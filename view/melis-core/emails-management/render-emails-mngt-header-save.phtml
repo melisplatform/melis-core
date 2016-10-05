@@ -1,0 +1,14 @@
+<?php 
+    $id = '';
+    if (!empty($this->zoneconfig['conf']['id'])){
+        $id = ' id="'.$this->zoneconfig['conf']['id'] .'"';
+    }
+    
+    $name = '';
+    if (!empty($this->zoneconfig['conf']['name'])){
+        $name = $this->zoneconfig['conf']['name'];
+    }
+    
+    $data_melisKey = 'data-melisKey="'.$this->melisKey.'"';
+?>
+<button class="btn btn-success btnMelisCoreEmailMngtSave" <?php echo $id.' '.$data_melisKey; ?> data-codename="<?php echo $this->codename ?>"><i class="fa fa-floppy-o" aria-hidden="true"></i> <?php echo $this->translate($name)?></button>

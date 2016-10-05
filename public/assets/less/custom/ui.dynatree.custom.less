@@ -1,0 +1,162 @@
+.mod-menu-dynatree{
+  .dynatree-container{
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: 0;
+    overflow: auto;
+    height: 100%;
+    a{
+      color: #ffffff;
+    }
+    li,
+    span.dynatree-connector,
+    a:focus,
+    a:hover,
+    span.dynatree-focused a:link{
+      .bgnone()
+    }
+    .dynatree-parent-item{
+      border-bottom: 1px solid #2c2c2c;
+      background-image: none;
+      > .dynatree-node {
+        display: block;
+        position: relative;
+        .dynatree-connector,
+        .dynatree-icon{
+          display: none;
+        }
+        &.dynatree-has-children{
+          > .dynatree-expander{
+            position: absolute;
+            right: 0;
+            padding: 20px;
+            margin: 0;
+            &:before{
+              margin:12px;
+            }
+          }
+          > .dynatree-icon{ display: none; }
+          
+          &.dynatree-active{
+            a{
+              .bgnone()
+            }
+          }
+        }
+        > a{ line-height: 40px; }
+        a{
+          display: block;
+          &:hover,
+          &:focus{
+            .bgnone()
+          }
+          i{
+            font-size: 1.3em;
+            vertical-align: middle;
+            width: 30px;
+            margin-right: 10px;
+            display: inline-block;
+            text-align: center;
+            color: #ffffff;
+          }
+        }
+      }
+      > ul{
+        padding-bottom: 10px;
+      }
+      .dynatree-node {
+        .dynatree-icon,
+        .dynatree-expander
+        {
+          &:before{
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.bgnone(){
+  background: none;
+}
+
+
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul ul.menu-style,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul ul.menu-style ul,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul ul.menu-style li{
+  border-bottom: 0;
+  border-top: 0;
+}
+
+span.dynatree-empty, span.dynatree-vline, span.dynatree-connector, span.dynatree-expander, span.dynatree-icon, span.dynatree-checkbox, span.dynatree-radio, span.dynatree-drag-helper-img, #dynatree-drop-marker{
+  float: left;
+  margin-top: 3px;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu ul li a{
+  float: left;
+  line-height: 20px;
+  color: #fff;
+  background: none !important;
+}
+span.dynatree-node{
+  overflow: hidden;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu ul.dynatree-container li a:hover,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu ul.dynatree-container span.dynatree-active a{
+  background: none !important;
+  color: #cb4040 !important;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul ul.dynatree-container li .dynatree-node.st_disabled a,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul ul.dynatree-container li .dynatree-node.st_disabled .dynatree-icon:before{
+  color: #999999;
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul ul.dynatree-container li .dynatree-node.st_inpublish a,
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul ul.dynatree-container li .dynatree-node.st_inpublish .dynatree-icon:before{
+  color: #F9BF3B;
+}
+
+
+
+
+ul.dynatree-container li, span.dynatree-empty, span.dynatree-vline, span.dynatree-connector, span.dynatree-expander, span.dynatree-icon, span.dynatree-checkbox, span.dynatree-radio, span.dynatree-drag-helper-img, #dynatree-drop-marker{
+  /*background: none;*/
+}
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.hasSubmenu ul.dynatree-container{
+  background: inherit;
+  border: 0;
+}
+.dynatree-node .dynatree-icon,
+.dynatree-node .dynatree-expander{
+  background: none;
+  position: relative;
+}
+.dynatree-node .dynatree-icon:before,
+.dynatree-node .dynatree-expander:before{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  content: "\E037";
+  font-family: 'Glyphicons Regular';
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+}
+.dynatree-node .dynatree-expander:before{
+  content: "\002B";
+}
+.dynatree-node.dynatree-expanded .dynatree-expander:before{
+  content: "\2212";
+ }
+.dynatree-node.dynatree-folder.dynatree-has-children > .dynatree-icon:before{
+  content: "\E441";
+}
+.dynatree-node.dynatree-folder.dynatree-has-children.dynatree-expanded > .dynatree-icon:before{
+  content: "\E145";
+}
+.dynatree-node.dynatree-has-children > .dynatree-icon:before{
+  content: "\E319";
+}

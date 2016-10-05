@@ -1,0 +1,24 @@
+// Wells
+// -------------------------
+
+.well {
+	z-index: 1;
+	position: relative;
+	padding: 15px;
+	margin: 0 0 @spacing;
+	&.small { padding: 10px; }
+	.popover { 
+		z-index: 2;
+		font-size: 13px; 
+	}
+	.rounded();
+	.box-shadow(none);
+	background: @widgetBgGray;
+	border-color: @contentBorder;
+	&.white { background: #fff; }
+	&.primary { background: @primaryColor; &, * { color: #fff; } }
+	&.inverse { background: @inverseColor; &, * { color: #fff; } }
+	&.info { background: @infoColor; &, * { color: #fff; } }
+	&.default { background: @defaultColor; &, * { color: #fff; } }
+	&.success { background: @successColor; &, * { color: #fff; } }
+}

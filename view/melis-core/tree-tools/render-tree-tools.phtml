@@ -1,0 +1,110 @@
+<?php
+
+	$name = '';
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['name']))
+		$name = $this->zoneconfig['conf']['name'];
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$data_melisKey = $this->melisKey;
+		
+?>
+<li<?= $id; ?> class="hasSubmenu" data-melisKey='<?= $data_melisKey; ?>'> 
+	<a data-target="#tools" data-toggle="collapse" class="collapsed">
+		<i class="fa fa-wrench"></i>
+		<span><?= $name; ?></span>
+	</a>
+	    <ul class="collapse" id="tools">
+			<?php 
+				if (!empty($this->tools))
+				{
+					foreach ($this->tools as $keySection => $sectionTool)
+					{
+						$sectionIcon = 'fa-folder';
+						if (!empty($sectionTool['toolsection_icon']))
+							$sectionIcon = $sectionTool['toolsection_icon'];
+						?>
+						<li class="hasSubmenu" data-meliskey=""> 
+	                    	<a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
+	                    		<i class="fa <?= $sectionIcon; ?>"></i>
+	                    		<span><?= $sectionTool['toolsection_name']; ?></span>
+	                    	</a>
+	                    	<ul class="collapse secondlvl-container" id="sub-load-<?= $keySection; ?>">
+							<?php
+							if (!empty($sectionTool['toolsection_children']))
+							{
+								foreach ($sectionTool['toolsection_children'] as $keyTool => $tool)
+								{
+									$toolIcon = 'fa-wrench';
+									if (!empty($tool['tool_icon']))
+										$toolIcon = $tool['tool_icon'];
+									
+									$data_tool_id = $tool['tool_id'];
+									$data_tool_name = $tool['tool_name'];
+									$data_tool_meliskey = $tool['tool_melisKey'];
+								
+									?>
+									<li class="melis-opentools" data-tool-icon="<?= $toolIcon; ?>" data-tool-name="<?= $data_tool_name; ?>" data-tool-id="<?= $data_tool_id; ?>" data-tool-meliskey="<?= $data_tool_meliskey; ?>">
+										<a href="#">
+											<i class="fa <?= $toolIcon; ?>"></i>
+											<span><?= $data_tool_name; ?></span>
+										</a>
+									</li>
+									<?php
+								}
+							}
+							?>
+							</ul>
+						</li>
+						<?php
+					}
+				}
+				else
+				{
+					echo '<span style="margin-left: 60px">' . $this->translate('tr_meliscore_leftmenu_tools_No tools available') . '</span>';
+				}
+			?>
+		</ul>
+</li>
+
+<!-- 
+<li class="hasSubmenu" data-meliskey=""> 
+            	<a data-target="#z-load" data-toggle="collapse" class="collapsed">
+            		<i class="fa fa-wrench"></i>
+            		<span>2Lvl Accordion</span>
+            	</a>
+            	
+                <ul class="collapse" id="z-load">
+            		<li class="hasSubmenu" data-meliskey=""> 
+                    	<a data-target="#sub-load" data-toggle="collapse" class="collapsed second-lvl">
+                    		<i class="fa fa-folder"></i>
+                    		<span>Power Tools</span>
+                    	</a>
+                    	
+                        <ul class="collapse secondlvl-container" id="sub-load">
+                    		<li>
+                    			<a class="">
+                               		<i class="fa fa-wrench"></i>
+                               		<span>Jack hammer</span>
+                           		</a>
+                    		</li>
+                    		<li>
+          
+                    			<a class="">
+                               		<i class="fa fa-wrench"></i>
+                               		<span>Chainsaw</span>
+                           		</a>
+                    		</li>
+                    	</ul> 
+                    	
+                    </li>
+            		<li>
+  
+            			<a class="">
+                       		<i class="fa fa-folder"></i>
+                       		<span>Super Tools</span>
+                   		</a>
+            		</li>
+            	</ul> 
+            	
+            </li>  -->

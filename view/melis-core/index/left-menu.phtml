@@ -1,0 +1,51 @@
+
+
+
+<div id="menu">
+    <?php
+    
+    	$id = '';
+    	if (!empty($this->zoneconfig['conf']['id']))
+    		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+    	$data_melisKey = $this->melisKey;
+    	
+    ?>
+
+    <div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="sidebar sidebar-inverse transition3ms">
+     
+      
+      	
+    	<?php 
+    	
+    		if (!empty($this->zoneconfig['interface']['meliscore_leftmenu_identity']))
+    			echo $this->meliscore_leftmenu_identity;
+    	
+    	?>
+    	
+     
+        <div class="sidebarMenuWrapper hasNiceScroll">
+        
+            <ul class="list-unstyled sideMenu">
+            	<?php 
+        	    	if (!empty($this->zoneconfig['interface']))
+        	    	{
+        	    		foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+        	    		{
+        	    			if ($keyConfig != 'meliscore_leftmenu_identity' && $keyConfig != 'meliscore_footer')
+        	    			{
+        	    				echo $this->$keyConfig;
+        	    			}
+        	    		}
+        	    	}
+        	 	?>
+        	 </ul>
+        </div>
+        	
+            <?php       
+            	if (!empty($this->zoneconfig['interface']['meliscore_footer']))
+            		echo $this->meliscore_footer;
+            ?>    
+           
+      
+    </div>
+</div>

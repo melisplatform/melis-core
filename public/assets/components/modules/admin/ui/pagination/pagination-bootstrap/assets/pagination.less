@@ -1,0 +1,60 @@
+//
+// Pagination
+// --------------------------------------------------
+
+// Pagination
+// ------------------------- //
+
+.pager li > a, .pager li > span {
+	.rounded(3px,3px,3px,3px);
+}
+.pagination {
+	&.bootpag {
+		margin: 0;
+	}
+}
+.pagination > li > a:hover,
+.pagination > li.primary > a {
+	background: @primaryColor;
+	color: #fff;
+	font-weight: 700;
+} 
+.pagination>.active>a, 
+.pagination>.active>span, 
+.pagination>.active>a:hover, 
+.pagination>.active>span:hover, 
+.pagination>.active>a:focus, 
+.pagination>.active>span:focus {
+	border-color: @contentBorder;
+	background: @primaryColor;
+	color: #fff;
+	font-weight: 700;
+}
+.pagination > li > a, 
+.pagination > li > span {
+	border-color: @contentBorder;
+	background: @widgetBg;
+	color:@primaryColor;
+	
+}
+.pagination > .primary.disabled > a,
+.pagination > .disabled > a,
+.pagination > .disabled > span {
+	border-color: @contentBorder;
+	background: @widgetBg;
+	color: #dddddd;
+	font-weight: 700;
+	text-shadow: none;
+	.bevelEmboss(0,0);
+}
+.pagination > .disabled > a:hover {
+	border-color: @contentBorder;
+	background: @widgetBg;
+	color: #dddddd;
+	text-shadow: none;
+	.bevelEmboss(0,0);
+}
+
+.pager a {
+	color:@primaryColor;
+}

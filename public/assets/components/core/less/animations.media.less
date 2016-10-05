@@ -1,0 +1,16 @@
+html.csstransitions.csstransforms3d
+{
+	[data-toggle="gridalicious"] .widget-pinterest {
+		.transition(all 100ms ease);
+		.widget-body {
+			.thumb { .transition(all 2000ms ease); }
+			.description { .transition(all 1000ms ease); }
+		}
+		&:hover {
+			.transition(all 1000ms ease);
+			z-index: 1000;
+			.transform(scale(1.08));
+			.thumb { .transform(scale(1.1)); }
+		}
+	}
+}

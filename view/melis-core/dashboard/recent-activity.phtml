@@ -1,0 +1,65 @@
+<?php
+
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$data_melisKey = $this->melisKey;
+		
+?>
+<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="widget-parent">
+	<div class="widget-head">
+		<div class="btn-group pull-right btn-group-xs">
+			<a class="btn btn-default melis-refreshZone" data-toggle="tab"><i class="fa fa-refresh"></i></a>
+		</div>
+		<h3 class="heading"><i class="icon-stocks-up fa fa-fw"></i> <?= $this->translate('tr_meliscore_dashboard_Recent Activity'); ?></h3>
+	</div>
+	<div class="widget-body padding-none">
+	        
+		<div class="widget widget-tabs widget-tabs-icons-only-2 widget-activity margin-none border-none">
+	        
+			<!-- Tabs Heading -->
+			<div class="widget-head">
+				<ul class="nav-tabs">
+				<?php
+			        if (!empty($this->zoneconfig['interface']))
+				    {
+				    	$cpt = 1;
+				    	foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+				    	{
+				    		$id = 'meliscore_dashboard_tmp_' . $cpt;
+				    		if (!empty($menuConfig['conf']['id']))
+				    			$id = $menuConfig['conf']['id'];
+				    		$name = '';
+				    		if (!empty($menuConfig['conf']['name']))
+				    			$name = $menuConfig['conf']['name'];
+				    		$icon = '';
+				    		if (!empty($menuConfig['conf']['icon']))
+				    			$icon = $menuConfig['conf']['icon'];
+				    		?>
+				    		<li><a class="glyphicons <?= $icon; ?>" data-toggle="tab" href="#<?= $id; ?>"><i></i><?= $name; ?></a></li>
+				    		<?php
+				    			$cpt++;
+				    	}
+				    }
+				?>
+				</ul>
+			</div>
+			<!-- widget content add class depending on widget size -->
+			<!-- SMALL = dashboard-widget-content-small  |  MEDIUM = dashboard-widget-content-medium   |  LARGE = dashboard-widget-content-large  -->
+			<!-- create custom if widget is not in default sizes (small, medium and large) -->
+			<div class="widget-body padding-none dashboard-widget-content-medium">
+				<div class="tab-content">
+					<?php 
+						if (!empty($this->zoneconfig['interface']))
+						{
+							foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+							{
+								echo $this->$keyConfig;
+							}
+						}
+					?>
+				</div>
+			</div>	
+		</div>
+	</div>
+</div>

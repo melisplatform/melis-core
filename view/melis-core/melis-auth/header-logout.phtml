@@ -1,0 +1,16 @@
+<?php
+
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$namePlugin = '';
+	if (!empty($this->zoneconfig['conf']['name']))
+		$namePlugin = ' data-title="' . $this->zoneconfig['conf']['name'] . '"';
+	$data_melisKey = $this->melisKey;
+		
+?>
+<li<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' <?= $namePlugin; ?>>
+	<a href="/melis/logout" class="menu-icon">
+		<i class="fa fa-sign-out" title="<?= $this->translate('tr_meliscore_header_logout'); ?>"></i>
+	</a>
+</li>

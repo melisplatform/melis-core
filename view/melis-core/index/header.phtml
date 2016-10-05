@@ -1,0 +1,108 @@
+<?php
+
+
+    $id = '';
+    if (!empty($this->zoneconfig['conf']['id']))
+        $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+    $data_melisKey = $this->melisKey;
+
+?>
+<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar  navbar-primary main" role="navigation">
+
+	
+    <!-- left menu -->
+    <div class="left-menu"> 
+            <div class="navbar-brand">
+            
+              <div class="pull-left">
+                <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
+                    <i class="fa fa-bars"></i>
+                </a>
+              </div>
+              <a href="/melis" class="appbrand innerL">
+              
+              		<img alt="melis platform" src="/MelisCore/images/dashboard/melis-logo.png">
+					<?php echo $this->translate('tr_meliscore_header Title') ?>
+              
+              </a>
+              
+              <div class="pull-right">
+                <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
+                    <i class="fa fa-cog"></i>
+                </a>
+              </div>
+            
+            </div>
+    </div>
+        
+    <div class="res-action-container">
+    
+            <!-- main nav tabs --> 
+            <div id="melis-navtabs-container-outer">
+              <span class="melis-tabprev">
+                <i class="fa fa-angle-left"></i>
+              </span>
+              <div id="melis-navtabs-container-inner">
+                  
+                  <!-- responsive tab menu -->
+                  <div id="res-page-cont" class="reponsive-menu-tabs">
+                        <span> 
+                        	<?php echo $this->translate('tr_meliscore_tool_gen_content') ?> 
+                            <i class="fa fa-angle-down"></i>
+                        </span>
+                  </div>
+                  
+                  <ul class="nav nav-tabs navbar-nav tabsbar" id="melis-id-nav-bar-tabs">
+                        <?php 
+                            if (!empty($this->appsConfigCenter['interface']))
+                            {
+                                foreach ($this->appsConfigCenter['interface'] as $keyConfig => $menuConfig)
+                                {
+                                    if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['name']))
+                                        $tabname = $menuConfig['conf']['name'];
+                                    else 
+                                        $tabname = 'Tab';
+                                    $icon = '';
+                                    if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['icon']))
+                                        $icon = $menuConfig['conf']['icon'];
+                                    echo '<li class=""><a  data-toggle="tab" class="dropdown-toggle menu-icon tab-element" href="#'. $menuConfig['conf']['id'] .'" data-id="'. $menuConfig['conf']['id'] .'"><i class="fa ' . $icon . ' fa-2x"></i><span class="navtab-pagename">' . $tabname . '</span></a><a class="close close-tab"  data-id="'. $menuConfig['conf']['id'] .'">Close</a></li>';
+                                }
+                            } 
+                        ?>
+                        
+                  </ul>
+              </div>    
+               <span class="melis-tabnext">
+                <i class="fa fa-angle-right"></i>
+               </span>  
+            </div>
+          
+
+            <ul class="nav navbar-nav navbar-right">
+                <!-- add flash messenger here -->
+                
+                <?php 
+                    if (!empty($this->zoneconfig['interface']))
+                    {
+                        foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+                        {
+                            echo $this->$keyConfig;
+                        }
+                    }
+                ?>
+            </ul>
+        
+    
+    </div>
+    
+</div>
+
+<div id="newplugin-cont">
+	
+     
+      <ul class="nav ul-cont">
+        
+      </ul>
+    
+  
+</div>

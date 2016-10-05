@@ -1,0 +1,12 @@
+<?php 
+	if (!empty($this->meliscore_error_dispatch))
+		echo $this->meliscore_error_dispatch;
+	
+	if (!empty($this->zoneconfig['interface']))
+	{
+		foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+		{
+			echo $this->$keyConfig;
+		}
+	}
+?>

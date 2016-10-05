@@ -1,0 +1,251 @@
+  var o = {
+    global:{
+      classBootModalAjax : '.boot-modal-ajax' 
+    }
+  };
+
+
+/**********************************
+Config jquery.dynatree
+*/
+_canLog = MELIS.plugins.tree.debug;
+
+
+  /* Remove Envato Frame */
+  if (window.location != window.parent.location) top.location.href = document.location.href;
+  (function($, window) {
+    window.onunload = function() {};
+    //alert($('.tab-pane.active.full-width').height());
+    //$('.iframe-content').attr({"width":$('.tab-pane.active.full-width').width()+'px',"height":$('.tab-pane.active.full-width').height()+'px'});
+    window.initTinymce = function() {
+      tinymce.init({
+        selector: "h1.editable",
+        inline: true,
+        toolbar: "undo redo",
+        menubar: false
+      });
+      tinymce.init({
+        selector: "div.editable",
+        inline: true,
+        plugins: ["advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+      });
+    };
+    initTinymce();
+    window.resizeIframe = function() {
+      setTimeout(function() {
+        $('.iframe-content').attr({
+          "width": $('.tab-pane.active.full-width').width() + 'px',
+          "height": $('.tab-pane.active.full-width').height() + 'px'
+        });
+      }, 100);
+    };
+    window.initNiceScrollSidebarMenuWrapper = function() {
+      $('.hasNiceScroll').getNiceScroll().resize();
+    }
+    $(window).resize(function() {
+      resizeIframe();
+    });
+
+    //$().alert('close');
+
+
+    window.initConextMenu = function() {
+      $('.context').contextmenu({
+        target:'#context-menu', 
+        before: function(e,context) {
+          // execute code before context menu if shown
+        },
+        onItem: function(context,e) {
+          // execute on menu item selection
+        }
+      });
+    };
+    initConextMenu();
+
+
+
+    $('#myModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var href = button.data('model-href'); // Extract info from data-* attributes
+    var title = button.data('model-title');
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    var modal = $(this);
+    modal.find('.modal-body').text('New message to ' + href);
+    $.ajax({
+      url: href,
+      success: function(msg){
+        //alert(srctarget);
+        modal.find('.modal-title').text(title);
+        modal.find('.modal-body').html(msg);
+      }
+    });
+    
+  });
+
+   window.initNavTabs = function() {
+
+    $('.content-nav-tabs.nav-tabs-fixed-top .widget-head > ul > li').click(function(){
+      if($(this).hasClass('nav-tabs-li-id-home')){
+        $('.content-options.options-fixed-top').hide();
+      }else{
+        $('.content-options.options-fixed-top').show();
+      }
+    })
+  };
+    
+initNavTabs();
+    // --- Initialize first Dynatree -------------------------------------------
+    $("#id-mod-menu-dynatree").dynatree({
+      fx: { height: "toggle", duration: 200 },
+      autoCollapse: false,
+      classNames:{
+        liClass : " dynatree-parent-item "
+      },
+      initAjax: {
+        url: MELIS.plugins.tree.pathXhr
+      },
+      onClick: function(node, event) {
+        
+        if(node.getEventTargetType(event) == "title"){
+
+          if($('#nav-tabs-li-'+node.data.tab_id).length){
+            $('.content-nav-tabs .widget-head > ul > li.active').removeClass('active');
+            $('.content-iframe .tab-content.full-width > .tab-pane.full-width.active').removeClass('active');
+            $('#nav-tabs-li-'+node.data.tab_id).attr('style','').addClass('active');
+            $('#tabContent-div-'+node.data.tab_id).attr('style','').addClass('active');
+
+          }else{
+            
+            // Desactive 
+            $('.content-nav-tabs .widget-head > ul > li.active').removeClass('active');
+            // Creat New item Tab
+            $newTabItem = jQuery('<li/>', {
+              id: 'nav-tabs-li-'+node.data.tab_id,
+              class: 'active',
+              'data-id': node.data.tab_id,
+              html: '<a class="glyphicons file" href="#tabContent-'+node.data.tab_id+'" data-toggle="tab"><i></i>'+node.data.tab_name+'</a><a class="close" data-idtab="'+node.data.tab_id+'">Close</a>'
+            });
+            // Append New item Tab
+            $('.content-nav-tabs .widget-head ul').append($newTabItem);
+
+            // Desactive 
+            $('.content-iframe .tab-content.full-width > .tab-pane.full-width.active').removeClass('active');
+
+            // Add Iframe or Ajax
+            if(node.data.load == "iframe"){
+              // Iframe
+              // Creat New Content
+              $newTabContent = jQuery('<div/>', {
+                id: 'tabContent-div-'+node.data.tab_id,
+                class: 'tab-pane full-width active',
+                html: '<iframe name="myiframe" id="myiframe-'+node.data.tab_id+'" class="myiframe iframe-content" src="'+node.data.href+'" width="100%" height="100%"></iframe>'
+              });
+              $('.content-iframe .tab-content.full-width').append($newTabContent);
+              $.notify("New Tab '"+node.data.tab_name+"' has add", "success");
+
+            }else{
+              // Ajax
+              // Creat New Content
+              $.ajax({
+                  url: node.data.href,
+                  success: function(msg){
+                    $newTabContent = jQuery('<div/>', {
+                      id: 'tabContent-div-'+node.data.tab_id,
+                      class: 'tab-pane full-width active',
+                      html: msg
+                    });
+                    $('.content-iframe .tab-content.full-width').append($newTabContent);
+                    $.notify('New Tab "'+node.data.tab_name+'" has add', "success");
+                  }
+                });
+            }
+          }
+          $('.content-nav-tabs .widget-head ul .close').click(function(){
+            $('#nav-tabs-li-'+$(this).data('idtab')).hide().removeClass('active');
+            $('#tabContent-div-'+$(this).data('idtab')).hide().removeClass('active');
+            $.notify('Tab has close', "warn");
+          });
+
+          initNavTabs();
+          return false;// Prevent default processing
+        }
+      },
+      onLazyRead: function(node) {
+        console.log($(this).attr('class'));
+        // Mockup a slow reqeuest ...
+        node.appendAjax({
+          url: "sample-data2.json",
+          debugLazyDelay: 750, // don't do this in production code
+          success: function(node) {
+            initNiceScrollSidebarMenuWrapper();
+            initConextMenu();
+
+          }
+        });
+      },
+      onExpand: function(node) {
+        initNiceScrollSidebarMenuWrapper();
+        return true;
+      },
+      dnd: {
+        onDragStart: function(node) {
+          /** This function MUST be defined to enable dragging for the tree.
+           *  Return false to cancel dragging of node.
+           */
+           logMsg("tree.onDragStart(%o)", node);
+           return true;
+         },
+         onDragStop: function(node) {
+          // This function is optional.
+          logMsg("tree.onDragStop(%o)", node);
+        },
+        autoExpandMS: 1000,
+        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+        onDragEnter: function(node, sourceNode) {
+          /** sourceNode may be null for non-dynatree droppables.
+           *  Return false to disallow dropping on node. In this case
+           *  onDragOver and onDragLeave are not called.
+           *  Return 'over', 'before, or 'after' to force a hitMode.
+           *  Return ['before', 'after'] to restrict available hitModes.
+           *  Any other return value will calc the hitMode from the cursor position.
+           */
+           logMsg("tree.onDragEnter(%o, %o)", node, sourceNode);
+           return true;
+         },
+         onDragOver: function(node, sourceNode, hitMode) {
+          /** Return false to disallow dropping this node.
+           *
+           */
+           logMsg("tree.onDragOver(%o, %o, %o)", node, sourceNode, hitMode);
+          // Prevent dropping a parent below it's own child
+          if (node.isDescendantOf(sourceNode)) {
+            return false;
+          }
+          // Prohibit creating childs in non-folders (only sorting allowed)
+          if (!node.data.isFolder && hitMode === "over") {
+            return "after";
+          }
+        },
+        onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+          /** This function MUST be defined to enable dropping of items on
+           * the tree.
+           */
+           logMsg("tree.onDrop(%o, %o, %s)", node, sourceNode, hitMode);
+           sourceNode.move(node, hitMode);
+          // expand the drop target
+          //        sourceNode.expand(true);
+        },
+        onDragLeave: function(node, sourceNode) {
+          /** Always called if onDragEnter was called.
+          */
+          logMsg("tree.onDragLeave(%o, %o)", node, sourceNode);
+        }
+      }
+    });
+
+  $.notify("Melis init success !", "success");
+  //$mls_nt.notification('warning', 'Notification Test 3');
+  //$mls_nt.notification('info', 'Notification Test 4');
+  })(jQuery, window);

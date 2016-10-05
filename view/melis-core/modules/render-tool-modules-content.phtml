@@ -1,0 +1,96 @@
+<?php 
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+    $data_melisKey = $this->melisKey;
+    $status = '';
+?>
+
+<div <?= $id; ?> data-melisKey="<?= $data_melisKey; ?>">
+	<div class="spacing-x2 innerAll">
+
+			<!-- modules -->
+            <div class="module-settings">
+            
+            	<div class="ms-heading">
+            		<h4>Modules</h4>
+            		<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
+            	</div>
+            	
+            	
+            	<div class="module-sortable">
+            		<?php foreach($this->modules as $moduleName => $moduleStatus): ?>
+                    <div class="module-cont clearfix">
+    
+                    		<h4><?= $moduleName; ?></h4>
+    
+    						<div data-module-name="<?= $moduleName; ?>" class="make-switch module-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
+    							<?php 
+    							$status = $moduleStatus > 0 ? 'checked' : '';
+    							?>
+    							<input name="<?= $moduleName; ?>" data-module-name="<?= $moduleName; ?>" type="checkbox" <?= $status; ?>/>
+    						</div>
+    
+                	</div>
+                	<?php endforeach; ?>
+            	</div>
+            	
+            </div>
+
+<?php 
+    /*
+			<!-- websites -->
+            <div class="module-settings">
+            
+            	<div class="ms-heading">
+            		<h4>Websites</h4>
+            		<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
+            	</div>
+            	
+            	<div class="module-sortable">
+                	<?php foreach($this->siteModules as $moduleName => $moduleStatus): ?>
+                    <div class="module-cont clearfix">
+                    	
+                    		<h4><?= $moduleName; ?></h4>
+    
+    						<div data-module-name="<?= $moduleName; ?>" class="make-switch module-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
+    							<?php 
+    							$status = $moduleStatus > 0 ? 'checked' : '';
+    							?>
+    							<input name="<?= $moduleName; ?>" data-module-name="<?= $moduleName; ?>" type="checkbox" <?= $status; ?>/>
+    						</div>
+    
+                	</div>
+                	<?php endforeach; ?>
+            	</div>
+            </div>
+    */
+?>
+
+ 			<!-- <button id="btnModulesSave" class="btn btn-success pull-right"><i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_module_management_modules_save'); ?></button> -->
+
+	</div>
+
+</div>
+	
+<script type="text/javascript">
+
+
+	$(document).ready(function() {
+		
+		// initialize jquery sortable
+	    $(".module-sortable").sortable({
+	    	containment: "parent",
+	    	placeholder: "ui-sortable-placeholder",
+	    	opacity: 0.8,
+	    	revert: 300,
+			tolerance: "pointer",
+	    });
+	    
+	});
+
+</script>
+
+
+
+

@@ -1,0 +1,26 @@
+<div id="newformalert"></div>
+<?php 
+$form = $this->meliscore_tool_user_form_new;
+echo $this->form()->openTag($form);
+echo $this->melisFieldCollection($form);
+//data-dismiss="modal"
+?>
+<div class="center-block">
+    <span class="thumbnail">
+      <img id="new-profile-image" width="64" height="64" src="/MelisCore/images/profile/default_picture.jpg" alt="<?= $this->translate('tr_meliscore_tool_user_usr_profile_image'); ?>">
+    </span>
+</div>
+
+
+<button type="submit" class="btn btn-success pull-right hidden-xs hidden-sm" id="btnAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
+<button type="submit" class="btn btn-success pull-right visible-xs visible-sm" id="btnAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></button>
+
+<?php 
+echo $this->melisModalInvoker()->render(
+    array(
+        'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+        'class' => 'btn btn-danger pull-left'
+    ), 'dismiss');
+echo $this->form()->closeTag();
+?>
+

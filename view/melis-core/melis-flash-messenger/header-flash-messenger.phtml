@@ -1,0 +1,28 @@
+<?php
+    $id = '';
+    if (!empty($this->zoneconfig['conf']['id']))
+	   $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$namePlugin = '';
+	if (!empty($this->zoneconfig['conf']['name']))
+		$namePlugin = ' data-title="' . $this->zoneconfig['conf']['name'] . '"';
+    $data_melisKey = $this->melisKey;
+
+?>
+<!-- START test flash message container -->
+<li class="dropdown notification" <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' <?= $namePlugin; ?>>
+
+    <a href="#" class="dropdown-toggle menu-icon dropdown-hover">
+        <i class="fa fa-fw fa-bell"></i>
+        <span class="badge badge-success hidden">0</span>
+    </a>
+    
+    <ul id="flash-messenger" class="dropdown-menu inbox empty-notif">
+    	<li class="empty-notif-li">   
+        	<div class="media">       
+            	 <span><?= $this->translate('tr_meliscore_no_notificaions'); ?></span>      
+        	</div>
+    	</li>
+    </ul>
+    
+</li>
+<!-- END test flash message container -->

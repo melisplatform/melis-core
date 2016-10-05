@@ -1,0 +1,64 @@
+.module-lists{
+	background-color:##2c2c2c;
+}
+
+.module-display-heading .ms-heading{
+    background: #932E2A;
+    border-radius: 5px 5px 0 0;
+	position: relative;
+}
+.module-display-heading .ms-heading h4{
+	color: #fff;
+	font-size: 16px;
+	font-weight: 700;
+	padding: 15px 20px;
+	margin: 0;
+}
+
+.module-display-heading .ms-heading .fa{
+	float: right;
+    font-size: 18px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    padding: 16px 14px 13px;
+    color: #fff;
+	cursor: pointer;
+}
+.module-display-heading .ms-heading .tooltip .tooltip-inner{
+	background: #2c2c2c;
+	font-size: 14px;
+    letter-spacing: .3px;
+    word-spacing: 1px;
+    padding: 6px 10px;
+    border-radius: 3px;
+	max-width: 300px;
+}
+
+.panel-default>.panel-heading {
+    height: 50px;
+}
+
+.progress .progress-bar.progress-bar-danger {
+    background: #932e2a;
+}
+
+.panel-title {
+    margin-top: 5px;
+}
+
+.btn-run-module-test{
+	margin-top: -5px;
+}
+
+.panel-default>.panel-heading {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+    border-bottom: #dadada 1px solid;
+}
+
+.divLogger{
+    overflow-y: scroll;
+    height: 300px;
+}

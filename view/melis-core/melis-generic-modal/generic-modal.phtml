@@ -1,0 +1,34 @@
+<?php
+
+	$id = '';
+	if (!empty($this->id))
+		$id = ' id="' . $this->id . '"';
+	$data_melisKey = '';
+	if (!empty($this->melisKey))
+		$data_melisKey = ' data-meliskey="' . $this->melisKey . '"';
+		
+?>
+<!-- PAGE WORKFLOW MODAL -->
+<div class="workflow-modal-cont">
+    <div class="modal fade" id="pageWorkflowModal">
+        <div class="modal-dialog" role="documentxxxx">
+        
+          <div <?= $id; ?> <?= $data_melisKey; ?> class="modal-content workflow-modal-cont">
+            
+            	
+                
+                
+            
+          </div>
+          
+          
+          <!-- Modal footer-->
+    	  <div class="modal-footer text-center">
+          	<button type="button" class="btn btn-danger" data-dismiss="modal"> <?= $this->translate('tr_melissb_common_close'); ?> </button>
+          </div>
+          
+          
+          
+        </div>
+    </div>
+</div>

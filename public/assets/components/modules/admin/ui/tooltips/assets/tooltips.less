@@ -1,0 +1,15 @@
+//
+// Tooltips
+// --------------------------------------------------
+
+.tooltip { 
+	.tooltip-inner { 
+		background-color: @primaryColor; 
+		color: #fff;
+		.rounded(); 
+	}
+	&.right { .tooltip-arrow { border-right-color: @primaryColor; } }
+	&.left { margin-left: -13px; .tooltip-arrow { border-left-color: @primaryColor; } }
+	&.top { .tooltip-arrow { border-top-color: @primaryColor; } }
+	&.bottom { .tooltip-arrow { border-bottom-color: @primaryColor; } }
+}

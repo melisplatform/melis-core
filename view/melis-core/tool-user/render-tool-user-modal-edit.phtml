@@ -1,0 +1,37 @@
+<div id="editformalert"></div>
+<span id="edituserid" class="hidden"></span>
+<div class="form-group">
+    <label for="tool_user_management_id_tmp" style="color: rgb(104, 104, 104);"><?= $this->translate('tr_meliscore_tool_user_col_id'); ?></label>
+    <input type="text" class="form-control" id="tool_user_management_id_tmp" disabled="disabled" value="">
+</div>
+<?php 
+$form = $this->meliscore_tool_user_form_edit;
+echo $this->form()->openTag($form);
+echo $this->melisFieldCollection($form);
+//data-dismiss="modal"
+?>
+
+
+<div class="center-block">
+    <span class="thumbnail">
+      <img id="profile-image" width="64" height="64" src="" alt="<?= $this->translate('tr_meliscore_tool_user_usr_profile_image'); ?>">
+    </span>
+</div>
+
+<div class="form-group">
+    <label class=""><?= $this->translate('tr_meliscore_tool_user_col_last_login'); ?>: </label>
+    <span class="form-control-static" id="lastlogindate"></span>
+</div>
+
+<button type="submit" class="btn btn-success pull-right" id="btnEdit"><i class="fa fa-save"></i>  <?= $this->translate('tr_meliscore_tool_user_update'); ?></button>
+
+<?php 
+echo $this->melisModalInvoker()->render(
+    array(
+        'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+        'class' => 'btn btn-danger pull-left'
+    ), 'dismiss');
+echo $this->form()->closeTag();
+?>
+
+

@@ -1,0 +1,64 @@
+.navbar.main {
+	&.navbar-primary {
+		.appbrand { color: #fff; }
+		border-bottom-color: darken(@primaryColor,13%);
+		background-color: @primaryColor;
+		.caret {
+			border-top-color: #fff;
+			border-bottom-color: #fff;
+		}
+		.dropdown-toggle {
+			color: lighten(@primaryColor,43%) !important;
+			&:hover { 
+				color:#ffffff; 
+				text-decoration: none; 
+				.caret {
+					border-top-color: #fff;
+					border-bottom-color: #fff;
+				}
+			}
+		}
+		a.menu-icon > i { color: #fff}
+		.navbar-brand {
+			border-right: 1px solid darken(@primaryColor,13%);
+			@media (max-width: 767px) {
+			padding-right:10px;
+			}
+			.btn.text-regular { color: lighten(@primaryColor,43%) !important; }
+		}
+		.toggle-button {
+			> i { color: lighten(@primaryColor,13%); }
+			&:hover i { color:#fff; }
+		}
+		.navbar-form {
+			input { background-color: darken(@primaryColor,13%); color:#fff; }
+			::-webkit-input-placeholder { color: lighten(@primaryColor,10%); }
+			:-moz-placeholder { color: lighten(@primaryColor,10%); }
+			::-moz-placeholder { color: lighten(@primaryColor,10%); }
+			:-ms-input-placeholder { color: lighten(@primaryColor,10%); }
+			.btn {
+				border: none;
+				border-left: 1px solid darken(@primaryColor,13%);
+				color: #fff;
+				border-right:1px solid  @primaryColor; 
+				background:  darken(@primaryColor,13%); ;
+				&:hover { color: lighten(@primaryColor,50%);}
+			}
+		}
+		.nav .open>a { background-color: darken(@primaryColor,13%); }
+		.nav>li>a:focus { background: none; }
+		.nav > li {
+			border-left-color: darken(@primaryColor,13%);
+			> a {
+				&:hover { background-color: darken(@primaryColor,13%); }
+				.badge {
+					&.badge-primary {
+						background-color: #fff;
+						color:@primaryColor;
+					}
+				}
+			}
+			&.lang { background-color: darken(@primaryColor,13%); }
+		}
+	}
+}

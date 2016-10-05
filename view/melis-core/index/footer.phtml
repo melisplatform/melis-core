@@ -1,0 +1,28 @@
+<?php
+
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$data_melisKey = $this->melisKey;
+		
+?>
+<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="hidden-print transition3ms">
+	<div class="copy footer">
+		<a href="http://www.melistechnology.com/" target="_blank"><?php echo $this->translate('tr_meliscore_footer_2015 by Melis Technology') ?></a>
+		- <?php echo $this->translate('tr_meliscore_footer_all rights reserved') ?> 
+		<a href="http://www.melistechnology.com/resources/download-&-documentation/id/21" target="_blank">
+			<?php echo $this->translate('tr_meliscore_header Title') ?>
+		</a>
+		- <?php echo $this->translate('tr_meliscore_footer_Version') ?>: v2.0
+	<?php /*	<br /><br />
+		Test loading ajax :
+		<br />
+		- <a href='#' id='loadingAjax1' onclick='return false;'>Load Header</a>
+		<br />
+		- <a href='#' id='loadingAjax2' onclick='return false;'>Load Page</a>
+		<br />
+		- <a href='#' id='loadingAjax3' onclick='return false;'>Load Site Tree View</a>
+		<br />
+		- <a href='#' id='loadingTree' onclick='return false;'>Load Root Site Tree XHR</a> */ ?>
+	</div>
+</div>

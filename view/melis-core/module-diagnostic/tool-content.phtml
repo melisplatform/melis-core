@@ -1,0 +1,45 @@
+<?php 
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+    $data_melisKey = $this->melisKey;
+?>
+<div <?= $id; ?> data-melisKey="<?= $data_melisKey; ?>">
+	<div class="spacing-x2 innerAll">
+		<div class="module-display-heading">
+        	<div class="ms-heading ">
+        		<h4>Modules</h4>
+        	</div>
+
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+               <div class="panel panel-default">
+               
+               	  <?php foreach($this->modules as $module):?>
+                  <div class="panel-heading" role="tab" id="heading<?= $module; ?>">
+                     <h4 class="panel-title">
+                     	<?= $module; ?>
+                     	<button data-modules="<?= $module; ?>" class="btn btn-success pull-right btn-small btn-run-module-test">
+						<?= $this->translate('tr_melis_module_diagnostics_run_test'); ?>
+						</button>
+
+                    </h4>
+                  </div>
+                  <div id="collapse<?= $module; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?= $module; ?>">
+                     <div class="panel-body">
+
+                        <div class="progress">
+                          <div id="pb<?= $module; ?>" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            0%
+                          </div>
+                        </div>
+                        <div class="well divLogger" id="well<?= $module; ?>">
+                        </div>
+                     </div>
+                  </div>
+                  <?php endforeach; ?>
+                  
+               </div>
+            </div>
+		</div>
+	</div>
+</div>

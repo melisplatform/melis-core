@@ -1,0 +1,27 @@
+// Filters Widget
+// -------------------------
+
+.filter-bar {
+	background: @widgetBgGray;
+	margin: 0 auto @spacing;
+	border: 1px solid @contentBorder;
+	
+	padding: 10px 15px;
+	line-height: 30px;
+	&.dark {
+		background: #64625f;
+		color: #fff;
+	}
+
+	/* Desktops */
+	@media (min-width: 992px) {
+		label {
+			float: left;
+			margin-right: 5px;
+			margin-left: 5px;
+		}
+		.form-group:first-of-type label {
+			margin-left: 0;
+		}
+	}
+}

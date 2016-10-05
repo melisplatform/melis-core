@@ -1,0 +1,190 @@
+// Stats widgets
+// -------------------------
+
+.widget-stats {
+	background: @widgetBg;
+	padding: @spacing 0;
+	margin: 0;
+	height:110px;
+	position: relative;
+	text-align: center;
+	display: block;
+	.count {
+		position: absolute; 
+		top: 0; 
+		left: 0; 
+		font-size: 13px; 
+		.rounded();
+	}
+	.label { font-weight: 600; padding: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,.2) inset; }
+	span { display: inline-block; }
+	.txt { padding: 0; color: #cecece; }
+	.glyphicons {
+		padding: 0;
+		display: block;
+		i { display: block; }
+		i:before { color: #cecece; font-size: 30px; top: 0; left: 0; position: relative; }
+	}
+	&, &:hover, &:focus { text-decoration: none; }
+	&:hover { background: @contentGradient1; }
+	&.small {
+		padding: 5px 0;
+		.glyphicons {
+			padding: 12px 0 0;
+			i:before { font-size: 25px; }
+		}
+	}
+	&.widget-stats-1 {
+		padding: 8px 0;
+		height: 110px;
+		.glyphicons {
+			display: block;
+			height: 35px;
+			line-height: 35px;
+			padding-bottom: 5px;
+			.txt { display: inline-block; padding: 0 5px; line-height: 35px; }
+			i {
+				display: inline-block;
+				&:before { top: 5px; font-size: 25px; }
+			}
+		}
+		.count { position: relative; top: auto; right: auto; font-size: 60px; display: inline-block; font-weight: 700; padding: 0; line-height: 40px; }
+	}
+	&.widget-stats-2 {
+		.txt { font-size: 14px; }
+		.sparkline { margin: 0 0 5px; }
+		.count { position: relative; top: auto; right: auto; font-size: 60px; font-weight: 700; padding: 0 0 3px; display: block; line-height: 55px; }
+	}
+	&.widget-stats-3 {
+		.sparkline { display: inline-block; }
+		.txt {
+			text-align: left;
+			vertical-align: middle;
+			padding: 13px 0 0 10px;
+		}
+		.count { padding: 0 0 5px; display: block; }
+	}
+	&.widget-stats-4 {
+		text-align: left;
+		padding-left: @spacing*2;
+		padding-right: @spacing*2;
+		.txt { font-size: 16px; font-weight: 400; color: #000; display: block; }
+		.glyphicons {
+			float: right;
+			width: 80px;
+			text-align: center;
+			i {
+				font-size: 80px;
+				&:before {
+					position: absolute;
+					left: auto;
+					right: 0;
+					color: #424242;
+					font-size: inherit;
+					top: -20px;
+					z-index: 1;
+				}
+			}
+			&.star {
+				width: 90px;
+				i {
+					font-size: 90px;
+					&:before { top: -25px; }
+				}
+			} 
+		}
+		.count { 
+			float: left; 
+			position: relative; 
+			top: auto; 
+			right: auto; 
+			font-size: 60px; 
+			font-weight: 700; 
+			padding: 0 0 3px; 
+			display: block; 
+			line-height: 55px;
+			span {
+				font-size: 20px;
+				line-height: 60px;
+				vertical-align: middle;
+				color: #bbbbbb;
+				padding-left: 5px;
+				text-transform: uppercase;
+			} 
+		}
+		[class="icon-play-circle"] { position: absolute; top: 10px; right: 10px; color: #bfbfbf; font-size: 15px; }
+	}
+	&.widget-stats-5 {
+		background: @widgetBgGray;
+		text-align: left;
+		padding-left: @spacing;
+		padding-right: @spacing;
+		.glyphicons {
+			padding-top: 10px;
+			float: left;
+			text-align: center;
+			i {
+				font-size: 40px;
+				display: inline-block; 
+				width: 50px; 
+				text-align: center;
+				&:before { 
+					font-size: inherit;
+					display: block;
+					width: 50px; 
+					text-align: center; 
+				}
+			}
+		}
+		.txt {
+			display: block;
+			line-height: 15px;
+			float: left;
+			padding: 17px 0 0 10px;
+			font-size: 16px;
+			span { 
+				display: block;
+				line-height: 30px;
+				font-size: 25px; 
+			}
+		}
+	}
+	&.widget-stats-easy-pie {
+		.easy-pie { display: block; width: 50px; margin: -5px auto 0; }
+		&.txt-single {
+			.easy-pie { margin: 0 auto; }
+			.txt { padding: 7px 0 0; }
+		}
+	}
+	
+	&.widget-stats-gray {
+		background: @widgetBgGray;
+		&.widget-stats-1, &.widget-stats-2 {
+			.txt, i:before { color: @inverseColor; }
+		}
+	}
+	&.widget-stats-primary {
+		background: @primaryColor;
+		&.widget-stats-1, &.widget-stats-2, &.widget-stats-4, &.widget-stats-5 {
+			&, .txt, i:before { color: #fff; }
+		}
+	}
+	&.widget-stats-default {
+		background: @defaultColor;
+		&.widget-stats-1, &.widget-stats-2, &.widget-stats-4, &.widget-stats-5 {
+			&, .txt, i:before { color: #fff; }
+		}
+	}
+	&.widget-stats-info {
+		background: @infoColor;
+		&.widget-stats-1, &.widget-stats-2, &.widget-stats-4, &.widget-stats-5 {
+			&, .txt, i:before { color: #fff; }
+		}
+	}
+	&.widget-stats-inverse {
+		background: @inverseColor;
+		&.widget-stats-1, &.widget-stats-2, &.widget-stats-4, &.widget-stats-5 {
+			&, .txt, i:before { color: #fff; }
+		}
+	}
+}

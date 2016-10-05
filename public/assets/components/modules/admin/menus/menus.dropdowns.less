@@ -1,0 +1,22 @@
+.dropdown-menu { 
+	border-radius: 0; 
+	padding:0;
+	margin: 0;
+	font-size:13px;
+	border-color: #e5e5e5;
+	li {
+		border-bottom: 1px solid #e5e5e5;
+		&:last-of-type { border:none; }
+		&.headline {
+			padding:10px;
+			font-size: 16px;
+			text-align: center;
+			&:hover { background:none;}
+		}
+		.divider {padding: 0; height:1px; margin: 0;}		
+		&.clean:hover { background:none; }
+		a { line-height: 25px; }
+		&.active a, &.active:hover a { background-color: @primaryColor; }
+	}
+	&.clean li:hover { background:none; }
+}

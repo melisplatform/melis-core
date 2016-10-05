@@ -1,0 +1,70 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+
+html {
+	-webkit-font-smoothing: antialiased !important;
+	height:100%;
+}
+body {
+	color: #686868;
+	background: #f5f5f5;
+	font-family: 'Open Sans', sans-serif; 
+}
+
+// Outlines
+// -------------------------
+
+*, a:focus { outline: none !important; }
+button:focus { outline: none !important; }
+button::-moz-focus-inner { border: 0; }
+
+ul {
+	padding: 0;
+	&.list-regular {
+		padding-left: 20px;
+		.list-regular {
+			padding-left: 40px;
+		}
+	}
+}
+
+#content {
+	h1,h2,h3 {
+		font-family: 'Roboto', sans-serif;
+		margin: 0;
+		&.content-heading {
+			font-size: 24px;
+			text-transform: uppercase;
+			padding: 15px 0;
+		}
+		span { font-size: 60%; color: #ccc; font-weight: normal; }
+	}
+	> h1, > h2, > h3 {
+		&, &.content-heading {
+			padding: 15px;
+		}
+	}
+	.col-table > .content-heading {
+		padding: 15px;
+	}
+	.innerAll {
+		> h1, > h2, > h3 {
+			&, &.content-heading {
+				padding: 0 0 15px;
+			}
+		}
+	}
+}
+
+h4, h5, h6 {
+	margin-top: 0;
+	&.separator {
+		margin-bottom: 0;
+	}
+}
+
+a, a:hover {
+	color: @primaryColor;
+}
+
+.borderB { border-bottom:1px solid @navbar-top-separator;}

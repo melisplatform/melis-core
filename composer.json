@@ -1,0 +1,11 @@
+{
+  "name": "melisplatform/melis-core",
+  "type": "library",
+  "license": "OSL-3.0",
+  "homepage": "https://github.com/melisplatform/melis-core",
+  "autoload": {
+    "psr-4": {
+      "MelisCore\\": "src/"
+    }
+  }
+}

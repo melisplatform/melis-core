@@ -1,0 +1,14 @@
+
+<div id="rights-fancytree">
+
+</div>
+
+<?php 
+echo $this->melisModalInvoker()->render(
+    array(
+        'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+        'class' => 'btn btn-danger pull-left'
+    ), 'dismiss');
+?>
+
+<button type="button" class="btn btn-success pull-right" id="btnEditRights"><i class="fa fa-save"></i>  <?= $this->translate('tr_meliscore_tool_user_update'); ?></button>

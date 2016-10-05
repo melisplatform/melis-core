@@ -1,0 +1,47 @@
+<?php
+
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$namePlugin = '';
+	if (!empty($this->zoneconfig['conf']['name']))
+		$namePlugin = ' data-title="' . $this->zoneconfig['conf']['name'] . '"';
+	$data_melisKey = $this->melisKey;
+		
+	$primaryLangImgPath = $this->flagImagePath. $this->currentLangLocale.'.png';
+?>
+<li<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="dropdown" <?= $namePlugin; ?>>
+	<a href="#" class="dropdown-toggle dropdown-hover">
+		<?php if (!file_exists($primaryLangImgPath)):?>
+			<span style="padding: 0px 3px; border: 1px solid #ccc5c5; box-shadow: 0px 1px 1px #444444;"><?php echo mb_strtoupper($this->currentLangLocale)?></span>
+		<?php else:?>
+			<span class="langimg-cont"><img src="/MelisCore/assets/images/lang/<?= $this->currentLangLocale; ?>.png"></span>
+		<?php endif;?>
+		
+	</a> 
+	<ul class="dropdown-menu">
+		<?php 
+		
+			foreach ($this->languages as $language):
+				$name = $language['lang_name'];
+				if ($this->currentLangId == $language['lang_id'])
+					$name = '<b>' . $name . '</b>';
+				
+				$lang = explode('_', $language['lang_locale']);
+				
+                $imgPath = $this->flagImagePath.'/'. $lang[0].'.png';
+		?>
+		<li class="active">
+			
+			<a href="" onclick="melisChangeLanguage(<?= $language['lang_id']; ?>); return false;">
+				<?php if (!file_exists($imgPath)):?>
+					<span style="padding: 0px 3px; border: 1px solid #ccc5c5; box-shadow: 0px 1px 1px #444444;"><?php echo mb_strtoupper($lang[0])?></span> <?= $name; ?>
+				<?php else:?>
+					<img src="/MelisCore/assets/images/lang/<?= $lang[0]; ?>.png"> <?= $name; ?>
+				<?php endif;?>
+			</a>
+			
+		</li>
+		<?php endforeach;?>
+	</ul>
+</li>

@@ -1,0 +1,40 @@
+<?php
+
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$data_melisKey = $this->melisKey;
+		
+?>
+<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="user-profile media innerAll">
+	<a href="" class="pull-left">
+		<img src="/melis/MelisCore/MelisAuth/getProfilePicture" alt="" class="img-circle" id="meliscore_left_menu_profile_pic">
+	<!-- 	<span class="badge badge-primary">2</span>  -->
+	</a>
+	<div class="media-body">
+		<a href="" class="strong">
+			<?php 
+			     if (!empty($this->userAuthDatas))
+			     {    
+			?>
+			<?= $this->userAuthDatas->usr_firstname;?> <?= $this->userAuthDatas->usr_lastname;?>
+			<?php 
+			     }
+			?>
+		</a>
+		<p class="text-success">
+			<i class="fa fa-fw fa-circle"></i> <?= $this->translate('tr_meliscore_common_online'); ?>
+		</p>
+	</div>
+	<ul>
+		 
+		<li class="active">
+    		<a href="#modal-user-management" id="btnUserInfoEdit">
+    			<i class="fa fa-fw fa-user"></i>
+    		</a>
+		</li> 
+		<!--<li><a href=""><i class="fa fa-fw fa-envelope"></i></a></li>
+		-->
+		<li><a href="melis/logout" title="<?= $this->translate('tr_meliscore_header_logout'); ?>"><i class="fa fa-fw fa-lock"></i></a></li>  
+	</ul> 
+</div>

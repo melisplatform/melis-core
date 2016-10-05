@@ -1,0 +1,26 @@
+// Twitter
+// ---------------------------
+
+.jstwitter {
+    position: relative;
+	.item { overflow:hidden; background: @widgetBgGray; }
+	.tweet-wrapper {
+	    -webkit-box-sizing:border-box;
+	    -moz-box-sizing:border-box;
+	    box-sizing:border-box;
+	    line-height:16px;
+	    padding: @spacing;
+	}
+	.widget-body { padding: 0; }
+	.item a { text-decoration: none; }
+	.item img { width:100%; }
+	.item .thumb { padding: 0; border: none; }
+	.item a:hover { text-decoration: underline; }
+	.item .text { display:block; }
+	.item .time,
+	.item .user {
+	    font-style: italic;
+	    color: #999;
+	}
+	.item.active { display: block; }
+}

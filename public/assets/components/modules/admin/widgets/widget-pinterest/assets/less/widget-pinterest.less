@@ -1,0 +1,30 @@
+// Pinterest style widget
+// ---------------------------
+.widget-pinterest {
+	.widget-body {
+		padding: 0;
+		.description {
+		    -webkit-box-sizing:border-box;
+		    -moz-box-sizing:border-box;
+		    box-sizing:border-box;
+		    line-height:16px;
+		    padding: @spacing;
+		}
+		.thumb { 
+			padding: 0; 
+			border: none; 
+			img { 
+				width:100%; 
+				.rounded(5px, 5px, 0, 0); 
+			} 
+		}
+	}
+}
+[data-gridalicious-gutter="0"] {
+	.widget-pinterest {
+		margin-bottom: @spacing !important;
+	}
+	.galcolumn:not(:first-of-type) {
+		.widget-pinterest { margin-left: @spacing; }
+	}
+}

@@ -1,0 +1,30 @@
+<?php
+
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$data_melisKey = $this->melisKey;
+	
+	$tagsOpening = 'class="disable-widget-hover"';
+	if ($this->toolIsAccessible)
+	{
+		$tagsOpening = 'class="melis-opentooltreeview" data-tool-name="' . $this->toolName . '" data-tool-id="' . $this->toolId . '" data-tool-meliskey="' . $this->toolMelisKey . '"';
+	}
+?>
+<div class="tab-pane" <?= $id; ?>>
+	<ul class="list">
+		<?php 
+			foreach ($this->users as $user)
+			{
+				$name = $user['usr_firstname'] . ' ' . $user['usr_lastname'];
+		?>
+		<li <?= $tagsOpening; ?>>
+			<span ><?= $user['usr_last_login_date']; ?> : 
+			<span class="ra-username"><?= $name; ?></span> <?= $this->translate('tr_meliscore_dashboard_recent_activity_Logged in'); ?>.</span>
+			<div class="clearfix"></div>
+		</li>
+		<?php 
+			}
+		?>				
+	</ul>
+</div>

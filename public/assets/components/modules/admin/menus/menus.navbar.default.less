@@ -1,0 +1,23 @@
+.navbar.main {
+	&.navbar-default {
+		background-color: @navbarBg;
+		border-bottom: 1px solid #eaeaea;
+		.dropdown-toggle {
+			color: #585858;
+			&:hover { 
+				color:#585858; 
+				text-decoration: none; 
+			}
+		}
+		.navbar-form input { background-color: #ededed; }
+		.nav > li {   
+			border-left: 1px solid @navbar-top-separator;
+			> a { color:#585858; }
+			&.lang { background-color: @navbar-top-separator; }
+			a.menu-icon {
+				> i { color:#e5e5e5; }
+				&:hover i { color:#fff; }
+			}
+		}
+	}
+}

@@ -1,0 +1,49 @@
+<?php
+
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$data_melisKey = $this->melisKey;
+?>
+
+
+<div data-melisKey='<?= $data_melisKey; ?>'<?= $id; ?> class="tab-pane container-level-a">
+							
+	<!--<div class="content-nav-tabs nav-tabs-fixed-top heading-buttons bg-white border-bottom clearfix" id="id-wrap-maintabs-tabs">
+		<h1 id="page-title" class="bg-white content-heading border-bottom page-title">Dashboard</h1>
+	</div> -->
+	<!-- Tab content 1 -->
+	<div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2" id="id-maintabs-home">
+	    <div class="row">
+	    <?php
+	    	if (!$this->isAccessible)
+	    		echo $this->translate('tr_meliscore_rights_Not allowed dashboard');
+	    	else
+	    	{
+	    		if (!empty($this->zoneconfig['interface']))
+	    		{
+	    			foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+	    			{
+	    				$width = 3;
+	    				if (!empty($menuConfig['conf']['width']))
+	    					$width = $menuConfig['conf']['width'];
+	    				$height = 'dashboard-small';
+	    				if (!empty($menuConfig['conf']['height']))
+	    					$height = $menuConfig['conf']['height'];
+	    				$class = '';
+	    				if (!empty($menuConfig['conf']['class']))
+	    					$class = $menuConfig['conf']['class'];
+		?>
+				    	<div class="col-xs-12 col-lg-<?= $width; ?>">
+    				    	<div class="widget widget-inverse <?= $height; ?> <?= $class; ?>">
+    				    		<?= $this->$keyConfig; ?>
+    						</div>
+    					</div>
+    	<?php 
+    				}
+    			}
+	    	}
+	    ?>
+		</div>
+	</div>
+</div>

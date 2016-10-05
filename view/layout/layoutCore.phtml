@@ -1,0 +1,115 @@
+
+<?php  
+$loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
+
+?>
+<?php echo $this->doctype(); ?>
+<!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html class="ie lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html class="ie lt-ie9"> <![endif]-->
+<!--[if gt IE 8]> <html> <![endif]-->
+<!--[if !IE]><!-->
+<html>
+<!-- <![endif]-->
+	<head>
+        <meta charset="utf-8">
+		<?= $this->headTitle('MELIS Platform V2.0'); ?>
+        <?= $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+        <!--[if lt IE 9]>
+		<link rel="stylesheet" href="../assets/components/library/bootstrap/css/bootstrap.min.css"/><![endif]-->
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
+		        
+		<!-- fonts -->  
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+		      
+        <?php 
+            if (!$this->isLogin && !$this->isMelisInstallerRoute)
+                $pluginsFiles = $this->MelisCoreHeadPlugin();
+            else    
+                $pluginsFiles = $this->MelisCoreHeadPlugin('/meliscore_login');
+        	
+        	foreach ($pluginsFiles['css'] as $cssFile) {
+        	    if(strpos($cssFile, 'MelisInstaller') === false) {
+        	        $this->headLink()->appendStylesheet($this->basePath($cssFile));
+        	    }
+        	}
+        		
+        	echo $this->headLink();
+		?>
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script><![endif]-->
+		<script>
+		 var basePath = '',
+		 commonPath = '../assets/',
+		 rootPath = '../',
+		 DEV = false,
+		 componentsPath = '../assets/components/';
+		
+		 var primaryColor = '#cb4040',
+		 dangerColor = '#b55151',
+		 infoColor = '#466baf',
+		 successColor = '#8baf46',
+		 warningColor = '#ab7a4b',
+		 inverseColor = '#45484d';
+		
+		 var themerPrimaryColor = primaryColor;
+
+		 
+		</script>
+		
+		<?php
+//         	$this->headScript()->prependFile($this->basePath('jquery-1.11.3.js'));
+        	foreach ($pluginsFiles['js'] as $jsFile) {
+        	    if(strpos($jsFile, 'MelisInstaller') === false) {
+        	        $this->headScript()->appendFile($this->basePath($jsFile));
+        	    }
+        	}
+        		
+        ?>
+        
+         <!-- Login page backgroun <style> -->
+	     <?php 
+	     	echo '
+                 <style>
+    
+    	     	 body.login-page{
+    	     	    background: url(../' . $this->login_background . ') fixed no-repeat;
+    	     	    background-size: cover;
+    	     	    height: 100%;
+    	     	 }
+    
+                 </style>' ;
+	     ?>
+        
+	</head>
+	<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>">
+		
+		<?= $this->content; ?>
+		
+		
+		<?php 
+		// load callbacks
+// 		if (!empty($this->jsCallBacks))
+// 		{
+// 		    $this->headScript()->captureStart();
+// 		    echo '$(document).ready(function() {' . "\r\n";
+// 		    foreach ($this->jsCallBacks as $jsCallback)
+// 		        echo $jsCallback . "\r\n";
+// 		        echo '});';
+// 		        $this->headScript()->captureEnd();
+// 		}
+        if(!$this->isMelisInstallerRoute)
+		  echo $this->headScript();
+		?>
+		
+		<!-- modals container -->
+		<div id="melis-modals-container"></div>
+		
+	</body>
+</html>

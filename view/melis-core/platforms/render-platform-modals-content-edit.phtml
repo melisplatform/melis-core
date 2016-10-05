@@ -1,0 +1,18 @@
+<div id="platformeditalert"></div>
+<span id="platformupdateid" class="hidden"></span>
+<div id="formplatformedit">
+<?php 
+$form = $this->meliscore_platform_generic_form;
+echo $this->form()->openTag($form);
+echo $this->melisFieldCollection($form);
+echo $this->form()->closeTag();
+
+echo $this->melisModalInvoker()->render(
+    array(
+        'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+        'class' => 'btn btn-danger pull-left'
+    ), 'dismiss');
+?>
+
+<a class="btn btn-success pull-right" id="btnPlatformEdit"><i class="fa fa-save"></i>  <?= $this->translate('tr_meliscore_tool_platform_forms_button_edit'); ?></a>
+</div>
