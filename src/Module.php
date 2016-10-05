@@ -226,8 +226,8 @@ class Module
     	$container = new Container('meliscore');
     	$locale = $container['melis-lang-locale'];
     	
-    	$translator->addTranslationFile('phparray', __DIR__ . '/language/' . $locale . '.interface.php');
-    	$translator->addTranslationFile('phparray', __DIR__ . '/language/' . $locale . '.forms.php');
+    	$translator->addTranslationFile('phparray', __DIR__ . '/../language/' . $locale . '.interface.php');
+    	$translator->addTranslationFile('phparray', __DIR__ . '/../language/' . $locale . '.forms.php');
     	
     	$lang = explode('_', $locale);
     	$lang = $lang[0];
