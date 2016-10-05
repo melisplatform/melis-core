@@ -256,12 +256,12 @@ class Module
     {
     	$config = array();
     	$configFiles = array(
-			include __DIR__ . '/config/module.config.php',
-			include __DIR__ . '/config/app.interface.php',
-			include __DIR__ . '/config/app.forms.php',
-	        include __DIR__ . '/config/app.tools.php',
-	        include __DIR__ . '/config/app.emails.php',
-	        include __DIR__ . '/config/diagnostic.config.php',
+			include __DIR__ . '/../config/module.config.php',
+			include __DIR__ . '/../config/app.interface.php',
+			include __DIR__ . '/../config/app.forms.php',
+	        include __DIR__ . '/../config/app.tools.php',
+	        include __DIR__ . '/../config/app.emails.php',
+	        include __DIR__ . '/../config/diagnostic.config.php',
     	);
     	
     	
@@ -438,17 +438,6 @@ class Module
     					},
     			),
     	); 
-    }
-
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
     }
     
     public function getViewHelperConfig()
