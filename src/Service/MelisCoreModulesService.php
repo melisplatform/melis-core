@@ -99,6 +99,8 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
             return $package->getExtra()['module-name'];
         }, $packages);
         
+        sort($modules);
+        
         return $modules;
     }
      
