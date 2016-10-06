@@ -270,7 +270,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     
     public function getTranslationsLocale() 
     {
-        $path = MELIS_MODULES_FOLDER.'MelisCore/language/';
+        $path = __DIR__ . '/../../language/';
         $dir  = scandir($path);
         $files = array();
         foreach($dir as $file) {
