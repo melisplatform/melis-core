@@ -1,5 +1,6 @@
 {
   "name": "melisplatform/melis-core",
+  "description": "Melis Platform Core module",
   "type": "melisplatform-module",
   "license": "OSL-3.0",
   "homepage": "https://github.com/melisplatform/melis-core",

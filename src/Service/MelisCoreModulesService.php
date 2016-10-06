@@ -8,6 +8,7 @@
 
 namespace MelisCore\Service;
 
+use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\NullIO;
 use Composer\Package\CompletePackage;
@@ -15,10 +16,16 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Config\Config;
 use Zend\Config\Writer\PhpArray;
+
 class MelisCoreModulesService implements ServiceLocatorAwareInterface 
 {
     
     public $serviceLocator;
+
+    /**
+     * @var Composer
+     */
+    protected $composer;
     
     public function setServiceLocator(ServiceLocatorInterface $sl)
     {
@@ -29,6 +36,34 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     public function getServiceLocator()
     {
         return $this->serviceLocator;
+    }
+
+    /**
+     * @param Composer $composer
+     * @return $this
+     */
+    public function setComposer(Composer $composer)
+    {
+        $this->composer = $composer;
+        
+        return $this;
+    }
+
+    /**
+     * @return Composer
+     */
+    public function getComposer()
+    {
+        if (is_null($this->composer)) {
+            // required by composer factory but not used to parse local repositories
+            if (!isset($_ENV['COMPOSER_HOME'])) {
+                putenv("COMPOSER_HOME=/tmp");
+            }
+            $factory = new Factory();
+            $this->setComposer($factory->createComposer(new NullIO())); 
+        }
+        
+        return $this->composer;
     }
     
     /**
@@ -48,18 +83,11 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
     /**
      * Returns all melisplatform-module packages loaded by composer
-     * @todo write code
      * @return array
      */
     public function getVendorModules()
     {
-        if (!isset($_ENV['COMPOSER_HOME'])) {
-            putenv("COMPOSER_HOME=/tmp");
-        }
-        $factory = new Factory();
-        $composer = $factory->createComposer(new NullIO());
-        
-        $repos = $composer->getRepositoryManager()->getLocalRepository();
+        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
         
         $packages = array_filter($repos->getPackages(), function($package) {
             /** @var CompletePackage $package */
