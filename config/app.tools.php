@@ -27,11 +27,6 @@ return array(
                         'ajaxCallback' => 'initRetrieveUser()', 
                         'filters' => array(
                             'left' => array(
-                                'tooluser-search' => array(
-                                    'module' => 'MelisCore',
-                                    'controller' => 'ToolUser',
-                                    'action' => 'render-tool-user-content-filters-search'
-                                ),
                                 'tooluser-limit' => array(
                                     'module' => 'MelisCore',
                                     'controller' => 'ToolUser',
@@ -39,7 +34,11 @@ return array(
                                 ),
                             ),
                             'center' => array(
-                            
+                                'tooluser-search' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'ToolUser',
+                                    'action' => 'render-tool-user-content-filters-search'
+                                ),
                             ),
                             'right' => array(
                                 'tooluser-export' => array(

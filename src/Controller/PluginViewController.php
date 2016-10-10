@@ -108,6 +108,8 @@ class PluginViewController extends AbstractActionController
 			else 
 				$datas['melisKey'] = $fullKey;
 			
+			$datas['zoneconfig'] = $itemConfig;
+				
 			// Get the view
 			try
 			{

@@ -19,20 +19,28 @@ if (!empty($this->zoneconfig['conf']['id']))
             	
             	
             	<div class="module-sortable">
-            		<?php foreach($this->modules as $moduleName => $moduleStatus): ?>
-                    <div class="module-cont clearfix">
-    
-                    		<h4><?= $moduleName; ?></h4>
-    
-    						<div data-module-name="<?= $moduleName; ?>" class="make-switch module-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
-    							<?php 
-    							$status = $moduleStatus > 0 ? 'checked' : '';
-    							?>
-    							<input name="<?= $moduleName; ?>" data-module-name="<?= $moduleName; ?>" type="checkbox" <?= $status; ?>/>
-    						</div>
-    
-                	</div>
-                	<?php endforeach; ?>
+            		<?php
+            		  if (!empty($this->modules))
+            		  {
+                		  foreach($this->modules as $moduleName => $moduleStatus)
+                		  {    
+            		          ?>
+                                <div class="module-cont clearfix">
+                
+                                		<h4><?= $moduleName; ?></h4>
+                
+                						<div data-module-name="<?= $moduleName; ?>" class="make-switch module-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
+                							<?php 
+                							$status = $moduleStatus > 0 ? 'checked' : '';
+                							?>
+                							<input name="<?= $moduleName; ?>" data-module-name="<?= $moduleName; ?>" type="checkbox" <?= $status; ?>/>
+                						</div>
+                
+                            	</div>
+                            	<?php
+                		  }
+            		  }
+                	?>
             	</div>
             	
             </div>

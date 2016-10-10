@@ -23,8 +23,8 @@ use MelisCalendar\Service\MelisCalendarService;
 class ModulesController extends AbstractActionController
 {
     
-    const MODULE_LOADER_FILE     = 'module/MelisModuleConfig/config/module.load.php';
-    private $exclude_modules     = array('AssetManager', 'MelisCore', 'MelisModuleConfig', '.', '..', 'MelisSites', 'MelisEngine', 'MelisInstaller', 'MelisFront', '.gitignore');
+    const MODULE_LOADER_FILE     = 'config/melis.module.load.php';
+    private $exclude_modules     = array('AssetManager', 'MelisCore', '.', '..', 'MelisSites', 'MelisEngine', 'MelisInstaller', 'MelisFront', '.gitignore');
     
     /**
      * Main Tool Container
@@ -149,7 +149,7 @@ class ModulesController extends AbstractActionController
     
         $modules = array();
         $modulesList = null;
-        $moduleLoadFile = file_exists(self::MODULE_LOADER_FILE) ? include(self::MODULE_LOADER_FILE) : $this->getModuleSvc()->getModulePlugins();
+        $moduleLoadFile = file_exists(self::MODULE_LOADER_FILE) ? include(self::MODULE_LOADER_FILE) : $this->getModuleSvc()->getModulePlugins(array('MelisModuleConfig'));
 
         $modules = $moduleLoadFile;
         foreach($modules as $index => $modValues) {
@@ -189,7 +189,7 @@ class ModulesController extends AbstractActionController
      */
     protected function createModuleLoaderFile($modules = array())
     {
-        $status = $this->getModuleSvc()->createModuleLoader('module/MelisModuleConfig/config/', $modules, array('AssetManager','meliscore', 'melisfront', 'melisengine'));
+        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('AssetManager','meliscore', 'melisfront', 'melisengine'));
         return $status;
     }
 

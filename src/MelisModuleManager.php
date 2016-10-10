@@ -16,19 +16,17 @@ namespace MelisCore;
  * @package    MelisCore
  * @license    https://opensource.org/licenses/OSL-3.0 Open Software License v. 3.0
  */
-class ModuleManager
+class MelisModuleManager
 {
     /**
      * @return array
      */
     public static function getModules()
     {
-        $rootMelisConfig =  MELIS_MODULE_CONFIG_FOLDER . '/MelisModuleConfig';
-        $rootMelisSites = MELIS_MODULE_CONFIG_FOLDER . '/MelisSites';
-
+        $rootMelisSites = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
 
         $modules = array();
-        $modulesMelisBackOffice = include $rootMelisConfig . '/config/module.load.php';
+        $modulesMelisBackOffice = include $_SERVER['DOCUMENT_ROOT'] . '/../config/melis.module.load.php';
 
         if (array_key_exists('REQUEST_URI', $_SERVER)) {
             $uri = $_SERVER['REQUEST_URI'];

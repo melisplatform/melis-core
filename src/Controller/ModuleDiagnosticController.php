@@ -7,6 +7,7 @@ use Zend\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
 use Zend\Session\Container;
 use Zend\Json\Json;
+
 class ModuleDiagnosticController extends AbstractActionController
 {
 
@@ -25,7 +26,19 @@ class ModuleDiagnosticController extends AbstractActionController
     public function toolContentAction()
     {
         $view = new ViewModel();
-        $view->modules = $this->getAvailableModules();
+        $modules = $this->getAvailableModules();
+        
+        if (in_array('MelisModuleConfig', $modules))
+        {
+            $tmpMods = array();
+            foreach ($modules as $module)
+                if ($module != 'MelisModuleConfig')
+                    array_push($tmpMods, $module);
+            $modules = $tmpMods;
+        }
+
+        $view->modules = $modules;
+        
         return $view;
     }
     
@@ -52,8 +65,8 @@ class ModuleDiagnosticController extends AbstractActionController
         if($this->getRequest()->isPost()) {
 
             $module = $this->getRequest()->getPost('module');
-            $modPath = $this->getModuleSvc()->getModulePath($module, false);
-            //echo $modPath;
+            $modPath = $this->getModuleSvc()->getModulePath($module, true);
+            
             array_push($messages, array('success' => 1, 'message' => $this->getText('tr_melis_module_diag_check_rights', $module)));
             
             if($module && file_exists($modPath)) {

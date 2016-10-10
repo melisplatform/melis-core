@@ -294,7 +294,7 @@ var melisHelper = (function(){
     }
     
     // CREATE MODAL =================================================================================================================
-    function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl){
+    function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl, callback){
     	
     	// if no modalUrl is supplied it will use the default modal layout from melisCore
     	if(modalUrl === undefined || modalUrl == null){
@@ -322,6 +322,10 @@ var melisHelper = (function(){
 			
 			
 			$("#" + modalID).modal({ show: true });
+			if(typeof callback !== "undefined") {
+				callback();
+			}
+			
 
     	}).error(function(xhr, textStatus, errorThrown){
     		alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);

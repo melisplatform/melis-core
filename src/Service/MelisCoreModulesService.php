@@ -71,14 +71,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      */
     public function getAllModules()
     {
-        // Returns all the modules from both possible directories of modules
-        $userModules = MELIS_MODULE_CONFIG_FOLDER;
-        $modules = array();
-        if($this->checkDir($userModules)) {
-            $modules = array_merge($this->getDir($userModules), $this->getVendorModules());
-        }
-        
-        return $modules;
+        return array_merge($this->getUserModules(), $this->getVendorModules());
     }
 
     /**
@@ -91,7 +84,8 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         
         $packages = array_filter($repos->getPackages(), function($package) {
             /** @var CompletePackage $package */
-            return $package->getType()==='melisplatform-module' && array_key_exists('module-name', $package->getExtra());
+            return $package->getType()==='melisplatform-module' && 
+                    array_key_exists('module-name', $package->getExtra());
         });
         
         $modules = array_map(function ($package) {
@@ -103,6 +97,19 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         
         return $modules;
     }
+    
+    public function getUserModules()
+    {
+        $userModules = $_SERVER['DOCUMENT_ROOT'] . '/../module';
+        
+        $modules = array();
+        if($this->checkDir($userModules)) {
+            $modules = $this->getDir($userModules);
+        }
+        
+        return $modules;
+    }
+    
      
     /**
      * Returns all the important modules
@@ -117,7 +124,6 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
             'melisengine' => 'MelisEngine',
             'melisfront' => 'MelisFront',
             'melissites' => 'MelisSites',
-            'melismoduleconfig' => 'MelisModuleConfig',
         );
         
         if($excludeModulesOnReturn) {
@@ -137,19 +143,63 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      */
     public function getModulePath($moduleName, $returnFullPath = true) 
     {
-        $path = '';
-        $userModules = MELIS_MODULE_CONFIG_FOLDER;
-        if(in_array($moduleName, $this->getAllModules())) {
-            if($this->checkDir($userModules.$moduleName)) {
-                if(!$returnFullPath) {
-                    $path = $userModules.$moduleName;
-                }
-                else {
-                    $path = $_SERVER['DOCUMENT_ROOT'].'/../'.$userModules.$moduleName;
+        $path = $this->getUserModulePath($moduleName, $returnFullPath);
+        if ($path == '')
+            $path = $this->getComposerModulePath($moduleName, $returnFullPath);
+        
+        return $path;    
+    }
+    
+    public function getComposerModulePath($moduleName, $returnFullPath = true)
+    {
+        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
+        $packages =   $repos->getPackages();
+    
+        if (!empty($packages))
+        {
+            foreach ($packages as $repo)
+            {
+                if ($repo->getType() == 'melisplatform-module')
+                {
+                    if (array_key_exists('module-name', $repo->getExtra())
+                        && $moduleName == $repo->getExtra()['module-name'])
+                    {
+                        foreach ($repo->getRequires() as $require)
+                        {
+                            $source = $require->getSource();
+                            
+                            if ($returnFullPath)
+                                return $_SERVER['DOCUMENT_ROOT'] . '/../vendor/' . $source;
+                            else
+                                return '/vendor/' . $source;
+                        }
+                    }
                 }
             }
         }
-
+    
+        return '';
+    }
+    
+    public function getUserModulePath($moduleName, $returnFullPath = true) 
+    {
+        $path = '';
+        $userModules = $_SERVER['DOCUMENT_ROOT'] . '/../';
+        
+        if (in_array($moduleName, $this->getUserModules())) 
+        {
+            if ($this->checkDir($userModules.'module/'.$moduleName)) 
+            {
+                if (!$returnFullPath) 
+                {
+                    $path = '/module/'.$moduleName;
+                }
+                else {
+                    $path = $userModules.'module/'.$moduleName;
+                }
+            }
+        }
+        
         return $path;
     }
     
@@ -191,10 +241,10 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      * Creates module loader file
      * @param unknown $pathToStore
      */
-    public function createModuleLoader($pathToStore, $modules = array(), $topModules = array('meliscore', 'melisfront', 'melisengine'), $bottomModules = array('melismoduleconfig'))
+    public function createModuleLoader($pathToStore, $modules = array(), $topModules = array('meliscore', 'melisfront', 'melisengine'), $bottomModules = array())
     {
-        $tmpFileName = 'module.load.php.tmp';
-        $fileName = 'module.load.php';
+        $tmpFileName = 'melis.module.load.php.tmp';
+        $fileName = 'melis.module.load.php';
         if($this->checkDir($pathToStore)) {
             $coreModules = $this->getCoreModules();    
             $topModules = array_reverse($topModules);

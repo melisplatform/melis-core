@@ -97,7 +97,15 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     
     public function getTranslatedMessageByLocale($locale = 'en_EN')
     {
-        $moduleFolders = array_diff(scandir(MELIS_MODULES_FOLDER), array('.','..','.gitignore'));
+        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modules = $modulesSvc->getAllModules();
+        
+        $moduleFolders = array();
+        foreach ($modules as $module)
+        {
+            array_push($moduleFolders, $modulesSvc->getModulePath($module));
+        }
+        
         $transMessages = array();
         $tmpTrans = array();
         
@@ -107,10 +115,10 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         );
         
         foreach($moduleFolders as $module) {
-            if(file_exists(MELIS_MODULES_FOLDER.$module.'/language')) {
+            if(file_exists('/language')) {
                 foreach($transFiles as $file) {
-                    if(file_exists(MELIS_MODULES_FOLDER.$module.'/language/'.$file)) {
-                        $tmpTrans[] = include(MELIS_MODULES_FOLDER.$module.'/language/'.$file);
+                    if(file_exists('/language/'.$file)) {
+                        $tmpTrans[] = include('/language/'.$file);
                     }
                 }
             }
@@ -195,18 +203,22 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $transForms     = $locale.'.forms.php';
         $excludeModules = array('.', '..', '.gitignore', 'MelisSites');
         $modules = array();
-        $modDir  = scandir('module');
         
-        foreach($modDir as $moduleName) {
+
+        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modules = $modulesSvc->getAllModules();
         
-            if(!in_array($moduleName, $excludeModules)) {
-                $modules[] = $moduleName.'/language';
+        foreach ($modules as $moduleName)
+        {
+            if(!in_array($moduleName, $excludeModules)) 
+            {
+                $pathModule = $modulesSvc->getModulePath($moduleName);
+                $modules[] = $pathModule.'/language';
             }
-        
         }
         
         foreach($modules as $translationPath) {
-            $truePath = MELIS_MODULES_FOLDER.$translationPath;
+            $truePath = $translationPath;
             if(is_writable($truePath)) {
                 if(!file_exists($truePath.'/'.$transInterface)) {
                     if(file_exists($truePath.'/'.$defaultTransInterface)) {
@@ -233,20 +245,25 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     public function getFilesByLocale($locale) 
     {
         $excludeModules = array('.', '..', '.gitignore', 'MelisSites');
-        $modDir  = scandir(MELIS_MODULES_FOLDER);
         $modules = array();
-        $translationFiles = array();
-        foreach($modDir as $moduleName) {
-            
-            if(!in_array($moduleName, $excludeModules)) {
-                $modules[] = $moduleName.'/language';
+        
+        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modules = $modulesSvc->getAllModules();
+        
+        foreach ($modules as $moduleName)
+        {
+            if(!in_array($moduleName, $excludeModules))
+            {
+                $pathModule = $modulesSvc->getModulePath($moduleName);
+                $modules[] = $pathModule.'/language';
             }
-            
         }
+        
+        $translationFiles = array();
         
         foreach($modules as $translationPath) {
             
-            $truePath = MELIS_MODULES_FOLDER.$translationPath;
+            $truePath = $translationPath;
             
             if(file_exists($truePath)) {
                 $path = scandir($truePath);
@@ -270,7 +287,11 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     
     public function getTranslationsLocale() 
     {
-        $path = __DIR__ . '/../../language/';
+        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modules = $modulesSvc->getAllModules();
+        $modulePath = $modulesSvc->getModulePath('MelisCore');
+        
+        $path = $modulePath.'/language/';
         $dir  = scandir($path);
         $files = array();
         foreach($dir as $file) {

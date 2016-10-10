@@ -15,16 +15,6 @@ return array(
                         'module' => 'MelisCore'
                     )
                 ),
-      
-                'fileCreationTest' => array(
-                    'controller' => 'Diagnostic',
-                    'action' => 'fileCreationTest',
-                    'payload' => array(
-                        'label' => 'tr_melis_module_basic_action_test',
-                        'path' => MELIS_MODULES_FOLDER.'MelisCore/public/',
-                        'file' => 'test_file_creation.txt'
-                    ),
-                ),
                 
                 'checkImportantFolders' => array(
                     'controller' => 'Diagnostic',

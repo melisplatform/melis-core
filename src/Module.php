@@ -3,7 +3,7 @@
 /**
  * Melis Technology (http://www.melistechnology.com)
  *
- * @copyright Copyright (c) 2015 Melis Technology (http://www.melistechnology.com)
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
  *
  */
 
@@ -50,6 +50,7 @@ use MelisCore\Model\Tables\MelisBOEmailsDetailsTable;
 use MelisCore\Model\MelisBOEmailsDetails;
 
 use Zend\ServiceManager;
+
 class Module
 {   
     public function onBootstrap(MvcEvent $e)
@@ -438,6 +439,17 @@ class Module
     					},
     			),
     	); 
+    }
+
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                ),
+            ),
+        );
     }
     
     public function getViewHelperConfig()

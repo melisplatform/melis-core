@@ -749,7 +749,14 @@ class EmailsManagementController extends AbstractActionController
                 // Only allow files that exist in ~both~ directories
                 $layoutPathValidator = new \Zend\Validator\File\Exists();
                 
-                if (!$layoutPathValidator->isValid(__DIR__ .'/../../../..'.$datas['boe_content_layout'])) {
+                $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+                $layout = $datas['boe_content_layout'];
+                $nameModuleTab = explode('/', $layout);
+                $nameModule = $nameModuleTab[1];
+                $path = $modulesSvc->getModulePath($nameModule);
+                $layout = $path . str_replace($nameModule, '', $layout);
+                
+                if (!$layoutPathValidator->isValid($layout)) {
                     $layoutPathError['boe_content_layout'] = array(
                         'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_path')
                         );
@@ -757,7 +764,7 @@ class EmailsManagementController extends AbstractActionController
                     // Allow files with 'php' or 'exe' extensions
                     $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
                     
-                    if (!$layoutExtensionValidator->isValid(__DIR__ .'/../../../..'.$datas['boe_content_layout'])) {
+                    if (!$layoutExtensionValidator->isValid($layout)) {
                         $layoutPathError['boe_content_layout'] = array(
                             'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_extension')
                         );

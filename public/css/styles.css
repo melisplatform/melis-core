@@ -2009,7 +2009,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
     .melis-tabprev,
     .melis-tabnext{
         float: left;
-        padding: 9.5px 10px;
+        padding: 9px 10px;
         font-size: 20px;
         color: #fff;
         background: #932E2A;
