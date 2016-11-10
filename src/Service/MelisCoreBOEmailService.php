@@ -292,9 +292,11 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	public function sendBoEmailByCode($codename, $tags, $email_to, $name_to = null, $langId = null) {
 	    
 	    // Getting the Current Dev. Environment
+	    $configPath = 'meliscore/datas';
 	    $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-	    $emailCfg = $melisConfig->getItem('meliscore/datas/'.getenv('MELIS_PLATFORM'));
+	    $emailCfg = $melisConfig->getItemPerPlatform($configPath);
 	    $emailActive = (isset($emailCfg['emails']['active'])) ? $emailCfg['emails']['active'] : 0;
+	    
 	    // Return FALSE if the email is not active
 	    if (!$emailActive){
 	        return FALSE;
@@ -358,23 +360,20 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	                    if (!empty($message_html)){
     	                    $layoutFlag = TRUE;
     	                    
-    	                    // Getting the Current Dev. Environment
-    	                    $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-    	                    $emailCfg = $melisConfig->getItem('meliscore/datas/'.getenv('MELIS_PLATFORM'));
-    	                    $host = $emailCfg['host'];
+    	                    
     	                    
     	                    if (!empty($layout)){
     	                        
     	                        $layoutPathValidator = new \Zend\Validator\File\Exists();
     	                         
     	                        
-    	                        if (!$layoutPathValidator->isValid(__DIR__ .'/../../../..'.$layout)) {
+    	                        if (!$layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)) {
     	                            $layoutFlag = FALSE;
     	                        }else{
     	                            // Allow file with '.phtml' extensions
     	                            $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
     	                             
-    	                            if (!$layoutExtensionValidator->isValid(__DIR__ .'/../../../..'.$layout)) {
+    	                            if (!$layoutExtensionValidator->isValid(__DIR__ .'/../../../'.$layout)) {
     	                                $layoutFlag = FALSE;
     	                            }
     	                        }
@@ -384,10 +383,12 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
             	                    $view       = new \Zend\View\Renderer\PhpRenderer();
             	                    $resolver   = new \Zend\View\Resolver\TemplateMapResolver();
             	                    $resolver->setMap(array(
-            	                        'mailTemplate' => __DIR__ .'/../../../..'.$layout,
+            	                        'mailTemplate' => __DIR__ .'/../../../'.$layout,
             	                    ));
             	                    $view->setResolver($resolver);
             	                     
+            	                    $host = $emailCfg['host'];
+            	                    
             	                    $viewModel  = new \Zend\View\Model\ViewModel();
             	                    $viewModel->setTemplate('mailTemplate')->setVariables(array(
             	                        'headerLogo' => $host.'/img/MelisTech.png',
@@ -409,7 +410,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
     	                        $view       = new \Zend\View\Renderer\PhpRenderer();
     	                        $resolver   = new \Zend\View\Resolver\TemplateMapResolver();
     	                        $resolver->setMap(array(
-    	                            'mailTemplate' => __DIR__ .'/../../../../MelisCore/view/layout/layoutEmailDefault.phtml',
+    	                            'mailTemplate' => __DIR__ .'/../../view/layout/layoutEmailDefault.phtml',
     	                        ));
     	                        $view->setResolver($resolver);
     	                        

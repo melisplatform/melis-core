@@ -46,6 +46,7 @@
 
 	    // Simple Texts
 	    'tr_meliscore_empty' => 'vide',
+	    'tr_meliscore_all' => 'Tous',
 			
 		// Languages
 		'tr_meliscore_header_language_Language' => 'Languages', 
@@ -165,12 +166,12 @@
 	    
 	    // DataTables Translations http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json
 	    'tr_meliscore_dt_sEmptyTable' => 'Aucune donn&eacute;e disponible dans le tableau',
-	    'tr_meliscore_dt_sInfo' => 'Affichage de l\'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments',
+	    'tr_meliscore_dt_sInfo' => 'Affichage de l\'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments',
 	    'tr_meliscore_dt_sInfoEmpty' => 'Affichage de l\'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments',
 	    'tr_meliscore_dt_sInfoFiltered' => ' ',
 	    'tr_meliscore_dt_sInfoPostFix' => ' ',
 	    'tr_meliscore_dt_sInfoThousands' => ' ',
-	    'tr_meliscore_dt_sLengthMenu' => 'Afficher _MENU_ &eacute;l&eacute;ments',
+	    'tr_meliscore_dt_sLengthMenu' => 'Afficher _MENU_',
 	    'tr_meliscore_dt_sLoadingRecords' => 'Chargement en cours...',
 	    'tr_meliscore_dt_sProcessing' => 'Traitement en cours...',
 	    'tr_meliscore_dt_sSearch' => 'Rechercher&nbsp;:',
@@ -193,7 +194,7 @@
 		'tr_meliscore_dashboard_Calendar' => 'Calendrier',
 	    
 	    // Date Picker
-	    'tr_meliscore_datepicker_select_date' => 'Choisissez une date: ',
+	    'tr_meliscore_datepicker_select_date' => 'Date: ',
 	    'tr_meliscore_datepicker_today' => 'Aujourd\'hui',
 	    'tr_meliscore_datepicker_yesterday' => 'Hier',
 	    'tr_meliscore_datepicker_last_7_days' => '7 derniers jours',
@@ -320,7 +321,7 @@
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email' => 'De l\'email',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to' => 'Répondre à',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Tags de remplacement acceptés',
-	    'tr_emails_management_emal_boe_code_name_must_be_unique' => 'Le nom de code existe déjà, essayez un autre',
+	    'tr_emails_management_emal_boe_code_name_must_be_unique' => 'Le code email existe déjà, veuillez en saisir un autre',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout' => 'Layout',
 	    // Emails Details Form
 	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject' => 'Sujet',
@@ -345,7 +346,16 @@
 	    'tr_emails_management_confirm_msg' => 'Etes-vous sûr de vouloir supprimer cet email?',
 	    'tr_emails_management_remove_merge_data_confirm_msg' => 'Etes-vous sûr de vouloir supprimer les données de la base de données qui sont fusionnées ou substituées à cet email?',
 	
-	    
+	    // Diagnostics
+	    'tr_melis_diagnostic_test_important_folders' => 'Testing MelisCore folders',
+	    'tr_melis_diagnostic_test_important_folders_writable' => '"%s" is writable',
+	    'tr_melis_diagnostic_test_important_folders_readable' => '"%s" is readable',
+	    'tr_melis_diagnostic_test_important_folders_not_writable' => '"%s" is not writable',
+	    'tr_melis_diagnostic_test_important_folders_not_readable' => '"%s" is not readable',
+	    'tr_melis_diagnostic_test_important_not_folder' => '"%s" is not a directory',
+	    'tr_melis_diagnostic_test_important_folders_exists_false' => '"%s" does not exists',
+	    'tr_melis_diagnostic_test_important_folders_failed' => 'Unable to run test, you don\'t have enough rights to execute this action',
+	    'tr_melis_diagnostic_test_empty' => 'Nothing to test, no folder(s) provided to test, please check diagnostic.config.php.',
 	    
 	    
 	    // Module Diagnostic Tool
@@ -398,6 +408,11 @@
 	    'tr_melis_test_db_table_test_failed' => 'Testing table "%s" failed, table does not exists',
 	     
 	    'tr_melis_module_controller_action_warn' => 'Please add diagnostic.config.php in your %s module',
+	    
+	    'tr_melis_diag_test_module_config_title' => 'Testing module config folder and melis.module.load file',
 	     
+	    // Tooltip messages
+	    'tr_meliscore_tool_tooltip_password' => 'Le mot de passe doit être d`au moins 8 caractères et doit contenir au moins une lettre ET un chiffre.',
+	    'tr_meliscore_tool_tooltip_password_2' => 'Confirmer le mot de passe',
 	);
 ?>

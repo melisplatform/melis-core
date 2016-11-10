@@ -579,6 +579,7 @@ class LanguageController extends AbstractActionController
         $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $key);
     
         return $isAccessible;
-    }
+    } 
+
 
 }

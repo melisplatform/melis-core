@@ -123,7 +123,7 @@ class ToolUserController extends AbstractActionController
 
         $columns = $melisTool->getColumns();
         // add action column
-        $columns['actions'] = array('text' => $translator->translate('tr_meliscms_action'), 'css' => 'width:10%');
+        $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'), 'css' => 'width:10%');
         
         
         $view = new ViewModel();
@@ -521,7 +521,8 @@ class ToolUserController extends AbstractActionController
                     {
                         $imageContent = null;
                         // create tmp folder if not exists
-                        $dirName = 'public/media/';
+                        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+                        $dirName = $moduleSvc->getComposerModulePath('MelisCore').'/public/images/profile/tmp/';
                         if(!file_exists($dirName) && is_writable($dirName)) {
                             $oldmask = umask(0);
                             mkdir($dirName, 0755);
@@ -633,7 +634,7 @@ class ToolUserController extends AbstractActionController
 
     	$response = array();
     	$this->getEventManager()->trigger('meliscore_tooluser_delete_start', $this, $response);
-    	
+    	$translator = $this->getServiceLocator()->get('translator');
         $id = 0;
         $success = 0;
         $textMessage = '';
@@ -653,8 +654,8 @@ class ToolUserController extends AbstractActionController
         }
 
         $response = array(
-            'textTitle' => 'tr_meliscore_tool_user_delete',
-            'textMessage' => $textMessage, 
+            'textTitle' => $translator->translate('tr_meliscore_tool_user_delete'),
+            'textMessage' => $translator->translate($textMessage), 
             'success' => $success
         );
         $this->getEventManager()->trigger('meliscore_tooluser_delete_end', $this, $response);
@@ -687,6 +688,7 @@ class ToolUserController extends AbstractActionController
                                     $data['usr_email'] = $userVal->usr_email;
                                     $data['usr_firstname'] = $userVal->usr_firstname;
                                     $data['usr_lastname'] = $userVal->usr_lastname;
+                                    $data['usr_lang_id'] = $userVal->usr_lang_id;
                                     $data['usr_image'] = $image;
                                     $data['usr_status'] = $userVal->usr_status;
                                     $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date));
@@ -886,7 +888,8 @@ class ToolUserController extends AbstractActionController
                 $imageContent = null;
                 
                 // create tmp folder if not exists
-                $dirName = 'public/media/';
+                $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+                $dirName = $moduleSvc->getComposerModulePath('MelisCore').'/public/images/profile/tmp/';
                 if(!file_exists($dirName) && is_writable($dirName)) {
                     $oldmask = umask(0);
                     mkdir($dirName, 0755);
@@ -1001,7 +1004,7 @@ class ToolUserController extends AbstractActionController
                         
                         $data['usr_login'] = $userInfo['usr_login'];
                         $data['usr_password'] = !empty($newPass) ? $newPass : $userInfo['usr_password'];
-                        $data['usr_lang_id'] = $userInfo['usr_lang_id'];
+                        // $data['usr_lang_id'] = $userInfo['usr_lang_id'];
                         $data['usr_rights'] = $userInfo['usr_rights'];
                         $data['usr_creation_date'] = $userInfo['usr_creation_date'];
                         $data['usr_last_login_date'] = $userInfo['usr_last_login_date'];
@@ -1032,8 +1035,6 @@ class ToolUserController extends AbstractActionController
                             $newXmlRights = $roleData->urole_rights;
                             $data['usr_rights'] = null;//$roleData->urole_rights;
                         }
-                        
-
                         
                         $userTable->save($data, $userId);
                         // check if you are updating your own info
@@ -1193,5 +1194,13 @@ class ToolUserController extends AbstractActionController
     	$this->getEventManager()->trigger('meliscore_tooluser_getrightstreeview_end', $this, $response);
     	
     	return new JsonModel($response);
+    }
+    
+    
+    public function testerAction()
+    {
+        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        echo $moduleSvc->getComposerModulePath('MelisCore');
+        die;
     }
 }

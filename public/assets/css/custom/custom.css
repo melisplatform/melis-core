@@ -11,8 +11,9 @@ ________________________________________________________________________________
 .fa.fa-color-red:before{
     color: #cb4040;
 }
-
-
+.fa.fa-color-orange:before{
+    color: #F39A0D;
+}
 
 .iframe-content,
 .iframe-level-tab,

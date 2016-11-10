@@ -133,10 +133,16 @@ class EmailsManagementController extends AbstractActionController
         $columns = $melisTool->getColumns();
         // pre-add Action Columns
         $columns['actions'] = array('text' => $translator->translate('tr_meliscms_action'));
+        
+        // Custom Datatable configuration
+        $tableOption = array(
+            'serverSide' => 'false',
+        );
+        
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         $view->tableColumns = $columns;
-        $view->getToolDataTableConfig = $melisTool->getDataTableConfiguration();
+        $view->getToolDataTableConfig = $melisTool->getDataTableConfiguration(null, true, false, $tableOption);
         return $view;
     }
     
@@ -159,44 +165,45 @@ class EmailsManagementController extends AbstractActionController
     
         if($this->getRequest()->isPost()) {
     
-            $colId = array_keys($melisTool->getColumns());
+//             $colId = array_keys($melisTool->getColumns());
     
-            $sortOrder = $this->getRequest()->getPost('order');
-            $sortOrder = $sortOrder[0]['dir'];
+//             $sortOrder = $this->getRequest()->getPost('order');
+//             $sortOrder = $sortOrder[0]['dir'];
     
-            $selCol = $this->getRequest()->getPost('order');
-            $selCol = $colId[$selCol[0]['column']];
+//             $selCol = $this->getRequest()->getPost('order');
+//             $selCol = $colId[$selCol[0]['column']];
     
-            $draw = $this->getRequest()->getPost('draw');
+//             $draw = $this->getRequest()->getPost('draw');
     
-            $start = $this->getRequest()->getPost('start');
-            $length =  $this->getRequest()->getPost('length');
+//             $start = $this->getRequest()->getPost('start');
+//             $length =  $this->getRequest()->getPost('length');
     
-            $search = $this->getRequest()->getPost('search');
-            $search = $search['value'];
+//             $search = $this->getRequest()->getPost('search');
+//             $search = $search['value'];
             
             $dataCount = $BOEmails->getTotalData();
     
-            $getData = $BOEmails->getPagedData(array(
-                'where' => array(
-                    'key' => 'boe_id',
-                    'value' => $search,
-                ),
-                'order' => array(
-                    'key' => $selCol,
-                    'dir' => $sortOrder,
-                ),
-                'start' => $start,
-                'limit' => $length,
-                'columns' => $melisTool->getSearchableColumns(),
-                'date_filter' => array()
-            ));
+//             $getData = $BOEmails->getPagedData(array(
+//                 'where' => array(
+//                     'key' => 'boe_id',
+//                     'value' => $search,
+//                 ),
+//                 'order' => array(
+//                     'key' => $selCol,
+//                     'dir' => $sortOrder,
+//                 ),
+//                 'start' => $start,
+//                 'limit' => $length,
+//                 'columns' => $melisTool->getSearchableColumns(),
+//                 'date_filter' => array()
+//             ));
             
             // Get Email App
             $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
             $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/');
             
             
+            $getData = $BOEmails->fetchAll();
             $tableData = $getData->toArray();
             
             $tempTableData = array();
@@ -324,7 +331,11 @@ class EmailsManagementController extends AbstractActionController
                 
                 if (!empty($subject)&&(!empty($html_content)||!empty($text_content))){
                     $temp = explode('_', $ekey);
-                    array_push($emailLangString, $temp[1]);
+                    if (count($temp)>=2){
+                        array_push($emailLangString, $temp[1]);
+                    }else{
+                        array_push($emailLangString, $temp[0]);
+                    }
                 }
             }
         }
@@ -375,19 +386,6 @@ class EmailsManagementController extends AbstractActionController
         $view = new ViewModel();
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         $view->title = $title;
-        return $view;
-    }
-    
-    /*
-     * Render Page Creation and Edition Header Cancel Button
-     * */
-    public function renderEmailsMngtHeaderCancelAction(){
-        $translator = $this->getServiceLocator()->get('translator');
-        $codename = $this->params()->fromRoute('codename', $this->params()->fromQuery('codename', ''));
-        
-        $view = new ViewModel();
-        $view->melisKey = $this->params()->fromRoute('melisKey', '');
-        $view->codename = $codename;
         return $view;
     }
     
@@ -749,12 +747,13 @@ class EmailsManagementController extends AbstractActionController
                 // Only allow files that exist in ~both~ directories
                 $layoutPathValidator = new \Zend\Validator\File\Exists();
                 
-                $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+//                 $modulesSvc = $this->getServiceLocator()->get('ModulesService');
                 $layout = $datas['boe_content_layout'];
-                $nameModuleTab = explode('/', $layout);
-                $nameModule = $nameModuleTab[1];
-                $path = $modulesSvc->getModulePath($nameModule);
-                $layout = $path . str_replace($nameModule, '', $layout);
+//                 $nameModuleTab = explode('/', $layout);
+//                 $nameModule = $nameModuleTab[1];
+//                 $path = $modulesSvc->getModulePath($nameModule);
+//                 $layout = $path . str_replace($nameModule, '', $layout);
+                $layout = __DIR__ .'/../../../'.$layout;
                 
                 if (!$layoutPathValidator->isValid($layout)) {
                     $layoutPathError['boe_content_layout'] = array(

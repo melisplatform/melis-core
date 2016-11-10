@@ -5,7 +5,7 @@ return array(
             'emails' => array(
                 'LOSTPASSWORD' => array(
                     'email_name' => 'Lost Password',
-                    'layout' => '/MelisCore/view/layout/layoutEmail.phtml',
+                    'layout' => 'melis-core/view/layout/layoutEmail.phtml',
                     'headers' => array(
                         'from' => 'noreply@melistechnology.com',
                         'from_name' => 'Melis Technology',
@@ -27,7 +27,7 @@ return array(
                 ),
                 'ACCOUNTCREATION' => array(
                     'email_name' => 'Account Creation',
-                    'layout' => '/MelisCore/view/layout/layoutEmail.phtml',
+                    'layout' => 'melis-core/view/layout/layoutEmail.phtml',
                     'headers' => array(
                         'from' => 'noreply@melistechnology.com',
                         'from_name' => 'Melis Technology',
@@ -49,7 +49,7 @@ return array(
                 ),
                 'PASSWORDMODIFICATION' => array(
                     'email_name' => 'Password Modification',
-                    'layout' => '/MelisCore/view/layout/layoutEmail.phtml',
+                    'layout' => 'melis-core/view/layout/layoutEmail.phtml',
                     'headers' => array(
                         'from' => 'noreply@melistechnology.com',
                         'from_name' => 'Melis Technology',

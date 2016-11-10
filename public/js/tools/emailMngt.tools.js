@@ -26,12 +26,6 @@ $(function(){
 		});
 	});
 	
-	$("body").on("click", ".btnMelisCoreEmailMngtCancel", function(){
-		var codename = $(this).data("codename");
-		melisHelper.tabClose(codename+"_id_meliscore_tool_emails_mngt_generic_from");
-		melisHelper.tabOpen(translations.tr_meliscore_tool_emails_mngt, 'fa-envelope-o', 'id_meliscore_tool_emails_mngt', 'meliscore_tool_emails_mngt');
-	});
-	
 	$("body").on("click", ".btnMelisCoreEmailMngtSave", function(){
 		var codename = $(this).data("codename");
 		var formId = '#'+codename+'_generalPropertiesform';
@@ -156,9 +150,6 @@ $(function(){
 			  	relative_urls : false,
 			  	remove_script_host : false,
 			  	convert_urls : true,
-			  	external_plugins: {
-			  		"moxiemanager": "/melis/MelisSmallBusiness/js/tinyMCE/moxiemanager/plugin.min.js"
-		        },
 		        plugins: [
 		    	    'advlist autolink lists link image charmap print preview anchor',
 		    	    'searchreplace visualblocks code fullscreen',
@@ -178,11 +169,11 @@ $(function(){
 		});
 		
 		// Removing DataTaable Pagination, Sorting and filters features
-		$('#tableEmailMngt_paginate').addClass('hidden');
-		$('#tableEmailMngt_info').addClass('hidden');
-		$('#tableEmailMngt th').removeClass('sorting');
-		$('#tableEmailMngt th').removeClass('sorting_asc');
-		$('#tableEmailMngt th').unbind('click');
+//		$('#tableEmailMngt_paginate').addClass('hidden');
+//		$('#tableEmailMngt_info').addClass('hidden');
+//		$('#tableEmailMngt th').removeClass('sorting');
+//		$('#tableEmailMngt th').removeClass('sorting_asc');
+//		$('#tableEmailMngt th').unbind('click');
 		
 	}
 });

@@ -439,6 +439,8 @@ var melisCore = (function(window){
         		$("#newplugin-cont ul.ul-cont").append( $(this) );
         	});
         }
+		
+		
     });
 
     
@@ -496,8 +498,9 @@ var melisCore = (function(window){
 	
 	sessionCheck();
 
-	
-	
+	/* Responsive Fix on Dashboard */
+	$('.dashboard-workflow-container .nav-tabs li').height($('.dashboard-workflow-container .nav-tabs').height());
+		
 	
 	
 	

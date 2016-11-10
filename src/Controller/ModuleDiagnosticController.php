@@ -237,7 +237,14 @@ class ModuleDiagnosticController extends AbstractActionController
      */
     protected function getAvailableModules()
     {
-        $modules = $this->getModuleSvc()->getActiveModules(); 
+        $removeModules = array('MelisInstaller', 'MelisSites');
+        $availableModules = $this->getModuleSvc()->getAllModules(); 
+        $modules = array();
+        foreach($availableModules as $module) {
+            if(!in_array($module, $removeModules)) {
+                $modules[] = $module;
+            }
+        }
         return $modules;
     }
 

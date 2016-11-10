@@ -1,6 +1,8 @@
 <div id="newformalert"></div>
 <?php 
 $form = $this->meliscore_tool_user_form_new;
+$form->get('usr_password')->setLabel($form->get('usr_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password').'"></i>');
+$form->get('usr_confirm_password')->setLabel($form->get('usr_confirm_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password_2').'"></i>');
 echo $this->form()->openTag($form);
 echo $this->melisFieldCollection($form);
 //data-dismiss="modal"

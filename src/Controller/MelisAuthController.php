@@ -293,13 +293,15 @@ class MelisAuthController extends AbstractActionController
     public function getProfilePictureAction()
     {
     	$melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');    	 
+    	$moduleSvc = $this->getServiceLocator()->get('ModulesService');
     	$user =  $melisCoreAuth->getIdentity();
-    	
+    	$imageDefault = $moduleSvc->getModulePath('MelisCore').'/public/images/profile/default_picture.jpg';
+
     	if (!empty($user) && !empty($user->usr_image))
     		$image = $user->usr_image;
     	else
-    	{
-    		$image =  file_get_contents(__DIR__ .'/../../../../MelisCore/public/images/profile/default_picture.jpg');
+    	{  
+    		$image =  file_get_contents($imageDefault);
     	}
     	
     	$response = $this->getResponse();

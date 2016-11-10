@@ -10,6 +10,7 @@ class MelisFieldRow extends FormRow
     const MELIS_SELECT_FACTORY        = 'select';
     const MELIS_MULTI_VAL_INPUT       = 'melis-multi-val-input';
     const MELIS_DRAGGABLE_INPUT       = 'melis-draggable-input';
+    const MELIS_COMMERCE_DATE         = 'melis-commerce-date';
  
 	public function render(ElementInterface $element, $labelPosition = null)
 	{
@@ -73,6 +74,18 @@ class MelisFieldRow extends FormRow
 	        {
 	            $formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
 	        }
+	    }
+	    elseif (strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE))
+	    {
+	        $element->setLabel('');
+	        $attrib = $element->getAttributes();
+	        $formElement = '<label for="">'.$attrib['dateLabel'].'</label>
+	                        <div class="input-group date '.$attrib['dateId'].'">
+	                        '.parent::render($element).'
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>';
 	    }
 	    else 
 	    {

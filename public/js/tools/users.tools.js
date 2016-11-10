@@ -6,8 +6,19 @@ function getRightsTree(userId){
 	
 	var tree = $("#rights-fancytree").fancytree("getTree");
 	tree.reload({
-		url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId='+userId
+		url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId='+userId,
+		  lazyLoad: function(event, data){
+			  alert("expanded");
+		  },
 	});
+	
+	var checker = setInterval(function() {
+		if(tree.count() > 1) {
+			$("#btnEdit").removeClass("disabled").css("pointer-events", "auto");
+			$("#btnEditRights").removeClass("disabled").css("pointer-events", "auto");
+			clearInterval(checker);
+		}
+	}, 500);
 }
 
 // action buttons
@@ -118,9 +129,10 @@ var toolUserManagement = {
 		    	        data		: {id : id},
 		    	        dataType    : 'json',
 		    	        encode		: true,
-		    	     }).success(function(data ){
+		    	     }).success(function(data){
 		    	    	 	melisCoreTool.pending(".btn-danger");
 			    	    	if(data.success) {
+			    	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46');
 			    	    		toolUserManagement.refreshTable();
 			    	    		melisCore.flashMessenger();
 			    	    	}
@@ -132,6 +144,8 @@ var toolUserManagement = {
 		},
 		
 		retrieveUser : function(id) {
+			$("#btnEdit").addClass("disabled").css("pointer-events", "none");
+			$("#btnEditRights").addClass("disabled").css("pointer-events", "none");
     		$.ajax({
     	        type        : 'POST', 
     	        url         : '/melis/MelisCore/ToolUser/getUserById',
@@ -182,6 +196,7 @@ var toolUserManagement = {
 	 	       	dataType    : 'json',
 			}).done(function(data) {
 				if(data.success) {
+					melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46');
 					$('#modal-user-management').modal('hide');
 					toolUserManagement.refreshTable();
 				}
@@ -220,6 +235,7 @@ var toolUserManagement = {
      	       	dataType    : 'json',
 			}).done(function(data) {
 				if(data.success) {
+					melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46');
 					$('#modal-user-management').modal('hide');
 					if(data.datas.isMyInfo == 1) {
 						$("#meliscore_left_menu_profile_pic").attr("src", "");

@@ -16,14 +16,27 @@ return array(
                     )
                 ),
                 
+                'basicTest' => array(
+                    'controller' => 'Diagnostic',
+                    'action' => 'testModuleLoadFolder',
+                    'payload' => array(
+                        'label' => 'tr_melis_diag_test_module_config_title',
+                        'folderPath' => array(
+                            $_SERVER['DOCUMENT_ROOT'] .'/../config',
+                        ),
+                        'files' => array(
+                             $_SERVER['DOCUMENT_ROOT'] .'/../config/melis.module.load.php'
+                        )
+                    )
+                ),
+                
                 'checkImportantFolders' => array(
                     'controller' => 'Diagnostic',
                     'action' => 'checkImportantFolders',
                     'payload' => array(
                         'label' => 'tr_melis_diagnostic_test_important_folders',
                         'folderPath' => array(
-                            'module/MelisCore/public/images/profiles',
-                            'module/MelisCore/public/images/login',
+                            'vendor/melisplatform/melis-core/public/images/login',
                         ),
                     ),
                 ),

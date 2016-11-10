@@ -3695,7 +3695,7 @@ html.csstransitions.csstransforms3d .panel-3d.panel-flip .back {
 }
 
 .tooltip .tooltip-inner {
-    background-color: #932E2A;
+    /*background-color: #932E2A;*/
     color: #fff;
     -webkit-border-radius: 0 0 0 0;
     -moz-border-radius: 0 0 0 0;

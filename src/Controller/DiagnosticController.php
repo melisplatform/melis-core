@@ -50,6 +50,113 @@ class DiagnosticController extends AbstractActionController
         ));
     }
     
+    
+    public function testModuleLoadFolderAction()
+    {
+        $request = $this->params()->fromRoute('payload', $this->params()->fromQuery('payload', null));
+        $label = null;
+        $success = 0;
+        $response = array();
+        $error = null;
+        $hasErrors = 0;
+        
+        if($request) {
+            $label = $request['label'];
+            $folders = $request['folderPath'];
+            $files = $request['files'];
+            if($folders) {
+                foreach($folders as $folder) {
+                    if(file_exists($folder)) {
+                        if(is_dir($folder)) {
+                            
+                            if(is_readable($folder)) {
+                                $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_readable', array($folder));
+                                if(is_writable($folder)) {
+                                    
+                                    $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_writable', array($folder));
+                                    $success = 1;
+                                }
+                                else {
+                                    $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_not_writable', array($folder));
+                                    $error .= $this->getTranslations('tr_melis_diagnostic_test_important_folders_not_writable', array($folder)).PHP_EOL;
+                                    $hasErrors++;
+                                }
+                            }
+                            else {
+                                $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_not_readable', array($folder));
+                                $error .= $this->getTranslations('tr_melis_diagnostic_test_important_folders_not_readable', array($folder)).PHP_EOL;
+                                $hasErrors++;
+                            }
+                            
+                        }
+                        else{
+                            $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_not_folder', array($folder));
+                            $error .= $this->getTranslations('tr_melis_diagnostic_test_important_not_folder', array($folder)).PHP_EOL;
+                            $hasErrors++;
+                        }
+                    }
+                    else {
+                        $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_exists_false', array($folder));
+                        $error .= $this->getTranslations('tr_melis_diagnostic_test_important_folders_exists_false', array($folder)).PHP_EOL;
+                        $hasErrors++;
+                    }
+                }
+            }
+            else {
+                $error .= $this->getTranslations('tr_melis_diagnostic_test_empty').PHP_EOL;
+            }
+            
+            if($files) {
+                foreach($files as $file) {
+                    if(file_exists($file)) {
+                            if(is_readable($file)) {
+                                $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_readable', array($file));
+                                if(is_writable($file)) {
+                
+                                    $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_writable', array($file));
+                                    $success = 1;
+                                }
+                                else {
+                                    $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_not_writable', array($file));
+                                    $error .= $this->getTranslations('tr_melis_diagnostic_test_important_folders_not_writable', array($file)).PHP_EOL;
+                                    $hasErrors++;
+                                }
+                            }
+                            else {
+                                $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_not_readable', array($file));
+                                $error .= $this->getTranslations('tr_melis_diagnostic_test_important_folders_not_readable', array($file)).PHP_EOL;
+                                $hasErrors++;
+                            }
+
+                    }
+                    else {
+                        $response[] =  $this->getTranslations('tr_melis_diagnostic_test_important_folders_exists_false', array($file));
+                        $error .= $this->getTranslations('tr_melis_diagnostic_test_important_folders_exists_false', array($file)).PHP_EOL;
+                        $hasErrors++;
+                    }
+                }
+            }
+            else {
+                $error .= $this->getTranslations('tr_melis_diagnostic_test_empty').PHP_EOL;
+            }
+        }
+        else {
+            $error .= $this->getTranslations('tr_melis_diagnostic_test_important_folders_failed').PHP_EOL;
+        }
+        
+        if($hasErrors) {
+            $success = 0;
+        }
+        
+        $actionResponse = array_merge(array(
+            'label' => $label,
+            'success' => $success,
+            'error' => $error
+        ), array('result' => $response));
+        
+        return new JsonModel($actionResponse);
+    }
+    
     public function fileCreationTestAction()
     {
         $request = $this->params()->fromRoute('payload', $this->params()->fromQuery('payload', null));

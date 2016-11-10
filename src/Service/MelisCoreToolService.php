@@ -381,149 +381,188 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             
             
             
-           // actions
-           $actionButtons = '';
-           $action = '';
-           $forward = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward');
-           $actionCount = 0;
-           foreach($actionContainer as $actionKey => $actionContent) 
-           {
-                    $actionButtons .= $this->getViewContent($actionContent);
-           }
+            // actions
+            $actionButtons = '';
+            $action = '';
+            $forward = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward');
+            $actionCount = 0;
+            foreach($actionContainer as $actionKey => $actionContent) 
+            {
+                $actionButtons .= $this->getViewContent($actionContent);
+            }
 
-           // remove unnecessary new lines and text paragraphs (not <p> tags)
-           $actionButtons = trim(preg_replace('/\s\s+/', ' ', $actionButtons)); 
+            // remove unnecessary new lines and text paragraphs (not <p> tags)
+            $actionButtons = trim(preg_replace('/\s\s+/', ' ', $actionButtons)); 
            
-           // retrieve the css configuration inside each columns
-           $colCtr = 1; // starts with index 1 since this will be used in JS configuration for jquery nth-child
-           $colKeyId = array_keys($columns);
-           
-           // column configurations
-           $colPostInitConfig = '';
-           foreach($columns as $colKey => $colArrValue)
-           {
-               $varName = 'oTh'.$colKey;
-               $isSortable = $colArrValue['sortable'] == false ? $varName.'.off();' : '';
-               $colPostInitConfig .= 'var '.$varName. ' = $("'.$tableId.' thead tr").find("th:nth-child('.$colCtr.')");'.PHP_EOL;
-               $colPostInitConfig .= $varName.'.css('.json_encode($colArrValue['css']).');'.PHP_EOL;
-               $colPostInitConfig .= $isSortable.PHP_EOL;
-               $colPostInitConfig .= PHP_EOL;
-               $colCtr++;
-           }
+            // retrieve the css configuration inside each columns
+            $colCtr = 1; // starts with index 1 since this will be used in JS configuration for jquery nth-child
+            $colKeyId = array_keys($columns);
            
            
-           // convert columns in Javascript JSON
-           $jsonColumns = '[';
-           foreach($colKeyId as $colId) {
+            // convert columns in Javascript JSON
+            $jsonColumns = '[';
+            foreach($colKeyId as $colId) {
                $jsonColumns .= '{"data":"'.$colId.'"},';
-           }
-           $jsonColumns .= '{"data":"actions"}]';
+            }
+            $jsonColumns .= '{"data":"actions"}]';
 
            
-           $fnName = 'fn'.$tableId.'init';
+            $fnName = 'fn'.$tableId.'init';
            
-           $reInitTable = '';
-           if($allowReInit) {
-           $reInitTable = '     
-               var dTable = $("'.$tableId.'").DataTable();
-               if(dTable !== undefined) {
+            $reInitTable = '';
+            if($allowReInit) {
+            $reInitTable = '     
+                var dTable = $("'.$tableId.'").DataTable();
+                if(dTable !== undefined) {
                        dTable.destroy();    
-               }';
-           }
-           // select checkbox extension
-           $select = '';
-           $selectColDef = '';
-           if($selectCheckbox){
+                }';
+            }
+            // select checkbox extension
+            $select = '';
+            $selectColDef = '';
+            if($selectCheckbox){
 //                $select = 'select: {
 //                             style:    "os",
 //                             selector: "td:first-child"
 //                          },';
-               $selectColDef = '{
-                                    "targets": 0,                                   
-                                     "bSortable":false,                                 
-                                     "mRender": function (data, type, full, meta){
-                                         return `<div class="checkbox checkbox-single margin-none">
-                    									<label class="checkbox-custom">
-                    										<i class="fa fa-fw fa-square-o checked"></i>
-                    										<input type="checkbox" checked="checked" name="id[]" value="` + $("<div/>").text(data).html() + `">
-                    									</label>
-                    								</div>  
-                                                `;
-                                     }
-                                },';
-           }
+                $selectColDef = '{
+                                "targets": 0,                                   
+                                 "bSortable":false,                                 
+                                 "mRender": function (data, type, full, meta){
+                                     return `<div class="checkbox checkbox-single margin-none">
+                									<label class="checkbox-custom">
+                										<i class="fa fa-fw fa-square-o checked"></i>
+                										<input type="checkbox" checked="checked" name="id[]" value="` + $("<div/>").text(data).html() + `">
+                									</label>
+                								</div>  
+                                            `;
+                                 }
+                            },';
+            }
            
-           $defaultTblOptions = array(
-               'paging' => 'true',
-               'ordering' => 'true',
-               'serverSide' => 'true',
-               'searching' => 'true',
-           );
+           /**
+            * DataTable default is every Column are sortable
+            * This process will get not sortable column from tool config and prepare string for datatable configuration
+            **/
+            $unSortableColumns = array();
+            $columnCtr = 0;
+            foreach($columns as $colKey => $colArrValue)
+            {
+                if (isset($colArrValue['sortable'])){
+                    // Getting unsortable columns
+                    $isSortable = $colArrValue['sortable'] == false ? array_push($unSortableColumns, $columnCtr) : '';
+                }
+                $columnCtr++;
+            }
+            $unSortableColumnsStr = '';
+            if (!empty($unSortableColumns)){
+                // Creating config string for Unsortable Columns
+                $unSortableColumnsStr = '{ targets: ['.implode(',', $unSortableColumns).'], bSortable: false},';
+            }
+            // Column Unsortable End
+            
+            // Preparing Table Column Styles
+            $columnsStyles = array();
+            $columnCtr = 0;
+            foreach($columns as $colKey => $colArrValue)
+            {
+                if (isset($colArrValue['css'])){
+                    // Getting Style of the columns
+                    $columnStyles = $colArrValue['css'];
+                }
+                // Adding the Ctr/index/number of the column
+                $columnStyles['targets'] = $columnCtr;
+                
+                array_push($columnsStyles, $columnStyles);
+                $columnCtr++;
+            }
+            $columnsStylesStr = '';
+            if (!empty($columnsStyles)){
+                // Creating Column config string
+                foreach ($columnsStyles As $sVal){
+                    $columnStyle = array();
+                    foreach ($sVal As $cKey => $cVal){
+                        if (in_array($cKey, array('width','targets'))){
+                            $cVal = (is_numeric($cVal)) ? $cVal : '"'.$cVal.'"';
+                            array_push($columnStyle, '"'.$cKey.'": '.$cVal);
+                        }
+                    }
+                    $columnsStylesStr .= '{ '.implode(', ', $columnStyle).' },'.PHP_EOL;
+                }
+            }
+            // Columns Styles End
            
-           $finalTblOption = array_merge($defaultTblOptions, $tableOption);
+            // Default Melis Table Configuration
+            // This can be override from Param
+            $defaultTblOptions = array(
+                'paging' => 'true',
+                'ordering' => 'true',
+                'serverSide' => 'true',
+                'searching' => 'true',
+            );
+            // Merging Default Configuration and Param Configuration
+            // This process will override default config if index exist on param config
+            $finalTblOption = array_merge($defaultTblOptions, $tableOption);
            
-           // Table Option
-           $finalTblOptionStr = '';
-           foreach ($finalTblOption As $key => $val){
-               if (is_array($val)){
-                   $val = json_encode($val);
-               }
-               $finalTblOptionStr .= $key.': '.$val.','.PHP_EOL;
-           }
+            // Table Option
+            $finalTblOptionStr = '';
+            foreach ($finalTblOption As $key => $val){
+                if (is_array($val)){
+                    // If Option has multiple options
+                    $val = json_encode($val);
+                }
+                $finalTblOptionStr .= $key.': '.$val.','.PHP_EOL;
+            }
            
-           //remove special characters in function name
-           $fnName = preg_replace('/\W/', '', $fnName);
-           // simulate javascript code function here
-           $dtJScript = 'window.'.$fnName .' = function() {
-                    '.$reInitTable.'
-                   
-            var '.str_replace("#","$",$tableId).' = $("'.$tableId.'").DataTable({
-                       ' . $select . '
-                       ' . $finalTblOptionStr . '
-                       responsive:true,
-                       processing: true,
-                       lengthMenu: [ [5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"] ],
-                       pageLength: 10,
-                       ajax: {
-                            url: "' . $ajaxUrl . '",
-                            type: "POST",
-                            '.$dataFunction.'
-                       },
-                       fnDrawCallback: function(oSettings) {
-                            '.$ajaxCallBack.'
-                        },
-                       columns: '.$jsonColumns.',
-    				   language: {
-    						url: "/melis/MelisCore/Language/getDataTableTranslations",
-    				   },
-                       sDom : \''.$sDomStructure.'\',
-                       bSort: true,
-					   columnDefs: [
-						 '. $selectColDef .'
-						 { responsivePriority: 1, targets: 0 },
-						 { responsivePriority: 2, targets: -1 }, // make sure action column stays whenever the window is resized
-						 {
-							 "targets": -1,
-							 "data": null,
-							 "mRender": function (data, type, full) {
-								 return \''.$actionButtons.'\';
-							 },
-							 "bSortable" : false, 
-							 "sClass" : \'dtActionCls\',
-						 }
-					 ],
-                   }).columns.adjust().responsive.recalc();
-
-	                return '.str_replace("#","$",$tableId).';
-               };
-	                    
-                var '.str_replace("#","$",$tableId).' = '.$fnName.'();
-               
-		      $(document).on("init.dt", function(e, settings) {
-				    '.$colPostInitConfig.$jsSdomContentInit.'
-				         
-		      });
-           ';
+            //remove special characters in function name
+            $fnName = preg_replace('/\W/', '', $fnName);
+            // simulate javascript code function here
+            $dtJScript = 'window.'.$fnName .' = function() {
+                '.$reInitTable.'
+                var '.str_replace("#","$",$tableId).' = $("'.$tableId.'").DataTable({
+                    ' . $select . '
+                    ' . $finalTblOptionStr . '
+                    responsive:true,
+                    processing: true,
+                    lengthMenu: [ [5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "'.$translator->translate('tr_meliscore_all').'"] ],
+                    pageLength: 10,
+                    ajax: {
+                        url: "' . $ajaxUrl . '",
+                        type: "POST",
+                        '.$dataFunction.'
+                    },
+                    fnDrawCallback: function(oSettings) {
+                        '.$ajaxCallBack.'
+                    },
+                    columns: '.$jsonColumns.',
+				    language: {
+						url: "/melis/MelisCore/Language/getDataTableTranslations",
+				    },
+                    sDom : \''.$sDomStructure.'\',
+                    bSort: true,
+			        columnDefs: [
+                        '.$columnsStylesStr.'  
+                        '.$unSortableColumnsStr.'
+					    '. $selectColDef .'
+					    { responsivePriority: 1, targets: 0 },
+					    { responsivePriority: 2, targets: -1 }, // make sure action column stays whenever the window is resized
+					    {
+						    "targets": -1,
+						    "data": null,
+						    "mRender": function (data, type, full) {
+							    return \''.$actionButtons.'\';
+						    },
+						    "bSortable" : false, 
+						    "sClass" : \'dtActionCls\',
+					    }
+				    ],
+                }).columns.adjust().responsive.recalc();
+                return '.str_replace("#","$",$tableId).';
+            };
+            var '.str_replace("#","$",$tableId).' = '.$fnName.'();
+	        $(document).on("init.dt", function(e, settings) {
+			    '.$jsSdomContentInit.'
+	        });';
 	    }
 	    
 	    return $dtJScript;
@@ -652,15 +691,47 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	    $newValue = '';
 	    $oldVal = $this->stringSplitUnicode($str);
 	    $replaceTable = array(
-	        'Å '=>'S', 'Å¡'=>'s', 'Ä�'=>'Dj', 'Ä‘'=>'dj', 'Å½'=>'Z', 'Å¾'=>'z', 'ÄŒ'=>'C', 'Ä�'=>'c', 'Ä†'=>'C', 'Ä‡'=>'c',
-	        'Ã€'=>'A', 'Ã�'=>'A', 'Ã‚'=>'A', 'Ãƒ'=>'A', 'Ã„'=>'A', 'Ã…'=>'A', 'Ã†'=>'A', 'Ã‡'=>'C', 'Ãˆ'=>'E', 'Ã‰'=>'E',
-	        'ÃŠ'=>'E', 'Ã‹'=>'E', 'ÃŒ'=>'I', 'Ã�'=>'I', 'ÃŽ'=>'I', 'Ã�'=>'I', 'Ã‘'=>'N', 'Ã’'=>'O', 'Ã“'=>'O', 'Ã”'=>'O',
-	        'Ã•'=>'O', 'Ã–'=>'O', 'Ã˜'=>'O', 'Ã™'=>'U', 'Ãš'=>'U', 'Ã›'=>'U', 'Ãœ'=>'U', 'Ã�'=>'Y', 'Ãž'=>'B', 'ÃŸ'=>'Ss',
-	        'Ã '=>'a', 'Ã¡'=>'a', 'Ã¢'=>'a', 'Ã£'=>'a', 'Ã¤'=>'a', 'Ã¥'=>'a', 'Ã¦'=>'a', 'Ã§'=>'c', 'Ã¨'=>'e', 'Ã©'=>'e',
-	        'Ãª'=>'e', 'Ã«'=>'e', 'Ã¬'=>'i', 'Ã­'=>'i', 'Ã®'=>'i', 'Ã¯'=>'i', 'Ã°'=>'o', 'Ã±'=>'n', 'Ã²'=>'o', 'Ã³'=>'o',
-	        'Ã´'=>'o', 'Ãµ'=>'o', 'Ã¶'=>'o', 'Ã¸'=>'o', 'Ã¹'=>'u', 'Ãº'=>'u', 'Ã»'=>'u', 'Ã½'=>'y', 'Ã½'=>'y', 'Ã¾'=>'b',
-	        'Ã¿'=>'y', 'Å”'=>'R', 'Å•'=>'r'
-	    );
+            'ъ'=>'b', 'Ь'=>'b', 'Ъ'=>'b', 'ь'=>'b',
+            'Ă'=>'A', 'Ą'=>'A', 'À'=>'A', 'Ã'=>'A', 'Á'=>'A', 'Æ'=>'A', 'Â'=>'A', 'Å'=>'A', 'Ä'=>'A',
+            'Þ'=>'B',
+            'Ć'=>'C', 'ץ'=>'C', 'Ç'=>'C',
+            'È'=>'E', 'Ę'=>'E', 'É'=>'E', 'Ë'=>'E', 'Ê'=>'E',
+            'Ğ'=>'G',
+            'İ'=>'I', 'Ï'=>'I', 'Î'=>'I', 'Í'=>'I', 'Ì'=>'I',
+            'Ł'=>'L',
+            'Ñ'=>'N', 'Ń'=>'N',
+            'Ø'=>'O', 'Ó'=>'O', 'Ò'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O',
+            'Ş'=>'S', 'Ś'=>'S', 'Ș'=>'S', 'Š'=>'S',
+            'Ț'=>'T',
+            'Ù'=>'U', 'Û'=>'U', 'Ú'=>'U', 'Ü'=>'U',
+            'Ý'=>'Y',
+            'Ź'=>'Z', 'Ž'=>'Z', 'Ż'=>'Z',
+            'â'=>'a', 'ǎ'=>'a', 'ą'=>'a', 'á'=>'a', 'ă'=>'a', 'ã'=>'a', 'Ǎ'=>'a', 'а'=>'a', 'А'=>'a', 'å'=>'a', 'à'=>'a', 'א'=>'a', 'Ǻ'=>'a', 'Ā'=>'a', 'ǻ'=>'a', 'ā'=>'a', 'ä'=>'a', 'æ'=>'a', 'Ǽ'=>'a', 'ǽ'=>'a',
+            'б'=>'b', 'ב'=>'b', 'Б'=>'b', 'þ'=>'b',
+            'ĉ'=>'c', 'Ĉ'=>'c', 'Ċ'=>'c', 'ć'=>'c', 'ç'=>'c', 'ц'=>'c', 'צ'=>'c', 'ċ'=>'c', 'Ц'=>'c', 'Č'=>'c', 'č'=>'c', 'Ч'=>'ch', 'ч'=>'ch',
+            'ד'=>'d', 'ď'=>'d', 'Đ'=>'d', 'Ď'=>'d', 'đ'=>'d', 'д'=>'d', 'Д'=>'D', 'ð'=>'d',
+            'є'=>'e', 'ע'=>'e', 'е'=>'e', 'Е'=>'e', 'Ə'=>'e', 'ę'=>'e', 'ĕ'=>'e', 'ē'=>'e', 'Ē'=>'e', 'Ė'=>'e', 'ė'=>'e', 'ě'=>'e', 'Ě'=>'e', 'Є'=>'e', 'Ĕ'=>'e', 'ê'=>'e', 'ə'=>'e', 'è'=>'e', 'ë'=>'e', 'é'=>'e',
+            'ф'=>'f', 'ƒ'=>'f', 'Ф'=>'f',
+            'ġ'=>'g', 'Ģ'=>'g', 'Ġ'=>'g', 'Ĝ'=>'g', 'Г'=>'g', 'г'=>'g', 'ĝ'=>'g', 'ğ'=>'g', 'ג'=>'g', 'Ґ'=>'g', 'ґ'=>'g', 'ģ'=>'g',
+            'ח'=>'h', 'ħ'=>'h', 'Х'=>'h', 'Ħ'=>'h', 'Ĥ'=>'h', 'ĥ'=>'h', 'х'=>'h', 'ה'=>'h',
+            'î'=>'i', 'ï'=>'i', 'í'=>'i', 'ì'=>'i', 'į'=>'i', 'ĭ'=>'i', 'ı'=>'i', 'Ĭ'=>'i', 'И'=>'i', 'ĩ'=>'i', 'ǐ'=>'i', 'Ĩ'=>'i', 'Ǐ'=>'i', 'и'=>'i', 'Į'=>'i', 'י'=>'i', 'Ї'=>'i', 'Ī'=>'i', 'І'=>'i', 'ї'=>'i', 'і'=>'i', 'ī'=>'i', 'ĳ'=>'ij', 'Ĳ'=>'ij',
+            'й'=>'j', 'Й'=>'j', 'Ĵ'=>'j', 'ĵ'=>'j', 'я'=>'ja', 'Я'=>'ja', 'Э'=>'je', 'э'=>'je', 'ё'=>'jo', 'Ё'=>'jo', 'ю'=>'ju', 'Ю'=>'ju',
+            'ĸ'=>'k', 'כ'=>'k', 'Ķ'=>'k', 'К'=>'k', 'к'=>'k', 'ķ'=>'k', 'ך'=>'k',
+            'Ŀ'=>'l', 'ŀ'=>'l', 'Л'=>'l', 'ł'=>'l', 'ļ'=>'l', 'ĺ'=>'l', 'Ĺ'=>'l', 'Ļ'=>'l', 'л'=>'l', 'Ľ'=>'l', 'ľ'=>'l', 'ל'=>'l',
+            'מ'=>'m', 'М'=>'m', 'ם'=>'m', 'м'=>'m',
+            'ñ'=>'n', 'н'=>'n', 'Ņ'=>'n', 'ן'=>'n', 'ŋ'=>'n', 'נ'=>'n', 'Н'=>'n', 'ń'=>'n', 'Ŋ'=>'n', 'ņ'=>'n', 'ŉ'=>'n', 'Ň'=>'n', 'ň'=>'n',
+            'о'=>'o', 'О'=>'o', 'ő'=>'o', 'õ'=>'o', 'ô'=>'o', 'Ő'=>'o', 'ŏ'=>'o', 'Ŏ'=>'o', 'Ō'=>'o', 'ō'=>'o', 'ø'=>'o', 'ǿ'=>'o', 'ǒ'=>'o', 'ò'=>'o', 'Ǿ'=>'o', 'Ǒ'=>'o', 'ơ'=>'o', 'ó'=>'o', 'Ơ'=>'o', 'œ'=>'o', 'Œ'=>'o', 'ö'=>'o',
+            'פ'=>'p', 'ף'=>'p', 'п'=>'p', 'П'=>'p',
+            'ק'=>'q',
+            'ŕ'=>'r', 'ř'=>'r', 'Ř'=>'r', 'ŗ'=>'r', 'Ŗ'=>'r', 'ר'=>'r', 'Ŕ'=>'r', 'Р'=>'r', 'р'=>'r',
+            'ș'=>'s', 'с'=>'s', 'Ŝ'=>'s', 'š'=>'s', 'ś'=>'s', 'ס'=>'s', 'ş'=>'s', 'С'=>'s', 'ŝ'=>'s', 'Щ'=>'sch', 'щ'=>'sch', 'ш'=>'sh', 'Ш'=>'sh', 'ß'=>'s',
+            'т'=>'t', 'ט'=>'t', 'ŧ'=>'t', 'ת'=>'t', 'ť'=>'t', 'ţ'=>'t', 'Ţ'=>'t', 'Т'=>'t', 'ț'=>'t', 'Ŧ'=>'t', 'Ť'=>'t', '™'=>'tm',
+            'ū'=>'u', 'у'=>'u', 'Ũ'=>'u', 'ũ'=>'u', 'Ư'=>'u', 'ư'=>'u', 'Ū'=>'u', 'Ǔ'=>'u', 'ų'=>'u', 'Ų'=>'u', 'ŭ'=>'u', 'Ŭ'=>'u', 'Ů'=>'u', 'ů'=>'u', 'ű'=>'u', 'Ű'=>'u', 'Ǖ'=>'u', 'ǔ'=>'u', 'Ǜ'=>'u', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'У'=>'u', 'ǚ'=>'u', 'ǜ'=>'u', 'Ǚ'=>'u', 'Ǘ'=>'u', 'ǖ'=>'u', 'ǘ'=>'u', 'ü'=>'u',
+            'в'=>'v', 'ו'=>'v', 'В'=>'v',
+            'ש'=>'w', 'ŵ'=>'w', 'Ŵ'=>'w',
+            'ы'=>'y', 'ŷ'=>'y', 'ý'=>'y', 'ÿ'=>'y', 'Ÿ'=>'y', 'Ŷ'=>'y',
+            'Ы'=>'y', 'ž'=>'z', 'З'=>'z', 'з'=>'z', 'ź'=>'z', 'ז'=>'z', 'ż'=>'z', 'ſ'=>'z', 'Ж'=>'zh', 'ж'=>'zh'
+        );
 
 
         foreach($oldVal as $charKey => $ch) {
@@ -811,6 +882,84 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	    return $data;
 	}
 	
-
+	/**
+	 * Formats the date based on the current language
+	 *
+	 * @param string $date string value of the date
+	 * @param string $time optional time format ie: h:i:s, leave blank to exclude time
+	 * @return formatted date
+	 */
+	public function dateFormatLocale($date, $time = '')
+	{
+	    $container = new Container('meliscore');
+	    $locale = $container['melis-lang-locale'];
+	
+	    switch($locale) {
+	        case 'fr_FR':
+	            $date = !empty($date)? date("d/m/Y ".$time ,strtotime($date)): null;
+	            break;
+	        default:
+	            $date = !empty($date)? date("m/d/Y ".$time ,strtotime($date)): null ;
+	            break;
+	    }
+	
+	    return $date;
+	}
+	
+	/**
+	 * JS script needed for the date input group
+	 * @param string $dateField the date input group id, ex: myDateField
+	 * @param string $time the time format if needed, leave blank to exclude time
+	 * @return string
+	 */
+	public function datePickerInit($dateField, $time = '')
+	{
+	    $container = new Container('meliscore');
+	    $locale = $container['melis-lang-locale'];
+	    switch($locale) {
+	        case 'fr_FR':
+	            $language = 'fr';
+	            $format = 'dd/mm/yyyy '.$time;
+	            break;
+	        default:
+	            $language = 'en';
+	            $format = 'mm/dd/yyyy '.$time;
+	            break;
+	    }
+	    $script =   '<script type="text/javascript">
+                        $(function () {
+                            $(".'.$dateField.'").datepicker({
+                                    language: "'.$language.'",
+                            		format: "'.$format.'",
+                            });
+                        });
+                    </script>';
+	
+	    return $script;
+	}
+	
+	/**
+	 * formats the localized date to mysql datetime
+	 * @param string $date, the date value to be formatted
+	 * 
+	 * @return NULL|string formatted date
+	 */
+	public function localeDateToSql($date)
+	{
+	    $container = new Container('meliscore');
+	    $locale = $container['melis-lang-locale'];
+	    switch($locale) {
+	        case 'fr_FR':
+	            //converts dd/mm/yyyy to yyyy-mm-dd
+	            $date = str_replace('/', '-', $date);
+	            $date = !empty(strtotime($date))? date("Y-m-d" ,strtotime($date)): null;
+	            break;
+	        default:
+	            //converts mm/dd/yyyy to yyyy-mm-dd
+	            $date = !empty(strtotime($date))? date("Y-m-d" ,strtotime($date)): null;
+	            break;
+	    }
+	    return $date;
+	}
 	
 }

@@ -6,7 +6,7 @@ body .melis-hide{
 .melis-show-inline{
 	display: inline-block;	
 }
-melis-show{
+.melis-show{
 	display: block;
 }
 
@@ -50,7 +50,13 @@ body{
 .spacing-x2 .box-generic{
 	background: #fff;
 }
-
+/* Upper Area dataTable Dashboard */
+#id_meliscommerce_clients_list_widgets,
+#id_MelisCmsProspects_tool_prospects_widgets,
+#id_meliscommerce_order_list_widgets {
+	padding: 25px 25px 0;
+	margin: 0 0 -25px;
+}
 
 /* global buttons layout override */
 .btn-success{
@@ -1034,8 +1040,9 @@ table.dataTable thead .sorting:after {
 #dt_bsdatepicker{
 	cursor: pointer;
     border: 1px solid #CECBCB;
-    padding: 0 5px;
+    /* padding: 10px 5px; */
     border-radius: 3px;
+	padding: 8px 8px 10px;
 }
 #dt_bsdatepicker i.fa{
 	position: relative;
@@ -1043,8 +1050,9 @@ table.dataTable thead .sorting:after {
 }
 #dt_bsdatepicker b.caret{
     float: right;
-    margin-top: 13px;
-    margin-right: 5px;
+	margin: 5px 0 0 5px;
+	/* margin-top: 13px;
+    margin-right: 5px; */
 }
 .filter-bar .form-inline:after,
 .filter-bar .form-inline:before{
@@ -1352,6 +1360,7 @@ span.fancytree-active span.fancytree-title{
 }
 #id_meliscms_dashboard_pages_indicators .innerAll{
     padding: 25px 10px;
+	margin: 5px 0;
 }
 
 
@@ -2130,6 +2139,14 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 
 
 
+@media ( max-width: 768px ) {
+	#id_meliscms_dashboard_pages_indicators .innerAll {
+		margin: 0;
+	}
+	.dashboard-medium {
+		height: auto;
+	}
+}
 @media ( min-width: 980px ) {
 	.melisToolContainer .filter-bar .tool-btn-actions{
 		float: right;

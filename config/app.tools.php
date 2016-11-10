@@ -244,6 +244,9 @@ return array(
                                         'type' => 'Password',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_password',
+                                            'label_options' => array(
+                                                'disable_html_escape' => true,
+                                            )
                                         ),
                                         'attributes' => array(
                                             'id' => 'id_n_usr_password',
@@ -259,6 +262,9 @@ return array(
                                         'type' => 'Password',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_confirm_password',
+                                            'label_options' => array(
+                                                'disable_html_escape' => true,
+                                            )
                                         ),
                                         'attributes' => array(
                                             'id' => 'id_n_usr_confirm_password',
@@ -317,6 +323,7 @@ return array(
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_form_language',
                                             'empty_option' => 'tr_meliscms_form_common_Choose',
+                                            'disable_inarray_validator' => true,
                                         ),
                                         'attributes' => array(
                                             'id' => 'id_n_usr_lang_id',
@@ -562,7 +569,7 @@ return array(
                                 ),
                                 'usr_lang_id' => array(
                                     'name'     => 'usr_lang_id',
-                                    'required' => false,
+                                    'required' => true,
                                     'validators' => array(
                                         array(
                                             'name' => 'NotEmpty',
@@ -688,6 +695,9 @@ return array(
                                         'type' => 'Password',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_password',
+                                            'label_options' => array(
+                                                'disable_html_escape' => true,
+                                            )
                                         ),
                                         'attributes' => array(
                                             'id' => 'id_usr_password',
@@ -703,6 +713,9 @@ return array(
                                         'type' => 'Password',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_confirm_password',
+                                            'label_options' => array(
+                                                'disable_html_escape' => true,
+                                            )
                                         ),
                                         'attributes' => array(
                                             'id' => 'id_usr_confirm_password',
@@ -742,7 +755,20 @@ return array(
                                         ),
                                     ),
                                 ),
-                                
+                                array(
+                                    'spec' => array(
+                                        'name' => 'usr_lang_id',
+                                        'type' => 'MelisCoreLanguageSelect',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_tool_user_form_language',
+                                            'empty_option' => 'tr_meliscms_form_common_Choose',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'id_usr_lang_id',
+                                        ),
+                                    ),
+                                ),
 //                                 array(
 //                                     'spec' => array(
 //                                         'name' => 'usr_role_id',
@@ -957,6 +983,22 @@ return array(
                                         array('name' => 'StringTrim'),
                                     ),
                                 ),
+                                'usr_lang_id' => array(
+                                    'name'     => 'usr_lang_id',
+                                    'required' => true,
+                                    'validators' => array(
+                                        array(
+                                            'name' => 'NotEmpty',
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lang_id_error_empty',
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'filters'  => array(
+                                    ),
+                                ),
 //                                 'usr_role_id' => array(
 //                                     'name'     => 'usr_role_id',
 //                                     'required' => false,
@@ -1004,11 +1046,6 @@ return array(
                         'ajaxCallback' => 'getCurrentPlatform()',
                         'filters' => array(
                             'left' => array(
-                                'platform_search' => array(
-                                    'module' => 'MelisCore',
-                                    'controller' => 'Platforms',
-                                    'action' => 'render-platform-content-filters-search',
-                                ),
                                 'platform_limit' => array(
                                     'module' => 'MelisCore',
                                     'controller' => 'Platforms',
@@ -1016,7 +1053,11 @@ return array(
                                 ),
                             ),
                             'center' => array(
-                                
+                                'platform_search' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Platforms',
+                                    'action' => 'render-platform-content-filters-search',
+                                ),
                             ),
                             'right' => array(
                                 'platform_refresh' => array(
@@ -1177,11 +1218,6 @@ return array(
                         'ajaxCallback' => 'initLangJs()',
                         'filters' => array(
                             'left' => array(
-                                'meliscore_tool_language_content_filters_search' => array(
-                                    'module' => 'MelisCore',
-                                    'controller' => 'Language',
-                                    'action' => 'render-tool-language-content-filters-search',
-                                ),
                                 'meliscore_tool_language_content_filters_limit' => array(
                                     'module' => 'MelisCore',
                                     'controller' => 'Language',
@@ -1189,7 +1225,11 @@ return array(
                                 ),
                             ),
                             'center' => array(
-                                
+                                'meliscore_tool_language_content_filters_search' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Language',
+                                    'action' => 'render-tool-language-content-filters-search',
+                                ),
                             ),
                             'right' => array(
                                 'meliscore_tool_language_content_filters_refresh' => array(
@@ -1388,62 +1428,67 @@ return array(
                         'ajaxCallback' => 'reInitTableEmailMngt();',
                         'filters' => array(
                             'left' => array(
-//                                 'meliscore_tool_tool_emails_mngt_table_search' => array(
-//                                     'module' => 'MelisCore',
-//                                     'controller' => 'EmailsManagement',
-//                                     'action' => 'render-tool-emails-mngt-table-search',
-//                                 ),
-//                                 'meliscore_tool_language_content_filters_limit' => array(
-//                                     'module' => 'MelisCore',
-//                                     'controller' => 'Language',
-//                                     'action' => 'render-tool-language-content-filters-limit',
-//                                 ),
+                                'meliscore_tool_language_content_filters_limit' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Language',
+                                    'action' => 'render-tool-language-content-filters-limit',
+                                ),
                             ),
                             'center' => array(
+                                'meliscore_tool_tool_emails_mngt_table_search' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'EmailsManagement',
+                                    'action' => 'render-tool-emails-mngt-table-search',
+                                ),
                             ),
                             'right' => array(
+                                'meliscore_tool_tool_emails_mngt_table_refresh' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'EmailsManagement',
+                                    'action' => 'render-tool-emails-mngt-table-refresh',
+                                ),
                             ),
                         ),
                         'columns' => array(
                             'boe_id' => array(
                                 'text' => 'tr_meliscore_tool_email_mngt_boe_id',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
                             ),
                             'boe_indicator' => array(
                                 'text' => 'tr_meliscore_tool_email_mngt_boe_indicator',
                                 'css' => array('width' => '3%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
                             ),
                             'boe_name' => array(
                                 'text' => 'tr_meliscore_tool_email_mngt_boe_name',
                                 'css' => array('width' => '16%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
                             ),
                             'boe_code_name' => array(
                                 'text' => 'tr_meliscore_tool_email_mngt_boe_code_name',
                                 'css' => array('width' => '15%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
                             ),
                             'boe_lang' => array(
                                 'text' => 'tr_meliscore_tool_email_mngt_boe_lang',
                                 'css' => array('width' => '15%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
                             ),
                             'boe_from_name' => array(
                                 'text' => 'tr_meliscore_tool_email_mngt_boe_from_name',
                                 'css' => array('width' => '20%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
                             ),
                             'boe_from_email' => array(
                                 'text' => 'tr_meliscore_tool_email_mngt_boe_from_email',
                                 'css' => array('width' => '10%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
                             ),
                             'boe_reply_to' => array(
                                 'text' => 'tr_meliscore_tool_email_mngt_boe_reply_to',
                                 'css' => array('width' => '10%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
                             ),
                         ),
                         'searchables' => array(

@@ -22,7 +22,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
     {
         return $this->serviceLocator;
     }
-    
+     
     /**
      * Adds new record for lost password request 
      * @param String $url

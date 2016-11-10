@@ -1,7 +1,7 @@
 <?php
 
 
-return array( 
+return array(  
 	'plugins' => array(
 		'meliscore' => array(
 			'conf' => array(
@@ -129,6 +129,9 @@ return array(
 				            '/MelisCore/js/tools/lang.tools.js',
 				            '/MelisCore/js/tools/emailMngt.tools.js',
 				            '/MelisCore/js/tools/melis_mod_diag.tool.js',
+				    
+				            //datepicker translations
+				            '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
 						),
 				'css' => array(
                               '/MelisCore/assets/css/admin/module.admin.page.index.min.css',
@@ -349,10 +352,6 @@ return array(
 							                        ),
 							            
 							                    ), // melis_module_diagnostics_tool_content
-							            
-							                    'melis_module_diagnostics_tool_modal' => array(
-							            
-							                    ), // end melis_module_diagnostics_tool_modal
 							                ),
 							            ),
 							            // MODULE MANAGEMENT 
@@ -673,20 +672,6 @@ return array(
 							                            'jsdatas' => array()
 							                        ),
 							                        'interface' => array(
-							                            'meliscore_tool_emails_mngt_content_refresh' => array(
-							                                'conf' => array(
-							                                    'id' => 'id_meliscore_tool_emails_mngt_content_refresh',
-							                                    'name' => 'tr_meliscore_tool_emails_mngt_content_refresh',
-							                                    'melisKey' => 'meliscore_tool_emails_mngt_content_refresh',
-							                                ),
-							                                'forward' => array(
-							                                    'module' => 'MelisCore',
-							                                    'controller' => 'EmailsManagement',
-							                                    'action' => 'render-tool-emails-mngt-table-refresh',
-							                                    'jscallback' => '',
-							                                    'jsdatas' => array()
-							                                ),
-							                            ),
 							                            'meliscore_tool_emails_mngt_content_table' => array(
 							                                'conf' => array(
 							                                    'id' => 'id_meliscore_tool_emails_mngt_content',
@@ -732,20 +717,6 @@ return array(
 							                                    'jsdatas' => array()
 							                                ),
 							                                'interface' => array(
-							                                    'meliscore_tool_emails_mngt_generic_from_header_cancel' => array(
-							                                        'conf' => array(
-							                                            'id' => 'id_meliscore_tool_emails_mngt_generic_from_header_cancel',
-							                                            'name' => 'tr_meliscore_tool_emails_mngt_generic_from_header_cancel',
-							                                            'melisKey' => 'meliscore_tool_emails_mngt_generic_from_header_cancel'
-							                                        ),
-							                                        'forward' => array(
-							                                            'module' => 'MelisCore',
-							                                            'controller' => 'EmailsManagement',
-							                                            'action' => 'render-emails-mngt-header-cancel',
-							                                            'jscallback' => '',
-							                                            'jsdatas' => array()
-							                                        ),
-							                                    ),
 							                                    'meliscore_tool_emails_mngt_generic_from_header_save' => array(
 							                                        'conf' => array(
 							                                            'id' => 'id_meliscore_tool_emails_mngt_generic_from_header_save',

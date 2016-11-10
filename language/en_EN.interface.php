@@ -46,6 +46,7 @@
 	    
 	    // Simple Texts
 	    'tr_meliscore_empty' => 'empty',
+	    'tr_meliscore_all' => 'All',
 			
 		// Languages
 		'tr_meliscore_header_language_Language' => 'Languages', 
@@ -171,7 +172,7 @@
 	    'tr_meliscore_dt_sInfoFiltered' => ' ',
 	    'tr_meliscore_dt_sInfoPostFix' => ' ',
 	    'tr_meliscore_dt_sInfoThousands' => ' ',
-	    'tr_meliscore_dt_sLengthMenu' => 'Show _MENU_ entries',
+	    'tr_meliscore_dt_sLengthMenu' => 'Show _MENU_',
 	    'tr_meliscore_dt_sLoadingRecords' => 'Loading...',
 	    'tr_meliscore_dt_sProcessing' => 'Processing...',
 	    'tr_meliscore_dt_sSearch' => 'Search:',  
@@ -193,7 +194,7 @@
 		'tr_meliscore_dashboard_Calendar' => 'Calendar',
 	    
 	    // Date Picker
-	    'tr_meliscore_datepicker_select_date' => 'Select Date: ',
+	    'tr_meliscore_datepicker_select_date' => 'Date: ',
 	    'tr_meliscore_datepicker_today' => 'Today',
 	    'tr_meliscore_datepicker_yesterday' => 'Yesterday',
 	    'tr_meliscore_datepicker_last_7_days' => 'Last 7 Days',
@@ -229,7 +230,7 @@
         'tr_meliscore_tool_platform_modal_new' => 'New Platform',
 	    'tr_meliscore_tool_platform_modal_edit' => 'Edit Platform',
 	    'tr_meliscore_tool_platform_modal_del' => 'Delete Platform',
-	    'tr_meliscore_tool_platform_prompts_confirm' => 'By removing this platform, you will also be removing critical information and settings that is attached to this platform, are you sure you want to delete?',
+	    'tr_meliscore_tool_platform_prompts_confirm' => 'By removing this platform, you will also be removing critical information and settings attached to this platform, are you sure you want to delete the platform?',
 	    'tr_meliscore_tool_platform_prompts_delete_success' => 'Platform has been deleted successfully',
 	    'tr_meliscore_tool_platform_prompts_delete_failed' => 'Unable to delete platform, please try again',
 	    'tr_meliscore_tool_platform_prompts_new_success' => 'New platform has been added successfully',
@@ -408,5 +409,10 @@
 	    
 	    'tr_melis_module_controller_action_warn' => 'Please add diagnostic.config.php in your %s module',
 	    
+	    'tr_melis_diag_test_module_config_title' => 'Testing module config folder and melis.module.load file',
+	    
+	    // Tooltip messages
+	    'tr_meliscore_tool_tooltip_password' => 'The password must be at least of 8 characters and must contain at least a letter AND a number.',
+	    'tr_meliscore_tool_tooltip_password_2' => 'Confirm the password',
 	);
 ?>

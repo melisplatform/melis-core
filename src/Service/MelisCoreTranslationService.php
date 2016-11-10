@@ -115,10 +115,10 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         );
         
         foreach($moduleFolders as $module) {
-            if(file_exists('/language')) {
+            if(file_exists($module.'/language')) {
                 foreach($transFiles as $file) {
-                    if(file_exists('/language/'.$file)) {
-                        $tmpTrans[] = include('/language/'.$file);
+                    if(file_exists($module.'/language/'.$file)) {
+                        $tmpTrans[] = include($module.'/language/'.$file);
                     }
                 }
             }
@@ -197,49 +197,174 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     public function addTranslationFiles($locale)
     {
         $status = false;
-        $defaultTransInterface = 'en_EN.interface.php';
-        $defaultTransForms     = 'en_EN.forms.php';
+        $excludeModules = array('.', '..', '.gitignore', 'MelisSites', 'MelisInstaller');
         $transInterface = $locale.'.interface.php';
         $transForms     = $locale.'.forms.php';
-        $excludeModules = array('.', '..', '.gitignore', 'MelisSites');
         $modules = array();
         
+        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $vendorModules = $moduleSvc->getVendorModules();
+        $userModules   = $moduleSvc->getUserModules();
+        $modules = $moduleSvc->getAllModules();
+        
+        
+        $fullPathVendorModules = array();
+        $fullPathUserModules   = array();
+        
+        // get the full path of User Modules
+        foreach($userModules as $uModule) {
+            $uPath = $moduleSvc->getModulePath($uModule) . '/language/';
+            if(file_exists($uPath) && is_writable($uPath)) {
+                $fullPathUserModules[] = $uPath;
+            }
+        
+        }
+        
+        foreach($vendorModules as $vModule) {
+        
+            $vPath = $moduleSvc->getModulePath($vModule) . '/language/';
+            if(file_exists($vPath) && is_writable($vPath)) {
+                $fullPathVendorModules[] = $vPath;
+            }
+        }
+        
 
-        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
-        $modules = $modulesSvc->getAllModules();
+        
+        if($fullPathUserModules) {
+            foreach($fullPathUserModules as $uModule) {
+                $this->copyOrCreateTranslationFiles($uModule, $locale);
+            }
+        }
+        
+        if($fullPathVendorModules) {
+            foreach($fullPathVendorModules as $vModule) {
+                $this->copyOrCreateTranslationFiles($vModule, $locale);
+            }
+        }
         
         foreach ($modules as $moduleName)
         {
-            if(!in_array($moduleName, $excludeModules)) 
+            if(!in_array($moduleName, $excludeModules))
             {
-                $pathModule = $modulesSvc->getModulePath($moduleName);
+                $pathModule = $moduleSvc->getModulePath($moduleName);
                 $modules[] = $pathModule.'/language';
             }
         }
         
         foreach($modules as $translationPath) {
             $truePath = $translationPath;
-            if(is_writable($truePath)) {
-                if(!file_exists($truePath.'/'.$transInterface)) {
-                    if(file_exists($truePath.'/'.$defaultTransInterface)) {
-                        copy($truePath.'/'.$defaultTransInterface, $truePath.'/'.$transInterface);
-                    
-                        // check if the path has forms translations
-                        if(file_exists($truePath.'/'.$defaultTransForms)) {
-                            copy($truePath.'/'.$defaultTransForms, $truePath.'/'.$transForms);
-                        }
-                    }
-                }
-
-                
-                // make sure that the created translation file exists
-                if(file_exists($truePath.'/'.$transInterface)) {
-                    $status = true;
-                }
+        
+            // make sure that the created translation file exists
+            if(file_exists($truePath.'/'.$transInterface)) {
+                $status = true;
             }
         }
         
         return $status;
+    }
+    
+    private function getFirstTranslationFile($directory, $lookFor = '.interface.')
+    {
+        if(file_exists($directory)) {
+            $files = array_diff(scandir($directory), array('.', '..'));
+    
+            $fileName = '';
+            sort($files);
+            $files = array_reverse($files);
+            foreach($files as $file) {
+                if(strpos($file, $lookFor) !== false) {
+                    $fileName = $file;
+                }
+            }
+        }
+    
+        return $fileName;
+    
+    }
+    
+    private function copyOrCreateTranslationFiles($dir, $locale) {
+        $result = array();
+        $cdir = scandir($dir);
+        $fileName = '';
+        
+        $defaultTransInterface = 'en_EN.interface.php';
+        $defaultTransForms     = 'en_EN.forms.php';
+        $transInterface = $locale.'.interface.php';
+        $transForms     = $locale.'.forms.php';
+        
+        foreach ($cdir as $key => $value) {
+            if (!in_array($value,array(".",".."))) {
+                if (is_dir($dir . $value)) {
+                    $result[$dir .$value] = $this->copyOrCreateTranslationFiles($dir . $value, $locale);
+                    $tmpdir = $dir .$value;
+                    if($this->isDirEmpty($tmpdir)) {
+                        $this->createTranslationFile($tmpdir, $defaultTransInterface);
+                        $this->createTranslationFile($tmpdir, $transInterface);
+                        
+                        $this->createTranslationFile($tmpdir, $defaultTransForms);
+                        $this->createTranslationFile($tmpdir, $transForms);
+                    }
+                }
+                else {
+                    $result[$dir . $value] = $value;
+                    $fileName = $dir . $value;
+                    
+                    if(is_writable($dir)) {
+                        if(!$this->isDirEmpty($dir)) {
+                            $defaultTransInterface = $this->getFirstTranslationFile($dir, '.interface.') ? $this->getFirstTranslationFile($dir, '.interface.') :  $transInterface;
+                            $defaultTransForms     = $this->getFirstTranslationFile($dir, '.forms.') ? $this->getFirstTranslationFile($dir, '.forms.') : $transForms;
+                            
+                            $transInterface = $this->getTranslationFileName($defaultTransInterface, $locale);
+                            $transForms = $this->getTranslationFileName($defaultTransForms, $locale);
+
+                            if(!file_exists($dir.'/'.$transInterface)) {
+                                if(file_exists($dir.'/'.$defaultTransInterface)) {
+                                    copy($dir.'/'.$defaultTransInterface, $dir.'/'.$transInterface);
+                                }
+                                else {
+                                    $this->createTranslationFile($dir, $transInterface);
+                                }
+                            }
+                            
+                            if(!file_exists($dir.'/'.$transForms)) {
+                                // check if the path has forms translations
+                                if(file_exists($dir.'/'.$defaultTransForms)) {
+                                    copy($dir.'/'.$defaultTransForms, $dir.'/'.$transForms);
+                                }
+                                else {
+                                    $this->createTranslationFile($dir, $transForms);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+    
+    private function getTranslationFileName($fileName, $locale)
+    {
+        $token = strpos($fileName, '.') !== false ? explode('.', $fileName) : null;
+        $newFileName = $fileName;
+        if($token) {
+            $newFileName = str_replace($token[0], $locale, $fileName);
+        }
+    
+        return $newFileName;
+    }
+    
+    private function createTranslationFile($dir, $fileName)
+    {
+        $content = '<?php'. PHP_EOL . 'return array(' . PHP_EOL . PHP_EOL. ');';
+        if(file_exists($dir) && is_writable($dir)) {
+            file_put_contents($dir.'/'.$fileName, $content);
+        }
+    }
+    
+    private function isDirEmpty($dir) {
+      if (!is_readable($dir)) return NULL; 
+      return (count(scandir($dir)) == 2);
     }
     
     public function getFilesByLocale($locale) 
