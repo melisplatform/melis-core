@@ -14,7 +14,7 @@ use Zend\Db\TableGateway\TableGateway;
 class MelisLangTable extends MelisGenericTable
 {
 	public function __construct(TableGateway $tableGateway)
-	{
+	{ 
 		parent::__construct($tableGateway);
 		$this->idField = 'lang_id';
 	}

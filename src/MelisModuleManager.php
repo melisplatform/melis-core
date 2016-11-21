@@ -57,6 +57,7 @@ class MelisModuleManager
         } else {
             $modules = array();
         }
+        
         return $modules;
     }
 }

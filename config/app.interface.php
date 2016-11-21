@@ -75,6 +75,7 @@ return array(
         				    '/MelisCore/assets/components/core/js/core.init.js',
 				            '/MelisCore/js/library/datepicker/moment.min.js',
 				            '/MelisCore/js/library/datepicker/daterangepicker.js',
+				            '/MelisCore/assets/components/plugins/type-watch/jquery.typewatch.js',
 				    
 				            // switch feature
 				            '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/lib/js/bootstrap-switch.js?v=v1.2.3',

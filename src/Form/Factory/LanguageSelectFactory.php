@@ -22,7 +22,7 @@ class LanguageSelectFactory extends MelisSelectFactory
 	{
 		$serviceManager = $formElementManager->getServiceLocator();
 
-		$tableLang = $serviceManager->get('MelisEngineTableCmsLang');
+		$tableLang = $serviceManager->get('MelisCoreTableLang');
 		$languages = $tableLang->fetchAll();
 		
 		$valueoptions = array();
@@ -30,7 +30,7 @@ class LanguageSelectFactory extends MelisSelectFactory
 		for ($i = 0; $i < $max; $i++)
 		{
 			$tpl = $languages->current();
-			$valueoptions[$tpl->lang_cms_id] = $tpl->lang_cms_name;
+			$valueoptions[$tpl->lang_id] = $tpl->lang_name;
 			$languages->next();
 		}
 		

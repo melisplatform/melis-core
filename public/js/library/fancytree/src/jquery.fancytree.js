@@ -47,7 +47,7 @@ function consoleApply(method, args){
 
 	if(fn){
 		try{
-			fn.apply(window.console, args);
+			/* fn.apply(window.console, args); */
 		} catch(e) {
 			// IE 8?
 			s = "";

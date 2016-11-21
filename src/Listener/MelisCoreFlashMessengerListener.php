@@ -23,10 +23,17 @@ class MelisCoreFlashMessengerListener extends MelisCoreGeneralListener implement
         $callBackHandler = $sharedEvents->attach(
         	'MelisCore',
         	array(
-        	    'meliscore_tooluser_savenew_end', 'meliscore_tooluser_save_end', 'meliscore_tooluser_delete_end',
-        	    'meliscore_module_management_save_end', 'meliscore_platform_new_end', 'meliscore_platform_update_end',
-        	    'meliscore_platform_delete_end', 'meliscore_module_management_save_end', 'meliscore_language_new_end',
-        	    'meliscore_language_delete_end', 'meliscore_tool_bo_emails_end'
+        	    'meliscore_tooluser_savenew_end', 
+        	    'meliscore_tooluser_save_end', 
+        	    'meliscore_tooluser_delete_end',
+        	    'meliscore_module_management_save_end', 
+        	    'meliscore_platform_new_end', 
+        	    'meliscore_platform_update_end',
+        	    'meliscore_platform_delete_end', 
+        	    'meliscore_module_management_save_end', 
+        	    'meliscore_language_new_end',
+        	    'meliscore_language_delete_end', 
+        	    'meliscore_tool_bo_emails_end',
         	),
         	function($e){
 

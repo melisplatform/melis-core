@@ -326,6 +326,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             // datatables predefined filter plugins
             $preDefDTFilter = array('l', 'f');
             
+            $searchInputClass = '';
 
             // render the buttons in the left section of the filter bar
             foreach($left as $leftKey => $leftValue) {
@@ -336,8 +337,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 }
                 else {
                     $leftDom .= '<"'.$leftKey.'"'. $htmlContent. '>';
+                    if ($htmlContent == 'f'){
+                        $searchInputClass = $leftKey;
+                    }
                 }
-            
             }
             
             // render the buttons in the center section of the filter bar
@@ -349,6 +352,9 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 }
                 else {
                     $centerDom .= '<"'.$centerKey.'"'. $htmlContent. '>';
+                    if ($htmlContent == 'f'){
+                        $searchInputClass = $centerKey;
+                    }
                 }
             
             }
@@ -362,8 +368,22 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 }
                 else {
                     $rightDom .= '<"'.$rightKey.'"'. $htmlContent. '>';
+                    if ($htmlContent == 'f'){
+                        $searchInputClass = $rightKey;
+                    }
                 }
             
+            }
+            
+            $tableSearchPlugin = '';
+            if (!empty($searchInputClass)){
+                $tableSearchPlugin = '$(\'.'.$searchInputClass.' input[type="search"]\').unbind();
+                    	               $(\'.'.$searchInputClass.' input[type="search"]\').typeWatch({
+                            				captureLength: 2,
+                            				callback: function(value) {
+                        	                '.str_replace("#","$",$tableId).'.search(value).draw();   
+                            				}
+                            			});';
             }
             
             
@@ -540,6 +560,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 				    },
                     sDom : \''.$sDomStructure.'\',
                     bSort: true,
+                    searchDelay: 1500,
 			        columnDefs: [
                         '.$columnsStylesStr.'  
                         '.$unSortableColumnsStr.'
@@ -562,6 +583,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             var '.str_replace("#","$",$tableId).' = '.$fnName.'();
 	        $(document).on("init.dt", function(e, settings) {
 			    '.$jsSdomContentInit.'
+		        '.$tableSearchPlugin.'   
 	        });';
 	    }
 	    
