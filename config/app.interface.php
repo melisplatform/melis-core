@@ -1,6 +1,5 @@
 <?php
 
-
 return array(  
 	'plugins' => array(
 		'meliscore' => array(

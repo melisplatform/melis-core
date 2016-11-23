@@ -2158,11 +2158,15 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
     color: #7D7B7B;
 }
 
-
-
 @media ( max-width: 991px ) {	
 	#content .page-head-container .page-title .page-publishunpublish.title-switch {
 		margin-top: 0px;
+	}
+	.dashboard-workflow-container .nav-tabs li > a {
+		height: 100%;
+	}	
+	.dataTable span.dtr-data:after {
+		content: "\00a0";
 	}
 }
 @media ( max-width: 768px ) {
