@@ -412,7 +412,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             }
 
             // remove unnecessary new lines and text paragraphs (not <p> tags)
-            $actionButtons = trim(preg_replace('/\s\s+/', ' ', $actionButtons)); 
+            $actionButtons = trim(preg_replace('/\s+/', ' ', $actionButtons));
            
             // retrieve the css configuration inside each columns
             $colCtr = 1; // starts with index 1 since this will be used in JS configuration for jquery nth-child
@@ -502,7 +502,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 foreach ($columnsStyles As $sVal){
                     $columnStyle = array();
                     foreach ($sVal As $cKey => $cVal){
-                        if (in_array($cKey, array('width','targets'))){
+                        if (in_array($cKey, array('width','targets','visible'))){
                             $cVal = (is_numeric($cVal)) ? $cVal : '"'.$cVal.'"';
                             array_push($columnStyle, '"'.$cKey.'": '.$cVal);
                         }

@@ -1,5 +1,6 @@
 <?php
 
+
 return array(  
 	'plugins' => array(
 		'meliscore' => array(
@@ -111,6 +112,8 @@ return array(
 				            // tinyMCE
 				            '/MelisCore/js/library/tinymce/tinymce.min.js',
 				            '/MelisCore/js/library/tinymce/langs/fr_FR.js',
+				            '/MelisCore/js/tinyMCE/melis_tinymce.js',
+				            '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
 				    
 				            // BS FileStyle
 				            '/MelisCore/js/library/bs-filestyle/bootstrap-filestyle.min.js',

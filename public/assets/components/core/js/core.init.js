@@ -225,7 +225,7 @@ if (window.location != window.parent.location)
         $('.navbar .dropdown-submenu > a').on('click', function(e){
             e.preventDefault();
             e.stopPropagation();
-            $(this).parent().toggleClass('open');			
+            $(this).parent().toggleClass('open');
         });
     }
 

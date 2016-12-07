@@ -129,38 +129,9 @@ $(function(){
 		$('.boed_lang_id').each(function(){
 			langID = $(this).val();
 			codename = $(this).data('codename');
-			
-			if(melisLangId == "en_EN") {
-				locale = "en";
-    		}else {
-    			locale = melisLangId;
-    		}
-    		
-    		if(typeof(tinyMCE) != 'undefined' && tinymce != null) {
-    			try {
-    		        tinymce.remove("#"+codename+"_"+langID+"_boed_html");
-    			} catch (e) {}
-			}
-			
-            tinymce.init({
-				mode: "textareas",
-				selector : "#"+codename+"_"+langID+"_boed_html",
-				language: locale,
-			  	height: 200,
-			  	relative_urls : false,
-			  	remove_script_host : false,
-			  	convert_urls : true,
-		        plugins: [
-		    	    'advlist autolink lists link image charmap print preview anchor',
-		    	    'searchreplace visualblocks code fullscreen',
-		    	    'insertdatetime media table contextmenu paste template'
-	    	    ],
-	    	    menubar: false,
-			  	toolbar: 'undo redo | styleselect | bold italic | link image |  alignleft aligncenter alignright alignjustify | code',
-			});
-            
+            // Initialize TinyMCE editor
+        	melisTinyMCE.createTinyMCE("tool", "textarea#"+codename+"_"+langID+"_boed_html", {height: 200, remove_script_host: false, convert_urls : true});
 		});
-		
 	}
 	
 	window.reInitTableEmailMngt = function(){

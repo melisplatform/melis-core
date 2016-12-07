@@ -60,6 +60,22 @@ class Module
         $eventManager->attach(new MelisCoreInstallNewPlatformListener());
         $eventManager->attach(new MelisCoreInstallCreateNewUserListener());
 
+        // Set cache directives
+        $eventManager->attach(MvcEvent::EVENT_FINISH, function($e) {
+            $sm = $e->getApplication()->getServiceManager();
+            
+            $assetManagerService = $sm->get('AssetManager\Service\AssetManager');
+            
+            $response = $e->getResponse();
+            $headers = $response->getHeaders();
+            
+            $headers = array(
+                'Cache-Control' => 'public',
+                'Pragma' => '',
+            );
+            $e->getResponse()->getHeaders()->addHeaders($headers);
+            
+        }, -1000);
     }
     
     public function initShowErrorsByconfig(MvcEvent $e)

@@ -1111,9 +1111,9 @@ return array(
                         ),
                         'meliscore_platform_modal_content_new' => array(
                             'id' => 'id_meliscore_platform_modal_content_new',
-                            'class' => 'glyphicons user',
-                            'tab-header' => 'tr_meliscore_tool_platform_modal_new',
-                            'tab-text' => '',
+                            'class' => 'glyphicons plus',
+                            'tab-header' => '',
+                            'tab-text' => 'tr_meliscore_tool_platform_modal_new',
                             'content' => array(
                                 'module' => 'MelisCore',
                                 'controller' => 'Platforms',
@@ -1122,9 +1122,9 @@ return array(
                         ),
                         'meliscore_platform_modal_content_edit' => array(
                             'id' => 'id_meliscore_platform_modal_content_edit',
-                            'class' => 'glyphicons user',
-                            'tab-header' => 'tr_meliscore_tool_platform_modal_edit',
-                            'tab-text' => '',
+                            'class' => 'glyphicons pencil',
+                            'tab-header' => '',
+                            'tab-text' => 'tr_meliscore_tool_platform_modal_edit',
                             'content' => array(
                                 'module' => 'MelisCore',
                                 'controller' => 'Platforms',
@@ -1286,9 +1286,9 @@ return array(
                         ),
                         'meliscore_tool_language_modal_content_new' => array(
                             'id' => 'id_meliscore_tool_language_modal_content_new',
-                            'class' => 'glyphicons asterisk',
-                            'tab-header' => 'tr_meliscore_tool_language_new',
-                            'tab-text' => '',
+                            'class' => 'glyphicons plus',
+                            'tab-header' => '',
+                            'tab-text' => 'tr_meliscore_tool_language_new',
                             'content' => array(
                                 'module' => 'MelisCore',
                                 'controller' => 'Language',
@@ -1815,6 +1815,10 @@ return array(
                                         'options' => array(
                                             'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html',
                                         ),
+                                        'attributes' => array(
+                                            'class' => 'form-control',
+                                            'rows' => 10,
+                                        ),
                                     ),
                                 ),
                                 array(
@@ -1823,6 +1827,10 @@ return array(
                                         'type' => 'TextArea',
                                         'options' => array(
                                             'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text',
+                                        ),
+                                        'attributes' => array(
+                                            'class' => 'form-control',
+                                            'rows' => 10,
                                         ),
                                     ),
                                 ),

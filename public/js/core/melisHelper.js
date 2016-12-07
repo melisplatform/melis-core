@@ -293,54 +293,70 @@ var melisHelper = (function(){
 	    });	   
     }
     
+    // Requesting flag set to false so this function will set state to ready 
+	var createModalRequestingFlag = false;
     // CREATE MODAL =================================================================================================================
     function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl, callback){
     	
-    	// if no modalUrl is supplied it will use the default modal layout from melisCore
-    	if(modalUrl === undefined || modalUrl == null){
-    		modalUrl = '/melis/MelisCore/MelisGenericModal/genericModal';
-    	}
+    	if (createModalRequestingFlag == false){
     		
-    	var datastring = {
-    			id : zoneId,
-    			melisKey : melisKey,
-    			hasCloseBtn : hasCloseBtn,
-    	};
-    	
-    	$.ajax({
-    	    url         : modalUrl,
-    	    data        : datastring,
-    	    encode		: true
-    	}).success(function(data){
-
-    		$("#melis-modals-container").append(data);
-			var modalID = $(data).find(".modal").attr("id");
-			melisHelper.zoneReload(zoneId, melisKey, parameters);
-
-			// test modal content
-			// melisHelper.createModal('id_xx1','meliscore_test_modal_content');
-			
-			
-			$("#" + modalID).modal({ show: true });
-			if(typeof callback !== "undefined") {
-				callback();
-			}
-			
-
-    	}).error(function(xhr, textStatus, errorThrown){
-    		alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
-    	});
-    	
-    	
+    		// Requesting flag set to true so this function will execute any action while still requesting
+    		createModalRequestingFlag = true;
+    		
+	    	// if no modalUrl is supplied it will use the default modal layout from melisCore
+	    	if(modalUrl === undefined || modalUrl == null){
+	    		modalUrl = '/melis/MelisCore/MelisGenericModal/genericModal';
+	    	}
+	    		
+	    	var datastring = {
+	    			id : zoneId,
+	    			melisKey : melisKey,
+	    			hasCloseBtn : hasCloseBtn,
+	    	};
+	    	
+	    	$.ajax({
+	    	    url         : modalUrl,
+	    	    data        : datastring,
+	    	    encode		: true
+	    	}).success(function(data){
+	    		// Requesting flag set to false so this function will set state to ready 
+	    		createModalRequestingFlag = false;
+	    		
+	    		$("#melis-modals-container").append(data);
+				var modalID = $(data).find(".modal").attr("id");
+				melisHelper.zoneReload(zoneId, melisKey, parameters);
+				
+				$("#" + modalID).modal({ 
+					show: true, 
+					keyboard : false,
+					backdrop : "static"
+				});
+				if(typeof callback !== "undefined") {
+					callback();
+				}
+	    	}).error(function(xhr, textStatus, errorThrown){
+	    		alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
+	    		// Requesting flag set to false so this function will set state to ready 
+	    		createModalRequestingFlag = true;
+	    	});
+    	}
     }
-
     
+    // Stating zone to loading
+    function loadingZone(targetElem){
+    	if(targetElem.length){
+    		var tempLoader = '<div id="loadingZone" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+    		targetElem.attr("style", "position: relative");
+    		targetElem.append(tempLoader);
+    	}
+    }
     
-    
-    
-    
-    
-    
+    // Removing loading state on zone
+    function removeLoadingZone(targetElem){
+    	if(targetElem.length){
+    		targetElem.find("#loadingZone").remove();
+    	}
+    }
     
     
     // BIND AND DELEGATE EVENTS =====================================================================================================
@@ -352,14 +368,6 @@ var melisHelper = (function(){
 	$("body").on("click", ".melis-modal-cont.KOnotif span.btn, .overlay-hideonclick, .delete-page-modal .cancel, .melis-prompt, melis-prompt .cancel", function(){
 	  $(".melis-modaloverlay, .melis-modal-cont").remove();
 	});
-
-	
-	
-	
-	
-	
-	
-	
 	
 	
     /* 
@@ -385,6 +393,10 @@ var melisHelper = (function(){
 		
 		// modal
 		createModal										:			createModal,
+		
+		// Loading zone
+		loadingZone										:			loadingZone,
+		removeLoadingZone								:			removeLoadingZone,
 	};
 	
 })();

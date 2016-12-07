@@ -210,6 +210,7 @@ return array(
             'MelisCore\Controller\EmailsManagement' => 'MelisCore\Controller\EmailsManagementController',
             'MelisCore\Controller\ModuleDiagnostic' => 'MelisCore\Controller\ModuleDiagnosticController',
             'MelisCore\Controller\Diagnostic' => 'MelisCore\Controller\DiagnosticController',
+            'MelisCore\Controller\MelisTinyMce' => 'MelisCore\Controller\MelisTinyMceController',
         ),
     ),
     
@@ -266,7 +267,7 @@ return array(
     ),
     // Config Files
     'tinyMCE' => array(
-    	'tool' => 'MelisCore/public/js/tinyMCE/tool.js',
+    	'tool' => 'MelisCore/public/js/tinyMCE/tool.php',
     ),
     'asset_manager' => array(
         'activate_cache' => array(
