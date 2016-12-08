@@ -15,21 +15,23 @@ var melisTinyMCE = (function(){
 			type        : 'POST', 
     	    url         : '/melis/MelisCore/MelisTinyMce/getTinyMceConfig',
     	    data        : dataString,
-    	    encode		: true
-    	}).success(function(data){
-    		if(data.success){
-    			
-    			if(typeof(tinyMCE) != 'undefined') {
-    				if(selector.length){
-    					tinymce.remove(selector);
-    				}
-     			}
-    			
-    			// Initializing TinyMCE with the request Configurations
-    			tinymce.init(data.config);
-    		}
-    	}).error(function(xhr, textStatus, errorThrown){
-    		alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
+    	    encode		: true,
+    	    success		: function(data){
+        		if(data.success){
+        			
+        			if(typeof(tinyMCE) != 'undefined') {
+        				if(selector.length){
+        					tinymce.remove(selector);
+        				}
+         			}
+        			
+        			// Initializing TinyMCE with the request Configurations
+        			tinymce.init(data.config);
+        		}
+        	},
+        	error		: function(xhr, textStatus, errorThrown){
+        		alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
+        	}
     	});
 	}
 	

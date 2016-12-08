@@ -61,7 +61,7 @@ class MelisTinyMceController extends AbstractActionController
     		    $locale = $container['melis-lang-locale'];
     		    $tinyMCEconfig['language'] = ($locale != 'en_EN') ? $locale : 'en';
     		    
-    		    if (!empty($options))
+    		    if (!empty($options) && $options != 'null')
     		    {
     		        // Merging Default TinyMCE configuration with Options from request
     		        $tinyMCEconfig = array_merge($tinyMCEconfig, $options);
