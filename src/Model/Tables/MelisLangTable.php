@@ -18,4 +18,14 @@ class MelisLangTable extends MelisGenericTable
 		parent::__construct($tableGateway);
 		$this->idField = 'lang_id';
 	}
+	
+	public function getLanguageInOrdered()
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	    
+	    $select->order(array('lang_name' => "asc"));
+	     
+	    $resultSet = $this->tableGateway->selectWith($select);
+	    return $resultSet;
+	}
 }

@@ -81,10 +81,15 @@ class MelisFlashMessengerController extends AbstractActionController
         $success = $this->params()->fromRoute('success', $this->params()->fromQuery('success', ''));
         $title   = $this->params()->fromRoute('textTitle', $this->params()->fromQuery('textTitle', ''));
         $message = $this->params()->fromRoute('textMessage', $this->params()->fromQuery('textMessage', ''));
+        $typeCode = $this->params()->fromRoute('typeCode', $this->params()->fromQuery('typeCode', ''));
+        $itemId = $this->params()->fromRoute('itemId', $this->params()->fromQuery('itemId', ''));
     
         $img = $success == 1 ? $flashMessenger::INFO : $flashMessenger::WARNING;
     
         $flashMessenger->addToFlashMessenger($title, $message, $img);
+        
+        $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+        $logSrv->saveLog($title, $message, $success, $typeCode, $itemId);
     }
     
 }

@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * Melis Technology (http://www.melistechnology.com)
+ *
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
+ *
+ */
+
+namespace {{moduleTestName}}\Controller;
+
+use MelisCore\ServiceManagerGrabber;
+use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+class {{moduleTestControllerName}} extends AbstractHttpControllerTestCase
+{
+    protected $traceError = false;
+    protected $sm;
+    protected $method = 'save';
+
+    public function setUp()
+    {
+        $this->sm  = new ServiceManagerGrabber();
+    }
+
+    {{tableFunctions}}
+
+    public function getPayload($method)
+    {
+        return $this->sm->getPhpUnitTool()->getPayload('{{moduleName}}', $method);
+    }
+
+    /**
+     * START ADDING YOUR TESTS HERE
+     */
+
+    public function testBasic{{moduleTestName}}Success()
+    {
+        $this->assertEquals("equalvalue", "equalvalue");
+    }
+
+    public function testBasic{{moduleTestName}}Error()
+    {
+        $this->assertEquals("supposed-to", "display-an-error");
+    }
+
+
+
+}
+

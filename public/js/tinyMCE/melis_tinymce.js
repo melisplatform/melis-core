@@ -15,34 +15,36 @@ var melisTinyMCE = (function(){
 			type        : 'POST', 
     	    url         : '/melis/MelisCore/MelisTinyMce/getTinyMceConfig',
     	    data        : dataString,
-    	    encode		: true,
-    	    success		: function(data){
-        		if(data.success){
-        			
-        			if(typeof(tinyMCE) != 'undefined') {
-        				if(selector.length){
-        					tinymce.remove(selector);
-        				}
-         			}
-        			
-        			// Initializing TinyMCE with the request Configurations
-        			tinymce.init(data.config);
-        		}
-        	},
-        	error		: function(xhr, textStatus, errorThrown){
-        		alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
-        	}
+    	    encode		: true
+    	}).success(function(data){
+    		if(data.success){
+    			
+    			if(typeof(tinyMCE) != 'undefined') {
+    				if(selector.length){
+    					try{
+    						tinymce.remove(selector);
+    					}catch (e) {}
+    				}
+     			}
+    			
+    			// Initializing TinyMCE with the request Configurations
+    			tinymce.init(data.config);
+    		}
+    	}).error(function(xhr, textStatus, errorThrown){
+    		alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
     	});
 	}
 	
 	// TinyMCE  action event
 	function tinyMceActionEvent(editor) {
 		
+		/**
 		var targetId = editor.id;
-		
+		*/
         editor.on("change", function () {
         	// Any changes will sync to the selector (Ex. textarea)
-            tinymce.triggerSave();
+//            tinymce.triggerSave();
+            editor.save();
         });
         
         editor.on("init",function(ed) {

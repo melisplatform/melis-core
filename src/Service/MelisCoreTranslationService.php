@@ -203,6 +203,8 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $modules = array();
         
         $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $directory = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_dir');
         $vendorModules = $moduleSvc->getVendorModules();
         $userModules   = $moduleSvc->getUserModules();
         $modules = $moduleSvc->getAllModules();
@@ -215,7 +217,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         foreach($userModules as $uModule) {
             $uPath = $moduleSvc->getModulePath($uModule) . '/language/';
             if(file_exists($uPath) && is_writable($uPath)) {
-                $fullPathUserModules[] = $uPath;
+                $fullPathUserModules[] = array('module' => $uModule, 'path' => $uPath);
             }
         
         }
@@ -224,30 +226,29 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         
             $vPath = $moduleSvc->getModulePath($vModule) . '/language/';
             if(file_exists($vPath) && is_writable($vPath)) {
-                $fullPathVendorModules[] = $vPath;
+                $fullPathVendorModules[] = array('module' => $vModule, 'path' => $vPath);
             }
         }
         
 
         
         if($fullPathUserModules) {
-            foreach($fullPathUserModules as $uModule) {
-                $this->copyOrCreateTranslationFiles($uModule, $locale);
+            foreach($fullPathUserModules as $uModuleConf) {
+                $this->createOrUpdateTranslationFiles($uModuleConf['path'], $uModuleConf['module'], $locale);
             }
         }
         
         if($fullPathVendorModules) {
-            foreach($fullPathVendorModules as $vModule) {
-                $this->copyOrCreateTranslationFiles($vModule, $locale);
+            foreach($fullPathVendorModules as $vModuleConf) {
+                $this->createOrUpdateTranslationFiles($vModuleConf['path'], $vModuleConf['module'], $locale);
             }
         }
         
         foreach ($modules as $moduleName)
         {
             if(!in_array($moduleName, $excludeModules))
-            {
-                $pathModule = $moduleSvc->getModulePath($moduleName);
-                $modules[] = $pathModule.'/language';
+            {                
+                $modules[] = $directory['path'].$moduleName;
             }
         }
         
@@ -282,64 +283,140 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     
     }
     
-    private function copyOrCreateTranslationFiles($dir, $locale) {
-        $result = array();
-        $cdir = scandir($dir);
-        $fileName = '';
+    public function createOrUpdateTranslationFiles($path, $module, $locale) {
         
-        $defaultTransInterface = 'en_EN.interface.php';
-        $defaultTransForms     = 'en_EN.forms.php';
-        $transInterface = $locale.'.interface.php';
-        $transForms     = $locale.'.forms.php';
+        $result = 0;
+        $cdir = scandir($path);
+        $fileName = '';
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+       
+        $confLanguage = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_files');
+        $directory = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_dir');
+        $defaultTransInterface = $confLanguage['defaultTransInterface'];
+        $defaultTransForms = $confLanguage['defaultTransForms'];
+        $transInterface = $locale.'.interface';
+        $transForms     = $locale.'.forms';       
+        $newDir = $directory['path'].$module;
+        $this->checkLanguageDirectory($newDir, $path);
         
         foreach ($cdir as $key => $value) {
-            if (!in_array($value,array(".",".."))) {
-                if (is_dir($dir . $value)) {
-                    $result[$dir .$value] = $this->copyOrCreateTranslationFiles($dir . $value, $locale);
-                    $tmpdir = $dir .$value;
-                    if($this->isDirEmpty($tmpdir)) {
-                        $this->createTranslationFile($tmpdir, $defaultTransInterface);
-                        $this->createTranslationFile($tmpdir, $transInterface);
-                        
-                        $this->createTranslationFile($tmpdir, $defaultTransForms);
-                        $this->createTranslationFile($tmpdir, $transForms);
-                    }
+            
+            if (!in_array($value,array(".",".."))) {    
+                
+                if (is_dir($path.$value)) {                
+                   
+                   // recursive for commerce folder setup
+                   $result = $this->createOrUpdateTranslationFiles($path.$value, $module, $locale);  
+                   
                 }
-                else {
-                    $result[$dir . $value] = $value;
-                    $fileName = $dir . $value;
+                
+                else{
                     
-                    if(is_writable($dir)) {
-                        if(!$this->isDirEmpty($dir)) {
-                            $defaultTransInterface = $this->getFirstTranslationFile($dir, '.interface.') ? $this->getFirstTranslationFile($dir, '.interface.') :  $transInterface;
-                            $defaultTransForms     = $this->getFirstTranslationFile($dir, '.forms.') ? $this->getFirstTranslationFile($dir, '.forms.') : $transForms;
+                    // explode file name extensions to work both on develop and commerce modules
+                    // develop translations files ex. en_EN.interface.php
+                    // commerce translations files ex. en_EN.interface.variants.php , en_EN.interface.attributes.php
+                    $tmp = explode(".", $value);
+                    $file  = $tmp[0].'.'.$tmp[1];
+                    
+                    //compare if file is an interface translation
+                    if($defaultTransInterface == $file) {                        
+                       
+                        $transFile = $transInterface;
+                        $defaultFile = $defaultTransInterface;
+                        
+                        // append remaing file extensions to get full file name
+                        for($c = 2; $c < count($tmp); $c++){
+                            $transFile .= '.'.$tmp[$c];
+                            $defaultFile .= '.'.$tmp[$c];
+                        }
+                        
+                        // check if __dir__/languages/[module]/[locale].interface.* exists
+                        if(!file_exists($newDir.'/'.$transFile)){
                             
-                            $transInterface = $this->getTranslationFileName($defaultTransInterface, $locale);
-                            $transForms = $this->getTranslationFileName($defaultTransForms, $locale);
-
-                            if(!file_exists($dir.'/'.$transInterface)) {
-                                if(file_exists($dir.'/'.$defaultTransInterface)) {
-                                    copy($dir.'/'.$defaultTransInterface, $dir.'/'.$transInterface);
-                                }
-                                else {
-                                    $this->createTranslationFile($dir, $transInterface);
-                                }
-                            }
+                            //create new blank interface translation then copy contents
+                            $this->createTranslationFile($newDir, $transFile);
+                            $result = copy($path.'/'.$defaultFile, $newDir.'/'.$transFile);                               
                             
-                            if(!file_exists($dir.'/'.$transForms)) {
-                                // check if the path has forms translations
-                                if(file_exists($dir.'/'.$defaultTransForms)) {
-                                    copy($dir.'/'.$defaultTransForms, $dir.'/'.$transForms);
-                                }
-                                else {
-                                    $this->createTranslationFile($dir, $transForms);
-                                }
+                        }else{
+                            
+                            // if a translations already exist then check for new or missing translation
+                            $transDiff = $this->checkTranslationsDiff($path.'/'.$defaultFile, $newDir.'/'.$transFile);
+                            $result = true;
+                            
+                            if($transDiff){
+                                
+                                // update current translation if there are new ones
+                                $result = $this->updateTranslations($newDir.'/'.$transFile, $transDiff);                                
+                            }                            
+                        }                        
+                    }
+                    
+                    // compare if file is a form translation
+                    if($defaultTransForms == $file ) {
+                        
+                        $transFile = $transForms;
+                        $defaultFile = $defaultTransForms;
+                        
+                        // append remaing file extensions for complete file name
+                        for($c = 2; $c < count($tmp); $c++){
+                            $transFile .= '.'.$tmp[$c];
+                            $defaultFile .= '.'.$tmp[$c];
+                        }
+                        
+                        // check if __dir__/languages/[module]/[locale].forms.* exists
+                        if(!file_exists($newDir.'/'.$transFile)){
+                            
+                            //create new forms translation then copy contents
+                            $this->createTranslationFile($newDir, $transFile);
+                            $result = copy($path.'/'.$defaultFile, $newDir.'/'.$transFile);
+                            
+                        }else{
+                            
+                            // check for translation difference
+                            $transDiff = $this->checkTranslationsDiff($path.'/'.$defaultFile, $newDir.'/'.$transFile);
+                            $result = true;
+                            
+                            if($transDiff){
+                                
+                                // update current translation if there are new ones
+                                $result = $this->updateTranslations($newDir.'/'.$transFile, $transDiff);
                             }
                         }
-                    }
+                    }                    
                 }
             }
+        }  
+
+        
+        return $result;
+    }
+    
+    /**
+     * Checks the language directory if the path exist, creates a directory if with english translations if not existing
+     * 
+     * @param string $dir The directory path of the language directory
+     * @param string $modulePath The directory path of melis english translations
+     * 
+     * @return boolean true if existing, otherwise false if failed to create
+     */
+    private function checkLanguageDirectory($dir, $modulePath)
+    {
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $confLanguage = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_files');
+        $defaultTransInterface = $confLanguage['defaultTransInterface'];
+        $defaultTransForms = $confLanguage['defaultTransForms'];
+        $result = true;
+ 
+        if (!file_exists($dir)) {
+            $result = mkdir($dir, 0777, true);
+            if(file_exists($modulePath.$defaultTransInterface)){
+                copy($modulePath.$defaultTransInterface, $dir.'/'.$defaultTransInterface);
+            }
+            if(file_exists($modulePath.$defaultTransForms)){
+                copy($modulePath.$defaultTransForms, $dir.'/'.$defaultTransForms);
+            }            
         }
+        
         return $result;
     }
     
@@ -440,6 +517,54 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
 
         
         return $newUniqueLocales;
+    }
+    
+    /**
+     * Checks if melis translations have new updates and returns the missing translations
+     * 
+     * @param string $melisTrans The path of the module translation
+     * @param string $currentTrans The path of the current translation
+     * 
+     * returns array() Returns an array of missing translations with the keys and values
+     */
+    public function checkTranslationsDiff($melisTrans, $currentTrans)
+    {   
+        
+        $new = include $melisTrans;
+        $new = is_array($new)? $new : array();
+        $current = include $currentTrans;   
+        $current = is_array($current)? $current : array();
+        
+        return array_diff_key($new, $current);
+    }
+    
+    /**
+     * Updates the translation files
+     * 
+     * @param string $currentTrans The path of the current translation
+     * @param array $transDiff array of translations to be added
+     * 
+     * @return boolean
+     */
+    public function updateTranslations($currentTrans, $transDiff)
+    {
+        $status = false;
+        $current = include $currentTrans;
+        $current = is_array($current)? $current : array();
+        $transUpdate =  array_merge($current, $transDiff);
+       
+        $content = "<?php". PHP_EOL . "\t return array(" . PHP_EOL;
+        foreach($transUpdate as $key => $value){
+            $content .= "\t\t'". $key . "' => '" . addslashes($value) ."'," .PHP_EOL;
+        }
+        $content .= "\t );" . PHP_EOL;
+        
+        if(file_put_contents($currentTrans, $content, LOCK_EX)){
+            $status = true;
+        }
+        
+        return $status;
+        
     }
 
 }

@@ -22,8 +22,12 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	 * Saving Emails Properties and Details
 	 * @param string $codename - Codename of the email
 	 * @param array $data - Containing the properties and details of the email
+	 * 
+	 * @return ID|NULL if saving is failed
 	 */
 	public function saveBoEmailByCode($codename, $data){
+	    
+	    $boeID = null;
 	    
 	    $melisBOEmails = $this->getServiceLocator()->get('MelisCoreTableBOEmails');
 	    $melisBOEmailsDetails = $this->getServiceLocator()->get('MelisCoreTableBOEmailsDetails');
@@ -69,20 +73,20 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	        $melisBOEmailsData = $melisBOEmailsResult->current();
 	        if (!empty($melisBOEmailsData)){
 	            // Email Edition Statement
-	            $poeID = $melisBOEmailsData->boe_id;
-                $melisBOEmails->save($data,$poeID);
+	            $boeID = $melisBOEmailsData->boe_id;
+                $melisBOEmails->save($data,$boeID);
 	        }else{
 	            // Adding new database row
-	            $poeID = $melisBOEmails->save($data);
+	            $boeID = $melisBOEmails->save($data);
 	        }
 	    }else{
 	        // Adding Email Statement
-	        $poeID = $melisBOEmails->save($data);
+	        $boeID = $melisBOEmails->save($data);
 	    }
 	    
 	    foreach ($langEmailDetailsContainer As $key => $val){
 	        $emailDetails = $langEmailDetailsContainer[$key];
-	        $emailDetails['boed_email_id'] = $poeID;
+	        $emailDetails['boed_email_id'] = $boeID;
 	        
 	        if (isset($emailDetails['boed_id'])&&!empty($emailDetails['boed_id'])){
 	            $melisBOEmailsDetails->save($emailDetails,$emailDetails['boed_id']);
@@ -91,33 +95,39 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	            $melisBOEmailsDetails->save($emailDetails);
 	        }
 	    }
+	    
+	    return $boeID;
 	}
 	
 	/**
 	 * Deleting Email
 	 * @param Array $data - contain the codename of the email
+	 * 
+	 * @return Id|null if deletion is failed
 	 */
 	public function deleteEmail($data){
+	    $emailBoId = null;
 	    if (!empty($data['codename'])){
 	        $melisBOEmails = $this->getServiceLocator()->get('MelisCoreTableBOEmails');
 	        $boeID = $melisBOEmails->getEntryByField('boe_code_name', $data['codename']);
 	        
 	        if (!empty($boeID)){
 	            $boeID = $boeID->current();
-	            
+	            $emailBoId = $boeID->boe_id;
 	            $melisBOEmails->deleteById($boeID->boe_id);
 	            
 	            $melisBOEmailsDetails = $this->getServiceLocator()->get('MelisCoreTableBOEmailsDetails');
 	            $melisBOEmailsDetails->deleteByField('boed_email_id', $boeID->boe_id);
 	        }
 	    }
+	    
+	    return $emailBoId;
 	}
 	
 	/**
 	 * Get BO Emails By Code
-	 * @param string $codename
-	 * @param int $langId
-	 * @return Array containing the Email properteis and details
+	 * @param String $codename  - Codename of the email
+	 * @param int $langId - Language id
 	 * Return Array Structure
 	 *     array(
 	 *         **** Data From "melis_core_bo_emails" ****
@@ -152,6 +162,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	 *         )
 	 *     )
 	 * 
+	 * @return Array
 	 */
 	public function getBoEmailByCode($codename, $langId = null) {
 	    $melisCoreTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
@@ -187,7 +198,6 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	                $result['headers']['from'] = ($melisBOEmailsData->boe_from_email) ? $melisBOEmailsData->boe_from_email : $from;
 	                $result['headers']['from_name'] = ($melisBOEmailsData->boe_from_name) ? $melisBOEmailsData->boe_from_name : $from_name;
 	                $result['headers']['replyTo'] = ($melisBOEmailsData->boe_reply_to) ? $melisBOEmailsData->boe_reply_to : $replyTo;
-// 	                $result['layout'] = ($melisBOEmailsData->boe_content_layout) ? $melisBOEmailsData->boe_content_layout : $layout;
 	                $result['layout'] = $melisBOEmailsData->boe_content_layout;
 	                $result['headers']['tags'] = '';
 	                if (!empty($melisBOEmailsData->boe_tag_accepted_list)||!empty($tags)){
@@ -288,6 +298,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	 * @param int $langId - Id/primary key on the Corelanguage
 	 * @return Boolean - return TRUE if send successfully otherwise FALSE
 	 * 
+	 * @return boolean
 	 */
 	public function sendBoEmailByCode($codename, $tags, $email_to, $name_to = null, $langId = null) {
 	    
@@ -436,6 +447,4 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	    
 	    return $sendFlag; 
 	}
-	
-	
 }

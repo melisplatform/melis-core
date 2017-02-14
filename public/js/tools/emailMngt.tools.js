@@ -73,16 +73,16 @@ $(function(){
 	        encode		: true
 		}).done(function(data) {
 			if(data.success) {
-				melisCore.flashMessenger();
-				melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46');
+				melisHelper.melisOkNotification(data.textTitle, data.textMessage);
 				melisHelper.tabClose(codename+"_id_meliscore_tool_emails_mngt_generic_from");
 				melisHelper.tabOpen(translations.tr_meliscore_tool_emails_mngt, 'fa-envelope-o', 'id_meliscore_tool_emails_mngt', 'meliscore_tool_emails_mngt');
 				melisHelper.zoneReload("id_meliscore_tool_emails_mngt", "meliscore_tool_emails_mngt");
 			} else {
-				melisCoreTool.alertDanger("#siteaddalert", '', data.textMessage + "<br/>");
-				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors, 'closeByButtonOnly');
+				melisCoreTool.alertDanger("#siteaddalert", '', data.textMessage);
+				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
 				melisCoreTool.highlightErrors(data.success, data.errors, codename+'_generalPropertiesform');
 			}
+			melisCore.flashMessenger();
 		}).fail(function(){
 			alert( translations.tr_meliscore_error_message );
 		});
@@ -117,7 +117,7 @@ $(function(){
 			        encode		: true
 				}).done(function(data) {
 					melisCore.flashMessenger();
-					melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46');
+					melisHelper.melisOkNotification(data.textTitle, data.textMessage);
 					melisHelper.zoneReload("id_meliscore_tool_emails_mngt", "meliscore_tool_emails_mngt");
 				}).fail(function(){
 					alert( translations.tr_meliscore_error_message );
@@ -138,13 +138,5 @@ $(function(){
 		$('.noDeleteBtn').each(function(){
 			$('#'+$(this).attr('id')+' .btnMelisCoreEmailMngtDelete').remove();
 		});
-		
-		// Removing DataTaable Pagination, Sorting and filters features
-//		$('#tableEmailMngt_paginate').addClass('hidden');
-//		$('#tableEmailMngt_info').addClass('hidden');
-//		$('#tableEmailMngt th').removeClass('sorting');
-//		$('#tableEmailMngt th').removeClass('sorting_asc');
-//		$('#tableEmailMngt th').unbind('click');
-		
 	}
 });

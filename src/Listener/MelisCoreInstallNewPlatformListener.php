@@ -46,21 +46,6 @@ class MelisCoreInstallNewPlatformListener extends MelisCoreGeneralListener imple
                              $tablePlatform->save(array('plf_name' => $platform['plf_name']));
                     }
                 }
-                
-                // install lang
-                $tableLang = $sm->get('MelisCoreTableLang');
-                $tableLang->save(array(
-                    'lang_id' => 1,
-                    'lang_locale' => 'en_EN',
-                    'lang_name' => 'English'
-                ));
-                
-                $tableLang->save(array(
-                    'lang_id' => 2,
-                    'lang_locale' => 'fr_FR',
-                    'lang_name' => 'Français'
-                ));
-
         	},
         -1000);
         

@@ -399,7 +399,7 @@ class ToolUserController extends AbstractActionController
         $success = 0;
         $errors = array();
         $datas = array();
-        $textTitle = $translator->translate('tr_meliscore_tool_user');
+        $textTitle = 'tr_meliscore_tool_user';
         $textMessage = '';
         
         if(!empty($container['action-tool-user-tmp']))
@@ -430,13 +430,19 @@ class ToolUserController extends AbstractActionController
         
         if($success == 0)
         {
-            $textMessage = $translator->translate('tr_meliscore_tool_user_new_fail_info');
+            $textMessage = 'tr_meliscore_tool_user_new_fail_info';
         }
         else 
         {
-            $textMessage = $translator->translate('tr_meliscore_tool_user_new_success_info');
+            $textMessage = 'tr_meliscore_tool_user_new_success_info';
         }
-
+        
+        $userId = null;
+        if (!empty($datas['usr_id']))
+        {
+            $userId = $datas['usr_id'];
+            unset($datas['usr_id']);
+        }
         
         $response = array(
            'success' => $success,
@@ -445,7 +451,8 @@ class ToolUserController extends AbstractActionController
             'errors' => $errors,
             'datas' => $datas
         );
-        $this->getEventManager()->trigger('meliscore_tooluser_savenew_end', $this, $response);
+        
+        $this->getEventManager()->trigger('meliscore_tooluser_savenew_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_ADD', 'itemId' => $userId)));
         
         return new JsonModel($response);
     }
@@ -545,6 +552,7 @@ class ToolUserController extends AbstractActionController
                         
                         $data['usr_id'] = null;
                         $data['usr_password'] = md5($data['usr_password']);
+                        $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
                         $data['usr_image'] = $imageContent;
                         $data['usr_creation_date'] = date('Y-m-d H:i:s');
                         $data['usr_last_login_date'] = null;
@@ -590,7 +598,7 @@ class ToolUserController extends AbstractActionController
                         
                         $melisEmailBO->sendBoEmailByCode('ACCOUNTCREATION',  $tags, $email_to, $name_to, $langId);
                         
-                        $userTable->save($data);
+                        $data['usr_id'] = $userTable->save($data);
                         $textMessage = 'tr_meliscore_tool_user_new_success_info';
                         $success = true;
                         
@@ -618,7 +626,7 @@ class ToolUserController extends AbstractActionController
         $response = array(
             'success' => $success,
             'errors' => array($errors),
-            'data' => $data
+            'datas' => $data
         );
         $this->getEventManager()->trigger('meliscore_tooluser_savenew_info_end', $this, $response);
         
@@ -635,9 +643,10 @@ class ToolUserController extends AbstractActionController
     	$response = array();
     	$this->getEventManager()->trigger('meliscore_tooluser_delete_start', $this, $response);
     	$translator = $this->getServiceLocator()->get('translator');
-        $id = 0;
+        $id = null;
         $success = 0;
-        $textMessage = '';
+        $textTitle = 'tr_meliscore_tool_user_delete';
+        $textMessage = 'tr_meliscore_tool_user_delete_unable';
         $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
         
         if($this->getRequest()->isPost())
@@ -650,15 +659,14 @@ class ToolUserController extends AbstractActionController
                 $success = 1;
                 $textMessage = 'tr_meliscore_tool_user_delete_success';
             }
-            
         }
 
         $response = array(
-            'textTitle' => $translator->translate('tr_meliscore_tool_user_delete'),
-            'textMessage' => $translator->translate($textMessage), 
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage, 
             'success' => $success
         );
-        $this->getEventManager()->trigger('meliscore_tooluser_delete_end', $this, $response);
+        $this->getEventManager()->trigger('meliscore_tooluser_delete_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_DELETE', 'itemId' => $id)));
         
         return new JsonModel($response);
     }
@@ -689,6 +697,7 @@ class ToolUserController extends AbstractActionController
                                     $data['usr_firstname'] = $userVal->usr_firstname;
                                     $data['usr_lastname'] = $userVal->usr_lastname;
                                     $data['usr_lang_id'] = $userVal->usr_lang_id;
+                                    $data['usr_admin'] = $userVal->usr_admin;
                                     $data['usr_image'] = $image;
                                     $data['usr_status'] = $userVal->usr_status;
                                     $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date));
@@ -1005,6 +1014,7 @@ class ToolUserController extends AbstractActionController
                         $data['usr_login'] = $userInfo['usr_login'];
                         $data['usr_password'] = !empty($newPass) ? $newPass : $userInfo['usr_password'];
                         // $data['usr_lang_id'] = $userInfo['usr_lang_id'];
+                        $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
                         $data['usr_rights'] = $userInfo['usr_rights'];
                         $data['usr_creation_date'] = $userInfo['usr_creation_date'];
                         $data['usr_last_login_date'] = $userInfo['usr_last_login_date'];
@@ -1090,7 +1100,6 @@ class ToolUserController extends AbstractActionController
         $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
     
-    
         $searched = $this->getRequest()->getQuery('filter');
         $columns  = $melisTool->getSearchableColumns();
         
@@ -1103,8 +1112,7 @@ class ToolUserController extends AbstractActionController
             $userData[$x]['usr_rights'] = '';
             $userData[$x]['usr_image'] = '';
         }
-
-
+        
         return $melisTool->exportDataToCsv($userData);
     }
     
@@ -1124,7 +1132,7 @@ class ToolUserController extends AbstractActionController
         $success = 0;
         $errors = array();
         $datas = array();
-        $textTitle = $translator->translate('tr_meliscore_tool_user');
+        $textTitle = 'tr_meliscore_tool_user';
         $textMessage = '';
         
         if(!empty($container['action-tool-user-tmp']))
@@ -1157,13 +1165,21 @@ class ToolUserController extends AbstractActionController
         
         if($success == 0)
         {
-            $textMessage = $translator->translate('tr_meliscore_tool_user_update_fail_info');
+            $textMessage = 'tr_meliscore_tool_user_update_fail_info';
         }
-        else 
+        else
         {
-            $textMessage = $translator->translate('tr_meliscore_tool_user_update_success_info');
+            $textMessage = 'tr_meliscore_tool_user_update_success_info';
         }
-
+        
+        $userId = null;
+        $request = $this->getRequest();
+        $postData = get_object_vars($request->getPost());
+        if (!empty($postData['usr_id']))
+        {
+            $userId = $postData['usr_id'];
+        }
+        
         $response = array(
            'success' => $success,
             'textTitle' => $textTitle,
@@ -1171,7 +1187,8 @@ class ToolUserController extends AbstractActionController
             'errors' => $errors,
             'datas' => $datas
         );
-        $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, $response);
+        
+        $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId)));
         
         return new JsonModel($response);
     }

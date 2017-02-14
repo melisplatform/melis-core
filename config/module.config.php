@@ -11,178 +11,182 @@
 return array(
     'router' => array(
         'routes' => array(
-        	'melis-backoffice' => array(
-        		'type'    => 'Segment',
-        		'options' => array(
-        			'route'    => '/melis[/]',
-        			'defaults' => array(
-        				'controller' => 'MelisCore\Controller\Index',
-        				'action'     => 'melis',
-        			),
-        		),
+            'melis-backoffice' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/melis[/]',
+                    'defaults' => array(
+                        'controller' => 'MelisCore\Controller\Index',
+                        'action' => 'melis',
+                    ),
+                ),
                 'may_terminate' => true,
                 'child_routes' => array(
                     'login' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'login[/]',
-		        			'defaults' => array(
-		        				'controller' => 'MelisCore\Controller\MelisAuth',
-		        				'action'     => 'loginpage',
-		        			),
+                            'route' => 'login[/]',
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\MelisAuth',
+                                'action' => 'loginpage',
+                            ),
                         ),
                     ),
                     'lost-password' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'lost-password[/]',
+                            'route' => 'lost-password[/]',
                             'defaults' => array(
                                 'controller' => 'MelisCore\Controller\User',
-                                'action'     => 'renderLostPassword',
+                                'action' => 'renderLostPassword',
                             ),
                         ),
                     ),
                     'lost-password-request' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'lost-password-request[/]',
+                            'route' => 'lost-password-request[/]',
                             'defaults' => array(
                                 'controller' => 'MelisCore\Controller\User',
-                                'action'     => 'lostPasswordRequest',
+                                'action' => 'lostPasswordRequest',
                             ),
                         ),
                     ),
                     'reset-password' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'reset-password[/:rhash]',
+                            'route' => 'reset-password[/:rhash]',
                             'constraints' => array(
                                 'rhash' => '[a-f0-9]*',
                             ),
                             'defaults' => array(
                                 'controller' => 'MelisCore\Controller\User',
-                                'action'     => 'renderResetPassword',
+                                'action' => 'renderResetPassword',
                             ),
                         ),
                     ),
                     'authenticate' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'authenticate[/]',
-		        			'defaults' => array(
-		        				'controller' => 'MelisCore\Controller\MelisAuth',
-		        				'action'     => 'authenticate',
-		        			),
+                            'route' => 'authenticate[/]',
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\MelisAuth',
+                                'action' => 'authenticate',
+                            ),
                         ),
                     ),
                     'islogin' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'islogin[/]',
+                            'route' => 'islogin[/]',
                             'defaults' => array(
                                 'controller' => 'MelisCore\Controller\MelisAuth',
-                                'action'     => 'isLoggedIn',
+                                'action' => 'isLoggedIn',
                             ),
                         ),
                     ),
                     'logout' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'logout[/]',
-		        			'defaults' => array(
-		        				'controller' => 'MelisCore\Controller\MelisAuth',
-		        				'action'     => 'logout',
-		        			),
+                            'route' => 'logout[/]',
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\MelisAuth',
+                                'action' => 'logout',
+                            ),
                         ),
                     ),
                     'zoneview' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'zoneview',
-		        			'defaults' => array(
-		        				'controller' => 'MelisCore\Controller\PluginView',
-		        				'action'     => 'generate',
-		        			),
+                            'route' => 'zoneview',
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\PluginView',
+                                'action' => 'generate',
+                            ),
                         ),
                     ),
                     'change-language' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'change-language',
-		        			'defaults' => array(
-		        				'controller' => 'MelisCore\Controller\Language',
-		        				'action'     => 'change-language',
-		        			),
+                            'route' => 'change-language',
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\Language',
+                                'action' => 'change-language',
+                            ),
                         ),
                     ),
                     'get-translations' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => 'get-translations',
+                            'route' => 'get-translations',
                             'defaults' => array(
                                 'controller' => 'MelisCore\Controller\Language',
-                                'action'     => 'get-translations',
+                                'action' => 'get-translations',
                             ),
                         ),
                     ),
                     'application-MelisCore' => array(
-                        'type'    => 'Literal',
+                        'type' => 'Literal',
                         'options' => array(
-                            'route'    => 'MelisCore',
+                            'route' => 'MelisCore',
                             'defaults' => array(
                                 '__NAMESPACE__' => 'MelisCore\Controller',
-                                'controller'    => 'Index',
-                                'action'        => 'melis',
+                                'controller' => 'Index',
+                                'action' => 'melis',
                             ),
                         ),
                         'may_terminate' => true,
                         'child_routes' => array(
                             'default' => array(
-                                'type'    => 'Segment',
+                                'type' => 'Segment',
                                 'options' => array(
-                                    'route'    => '/[:controller[/:action]]',
+                                    'route' => '/[:controller[/:action]]',
                                     'constraints' => array(
                                         'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                     ),
-                                    'defaults' => array(
-                                    ),
+                                    'defaults' => array(),
                                 ),
                             ),
                         ),
                     ),
                 ),
-        	), 
+            ),
         ),
     ),
     'translator' => array(
-    	'locale' => 'en_EN',
-	),
+        'locale' => 'en_EN',
+    ),
     'service_manager' => array(
         'aliases' => array(
             'translator' => 'MvcTranslator',
-			'MelisCoreTablePlatform' => 'MelisCore\Model\Tables\MelisPlatformTable',
-			'MelisCoreTableLang' => 'MelisCore\Model\Tables\MelisLangTable',
+            'MelisCoreTablePlatform' => 'MelisCore\Model\Tables\MelisPlatformTable',
+            'MelisCoreTableLang' => 'MelisCore\Model\Tables\MelisLangTable',
             'MelisCoreTableUser' => 'MelisCore\Model\Tables\MelisUserTable',
             'MelisCoreTableUserRole' => 'MelisCore\Model\Tables\MelisUserRoleTable',
             'MelisLostPasswordTable' => 'MelisCore\Model\Tables\MelisLostPasswordTable',
             'MelisCoreTableBOEmails' => 'MelisCore\Model\Tables\MelisBOEmailsTable',
             'MelisCoreTableBOEmailsDetails' => 'MelisCore\Model\Tables\MelisBOEmailsDetailsTable',
+            'MelisCoreTableLog' => 'MelisCore\Model\Tables\MelisLogTable',
+            'MelisCoreTableLogType' => 'MelisCore\Model\Tables\MelisLogTypeTable',
+            'MelisCoreTableLogTypeTrans' => 'MelisCore\Model\Tables\MelisLogTypeTransTable',
         ),
         'factories' => array(
-			'MelisCoreConfig' => 'MelisCore\Service\Factory\MelisCoreConfigServiceFactory',
-			'MelisCoreDispatch' => 'MelisCore\Service\Factory\MelisCoreDispatchServiceFactory',
-			'MelisCoreAuth' => 'MelisCore\Service\Factory\MelisCoreAuthServiceFactory',
-			'MelisCoreUser' => 'MelisCore\Service\Factory\MelisCoreUserServiceFactory',
-			'MelisCoreRights' => 'MelisCore\Service\Factory\MelisCoreRightsServiceFactory',
-			'MelisCoreFlashMessenger' => 'MelisCore\Service\Factory\MelisCoreFlashmessengerServiceFactory',
-			'MelisCoreImage' => 'MelisCore\Service\Factory\MelisCoreImageServiceFactory',
-			'MelisCoreTranslation' => 'MelisCore\Service\Factory\MelisCoreTranslationServiceFactory',
-			'MelisCoreLostPassword' => 'MelisCore\Service\Factory\MelisCoreLostPasswordServiceFactory',
-			'MelisCoreTool' => 'MelisCore\Service\Factory\MelisCoreToolServiceFactory',
-			'MelisCoreBOEmailService' => 'MelisCore\Service\Factory\MelisCoreBOEmailServiceFactory',
-			'MelisCoreEmailSendingService' => 'MelisCore\Service\Factory\MelisCoreEmailSendingServiceFactory',
-			'ModulesService' => 'MelisCore\Service\Factory\MelisCoreModulesServiceFactory',
+            'MelisCoreConfig' => 'MelisCore\Service\Factory\MelisCoreConfigServiceFactory',
+            'MelisCoreDispatch' => 'MelisCore\Service\Factory\MelisCoreDispatchServiceFactory',
+            'MelisCoreAuth' => 'MelisCore\Service\Factory\MelisCoreAuthServiceFactory',
+            'MelisCoreUser' => 'MelisCore\Service\Factory\MelisCoreUserServiceFactory',
+            'MelisCoreRights' => 'MelisCore\Service\Factory\MelisCoreRightsServiceFactory',
+            'MelisCoreFlashMessenger' => 'MelisCore\Service\Factory\MelisCoreFlashmessengerServiceFactory',
+            'MelisCoreImage' => 'MelisCore\Service\Factory\MelisCoreImageServiceFactory',
+            'MelisCoreTranslation' => 'MelisCore\Service\Factory\MelisCoreTranslationServiceFactory',
+            'MelisCoreLostPassword' => 'MelisCore\Service\Factory\MelisCoreLostPasswordServiceFactory',
+            'MelisCoreTool' => 'MelisCore\Service\Factory\MelisCoreToolServiceFactory',
+            'MelisCoreBOEmailService' => 'MelisCore\Service\Factory\MelisCoreBOEmailServiceFactory',
+            'MelisCoreEmailSendingService' => 'MelisCore\Service\Factory\MelisCoreEmailSendingServiceFactory',
+            'ModulesService' => 'MelisCore\Service\Factory\MelisCoreModulesServiceFactory',
+            'MelisCoreLogService' => 'MelisCore\Service\Factory\MelisCoreLogServiceFactory',
+            'MelisPhpUnitTool' => 'MelisCore\Service\Factory\MelisPhpUnitToolServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',
@@ -191,6 +195,9 @@ return array(
             'MelisCore\Model\Tables\MelisLostPasswordTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLostPasswordTableFactory',
             'MelisCore\Model\Tables\MelisBOEmailsTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisBOEmailsTableFactory',
             'MelisCore\Model\Tables\MelisBOEmailsDetailsTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisBOEmailsDetailsTableFactory',
+            'MelisCore\Model\Tables\MelisLogTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTableFactory',
+            'MelisCore\Model\Tables\MelisLogTypeTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTypeTableFactory',
+            'MelisCore\Model\Tables\MelisLogTypeTransTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTypeTransTableFactory',
         ),
     ),
     'controllers' => array(
@@ -211,19 +218,21 @@ return array(
             'MelisCore\Controller\ModuleDiagnostic' => 'MelisCore\Controller\ModuleDiagnosticController',
             'MelisCore\Controller\Diagnostic' => 'MelisCore\Controller\DiagnosticController',
             'MelisCore\Controller\MelisTinyMce' => 'MelisCore\Controller\MelisTinyMceController',
+            'MelisCore\Controller\MelisPhpUnitTool' => 'MelisCore\Controller\MelisPhpUnitToolController',
+            'MelisCore\Controller\Log' => 'MelisCore\Controller\LogController',
         ),
     ),
-    
+
     'validators' => array(
         'invokables' => array(
             'MelisPasswordValidator' => 'MelisCore\Validator\MelisPasswordValidator',
         ),
     ),
-    
+
     'form_elements' => array(
         'factories' => array(
-    		'MelisSelect' => 'MelisCore\Form\Factory\MelisSelectFactory',
-    		'MelisCoreLanguageSelect' => 'MelisCore\Form\Factory\LanguageSelectFactory',
+            'MelisSelect' => 'MelisCore\Form\Factory\MelisSelectFactory',
+            'MelisCoreLanguageSelect' => 'MelisCore\Form\Factory\LanguageSelectFactory',
             'MelisCoreSiteSelect' => 'MelisCore\Form\Factory\MelisSiteSelectFactory',
             'MelisToggleButton' => 'MelisCore\Form\Factory\MelisToggleButtonFactory',
             'MelisText' => 'MelisCore\Form\Factory\MelisTextFactory',
@@ -232,47 +241,47 @@ return array(
         ),
     ),
     'view_helpers' => array(
-		'invokables' => array(
-			'MelisFieldCollection' => 'MelisCore\Form\View\Helper\MelisFieldCollection',
-			'MelisFieldRow' => 'MelisCore\Form\View\Helper\MelisFieldRow',
-		    'MelisGenericTable' => 'MelisCore\View\Helper\MelisGenericTable',
-		    'MelisModal' => 'MelisCore\View\Helper\MelisModal',
-		    'MelisModalInvoker' => 'MelisCore\View\Helper\MelisModalInvoker',
-		),
+        'invokables' => array(
+            'MelisFieldCollection' => 'MelisCore\Form\View\Helper\MelisFieldCollection',
+            'MelisFieldRow' => 'MelisCore\Form\View\Helper\MelisFieldRow',
+            'MelisGenericTable' => 'MelisCore\View\Helper\MelisGenericTable',
+            'MelisModal' => 'MelisCore\View\Helper\MelisModal',
+            'MelisModalInvoker' => 'MelisCore\View\Helper\MelisModalInvoker',
+        ),
         'factories' => array(
             'MelisCoreHeadPlugin' => 'MelisCore\View\Helper\Factory\MelisCoreHeadPluginHelperFactory',
-        ),    
+        ),
     ),
     'view_manager' => array(
         'display_not_found_reason' => true,
-        'display_exceptions'       => true,
-        'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/404',
-        'exception_template'       => 'error/index',
+        'display_exceptions' => true,
+        'doctype' => 'HTML5',
+        'not_found_template' => 'error/404',
+        'exception_template' => 'error/index',
         'template_map' => array(
-            'layout/layoutError'          => __DIR__ . '/../view/layout/layoutError.phtml',
-            'layout/layoutCore'          => __DIR__ . '/../view/layout/layoutCore.phtml',
-            'layout/layoutLogin'        => __DIR__ . '/../view/layout/layoutLogin.phtml',
+            'layout/layoutError' => __DIR__ . '/../view/layout/layoutError.phtml',
+            'layout/layoutCore' => __DIR__ . '/../view/layout/layoutCore.phtml',
+            'layout/layoutLogin' => __DIR__ . '/../view/layout/layoutLogin.phtml',
             'melis-core/index/index' => __DIR__ . '/../view/melis-core/index/index.phtml',
             'melis-core/plugin-view/generate' => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
-            'error/404'               => __DIR__ . '/../view/error/404.phtml',
-            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+            'error/404' => __DIR__ . '/../view/error/404.phtml',
+            'error/index' => __DIR__ . '/../view/error/index.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
-	    'strategies' => array(
-	        'ViewJsonStrategy'
-	    )
+        'strategies' => array(
+            'ViewJsonStrategy'
+        )
     ),
     // Config Files
     'tinyMCE' => array(
-    	'tool' => 'MelisCore/public/js/tinyMCE/tool.php',
+        'tool' => 'MelisCore/public/js/tinyMCE/tool.php',
     ),
     'asset_manager' => array(
         'activate_cache' => array(
             'platforms' => array(
-                'default' => 1,
+                'default' => 0,
             ),
         ),
         'resolver_configs' => array(
@@ -282,11 +291,11 @@ return array(
         ),
         'caching' => array(
             'default' => array(
-                'cache'     => 'AssetManager\\Cache\\FilePathCache',
+                'cache' => 'AssetManager\\Cache\\FilePathCache',
                 'options' => array(
                     'dir' => 'public/cache',
                 ),
-            ),    
-        ),  
+            ),
+        ),
     ),
 );

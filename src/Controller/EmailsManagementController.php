@@ -165,39 +165,8 @@ class EmailsManagementController extends AbstractActionController
     
         if($this->getRequest()->isPost()) {
     
-//             $colId = array_keys($melisTool->getColumns());
-    
-//             $sortOrder = $this->getRequest()->getPost('order');
-//             $sortOrder = $sortOrder[0]['dir'];
-    
-//             $selCol = $this->getRequest()->getPost('order');
-//             $selCol = $colId[$selCol[0]['column']];
-    
-//             $draw = $this->getRequest()->getPost('draw');
-    
-//             $start = $this->getRequest()->getPost('start');
-//             $length =  $this->getRequest()->getPost('length');
-    
-//             $search = $this->getRequest()->getPost('search');
-//             $search = $search['value'];
-            
             $dataCount = $BOEmails->getTotalData();
     
-//             $getData = $BOEmails->getPagedData(array(
-//                 'where' => array(
-//                     'key' => 'boe_id',
-//                     'value' => $search,
-//                 ),
-//                 'order' => array(
-//                     'key' => $selCol,
-//                     'dir' => $sortOrder,
-//                 ),
-//                 'start' => $start,
-//                 'limit' => $length,
-//                 'columns' => $melisTool->getSearchableColumns(),
-//                 'date_filter' => array()
-//             ));
-            
             // Get Email App
             $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
             $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/');
@@ -628,34 +597,6 @@ class EmailsManagementController extends AbstractActionController
     }
     
     /*
-     * Deleting Email
-     * */
-    public function deleteEmailAction(){
-         
-        $translator = $this->getServiceLocator()->get('translator');
-        
-        $request = $this->getRequest();
-        $datas = get_object_vars($request->getPost());
-        $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
-        $melisCoreBOEmailService->deleteEmail($datas);
-        
-        $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
-        $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($datas['codename']);
-        
-        $title = ($emailsPropertiesAndDetails['email_name']) ? $emailsPropertiesAndDetails['email_name'] : $datas['codename'];
-        
-        $response = array(
-            'success' => 1,
-            'textTitle' => $translator->translate('tr_emails_management_title_deletion'),
-            'textMessage' => $translator->translate('tr_emails_management_email').' '.$title.' '.$translator->translate('tr_emails_management_deleted')
-        );
-        
-        $this->getEventManager()->trigger('meliscore_tool_bo_emails_end', $this, $response);
-        
-        return new JsonModel($response);
-    }
-    
-    /*
      * Adding new Email
      * */
     public function saveEmailAction(){
@@ -663,6 +604,7 @@ class EmailsManagementController extends AbstractActionController
         
         $request = $this->getRequest();
         // Default Values
+        $BoEmailId = null;
         $status  = 0;
         $textMessage = '';
         $errors  = array();
@@ -683,15 +625,22 @@ class EmailsManagementController extends AbstractActionController
             $datas = get_object_vars($request->getPost());
             
             $codename = $datas['codename'];
+            
+            if ($codename=='NEW'){
+                $logTypeCode = 'CORE_BO_EMAIL_ADD';
+            }else{
+                $logTypeCode = 'CORE_BO_EMAIL_UPDATE';
+            }
+            
             unset($datas['codename']);
             
             // Response Temporary Initialized and can be overrided
             if ($codename!='NEW'){
-                $textTitle = $translator->translate('tr_emails_management_edition');
-                $textMessage = $translator->translate('tr_emails_management_unable_to_update');
+                $textTitle = 'tr_emails_management_edition';
+                $textMessage = 'tr_emails_management_unable_to_update';
             }else{
-                $textTitle = $translator->translate('tr_emails_management_creation');
-                $textMessage = $translator->translate('tr_emails_management_unable_to_add');
+                $textTitle = 'tr_emails_management_creation';
+                $textMessage = 'tr_emails_management_unable_to_add';
             }
             
             // Reinitialize Codename if not Set
@@ -747,12 +696,7 @@ class EmailsManagementController extends AbstractActionController
                 // Only allow files that exist in ~both~ directories
                 $layoutPathValidator = new \Zend\Validator\File\Exists();
                 
-//                 $modulesSvc = $this->getServiceLocator()->get('ModulesService');
                 $layout = $datas['boe_content_layout'];
-//                 $nameModuleTab = explode('/', $layout);
-//                 $nameModule = $nameModuleTab[1];
-//                 $path = $modulesSvc->getModulePath($nameModule);
-//                 $layout = $path . str_replace($nameModule, '', $layout);
                 $layout = __DIR__ .'/../../../'.$layout;
                 
                 if (!$layoutPathValidator->isValid($layout)) {
@@ -771,19 +715,18 @@ class EmailsManagementController extends AbstractActionController
                 }
             }
             
-            
             $propertyForm->setData($datas);
             
             if($propertyForm->isValid()&&empty($codeNameError)&&empty($layoutPathError)) {
                 
                 $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
-                $melisCoreBOEmailService->saveBoEmailByCode($codename, $datas);
+                $BoEmailId = $melisCoreBOEmailService->saveBoEmailByCode($codename, $datas);
                 
                 if ($codename=='NEW'){
-                    $textTitle = $translator->translate('tr_emails_management_title_creation');
+                    $textTitle = 'tr_emails_management_title_creation';
                     $textMessage = $translator->translate('tr_emails_management_email').' '.$datas['boe_name'].' '.$translator->translate('tr_emails_management_created');
                 }else{
-                    $textTitle = $translator->translate('tr_emails_management_title_edition');
+                    $textTitle = 'tr_emails_management_title_edition';
                     $textMessage = $translator->translate('tr_emails_management_email').' '.$datas['boe_name'].' '.$translator->translate('tr_emails_management_edited');
                 }
                 
@@ -815,10 +758,40 @@ class EmailsManagementController extends AbstractActionController
             'event' => $responseData
         );
         
-        if ($status==1){
-            $this->getEventManager()->trigger('meliscore_tool_bo_emails_end', $this, $response);
-        }
+        $this->getEventManager()->trigger('meliscore_tool_bo_emails_end', $this, array_merge($response, array('typeCode' => $logTypeCode, 'itemId' => $BoEmailId)));
          
+        return new JsonModel($response);
+    }
+    
+    /*
+     * Deleting Email
+     * */
+    public function deleteEmailAction(){
+         
+        $translator = $this->getServiceLocator()->get('translator');
+    
+        $request = $this->getRequest();
+        $datas = get_object_vars($request->getPost());
+    
+        $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($datas['codename']);
+    
+        $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $BoEmailId = $melisCoreBOEmailService->deleteEmail($datas);
+    
+        $title = ($emailsPropertiesAndDetails['email_name']) ? $emailsPropertiesAndDetails['email_name'] : $datas['codename'];
+    
+        $textTitle = 'tr_emails_management_title_deletion';
+        $textMessage = $translator->translate('tr_emails_management_email').' '.$title.' '.$translator->translate('tr_emails_management_deleted');
+    
+        $response = array(
+            'success' => 1,
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage
+        );
+    
+        $this->getEventManager()->trigger('meliscore_tool_bo_emails_end', $this, array_merge($response, array('typeCode' => 'CORE_BO_EMAIL_DELETE', 'itemId' => $BoEmailId)));
+    
         return new JsonModel($response);
     }
     

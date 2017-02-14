@@ -347,6 +347,17 @@ return array(
                                         ),
                                     ),
                                 ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'usr_admin',
+                                        'type' => 'MelisText',
+                                        'options' => array(),
+                                        'attributes' => array(
+                                            'class' => 'usr_admin',
+                                            'data-label' => 'tr_meliscore_tool_user_col_admin',
+                                        ),
+                                    ),
+                                ),
                             ), // end elements
                             'input_filter' => array(
                                 'usr_login' => array(
@@ -798,6 +809,17 @@ return array(
                                             'onchange' => 'toolUserManagement.imagePreview("#profile-image", this);',
                                             'class' => 'filestyle',
                                             'data-buttonText' => 'Select Image',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'usr_admin',
+                                        'type' => 'MelisText',
+                                        'options' => array(),
+                                        'attributes' => array(
+                                            'class' => 'usr_admin',
+                                            'data-label' => 'tr_meliscore_tool_user_col_admin',
                                         ),
                                     ),
                                 ),
@@ -1264,6 +1286,11 @@ return array(
                                 'module' => 'MelisCore',
                                 'controller' => 'Language',
                                 'action' => 'render-tool-language-content-action-apply',
+                            ),
+                            'meliscore_tool_language_content_update' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'Language',
+                                'action' => 'render-tool-language-content-action-update',
                             ),
                             'meliscore_tool_language_content_delete' => array(
                                 'module' => 'MelisCore',
@@ -1840,6 +1867,200 @@ return array(
                     )
                 ),
                 // End of Email Management Tool
+                
+                // Logs tool
+                'meliscore_logs_tool' => array(
+                    'conf' => array(
+                        'title' => 'tr_meliscore_logs_tool',
+                        'id' => 'id_meliscore_logs_tool',
+                    ),
+                    'table' => array(
+                        'target' => '#tableMelisLogs',
+                        'ajaxUrl' => '/melis/MelisCore/Log/getLogs',
+                        'dataFunction' => 'initLogDataTable',
+                        'ajaxCallback' => '',
+                        'initComplete' => 'initDatePicker()',
+                        'filters' => array(
+                            'left' => array(
+                                'meliscore_logs_tool_table_limit' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Log',
+                                    'action' => 'render-logs-tool-table-limit',
+                                ),
+                                'meliscore_logs_tool_table_date_range' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Log',
+                                    'action' => 'render-logs-tool-table-date-range',
+                                ),
+                            ),
+                            'center' => array(
+                                'meliscore_logs_tool_table_search' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Log',
+                                    'action' => 'render-logs-tool-table-search',
+                                ),
+                                'meliscore_logs_tool_table_user_filter' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Log',
+                                    'action' => 'render-logs-tool-table-user-filter',
+                                ),
+                            ),
+                            'right' => array(
+                                'meliscore_logs_tool_table_type_filter' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Log',
+                                    'action' => 'render-logs-tool-table-type-filter',
+                                ),
+                                'meliscore_logs_tool_table_refresh' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Log',
+                                    'action' => 'render-logs-tool-table-refresh',
+                                ),
+                            ),
+                        ),
+                        'columns' => array(
+                            'log_id' => array(
+                                'text' => 'tr_meliscore_logs_tool_log_id',
+                                'css' => array('width' => '1%'),
+                                'sortable' => true,
+                            ),
+                            'log_title' => array(
+                                'text' => 'tr_meliscore_logs_tool_log_title',
+                                'css' => array('width' => '20%'),
+                                'sortable' => false,
+                            ),
+                            'log_message' => array(
+                                'text' => 'tr_meliscore_logs_tool_log_message',
+                                'css' => array('width' => '30%'),
+                                'sortable' => false,
+                            ),
+                            'log_user' => array(
+                                'text' => 'tr_meliscore_logs_tool_log_user',
+                                'css' => array('width' => '15%'),
+                                'sortable' => false,
+                            ),
+                            'log_type' => array(
+                                'text' => 'tr_meliscore_logs_tool_log_type',
+                                'css' => array('width' => '15%'),
+                                'sortable' => false,
+                            ),
+                            'log_item_id' => array(
+                                'text' => 'tr_meliscore_logs_tool_log_item_id',
+                                'css' => array('width' => '5%'),
+                                'sortable' => false,
+                            ),
+                            'log_date_added' => array(
+                                'text' => 'tr_meliscore_logs_tool_log_date_added',
+                                'css' => array('width' => '15%'),
+                                'sortable' => false,
+                            ),
+                        ),
+                        'searchables' => array(),
+                        'actionButtons' => array(),
+                    ),
+                    'forms' => array(
+                        'meliscore_logs_tool_log_type_form' => array(
+                            'attributes' => array(
+                                'name' => 'logTypeForm',
+                                'id' => '',
+                                'method' => '',
+                                'action' => '',
+                                'class' => 'logTypeForm',
+                            ),
+                            'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => array(
+                                array(
+                                    'spec' => array(
+                                        'name' => 'logtt_id',
+                                        'type' => 'hidden',
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'logtt_lang_id',
+                                        'type' => 'hidden',
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'logtt_type_id',
+                                        'type' => 'hidden',
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'logtt_name',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_logs_tool_log_type_name',
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'logtt_name',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'logtt_description',
+                                        'type' => 'Textarea',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_logs_tool_log_type_description',
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'logtt_name',
+                                            'rows' => 10,
+                                            'class' => 'form-control',
+                                        ),
+                                    ),
+                                ),
+                                
+                            ),
+                            'input_filter' => array(
+                                'logtt_name' => array(
+                                    'name'     => 'logtt_name',
+                                    'required' => false,
+                                    'validators' => array(
+                                        array(
+                                            'name'    => 'StringLength',
+                                            'options' => array(
+                                                'encoding' => 'UTF-8',
+                                                'max'      => 255,
+                                                'messages' => array(
+                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_logs_tool_log_input_to_long_255',
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'filters'  => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ),
+                                'logtt_description' => array(
+                                    'name'     => 'logtt_description',
+                                    'required' => false,
+                                    'validators' => array(
+                                        array(
+                                            'name'    => 'StringLength',
+                                            'options' => array(
+                                                'encoding' => 'UTF-8',
+                                                'max'      => 255,
+                                                'messages' => array(
+                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_logs_tool_log_input_to_long_255',
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'filters'  => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ),
+                            )
+                        )
+                    ),
+                ),
+                // end Language tool
              ),
         ),
     ),

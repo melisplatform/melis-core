@@ -42,14 +42,13 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
         return $this->serviceLocator;
     }
     
-    
     /*
      * Adds a new message in the Flash Messenger MVC helper, this will be displayed
      * in the Flash Messenger View in Melis CMS headers
      * @param String $text
      * @param String $img
      */
-    public function addToFlashMessenger($title, $text, $img = 'glyphicon glyphicon-info-sign')
+    public function addToFlashMessenger($title, $message, $img = 'glyphicon glyphicon-info-sign')
     {
         $this->fmContainer = new Container('fms');
 
@@ -61,7 +60,7 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
         $curFlashMessages = $this->fmContainer->flashMessages;
         $newFlashMessage = array(
             'title' => $translator->translate($title),
-            'message'=> $translator->translate($text),
+            'message'=> $translator->translate($message),
             'image'  => $img,
             'time' => $time
         );

@@ -1113,12 +1113,14 @@ table.dataTable.nowrap .child td {
 }
 table.dataTable thead th:last-child{
 	padding-right: 40px;
-	text-align: right;
 }
-table.dataTable tbody tr td.dtActionCls:last-child{
+table.dataTable thead th.dtActionCls{
 	text-align: right;
 }
 
+table.dataTable tbody td.dtActionCls{
+	text-align: right;
+}
 
 div.dataTables_wrapper div.dataTables_paginate,
 div.dataTables_wrapper div.dataTables_info{
@@ -1136,13 +1138,16 @@ table.dataTable thead .sorting:after {
 }
 
 
+
 /* data table filter fixes */
 #dt_bsdatepicker{
 	cursor: pointer;
-    border: 1px solid #CECBCB;
-    /* padding: 10px 5px; */
+    border: 1px solid rgba(206, 203, 203, 0.52);
+    padding: 2px 5px;
     border-radius: 3px;
-	padding: 8px 8px 10px;
+    background: #fff;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 #dt_bsdatepicker i.fa{
 	position: relative;
@@ -1150,9 +1155,14 @@ table.dataTable thead .sorting:after {
 }
 #dt_bsdatepicker b.caret{
     float: right;
-	margin: 5px 0 0 5px;
-	/* margin-top: 13px;
-    margin-right: 5px; */
+    margin: 13px 0 0 5px;
+}
+.filter-bar .dt-date-range-picker{
+    cursor: pointer;
+    border: 1px solid rgba(206, 203, 203, 0.51);
+    border-radius: 3px;
+    padding: 0px 10px 3px;
+    background: #fff;
 }
 .filter-bar .form-inline:after,
 .filter-bar .form-inline:before{
@@ -2323,4 +2333,17 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
                 flex: 1 1 auto;
                 height: 29px !important;
             }
+}
+
+.log-type-code{
+    margin-top: 0px;
+    margin-bottom: 25px;
+    padding-left: 5px;
+}
+
+/**
+ * Switch icon
+ */
+.has-switch label i {
+    color: inherit;
 }

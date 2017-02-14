@@ -1,11 +1,10 @@
 <div id="newformalert"></div>
 <?php 
-$form = $this->meliscore_tool_user_form_new;
-$form->get('usr_password')->setLabel($form->get('usr_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password').'"></i>');
-$form->get('usr_confirm_password')->setLabel($form->get('usr_confirm_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password_2').'"></i>');
-echo $this->form()->openTag($form);
-echo $this->melisFieldCollection($form);
-//data-dismiss="modal"
+    $form = $this->meliscore_tool_user_form_new;
+    $form->get('usr_password')->setLabel($form->get('usr_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password').'"></i>');
+    $form->get('usr_confirm_password')->setLabel($form->get('usr_confirm_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password_2').'"></i>');
+    echo $this->form()->openTag($form);
+    echo $this->melisFieldCollection($form);
 ?>
 <div class="center-block">
     <span class="thumbnail">
@@ -13,16 +12,14 @@ echo $this->melisFieldCollection($form);
     </span>
 </div>
 
-
 <button type="submit" class="btn btn-success pull-right hidden-xs hidden-sm" id="btnAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
 <button type="submit" class="btn btn-success pull-right visible-xs visible-sm" id="btnAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></button>
 
 <?php 
-echo $this->melisModalInvoker()->render(
-    array(
-        'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
-        'class' => 'btn btn-danger pull-left'
-    ), 'dismiss');
-echo $this->form()->closeTag();
+    echo $this->melisModalInvoker()->render(
+        array(
+            'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+            'class' => 'btn btn-danger pull-left'
+        ), 'dismiss');
+    echo $this->form()->closeTag();
 ?>
-

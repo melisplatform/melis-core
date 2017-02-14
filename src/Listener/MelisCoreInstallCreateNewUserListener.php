@@ -44,6 +44,7 @@ class MelisCoreInstallCreateNewUserListener extends MelisCoreGeneralListener imp
                         'usr_firstname' => $userData['firstname'],
                         'usr_lastname'  => $userData['lastname'],
                         'usr_lang_id'   => 1,
+                        'usr_admin'     => 0,
                         'usr_role_id'   => 1,
                         'usr_rights' => '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages>	<id>-1</id></meliscms_pages><meliscore_interface></meliscore_interface><meliscore_tools>	<id>meliscore_tools_root</id></meliscore_tools></document>',
                         'usr_creation_date' => date('Y-m-d H:i:s'),  

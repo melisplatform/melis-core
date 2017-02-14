@@ -1,0 +1,15 @@
+<phpunit backupGlobals="false"
+         bootstrap="./vendor/autoload.php"
+         cacheTokens="true"
+         colors="true">
+    <testsuites>
+        <testsuite name="MelisCore test suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+</phpunit>

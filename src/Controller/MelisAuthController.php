@@ -167,6 +167,9 @@ class MelisAuthController extends AbstractActionController
     		        
     		                // update last login
     		                $userTable->save(array('usr_last_login_date' => date('Y-m-d H:i:s')), $user->usr_id);
+    		                
+    		                // Retrieving recent user logs on database
+    		                $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
     		        
     		                // check if the user clicked remember me button
     		                $rememberMe = (int) $request->getPost('remember');

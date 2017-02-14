@@ -1,0 +1,84 @@
+<?php
+	$name = '';
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['name']))
+		$name = $this->zoneconfig['conf']['name'];
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$data_melisKey = $this->melisKey;
+		
+	
+	$languages = $this->languages;
+?>
+<div class="modal-content">
+	<div class="modal-body padding-none">
+		<div class="wizard">
+			<div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
+                <div class="widget-head">
+                	<ul class="nav nav-tabs">
+                		<li class="active"><a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="glyphicons pencil" data-toggle="tab" aria-expanded="true"><i></i> <?php echo $this->translate('Log Type') ?></a></li>
+            		</ul>
+        		</div>
+        		<div class="widget-body innerAll inner-2x">
+    				<div class="tab-pane active" <?php echo $id ?>>
+                        <div class="row">
+                        	<div class="col-xd-12">
+                        		<h4 class="log-type-code"><?php echo $this->translate('tr_meliscore_logs_tool_log_type_code')?> : <?php echo $this->logTypeCode?></h4>
+                        	</div>
+                        	<div class="col-xs-12 col-md-4">
+                        		<div class="product-text-tab-container">
+                        			<ul class="nav-tabs product-text-tab">
+                            			<?php foreach ($languages As $key => $val):?>
+                                    		<li class="">
+                                    			<a class="clearfix" data-toggle="tab" href="#<?php echo $key?>-log-type-details" aria-expanded="false">
+                                    				<span><?php echo $val['lang_name']?></span>
+                                    			</a>
+                                    		</li>
+                                		<?php endforeach;?>
+                               		</ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-8">
+                            	<div class="tab-content">
+                                    <?php foreach ($languages As $key => $val):?>
+                                    	<div id="<?php echo $key ?>-log-type-details" class="tab-pane product-text-tab-content">
+                                    		<div class="bg-white">
+                                    			<h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?php echo $val['lang_name']?></h3>
+                                    		</div>
+                                            <?php
+                                            	$form = clone($this->meliscore_logs_tool_log_type_form);
+                                            	$form->setAttribute('id', $key.'_log_form');
+                                            	$form->get('logtt_lang_id')->setValue($val['lang_id']);
+                                            	$form->get('logtt_type_id')->setValue($this->logTypeId);
+                                            	$form->prepare();
+                                            	
+                                            	if (is_array($this->logTypeTrans))
+                                            	{
+                                            	    foreach ($this->logTypeTrans As $lVal)
+                                            	    {
+                                            	        if ($lVal->logtt_lang_id == $val['lang_id'])
+                                            	        {
+                                            	            $form->bind($lVal);
+                                            	        }
+                                            	    }
+                                            	}
+                                            	
+                                            	echo $this->form()->openTag($form); 
+                                            	echo $this->melisFieldCollection($form);
+                                            	echo $this->form()->closeTag(); 
+                                            ?>
+            							</div>
+        							<?php endforeach;?>
+								</div>
+							</div>
+                        </div>
+                        <div align="right">
+                     		<button data-dismiss="modal" class="btn btn-danger pull-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
+                     		<button class="btn btn-success saveLogTypeDetails"><i class="fa fa-save"></i>  <?php echo $this->translate('tr_meliscore_tool_gen_save'); ?></button>
+                     	</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

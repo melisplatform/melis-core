@@ -9,6 +9,14 @@ var dEndDate   = ''; //moment().format(melisDateFormat);
 
 var melisCoreTool = (function(window){
 
+	function translate(transKey){
+		var translated = translations[transKey]
+		if(translated === undefined){
+			translated = transKey;
+		}
+		return translated;
+	}
+	
 	// FOR MODALS
 	function confirm(textOk, textNo, title, msg, callBackOnYes) {
 		BootstrapDialog.show({
@@ -38,7 +46,7 @@ var melisCoreTool = (function(window){
 		$(target).removeClass();
 		$(target).css("display", "none");
 		$(target).addClass("alert alert-" + type);
-		$(target).html("<strong>" + highlight + "</strong> " + message);
+		$(target).html("<strong>" + highlight + "</strong> " + translate(message));
 		$(target).fadeIn();
 	}
 	
@@ -49,7 +57,6 @@ var melisCoreTool = (function(window){
 	function alertSuccess(target, highlight, message) {
 		showAlert(target, highlight, message, "success");
 	}
-	
 	
 	function alertInfo(target, highlight, message) {
 		showAlert(target, highlight, message, "info");
@@ -214,7 +221,6 @@ var melisCoreTool = (function(window){
 	    }, cb);
 	}
 	
-
 	
 	return {
 		// modal

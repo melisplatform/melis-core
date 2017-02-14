@@ -34,6 +34,9 @@ if (!empty($this->zoneconfig['conf']['id']))
 		// render table to DataTable plugin
 		$(document).ready(function() {
 			<?= $this->getToolDataTableConfig; ?>
+			$(document).on("init.dt", function(e, settings) {
+				$('#tableLanguages td:nth-child(3):contains("en_EN")').parent().find('.btnLangUpdate').hide();
+			});
 		});
 		</script>
 

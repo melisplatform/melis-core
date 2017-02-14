@@ -5,21 +5,20 @@ var melisHelper = (function(){
 	// CACHE SELECTORS
 	var $body = $("body");
 	var $navTabs = $("#melis-id-nav-bar-tabs");
-
 	
-	
-	
-	
-	
-	
-	
-	
+	function melisTranslator(transKey){
+		var translated = translations[transKey]
+		if(translated === undefined){
+			translated = transKey;
+		}
+		return translated;
+	}
 	
 	// OK NOTIFICATION
-	function melisOkNotification(title, message, color){
+	function melisOkNotification(title, message, color = "#72af46"){
 		$.gritter.add({
-				title: title,
-				text: message,
+				title: melisTranslator(title),
+				text: melisTranslator(message),
 				time: 3000,
 				image: '/melis/MelisCore/MelisAuth/getProfilePicture',
 		}); 
@@ -28,13 +27,13 @@ var melisHelper = (function(){
 	}
 	  
 	// KO NOTIFICATION
-	function melisKoNotification(title, message, errors, closeByButtonOnly){
+	function melisKoNotification(title, message, errors, closeByButtonOnly = "closeByButtonOnly"){
 		
 		( closeByButtonOnly !== 'closeByButtonOnly' ) ? closeByButtonOnly = 'overlay-hideonclick' : closeByButtonOnly = '';
 
-		var errorTexts = '<h3>'+ title +'</h3>';
+		var errorTexts = '<h3>'+ melisTranslator(title) +'</h3>';
 		
-			errorTexts +='<h4>'+ message +'</h4>';
+			errorTexts +='<h4>'+ melisTranslator(message) +'</h4>';
 			$.each( errors, function( key, error ) {
 				if(key !== 'label'){
 					errorTexts += '<p class="modal-error-cont"><b>'+ (( errors[key]['label'] == undefined ) ? ((errors['label']== undefined) ? key : errors['label'] ) : errors[key]['label'] )+ ': </b>  ';
@@ -58,6 +57,131 @@ var melisHelper = (function(){
 		var div = "<div class='melis-modaloverlay "+ closeByButtonOnly +"'></div>";
 		div += "<div class='melis-modal-cont KOnotif'>  <div class='modal-content'>"+ errorTexts +" <span class='btn btn-block btn-primary'>"+ translations.tr_meliscore_notification_modal_Close +"</span></div> </div>";
 		$body.append(div);
+	}
+	/**
+	 * KO NOTIFICATION for Multiple Form
+	 */
+	function melisMultiKoNotification(title, message, errors, closeByButtonOnly = true){
+		
+		var closeByButtonOnly = ( closeByButtonOnly !== true ) ?  'overlay-hideonclick' : '';
+
+		var errorTexts = '<h3>'+ melisHelper.melisTranslator(title) +'</h3>';
+			errorTexts +='<h4>'+ melisHelper.melisTranslator(message) +'</h4>';
+		
+		$.each( errors, function( key, error ) {
+			if(key !== 'label'){
+				errorTexts += '<p class="modal-error-cont"><b>'+ (( errors[key]['label'] == undefined ) ? ((errors['label']== undefined) ? key : errors['label'] ) : errors[key]['label'] )+ ': </b>  ';
+				// catch error level of object
+				try {
+					$.each( error, function( key, value ) {
+						if(key !== 'label' && key !== 'form'){
+							
+							$errMsg = '';
+							if(value instanceof Object){
+								$errMsg = value[0];
+							}else{
+								$errMsg = value;
+							}
+							errorTexts += '<span><i class="fa fa-circle"></i>'+ $errMsg + '</span>';
+						}
+					});
+				} catch(Tryerror) {
+					if(key !== 'label' && key !== 'form'){
+						 errorTexts +=  '<span><i class="fa fa-circle"></i>'+ error + '</span>';
+					} 
+				}	
+				errorTexts += '</p>';
+			}
+		});
+			
+		var div = "<div class='melis-modaloverlay "+ closeByButtonOnly +"'></div>";
+		div += "<div class='melis-modal-cont KOnotif'>  <div class='modal-content'>"+ errorTexts +" <span class='btn btn-block btn-primary'>"+ translations.tr_meliscore_notification_modal_Close +"</span></div> </div>";
+		$body.append(div);
+	}
+	
+	/**
+	 * This method will Highlight an input label where an error occured
+	 * @param success, 1 or 0
+	 * @param errors, Object array
+	 * @param selector, element selector 
+	 */
+	function highlightMultiErrors(success, errors, selector = activeTabId){
+		// remove red color for correctly inputted fields
+		$("" + selector + " .form-group label").css("color", "inherit");
+		// if all form fields are error color them red
+		if(success === 0){
+			$.each( errors, function( key, error ) { 
+				if("form" in error){
+					$.each(this.form, function( fkey, fvalue ){
+						$("#" + fvalue + " .form-control[name='"+key +"']").prev("label").css("color","red");
+					});
+				}
+			});
+		}
+	}
+	
+	/**
+	 * This method will initialize a element to DataRangePicker plugin
+	 * @param selector, element selector
+	 * @param callBackFunction, callback function of the date range picker
+	 */
+	function initDateRangePicker(selector, callBackFunction){
+		setTimeout(function(){ 
+			var target = $(selector);
+			target.addClass("dt-date-range-picker");
+			target.html(''+translations.tr_meliscore_datepicker_select_date+' <i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span></span> <b class="caret"></b>');
+		    var sToday = translations.tr_meliscore_datepicker_today;
+			var sYesterday = translations.tr_meliscore_datepicker_yesterday;
+			var sLast7Days = translations.tr_meliscore_datepicker_last_7_days;
+			var sLast30Days = translations.tr_meliscore_datepicker_last_30_days;
+			var sThisMonth = translations.tr_meliscore_datepicker_this_month;
+			var sLastMonth = translations.tr_meliscore_datepicker_last_month;
+			
+			var rangeStringParam = {};
+			rangeStringParam[sToday] = [moment(), moment()];
+			rangeStringParam[sYesterday] = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
+			rangeStringParam[sLast7Days] = [moment().subtract(6, 'days'), moment()];
+			rangeStringParam[sLast30Days] = [moment().subtract(29, 'days'), moment()];
+			rangeStringParam[sThisMonth] = [moment().startOf('month'), moment().endOf('month')];
+			rangeStringParam[sLastMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
+			
+			target.daterangepicker({
+				startDate: moment().subtract(10, 'years'),
+		        endDate: moment(),
+		    	locale : {
+					format: melisDateFormat,
+					applyLabel: translations.tr_meliscore_datepicker_apply,
+					cancelLabel: translations.tr_meliscore_datepicker_cancel,
+					customRangeLabel: translations.tr_meliscore_datepicker_custom_range,
+				},
+		        ranges: rangeStringParam
+		    }, function(start, end) {
+		    	target.find("span").html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+		    });
+		    
+			target.on('apply.daterangepicker', function(ev, picker){
+				if(callBackFunction !== undefined){
+					callBackFunction(ev, picker);
+				}
+		    });
+		}, 1000);
+	}
+	
+	function initSwitch(selector){
+		var targetInput = $(selector);
+		if(targetInput.length){
+			var parentDiv = targetInput.parent("div.form-group");
+			var switchBtn = '<label for="'+targetInput.attr("name")+'">'+targetInput.data("label")+'</label>'
+							+'<div class="make-switch user-admin-switch" data-label-icon="glyphicon glyphicon-resize-horizontal" data-on-label="'+translations.tr_meliscore_common_yes+'" data-off-label="'+translations.tr_meliscore_common_no+'" style="display: block;">'
+								+'<input type="checkbox" name="'+targetInput.attr("name")+'" id="'+targetInput.attr("name")+'">'
+							+'</div>';
+			parentDiv.html(switchBtn);
+			$('.user-admin-switch').bootstrapSwitch('destroy', true);
+			$('.user-admin-switch').bootstrapSwitch();
+		}else{
+			console.log("Selector not found");
+		}
+		
 	}
 
 	// SWITCH ACTIVE TABS =============================================================================================================
@@ -119,11 +243,12 @@ var melisHelper = (function(){
 		}
 		else{
 			var leftOffset = $navTabs.position().left;
-			if( leftOffset !== 0 ){
+			if( leftOffset === -1 ) {}
+			else if( leftOffset !== 0 ){
 				$("#melis-id-nav-bar-tabs").animate({
 	                left: (leftOffset + removedWidth)
 	            }, 0); 
-			}	
+			} 
 		}
 		
 		// [ Mobile ] when closing a page
@@ -379,10 +504,23 @@ var melisHelper = (function(){
 	return{
 		//key - access name outside									// value - name of function above
 		
+		// javascript translator function
+		melisTranslator									:			melisTranslator,
+		
 		// notifications
 		melisOkNotification 							:       	melisOkNotification,
 		melisKoNotification 							: 			melisKoNotification,
-
+		
+		// multiple KO notifications
+		melisMultiKoNotification						: 			melisMultiKoNotification,
+		highlightMultiErrors							: 			highlightMultiErrors,
+		
+		// initialize dateRangePicker
+		initDateRangePicker								:			initDateRangePicker,
+		
+		// initialize bootstrap switch
+		initSwitch										: 			initSwitch,
+		
 		// tabs
 		tabSwitch 										: 			tabSwitch,
 		tabClose 										: 			tabClose,

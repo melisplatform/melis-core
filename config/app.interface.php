@@ -45,6 +45,53 @@ return array(
 				        'after' => 86400, // 1 day  
 				        //'after' => 60, 
 				    ),
+                    'phpunit_conf' => array(
+                        'windows' => array(
+                            // the setup is done here, so you don't need to do a batch file to register
+                            // phpunit globally, instead we just call them directly from their directory to execute it.
+                            // Download latest release: https://phar.phpunit.de/phpunit.phar
+
+                            // php command line path
+                            'php_cli' => '"C:/Program Files (x86)/Zend/ZendServer/bin/php.exe"',
+                            // the path where you save your phpunit
+                            'phpunit' => 'C:/bin/phpunit.phar'
+                        ),
+                        'others' => array(
+                            /**
+                             * How to install PHPUnit in Linux and Mac
+                             * Run in Terminal:
+                             * --------------------------------------
+                             * wget https://phar.phpunit.de/phpunit.phar
+                             * chmod +x phpunit.phar
+                             * --------------------------------------
+                             * Once downloaded we have to move or copy phpunit.phar into /usr/local/bin/ so we can call it globally
+                             * Run this command: sudo cp phpunit.phar /usr/local/bin/phpunit
+                             * -- OR --
+                             * sudo mv phpunit.phar /usr/local/bin/phpunit
+                             *
+                             *
+                             * And also, make sure that the php cli is available globally, if not just run this command:
+                             * sudo cp /path/of/php /usr/local/bin/php
+                             * To test if your phpunit is working, just run this command: phpunit --version
+                             * It should return something like this:
+                             * -------------------------------
+                             * PHPUnit 5.7.4 by Sebastian Bergmann and contributors.
+                             *
+                             * -------------------------------
+                             */
+                            'php_cli' => 'php',
+                            'phpunit' => 'phpunit',
+                        ),
+                    ),
+				    'langauges' => array(
+				        'default_trans_files' => array(
+				            'defaultTransInterface' =>  'en_EN.interface',
+				            'defaultTransForms' => 'en_EN.forms',
+				        ),
+				        'default_trans_dir' => array( 
+				            'path' => $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/languages/'
+				        ),
+				    ),
 				),
 			),
 			'ressources' => array(
@@ -106,6 +153,7 @@ return array(
 				   
 				            '/MelisCore/js/library/fancytree/src/jquery.fancytree.js',
         				    '/MelisCore/js/library/fancytree/src/jquery.fancytree.dnd.js',
+        				    '/MelisCore/js/library/fancytree/src/jquery.fancytree.filter.js',
 				            '/MelisCore/js/library/fancytree/extensions/contextmenu/js/jquery.contextMenu-1.6.5.js',
 				            '/MelisCore/js/library/fancytree/extensions/contextmenu/js/jquery.fancytree.contextMenu.js',
 				           
@@ -131,7 +179,8 @@ return array(
 				            '/MelisCore/js/tools/platforms.tools.js',
 				            '/MelisCore/js/tools/lang.tools.js',
 				            '/MelisCore/js/tools/emailMngt.tools.js',
-				            '/MelisCore/js/tools/melis_mod_diag.tool.js',
+				            '/MelisCore/js/tools/melisPHPUnitTool.js',
+				            '/MelisCore/js/tools/logs.tool.js',
 				    
 				            //datepicker translations
 				            '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
@@ -289,74 +338,70 @@ return array(
 							            'rights_checkbox_disable' => true,
 							        ),
 							        'interface' => array(
-							            'melis_module_diagnostics_tool_interface_config' => array(
-							                'conf' => array(
-							                    'id' => 'id_melis_module_diagnostics_tool',
-							                    'name' => 'tr_melis_module_diagnostics_title',
-							                    'melisKey' => 'melis_module_diagnostics_tool',
-							                    'icon' => 'fa-stethoscope',
-							                    'rights_checkbox_disable' => true,
-							                ),
-							                'forward' => array(
-							                    'module' => 'MelisCore',
-							                    'controller' => 'ModuleDiagnostic',
-							                    'action' => 'toolContainer',
-							                    'jscallback' => '',
-							                    'jsdatas' => array()
-							                ),
-							                'interface' => array(
-							                    'melis_module_diagnostics_tool_header' => array(
-							                        'conf' => array(
-							                            'id' => 'id_melis_module_diagnostics_tool_header',
-							                            'name' => 'tr_melis_module_diagnostics_tool_header',
-							                            'melisKey' => 'melis_module_diagnostics_tool_header',
-							                        ),
-							                        'forward' => array(
-							                            'module' => 'MelisCore',
-							                            'controller' => 'ModuleDiagnostic',
-							                            'action' => 'toolHeader',
-							                            'jscallback' => '',
-							                            'jsdatas' => array()
-							                        ),
-							                        'interface' => array(
-							                            'melis_module_diagnostics_tool_header_run_all' => array(
-							                                'conf' => array(
-							                                    'id' => 'id_melis_module_diagnostics_tool_header_run_all',
-							                                    'name' => 'tr_melis_module_diagnostics_tool_header_run_all',
-							                                    'melisKey' => 'melis_module_diagnostics_tool_header_run_all',
-							                                ),
-							                                'forward' => array(
-							                                    'module' => 'MelisCore',
-							                                    'controller' => 'ModuleDiagnostic',
-							                                    'action' => 'toolHeaderRunAll',
-							                                    'jscallback' => '',
-							                                    'jsdatas' => array()
-							                                ),
-							                            ),
-							            
-							                        ),
-							                    ), // end melis_module_diagnostics_tool_header
-							            
-							                    'melis_module_diagnostics_tool_content' => array(
-							                        'conf' => array(
-							                            'id' => 'id_melis_module_diagnostics_tool_content',
-							                            'name' => 'tr_melis_module_diagnostics_tool_content',
-							                            'melisKey' => 'melis_module_diagnostics_tool_content',
-							                        ),
-							                        'forward' => array(
-							                            'module' => 'MelisCore',
-							                            'controller' => 'ModuleDiagnostic',
-							                            'action' => 'toolContent',
-							                            'jscallback' => '',
-							                            'jsdatas' => array()
-							                        ),
-							                        'interface' => array(
-							            
-							                        ),
-							            
-							                    ), // melis_module_diagnostics_tool_content
-							                ),
-							            ),
+                                        // PhpUnit
+                                        'meliscore_tool_phpunit' => array(
+                                            'conf' => array(
+                                                'id' => 'id_meliscore_tool_phpunit',
+                                                'name' => 'Diagnostic',
+                                                'melisKey' => 'meliscore_tool_phpunit',
+                                                'icon' => 'fa fa-stethoscope',
+                                                'rights_checkbox_disable' => true,
+                                            ),
+                                            'forward' => array(
+                                                'module' => 'MelisCore',
+                                                'controller' => 'MelisPhpUnitTool',
+                                                'action' => 'render-phpunit-container',
+                                                'jscallback' => '',
+                                                'jsdatas' => array()
+                                            ),
+                                            'interface' => array(
+                                                'meliscore_tool_phpunit_header' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_meliscore_tool_phpunit_header',
+                                                        'name' => 'PHPUnit Header',
+                                                        'melisKey' => 'meliscore_tool_phpunit_header',
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'MelisPhpUnitTool',
+                                                        'action' => 'render-phpunit-header',
+                                                        'jscallback' => '',
+                                                        'jsdatas' => array()
+                                                    ),
+                                                    'interface' => array(
+                                                        'meliscore_tool_phpunit_header_run_all' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_meliscore_tool_phpunit_header_run_all',
+                                                                'name' => 'PHPUnit Header Run All',
+                                                                'melisKey' => 'meliscore_tool_phpunit_header_run_all',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisPhpUnitTool',
+                                                                'action' => 'render-phpunit-header-run-all',
+                                                                'jscallback' => '',
+                                                                'jsdatas' => array()
+                                                            ),
+                                                        ),
+                                                    )
+                                                ),
+                                                'meliscore_tool_phpunit_content' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_meliscore_tool_phpunit_content',
+                                                        'name' => 'PHPUnit Content',
+                                                        'melisKey' => 'meliscore_tool_phpunit_content',
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'MelisPhpUnitTool',
+                                                        'action' => 'render-phpunit-content',
+                                                        'jscallback' => '',
+                                                        'jsdatas' => array()
+                                                    ),
+                                                ),
+                                            )
+                                        ),
+                                        // End PhpUnit
 							            // MODULE MANAGEMENT 
 							            'meliscore_tool_user_module_management' => array(
 							                'conf' => array(
@@ -785,6 +830,78 @@ return array(
 							                )
 							            ),
                                         // END BO EMAILS MANAGEMENT
+							            // LOGS TOOL
+							            'meliscore_logs_tool' => array(
+							                'conf' => array(
+							                    'id' => 'id_meliscore_logs_tool',
+							                    'name' => 'tr_meliscore_logs_tool',
+							                    'melisKey' => 'meliscore_logs_tool',
+							                    'icon' => 'fa-list',
+							                    'rights_checkbox_disable' => true,
+							                ),
+							                'forward' => array(
+							                    'module' => 'MelisCore',
+							                    'controller' => 'Log',
+							                    'action' => 'render-logs-tool',
+							                    'jscallback' => '',
+							                    'jsdatas' => array()
+							                ),
+							                'interface' => array(
+							                    'meliscore_logs_tool_header' => array(
+							                        'conf' => array(
+							                            'id' => 'id_meliscore_logs_tool_header',
+							                            'name' => 'tr_meliscore_logs_tool_header',
+							                            'melisKey' => 'meliscore_logs_tool_header',
+							                        ),
+							                        'forward' => array(
+							                            'module' => 'MelisCore',
+							                            'controller' => 'Log',
+							                            'action' => 'render-logs-tool-header',
+							                        ),
+							                    ),
+							                    'meliscore_logs_tool_content' => array(
+							                        'conf' => array(
+							                            'id' => 'id_meliscore_logs_tool_content',
+							                            'name' => 'tr_meliscore_logs_tool_content',
+							                            'melisKey' => 'meliscore_logs_tool_content',
+							                        ),
+							                        'forward' => array(
+							                            'module' => 'MelisCore',
+							                            'controller' => 'Log',
+							                            'action' => 'render-logs-tool-content',
+							                        ),
+							                        'interface' => array(
+							                            'meliscore_logs_tool_table' => array(
+							                                'conf' => array(
+							                                    'id' => 'id_meliscore_logs_tool_table',
+							                                    'name' => 'tr_meliscore_logs_tool_table',
+							                                    'melisKey' => 'meliscore_logs_tool_table',
+							                                ),
+							                                'forward' => array(
+							                                    'module' => 'MelisCore',
+							                                    'controller' => 'Log',
+							                                    'action' => 'render-logs-tool-table',
+							                                ),
+							                                'interface' => array(
+							                                    'meliscore_logs_tool_log_type_form' => array(
+							                                        'conf' => array(
+							                                            'id' => 'id_meliscore_logs_tool_log_type_form',
+							                                            'name' => 'tr_meliscore_logs_tool_log_type_form',
+							                                            'melisKey' => 'meliscore_logs_tool_log_type_form',
+							                                        ),
+							                                        'forward' => array(
+							                                            'module' => 'MelisCore',
+							                                            'controller' => 'Log',
+							                                            'action' => 'render-logs-tool-table-log-type-form',
+							                                        ),
+						                                        )
+							                                )
+							                            ),
+							                        )
+							                    ),
+							                ),
+							            ),
+							            // END LOGS TOOL
 							        ),
 							    ),
 								'meliscore_tool_admin_section' => array(

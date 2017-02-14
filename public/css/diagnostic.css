@@ -1,5 +1,5 @@
 .module-lists{
-	background-color:##2c2c2c;
+	background-color:#2c2c2c;
 }
 
 .module-display-heading .ms-heading{
@@ -47,7 +47,7 @@
     margin-top: 5px;
 }
 
-.btn-run-module-test{
+.btn-run-module-test, .btn-run-pu-module-test{
 	margin-top: -5px;
 }
 
@@ -61,4 +61,7 @@
 .divLogger{
     overflow-y: scroll;
     height: 300px;
+}
+.progress{
+    background-color: #cecece;
 }

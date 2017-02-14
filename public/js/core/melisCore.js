@@ -15,15 +15,6 @@ var melisCore = (function(window){
     var $centerContent = $("#melis-id-body-content-load");
     var screenSize = jQuery(window).width();
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
     // MAIN FUNCTIONS =================================================================================================================
     
     // CHANGE LANGUAGE
@@ -345,13 +336,14 @@ var melisCore = (function(window){
     	}
     });
     // ---=[ END ]=--- MULTI VALUE INPUT FILED JS --------------------------------------------------
-    
-    
-    
-    
-    
-    
-    
+
+    // detect IE8 and above, and edge
+    if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+        // remove flickering issue on edge
+        $('html').css('overflow', 'hidden');
+        $body.css('overflow', 'auto');
+    }
+
     
     // BIND & DELEGATE EVENTS =================================================================================================================
     
@@ -523,7 +515,7 @@ var melisCore = (function(window){
         melisChangeLanguage                             :           melisChangeLanguage,
         resizeScreen                                    :           window.resizeScreen,
         screenSize										:			screenSize,    
-        iframeLoad										:			iframeLoad
+        iframeLoad										:			iframeLoad,
     };
     
     

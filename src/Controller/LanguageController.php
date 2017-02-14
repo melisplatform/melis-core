@@ -300,6 +300,11 @@ class LanguageController extends AbstractActionController
         return new ViewModel();
     }
     
+    public function renderToolLanguageContentActionUpdateAction()
+    {
+        return new ViewModel();
+    }
+    
     
     // END BODY SECTION 
     
@@ -426,6 +431,7 @@ class LanguageController extends AbstractActionController
     
                 // add DataTable RowID, this will be added in the <tr> tags in each rows
                 $tableData[$ctr]['DT_RowId'] = $tableData[$ctr]['lang_id'];
+                $tableData[$ctr]['DT_RowAttr'] = array('data-locale' => $tableData[$ctr]['lang_locale']);
     
             }
     
@@ -450,7 +456,7 @@ class LanguageController extends AbstractActionController
 
         $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-        $id = 0;
+        $id = null;
         $form = $melisTool->getForm('meliscore_tool_language_generic_form');
         
         $success = 0;
@@ -470,7 +476,6 @@ class LanguageController extends AbstractActionController
                 $isExistData = $isExistData->current();
                 if(empty($isExistData)) {
                     
-
                     $createTranslationFiles = $melisTranslation->addTranslationFiles($data['lang_locale']);
                     if($createTranslationFiles) {
                         $id = $langTable->save($data);
@@ -480,7 +485,6 @@ class LanguageController extends AbstractActionController
                     else {
                         $textMessage = 'tr_meliscore_tool_language_permission';
                     }
-                    
                 }
                 else {
                     $errors = array(
@@ -512,12 +516,12 @@ class LanguageController extends AbstractActionController
         
         $response = array(
             'success' => $success,
-            'textTitle' => $translator->translate($textTitle),
-            'textMessage' => $translator->translate($textMessage),
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage,
             'errors' => $errors
         );
         
-        $this->getEventManager()->trigger('meliscore_language_new_end', $this, $response);
+        $this->getEventManager()->trigger('meliscore_language_new_end', $this, array_merge($response, array('typeCode' => 'CORE_LANGUAGE_ADD', 'itemId' => $id)));
          
         return new JsonModel($response);
         
@@ -531,11 +535,13 @@ class LanguageController extends AbstractActionController
         $langTable = $this->getServiceLocator()->get('MelisCoreTableLang');
         $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
+        
+        $textTitle = $melisTool->getTitle();
         $textMessage = 'tr_meliscore_tool_language_delete_failed';
         $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
         $doNotDelete = array('en_EN.interface.php', 'en_EN.forms.php');
         
-        $id = 0;
+        $id = null;
         $success = 0;
         $lang = '';
         
@@ -557,13 +563,73 @@ class LanguageController extends AbstractActionController
         }
         
         $response = array(
-            'textTitle' => $melisTool->getTitle(),
-            'textMessage' => $translator->translate($textMessage),
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage,
             'success' => $success
         );
-        $this->getEventManager()->trigger('meliscore_language_delete_end', $this, $response);
+        $this->getEventManager()->trigger('meliscore_language_delete_end', $this, array_merge($response, array('typeCode' => 'CORE_LANGUAGE_DELETE', 'itemId' => $id)));
         
         return new JsonModel($response);
+    }
+    
+    /**
+     * This allows the selected language to get new translations from melisplatform
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function updateLanguageAction()
+    {
+        $response = array();
+        $success = 0;
+        $excludeModules = array('.', '..', '.gitignore', 'MelisSites', 'MelisInstaller');
+        
+        $textTitle = 'tr_meliscore_header_language_Language';
+        $textMessage = 'tr_meliscore_tool_language_update_failed';
+        
+        $this->getEventManager()->trigger('meliscore_language_update_start', $this, $response);
+        $translationSvc = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $vendorModules = $moduleSvc->getVendorModules();
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $directory = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_dir');
+        
+        if($this->getRequest()->isPost()){
+            $id = $this->getRequest()->getPost('id');
+            $locale = $this->getRequest()->getPost('locale');
+            if(!empty($locale)){
+                foreach($vendorModules as $vModule) {
+                
+                    $vPath = $moduleSvc->getModulePath($vModule) . '/language/';
+                    if(file_exists($vPath) && is_writable($vPath)) {
+                        $fullPathVendorModules[] = array('module' => $vModule, 'path' => $vPath);
+                    }
+                }
+
+                if($fullPathVendorModules) {
+                    foreach($fullPathVendorModules as $vModuleConf) {                       
+                       $success = $translationSvc->createOrUpdateTranslationFiles($vModuleConf['path'], $vModuleConf['module'], $locale);
+                       if(!$success){                          
+                            break;    
+                       }
+                    }
+                }
+                
+                if($success){
+                    $textMessage = 'tr_meliscore_tool_language_edit_success';
+                }   
+            }
+            
+        }
+       
+        $response = array(
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage,
+            'success' => $success
+        );
+        $this->getEventManager()->trigger('meliscore_language_update_end', $this, $response);
+        
+        return new JsonModel($response);
+        
     }
     
     /**

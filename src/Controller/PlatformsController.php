@@ -391,12 +391,12 @@ class PlatformsController extends AbstractActionController
         
         $response = array(
             'success' => $success,
-            'textTitle' => $translator->translate($textTitle),
-            'textMessage' => $translator->translate($textMessage),
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage,
             'errors' => $errors
         );
         
-        $this->getEventManager()->trigger('meliscore_platform_new_end', $this, array_merge($response, array('id' => $id)));
+        $this->getEventManager()->trigger('meliscore_platform_new_end', $this, array_merge($response, array('typeCode' => 'CORE_PLATFORM_ADD', 'itemId' => $id, 'id' => $id)));
          
         return new JsonModel($response);
     }
@@ -408,6 +408,7 @@ class PlatformsController extends AbstractActionController
         $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
         $translator = $this->getServiceLocator()->get('translator');
         
+        $id = null;
         $success = 0;
         $errors  = array();
         $textTitle = 'tr_meliscore_tool_platform_title';
@@ -423,9 +424,9 @@ class PlatformsController extends AbstractActionController
             $postValues = get_object_vars($this->getRequest()->getPost());
             $form->setData($postValues);
         
+            $id = $postValues['id'];
+            
             if($form->isValid()) {
-                
-                $id = $postValues['id'];
                 $data = $form->getData();
                 $data['plf_id'] = $id;
                 $platformTable->save($data, $id);
@@ -453,12 +454,12 @@ class PlatformsController extends AbstractActionController
         
         $response = array(
             'success' => $success,
-            'textTitle' => $translator->translate($textTitle),
-            'textMessage' => $translator->translate($textMessage),
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage,
             'errors' => $errors
         );
         
-        $this->getEventManager()->trigger('meliscore_platform_update_end', $this, $response);
+        $this->getEventManager()->trigger('meliscore_platform_update_end', $this, array_merge($response, array('typeCode' => 'CORE_PLATFORM_UPDATE', 'itemId' => $id)));
          
         return new JsonModel($response);
     }
@@ -471,12 +472,14 @@ class PlatformsController extends AbstractActionController
         $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
         $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
+        
+        $textTitle = 'tr_meliscore_tool_platform_title';
         $textMessage = 'tr_meliscore_tool_platform_prompts_delete_failed';
         
         $id = 0;
         $success = 0;
         $platform = '';
-    
+        
         if($this->getRequest()->isPost())
         {
             $id = $this->getRequest()->getPost('id');
@@ -493,13 +496,21 @@ class PlatformsController extends AbstractActionController
                 }
             }
         }
-    
+        
         $response = array(
-            'textTitle' => $melisTool->getTitle(),
-            'textMessage' => $translator->translate($textMessage),
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage,
             'success' => $success
         );
-        $this->getEventManager()->trigger('meliscore_platform_delete_end', $this, array_merge($response, array('platform' => $platform, 'id' => (int) $id)));
+        
+        $eventData = array_merge($response, array(
+            'platform' => $platform,
+            'id' => $id,
+            'typeCode' => 'CORE_PLATFORM_DELETE',
+            'itemId' => $id
+        ));
+        
+        $this->getEventManager()->trigger('meliscore_platform_delete_end', $this, $eventData);
         
         return new JsonModel($response);
     }

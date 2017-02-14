@@ -309,6 +309,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
            $ajaxUrl = $table['ajaxUrl'];
            $dataFunction = !empty($table['dataFunction']) ? 'data: '.$table['dataFunction'] : '';
            $ajaxCallBack = !empty($table['ajaxCallback']) ? $table['ajaxCallback'].';' : '';
+           $initComplete = !empty($table['initComplete']) ? $table['initComplete'].';' : '';
            $filters = $table['filters'];
            $columns = $table['columns'];
            $actionContainer = $table['actionButtons'];
@@ -399,9 +400,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 $sDomStructure = $tableTop.$tableBottom;
             }
             
-            
-            
-            // actions
+            // Action Buttons
             $actionButtons = '';
             $action = '';
             $forward = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward');
@@ -418,14 +417,29 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $colCtr = 1; // starts with index 1 since this will be used in JS configuration for jquery nth-child
             $colKeyId = array_keys($columns);
            
-           
+            // Action Column
+            $actionColumn = null;
             // convert columns in Javascript JSON
             $jsonColumns = '[';
             foreach($colKeyId as $colId) {
                $jsonColumns .= '{"data":"'.$colId.'"},';
             }
-            $jsonColumns .= '{"data":"actions"}]';
-
+            
+            if (!empty($actionButtons)){
+                $jsonColumns .= '{"data":"actions"}';
+                
+                // Preparing the Table Action column Buttons
+                $actionColumn = '{
+                                    "targets": -1,
+                                    "data": null,
+                                    "mRender": function (data, type, full) {
+                                        return \'<div>'.$actionButtons.'</div>\';
+        						    },
+        						    "bSortable" : false,
+        						    "sClass" : \'dtActionCls\',
+        					    }';
+            }
+            $jsonColumns .= ']';
            
             $fnName = 'fn'.$tableId.'init';
            
@@ -551,6 +565,9 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                         type: "POST",
                         '.$dataFunction.'
                     },
+                    initComplete : function(oSettings, json) {
+                        '.$initComplete.'  
+                    },
                     fnDrawCallback: function(oSettings) {
                         '.$ajaxCallBack.'
                     },
@@ -567,21 +584,13 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 					    '. $selectColDef .'
 					    { responsivePriority: 1, targets: 0 },
 					    { responsivePriority: 2, targets: -1 }, // make sure action column stays whenever the window is resized
-					    {
-						    "targets": -1,
-						    "data": null,
-						    "mRender": function (data, type, full) {
-							    return \''.$actionButtons.'\';
-						    },
-						    "bSortable" : false, 
-						    "sClass" : \'dtActionCls\',
-					    }
+					    '.$actionColumn.'
 				    ],
                 }).columns.adjust().responsive.recalc();
                 return '.str_replace("#","$",$tableId).';
             };
             var '.str_replace("#","$",$tableId).' = '.$fnName.'();
-	        $(document).on("init.dt", function(e, settings) {
+	        $("'.$tableId.'").on("init.dt", function(e, settings) {
 			    '.$jsSdomContentInit.'
 		        '.$tableSearchPlugin.'   
 	        });';

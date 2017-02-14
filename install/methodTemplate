@@ -1,0 +1,9 @@
+    /**
+     * Get {{methodName}} table
+     * @return mixed
+     */
+    private function {{methodName}}()
+    {
+        $conf = $this->sm->getPhpUnitTool()->getTable('{{moduleName}}', __METHOD__);
+        return $this->sm->getTableMock(new $conf['model'], $conf['model_table'], $conf['db_table_name'], $this->method);
+    }

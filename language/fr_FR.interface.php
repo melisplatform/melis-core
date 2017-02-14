@@ -23,7 +23,7 @@
 		// Rights
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
-		'tr_meliscore_header_flash_messenger' => 'Flash Messenger',
+		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
 		'tr_meliscore_header_language' => 'Langue',
 		'tr_meliscore_header_logout' => 'Déconnexion',
 		'tr_meliscore_leftmenu_leftmenu' => 'Menu gauche',
@@ -80,6 +80,7 @@
 	    'tr_meliscore_tool_user_col_confirm_password' => 'Mot de passe (2)',
 	    'tr_meliscore_tool_user_col_last_login' => 'Dernier accès',
 	    'tr_meliscore_tool_user_col_profile' => 'Photo',
+	    'tr_meliscore_tool_user_col_admin' => 'Admin',
 	    'tr_meliscore_tool_user_modal_empty' => 'Pas d\'accès',
 	    'tr_meliscore_tool_user_modal_edit' => 'Informations',
 	    'tr_meliscore_tool_user_modal_rights' => 'Droits d\'accès',
@@ -117,7 +118,7 @@
 	    'tr_meliscore_email_lost_password_request_form_empty' => 'Please complete the form',
 	    'tr_meliscore_email_failed' => 'Login ou email invalide',
 	    // Password Modification
-	    'tr_meliscore_email_password_modification_Subject' => 'Password Modification',
+	    'tr_meliscore_email_password_modification_Subject' => 'Password modification',
 	    'tr_meliscore_email_password_modification_html_Content' => '<p>Bonjour [NAME],</p><p>Votre mot de passe sur Melis Platform a été modifié.<br/>Votre nouveau mot de passe est : [PASSWORD]</p><p>Bonne journée.</p>',
 	    
 	    // Reset Password
@@ -210,8 +211,8 @@
 	    'tr_meliscore_error_language' => 'Une erreur est survenue lors du changement de langage, veuillez réessayer.',
 	    
 	    // Module Management Translations
-	    'tr_meliscore_system_configuration' => 'Configuration Système',
-	    'tr_meliscore_module_management' => 'Module Management',
+	    'tr_meliscore_system_configuration' => 'Configuration système',
+	    'tr_meliscore_module_management' => 'Module management',
 	    'tr_meliscore_module_management_modules' => 'Modules',
 	    'tr_meliscore_module_management_modules_save' => 'Sauvegarder',
 	    'tr_meliscore_module_management_header' => 'Contenu du header',
@@ -220,15 +221,47 @@
 	    'tr_meliscore_module_management_prompt_success' => 'Les paramètres des modules ont été mis à jour',
 	    'tr_meliscore_module_management_prompt_failed' => 'Impossible de mettre à jour les paramètres des modules',
 	    'tr_meliscore_module_management_notification_tip' => "Glisser/déposer les modules pour arranger l'ordre",
+	    
+	    // Common File Attachment and Images Deletion labels and messages
+	    // File
+	    'tr_meliscore_delete_file_title' => 'Supprimer le fichier',
+	    'tr_meliscore_delete_file_confirm_msg' => 'Êtes-vous sûr de vouloir supprimer ce fichier?',
+	    'tr_meliscore_delete_file_success' => 'Le fichier a été supprimé avec succès',
+	    'tr_meliscore_delete_file_unable' => 'Impossible de supprimer le fichier, veuillez réessayer plus tard',
+	    'tr_meliscore_delete_file_rights_issue' => 'Impossible de supprimer le fichier, veuillez vérifier vos droits',
+	    'tr_meliscore_delete_file_not_exists' => 'Impossible de supprimer, le fichier n\'existe pas',
+	    // Image
+	    'tr_meliscore_delete_image_title' => 'Supprimer l\'image',
+	    'tr_meliscore_delete_image_confirm_msg' => 'Êtes-vous sûr de vouloir supprimer cette image?',
+	    'tr_meliscore_delete_image_success' => 'L\'image a été supprimée avec succès',
+	    'tr_meliscore_delete_image_unable' => 'Impossible de supprimer l\'image, veuillez réessayer plus tard',
+	    'tr_meliscore_delete_image_rights_issue' => 'Impossible de supprimer l\'image, veuillez vérifier vos droits',
+	    'tr_meliscore_delete_image_not_exists' => 'Impossible de supprimer, l\'image n\'existe pas',
+	    
+	    
+	    // Delete Message Confimation
+	    'tr_meliscommerce_documents_delete_file_title' => 'Supprimer le fichier',
+	    'tr_meliscommerce_documents_delete_file_msg_confirm' => 'Êtes-vous sûr de vouloir supprimer ce fichier ?',
+	    'tr_meliscommerce_documents_delete_image_title' => 'Supprimer l\'image',
+	    'tr_meliscommerce_documents_delete_image_msg_confirm' => 'Êtes-vous sûr de vouloir supprimer cette image?',
+	    'tr_meliscommerce_documents_delete_file_success' => 'Le fichier a été supprimé avec succès',
+	    'tr_meliscommerce_documents_delete_image_success' => 'L\'image a été supprimée avec succès',
+	    'tr_meliscommerce_documents_delete_file_fail' => 'Impossible de supprimer le fichier, veuillez réessayer plus tard.',
+	    'tr_meliscommerce_documents_delete_image_fail' => 'Impossible de supprimer l\'image, veuillez réessayer plus tard.',
+	    'tr_meliscommerce_documents_delete_file_rights_issue' => 'Impossible de supprimer le fichier, veuillez vérifier vos droits',
+	    'tr_meliscommerce_documents_delete_image_rights_issue' => 'Impossible de supprimer l\'image, veuillez vérifier vos droits',
+	    'tr_meliscommerce_documents_delete_file_not_exists' => 'Impossible de supprimer, le fichier n\'existe pas',
+	    'tr_meliscommerce_documents_delete_image_not_exists' => 'Impossible de supprimer, l\'image n\'existe pas',
+	    
 	    // Platform Tool Translations
 	    'tr_meliscore_tool_platform_title' => 'Plateformes',
 	    'tr_meliscore_tool_platform_header' => 'Header',
 	    'tr_meliscore_tool_platform_header_add' => 'Nouvelle plateforme',
 	    'tr_meliscore_tool_platform_content' => 'Content',
 	    'tr_meliscore_tool_platform_modals' => 'Modals',
-        'tr_meliscore_tool_platform_modal_new' => 'Nouvelle Plateforme',
-	    'tr_meliscore_tool_platform_modal_edit' => 'Editer Plateforme',
-	    'tr_meliscore_tool_platform_modal_del' => 'Supprimer la Plateforme',
+        'tr_meliscore_tool_platform_modal_new' => 'Nouvelle plateforme',
+	    'tr_meliscore_tool_platform_modal_edit' => 'Editer plateforme',
+	    'tr_meliscore_tool_platform_modal_del' => 'Supprimer la plateforme',
 	    'tr_meliscore_tool_platform_prompts_confirm' => 'En supprimant cette plateforme vous allez aussi supprimer des informations et des paramètres critiques qui y sont rattachés. Etes-vous sûr de vouloir supprimer cette plateforme?',
 	    'tr_meliscore_tool_platform_prompts_delete_success' => 'Plateforme supprimée avec succès',
 	    'tr_meliscore_tool_platform_prompts_delete_failed' => 'Impossible de supprimer la plateforme',
@@ -245,7 +278,7 @@
 	    'tr_meliscore_tool_platform_forms_button_edit' => 'Sauvegarder',
 	    
 	    // Language Tool Translations
-	    'tr_meliscore_tool_language' => 'Langages du Back-Office',
+	    'tr_meliscore_tool_language' => 'Langages du back-office',
 	    'tr_meliscore_tool_language_header' => 'Header',
 	    'tr_meliscore_tool_language_content' => 'Content',
 	    'tr_meliscore_tool_language_modal' => 'Modals',
@@ -275,12 +308,12 @@
 	    
 	    // Email Management
 	    'tr_meliscore_tool_emails_mngt_generic_from' => 'Email Creation and Edition Form',
-	    'tr_meliscore_tool_emails_mngt' => 'Gestion Emails',
+	    'tr_meliscore_tool_emails_mngt' => 'Gestion emails',
 	    'tr_meliscore_tool_emails_mngt_header' => 'Header',
 	    'tr_meliscore_tool_emails_mngt_header_btn_add' => 'Ajouter un email',
 	    'tr_meliscore_tool_emails_mngt_content' => 'Contenu',
 	    'tr_meliscore_tool_emails_mngt_content_refresh' => 'Rafraîchir',
-	    'tr_meliscore_tool_emails_mngt_content_table' => 'Emails Table',
+	    'tr_meliscore_tool_emails_mngt_content_table' => 'Emails table',
 	    'tr_meliscore_tool_emails_mngt_filters' => 'Filtres',
 	    'tr_meliscore_tool_emails_mngt_filters_refresh' => 'Rafraîchir',
 	    'tr_meliscore_tool_emails_mngt_filters_content' => 'Contenu',
@@ -317,7 +350,7 @@
 	    // General Properties Form
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_name' => 'Nom de l\'email',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_code_name' => 'Code email',
-        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_name' => 'From Nom',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_name' => 'From nom',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email' => 'De l\'email',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to' => 'Répondre à',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Tags de remplacement acceptés',
@@ -359,19 +392,19 @@
 	    
 	    
 	    // Module Diagnostic Tool
-	    'tr_melis_module_diagnostics_title' => 'Module Diagnostics',
+	    'tr_melis_module_diagnostics_title' => 'Module diagnostics',
 	    'tr_melis_module_diagnostics_run_test' => '<i class="fa fa-play"></i> Run',
 	    'tr_melis_module_diagnostics_testing' => '<i class="fa fa-spinner"></i> Testing...',
 	    'tr_melis_module_diagnostics_collapse' => '<i class="fa fa-minus"></i> Hide',
 	    'tr_melis_module_diagnostics_tool_header' => 'Header',
 	    'tr_melis_module_diagnostics_tool_content' => 'Content',
-	    'tr_melis_module_diagnostics_tool_header_run_all' => '<i class="glyphicon glyphicon-flash"></i> Run All',
-	    'tr_melis_module_diagnostics_tool_header_hide_all' => '<i class="fa fa-minus"></i> Hide All',
+	    'tr_melis_module_diagnostics_tool_header_run_all' => '<i class="glyphicon glyphicon-flash"></i> Run all',
+	    'tr_melis_module_diagnostics_tool_header_hide_all' => '<i class="fa fa-minus"></i> Hide all',
 	     
-	    'tr_melis_module_rights_dir' => 'Module Basic Folder Test',
-	    'tr_melis_module_basic_action_test' => 'Basic Action Test',
-	    'tr_melis_module_file_creation_test' => 'File Creation Test',
-	    'tr_melis_module_db_test' => 'Test Module Database Table(s)',
+	    'tr_melis_module_rights_dir' => 'Module basic folder test',
+	    'tr_melis_module_basic_action_test' => 'Basic action test',
+	    'tr_melis_module_file_creation_test' => 'File creation test',
+	    'tr_melis_module_db_test' => 'Test module database table(s)',
 	     
 	     
 	    'tr_melis_module_diag_check_rights' => 'Checking rights for <strong>"%s"</strong>',
@@ -386,7 +419,7 @@
 	    'tr_melis_module_controller_check_route' => 'Checking <strong><strong>"%s"</strong></strong> route configuration',
 	    'tr_melis_module_controller_testing_route' => 'Testing route status: <strong>"%s"</strong>',
 	    'tr_melis_module_controller_testing_route_not_found' => 'Unable to test route, cannot find <strong>"%s"</strong> in your route configuration, please check %s/config/module.config.php',
-	    'tr_melis_module_controller_route_test_results' => 'Route Results: <strong>%s</strong>',
+	    'tr_melis_module_controller_route_test_results' => 'Route results: <strong>%s</strong>',
 	     
 	    'tr_melis_module_ending_test' => 'Finishing testing for <strong>%s</strong>...',
 	    'tr_melis_module_no_more_results' => 'Request doesn\'t have anymore response. Response payload might be too big for the diagnostic tool to handle',
@@ -414,5 +447,28 @@
 	    // Tooltip messages
 	    'tr_meliscore_tool_tooltip_password' => 'Le mot de passe doit être d`au moins 8 caractères et doit contenir au moins une lettre ET un chiffre.',
 	    'tr_meliscore_tool_tooltip_password_2' => 'Confirmer le mot de passe',
+	    
+	    // Logs Tool
+	    'tr_meliscore_logs_tool' => 'Logs',
+	    'tr_meliscore_logs_type' => 'Type de logs',
+	     
+	    // Table columns
+	    'tr_meliscore_logs_tool_log_id' => 'ID',
+	    'tr_meliscore_logs_tool_log_title' => 'Titre',
+	    'tr_meliscore_logs_tool_log_message' => 'Message',
+	    'tr_meliscore_logs_tool_log_type' => 'Type',
+	    'tr_meliscore_logs_tool_log_item_id' => 'ID élément',
+	    'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
+	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajouté',
+	     
+	    // Log Type Deatils
+	    'tr_meliscore_logs_tool_log_type_name' => 'Nom',
+	    'tr_meliscore_logs_tool_log_type_description' => 'Description',
+	    'tr_meliscore_logs_tool_log_type_code' => 'Code type de log',
+	     
+	    'tr_meliscore_logs_tool_log_save_success' => 'Le type de log a été sauvegardé avec succès',
+	    'tr_meliscore_logs_tool_log_save_unable' => 'Impossible de sauvegarder le type de log, veuillez réessayer',
+	    'tr_meliscore_logs_tool_log_input_to_long_255' => 'Valeur trop longue, elle doit être de moins de 255 caractères',
+	    'tr_meliscore_logs_tool_log_tyne_name_must_atleast_one_entry' => 'Le nom du type de log doit avoir au moins un caractère',
 	);
 ?>

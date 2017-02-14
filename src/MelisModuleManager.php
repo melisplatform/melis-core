@@ -26,7 +26,8 @@ class MelisModuleManager
         $rootMelisSites = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
 
         $modules = array();
-        $modulesMelisBackOffice = include $_SERVER['DOCUMENT_ROOT'] . '/../config/melis.module.load.php';
+        $docRoot = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '../..';
+        $modulesMelisBackOffice = include $docRoot . '/../config/melis.module.load.php';
 
         if (array_key_exists('REQUEST_URI', $_SERVER)) {
             $uri = $_SERVER['REQUEST_URI'];
@@ -57,7 +58,7 @@ class MelisModuleManager
         } else {
             $modules = array();
         }
-        
+
         return $modules;
     }
 }

@@ -8,11 +8,11 @@
 	    'tr_meliscore_forgot_form_email' => 'Email',
 	    'tr_meliscore_forgot_form_login' => 'Login',
 	    'tr_meliscore_forgot_form_submit' => 'Submit',
-	    'tr_meliscore_forgot_page_title' => 'Forgot Password - ',
+	    'tr_meliscore_forgot_page_title' => 'Forgot password - ',
 	    'tr_meliscore_forgot_page_header' => 'Retrieve your account',
 	    
 	    'tr_meliscore_reset_password' => 'Password',
-	    'tr_meliscore_reset_password_confirm' => 'Confirm Password',
+	    'tr_meliscore_reset_password_confirm' => 'Confirm password',
 	    'tr_meliscore_reset_password_button' => 'Reset',
 
 		'tr_meliscore_login_errors_Empty datas' => 'Empty datas',
@@ -60,7 +60,7 @@
 	    'tr_meliscore_tool_user_usr_image_error_invalid'  => 'Invalid image format, please choose another',
 	    
 	    'tr_meliscore_tool_user_usr_profile_image' => 'Photo de profil',
-	    'tr_meliscore_tool_user_usr_file_button' => 'Select Image',
+	    'tr_meliscore_tool_user_usr_file_button' => 'Select image',
 	    
 	    'tr_meliscore_user_password_change_succes' => 'Password successfully changed.',
 	    

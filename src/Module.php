@@ -23,6 +23,7 @@ use MelisCore\Listener\MelisCoreFlashMessengerListener;
 use MelisCore\Listener\MelisCoreNewPlatformListener;
 use MelisCore\Listener\MelisCoreInstallNewPlatformListener;
 use MelisCore\Listener\MelisCoreInstallCreateNewUserListener;
+use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 
 class Module
 {   
@@ -56,6 +57,7 @@ class Module
         $eventManager->attach(new MelisCoreToolUserUpdateUserListener());
         $eventManager->attach(new MelisCoreFlashMessengerListener());
         $eventManager->attach(new MelisCoreNewPlatformListener());
+        $eventManager->attach(new MelisCoreUserRecentLogsListener());
         
         $eventManager->attach(new MelisCoreInstallNewPlatformListener());
         $eventManager->attach(new MelisCoreInstallCreateNewUserListener());
@@ -215,8 +217,22 @@ class Module
     	$container = new Container('meliscore');
     	$locale = $container['melis-lang-locale'];
     	
-    	$translator->addTranslationFile('phparray', __DIR__ . '/../language/' . $locale . '.interface.php');
-    	$translator->addTranslationFile('phparray', __DIR__ . '/../language/' . $locale . '.forms.php');
+    	if (!empty($locale))
+    	{
+    	    
+    	    // Inteface translations
+    	    $interfaceTransPath = 'module/MelisModuleConfig/languages/MelisCore/' . $locale . '.interface.php';
+    	    $default = __DIR__ . '/../language/en_EN.interface.php';
+    	    $transPath = (file_exists($interfaceTransPath))? $interfaceTransPath : $default;
+    	    $translator->addTranslationFile('phparray', $transPath);
+    	    	
+     	    // Forms translations
+    	    $formsTransPath = 'module/MelisModuleConfig/languages/MelisCore/' . $locale . '.forms.php';
+    	    $default = __DIR__ . '/../language/en_EN.forms.php';
+    	    $transPath = (file_exists($formsTransPath))? $formsTransPath : $default;
+    	    $translator->addTranslationFile('phparray', $transPath);
+
+    	}
     	
     	$lang = explode('_', $locale);
     	$lang = $lang[0];

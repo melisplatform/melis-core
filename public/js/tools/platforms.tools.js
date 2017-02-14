@@ -9,7 +9,6 @@ window.getCurrentPlatform = function() {
 	    	 $('#tablePlatforms td:nth-child(2):contains("'+ data.env +'")').siblings(':last').html('-');
 	     });
 	//});
-
 }
 
 $(document).ready(function() {
@@ -43,7 +42,6 @@ $(document).ready(function() {
  	    			var name = $(this).attr('name');
  	    			$("input#" + $(this).attr('id')).val(data.platform[name]);
  	    			$("span#platformupdateid").html(data.platform['plf_id']);
-
  	    		});
  	    		melisCoreTool.done(".btn");
 	     }).error(function(){
@@ -68,11 +66,11 @@ $(document).ready(function() {
 				$('#modal-platforms').modal('hide');
 				melisHelper.zoneReload("id_meliscore_tool_platform", "meliscore_tool_platform");
 				// Show Pop-up Notification
-	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46');
+	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage);
 			}
 			else {
-				melisCoreTool.alertDanger("#platformalert", '', data.textMessage + "<br/>");
-				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors, 'closeByButtonOnly');
+				melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
+				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
 				melisCoreTool.highlightErrors(data.success, data.errors, "formplatformadd form#idformsite");
 			}
 			melisCoreTool.done("#btnPlatformAdd");
@@ -106,11 +104,11 @@ $(document).ready(function() {
 				$('#modal-platforms').modal('hide');
 				melisHelper.zoneReload("id_meliscore_tool_platform", "meliscore_tool_platform");
 				// Show Pop-up Notification
-	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46');
+	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage);
 			}
 			else {
-				melisCoreTool.alertDanger("#platformeditalert", '', data.textMessage + "<br/>");
-				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors, 'closeByButtonOnly');
+				melisCoreTool.alertDanger("#platformeditalert", '', data.textMessage);
+				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
 				melisCoreTool.highlightErrors(data.success, data.errors, "formplatformedit form#idformsite");
 			}
 			melisCoreTool.done("#btnPlatformEdit");
@@ -145,7 +143,7 @@ $(document).ready(function() {
 		    	    		melisCore.flashMessenger();
 		    	    		
 		    	    		// Show Pop-up Notification
-		    	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46');
+		    	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage);
 		    	    	}
 		    	    	melisCoreTool.done(".btn-danger");
 	    	     }).error(function(){

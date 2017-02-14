@@ -12,6 +12,7 @@
 		'cleanup' => false,
 		'verify_html' => false,
 	    'setup' => 'melisTinyMCE.tinyMceActionEvent',
+	    'paste_auto_cleanup_on_paste' => true,
 		'plugins' => array(
 		    'advlist autolink lists link image charmap print preview anchor',
 		    'searchreplace visualblocks code fullscreen',

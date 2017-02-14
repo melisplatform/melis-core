@@ -18,6 +18,17 @@ class MelisUserTable extends MelisGenericTable
 		parent::__construct($tableGateway);
 		$this->idField = 'usr_id';
 	}
+	
+	public function getUserOrderByName()
+	{
+	    $select = $this->tableGateway->getSql()->select();
+	    
+	    $select->order(array('usr_firstname' => 'asc', 'usr_lastname' => 'asc'));
+	    
+	    $resultSet = $this->tableGateway->selectWith($select);
+	    
+	    return $resultSet;
+	}
 
 	public function getLastLoggedInUsers($max = 5)
 	{
