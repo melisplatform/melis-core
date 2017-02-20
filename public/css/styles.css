@@ -753,7 +753,13 @@ newplugin-cont span,
 }
 #melis-id-body-content-load .menubar > li a.btn-default:hover{
 	background: #fff;
+    color: #932E2A;
 }
+
+#melis-id-body-content-load .menubar > li a.btn-default:hover .displaysettingsicon span.fa {
+    color: #932E2A;
+}
+
 #content > .innerAll.px2 {
     padding: 0;
 }
@@ -906,8 +912,8 @@ newplugin-cont span,
 .menubar>li.active>a, .menubar>li.open>a{
 	font-weight: normal;
 }
+
 .displaysettingsicon span.fa{
-	color: #932E2A;
 	padding: 3px;
 }
 .dropdown-menu  span.fa{

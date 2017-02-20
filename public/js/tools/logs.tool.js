@@ -1,4 +1,6 @@
 $(function(){
+	$body = $('body');
+	
 	$body.on("click", ".logTypeButon", function(){
 		var btn  = $(this);
 		var logId = btn.parents("tr").attr("id");
