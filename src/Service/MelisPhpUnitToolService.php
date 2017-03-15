@@ -157,9 +157,6 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
 //                     else {
 //                         $results = 'Error: <strong>'.$phpCli.'</strong>  not found';
 //                     }
-                    set_time_limit(0);
-//                     ini_set('max_execution_time', 5000);
-//                     ini_set('max_input_time', 5000);
                     $output = shell_exec($execCommand);
                 }
                 else {

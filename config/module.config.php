@@ -278,24 +278,4 @@ return array(
     'tinyMCE' => array(
         'tool' => 'MelisCore/public/js/tinyMCE/tool.php',
     ),
-    'asset_manager' => array(
-        'activate_cache' => array(
-            'platforms' => array(
-                'default' => 0,
-            ),
-        ),
-        'resolver_configs' => array(
-            'aliases' => array(
-                'MelisCore/' => __DIR__ . '/../public/',
-            ),
-        ),
-        'caching' => array(
-            'default' => array(
-                'cache' => 'AssetManager\\Cache\\FilePathCache',
-                'options' => array(
-                    'dir' => 'public/cache',
-                ),
-            ),
-        ),
-    ),
 );

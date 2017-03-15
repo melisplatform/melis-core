@@ -110,6 +110,18 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         return $modules;
     }
     
+    public function getSitesModules()
+    {
+        $userModules = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
+        
+        $modules = array();
+        if($this->checkDir($userModules)) {
+            $modules = $this->getDir($userModules);
+        }
+        
+        return $modules;
+    }
+    
      
     /**
      * Returns all the important modules

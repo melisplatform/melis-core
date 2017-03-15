@@ -61,23 +61,6 @@ class Module
         
         $eventManager->attach(new MelisCoreInstallNewPlatformListener());
         $eventManager->attach(new MelisCoreInstallCreateNewUserListener());
-
-        // Set cache directives
-        $eventManager->attach(MvcEvent::EVENT_FINISH, function($e) {
-            $sm = $e->getApplication()->getServiceManager();
-            
-            $assetManagerService = $sm->get('AssetManager\Service\AssetManager');
-            
-            $response = $e->getResponse();
-            $headers = $response->getHeaders();
-            
-            $headers = array(
-                'Cache-Control' => 'public',
-                'Pragma' => '',
-            );
-            $e->getResponse()->getHeaders()->addHeaders($headers);
-            
-        }, -1000);
     }
     
     public function initShowErrorsByconfig(MvcEvent $e)
@@ -220,18 +203,24 @@ class Module
     	if (!empty($locale))
     	{
     	    
-    	    // Inteface translations
-    	    $interfaceTransPath = 'module/MelisModuleConfig/languages/MelisCore/' . $locale . '.interface.php';
-    	    $default = __DIR__ . '/../language/en_EN.interface.php';
-    	    $transPath = (file_exists($interfaceTransPath))? $interfaceTransPath : $default;
-    	    $translator->addTranslationFile('phparray', $transPath);
-    	    	
-     	    // Forms translations
-    	    $formsTransPath = 'module/MelisModuleConfig/languages/MelisCore/' . $locale . '.forms.php';
-    	    $default = __DIR__ . '/../language/en_EN.forms.php';
-    	    $transPath = (file_exists($formsTransPath))? $formsTransPath : $default;
-    	    $translator->addTranslationFile('phparray', $transPath);
-
+    	    $translationType = array(
+    	        'interface',
+    	        'forms',
+    	    );
+    	    
+    	    foreach($translationType as $type){
+    	    
+    	        $transPath = "module/MelisModuleConfig/languages/MelisCore/$locale.$type.php";
+    	    
+    	        if(!file_exists($transPath)){
+    	    
+    	            // if translation is not found, use melis default translations
+    	            $locale = (file_exists(__DIR__ . "/../language/$locale.$type.php"))? $locale : "en_EN";
+    	            $transPath = __DIR__ . "/../language/$locale.$type.php";
+    	        }
+    	    
+    	        $translator->addTranslationFile('phparray', $transPath);
+    	    }
     	}
     	
     	$lang = explode('_', $locale);

@@ -225,8 +225,9 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 				if (empty($toolsOrdered[$orderKeySection]))
 					$toolsOrdered[$orderKeySection] = array();
 				$toolsOrdered[$orderKeySection] = $tools[$orderKeySection];
-				unset($toolsOrdered[$orderKeySection]['children']);
-				unset($sections[$orderKeySection]);
+                // commented because the child nodes of some business apps doesn't show
+				//unset($toolsOrdered[$orderKeySection]['children']);
+				//unset($sections[$orderKeySection]);
 			}
 		}
 		foreach ($sections as $keyInterfaceSection => $childinterface)
@@ -234,7 +235,8 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 			if (empty($toolsOrdered[$keyInterfaceSection]))
 				$toolsOrdered[$keyInterfaceSection] = array();
 			$toolsOrdered[$keyInterfaceSection] = $tools[$keyInterfaceSection];
-			unset($toolsOrdered[$keyInterfaceSection]['children']);
+            // commented because the child nodes of some business apps doesn't show
+			//unset($toolsOrdered[$keyInterfaceSection]['children']);
 		}
 		 
 		// Reordering tools inside sections
@@ -254,7 +256,8 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 						if (!empty($tools[$keySection]['children'][$orderKey]))
 						{
 							$toolsOrdered[$keySection]['children'][$orderKey] = $tools[$keySection]['children'][$orderKey];
-							unset($tools[$keySection]['children'][$orderKey]);
+                            // commented because the child nodes of some business apps doesn't show
+							//unset($tools[$keySection]['children'][$orderKey]);
 						}
 					}
 				
