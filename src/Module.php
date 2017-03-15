@@ -154,10 +154,6 @@ class Module
         
 
        $events = $mm->getEventManager();
-       
-            // Registering a listener at default priority, 1, which will trigger
-            // after the ConfigListener merges config.
-       $events->attach(ModuleEvent::EVENT_MERGE_CONFIG, array($this, 'melisAssetsCaching'));
         
     }
     
@@ -246,33 +242,6 @@ class Module
     	} 
     	
     	return $config;
-    }
-    
-    public function melisAssetsCaching(ModuleEvent $e)
-    {
-        $configListener = $e->getConfigListener();
-        $config         = $configListener->getMergedConfig(false);
-    
-        if (!empty($config['asset_manager']))
-        {
-            if (!empty($config['asset_manager']['activate_cache']))
-            {
-                $activateCache = 1;
-                $activateCacheArray = $config['asset_manager']['activate_cache'];
-                $platform = getenv('MELIS_PLATFORM');
-                if (isset($activateCacheArray['platforms'][$platform]))
-                    $activateCache = $activateCacheArray['platforms'][$platform];
-                else
-                    if (isset($activateCacheArray['platforms']['default']))
-                        $activateCache = $activateCacheArray['platforms']['default'];
-            }
-            
-            if (!$activateCache)
-                unset($config['asset_manager']['caching']);
-        }
-    
-        // Pass the changed configuration back to the listener:
-        $configListener->setMergedConfig($config);
     }
 
     public function getAutoloaderConfig()
