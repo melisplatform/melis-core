@@ -24,7 +24,7 @@ class ModulesController extends AbstractActionController
 {
     
     const MODULE_LOADER_FILE     = 'config/melis.module.load.php';
-    private $exclude_modules     = array('AssetManager', 'MelisCore', '.', '..', 'MelisSites', 'MelisEngine', 'MelisInstaller', 'MelisFront', '.gitignore');
+    private $exclude_modules     = array('MelisAssetManager', 'MelisCore', '.', '..', 'MelisSites', 'MelisEngine', 'MelisInstaller', 'MelisFront', '.gitignore');
     
     /**
      * Main Tool Container
@@ -189,7 +189,7 @@ class ModulesController extends AbstractActionController
      */
     protected function createModuleLoaderFile($modules = array())
     {
-        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('AssetManager','meliscore', 'melisfront', 'melisengine'));
+        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','meliscore', 'melisfront', 'melisengine'));
         return $status;
     }
 
