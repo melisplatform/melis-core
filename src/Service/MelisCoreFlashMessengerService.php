@@ -56,6 +56,10 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
         $time = date('h:i A', strtotime(date('m/d/y H:i:s')));
         
         $translator = $this->getServiceLocator()->get('translator');
+        $tool       = $this->getServiceLocator()->get('MelisCoreTool');
+
+        $title      = $tool->escapeHtml($title);
+        $message    = $tool->escapeHtml($message);
         
         $curFlashMessages = $this->fmContainer->flashMessages;
         $newFlashMessage = array(
@@ -100,7 +104,7 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
     public function clearFlashMessage()
     {
         $this->fmContainer = new Container('fms');
-        $this->fmContainer->getManager()->destroy();
+        $this->fmContainer->getManager()->getStorage()->clear('fms');
     }
 
 }

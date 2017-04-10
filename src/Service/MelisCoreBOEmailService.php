@@ -92,7 +92,12 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	            $melisBOEmailsDetails->save($emailDetails,$emailDetails['boed_id']);
 	        }else{
 	            unset($emailDetails['boed_id']);
-	            $melisBOEmailsDetails->save($emailDetails);
+	            try {
+                    $melisBOEmailsDetails->save($emailDetails);
+                }catch(\Exception $e) {
+
+                }
+
 	        }
 	    }
 	    
@@ -399,10 +404,10 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
             	                    $view->setResolver($resolver);
             	                     
             	                    $host = $emailCfg['host'];
-            	                    
+            	                    $headerLogo = $emailCfg['logo'];
             	                    $viewModel  = new \Zend\View\Model\ViewModel();
             	                    $viewModel->setTemplate('mailTemplate')->setVariables(array(
-            	                        'headerLogo' => $host.'/img/MelisTech.png',
+            	                        'headerLogo' => $host.$headerLogo,
             	                        'headerLogoLink' => $host,
             	                        'content' => wordwrap($message_html,FALSE),
             	                        'fromName' => $from_name

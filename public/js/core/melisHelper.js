@@ -17,9 +17,9 @@ var melisHelper = (function(){
 	// OK NOTIFICATION
 	function melisOkNotification(title, message, color = "#72af46"){
 		$.gritter.add({
-				title: melisTranslator(title),
-				text: melisTranslator(message),
-				time: 3000,
+				title: melisCore.escapeHtml(melisTranslator(title)),
+				text:  melisCore.escapeHtml(melisTranslator(message)),
+				time:  3000,
 				image: '/melis/MelisCore/MelisAuth/getProfilePicture',
 		}); 
 		//set the color

@@ -247,6 +247,7 @@ return array(
             'MelisGenericTable' => 'MelisCore\View\Helper\MelisGenericTable',
             'MelisModal' => 'MelisCore\View\Helper\MelisModal',
             'MelisModalInvoker' => 'MelisCore\View\Helper\MelisModalInvoker',
+            'MelisTextHelper' => 'MelisCore\View\Helper\MelisTextHelper',
         ),
         'factories' => array(
             'MelisCoreHeadPlugin' => 'MelisCore\View\Helper\Factory\MelisCoreHeadPluginHelperFactory',

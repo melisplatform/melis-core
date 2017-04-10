@@ -15,39 +15,39 @@ use Zend\View\Model\JsonModel;
 class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLocatorAwareInterface
 {
     public $serviceLocator;
-    
-    protected $_melisToolKey; 
+
+    protected $_melisToolKey;
     protected $_melisConfig;
     protected $_appConfig;
     protected $_usedKey;
 
     const TEXT_LIMIT = 25;
-    
+
     public function setServiceLocator(ServiceLocatorInterface $sl)
     {
         $this->serviceLocator = $sl;
         return $this;
     }
-    
+
     public function getServiceLocator()
     {
         return $this->serviceLocator;
     }
-    
+
     /**
      * Sets what configuration key in app.tools.php will be used on this tool service.
      * @param String $module
      * @param String $melisToolKey
      */
-    public function setMelisToolKey($module, $melisToolKey) 
+    public function setMelisToolKey($module, $melisToolKey)
     {
         $this->_melisToolKey = $module.'/tools/'.$melisToolKey;
-        
+
         $this->_melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $this->_appConfig = $this->_melisConfig->getItem($this->_melisToolKey);
         $this->_usedKey = $melisToolKey;
     }
-    
+
     /**
      * Returns the melis tool key configuration text
      * @return string
@@ -56,7 +56,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         return $this->_melisToolKey;
     }
-    
+
     /**
      * Returns the Title of the tool
      */
@@ -64,7 +64,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         return $this->_appConfig['conf']['title'];
     }
-    
+
     /**
      * Returns the Unique Identifier of the tool
      */
@@ -72,7 +72,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         return $this->_appConfig['conf']['id'];
     }
-    
+
     /**
      * Returns the columns in the app.tools.php
      * @return Array;
@@ -81,7 +81,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         return $this->_appConfig['table']['columns'];
     }
-    
+
     /**
      * Returns the column config (e.g: text, css, sortable)
      * @return Array
@@ -90,7 +90,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         return array_values($this->getColumns());
     }
-    
+
     /**
      * Returns the form elements of the provided form key
      * @param String $formKey
@@ -102,7 +102,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $toolKey = $this->getMelisToolKey();
         $formConfig = $toolKey.'/forms/'.$formKey;
-        
+
         $hasFormOrderCfg = $melisConfig->getOrderFormsConfig($formKey);
         if($hasFormOrderCfg) {
             $formConfig = $melisConfig->getFormMergedAndOrdered($formConfig, $formKey);
@@ -111,17 +111,17 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             // use the original order of the form
             $formConfig = $this->_appConfig['forms'][$formKey];
         }
-        
+
         $factory = new \Zend\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);
-        
-        
-        
+
+
+
         return $form;
     }
-    
+
     /**
      * Returns all form elements of the Tool
      * @return \Zend\Form\ElementInterface[]
@@ -137,11 +137,11 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         {
             $forms[] = $factory->createForm($this->_appConfig['forms'][$keys]);
         }
-        
+
         return $forms;
-        
+
     }
-    
+
     /**
      * Returns all Form Keys of the tool
      * @return Array
@@ -154,10 +154,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         {
             $forms[] = $keys;
         }
-        
+
         return $forms;
     }
-    
+
     /**
      * Returns the modal content array of the form
      * @param String $formKey
@@ -167,7 +167,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         return $this->_appConfig['modals'][$formKey];
     }
-    
+
     /**
      * Returns all the modals of the tools
      * @return Array
@@ -176,10 +176,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         $forms = array();
         $formKeys = $this->_appConfig['modals'];
-        
+
         foreach($formKeys as $keys => $values)
         {
-            
+
             $forms[$keys] = $this->_appConfig['modals'][$keys];
             $forms[$keys]['content'] = $this->getModalContent($keys);
         }
@@ -193,7 +193,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function getModal($modalKey)
     {
-        
+
         $forms = array();
         $formKeys = $this->_appConfig['modals'][$modalKey];
 
@@ -205,7 +205,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 
         return $forms;
     }
-    
+
     /**
      * Returns the contents of the modal from the provided form key
      * @param String $formKey
@@ -215,27 +215,27 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         $forward = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward');
         $content = $this->_appConfig['modals'][$formKey]['content'];
-        
+
         $contentValue = $this->getViewContent($content);
-        
+
         return $contentValue;
 
     }
-    
+
     /**
      * Returns an array of searchable columns that will be used whenever search function is used in the Data Table
      * return array
      */
-    public function getSearchableColumns() 
-    {   
+    public function getSearchableColumns()
+    {
         $seachableCols = array();
-        
+
         if($this->_appConfig['table']['searchables'])
             $seachableCols = $this->_appConfig['table']['searchables'];
-        
+
         return $seachableCols;
     }
-    
+
     /**
      * Returns the format of the date depending on what locale
      * @todo THIS IS TEMPORARY, NEED TO CREATE A FUNCTION FOR GLOBAL USE
@@ -249,14 +249,14 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	            $sDate = str_replace($delimiter, '-', $date);
 	            // breakdown dates
 	            $aDate = explode('-', $sDate);
-	             
+
 	            $container = new Container('meliscore');
 	            $locale = $container['melis-lang-locale'];
-	        
+
 	            $iYear  = $aDate[2];
 	            $iMonth = 0;
 	            $iDay   = 0;
-	        
+
 	            switch($locale) {
 	                case 'fr_FR':
 	                    $iMonth = $aDate[1];
@@ -267,34 +267,34 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	                    $iDay   = $aDate[1];
 	                    break;
 	            }
-	             
+
 	            $sDate = $iYear . '-' . $iMonth . '-' . $iDay;
 	        }
 	    }
-        
+
         return $sDate;
 	}
-	
+
 	/**
 	 * Returns a limited text
 	 * @param String $text
 	 * @return String
 	 */
-	public function limitedText($text,$limit = self::TEXT_LIMIT) 
+	public function limitedText($text,$limit = self::TEXT_LIMIT)
 	{
        $postString = '...';
        $strCount = strlen($text);
        $sLimitedText = $text;
-       
+
        if($strCount > $limit)
        {
            $sLimitedText = mb_substr($text, 0, $limit) . $postString;
        }
-       
+
        return $sLimitedText;
-       
+
 	}
-	
+
 	/**
 	 * This functions reads the configuration inside the app.tool array config
 	 */
@@ -303,7 +303,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	    $translator = $this->getServiceLocator()->get('translator');
 	    $table = $this->_appConfig['table'];
 	    $dtJScript = '';
-	    
+
 	    if($table) {
            $tableId = is_null($targetTable) ? $table['target'] : $targetTable;
            $ajaxUrl = $table['ajaxUrl'];
@@ -313,20 +313,20 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
            $filters = $table['filters'];
            $columns = $table['columns'];
            $actionContainer = $table['actionButtons'];
-            
+
             $jsSdomContentInit = '';
             $tableTop = '<"filter-bar"<"row"';
-            
+
             $left = $filters['left'];
             $center = $filters['center'];
             $right = $filters['right'];
             $leftDom = '<"fb-dt-left col-xs-12 col-md-4"';
             $centerDom = '<"fb-dt-center col-xs-12 col-md-4"';
             $rightDom = '<"fb-dt-right col-xs-12 col-md-4"';
-            
+
             // datatables predefined filter plugins
             $preDefDTFilter = array('l', 'f');
-            
+
             $searchInputClass = '';
 
             // render the buttons in the left section of the filter bar
@@ -343,7 +343,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                     }
                 }
             }
-            
+
             // render the buttons in the center section of the filter bar
             foreach($center as $centerKey => $centerValue) {
                 $htmlContent = $this->getViewContent($centerValue);
@@ -357,9 +357,9 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                         $searchInputClass = $centerKey;
                     }
                 }
-            
+
             }
-            
+
             // render the buttons in the right sectuib if the filter bar
             foreach($right as $rightKey => $rightValue) {
                 $htmlContent = $this->getViewContent($rightValue);
@@ -373,9 +373,9 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                         $searchInputClass = $rightKey;
                     }
                 }
-            
+
             }
-            
+
             $tableSearchPlugin = '';
             if (!empty($searchInputClass)){
                 $tableSearchPlugin = '$(\'.'.$searchInputClass.' input[type="search"]\').unbind();
@@ -386,11 +386,11 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                             				}
                             			});';
             }
-            
-            
+
+
             $tableTop .= $leftDom.'>'.$centerDom.'>'.$rightDom.'>>>';
             $tableBottom = '<"bottom" t<"pagination-cont clearfix"rip>>';
-            
+
             // check if the filter array configuration is empty
             if(empty($left) && empty($center) && empty($right)) {
                 $sDomStructure = '';
@@ -399,24 +399,24 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 // if not filters found, filter-bar class content should not be displayed
                 $sDomStructure = $tableTop.$tableBottom;
             }
-            
+
             // Action Buttons
             $actionButtons = '';
             $action = '';
             $forward = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward');
             $actionCount = 0;
-            foreach($actionContainer as $actionKey => $actionContent) 
+            foreach($actionContainer as $actionKey => $actionContent)
             {
                 $actionButtons .= $this->getViewContent($actionContent);
             }
 
             // remove unnecessary new lines and text paragraphs (not <p> tags)
             $actionButtons = trim(preg_replace('/\s+/', ' ', $actionButtons));
-           
+
             // retrieve the css configuration inside each columns
             $colCtr = 1; // starts with index 1 since this will be used in JS configuration for jquery nth-child
             $colKeyId = array_keys($columns);
-           
+
             // Action Column
             $actionColumn = null;
             // convert columns in Javascript JSON
@@ -424,10 +424,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             foreach($colKeyId as $colId) {
                $jsonColumns .= '{"data":"'.$colId.'"},';
             }
-            
+
             if (!empty($actionButtons)){
                 $jsonColumns .= '{"data":"actions"}';
-                
+
                 // Preparing the Table Action column Buttons
                 $actionColumn = '{
                                     "targets": -1,
@@ -440,9 +440,9 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         					    }';
             }
             $jsonColumns .= ']';
-           
+
             $fnName = 'fn'.$tableId.'init';
-           
+
             $reInitTable = '';
             if($allowReInit) {
             $reInitTable = '     
@@ -473,7 +473,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                                  }
                             },';
             }
-           
+
            /**
             * DataTable default is every Column are sortable
             * This process will get not sortable column from tool config and prepare string for datatable configuration
@@ -494,7 +494,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 $unSortableColumnsStr = '{ targets: ['.implode(',', $unSortableColumns).'], bSortable: false},';
             }
             // Column Unsortable End
-            
+
             // Preparing Table Column Styles
             $columnsStyles = array();
             $columnCtr = 0;
@@ -506,7 +506,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 }
                 // Adding the Ctr/index/number of the column
                 $columnStyles['targets'] = $columnCtr;
-                
+
                 array_push($columnsStyles, $columnStyles);
                 $columnCtr++;
             }
@@ -525,7 +525,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 }
             }
             // Columns Styles End
-           
+
             // Default Melis Table Configuration
             // This can be override from Param
             $defaultTblOptions = array(
@@ -537,7 +537,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             // Merging Default Configuration and Param Configuration
             // This process will override default config if index exist on param config
             $finalTblOption = array_merge($defaultTblOptions, $tableOption);
-           
+
             // Table Option
             $finalTblOptionStr = '';
             foreach ($finalTblOption As $key => $val){
@@ -547,7 +547,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 }
                 $finalTblOptionStr .= $key.': '.$val.','.PHP_EOL;
             }
-           
+
             //remove special characters in function name
             $fnName = preg_replace('/\W/', '', $fnName);
             // simulate javascript code function here
@@ -558,7 +558,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                     ' . $finalTblOptionStr . '
                     responsive:true,
                     processing: true,
-                    lengthMenu: [ [5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "'.$translator->translate('tr_meliscore_all').'"] ],
+                    lengthMenu: [ [5, 10, 25, 50], [5, 10, 25, 50] ],
                     pageLength: 10,
                     ajax: {
                         url: "' . $ajaxUrl . '",
@@ -595,12 +595,12 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 		        '.$tableSearchPlugin.'   
 	        });';
 	    }
-	    
+
 	    return $dtJScript;
 	}
-	
 
-	
+
+
 	/**
 	 * Retrieves the content of the view file
 	 * @param Array $dispatchHandler
@@ -612,29 +612,29 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	    $module = $dispatchHandler['module'];
 	    $controller = $dispatchHandler['controller'];
 	    $actionView = $dispatchHandler['action'];
-	
+
 	    $action = $this->convertToNormalFunction($actionView);
-	
+
 	    $viewModel = new ViewModel();
 	    $viewModel = $forward->dispatch($module.'\\Controller\\'.$controller, array('action' => $action));
-	
+
 	    $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
 	    $html = new \Zend\Mime\Part($renderer->render($viewModel));
-	
+
 	    // since it will return an object with private properties, change the accessibility so we can get the content data we want.
 	    $reflection = new ReflectionClass($html);
 	    $property = $reflection->getProperty('content');
 	    $property->setAccessible(true);
-	
+
 	    $content = $property->getValue($html);
-	
+
 	    // replace single quote with duoble quote
 	    $content = str_replace('\'', '"', $content);
-	    
+
 	    return $content;
 	}
-	
-	
+
+
 	/**
 	 * Exports the data inside the data table in CSV
 	 * {@inheritDoc}
@@ -643,7 +643,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	public function exportDataToCsv($data)
 	{
 	    $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-	    
+
 	    $csvConfig = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
 	    $csvFileName = '';
 	    $separator   = $csvConfig['separator'];
@@ -655,14 +655,14 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	    {
 	        $csvFileName = $this->_appConfig['export']['csvFileName'];
 	    }
-	    else 
+	    else
 	    {
 	      $csvFileName = $csvConfig['defaultFileName'];
-	       
-	    }
-	    
 
-	    if($data) 
+	    }
+
+
+	    if($data)
 	    {
             $csvColumn = $data[0];
 
@@ -693,12 +693,12 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                     // convert UTF-8 to UTF-16LE encoding for excel encoding rendering
                     $value = mb_convert_encoding($value, 'UTF-16LE', 'UTF-8');
                     $content .= $enclosed . $this->replaceAccents($value) . $enclosed . $separator;
-                    
+
                 }
                 $content .= PHP_EOL;
             }
-            
-            
+
+
             $response = new Response();
             $headers  = $response->getHeaders();
             $headers->addHeaderLine('Content-Type', 'text/csv; charset=utf-8');
@@ -707,11 +707,11 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $headers->addHeaderLine('Content-Length', strlen($content));
             $response->setContent($content);
 	    }
-	    
+
 	    return $response;
-	    
+
 	}
-	
+
 	/**
 	 * Replaces characters with accents into normal character
      * @param String $str
@@ -777,7 +777,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 
 	    return $newValue;
 	}
-	
+
 	/**
 	 * Returns the selected locale ID, if locale not found it will return 1 which is English
 	 */
@@ -792,10 +792,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	            return $langData->lang_id;
 	        }
 	    }
-	
+
 	    return 1;
 	}
-	
+
 	/**
 	 * This is used whenever you want to convert phtml files names into an action name
 	 * @param unknown $action
@@ -814,13 +814,13 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	        else {
 	            $actionStr .= $actionWords;
 	        }
-	
+
 	        $loopCtr++;
 	    }
-	
+
 	    return $actionStr;
 	}
-	
+
 	/**
 	 * PHP native str_split with unicode version
 	 * @param String $str
@@ -838,21 +838,21 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	    }
 	    return preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
 	}
-	
+
 	/**
 	 * Returns the translated text based on the current locale
 	 * @param String $translationKey
 	 * @param array $args
 	 * @return string
 	 */
-	public function getTranslation($translationKey, $args = array()) 
+	public function getTranslation($translationKey, $args = array())
 	{
 	    $translator = $this->getServiceLocator()->get('translator');
 	    $translatedText = vsprintf($translator->translate($translationKey), $args);
-	    
+
 	    return $translatedText;
 	}
-	
+
 	/**
 	 * Returns the User ID of the logged-in user
 	 * @return int
@@ -868,7 +868,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	        return null;
 	    }
 	}
-	
+
 	/**
 	 * Used to split array data and return the data you need
 	 * @param String $prefix of the array data
@@ -885,10 +885,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	            }
 	        }
 	    }
-	     
+
 	    return $data;
 	}
-	
+
 	/**
 	 * This function is the opposite of splitData, this function removes
 	 * the data with prefix  provided in the parameter
@@ -896,7 +896,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	 * @param array $haystack
 	 * @return array
 	 */
-	public function removeDataWithPrefix($prefix, $haystack = array()) 
+	public function removeDataWithPrefix($prefix, $haystack = array())
 	{
 	    $data = array();
 	    if($haystack) {
@@ -909,10 +909,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	            }
 	        }
 	    }
-	    
+
 	    return $data;
 	}
-	
+
 	/**
 	 * Formats the date based on the current language
 	 *
@@ -924,7 +924,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	{
 	    $container = new Container('meliscore');
 	    $locale = $container['melis-lang-locale'];
-	
+
 	    switch($locale) {
 	        case 'fr_FR':
 	            $date = !empty($date)? date("d/m/Y ".$time ,strtotime($date)): null;
@@ -933,10 +933,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	            $date = !empty($date)? date("m/d/Y ".$time ,strtotime($date)): null ;
 	            break;
 	    }
-	
+
 	    return $date;
 	}
-	
+
 	/**
 	 * JS script needed for the date input group
 	 * @param string $dateField the date input group id, ex: myDateField
@@ -965,14 +965,14 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                             });
                         });
                     </script>';
-	
+
 	    return $script;
 	}
-	
+
 	/**
 	 * formats the localized date to mysql datetime
 	 * @param string $date, the date value to be formatted
-	 * 
+	 *
 	 * @return NULL|string formatted date
 	 */
 	public function localeDateToSql($date)
@@ -992,5 +992,110 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	    }
 	    return $date;
 	}
+
+    /**
+     * HTML Escaper
+     * @param $value
+     * @return string
+     */
+	public function escapeHtml($value)
+    {
+        $escaper = new \Zend\Escaper\Escaper('utf-8');
+        $value = $escaper->escapeHtml($value);
+
+        return $value;
+    }
+
+    /**
+     * Sanitize's the value, removes the value that has
+     * XSS or SQL injection
+     * @param $input
+     * @return mixed|string
+     */
+    public function sanitize($input, $textOnly = false, $removeFunctions =  true)
+    {
+        if($removeFunctions) {
+            $input   = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
+        }
+        $badVals     = array('exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>");
+        $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u>';
+        $input       = str_replace($badVals, '', $input);
+        $input       = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
+        $input       = strip_tags(trim($input), $allowedTags);
+
+        if($textOnly) {
+            $input   = str_replace(['<', '>', "'", '"'], '', $input);
+        }
+
+        return $input;
+    }
+
+
+    /**
+     * Sanitize values inside an array
+     * @param $postArray
+     * @param array $exclude
+     * @param bool $textOnly
+     * @return array
+     */
+    public function sanitizePost($postArray, $exclude = [], $textOnly = false, $removeFunctions = true)
+    {
+        $post = array();
+
+        $postArray = (array) $postArray;
+        foreach($postArray as $postKey => $postVal) {
+
+            if(!empty($exclude)) {
+                foreach($exclude as $input) {
+                    if($input != $postKey) {
+                        $post[$postKey] = $this->sanitize($postVal, $textOnly, $removeFunctions);
+                    }
+                    else {
+                        $post[$postKey] = $postVal;
+                    }
+                }
+            }
+            else {
+                $post[$postKey] = $this->sanitize($postVal, $textOnly, $removeFunctions);
+            }
+        }
+
+        return $post;
+
+    }
+
+    /**
+     * Recursively loop through the array and sanitizes its' values
+     * @param $arrayVal
+     * @param array $exclude
+     * @param $textOnly
+     * @param bool $
+     * @param bool $removeFunctions
+     * @return array
+     */
+    public function sanitizeRecursive($arrayVal, $exclude = [], $textOnly = false, $removeFunctions = true)
+    {
+        $array      = [];
+        foreach($arrayVal as $key => $value) {
+            if(is_array($value)) {
+                $children    = $this->sanitizeRecursive($value, $exclude, $textOnly, $removeFunctions);
+                $array[$key] = $children;
+            }
+            else {
+                if(!in_array($key, $exclude)) {
+                    $value = $this->sanitize($value, $textOnly, $removeFunctions);
+                    $array[$key] = $value;
+                }
+                else {
+                    $array[$key] = $value;
+                }
+            }
+        }
+
+        return $array;
+    }
+
+
+
 	
 }

@@ -23,7 +23,7 @@
 		<?php 
 		
 			foreach ($this->languages as $language):
-				$name = $language['lang_name'];
+				$name = $this->escapeHtml($language['lang_name']);
 				if ($this->currentLangId == $language['lang_id'])
 					$name = '<b>' . $name . '</b>';
 				

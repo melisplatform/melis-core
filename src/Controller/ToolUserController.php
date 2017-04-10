@@ -488,6 +488,7 @@ class ToolUserController extends AbstractActionController
         if($this->getRequest()->isPost())
         {
             $postValues = get_object_vars($this->getRequest()->getPost());
+            $postValues = $melisTool->sanitizePost($postValues);
             $userAddForm->setData($postValues);
             
             $userLogin = $this->getRequest()->getPost('usr_login');
@@ -528,11 +529,10 @@ class ToolUserController extends AbstractActionController
                     {
                         $imageContent = null;
                         // create tmp folder if not exists
-                        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
-                        $dirName = $moduleSvc->getComposerModulePath('MelisCore').'/public/images/profile/tmp/';
-                        if(!file_exists($dirName) && is_writable($dirName)) {
+                        $dirName = HTTP_ROOT.'/public/media/images/profile/tmp/';
+                        if(!file_exists($dirName)) {
                             $oldmask = umask(0);
-                            mkdir($dirName, 0755);
+                            mkdir($dirName, 0777,  true);
                         }
                         
                         if(file_exists($dirName)) {
@@ -786,7 +786,7 @@ class ToolUserController extends AbstractActionController
                 // apply text limits
                 foreach($tableData[$ctr] as $vKey => $vValue)
                 {
-                    $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue);
+                    $tableData[$ctr][$vKey] = $melisTool->limitedText($melisTool->escapeHtml($vValue));
                 }
                 
                 // manual data manipulation
@@ -861,6 +861,7 @@ class ToolUserController extends AbstractActionController
             
 
             $postValues = get_object_vars($this->getRequest()->getPost());
+            $postValues = $melisTool->sanitizePost($postValues);
 
             $postValues = $this->getRequest()->getPost();
 
@@ -897,11 +898,10 @@ class ToolUserController extends AbstractActionController
                 $imageContent = null;
                 
                 // create tmp folder if not exists
-                $moduleSvc = $this->getServiceLocator()->get('ModulesService');
-                $dirName = $moduleSvc->getComposerModulePath('MelisCore').'/public/images/profile/tmp/';
-                if(!file_exists($dirName) && is_writable($dirName)) {
+                $dirName = HTTP_ROOT.'media/images/profile/tmp/';
+                if(!file_exists($dirName)) {
                     $oldmask = umask(0);
-                    mkdir($dirName, 0755);
+                    mkdir($dirName, 0777, true);
                 }
                 
                 if(file_exists($dirName)) {

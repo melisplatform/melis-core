@@ -44,6 +44,9 @@ class MelisFlashMessengerController extends AbstractActionController
     {
         // translator service
         $translator = $this->serviceLocator->get('translator');
+
+        // tool service
+        $tool = $this->getServiceLocator()->get('MelisCoretool');
         
         // flash messenger service
         $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
@@ -57,9 +60,11 @@ class MelisFlashMessengerController extends AbstractActionController
         if($flashMessages)
         {
             foreach($flashMessages as $fmKey => $fmValues) {
+                $title   = $translator->translate($fmValues->title);
+                $message =  $translator->translate($fmValues->message);
                 $fmArray[] = array(
-                    'title' => $translator->translate($fmValues->title),
-                    'message' => $translator->translate($fmValues->message),
+                    'title' => ($title),
+                    'message' => ($message),
                     'image' => $fmValues->image,
                     'time' => $fmValues->time
                 );

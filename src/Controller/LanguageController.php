@@ -467,6 +467,8 @@ class LanguageController extends AbstractActionController
         if($this->getRequest()->isPost()) {
         
             $postValues = get_object_vars($this->getRequest()->getPost());
+            // sanitize values
+            $postValues = $melisTool->sanitizePost($postValues);
             $form->setData($postValues);
             
             if($form->isValid()) {
@@ -592,10 +594,11 @@ class LanguageController extends AbstractActionController
         $vendorModules = $moduleSvc->getVendorModules();
         $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $directory = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_dir');
+        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
         
         if($this->getRequest()->isPost()){
-            $id = $this->getRequest()->getPost('id');
-            $locale = $this->getRequest()->getPost('locale');
+            $id = (int) $this->getRequest()->getPost('id');
+            $locale = $melisTool->sanitize($this->getRequest()->getPost('locale'));
             if(!empty($locale)){
                 foreach($vendorModules as $vModule) {
                 

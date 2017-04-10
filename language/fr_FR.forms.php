@@ -29,6 +29,7 @@
         // User Tool prompts
         'tr_meliscore_tool_user_usr_login_error_empty' => 'Veuillez saisir un login',
         'tr_meliscore_tool_user_usr_login_error_long'  => 'Login trop long, il doit faire moins de 255 caractères',
+        'tr_meliscore_tool_user_usr_login_invalid' => 'Invalid username, please choose another',
         
         'tr_meliscore_tool_user_usr_status_error_empty' => 'Veuillez sélectionner un statut',
         'tr_meliscore_tool_user_usr_status_error_invalid'  => 'Statut sélectionné invalide',
@@ -48,9 +49,11 @@
         'tr_meliscore_tool_user_usr_confirm_password_error_low' => 'Le mot de passe doit être de 8 caractères minimum',
         
         'tr_meliscore_tool_user_usr_firstname_error_empty' => 'Veuillez saisir un prénom',
+        'tr_meliscore_tool_user_usr_firstname_invalid' => 'Invalid first name entered',
         'tr_meliscore_tool_user_usr_firstname_error_long'  => 'Prénom trop long, il doit faire moins de 255 caractères',
         
         'tr_meliscore_tool_user_usr_lastname_error_empty' => 'Veuillez saisir un nom',
+        'tr_meliscore_tool_user_usr_lastname_invalid' => 'Invalid last name entered',
         'tr_meliscore_tool_user_usr_lastname_error_long'  => 'Nom trop long, il doit faire moins de 255 caractères',
         
         'tr_meliscore_tool_user_usr_lang_id_error_empty' => 'Veuillez choisir un langage',

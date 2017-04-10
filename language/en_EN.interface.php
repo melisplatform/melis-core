@@ -329,7 +329,7 @@
 	    // Flash Massges
 	    'tr_emails_management_title_creation' =>  'Email creation',
 	    'tr_emails_management_title_edition' =>  'Email edition',
-	    'tr_emails_management_title_deletion' =>  'Email feletion',
+	    'tr_emails_management_title_deletion' =>  'Email deletion',
 	    'tr_emails_management_created' =>  'created',
 	    'tr_emails_management_edited' =>  'edited',
 	    'tr_emails_management_deleted' =>  'deleted',
@@ -354,6 +354,7 @@
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_path' => 'Invalid layout path',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_extension' => 'Invalid layout extension, layout must be in ".phtml" extension',
 	    'tr_emails_management_emal_boe_code_name_reserved' => 'Codename "NEW" is a reserved codename, please try another codename',
+	    'tr_emails_management_emal_boe_code_name_invalid' => 'Invalid code',
 	    'tr_emails_management_unable_to_update' => 'Unable to update email',
 	    'tr_emails_management_unable_to_add' => 'Unable to add new email',
 	    // Action Messages
@@ -456,5 +457,7 @@
 	    'tr_meliscore_logs_tool_log_save_unable' => 'Impossible de sauvegarder le type de log, veuillez réessayer',
 	    'tr_meliscore_logs_tool_log_input_to_long_255' => 'Valeur trop longue, elle doit être de moins de 255 caractères',
 	    'tr_meliscore_logs_tool_log_tyne_name_must_atleast_one_entry' => 'Le nom du type de log doit avoir au moins un caractère',
+
+        'tr_meliscore_invalid_id' => 'Invalid ID',
 	);
 ?>

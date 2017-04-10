@@ -136,6 +136,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
             'melisengine' => 'MelisEngine',
             'melisfront' => 'MelisFront',
             'melissites' => 'MelisSites',
+            'melisassetmanager' => 'MelisAssetManager'
         );
         
         if($excludeModulesOnReturn) {

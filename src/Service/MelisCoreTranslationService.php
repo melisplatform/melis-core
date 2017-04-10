@@ -11,6 +11,7 @@ namespace MelisCore\Service;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\I18n\Translator\Translator;
+use Zend\Stdlib\ArrayUtils;
 /**
  * Translation Service for retrieveing all the translation messages 
  *
@@ -29,6 +30,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
      */
     protected $fmContainer;
     
+    protected $updated;
     
     public function setServiceLocator(ServiceLocatorInterface $sl)
     {
@@ -260,7 +262,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
                 $status = true;
             }
         }
-        
+        $this->updateTranslationList();
         return $status;
     }
     
@@ -288,6 +290,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $result = 0;
         $cdir = scandir($path);
         $fileName = '';
+        $updatedFile = array();
         $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
        
         $confLanguage = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_files');
@@ -319,10 +322,10 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
                     $file  = $tmp[0].'.'.$tmp[1];
                     
                     //compare if file is an interface translation
-                    if($defaultTransInterface == $file) {                        
+                    if($defaultTransInterface == $file  || $defaultTransForms == $file) {                        
                        
-                        $transFile = $transInterface;
-                        $defaultFile = $defaultTransInterface;
+                        $transFile = ($defaultTransInterface == $file)? $transInterface : $transForms;
+                        $defaultFile = ($defaultTransInterface == $file) ? $defaultTransInterface : $defaultTransForms;
                         
                         // append remaing file extensions to get full file name
                         for($c = 2; $c < count($tmp); $c++){
@@ -348,45 +351,12 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
                                 // update current translation if there are new ones
                                 $result = $this->updateTranslations($newDir.'/'.$transFile, $transDiff);                                
                             }                            
-                        }                        
+                        }
+                        $this->updated[] = $module.'/'.$transFile; 
                     }
-                    
-                    // compare if file is a form translation
-                    if($defaultTransForms == $file ) {
-                        
-                        $transFile = $transForms;
-                        $defaultFile = $defaultTransForms;
-                        
-                        // append remaing file extensions for complete file name
-                        for($c = 2; $c < count($tmp); $c++){
-                            $transFile .= '.'.$tmp[$c];
-                            $defaultFile .= '.'.$tmp[$c];
-                        }
-                        
-                        // check if __dir__/languages/[module]/[locale].forms.* exists
-                        if(!file_exists($newDir.'/'.$transFile)){
-                            
-                            //create new forms translation then copy contents
-                            $this->createTranslationFile($newDir, $transFile);
-                            $result = copy($path.'/'.$defaultFile, $newDir.'/'.$transFile);
-                            
-                        }else{
-                            
-                            // check for translation difference
-                            $transDiff = $this->checkTranslationsDiff($path.'/'.$defaultFile, $newDir.'/'.$transFile);
-                            $result = true;
-                            
-                            if($transDiff){
-                                
-                                // update current translation if there are new ones
-                                $result = $this->updateTranslations($newDir.'/'.$transFile, $transDiff);
-                            }
-                        }
-                    }                    
                 }
             }
         }  
-
         
         return $result;
     }
@@ -560,6 +530,41 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $content .= "\t );" . PHP_EOL;
         
         if(file_put_contents($currentTrans, $content, LOCK_EX)){
+            $status = true;
+        }
+        
+        return $status;
+        
+    }
+    
+    public function updateTranslationList()
+    {
+        
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $translationListDir = $melisCoreConfig->getItem('meliscore/datas/default/langauges/trans_list_dir')[0];
+        
+        $translationList = include $translationListDir;
+        
+        $newItems = array_diff($this->updated, $translationList);
+        
+        if(!empty($newItems)){
+            foreach($newItems as $item){
+                $translationList[] = $item;
+            }
+        }
+        
+        // for array formating, readability
+        
+        $content = "<?php". PHP_EOL . "\t return array(" . PHP_EOL;
+        
+        foreach ($translationList as $value) {
+            
+            $content .= "\t\t'" . $value ."'," .PHP_EOL;
+        }
+        
+        $content .= "\t );" . PHP_EOL;
+       
+        if(file_put_contents($translationListDir, $content, LOCK_EX)){
             $status = true;
         }
         

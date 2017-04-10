@@ -53,7 +53,9 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $config = str_replace(array(
             '        ', '    ',
         ), '', $config);
+        chmod('config', 0777);
         file_put_contents('config/test.application.config.php', $config);
+        chmod('config/test.application.config.php', 0777);
     }
 
     /**
@@ -70,8 +72,9 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $xmlSavePath = $modulePath.'/'.$unitTestPath.'/phpunit.xml';
         $moduleTestSavePath = $modulePath.'/'.$unitTestPath.'/'.$moduleTestName.'/Controller';
         $testSavePath = $modulePath.'/'.$unitTestPath;
+        $this->setAppConfig();
         if(file_exists($modulePath) && file_exists($testSavePath)) {
-            $this->setAppConfig();
+
             $bootstrapTemplate = __DIR__ . '/../../install/BootstrapTemplate';
             $puControllerTemplate = __DIR__ . '/../../install/PHPUnitControllTest';
             $bootstrapContent = '';
@@ -141,8 +144,10 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $moduleTestSavePath = $modulePath.'/'.$unitTestPath.'/'.$moduleTestName;
         $results = '';
 
-        
+        // recreate the config everytime, to update the available modules
+        $this->setAppConfig();
         if((file_exists($phpUnit) && $this->getOS() == 'windows') || ($this->getOS() == 'others' && $this->shellExists($phpUnit))) {
+
             if( file_exists($modulePath) &&
                 file_exists($testSavePath) &&
                 file_exists($bootstrapPath) &&
@@ -150,26 +155,22 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
                 $execCommand = $phpCli. ' '.$phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testSavePath.'/results.xml" --configuration "'.$puXml.'"';
                 $output = '';
                 if($this->getOS() == 'windows') {
-                    // @deprecated | temporarily removed for windows directory naming compatiblity
-//                     if(file_exists($phpCli)) {
-//                         $output = shell_exec($execCommand);
-//                     }
-//                     else {
-//                         $results = 'Error: <strong>'.$phpCli.'</strong>  not found';
-//                     }
                     $output = shell_exec($execCommand);
                 }
                 else {
-                   
                     $output = shell_exec($phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testSavePath.'/results.xml" --configuration "'.$puXml.'"');
                 }
             }
-
-            if(!file_exists($testSavePath)) {
-                // if unitTestPath does not exists, it will create a test folder that will be used in unit testing
-                $this->init($moduleName, $moduleTestName, $unitTestPath);
+            else {
+                $this->init($moduleName, $moduleTestName, $unitTestPath = 'test');
                 $this->runTest($moduleName, $moduleTestName, $unitTestPath);
             }
+            if(!file_exists($testSavePath)) {
+                // if unitTestPath does not exists, it will create a test folder that will be used in unit testing
+                $this->init($moduleName, $moduleTestName, $unitTestPath = 'test');
+                $this->runTest($moduleName, $moduleTestName, $unitTestPath);
+            }
+
         }
         else {
             $results = 'Error: <strong>'.$phpUnit.'</strong> not found, please download the latest release at : https://phar.phpunit.de/phpunit.phar';
@@ -226,7 +227,6 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
                 $totalTests = (int) $results['tests'];
                 $totalFailed = (int) $results['failures'];
                 $totalSuccess = $totalTests - $totalFailed;
-//                print_r($testcase);
 
                 if($totalTests > 1) {
                     // loop through test cases

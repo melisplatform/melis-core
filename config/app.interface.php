@@ -17,6 +17,7 @@ return array(
 				// Overide these datas in MelisModuleConfig !
 				'default' => array(
 					'host' => 'http://www.melisv2url.local',
+				    'logo' => '/img/MelisTech.png',
 					'errors' => array(
 						'error_reporting' => E_ALL & ~E_USER_DEPRECATED,
 						'display_errors' => 1,
@@ -89,8 +90,11 @@ return array(
 				            'defaultTransForms' => 'en_EN.forms',
 				        ),
 				        'default_trans_dir' => array( 
-				            'path' => $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/languages/'
+				            'path' => $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/languages/',
 				        ),
+				        'trans_list_dir' => array(
+				            $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/config/translation.list.php',
+				        ),				        
 				    ),
 				),
 			),
@@ -1199,6 +1203,7 @@ return array(
 				'askaccount_email' => 'askaccount@test.com',
 				'lostpassword_email' => 'lostpassword@test.com',
 				'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
+			    'login_logo' => '/MelisCore/images/login/melis-box.png',
 			),
 			'interface' => array(
 				'meliscore_login_header' => array(

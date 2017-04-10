@@ -368,6 +368,7 @@
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_path' => 'Chemin du layout invalide',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_extension' => 'Extension du layout invalide, le layout doit être dans l\'extension ".phtml"',
 	    'tr_emails_management_emal_boe_code_name_reserved' => 'Le nom de code "NEW" est réservé, veuillez saisir un autre nom de code',
+        'tr_emails_management_emal_boe_code_name_invalid' => 'Invalid code',
 	    'tr_emails_management_unable_to_update' => 'Impossible de mettre à jour l\'email',
 	    'tr_emails_management_unable_to_add' => 'Impossible d\'ajouter un nouvel email',
 	    // Action Messages
@@ -470,5 +471,7 @@
 	    'tr_meliscore_logs_tool_log_save_unable' => 'Impossible de sauvegarder le type de log, veuillez réessayer',
 	    'tr_meliscore_logs_tool_log_input_to_long_255' => 'Valeur trop longue, elle doit être de moins de 255 caractères',
 	    'tr_meliscore_logs_tool_log_tyne_name_must_atleast_one_entry' => 'Le nom du type de log doit avoir au moins un caractère',
+
+        'tr_meliscore_invalid_id' => 'Invalid ID',
 	);
 ?>

@@ -317,9 +317,8 @@ class PlatformsController extends AbstractActionController
             $platformId = $this->getRequest()->getPost('id');
             $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
         
-            $platformData = $platformTable->getEntryById($platformId);
-        
-            foreach($platformData->current() as $roleKey => $roleValues) {
+            $platformData = $platformTable->getEntryById($platformId)->current();
+            foreach($platformData as $roleKey => $roleValues) {
                 $data[$roleKey] = $roleValues;
             }
 
@@ -348,6 +347,7 @@ class PlatformsController extends AbstractActionController
         if($this->getRequest()->isPost()) {
             
             $postValues = get_object_vars($this->getRequest()->getPost());
+            $postValues = $melisTool->sanitizePost($postValues);
             $form->setData($postValues);
             
             if($form->isValid()) {
@@ -422,6 +422,7 @@ class PlatformsController extends AbstractActionController
         if($this->getRequest()->isPost()) {
         
             $postValues = get_object_vars($this->getRequest()->getPost());
+            $postValues = $melisTool->sanitizePost($postValues);
             $form->setData($postValues);
         
             $id = $postValues['id'];
@@ -482,7 +483,7 @@ class PlatformsController extends AbstractActionController
         
         if($this->getRequest()->isPost())
         {
-            $id = $this->getRequest()->getPost('id');
+            $id = (int) $this->getRequest()->getPost('id');
             if(is_numeric($id))
             {
                 $domainData = $platformTable->getEntryById($id);

@@ -34,25 +34,10 @@
 			
 				if (!empty($this->zoneconfig['interface'])) 
 				{
-
-				/*	echo '<pre>';
-					print_r($this->zoneconfig['interface']);
-					echo '</pre>';
-				*/	
 					$cpt = 0;
 					foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
 					{
-					//	echo $keyConfig . '<br />';
-						
-					/*	$id = '';
-						if (!empty($menuConfig['conf']['id']))
-							$id = ' id="' . $menuConfig['conf']['id'] . '"';
-						$data_melisKey = $this->melisKey . '/interface/' . $keyConfig;
-						if (!empty($menuConfig['conf']['melisKey']))
-							$data_melisKey = $menuConfig['conf']['melisKey'];
-					*/	
 						echo $this->$keyConfig;
-								
 						$cpt++;
 					}
 				}

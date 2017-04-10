@@ -76,7 +76,24 @@ var melisCore = (function(window){
 	        });
 		}, (checkEvery * 60) * 1000);
 	}
-     
+
+    function escapeHtml (string) {
+        var entityMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+        };
+
+        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+            return entityMap[s];
+        });
+    }
+
     // FLASH MESSENGER 
     function flashMessenger() {
         $.ajax({
@@ -99,8 +116,8 @@ var melisCore = (function(window){
                                 "	<span class='img-circle media-object "+fm.image+"'></span>" +
                                 "   <div class='media'>" +
                                 "       <div class='media-body'>" +
-                                "           <a  class='strong text-primary'>"+fm.title+"</a><span class='time-email'>"+fm.time+"</span>" +
-                                            "<div class='clearfix'></div>"+fm.message+
+                                "           <a  class='strong text-primary'>"+escapeHtml(fm.title)+"</a><span class='time-email'>"+fm.time+"</span>" +
+                                            "<div class='clearfix'></div>"+escapeHtml(fm.message)+
                                         "</div>" +
                                     "</div>" +
                                 "</li>";
@@ -516,6 +533,7 @@ var melisCore = (function(window){
         resizeScreen                                    :           window.resizeScreen,
         screenSize										:			screenSize,    
         iframeLoad										:			iframeLoad,
+		escapeHtml										: 			escapeHtml
     };
     
     

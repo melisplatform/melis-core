@@ -259,7 +259,9 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	            // Save Log
 	            $results = $melisCoreTableLog->save($log, $arrayParameters['logId']);
 	        }
-	        catch(Exception $e){}
+	        catch(Exception $e){
+	            echo $e->getMessage();
+            }
 	    }
 	    
 	    // Adding results to parameters for events treatment if needed

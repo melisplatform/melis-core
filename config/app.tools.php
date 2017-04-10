@@ -90,10 +90,6 @@ return array(
                                 'sortable' => true,
                                 
                             ),
-    //                         'usr_role_id' => array(
-    //                             'text' => 'tr_meliscore_tool_user_col_role',
-    //                             'css' => 'width:3%;',
-    //                         ),
                             'usr_last_login_date' => array(
                                 'text' => 'tr_meliscore_tool_user_col_last_login',
                                 'css' => array('width' => '20%', 'padding-right' => '0'),
@@ -302,20 +298,6 @@ return array(
                                         ),
                                     ),
                                 ),
-//                                 array(
-//                                     'spec' => array(
-//                                         'name' => 'usr_role_id',
-//                                         'type' => 'MelisUserRoleSelect',
-//                                         'options' => array(
-//                                             'label' => 'tr_meliscore_tool_user_col_role',
-//                                         ),
-//                                         'attributes' => array(
-//                                             'id' => 'id_n_usr_role_id',
-//                                             'value' => '',
-//                                             'placeholder' => 'tr_meliscore_tool_user_col_role'
-//                                         ),
-//                                     ),
-//                                 ),
                                 array(
                                     'spec' => array(
                                         'name' => 'usr_lang_id',
@@ -372,6 +354,14 @@ return array(
                                                 'messages' => array(
                                                     \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_login_error_long',
                                                 ),
+                                            ),
+                                        ),
+                                        array(
+                                            'name' => 'regex', false,
+                                            'options' => array(
+                                                'pattern' => '/^[a-zA-Z0-9]+([_ -]?[a-zA-Z0-9])*$/',
+                                                'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_login_invalid'),
+                                                'encoding' => 'UTF-8',
                                             ),
                                         ),
                                         array(
@@ -536,6 +526,14 @@ return array(
                                             ),
                                         ),
                                         array(
+                                            'name' => 'regex', false,
+                                            'options' => array(
+                                                'pattern' => '/(\w)+/',
+                                                'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_firstname_invalid'),
+                                                'encoding' => 'UTF-8',
+                                            ),
+                                        ),
+                                        array(
                                             'name' => 'NotEmpty',
                                             'options' => array(
                                                 'messages' => array(
@@ -557,11 +555,18 @@ return array(
                                             'name'    => 'StringLength',
                                             'options' => array(
                                                 'encoding' => 'UTF-8',
-                                                //'min'      => 1,
                                                 'max'      => 255,
                                                 'messages' => array(
                                                     \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_lastname_error_long',
                                                 ),
+                                            ),
+                                        ),
+                                        array(
+                                            'name' => 'regex', false,
+                                            'options' => array(
+                                                'pattern' => '/(\w)+/',
+                                                'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_lastname_invalid'),
+                                                'encoding' => 'UTF-8',
                                             ),
                                         ),
                                         array(
@@ -583,6 +588,15 @@ return array(
                                     'required' => true,
                                     'validators' => array(
                                         array(
+                                            'name'    => 'IsInt',
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                )
+                                            )
+                                        ),
+                                        array(
                                             'name' => 'NotEmpty',
                                             'options' => array(
                                                 'messages' => array(
@@ -594,36 +608,6 @@ return array(
                                     'filters'  => array(
                                     ),
                                 ),
-//                                 'usr_role_id' => array(
-//                                     'name'     => 'usr_role_id',
-//                                     'required' => false,
-//                                     'validators' => array(
-//                                     ),
-//                                     'filters'  => array(
-//                                     ),
-//                                 ),
-//                                 'usr_image' => array(
-//                                     'name' => 'usr_image',
-//                                     'required' => false,
-//                                     'validators' => array(
-//                                         array(
-//                                             'name' => '\Zend\Validator\Size',
-//                                             'options' => array(
-//                                                 'min' => 120,
-//                                                 'max' => 16000000
-//                                             )
-//                                         ),
-//                                         array(
-//                                             'name' => 'Zend\Validator\File\Extension',
-//                                             'options' => array(
-//                                                 'extension' => 'png',
-//                                                 'extension' => 'jpg',
-//                                                 'extension' => 'gif',
-//                                                 'extension' => 'jpeg',
-//                                             ),
-//                                         ),
-//                                     ),
-//                                 ),
                             ), // end input filter
                         ), // end new user form
                         'meliscore_tool_user_form_edit' => array(
@@ -780,21 +764,6 @@ return array(
                                         ),
                                     ),
                                 ),
-//                                 array(
-//                                     'spec' => array(
-//                                         'name' => 'usr_role_id',
-//                                         'type' => 'MelisUserRoleSelect',
-//                                         'options' => array(
-//                                             'label' => 'tr_meliscore_tool_user_col_role',
-//                                         ),
-//                                         'attributes' => array(
-//                                             'id' => 'id_usr_role_id',
-//                                             'value' => '',
-//                                             'placeholder' => 'tr_meliscore_tool_user_col_role'
-//                                         ),
-//                                     ),
-//                                 ),
-                                
                                 array(
                                     'spec' => array(
                                         'name' => 'usr_image',
@@ -823,9 +792,28 @@ return array(
                                         ),
                                     ),
                                 ),
-                                
+
                             ), // end edit elements
                             'input_filter' => array(
+                                'usr_id' => array(
+                                    'name'     => 'usr_id',
+                                    'required' => false,
+                                    'validators' => array(
+                                        array(
+                                            'name'    => 'IsInt',
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_id',
+                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_id',
+                                                )
+                                            )
+                                        ),
+                                    ),
+                                    'filters' => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ),
                                 'usr_status' => array(
                                     'name'     => 'usr_status',
                                     'required' => true,
@@ -855,14 +843,6 @@ return array(
                                     'name'     => 'usr_email',
                                     'required' => true,
                                     'validators' => array(
-//                                         array(
-//                                             'name' => 'regex', false,
-//                                             'options' => array(
-//                                                 'pattern' => '/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/  ',
-//                                                 'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_invalid_email'),
-//                                                 'encoding' => 'UTF-8',
-//                                             ),
-//                                         ),
                                         array(
                                           'name' => 'EmailAddress',
                                            'options' => array(
@@ -887,65 +867,7 @@ return array(
                                         array('name' => 'StringTrim'),
                                     ),
                                 ),
-//                                 'usr_password' => array(
-//                                     'name'     => 'usr_password',
-//                                     'required' => true,
-//                                     'validators' => array(
-//                                         array(
-//                                             'name'    => 'StringLength',
-//                                             'options' => array(
-//                                                 'encoding' => 'UTF-8',
-//                                                 //'min'      => 1,
-//                                                 'max'      => 255,
-//                                                 'messages' => array(
-//                                                     \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_password_error_long',
-//                                                 ),
-//                                             ),
-//                                         ),
-//                                         array(
-//                                             'name' => 'NotEmpty',
-//                                             'options' => array(
-//                                                 'messages' => array(
-//                                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_password_error_empty',
-//                                                 ),
-//                                             ),
-//                                         ),
-//                                     ),
-//                                     'filters'  => array(
-//                                         array('name' => 'StripTags'),
-//                                         array('name' => 'StringTrim'),
-//                                     ),
-//                                 ),
-//                                 'usr_confirm_password' => array(
-//                                     'name'     => 'usr_confirm_password',
-//                                     'required' => true,
-//                                     'validators' => array(
-//                                         array(
-//                                             'name'    => 'StringLength',
-//                                             'options' => array(
-//                                                 'encoding' => 'UTF-8',
-//                                                 //'min'      => 1,
-//                                                 'max'      => 255,
-//                                                 'messages' => array(
-//                                                     \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_confirm_password_error_long',
-//                                                 ),
-//                                             ),
-//                                         ),
-//                                         array(
-//                                             'name' => 'NotEmpty',
-//                                             'options' => array(
-//                                                 'messages' => array(
-//                                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_confirm_password_error_empty',
-//                                                 ),
-//                                             ),
-//                                         ),
-//                                     ),
-//                                     'filters'  => array(
-//                                         array('name' => 'StripTags'),
-//                                         array('name' => 'StringTrim'),
-//                                     ),
-//                                 ),
-                                
+
                                 
                                 'usr_firstname' => array(
                                     'name'     => 'usr_firstname',
@@ -960,6 +882,14 @@ return array(
                                                 'messages' => array(
                                                     \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_firstname_error_long',
                                                 ),
+                                            ),
+                                        ),
+                                        array(
+                                            'name' => 'regex', false,
+                                            'options' => array(
+                                                'pattern' => '/(\w)+/',
+                                                'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_firstname_invalid'),
+                                                'encoding' => 'UTF-8',
                                             ),
                                         ),
                                         array(
@@ -992,6 +922,14 @@ return array(
                                             ),
                                         ),
                                         array(
+                                            'name' => 'regex', false,
+                                            'options' => array(
+                                                'pattern' => '/(\w)+/',
+                                                'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_lastname_invalid'),
+                                                'encoding' => 'UTF-8',
+                                            ),
+                                        ),
+                                        array(
                                             'name' => 'NotEmpty',
                                             'options' => array(
                                                 'messages' => array(
@@ -1010,6 +948,15 @@ return array(
                                     'required' => true,
                                     'validators' => array(
                                         array(
+                                            'name'    => 'IsInt',
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                )
+                                            )
+                                        ),
+                                        array(
                                             'name' => 'NotEmpty',
                                             'options' => array(
                                                 'messages' => array(
@@ -1021,36 +968,6 @@ return array(
                                     'filters'  => array(
                                     ),
                                 ),
-//                                 'usr_role_id' => array(
-//                                     'name'     => 'usr_role_id',
-//                                     'required' => false,
-//                                     'validators' => array(
-//                                     ),
-//                                     'filters'  => array(
-//                                     ),
-//                                 ),
-//                                 'usr_image' => array(
-//                                     'name' => 'usr_image',
-//                                     'required' => false,
-//                                     'validators' => array(
-//                                         array(
-//                                             'name' => '\Zend\Validator\Size',
-//                                             'options' => array(
-//                                                 'min' => 120,
-//                                                 'max' => 16000000
-//                                             )
-//                                         ),
-//                                         array(
-//                                             'name' => 'Zend\Validator\File\Extension',
-//                                             'options' => array(
-//                                                 'extension' => 'png',
-//                                                 'extension' => 'jpg',
-//                                                 'extension' => 'gif',
-//                                                 'extension' => 'jpeg',
-//                                             ),
-//                                         ),
-//                                     ),
-//                                 ),
                             ), // end input filter
                         ), // end edit form
                     ), // end forms
@@ -1193,6 +1110,25 @@ return array(
                                 ),
                             ),
                             'input_filter' => array(
+                                'plf_id' => array(
+                                    'name'     => 'plf_id',
+                                    'required' => false,
+                                    'validators' => array(
+                                        array(
+                                            'name'    => 'IsInt',
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_invalid_id',
+                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_invalid_id',
+                                                )
+                                            )
+                                        ),
+                                    ),
+                                    'filters' => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ),
                                 'plf_name' => array(
                                     'name'     => 'plf_name',
                                     'required' => true,
@@ -1377,6 +1313,25 @@ return array(
 
                             ),
                             'input_filter' => array(
+                                'lang_id' => array(
+                                    'name'     => 'lang_id',
+                                    'required' => false,
+                                    'validators' => array(
+                                        array(
+                                            'name'    => 'IsInt',
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_invalid_id',
+                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_invalid_id',
+                                                )
+                                            )
+                                        ),
+                                    ),
+                                    'filters' => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ),
                                 'lang_locale' => array(
                                     'name'     => 'lang_locale',
                                     'required' => true,
@@ -1655,6 +1610,7 @@ return array(
                                     'filters'  => array(
                                         array('name' => 'StripTags'),
                                         array('name' => 'StringTrim'),
+
                                     ),
                                 ),
                                 'boe_code_name' => array(
@@ -1667,6 +1623,14 @@ return array(
                                                 'messages' => array(
                                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ),
+                                            ),
+                                        ),
+                                        array(
+                                            'name' => 'regex', false,
+                                            'options' => array(
+                                                'pattern' => '/[\w]+/',
+                                                'messages' => array(\Zend\Validator\Regex::INVALID => 'tr_emails_management_emal_boe_code_name_invalid'),
+                                                'encoding' => 'UTF-8',
                                             ),
                                         ),
                                         array(

@@ -306,8 +306,10 @@ class LogController extends AbstractActionController
             $recordsFiltered = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, $sortOrder, $search);
             
             $logTypeBtn = '<button class="btn btn-default btn-sm logTypeButon" data-typeid="%s">%s</button>';
+
             foreach ($logs As $key => $val)
             {
+
                 // Retrieving the Log Id from Log Entity
                 $logId = $val->getId();
                 // Retrieving the Log from Log Entity
@@ -329,18 +331,20 @@ class LogController extends AbstractActionController
                 }
                 
                 $rowData = array(
-                    'DT_RowId' => $logId,
-                    'log_id' => $logId,
-                    'log_title' => $translator->translate($log->log_title),
-                    'log_message' => $translator->translate($log->log_message),
+                    'DT_RowId' => $melisTool->escapeHtml($logId),
+                    'log_id' => $melisTool->escapeHtml($logId),
+                    'log_title' => $melisTool->escapeHtml($translator->translate($log->log_title)),
+                    'log_message' => $melisTool->escapeHtml($translator->translate($log->log_message)),
                     'log_type' => sprintf($logTypeBtn, $logType->logt_id, $logType->logt_code),
-                    'log_item_id' => $log->log_item_id,
-                    'log_user' => $userName,
+                    'log_item_id' => $melisTool->escapeHtml($log->log_item_id),
+                    'log_user' => $melisTool->escapeHtml($userName),
                     'log_date_added' => strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($log->log_date_added))
                 );
                 
                 array_push($tableData, $rowData);
             }
+
+
         }
         
         return new JsonModel(array(

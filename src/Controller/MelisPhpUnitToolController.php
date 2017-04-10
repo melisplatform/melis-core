@@ -67,7 +67,7 @@ class MelisPhpUnitToolController extends AbstractActionController
      */
     protected function getAvailableModules()
     {
-        $removeModules = array('MelisInstaller', 'MelisSites');
+        $removeModules = array('MelisInstaller', 'MelisSites', 'MelisAssetManager');
         $availableModules = $this->getModuleSvc()->getAllModules();
         $modules = array();
         foreach ($availableModules as $module) {
@@ -88,12 +88,12 @@ class MelisPhpUnitToolController extends AbstractActionController
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
         $modules = $modSvc->getActiveModules();
         unset($modules['MelisModuleConfig']);
-        for($x = 0; $x <= count($modules); $x++) {
+        for($x = 0; $x < count($modules); $x++) {
             if($modules[$x] == 'MelisModuleConfig') {
                 unset($modules[$x]);
             }
         }
-        $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites']);
+        $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites', 'melisassetmanager']);
         $coreModules = array();
         foreach($coreModulesArray as $module) {
             $coreModules[] = $module;
@@ -199,9 +199,23 @@ class MelisPhpUnitToolController extends AbstractActionController
                         $response .= $runTestResponse . '<br/>' . $results . $statistics;
                     }
 
-                    if(!is_readable($testModulePath)) {
-                        $response .= 'Unable to read from <strong>' . $testModulePath . '</strong><br/>';
+                    if(!file_exists($testModulePath)) {
+                        $response .= 'Unable to read from <strong>' . $testModulePath . '</strong>, folder does not exist.<br/>';
+                        if(is_writable($modulePath)) {
+                            mkdir($testModulePath, 0777);
+                            chmod($testModulePath, 0777);
+                            $response .= '<strong>'.$testFolder.'</strong> folder has been created, please re-run the test<br/>';
+                        }
+                        else {
+                            $response .= 'Unable to create <strong>'.$testFolder.'</strong>, the directory is not writable.<br/>';
+                        }
                     }
+                    else {
+                        if(!is_readable($testModulePath)) {
+                            $response .= 'Unable to read from <strong>' . $testModulePath . '</strong><br/>';
+                        }
+                    }
+
 
                 }
                 else {
@@ -228,13 +242,13 @@ class MelisPhpUnitToolController extends AbstractActionController
 
     protected function koMessage($msg)
     {
-        $content = '<span class="text-danger">KO: '.$msg.'</span><br/>';
+        $content = '<span class="text-danger">'.$msg.'</span><br/>';
         return $content;
     }
 
     protected function okMessage($msg)
     {
-        $content = '<span class="text-success">OK: '.$msg.'</span><br/>';
+        $content = '<span class="text-success">'.$msg.'</span><br/>';
         return $content;
     }
 

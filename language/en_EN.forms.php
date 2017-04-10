@@ -27,8 +27,11 @@
 	    'tr_meliscore_login_error' => 'Incorrect login or password',
 	    
 	    // User Tool prompts
+        'tr_meliscore_tool_user_usr_id' => 'Invalid ID entered',
+
 	    'tr_meliscore_tool_user_usr_login_error_empty' => 'Please enter your user login',
 	    'tr_meliscore_tool_user_usr_login_error_long'  => 'User login too long, it should be less than 255 characters',
+        'tr_meliscore_tool_user_usr_login_invalid' => 'Invalid username, please choose another',
 	    
 	    'tr_meliscore_tool_user_usr_status_error_empty' => 'Please select a status for the user',
 	    'tr_meliscore_tool_user_usr_status_error_invalid'  => 'Invalid status selection',
@@ -48,9 +51,11 @@
 	    'tr_meliscore_tool_user_usr_confirm_password_error_low' => 'Password should be greater than or equal to 8 characters',
 	    
 	    'tr_meliscore_tool_user_usr_firstname_error_empty' => 'Please enter your first name',
+	    'tr_meliscore_tool_user_usr_firstname_invalid' => 'Invalid first name entered',
 	    'tr_meliscore_tool_user_usr_firstname_error_long'  => 'First name too long, it should be less than 255 characters',
 	    
 	    'tr_meliscore_tool_user_usr_lastname_error_empty' => 'Please enter your last name',
+	    'tr_meliscore_tool_user_usr_lastname_invalid' => 'Invalid last name entered',
 	    'tr_meliscore_tool_user_usr_lastname_error_long'  => 'Last name too long, tis hould be less than 255 characters',
 	    
 	    'tr_meliscore_tool_user_usr_lang_id_error_empty' => 'Please choose a language',

@@ -81,8 +81,8 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	
 	public function save($datas, $id = null)
 	{
-		$id = (int) $id;
-		
+		$id    = (int) $id;
+
 		if ($this->getEntryById($id)->current())
 		{
 			$this->tableGateway->update($datas, array($this->idField => $id));

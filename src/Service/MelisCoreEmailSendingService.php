@@ -63,6 +63,7 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 	    }
 	    
 	    $transport = new Sendmail();
+	    $transport->send($message);
 	}
 	
 	public function send($email, $name, $subject, $content)

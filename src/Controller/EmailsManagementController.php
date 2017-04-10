@@ -179,7 +179,7 @@ class EmailsManagementController extends AbstractActionController
             for($ctr = 0; $ctr < count($tableData); $ctr++){
                 // apply text limits
                 foreach($tableData[$ctr] as $vKey => $vValue){
-                    $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue,50);
+                    $tableData[$ctr][$vKey] = $melisTool->escapeHtml($melisTool->limitedText($vValue,50));
                 }
                 
                 // Init indicator
@@ -595,7 +595,7 @@ class EmailsManagementController extends AbstractActionController
         $view->codename = $codename;
         return $view;
     }
-    
+
     /*
      * Adding new Email
      * */
@@ -621,9 +621,12 @@ class EmailsManagementController extends AbstractActionController
         $propertyForm = $factory->createForm($generalProperties);
         
         if($request->isPost()) {
+
+            $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+            $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
              
-            $datas = get_object_vars($request->getPost());
-            
+            $datas = $melisTool->sanitizePost(get_object_vars($request->getPost()), [], true);
+
             $codename = $datas['codename'];
             
             if ($codename=='NEW'){
@@ -807,4 +810,5 @@ class EmailsManagementController extends AbstractActionController
         $isAccessible = $melisCmsRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $key);
         return $isAccessible;
     }
+
 }

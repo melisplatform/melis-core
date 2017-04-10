@@ -66,8 +66,8 @@ class MelisAuthController extends AbstractActionController
 
     	$factory = new \Zend\Form\Factory();
     	$loginForm = $factory->createForm($appConfigForm);
-
-    
+        $loginDataConfig = $melisMelisCoreConfig->getItem('meliscore_login/datas');
+        
     	// change to layout login
     	$isRemembered = !empty($_COOKIE['remember']) ? (int) $_COOKIE['remember'] : 0;
     	$user = '';
@@ -83,6 +83,7 @@ class MelisAuthController extends AbstractActionController
     	
     	$view = new ViewModel();
     	$view->setVariable('meliscore_login', $loginForm);
+    	$view->setVariable('login_logo', $loginDataConfig['login_logo']);
     	$view->isChecked = $isChecked;
     	
     	return $view;
@@ -269,25 +270,23 @@ class MelisAuthController extends AbstractActionController
      */
     public function logoutAction()
     {
-    	// Delete session
-    	$melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
-    	$melisCoreAuth->getStorage()->clear();
-
     	$container = new Container('meliscore');
-    	$container->getManager()->destroy();
+    	$container->getManager()->getStorage()->clear('meliscore');
     	
     	$container = new Container('meliscms');
-    	$container->getManager()->destroy();
+    	$container->getManager()->getStorage()->clear('meliscms');
     	
     	$flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
     	$flashMessenger->clearFlashMessage();
-    	
+
+        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisCoreAuth->getStorage()->clear();
     	// Redirect
     	$this->plugin('redirect')->toUrl('/melis/login');
     	
     	return new JsonModel();
     }
-    
+
     /**
      * Get the profile picture
      * 

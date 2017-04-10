@@ -26,9 +26,7 @@ $(document).ready(function() {
 	
 	addEvent(".btnPlatformEdit", function() {
 		melisCoreTool.showOnlyTab('#modal-platforms', '#id_meliscore_platform_modal_content_edit');
-		var tdParent = $(this).parent();
-		var trParent = $(tdParent).parent();
-		var getId = trParent.attr('id');
+		var getId = $(this).parents("tr").attr("id");
 		
 		$.ajax({
 	        type        : 'POST', 
