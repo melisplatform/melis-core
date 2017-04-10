@@ -53,7 +53,7 @@ return array(
                             // Download latest release: https://phar.phpunit.de/phpunit.phar
 
                             // php command line path
-                            'php_cli' => '"C:/Program Files (x86)/Zend/ZendServer/bin/php.exe"',
+                            'php_cli' => '"D:\xampp\app\php/php.exe"',
                             // the path where you save your phpunit
                             'phpunit' => 'C:/bin/phpunit.phar'
                         ),

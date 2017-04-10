@@ -150,15 +150,13 @@ class MelisPhpUnitToolController extends AbstractActionController
                 $phpUnitCfg = $config->getItem('diagnostic/' . $module);
                 $testFolder = isset($phpUnitCfg['testFolder']) ? $phpUnitCfg['testFolder'] : null;
                 $moduleTest = isset($phpUnitCfg['moduleTestName']) ? $phpUnitCfg['moduleTestName'] : null;
-                $modulePath = $modSvc->getModulePath($module, true);
-
+                $modulePath = $modSvc->getModulePath($module);
+                $testModulePath = $modulePath.'/'.$testFolder;
                 if ($phpUnitCfg && !empty($testFolder)) {
 
-                    $testModulePath = $modulePath.'/'.$testFolder;
                     if(is_readable($testModulePath) && is_writable($testModulePath)) {
                         $runTestResponse = $this->getPHPUnitTool()->runTest($module, $phpUnitCfg['moduleTestName'], $phpUnitCfg['testFolder']);
-                        $testResults = $this->getPHPUnitTool()->getTestResult($module, $phpUnitCfg['moduleTestName']);
-
+                        $testResults = $this->getPHPUnitTool()->getTestResult($module, $phpUnitCfg['moduleTestName'], $testFolder);
                         if (!$testResults) {
                             $response .= $this->koMessage('No tests found!');
                         }
@@ -202,7 +200,7 @@ class MelisPhpUnitToolController extends AbstractActionController
                     if(!file_exists($testModulePath)) {
                         $response .= 'Unable to read from <strong>' . $testModulePath . '</strong>, folder does not exist.<br/>';
                         if(is_writable($modulePath)) {
-                            mkdir($testModulePath, 0777);
+                            mkdir($testModulePath, 0777, true);
                             chmod($testModulePath, 0777);
                             $response .= '<strong>'.$testFolder.'</strong> folder has been created, please re-run the test<br/>';
                         }

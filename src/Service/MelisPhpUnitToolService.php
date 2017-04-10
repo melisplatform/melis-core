@@ -29,7 +29,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $loadedModules = '';
 
         foreach($modules as $module) {
-            if($module != 'MelisModuleConfig') {
+            if(!in_array($module, ['MelisAssetManager', 'MelisModuleConfig'])) {
                 $loadedModules .= "\t\t'" . $module . "'," . PHP_EOL;
             }
 
@@ -53,9 +53,9 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $config = str_replace(array(
             '        ', '    ',
         ), '', $config);
-        chmod('config', 0777);
-        file_put_contents('config/test.application.config.php', $config);
-        chmod('config/test.application.config.php', 0777);
+        chmod('test', 0777);
+        file_put_contents('test/test.application.config.php', $config);
+        chmod('test/test.application.config.php', 0777);
     }
 
     /**
@@ -72,18 +72,20 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $xmlSavePath = $modulePath.'/'.$unitTestPath.'/phpunit.xml';
         $moduleTestSavePath = $modulePath.'/'.$unitTestPath.'/'.$moduleTestName.'/Controller';
         $testSavePath = $modulePath.'/'.$unitTestPath;
+
         $this->setAppConfig();
         if(file_exists($modulePath) && file_exists($testSavePath)) {
 
-            $bootstrapTemplate = __DIR__ . '/../../install/BootstrapTemplate';
-            $puControllerTemplate = __DIR__ . '/../../install/PHPUnitControllTest';
+            $bootstrapTemplate = HTTP_ROOT . '../test/tpl/BootstrapTemplate';
+            $puControllerTemplate = HTTP_ROOT . '../test/tpl/PHPUnitControllTest';
             $bootstrapContent = '';
             $xmlContent = '';
             if(file_exists($bootstrapTemplate)) {
+
                 $bootstrapContent = file_get_contents($bootstrapTemplate);
                 $bootstrapContent = sprintf($bootstrapContent, $moduleTestName);
                 file_put_contents($bootstrapSavePath, $bootstrapContent);
-                $xml = __DIR__.'/../../install/phpunitxmlTemplate';
+                $xml = HTTP_ROOT.'../test/tpl/phpunitxmlTemplate';
                 if(file_exists($xml)) {
                     $xmlContent = file_get_contents($xml);
                     $xmlContent = str_replace('{{moduleName}}', $moduleTestName, $xmlContent);
@@ -139,8 +141,8 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $moduleSvc = $this->getServiceLocator()->get('ModulesService');
         $modulePath = $moduleSvc->getModulePath($moduleName);
         $testSavePath = $modulePath.'/'.$unitTestPath;
-        $bootstrapPath = $bootstrapSavePath = $modulePath.'/'.$unitTestPath.'/Bootstrap.php';
-        $puXml = $bootstrapSavePath = $modulePath.'/'.$unitTestPath.'/phpunit.xml';
+        $bootstrapPath  = $modulePath.'/'.$unitTestPath.'/Bootstrap.php';
+        $puXml  = $modulePath.'/'.$unitTestPath.'/phpunit.xml';
         $moduleTestSavePath = $modulePath.'/'.$unitTestPath.'/'.$moduleTestName;
         $results = '';
 
@@ -152,6 +154,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
                 file_exists($testSavePath) &&
                 file_exists($bootstrapPath) &&
                 file_exists($moduleTestSavePath)) {
+
                 $execCommand = $phpCli. ' '.$phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testSavePath.'/results.xml" --configuration "'.$puXml.'"';
                 $output = '';
                 if($this->getOS() == 'windows') {
@@ -162,12 +165,12 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
                 }
             }
             else {
-                $this->init($moduleName, $moduleTestName, $unitTestPath = 'test');
+                $this->init($moduleName, $moduleTestName, $unitTestPath);
                 $this->runTest($moduleName, $moduleTestName, $unitTestPath);
             }
             if(!file_exists($testSavePath)) {
                 // if unitTestPath does not exists, it will create a test folder that will be used in unit testing
-                $this->init($moduleName, $moduleTestName, $unitTestPath = 'test');
+                $this->init($moduleName, $moduleTestName, $unitTestPath);
                 $this->runTest($moduleName, $moduleTestName, $unitTestPath);
             }
 
@@ -191,12 +194,12 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
     {
         $moduleSvc = $this->getServiceLocator()->get('ModulesService');
         $modulePath = $moduleSvc->getModulePath($moduleName);
-        $modulePath = $moduleSvc->getModulePath($moduleName);
         $resultsFile = $modulePath.'/'.$unitTestPath . '/results.xml';
         $results = array();
         if(file_exists($resultsFile)) {
             $readXml = new Xml();
             $results = $readXml->fromFile($resultsFile);
+
             if($results) {
                 if(isset($results['testsuite'])) {
                     $results = $results['testsuite']['testsuite'];
@@ -365,7 +368,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $config = $config->getItem('diagnostic/'.$module.'/db');
         $methods = $config;
         $methodLists = '';
-        $methodTemplate = __DIR__ . '/../../install/methodTemplate';
+        $methodTemplate = HTTP_ROOT . '../test/tpl/methodTemplate';
         if(file_exists($methodTemplate)) {
             $template = file_get_contents($methodTemplate);
             foreach($methods as $methodKey => $method) {

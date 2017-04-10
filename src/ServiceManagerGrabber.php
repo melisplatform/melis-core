@@ -13,7 +13,7 @@ class ServiceManagerGrabber extends PHPUnit_Framework_TestCase
 
     public static function setServiceConfig()
     {
-        $config = include '../../../config/test.application.config.php';
+        $config = include '../../../test/test.application.config.php';
         static::$serviceConfig = $config;
     }
 
@@ -24,7 +24,7 @@ class ServiceManagerGrabber extends PHPUnit_Framework_TestCase
 
     public function getServiceManager()
     {
-        $configuration = static::$serviceConfig ? : require_once './config/test.application.config.php';
+        $configuration = static::$serviceConfig ? : include '../../../../test/test.application.config.php';
         $smConfig = isset($configuration['service_manager']) ? $configuration['service_manager'] : array();
         $serviceManager = new ServiceManager(new ServiceManagerConfig($smConfig));
         $serviceManager->setService('ApplicationConfig', $configuration);
@@ -35,7 +35,7 @@ class ServiceManagerGrabber extends PHPUnit_Framework_TestCase
     public function getTableGateway($model, $table)
     {
         if(static::$serviceConfig) {
-            $cfg = !is_null(static::getServiceConfig()) ? static::getServiceConfig() : static::setServiceConfig(include '../../../config/test.application.config.php');
+            $cfg = !is_null(static::getServiceConfig()) ? static::getServiceConfig() : static::setServiceConfig(include '../../../../test/test.application.config.php');
             $cfg = $cfg['module_listener_options']['config_glob_paths'];
             $db  = array();
             $tmpArray = array();
