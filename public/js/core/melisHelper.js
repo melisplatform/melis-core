@@ -15,11 +15,12 @@ var melisHelper = (function(){
 	}
 	
 	// OK NOTIFICATION
-	function melisOkNotification(title, message, color = "#72af46"){
+	function melisOkNotification(title, message, color){
+		if(!color) color = "#72af46";
 		$.gritter.add({
-				title: melisCore.escapeHtml(melisTranslator(title)),
-				text:  melisCore.escapeHtml(melisTranslator(message)),
-				time:  3000,
+				title: melisTranslator(title),
+				text: melisTranslator(message),
+				time: 3000,
 				image: '/melis/MelisCore/MelisAuth/getProfilePicture',
 		}); 
 		//set the color
@@ -27,8 +28,8 @@ var melisHelper = (function(){
 	}
 	  
 	// KO NOTIFICATION
-	function melisKoNotification(title, message, errors, closeByButtonOnly = "closeByButtonOnly"){
-		
+	function melisKoNotification(title, message, errors, closeByButtonOnly){
+		if(!closeByButtonOnly) closeByButtonOnly = "closeByButtonOnly";
 		( closeByButtonOnly !== 'closeByButtonOnly' ) ? closeByButtonOnly = 'overlay-hideonclick' : closeByButtonOnly = '';
 
 		var errorTexts = '<h3>'+ melisTranslator(title) +'</h3>';
@@ -61,8 +62,8 @@ var melisHelper = (function(){
 	/**
 	 * KO NOTIFICATION for Multiple Form
 	 */
-	function melisMultiKoNotification(title, message, errors, closeByButtonOnly = true){
-		
+	function melisMultiKoNotification(title, message, errors, closeByButtonOnly){
+		if(!closeByButtonOnly) closeByButtonOnly = true;
 		var closeByButtonOnly = ( closeByButtonOnly !== true ) ?  'overlay-hideonclick' : '';
 
 		var errorTexts = '<h3>'+ melisHelper.melisTranslator(title) +'</h3>';
@@ -105,7 +106,8 @@ var melisHelper = (function(){
 	 * @param errors, Object array
 	 * @param selector, element selector 
 	 */
-	function highlightMultiErrors(success, errors, selector = activeTabId){
+	function highlightMultiErrors(success, errors, selector){
+		if(!selector) selector = activeTabId;
 		// remove red color for correctly inputted fields
 		$("" + selector + " .form-group label").css("color", "inherit");
 		// if all form fields are error color them red

@@ -2,8 +2,13 @@ var melisTinyMCE = (function(){
 	
 	
 	// This method will initialize an editor after requesting the TinyMCE configuration
-	function createTinyMCE(type = '', selector = '', options = null){
-		
+	function createTinyMCE(type, selector, options){
+        if(!type) type='';
+        if(!selector) selector='';
+        if(!options) options=null;
+		if(typeof type !== "undefined") {
+
+        }
 		// DataString with the values need get the TinyMCE configuration
 		var dataString = {
 			type 		: type,
