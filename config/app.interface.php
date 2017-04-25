@@ -52,7 +52,7 @@ return array(
                             // phpunit globally, instead we just call them directly from their directory to execute it.
                             // Download latest release: https://phar.phpunit.de/phpunit.phar
 
-                            // php command line path
+                            // php executable file path
                             'php_cli' => '"D:\xampp\app\php/php.exe"',
                             // the path where you save your phpunit
                             'phpunit' => 'C:/bin/phpunit.phar'
