@@ -53,7 +53,13 @@ class MelisModuleManager
                 $melisModuleName = getenv('MELIS_MODULE');
                 // include in module load if Melis Module exists on this folder
                 $modulePath = $rootMelisSites . '/' . $melisModuleName;
-                $modules = include $modulePath . '/config/module.load.php';
+                if($melisModuleName) {
+                    $siteModuleLoad = $modulePath . '/config/module.load.php';
+                    if(file_exists($siteModuleLoad)) {
+                        $modules = include $siteModuleLoad;
+                    }
+                }
+
             }
         } else {
             $modules = array();

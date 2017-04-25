@@ -16,7 +16,7 @@ $status = '';
                 <h4><i class="fa fa-warning"></i> Warning</h4>
                 <?php
                 foreach($this->warningLogs as $log) {
-                    echo '<li>' . $log . '</li>';
+                    echo '<li>'.$log.'</li>';
                 }
                 ?>
             </div>
@@ -29,19 +29,26 @@ $status = '';
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <div class="panel panel-default">
 
-                    <?php foreach($this->modules as $module):?>
-                        <div class="panel-heading" role="tab" id="headingPU<?= $module; ?>">
+
+                    <?php foreach($this->modules as $key => $module):?>
+                        <div class="panel-heading" role="tab" id="headingPU<?= $module['name']; ?>">
                             <h4 class="panel-title">
-                                <?= $module; ?>
-                                <button data-modules="<?= $module; ?>" class="btn btn-success pull-right btn-small btn-run-pu-module-test">
-                                    <span id="icon<?php echo $module; ?>"><i class="fa fa-play"></i> Run</span>
+                                <?= $module['name']; ?>
+                                <?php
+                                $disabled = null;
+                                if(! (bool) $module['hasRights']) {
+                                    $disabled = 'disabled';
+                                }
+                                ?>
+                                <button data-modules="<?= $module['name']; ?>" class="btn btn-success pull-right btn-small btn-run-pu-module-test" <?= $disabled; ?>>
+                                    <span id="icon<?= $module['name']; ?>"><i class="fa fa-play"></i> Run</span>
                                 </button>
 
                             </h4>
                         </div>
-                        <div id="collapsePU<?= $module; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingPU<?= $module; ?>">
+                        <div id="collapsePU<?= $module['name']; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingPU<?= $module['name']; ?>">
                             <div class="panel-body">
-                                <div class="well divLogger" id="wellPU<?= $module; ?>">
+                                <div class="well divLogger" id="wellPU<?= $module['name']; ?>">
                                 </div>
                             </div>
                         </div>

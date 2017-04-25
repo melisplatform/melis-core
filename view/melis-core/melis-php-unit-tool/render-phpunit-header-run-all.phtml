@@ -1,1 +1,7 @@
-<button class="btn btn-success" id="btnDiagPhpunitRunAll"><?= $this->translate('tr_melis_module_diagnostics_tool_header_run_all'); ?></button>
+<?php
+$disabled = '';
+if(!empty($this->warningLogs)) {
+    $disabled = 'disabled';
+}
+?>
+<button class="btn btn-success" id="btnDiagPhpunitRunAll" <?= $disabled; ?>><?= $this->translate('tr_melis_module_diagnostics_tool_header_run_all'); ?></button>

@@ -37,7 +37,9 @@ class MelisPhpUnitToolController extends AbstractActionController
 
     public function renderPhpunitHeaderRunAllAction()
     {
-        $view = new ViewModel();
+        $view = new ViewModel([
+            'warningLogs' =>  $this->checkAllModule()
+        ]);
 
         return $view;
     }
@@ -46,13 +48,30 @@ class MelisPhpUnitToolController extends AbstractActionController
     {
         $view = new ViewModel();
         $modules = $this->getAvailableModules();
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
 
         if (in_array('MelisModuleConfig', $modules)) {
-            $tmpMods = array();
-            foreach ($modules as $module)
-                if ($module != 'MelisModuleConfig')
-                    array_push($tmpMods, $module);
-            $modules = $tmpMods;
+            $tmp = [];
+            foreach ($modules as $module) {
+                $hasRights = false;
+                $phpUnitCfg = $config->getItem('diagnostic/' . $module);
+                $modulePath = $this->getModuleSvc()->getModulePath($module);
+                if($phpUnitCfg) {
+                    $testFolder = isset($phpUnitCfg['testFolder']) ? $phpUnitCfg['testFolder'] : null;
+                    if($this->hasRights($modulePath)) {
+                        if($this->hasRights($modulePath.'/'.$testFolder)) {
+                            $hasRights = true;
+                        }
+                    }
+                }
+                if ($module != 'MelisModuleConfig') {
+                    $tmp[$module] = [
+                        'name' => $module,
+                        'hasRights' => $hasRights
+                    ];
+                }
+            }
+            $modules = $tmp;
         }
 
         $view->modules = $modules;
@@ -100,7 +119,30 @@ class MelisPhpUnitToolController extends AbstractActionController
         }
         $modules = array_merge($modules, $coreModules);
 
+        $testCfgDir = HTTP_ROOT.'../test';
+        $testCfgFile = $testCfgDir.'/test.application.config.php';
         $logs = array();
+
+        // TEST FOLDER
+        if(!is_readable($testCfgDir)) {
+            $logs[] = $testCfgDir . ' is not readable';
+        }
+        else {
+            if(!is_writable($testCfgDir)) {
+                $logs[] = $testCfgDir . ' is not writable';
+            }
+        }
+
+        // TEST/test.application.config.php FOLDER
+        if(!is_readable($testCfgFile)) {
+            $logs[] = $testCfgFile . ' is not readable';
+        }
+        else {
+            if(!is_writable($testCfgFile)) {
+                $logs[] = $testCfgFile . ' is not writable';
+            }
+        }
+
         foreach($modules as $module) {
             $phpUnitCfg = $config->getItem('diagnostic/' . $module);
             if($phpUnitCfg) {
@@ -108,12 +150,18 @@ class MelisPhpUnitToolController extends AbstractActionController
                 $moduleTest = isset($phpUnitCfg['moduleTestName']) ? $phpUnitCfg['moduleTestName'] : null;
                 $modulePath = $modSvc->getModulePath($module, true);
 
-                if(!file_exists($modulePath.'/'.$testFolder)) {
+
+                if(file_exists($modulePath)) {
                     if(!is_readable($modulePath)) {
-                        $logs[] = 'Unable to run test on ' . $module . ', access is denied';
+                        $logs[] = 'Unable to run test on ' . $module .' (' . $modulePath .'), folder not readable';
+                    }
+
+                    if(!is_writable($modulePath)) {
+                        $logs[] = 'Unable to run test on ' . $module .' (' . $modulePath .'), folder not writable';
                     }
                 }
-                else {
+
+                if(file_exists($modulePath.'/'.$testFolder)) {
                     if(!is_readable($modulePath.'/'.$testFolder)) {
                         $logs[] = $module.'/'.$testFolder . ' is not readable';
                     }
@@ -261,6 +309,16 @@ class MelisPhpUnitToolController extends AbstractActionController
                   </div>
                 </div>';
         return $dom;
+    }
+
+    protected function hasRights($folderPath)
+    {
+        if(!is_readable($folderPath))
+            return false;
+        if(!is_writable($folderPath))
+            return false;
+
+        return true;
     }
 
     public function testAction()

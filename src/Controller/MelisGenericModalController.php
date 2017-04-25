@@ -32,18 +32,5 @@ class MelisGenericModalController extends AbstractActionController
          
         return $view;
     }
-    
-    public function testContentAction()
-    {
-        $id = $this->params()->fromRoute('id', $this->params()->fromQuery('id', ''));
-        $melisKey = $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey', ''));
-         
-        $view = new ViewModel();
-        $view->setTerminal(false);
-        $view->id = $id;
-        $view->melisKey = $melisKey;
-         
-        return $view;
-    }
 }
 

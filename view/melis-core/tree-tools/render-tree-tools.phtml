@@ -24,15 +24,19 @@
 						if (!empty($sectionTool['toolsection_icon']))
 							$sectionIcon = $sectionTool['toolsection_icon'];
 						?>
-						<li class="hasSubmenu" data-meliskey=""> 
-	                    	<a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
-	                    		<i class="fa <?= $sectionIcon; ?>"></i>
-	                    		<span><?= $sectionTool['toolsection_name']; ?></span>
-	                    	</a>
-	                    	<ul class="collapse secondlvl-container" id="sub-load-<?= $keySection; ?>">
+
 							<?php
 							if (!empty($sectionTool['toolsection_children']))
 							{
+
+                            ?>
+                            <li class="hasSubmenu" data-meliskey="">
+                            <a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
+                                <i class="fa <?= $sectionIcon; ?>"></i>
+                                <span><?= $sectionTool['toolsection_name']; ?></span>
+                            </a>
+                            <ul class="collapse secondlvl-container" id="sub-load-<?= $keySection; ?>">
+                            <?php
 								foreach ($sectionTool['toolsection_children'] as $keyTool => $tool)
 								{
 									$toolIcon = 'fa-wrench';
@@ -47,15 +51,18 @@
 									<li class="melis-opentools" data-tool-icon="<?= $toolIcon; ?>" data-tool-name="<?= $data_tool_name; ?>" data-tool-id="<?= $data_tool_id; ?>" data-tool-meliskey="<?= $data_tool_meliskey; ?>">
 										<a href="#">
 											<i class="fa <?= $toolIcon; ?>"></i>
-											<span><?= $data_tool_name; ?></span>
+											<span><?= $data_tool_name; ?> </span>
 										</a>
 									</li>
 									<?php
 								}
+							?>
+                            </ul>
+                            </li>
+							<?php
 							}
 							?>
-							</ul>
-						</li>
+
 						<?php
 					}
 				}
@@ -66,45 +73,3 @@
 			?>
 		</ul>
 </li>
-
-<!-- 
-<li class="hasSubmenu" data-meliskey=""> 
-            	<a data-target="#z-load" data-toggle="collapse" class="collapsed">
-            		<i class="fa fa-wrench"></i>
-            		<span>2Lvl Accordion</span>
-            	</a>
-            	
-                <ul class="collapse" id="z-load">
-            		<li class="hasSubmenu" data-meliskey=""> 
-                    	<a data-target="#sub-load" data-toggle="collapse" class="collapsed second-lvl">
-                    		<i class="fa fa-folder"></i>
-                    		<span>Power Tools</span>
-                    	</a>
-                    	
-                        <ul class="collapse secondlvl-container" id="sub-load">
-                    		<li>
-                    			<a class="">
-                               		<i class="fa fa-wrench"></i>
-                               		<span>Jack hammer</span>
-                           		</a>
-                    		</li>
-                    		<li>
-          
-                    			<a class="">
-                               		<i class="fa fa-wrench"></i>
-                               		<span>Chainsaw</span>
-                           		</a>
-                    		</li>
-                    	</ul> 
-                    	
-                    </li>
-            		<li>
-  
-            			<a class="">
-                       		<i class="fa fa-folder"></i>
-                       		<span>Super Tools</span>
-                   		</a>
-            		</li>
-            	</ul> 
-            	
-            </li>  -->

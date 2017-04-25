@@ -625,7 +625,15 @@ class EmailsManagementController extends AbstractActionController
             $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
             $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
              
-            $datas = $melisTool->sanitizePost(get_object_vars($request->getPost()), [], true);
+            $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+            $coreLangResult = $coreLang->fetchAll();
+            $coreLangLocale = array();
+            foreach ($coreLangResult->toArray() As $val)
+            {
+                array_push($coreLangLocale, $val['lang_locale']);
+            }
+            
+            $datas = $melisTool->sanitizeRecursive(get_object_vars($request->getPost()), $coreLangLocale, true);
 
             $codename = $datas['codename'];
             
@@ -700,14 +708,18 @@ class EmailsManagementController extends AbstractActionController
                 $layoutPathValidator = new \Zend\Validator\File\Exists();
                 
                 $layout = $datas['boe_content_layout'];
-                $layout = __DIR__ .'/../../../'.$layout;
                 
-                if (!$layoutPathValidator->isValid($layout)) {
-                    $layoutPathError['boe_content_layout'] = array(
-                        'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_path')
-                        );
-                }else{
-                    // Allow files with 'php' or 'exe' extensions
+                $validLayout = false;
+                if ($layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)){
+                    $layout = __DIR__ .'/../../../'.$layout;
+                    $validLayout = true;
+                }elseif ($layoutPathValidator->isValid(HTTP_ROOT .'/../module/'.$layout)){
+                    $layout = HTTP_ROOT .'/../module/'.$layout;
+                    $validLayout = true;
+                }
+                
+                if ($validLayout){
+                    // Allow file with 'phtml' extension
                     $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
                     
                     if (!$layoutExtensionValidator->isValid($layout)) {
@@ -715,6 +727,10 @@ class EmailsManagementController extends AbstractActionController
                             'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_extension')
                         );
                     }
+                }else{
+                    $layoutPathError['boe_content_layout'] = array(
+                        'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_path')
+                    );
                 }
             }
             

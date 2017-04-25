@@ -8,6 +8,20 @@ if (!empty($this->zoneconfig['conf']['id']))
 
 <div <?= $id; ?> data-melisKey="<?= $data_melisKey; ?>">
 	<div class="spacing-x2 innerAll">
+        <?php
+        if(!empty($this->warningLogs)) {
+            ?>
+            <div class="alert alert-danger">
+                <h4><i class="fa fa-warning"></i> Warning</h4>
+                <?php
+                foreach($this->warningLogs as $log) {
+                    echo '<li>' . $log . '</li>';
+                }
+                ?>
+            </div>
+            <?php
+        }
+        ?>
 		<?php 
 		$this->melisGenericTable()->setTable(array(
 		    'id' => 'tableLanguages',

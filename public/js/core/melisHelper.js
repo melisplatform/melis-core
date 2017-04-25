@@ -21,7 +21,7 @@ var melisHelper = (function(){
 				title: melisTranslator(title),
 				text: melisTranslator(message),
 				time: 3000,
-				image: '/melis/MelisCore/MelisAuth/getProfilePicture',
+				image: '/melis/MelisCore/MelisAuth/getProfilePicture?v=' + new Date().getTime(),
 		}); 
 		//set the color
 		$(".gritter-item").css("background",color);

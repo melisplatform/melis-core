@@ -1276,6 +1276,7 @@ return array(
 	    	),
 	        'datas' => array(
 	            'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
+	            'lost_password_logo' => '/MelisCore/images/login/melis-box.png',
 	        ),
 	        'interface' => array(
 	            'meliscore_lost_password_header' => array(
@@ -1351,6 +1352,7 @@ return array(
 	    	),
 	        'datas' => array(
 	            'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
+	            'reset_password_logo' => '/MelisCore/images/login/melis-box.png',
 	        ),
 	        'interface' => array(
 	            'meliscore_reset_password_header' => array(
@@ -1412,19 +1414,6 @@ return array(
 	                    'module' => 'MelisCore',
 	                    'controller' => 'Index',
 	                    'action' => 'footer',
-	                    'jscallback' => '',
-	                    'jsdatas' => array()
-	                ),
-	            ),
-	            'meliscore_test_modal_content' => array(
-	                'conf' => array(
-	                    'id' => 'id_xx1',
-	                    'melisKey' => 'meliscore_test_modal_content'
-	                ),
-	                'forward' => array(
-	                    'module' => 'MelisCore',
-	                    'controller' => 'MelisGenericModal',
-	                    'action' => 'test-content',
 	                    'jscallback' => '',
 	                    'jsdatas' => array()
 	                ),

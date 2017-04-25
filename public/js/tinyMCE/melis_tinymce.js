@@ -6,9 +6,6 @@ var melisTinyMCE = (function(){
         if(!type) type='';
         if(!selector) selector='';
         if(!options) options=null;
-		if(typeof type !== "undefined") {
-
-        }
 		// DataString with the values need get the TinyMCE configuration
 		var dataString = {
 			type 		: type,
@@ -31,7 +28,6 @@ var melisTinyMCE = (function(){
     					}catch (e) {}
     				}
      			}
-    			
     			// Initializing TinyMCE with the request Configurations
     			tinymce.init(data.config);
     		}

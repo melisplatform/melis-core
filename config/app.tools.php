@@ -3,6 +3,10 @@
 return array( 
     'plugins' => array(
         'melisModuleDiagnostics' => array(
+            'conf' => array(
+                // user rights exclusions
+                'rightsDisplay' => 'none',
+            ),
             'tools' => array(
                 'melis_module_diagnostic_tool_config' => array(
                     'conf' => array(
@@ -208,7 +212,7 @@ return array(
                                         'type' => 'Zend\Form\Element\Select',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_status',
-                                            'empty_option' => 'tr_meliscms_form_common_Choose',
+                                            'empty_option' => 'tr_meliscore_common_choose',
                                             'value_options' => array(
                                                 '0' => 'tr_meliscore_common_inactive',
                                                 '1' => 'tr_meliscore_common_active',
@@ -304,7 +308,7 @@ return array(
                                         'type' => 'MelisCoreLanguageSelect',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_form_language',
-                                            'empty_option' => 'tr_meliscms_form_common_Choose',
+                                            'empty_option' => 'tr_meliscore_common_choose',
                                             'disable_inarray_validator' => true,
                                         ),
                                         'attributes' => array(
@@ -656,7 +660,7 @@ return array(
                                         'type' => 'Zend\Form\Element\Select',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_status',
-                                            'empty_option' => 'tr_meliscms_form_common_Choose',
+                                            'empty_option' => 'tr_meliscore_common_choose',
                                             'value_options' => array(
                                                 '0' => 'tr_meliscore_common_inactive',
                                                 '1' => 'tr_meliscore_common_active',
@@ -756,7 +760,7 @@ return array(
                                         'type' => 'MelisCoreLanguageSelect',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_form_language',
-                                            'empty_option' => 'tr_meliscms_form_common_Choose',
+                                            'empty_option' => 'tr_meliscore_common_choose',
                                             'disable_inarray_validator' => true,
                                         ),
                                         'attributes' => array(

@@ -451,9 +451,11 @@ class ToolUserController extends AbstractActionController
             'errors' => $errors,
             'datas' => $datas
         );
-        
+
         $this->getEventManager()->trigger('meliscore_tooluser_savenew_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_ADD', 'itemId' => $userId)));
-        
+
+        unset($response['datas']);
+
         return new JsonModel($response);
     }
     
@@ -529,7 +531,7 @@ class ToolUserController extends AbstractActionController
                     {
                         $imageContent = null;
                         // create tmp folder if not exists
-                        $dirName = HTTP_ROOT.'/public/media/images/profile/tmp/';
+                        $dirName = HTTP_ROOT.'media/images/profile/tmp/';
                         if(!file_exists($dirName)) {
                             $oldmask = umask(0);
                             mkdir($dirName, 0777,  true);
@@ -579,7 +581,7 @@ class ToolUserController extends AbstractActionController
                             $rolesTable = $this->getServiceLocator()->get('MelisUserRole');
                             $roleData = $rolesTable->getEntryById($roleId);
                             $roleData = $roleData->current();
-                            $data['usr_rights'] = null;//$roleData->urole_rights;
+                            $data['usr_rights'] = null;
                         }
                         
                         $melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');
@@ -601,7 +603,6 @@ class ToolUserController extends AbstractActionController
                         $data['usr_id'] = $userTable->save($data);
                         $textMessage = 'tr_meliscore_tool_user_new_success_info';
                         $success = true;
-                        
                     }
                     else 
                     {

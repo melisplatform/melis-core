@@ -117,10 +117,8 @@ $(document).ready(function() {
 		});
 	});
 	
-	addEvent(".btnPlatformDelete", function(){ 
-		var tdParent = $(this).parent();
-		var trParent = $(tdParent).parent();
-		var getId = trParent.attr('id');
+	addEvent(".btnPlatformDelete", function(){
+		var getId = $(this).parents("tr").attr("id");
 		
 		melisCoreTool.confirm(
 			translations.tr_meliscore_common_yes, 

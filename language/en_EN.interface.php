@@ -287,7 +287,10 @@
 	    'tr_meliscore_tool_language_delete_failed' => 'Unable to delete language',
 	    'tr_meliscore_tool_language_update_failed' => 'Unable to update language',
 	    'tr_meliscore_tool_language_permission' => 'Unable to add language, please check your rights to write files',
-	    
+        'tr_meliscore_tool_language_lang_folder_not_readable' => '%s is not readable',
+        'tr_meliscore_tool_language_lang_folder_not_writable' => '%s is not writable',
+        'tr_meliscore_tool_language_lang_folder_not_exist' => '%s does not exist',
+
 	    // Deleted User
 	    'tr_meliscore_user_deleted' => 'Deleted user',
 	    
@@ -437,26 +440,26 @@
 	    
 	    // Logs Tool
 	    'tr_meliscore_logs_tool' => 'Logs',
-	    'tr_meliscore_logs_type' => 'Type de logs',
-	     
+	    'tr_meliscore_logs_type' => 'Log type',
+	    
 	    // Table columns
 	    'tr_meliscore_logs_tool_log_id' => 'ID',
-	    'tr_meliscore_logs_tool_log_title' => 'Titre',
+	    'tr_meliscore_logs_tool_log_title' => 'Title',
 	    'tr_meliscore_logs_tool_log_message' => 'Message',
 	    'tr_meliscore_logs_tool_log_type' => 'Type',
-	    'tr_meliscore_logs_tool_log_item_id' => 'ID élément',
-	    'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
-	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajouté',
-	     
+	    'tr_meliscore_logs_tool_log_item_id' => 'Item ID',
+	    'tr_meliscore_logs_tool_log_user' => 'User',
+	    'tr_meliscore_logs_tool_log_date_added' => 'Date Added',
+	    
 	    // Log Type Deatils
-	    'tr_meliscore_logs_tool_log_type_name' => 'Nom',
+	    'tr_meliscore_logs_tool_log_type_name' => 'Name',
 	    'tr_meliscore_logs_tool_log_type_description' => 'Description',
-	    'tr_meliscore_logs_tool_log_type_code' => 'Code type de log',
-	     
-	    'tr_meliscore_logs_tool_log_save_success' => 'Le type de log a été sauvegardé avec succès',
-	    'tr_meliscore_logs_tool_log_save_unable' => 'Impossible de sauvegarder le type de log, veuillez réessayer',
-	    'tr_meliscore_logs_tool_log_input_to_long_255' => 'Valeur trop longue, elle doit être de moins de 255 caractères',
-	    'tr_meliscore_logs_tool_log_tyne_name_must_atleast_one_entry' => 'Le nom du type de log doit avoir au moins un caractère',
+	    'tr_meliscore_logs_tool_log_type_code' => 'Log type code',
+	    
+	    'tr_meliscore_logs_tool_log_save_success' => 'Log type has been saved successfully',
+	    'tr_meliscore_logs_tool_log_save_unable' => 'Unable to save log type, please try again',
+	    'tr_meliscore_logs_tool_log_input_to_long_255' => 'The value is too long, it should be less than 255 characters',
+	    'tr_meliscore_logs_tool_log_tyne_name_must_atleast_one_entry' => 'Log type name name must have atleast one entry',
 
         'tr_meliscore_invalid_id' => 'Invalid ID',
 	);

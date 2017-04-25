@@ -53,9 +53,9 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $config = str_replace(array(
             '        ', '    ',
         ), '', $config);
-        chmod('test', 0777);
-        file_put_contents('test/test.application.config.php', $config);
-        chmod('test/test.application.config.php', 0777);
+        @chmod('test', 0777);
+        @file_put_contents(HTTP_ROOT.'../test/test.application.config.php', $config);
+        @chmod(HTTP_ROOT.'../test/test.application.config.php', 0777);
     }
 
     /**

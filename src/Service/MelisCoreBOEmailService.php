@@ -374,23 +374,26 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	                    
 	                    // Email Content Must have value/data to be sent
 	                    if (!empty($message_html)){
-    	                    $layoutFlag = TRUE;
-    	                    
-    	                    
+    	                    $layoutFlag = FALSE;
     	                    
     	                    if (!empty($layout)){
     	                        
     	                        $layoutPathValidator = new \Zend\Validator\File\Exists();
     	                         
+    	                        if ($layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)) {
+    	                            $layout = __DIR__ .'/../../../'.$layout;
+    	                            $layoutFlag = TRUE;
+    	                        }elseif ($layoutPathValidator->isValid(HTTP_ROOT .'/../module/'.$layout)){
+    	                            $layout = HTTP_ROOT .'/../module/'.$layout;
+    	                            $layoutFlag = TRUE;
+    	                        }
     	                        
-    	                        if (!$layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)) {
-    	                            $layoutFlag = FALSE;
-    	                        }else{
-    	                            // Allow file with '.phtml' extensions
+    	                        if ($layoutFlag){
+    	                            // Allow file with 'phtml' extension
     	                            $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
     	                             
-    	                            if (!$layoutExtensionValidator->isValid(__DIR__ .'/../../../'.$layout)) {
-    	                                $layoutFlag = FALSE;
+    	                            if ($layoutExtensionValidator->isValid($layout)) {
+    	                                $layoutFlag = TRUE;
     	                            }
     	                        }
     	                        
@@ -399,7 +402,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
             	                    $view       = new \Zend\View\Renderer\PhpRenderer();
             	                    $resolver   = new \Zend\View\Resolver\TemplateMapResolver();
             	                    $resolver->setMap(array(
-            	                        'mailTemplate' => __DIR__ .'/../../../'.$layout,
+            	                        'mailTemplate' => $layout,
             	                    ));
             	                    $view->setResolver($resolver);
             	                     

@@ -300,8 +300,11 @@
 	    'tr_meliscore_tool_language_delete_success' => 'Langage supprimé',
 	    'tr_meliscore_tool_language_delete_failed' => 'Impossible de supprimer le langage',
 	    'tr_meliscore_tool_language_permission' => 'Impossible d\'ajouter un nouveau langage, veuillez vérifier vos droits pour éditer les fichiers',
-	    
-	    // Deleted User
+        'tr_meliscore_tool_language_lang_folder_not_readable' => '%s is not readable',
+        'tr_meliscore_tool_language_lang_folder_not_writable' => '%s is not writable',
+        'tr_meliscore_tool_language_lang_folder_not_exist' => '%s does not exist',
+
+        // Deleted User
 	    'tr_meliscore_user_deleted' => 'Utilisateur Supprimé',
 	    
 	    'tr_meliscms_tool_language_edit' => 'Edit Language',
