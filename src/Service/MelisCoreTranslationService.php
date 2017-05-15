@@ -357,7 +357,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
                 }
             }
         }
-
+        $this->updateTranslationList();
         return $result;
     }
 

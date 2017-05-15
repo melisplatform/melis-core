@@ -82,8 +82,8 @@
 	    'tr_meliscore_tool_user_col_password' => 'Password',
 	    'tr_meliscore_tool_user_col_confirm_password' => 'Confirm password',
 	    'tr_meliscore_tool_user_modal_empty' => 'No access',
-	    'tr_meliscore_tool_user_modal_edit' => 'Edit information',
-	    'tr_meliscore_tool_user_modal_rights' => 'User rights',
+	    'tr_meliscore_tool_user_modal_edit' => 'Information',
+	    'tr_meliscore_tool_user_modal_rights' => 'Rights',
 	    
 	    
 	    'tr_meliscore_tool_user_update_success_info' => 'User\'s info updated successfully',
@@ -102,7 +102,7 @@
 	    'tr_meliscore_tool_user_new_fail_info' => 'Unable to add user',
 	    'tr_meliscore_tool_user_new_fail_user_exists' => 'User login already exists, please choose another',
 	    'tr_meliscore_tool_user_new_fail_pass' => 'Password does not match',
-	    'tr_meliscore_tool_user_new_rights' => 'New user\'s rights',
+	    'tr_meliscore_tool_user_new_rights' => 'Rights',
 	    'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
 	    'tr_meliscore_tool_user_add' => 'Add',
 	    'tr_meliscore_tool_user_update' => 'Save',
@@ -168,7 +168,7 @@
 	    
 	    
 	    // DataTables Translations 
-	    'tr_meliscore_dt_sEmptyTable' => 'No data available in table',
+	    'tr_meliscore_dt_sEmptyTable' => 'No data available in the table',
 	    'tr_meliscore_dt_sInfo' => 'Showing _START_ to _END_ of _TOTAL_ entries',
 	    'tr_meliscore_dt_sInfoEmpty' => 'Showing 0 to 0 of 0 entries',
 	    'tr_meliscore_dt_sInfoFiltered' => ' ',
@@ -178,7 +178,7 @@
 	    'tr_meliscore_dt_sLoadingRecords' => 'Loading...',
 	    'tr_meliscore_dt_sProcessing' => 'Processing...',
 	    'tr_meliscore_dt_sSearch' => 'Search:',  
-	    'tr_meliscore_dt_sZeroRecords' => 'No matching records found',
+	    'tr_meliscore_dt_sZeroRecords' => 'No product correspond to the search',
 	    'tr_meliscore_dt_sFirst' => 'First',
 	    'tr_meliscore_dt_sLast' => 'Last',  
 	    'tr_meliscore_dt_sNext' => 'Next',
@@ -299,7 +299,7 @@
 	    /*   Email Management  */
 	    'tr_meliscore_tool_emails_mngt_generic_from' => 'Email creation and edition Form',
 	    'tr_meliscore_tool_emails_mngt' => 'Emails management',
-	    'tr_meliscore_tool_emails_mngt_header' => 'Header',
+	    'tr_meliscore_tool_emails_mngt_header' => 'Emails management',
 	    'tr_meliscore_tool_emails_mngt_header_btn_add' => 'Add a new email',
 	    'tr_meliscore_tool_emails_mngt_content' => 'Content',
 	    'tr_meliscore_tool_emails_mngt_content_refresh' => 'Refresh',
@@ -311,7 +311,7 @@
 	    // Table Columns
 	    'tr_meliscore_tool_email_mngt_boe_id' => 'ID',
 	    'tr_meliscore_tool_email_mngt_boe_indicator' => ' ',
-	    'tr_meliscore_tool_email_mngt_boe_name' => 'Name of the email',
+	    'tr_meliscore_tool_email_mngt_boe_name' => 'Email  name',
 	    'tr_meliscore_tool_email_mngt_boe_code_name' => 'Email code',
 	    'tr_meliscore_tool_email_mngt_boe_lang' => 'Languages',
 	    'tr_meliscore_tool_email_mngt_boe_from_name' => 'From name',
@@ -462,5 +462,8 @@
 	    'tr_meliscore_logs_tool_log_tyne_name_must_atleast_one_entry' => 'Log type name name must have atleast one entry',
 
         'tr_meliscore_invalid_id' => 'Invalid ID',
+	    
+	    'tr_meliscore_date_today' => 'Today',
+	    'tr_meliscore_date_yesterday' => 'Yesterday',
 	);
 ?>

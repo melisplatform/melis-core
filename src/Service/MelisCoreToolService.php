@@ -920,10 +920,10 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	 * @param string $time optional time format ie: h:i:s, leave blank to exclude time
 	 * @return formatted date
 	 */
-	public function dateFormatLocale($date, $time = '')
+	public function dateFormatLocale($date, $time = '', $locale = null)
 	{
 	    $container = new Container('meliscore');
-	    $locale = $container['melis-lang-locale'];
+	    $locale = is_null($locale)? $container['melis-lang-locale'] : $locale;
 
 	    switch($locale) {
 	        case 'fr_FR':

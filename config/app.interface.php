@@ -11,7 +11,7 @@ return array(
 			),
 			'datas' => array( 
 			    'zf2' => array(
-			        'maxNestedForwards' => 20
+			        'maxNestedForwards' => 100
 			    ),
 			    
 				// Overide these datas in MelisModuleConfig !
@@ -217,6 +217,8 @@ return array(
             				  // MelisCore main CSS - should always be in bottom
             				  '/MelisCore/css/styles.css',
 				              '/MelisCore/css/diagnostic.css',
+
+				              '/MelisCore/css/design-tool.css',
 						),
 			),
 			'interface' => array(

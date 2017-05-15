@@ -2,13 +2,13 @@ var igms = false;
 function initScripts()
 {
 	if (igms) return;
-	
+	componentsPath = "";
 	var $scripts = [
-        componentsPath + "modules/admin/maps/google/assets/lib/jquery-ui-map/ui/jquery.ui.map.js",
-        componentsPath + "modules/admin/maps/google/assets/lib/jquery-ui-map/ui/jquery.ui.map.extensions.js",
-        componentsPath + "modules/admin/maps/google/assets/lib/jquery-ui-map/ui/jquery.ui.map.services.js",
-        componentsPath + "modules/admin/maps/google/assets/lib/jquery-ui-map/ui/jquery.ui.map.microformat.js",
-        componentsPath + "modules/admin/maps/google/assets/lib/jquery-ui-map/addons/markerclustererplus/markerclusterer.min.js"
+        componentsPath + "/MelisCore/assets/components/modules/admin/maps/google/assets/lib/jquery-ui-map/ui/jquery.ui.map.js",
+        componentsPath + "/MelisCore/assets/components/modules/admin/maps/google/assets/lib/jquery-ui-map/ui/jquery.ui.map.extensions.js",
+        componentsPath + "/MelisCore/assets/components/modules/admin/maps/google/assets/lib/jquery-ui-map/ui/jquery.ui.map.services.js",
+        componentsPath + "/MelisCore/assets/components/modules/admin/maps/google/assets/lib/jquery-ui-map/ui/jquery.ui.map.microformat.js",
+        componentsPath + "/MelisCore/assets/components/modules/admin/maps/google/assets/lib/jquery-ui-map/addons/markerclustererplus/markerclusterer.min.js"
     ];
 	$.each($scripts, function(k,v){
 		if ($('[src="'+v+'"]').length) return true;
@@ -74,7 +74,10 @@ function initGoogleMaps()
 					$('#google-map-clustering').gmap('openInfoWindow', { content : 'Hello world!' }, this);
 				});
 			}
-			$('#google-map-clustering').gmap('set', 'MarkerClusterer', new MarkerClusterer(map, $(this).gmap('get', 'markers')));
+			mcOptions = {imagePath: "https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclustererplus/images/m"};
+			// $('#google-map-clustering').gmap('set', 'MarkerClusterer', new MarkerClusterer(map, $(this).gmap('get', 'markers')));
+			$('#google-map-clustering').gmap('set', 'MarkerClusterer', new MarkerClusterer(map, mcOptions));
+
 			// To call methods in MarkerClusterer simply call 
 			// $('#google-map-clustering').gmap('get', 'MarkerClusterer').callingSomeMethod();
 		});
@@ -121,7 +124,8 @@ function initGoogleMaps()
 			var northEast = map.getBounds().getNorthEast();
 			var lngSpan = northEast.lng() - southWest.lng();
 			var latSpan = northEast.lat() - southWest.lat();
-			var images = ['http://google-maps-icons.googlecode.com/files/friends.png', 'http://google-maps-icons.googlecode.com/files/home.png', 'http://google-maps-icons.googlecode.com/files/girlfriend.png', 'http://google-maps-icons.googlecode.com/files/dates.png', 'http://google-maps-icons.googlecode.com/files/realestate.png', 'http://google-maps-icons.googlecode.com/files/apartment.png', 'http://google-maps-icons.googlecode.com/files/family.png'];
+			// var images = ['http://google-maps-icons.googlecode.com/files/friends.png', 'http://google-maps-icons.googlecode.com/files/home.png', 'http://google-maps-icons.googlecode.com/files/girlfriend.png', 'http://google-maps-icons.googlecode.com/files/dates.png', 'http://google-maps-icons.googlecode.com/files/realestate.png', 'http://google-maps-icons.googlecode.com/files/apartment.png', 'http://google-maps-icons.googlecode.com/files/family.png'];
+			var images = [];
 			var tags = ['jQuery', 'Google maps', 'Plugin', 'SEO', 'Java', 'PHP', 'C#', 'Ruby', 'JavaScript', 'HTML'];
 			//$('#tags').append('<option value="all">All</option>');
 			$.each(tags, function(i, tag) {
@@ -307,7 +311,7 @@ function initGoogleMaps()
 	        'scrollwheel': false,
 	        'mapTypeId': google.maps.MapTypeId.ROADMAP
 		}).bind('init', function() { 
-			$.getJSON( componentsPath + 'modules/admin/maps/google/assets/lib/jquery-ui-map/data/demo.json', function(data) { 
+			$.getJSON( componentsPath + '/MelisCore/assets/components/modules/admin/maps/google/assets/lib/jquery-ui-map/data/demo.json', function(data) { 
 				$.each( data.markers, function(i, marker) {
 					$('#google-map-json').gmap('addMarker', { 
 						'position': new google.maps.LatLng(marker.latitude, marker.longitude) 
@@ -332,7 +336,8 @@ function initGoogleMaps()
 				var clone = $(item).clone().addClass('ui-dialog-vevent').append('<div id="streetview{0}" class="streetview"></div>'.replace('{0}', index));
 				clone.find('p').remove();
 				var latlng = new google.maps.LatLng(result.location[0].geo[0].latitude['value-title'], result.location[0].geo[0].longitude['value-title']);
-				self.addMarker( { 'bounds':true, 'position': latlng, 'title': result.summary, 'icon': 'http://google-maps-icons.googlecode.com/files/music-rock.png' }, function(map, marker) {
+				// self.addMarker( { 'bounds':true, 'position': latlng, 'title': result.summary, 'icon': 'http://google-maps-icons.googlecode.com/files/music-rock.png' }, function(map, marker) {
+				self.addMarker( { 'bounds':true, 'position': latlng, 'title': result.summary }, function(map, marker) {
 					$(item).find('.summary').click( function() {
 						$(marker).triggerEvent('click');
 						return false;
@@ -373,7 +378,7 @@ function initGoogleMaps()
 		})
 		.bind('init', function() 
 		{ 
-			$.getJSON( componentsPath + 'modules/admin/maps/google/assets/lib/jquery-ui-map/data/demo.json', function(data) 
+			$.getJSON( componentsPath + '/MelisCore/assets/components/modules/admin/maps/google/assets/lib/jquery-ui-map/data/demo.json', function(data) 
 			{ 
 				$.each( data.markers, function(i, marker) 
 				{

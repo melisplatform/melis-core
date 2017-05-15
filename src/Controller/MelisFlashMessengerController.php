@@ -13,6 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Json\Json;
+use Zend\Session\Container;
 
 /**
  * This class handles Melis CMS Flash Messenger
@@ -66,7 +67,9 @@ class MelisFlashMessengerController extends AbstractActionController
                     'title' => ($title),
                     'message' => ($message),
                     'image' => $fmValues->image,
-                    'time' => $fmValues->time
+                    'time' => $fmValues->time,
+                    'date' => $fmValues->date,
+                    'date_trans' => $fmValues->date_trans,
                 );
             }
         }

@@ -11,6 +11,7 @@ class MelisFieldRow extends FormRow
     const MELIS_MULTI_VAL_INPUT       = 'melis-multi-val-input';
     const MELIS_DRAGGABLE_INPUT       = 'melis-draggable-input';
     const MELIS_COMMERCE_DATE         = 'melis-commerce-date';
+    const MELIS_COLOR_PICKER          = 'color-picker';
  
 	public function render(ElementInterface $element, $labelPosition = null)
 	{
@@ -80,12 +81,23 @@ class MelisFieldRow extends FormRow
 	        $element->setLabel('');
 	        $attrib = $element->getAttributes();
 	        $formElement = '<label for="">'.$attrib['dateLabel'].'</label>
-	                        <div class="input-group date '.$attrib['dateId'].'">
+	                        <div class="form-group input-group date '.$attrib['dateId'].'">
 	                        '.parent::render($element).'
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
                             </div>';
+	    }
+	    elseif ($element->getAttribute('class') == self::MELIS_COLOR_PICKER)
+	    {
+	        $attrib = $element->getAttributes();
+	        $formElement = '<div class="form-group">
+	                        <label for="">'.$element->getLabel().'</label>
+	                        <div class="input-group colorpicker-component '.$attrib['name'].'">
+                                 <input type="text" name="'.$attrib['name'].'" value="" class="form-control" />
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+	                        </div>';
 	    }
 	    else 
 	    {

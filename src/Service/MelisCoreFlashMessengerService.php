@@ -48,12 +48,21 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
      * @param String $text
      * @param String $img
      */
-    public function addToFlashMessenger($title, $message, $img = 'glyphicon glyphicon-info-sign')
+    public function addToFlashMessenger($title, $message, $img = 'glyphicon glyphicon-info-sign', $logDate = null)
     {
         $this->fmContainer = new Container('fms');
-
-        // process time
-        $time = date('h:i A', strtotime(date('m/d/y H:i:s')));
+        
+        $container = new Container('meliscore');
+        $locale = $container['melis-login-lang-locale'];
+        
+        // create date time
+        if(is_null($logDate)){
+            $time = date('h:i A');
+            $date = date('M d y');
+        }else{
+            $time = date('h:i A', strtotime($logDate));
+            $date = date('M d y',  strtotime($logDate));
+        }
         
         $translator = $this->getServiceLocator()->get('translator');
         $tool       = $this->getServiceLocator()->get('MelisCoreTool');
@@ -66,7 +75,9 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
             'title' => $translator->translate($title),
             'message'=> $translator->translate($message),
             'image'  => $img,
-            'time' => $time
+            'time' => $time,
+            'date' => $date,
+            'date_trans' => $this->dateMod($date, $locale),
         );
         
         if(!empty($curFlashMessages))
@@ -105,6 +116,30 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
     {
         $this->fmContainer = new Container('fms');
         $this->fmContainer->getManager()->getStorage()->clear('fms');
+    }
+    
+    public function dateMod($date, $locale)
+    {
+    
+        $translator = $this->serviceLocator->get('translator');
+    
+        $data = $date;
+        $today = date('M d y');
+        $yesterday = date('M d y', strtotime('yesterday'));
+        
+        switch($date){
+            // date today
+            case $today:
+                $data = $translator->translate('tr_meliscore_date_today');
+                break;
+            case $yesterday:
+                $data = $translator->translate('tr_meliscore_date_yesterday');
+                break;
+            default:
+                $data = ($locale == 'fr_FR')? date('d M y', strtotime($date)) : date('M d y', strtotime($date));
+        }
+    
+        return $data;
     }
 
 }

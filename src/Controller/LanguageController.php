@@ -101,8 +101,10 @@ class LanguageController extends AbstractActionController
             $container = new Container('meliscore');
             if($container) {
                 $container['melis-lang-id'] = $langId;
-                if(isset($datasLang->lang_locale))
+                if(isset($datasLang->lang_locale)){
                     $container['melis-lang-locale'] = $datasLang->lang_locale;
+                    $container['melis-login-lang-locale'] = $datasLang->lang_locale;
+                }
             }
 
         }

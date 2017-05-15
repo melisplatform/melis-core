@@ -49,7 +49,7 @@ class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implement
         		    $message = $log->log_message;
         		    $icon = ($log->log_action_status) ? $flashMsgSrv::INFO : $flashMsgSrv::WARNING;
         		    
-        		    $flashMsgSrv->addToFlashMessenger($title, $message, $icon);
+        		    $flashMsgSrv->addToFlashMessenger($title, $message, $icon, $log->log_date_added);
         		}
     	});
         

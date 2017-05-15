@@ -40,7 +40,7 @@
 		'tr_meliscore_tool_gen_modal' => 'Modal',
 		'tr_meliscore_tool_user_modal_rights' => 'Droits',
 		'tr_meliscore_tool_user_modal_new_rights' => 'Droits pour nouveau',
-		'tr_meliscore_rights_Interface exclusion' => 'Exclusions Interface',
+		'tr_meliscore_rights_Interface exclusion' => 'Interface d\'exclusion',
 		'tr_meliscore_rights_Not allowed dashboard' => 'Vos droits ne vous autorisent pas à voir le dashboard',
 	    'tr_meliscore_common_add' => 'Ajouter',
 
@@ -176,7 +176,7 @@
 	    'tr_meliscore_dt_sLoadingRecords' => 'Chargement en cours...',
 	    'tr_meliscore_dt_sProcessing' => 'Traitement en cours...',
 	    'tr_meliscore_dt_sSearch' => 'Rechercher&nbsp;:',
-	    'tr_meliscore_dt_sZeroRecords' => 'Aucun &eacute;l&eacute;ment &agrave; afficher',
+	    'tr_meliscore_dt_sZeroRecords' => 'Aucun produit ne correspond à la recherche',
 	    'tr_meliscore_dt_sFirst' => 'Premier',
 	    'tr_meliscore_dt_sLast' => 'Dernier',
 	    'tr_meliscore_dt_sNext' => 'Suivant',
@@ -311,7 +311,7 @@
 	    
 	    // Email Management
 	    'tr_meliscore_tool_emails_mngt_generic_from' => 'Email Creation and Edition Form',
-	    'tr_meliscore_tool_emails_mngt' => 'Gestion emails',
+	    'tr_meliscore_tool_emails_mngt' => 'Gestion des emails',
 	    'tr_meliscore_tool_emails_mngt_header' => 'Header',
 	    'tr_meliscore_tool_emails_mngt_header_btn_add' => 'Ajouter un email',
 	    'tr_meliscore_tool_emails_mngt_content' => 'Contenu',
@@ -333,7 +333,7 @@
 	    'tr_meliscore_tool_email_mngt_boe_reply_to' => 'Répondre à',
 	    // Email Creation / Edition
 	    'tr_emails_management_email' => 'Email',
-	    'tr_emails_management_creation' => 'Création de l\'email',
+	    'tr_emails_management_creation' => 'Création d\'un email',
 	    'tr_emails_management_edition' => 'Edition de l\'email',
 	    'tr_emails_management_add_email' =>  'Ajouter un email',
 	    'tr_emails_management_title_creation' =>  'Création',
@@ -344,7 +344,7 @@
 	    'tr_meliscore_tool_emails_mngt_generic_from_content_tab_nav' => 'Form Tab Navigators',
 	    'tr_meliscore_tool_emails_mngt_generic_from_content_tab_content' => 'Form Tab Content',
 	    // Flash Massges
-	    'tr_emails_management_title_creation' =>  'Création email',
+	    'tr_emails_management_title_creation' =>  'Création d\'un email',
 	    'tr_emails_management_title_edition' =>  'Edition email',
 	    'tr_emails_management_title_deletion' =>  'Suppression email',
 	    'tr_emails_management_created' =>  'créé',
@@ -476,5 +476,8 @@
 	    'tr_meliscore_logs_tool_log_tyne_name_must_atleast_one_entry' => 'Le nom du type de log doit avoir au moins un caractère',
 
         'tr_meliscore_invalid_id' => 'Invalid ID',
+	    
+	    'tr_meliscore_date_today' => 'Aujourd\'hui',
+	    'tr_meliscore_date_yesterday' => 'Hier',
 	);
 ?>

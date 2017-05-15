@@ -116,7 +116,7 @@ var melisCore = (function(window){
                                 "	<span class='img-circle media-object "+fm.image+"'></span>" +
                                 "   <div class='media'>" +
                                 "       <div class='media-body'>" +
-                                "           <a  class='strong text-primary'>"+(fm.title)+"</a><span class='time-email'>"+fm.time+"</span>" +
+                                "           <a  class='strong text-primary'>"+(fm.title)+"</a><span class='time-email'>"+fm.date_trans+' '+fm.time+"</span>" +
                                             "<div class='clearfix'></div>"+(fm.message)+
                                         "</div>" +
                                     "</div>" +
