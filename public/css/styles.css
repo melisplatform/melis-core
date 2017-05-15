@@ -298,6 +298,7 @@ newplugin-cont span,
 }
 
 #flash-messenger > li{
+	cursor: default;
     position: relative;
 }
 #newplugin-cont #flash-messenger > li .media{
@@ -322,6 +323,11 @@ newplugin-cont span,
     position: absolute;
     top: 12px;
     left: 12px;
+}
+
+#flash-messenger > li a{
+	cursor: default;
+    text-decoration: none;
 }
 
 /* Dashboard */
