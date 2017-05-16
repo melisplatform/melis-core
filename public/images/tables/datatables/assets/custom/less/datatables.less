@@ -1,0 +1,83 @@
+// DataTables
+// -------------------------
+
+.dataTables_paginate { text-align: right; }
+div.dataTables_info { padding: 35px 0 0; font-size: 12px; font-weight: 600; }
+div.dataTables_paginate .pagination { margin-bottom: 0; }
+.ColVis { margin: 0; }
+div.ColVis_collectionBackground { background-color: #fff; }
+.ColVis .ColVis_Button {
+	padding: 0 10px;
+	border: none;
+	background-color: @primaryColor;
+	color: #fff;
+	.rounded(4px,4px,4px,4px);
+	margin: 0;
+}
+div.ColVis_collection { 
+	width: 150px !important; 
+	padding: 0;
+	border-color: #efefef;
+}
+div.ColVis_collection button.ColVis_Button {
+	width: 100% !important;
+	margin: 0 !important;
+	border: none;
+	border-bottom: 1px solid #efefef;
+	padding: 0 10px;
+	&:hover {
+		background: @primaryColor;
+		border: none;
+		border-bottom: 1px solid #efefef;
+		color: #fff;
+	}
+}
+.dataTables_wrapper {
+	[class*="col-"] {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	.row {
+		margin: 0 !important;
+	}
+	.control-label {
+		padding-right: 10px !important;
+	}
+}
+.dataTables_processing { display: none; }
+.dataTables_scrollBody .dynamicTable { 
+	width: 100% !important; 
+	min-width: 1000px; 
+}
+.dataTables_scrollHeadInner {
+	width: 100% !important; 
+	.dynamicTable { 
+		width: 100% !important; 
+		min-width: 1000px; 
+	}
+}
+.FixedHeader_Cloned {
+	max-width: 100%;
+	overflow-x: auto;
+	display: none;
+}
+@media (min-width: 1140px) {
+	.FixedHeader_Cloned { display: block; }
+	.dataTables_scrollBody .dynamicTable { 
+		&.fixedHeaderColReorder { min-width: 0; }
+	}
+	.dataTables_scrollHeadInner {
+		.dynamicTable { 
+			&.fixedHeaderColReorder { min-width: 0; }
+		}
+	}
+}
+table.DTCR_clonedTable {
+	background-color: white;
+	z-index: 202;
+}
+div.DTCR_pointer {
+	width: 1px;
+	background-color: @primaryColor;
+	z-index: 201;
+}
