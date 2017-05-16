@@ -651,11 +651,11 @@ class LanguageController extends AbstractActionController
         $allModules = $moduleSvc->getAllModules();
         $excludeModules = ['MelisFront', 'MelisEngine', 'MelisInstaller', 'MelisAssetManager', 'MelisModuleConfig', 'MelisSites'];
         $modules    = [];
-        foreach($allModules as $module) {
-            if(!in_array($module, $excludeModules)) {
-                $modules[] = $moduleSvc->getModulePath($module).'/language';
-            }
-        }
+//         foreach($allModules as $module) {
+//             if(!in_array($module, $excludeModules)) {
+//                 $modules[] = $moduleSvc->getModulePath($module).'/language';
+//             }
+//         }
 
         $folderPath = [
             HTTP_ROOT . '../module/MelisModuleConfig/',

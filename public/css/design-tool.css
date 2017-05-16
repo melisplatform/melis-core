@@ -4109,12 +4109,12 @@ table.table thead .sorting_desc_disabled {
   *cursor: hand;
 }
 
-table.table thead .sorting { background-image: url('/media/images/sort_both.png'); background-repeat: no-repeat; background-position: center right; }
+/* table.table thead .sorting { background-image: url('/media/images/sort_both.png'); background-repeat: no-repeat; background-position: center right; }
 table.table thead .sorting_asc { background-image: url('/media/images/sort_asc.png'); background-repeat: no-repeat; background-position: center right; }
 table.table thead .sorting_desc { background-image: url('/media/images/sort_desc.png'); background-repeat: no-repeat; background-position: center right; }
 
 table.table thead .sorting_asc_disabled { background-image: url('/media/images/sort_asc_disabled.png'); background-repeat: no-repeat; background-position: center right; }
-table.table thead .sorting_desc_disabled { background-image: url('/media/images/sort_desc_disabled.png'); background-repeat: no-repeat; background-position: center right; }
+table.table thead .sorting_desc_disabled { background-image: url('/media/images/sort_desc_disabled.png'); background-repeat: no-repeat; background-position: center right; } */
 
 table.dataTable th:active {
   outline: none;

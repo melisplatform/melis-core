@@ -89,13 +89,21 @@ class MelisPhpUnitToolController extends AbstractActionController
         $removeModules = array('MelisInstaller', 'MelisSites', 'MelisAssetManager');
         $availableModules = $this->getModuleSvc()->getAllModules();
         $modules = array();
+
+        $mm            = $this->getServiceLocator()->get('ModuleManager');
+        $activeModules = array_keys($mm->getLoadedModules());
+
         foreach ($availableModules as $module) {
             if (!in_array($module, $removeModules)) {
-                $modules[] = $module;
+                if(in_array($module, $activeModules)) {
+                    $modules[] = $module;
+                }
+
             }
         }
         return $modules;
     }
+
 
     /**
      * Provides a basic information about modules before doing a test
