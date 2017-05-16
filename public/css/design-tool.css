@@ -1664,16 +1664,25 @@ div.radio.default input {
 }
 
 /* Modal */
-.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons, 
+/* .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons, 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons i:before {
   color: #7c7c7c;
-}
+} */
 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons,
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons {
-  padding: 5px 15px 0 35px;
+  /*padding: 5px 15px 0 35px;*/
+  padding: 9px 15px 0 38px;
+}
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover,
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover {
+  color: #932E2A;
 }
 
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover i:before,
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover i:before {
+  color: #932E2A;
+}
 .wizard .widget-head.widget-steps-head { 
   padding: 10px 0;
 }

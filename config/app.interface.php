@@ -218,7 +218,7 @@ return array(
             				  '/MelisCore/css/styles.css',
 				              '/MelisCore/css/diagnostic.css',
 
-				              '/MelisCore/css/design-tool.css',
+				              // '/MelisCore/css/design-tool.css',
 						),
 			),
 			'interface' => array(
