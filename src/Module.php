@@ -114,7 +114,8 @@ class Module
     	    'melis-backoffice/application-MelisInstaller/default',
     	    'melis-backoffice/MelisInstaller',
     	);
-    	if (in_array($matchedRouteName, $excludedRoutes))
+        // added console handling otherwise it breaks beacause of authentification.
+    	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;
     	
     	if (!$melisCoreAuth->hasIdentity())
