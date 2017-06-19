@@ -866,7 +866,7 @@
             }, this.AfterInit = function() {
                 this.initialized = !0
             }, this.Cache = function() {
-                // "none" !== this.label1.css("display") && (this.cache = {}, this.cache.label1 = {}, this.cache.label2 = {}, this.cache.handle1 = {}, this.cache.handle2 = {}, this.cache.offsetParent = {}, this.CacheElement(this.label1, this.cache.label1), this.CacheElement(this.label2, this.cache.label2), this.CacheElement(this.handle1, this.cache.handle1), this.CacheElement(this.handle2, this.cache.handle2), this.CacheElement(this.label1.offsetParent(), this.cache.offsetParent))
+                "none" !== this.label1.css("display") && (this.cache = {}, this.cache.label1 = {}, this.cache.label2 = {}, this.cache.handle1 = {}, this.cache.handle2 = {}, this.cache.offsetParent = {}, this.CacheElement(this.label1, this.cache.label1), this.CacheElement(this.label2, this.cache.label2), this.CacheElement(this.handle1, this.cache.handle1), this.CacheElement(this.handle2, this.cache.handle2), this.CacheElement(this.label1.offsetParent(), this.cache.offsetParent))
             }, this.CacheIfNecessary = function() {
                 null === this.cache ? this.Cache() : (this.CacheWidth(this.label1, this.cache.label1), this.CacheWidth(this.label2, this.cache.label2), this.CacheHeight(this.label1, this.cache.label1), this.CacheHeight(this.label2, this.cache.label2), this.CacheWidth(this.label1.offsetParent(), this.cache.offsetParent))
             }, this.CacheElement = function(a, b) {

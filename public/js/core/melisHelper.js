@@ -436,9 +436,9 @@ var melisHelper = (function(){
 	    	}
 	    		
 	    	var datastring = {
-	    			id : zoneId,
-	    			melisKey : melisKey,
-	    			hasCloseBtn : hasCloseBtn,
+    			id : zoneId,
+    			melisKey : melisKey,
+    			hasCloseBtn : hasCloseBtn,
 	    	};
 	    	
 	    	$.ajax({
@@ -458,9 +458,11 @@ var melisHelper = (function(){
 					keyboard : false,
 					backdrop : "static"
 				});
+				
 				if(typeof callback !== "undefined") {
 					callback();
 				}
+				
 	    	}).error(function(xhr, textStatus, errorThrown){
 	    		alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
 	    		// Requesting flag set to false so this function will set state to ready 

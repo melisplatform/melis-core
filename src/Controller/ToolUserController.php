@@ -130,6 +130,9 @@ class ToolUserController extends AbstractActionController
         $view->melisKey = $melisKey;
         $view->tableColumns = $columns;
         $view->getToolDataTableConfig = $melisTool->getDataTableConfiguration();
+
+        $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
+        $view->getToolDataTableConfigForDateConnection = $melisTool->getDataTableConfiguration('#tableUserViewDateConnection', null, null, array('order' => '[[ 0, "desc" ]]'));
         
         return $view;
     }
@@ -358,6 +361,42 @@ class ToolUserController extends AbstractActionController
     
         return $view;
     }
+
+    public function renderTooluserViewDateConnectionModalHandlerAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        // declare the Tool service that we will be using to completely create our tool.
+        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+
+        // tell the Tool what configuration in the app.tool.php that will be used.
+        $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+        $view->userConnectionDateModal = $melisTool->getModal('meliscore_tool_user_view_date_connection_modal');
+
+        return $view;
+    }
+
+    public function renderTooluserViewDateConnectionModalAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceLocator()->get('translator');
+        $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
+
+        $columns = $melisTool->getColumns();
+
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+        $view->tableColumns = $columns;
+
+
+        return $view;
+    }
     
     
     /**
@@ -486,6 +525,8 @@ class ToolUserController extends AbstractActionController
         $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
         
         $imgService = $this->getServiceLocator()->get('MelisCoreImage');
+
+        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
         
         if($this->getRequest()->isPost())
         {
@@ -553,7 +594,7 @@ class ToolUserController extends AbstractActionController
                         unset($data['usr_confirm_password']);
                         
                         $data['usr_id'] = null;
-                        $data['usr_password'] = md5($data['usr_password']);
+                        $data['usr_password'] = $melisCoreAuth->encryptPassword($data['usr_password']);
                         $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
                         $data['usr_image'] = $imageContent;
                         $data['usr_creation_date'] = date('Y-m-d H:i:s');
@@ -681,35 +722,41 @@ class ToolUserController extends AbstractActionController
             $container = new Container('meliscore');
             $locale = $container['melis-lang-locale'];
             $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+            $userSvc = $this->getServiceLocator()->get('MelisCoreUser');
+            $translation = $this->getServiceLocator()->get('translator');
     
              if($this->getRequest()->isPost())
+             {
+                $id = (int) $this->getRequest()->getPost('id');
+
+                 if(is_numeric($id))
                  {
-                    $id = (int) $this->getRequest()->getPost('id');
-    
-                     if(is_numeric($id))
-                         {
-                            $_defaultProfile = '/MelisCore/images/profile/default_picture.jpg';
-                            foreach($userTable->getEntryById($id) as $userVal)
-                                 {
-                                    $image = !empty($userVal->usr_image) ? 'data:image/jpeg;base64,'. base64_encode($userVal->usr_image) : $_defaultProfile;
-                                    $data['usr_id'] = $userVal->usr_id;
-                                    $data['usr_login'] = $userVal->usr_login;
-                                    $data['usr_email'] = $userVal->usr_email;
-                                    $data['usr_firstname'] = $userVal->usr_firstname;
-                                    $data['usr_lastname'] = $userVal->usr_lastname;
-                                    $data['usr_lang_id'] = $userVal->usr_lang_id;
-                                    $data['usr_admin'] = $userVal->usr_admin;
-                                    $data['usr_image'] = $image;
-                                    $data['usr_status'] = $userVal->usr_status;
-                                    $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date));
-                                    
-                                    //$tableData[$ctr]['usr_last_login_date'] = is_null($tableData[$ctr]['usr_last_login_date']) ? '-' : strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usr_last_login_date']));
-                                    $data['usr_role_id'] = $userVal->usr_role_id;
-                                 }
-    
-                            $success = true;
-                         }
+                    $_defaultProfile = '/MelisCore/images/profile/default_picture.jpg';
+                    foreach($userTable->getEntryById($id) as $userVal)
+                     {
+                         $connectionTime = $userSvc->getUserSessionTime( (int) $userVal->usr_id, $userVal->usr_last_login_date) == '-' ?
+                              strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date)) :
+                              $userSvc->getUserSessionTime( (int) $userVal->usr_id, $userVal->usr_last_login_date);
+
+                         $connectionTime = $connectionTime ? $translation->translate('tr_meliscore_date_for') . $connectionTime : null;
+
+                        $image = !empty($userVal->usr_image) ? 'data:image/jpeg;base64,'. base64_encode($userVal->usr_image) : $_defaultProfile;
+                        $data['usr_id'] = $userVal->usr_id;
+                        $data['usr_login'] = $userVal->usr_login;
+                        $data['usr_email'] = $userVal->usr_email;
+                        $data['usr_firstname'] = $userVal->usr_firstname;
+                        $data['usr_lastname'] = $userVal->usr_lastname;
+                        $data['usr_lang_id'] = $userVal->usr_lang_id;
+                        $data['usr_admin'] = $userVal->usr_admin;
+                        $data['usr_image'] = $image;
+                        $data['usr_status'] = $userVal->usr_status;
+                        $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
+                        $data['usr_role_id'] = $userVal->usr_role_id;
+                     }
+
+                    $success = true;
                  }
+             }
     
             return new JsonModel(array(
                 'success' => $success,
@@ -728,6 +775,7 @@ class ToolUserController extends AbstractActionController
         $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
         $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
         
@@ -783,6 +831,7 @@ class ToolUserController extends AbstractActionController
                 // process image first before applying text limits
                 $image = !empty($tableData[$ctr]['usr_image']) ? 'data:image/jpeg;base64,'. base64_encode($tableData[$ctr]['usr_image']) : $defaultProfile;
                 $status = (int) $tableData[$ctr]['usr_status'] != 1 ? 'text-danger' : 'text-success';
+                $online = (int) $tableData[$ctr]['usr_is_online'] ? 'text-success' : 'text-danger';
                 
                 // apply text limits
                 foreach($tableData[$ctr] as $vKey => $vValue)
@@ -798,12 +847,9 @@ class ToolUserController extends AbstractActionController
                 $tableData[$ctr]['usr_image'] = $image;
                 $tableData[$ctr]['usr_firstname'] = $tableData[$ctr]['usr_firstname'] . ' ' . $tableData[$ctr]['usr_lastname'];
                 $tableData[$ctr]['usr_status'] = '<span class="'.$status.'"><i class="fa fa-fw fa-circle"></i></span>';
+                $tableData[$ctr]['usr_is_online'] = '<span class="'.$online.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_image'] = '<img src="'.$image . '" width="24" height="24" alt="profile image" title="Profile picture of '.$tableData[$ctr]['usr_firstname'].'"/>';
-                
-                // check if the login date is a dummy date
-                $tableData[$ctr]['usr_last_login_date'] = is_null($tableData[$ctr]['usr_last_login_date']) ? 
-                                                        '-' : 
-                                                        strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usr_last_login_date']));
+                $tableData[$ctr]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usr_last_login_date']));
                 
                 // remove critical details
                 unset($tableData[$ctr]['usr_password']);
@@ -876,9 +922,6 @@ class ToolUserController extends AbstractActionController
             
             if($userUpdateForm->isValid())
             {
-                 
-            	
-            	
                 // pass values that should not be changed
                 foreach($userTable->getEntryById($userId) as $user)
                 {
@@ -955,7 +998,7 @@ class ToolUserController extends AbstractActionController
                                         
                                         $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION',  $tags, $email_to, $name_to, $langId);
                                         
-                                        $newPass = md5($password);
+                                        $newPass = $melisCoreAuth->encryptPassword($password);
                                         $success = true;
                                     }
                                     else
@@ -1215,10 +1258,75 @@ class ToolUserController extends AbstractActionController
     }
     
     
-    public function testerAction()
+    public function getUserConnectionDataAction()
     {
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
-        echo $moduleSvc->getComposerModulePath('MelisCore');
-        die;
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceLocator()->get('translator');
+        $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
+        $userSvc = $this->getServiceLocator()->get('MelisCoreUser');
+        $userTbl = $this->getServiceLocator()->get('MelisUserConnectionDate');
+        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+
+        $container = new Container('meliscore');
+        $locale = $container['melis-lang-locale'];
+
+        $data = null;
+        $request = $this->getRequest();
+        $dataCount = 0;
+        $dataFilteredCount = 0;
+        $tableData = array();
+        $draw = 0;
+
+        if($request->isPost()) {
+
+            $post    = get_object_vars($request->getPost());
+
+            $columns = array_keys($melisTool->getColumns());
+
+            $draw              = (int) $post['draw'];
+            $selColOrder       = $columns[(int) $post['order'][0]['column']];
+            $orderDirection    = isset($post ['order']['0']['dir']) ? strtoupper($post['order']['0']['dir']) : 'ASC';
+            $searchValue       = isset($post['search']['value']) ? $post['search']['value'] : null;
+            $searchableCols    = $melisTool->getSearchableColumns();
+            $start             = (int) $post['start'];
+            $length            = (int) $post['length'];
+            $userId            = (int) $post['usr_id'];
+
+            $data              = $userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection, $start, $length)->toArray();
+            $dataCount         = $userTbl->getTotalData();
+            $dataFilteredCount = $userTbl->getTotalFiltered();
+            $tableData         = $data;
+
+            for($ctr = 0; $ctr < count($tableData); $ctr++) {
+                // apply text limits
+                foreach($tableData[$ctr] as $vKey => $vValue) {
+                    $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue, 80);
+                }
+
+                $loginDate = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usrcd_last_login_date']));
+                $loginDate = explode(' ' , $loginDate)[0];
+
+                $connectionTime = $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date']) == '-' ? '0' :
+                    $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date'], false);
+
+
+                $tableData[$ctr]['usrcd_id']                   = date('H:i:s', strtotime($tableData[$ctr]['usrcd_last_login_date']));
+                $tableData[$ctr]['usrcd_usr_login']            = date('H:i:s', strtotime($tableData[$ctr]['usrcd_last_connection_time']));
+                $tableData[$ctr]['usrcd_last_login_date']      = $loginDate;
+                $tableData[$ctr]['usrcd_last_connection_time'] = $connectionTime;
+                $tableData[$ctr]['DT_RowId']                   = $tableData[$ctr]['usrcd_id'];
+            }
+        }
+
+        $response = [
+            'draw' => $draw,
+            'data' => $tableData,
+            'recordsFiltered' => $dataFilteredCount,
+            'recordsTotal' => $dataCount
+        ];
+
+        return new JsonModel($response);
     }
 }

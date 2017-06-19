@@ -11,8 +11,8 @@ namespace MelisCore\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use MelisCore\Service\MelisCoreRightsService;
+// use Zend\View\Model\JsonModel;
+// use MelisCore\Service\MelisCoreRightsService;
 
 /**
  * This class renders Melis CMS appConfig views recursively
@@ -30,6 +30,19 @@ class MelisGenericModalController extends AbstractActionController
         $view->id = $id;
         $view->melisKey = $melisKey;
          
+        return $view;
+    }
+    
+    public function emptyGenericModalAction()
+    {
+        $id = $this->params()->fromRoute('id', $this->params()->fromQuery('id', ''));
+        $melisKey = $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey', ''));
+         
+        $view = new ViewModel();
+        $view->setTerminal(true);
+        $view->id = $id;
+        $view->melisKey = $melisKey;
+        
         return $view;
     }
 }

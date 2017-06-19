@@ -1149,7 +1149,32 @@ table.dataTable thead .sorting:after {
     opacity: 0;
 }
 
+table.dataTable thead>tr>th.sorting_asc:after,
+table.dataTable thead>tr>td.sorting_asc:after {
+    content: "\f0de"
+}
 
+table.dataTable thead>tr>th.sorting_desc:after,
+table.dataTable thead>tr>td.sorting_desc:after {
+    content: "\f0dd"
+}
+
+table.dataTable thead>tr>th.sorting:after,
+table.dataTable thead>tr>th.sorting_asc:after,
+table.dataTable thead>tr>th.sorting_desc:after,
+table.dataTable thead>tr>td.sorting:after,
+table.dataTable thead>tr>td.sorting_asc:after,
+table.dataTable thead>tr>td.sorting_desc:after {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    display: block;
+    font-family: 'FontAwesome'
+}
+
+table.dataTable thead>tr>th.sorting_asc:after {
+    top: 14px;
+}
 
 /* data table filter fixes */
 #dt_bsdatepicker{
@@ -1908,7 +1933,24 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 }
 
 
+/** form info adjustments **/
+.form-group > label:first-child{
+	width : 100%;
+}
 
+.form-group i.fa-info-circle{
+	float: right;
+}
+
+p.modal-text-info{
+	text-align: justify; 
+	text-justify: inter-word;
+}
+
+div.dataTables_wrapper div.dataTables_length select.new_filter {
+  width: 100px;
+  display: inline-block;
+}
 
 
 /* ===============================================================[ -= RESPONSIVE =- ]================================================================================ */
@@ -2359,4 +2401,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
  */
 .has-switch label i {
     color: inherit;
+}
+
+div#modal-user-management div.widget {
+    width: 680px;
 }

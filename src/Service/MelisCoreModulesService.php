@@ -305,12 +305,13 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         return false;
 
     }
-    
+
     /**
      * Returns all the modules that has been loaded in zend
+     * @param array $exclude
      * @return unknown[]
      */
-    public function getActiveModules()
+    public function getActiveModules($exclude = array())
     {
         $mm = $this->getServiceLocator()->get('ModuleManager');
         $loadedModules = array_keys($mm->getLoadedModules());
@@ -318,7 +319,9 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         $modules = array();
         foreach($loadedModules as $module) {
             if(in_array($module, $pluginModules)) {
-                $modules[] = $module;
+                if(!in_array($module, $exclude)) {
+                    $modules[] = $module;
+                }
             }
         }
         

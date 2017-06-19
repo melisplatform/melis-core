@@ -64,6 +64,12 @@ return array(
                                 'sortable' => true,
                                 
                             ),
+                            'usr_is_online' => array(
+                                'text' => 'tr_meliscore_common_online',
+                                'css' => array('width' => '1%', 'padding-right' => '0'),
+                                'sortable' => false,
+
+                            ),
                             'usr_status' => array(
                                 'text' => 'tr_meliscore_tool_user_col_status',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
@@ -78,7 +84,7 @@ return array(
                             ),
                             'usr_login' => array(
                                 'text' => 'tr_meliscore_tool_user_col_username',
-                                'css' => array('width' => '21%', 'padding-right' => '0'),
+                                'css' => array('width' => '20%', 'padding-right' => '0'),
                                 'sortable' => true,
                                 
                             ),
@@ -179,6 +185,17 @@ return array(
                                 'action' => 'render-tool-user-modal-rights'
                             ),
                         ),
+                        'meliscore_tool_user_view_date_connection_modal' => array(
+                            'id' => 'id_meliscore_tool_user_view_date_connection_modal',
+                            'class' => 'glyphicons list',
+                            'tab-header' => '',
+                            'tab-text' => 'tr_meliscore_tool_user_view_date_connection',
+                            'content' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'ToolUser',
+                                'action' => 'render-tool-user-view-date-connection-modal'
+                            ),
+                        )
                     ),
                     
                     'forms' => array(
@@ -1091,6 +1108,7 @@ return array(
                                         'type' => 'MelisText',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_platform_forms_id',
+                                            'tooltip' => 'tr_meliscore_tool_platform_forms_id tooltip',
                                         ),
                                         'attributes' => array(
                                             'id' => 'id_plf_id',
@@ -1105,10 +1123,12 @@ return array(
                                         'type' => 'MelisText',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_platform_forms_name',
+                                            'tooltip' => 'tr_meliscore_tool_platform_forms_name tooltip',
                                         ),
                                         'attributes' => array(
                                             'id' => 'id_plf_name',
                                             'value' => '',
+                                            'required' => 'required',
                                         ),
                                     ),
                                 ),
@@ -2029,6 +2049,56 @@ return array(
                     ),
                 ),
                 // end Language tool
+                'user_view_date_connection_tool' => array(
+                    'conf'  => array(),
+                    'table' => array(
+                        'target' => '#tableUserViewDateConnection',
+                        'ajaxUrl' => '/melis/MelisCore/ToolUser/getUserConnectionData',
+                        'dataFunction' => 'setUserDateConnection',
+                        'ajaxCallback' => '',
+                        'filters' => array(
+                            'left' => array(
+                                'tooluser-limit' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'ToolUser',
+                                    'action' => 'render-tool-user-content-filters-limit'
+                                ),
+                            ),
+                            'center' => array(
+                            ),
+                            'right' => array(
+                            ),
+                        ),
+                        'columns' => array(
+                            'usrcd_last_login_date' => array(
+                                'text' => 'tr_meliscore_tool_usrcd_last_login_date',
+                                'css' => array('width' => '25%', 'padding-right' => '0'),
+                                'sortable' => false,
+                            ),
+                            'usrcd_id' => array(
+                                'text' => 'tr_meliscore_date_start',
+                                'css' => array('width' => '25%', 'padding-right' => '0'),
+                                'sortable' => false,
+                            ),
+                            'usrcd_usr_login' => array(
+                                'text' => 'tr_meliscore_date_end',
+                                'css' => array('width' => '25%', 'padding-right' => '0'),
+                                'sortable' => false,
+                            ),
+                            'usrcd_last_connection_time' => array(
+                                'text' => 'tr_meliscore_tool_usrcd_last_connection_time',
+                                'css' => array('width' => '25%', 'padding-right' => '0'),
+                                'sortable' => false,
+                            ),
+                        ),
+
+                        // define what columns can be used in searching
+                        'searchables' => array('usrcd_last_login_date', 'usrcd_last_connection_time'),
+                        'actionButtons' => array(
+
+                        )
+                    )
+                )
              ),
         ),
     ),

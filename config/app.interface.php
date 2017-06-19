@@ -14,7 +14,7 @@ return array(
 			        'maxNestedForwards' => 100
 			    ),
 			    
-				// Overide these datas in MelisModuleConfig !
+				// Override these datas in MelisModuleConfig !
 				'default' => array(
 					'host' => 'http://www.melisv2url.local',
 				    'logo' => '/img/MelisTech.png',
@@ -104,6 +104,7 @@ return array(
 				            '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
 	           	            '/MelisCore/assets/components/library/jquery/jquery-migrate.min.js?v=v1.2.3',
         				    '/MelisCore/assets/components/library/modernizr/modernizr.js?v=v1.2.3',
+        				    '/MelisCore/assets/components/library/moment/moment.js',
 				            '/MelisCore/assets/components/plugins/less-js/less.min.js?v=v1.2.3',
 				            '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
 				            '/MelisCore/assets/components/plugins/browser/ie/ie.prototype.polyfill.js?v=v1.2.3',
@@ -124,7 +125,6 @@ return array(
 				            '/MelisCore/assets/components/core/js/sidebar.main.init.js',
         				    '/MelisCore/assets/components/helpers/themer/assets/plugins/cookie/jquery.cookie.js?v=v1.2.3',
         				    '/MelisCore/assets/components/core/js/core.init.js',
-				            '/MelisCore/js/library/datepicker/moment.min.js',
 				            '/MelisCore/js/library/datepicker/daterangepicker.js',
 				            '/MelisCore/assets/components/plugins/type-watch/jquery.typewatch.js',
 				    
@@ -685,7 +685,7 @@ return array(
 							                    'meliscore_tool_emails_mngt_header' => array(
 							                        'conf' => array(
 							                            'id' => 'id_meliscore_tool_emails_mngt_header',
-							                            'name' => 'tr_meliscore_tool_emails_mngt_header',
+							                            'name' => 'tr_meliscore_tool_emails_mngt',
 							                            'melisKey' => 'meliscore_tool_emails_mngt_header',
 							                        ),
 							                        'forward' => array(
@@ -1075,6 +1075,20 @@ return array(
 																						'module' => 'MelisCore',
 																						'controller' => 'ToolUser',
 																						'action' => 'render-tool-user-modal-handler-new-rights',
+																						'jscallback' => '',
+																						'jsdatas' => array(),
+																				),
+																		),
+                                                                    'meliscore_tool_user_view_date_connection_handler' => array(
+																				'conf' => array(
+																						'id' => 'id_meliscore_tool_user_view_date_connection_handler',
+																						'name' => 'tr_meliscore_tool_user_view_date_connection_handler',
+																						'melisKey' => 'meliscore_tool_user_view_date_connection_handler',
+																				),
+																				'forward' => array(
+																						'module' => 'MelisCore',
+																						'controller' => 'ToolUser',
+																						'action' => 'render-tool-user-view-date-connection-modal-handler',
 																						'jscallback' => '',
 																						'jsdatas' => array(),
 																				),

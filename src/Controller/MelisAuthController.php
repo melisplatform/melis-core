@@ -119,14 +119,45 @@ class MelisAuthController extends AbstractActionController
     		    // check if the user exists
     		    $userData = $userTable->getEntryByField('usr_login', $postValues['usr_login']);
     		    $userData = $userData->current();
-                
+
     		    if(!empty($userData))
     		    {
+
+                    /**
+                     * PASSWORD UPDATE - June 05, 2017
+                     * description: the following code below checks if the user's password is currently still on MD5,
+                     * if it's on MD5, it will still accept it, once correctly matched then it will update the user's password
+                     * into AES with hash SHA256. If the password is already in AES, it will push through with the normal authentication
+                     * process.
+                     */
+    		        $isPasswordMd5 = false;
+    		        $password      = $postValues['usr_password'];
+    		        $newPassword   = null;
+    		        $md5Regex      = '/^[a-f0-9]{32}$/';
+
+    		        if(preg_match($md5Regex, $userData->usr_password)) {
+    		            $isPasswordMd5 = true;
+                        $newPassword   = $melisCoreAuth->encryptPassword($password);
+                        $password      = md5($postValues['usr_password']);
+                    }
+                    else {
+                        $userEncPassword = $userData->usr_password;
+                        $userDecPassword = $melisCoreAuth->decryptPassword($userEncPassword);
+                        if($password == $userDecPassword) {
+                            // this will be used in setCredential method
+                            $password = $userEncPassword;
+                        }
+
+                    }
+
+
+
+
     		    	// If user is active
     		        if($userData->usr_status != self::USER_INACTIVE)
     		        {
     		            $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
-    		            							->setCredential(md5($postValues['usr_password']));
+    		            							->setCredential($password);
     		        
     		            $result = $melisCoreAuth->authenticate();
     		        
@@ -167,7 +198,18 @@ class MelisAuthController extends AbstractActionController
     		                }
     		        
     		                // update last login
-    		                $userTable->save(array('usr_last_login_date' => date('Y-m-d H:i:s')), $user->usr_id);
+                            $loggedInDate = date('Y-m-d H:i:s');
+    		                $this->getEventManager()->trigger('melis_core_auth_login_ok', $this, [
+    		                    'login_date' => $loggedInDate,
+                                'usr_id'     => $user->usr_id
+                            ]);
+
+    		                // update user password if the password is on MD5
+                            if($isPasswordMd5) {
+                                $userTable->save([
+                                    'usr_password' => $newPassword
+                                ], $userData->usr_id);
+                            }
     		                
     		                // Retrieving recent user logs on database
     		                $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
@@ -280,6 +322,14 @@ class MelisAuthController extends AbstractActionController
     	$flashMessenger->clearFlashMessage();
 
         $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+
+        if($melisCoreAuth->hasIdentity()) {
+            $userData = $melisCoreAuth->getIdentity();
+            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $userTable->save([
+                'usr_is_online' => 0
+            ], $userData->usr_id);
+        }
         $melisCoreAuth->getStorage()->clear();
     	// Redirect
     	$this->plugin('redirect')->toUrl('/melis/login');
@@ -354,6 +404,16 @@ class MelisAuthController extends AbstractActionController
             $user = $melisCoreAuth->getIdentity();
             if(!empty($user)) {
                 $isLoggedIn = true;
+
+                // update the connection time.
+                $table = $this->getServiceLocator()->get('MelisUserConnectionDate');
+                $data  = $table->getUserConnectionData((int) $user->usr_id, $user->usr_last_login_date)->current();
+
+                if($data) {
+                    $table->save([
+                        'usrcd_last_connection_time' => date('Y-m-d H:i:s')
+                    ], $data->usrcd_id);
+                }
             }
         }
 
@@ -452,8 +512,17 @@ class MelisAuthController extends AbstractActionController
        
         return $value;
     }
-    
 
-    
+    public function testAction()
+    {
+        $user = $this->getServiceLocator()->get('MelisUserConnectionDate');
+        $user = $user->getUserConnectionData(1);
+
+
+        print_r($user->toArray());
+
+        die;
+    }
+
 
 }

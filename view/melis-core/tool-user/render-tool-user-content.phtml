@@ -36,6 +36,7 @@ if (!empty($this->zoneconfig['conf']['id']))
 		$(document).ready(function() {
 
 			<?= $this->getToolDataTableConfig; ?>
+			<?= $this->getToolDataTableConfigForDateConnection; ?>
 
 			// Initialize the rights treeviews --------------------------------------->
 			initRightsTree("#rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
@@ -73,6 +74,8 @@ if (!empty($this->zoneconfig['conf']['id']))
 		    	 var btnDelete = $('#tableToolUserManagement td:nth-child(4):contains("'+ s.login +'")').siblings(':last').find(".btnUserDelete");
 		    	 btnDelete.hide();
 		     });
+            $($.fn.dataTable.tables(true)).DataTable().responsive.recalc();
+
 		});
 		</script>
 

@@ -198,6 +198,7 @@ return array(
             'MelisCore\Model\Tables\MelisLogTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTableFactory',
             'MelisCore\Model\Tables\MelisLogTypeTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTypeTableFactory',
             'MelisCore\Model\Tables\MelisLogTypeTransTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTypeTransTableFactory',
+            'MelisUserConnectionDate'                       => 'MelisCore\Model\Tables\Factory\MelisCoreUserConnectionDateTableFactory',
         ),
     ),
     'controllers' => array(

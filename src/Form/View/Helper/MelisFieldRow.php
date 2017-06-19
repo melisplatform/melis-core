@@ -12,9 +12,25 @@ class MelisFieldRow extends FormRow
     const MELIS_DRAGGABLE_INPUT       = 'melis-draggable-input';
     const MELIS_COMMERCE_DATE         = 'melis-commerce-date';
     const MELIS_COLOR_PICKER          = 'color-picker';
+    const MELIS_TEXT_REQUIRED         = 'required';
  
 	public function render(ElementInterface $element, $labelPosition = null)
 	{
+	    
+	    if ($element->getAttribute('required') == self::MELIS_TEXT_REQUIRED)
+	    {
+	        $element->setLabelOptions(array('disable_html_escape' => true));
+	        $label = $element->getLabel().' *';
+	        $element->setLabel($label);
+	    }
+	    
+	    if(!empty($element->getOption('tooltip')))
+	    {
+	        $element->setLabelOptions(array('disable_html_escape' => true));
+	        $label = $element->getLabel().'<i class="fa fa-info-circle fa-lg" title="'.$element->getOption('tooltip').'"></i>';
+	        $element->setLabel($label);
+	    }
+	    
 	    $formElement = '';
 	    if($this->getClass($element) == self::MELIS_TOGGLE_BUTTON_FACTORY)
 	    {

@@ -5,7 +5,6 @@ $openAddNewUserButton = $this->melisModalInvoker()->render(array(
     'href' => '#modal-user-management',
     'class' => 'btn btn-success',
     'text' => '<i class="fa fa-plus"></i> '.$this->translate('tr_meliscore_tool_user_new'),
-    'onclick' => "melisNewUserRights(); melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_edit_modal,#id_meliscore_tool_user_rights_modal', '#id_meliscore_tool_user_new_modal');",
     'data-melisKey' => $this->melisKey,
 ), 'invoke');
 echo $openAddNewUserButton;

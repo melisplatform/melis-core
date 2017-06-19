@@ -86,7 +86,7 @@ class MelisPhpUnitToolController extends AbstractActionController
      */
     protected function getAvailableModules()
     {
-        $removeModules = array('MelisInstaller', 'MelisSites', 'MelisAssetManager');
+        $removeModules = array('MelisInstaller', 'MelisSites', 'MelisAssetManager', 'MelisDesign');
         $availableModules = $this->getModuleSvc()->getAllModules();
         $modules = array();
 
@@ -113,18 +113,15 @@ class MelisPhpUnitToolController extends AbstractActionController
     {
         $modSvc = $this->getServiceLocator()->get('ModulesService');
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
-        $modules = $modSvc->getActiveModules();
-        unset($modules['MelisModuleConfig']);
-        for($x = 0; $x < count($modules); $x++) {
-            if($modules[$x] == 'MelisModuleConfig') {
-                unset($modules[$x]);
-            }
-        }
+        $modules = $modSvc->getActiveModules(array('MelisDesign', 'MelisModuleConfig'));
+
+
         $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites', 'melisassetmanager']);
         $coreModules = array();
         foreach($coreModulesArray as $module) {
             $coreModules[] = $module;
         }
+
         $modules = array_merge($modules, $coreModules);
 
         $testCfgDir = HTTP_ROOT.'../test';

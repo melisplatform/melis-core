@@ -53,15 +53,7 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
 				}
 			}
 		}
-	/*	else
-		{
-			$melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
-			$user = $melisCoreAuth->getIdentity();
-			
-			$rightsXML = '';
-			if (!empty($user))
-				$rightsXML = $user->usr_rights;
-		} */
+
 	
 		return $rightsXML;
 	}
@@ -86,4 +78,63 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
 		
 		return false;
 	}
+
+	public function getUserSessionTime($userId, $lastLoginDate, $displayMinimal = true, $hasAgoWord = false)
+    {
+        $table      = $this->getServiceLocator()->get('MelisUserConnectionDate');
+        $data       = $table->getUserConnectionData( (int) $userId, $lastLoginDate)->current();
+        $translator = $this->getServiceLocator()->get('translator');
+
+        if(!empty($data)) {
+            $lastLoginDate  = new \DateTime($data->usrcd_last_login_date);
+            $connectionTime = new \DateTime($data->usrcd_last_connection_time);
+
+            $diff = $lastLoginDate->diff($connectionTime);
+
+            $diff->w  = floor($diff->d / 7);
+            $diff->d -= $diff->w * 7;
+
+            $ago = $translator->translate('tr_meliscore_date_ago');
+            $now = $translator->translate('tr_meliscore_date_just_now');
+
+            $output = [
+                'y' => $translator->translate('tr_meliscore_date_year'),
+                'm' => $translator->translate('tr_meliscore_date_month'),
+                'w' => $translator->translate('tr_meliscore_date_week'),
+                'd' => $translator->translate('tr_meliscore_date_day'),
+                'h' => $translator->translate('tr_meliscore_date_hour'),
+                'i' => $translator->translate('tr_meliscore_date_minute'),
+                's' => $translator->translate('tr_meliscore_date_second')
+            ];
+
+            foreach ($output as $k => &$v) {
+                if ($diff->$k) {
+                    $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+                } else {
+                    unset($output[$k]);
+                }
+            }
+
+            if($displayMinimal) {
+                $output = array_slice($output, 0, 1);
+            }
+
+            if(!$hasAgoWord) {
+                $ago = null;
+            }
+//            print_r($output);
+
+            return $output ? implode(', ', $output) . ' ' . $ago : $now;
+        }
+
+        return null;
+    }
+
+    public function getUserConnectionData($userId, $lastLoginDate = null, $search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
+    {
+        $table = $this->getServiceLocator()->get('MelisUserConnectionDate');
+        $data  = $table->getUserConnectionData($userId, $lastLoginDate, $search, $searchableColumns, $orderBy, $orderDirection, $start, $limit );
+
+        return $data;
+    }
 }

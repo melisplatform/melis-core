@@ -82,7 +82,17 @@ class LanguageController extends AbstractActionController
         if (!empty($datasLang))
         {
             $datasLang = $datasLang->current();
-
+            
+            // Update session locale for melis BO
+            $container = new Container('meliscore');
+            if($container) {
+                $container['melis-lang-id'] = $langId;
+                if(isset($datasLang->lang_locale)){
+                    $container['melis-lang-locale'] = $datasLang->lang_locale;
+                    $container['melis-login-lang-locale'] = $datasLang->lang_locale;
+                }
+            }
+            
             // If user is connected
             if ($melisCoreAuth->hasIdentity())
             {
@@ -95,18 +105,11 @@ class LanguageController extends AbstractActionController
 
                 // Update user table
                 $datasUser = $melisUserTable->save(array('usr_lang_id' => $langId), $userId);
+                
+                $flashMsgSrv = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+                $flashMsgSrv->clearFlashMessage();
+                $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
             }
-
-            // Update session locale for melis BO
-            $container = new Container('meliscore');
-            if($container) {
-                $container['melis-lang-id'] = $langId;
-                if(isset($datasLang->lang_locale)){
-                    $container['melis-lang-locale'] = $datasLang->lang_locale;
-                    $container['melis-login-lang-locale'] = $datasLang->lang_locale;
-                }
-            }
-
         }
         else
         {

@@ -20,6 +20,10 @@ function getRightsTree(userId){
 		}
 	}, 500);
 }
+var _tmpUserId = null;
+window.setUserDateConnection = function(d) {
+	d.usr_id = _tmpUserId;
+}
 
 // action buttons
 $(document).ready(function() {
@@ -29,7 +33,14 @@ $(document).ready(function() {
 		melisCoreTool.hideTabs('#modal-user-management','#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal','#id_meliscore_tool_user_edit_modal');
 		melisCoreTool.resetLabels("#idusermanagement");
 		toolUserManagement.retrieveUser(id);
+		_tmpUserId = id;
+        $("#tableUserViewDateConnection").DataTable().destroy();
+        fntableUserViewDateConnectioninit();
+	});
 
+	$("body").on("click", "#id_meliscore_tool_user_action_new_user", function() {
+        melisNewUserRights();
+        melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_edit_modal,#id_meliscore_tool_user_rights_modal,#id_meliscore_tool_user_view_date_connection_modal', '#id_meliscore_tool_user_new_modal');
 	});
 	
 	//this is for user icon in identity menu

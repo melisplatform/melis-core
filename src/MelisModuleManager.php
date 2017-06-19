@@ -23,6 +23,7 @@ class MelisModuleManager
      */
     public static function getModules()
     {
+
         $rootMelisSites = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
 
         $modules = array();
@@ -30,6 +31,7 @@ class MelisModuleManager
         $modulesMelisBackOffice = include $docRoot . '/../config/melis.module.load.php';
 
         if (array_key_exists('REQUEST_URI', $_SERVER)) {
+
             $uri = $_SERVER['REQUEST_URI'];
             $uri1 = '';
             $tabUri = explode('/', $uri);
@@ -50,17 +52,23 @@ class MelisModuleManager
             }
             else
             {
+                $env             = getenv('MELIS_PLATFORM');
                 $melisModuleName = getenv('MELIS_MODULE');
                 // include in module load if Melis Module exists on this folder
-                $modulePath = $rootMelisSites . '/' . $melisModuleName;
+                $modulePath      = $rootMelisSites . '/' . $melisModuleName;
+                $platformFile    = $docRoot . '/../config/autoload/platforms/'.$env.'.php';
                 if($melisModuleName) {
                     $siteModuleLoad = $modulePath . '/config/module.load.php';
-                    if(file_exists($siteModuleLoad)) {
+                    if(file_exists($siteModuleLoad) && file_exists($platformFile)) {
                         $modules = include $siteModuleLoad;
+                    }
+                    else {
+                        $modules = $modulesMelisBackOffice;
                     }
                 }
 
             }
+
         } else {
             $modules = array();
         }

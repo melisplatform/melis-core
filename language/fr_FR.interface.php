@@ -84,6 +84,11 @@
 	    'tr_meliscore_tool_user_modal_empty' => 'Pas d\'accès',
 	    'tr_meliscore_tool_user_modal_edit' => 'Informations',
 	    'tr_meliscore_tool_user_modal_rights' => 'Droits d\'accès',
+        'tr_meliscore_tool_user_view_date_connection_handler' => 'User view date connection modal handler',
+        'tr_meliscore_tool_user_view_date_connection_modal' => 'User view date connection modal content',
+        'tr_meliscore_tool_user_view_date_connection' => 'Dates de connexion',
+        'tr_meliscore_tool_usrcd_last_login_date' => 'Date de connexion',
+        'tr_meliscore_tool_usrcd_last_connection_time' => 'Temps de connexion',
 	    
 	    'tr_meliscore_tool_user_update_success_info' => 'Infos utilisateur mises à jour avec succès.',
 	    'tr_meliscore_tool_user_update_fail_info' => 'Echec de mise à jour des infos utilisateur',
@@ -255,6 +260,7 @@
 	    
 	    // Platform Tool Translations
 	    'tr_meliscore_tool_platform_title' => 'Plateformes',
+	    'tr_meliscore_tool_platform_title info' => 'Melis Platform permet de déclarer des environnements différents (ex : local, pre-production, production) afin de sauvegarder des configurations spécifiques pour chacun d\'entre eux (domaine). Le nom de la plateforme doit correspondre à la variable d\'environnement définie dans le vhost (MELIS_PLATFORM).<br>Il est impossible de supprimer la plateforme courante.',
 	    'tr_meliscore_tool_platform_header' => 'Header',
 	    'tr_meliscore_tool_platform_header_add' => 'Nouvelle plateforme',
 	    'tr_meliscore_tool_platform_content' => 'Content',
@@ -271,7 +277,10 @@
 	    'tr_meliscore_tool_platform_prompts_edit_success' => 'Plateforme mise à jour avec succès',
 	    'tr_meliscore_tool_platform_prompts_edit_failed' => 'Impossible de mettre à jour la plateforme',
 	    'tr_meliscore_tool_platform_forms_id' => 'ID',
+	    'tr_meliscore_tool_platform_forms_id tooltip' => 'Identifiant de la plateforme',
 	    'tr_meliscore_tool_platform_forms_name' => 'Nom',
+	    'tr_meliscore_tool_platform_forms_name tooltip' => 'Le nom doit correspondre à la variable d&lsquo;environnement définie dans le vhost MELIS_PLATFORM',
+	    'tr_meliscore_tool_platform_forms_info' => 'Déclarez ou éditez une platforme (le nom doit correspondre à la variable d&lsquo;environnement définie dans le vhost MELIS_PLATFORM)',
 	    'tr_meliscore_tool_platform_forms_name_long' => 'Nom de la plateforme trop long, maximum 100 caractères',
 	    'tr_meliscore_tool_platform_forms_name_empty' => 'Merci d\'entrer le nom de la plateforme',
 	    'tr_meliscore_tool_platform_forms_button_add' => 'Ajouter',
@@ -465,7 +474,7 @@
 	    'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
 	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajouté',
 	     
-	    // Log Type Deatils
+	    // Log type details
 	    'tr_meliscore_logs_tool_log_type_name' => 'Nom',
 	    'tr_meliscore_logs_tool_log_type_description' => 'Description',
 	    'tr_meliscore_logs_tool_log_type_code' => 'Code type de log',
@@ -479,5 +488,17 @@
 	    
 	    'tr_meliscore_date_today' => 'Aujourd\'hui',
 	    'tr_meliscore_date_yesterday' => 'Hier',
+        'tr_meliscore_date_year' => 'Année',
+        'tr_meliscore_date_month' => 'Mois',
+        'tr_meliscore_date_week' => 'Semaine',
+        'tr_meliscore_date_day' => 'Jour',
+        'tr_meliscore_date_hour' => 'h',
+        'tr_meliscore_date_minute' => 'min',
+        'tr_meliscore_date_second' => 'sec',
+        'tr_meliscore_date_ago' => 'ago',
+	    'tr_meliscore_date_just_now' => '-',
+	    'tr_meliscore_date_for' => ' pendant ',
+	    'tr_meliscore_date_start' => 'Début',
+	    'tr_meliscore_date_end' => 'Fin',
 	);
 ?>

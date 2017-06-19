@@ -31,16 +31,18 @@ class MelisCoreInstallCreateNewUserListener extends MelisCoreGeneralListener imp
         		$userData  = $params['user_data'];
          		$tableUser = $sm->get('MelisCoreTableUser');
          		$installHelper = $sm->get('InstallerHelper');
+                $melisCoreAuth = $sm->get('MelisCoreAuth');
         		
         		// add the default platform
 
         		
                 if(!empty($userData)) {
+                    $password = $melisCoreAuth->encryptPassword($userData['password']);
                     $tableUser->save(array(
                         'usr_status' => 1,
                         'usr_login'  => $userData['login'],
                         'usr_email'  => $userData['email'],
-                        'usr_password' => md5($userData['password']),
+                        'usr_password'  => $password,
                         'usr_firstname' => $userData['firstname'],
                         'usr_lastname'  => $userData['lastname'],
                         'usr_lang_id'   => 1,

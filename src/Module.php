@@ -24,6 +24,7 @@ use MelisCore\Listener\MelisCoreNewPlatformListener;
 use MelisCore\Listener\MelisCoreInstallNewPlatformListener;
 use MelisCore\Listener\MelisCoreInstallCreateNewUserListener;
 use MelisCore\Listener\MelisCoreUserRecentLogsListener;
+use MelisCore\Listener\MelisCoreAuthSuccessListener;
 
 class Module
 {   
@@ -47,10 +48,8 @@ class Module
         	$this->checkIdentity($e);
         });
         
-     /*   $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function($e) {
-            $e->getTarget()->layout('layout/layoutError');
-        }, 100);
-       */ 
+
+
 
         $eventManager->attach(new MelisCoreGetRightsTreeViewListener());
         $eventManager->attach(new MelisCoreToolUserAddNewUserListener());
@@ -61,6 +60,8 @@ class Module
         
         $eventManager->attach(new MelisCoreInstallNewPlatformListener());
         $eventManager->attach(new MelisCoreInstallCreateNewUserListener());
+
+        $eventManager->attach(new MelisCoreAuthSuccessListener());
     }
     
     public function initShowErrorsByconfig(MvcEvent $e)
@@ -114,7 +115,6 @@ class Module
     	    'melis-backoffice/application-MelisInstaller/default',
     	    'melis-backoffice/MelisInstaller',
     	);
-        // added console handling otherwise it breaks beacause of authentification.
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;
     	
