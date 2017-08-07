@@ -298,7 +298,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	/**
 	 * This functions reads the configuration inside the app.tool array config
 	 */
-	public function getDataTableConfiguration($targetTable = null, $allowReInit = false, $selectCheckbox = false, $tableOption = array())
+	public function getDataTableConfiguration($targetTable = null, $allowReInit = false, $selectCheckbox = false, $tableOption = array(), $type = '')
 	{
 	    $translator = $this->getServiceLocator()->get('translator');
 	    $table = $this->_appConfig['table'];
@@ -548,6 +548,13 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 $finalTblOptionStr .= $key.': '.$val.','.PHP_EOL;
             }
 
+            $language = '"/melis/MelisCore/Language/getDataTableTranslations"';
+
+            if ($type) {
+                $language = '"/melis/MelisCommerce/MelisComOrderCheckout/getDataTableTranslations"';
+            }
+            
+
             //remove special characters in function name
             $fnName = preg_replace('/\W/', '', $fnName);
             // simulate javascript code function here
@@ -573,8 +580,8 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                     },
                     columns: '.$jsonColumns.',
 				    language: {
-						url: "/melis/MelisCore/Language/getDataTableTranslations",
-				    },
+                        url : '. $language .',
+                    },
                     sDom : \''.$sDomStructure.'\',
                     bSort: true,
                     searchDelay: 1500,
@@ -1007,35 +1014,44 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     }
 
     /**
-     * Sanitize's the value, removes the value that has
-     * XSS or SQL injection
-     * @param $input
-     * @return mixed|string
+     * This functions removes a suspicious XSS value and SQL injection value
+     * @param $input string|array - if the input is a string, it will sanitize the value, if the input is an array then it will call the sanitizeResursive function.
+     * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
+     * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
+     * @return array|mixed|string
      */
     public function sanitize($input, $textOnly = false, $removeFunctions =  true)
     {
-        if($removeFunctions) {
-            $input   = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
-        }
-        $badVals     = array('exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>");
-        $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u>';
-        $input       = str_replace($badVals, '', $input);
-        $input       = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
-        $input       = strip_tags(trim($input), $allowedTags);
 
-        if($textOnly) {
-            $input   = str_replace(['<', '>', "'", '"'], '', $input);
+        if(!is_array($input)) {
+            if($removeFunctions) {
+                $input   = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
+            }
+            $badVals     = array('exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>");
+            $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u>';
+            $input       = str_replace($badVals, '', $input);
+            $input       = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
+            $input       = strip_tags(trim($input), $allowedTags);
+
+            if($textOnly) {
+                $input   = str_replace(['<', '>', "'", '"'], '', $input);
+            }
         }
+        else {
+            return $this->sanitizeRecursive($input, [], $textOnly, $removeFunctions);
+        }
+
 
         return $input;
     }
 
 
     /**
-     * Sanitize values inside an array
+     * This function sanitizes a single array and removes  a suspicious XSS value and SQL injection value
      * @param $postArray
-     * @param array $exclude
-     * @param bool $textOnly
+     * @param array $exclude - if you want to exclude a certain value, then you must put the name of the value that you want to exclude
+     * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
+     * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
      * @return array
      */
     public function sanitizePost($postArray, $exclude = [], $textOnly = false, $removeFunctions = true)
@@ -1065,12 +1081,12 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     }
 
     /**
-     * Recursively loop through the array and sanitizes its' values
+     * This function accepts multi-dimensional array that will be recursively checked and sanitize it's value so that
+     * it will removes all suspicious XSS value and SQL injection value
      * @param $arrayVal
-     * @param array $exclude
-     * @param $textOnly
-     * @param bool $
-     * @param bool $removeFunctions
+     * @param array $exclude - if you want to exclude a certain value, then you must put the name of the value that you want to exclude
+     * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
+     * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
      * @return array
      */
     public function sanitizeRecursive($arrayVal, $exclude = [], $textOnly = false, $removeFunctions = true)

@@ -1,0 +1,7 @@
+/* TinyMCE */
+.melis-editable{
+    border: 1px dotted #333;
+}
+.melis-editable:hover{
+    border-color: red;
+}

@@ -7,23 +7,27 @@
 
 
 (function($){
+
 	$('ul#tools.collapse li.hasSubmenu > a').on('click',function(){
 		/* var scrollTop = $('#id_meliscore_leftmenu')[0].scrollHeight,
 		elementOffset = $(this).offset().top,
 		distance      = (elementOffset - scrollTop); */
 		if( $('#id_meliscore_leftmenu').hasScrollBar() ){
-			$('#id_meliscore_leftmenu')
-			.stop()
-			.animate({scrollTop: $(this).position().top }, 500);
+
+			if($(this).position().top > 0) {
+				$('#id_meliscore_leftmenu')
+				.stop()
+				// .animate({scrollTop: $(this).position().top }, 500);
+			} 
 		}
 	});
 	$('ul.sideMenu > li.hasSubmenu > a').on('click',function(){
-		/* if( $('#id_meliscore_leftmenu').hasScrollBar() ){ */
+		if($(this).position().top > 0) {
 			$('#id_meliscore_leftmenu')
 			.stop()
-			.animate({scrollTop: $(this).position().top }, 500);
-		/* } */
+		}
 	});
+
 	$('ul.collapse')
 	.on('show.bs.collapse', function(e){
 		

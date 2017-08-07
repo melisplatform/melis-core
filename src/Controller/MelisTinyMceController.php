@@ -19,18 +19,19 @@ class MelisTinyMceController extends AbstractActionController
 {
     public function getTinyMceConfigAction()
     {
-		$success = 0;
-		$tinyMCEconfig = null;
-		
-		$request = $this->getRequest();
-		
+		$success       = 0;
+		$tinyMCEconfig = '';
+		$request       = $this->getRequest();
+
 		if ($request->isPost())
 		{
+            $modulesSvc = $this->getServiceLocator()->get('ModulesService');
 		    // Getting the Posted Values
     		$postValues = get_object_vars($request->getPost());
+
     		$type = $postValues['type'];
     		$selector = $postValues['selector'];
-    		$options = $postValues['options'];
+    		$options = !empty($postValues['options']) ? $postValues['options'] : array();
     		
     		// Get the list of TinyMce configuration files declared
     		$config = $this->serviceLocator->get('config');
@@ -44,7 +45,6 @@ class MelisTinyMceController extends AbstractActionController
     		    $nameModuleTab = explode('/', $configDir);
     		    $nameModule = $nameModuleTab[0];
     		    // Getting the path of the Module
-    		    $modulesSvc = $this->getServiceLocator()->get('ModulesService');
     		    $path = $modulesSvc->getModulePath($nameModule);
     		    // Generating the directory of the requested TinyMCE configuration
     		    $tinyMCEconfig = $path . str_replace($nameModule, '', $configDir);
@@ -68,14 +68,55 @@ class MelisTinyMceController extends AbstractActionController
     		    }
     		    $success = 1;
     		}
+
+            /**
+             * This listener is for users or developers who wants to extend the functionality of tinyMCE, especially when adding new extensions.
+             */
+
+            $config = $this->getEventManager()->trigger('meliscore_tinymce_config', $this);
+            $tmpCfg = array();
+
+            // reconstruct data
+            foreach($config as $configKey => $cfg) {
+
+                if($cfg) {
+                    foreach($cfg['configuration'] as $configKey => $configVal) {
+                        $tmpCfg[$configKey] = $configVal;
+                    }
+                }
+
+                if(isset($cfg['exclude']) && !empty($cfg['exclude'])) {
+                    // remove the excluded configuration(s)
+                    foreach($cfg['exclude'] as $exclude) {
+                        if(isset($tmpCfg[$exclude])) {
+                            unset($tmpCfg[$exclude]);
+                        }
+                    }
+                }
+
+
+            }
+
+
+            // merge reconstructed data to tinyMCE configuration
+            foreach($tmpCfg as $idx => $cfg) {
+                if($cfg) {
+                    // get the merged and additional tinyMCE configurations
+                    $tinyMCEconfig = \Zend\Stdlib\ArrayUtils::merge($tinyMCEconfig, $cfg);
+                }
+            }
+
 		}
 		
 		$response = array(
 		    'success' => $success,
-		    'config' => $tinyMCEconfig
+		    'config'  => $tinyMCEconfig
 		);
 		
 		return new JsonModel($response);
     }
+
+
+
 }
 

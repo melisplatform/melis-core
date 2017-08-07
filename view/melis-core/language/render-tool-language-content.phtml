@@ -50,6 +50,14 @@ if (!empty($this->zoneconfig['conf']['id']))
 			<?= $this->getToolDataTableConfig; ?>
 			$(document).on("init.dt", function(e, settings) {
 				$('#tableLanguages td:nth-child(3):contains("en_EN")').parent().find('.btnLangUpdate').hide();
+				$('#tableLanguages tbody tr').each(function(){
+					var tableRow = $(this);
+					var applyButton = tableRow.find('.btnLangApply');
+					var langName = tableRow.find('td:nth-child(2)').text();
+					
+					applyButton.attr('title', applyButton.attr('title') + langName);
+					
+				});
 			});
 		});
 		</script>

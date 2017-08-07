@@ -84,7 +84,8 @@ $(document).ready(function(){
 	
 	
 	// INIT PLOTTING FUNCTION [also used as callback in the app.interface for when we refresh the chart]
-	window.simpleChartInit = function(chartFor = 'daily'){
+	window.simpleChartInit = function(chartFor){
+		if(typeof chartFor === "undefined") chartFor = 'daily';
 		// get the statistics data
 		$.ajax({
 			type        : 'POST',

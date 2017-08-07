@@ -7,6 +7,7 @@ $data_melisKey = $this->melisKey;
 ?>
 
 <div <?= $id; ?> data-melisKey="<?= $data_melisKey; ?>">
+	<p class="modal-text-info"><?= $this->translate('tr_meliscore_tool_user_rights_connection'); ?>
     <div class="spacing-x2 innerAll">
         <?php
         $this->melisGenericTable()->setTable(array(

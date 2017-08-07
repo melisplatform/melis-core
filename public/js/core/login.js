@@ -10,14 +10,23 @@ $(document).ready(function() {
             dataType    : 'json',
             encode      : true
         }).success(function(data){
-            if (data.success)   
+            if (data.success)   {
                 window.location.replace("/melis");
+            }
             else{
-            	var errorTxt = "";
-            	$.each(data.errors, function(i,v) {
-            		errorTxt = v;
-            	});
-            	melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
+                var errorTxt = "";
+                $.each(data.errors, function(i,v) {
+                    errorTxt = v;
+                });
+
+                if(data.require_reset_password) {
+                    melisCoreTool.alertWarning('#loginprompt', '<i class="fa fa-exclamation-triangle"></i> ' + translations.tr_meliscore_common_warning+"!", errorTxt);
+                }
+                else {
+                    melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
+                }
+
+
             }
         }).error(function(){
         	alert( translations.tr_meliscore_error_message );

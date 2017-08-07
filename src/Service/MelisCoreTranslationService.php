@@ -116,6 +116,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
             $locale.'.forms.php',
         );
 
+        set_time_limit(0);
         foreach($moduleFolders as $module) {
             if(file_exists($module.'/language')) {
                 foreach($transFiles as $file) {
@@ -210,7 +211,10 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $vendorModules = $moduleSvc->getVendorModules();
         $userModules   = $moduleSvc->getUserModules();
         $modules = $moduleSvc->getAllModules();
-
+        
+        if(!$this->checkTranslationList()){
+            return false;
+        }
 
         $fullPathVendorModules = array();
         $fullPathUserModules   = array();
@@ -525,7 +529,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
 
         $content = "<?php". PHP_EOL . "\t return array(" . PHP_EOL;
         foreach($transUpdate as $key => $value){
-            $content .= "\t\t'". $key . "' => '" . addslashes($value) ."'," .PHP_EOL;
+            $content .= "\t\t'". addslashes($key) . "' => '" . addslashes($value) ."'," .PHP_EOL;
         }
         $content .= "\t );" . PHP_EOL;
 
@@ -548,9 +552,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $newItems = array_diff( (array) $this->updated, $translationList);
 
         if(!empty($newItems)){
-            foreach($newItems as $item){
-                $translationList[] = $item;
-            }
+            $translationList = $newItems + $translationList;
         }
 
         // for array formating, readability
@@ -570,6 +572,24 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
 
         return $status;
 
+    }
+    
+    public function checkTranslationList()
+    {
+        $listPath = $_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/config/translation.list.php';
+        $exist = false;
+        if(file_exists($listPath)){
+            $exist = true;
+        }else{
+            // try to create file;
+            $this->createTranslationFile($_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/config/', 'translation.list.php');
+            
+            if(file_exists($listPath)){
+                $exist = true;
+            }
+        }
+        
+        return $exist;
     }
 
 }

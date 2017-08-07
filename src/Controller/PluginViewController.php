@@ -22,14 +22,19 @@ class PluginViewController extends AbstractActionController
 {
 	/**
 	 * Generates recursively views depending on the appConfig file
-	 * 
+	 *
 	 * @param string $key Child name view
 	 * @param string $fullKey Path in the appConfig file
 	 * 
 	 * @return \Zend\View\Model\ViewModel
 	 */
 	public function generateRec($key, $fullKey, $recDatas = array())
-	{ 
+	{
+
+        $isXmlHttpRequest = false;
+        if ($this->getRequest()->isXmlHttpRequest())
+            $isXmlHttpRequest = true;
+
 		$melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
 		
 		/**
@@ -66,6 +71,7 @@ class PluginViewController extends AbstractActionController
 		$xmlRights = $melisCoreAuth->getAuthRights();
 		$isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $fullKey);
 		$isDisabled = $melisAppConfig->isInterfaceDisabled($key);
+
 		
 		
 		if (!$isAccessible || $isDisabled)
@@ -91,86 +97,101 @@ class PluginViewController extends AbstractActionController
 		 *  logicaly continue inside children in the interface section.
 		 */
 		$view = new ViewModel();
-		if (!empty($itemConfig['forward']) && !empty($itemConfig['forward']['controller'])
-				&& !empty($itemConfig['forward']['action']))
-		{ 
-			// Preparing dispatch
-			$ctrlPath = $itemConfig['forward']['controller'];
-			if (!empty($itemConfig['forward']['module']))
-				$ctrlPath = $itemConfig['forward']['module'] . '\\Controller\\' . $ctrlPath;
+        $melisKeyFollow = isset($itemConfig['conf']['follow_regular_rendering']) ? $itemConfig['conf']['follow_regular_rendering'] : true;
 
-			// Add the action for dispatch
-			$datas = array_merge_recursive($recDatas, array('action' => $itemConfig['forward']['action']));
-			// Add the fullKey for data-id rendering
-			
-			if (!empty($itemConfig['conf']) && !empty($itemConfig['conf']['melisKey']))
-				$datas['melisKey'] = $itemConfig['conf']['melisKey'];
-			else 
-				$datas['melisKey'] = $fullKey;
-			
-			$datas['zoneconfig'] = $itemConfig;
-				
-			// Get the view
-			try
-			{
-                // maxNestedForwards for generation of interface
-			    $config = $this->getServiceLocator()->get('config');
-			    $specialConfigZf2 = $config['plugins']['meliscore']['datas']['zf2'];
-   
-			    $view = $this->forward()->setMaxNestedForwards($specialConfigZf2['maxNestedForwards'])->dispatch($ctrlPath, $datas);
-			}
-			catch (\Exception $e)
-			{
-				$view = new ViewModel();
-				$view->setTemplate('melis-core/plugin-view/generate');
-				$ctrlPath = $itemConfig['forward']['controller'];
-				if (!empty($itemConfig['forward']['module']))
-					$ctrlPath = $itemConfig['forward']['module'] . '/' . $ctrlPath;;
-				$ctrlPath = $ctrlPath . '/' . $itemConfig['forward']['action'];
-				$view->setVariable('meliscore_error_dispatch', 
-									'Error: ' . $ctrlPath . '<br />' . $e->getMessage());
-			}
-		}
-		else
-		{
-			// Use the default template because no forward item was found in appConfig
-			$view->setTemplate('melis-core/plugin-view/generate');
-		} 
-		// Adds the appConfig section to the view for further disposal in the view
-		$view->setVariable('zoneconfig', $itemConfig);
-		$view->setVariables($recDatas);
-		
-		/**
-		 * Going recursive in interface section of appConfig to generate any
-		 * subplugin.
-		 */
-		if (!empty($itemConfig['interface']))
-		{ 
-			
-			/**
-			 * Looping and getting the children in interface section to generate the children views.
-			 * Key defined in the appConfig will be used as child view keys
-			 */
-			foreach ($itemConfig['interface'] as $keyInterface => $valueInterface)
-			{
-				$subKey = $fullKey . '/interface/' . $keyInterface;
-				$subView = $this->generateRec($keyInterface, $subKey, $recDatas);
-				
-				$norights = $subView->getVariable('norights');
-				if ($norights)
-				{
-					$zoneconfig = $view->getVariable('zoneconfig');
-					unset($zoneconfig['interface'][$keyInterface]);
-					$view->setVariable('zoneconfig', $zoneconfig);
-				}
-				$view->addChild($subView, $keyInterface);
-				$view->setVariable('keyInterface', $keyInterface);
-			}
-		}
-		
-		$view->setVariable('keyInterface', $key);
-		
-		return $view;
+//        echo $fullKey . PHP_EOL;
+
+        if($melisKeyFollow || $isXmlHttpRequest)
+        {
+            if (!empty($itemConfig['forward']) && !empty($itemConfig['forward']['controller'])
+                && !empty($itemConfig['forward']['action']))
+            {
+                // Preparing dispatch
+                $ctrlPath = $itemConfig['forward']['controller'];
+                if (!empty($itemConfig['forward']['module']))
+                    $ctrlPath = $itemConfig['forward']['module'] . '\\Controller\\' . $ctrlPath;
+
+                // Add the action for dispatch
+                $datas = array_merge_recursive($recDatas, array('action' => $itemConfig['forward']['action']));
+                // Add the fullKey for data-id rendering
+
+                if (!empty($itemConfig['conf']) && !empty($itemConfig['conf']['melisKey']))
+                    $datas['melisKey'] = $itemConfig['conf']['melisKey'];
+                else
+                    $datas['melisKey'] = $fullKey;
+
+                $datas['zoneconfig'] = $itemConfig;
+
+                // Get the view
+                try
+                {
+                    // maxNestedForwards for generation of interface
+                    $config = $this->getServiceLocator()->get('config');
+                    $specialConfigZf2 = $config['plugins']['meliscore']['datas']['zf2'];
+
+                    $view = $this->forward()->setMaxNestedForwards($specialConfigZf2['maxNestedForwards'])->dispatch($ctrlPath, $datas);
+
+                }
+                catch (\Exception $e)
+                {
+                    $view = new ViewModel();
+                    $view->setTemplate('melis-core/plugin-view/generate');
+                    $ctrlPath = $itemConfig['forward']['controller'];
+                    if (!empty($itemConfig['forward']['module']))
+                        $ctrlPath = $itemConfig['forward']['module'] . '/' . $ctrlPath;;
+                    $ctrlPath = $ctrlPath . '/' . $itemConfig['forward']['action'];
+                    $view->setVariable('meliscore_error_dispatch',
+                        'Error: ' . $ctrlPath . '<br />' . $e->getMessage());
+                }
+            }
+            else
+            {
+                // Use the default template because no forward item was found in appConfig
+                $view->setTemplate('melis-core/plugin-view/generate');
+            }
+            // Adds the appConfig section to the view for further disposal in the view
+            $view->setVariable('zoneconfig', $itemConfig);
+            $view->setVariables($recDatas);
+
+            /**
+             * Going recursive in interface section of appConfig to generate any
+             * subplugin.
+             */
+            if (!empty($itemConfig['interface']))
+            {
+
+                /**
+                 * Looping and getting the children in interface section to generate the children views.
+                 * Key defined in the appConfig will be used as child view keys
+                 */
+                foreach ($itemConfig['interface'] as $keyInterface => $valueInterface)
+                {
+                    $subKey = $fullKey . '/interface/' . $keyInterface;
+                    $subView = $this->generateRec($keyInterface, $subKey, $recDatas);
+
+                    if(!empty($subView)) {
+                        $norights = $subView->getVariable('norights');
+                        if ($norights)
+                        {
+                            $zoneconfig = $view->getVariable('zoneconfig');
+                            unset($zoneconfig['interface'][$keyInterface]);
+                            $view->setVariable('zoneconfig', $zoneconfig);
+                        }
+                        $view->addChild($subView, $keyInterface);
+                        $view->setVariable('keyInterface', $keyInterface);
+                    }
+
+                }
+            }
+
+            $view->setVariable('keyInterface', $key);
+
+            return $view;
+        }
+        else {
+            return null;
+        }
+
 	}
 	
 	/**
@@ -266,7 +287,7 @@ class PluginViewController extends AbstractActionController
     	 */
     	$appconfigpath = $this->params()->fromRoute('appconfigpath', '/');
     	$keyView = $this->params()->fromRoute('keyview', 'melis');
-    	
+
     	/**
     	 * Else get the params from GET if ajax
     	 */
@@ -292,7 +313,7 @@ class PluginViewController extends AbstractActionController
 			$appconfigpath = $melisKeys[$appconfigpath];
 		
 		$appsConfig = $melisAppConfig->getItem($appconfigpath);
-		
+
 		if ($isXmlHttpRequest && !empty($appsConfig['interface']))
 			$appsConfig['interface'] = $this->orderInterfaceChildren($keyView, $appsConfig['interface']);
 		
@@ -304,7 +325,6 @@ class PluginViewController extends AbstractActionController
 		 * and add the corresponding appConfig part to make it accessible in the view
 		 */
 		$zoneView = $this->generateRec($keyView, $appconfigpath, $datasParameters);
-		
 		$zoneView->setVariable('zoneconfig', $appsConfig);
 		$zoneView->setVariable('parameters', $datasParameters);
 		$zoneView->setVariable('keyInterface', $keyView);

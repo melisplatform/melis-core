@@ -6,13 +6,17 @@
 		'tr_meliscore_login_header_Logout' => 'Logout',
 	    
 	    'tr_meliscore_forgot_form_email' => 'Email',
+	    'tr_meliscore_forgot_form_email_required' => 'Email *',
 	    'tr_meliscore_forgot_form_login' => 'Login',
+	    'tr_meliscore_forgot_form_login_required' => 'Login *',
 	    'tr_meliscore_forgot_form_submit' => 'Submit',
 	    'tr_meliscore_forgot_page_title' => 'Forgot password - ',
 	    'tr_meliscore_forgot_page_header' => 'Retrieve your account',
 	    
 	    'tr_meliscore_reset_password' => 'Password',
+	    'tr_meliscore_reset_password_required' => 'Password *',
 	    'tr_meliscore_reset_password_confirm' => 'Confirm password',
+	    'tr_meliscore_reset_password_confirm_required' => 'Confirm password *',
 	    'tr_meliscore_reset_password_button' => 'Reset',
 
 		'tr_meliscore_login_errors_Empty datas' => 'Empty datas',
@@ -22,6 +26,7 @@
 	    'tr_meliscore_login_pass_placeholder' => '(Do not fill in to keep the current password)',
 	    
 	    'tr_meliscore_tool_user_form_language' => 'Language',
+	    'tr_meliscore_tool_user_form_language tooltip' => 'Language in which the Back Office will be displayed for the user',
 	    
 	    // login prompts
 	    'tr_meliscore_login_error' => 'Incorrect login or password',
@@ -68,6 +73,8 @@
 	    'tr_meliscore_tool_user_usr_file_button' => 'Select image',
 	    
 	    'tr_meliscore_user_password_change_succes' => 'Password successfully changed.',
+
+        'tr_meliscore_login_password_enc_update' => 'We have changed our encryption algorithm, please update your password to secure your account. To do so click on <strong>Forgot password</strong> to create a new password. We apologize for the inconvenience.',
 	    
 	);
 ?>

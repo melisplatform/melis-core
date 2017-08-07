@@ -263,10 +263,3 @@ var melisCoreTool = (function(window){
 	}
 		
 })(window);
-
-//removes modal elements when clicking outside
-$("body").on("click", function (e) {
-	if ($(e.target).hasClass('modal')) {
-		$('.modal').modal('hide');
-	}
-});

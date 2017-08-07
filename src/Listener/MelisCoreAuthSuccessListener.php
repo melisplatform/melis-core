@@ -34,7 +34,7 @@ class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements L
                 $authSvc   = $sm->get('MelisCoreAuth');
 
                 // update the session last_login_date
-                $user                      = $authSvc->getStorage()->read();
+                $user = $authSvc->getStorage()->read();
 
                 if(!empty($user)) {
                     $user->usr_last_login_date = $params['login_date'];
@@ -46,18 +46,18 @@ class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements L
                             'usrcd_last_login_date'      => $params['login_date'],
                             'usrcd_last_connection_time' => $params['login_date'],
                         ]);
-
-                        $userTable->save(array(
-                            'usr_last_login_date' => $params['login_date'],
-                            'usr_is_online'       => true,
-                        ), $params['usr_id']);
                     }
+
+                    $userTable->save(array(
+                        'usr_last_login_date' => $params['login_date'],
+                        'usr_is_online'       => true,
+                    ), $params['usr_id']);
 
                 }
 
 
             },
-            -1000);
+            -10000);
 
         $this->listeners[] = $callBackHandler;
     }

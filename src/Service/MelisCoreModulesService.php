@@ -17,22 +17,22 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Config\Config;
 use Zend\Config\Writer\PhpArray;
 
-class MelisCoreModulesService implements ServiceLocatorAwareInterface 
+class MelisCoreModulesService implements ServiceLocatorAwareInterface
 {
-    
+
     public $serviceLocator;
 
     /**
      * @var Composer
      */
     protected $composer;
-    
+
     public function setServiceLocator(ServiceLocatorInterface $sl)
     {
         $this->serviceLocator = $sl;
         return $this;
     }
-    
+
     public function getServiceLocator()
     {
         return $this->serviceLocator;
@@ -45,7 +45,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     public function setComposer(Composer $composer)
     {
         $this->composer = $composer;
-        
+
         return $this;
     }
 
@@ -60,12 +60,12 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 putenv("COMPOSER_HOME=/tmp");
             }
             $factory = new Factory();
-            $this->setComposer($factory->createComposer(new NullIO())); 
+            $this->setComposer($factory->createComposer(new NullIO()));
         }
-        
+
         return $this->composer;
     }
-    
+
     /**
      * Returns all the modules
      */
@@ -81,48 +81,118 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     public function getVendorModules()
     {
         $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
-        
+
         $packages = array_filter($repos->getPackages(), function($package) {
             /** @var CompletePackage $package */
-            return $package->getType()==='melisplatform-module' && 
-                    array_key_exists('module-name', $package->getExtra());
+            return $package->getType()==='melisplatform-module' &&
+                array_key_exists('module-name', $package->getExtra());
         });
-        
+
         $modules = array_map(function ($package) {
             /** @var CompletePackage $package */
             return $package->getExtra()['module-name'];
         }, $packages);
-        
+
         sort($modules);
-        
+
         return $modules;
     }
-    
+
+    /**
+     * Returns the module name, module package, and its' version
+     * @param null $moduleName - provide the module name if you want to get the package specific information
+     * @return array
+     */
+    public function getModulesAndVersions($moduleName = null)
+    {
+        $tmpModules = array();
+        $repos      = $this->getComposer()->getRepositoryManager()->getLocalRepository();
+
+        $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
+        $composer     = (array) \Zend\Json\Json::decode(file_get_contents($composerFile));
+
+        foreach($composer as $package) {
+            $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
+            $module            = null;
+            if(isset($packageModuleName['module-name'])) {
+                $module = $packageModuleName['module-name'];
+            }
+
+            if($module) {
+                $tmpModules[$module] = array(
+                    'package' => $package->name,
+                    'module'  => $module,
+                    'version' => $package->version
+                );
+
+                if($module == $moduleName)
+                    break;
+            }
+
+        }
+
+        $userModules = $this->getUserModules();
+        $exclusions  = array('MelisModuleConfig', 'MelisSites');
+        foreach($userModules as $module) {
+            if(!in_array($module, $exclusions)) {
+                $class = $_SERVER['DOCUMENT_ROOT'].'/../module/'.$module.'/Module.php';
+                $class = file_get_contents($class);
+
+                $package    = $module;
+                $version    = '1.0';
+
+                if (preg_match_all('/@(\w+)\s+(.*)\r?\n/m', $class, $matches)){
+                    $result  = array_combine($matches[1], $matches[2]);
+                    $version = isset($result['version']) ? $result['version'] : '1.0';
+                    $package = isset($result['module'])  ? $result['module'] : $module;
+
+                }
+                $tmpModules[$package] = array(
+                    'package' => $package,
+                    'module'  => $package,
+                    'version' => $version
+                );
+
+                if($package == $module)
+                    break;
+            }
+        }
+
+        $modules = $tmpModules;
+
+
+        if(!is_null($moduleName)) {
+            return $modules[$moduleName];
+        }
+
+        return $modules;
+    }
+
     public function getUserModules()
     {
         $userModules = $_SERVER['DOCUMENT_ROOT'] . '/../module';
-        
+
         $modules = array();
         if($this->checkDir($userModules)) {
             $modules = $this->getDir($userModules);
         }
-        
+
         return $modules;
     }
-    
+
     public function getSitesModules()
     {
         $userModules = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
-        
+
         $modules = array();
         if($this->checkDir($userModules)) {
             $modules = $this->getDir($userModules);
         }
-        
+
         return $modules;
     }
-    
-     
+
+
     /**
      * Returns all the important modules
      * @param array $excludeModulesOnReturn | exclude some modules that you don't want to be included in return
@@ -134,11 +204,11 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
             'meliscore' => 'MelisCore',
             'melisinstaller' => 'MelisInstaller',
             'melisengine' => 'MelisEngine',
-            'melisfront' => 'MelisFront',
+            'melisfront'  => 'MelisFront',
             'melissites' => 'MelisSites',
             'melisassetmanager' => 'MelisAssetManager'
         );
-        
+
         if($excludeModulesOnReturn) {
             foreach($excludeModulesOnReturn as $exMod) {
                 if(isset($modules[$exMod])  && $modules[$exMod]) {
@@ -149,25 +219,25 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
         return $modules;
     }
-    
+
     /**
      * Returns the full path of the module
      * @param String $moduleName
      */
-    public function getModulePath($moduleName, $returnFullPath = true) 
+    public function getModulePath($moduleName, $returnFullPath = true)
     {
         $path = $this->getUserModulePath($moduleName, $returnFullPath);
         if ($path == '')
             $path = $this->getComposerModulePath($moduleName, $returnFullPath);
-        
-        return $path;    
+
+        return $path;
     }
-    
+
     public function getComposerModulePath($moduleName, $returnFullPath = true)
     {
         $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
         $packages =   $repos->getPackages();
-    
+
         if (!empty($packages))
         {
             foreach ($packages as $repo)
@@ -180,7 +250,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                         foreach ($repo->getRequires() as $require)
                         {
                             $source = $require->getSource();
-                            
+
                             if ($returnFullPath)
                                 return $_SERVER['DOCUMENT_ROOT'] . '/../vendor/' . $source;
                             else
@@ -190,20 +260,20 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 }
             }
         }
-    
+
         return '';
     }
-    
-    public function getUserModulePath($moduleName, $returnFullPath = true) 
+
+    public function getUserModulePath($moduleName, $returnFullPath = true)
     {
         $path = '';
         $userModules = $_SERVER['DOCUMENT_ROOT'] . '/../';
-        
-        if (in_array($moduleName, $this->getUserModules())) 
+
+        if (in_array($moduleName, $this->getUserModules()))
         {
-            if ($this->checkDir($userModules.'module/'.$moduleName)) 
+            if ($this->checkDir($userModules.'module/'.$moduleName))
             {
-                if (!$returnFullPath) 
+                if (!$returnFullPath)
                 {
                     $path = '/module/'.$moduleName;
                 }
@@ -212,10 +282,10 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 }
             }
         }
-        
+
         return $path;
     }
-    
+
     /**
      * Returns all modules plugins that does not belong or treated as core modules
      * @return unknown[]
@@ -231,9 +301,9 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         }
 
         return $modules;
-        
+
     }
-    
+
     /**
      * Returns all the modules that has been created by Melis
      * @return array
@@ -246,20 +316,20 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 $modules[] = $module;
             }
         }
-        
+
         return $modules;
     }
-    
+
     /**
      * Creates module loader file
      * @param unknown $pathToStore
      */
-    public function createModuleLoader($pathToStore, $modules = array(), $topModules = array('meliscore', 'melisfront', 'melisengine'), $bottomModules = array())
+    public function createModuleLoader($pathToStore, $modules = array(), $topModules = array('meliscore', 'melisfront', 'melisengine'), $bottomModules = array('MelisModuleConfig'))
     {
         $tmpFileName = 'melis.module.load.php.tmp';
         $fileName = 'melis.module.load.php';
         if($this->checkDir($pathToStore)) {
-            $coreModules = $this->getCoreModules();    
+            $coreModules = $this->getCoreModules();
             $topModules = array_reverse($topModules);
             foreach($topModules as $module) {
                 if(isset($coreModules[$module]) && $coreModules[$module]) {
@@ -268,9 +338,9 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 else {
                     array_unshift($modules, $module);
                 }
-                
+
             }
-            
+
             foreach($bottomModules as $module) {
                 if(isset($coreModules[$module]) && $coreModules[$module]) {
                     array_push($modules, $coreModules[$module]);
@@ -279,14 +349,14 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                     array_push($modules, $module);
                 }
             }
-            
+
             $config = new Config($modules, true);
             $writer = new PhpArray();
             $conf = $writer->toString($config);
             $conf = preg_replace('/    \d+/u', '', $conf); // remove the number index
             $conf = str_replace('=>', '', $conf); // remove the => characters.
             file_put_contents($pathToStore.'/'.$tmpFileName, $conf);
-            
+
             if(file_exists($pathToStore.'/'.$tmpFileName)) {
                 // check if the array is not empty
                 $checkConfig = include($pathToStore.'/'.$tmpFileName);
@@ -301,7 +371,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
             }
 
         }
-        
+
         return false;
 
     }
@@ -324,11 +394,11 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 }
             }
         }
-        
-        
+
+
         return $modules;
     }
-    
+
     /**
      * This will check if directory exists and it's a valid directory
      * @param unknown $dir
@@ -339,10 +409,10 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         {
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Returns all the sub-folders in the provided path
      * @param String $dir
@@ -355,15 +425,15 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         if(file_exists($dir)) {
             $excludeDir = array_merge(array('.', '..', '.gitignore'), $excludeSubFolders);
             $directory  = array_diff(scandir($dir), $excludeDir);
-    
+
             foreach($directory as $d) {
                 if(is_dir($dir.'/'.$d)) {
                     $directories[] = $d;
                 }
             }
-    
+
         }
-    
+
         return $directories;
     }
 }

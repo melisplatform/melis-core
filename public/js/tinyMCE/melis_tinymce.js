@@ -68,12 +68,57 @@ var melisTinyMCE = (function(){
     		targetElem.find("#loadingZone").remove();
     	}
     }
+
+    function modalPopUp() {
+        // OPENING THE POPUP
+        $("body").on("click", ".mce-btn", function(){
+            var mcePopUp = $("#mce-modal-block").length;
+            if(mcePopUp){
+
+                // iframe height
+                var iframeHeight = $(window).height();
+                    
+                // dialog box height
+                var dialogHeight = $(".mce-window").outerHeight();
+                
+                parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
+                
+                // CLOSING THE POPUP
+                var timeOut = setInterval(function(){ 
+                
+                    // console.log( "return =" + parent.scrollOffsetTinyMCE() );
+                    if( !$(".mce-window").is(":visible") ){
+                    // window.parent.scrollTo( 0,parent.scrollOffsetTinyMCE())
+                        window.parent.$("body").animate({scrollTop: parent.scrollOffsetTinyMCE() }, 200);
+                        
+                        clearTimeout(timeOut);
+                    }
+                }, 300);
+                
+            }
+            else{
+                /* console.log("no popup"); */
+            }
+            
+        });
+    }
+
+    function addMelisCss() {
+        var el = document.createElement('link');
+        el.href = '/MelisCore/css/melis_tinymce.css';
+        el.rel  = "stylesheet";
+        el.media  = "screen";
+        el.type = "text/css";
+        document.head.appendChild(el);
+    }
 	
 	// Function that accessible using melisTinyMCE
 	return{
 		
 		createTinyMCE		:	createTinyMCE,
 		tinyMceActionEvent	:	tinyMceActionEvent,
+        modalPopUp          :   modalPopUp,
+        addMelisCss         :   addMelisCss,
 	};
 	
 })();

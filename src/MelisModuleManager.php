@@ -23,7 +23,11 @@ class MelisModuleManager
      */
     public static function getModules()
     {
-
+        // This needs to be set when using MelisPlatform
+        error_reporting(E_ALL & ~E_USER_DEPRECATED);
+        if (empty(date_default_timezone_get()))
+            date_default_timezone_set('Europe/Paris');
+        
         $rootMelisSites = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
 
         $modules = array();

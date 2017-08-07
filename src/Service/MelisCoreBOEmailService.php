@@ -383,8 +383,8 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
     	                        if ($layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)) {
     	                            $layout = __DIR__ .'/../../../'.$layout;
     	                            $layoutFlag = TRUE;
-    	                        }elseif ($layoutPathValidator->isValid(HTTP_ROOT .'/../module/'.$layout)){
-    	                            $layout = HTTP_ROOT .'/../module/'.$layout;
+    	                        }elseif ($layoutPathValidator->isValid($_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout)){
+    	                            $layout = $_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout;
     	                            $layoutFlag = TRUE;
     	                        }
     	                        

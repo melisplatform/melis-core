@@ -27,6 +27,7 @@ $(function(){
 	});
 	
 	$("body").on("click", ".btnMelisCoreEmailMngtSave", function(){
+		melisCoreTool.pending(".btnMelisCoreEmailMngtSave");
 		var codename = $(this).data("codename");
 		var formId = '#'+codename+'_generalPropertiesform';
 		var dataString = $(formId).serializeArray();
@@ -39,18 +40,21 @@ $(function(){
 		    }
 		}
 		
-		$('.boed_lang_id_'+codename).each(function(){
+		$(this).closest('.container-level-a').find('.boed_lang_id_'+codename).each(function(){
 			$langID = $(this).val();
 			$langLocale = $(this).data('locale');
 			langFormId = '#'+codename+'_'+$langID+'_emailLangForm'
 			var langFormDataString = $(langFormId).serializeArray();
-			
-			for (index = 0; index < langFormDataString.length; index++) {
-			    if (langFormDataString[index].name == "boed_html") {
-			    	langFormDataString[index].value = tinyMCE.get(codename+'_'+$langID+'_boed_html').getContent();
-			        break;
-			    }
-			}
+//			for (index = 0; index < langFormDataString.length; index++) {
+//			    if (langFormDataString[index].name == "boed_html") {
+//			    	var kani = tinyMCE.get(codename+'_'+$langID+'_boed_html');
+//			    	if(kani == null){
+//			    		console.log(langFormDataString);
+//			    	}
+//			    	langFormDataString[index].value = kani.getContent();
+//			        break;
+//			    }
+//			}
 			
 			dataString.push({
 				name : $langLocale,
@@ -86,6 +90,8 @@ $(function(){
 		}).fail(function(){
 			alert( translations.tr_meliscore_error_message );
 		});
+		
+		melisCoreTool.done(".btnMelisCoreEmailMngtSave");
 	});
 	
 	$("body").on("click", ".btnMelisCoreEmailMngtDelete", function(){
@@ -129,9 +135,26 @@ $(function(){
 		$('.boed_lang_id').each(function(){
 			langID = $(this).val();
 			codename = $(this).data('codename');
+			var selector = "#"+codename+"_"+langID+"_boed_html";
             // Initialize TinyMCE editor
-        	melisTinyMCE.createTinyMCE("tool", "textarea#"+codename+"_"+langID+"_boed_html", {height: 200, remove_script_host: false, convert_urls : true});
+        	melisTinyMCE.createTinyMCE("tool", selector, {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false, 
+        		setupcontent_callback : cgeDawBeh(selector)
+    		});
 		});
+		
+	}
+	
+	window.cgeDawBeh = function(selector){
+		var currentPage = $(selector).closest('.container-level-a');
+		var editorCount = currentPage.find('.boed_lang_id').length;
+		var currentCount = parseInt(currentPage.data('editor-count'), 10);
+		
+		if(currentCount != editorCount){
+			currentPage.data('editor-count', currentCount + 1);
+		}else{
+			melisCoreTool.done(".btnMelisCoreEmailMngtSave");
+		}
+		
 	}
 	
 	window.reInitTableEmailMngt = function(){

@@ -22,8 +22,9 @@ class MelisPhpUnitToolController extends AbstractActionController
 
     public function renderPhpunitContainerAction()
     {
-        $view = new ViewModel();
 
+        $view = new ViewModel();
+        $view->isActive = $this->isActivated();
         return $view;
     }
 
@@ -74,8 +75,13 @@ class MelisPhpUnitToolController extends AbstractActionController
             $modules = $tmp;
         }
 
+        $moduleSvc   = $this->getServiceLocator()->get('ModulesService');
+        $modulesInfo = $moduleSvc->getModulesAndVersions();
+
+
         $view->modules = $modules;
         $view->warningLogs = $this->checkAllModule();
+        $view->modulesInfo = $modulesInfo;
 
         return $view;
     }
@@ -119,12 +125,13 @@ class MelisPhpUnitToolController extends AbstractActionController
         $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites', 'melisassetmanager']);
         $coreModules = array();
         foreach($coreModulesArray as $module) {
+            //echo 'test';
             $coreModules[] = $module;
         }
 
         $modules = array_merge($modules, $coreModules);
 
-        $testCfgDir = HTTP_ROOT.'../test';
+        $testCfgDir = $_SERVER['DOCUMENT_ROOT'].'/../test';
         $testCfgFile = $testCfgDir.'/test.application.config.php';
         $logs = array();
 
@@ -150,30 +157,29 @@ class MelisPhpUnitToolController extends AbstractActionController
 
         foreach($modules as $module) {
             $phpUnitCfg = $config->getItem('diagnostic/' . $module);
+
             if($phpUnitCfg) {
                 $testFolder = isset($phpUnitCfg['testFolder']) ? $phpUnitCfg['testFolder'] : null;
                 $moduleTest = isset($phpUnitCfg['moduleTestName']) ? $phpUnitCfg['moduleTestName'] : null;
                 $modulePath = $modSvc->getModulePath($module, true);
 
-
-                if(file_exists($modulePath)) {
+                if(file_exists($modulePath) && !file_exists($modulePath.'/'.$testFolder)) {
+                    $modulePathDisplay = $modSvc->getModulePath($module, false);
                     if(!is_readable($modulePath)) {
-                        $logs[] = 'Unable to run test on ' . $module .' (' . $modulePath .'), folder not readable';
+                        $logs[] = 'Unable to create diagnostic test on ' . $module .' (' . $modulePathDisplay .'), folder is not readable';
                     }
-
-                    if(!is_writable($modulePath)) {
-                        $logs[] = 'Unable to run test on ' . $module .' (' . $modulePath .'), folder not writable';
+                    else {
+                        if(!is_writable($modulePath)) {
+                            $logs[] = 'Unable to create diagnostic test on ' . $module .' (' . $modulePathDisplay .'), folder is not writable';
+                        }
                     }
                 }
 
                 if(file_exists($modulePath.'/'.$testFolder)) {
+                    // permission force change
+                    @chmod($modulePath.'/'.$testFolder, 0777);
                     if(!is_readable($modulePath.'/'.$testFolder)) {
                         $logs[] = $module.'/'.$testFolder . ' is not readable';
-                    }
-                    else {
-                        if(!is_writable($modulePath.'/'.$testFolder)) {
-                            $logs[] = $module.'/'.$testFolder . ' is not writable';
-                        }
                     }
                 }
 
@@ -183,6 +189,7 @@ class MelisPhpUnitToolController extends AbstractActionController
             }
 
         }
+
 
         return $logs;
     }
@@ -207,11 +214,11 @@ class MelisPhpUnitToolController extends AbstractActionController
                 $testModulePath = $modulePath.'/'.$testFolder;
                 if ($phpUnitCfg && !empty($testFolder)) {
 
-                    if(is_readable($testModulePath) && is_writable($testModulePath)) {
+                    if(is_readable($testModulePath)) {
                         $runTestResponse = $this->getPHPUnitTool()->runTest($module, $phpUnitCfg['moduleTestName'], $phpUnitCfg['testFolder']);
                         $testResults = $this->getPHPUnitTool()->getTestResult($module, $phpUnitCfg['moduleTestName'], $testFolder);
                         if (!$testResults) {
-                            $response .= $this->koMessage('No tests found!');
+                            $response .= $this->koMessage('No tests found! asdf');
                         }
                         else {
                             if(isset($testResults['tests']) && $testResults['tests']) {
@@ -320,21 +327,17 @@ class MelisPhpUnitToolController extends AbstractActionController
     {
         if(!is_readable($folderPath))
             return false;
-        if(!is_writable($folderPath))
-            return false;
 
         return true;
     }
 
-    public function testAction()
+    protected function isActivated()
     {
-        $command = '"C:/Program Files (x86)/Zend/ZendServer/bin/php.exe" --version';
-        $command = '"C:/Program Files (x86)/Zend/ZendServer/bin/php.exe" C:/bin/phpunit.phar --bootstrap "C:/Program Files (x86)/Zend/ZendServer/data/apps/http/www.melis-commerce.local/80/_docroot_/public/../vendor/melisplatform/melis-cms/test/Bootstrap.php" "C:/Program Files (x86)/Zend/ZendServer/data/apps/http/www.melis-commerce.local/80/_docroot_/public/../vendor/melisplatform/melis-cms/test/MelisCmsTest" --log-junit "C:/Program Files (x86)/Zend/ZendServer/data/apps/http/www.melis-commerce.local/80/_docroot_/public/../vendor/melisplatform/melis-cms/test/results.xml" --configuration "C:/Program Files (x86)/Zend/ZendServer/data/apps/http/www.melis-commerce.local/80/_docroot_/public/../vendor/melisplatform/melis-cms/test/phpunit.xml"';
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $isActivated = $config->getItemPerPlatform('meliscore/datas');
+        $isActivated = (bool) $isActivated['diagnostics']['active'];
 
-        $output = shell_exec($command);
-        print_r($output);
-
-        die;
+        return $isActivated;
     }
 
 }

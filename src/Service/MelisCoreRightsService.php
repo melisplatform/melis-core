@@ -147,7 +147,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 			'lazy' => false,
 			'selected' => $selectedInterface,
 			'iconTab' => '',
-			'hideCheckbox' => $hideCheckbox,
+			'checkbox' => $hideCheckbox,
 			'melisData' => array(
 				'colorSelected' => '#CB4040',
 			),

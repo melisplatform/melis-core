@@ -239,6 +239,7 @@ return array(
             'MelisText' => 'MelisCore\Form\Factory\MelisTextFactory',
             'MelisUserRoleSelect' => 'MelisCore\Form\Factory\MelisUserRoleSelectFactory',
             'MelisCoreMultiValInput' => 'MelisCore\Form\Factory\MelisCoreMultiValueInputFactory',
+            'DateField' => 'MelisCore\Form\Factory\DateFieldFactory',
         ),
     ),
     'view_helpers' => array(

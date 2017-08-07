@@ -26,7 +26,7 @@ class MelisGenericModalController extends AbstractActionController
 		$melisKey = $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey', ''));
          
         $view = new ViewModel();
-        $view->setTerminal(false);
+        $view->setTerminal(true);
         $view->id = $id;
         $view->melisKey = $melisKey;
          

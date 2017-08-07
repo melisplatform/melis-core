@@ -1,0 +1,42 @@
+/*** custom checkboxes ***/
+.font-awesome-checkbox { 
+    display:none; 
+}
+ 
+/* to hide the checkbox itself */
+.font-awesome-checkbox + label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+	cursor: pointer;
+}
+
+.font-awesome-checkbox + label {
+    font-size: 17px;
+    /* IE fix not working :before / after selector */
+    cursor: pointer;
+}
+
+/* unchecked icon */
+.font-awesome-checkbox + label:before { 
+    content: "\f096"; 
+} 
+/* space between checkbox and label */
+.font-awesome-checkbox + label:before { 
+    /* letter-spacing: 10px; */ 
+} 
+
+/* checked icon */
+.font-awesome-checkbox:checked + label:before { 
+    content: "\f046"; 
+} 
+/* allow space for check mark */
+.font-awesome-checkbox:checked + label:before { 
+    color: #72af46; 
+    /* letter-spacing: 5px; */ 
+} 
+
+/* cursor for disabled input checkbox */
+.font-awesome-checkbox:disabled + label:before {
+   	cursor: no-drop;
+    color: #d7d6d6;
+}

@@ -1,17 +1,18 @@
 <div id="newformalert"></div>
+<p class="modal-text-info"><?= $this->translate('tr_meliscore_tool_user_modal_description')?></p>
 <?php 
     $form = $this->meliscore_tool_user_form_new;
-    $form->get('usr_password')->setLabel($form->get('usr_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password').'"></i>');
-    $form->get('usr_confirm_password')->setLabel($form->get('usr_confirm_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password_2').'"></i>');
     echo $this->form()->openTag($form);
     echo $this->melisFieldCollection($form);
 ?>
-<div class="center-block">
+<div class="center-block userimage">
     <span class="thumbnail">
       <img id="new-profile-image" width="64" height="64" src="/MelisCore/images/profile/default_picture.jpg" alt="<?= $this->translate('tr_meliscore_tool_user_usr_profile_image'); ?>">
     </span>
 </div>
-
+<script type="text/javascript">
+	$('.userimage').detach().insertAfter('fieldset#idnewusermanagement div:last');
+</script>
 <button type="submit" class="btn btn-success pull-right hidden-xs hidden-sm" id="btnAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
 <button type="submit" class="btn btn-success pull-right visible-xs visible-sm" id="btnAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></button>
 

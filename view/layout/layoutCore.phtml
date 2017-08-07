@@ -18,6 +18,23 @@ $loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
         ?>
+        <script type="text/javascript">
+       		var ua = window.navigator.userAgent;
+        	var msie = ua.indexOf("MSIE ");
+        	if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {// If Internet Explorer set timeoutHandle
+        		// self executing function
+        		(function() {
+				  	if( window.localStorage ) {
+					    if (!localStorage.getItem('firstLoad')) {
+					     	localStorage['firstLoad'] = true;
+					     	window.location.reload();
+					    } else {
+					      localStorage.removeItem('firstLoad');
+					    }
+				  	}
+				})();
+ 			}
+		</script>
         <!--[if lt IE 9]>
 		<link rel="stylesheet" href="../assets/components/library/bootstrap/css/bootstrap.min.css"/><![endif]-->
 		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->

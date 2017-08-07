@@ -14,10 +14,8 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Session\Container;
 use Zend\Http\Header\SetCookie;
-use Zend\Crypt\BlockCipher;
-use Zend\Crypt\Symmetric\Mcrypt;
-use Zend\Session\Config\SessionConfig;
 use Zend\Session\SessionManager;
+use Zend\Debug\Debug;
 /**
  * This class deals with authentification to Melis Platform
  */
@@ -74,7 +72,6 @@ class MelisAuthController extends AbstractActionController
     	$pass = '';
     	if($isRemembered == 1) {
     	    $user = $this->crypt($_COOKIE['cookie1'], 'decrypt');
-    	    $pass = $this->crypt($_COOKIE['cookie2'], 'decrypt');
     	    $loginForm->get('usr_login')->setValue($user);
     	    $loginForm->get('usr_password')->setValue($pass);
     	    $isChecked = true;
@@ -111,6 +108,7 @@ class MelisAuthController extends AbstractActionController
     	if ($request->isPost())
     	{
     		$postValues = get_object_vars($request->getPost());
+
     		$loginForm->setData($postValues);
     		
     		// Validate datas
@@ -127,116 +125,181 @@ class MelisAuthController extends AbstractActionController
                      * PASSWORD UPDATE - June 05, 2017
                      * description: the following code below checks if the user's password is currently still on MD5,
                      * if it's on MD5, it will still accept it, once correctly matched then it will update the user's password
-                     * into AES with hash SHA256. If the password is already in AES, it will push through with the normal authentication
-                     * process.
+                     * encryption.
                      */
-    		        $isPasswordMd5 = false;
-    		        $password      = $postValues['usr_password'];
-    		        $newPassword   = null;
-    		        $md5Regex      = '/^[a-f0-9]{32}$/';
 
+                    // @var $requiresPasswordReset - Flag for password update when successfully logged-in
+    		        $requiresPasswordReset = false;
+    		        // @var $password - user provided password
+    		        $password              = $postValues['usr_password'];
+    		        // @var $newPassword - variable holder for new password encryption
+    		        $newPassword           = null;
+    		        // @var $md5Regex - regular expression for checking if the password in the user table is on MD5
+    		        $md5Regex              = '/^[a-f0-9]{32}$/';
+    		        // @var $needReset - Flag if user need's to use the forgot password link
+    		        $needReset             = false;
+
+    		        // if the user password in the user table is on MD5
     		        if(preg_match($md5Regex, $userData->usr_password)) {
-    		            $isPasswordMd5 = true;
-                        $newPassword   = $melisCoreAuth->encryptPassword($password);
-                        $password      = md5($postValues['usr_password']);
+    		            // set $requiresPasswordReset flag to "true" to update to new password encryption
+                        $requiresPasswordReset = true;
+                        // encrypt the password to new encryption
+                        $newPassword           = $melisCoreAuth->encryptPassword($password);
+                        // set the MD5 value of the user provided password, to match its' value to the user table password field
+                        $password              = md5($postValues['usr_password']);
                     }
                     else {
-                        $userEncPassword = $userData->usr_password;
-                        $userDecPassword = $melisCoreAuth->decryptPassword($userEncPassword);
-                        if($password == $userDecPassword) {
-                            // this will be used in setCredential method
-                            $password = $userEncPassword;
+                        // check if the user password in user table is already in the new password encryption algorithm
+                        if(strlen($userData->usr_password) != 60) {
+
+                            // get the 'use_mcrypt' config
+                            $useMcrypt   = $melisMelisCoreConfig->getItem('/meliscore/datas/default/accounts')['use_mcrypt'];
+                            // encrypt the password to new encryption
+                            $newPassword = $melisCoreAuth->encryptPassword($password);
+
+                            /**
+                             * if 'use_mcrypt' is set to "true", then we'll use the mcrypt API for password checking,
+                             * however, this will still update the password to new password encryption.
+                             *
+                             * WARNING: mcrypt API is deprecated on PHP 7.1
+                             */
+                            if($useMcrypt) {
+                                // salt config
+                                $salt = $melisMelisCoreConfig->getItem('/meliscore/datas/default/accounts')['salt'];
+                                // hash_method config
+                                $hash = $melisMelisCoreConfig->getItem('/meliscore/datas/default/accounts')['hash_method'];
+
+                                $enc = new \Zend\Crypt\BlockCipher(new \Zend\Crypt\Symmetric\Mcrypt(array(
+                                    'algo' => 'aes',
+                                    'mode' => 'cfb',
+                                    'hash' => $hash
+                                )));
+                                $enc->setKey($salt);
+
+                                // get the encrypted password value from the user table
+                                $userEncPassword   = $userData->usr_password;
+                                // get the decrypted password value from the user table
+                                $decryptedPassword = $enc->decrypt($userData->usr_password);
+
+                                // try to login using AES SHA256 by matching the decrypted user password to the user provided password
+                                if($password == $decryptedPassword) {
+                                    // set $requiresPasswordReset flag to "true" to update to new password encryption
+                                    $requiresPasswordReset = true;
+                                    // encrypt the password to new encryption
+                                    $newPassword           = $melisCoreAuth->encryptPassword($password);
+                                    // set the MD5 value of the user provided password, to match its' value to the user table password field
+                                    $password              = $userEncPassword;
+                                }
+                            }
+                            else {
+                                // asked the password to reset their password (by using "forgot password" link)
+                                $needReset = true;
+                            }
                         }
+                        else {
+                            $userPassword = $userData->usr_password;
+                            if($melisCoreAuth->isPasswordCorrect($password, $userPassword)) {
+                                // this will be used in setCredential method
+                                $password = $userPassword;
+                            }
 
+                        }
                     }
-
-
-
 
     		    	// If user is active
     		        if($userData->usr_status != self::USER_INACTIVE)
     		        {
-    		            $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
-    		            							->setCredential($password);
-    		        
-    		            $result = $melisCoreAuth->authenticate();
-    		        
-    		            if ($result->isValid())
-    		            {
-    		                $user = $melisCoreAuth->getAdapter()->getResultRowObject();
-    		        
-    		                // Update the rights of the user if it's not a custom role
-    		                if ($user->usr_role_id != self::ROLE_ID_CUSTOM)
-    		                {
-    		                    // Get rights from Role table
-    		                    $rightsXML = '';
-    		                    $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
-    		                    $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
-    		                    if ($datasRole)
-    		                    {
-    		                        $datasRole = $datasRole->current();
-    		                        if (!empty($datasRole))
-    		                        {
-    		                            $user->usr_rights = $datasRole->urole_rights;
-    		                        }
-    		                    }
-    		                }
-    		        
-    		                // Write session
-    		                $melisCoreAuth->getStorage()->write($user);
-    		                 
-    		                // Update Melis BO locale
-    		                $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
-    		                $datasLang = $melisLangTable->getEntryById($user->usr_lang_id);
-    		                
-    		                if (!empty($datasLang->current()))
-    		                {
-    		                    $datasLang = $datasLang->current();
-    		                    $container = new Container('meliscore');
-    		                    $container['melis-lang-id'] = $user->usr_lang_id;
-    		                    $container['melis-lang-locale'] = $datasLang->lang_locale;
-    		                }
-    		        
-    		                // update last login
-                            $loggedInDate = date('Y-m-d H:i:s');
-    		                $this->getEventManager()->trigger('melis_core_auth_login_ok', $this, [
-    		                    'login_date' => $loggedInDate,
-                                'usr_id'     => $user->usr_id
-                            ]);
+    		            if(!$needReset) {
+                            $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
+                                ->setCredential($password);
 
-    		                // update user password if the password is on MD5
-                            if($isPasswordMd5) {
-                                $userTable->save([
-                                    'usr_password' => $newPassword
-                                ], $userData->usr_id);
+                            $result = $melisCoreAuth->authenticate();
+
+                            if ($result->isValid())
+                            {
+                                $user = $melisCoreAuth->getAdapter()->getResultRowObject();
+
+                                // Update the rights of the user if it's not a custom role
+                                if ($user->usr_role_id != self::ROLE_ID_CUSTOM)
+                                {
+                                    // Get rights from Role table
+                                    $rightsXML = '';
+                                    $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
+                                    $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
+                                    if ($datasRole)
+                                    {
+                                        $datasRole = $datasRole->current();
+                                        if (!empty($datasRole))
+                                        {
+                                            $user->usr_rights = $datasRole->urole_rights;
+                                        }
+                                    }
+                                }
+
+                                // Write session
+                                $melisCoreAuth->getStorage()->write($user);
+
+                                // Update Melis BO locale
+                                $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
+                                $datasLang = $melisLangTable->getEntryById($user->usr_lang_id);
+
+                                if (!empty($datasLang->current()))
+                                {
+                                    $datasLang = $datasLang->current();
+                                    $container = new Container('meliscore');
+                                    $container['melis-lang-id'] = $user->usr_lang_id;
+                                    $container['melis-lang-locale'] = $datasLang->lang_locale;
+                                }
+
+                                // update last login
+                                $loggedInDate = date('Y-m-d H:i:s');
+                                $this->getEventManager()->trigger('melis_core_auth_login_ok', $this, [
+                                    'login_date' => $loggedInDate,
+                                    'usr_id'     => $user->usr_id
+                                ]);
+
+                                // update user password if the password is on MD5
+                                if($requiresPasswordReset) {
+                                    $userTable->save([
+                                        'usr_password' => $newPassword
+                                    ], $userData->usr_id);
+                                }
+
+                                // Retrieving recent user logs on database
+                                $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
+
+                                // check if the user clicked remember me button
+                                $rememberMe = (int) $request->getPost('remember');
+                                if($rememberMe == 1)
+                                {
+                                    $this->rememberMe($postValues['usr_login'], $postValues['usr_password']);
+                                }
+                                else
+                                {
+                                    $this->forgetMe($postValues['usr_login'], $postValues['usr_password']);
+                                }
+
+                                $result = array(
+                                    'success' => true,
+                                    'errors' => array(),
+                                );
                             }
-    		                
-    		                // Retrieving recent user logs on database
-    		                $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
-    		        
-    		                // check if the user clicked remember me button
-    		                $rememberMe = (int) $request->getPost('remember');
-    		                if($rememberMe == 1) 
-    		                {
-    		                    $this->rememberMe($postValues['usr_login'], $postValues['usr_password']);
-    		                }
-    		                else 
-    		                {
-    		                    $this->forgetMe($postValues['usr_login'], $postValues['usr_password']);
-    		                }
-    		        
-    		                $result = array(
-    		                    'success' => true,
-    		                    'errors' => array(),
-    		                );
-    		            }
-    		            else
-    		            {
-    		                $result = array(
-    		                    'success' => false,
-    		                    'errors' => array('empty' => $translator->translate('tr_meliscore_login_auth_Failed authentication')),
-    		                );
-    		            }
+                            else
+                            {
+                                $result = array(
+                                    'success' => false,
+                                    'errors' => array('empty' => $translator->translate('tr_meliscore_login_auth_Failed authentication')),
+                                );
+                            }
+                        }
+                        else {
+                            $result = array(
+                                'success' => false,
+                                'require_reset_password' => true,
+                                'errors' => array('empty' => $translator->translate('tr_meliscore_login_password_enc_update')),
+                            );
+                        }
+
     		        }
     		        else
     		        {
@@ -466,11 +529,9 @@ class MelisAuthController extends AbstractActionController
         
         
         $user = new SetCookie('cookie1', $this->crypt($username), strtotime($expire, time()));
-        $pass = new SetCookie('cookie2', $this->crypt($password), strtotime($expire, time()));
         $remember = new SetCookie('remember', 0, strtotime($expire, time()));
     
         $this->getResponse()->getHeaders()->addHeader($user);
-        $this->getResponse()->getHeaders()->addHeader($pass);
         $this->getResponse()->getHeaders()->addHeader($remember);
         
         // add code here to remove session
@@ -493,24 +554,16 @@ class MelisAuthController extends AbstractActionController
         
         $hashMethod = $datas['accounts']['hash_method'];
         $salt = $datas['accounts']['salt'];
-        // hash password
-        $bEncryptor = new BlockCipher(new Mcrypt(array(
-            'algo' => 'aes',
-            'mode' => 'cfb',
-            'hash' => $hashMethod
-        )));
-        $bEncryptor->setKey($salt);
-        
-        if($type == 'encrypt') 
-        {
-            $value = $bEncryptor->encrypt($data);
+
+        if($type == 'encrypt') {
+            return base64_encode($data);
         }
-        elseif($type == 'decrypt') 
-        {
-            $value = $bEncryptor->decrypt($data);
+
+        if($type == 'decrypt') {
+            return base64_decode($data);
         }
-       
-        return $value;
+
+        return;
     }
 
     public function testAction()

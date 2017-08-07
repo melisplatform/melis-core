@@ -4,22 +4,47 @@ if (!empty($this->zoneconfig['conf']['id']))
     $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
 $data_melisKey = $this->melisKey;
 
-
 ?>
 <div<?= $id; ?>  class="tab-pane container-level-a" data-melisKey='<?= $data_melisKey; ?>'>
     <?php
-    if(empty($this->noAccess))
-    {
-        if(!empty($this->zoneconfig['interface'])) {
-            foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
-                echo $this->$keyConfig;
+    if($this->isActive) {
+        if (empty($this->noAccess)) {
+            if (!empty($this->zoneconfig['interface'])) {
+                foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                    echo $this->$keyConfig;
+                }
             }
+        } else {
+            echo '<h4>' . $this->noAccess . '</h4>';
         }
     }
-    else
-    {
-        echo '<h4>'.$this->noAccess.'</h4>';
-    }
-
+    else {
     ?>
+    <div class="row">
+        <div class="col-lg-7 col-lg-offset-2">
+            <div id="diagnostic-container" class="alert alert-warning" role="alert">
+                <div class="diagnostic-wrap">
+                    <h3><i class="fa fa-warning"></i> Module diagnostic has been disabled</h3>
+                    <p><i class="fa fa-info-circle"></i> In order to use Melis Diagnostic go to <em>module/MelisModuleConfig/config/app.interface.php</em> and set <strong>active</strong> to <strong>true</strong>
+<pre>
+<code>
+'diagnostics' => array(
+    /**
+    * set to "true" if you want to use diagnostics
+    */
+    'active' => true,
+...
+</code>
+</pre>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<?php
+    }
+?>
 </div>
+

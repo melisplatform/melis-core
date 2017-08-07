@@ -109,7 +109,7 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
 
             foreach ($output as $k => &$v) {
                 if ($diff->$k) {
-                    $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+                    $v = $diff->$k . $v . ($diff->$k > 1 ? '' : '');
                 } else {
                     unset($output[$k]);
                 }
@@ -124,7 +124,7 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
             }
 //            print_r($output);
 
-            return $output ? implode(', ', $output) . ' ' . $ago : $now;
+            return $output ? implode(' ', $output) . ' ' . $ago : $now;
         }
 
         return null;

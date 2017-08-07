@@ -71,7 +71,8 @@ class UserController extends AbstractActionController
         
         $view = new ViewModel();
         $view->setVariable('meliscore_forgot', $forgotForm);
-        
+        $view->setVariable('formFactory', $factory);
+        $view->setVariable('formConfig', $appConfigForm);
         return $view;
     }
     
@@ -236,6 +237,8 @@ class UserController extends AbstractActionController
         
         
         $view->setVariable('meliscore_resetpass', $forgotForm);
+        $view->setVariable('formFactory', $factory);
+        $view->setVariable('formConfig', $appConfigForm);
         $view->hashExists = $hashExists;
         $view->message = $translator->translate($textMessage);
         $view->success = $success;

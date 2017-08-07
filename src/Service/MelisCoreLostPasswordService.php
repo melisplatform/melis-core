@@ -187,13 +187,14 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
      */
     protected function updatePassword($login, $newPass)
     {
-        $success = false;
-        $sPass = md5($newPass);
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $success       = false;
+        $userTable     = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+
         if($this->isDataExists($login)) 
         {
             $userTable->update(array(
-                'usr_password' => md5($newPass)
+                'usr_password' => $melisCoreAuth->encryptPassword($newPass)
             ),'usr_login', $login);
             
             $success = true;
@@ -275,7 +276,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
      */
     private function generateHash()
     {
-        return bin2hex(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM));
+        return bin2hex(uniqid());
     }
     
 }

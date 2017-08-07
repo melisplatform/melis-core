@@ -71,6 +71,7 @@ return array(
 			            'name' => 'meliscore_forgot',
 			            'id' => 'idformmeliscoreforgot',
 			            'method' => 'POST',
+			            'novalidate' => 'novalidate',
 			            //'action' => '/melis/lost-password-request',
 			        ),
 			        'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
@@ -126,7 +127,7 @@ return array(
 			            'name' => 'meliscore_reset_pass',
 			            'id' => 'idformmeliscoreresetpass',
 			            'method' => 'POST',
-
+			            'novalidate' => 'novalidate',
 			        ),
 			        'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
 			        'elements' => array(

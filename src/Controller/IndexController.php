@@ -103,10 +103,14 @@ class IndexController extends AbstractActionController
     public function footerAction()
     {
     	$melisKey = $this->params()->fromRoute('melisKey', '');
-    	
+
+    	$moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+    	$platformVersion =  $moduleSvc->getModulesAndVersions('MelisCore');
+
     	$view = new ViewModel();
     	$view->melisKey = $melisKey;
-    	
+    	$view->platformVersion = $platformVersion['version'];
+
     	return $view;
     }
     
@@ -137,5 +141,13 @@ class IndexController extends AbstractActionController
     	$view = new ViewModel();
     	$view->melisKey = $melisKey;
     	return $view;
+    }
+
+    public function viewSessionAction()
+    {
+        $container = new \Zend\Session\Container('meliscore');
+
+        \Zend\Debug\Debug::dump($container->getArrayCopy());
+        die;
     }
 }

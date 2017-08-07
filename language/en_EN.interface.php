@@ -4,7 +4,7 @@
 	    'fr_FR' => 'French',
 		'tr_meliscore_header Title' => 'Melis Platform',
 		'tr_meliscore_footer_Version' => 'Version',
-		'tr_meliscore_footer_2015 by Melis Technology' => '© 2016 by Melis Technology',
+		'tr_meliscore_footer_2015 by Melis Technology' => '© ' . date('Y') . ' by Melis Technology',
 		'tr_meliscore_footer_all rights reserved' => 'All rights reserved.',
 		'tr_meliscore_center_dashboard_title' => 'Melis Technology',
 
@@ -67,27 +67,42 @@
 	    
 	    // USER MANAGEMENT TOOL
 	    'tr_meliscore_tool_user' => 'User management',
+	    'tr_meliscore_tool_user_description' => 'Manage here the users having access to the platform as well as their rights and/or restrictions.',
+	    'tr_meliscore_tool_user_modal_description' => 'Manage here the generic information of the user account.',
+	    'tr_meliscore_tool_user_rights_description' => 'Manage here the different accesses of this user to Melis Platform.<br>Warning, the interface exclusions allow to prevent the display of a specific area for this user.',
+	    'tr_meliscore_tool_user_rights_connection' => 'Consult here the different connections of this user.',
 	    'tr_meliscore_tool_user_col_id' => 'ID',
+	    'tr_meliscore_tool_user_col_id tooltip' => 'Identifier of the user',
 	    'tr_meliscore_tool_user_col_status' => 'Status',
+	    'tr_meliscore_tool_user_col_power tooltip' => '<i class="fa fa-power-off" data-toggle="tooltip" data-placement="left" title="" data-original-title="Green for online, red for offline"></i>',
+	    'tr_meliscore_tool_user_col_status tooltip' => 'Choice of the status of the user account',
 	    'tr_meliscore_back_to_login_page' => 'Go back to login page',
 	    'tr_meliscore_tool_user_col_username' => 'Login',
+	    'tr_meliscore_tool_user_col_username tooltip' => 'Username to connect to Melis Platform',
 	    'tr_meliscore_tool_user_col_Email' => 'Email',
+	    'tr_meliscore_tool_user_col_Email tooltip' => 'Email address of the user',
 	    'tr_meliscore_tool_user_col_name' => 'Name',
 	    'tr_meliscore_tool_user_col_first_name' => 'First name',
+	    'tr_meliscore_tool_user_col_first_name tooltip' => 'First name of the user',
 	    'tr_meliscore_tool_user_col_last_name' => 'Last name',
+	    'tr_meliscore_tool_user_col_last_name tooltip' => 'Last name of the user',
 	    'tr_meliscore_tool_user_col_role' => 'Role',
 	    'tr_meliscore_tool_user_col_last_login' => 'Last login',
 	    'tr_meliscore_tool_user_col_profile' => 'Photo',
+	    'tr_meliscore_tool_user_col_profile tooltip' => ' Profile picture of the user',
 	    'tr_meliscore_tool_user_col_admin' => 'Admin',
+	    'tr_meliscore_tool_user_col_admin tooltip' => 'Give administrator attributes to this account which will allow the user to visualize some contents without limitation and depending on the tool.',
 	    'tr_meliscore_tool_user_col_password' => 'Password',
+	    'tr_meliscore_tool_user_col_password tooltip' => 'User password (must be of 8 characters minimum and contain at least a letter and a number)',
 	    'tr_meliscore_tool_user_col_confirm_password' => 'Confirm password',
+	    'tr_meliscore_tool_user_col_confirm_password tooltip' => 'Password confirmation of the user',
 	    'tr_meliscore_tool_user_modal_empty' => 'No access',
 	    'tr_meliscore_tool_user_modal_edit' => 'Information',
 	    'tr_meliscore_tool_user_modal_rights' => 'Rights',
         'tr_meliscore_tool_user_view_date_connection_handler' => 'User view date connection modal handler',
         'tr_meliscore_tool_user_view_date_connection_modal' => 'User view date connection modal content',
         'tr_meliscore_tool_user_view_date_connection' => 'Date connections',
-        'tr_meliscore_tool_usrcd_last_login_date' => 'Login date',
+        'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
         'tr_meliscore_tool_usrcd_last_connection_time' => 'Connection time',
 
 	    
@@ -162,6 +177,7 @@
 	    'tr_meliscore_common_success' => 'Success',
 	    'tr_meliscore_common_apply' => 'Apply',
 	    'tr_meliscore_common_update' => 'Update',
+	    'tr_meliscore_common_clear' => 'Clear',
 	    
 	    'tr_meliscore_login_remember_me' => 'Remember my details',
 	    'tr_meliscore_login_header' => 'Login to your Account',
@@ -183,7 +199,7 @@
 	    'tr_meliscore_dt_sLoadingRecords' => 'Loading...',
 	    'tr_meliscore_dt_sProcessing' => 'Processing...',
 	    'tr_meliscore_dt_sSearch' => 'Search:',  
-	    'tr_meliscore_dt_sZeroRecords' => 'No product correspond to the search',
+	    'tr_meliscore_dt_sZeroRecords' => 'No result to display',
 	    'tr_meliscore_dt_sFirst' => 'First',
 	    'tr_meliscore_dt_sLast' => 'Last',  
 	    'tr_meliscore_dt_sNext' => 'Next',
@@ -220,6 +236,7 @@
 	    'tr_meliscore_system_configuration' => 'System configuration',
 	    'tr_meliscore_module_management' => 'Module management',
 	    'tr_meliscore_module_management_modules' => 'Modules',
+	    'tr_meliscore_module_management_modules_description' => 'Activate or deactivate here the modules of the platform. Drag and drop the modules to adjust the order.',
 	    'tr_meliscore_module_management_modules_save' => 'Save',
 	    'tr_meliscore_module_management_header' => 'Header content',
 	    'tr_meliscore_module_management_content' => 'Content',
@@ -274,14 +291,18 @@
 	    
 	    // Language Tool Translations
 	    'tr_meliscore_tool_language' => 'Back-Office languages',
+	    'tr_meliscore_tool_language_description' => 'Define here the different languages that can be used in the Back Office.',
 	    'tr_meliscore_tool_language_header' => 'Header',
 	    'tr_meliscore_tool_language_content' => 'Content',
 	    'tr_meliscore_tool_language_modal' => 'Modals',
 	    'tr_meliscore_tool_language_lang_id' => 'ID',
 	    'tr_meliscore_tool_language_lang_locale' => 'Locale',
+	    'tr_meliscore_tool_language_lang_locale tooltip' => 'Locale',
+	    'tr_meliscore_tool_language_lang_locale2 tooltip' => 'ex: en_EN',
 	    'tr_meliscore_tool_language_lang_locale_long' => 'Locale value too long, it shoule be less than 10 characters',
 	    'tr_meliscore_tool_language_lang_locale_empty' => 'Locale is empty',
 	    'tr_meliscore_tool_language_lang_name' => 'Name',
+	    'tr_meliscore_tool_language_lang_name tooltip' => 'Each language must have a name and its &#34;locale&#34; defined',
 	    'tr_meliscore_tool_language_lang_name_long' => 'Name too long, it should be less than 45 characters',
 	    'tr_meliscore_tool_language_lang_name_empty' => 'Please enter the language name',
 	    'tr_meliscore_tool_language_new' => 'New language',
@@ -308,7 +329,9 @@
 	    /*   Email Management  */
 	    'tr_meliscore_tool_emails_mngt_generic_from' => 'Email creation and edition Form',
 	    'tr_meliscore_tool_emails_mngt' => 'Emails management',
+	    'tr_meliscore_tool_emails_mngt_description' => 'You can define here all the properties of the email.',
 	    'tr_meliscore_tool_emails_mngt_header' => 'Emails management',
+	    'tr_meliscore_tool_emails_mngt_header_description' => 'This tool allows to manage the emails sent by the different tools of the Back Office. <br>Some of these emails cannot be deleted (ex: "Forgotten password") because they are part of the basic functionalities of the platform. All can however be redefined. <br>Other specific tools can add email to this system.',
 	    'tr_meliscore_tool_emails_mngt_header_btn_add' => 'Add a new email',
 	    'tr_meliscore_tool_emails_mngt_content' => 'Content',
 	    'tr_meliscore_tool_emails_mngt_content_refresh' => 'Refresh',
@@ -347,17 +370,26 @@
 	    'tr_emails_management_deleted' =>  'deleted',
         // General Properties Form
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_name' => 'Name of the email',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_name tooltip' => ' Information used only on the Back Office side (Tool list...)',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_code_name' => 'Email code',
-        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_name' => 'From name',
-        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email' => 'From email',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_code_name tooltip' => 'Unique code used to recover the information of the email in a simple way (field destined to the developers)',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_name' => 'Sender name',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_name tooltip' => 'Sender name',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email tooltip' => 'Correspond to the &#34;From&#34; field of the email',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email' => 'Sender email (From)',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to' => 'Reply To',
-        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to tooltip' => 'Email to which the user will reply to (reply To)',
+        'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])"></i>',
 	    'tr_emails_management_emal_boe_code_name_must_be_unique' => 'Codename is already exist, Try another one.',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout' => 'Layout',
+	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout tooltip' => 'Path to the physical file of the template of the email',
 	    // Emails Details Form
 	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject' => 'Subject',
+	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject tooltip' => 'Email Subject',
 	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html' => 'Message',
+	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html tooltip' => 'Content of the email (usage of tags possible)',
 	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text' => 'Text Version',
+	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text tooltip' => 'Content of the email without html (usage of tags possible)',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder' => 'Separate options with a comma',
 	    // Form Error Message
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_empty' => 'Value is required and can\'t be empty',
@@ -392,6 +424,7 @@
 	    
 	    // Module Diagnostic Tool
 	    'tr_melis_module_diagnostics_title' => 'Module diagnostics',
+	    'tr_melis_module_diagnostics_description' => 'This module is used to lauch a set of tests in order to evaluate the correct configuration of the platform.<br>The tests can be launched all together or individually.',
 	    'tr_melis_module_diagnostics_run_test' => '<i class="fa fa-play"></i> Run',
 	    'tr_melis_module_diagnostics_testing' => '<i class="fa fa-spinner"></i> Testing...',
 	    'tr_melis_module_diagnostics_collapse' => '<i class="fa fa-minus"></i> Hide',
@@ -449,6 +482,7 @@
 	    
 	    // Logs Tool
 	    'tr_meliscore_logs_tool' => 'Logs',
+	    'tr_meliscore_logs_tool_description' => 'This tool saves the actions made by all users of the platform. the logs are then sortable according to their origin, to the user and to their type.',
 	    'tr_meliscore_logs_type' => 'Log type',
 	    
 	    // Table columns
@@ -486,5 +520,7 @@
 	    'tr_meliscore_date_for' => ' for ',
 	    'tr_meliscore_date_start' => 'Start',
 	    'tr_meliscore_date_end' => 'End',
+
+        'tr_melisore_tinymce_file_manager' => 'File Manager',
 	);
 ?>

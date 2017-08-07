@@ -22,7 +22,7 @@
     		</div>
     		<div class="product-text-tab-form-content">
     			<?php
-                	$form = $this->meliscore_emails_mngt_tool_emails_details_form;
+                	$form = clone $this->meliscore_emails_mngt_tool_emails_details_form;
                 	
                 	$form->setAttribute('id',$this->codename.'_'.$this->coreLangDatas[$i]['lang_id'].'_emailLangForm');
                 	$form->get('boed_html')->setAttribute('id',$this->codename.'_'.$this->coreLangDatas[$i]['lang_id'].'_boed_html');
@@ -56,3 +56,4 @@
     	</div>
 	<?php } ?>
 </div>
+<script type="text/javascript">initEmailsEditors();</script>

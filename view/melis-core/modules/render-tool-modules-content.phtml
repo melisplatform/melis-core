@@ -8,95 +8,74 @@ if (!empty($this->zoneconfig['conf']['id']))
 
 <div <?= $id; ?> data-melisKey="<?= $data_melisKey; ?>">
 	<div class="spacing-x2 innerAll">
+        <!-- modules -->
+        <div class="module-settings">
 
-			<!-- modules -->
-            <div class="module-settings">
-            
-            	<div class="ms-heading">
-            		<h4>Modules</h4>
-            		<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
-            	</div>
-            	
-            	
-            	<div class="module-sortable">
-            		<?php
-            		  if (!empty($this->modules))
-            		  {
-                		  foreach($this->modules as $moduleName => $moduleStatus)
-                		  {    
-            		          ?>
-                                <div class="module-cont clearfix">
-                
-                                		<h4><?= $moduleName; ?></h4>
-                
-                						<div data-module-name="<?= $moduleName; ?>" class="make-switch module-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
-                							<?php 
-                							$status = $moduleStatus > 0 ? 'checked' : '';
-                							?>
-                							<input name="<?= $moduleName; ?>" data-module-name="<?= $moduleName; ?>" type="checkbox" <?= $status; ?>/>
-                						</div>
-                
-                            	</div>
-                            	<?php
-                		  }
-            		  }
-                	?>
-            	</div>
-            	
+            <div class="ms-heading">
+                <div class="pull-left">
+                    <h4>Modules</h4>
+                </div>
+                <div class="pull-right">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-6  module-version-display">
+                            <h4>Version </h4>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 ">
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
             </div>
 
-<?php 
-    /*
-			<!-- websites -->
-            <div class="module-settings">
-            
-            	<div class="ms-heading">
-            		<h4>Websites</h4>
-            		<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
-            	</div>
-            	
-            	<div class="module-sortable">
-                	<?php foreach($this->siteModules as $moduleName => $moduleStatus): ?>
-                    <div class="module-cont clearfix">
-                    	
-                    		<h4><?= $moduleName; ?></h4>
-    
-    						<div data-module-name="<?= $moduleName; ?>" class="make-switch module-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
-    							<?php 
-    							$status = $moduleStatus > 0 ? 'checked' : '';
-    							?>
-    							<input name="<?= $moduleName; ?>" data-module-name="<?= $moduleName; ?>" type="checkbox" <?= $status; ?>/>
-    						</div>
-    
-                	</div>
-                	<?php endforeach; ?>
-            	</div>
+            <div class="module-sortable">
+            <?php
+              if (!empty($this->modules))
+              {
+                  foreach($this->modules as $moduleName => $moduleStatus)
+                  {
+                      ?>
+                        <div class="module-cont clearfix">
+                            <div class="pull-left">
+                                <h4><?= $moduleName; ?></h4>
+                            </div>
+                            <div class="pull-right">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-6 ">
+                                        <h4><?= $this->modulesInfo[$moduleName]['version']; ?> </h4>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6 ">
+                                        <div data-module-name="<?= $moduleName; ?>" class="make-switch module-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
+                                            <?php
+                                            $status = $moduleStatus > 0 ? 'checked' : '';
+                                            ?>
+                                            <input name="<?= $moduleName; ?>" data-module-name="<?= $moduleName; ?>" type="checkbox" <?= $status; ?>/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+            <?php
+                  }
+              }
+            ?>
             </div>
-    */
-?>
-
- 			<!-- <button id="btnModulesSave" class="btn btn-success pull-right"><i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_module_management_modules_save'); ?></button> -->
-
 	</div>
 
 </div>
 	
 <script type="text/javascript">
-
-
-	$(document).ready(function() {
-		
-		// initialize jquery sortable
-	    $(".module-sortable").sortable({
-	    	containment: "parent",
-	    	placeholder: "ui-sortable-placeholder",
-	    	opacity: 0.8,
-	    	revert: 300,
-			tolerance: "pointer",
-	    });
-	    
-	});
-
+$(document).ready(function() {
+    // initialize jquery sortable
+    $(".module-sortable").sortable({
+        containment: "parent",
+        placeholder: "ui-sortable-placeholder",
+        opacity: 0.8,
+        revert: 300,
+        tolerance: "pointer",
+    });
+});
 </script>
 
 

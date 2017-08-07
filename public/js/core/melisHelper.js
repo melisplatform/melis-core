@@ -173,7 +173,15 @@ var melisHelper = (function(){
 		var targetInput = $(selector);
 		if(targetInput.length){
 			var parentDiv = targetInput.parent("div.form-group");
-			var switchBtn = '<label for="'+targetInput.attr("name")+'">'+targetInput.data("label")+'</label>'
+			var attribRequired = '';
+			if(typeof targetInput.data("required") != 'undefined'){
+				attribRequired = ' *';
+			}
+			var attribTooltip = '';
+			if(typeof targetInput.data("tooltip") != 'undefined'){
+				attribTooltip = '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' + targetInput.data("tooltip") +'"></i>';
+			}
+			var switchBtn = '<label for="'+targetInput.attr("name")+'">'+targetInput.data("label") + attribRequired + attribTooltip+'</label>'
 							+'<div class="make-switch user-admin-switch" data-label-icon="glyphicon glyphicon-resize-horizontal" data-on-label="'+translations.tr_meliscore_common_yes+'" data-off-label="'+translations.tr_meliscore_common_no+'" style="display: block;">'
 								+'<input type="checkbox" name="'+targetInput.attr("name")+'" id="'+targetInput.attr("name")+'">'
 							+'</div>';
@@ -423,8 +431,12 @@ var melisHelper = (function(){
     // Requesting flag set to false so this function will set state to ready 
 	var createModalRequestingFlag = false;
     // CREATE MODAL =================================================================================================================
-    function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl, callback){
-    	
+    function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl, callback, modalBackDrop){
+    	// declaring parameters variable for old / cross browser compatability
+    	if (typeof(modalUrl)==='undefined') modalUrl = null;
+	    if (typeof(callback)==='undefined') callback = null;
+	    if (typeof(modalBackDrop)==='undefined') modalBackDrop = true;
+
     	if (createModalRequestingFlag == false){
     		
     		// Requesting flag set to true so this function will execute any action while still requesting
@@ -439,6 +451,7 @@ var melisHelper = (function(){
     			id : zoneId,
     			melisKey : melisKey,
     			hasCloseBtn : hasCloseBtn,
+    			parameters: parameters,
 	    	};
 	    	
 	    	$.ajax({
@@ -449,17 +462,19 @@ var melisHelper = (function(){
 	    		// Requesting flag set to false so this function will set state to ready 
 	    		createModalRequestingFlag = false;
 	    		
+
+
 	    		$("#melis-modals-container").append(data);
 				var modalID = $(data).find(".modal").attr("id");
 				melisHelper.zoneReload(zoneId, melisKey, parameters);
-				
+
 				$("#" + modalID).modal({ 
 					show: true, 
 					keyboard : false,
-					backdrop : "static"
+					backdrop : modalBackDrop
 				});
-				
-				if(typeof callback !== "undefined") {
+
+				if(typeof callback !== "undefined" && callback !== null) {
 					callback();
 				}
 				
@@ -498,6 +513,11 @@ var melisHelper = (function(){
 	  $(".melis-modaloverlay, .melis-modal-cont").remove();
 	});
 	
+	// Input-group that has clear function button 
+	$body.on("click", ".meliscore-clear-input", function(){
+		// Clearing the input of input-group
+		$(this).closest(".input-group").find("input").val("");
+	});
 	
     /* 
 	* RETURN ======================================================================================================================== 

@@ -41,7 +41,7 @@ var melisCore = (function(window){
     // REQUEST LOST PASSWORD
     $('#idformmeliscoreforgot').submit(function(event) {
         var datastring = $("#idformmeliscoreforgot").serialize();
-        console.log(datastring);
+        
         $.ajax({
             type        : 'POST', 
             url         : '/melis/lost-password-request',
@@ -162,38 +162,6 @@ var melisCore = (function(window){
     	var zoneId = $(this).parents(".container-level-a").attr("id");
     	melisHelper.zoneReload(zoneId, melisKey); 
     }
-
-    // IFRAME HEIGHT CONTROLS (for onload, displaySettings & sidebar collapse)
-    function iframeLoad(){
-    	var height = $("#"+ activeTabId + " .melis-iframe").contents().height();
-    	$("#"+ activeTabId + " .melis-iframe").css("height", height);
-    	$("#"+ activeTabId + " .melis-iframe").css("min-height", "700px");  
-    	
-    	// Saving all the editable component from edition
-		// Saving all content to xml for publish
-		
-		var x, dataStringTags =[],dataTagVal = [];		
-				
-		$("#"+ activeTabId + " iframe").contents().find('.melis-editable').each(function(){
-			var data = {
-				'tagID' : $(this).attr('data-tag-id'),
-				'tagVal': $(this).html()
-			}
-			dataTagVal.push(data);
-		});
-		
-		// check and Get all Editable Value and dataTags from Editor TinyMCE
-		$.ajax({
-			type        : 'POST', 
-			url         : '/melis/MelisCms/PageEdition/savePageTagSession?idPage='+$("#"+ activeTabId + " iframe").attr('data-iframe-id'),
-			/* url         : '/MelisCms/PageEdition/savePageTagSession?idPage='+idPage, */
-			data        : {'myArray': dataTagVal}, 
-			dataType    : 'json',
-			encode		: true
-		}).success(function(data){
-			//console.log(data)
-		});
-    }	
    
     // SIDEBAR MENU CLICK (toggle)
     function sidebarMenuClick(){
@@ -224,7 +192,7 @@ var melisCore = (function(window){
     	
     	// fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
     	setTimeout(function(){
-    		iframeLoad();
+    		melisCms.iframeLoad();
     		
     		// dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
     		$("table.dataTable").DataTable().columns.adjust().responsive.recalc();
@@ -281,10 +249,22 @@ var melisCore = (function(window){
 		var check = $body.find(".modal-backdrop").length;
 		if(check){ 
 			$body.addClass("modal-open");
-		}
-		else{
-			// clear melis modals container
-			$("#melis-modals-container").empty();
+			
+			$(this).remove();
+		}else{
+
+            if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+                var scrollTop = $('html, body').scrollTop();
+
+                // remove flickering issue on edge
+                $('html').css({'height': '100%'});
+                $body.css('overflow', 'auto');
+                setTimeout(function() {
+                    $('html, body').scrollTop(scrollTop);
+                }, 300);
+            }
+            // clear melis modals container
+            $("#melis-modals-container").empty();
 		}
 	});
 
@@ -360,7 +340,6 @@ var melisCore = (function(window){
         $('html').css('overflow', 'hidden');
         $body.css('overflow', 'auto');
     }
-
     
     // BIND & DELEGATE EVENTS =================================================================================================================
     
@@ -397,7 +376,6 @@ var melisCore = (function(window){
     
     // refresh tables
     $body.on("click", '.melis-refreshTable', refreshTable);
-
     
     
     
@@ -452,15 +430,6 @@ var melisCore = (function(window){
 		
     });
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
     // WINDOW SCROLL FUNCTIONALITIES ========================================================================================================
 	if(screenSize <= 767){
 		
@@ -481,18 +450,7 @@ var melisCore = (function(window){
     		$(this).children("a").append("<span class='title'>"+ $(this).data("title") +"</span>");
     		$("#newplugin-cont ul.ul-cont").append( $(this) );
     	});
-
 	}
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	// INITIALIZE ===================================================================================================================
     	    
@@ -525,14 +483,12 @@ var melisCore = (function(window){
     
     return{
         // key - access name outside                                 // value - name of function above
-        
         flashMessenger                                  :           flashMessenger,
         firstRender                                     :           firstRender,
         openTools		                                :           openTools,
         melisChangeLanguage                             :           melisChangeLanguage,
         resizeScreen                                    :           window.resizeScreen,
         screenSize										:			screenSize,    
-        iframeLoad										:			iframeLoad,
 		escapeHtml										: 			escapeHtml
     };
     

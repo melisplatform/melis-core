@@ -27,7 +27,7 @@ class EmailsManagementController extends AbstractActionController
      * Render Emails Mngt. Contanier
      * */
     public function renderToolEmailsMngtContainerAction(){
-        
+
         $translator = $this->getServiceLocator()->get('translator');
         
         $noAccessPrompt = '';
@@ -54,9 +54,11 @@ class EmailsManagementController extends AbstractActionController
      * Render Emails Mngt. Header Add Button
      * */
     public function renderToolEmailsMngtHeaderBtnAddAction(){
-        $view = new ViewModel();
-        $view->melisKey = $this->params()->fromRoute('melisKey', '');
-        return $view;
+
+            $view = new ViewModel();
+            $view->melisKey = $this->params()->fromRoute('melisKey', '');
+            return $view;
+
     }
     
     /*
@@ -198,7 +200,7 @@ class EmailsManagementController extends AbstractActionController
                             $boe_from_email = (isset($emailsConfig[$key]['headers']['from'])) ? $emailsConfig[$key]['headers']['from'] : '';
                             $boe_reply_to = (isset($emailsConfig[$key]['headers']['replyTo'])) ? $emailsConfig[$key]['headers']['replyTo'] : '';
                             $tableData[$ctr]['boe_indicator'] = '<i class="fa fa-database fa-lg" aria-hidden="true" title="DB Overrided"></i>';
-                            $tableData[$ctr]['boe_name'] = $tableData[$ctr]['boe_from_name'];
+                            $tableData[$ctr]['boe_name'] = $tableData[$ctr]['boe_name'];
                             $tableData[$ctr]['boe_from_name'] = ($tableData[$ctr]['boe_from_name']) ? $tableData[$ctr]['boe_from_name'] : $boe_from_name;
                             $tableData[$ctr]['boe_from_email'] = ($tableData[$ctr]['boe_from_email']) ? $tableData[$ctr]['boe_from_email'] : $boe_from_email;
                             $tableData[$ctr]['boe_reply_to'] = ($tableData[$ctr]['boe_reply_to']) ? $tableData[$ctr]['boe_reply_to'] : $boe_reply_to;
@@ -713,8 +715,8 @@ class EmailsManagementController extends AbstractActionController
                 if ($layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)){
                     $layout = __DIR__ .'/../../../'.$layout;
                     $validLayout = true;
-                }elseif ($layoutPathValidator->isValid(HTTP_ROOT .'/../module/'.$layout)){
-                    $layout = HTTP_ROOT .'/../module/'.$layout;
+                }elseif ($layoutPathValidator->isValid($_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout)){
+                    $layout = $_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout;
                     $validLayout = true;
                 }
                 

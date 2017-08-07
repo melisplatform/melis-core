@@ -1,13 +1,8 @@
 <div id="editformalert"></div>
 <span id="edituserid" class="hidden"></span>
-<div class="form-group">
-    <label for="tool_user_management_id_tmp" style="color: rgb(104, 104, 104);"><?= $this->translate('tr_meliscore_tool_user_col_id'); ?></label>
-    <input type="text" class="form-control" id="tool_user_management_id_tmp" disabled="disabled" value="">
-</div>
+<p class="modal-text-info"><?= $this->translate('tr_meliscore_tool_user_modal_description')?></p>
 <?php 
     $form = $this->meliscore_tool_user_form_edit;
-    $form->get('usr_password')->setLabel($form->get('usr_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password').'"></i>');
-    $form->get('usr_confirm_password')->setLabel($form->get('usr_confirm_password')->getLabel().' <i class="fa fa-info-circle fa-lg" title="'.$this->translate('tr_meliscore_tool_tooltip_password_2').'"></i>');
     echo $this->form()->openTag($form);
     echo $this->melisFieldCollection($form);
 ?>

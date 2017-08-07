@@ -43,6 +43,7 @@ class DashboardController extends AbstractActionController
     public function dashboardAction()
     {
     	$melisKey = $this->params()->fromRoute('melisKey', '');
+    	$isAccessible = null;
     	
     	$melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
     	$datas = $melisAppConfig->getItemPerPlatform('/meliscore/datas');
@@ -50,10 +51,12 @@ class DashboardController extends AbstractActionController
 		// Check if dashboard is available
     	$melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
     	$melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-    	$xmlRights = $melisCoreAuth->getAuthRights();
-    	$isAccessible = $melisCoreRights->isAccessible($xmlRights, 
-    													MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, 
-    													'/meliscore_dashboard');
+    	if($melisCoreAuth->hasIdentity()){
+    	    $xmlRights = $melisCoreAuth->getAuthRights();
+    	    $isAccessible = $melisCoreRights->isAccessible($xmlRights,
+    	        MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE,
+    	        '/meliscore_dashboard');
+    	}
     	
     	$view = new ViewModel();
     	$view->melisKey = $melisKey;

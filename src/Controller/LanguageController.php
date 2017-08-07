@@ -661,10 +661,10 @@ class LanguageController extends AbstractActionController
 //         }
 
         $folderPath = [
-            HTTP_ROOT . '../module/MelisModuleConfig/',
-            HTTP_ROOT . '../module/MelisModuleConfig/languages',
-            HTTP_ROOT . '../module/MelisModuleConfig/config',
-            HTTP_ROOT . '../module/MelisModuleConfig/config/translation.list.php',
+            $_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/',
+            $_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/languages',
+            $_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/config',
+            $_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/config/translation.list.php',
         ];
 
         $logs       = [];
@@ -681,9 +681,9 @@ class LanguageController extends AbstractActionController
                     }
                 }
             }
-            else {
-                $logs[] = $melisTool->getTranslation('tr_meliscore_tool_language_lang_folder_not_exist', [$path]);
-            }
+//             else {
+//                 $logs[] = $melisTool->getTranslation('tr_meliscore_tool_language_lang_folder_not_exist', [$path]);
+//             }
         }
 
         return $logs;

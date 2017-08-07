@@ -25,6 +25,8 @@ use MelisCore\Listener\MelisCoreInstallNewPlatformListener;
 use MelisCore\Listener\MelisCoreInstallCreateNewUserListener;
 use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
+use MelisCore\Listener\MelisCoreCheckUserRightsListener;
+use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 
 class Module
 {   
@@ -46,9 +48,8 @@ class Module
 
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, function($e) {
         	$this->checkIdentity($e);
-        });
-        
 
+        });
 
 
         $eventManager->attach(new MelisCoreGetRightsTreeViewListener());
@@ -62,6 +63,9 @@ class Module
         $eventManager->attach(new MelisCoreInstallCreateNewUserListener());
 
         $eventManager->attach(new MelisCoreAuthSuccessListener());
+        $eventManager->attach(new MelisCoreCheckUserRightsListener());
+        $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
+
     }
     
     public function initShowErrorsByconfig(MvcEvent $e)
@@ -239,6 +243,7 @@ class Module
     	$config = array();
     	$configFiles = array(
 			include __DIR__ . '/../config/module.config.php',
+    	    include __DIR__ . '/../config/app.interface.general.php',
 			include __DIR__ . '/../config/app.interface.php',
 			include __DIR__ . '/../config/app.forms.php',
 	        include __DIR__ . '/../config/app.tools.php',

@@ -1175,6 +1175,22 @@ table.dataTable thead>tr>td.sorting_desc:after {
 table.dataTable thead>tr>th.sorting_asc:after {
     top: 14px;
 }
+.datepicker thead th.dow{
+	background: #932E2A !important;
+	color: #fff;
+    -webkit-border-radius: 0 0 0 0;
+    -moz-border-radius: 0 0 0 0;
+    border-radius: 0 0 0 0
+}
+
+.datepicker .table-condensed tr td.active,
+.datepicker .table-condensed tr td.active:hover,
+.datepicker .table-condensed tr td.active.disabled,
+.datepicker .table-condensed tr td.active.disabled:hover {
+    background-image: none !important;
+    filter: none !important;
+    background: #e64444 !important
+}
 
 /* data table filter fixes */
 #dt_bsdatepicker{
@@ -1938,10 +1954,13 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 	width : 100%;
 }
 
-.form-group i.fa-info-circle{
+.form-group label i.fa-info-circle{
 	float: right;
 }
-
+.form-group i.fa-info-circle + .tooltip .tooltip-inner {
+    padding: 6px 10px;
+	border-radius: 2px;
+}
 p.modal-text-info{
 	text-align: justify; 
 	text-justify: inter-word;
@@ -1952,7 +1971,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
   display: inline-block;
 }
 
-
+.input-button-hover-pointer{
+	cursor: pointer;
+}
 /* ===============================================================[ -= RESPONSIVE =- ]================================================================================ */
 
 @media (min-width:396px) and (max-width:767px) {
@@ -2405,4 +2426,40 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
 div#modal-user-management div.widget {
     width: 680px;
+}
+
+.module-version-display {
+    left: -140%;
+}
+.diagnostic-module-version-display {
+    left: -65%;
+}
+
+/* Tooltip IE default mouse icon */
+.tip-info {
+    cursor: default;
+}
+
+.melis-opentools {
+    cursor: pointer;
+}
+#diagnostic-container {
+    padding: 40px;
+    margin-top: 30px;
+}
+#diagnostic-container pre {
+    background: #eee;
+}
+#diagnostic-container h3 {
+    margin-bottom: 20px;
+}
+#diagnostic-container h3 .fa {
+    margin-right: 10px;
+}
+#diagnostic-container p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+#diagnostic-container p .fa {
+    margin-right: 5px;
 }

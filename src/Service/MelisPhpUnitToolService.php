@@ -54,8 +54,8 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
             '        ', '    ',
         ), '', $config);
         @chmod('test', 0777);
-        @file_put_contents(HTTP_ROOT.'../test/test.application.config.php', $config);
-        @chmod(HTTP_ROOT.'../test/test.application.config.php', 0777);
+        @file_put_contents($_SERVER['DOCUMENT_ROOT'].'/../test/test.application.config.php', $config);
+        @chmod($_SERVER['DOCUMENT_ROOT'].'/../test/test.application.config.php', 0777);
     }
 
     /**
@@ -76,8 +76,8 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $this->setAppConfig();
         if(file_exists($modulePath) && file_exists($testSavePath)) {
 
-            $bootstrapTemplate = HTTP_ROOT . '../test/tpl/BootstrapTemplate';
-            $puControllerTemplate = HTTP_ROOT . '../test/tpl/PHPUnitControllTest';
+            $bootstrapTemplate = $_SERVER['DOCUMENT_ROOT'] . '/../test/tpl/BootstrapTemplate';
+            $puControllerTemplate = $_SERVER['DOCUMENT_ROOT'] . '/../test/tpl/PHPUnitControllTest';
             $bootstrapContent = '';
             $xmlContent = '';
             if(file_exists($bootstrapTemplate)) {
@@ -85,7 +85,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
                 $bootstrapContent = file_get_contents($bootstrapTemplate);
                 $bootstrapContent = sprintf($bootstrapContent, $moduleTestName);
                 file_put_contents($bootstrapSavePath, $bootstrapContent);
-                $xml = HTTP_ROOT.'../test/tpl/phpunitxmlTemplate';
+                $xml = $_SERVER['DOCUMENT_ROOT'].'/../test/tpl/phpunitxmlTemplate';
                 if(file_exists($xml)) {
                     $xmlContent = file_get_contents($xml);
                     $xmlContent = str_replace('{{moduleName}}', $moduleTestName, $xmlContent);
@@ -136,8 +136,8 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
     public function runTest($moduleName, $moduleTestName, $unitTestPath = 'test')
     {
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
-        $phpUnit = $config->getItem('meliscore/datas/default/phpunit_conf')[$this->getOS()]['phpunit'];
-        $phpCli  = $config->getItem('meliscore/datas/default/phpunit_conf')[$this->getOS()]['php_cli'];
+        $phpUnit = $config->getItem('meliscore/datas/default/diagnostics')[$this->getOS()]['phpunit'];
+        $phpCli  = $config->getItem('meliscore/datas/default/diagnostics')[$this->getOS()]['php_cli'];
         $moduleSvc = $this->getServiceLocator()->get('ModulesService');
         $modulePath = $moduleSvc->getModulePath($moduleName);
         $testSavePath = $modulePath.'/'.$unitTestPath;
@@ -146,8 +146,13 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $moduleTestSavePath = $modulePath.'/'.$unitTestPath.'/'.$moduleTestName;
         $results = '';
 
+        $testCfgDir = $_SERVER['DOCUMENT_ROOT'].'/../test/';
+
         // recreate the config everytime, to update the available modules
-        $this->setAppConfig();
+        if(!file_exists($_SERVER['DOCUMENT_ROOT'].'/../test/test.application.config.php')) {
+            $this->setAppConfig();
+        }
+
         if((file_exists($phpUnit) && $this->getOS() == 'windows') || ($this->getOS() == 'others' && $this->shellExists($phpUnit))) {
 
             if( file_exists($modulePath) &&
@@ -155,13 +160,13 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
                 file_exists($bootstrapPath) &&
                 file_exists($moduleTestSavePath)) {
 
-                $execCommand = $phpCli. ' '.$phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testSavePath.'/results.xml" --configuration "'.$puXml.'"';
+                $execCommand = $phpCli. ' '.$phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testCfgDir.'/results.xml" --configuration "'.$puXml.'"';
                 $output = '';
                 if($this->getOS() == 'windows') {
                     $output = shell_exec($execCommand);
                 }
                 else {
-                    $output = shell_exec($phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testSavePath.'/results.xml" --configuration "'.$puXml.'"');
+                    $output = shell_exec($phpUnit.' --bootstrap "'.$bootstrapPath.'" "'.$moduleTestSavePath.'" --log-junit "'.$testCfgDir.'/results.xml" --configuration "'.$puXml.'"');
                 }
             }
             else {
@@ -192,10 +197,12 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
      */
     public function getTestResult($moduleName, $moduleTestName, $unitTestPath = 'test')
     {
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
-        $modulePath = $moduleSvc->getModulePath($moduleName);
-        $resultsFile = $modulePath.'/'.$unitTestPath . '/results.xml';
+        $moduleSvc   = $this->getServiceLocator()->get('ModulesService');
+        $modulePath  = $moduleSvc->getModulePath($moduleName);
+        $testCfgDir  = $_SERVER['DOCUMENT_ROOT'].'/../test';
+        $resultsFile = $testCfgDir. '/results.xml';
         $results = array();
+
         if(file_exists($resultsFile)) {
             $readXml = new Xml();
             $results = $readXml->fromFile($resultsFile);
@@ -368,7 +375,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
         $config = $config->getItem('diagnostic/'.$module.'/db');
         $methods = $config;
         $methodLists = '';
-        $methodTemplate = HTTP_ROOT . '../test/tpl/methodTemplate';
+        $methodTemplate = $_SERVER['DOCUMENT_ROOT'] . '/../test/tpl/methodTemplate';
         if(file_exists($methodTemplate)) {
             $template = file_get_contents($methodTemplate);
             foreach($methods as $methodKey => $method) {
