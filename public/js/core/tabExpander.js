@@ -33,12 +33,20 @@ var tabExpander = (function($, window){
         
         // var innerUlWidthPercent = 99 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() ); 
         var innerUlWidthPercent = 100 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() );
-        
-        $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"});
+
+        $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"}); // change hidden to initial because of dropdown
         $navTabs.css({"width": navUlContainer });
         
         $(".melis-tabprev, .melis-tabnext").show();
-        
+
+        // toggle overflow for dropdown
+        $("#melis-navtabs-container-inner").hover(
+            function() {
+                $(this).css("overflow", "visible");
+            }, function() {
+                $(this).css("overflow", "hidden");
+            }
+        );
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
