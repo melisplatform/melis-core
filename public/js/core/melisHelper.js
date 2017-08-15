@@ -282,7 +282,7 @@ var melisHelper = (function(){
 
         // get the <ul> container width and disable the tabExpander
         var navUlContainer = 1;
-        $('#id_meliscore_header #melis-id-nav-bar-tabs li').each(function() {
+        $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
             navUlContainer += $(this).outerWidth();
         });
 
@@ -408,7 +408,9 @@ var melisHelper = (function(){
 
             //focus the newly opened tab if tabExpander() is enabled
             if( tabExpander.checkStatus() === 'enabled' ){
-                $(".melis-tabnext").trigger("click");
+                if(typeof navTabsGroup == "undefined") {
+                    $(".melis-tabnext").trigger("click");
+                }
             }
         }
         else{
