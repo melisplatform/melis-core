@@ -522,5 +522,17 @@
 	    'tr_meliscore_date_end' => 'End',
 
         'tr_melisore_tinymce_file_manager' => 'File Manager',
+
+        // Microservice
+        'tr_meliscore_microservice' => 'Microservice',
+        'tr_meliscore_microservice_tool_user_desc' => ' Manage and view user\'s microservice accessibility and activies',
+        'tr_meliscore_microservice_date_requested' => 'Date Requested',
+        'tr_meliscore_microservice_api_key_invalid' => 'Invalid API key',
+        'tr_meliscore_microservice_api_key_no_access' => 'You don\'t have the access to perform this action',
+        'tr_meliscore_microservice_service_ko' => 'Service does not exists',
+        'tr_meliscore_microservice_module_ko' => 'Unable to use module, module maybe inactive or not found',
+        'tr_meliscore_microservice_method_ko' => 'Service method not found',
+        'tr_meliscore_microservice_form_ko' => 'Form configuratoin not found',
+        'tr_meliscore_microservice_request_ok' => 'Request has been executed',
 	);
 ?>

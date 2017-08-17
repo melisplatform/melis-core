@@ -27,6 +27,7 @@ use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
+use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 
 class Module
 {   
@@ -65,6 +66,7 @@ class Module
         $eventManager->attach(new MelisCoreAuthSuccessListener());
         $eventManager->attach(new MelisCoreCheckUserRightsListener());
         $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
+        $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
 
     }
     
@@ -118,6 +120,7 @@ class Module
     	    'melis-backoffice/setup',
     	    'melis-backoffice/application-MelisInstaller/default',
     	    'melis-backoffice/MelisInstaller',
+    	    'melis-backoffice/microservice',
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;
@@ -249,6 +252,7 @@ class Module
 	        include __DIR__ . '/../config/app.tools.php',
 	        include __DIR__ . '/../config/app.emails.php',
 	        include __DIR__ . '/../config/diagnostic.config.php',
+	        include __DIR__ . '/../config/app.microservice.php',
     	);
     	
     	foreach ($configFiles as $file) 
