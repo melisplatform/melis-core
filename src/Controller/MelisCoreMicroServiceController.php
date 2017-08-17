@@ -146,7 +146,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                 // get the form configuration in app.microservice configuration file
                                 $this->layout('layout/layoutBlank');
                                 $view = new ViewModel();
-                                $view->form = $this->getForm($form);
+                                $view->form = $form;
 
                                 return $view;
                             }
