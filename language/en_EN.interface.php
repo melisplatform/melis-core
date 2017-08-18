@@ -532,7 +532,7 @@
         'tr_meliscore_microservice_service_ko' => 'Service does not exists',
         'tr_meliscore_microservice_module_ko' => 'Unable to use module, module maybe inactive or not found',
         'tr_meliscore_microservice_method_ko' => 'Service method not found',
-        'tr_meliscore_microservice_form_ko' => 'Form configuratoin not found',
+        'tr_meliscore_microservice_form_ko' => 'Form configuration not found',
         'tr_meliscore_microservice_request_ok' => 'Request has been executed',
 	);
 ?>
