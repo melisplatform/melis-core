@@ -34,6 +34,23 @@ class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener i
                 $method  = isset($params['method'])  ? $params['method']  : null;
                 $post    = isset($params['post'])  ? $params['post']  : null;
 
+                //
+                if($module == 'MelisCore' && $service == 'MelisCoreMicroServiceTestService' && $method = 'acceptArrayParam') {
+
+                    /**
+                     * This listens to the sample service test
+                     * /melis/api/abcd123/MelisCore/service/MelisCoreMicroServiceTestService/acceptArrayParam
+                     */
+
+                    /**
+                     * This explodes the string coming from arrayParam post value
+                     * Sample string value: 1,3,1,4,1
+                     */
+                    $post['arrayParam'] = explode(',', $post['arrayParam']);
+
+
+                }
+
                 return array(
                     'module'  => $module,
                     'service' =>  $service,

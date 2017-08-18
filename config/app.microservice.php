@@ -220,6 +220,54 @@ return array(
                             ),
                         )
                     ),
+
+                    /**
+                     * @method acceptArrayParam(array $arrayParam, $normalArg)
+                     */
+                    'acceptArrayParam' => array(
+                        'attributes' => array(
+                            'name'   => 'microservice_form',
+                            'id'     => 'microservice_form',
+                            'method' => 'POST',
+                            'action' => $_SERVER['REQUEST_URI'],
+                        ),
+                        'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                        'elements' => array(
+                            array(
+                                'spec' => array(
+                                    'name' => 'arrayParam',
+                                    'type' => 'Text',
+                                    'options' => array(
+                                        'label' => 'arrayParam',
+                                    ),
+                                    'attributes' => array(
+                                        'id' => 'arrayParam',
+                                        'value' => '',
+                                        'class' => '',
+                                        'placeholder' => 'arrayParam',
+                                    ),
+                                ),
+                            ),
+                            array(
+                                'spec' => array(
+                                    'name' => 'normalArg',
+                                    'type' => 'Text',
+                                    'options' => array(
+                                        'label' => 'normalArg',
+                                    ),
+                                    'attributes' => array(
+                                        'id' => 'normalArg',
+                                        'value' => '',
+                                        'class' => '',
+                                        'placeholder' => 'normalArg',
+                                    ),
+                                ),
+                            ),
+                        ),
+                        'input_filter' => array(
+
+                        )
+                    )
                 ),
             ),
         )
