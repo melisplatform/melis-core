@@ -25,7 +25,21 @@ class MelisMicroServiceAuthTable extends MelisGenericTable
 
         $select->join('melis_core_user', 'melis_core_user.usr_id = melis_core_microservice_auth.msoa_user_id', array('*'), $select::JOIN_LEFT);
 
+
         $select->where->equalTo('melis_core_microservice_auth.msoa_api_key', $apiKey);
+
+        $resultSet = $this->tableGateway->selectWith($select);
+
+        return $resultSet;
+    }
+
+    public function getUser($userId)
+    {
+        $select = $this->tableGateway->getSql()->select();
+
+        $select->join('melis_core_user', 'melis_core_user.usr_id = melis_core_microservice_auth.msoa_user_id', array('*'), $select::JOIN_LEFT);
+
+        $select->where->equalTo('melis_core_microservice_auth.msoa_user_id', (int) $userId);
 
         $resultSet = $this->tableGateway->selectWith($select);
 

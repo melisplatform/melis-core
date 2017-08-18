@@ -1108,7 +1108,20 @@ return array(
                                                                 'jsdatas' => array(),
                                                             ),
                                                         ),
-
+                                                        'meliscore_tool_user_microservice_modal_handler' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_meliscore_tool_user_microservice_handler',
+                                                                'name' => 'tr_meliscore_microservice_modal',
+                                                                'melisKey' => 'meliscore_tool_user_microservice_handler',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreMicroService',
+                                                                'action' => 'render-tool-user-view-micro-service-modal-handler',
+                                                                'jscallback' => 'setOnOff();',
+                                                                'jsdatas' => array(),
+                                                            ),
+                                                        ),
                                                     ), // end modal interface
                                                 ), // end tool modal
 

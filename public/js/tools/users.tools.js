@@ -36,11 +36,53 @@ $(document).ready(function() {
 		_tmpUserId = id;
         $("#tableUserViewDateConnection").DataTable().destroy();
         fntableUserViewDateConnectioninit();
+
+        $.ajax({
+            type        : 'POST',
+            url         : 'melis/MelisCore/MelisCoreMicroService/getUserAuthData',
+			data		: {id : id},
+            dataType    : 'json',
+            encode		: true,
+        }).done(function(data){
+            $("#melis-core-user-auth-api-key").html("");
+            $("#melis-core-user-auth-api-ok").addClass("hidden");
+            $("#melis-core-user-auth-api-ko").addClass("hidden");
+			if(data.success) {
+				$("#melis-core-user-auth-api-key").html(data.response.api_key);
+				$("#melis-core-user-auth-api-ok").removeClass("hidden");
+			}
+			else {
+                $("#melis-core-user-auth-api-ko").removeClass("hidden");
+			}
+        });
+
+	});
+
+	$("body").on("click", "#btn-melis-core-user-gen-api", function() {
+		var id = _tmpUserId;
+        $.ajax({
+            type        : 'POST',
+            url         : 'melis/MelisCore/MelisCoreMicroService/generateApiKey',
+            data		: {id : id},
+            dataType    : 'json',
+            encode		: true,
+        }).done(function(data){
+            $("#melis-core-user-auth-api-key").html("");
+            $("#melis-core-user-auth-api-ok").addClass("hidden");
+            $("#melis-core-user-auth-api-ko").addClass("hidden");
+            if(data.success) {
+                $("#melis-core-user-auth-api-key").html(data.response.api_key);
+                $("#melis-core-user-auth-api-ok").removeClass("hidden");
+            }
+            else {
+                $("#melis-core-user-auth-api-ko").removeClass("hidden");
+            }
+        });
 	});
 
 	$("body").on("click", "#id_meliscore_tool_user_action_new_user", function() {
         melisNewUserRights();
-        melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_edit_modal,#id_meliscore_tool_user_rights_modal,#id_meliscore_tool_user_view_date_connection_modal', '#id_meliscore_tool_user_new_modal');
+        melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_edit_modal,#id_meliscore_tool_user_rights_modal,#id_meliscore_tool_user_view_date_connection_modal,#id_meliscore_tool_user_microservice_modal', '#id_meliscore_tool_user_new_modal');
 	});
 	
 	//this is for user icon in identity menu

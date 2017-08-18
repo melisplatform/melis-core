@@ -195,7 +195,20 @@ return array(
                                 'controller' => 'ToolUser',
                                 'action' => 'render-tool-user-view-date-connection-modal'
                             ),
-                        )
+                        ),
+
+                        'meliscore_tool_user_microservice_modal' => array(
+                            'id' => 'id_meliscore_tool_user_microservice_modal',
+                            'class' => 'glyphicons cogwheels',
+                            'tab-header' => '',
+                            'tab-text' => 'tr_meliscore_microservice',
+                            'content' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'MelisCoreMicroService',
+                                'action' => 'render-tool-user-view-micro-service-modal'
+                            ),
+                        ),
+
                     ),
                     
                     'forms' => array(
