@@ -280,7 +280,8 @@ class MelisCoreMicroServiceController extends AbstractActionController
 
             if ($authData) {
                 $data['api_key'] = $authData->msoa_api_key;
-                $data['status'] = $authData->msoa_status;
+                $data['status']  = $authData->msoa_status;
+                $data['user_id'] = $userId;
                 $success = 1;
             }
 
@@ -297,7 +298,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
     public function generateApiKeyAction()
     {
         $success = 0;
-        $data = [];
+        $data    = [];
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -316,7 +317,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
 
                 if ($authData) {
                     $data['api_key'] = $authData->msoa_api_key;
-                    $data['status'] = $authData->msoa_status;
+                    $data['status']  = $authData->msoa_status;
                     $success = 1;
                 }
             }
@@ -331,9 +332,38 @@ class MelisCoreMicroServiceController extends AbstractActionController
         return new JsonModel($response);
     }
 
-    public function generateCode($length = 12)
+    public function updateStatusAction()
     {
-        $characters = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=?!$#@%&';
+        $success = 0;
+        $data    = [];
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            $userId  = (int) $request->getPost('id');
+            $status  = (int) $request->getPost('status');
+            $apiData = $this->getMicroServiceAuthTable()->getUser($userId)->current();
+
+            if ($apiData) {
+                $this->getMicroServiceAuthTable()->save([
+                    'msoa_status'  => $status,
+                ], $apiData->msoa_id);
+                $success = 1;
+            }
+
+        }
+
+        $response = [
+            'success'  => $success,
+            'response' => $data
+        ];
+
+        return new JsonModel($response);
+    }
+
+    private function generateCode($length = 16)
+    {
+        $characters = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=?!$#@&';
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {

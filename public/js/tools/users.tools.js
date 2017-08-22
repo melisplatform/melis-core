@@ -27,6 +27,32 @@ window.setUserDateConnection = function(d) {
 
 // action buttons
 $(document).ready(function() {
+
+    $("body").on("click", "#switch-user-api-status", function() {
+        var id 	   = $(this).data().userid;
+        var status = 0;
+
+        if($(this).find("div").hasClass("switch-on")) {
+        	status = 1;
+		}
+
+
+        $.ajax({
+            type        : 'POST',
+            url         : 'melis/MelisCore/MelisCoreMicroService/updateStatus',
+            data		: {id : id, status : status},
+            dataType    : 'json',
+            encode		: true,
+        }).done(function(data){
+			if(data.success) {
+
+			}
+        });
+
+    });
+
+
+
 	$("body").on("click", '.btnUserEdit', function() {
 		var id = $(this).parents("tr").attr("id");
 		melisCoreTool.hideAlert("#editformalert");
@@ -50,6 +76,9 @@ $(document).ready(function() {
 			if(data.success) {
 				$("#melis-core-user-auth-api-key").html(data.response.api_key);
 				$("#melis-core-user-auth-api-ok").removeClass("hidden");
+                var status = data.response.status == '1' ? true : false;
+                $("#switch-user-api-status").bootstrapSwitch("setState", status);
+                $("#switch-user-api-status").attr("data-userid", data.response.user_id);
 			}
 			else {
                 $("#melis-core-user-auth-api-ko").removeClass("hidden");
@@ -73,6 +102,7 @@ $(document).ready(function() {
             if(data.success) {
                 $("#melis-core-user-auth-api-key").html(data.response.api_key);
                 $("#melis-core-user-auth-api-ok").removeClass("hidden");
+
             }
             else {
                 $("#melis-core-user-auth-api-ko").removeClass("hidden");

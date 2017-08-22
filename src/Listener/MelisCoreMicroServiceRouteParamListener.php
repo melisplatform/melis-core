@@ -35,7 +35,7 @@ class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener i
                 $post    = isset($params['post'])  ? $params['post']  : null;
 
                 //
-                if($module == 'MelisCore' && $service == 'MelisCoreMicroServiceTestService' && $method = 'acceptArrayParam') {
+                if($module == 'MelisCore' && $service == 'MelisCoreMicroServiceTestService' && $method == 'acceptArrayParam') {
 
                     /**
                      * This listens to the sample service test
