@@ -133,15 +133,17 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
         $userModules = $this->getUserModules();
         $exclusions  = array('MelisModuleConfig', 'MelisSites');
+
         foreach($userModules as $module) {
             if(!in_array($module, $exclusions)) {
                 $class = $_SERVER['DOCUMENT_ROOT'].'/../module/'.$module.'/Module.php';
                 $class = file_get_contents($class);
 
                 $package    = $module;
-                $version    = '1.0';
+                $version    = 'v1.0';
 
                 if (preg_match_all('/@(\w+)\s+(.*)\r?\n/m', $class, $matches)){
+
                     $result  = array_combine($matches[1], $matches[2]);
                     $version = isset($result['version']) ? $result['version'] : '1.0';
                     $package = isset($result['module'])  ? $result['module'] : $module;
@@ -153,10 +155,12 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                     'version' => $version
                 );
 
-                if($package == $module)
-                    break;
+//                if($package == $module)
+//                    break;
             }
         }
+
+        //print_r($tmpModules);
 
         $modules = $tmpModules;
 
@@ -171,6 +175,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     public function getUserModules()
     {
         $userModules = $_SERVER['DOCUMENT_ROOT'] . '/../module';
+
 
         $modules = array();
         if($this->checkDir($userModules)) {
