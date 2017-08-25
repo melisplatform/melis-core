@@ -576,7 +576,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     
     public function checkTranslationList()
     {
-        $listPath = $_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/config/translation.list.php';
+        $listPath = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/config/translation.list.php';
         $exist = false;
         if(file_exists($listPath)){
             $exist = true;

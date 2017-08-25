@@ -1,5 +1,152 @@
+/* --------------------
+*   custom.css
+* ---------------------  */
+/* Base
+______________________________________________________________________________________________*/
 
+#content > .innerAll.px2{
+//padding: 25px;
+}
+
+.fa.fa-color-green:before {
+    color: #72af46;
+}
+.fa.fa-color-red:before{
+    color: #cb4040;
+}
+.fa.fa-color-orange:before{
+    color: #F39A0D;
+}
+
+.iframe-content,
+.iframe-level-tab,
+.myObject {
+    border: 0;
+}
+
+#content h1.content-heading.page-title{
+    padding: 15px;
+}
+
+/* Footer
+______________________________________________________________________________________________*/
+#id_meliscore_footer {
+    left: 0;
+    width: 100%;
+    font-size: 10px;
+    line-height: 14px;
+    padding: 4px 16px 6px;
+    position: fixed;
+    z-index: 2;
+    background: #f5f5f5;
+    bottom: 0;
+    text-align: center;
+    border-top: 1px solid #e5e5e5;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+
+/* SidebarMenuWrap
+______________________________________________________________________________________________*/
+.sidebar > .sidebarMenuWrapper {
+    bottom: 40px;
+}
+
+
+/* Navbar to tabs
+______________________________________________________________________________________________*/
+.navbar.main.navbar-primary .nav.tabsbar {
+    height: 47px;
+    border: 0;
+}
+
+.navbar.main.navbar-primary .nav > li {
+    border-right: 1px solid #AD6565;
+    cursor: pointer;
+}
+
+.navbar.main.navbar-primary .nav > li .menu-icon .fa {
+    padding-right: 5px;
+}
+
+.navbar.main.navbar-primary .nav > li.active,
+.navbar.main.navbar-primary .nav > li.active:hover,
+.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover{
+    background-color: #FFFFFF;
+    color: #AD6565;
+}
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle .fa,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle:hover,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle:hover .fa,
+.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover,
+.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover .fa
+{
+    color: #932E2A !important;
+}
+
+.navbar.main.navbar-primary .nav > li a.close {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0;
+    background-color: #000000;
+    display: none;
+    cursor: default;
+    text-indent: 5000px;
+    overflow: hidden;
+    background: none;
+}
+
+.navbar.main.navbar-primary .nav > li a.close:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: inline-block;
+    font: 12px/16px 'Glyphicons Regular';
+    font-style: normal;
+    font-weight: normal;
+    color: #1d1d1b;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    text-align: center;
+    content: "\E198";
+    width: 16px;
+    height: 16px;
+    color: #000000;
+    text-indent: 0;
+}
+
+.navbar.main.navbar-primary .nav > li:hover a.close {
+    display: block;
+}
+
+/* main tabs
+______________________________________________________________________________________________*/
+#id-wrap-maintabs-tabs .menu-bar-options li .fa:before{
+    margin-right: 4px;
+}
+#id-wrap-maintabs-tabs .menu-bar-options li.separator {
+    width: 1px;
+    position: relative;
+}
+
+#id-wrap-maintabs-tabs .menu-bar-options li.separator:before {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 5px;
+    bottom: 5px;
+    width: 1px;
+    left: 0;
+    border-right: 1px solid #e5e5e5;
+}
 /*  ============================================= Melis Development CSS =============================================================================  */
+
 body .melis-hide{
     display: none !important;
 }
@@ -1950,10 +2097,10 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 
 
 /** form info adjustments **/
-.form-group > label:first-child{
-	width : 100%;
+.form-group > label:first-child {
+    display: block;
+    min-height: 18px;
 }
-
 .form-group label i.fa-info-circle{
 	float: right;
 }
@@ -2120,6 +2267,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         -moz-transition: .5s ease-in-out;
         -o-transition: .5s ease-in-out;
         -ms-transition: .5s ease-in-out;
+        overflow: visible;
     }
     .navbar #melis-id-nav-bar-tabs > li{
         float: left;
@@ -2155,7 +2303,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
     /* responsive menu fix ================ */
     .res-action-container{
-        overflow: inherit;
+        overflow: visible;
         float: none;
         width: auto;
     }
@@ -2167,6 +2315,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         float: right;
     }
     .navbar.main .nav.navbar-right{
+        position: relative;
+        z-index: 2;
         display: block;
         border: none;
     }
@@ -2462,4 +2612,226 @@ div#modal-user-management div.widget {
 }
 #diagnostic-container p .fa {
     margin-right: 5px;
+}
+
+/*
+    Nav Group Dropdown
+    Note: force to use !important because of the current bad structure of css
+*/
+.tabsbar .nav-group-dropdown {
+    position: absolute;
+    min-width: 250px;
+    height: auto;
+    max-width: 350px;
+    max-height: 400px;
+    overflow: visible;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transform: translate3d(0, 10%, 0);
+    -moz-transform: translate3d(0, 10%, 0);
+    transform: translate3d(0, 10%, 0);
+    -webkit-transition: all 0.13s ease 0s;
+    -moz-transition: all 0.13s ease 0s;
+    -ms-transition: all 0.13s ease 0s;
+    transition: all 0.13s ease 0s;
+    -webkit-box-shadow: 0px 4px 6px #d6d6d6;
+    -moz-box-shadow: 0px 4px 6px #d6d6d6;
+    -ms-box-shadow: 0px 4px 6px #d6d6d6;
+    box-shadow: 0px 4px 6px #d6d6d6;
+}
+.tabsbar .nav-group-dropdown.scroll > .nav-group-dropdown li a {
+    padding-left: 30px;
+}
+.tabsbar li:hover > .nav-group-dropdown {
+    opacity: 1;
+    visibility: visible;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    z-index: 100;
+}
+.tabsbar .nav-group-dropdown .nav-group-dropdown {
+    top: 0;
+    left: 100%;
+    visibility: hidden;
+    -webkit-transform: translate3d(-10%, 0, 0);
+    -moz-transform: translate3d(-10%, 0, 0);
+    transform: translate3d(-10%, 0, 0);
+}
+.tabsbar .nav-group-dropdown li:hover .nav-group-dropdown {
+    visibility: visible;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    z-index: 100;
+}
+
+.tabsbar .nav-group-dropdown li {
+    position: relative;
+    padding: 0;
+    width: 100%;
+    color: #fff;
+    background: #932e2a;
+    height: auto;
+    line-height: 45px;
+    /*border-bottom: 1px solid #AD6565;*/
+    border: none;
+}
+
+.tabsbar .nav-group-dropdown.scroll {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.tabsbar .nav-group-dropdown.scroll .nav-group-dropdown {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+.tabsbar .nav-group-dropdown.scroll .nav-group-dropdown li a {
+    padding-left: 30px;
+}
+.tabsbar .nav-group-dropdown li:last-child {
+    border: none;
+}
+
+.navbar.main.navbar-primary .tabsbar .active-parent.on > a {
+    background: #fff;
+    color: #932e2a !important;
+}
+
+.navbar.main.navbar-primary .tabsbar .active-parent.on .active-parent.on > a {
+    background: #fff;
+    color: #932e2a !important;
+}
+
+.navbar.main.navbar-primary .tabsbar .active-parent.on .active-parent.on > a:hover {
+    color: #fff !important;
+}
+.navbar.main.navbar-primary .tabsbar .active-parent.on .active-parent.on > a .fa:before {
+    color: #932e2a;
+}
+
+.navbar.main.navbar-primary .tabsbar .active-parent.on a.close-tab {
+    background: transparent;
+}
+.navbar.main.navbar-primary .tabsbar .active-parent.on .active-parent.on > a.close-tab {
+    background: transparent;
+}
+.navbar.main.navbar-primary .tabsbar .active-parent.on a .fa:before {
+    color: #932e2a;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li a.dropdown-toggle {
+    color: #fff !important;
+    background: #932e2a;
+    height: auto;
+    line-height: 45px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li > a.dropdown-toggle:hover {
+    height: 100%;
+    background: #b93f3a !important;
+    color: #fff !important;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li a.dropdown-toggle .fa:before {
+    color: #fff;
+    line-height: 45px;
+    font-size: 16px;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li a.dropdown-toggle:hover .fa:before {
+    color: #fff !important;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li.active > a.dropdown-toggle {
+    color: #932e2a !important;
+    background: #fff !important;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li a.dropdown-toggle .fa {
+    height: 45px;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li.active > a.dropdown-toggle .fa:before {
+    color: #932e2a !important;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li.active > a.dropdown-toggle:hover .fa:before {
+    color: #932e2a !important;
+}
+.navbar.main.navbar-primary .tabsbar .nav-group-dropdown li > a.dropdown-toggle:hover .fa:before {
+    color: #932e2a;
+}
+.tabsbar .nav-group-dropdown li:first-child {
+    border-top: 0;
+}
+
+/* Mobile Layout */
+@media only screen and (max-width: 767px) {
+    .tabsbar .nav-group-dropdown,
+    .tabsbar .nav-group-dropdown .nav-group-dropdown {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        max-height: 100%;
+        max-width: 100%;
+        visibility: visible;
+        opacity: 1;
+        -webkit-box-shadow: 0 0 0;
+        -moz-box-shadow: 0 0 0;
+        -ms-box-shadow: 0 0 0;
+        box-shadow: 0 0 0;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+    }
+
+    .navbar.main.navbar-primary .tabsbar .nav-group-dropdown li a.dropdown-toggle {
+        padding-left: 30px;
+    }
+    .navbar.main.navbar-primary .tabsbar .nav-group-dropdown .nav-group-dropdown a.dropdown-toggle {
+        padding-left: 60px;
+    }
+    .navbar.main.navbar-primary .tabsbar .active-parent.on > a {
+        background: #932e2a;
+        color: #fff !important;
+    }
+    .navbar.main.navbar-primary .tabsbar .active-parent.on > a .fa:before {
+        color: #fff;
+    }
+    .navbar.main.navbar-primary .tabsbar .active-parent.on > a {
+        background: #932e2a;
+        color: #fff !important;
+    }
+    .navbar.main.navbar-primary .tabsbar .active-parent.on > a:hover {
+        background: #b93f3a !important;
+        color: #fff !important;
+    }
+    .navbar.main.navbar-primary .tabsbar .active-parent.on .active-parent.on > a {
+        background: #932e2a;
+        color: #fff !important;
+    }
+    .navbar.main.navbar-primary .tabsbar .active-parent.on .active-parent.on > a .fa:before {
+        color: #fff;
+    }
+
+    .navbar.main.navbar-primary .nav > li a.close:before {
+        font: 16px/16px 'Fontawesome';
+        content: "\f00d";
+        text-shadow: none;
+        color: #000;
+        cursor: pointer;
+    }
+
+    .navbar.main.navbar-primary .tabsbar li a.close-tab:hover {
+        background: transparent !important;
+    }
 }
