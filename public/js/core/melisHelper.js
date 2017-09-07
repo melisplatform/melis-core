@@ -575,7 +575,7 @@ var melisHelper = (function(){
                     backdrop : "static"
                 });
 
-                if(typeof callback !== "undefined") {
+                if(typeof callback !== "undefined" && typeof callback === "function") {
                     callback();
                 }
 

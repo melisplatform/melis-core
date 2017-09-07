@@ -125,7 +125,6 @@ return array(
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
-                    '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/core/tabExpander.js',
                     '/MelisCore/js/core/melisSidebar.js',
                     '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
