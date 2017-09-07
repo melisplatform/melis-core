@@ -252,6 +252,9 @@ var melisHelper = (function(){
         }
 
         if( currentParent.index() === 0 ){
+            if(currentParent.siblings().length === 0) {
+                currentParent.parent(".nav-group-dropdown").remove();
+            }
             currentParent.remove();
             $("#"+tabContentID).remove();
 
@@ -273,6 +276,7 @@ var melisHelper = (function(){
             }
         }
 
+        // check scroll class exists
         if(navBox) {
             // check if menu are too many
             if($(navBox).height() < 400) {
@@ -298,6 +302,7 @@ var melisHelper = (function(){
                 }, 0);
             }
         }
+        checkSubMenu();
 
         // [ Mobile ] when closing a page
         if( melisCore.screenSize <= 767 ){
@@ -375,6 +380,8 @@ var melisHelper = (function(){
                 $("body #melis-id-nav-bar-tabs").append(li);
             }
 
+            checkSubMenu();
+
             // [ Mobile ] when opening a page
             if( melisCore.screenSize <= 767 ){
                 // check if there are no contents open
@@ -419,10 +426,15 @@ var melisHelper = (function(){
         }
     }
 
-    // CHECK PARENT TAB ALREADY EXISTS
-    function checkTabParentExists(tabParent) {
-        // if not force open parent
-        // else
+    // CHECK SUBMENU =================================================================================
+    function checkSubMenu() {
+        $("body #melis-id-nav-bar-tabs li").each(function(){
+            if($(this).children("ul").length){
+                $(this).addClass("has-sub");
+            } else {
+                $(this).removeClass("has-sub");
+            }
+        });
     }
 
     // EXECUTE CALLBACK FUNCTIONS FROM ZONE RELOADING =================================================================================
@@ -522,7 +534,11 @@ var melisHelper = (function(){
     // Requesting flag set to false so this function will set state to ready
     var createModalRequestingFlag = false;
     // CREATE MODAL =================================================================================================================
-    function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl, callback){
+    function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl, callback, modalBackDrop){
+        // declaring parameters variable for old / cross browser compatability
+        if (typeof(modalUrl)==='undefined') modalUrl = null;
+        if (typeof(callback)==='undefined') callback = null;
+        if (typeof(modalBackDrop)==='undefined') modalBackDrop = true;
 
         if (createModalRequestingFlag == false){
 
@@ -538,6 +554,7 @@ var melisHelper = (function(){
                 id : zoneId,
                 melisKey : melisKey,
                 hasCloseBtn : hasCloseBtn,
+                parameters: parameters,
             };
 
             $.ajax({
@@ -558,7 +575,7 @@ var melisHelper = (function(){
                     backdrop : "static"
                 });
 
-                if(typeof callback !== "undefined") {
+                if(typeof callback !== "undefined" && typeof callback === "function") {
                     callback();
                 }
 
@@ -597,6 +614,11 @@ var melisHelper = (function(){
         $(".melis-modaloverlay, .melis-modal-cont").remove();
     });
 
+    // Input-group that has clear function button
+    $body.on("click", ".meliscore-clear-input", function(){
+        // Clearing the input of input-group
+        $(this).closest(".input-group").find("input").val("");
+    });
 
 	/*
 	 * RETURN ========================================================================================================================

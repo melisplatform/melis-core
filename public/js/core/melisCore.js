@@ -260,6 +260,16 @@ var melisCore = (function(window){
             $body.addClass("modal-open");
         }
         else{
+            if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+                var scrollTop = $('html, body').scrollTop();
+
+                // remove flickering issue on edge
+                $('html').css({'height': '100%'});
+                $body.css('overflow', 'auto');
+                    setTimeout(function() {
+                        $('html, body').scrollTop(scrollTop);
+                    }, 300);
+                }
             // clear melis modals container
             $("#melis-modals-container").empty();
         }
