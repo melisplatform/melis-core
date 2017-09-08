@@ -2708,12 +2708,19 @@ div#modal-user-management div.widget {
 .navbar.main .nav.tabsbar .nav-group-dropdown li .tab-element i.fa {
     height: 40px;
     line-height: 45px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tabsbar ul li a i:before {
     color: #fff;
     line-height: 45px;
     height: 45px;
+}
+.navbar.main.navbar-primary .tabsbar li:hover > .tab-element {
+    background: #fff;
+    color: #932e2a !important;
 }
 .tabsbar .nav-group-dropdown li:hover > .tab-element > i:before {
     color: #932E2A;
