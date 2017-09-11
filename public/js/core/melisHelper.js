@@ -572,7 +572,7 @@ var melisHelper = (function(){
                 $("#" + modalID).modal({
                     show: true,
                     keyboard : false,
-                    backdrop : "static"
+                    backdrop : modalBackDrop
                 });
 
                 if(typeof callback !== "undefined" && typeof callback === "function") {
