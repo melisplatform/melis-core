@@ -39,7 +39,7 @@ $(document).ready(function() {
 
         $.ajax({
             type        : 'POST',
-            url         : 'melis/MelisCore/MelisCoreMicroService/updateStatus',
+            url         : '/melis/MelisCore/MelisCoreMicroService/updateStatus',
             data		: {id : id, status : status},
             dataType    : 'json',
             encode		: true,
@@ -65,7 +65,7 @@ $(document).ready(function() {
 
         $.ajax({
             type        : 'POST',
-            url         : 'melis/MelisCore/MelisCoreMicroService/getUserAuthData',
+            url         : '/melis/MelisCore/MelisCoreMicroService/getUserAuthData',
 			data		: {id : id},
             dataType    : 'json',
             encode		: true,
