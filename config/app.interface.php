@@ -138,6 +138,7 @@ return array(
                     '/MelisCore/js/tools/emailMngt.tools.js',
                     '/MelisCore/js/tools/melisPHPUnitTool.js',
                     '/MelisCore/js/tools/logs.tool.js',
+                    '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
 
                     //datepicker translations
@@ -1100,6 +1101,19 @@ return array(
                     )
                 ),
             )
+        ),
+        'meliscore_user_profile' => array(
+            'conf' => array(
+                'id' => 'id_meliscore_user_profile',
+                'melisKey' => 'meliscore_user_profile'
+            ),
+            'forward' => array(
+                'module' => 'MelisCore',
+                'controller' => 'UserProfile',
+                'action' => 'render-user-profile',
+                'jscallback' => '',
+                'jsdatas' => array()
+            ),
         ),
         'meliscore_dashboard' => array(
             'conf' => array(
