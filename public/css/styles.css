@@ -2931,45 +2931,21 @@ div#modal-user-management div.widget {
     height: 40px;
     letter-spacing: 0.7px;
 }
-.cs-nav-tabs.nav-tabs {
+.widget-user .widget-head.nav {
+    border-top: 0;
+}
+.widget-user .tabs-label li.active a.glyphicons {
     border-bottom: 0;
-    background: #932e2a;
 }
-.cs-nav-tabs.nav-tabs > li > a {
-    padding: 15px 22px;
-    border: none;
-    border-radius: 0;
-    font-weight: bold;
-    color: #fff;
+.widget-user .tabs-label li a.glyphicons {
+    border-bottom: 0;
 }
-.cs-nav-tabs.nav-tabs > li > a .fa {
-    color: #fff;
+.container-level-a .widget-user .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li:hover {
+    border-bottom: 1px solid #e5e5e5;
 }
 
-.cs-nav-tabs.nav-tabs>li>a:active,
-.cs-nav-tabs.nav-tabs>li>a:focus,
-.cs-nav-tabs.nav-tabs>li>a:hover {
-    background: #fff;
-    color: #932e2a;
-    border: none;
-}
-.cs-nav-tabs.nav-tabs>li>a:hover .fa {
-    color: #932e2a;
-}
-
-
-.cs-nav-tabs.nav-tabs > li > a .fa {
-    margin-right: 6px;
-}
-.cs-nav-tabs.nav-tabs > li.active > a {
-    position: relative;
-    background: #fff;
-    color: #932e2a;
-    border: none;
-    box-shadow: 0 0;
-}
-.cs-nav-tabs.nav-tabs > li.active > a .fa {
-    color: #932e2a;
+.container-level-a .widget-user .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li.active:hover {
+    border-bottom: 0;
 }
 
 .tab-content-title {

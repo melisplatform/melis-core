@@ -10,7 +10,7 @@ $data_melisKey = $this->melisKey;
     <div class="innerAll spacing-x2">
 
         <!-- Widget -->
-        <div class="widget finances_summary widget-inverse">
+        <div class="widget widget-user widget-inverse">
 
             <div class="row row-merge">
                 <!-- col -->
@@ -42,10 +42,24 @@ $data_melisKey = $this->melisKey;
                 <div class="col-lg-9 col-md-9 col-sm-12">
                     <div class="">
                         <!-- Nav tabs -->
-                        <ul class="cs-nav-tabs nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-user"></i>Profile</a></li>
-                            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab"><i class="fa fa-comments"></i>Messages</a></li>
-                        </ul>
+                        <div class="widget widget-tabs widget-tabs-double-2 widget-tabs-responsive">
+                            <div class="widget-head nav">
+                                <ul class="tabs-label nav-tabs">
+                                    <li class="active" role="presentation">
+                                        <a class="glyphicons user" data-page-id="1" data-toggle="tab" href="#profile" aria-expanded="true">
+                                            <i> </i>
+                                            <span>Profile</span>
+                                        </a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a class="glyphicons inbox" data-page-id="2" data-toggle="tab" href="#messages" aria-expanded="true">
+                                            <i> </i>
+                                            <span>Messages</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
 
                         <!-- Tab panes -->
                         <div class="tab-content">
