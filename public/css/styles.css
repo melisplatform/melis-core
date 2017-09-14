@@ -2704,6 +2704,9 @@ div#modal-user-management div.widget {
     background: #932e2a;
     height: 45px;
     line-height: 45px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .navbar.main .nav.tabsbar .nav-group-dropdown li .tab-element i.fa {
     height: 40px;
