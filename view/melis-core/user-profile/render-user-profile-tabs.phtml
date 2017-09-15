@@ -5,8 +5,22 @@ if (!empty($this->zoneconfig['conf']['id']))
 $data_melisKey = $this->melisKey;
 ?>
 <div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>'>
-    <ul class="cs-nav-tabs nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-user"></i>Profile</a></li>
-        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab"><i class="fa fa-comments"></i>Messages</a></li>
-    </ul>
+    <div class="widget widget-tabs widget-tabs-double-2 widget-tabs-responsive">
+        <div class="widget-head nav">
+            <ul class="tabs-label nav-tabs">
+                <li class="active" role="presentation">
+                    <a class="glyphicons user" data-page-id="1" data-toggle="tab" href="#profile" aria-expanded="true">
+                        <i> </i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a class="glyphicons inbox" data-page-id="2" data-toggle="tab" href="#messages" aria-expanded="true">
+                        <i> </i>
+                        <span>Messages</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
