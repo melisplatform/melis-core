@@ -1,0 +1,29 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+$data_melisKey = $this->melisKey;
+
+?>
+<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>'>
+    <!-- Profile Photo -->
+    <?php foreach($this->userInfo AS $user): ?>
+        <div class="text-center">
+            <div class="profile-photo">
+                <img src="data:image/jpeg;base64,<?=$user['usr_image']?>" alt="" class="img-responsive img-circle" id="user-profile-pic">
+                <div class="photo-overlay"></div>
+                <div class="profile-photo-edit">
+                    <i class="fa fa-camera"></i>
+                </div>
+            </div>
+            <p class="u-name lead strong margin-none"><?=$user['usr_name']?></p>
+            <p class="u-username"><?=$user['usr_login']?></p>
+        </div>
+        <div class="innerAll inner-2x text-center">
+            <!-- <p class="lead">Senior UI Designer</p> -->
+            <span class="u-lists"><i class="fa fa-user"></i><span id="u-name-list"><?=$user['usr_login']?></span></span>
+            <span class="u-lists"><i class="fa fa-envelope"></i><span id="u-email-list"><?=$user['usr_email']?></span></span>
+        </div>
+     <?php endforeach; ?>
+</div>
+

@@ -1043,8 +1043,160 @@ return array(
                                 ),
                             ), // end input filter
                         ), // end edit form
+                        'meliscore_user_profile_form' => array(
+                            'attributes' => array(
+                                'name' => 'userprofilemanagement',
+                                'id' => 'iduserprofilemanagement',
+                                'method' => 'POST',
+                                'enctype' => 'multipart/form-data',
+                                'action' => '',
+                                'novalidate' => 'novalidate',
+                            ),
+                            'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => array(
+                                array(
+                                    'spec' => array(
+                                        'name' => 'usr_email',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_tool_user_col_Email',
+                                            'tooltip' => 'tr_meliscore_user_profile_email_tooltip',
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'id_usr_email',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_tool_user_col_Email',
+                                            'required' => 'required',
+                                        ),
+                                    ),
+                                ),
+                                
+                                array(
+                                    'spec' => array(
+                                        'name' => 'usr_password',
+                                        'type' => 'Password',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_tool_user_col_password',
+                                            'tooltip' => 'tr_meliscore_tool_tooltip_password',
+                                            'label_options' => array(
+                                                'disable_html_escape' => true,
+                                            )
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'id_usr_password',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_login_pass_placeholder',
+                                            'class' => 'form-control',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'usr_confirm_password',
+                                        'type' => 'Password',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_tool_user_col_confirm_password',
+                                            'label_options' => array(
+                                                'disable_html_escape' => true,
+                                            )
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'id_usr_confirm_password',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_login_pass_placeholder',
+                                            'class' => 'form-control',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'usr_lang_id',
+                                        'type' => 'MelisCoreLanguageSelect',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_tool_user_form_language',
+                                            'tooltip' => 'tr_meliscore_user_profile_language_tooltip',
+                                            'empty_option' => 'tr_meliscore_common_choose',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'id_usr_lang_id',
+                                            'required' => 'required',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'usr_image',
+                                        'type' => 'file',
+                                        'attributes' => array(
+                                            'id' => 'id_usr_image',
+                                            'value' => '',
+                                            'style' => 'display:none',
+                                        ),
+                                    ),
+                                ),
+                                
+                            ), // end edit elements
+                            'input_filter' => array(
+                                'usr_email' => array(
+                                    'name'     => 'usr_email',
+                                    'required' => true,
+                                    'validators' => array(
+                                        array(
+                                            'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_email_error_empty',
+                                                ),
+                                            ),
+                                        ),
+                                        array(
+                                            'name' => 'EmailAddress',
+                                            'options' => array(
+                                                'domain'   => 'true',
+                                                'hostname' => 'true',
+                                                'mx'       => 'true',
+                                                'deep'     => 'true',
+                                                'message'  => 'tr_meliscore_tool_user_invalid_email',
+                                            )
+                                        ),
+                                    ),
+                                    'filters'  => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ),
+                                'usr_lang_id' => array(
+                                    'name'     => 'usr_lang_id',
+                                    'required' => true,
+                                    'validators' => array(
+                                        array(
+                                            'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lang_id_error_empty',
+                                                ),
+                                            ),
+                                        ),
+                                        array(
+                                            'name'    => 'IsInt',
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                )
+                                            )
+                                        ),
+                                    ),
+                                    'filters'  => array(
+                                    ),
+                                ),
+                            ), // end input filter
+                        ), // end user profile edit form
                     ), // end forms
-                ), // end user management tool
+                ), // end user profile management
                 // Platform Tool
                 'meliscore_platform_tool' => array(
                     'conf' => array(

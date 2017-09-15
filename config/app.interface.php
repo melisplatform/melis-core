@@ -1114,6 +1114,66 @@ return array(
                 'jscallback' => '',
                 'jsdatas' => array()
             ),
+            'interface' => array(
+                'meliscore_user_profile_left' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_user_profile_photo',
+                        'melisKey' => 'meliscore_user_profile_photo',
+                        //'name' => 'tr_melismessenger_tool_name',
+                    ),
+                    'forward' => array(
+                        'module' => 'MelisCore',
+                        'controller' => 'UserProfile',
+                        'action' => 'render-user-profile-left',
+                        'jscallback' => '',
+                        'jsdatas' => array()
+                    ),
+                ),
+                'meliscore_user_profile_right' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_user_profile_right',
+                        'melisKey' => 'meliscore_user_profile_right',
+                        //'name' => 'tr_melismessenger_tool_name',
+                    ),
+                    'forward' => array(
+                        'module' => 'MelisCore',
+                        'controller' => 'UserProfile',
+                        'action' => 'render-user-profile-right',
+                        'jscallback' => '',
+                        'jsdatas' => array()
+                    ),
+                    'interface' => array(
+                        'meliscore_user_profile_tabs' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_user_profile_tabs',
+                                'melisKey' => 'meliscore_user_profile_tabs',
+                                //'name' => 'tr_melismessenger_tool_name',
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'UserProfile',
+                                'action' => 'render-user-profile-tabs',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                        ),
+                        'meliscore_user_profile_form' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_user_profile_form',
+                                'melisKey' => 'meliscore_user_profile_form',
+                                //'name' => 'tr_melismessenger_tool_name',
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'UserProfile',
+                                'action' => 'render-user-profile-form',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         ),
         'meliscore_dashboard' => array(
             'conf' => array(

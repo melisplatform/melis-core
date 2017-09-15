@@ -1,0 +1,12 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+$data_melisKey = $this->melisKey;
+?>
+<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>'>
+    <ul class="cs-nav-tabs nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-user"></i>Profile</a></li>
+        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab"><i class="fa fa-comments"></i>Messages</a></li>
+    </ul>
+</div>
