@@ -6,9 +6,8 @@ if (!empty($this->zoneconfig['conf']['id']))
 ?>
 <div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>'>
     <div class="tab-panel-save">
-        <a href="javascript:void(0)" class="btn btn-success btnUpdateUser" data-meliskey=""><i class="fa fa-plus"></i> Save</a>
+        <a href="javascript:void(0)" class="btn btn-success btnUpdateUser" data-meliskey=""><i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_tool_user_update') ?></a>
     </div>
-    <!-- <div class="tab-content-title">Profile</div> -->
     <?php 
         $form = $this->meliscore_user_profile_form;
         $form->setAttribute('class', 'form-custom-block');

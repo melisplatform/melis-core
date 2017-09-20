@@ -1117,9 +1117,8 @@ return array(
             'interface' => array(
                 'meliscore_user_profile_left' => array(
                     'conf' => array(
-                        'id' => 'id_meliscore_user_profile_photo',
-                        'melisKey' => 'meliscore_user_profile_photo',
-                        //'name' => 'tr_melismessenger_tool_name',
+                        'id' => 'id_meliscore_user_profile_left',
+                        'melisKey' => 'meliscore_user_profile_left',
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
@@ -1133,7 +1132,6 @@ return array(
                     'conf' => array(
                         'id' => 'id_meliscore_user_profile_right',
                         'melisKey' => 'meliscore_user_profile_right',
-                        //'name' => 'tr_melismessenger_tool_name',
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
@@ -1147,7 +1145,6 @@ return array(
                             'conf' => array(
                                 'id' => 'id_meliscore_user_profile_tabs',
                                 'melisKey' => 'meliscore_user_profile_tabs',
-                                //'name' => 'tr_melismessenger_tool_name',
                             ),
                             'forward' => array(
                                 'module' => 'MelisCore',
@@ -1161,7 +1158,6 @@ return array(
                             'conf' => array(
                                 'id' => 'id_meliscore_user_profile_form',
                                 'melisKey' => 'meliscore_user_profile_form',
-                                //'name' => 'tr_melismessenger_tool_name',
                             ),
                             'forward' => array(
                                 'module' => 'MelisCore',

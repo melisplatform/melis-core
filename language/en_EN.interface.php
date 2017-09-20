@@ -106,10 +106,12 @@
         'tr_meliscore_tool_usrcd_last_connection_time' => 'Connection time',
 
 	    //USER PROFILE MANAGEMENT
-	    'tr_meliscore_user_profile_email_tooltip' => 'Your Email Address',
-	    'tr_meliscore_user_profile_language_tooltip' => 'Select your desired language',
+	    'tr_meliscore_user_profile' => 'User Profile Management',
 	    'tr_meliscore_user_profile_success_info' => 'Profile successfully updated',
 	    'tr_meliscore_user_profile_failed_info' => 'Unable to update profile',
+	    'tr_meliscore_user_profile_profile_text' => 'Profile',
+	    'tr_meliscore_user_profile_message_text' => 'Messages',
+	    'tr_meliscore_user_profile_creation_date' => 'User Creation Date',
 	    
 	    'tr_meliscore_tool_user_update_success_info' => 'User\'s info updated successfully',
 	    'tr_meliscore_tool_user_update_fail_info' => 'Unable to update User\'s information',

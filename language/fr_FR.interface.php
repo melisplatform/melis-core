@@ -105,6 +105,14 @@
         'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
         'tr_meliscore_tool_usrcd_last_connection_time' => 'Temps de connexion',
 	    
+        //USER PROFILE MANAGEMENT
+	    'tr_meliscore_user_profile' => 'Gestion du profil utilisateur',
+	    'tr_meliscore_user_profile_success_info' => 'Profil mis à jour avec succès',
+	    'tr_meliscore_user_profile_failed_info' => 'Impossible de mettre à jour le profil',
+	    'tr_meliscore_user_profile_profile_text' => 'Profil',
+	    'tr_meliscore_user_profile_message_text' => 'Messages',
+	    'tr_meliscore_user_profile_creation_date' => 'Date de création de l\'utilisateur',
+	    
 	    'tr_meliscore_tool_user_update_success_info' => 'Infos utilisateur mises à jour avec succès.',
 	    'tr_meliscore_tool_user_update_fail_info' => 'Echec de mise à jour des infos utilisateur',
 	    

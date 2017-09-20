@@ -1043,6 +1043,10 @@ return array(
                                 ),
                             ), // end input filter
                         ), // end edit form
+                    ), // end forms
+                ),//end user tool management 
+                'meliscore_user_profile_management' =>  array(
+                    'forms' => array(
                         'meliscore_user_profile_form' => array(
                             'attributes' => array(
                                 'name' => 'userprofilemanagement',
@@ -1060,7 +1064,7 @@ return array(
                                         'type' => 'MelisText',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_Email',
-                                            'tooltip' => 'tr_meliscore_user_profile_email_tooltip',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_Email tooltip',
                                         ),
                                         'attributes' => array(
                                             'id' => 'id_usr_email',
@@ -1077,7 +1081,7 @@ return array(
                                         'type' => 'Password',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_password',
-                                            'tooltip' => 'tr_meliscore_tool_tooltip_password',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_password tooltip',
                                             'label_options' => array(
                                                 'disable_html_escape' => true,
                                             )
@@ -1096,6 +1100,7 @@ return array(
                                         'type' => 'Password',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_col_confirm_password',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_confirm_password tooltip',
                                             'label_options' => array(
                                                 'disable_html_escape' => true,
                                             )
@@ -1114,7 +1119,7 @@ return array(
                                         'type' => 'MelisCoreLanguageSelect',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_user_form_language',
-                                            'tooltip' => 'tr_meliscore_user_profile_language_tooltip',
+                                            'tooltip' => 'tr_meliscore_tool_user_form_language tooltip',
                                             'empty_option' => 'tr_meliscore_common_choose',
                                             'disable_inarray_validator' => true,
                                         ),
@@ -1129,9 +1134,8 @@ return array(
                                         'name' => 'usr_image',
                                         'type' => 'file',
                                         'attributes' => array(
-                                            'id' => 'id_usr_image',
+                                            'id' => 'id_usr_profile_image',
                                             'value' => '',
-                                            'style' => 'display:none',
                                         ),
                                     ),
                                 ),
@@ -1195,8 +1199,8 @@ return array(
                                 ),
                             ), // end input filter
                         ), // end user profile edit form
-                    ), // end forms
-                ), // end user profile management
+                    ),//end from
+                ),// end user profile management
                 // Platform Tool
                 'meliscore_platform_tool' => array(
                     'conf' => array(
