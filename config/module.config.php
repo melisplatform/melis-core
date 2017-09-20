@@ -221,6 +221,7 @@ return array(
             'MelisCore\Controller\MelisTinyMce' => 'MelisCore\Controller\MelisTinyMceController',
             'MelisCore\Controller\MelisPhpUnitTool' => 'MelisCore\Controller\MelisPhpUnitToolController',
             'MelisCore\Controller\Log' => 'MelisCore\Controller\LogController',
+            'MelisCore\Controller\UserProfile' => 'MelisCore\Controller\UserProfileController',
         ),
     ),
 

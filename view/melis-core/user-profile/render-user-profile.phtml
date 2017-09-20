@@ -1,0 +1,29 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+$data_melisKey = $this->melisKey;
+
+
+?>
+<div<?= $id; ?> class="tab-pane container-level-a" data-melisKey='<?= $data_melisKey; ?>'>
+    <div class="innerAll spacing-x2">
+        <!-- Widget -->
+        <div class="widget widget-user widget-inverse">
+            <div class="row row-merge">
+                <!-- col -->
+                <div class="col-sm-12 col-md-3">
+                    <?php echo $this->meliscore_user_profile_left; ?>
+                </div>
+                <!-- // END col -->
+                <!-- col -->
+                <div class="col-lg-9 col-md-9 col-sm-12">
+					<?php echo $this->meliscore_user_profile_right; ?>
+                </div>
+                <!-- // END col -->
+            </div>
+        </div>
+        <!-- // END row -->
+    </div>
+    <!-- // END row-app -->
+</div>

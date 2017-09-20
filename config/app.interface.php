@@ -138,6 +138,7 @@ return array(
                     '/MelisCore/js/tools/emailMngt.tools.js',
                     '/MelisCore/js/tools/melisPHPUnitTool.js',
                     '/MelisCore/js/tools/logs.tool.js',
+                    '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
 
                     //datepicker translations
@@ -1100,6 +1101,75 @@ return array(
                     )
                 ),
             )
+        ),
+        'meliscore_user_profile' => array(
+            'conf' => array(
+                'id' => 'id_meliscore_user_profile',
+                'melisKey' => 'meliscore_user_profile'
+            ),
+            'forward' => array(
+                'module' => 'MelisCore',
+                'controller' => 'UserProfile',
+                'action' => 'render-user-profile',
+                'jscallback' => '',
+                'jsdatas' => array()
+            ),
+            'interface' => array(
+                'meliscore_user_profile_left' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_user_profile_left',
+                        'melisKey' => 'meliscore_user_profile_left',
+                    ),
+                    'forward' => array(
+                        'module' => 'MelisCore',
+                        'controller' => 'UserProfile',
+                        'action' => 'render-user-profile-left',
+                        'jscallback' => '',
+                        'jsdatas' => array()
+                    ),
+                ),
+                'meliscore_user_profile_right' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_user_profile_right',
+                        'melisKey' => 'meliscore_user_profile_right',
+                    ),
+                    'forward' => array(
+                        'module' => 'MelisCore',
+                        'controller' => 'UserProfile',
+                        'action' => 'render-user-profile-right',
+                        'jscallback' => '',
+                        'jsdatas' => array()
+                    ),
+                    'interface' => array(
+                        'meliscore_user_profile_tabs' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_user_profile_tabs',
+                                'melisKey' => 'meliscore_user_profile_tabs',
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'UserProfile',
+                                'action' => 'render-user-profile-tabs',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                        ),
+                        'meliscore_user_profile_form' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_user_profile_form',
+                                'melisKey' => 'meliscore_user_profile_form',
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'UserProfile',
+                                'action' => 'render-user-profile-form',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         ),
         'meliscore_dashboard' => array(
             'conf' => array(

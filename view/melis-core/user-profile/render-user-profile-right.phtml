@@ -1,0 +1,20 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+$data_melisKey = $this->melisKey;
+
+
+?>
+<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>'>
+    <div class="">
+        <!-- Nav tabs -->
+        <?php echo $this->meliscore_user_profile_tabs; ?>
+        <!-- Tab panes -->
+        <div class="tab-content">
+             <div role="tabpanel" class="tab-pane" id="profile">
+             	<?php echo $this->meliscore_user_profile_form; ?>
+             </div>
+       	</div>
+    </div>
+</div>
