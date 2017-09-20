@@ -36,7 +36,7 @@ class MelisCoreImageService implements ServiceLocatorAwareInterface, MelisCoreIm
      */
     public function createThumbnail($savePath, $newImageName, $srcImageFile)
     {
-        $getImageFile = $this->resizeImage($savePath, $srcImageFile, 'tmb_'.$newImageName, 200, 200);
+        $getImageFile = $this->resizeImage($savePath, $srcImageFile, 'tmb_'.$newImageName, 250, 250);
         
         return $getImageFile;
     }

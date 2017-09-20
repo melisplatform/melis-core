@@ -423,7 +423,7 @@ class UserProfileController extends AbstractActionController
         {
            if($encodeImg)
            {
-                $usersInfo[$key]['usr_image'] = ($usersInfo[$key]['usr_image'] != "" && $usersInfo[$key]['usr_image'] != null) ? base64_encode($usersInfo[$key]['usr_image']) : "/MelisCore/images/profile/default_picture.jpg";
+                $usersInfo[$key]['usr_image'] = ($usersInfo[$key]['usr_image'] != "" && $usersInfo[$key]['usr_image'] != null) ? "data:image/jpeg;base64,".base64_encode($usersInfo[$key]['usr_image']) : "/MelisCore/images/profile/default_picture.jpg";
            }
            //get the user role by role id
            $r = $role->getEntryById($usersInfo[$key]['usr_role_id'])->toArray();

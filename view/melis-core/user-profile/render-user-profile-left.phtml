@@ -10,13 +10,10 @@ $data_melisKey = $this->melisKey;
     <?php foreach($this->userInfo AS $user){ ?>
         <div class="text-center">
             <div class="profile-photo">
-                <img src="data:image/jpeg;base64,<?=$user['usr_image']?>" alt="" class="img-responsive img-circle" id="user-profile-pic">
+                <img src="<?=$user['usr_image']?>" alt="" class="img-responsive img-circle" id="user-profile-pic">
                 <div class="photo-overlay"></div>
                 <div class="profile-photo-edit">
-                    <i class="fa fa-camera">
-                    	<br/>
-                    	<span>200 x 200</span>
-                    </i>
+                    <i class="fa fa-camera"></i>
                 </div>
             </div>
             <p class="u-name lead strong margin-none"><?=$user['usr_name']?></p>

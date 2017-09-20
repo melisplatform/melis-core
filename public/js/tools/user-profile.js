@@ -26,7 +26,7 @@ $(function() {
     /**
      * Open up File Input window to select an image
      */
-    body.on('click', '.profile-photo-edit, .profile-photo', function(e){
+    body.on('click', '.profile-photo-edit', function(e){
     	$('#id_usr_profile_image').trigger('click');
     	e.preventDefault();
     });
