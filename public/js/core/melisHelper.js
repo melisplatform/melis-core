@@ -326,7 +326,7 @@ var melisHelper = (function(){
 
         if(alreadyOpen.length < 1){
             var li = "<li>";
-            li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='" + zoneId + "'>";
+            li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='" + zoneId + "' title='"+ title +"'>";
             li += "<i class='fa "+ icon +" fa-2x'></i><span class='navtab-pagename'>";
             li += title + "</span></a>";
             li += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";

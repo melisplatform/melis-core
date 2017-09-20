@@ -2272,9 +2272,22 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     .navbar #melis-id-nav-bar-tabs > li{
         float: left;
         display: inline-block;
+        width: 170px;
         height: 47px;
         border-right: 1px solid #AD6565;
         border-bottom: none;
+        background: #90312e;
+        -webkit-transition: none;
+        -moz-transition: none;
+        -ms-transition: none;
+        transition: none;
+    }
+    .navbar #melis-id-nav-bar-tabs > li .navtab-pagename {
+        float: left;
+        width: 90px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     .navbar #melis-id-nav-bar-tabs > li:hover > a {
         background: #fff;
@@ -2342,6 +2355,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         border-bottom: none;
     }
     .navbar.main.navbar-primary .nav > li .menu-icon .fa{
+        float: left;
+        width: 35px;
+        text-align: center;
         line-height: 45px;
         height: auto;
     }
