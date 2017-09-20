@@ -13,14 +13,16 @@ $data_melisKey = $this->melisKey;
                 <img src="<?=$user['usr_image']?>" alt="" class="img-responsive img-circle" id="user-profile-pic">
                 <div class="photo-overlay"></div>
                 <div class="profile-photo-edit">
-                    <i class="fa fa-camera"></i>
+                    <i class="fa fa-camera">
+                        <br/>
+                        <small>250 x 250</small>
+                    </i>
                 </div>
             </div>
             <p class="u-name lead strong margin-none"><?=$user['usr_name']?></p>
             <p class="u-username"><?=$user['usr_login']?></p>
         </div>
         <div class="innerAll inner-2x text-center">
-            <!-- <p class="lead">Senior UI Designer</p> -->
             <span class="u-lists"><i class="fa fa-envelope" data-toggle="tooltip" data-placement="left" data-original-title="<?=$this->translate('tr_meliscore_tool_user_col_Email'); ?>"></i><span id="u-email-list"><?=$user['usr_email']?></span></span>
             <span class="u-lists"><i class="fa fa-calendar" data-toggle="tooltip" data-placement="left" data-original-title="<?=$this->translate('tr_meliscore_user_profile_creation_date'); ?>"></i><span id="u-creation-date-list"><?=$user['usr_creation_date']?></span></span>
             <span class="u-lists"><i class="fa fa-user" data-toggle="tooltip" data-placement="left" data-original-title="<?=$this->translate('tr_meliscore_tool_user_col_role'); ?>"></i><span id="u-role-list"><?=$user['usr_role']?></span></span>

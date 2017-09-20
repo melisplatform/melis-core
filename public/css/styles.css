@@ -2850,6 +2850,9 @@ div#modal-user-management div.widget {
     background: rgba(253,72,72,0.7);
     border-radius: 50%;
 }
+.profile-photo #user-profile-pic{
+	width: 100%;
+}
 .profile-photo .profile-photo-edit {
     cursor: pointer;
     display: block;

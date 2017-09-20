@@ -358,38 +358,51 @@ class UserProfileController extends AbstractActionController
             //check the length of the password
             if(strlen($password) >= 8)
             {
-                $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
-                if($passValidator->isValid($password))
+                //check the length of the confirm password
+                if(strlen($confirmPass) >= 8)
                 {
-                    // password and confirm password matching
-                    if($password == $confirmPass)
+                    $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                    if($passValidator->isValid($password))
                     {
-                        $newPass = $melisCoreAuth->encryptPassword($password);
-                        $success = true;
+                        // password and confirm password matching
+                        if($password == $confirmPass)
+                        {
+                            $newPass = $melisCoreAuth->encryptPassword($password);
+                            $success = true;
+                        }
+                        else
+                        {
+                            $errors = array(
+                                'usr_password' => array(
+                                    'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
+                                    'label' => 'Password',
+                                ),
+                                'usr_confirm_password' => array(
+                                    'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
+                                    'label' => 'Password',
+                                ),
+                            );
+                        } // password and confirm password matching
                     }
                     else
                     {
                         $errors = array(
                             'usr_password' => array(
-                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
+                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_regex_not_match'),
                                 'label' => 'Password',
-                            ),
-                            'usr_confirm_password' => array(
-                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
-                                'label' => 'Password',
-                            ),
+                            )
                         );
-                    } // password and confirm password matching
+                    } // password regex validator
                 }
                 else
                 {
                     $errors = array(
-                        'usr_password' => array(
-                            'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_regex_not_match'),
+                        'usr_confirm_password' => array(
+                            'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_confirm_password_error_low'),
                             'label' => 'Password',
                         )
                     );
-                } // password regex validator
+                }// end confirm password length
             }
             else 
             {

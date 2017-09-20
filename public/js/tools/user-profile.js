@@ -57,7 +57,7 @@ $(function() {
     }
     /**
      * Function to save user profile
-     * @returns
+     * @param Button - button that triggered the function
      */
     function updateUserInfo(_this){
     	//prepare the data
@@ -110,7 +110,6 @@ $(function() {
     
     /**
      * Function to check whether to load the user profile tab
-     * @returns
      */
     function checkUserProfileTabOnReload(){
     	$.get('/melis/MelisCore/UserProfile/checkUserSessionIfExist', function(data){
@@ -122,7 +121,6 @@ $(function() {
     
     /**
      * Function to open user profile tab
-     * @returns
      */
     function openUserProfileTab(){
     	var userName = $("#user-name-link").html().trim();

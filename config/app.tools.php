@@ -1067,7 +1067,7 @@ return array(
                                             'tooltip' => 'tr_meliscore_tool_user_col_Email tooltip',
                                         ),
                                         'attributes' => array(
-                                            'id' => 'id_usr_email',
+                                            'id' => 'id_usr_profile_email',
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_tool_user_col_Email',
                                             'required' => 'required',
@@ -1087,7 +1087,7 @@ return array(
                                             )
                                         ),
                                         'attributes' => array(
-                                            'id' => 'id_usr_password',
+                                            'id' => 'id_usr_profile_password',
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_login_pass_placeholder',
                                             'class' => 'form-control',
@@ -1106,7 +1106,7 @@ return array(
                                             )
                                         ),
                                         'attributes' => array(
-                                            'id' => 'id_usr_confirm_password',
+                                            'id' => 'id_usr_profile_confirm_password',
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_login_pass_placeholder',
                                             'class' => 'form-control',
@@ -1124,7 +1124,7 @@ return array(
                                             'disable_inarray_validator' => true,
                                         ),
                                         'attributes' => array(
-                                            'id' => 'id_usr_lang_id',
+                                            'id' => 'id_usr_profile_lang_id',
                                             'required' => 'required',
                                         ),
                                     ),
