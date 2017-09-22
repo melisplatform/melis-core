@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS `melis_core_user_connection_date` ;
 
 CREATE TABLE IF NOT EXISTS `melis_core_user_connection_date` (
-  `usrcd_id` INT NULL AUTO_INCREMENT,
+  `usrcd_id` INT NOT NULL AUTO_INCREMENT,
   `usrcd_usr_login` INT NOT NULL,
   `usrcd_last_login_date` DATETIME NOT NULL,
   `usrcd_last_connection_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
