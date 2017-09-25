@@ -539,6 +539,7 @@
 
         // Microservice
         'tr_meliscore_microservice' => 'Microservice',
+        'tr_meliscore_microservice_modal' => 'Microservice Modal',
         'tr_meliscore_microservice_tool_user_desc' => ' Manage and view user\'s microservice accessibility and activies',
         'tr_meliscore_microservice_date_requested' => 'Date Requested',
         'tr_meliscore_microservice_api_key_invalid' => 'Invalid API key',
@@ -548,5 +549,9 @@
         'tr_meliscore_microservice_method_ko' => 'Service method not found',
         'tr_meliscore_microservice_form_ko' => 'Form configuration not found',
         'tr_meliscore_microservice_request_ok' => 'Request has been executed',
+        'tr_meliscore_microservice_api_key_inactive' => 'API Key is inactive',
+
+        'tr_meliscore_microservice_generate_api_key' => 'Generate API Key',
+        'tr_meliscore_microservice_generateD_api_key' => 'API Key',
 	);
 ?>

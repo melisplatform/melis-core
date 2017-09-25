@@ -1,0 +1,45 @@
+<?php
+$url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+?>
+
+<?php
+if($this->userExists) {
+?>
+<style type="text/css">
+	.list{
+		padding-left:40px;
+
+	}
+	.list li{
+		position: relative;
+		list-style: none;
+	}
+</style>
+<div style="padding-left: 20px;">
+	<?php 
+		 foreach ($this->microservice as $module => $service) {
+
+		 	echo "<h4>$module</h4>";
+	 		
+		 	foreach($service as $serviceName => $methods) {
+				echo "<h5>&nbsp;&nbsp;&nbsp;&nbsp;$serviceName</h5>";
+				echo "<ul class=list>";
+
+	 			foreach($methods as $methodName => $config) {
+	 				echo "
+	 				<li>
+	 					<h6><i class='fa fa-plus'></i> <a href=\"/melis/api/$this->apiKey/$module/service/$serviceName/$methodName\" target='_blank'> $methodName</a></h6>
+	 				</li>";
+	 				
+	 			}
+	 			echo "</ul>";
+		 	} 
+		 	echo "<br/>";
+		}
+		 	
+	?>
+</div>
+
+<?php
+}
+?>

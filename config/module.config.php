@@ -151,6 +151,21 @@ return array(
 
                         ),
                     ),
+                    'microservice_list'  => array(
+                        'type'      => 'Segment',
+                        'options'   => array(
+                            'route' => 'api[/:api_key]',
+                            'constraint' => array(
+                                'api_key'        => '[a-zA-Z0-9_\-\=\$\@]*',
+
+                            ),
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'MelisCore\Controller',
+                                'controller'    => 'MelisCoreMicroService',
+                                'action'        => 'micro-services-list'
+                            ),
+                        ),
+                    ),
                     'microservice'  => array(
                         'type'      => 'Segment',
                         'options'   => array(

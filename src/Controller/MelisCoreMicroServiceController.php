@@ -12,7 +12,7 @@ namespace MelisCore\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
-
+use Zend\Db\ResultSet\HydratingResultSet;
 class MelisCoreMicroServiceController extends AbstractActionController
 {
     /**
@@ -62,7 +62,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
                     $config = $this->getServiceLocator()->get('config');
                     $services = array_merge($config['service_manager']['aliases'], $config['service_manager']['factories']);
                     $servicesKeys = array_keys($services);
-
+                    
                     /**
                      * Checker whether the requested Service exists in the platform
                      */
@@ -73,15 +73,16 @@ class MelisCoreMicroServiceController extends AbstractActionController
 
                         $servicePath = "\\$module\\Service\\$service";
                         $methodExists = method_exists($servicePath, $method);
+                        //echo func_num_args($servicePath."\\" . $method);
                         $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
                         $form = $coreConfig->getItem('microservice/' . $module . '/' . $service . '/' . $method);
+                       
 
                         /**
                          * Checker whether the requested method exists in the provided Service, and return JSON if
                          * requested method is POST
                          */
                         if ($post && $methodExists) {
-
                             /**
                              * If form configuration in app.microservice.php is properly configured depending on the provided
                              * route parameters, then we will use its' configuration to interact with the service
@@ -101,26 +102,58 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                  */
                                 if (isset($post[0]) && isset($post[0]['post'])) {
 
-                                    $post = $post[0]['post'];
+                                    $post = $post->bottom()['post'];
 
                                     $form = $this->getForm($form);
                                     $form->setData($post);
 
                                     if ($form->isValid()) {
+
                                         $tmpInstance = new $servicePath();
                                         $tmpInstance->setServiceLocator($this->getServiceLocator());
+
+                                        $setEventManagerMethodExists = (bool) method_exists($servicePath, 'setEventManager');
+
+                                        if($setEventManagerMethodExists) {
+                                            $tmpInstance->setEventManager($this->getEventManager());
+                                        }
+
                                         $reflectionMethod = new \ReflectionMethod($servicePath, $method);
+
                                         /**
                                          * allow method to accept dynamic arguments
                                          */
-                                        $data = (array)$reflectionMethod->invokeArgs($tmpInstance, $post);
+                                        $data = $reflectionMethod->invokeArgs($tmpInstance, $post);
+
+
+                                        /**
+                                         * This listener trigger handles the modification of the results returned by invokeArgs
+                                         */
+                                        $tmpData = $this->getEventManager()->trigger('melis_core_microservice_amend_data', $this, array('module' => $module, 'service' => $service, 'method' => $method, 'post' => $post, 'results' => $data));
+
+
+                                        if(isset($tmpData[0]) && isset($tmpData['0']['results'])) {
+                                            $data = $tmpData[0]['results'];
+
+                                        }
+                                        
+                                        if($data instanceof \ArrayObject || $data instanceof HydratingResultSet) {
+                                            $data = $data->toArray();
+                                        }
+                                        else {
+                                            if(!is_array($data)) {
+                                             $data = (array) $data;
+                                            }
+
+                                        } 
+
                                         $message = 'tr_meliscore_microservice_request_ok';
                                         $success = true;
                                     } else {
                                         $errors = $form->getMessages();
                                     }
                                 } else {
-                                    $errors['invalid_post_parameters'] = (array)$post;
+                                    $errors['invalid_post_parameters'] = (array) $post;
                                 }
                             }
 
@@ -129,14 +162,15 @@ class MelisCoreMicroServiceController extends AbstractActionController
                              */
                             if (!$errors) {
                                 $response = [
-                                    'success' => $success,
-                                    'message' => $translator->translate($message),
+                                    'success'  => $success,
+                                    'message'  => $translator->translate($message),
                                     'response' => $data,
-                                    'errors' => $errors
+                                    'errors'   => $errors
                                 ];
 
                                 return new JsonModel($response);
-                            } /**
+                            } 
+                            /**
                              * If provided arguments has errors then return the form with the error message(s)
                              */
                             else {
@@ -152,22 +186,53 @@ class MelisCoreMicroServiceController extends AbstractActionController
                              * If the request method is GET then we display the form
                              */
                             if ($methodExists) {
-
                                 /**
                                  * Display the form that will be used to provide data for the service method arguments
+                                 * 
                                  */
+                              
                                 if ($form) {
-                                    // get the form configuration in app.microservice configuration file
-                                    $this->layout('layout/layoutBlank');
-                                    $view = new ViewModel();
-                                    $view->form = $this->getForm($form);
 
-                                    return $view;
+                                    //Get the number of arguments passed
+                                    $arguments =  new \ReflectionMethod($servicePath, $method);
+                                    $numberOfParameters = $arguments->getNumberOfParameters();
+                                    //Display the form only when there is parameter(s)
+                                    if($numberOfParameters > 0 )
+                                     {
+                                        // get the form configuration in app.microservice configuration file
+                                        $this->layout('layout/layoutBlank');
+                                        $view = new ViewModel();
+                                        $view->form = $this->getForm($form);
+                                        return $view;
+                                    }
+                                    
+                                    else {
+
+                                        $tmpInstance = new $servicePath();
+                                        $tmpInstance->setServiceLocator($this->getServiceLocator());
+                                        $reflectionMethod = new \ReflectionMethod($servicePath, $method);
+                                        /**
+                                         * allow method to accept dynamic arguments
+                                         */
+                                        $data = (array)$reflectionMethod->invokeArgs($tmpInstance, $post);
+                                        $message = 'tr_meliscore_microservice_request_ok';
+                                        $success = true;
+
+                                        if (!$errors) {
+                                            $response = [
+                                                'success'  => $success,
+                                                'message'  => $translator->translate($message),
+                                                'response' => $data,
+                                                'errors'   => $errors
+                                           ];
+
+                                            return new JsonModel($response);
+                                        } 
+                                    }
                                 } else {
                                     $message = 'tr_meliscore_microservice_form_ko';
                                     $hasError = true;
                                 }
-
                             } else {
                                 $message = 'tr_meliscore_microservice_method_ko';
                                 $hasError = true;
@@ -183,7 +248,11 @@ class MelisCoreMicroServiceController extends AbstractActionController
                     $hasError = true;
                 }
 
-            }
+            }else{
+                $message = 'tr_meliscore_microservice_api_key_inactive';
+                $hasError = true;
+            }   
+
 
         } else {
             $message = 'tr_meliscore_microservice_api_key_invalid';
@@ -350,7 +419,6 @@ class MelisCoreMicroServiceController extends AbstractActionController
                 ], $apiData->msoa_id);
                 $success = 1;
             }
-
         }
 
         $response = [
@@ -379,4 +447,45 @@ class MelisCoreMicroServiceController extends AbstractActionController
         }
 
     }
+
+    /**
+     * generate all available list of Microservices
+     */
+    public function microServicesListAction()
+    {
+
+        $view         = new ViewModel();
+        $translator   = $this->getServiceLocator()->get('translator');
+        $apiKey       = trim($this->params()->fromRoute('api_key', ''));
+
+        $userExists   = false;
+        $microservice = array();
+        $userApiData  = $this->getMicroServiceAuthTable()->getUserByApiKey($apiKey)->current(); 
+        $apiStatus    = '';
+      
+        if($userApiData) {
+
+            $apiStatus = $userApiData->msoa_status;
+            // to validate the API key if its Active or Inactvie
+            if($apiStatus){
+                $config       = $this->getServiceLocator()->get('MelisCoreConfig');
+                $microservice = $config->getItem('microservice');
+                $userExists   = true;
+            }else{
+                $message = 'tr_meliscore_microservice_api_key_inactive';
+
+                echo "&nbsp;&nbsp;" .$translator->translate($message);
+            }
+         
+        }
+        else{
+
+        }
+     
+        $view->userExists   = $userExists;
+        $view->microservice = $microservice;
+        $view->apiKey       = $apiKey;
+        return $view;
+    }
+
 }
