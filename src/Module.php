@@ -167,31 +167,36 @@ class Module
     
     public function initSession(MvcEvent $e)
     {
-    	$sm = $e->getApplication()->getServiceManager();
-    	$container = new Container('meliscore');
-    	
-    	$translator = $sm->get('translator');
-    	$locale = $translator->getLocale();
-    	$langId = 1;
-    	
-    	// check first if the db config is available
-    	$env = getenv('MELIS_PLATFORM');
-    	$dbConfFile = 'config/autoload/platforms/'.$env.'.php';
-    	if(file_exists($dbConfFile)) {
-    	    if (empty($container['melis-lang-locale']))
-    	    {
-    	        $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
-    	        $datasLang = $melisLangTable->getEntryByField('lang_locale', $locale);
-    	        $datasLang = $datasLang->current();
-    	        $container['melis-lang-locale'] = $locale;
-    	        $langId = is_null($datasLang->lang_id) ? 1 : $datasLang->lang_id;
-    	    }
+        $sm = $e->getApplication()->getServiceManager();
+        $container = new Container('meliscore');
 
-    	}
-    	else {
-    	    $container['melis-lang-id'] = $langId;
-    	    $container['melis-lang-locale'] = $locale;
-    	}
+        $translator = $sm->get('translator');
+        $locale = $translator->getLocale();
+        $langId = 1;
+
+        // check first if the db config is available
+        $env = getenv('MELIS_PLATFORM');
+        $dbConfFile = 'config/autoload/platforms/'.$env.'.php';
+        if(file_exists($dbConfFile)) {
+            if (empty($container['melis-lang-locale']))
+            {
+                $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
+                $datasLang = $melisLangTable->getEntryByField('lang_locale', $locale)->current();
+
+                if($datasLang) {
+                    $container['melis-lang-locale'] = $locale;
+                    $langId = is_null($datasLang->lang_id) ? 1 : $datasLang->lang_id;
+                }
+                else {
+                    $container['melis-lang-locale'] = 'en_EN';
+                }
+            }
+
+        }
+        else {
+            $container['melis-lang-id'] = $langId;
+            $container['melis-lang-locale'] = $locale;
+        }
 
     }
     
