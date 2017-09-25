@@ -183,7 +183,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	    if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId']))
 	    {
 	        $logTypeTrans = $melisCoreTableLogTypeTrans->getLogTypeTranslations($arrayParameters['logTypeId'], $arrayParameters['langId']);
-	        
+
 	        foreach ($logTypeTrans As $key => $val)
 	        {
 	            array_push($results, $val);

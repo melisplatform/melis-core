@@ -29,7 +29,7 @@ class MelisLogTypeTransTable extends MelisGenericTable
 	    {
 	        $select->where('logtt_lang_id = '.$langId);
 	    }
-	    
+
 	    $resultSet = $this->tableGateway->selectWith($select);
 	    return $resultSet;
 	}

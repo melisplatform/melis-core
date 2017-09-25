@@ -17,7 +17,7 @@ use MelisCore\Service\MelisCoreRightsService;
 
 /**
  * This class renders Melis CMS Dashboard
- */
+*/
 class DashboardController extends AbstractActionController
 {
 	/**
