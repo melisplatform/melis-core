@@ -260,7 +260,7 @@ return array(
             'MelisCore\Controller\MelisPhpUnitTool' => 'MelisCore\Controller\MelisPhpUnitToolController',
             'MelisCore\Controller\Log' => 'MelisCore\Controller\LogController',
             'MelisCore\Controller\UserProfile' => 'MelisCore\Controller\UserProfileController',
-            'MelisCore\Controller\MelisCoreMicroService' => 'MelisCore\Controller\MelisCoreMicroServiceController',
+            'MelisCore\Controller\MelisCoreMicroService' => 'MelisCore\Controller\MelisCoreMicroServiceController', 
         ),
     ),
 
