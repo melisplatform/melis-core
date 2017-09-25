@@ -415,7 +415,6 @@ var melisCore = (function(window){
         $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
 
         if( screenSize <= 767 ){
-            console.log('mobile doy');
             tabDraggable("#melis-id-nav-bar-tabs", true);
         } else {
             tabDraggable("#melis-id-nav-bar-tabs", false);
