@@ -1153,18 +1153,22 @@ return array(
                                 'jscallback' => '',
                                 'jsdatas' => array()
                             ),
-                        ),
-                        'meliscore_user_profile_form' => array(
-                            'conf' => array(
-                                'id' => 'id_meliscore_user_profile_form',
-                                'melisKey' => 'meliscore_user_profile_form',
-                            ),
-                            'forward' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'UserProfile',
-                                'action' => 'render-user-profile-form',
-                                'jscallback' => '',
-                                'jsdatas' => array()
+                            'interface' =>  array(
+                                'meliscore_user_profile_form' => array(
+                                    'conf' => array(
+                                        'id' => 'id_meliscore_user_profile_form',
+                                        'melisKey' => 'meliscore_user_profile_form',
+                                        'name' => 'tr_meliscore_user_profile_profile_text',
+                                        'icon' => 'user',
+                                    ),
+                                    'forward' => array(
+                                        'module' => 'MelisCore',
+                                        'controller' => 'UserProfile',
+                                        'action' => 'render-user-profile-form',
+                                        'jscallback' => '',
+                                        'jsdatas' => array()
+                                    ),
+                                ),
                             ),
                         ),
                     ),
