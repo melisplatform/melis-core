@@ -2792,7 +2792,12 @@ div#modal-user-management div.widget {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
-
+.tabsbar .has-sub .has-sub > .tab-element:before, .tabsbar .has-sub >  .has-sub .tab-element:before {
+    content: "\f0da";
+}
+.tabsbar .scroll .has-sub > .tab-element:before, .tabsbar .has-sub >  .has-sub .tab-element:before {
+    content: '\f0d7';
+}
 .tabsbar .has-sub > .tab-element:before {
     color: #fff;
 }
@@ -3056,6 +3061,9 @@ div#modal-user-management div.widget {
 
     .navbar.main.navbar-primary .tabsbar li a.close-tab:hover {
         background: transparent !important;
+    }
+    .tabsbar .has-sub .has-sub > .tab-element:before, .tabsbar .has-sub >  .has-sub .tab-element:before {
+        content: '\f0d7';
     }
     
     .profile-photo{
