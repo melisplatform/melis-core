@@ -2868,6 +2868,7 @@ div#modal-user-management div.widget {
 }
 .profile-photo #user-profile-pic{
 	width: 100%;
+	height : 100%;
 }
 .profile-photo .profile-photo-edit {
     cursor: pointer;
@@ -2888,6 +2889,10 @@ div#modal-user-management div.widget {
     -ms-transition: all 0.4s ease-in-out;
     -o-transition: all 0.4s ease-in-out;
     transition: all 0.4s ease-in-out;
+}
+
+.profile-photo .profile-photo-edit small{
+	color: #fff;
 }
 .profile-photo .profile-photo-edit .fa {
     color: #fff;
@@ -2935,24 +2940,15 @@ div#modal-user-management div.widget {
     text-align: center;
 }
 
-.form-custom-block {
-    padding: 15px 25px;
+#profile{
+	padding: 15px;
 }
 
-.form-custom-block label {
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    color: #888888;
+.user-profile-btn-save {
+    text-align: right;
+	margin-bottom: 15px;
 }
 
-.form-custom-block .form-group {
-    margin-bottom: 25px;
-}
-
-.form-custom-block .form-control {
-    height: 40px;
-    letter-spacing: 0.7px;
-}
 .widget-user .widget-head.nav {
     border-top: 0;
 }
@@ -2980,10 +2976,7 @@ div#modal-user-management div.widget {
     text-transform: uppercase;
     font-weight: bold;
 }
-.tab-panel-save {
-    padding: 15px;
-    text-align: right;
-}
+
 /* Mobile Layout */
 @media only screen and (max-width: 1080px) {
 	.profile-photo{
