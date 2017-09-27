@@ -271,7 +271,12 @@ var toolUserManagement = {
 							}
 						});
 					}
-					toolUserManagement.refreshTable();	
+					toolUserManagement.refreshTable();
+					
+					//check if data that has been updated is equal to the current user info to replicate the user profile data
+		    		if(_tmpUserId == $('#id_meliscore_user_profile_left').attr('data-user-id')){
+		    			melisHelper.zoneReload("id_meliscore_user_profile", "meliscore_user_profile");
+		    		}
 				}
 				else {
 					melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error+"! ", data.textMessage);

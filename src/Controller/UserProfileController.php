@@ -92,6 +92,7 @@ class UserProfileController extends AbstractActionController
         }
         
         $view->userInfo = $data;
+        $view->user_id  = $this->getCurrentUserId();
         
         return $view;
     }
