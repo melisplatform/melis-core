@@ -116,7 +116,8 @@ class UserProfileController extends AbstractActionController
         //make the usr_image field hidden (where just going to trigger the file input on user image click)
         $form->get('usr_image')->setAttribute('style', 'display:none');
         //set the data to the form
-        $form->setData($this->getCurrentUserInfo()[0]);
+        if($this->getCurrentUserInfo())
+            $form->setData($this->getCurrentUserInfo()[0]);
                 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
