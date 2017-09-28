@@ -135,23 +135,22 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 			$name = $tabName[count($tabName) - 1];
 		}
 		
-		$hideCheckbox = false;
+		$showCheckbox = true;
 		if (!empty($configInterface['conf']['rights_checkbox_disable']))
-			$hideCheckbox = $configInterface['conf']['rights_checkbox_disable'];
-		
-		
-		$item = array(
-			'key' => $keyPrefixed,
-			'title' => $name,
-			'children' => array(),
-			'lazy' => false,
-			'selected' => $selectedInterface,
-			'iconTab' => '',
-			'checkbox' => $hideCheckbox,
-			'melisData' => array(
-				'colorSelected' => '#CB4040',
-			),
-		);
+		    $showCheckbox = false;
+		    
+	    $item = array(
+	        'key' => $keyPrefixed,
+	        'title' => $name,
+	        'lazy' => false,
+	        'selected' => $selectedInterface,
+	        'iconTab' => '',
+	        'checkbox' => $showCheckbox,
+	        'melisData' => array(
+	            'colorSelected' => '#CB4040',
+	        ),
+	        'children' => array(),
+	    );
 		
 		
 		if (!empty($configInterface['interface']))
