@@ -452,9 +452,12 @@ class UserProfileController extends AbstractActionController
      */
     private function getCurrentUserId()
     {
+        $userId = null;
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-        $userId = (int) $userAuthDatas->usr_id;
+        if($melisCoreAuth->hasIdentity()) {
+            $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+            $userId = (int) $userAuthDatas->usr_id;
+        }
         return $userId;
     }
     
