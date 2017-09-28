@@ -236,7 +236,7 @@ class UserProfileController extends AbstractActionController
                                 
                                 //prepare data to update in the view
                                 $uInfo = array(
-                                    'profilePic'    =>  'data:image/jpeg;base64,'. base64_encode($userSession->usr_image),
+                                    'profilePic'    =>  ($userSession->usr_image != "" && $userSession->usr_image != null) ? "data:image/jpeg;base64,".base64_encode($userSession->usr_image) : "/MelisCore/images/profile/default_picture.jpg",
                                     'email'         =>  $userSession->usr_email,
                                     'usrLang'       =>  $data['usr_lang_id'],
                                 );
