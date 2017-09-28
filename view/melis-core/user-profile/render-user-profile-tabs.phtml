@@ -9,7 +9,7 @@ $data_melisKey = $this->melisKey;
         <div class="widget-head nav">
             <ul class="tabs-label nav-tabs">
                 <?php foreach($this->zoneconfig['interface'] AS $configKey => $configVal) { ?>
-                	<li class="active" role="presentation">
+                	<li role="presentation">
                         <a class="glyphicons <?= $configVal['conf']['icon'] ?>" data-toggle="tab" href="#<?=$configVal['conf']['id']?>" aria-expanded="true">
                             <i></i>
                             <span><?=$this->translate($configVal['conf']['name']); ?></span>
@@ -19,11 +19,11 @@ $data_melisKey = $this->melisKey;
             </ul>
         </div>
     </div>
-    <div class="tab-content">
-    	<div class="user-profile-tab-content">
-     		<?php foreach($this->zoneconfig['interface'] AS $configKey => $configVal) { ?>      
+    <div class="user-profile-tab-content">
+        <div class="tab-content">
+     		<?php foreach($this->zoneconfig['interface'] AS $configKey => $configVal) { ?>
              	<?php echo $this->$configKey ?>
      		<?php } ?>
- 		</div>
-   	</div>
+       	</div>
+    </div>
 </div>
