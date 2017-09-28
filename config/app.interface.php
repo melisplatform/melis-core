@@ -259,6 +259,84 @@ return array(
                                 'jscallback' => '',
                                 'jsdatas' => array()
                             ),
+                            'interface' => array(
+                                'meliscore_user_profile' => array(
+                                    'conf' => array(
+                                        'id' => 'id_meliscore_user_profile',
+                                        'melisKey' => 'meliscore_user_profile',
+                                        'name' => 'tr_meliscore_user_profile',
+                                    ),
+                                    'forward' => array(
+                                        'module' => 'MelisCore',
+                                        'controller' => 'UserProfile',
+                                        'action' => 'render-user-profile',
+                                        'jscallback' => '',
+                                        'jsdatas' => array()
+                                    ),
+                                    'interface' => array(
+                                        'meliscore_user_profile_left' => array(
+                                            'conf' => array(
+                                                'id' => 'id_meliscore_user_profile_left',
+                                                'melisKey' => 'meliscore_user_profile_left',
+                                                'rightsDisplay' => 'none',
+                                            ),
+                                            'forward' => array(
+                                                'module' => 'MelisCore',
+                                                'controller' => 'UserProfile',
+                                                'action' => 'render-user-profile-left',
+                                                'jscallback' => '',
+                                                'jsdatas' => array()
+                                            ),
+                                        ),
+                                        'meliscore_user_profile_right' => array(
+                                            'conf' => array(
+                                                'id' => 'id_meliscore_user_profile_right',
+                                                'melisKey' => 'meliscore_user_profile_right',
+                                                'rightsDisplay' => 'none',
+                                            ),
+                                            'forward' => array(
+                                                'module' => 'MelisCore',
+                                                'controller' => 'UserProfile',
+                                                'action' => 'render-user-profile-right',
+                                                'jscallback' => '',
+                                                'jsdatas' => array()
+                                            ),
+                                            'interface' => array(
+                                                'meliscore_user_profile_tabs' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_meliscore_user_profile_tabs',
+                                                        'melisKey' => 'meliscore_user_profile_tabs',
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'UserProfile',
+                                                        'action' => 'render-user-profile-tabs',
+                                                        'jscallback' => '',
+                                                        'jsdatas' => array()
+                                                    ),
+                                                    'interface' =>  array(
+                                                        'meliscore_user_profile_form' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_meliscore_user_profile_form',
+                                                                'melisKey' => 'meliscore_user_profile_form',
+                                                                'name' => 'tr_meliscore_user_profile_profile_text',
+                                                                'icon' => 'user',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'UserProfile',
+                                                                'action' => 'render-user-profile-form',
+                                                                'jscallback' => '',
+                                                                'jsdatas' => array()
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            )
                         ),
                         'meliscore_leftmenu_dashboard' =>  array(
                             'conf' => array(
@@ -1113,82 +1191,6 @@ return array(
                             ),
                         ),
                     )
-                ),
-                'meliscore_user_profile' => array(
-                    'conf' => array(
-                        'id' => 'id_meliscore_user_profile',
-                        'melisKey' => 'meliscore_user_profile',
-                        'name' => 'tr_meliscore_user_profile',
-                    ),
-                    'forward' => array(
-                        'module' => 'MelisCore',
-                        'controller' => 'UserProfile',
-                        'action' => 'render-user-profile',
-                        'jscallback' => '',
-                        'jsdatas' => array()
-                    ),
-                    'interface' => array(
-                        'meliscore_user_profile_left' => array(
-                            'conf' => array(
-                                'id' => 'id_meliscore_user_profile_left',
-                                'melisKey' => 'meliscore_user_profile_left',
-                                'rightsDisplay' => 'none',
-                            ),
-                            'forward' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'UserProfile',
-                                'action' => 'render-user-profile-left',
-                                'jscallback' => '',
-                                'jsdatas' => array()
-                            ),
-                        ),
-                        'meliscore_user_profile_right' => array(
-                            'conf' => array(
-                                'id' => 'id_meliscore_user_profile_right',
-                                'melisKey' => 'meliscore_user_profile_right',
-                                'rightsDisplay' => 'none',
-                            ),
-                            'forward' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'UserProfile',
-                                'action' => 'render-user-profile-right',
-                                'jscallback' => '',
-                                'jsdatas' => array()
-                            ),
-                            'interface' => array(
-                                'meliscore_user_profile_tabs' => array(
-                                    'conf' => array(
-                                        'id' => 'id_meliscore_user_profile_tabs',
-                                        'melisKey' => 'meliscore_user_profile_tabs',
-                                    ),
-                                    'forward' => array(
-                                        'module' => 'MelisCore',
-                                        'controller' => 'UserProfile',
-                                        'action' => 'render-user-profile-tabs',
-                                        'jscallback' => '',
-                                        'jsdatas' => array()
-                                    ),
-                                    'interface' =>  array(
-                                        'meliscore_user_profile_form' => array(
-                                            'conf' => array(
-                                                'id' => 'id_meliscore_user_profile_form',
-                                                'melisKey' => 'meliscore_user_profile_form',
-                                                'name' => 'tr_meliscore_user_profile_profile_text',
-                                                'icon' => 'user',
-                                            ),
-                                            'forward' => array(
-                                                'module' => 'MelisCore',
-                                                'controller' => 'UserProfile',
-                                                'action' => 'render-user-profile-form',
-                                                'jscallback' => '',
-                                                'jsdatas' => array()
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
                 ),
             )
         ),
