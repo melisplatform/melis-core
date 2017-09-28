@@ -101,10 +101,12 @@ class MelisCoreGeneralService implements ServiceLocatorAwareInterface, EventMana
 	
 	public function sendEvent($eventName, $parameters)
 	{
-	    $parameters = $this->eventManager->prepareArgs($parameters);
-	    $this->eventManager->trigger($eventName, $this, $parameters);
-	    $parameters = get_object_vars($parameters);
-	    
+        if($this->eventManager) {
+            $parameters = $this->eventManager->prepareArgs($parameters);
+            $this->eventManager->trigger($eventName, $this, $parameters);
+            $parameters = get_object_vars($parameters);
+        }
+
 	    return $parameters;
 	}
 	

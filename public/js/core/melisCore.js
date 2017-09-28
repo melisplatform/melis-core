@@ -348,6 +348,18 @@ var melisCore = (function(window){
         $body.css('overflow', 'auto');
     }
 
+    // TAB DRAGGABLE
+    function tabDraggable(el, disabled) {
+        $(el).sortable({
+            tolerance: "intersect",
+            animation: 150,
+            containment: "parent",
+            axis: "x",
+            disabled: disabled
+        });
+    }
+
+    tabDraggable("#melis-id-nav-bar-tabs", false);
 
     // BIND & DELEGATE EVENTS =================================================================================================================
 
@@ -401,6 +413,13 @@ var melisCore = (function(window){
 
         // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
         $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+
+        if( screenSize <= 767 ){
+            tabDraggable("#melis-id-nav-bar-tabs", true);
+        } else {
+            tabDraggable("#melis-id-nav-bar-tabs", false);
+        }
+
 
         //check tabExpander() when window is resized
         if( screenSize >= 768 ){

@@ -1,0 +1,10 @@
+<center>
+<?php
+$form = $this->form;
+echo $this->form()->openTag($form);
+echo $this->melisFieldCollection($form);
+echo '<button type="submit">Submit</button>';
+echo $this->form()->closeTag();
+
+?>
+</center>

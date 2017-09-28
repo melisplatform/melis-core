@@ -572,8 +572,8 @@ class ToolUserController extends AbstractActionController
                     {
                         $imageContent = null;
                         // create tmp folder if not exists
-                        $dirName = $_SERVER['DOCUMENT_ROOT'].'media/images/profile/tmp/';
-                        if(!file_exists($dirName)) {
+                        $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/images/profile/tmp/';
+                        if(!file_exists($dirName) && is_writable($dirName)) {
                             $oldmask = umask(0);
                             mkdir($dirName, 0777,  true);
                         }
@@ -951,7 +951,7 @@ class ToolUserController extends AbstractActionController
         $textTitle = 'tr_meliscore_tool_user';
         $textMessage = '';
         $userInfo = array();
-        // translator 
+        // translator
         $translator = $this->getServiceLocator()->get('translator');
 
         // declare the Tool service that we will be using to completely create our tool.
@@ -1009,8 +1009,8 @@ class ToolUserController extends AbstractActionController
                 $imageContent = null;
 
                 // create tmp folder if not exists
-                $dirName = $_SERVER['DOCUMENT_ROOT'].'media/images/profile/tmp/';
-                if(!file_exists($dirName)) {
+                $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/images/profile/tmp/';
+                if(!file_exists($dirName) && is_writable($dirName)) {
                     $oldmask = umask(0);
                     mkdir($dirName, 0777, true);
                 }

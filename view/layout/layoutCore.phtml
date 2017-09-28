@@ -9,7 +9,7 @@ $loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
 <!--[if IE 8]>    <html class="ie lt-ie9"> <![endif]-->
 <!--[if gt IE 8]> <html> <![endif]-->
 <!--[if !IE]><!-->
-<html>
+<html <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null; ?>>
 <!-- <![endif]-->
 	<head>
         <meta charset="utf-8">
@@ -105,7 +105,7 @@ $loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
 	     ?>
         
 	</head>
-	<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>">
+	<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null?>>
 		
 		<?= $this->content; ?>
 		
