@@ -1112,6 +1112,31 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     }
 
 
+    /**
+     * Maps through all array and converts objects into array if found
+     */
+    public function convertObjectToArray($content) {
+
+        if(is_object($content))  {
+            $content = $content->getArrayCopy();
+            // $content = get_object_vars($content);
+        }
+
+        if(is_array($content)) {
+            $new = array();
+
+            foreach($content as $key => $val) {
+                $new[$key] = $this->convertObjectToArray($val);
+            }
+
+        }
+        else {
+            $new = $content;
+        }
+
+        return $new;       
+    }
+
 
 	
 }
