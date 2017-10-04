@@ -482,6 +482,11 @@ class MelisCoreMicroServiceController extends AbstractActionController
             if($apiStatus){
                 $config       = $this->getServiceLocator()->get('MelisCoreConfig');
                 $microservice = $config->getItem('microservice');
+
+                //Exclude array 'conf' key
+                if(array_key_exists('conf',$microservice)){
+                    unset($microservice['conf']);
+                }
                 $userExists   = true;
             }else{
                 $message = 'tr_meliscore_microservice_api_key_inactive';
