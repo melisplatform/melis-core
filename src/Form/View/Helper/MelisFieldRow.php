@@ -235,12 +235,8 @@ class MelisFieldRow extends FormRow
 	                        </div>';
 	    }elseif(strpos($element->getAttribute('class'), self::MELIS_MSGR_MSG_BOX)){
 	        $element->setLabel('');
-	        $formElement = '<div class="input-group test">
-								'.parent::render($element).'
-								<div class="input-group-btn">
-									<button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i></button>
-								</div>
-							</div>';
+	        $formElement = parent::render($element);
+
 	    }elseif ($element->getAttribute('type') != 'hidden') 
 	    {
 	        $formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';

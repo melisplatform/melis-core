@@ -2949,6 +2949,9 @@ div#modal-user-management div.widget {
     letter-spacing: 0.4px;
     text-align: left;
     line-height: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .u-lists .fa {
