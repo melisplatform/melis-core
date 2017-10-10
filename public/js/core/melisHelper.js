@@ -452,7 +452,7 @@ var melisHelper = (function(){
     }
 
     // ZONE RELOADING =================================================================================================================
-    function zoneReload(zoneId, melisKey, parameters){
+    function zoneReload(zoneId, melisKey, parameters, callback){
 
         var datastring = { cpath: melisKey };
 
@@ -517,6 +517,9 @@ var melisHelper = (function(){
                     $('#'+zoneId).remove();
 
                     melisHelper.melisKoNotification( "Error Fetching data", "No result was retreived while doing this operation.", "no error datas returned", '#000' );
+                }
+                if ( callback !== undefined ) {
+                    callback();
                 }
             }, 300);
         }).error(function(xhr, textStatus, errorThrown){
