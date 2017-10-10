@@ -24,6 +24,7 @@
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
 		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
+		'tr_meliscore_header_flash_messenger_title' => 'Notifications',
 		'tr_meliscore_header_language' => 'Language',
 		'tr_meliscore_header_logout' => 'Logout',
 		'tr_meliscore_leftmenu_leftmenu' => 'Left menu',
