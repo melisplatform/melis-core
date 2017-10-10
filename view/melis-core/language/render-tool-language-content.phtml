@@ -47,6 +47,9 @@ if (!empty($this->zoneconfig['conf']['id']))
 		<script type="text/javascript">
 		// render table to DataTable plugin
 		$(document).ready(function() {
+
+			var flag = 0;
+
 			<?= $this->getToolDataTableConfig; ?>
 			$(document).on("init.dt", function(e, settings) {
 				$('#tableLanguages td:nth-child(3):contains("en_EN")').parent().find('.btnLangUpdate').hide();
@@ -54,10 +57,16 @@ if (!empty($this->zoneconfig['conf']['id']))
 					var tableRow = $(this);
 					var applyButton = tableRow.find('.btnLangApply');
 					var langName = tableRow.find('td:nth-child(2)').text();
-					
-					applyButton.attr('title', applyButton.attr('title') + langName);
+
+					// put flag to avoid redundancy in adding languageName
+					if (flag == 0)
+					{
+						applyButton.attr('title', applyButton.attr('title') + langName);
+
+					}
 					
 				});
+				flag = 1;
 			});
 		});
 		</script>

@@ -183,6 +183,7 @@
 	    'tr_meliscore_common_close' => 'Annuler',
 	    'tr_meliscore_common_success' => 'Success',
 	    'tr_meliscore_common_apply' => 'Appliquer',
+	    'tr_meliscore_common_update' => 'Mettre à jour',
 	    'tr_meliscore_common_clear' => 'Effacer',
 	    
 	    
