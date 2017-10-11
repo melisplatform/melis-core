@@ -50,7 +50,7 @@
 	    'tr_meliscore_all' => 'Tous',
 			
 		// Languages
-		'tr_meliscore_header_language_Language' => 'Langages', 
+		'tr_meliscore_header_language_Language' => 'Langage BO', 
 	    
 	    // modals
 		'tr_meliscore_notification_modal_Close' => 'Fermer', 
