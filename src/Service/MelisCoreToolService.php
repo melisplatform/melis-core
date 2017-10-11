@@ -590,7 +590,6 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                         '.$columnsStylesStr.'  
                         '.$unSortableColumnsStr.'
 					    '. $selectColDef .'
-					    { responsivePriority: 1, targets: 0 },
 					    { responsivePriority: 1, targets: 0 },';
 
 					    if($actionColumn != "") {
