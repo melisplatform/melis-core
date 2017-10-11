@@ -469,19 +469,23 @@ class MelisAuthController extends AbstractActionController
             $user = $melisCoreAuth->getIdentity();
             if(!empty($user)) {
                 $isLoggedIn = true;
-
+                
                 // update the connection time.
                 $table = $this->getServiceLocator()->get('MelisUserConnectionDate');
-                $data  = $table->getUserConnectionData((int) $user->usr_id, $user->usr_last_login_date)->current();
-
+                $data  = $table->getUserLastConnectionDate((int) $user->usr_id, $user->usr_last_login_date)->current();
+                
                 if($data) {
+                    
+                    $currentData = date('Y-m-d H:i:s');
                     $table->save([
-                        'usrcd_last_connection_time' => date('Y-m-d H:i:s')
+                        'usrcd_last_connection_time' => $currentData
                     ], $data->usrcd_id);
+                    
+                    // Updating new last login of the current user
+                    $user->usr_last_login_date = $currentData;
                 }
             }
         }
-
         
         return new JsonModel(array('login' => $isLoggedIn));
     }
@@ -567,17 +571,4 @@ class MelisAuthController extends AbstractActionController
 
         return;
     }
-
-    public function testAction()
-    {
-        $user = $this->getServiceLocator()->get('MelisUserConnectionDate');
-        $user = $user->getUserConnectionData(1);
-
-
-        print_r($user->toArray());
-
-        die;
-    }
-
-
 }
