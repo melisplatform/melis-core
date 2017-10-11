@@ -397,10 +397,6 @@ var melisCore = (function(window){
     // refresh tables
     $body.on("click", '.melis-refreshTable', refreshTable);
 
-    // Onload
-   $(document).ready(function(){
-        $("#id_meliscore_header_flash_messenger span[class='title'] ").html(translations.tr_meliscore_header_flash_messenger_title);
-    });
 
 
 
@@ -458,8 +454,7 @@ var melisCore = (function(window){
                 $("#newplugin-cont ul.ul-cont").append( $(this) );
             });
 
-           // Change Flash Messenger title into translations
-           $("#id_meliscore_header_flash_messenger span[class='title'] ").html(translations.tr_meliscore_header_flash_messenger_title);
+         
         }
 
     });
