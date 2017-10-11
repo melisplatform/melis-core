@@ -26,7 +26,6 @@ $(function() {
         }
 
         if(runAllMode && $("#btnDiagPhpunitRunAll").html() != hideVal) {
-            console.log("run");
             $(".btn-run-pu-module-test").trigger("click");
             changeContent("#btnDiagPhpunitRunAll", translations.tr_melis_module_diagnostics_tool_header_run_al);
             runAllMode = false;
