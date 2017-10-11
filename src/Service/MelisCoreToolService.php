@@ -591,8 +591,12 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                         '.$unSortableColumnsStr.'
 					    '. $selectColDef .'
 					    { responsivePriority: 1, targets: 0 },
-					    { responsivePriority: 2, targets: -1 }, // make sure action column stays whenever the window is resized
-					    '.$actionColumn.'
+					    { responsivePriority: 1, targets: 0 },';
+
+					    if($actionColumn != "") {
+                            $dtJScript .= '{responsivePriority:2, targets: -1 },'; // make sure action column stays whenever the window is resized
+                        }
+                        $dtJScript .= $actionColumn.'
 				    ],
                 }).columns.adjust().responsive.recalc();
                 return '.str_replace("#","$",$tableId).';
