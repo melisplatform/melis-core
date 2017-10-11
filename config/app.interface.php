@@ -192,7 +192,7 @@ return array(
                             'conf' => array(
                                 'id' => 'id_meliscore_header_flash_messenger',
                                 'melisKey' => 'meliscore_header_flash_messenger',
-                                'name' => 'tr_meliscore_header_flash_messenger',
+                                'name' => 'tr_meliscore_header_flash_messenger_title',
                             ),
                             'forward' => array(
                                 'module' => 'MelisCore',
