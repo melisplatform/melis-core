@@ -2109,7 +2109,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 	border-radius: 2px;
 }
 p.modal-text-info{
-	text-align: justify; 
+	text-align: justify;
 	text-justify: inter-word;
 }
 
@@ -3005,7 +3005,7 @@ div#modal-user-management div.widget {
 		width: 150px;
 		height: 150px;
 	}
-	
+
 	.profile-photo .profile-photo-edit {
 		top: 60px;
 	}
@@ -3075,7 +3075,7 @@ div#modal-user-management div.widget {
     .tabsbar .has-sub .has-sub > .tab-element:before, .tabsbar .has-sub >  .has-sub .tab-element:before {
         content: '\f0d7';
     }
-    
+
     .profile-photo{
 		margin-top:50px !important;
     }

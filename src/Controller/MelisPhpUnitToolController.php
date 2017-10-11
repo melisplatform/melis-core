@@ -217,8 +217,9 @@ class MelisPhpUnitToolController extends AbstractActionController
                     if(is_readable($testModulePath)) {
                         $runTestResponse = $this->getPHPUnitTool()->runTest($module, $phpUnitCfg['moduleTestName'], $phpUnitCfg['testFolder']);
                         $testResults = $this->getPHPUnitTool()->getTestResult($module, $phpUnitCfg['moduleTestName'], $testFolder);
+
                         if (!$testResults) {
-                            $response .= $this->koMessage('No tests found! asdf');
+                            $response .= $this->koMessage('No tests found!');
                         }
                         else {
                             if(isset($testResults['tests']) && $testResults['tests']) {
