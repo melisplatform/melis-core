@@ -9,6 +9,7 @@
 
 namespace MelisCore\Controller;
 
+use MelisCore\Service\MelisCoreRightsService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
@@ -60,6 +61,7 @@ class UserProfileController extends AbstractActionController
         
         $view = new ViewModel();
         $view->melisKey = $melisKey;
+        $view->isAccessible = $this->getUserRightsForMessenger();
         
         return $view;
     }
@@ -471,5 +473,15 @@ class UserProfileController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey'), null);
 
         return $melisKey;
+    }
+
+    //get user rights for messenger tab
+    private function getUserRightsForMessenger(){
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+        $xmlRights = $melisCoreAuth->getAuthRights();
+        $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, "/melismessenger");
+
+        return $isAccessible;
     }
 }

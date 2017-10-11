@@ -9,12 +9,23 @@ $data_melisKey = $this->melisKey;
         <div class="widget-head nav">
             <ul class="tabs-label nav-tabs">
                 <?php foreach($this->zoneconfig['interface'] AS $configKey => $configVal) { ?>
-                	<li role="presentation">
-                        <a class="glyphicons <?= $configVal['conf']['icon'] ?> cs-fa" data-toggle="tab" href="#<?=$configVal['conf']['id']?>" aria-expanded="true">
-                            <i></i>
-                            <span><?=$this->translate($configVal['conf']['name']); ?></span>
-                        </a>
-                    </li>
+                    <?php if($configVal['conf']['id'] == "id_melismessenger_tool") { ?>
+                        <?php if($this->isAccessible) { ?>
+                            <li role="presentation" id="melis-messenger-tab">
+                                <a class="glyphicons <?= $configVal['conf']['icon'] ?> cs-fa" data-toggle="tab" href="#<?=$configVal['conf']['id']?>" aria-expanded="true">
+                                    <i></i>
+                                    <span><?=$this->translate($configVal['conf']['name']); ?></span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    <?php }else { ?>
+                        <li role="presentation">
+                            <a class="glyphicons <?= $configVal['conf']['icon'] ?> cs-fa" data-toggle="tab" href="#<?=$configVal['conf']['id']?>" aria-expanded="true">
+                                <i></i>
+                                <span><?=$this->translate($configVal['conf']['name']); ?></span>
+                            </a>
+                        </li>
+                    <?php } ?>
                 <?php } ?>
             </ul>
         </div>
