@@ -85,8 +85,8 @@ return array(
                              *
                              * -------------------------------
                              */
-                            'php_cli' => 'php',
-                            'phpunit' => 'phpunit',
+                            'php_cli' => '/usr/local/bin/php',
+                            'phpunit' => '/usr/local/bin/phpunit',
                         ),
                     ),
                     'langauges' => array(
