@@ -100,14 +100,14 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     public function getTranslatedMessageByLocale($locale = 'en_EN')
     {
         $modulesSvc = $this->getServiceLocator()->get('ModulesService');
-        $modules = $modulesSvc->getActiveModules();
+        $modules = $modulesSvc->getAllModules();
 
         $moduleFolders = array();
         foreach ($modules as $module)
         {
             array_push($moduleFolders, $modulesSvc->getModulePath($module));
         }
-
+        
         $transMessages = array();
         $tmpTrans = array();
 
