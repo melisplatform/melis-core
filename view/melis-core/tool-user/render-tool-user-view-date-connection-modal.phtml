@@ -33,3 +33,11 @@ $data_melisKey = $this->melisKey;
         ?>
     </div>
 </div>
+
+<?php 
+echo $this->melisModalInvoker()->render(
+    array(
+        'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+        'class' => 'btn btn-danger pull-left'
+    ), 'dismiss');
+?>
