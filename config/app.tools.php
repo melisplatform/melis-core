@@ -64,6 +64,12 @@ return array(
                                 'sortable' => true,
                                 
                             ),
+                            'usr_login' => array(
+                                'text' => 'tr_meliscore_tool_user_col_username',
+                                'css' => array('width' => '10%', 'padding-right' => '0'),
+                                'sortable' => true,
+                                
+                            ),
                             'usr_is_online' => array(
                                 'text' => 'tr_meliscore_tool_user_col_power tooltip',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
@@ -80,12 +86,6 @@ return array(
                                 'text' => 'tr_meliscore_tool_user_col_profile',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
                                 'sortable' => false,
-                                
-                            ),
-                            'usr_login' => array(
-                                'text' => 'tr_meliscore_tool_user_col_username',
-                                'css' => array('width' => '10%', 'padding-right' => '0'),
-                                'sortable' => true,
                                 
                             ),
                             'usr_email' => array(
