@@ -24,6 +24,7 @@
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
 		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
+		'tr_meliscore_header_flash_messenger_title' => 'Notifications',
 		'tr_meliscore_header_language' => 'Langue',
 		'tr_meliscore_header_logout' => 'Déconnexion',
 		'tr_meliscore_leftmenu_leftmenu' => 'Menu gauche',
@@ -49,7 +50,7 @@
 	    'tr_meliscore_all' => 'Tous',
 			
 		// Languages
-		'tr_meliscore_header_language_Language' => 'Languages', 
+		'tr_meliscore_header_language_Language' => 'Langages', 
 	    
 	    // modals
 		'tr_meliscore_notification_modal_Close' => 'Fermer', 
@@ -183,6 +184,7 @@
 	    'tr_meliscore_common_close' => 'Annuler',
 	    'tr_meliscore_common_success' => 'Success',
 	    'tr_meliscore_common_apply' => 'Appliquer',
+	    'tr_meliscore_common_update' => 'Mettre à jour',
 	    'tr_meliscore_common_clear' => 'Effacer',
 	    
 	    
@@ -332,7 +334,7 @@
 	    'tr_meliscore_tool_language_add_success' => 'Langage ajouté avec succès',
 	    'tr_meliscore_tool_language_add_failed' => 'Impossible d\'ajouter un langage, veuillez réessayer',
 	    'tr_meliscore_tool_language_add_exists' => 'Locale déjà existante',
-	    'tr_meliscore_tool_language_edit_success' => 'Language mis à jour avec succès',
+	    'tr_meliscore_tool_language_edit_success' => 'Langage mis à jour avec succès',
 	    'tr_meliscore_tool_language_edit_failed' => 'Impossible de mettre la langue à jour',
 	    'tr_meliscore_tool_language_delete_confirm' => 'Êtes-vous sûr de vouloir supprimer ce langage ?',
 	    'tr_meliscore_tool_language_delete_success' => 'Langage supprimé',
@@ -345,7 +347,7 @@
         // Deleted User
 	    'tr_meliscore_user_deleted' => 'Utilisateur Supprimé',
 	    
-	    'tr_meliscms_tool_language_edit' => 'Edit Language',
+	    'tr_meliscms_tool_language_edit' => 'Edit Langage',
 	    
 	    // Email Management
 	    'tr_meliscore_tool_emails_mngt_generic_from' => 'Email Creation and Edition Form',

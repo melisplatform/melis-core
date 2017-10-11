@@ -572,7 +572,7 @@ class ToolUserController extends AbstractActionController
                     {
                         $imageContent = null;
                         // create tmp folder if not exists
-                        $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/images/profile/tmp/';
+                        $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/';
                         if(!file_exists($dirName) && is_writable($dirName)) {
                             $oldmask = umask(0);
                             mkdir($dirName, 0777,  true);
@@ -1009,7 +1009,7 @@ class ToolUserController extends AbstractActionController
                 $imageContent = null;
 
                 // create tmp folder if not exists
-                $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/images/profile/tmp/';
+                $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/';
                 if(!file_exists($dirName) && is_writable($dirName)) {
                     $oldmask = umask(0);
                     mkdir($dirName, 0777, true);
