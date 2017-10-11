@@ -87,6 +87,9 @@ return array(
                              */
                             'php_cli' => '/usr/local/bin/php',
                             'phpunit' => '/usr/local/bin/phpunit',
+                            /**
+                             * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
+                             */
                         ),
                     ),
                     'langauges' => array(
