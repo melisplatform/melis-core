@@ -158,13 +158,16 @@ body .melis-hide{
 }
 
 
-
+html {
+    -webkit-overflow-scrolling: touch;
+}
 
 body{
     padding-top: 94px;
     background: #fff;
     position: relative;
     height: 100%;
+    -webkit-overflow-scrolling: touch;
 }
 
 .login-page h4.innerAll{
@@ -286,6 +289,7 @@ body{
 /* accordion layout change */
 .sidebar>.sidebarMenuWrapper {
     margin-bottom: 40px;
+    -webkit-overflow-scrolling: touch;
 }
 .sidebar>.sidebarMenuWrapper ul ul li > a[data-toggle="collapse"]:after{
     top: 10px;
@@ -2297,6 +2301,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     .navbar #melis-id-nav-bar-tabs > li:hover > a > i {
         color: #932e2a;
     }
+    .navbar #melis-id-nav-bar-tabs > li:hover > a.close {
+        background: transparent;
+    }
 
     .navbar #melis-id-nav-bar-tabs > li > a.close:hover {
         opacity: 1;
@@ -2314,6 +2321,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
     .navbar.main.navbar-primary .nav > li a.close:before{
         font-size: 12px;
+        background: transparent;
     }
 
     .navbar.main.navbar-primary .nav > li a.close:before{
