@@ -115,32 +115,10 @@ $(document).ready(function() {
         melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_edit_modal,#id_meliscore_tool_user_rights_modal,#id_meliscore_tool_user_view_date_connection_modal,#id_meliscore_tool_user_microservice_modal', '#id_meliscore_tool_user_new_modal');
 	});
 	
-	//this is for user icon in identity menu
+	//open up user profile when user icon click in identity menu
 	$("body").on("click", "#btnUserInfoEdit", function() {
-		var interval = 100;
-		if(!$("a[data-id='id_meliscore_tool_user']").is(':visible')) {
-			interval = 3000;
-		}
-		$("#id_meliscore_menu_toolstree li[data-tool-id='id_meliscore_tool_user']").trigger("click");//loads user management tool
-		setTimeout(function()
-        {
-			$.ajax({
-    	        type        : 'GET', 
-    	        url         : '/melis/MelisCore/MelisAuth/getCurrentLoggedInId',
-    	        dataType    : 'json',
-    	        encode		: true,		
-    	    }).success(function(data){ 
-    	    	if(data){
-    				toolUserManagement.retrieveUser(data.user.usr_id);//ajax call function 
-	 	    		getRightsTree(data.user.usr_id);
-	 				melisCoreTool.hideTabs('#modal-user-management','#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal','#id_meliscore_tool_user_edit_modal');
-	 				$("#modal-user-management").modal("show");
-    	    	}			
-    	    }).error(function(){
-    	    	alert( translations.tr_meliscore_error_message );
-    	    });		
-
-        }, interval);
+		var userName = $("#user-name-link").html().trim();
+        melisHelper.tabOpen(userName, 'fa-user', 'id_meliscore_user_profile', 'meliscore_user_profile');
 	});
 	
 	$("body").on("click", '.btnUserDelete', function() {
@@ -347,7 +325,8 @@ var toolUserManagement = {
 					
 					//check if data that has been updated is equal to the current user info to replicate the user profile data
 		    		if(_tmpUserId == $('#id_meliscore_user_profile_left').attr('data-user-id')){
-		    			melisHelper.zoneReload("id_meliscore_user_profile", "meliscore_user_profile");
+		    			melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
+                        melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
 		    		}
 				}
 				else {

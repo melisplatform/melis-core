@@ -12,5 +12,6 @@ if (!empty($this->zoneconfig['conf']['id']))
         $form = $this->meliscore_user_profile_form;
         echo $this->form()->openTag($form);
         echo $this->melisFieldCollection($form);
+        echo $this->form()->closeTag();
     ?>
 </div>

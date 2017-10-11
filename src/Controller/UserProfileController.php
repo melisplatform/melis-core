@@ -116,7 +116,8 @@ class UserProfileController extends AbstractActionController
         //make the usr_image field hidden (where just going to trigger the file input on user image click)
         $form->get('usr_image')->setAttribute('style', 'display:none');
         //set the data to the form
-        $form->setData($this->getCurrentUserInfo()[0]);
+        if($this->getCurrentUserInfo())
+            $form->setData($this->getCurrentUserInfo()[0]);
                 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -236,7 +237,7 @@ class UserProfileController extends AbstractActionController
                                 
                                 //prepare data to update in the view
                                 $uInfo = array(
-                                    'profilePic'    =>  'data:image/jpeg;base64,'. base64_encode($userSession->usr_image),
+                                    'profilePic'    =>  ($userSession->usr_image != "" && $userSession->usr_image != null) ? "data:image/jpeg;base64,".base64_encode($userSession->usr_image) : "/MelisCore/images/profile/default_picture.jpg",
                                     'email'         =>  $userSession->usr_email,
                                     'usrLang'       =>  $data['usr_lang_id'],
                                 );
@@ -452,9 +453,12 @@ class UserProfileController extends AbstractActionController
      */
     private function getCurrentUserId()
     {
+        $userId = null;
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-        $userId = (int) $userAuthDatas->usr_id;
+        if($melisCoreAuth->hasIdentity()) {
+            $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+            $userId = (int) $userAuthDatas->usr_id;
+        }
         return $userId;
     }
     

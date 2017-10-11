@@ -2859,8 +2859,8 @@ div#modal-user-management div.widget {
     -ms-box-shadow: 0 2px 7px #afa8a8;
     -o-box-shadow: 0 2px 7px #afa8a8;
     box-shadow: 0 2px 7px #afa8a8;
-    overflow: hidden;
 }
+
 .photo-overlay {
     position: absolute;
     top: 0;
@@ -2875,11 +2875,25 @@ div#modal-user-management div.widget {
     -o-transition: all 0.4s ease-in-out;
     transition: all 0.4s ease-in-out;
 }
+.profile-photo .image-tool-tip {
+	position: absolute;
+    right: 15px;
+    color: #fff;
+    background: #932e2a;
+    padding: 5px;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+.profile-photo:hover .image-tool-tip {
+    opacity: 0;
+}
 .profile-photo:hover .photo-overlay {
     background: rgba(253,72,72,0.7);
     border-radius: 50%;
 }
-.profile-photo #user-profile-pic{
+.profile-photo #user-profile-pic {
 	width: 100%;
 	height : 100%;
 }
@@ -2943,6 +2957,9 @@ div#modal-user-management div.widget {
     letter-spacing: 0.4px;
     text-align: left;
     line-height: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .u-lists .fa {
@@ -2959,7 +2976,7 @@ div#modal-user-management div.widget {
 
 .user-profile-btn-save {
     text-align: right;
-	margin-bottom: 15px;
+	margin: -20px auto 20px;
 }
 
 .widget-user .widget-head.nav {

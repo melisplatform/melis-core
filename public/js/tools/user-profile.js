@@ -12,7 +12,6 @@ $(function() {
 	 */
 	body.on("click", "#img-user-link, #user-name-link", function(event) {
     	openUserProfileTab();
-        destroyFileStyle();
         event.preventDefault();
     });
     
@@ -35,11 +34,6 @@ $(function() {
      */
 	body.on('change', '#id_usr_profile_image', function(){
     	previewImage(this);
-    });
-    
-	body.on('click',"a[data-id='id_meliscore_user_profile'], a[data-id='id_meliscore_tool_user']", function(e){
-    	destroyFileStyle();
-    	e.preventDefault();
     });
     
     /**
@@ -126,13 +120,4 @@ $(function() {
     	var userName = $("#user-name-link").html().trim();
         melisHelper.tabOpen(userName, 'fa-user', 'id_meliscore_user_profile', 'meliscore_user_profile');
     }
-    
-    /**
-     * Destroy the file style plugin on file
-     */
-    function destroyFileStyle(){
-    	$('#iduserprofilemanagement').find(':file').filestyle('destroy');
-    	$('#iduserprofilemanagement').find(':file').hide();
-    }
-    
 });

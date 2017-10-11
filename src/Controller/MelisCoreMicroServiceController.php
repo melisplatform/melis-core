@@ -124,28 +124,39 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                          * allow method to accept dynamic arguments
                                          */
                                         $data = $reflectionMethod->invokeArgs($tmpInstance, $post);
-
+                                        
 
                                         /**
                                          * This listener trigger handles the modification of the results returned by invokeArgs
                                          */
                                         $tmpData = $this->getEventManager()->trigger('melis_core_microservice_amend_data', $this, array('module' => $module, 'service' => $service, 'method' => $method, 'post' => $post, 'results' => $data));
-
-
+                                      
                                         if(isset($tmpData[0]) && isset($tmpData['0']['results'])) {
                                             $data = $tmpData[0]['results'];
+                                        }
 
-                                        }
-                                        
-                                        if($data instanceof \ArrayObject || $data instanceof HydratingResultSet) {
-                                            $data = $data->toArray();
-                                        }
-                                        else {
-                                            if(!is_array($data)) {
-                                             $data = (array) $data;
+                                        // Check data if it's an Object
+                                        if(is_object($data)){
+                                          
+                                            // This will check if the property of an object is protected
+                                            $obj = new \ReflectionObject($data);
+                                            $objIsProtected = $obj->getProperties(\ReflectionProperty::IS_PROTECTED);
+
+                                            // This is for HydratingResultSet Object
+                                            if($data instanceof HydratingResultSet){
+                                                $data = $data->toArray();
                                             }
 
-                                        } 
+                                            // This is for Object that is protected
+                                            if($objIsProtected){
+                                                $data = $this->tool()->convertObjectToArray($data);
+                                            }
+                                        }
+                                        // Check data if it's an array
+                                        if(is_array($data)){
+                                            
+                                            $data = $this->tool()->convertObjectToArray($data);
+                                        }
 
                                         $message = 'tr_meliscore_microservice_request_ok';
                                         $success = true;
@@ -161,6 +172,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
                              * If no error encountered, then we will return a JSON response including its' service returned data
                              */
                             if (!$errors) {
+
                                 $response = [
                                     'success'  => $success,
                                     'message'  => $translator->translate($message),
@@ -470,6 +482,11 @@ class MelisCoreMicroServiceController extends AbstractActionController
             if($apiStatus){
                 $config       = $this->getServiceLocator()->get('MelisCoreConfig');
                 $microservice = $config->getItem('microservice');
+
+                //Exclude array 'conf' key
+                if(array_key_exists('conf',$microservice)){
+                    unset($microservice['conf']);
+                }
                 $userExists   = true;
             }else{
                 $message = 'tr_meliscore_microservice_api_key_inactive';

@@ -62,7 +62,7 @@ if (!empty($this->zoneconfig['conf']['id']))
 		    	return false;
 		    });
 			//melisTool.buttons.refresh("#idToolUserContentRefresh .btnRefresh", toolUserManagement.refreshTable());
-		    $(":file").filestyle({buttonBefore: true, input: false, buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
+		    $("#idusermanagement input:file, #idnewusermanagement input:file").filestyle({buttonBefore: true, input: false, buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
 
 			// if initRetrieveUser fails, then re-execute this one
 			$.ajax({

@@ -572,7 +572,7 @@ class ToolUserController extends AbstractActionController
                     {
                         $imageContent = null;
                         // create tmp folder if not exists
-                        $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/images/profile/tmp/';
+                        $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/';
                         if(!file_exists($dirName) && is_writable($dirName)) {
                             $oldmask = umask(0);
                             mkdir($dirName, 0777,  true);
@@ -876,7 +876,7 @@ class ToolUserController extends AbstractActionController
                 $tableData[$ctr]['usr_status'] = '<span class="'.$status.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_is_online'] = '<span class="'.$online.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_image'] = '<img src="'.$image . '" width="24" height="24" alt="profile image" title="Profile picture of '.$tableData[$ctr]['usr_firstname'].'"/>';
-                $tableData[$ctr]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usr_last_login_date']));
+                $tableData[$ctr]['usr_last_login_date'] = ($tableData[$ctr]['usr_last_login_date']) ? strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usr_last_login_date'])) : '';
                 $tableData[$ctr]['usr_email'] = $melisTool->limitedText($tableData[$ctr]['usr_email'], 35);
                 // remove critical details
                 unset($tableData[$ctr]['usr_password']);
@@ -1009,7 +1009,7 @@ class ToolUserController extends AbstractActionController
                 $imageContent = null;
 
                 // create tmp folder if not exists
-                $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/images/profile/tmp/';
+                $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/';
                 if(!file_exists($dirName) && is_writable($dirName)) {
                     $oldmask = umask(0);
                     mkdir($dirName, 0777, true);
