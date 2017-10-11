@@ -24,6 +24,7 @@
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
 		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
+		'tr_meliscore_header_flash_messenger_title' => 'Notifications',
 		'tr_meliscore_header_language' => 'Language',
 		'tr_meliscore_header_logout' => 'Logout',
 		'tr_meliscore_leftmenu_leftmenu' => 'Left menu',
@@ -49,7 +50,7 @@
 	    'tr_meliscore_all' => 'All',
 			
 		// Languages
-		'tr_meliscore_header_language_Language' => 'Languages', 
+		'tr_meliscore_header_language_Language' => 'BO Languages', 
 	    
 	    // Modals
 		'tr_meliscore_notification_modal_Close' => 'Close', 

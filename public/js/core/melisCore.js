@@ -453,8 +453,9 @@ var melisCore = (function(window){
                 $(this).children("a").append("<span class='title'>"+ $(this).data("title") +"</span>");
                 $("#newplugin-cont ul.ul-cont").append( $(this) );
             });
-        }
 
+         
+        }
 
     });
 

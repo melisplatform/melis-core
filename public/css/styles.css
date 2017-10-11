@@ -158,13 +158,16 @@ body .melis-hide{
 }
 
 
-
+html {
+    -webkit-overflow-scrolling: touch;
+}
 
 body{
     padding-top: 94px;
     background: #fff;
     position: relative;
     height: 100%;
+    -webkit-overflow-scrolling: touch;
 }
 
 .login-page h4.innerAll{
@@ -286,6 +289,7 @@ body{
 /* accordion layout change */
 .sidebar>.sidebarMenuWrapper {
     margin-bottom: 40px;
+    -webkit-overflow-scrolling: touch;
 }
 .sidebar>.sidebarMenuWrapper ul ul li > a[data-toggle="collapse"]:after{
     top: 10px;
@@ -1716,6 +1720,62 @@ span.fancytree-active span.fancytree-title{
 .login-page .navbar.main .nav>li>a{
     padding: 0 25px;
 }
+/* login-page mobile */
+@media only screen and (max-width: 767px) {
+    body.login-page {
+        padding-top: 47px;
+    }
+    .login-page .res-action-container {
+        float: none;
+        position: relative;
+        width: auto;
+        height: 47px;
+        max-height: 250px;
+        overflow: visible;
+    }
+    .login-page .navbar.main .nav.navbar-right {
+        display: block;
+        border: none;
+        position: relative;
+        z-index: 101;
+        background: #932E2A;
+        height: 47px;
+        width: 50px;
+        float: right;
+        top: -47px;
+    }
+    .login-page .navbar.main .nav.navbar-right li {
+        position: relative;
+        display: block;
+        border: 0;
+    }
+    .login-page .navbar.main .nav>li>a {
+        float: none;
+        display: block;
+        height: 47px;
+        line-height: 47px;
+        font-weight: 600;
+        font-size: 13px;
+        padding: 0 13px;
+        background: transparent;
+    }
+
+    .login-page .navbar.main .nav.navbar-right li:hover ul {
+        position: absolute;
+        left: inherit;
+        right: 0;
+        background-color: #932e2a;
+    }
+    .login-page .navbar.main .nav>li .dropdown-menu li {
+        background: #932e2a;
+        border-bottom: 1px solid #AD6565;
+    }
+
+    #flash-messenger li {
+        height: auto;
+    }
+}
+
 /* checkbox manipulation */
 .cb-cont input[type=checkbox]{
     opacity: 0;
@@ -2297,6 +2357,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     .navbar #melis-id-nav-bar-tabs > li:hover > a > i {
         color: #932e2a;
     }
+    .navbar #melis-id-nav-bar-tabs > li:hover > a.close {
+        background: transparent;
+    }
 
     .navbar #melis-id-nav-bar-tabs > li > a.close:hover {
         opacity: 1;
@@ -2314,6 +2377,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
     .navbar.main.navbar-primary .nav > li a.close:before{
         font-size: 12px;
+        background: transparent;
     }
 
     .navbar.main.navbar-primary .nav > li a.close:before{
