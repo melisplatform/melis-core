@@ -3144,3 +3144,16 @@ div#modal-user-management div.widget {
 		margin-top:50px !important;
     }
 }
+
+@media only screen and (max-width: 767px) {
+    /* Old Modal */
+    #content .tooltabmodal#modal-user-management .nav.nav-tabs li {
+        float: none !important;
+    }
+    #content .tooltabmodal#modal-user-management .nav.nav-tabs li.active {
+        float: none !important;;
+    }
+    #content .tooltabmodal#modal-user-management .widget {
+        width: auto;
+    }
+}
