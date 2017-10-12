@@ -547,7 +547,7 @@
         'tr_meliscore_microservice_api_key_inactive' => 'API Key is inactive',
 
         'tr_meliscore_microservice_generate_api_key' => 'Generate API Key',
-        'tr_meliscore_microservice_generate_api_key_ok' => 'You may access to the services at this URL',
+        'tr_meliscore_microservice_generate_api_key_ok' => 'You may access to the microservices at this URL:',
         'tr_meliscore_microservice_generateD_api_key' => 'API Key',
         //Microservice Listing
         'tr_meliscore_microservice_title' => 'List of microservices available on the Platform',
