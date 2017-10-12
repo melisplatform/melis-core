@@ -72,9 +72,9 @@ $(document).ready(function() {
         }).done(function(data){
             $("#melis-core-user-auth-api-key").html("");
             $("#melis-core-user-auth-api-ok").addClass("hidden");
-            $("#melis-core-user-auth-api-ko").addClass("hidden");
 			if(data.success) {
 				$("#melis-core-user-auth-api-key").html(data.response.api_key);
+				$("#melis-core-microservices-url").html('<a href="'+data.response.url+'" target="_blank">'+data.response.url+'</a>');
 				$("#melis-core-user-auth-api-ok").removeClass("hidden");
                 var status = data.response.status == '1' ? true : false;
                 $("#switch-user-api-status").bootstrapSwitch("setState", status);
@@ -101,6 +101,7 @@ $(document).ready(function() {
             $("#melis-core-user-auth-api-ko").addClass("hidden");
             if(data.success) {
                 $("#melis-core-user-auth-api-key").html(data.response.api_key);
+                $("#melis-core-microservices-url").html('<a href="'+data.response.url+'" target="_blank">'+data.response.url+'</a>');
                 $("#melis-core-user-auth-api-ok").removeClass("hidden");
 
             }

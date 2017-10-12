@@ -533,6 +533,7 @@
 
         // Microservice
         'tr_meliscore_microservice' => 'Microservice',
+        'tr_meliscore_microservice_tab_title' => 'Microservices',
         'tr_meliscore_microservice_modal' => 'Microservice Modal',
         'tr_meliscore_microservice_tool_user_desc' => ' Manage and view user\'s microservice accessibility and activies',
         'tr_meliscore_microservice_date_requested' => 'Date Requested',
@@ -546,6 +547,7 @@
         'tr_meliscore_microservice_api_key_inactive' => 'API Key is inactive',
 
         'tr_meliscore_microservice_generate_api_key' => 'Generate API Key',
+        'tr_meliscore_microservice_generate_api_key_ok' => 'You may access to the services at this URL',
         'tr_meliscore_microservice_generateD_api_key' => 'API Key',
 
 	);

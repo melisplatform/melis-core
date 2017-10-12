@@ -360,9 +360,17 @@ class MelisCoreMicroServiceController extends AbstractActionController
             $authData = $this->getMicroServiceAuthTable()->getUser($userId)->current();
 
             if ($authData) {
+
+                $uri = $request->getUri();
+                $host = $uri->getHost();
+                $scheme = $uri->getScheme();
+                $url = $scheme . '://' . $host.'/melis/api/'.$authData->msoa_api_key;
+
+
                 $data['api_key'] = $authData->msoa_api_key;
                 $data['status']  = $authData->msoa_status;
                 $data['user_id'] = $userId;
+                $data['url']     = $url;
                 $success = 1;
             }
 
@@ -397,12 +405,18 @@ class MelisCoreMicroServiceController extends AbstractActionController
                 $authData = $this->getMicroServiceAuthTable()->getUser($userId)->current();
 
                 if ($authData) {
+
+                    $uri = $request->getUri();
+                    $host = $uri->getHost();
+                    $scheme = $uri->getScheme();
+                    $url = $scheme . '://' . $host.'/melis/api/'.$authData->msoa_api_key;
+
                     $data['api_key'] = $authData->msoa_api_key;
                     $data['status']  = $authData->msoa_status;
+                    $data['url']     = $url;
                     $success = 1;
                 }
             }
-
         }
 
         $response = [
