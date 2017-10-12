@@ -320,7 +320,7 @@ var melisHelper = (function(){
     }
 
     // TAB OPEN =====================================================================================================================
-    function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup){
+    function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
         //check if the tab is already open and added to the main nav
         var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='"+ zoneId +"']");
 
@@ -408,7 +408,12 @@ var melisHelper = (function(){
             tabSwitch(zoneId);
 
             //load the page content
-            zoneReload(zoneId, melisKey, parameters);
+            var fnCallback = null;
+
+            if ( callback !== undefined ) {
+                fnCallback= callback;
+            }
+            zoneReload(zoneId, melisKey, parameters, fnCallback);
 
             // check if tabExpander(); needs to be activated or not
             tabExpander.checkTE();
@@ -419,6 +424,7 @@ var melisHelper = (function(){
                     $(".melis-tabnext").trigger("click");
                 }
             }
+
         }
         else{
             //make the new tab and content active instead of realoading
