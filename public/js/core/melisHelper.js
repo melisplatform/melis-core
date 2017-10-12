@@ -707,6 +707,7 @@ var melisHelper = (function(){
 
         // Loading zone
         loadingZone										:			loadingZone,
+        removeLoadingZone								:			removeLoadingZone,
         disableTab								        :			disableTab,
         enableTab								        :			enableTab,
         disableAllTabs								    :			disableAllTabs,
