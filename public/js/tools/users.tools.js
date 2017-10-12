@@ -28,31 +28,24 @@ window.setUserDateConnection = function(d) {
 // action buttons
 $(document).ready(function() {
 
-    $("body").on("click", "#switch-user-api-status", function() {
-        var id 	   = $(this).data().userid;
+    $("body").on("switch-change", "#switch-user-api-status", function(e) {
+    	
+        var id = $(this).attr("data-userid"); 
+        
         var status = 0;
-
         if($(this).find("div").hasClass("switch-on")) {
         	status = 1;
 		}
-
-
+        
         $.ajax({
             type        : 'POST',
             url         : '/melis/MelisCore/MelisCoreMicroService/updateStatus',
             data		: {id : id, status : status},
             dataType    : 'json',
             encode		: true,
-        }).done(function(data){
-			if(data.success) {
-
-			}
         });
-
     });
-
-
-
+    
 	$("body").on("click", '.btnUserEdit', function() {
 		var id = $(this).parents("tr").attr("id");
 		melisCoreTool.hideAlert("#editformalert");
@@ -76,9 +69,17 @@ $(document).ready(function() {
 				$("#melis-core-user-auth-api-key").html(data.response.api_key);
 				$("#melis-core-microservices-url").html('<a href="'+data.response.url+'" target="_blank">'+data.response.url+'</a>');
 				$("#melis-core-user-auth-api-ok").removeClass("hidden");
-                var status = data.response.status == '1' ? true : false;
-                $("#switch-user-api-status").bootstrapSwitch("setState", status);
-                $("#switch-user-api-status").attr("data-userid", data.response.user_id);
+				
+				
+				// Micro service status 
+				$("#switch-user-api-status").attr("data-userid", id);
+                if(data.response.status == 1){
+                	$("#switch-user-api-status .switch-animate").removeClass("switch-off");
+                	$("#switch-user-api-status .switch-animate").addClass("switch-on");
+                }else{
+                	$("#switch-user-api-status .switch-animate").removeClass("switch-on");
+                	$("#switch-user-api-status .switch-animate").addClass("switch-off");
+                }
 			}
 			else {
                 $("#melis-core-user-auth-api-ko").removeClass("hidden");
