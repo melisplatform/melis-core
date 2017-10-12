@@ -2349,6 +2349,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         text-overflow: ellipsis;
         overflow: hidden;
     }
+    .navbar #melis-id-nav-bar-tabs > li li .navtab-pagename {
+        width: 170px;
+    }
     .navbar #melis-id-nav-bar-tabs > li:hover > a {
         background: #fff;
         color: #932e2a !important;
@@ -3157,8 +3160,12 @@ div#modal-user-management div.widget {
         width: auto;
     }
 }
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 992px) {
     .filter-bar .news-list-news-filter-limit {
-        width: 50%;
+        min-width: 150px;
+    }
+    .filter-bar .meliscore_logs_tool_table_limit {
+        float: left;
+        min-width: 150px;
     }
 }
