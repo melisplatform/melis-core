@@ -524,7 +524,7 @@ var melisHelper = (function(){
 
                     melisHelper.melisKoNotification( "Error Fetching data", "No result was retreived while doing this operation.", "no error datas returned", '#000' );
                 }
-                if ( callback !== undefined ) {
+                if ( callback !== undefined || callback !== null) {
                     callback();
                 }
             }, 300);
