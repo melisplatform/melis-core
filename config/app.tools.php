@@ -201,7 +201,7 @@ return array(
                             'id' => 'id_meliscore_tool_user_microservice_modal',
                             'class' => 'glyphicons cogwheels',
                             'tab-header' => '',
-                            'tab-text' => 'tr_meliscore_microservice',
+                            'tab-text' => 'tr_meliscore_microservice_tab_title',
                             'content' => array(
                                 'module' => 'MelisCore',
                                 'controller' => 'MelisCoreMicroService',
