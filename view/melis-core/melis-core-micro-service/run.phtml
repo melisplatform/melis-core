@@ -1,10 +1,88 @@
-<center>
+<div class="microservice_container">
+<!-- Method Name -->
+<h4><?= $this->methodName; ?></h4>
+<!-- Subtitle -->
+<p><?php echo $this->translate('tr_meliscore_microservice_sub_title'); ?></p>
+<br>
+
+<!-- Form -->
 <?php
 $form = $this->form;
+foreach($form->getElements() as $element => $attributes)  {
+	$el =  $form->get((string) $element);
+	$label=$el->getLabel();
+	$attributes = $el->getAttributes();
+	if($attributes && isset($attributes['data-type'])) {
+		$dataType = $this->translate($attributes['data-type']);
+		$form->get((string) $element)->setLabel($label.' ('.$dataType.')');
+	}
+}
+;
 echo $this->form()->openTag($form);
 echo $this->melisFieldCollection($form);
-echo '<button type="submit">Submit</button>';
+echo '<button type="submit" style=margin-left:50px>Submit</button>';
 echo $this->form()->closeTag();
 
 ?>
-</center>
+</div>
+<?php
+echo $this->headTitle($this->translate('tr_meliscore_microservice_tab_title'));
+?>
+
+
+<style type="text/css">
+.microservice_container{
+	padding-left:20px;
+	padding-top:47px;
+	color:#686868;
+	font-family: "Open Sans'";
+}
+#microservice_form ul li{
+	list-style-type: none;
+}
+#microservice_form ul {
+	margin:0;
+	padding: 0;
+}
+.microservice_container input,select{
+	text-indent: 5px;
+	color:#000;
+	font-weight: 600;
+	display: block;
+	margin-bottom: 8px;
+	height: 30px;
+	border-radius: 3px;
+    border: 1px solid #a8a8a8;
+}
+select {
+	width: auto !important;
+}
+.microservice_container input::-webkit-input-placeholder {
+   color: #bcbcbc;
+}
+
+.microservice_container input:-moz-placeholder { /* Firefox 18- */
+   color: #bcbcbc;  
+}
+
+.microservice_container input::-moz-placeholder {  /* Firefox 19+ */
+   color: #bcbcbc;  
+}
+
+.microservice_container input:-ms-input-placeholder {  
+   color: #bcbcbc;  
+}
+fieldset{
+	border:none;
+	padding: 0;
+}
+h4{
+	font-weight: 500;
+	font-size: 25px;
+	margin:0;
+}
+p{
+	margin-top:8px;
+	margin-bottom:10px;
+}
+</style>

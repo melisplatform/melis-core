@@ -13,6 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Session\Container;
 class MelisCoreMicroServiceController extends AbstractActionController
 {
     /**
@@ -31,6 +32,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
         $module = ucfirst($this->params()->fromRoute('module'));
         $service = ucfirst($this->params()->fromRoute('service_alias'));
         $method = $this->params()->fromRoute('service_method');
+
         $translator = $this->getServiceLocator()->get('translator');
         $userApiData = $this->getMicroServiceAuthTable()->getUserByApiKey($apiKey)->current();
 
@@ -38,6 +40,14 @@ class MelisCoreMicroServiceController extends AbstractActionController
          * If user API data is not empty, then proceed on checking its' content
          */
         if ($userApiData) {
+
+            // set the langauge 
+            $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
+            $langData = $melisLangTable->getEntryById($userApiData->usr_lang_id)->current();
+            if($langData) {
+                $container = new Container('meliscore');
+                $container['melis-lang-locale'] = $langData->lang_locale;
+            }
 
             /**
              * check whether user's accessibility is still "active" or not
@@ -189,8 +199,9 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                 // get the form configuration in app.microservice configuration file
                                 $this->layout('layout/layoutBlank');
                                 $view = new ViewModel();
+                                $view->setTerminal(true);
                                 $view->form = $form;
-
+                                $view->methodName = $method;
                                 return $view;
                             }
                         } else {
@@ -214,7 +225,9 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                         // get the form configuration in app.microservice configuration file
                                         $this->layout('layout/layoutBlank');
                                         $view = new ViewModel();
+                                        $view->setTerminal(true);
                                         $view->form = $this->getForm($form);
+                                        $view->methodName = $method;
                                         return $view;
                                     }
                                     
@@ -483,25 +496,37 @@ class MelisCoreMicroServiceController extends AbstractActionController
         $view         = new ViewModel();
         $translator   = $this->getServiceLocator()->get('translator');
         $apiKey       = trim($this->params()->fromRoute('api_key', ''));
-
         $userExists   = false;
         $microservice = array();
         $userApiData  = $this->getMicroServiceAuthTable()->getUserByApiKey($apiKey)->current(); 
         $apiStatus    = '';
-      
-        if($userApiData) {
+        $toolTranslator = $this->getServiceLocator()->get('MelisCoreTranslation');
+        
 
+        
+
+        if($userApiData) {
+            
             $apiStatus = $userApiData->msoa_status;
-            // to validate the API key if its Active or Inactvie
+            // to validate the API key if it's Active or Inactvie
             if($apiStatus){
                 $config       = $this->getServiceLocator()->get('MelisCoreConfig');
                 $microservice = $config->getItem('microservice');
+             
+                // set the langauge 
+                $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
+                $langData = $melisLangTable->getEntryById($userApiData->usr_lang_id)->current();
+                if($langData) {
+                    $container = new Container('meliscore');
+                    $container['melis-lang-locale'] = $langData->lang_locale;
+                }
 
                 //Exclude array 'conf' key
                 if(array_key_exists('conf',$microservice)){
                     unset($microservice['conf']);
                 }
                 $userExists   = true;
+
             }else{
                 $message = 'tr_meliscore_microservice_api_key_inactive';
 
@@ -516,6 +541,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
         $view->userExists   = $userExists;
         $view->microservice = $microservice;
         $view->apiKey       = $apiKey;
+        $view->title       = 'tr_meliscore_microservice_title';
         return $view;
     }
 
