@@ -614,6 +614,43 @@ var melisHelper = (function(){
         }
     }
 
+    // disable single tab
+    function disableTab(tabId) {
+        $("li a.tab-element[data-id='"+tabId+"']").css('pointer-events','none').parent().css("cursor", "not-allowed");
+    }
+
+    // enable single tab
+    function enableTab(tabId) {
+        $("li a.tab-element[data-id='"+tabId+"']").css('pointer-events','auto').parent().css("cursor", "pointer");
+    }
+
+    // disabled all tabs
+    function disableAllTabs()
+    {
+        $.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
+            var tabId = $(v).data("id");
+            disableTab(tabId);
+        });
+
+        // disable navigation too
+        $.each($("ul.sideMenu"), function(i ,v) {
+            $(v).css('pointer-events','none').parent().css("cursor", "not-allowed");
+        });
+    }
+
+    // enables all tabs
+    function enableAllTabs()
+    {
+        $.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
+            var tabId = $(v).data("id");
+            enableTab(tabId);
+        });
+
+        $.each($("ul.sideMenu"), function(i ,v) {
+            $(v).css('pointer-events','none').css('pointer-events','auto').parent().css("cursor", "pointer");
+        });
+    }
+
 
     // BIND AND DELEGATE EVENTS =====================================================================================================
 
@@ -670,7 +707,11 @@ var melisHelper = (function(){
 
         // Loading zone
         loadingZone										:			loadingZone,
-        removeLoadingZone								:			removeLoadingZone,
+        disableTab								        :			disableTab,
+        enableTab								        :			enableTab,
+        disableAllTabs								    :			disableAllTabs,
+        enableAllTabs								    :			enableAllTabs,
+
     };
 
 })();
