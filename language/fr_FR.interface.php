@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 	return array(  
 	    'en_EN' => 'English',
 	    'fr_FR' => 'French',
@@ -184,7 +184,7 @@
 	    'tr_meliscore_common_close' => 'Annuler',
 	    'tr_meliscore_common_success' => 'Success',
 	    'tr_meliscore_common_apply' => 'Appliquer',
-	    'tr_meliscore_common_update' => 'Mettre à jour',
+	    'tr_meliscore_common_update' => 'Mettre a jour',
 	    'tr_meliscore_common_clear' => 'Effacer',
 	    
 	    
