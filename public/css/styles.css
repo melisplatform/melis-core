@@ -3042,6 +3042,9 @@ div#modal-user-management div.widget {
 .widget-user .widget-head.nav {
     border-top: 0;
 }
+.widget-user .widget.widget-tabs-double-2>.widget-head {
+    border-bottom: 1px solid #e5e5e5;
+}
 .widget-user .tabs-label li.active a.glyphicons {
     border-bottom: 0;
 }
