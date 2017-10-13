@@ -30,7 +30,6 @@ class MelisCoreFlashMessengerListener extends MelisCoreGeneralListener implement
         	    'meliscore_platform_new_end', 
         	    'meliscore_platform_update_end',
         	    'meliscore_platform_delete_end', 
-        	    'meliscore_module_management_save_end', 
         	    'meliscore_language_new_end',
                 'meliscore_language_update_end',
         	    'meliscore_language_delete_end', 
