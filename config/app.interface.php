@@ -166,6 +166,9 @@ return array(
                     // Bootstrap Dialog
                     'MelisCore/css/bootstrap-dialog.min.css',
 
+                    // Plugins Move css group
+                    'MelisCore/css/plugin.group.css',
+
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
                     '/MelisCore/css/diagnostic.css',
