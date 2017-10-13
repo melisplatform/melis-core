@@ -2052,7 +2052,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
     cursor: pointer;
 }
 .module-settings .ms-heading .tooltip .tooltip-inner{
-    background: #2c2c2c;
+    background: #cb4040;
     font-size: 14px;
     letter-spacing: .3px;
     word-spacing: 1px;
