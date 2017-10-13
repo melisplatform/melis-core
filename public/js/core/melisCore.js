@@ -344,6 +344,12 @@ var melisCore = (function(window){
     // detect IE8 and above, and edge
     if (document.documentMode || /Edge/.test(navigator.userAgent)) {
         // remove flickering issue on edge
+        // $('html').css('overflow', 'hidden');
+        // $body.css('overflow', 'auto');
+        $("#id_meliscore_leftmenu").css("-webkit-transform", "translate3d(0px, 0px, 0px)");
+    }
+    var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+    if(isIE11) {
         $('html').css('overflow', 'hidden');
         $body.css('overflow', 'auto');
     }
