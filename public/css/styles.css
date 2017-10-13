@@ -3066,7 +3066,7 @@ div#modal-user-management div.widget {
     height: 70px;
     border-bottom: 1px solid #fff;
 }
-.container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li:hover {
+.container-level-a .widget-user .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li:hover {
     height: 69px;
 }
 
