@@ -292,7 +292,7 @@ class UserProfileController extends AbstractActionController
             'reLoad'        => $reloadPage,
         );
         //save notifications - whether success or not
-        $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId)));
+        $this->getEventManager()->trigger('meliscore_profile_save_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId)));
         
         return new JsonModel($response);
     }
