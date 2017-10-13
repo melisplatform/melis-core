@@ -567,6 +567,6 @@
         'tr_meliscore_microservice_generateD_api_key' => 'API Key',
 
         'tr_meliscore_microservice_title' => 'Liste des microservices existants sur la Platform',
-        'tr_meliscore_microservice_sub_title' => 'Les paramÃ¨tres de ce service doivent Ãªtre POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnÃ©e n\'est postÃ©e.'
+        'tr_meliscore_microservice_sub_title' => 'Les paramètres de ce service doivent être POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnée n\'est postée.'
 	);
 ?>
