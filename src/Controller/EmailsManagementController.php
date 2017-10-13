@@ -134,7 +134,7 @@ class EmailsManagementController extends AbstractActionController
         
         $columns = $melisTool->getColumns();
         // pre-add Action Columns
-        $columns['actions'] = array('text' => $translator->translate('tr_meliscms_action'));
+        $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'));
         
         // Custom Datatable configuration
         $tableOption = array(

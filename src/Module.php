@@ -121,6 +121,7 @@ class Module
     	    'melis-backoffice/application-MelisInstaller/default',
     	    'melis-backoffice/MelisInstaller',
     	    'melis-backoffice/microservice',
+    	    'melis-backoffice/microservice_list',
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;

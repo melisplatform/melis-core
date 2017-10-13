@@ -14,8 +14,14 @@ if($this->userExists) {
 		position: relative;
 		list-style: none;
 	}
+	#microservice_form input {
+
+	}
 </style>
 <div style="padding-left: 20px;">
+	<h2><?php  echo $this->translate($this->title); ?></h2>
+	
+	<br>
 	<?php 
 		 foreach ($this->microservice as $module => $service) {
 

@@ -24,6 +24,7 @@
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
 		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
+		'tr_meliscore_header_flash_messenger_title' => 'Notifications',
 		'tr_meliscore_header_language' => 'Language',
 		'tr_meliscore_header_logout' => 'Logout',
 		'tr_meliscore_leftmenu_leftmenu' => 'Left menu',
@@ -49,7 +50,7 @@
 	    'tr_meliscore_all' => 'All',
 			
 		// Languages
-		'tr_meliscore_header_language_Language' => 'Languages', 
+		'tr_meliscore_header_language_Language' => 'BO Languages', 
 	    
 	    // Modals
 		'tr_meliscore_notification_modal_Close' => 'Close', 
@@ -532,6 +533,7 @@
 
         // Microservice
         'tr_meliscore_microservice' => 'Microservice',
+        'tr_meliscore_microservice_tab_title' => 'Microservices',
         'tr_meliscore_microservice_modal' => 'Microservice Modal',
         'tr_meliscore_microservice_tool_user_desc' => ' Manage and view user\'s microservice accessibility and activies',
         'tr_meliscore_microservice_date_requested' => 'Date Requested',
@@ -545,7 +547,11 @@
         'tr_meliscore_microservice_api_key_inactive' => 'API Key is inactive',
 
         'tr_meliscore_microservice_generate_api_key' => 'Generate API Key',
+        'tr_meliscore_microservice_generate_api_key_ok' => 'You may access to the microservices at this URL:',
         'tr_meliscore_microservice_generateD_api_key' => 'API Key',
+        //Microservice Listing
+        'tr_meliscore_microservice_title' => 'List of microservices available on the Platform',
+        'tr_meliscore_microservice_sub_title' => 'Parameters for this service needs to be POSTED. The return will be in JSON. This form will show up for easy testing if no data has been posted.'
 
 	);
 ?>

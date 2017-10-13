@@ -158,13 +158,16 @@ body .melis-hide{
 }
 
 
-
+html {
+    -webkit-overflow-scrolling: touch;
+}
 
 body{
     padding-top: 94px;
     background: #fff;
     position: relative;
     height: 100%;
+    -webkit-overflow-scrolling: touch;
 }
 
 .login-page h4.innerAll{
@@ -286,6 +289,7 @@ body{
 /* accordion layout change */
 .sidebar>.sidebarMenuWrapper {
     margin-bottom: 40px;
+    -webkit-overflow-scrolling: touch;
 }
 .sidebar>.sidebarMenuWrapper ul ul li > a[data-toggle="collapse"]:after{
     top: 10px;
@@ -1716,6 +1720,62 @@ span.fancytree-active span.fancytree-title{
 .login-page .navbar.main .nav>li>a{
     padding: 0 25px;
 }
+/* login-page mobile */
+@media only screen and (max-width: 767px) {
+    body.login-page {
+        padding-top: 47px;
+    }
+    .login-page .res-action-container {
+        float: none;
+        position: relative;
+        width: auto;
+        height: 47px;
+        max-height: 250px;
+        overflow: visible;
+    }
+    .login-page .navbar.main .nav.navbar-right {
+        display: block;
+        border: none;
+        position: relative;
+        z-index: 101;
+        background: #932E2A;
+        height: 47px;
+        width: 50px;
+        float: right;
+        top: -47px;
+    }
+    .login-page .navbar.main .nav.navbar-right li {
+        position: relative;
+        display: block;
+        border: 0;
+    }
+    .login-page .navbar.main .nav>li>a {
+        float: none;
+        display: block;
+        height: 47px;
+        line-height: 47px;
+        font-weight: 600;
+        font-size: 13px;
+        padding: 0 13px;
+        background: transparent;
+    }
+
+    .login-page .navbar.main .nav.navbar-right li:hover ul {
+        position: absolute;
+        left: inherit;
+        right: 0;
+        background-color: #932e2a;
+    }
+    .login-page .navbar.main .nav>li .dropdown-menu li {
+        background: #932e2a;
+        border-bottom: 1px solid #AD6565;
+    }
+
+    #flash-messenger li {
+        height: auto;
+    }
+}
+
 /* checkbox manipulation */
 .cb-cont input[type=checkbox]{
     opacity: 0;
@@ -2109,7 +2169,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 	border-radius: 2px;
 }
 p.modal-text-info{
-	text-align: justify; 
+	text-align: justify;
 	text-justify: inter-word;
 }
 
@@ -2289,6 +2349,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         text-overflow: ellipsis;
         overflow: hidden;
     }
+    .navbar #melis-id-nav-bar-tabs > li li .navtab-pagename {
+        width: 170px;
+    }
     .navbar #melis-id-nav-bar-tabs > li:hover > a {
         background: #fff;
         color: #932e2a !important;
@@ -2296,6 +2359,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
     .navbar #melis-id-nav-bar-tabs > li:hover > a > i {
         color: #932e2a;
+    }
+    .navbar #melis-id-nav-bar-tabs > li:hover > a.close {
+        background: transparent;
     }
 
     .navbar #melis-id-nav-bar-tabs > li > a.close:hover {
@@ -2314,6 +2380,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
     .navbar.main.navbar-primary .nav > li a.close:before{
         font-size: 12px;
+        background: transparent;
     }
 
     .navbar.main.navbar-primary .nav > li a.close:before{
@@ -3005,7 +3072,7 @@ div#modal-user-management div.widget {
 		width: 150px;
 		height: 150px;
 	}
-	
+
 	.profile-photo .profile-photo-edit {
 		top: 60px;
 	}
@@ -3075,8 +3142,30 @@ div#modal-user-management div.widget {
     .tabsbar .has-sub .has-sub > .tab-element:before, .tabsbar .has-sub >  .has-sub .tab-element:before {
         content: '\f0d7';
     }
-    
+
     .profile-photo{
 		margin-top:50px !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    /* Old Modal */
+    #content .tooltabmodal#modal-user-management .nav.nav-tabs li {
+        float: none !important;
+    }
+    #content .tooltabmodal#modal-user-management .nav.nav-tabs li.active {
+        float: none !important;;
+    }
+    #content .tooltabmodal#modal-user-management .widget {
+        width: auto;
+    }
+}
+@media only screen and (max-width: 992px) {
+    .filter-bar .news-list-news-filter-limit {
+        min-width: 150px;
+    }
+    .filter-bar .meliscore_logs_tool_table_limit {
+        float: left;
+        min-width: 150px;
     }
 }

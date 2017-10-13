@@ -320,7 +320,7 @@ var melisHelper = (function(){
     }
 
     // TAB OPEN =====================================================================================================================
-    function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup){
+    function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
         //check if the tab is already open and added to the main nav
         var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='"+ zoneId +"']");
 
@@ -408,7 +408,12 @@ var melisHelper = (function(){
             tabSwitch(zoneId);
 
             //load the page content
-            zoneReload(zoneId, melisKey, parameters);
+            var fnCallback = null;
+
+            if ( callback !== undefined || callback !== null) {
+                fnCallback = callback;
+            }
+            zoneReload(zoneId, melisKey, parameters, fnCallback);
 
             // check if tabExpander(); needs to be activated or not
             tabExpander.checkTE();
@@ -419,6 +424,7 @@ var melisHelper = (function(){
                     $(".melis-tabnext").trigger("click");
                 }
             }
+
         }
         else{
             //make the new tab and content active instead of realoading
@@ -452,7 +458,7 @@ var melisHelper = (function(){
     }
 
     // ZONE RELOADING =================================================================================================================
-    function zoneReload(zoneId, melisKey, parameters){
+    function zoneReload(zoneId, melisKey, parameters, callback){
 
         var datastring = { cpath: melisKey };
 
@@ -517,6 +523,11 @@ var melisHelper = (function(){
                     $('#'+zoneId).remove();
 
                     melisHelper.melisKoNotification( "Error Fetching data", "No result was retreived while doing this operation.", "no error datas returned", '#000' );
+                }
+                if ( callback !== undefined || callback !== null) {
+                    if (callback) {
+                        callback();
+                    }
                 }
             }, 300);
         }).error(function(xhr, textStatus, errorThrown){
@@ -603,6 +614,43 @@ var melisHelper = (function(){
         }
     }
 
+    // disable single tab
+    function disableTab(tabId) {
+        $("li a.tab-element[data-id='"+tabId+"']").css('pointer-events','none').parent().css("cursor", "not-allowed");
+    }
+
+    // enable single tab
+    function enableTab(tabId) {
+        $("li a.tab-element[data-id='"+tabId+"']").css('pointer-events','auto').parent().css("cursor", "pointer");
+    }
+
+    // disabled all tabs
+    function disableAllTabs()
+    {
+        $.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
+            var tabId = $(v).data("id");
+            disableTab(tabId);
+        });
+
+        // disable navigation too
+        $.each($("ul.sideMenu"), function(i ,v) {
+            $(v).css('pointer-events','none').parent().css("cursor", "not-allowed");
+        });
+    }
+
+    // enables all tabs
+    function enableAllTabs()
+    {
+        $.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
+            var tabId = $(v).data("id");
+            enableTab(tabId);
+        });
+
+        $.each($("ul.sideMenu"), function(i ,v) {
+            $(v).css('pointer-events','none').css('pointer-events','auto').parent().css("cursor", "pointer");
+        });
+    }
+
 
     // BIND AND DELEGATE EVENTS =====================================================================================================
 
@@ -660,6 +708,11 @@ var melisHelper = (function(){
         // Loading zone
         loadingZone										:			loadingZone,
         removeLoadingZone								:			removeLoadingZone,
+        disableTab								        :			disableTab,
+        enableTab								        :			enableTab,
+        disableAllTabs								    :			disableAllTabs,
+        enableAllTabs								    :			enableAllTabs,
+
     };
 
 })();

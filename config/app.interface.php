@@ -58,7 +58,7 @@ return array(
                             // Download latest release: https://phar.phpunit.de/phpunit.phar
 
                             // php executable file path
-                            'php_cli' => '"C:\Program Files (x86)\Zend\ZendServer\bin\php.exe"',
+                            'php_cli' => '"A:\xampp\php\php.exe"',
                             // the path where you save your phpunit
                             'phpunit' => 'C:/bin/phpunit.phar'
                         ),
@@ -85,8 +85,11 @@ return array(
                              *
                              * -------------------------------
                              */
-                            'php_cli' => 'php',
-                            'phpunit' => 'phpunit',
+                            'php_cli' => '/usr/local/bin/php',
+                            'phpunit' => '/usr/local/bin/phpunit',
+                            /**
+                             * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
+                             */
                         ),
                     ),
                     'langauges' => array(
@@ -192,7 +195,7 @@ return array(
                             'conf' => array(
                                 'id' => 'id_meliscore_header_flash_messenger',
                                 'melisKey' => 'meliscore_header_flash_messenger',
-                                'name' => 'tr_meliscore_header_flash_messenger',
+                                'name' => 'tr_meliscore_header_flash_messenger_title',
                             ),
                             'forward' => array(
                                 'module' => 'MelisCore',

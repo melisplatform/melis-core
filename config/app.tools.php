@@ -64,6 +64,12 @@ return array(
                                 'sortable' => true,
                                 
                             ),
+                            'usr_login' => array(
+                                'text' => 'tr_meliscore_tool_user_col_username',
+                                'css' => array('width' => '10%', 'padding-right' => '0'),
+                                'sortable' => true,
+                                
+                            ),
                             'usr_is_online' => array(
                                 'text' => 'tr_meliscore_tool_user_col_power tooltip',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
@@ -80,12 +86,6 @@ return array(
                                 'text' => 'tr_meliscore_tool_user_col_profile',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
                                 'sortable' => false,
-                                
-                            ),
-                            'usr_login' => array(
-                                'text' => 'tr_meliscore_tool_user_col_username',
-                                'css' => array('width' => '10%', 'padding-right' => '0'),
-                                'sortable' => true,
                                 
                             ),
                             'usr_email' => array(
@@ -201,7 +201,7 @@ return array(
                             'id' => 'id_meliscore_tool_user_microservice_modal',
                             'class' => 'glyphicons cogwheels',
                             'tab-header' => '',
-                            'tab-text' => 'tr_meliscore_microservice',
+                            'tab-text' => 'tr_meliscore_microservice_tab_title',
                             'content' => array(
                                 'module' => 'MelisCore',
                                 'controller' => 'MelisCoreMicroService',

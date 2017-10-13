@@ -59,9 +59,25 @@ class MelisUserConnectionDateTable extends MelisGenericTable
          if(!empty($start)) {
              $select->offset($start);
          }
-
+         
          $resultSet = $this->tableGateway->selectWith($select);
 
+         
+         return $resultSet;
+     }
+     
+     public function getUserLastConnectionDate($userId, $date)
+     {
+         $select = $this->tableGateway->getSql()->select();
+         
+         $select->columns(['*']);
+         
+         $select->where->equalTo('usrcd_usr_login', $userId);
+         
+         $select->where->and->equalTo('usrcd_last_connection_time', $date);
+         
+         $resultSet = $this->tableGateway->selectWith($select);
+         
          return $resultSet;
      }
 
