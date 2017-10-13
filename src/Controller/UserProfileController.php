@@ -58,12 +58,10 @@ class UserProfileController extends AbstractActionController
     public function renderUserProfileTabsAction()
     {
         $melisKey = $this->getMelisKey();
-        $messengerService = $this->getServiceLocator()->get('MelisMessengerService');
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
-        $view->isAccessible = $messengerService->getUserRightsForMessenger();
-        
+
         return $view;
     }
     
