@@ -27,6 +27,7 @@ use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
+use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 
 class Module
 {   
@@ -65,6 +66,7 @@ class Module
         $eventManager->attach(new MelisCoreAuthSuccessListener());
         $eventManager->attach(new MelisCoreCheckUserRightsListener());
         $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
+        $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
 
     }
     
@@ -118,6 +120,8 @@ class Module
     	    'melis-backoffice/setup',
     	    'melis-backoffice/application-MelisInstaller/default',
     	    'melis-backoffice/MelisInstaller',
+    	    'melis-backoffice/microservice',
+    	    'melis-backoffice/microservice_list',
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;
@@ -164,31 +168,36 @@ class Module
     
     public function initSession(MvcEvent $e)
     {
-    	$sm = $e->getApplication()->getServiceManager();
-    	$container = new Container('meliscore');
-    	
-    	$translator = $sm->get('translator');
-    	$locale = $translator->getLocale();
-    	$langId = 1;
-    	
-    	// check first if the db config is available
-    	$env = getenv('MELIS_PLATFORM');
-    	$dbConfFile = 'config/autoload/platforms/'.$env.'.php';
-    	if(file_exists($dbConfFile)) {
-    	    if (empty($container['melis-lang-locale']))
-    	    {
-    	        $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
-    	        $datasLang = $melisLangTable->getEntryByField('lang_locale', $locale);
-    	        $datasLang = $datasLang->current();
-    	        $container['melis-lang-locale'] = $locale;
-    	        $langId = is_null($datasLang->lang_id) ? 1 : $datasLang->lang_id;
-    	    }
+        $sm = $e->getApplication()->getServiceManager();
+        $container = new Container('meliscore');
 
-    	}
-    	else {
-    	    $container['melis-lang-id'] = $langId;
-    	    $container['melis-lang-locale'] = $locale;
-    	}
+        $translator = $sm->get('translator');
+        $locale = $translator->getLocale();
+        $langId = 1;
+
+        // check first if the db config is available
+        $env = getenv('MELIS_PLATFORM');
+        $dbConfFile = 'config/autoload/platforms/'.$env.'.php';
+        if(file_exists($dbConfFile)) {
+            if (empty($container['melis-lang-locale']))
+            {
+                $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
+                $datasLang = $melisLangTable->getEntryByField('lang_locale', $locale)->current();
+
+                if($datasLang) {
+                    $container['melis-lang-locale'] = $locale;
+                    $langId = is_null($datasLang->lang_id) ? 1 : $datasLang->lang_id;
+                }
+                else {
+                    $container['melis-lang-locale'] = 'en_EN';
+                }
+            }
+
+        }
+        else {
+            $container['melis-lang-id'] = $langId;
+            $container['melis-lang-locale'] = $locale;
+        }
 
     }
     
@@ -249,6 +258,7 @@ class Module
 	        include __DIR__ . '/../config/app.tools.php',
 	        include __DIR__ . '/../config/app.emails.php',
 	        include __DIR__ . '/../config/diagnostic.config.php',
+	        include __DIR__ . '/../config/app.microservice.php',
     	);
     	
     	foreach ($configFiles as $file) 

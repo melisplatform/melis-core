@@ -183,7 +183,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	    if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId']))
 	    {
 	        $logTypeTrans = $melisCoreTableLogTypeTrans->getLogTypeTranslations($arrayParameters['logTypeId'], $arrayParameters['langId']);
-	        
+
 	        foreach ($logTypeTrans As $key => $val)
 	        {
 	            array_push($results, $val);
@@ -221,9 +221,13 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	    $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
 	    
 	    // Get Cureent User ID
+	    $userId = null;
 	    $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
 	    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-	    $userId = (int) $userAuthDatas->usr_id;
+	    if ($userAuthDatas)
+	    {
+	        $userId = (int) $userAuthDatas->usr_id;
+	    }
 	    
 	    // Checking if the Typecode exist, else this will save as new TypeCode entry
 	    $logType = $this->getLogTypeByTypeCode($arrayParameters['typeCode']);
@@ -241,7 +245,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	        catch(Exception $e){}
 	    }
 	    
-	    if (!is_null($logTypeId))
+	    if (!is_null($userId) && !is_null($logTypeId))
 	    {
 	        // Preparing the Log data for saving
 	        $log = array(

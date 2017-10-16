@@ -107,7 +107,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         {
             array_push($moduleFolders, $modulesSvc->getModulePath($module));
         }
-
+        
         $transMessages = array();
         $tmpTrans = array();
 
@@ -576,7 +576,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     
     public function checkTranslationList()
     {
-        $listPath = $_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/config/translation.list.php';
+        $listPath = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/config/translation.list.php';
         $exist = false;
         if(file_exists($listPath)){
             $exist = true;

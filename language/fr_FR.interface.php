@@ -24,6 +24,7 @@
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
 		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
+		'tr_meliscore_header_flash_messenger_title' => 'Notifications',
 		'tr_meliscore_header_language' => 'Langue',
 		'tr_meliscore_header_logout' => 'Déconnexion',
 		'tr_meliscore_leftmenu_leftmenu' => 'Menu gauche',
@@ -49,7 +50,7 @@
 	    'tr_meliscore_all' => 'Tous',
 			
 		// Languages
-		'tr_meliscore_header_language_Language' => 'Languages', 
+		'tr_meliscore_header_language_Language' => 'Langage BO', 
 	    
 	    // modals
 		'tr_meliscore_notification_modal_Close' => 'Fermer', 
@@ -104,6 +105,14 @@
         'tr_meliscore_tool_user_view_date_connection' => 'Dates de connexion',
         'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
         'tr_meliscore_tool_usrcd_last_connection_time' => 'Temps de connexion',
+	    
+        //USER PROFILE MANAGEMENT
+	    'tr_meliscore_user_profile' => 'Gestion du profil utilisateur',
+	    'tr_meliscore_user_profile_success_info' => 'Profil mis à jour avec succès',
+	    'tr_meliscore_user_profile_failed_info' => 'Impossible de mettre à jour le profil',
+	    'tr_meliscore_user_profile_profile_text' => 'Profil',
+	    'tr_meliscore_user_profile_message_text' => 'Messages',
+	    'tr_meliscore_user_profile_creation_date' => 'Date de création de l\'utilisateur',
 	    
 	    'tr_meliscore_tool_user_update_success_info' => 'Infos utilisateur mises à jour avec succès.',
 	    'tr_meliscore_tool_user_update_fail_info' => 'Echec de mise à jour des infos utilisateur',
@@ -175,6 +184,7 @@
 	    'tr_meliscore_common_close' => 'Annuler',
 	    'tr_meliscore_common_success' => 'Success',
 	    'tr_meliscore_common_apply' => 'Appliquer',
+	    'tr_meliscore_common_update' => 'Mettre a jour',
 	    'tr_meliscore_common_clear' => 'Effacer',
 	    
 	    
@@ -324,7 +334,7 @@
 	    'tr_meliscore_tool_language_add_success' => 'Langage ajouté avec succès',
 	    'tr_meliscore_tool_language_add_failed' => 'Impossible d\'ajouter un langage, veuillez réessayer',
 	    'tr_meliscore_tool_language_add_exists' => 'Locale déjà existante',
-	    'tr_meliscore_tool_language_edit_success' => 'Language mis à jour avec succès',
+	    'tr_meliscore_tool_language_edit_success' => 'Langage mis à jour avec succès',
 	    'tr_meliscore_tool_language_edit_failed' => 'Impossible de mettre la langue à jour',
 	    'tr_meliscore_tool_language_delete_confirm' => 'Êtes-vous sûr de vouloir supprimer ce langage ?',
 	    'tr_meliscore_tool_language_delete_success' => 'Langage supprimé',
@@ -337,7 +347,7 @@
         // Deleted User
 	    'tr_meliscore_user_deleted' => 'Utilisateur Supprimé',
 	    
-	    'tr_meliscms_tool_language_edit' => 'Edit Language',
+	    'tr_meliscms_tool_language_edit' => 'Edit Langage',
 	    
 	    // Email Management
 	    'tr_meliscore_tool_emails_mngt_generic_from' => 'Email Creation and Edition Form',
@@ -536,5 +546,27 @@
 	    'tr_meliscore_date_end' => 'Fin',
 
         'tr_melisore_tinymce_file_manager' => 'File Manager',
+
+        // Microservice
+        'tr_meliscore_microservice' => 'Microservice',
+        'tr_meliscore_microservice_tab_title' => 'Microservices',
+        'tr_meliscore_microservice_modal' => 'Microservice Modal',
+        'tr_meliscore_microservice_tool_user_desc' => ' Manage and view user\'s microservice accessibility and activies',
+        'tr_meliscore_microservice_date_requested' => 'Date Requested',
+        'tr_meliscore_microservice_api_key_invalid' => 'Invalid API key',
+        'tr_meliscore_microservice_api_key_no_access' => 'You don\'t have the access to perform this action',
+        'tr_meliscore_microservice_service_ko' => 'Service does not exists',
+        'tr_meliscore_microservice_module_ko' => 'Unable to use module, module maybe inactive or not found',
+        'tr_meliscore_microservice_method_ko' => 'Service method not found',
+        'tr_meliscore_microservice_form_ko' => 'Form configuration not found',
+        'tr_meliscore_microservice_request_ok' => 'Request has been executed',
+        'tr_meliscore_microservice_api_key_inactive' => 'API Key is inactive',
+
+        'tr_meliscore_microservice_generate_api_key' => 'Generate API Key',
+        'tr_meliscore_microservice_generate_api_key_ok' => 'Vous pouvez accéder aux microservices à cette URL :',
+        'tr_meliscore_microservice_generateD_api_key' => 'API Key',
+
+        'tr_meliscore_microservice_title' => 'Liste des microservices existants sur la Platform',
+        'tr_meliscore_microservice_sub_title' => 'Les paramètres de ce service doivent être POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnée n\'est postée.'
 	);
 ?>

@@ -8,11 +8,11 @@
 ?>
 <div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="user-profile media innerAll">
 	<a href="" class="pull-left" id="img-user-link">
-		<img src="/melis/MelisCore/MelisAuth/getProfilePicture?v=<?= time(); ?>" alt="" class="img-circle" id="meliscore_left_menu_profile_pic">
+		<img src="/melis/MelisCore/MelisAuth/getProfilePicture?v=<?= time(); ?>" alt="" class="img-circle" id="meliscore_left_menu_profile_pic" width="50" height="50">
 
 	</a>
 	<div class="media-body">
-		<a href="" class="strong">
+		<a href="" class="strong" id="user-name-link">
 			<?php 
 			     if (!empty($this->userAuthDatas))
 			     {
@@ -29,7 +29,7 @@
 	<ul>
 		 
 		<li class="active">
-    		<a href="#modal-user-management" id="btnUserInfoEdit">
+    		<a href="#" id="btnUserInfoEdit" title="<?=$this->translate('tr_meliscore_user_profile_profile_text'); ?>">
     			<i class="fa fa-fw fa-user"></i>
     		</a>
 		</li> 

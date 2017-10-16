@@ -63,9 +63,16 @@
                                     else 
                                         $tabname = 'Tab';
                                     $icon = '';
+                                    $zoneId = '';
+                                    $melisKey = '';
                                     if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['icon']))
                                         $icon = $menuConfig['conf']['icon'];
-                                    echo '<li class=""><a  data-toggle="tab" class="dropdown-toggle menu-icon tab-element" href="#'. $menuConfig['conf']['id'] .'" data-id="'. $menuConfig['conf']['id'] .'"><i class="fa ' . $icon . ' fa-2x"></i><span class="navtab-pagename">' . $tabname . '</span></a><a class="close close-tab"  data-id="'. $menuConfig['conf']['id'] .'">Close</a></li>';
+                                    if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['id']))
+                                        $zoneId = $menuConfig['conf']['id'];
+                                    if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['melisKey']))
+                                        $melisKey = $menuConfig['conf']['melisKey'];
+
+                                    echo '<li class="" data-tool-name="'.$tabname.'" data-tool-icon="'.$icon.'" data-tool-id="'.$zoneId.'" data-tool-meliskey="'.$melisKey.'"><a  data-toggle="tab" class="dropdown-toggle menu-icon tab-element" href="#'. $menuConfig['conf']['id'] .'" data-id="'. $menuConfig['conf']['id'] .'"><i class="fa ' . $icon . ' fa-2x"></i><span class="navtab-pagename">' . $tabname . '</span></a><a class="close close-tab"  data-id="'. $menuConfig['conf']['id'] .'">Close</a></li>';
                                 }
                             } 
                         ?>

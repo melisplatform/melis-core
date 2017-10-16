@@ -334,7 +334,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 $htmlContent = $this->getViewContent($leftValue);
                 if(!in_array($htmlContent, $preDefDTFilter)) {
                     $leftDom .= '<"'.$leftKey.'">';
-                    $jsSdomContentInit .= '$(".'.$leftKey.'").html(\'' . $htmlContent . '\');';
+                    $jsSdomContentInit .= '$(".'.$leftKey.'").html(\''.$this->replaceQuotes($htmlContent).'\');';
                 }
                 else {
                     $leftDom .= '<"'.$leftKey.'"'. $htmlContent. '>';
@@ -363,6 +363,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             // render the buttons in the right sectuib if the filter bar
             foreach($right as $rightKey => $rightValue) {
                 $htmlContent = $this->getViewContent($rightValue);
+                $htmlContent = $this->replaceQuotes($htmlContent);
                 if(!in_array($htmlContent, $preDefDTFilter)) {
                     $rightDom .= '<"'.$rightKey.'">';
                     $jsSdomContentInit .= '$(".'.$rightKey.'").html(\'' . $htmlContent . '\');';
@@ -589,9 +590,12 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                         '.$columnsStylesStr.'  
                         '.$unSortableColumnsStr.'
 					    '. $selectColDef .'
-					    { responsivePriority: 1, targets: 0 },
-					    { responsivePriority: 2, targets: -1 }, // make sure action column stays whenever the window is resized
-					    '.$actionColumn.'
+					    { responsivePriority: 1, targets: 0 },';
+
+					    if($actionColumn != "") {
+                            $dtJScript .= '{responsivePriority:2, targets: -1 },'; // make sure action column stays whenever the window is resized
+                        }
+                        $dtJScript .= $actionColumn.'
 				    ],
                 }).columns.adjust().responsive.recalc();
                 return '.str_replace("#","$",$tableId).';
@@ -1112,6 +1116,40 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     }
 
 
+    /**
+     * Maps through all array and converts objects into array if found
+     */
+    public function convertObjectToArray($content) {
+
+        if(is_object($content))  {
+            $content = $content->getArrayCopy();
+            // $content = get_object_vars($content);
+        }
+
+        if(is_array($content)) {
+            $new = array();
+
+            foreach($content as $key => $val) {
+                $new[$key] = $this->convertObjectToArray($val);
+            }
+
+        }
+        else {
+            $new = $content;
+        }
+
+        return $new;       
+    }
+
+    /**
+     * Quote correction for better execution in queries
+     * @param $text
+     * @return mixed
+     */
+    private function replaceQuotes($text)
+    {
+        return str_replace(array("'", "’"), chr(92) . "'", $text);
+    }
 
 	
 }

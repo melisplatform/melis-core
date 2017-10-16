@@ -148,6 +148,40 @@ return array(
                                     'defaults' => array(),
                                 ),
                             ),
+
+                        ),
+                    ),
+                    'microservice_list'  => array(
+                        'type'      => 'Segment',
+                        'options'   => array(
+                            'route' => 'api[/:api_key]',
+                            'constraint' => array(
+                                'api_key'        => '[a-zA-Z0-9_\-\=\$\@]*',
+
+                            ),
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'MelisCore\Controller',
+                                'controller'    => 'MelisCoreMicroService',
+                                'action'        => 'micro-services-list'
+                            ),
+                        ),
+                    ),
+                    'microservice'  => array(
+                        'type'      => 'Segment',
+                        'options'   => array(
+                            'route' => 'api[/:api_key][/:module]/service[/:service_alias[/:service_method]]',
+                            'constraint' => array(
+                                'api_key'        => '[a-zA-Z0-9_\-\=\$\@]*',
+                                'module'         => '[A-Z][a-zA-Z0-9_-]*',
+                                'service_alias'  => '[A-Z][a-zA-Z0-9_-]*',
+                                'service_method' => '[a-zA-Z][a-zA-Z0-9_-]*',
+
+                            ),
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'MelisCore\Controller',
+                                'controller'    => 'MelisCoreMicroService',
+                                'action'        => 'run'
+                            ),
                         ),
                     ),
                 ),
@@ -170,6 +204,8 @@ return array(
             'MelisCoreTableLog' => 'MelisCore\Model\Tables\MelisLogTable',
             'MelisCoreTableLogType' => 'MelisCore\Model\Tables\MelisLogTypeTable',
             'MelisCoreTableLogTypeTrans' => 'MelisCore\Model\Tables\MelisLogTypeTransTable',
+            'MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\MelisMicroServiceAuthTable',
+            'MelisUserConnectionDate' => 'MelisCore\Model\Tables\MelisUserConnectionDate' ,
         ),
         'factories' => array(
             'MelisCoreConfig' => 'MelisCore\Service\Factory\MelisCoreConfigServiceFactory',
@@ -187,6 +223,7 @@ return array(
             'ModulesService' => 'MelisCore\Service\Factory\MelisCoreModulesServiceFactory',
             'MelisCoreLogService' => 'MelisCore\Service\Factory\MelisCoreLogServiceFactory',
             'MelisPhpUnitTool' => 'MelisCore\Service\Factory\MelisPhpUnitToolServiceFactory',
+            'MelisCoreMicroServiceTestService' => 'MelisCore\Service\Factory\MelisCoreMicroServiceTestServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',
@@ -198,7 +235,8 @@ return array(
             'MelisCore\Model\Tables\MelisLogTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTableFactory',
             'MelisCore\Model\Tables\MelisLogTypeTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTypeTableFactory',
             'MelisCore\Model\Tables\MelisLogTypeTransTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTypeTransTableFactory',
-            'MelisUserConnectionDate'                       => 'MelisCore\Model\Tables\Factory\MelisCoreUserConnectionDateTableFactory',
+            'MelisCore\Model\Tables\MelisUserConnectionDate'    => 'MelisCore\Model\Tables\Factory\MelisCoreUserConnectionDateTableFactory',
+            'MelisCore\Model\Tables\MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\Factory\MelisMicroServiceAuthTableFactory',
         ),
     ),
     'controllers' => array(
@@ -221,6 +259,8 @@ return array(
             'MelisCore\Controller\MelisTinyMce' => 'MelisCore\Controller\MelisTinyMceController',
             'MelisCore\Controller\MelisPhpUnitTool' => 'MelisCore\Controller\MelisPhpUnitToolController',
             'MelisCore\Controller\Log' => 'MelisCore\Controller\LogController',
+            'MelisCore\Controller\UserProfile' => 'MelisCore\Controller\UserProfileController',
+            'MelisCore\Controller\MelisCoreMicroService' => 'MelisCore\Controller\MelisCoreMicroServiceController', 
         ),
     ),
 
@@ -265,6 +305,7 @@ return array(
             'layout/layoutError' => __DIR__ . '/../view/layout/layoutError.phtml',
             'layout/layoutCore' => __DIR__ . '/../view/layout/layoutCore.phtml',
             'layout/layoutLogin' => __DIR__ . '/../view/layout/layoutLogin.phtml',
+            'layout/layoutBlank' => __DIR__ . '/../view/layout/layoutBlank.phtml',
             'melis-core/index/index' => __DIR__ . '/../view/melis-core/index/index.phtml',
             'melis-core/plugin-view/generate' => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',

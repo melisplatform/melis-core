@@ -1,0 +1,17 @@
+<?php 
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+    $data_melisKey = $this->melisKey;
+?>
+<div <?= $id; ?> data-melisKey="<?= $data_melisKey; ?>" role="tabpanel" class="tab-pane">
+    <div class="user-profile-btn-save">
+        <a href="javascript:void(0)" class="btn btn-success btnUpdateUser" data-meliskey=""><i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_tool_user_update') ?></a>
+    </div>
+    <?php 
+        $form = $this->meliscore_user_profile_form;
+        echo $this->form()->openTag($form);
+        echo $this->melisFieldCollection($form);
+        echo $this->form()->closeTag();
+    ?>
+</div>

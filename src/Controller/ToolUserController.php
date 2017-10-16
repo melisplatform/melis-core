@@ -838,10 +838,12 @@ class ToolUserController extends AbstractActionController
             for($ctr = 0; $ctr < count($tableData); $ctr++)
             {
                 $userId              = (int) $tableData[$ctr]['usr_id'];
-
+                $online = (int) $tableData[$ctr]['usr_is_online'] ? 'text-success' : 'text-danger';
+                
                 $userConnectionTable = $this->getServiceLocator()->get('MelisUserConnectionDate');
                 $userConnectionData  = $userConnectionTable->getUserLastConnectionTime($userId, null, array(), 'usrcd_last_connection_time')->current();
-                if($userConnectionData) {
+                if($userConnectionData && $online == 'text-success') 
+                {
                     $now                = new \DateTime(date("H:i:s"));
                     $lastConnectionTime = new \DateTime(date('H:i:s', strtotime($userConnectionData->usrcd_last_connection_time)));
                     $difference         = $lastConnectionTime->diff($now)->i;
@@ -852,19 +854,21 @@ class ToolUserController extends AbstractActionController
                         $userTable->save([
                             'usr_is_online' => 0
                         ], $userId);
+                        
+                        $online = 'text-danger';
                     }
                     else {
                         $userTable->save([
                             'usr_is_online' => 1
                         ], $userId);
-
+                        
+                        $online = 'text-success';
                     }
                 }
 
                 // process image first before applying text limits
                 $image = !empty($tableData[$ctr]['usr_image']) ? 'data:image/jpeg;base64,'. base64_encode($tableData[$ctr]['usr_image']) : $defaultProfile;
                 $status = (int) $tableData[$ctr]['usr_status'] != 1 ? 'text-danger' : 'text-success';
-                $online = (int) $tableData[$ctr]['usr_is_online'] ? 'text-success' : 'text-danger';
 
                 // manual data manipulation
                 $tableData[$ctr]['DT_RowId'] = $userId;
@@ -876,7 +880,7 @@ class ToolUserController extends AbstractActionController
                 $tableData[$ctr]['usr_status'] = '<span class="'.$status.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_is_online'] = '<span class="'.$online.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_image'] = '<img src="'.$image . '" width="24" height="24" alt="profile image" title="Profile picture of '.$tableData[$ctr]['usr_firstname'].'"/>';
-                $tableData[$ctr]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usr_last_login_date']));
+                $tableData[$ctr]['usr_last_login_date'] = ($tableData[$ctr]['usr_last_login_date']) ? strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usr_last_login_date'])) : '';
                 $tableData[$ctr]['usr_email'] = $melisTool->limitedText($tableData[$ctr]['usr_email'], 35);
                 // remove critical details
                 unset($tableData[$ctr]['usr_password']);

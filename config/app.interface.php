@@ -58,7 +58,7 @@ return array(
                             // Download latest release: https://phar.phpunit.de/phpunit.phar
 
                             // php executable file path
-                            'php_cli' => '"C:\Program Files (x86)\Zend\ZendServer\bin\php.exe"',
+                            'php_cli' => '"A:\xampp\php\php.exe"',
                             // the path where you save your phpunit
                             'phpunit' => 'C:/bin/phpunit.phar'
                         ),
@@ -85,8 +85,11 @@ return array(
                              *
                              * -------------------------------
                              */
-                            'php_cli' => 'php',
-                            'phpunit' => 'phpunit',
+                            'php_cli' => '/usr/local/bin/php',
+                            'phpunit' => '/usr/local/bin/phpunit',
+                            /**
+                             * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
+                             */
                         ),
                     ),
                     'langauges' => array(
@@ -107,64 +110,16 @@ return array(
                 'js' => array(
                     '/melis/MelisCore/Language/getTranslations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/library/jquery/jquery-migrate.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/library/modernizr/modernizr.js?v=v1.2.3',
-                    '/MelisCore/assets/components/library/moment/moment.js',
-                    '/MelisCore/assets/components/plugins/less-js/less.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
-                    '/MelisCore/assets/components/plugins/browser/ie/ie.prototype.polyfill.js?v=v1.2.3',
-                    '/MelisCore/assets/components/library/jquery-ui-v1.11.4/jquery-ui.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/library/bootstrap/js/bootstrap.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/plugins/nicescroll/jquery.nicescroll.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/plugins/breakpoints/breakpoints.js?v=v1.2.3',
-                    '/MelisCore/assets/components/core/js/animations.init.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/widgets/widget-chat/assets/js/widget-chat.js?v=v1.2.3',
-                    '/MelisCore/assets/components/plugins/slimscroll/jquery.slimscroll.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/js/bootstrap-datepicker.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/easy-pie/assets/lib/js/jquery.easy-pie-chart.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/easy-pie/assets/custom/easy-pie.init.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/widgets/widget-scrollable/assets/js/widget-scrollable.init.js',
-                    '/MelisCore/assets/components/plugins/holder/holder.js?v=v1.2.3',
 
-                    '/MelisCore/assets/components/core/js/sidebar.main.init.js',
-                    '/MelisCore/assets/components/helpers/themer/assets/plugins/cookie/jquery.cookie.js?v=v1.2.3',
+                    // Concat plugins
+                    '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
                     '/MelisCore/assets/components/core/js/core.init.js',
-                    '/MelisCore/js/library/datepicker/daterangepicker.js',
-                    '/MelisCore/assets/components/plugins/type-watch/jquery.typewatch.js',
 
-                    // switch feature
-                    '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/lib/js/bootstrap-switch.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/custom/js/bootstrap-switch.init.js?v=v1.2.3',
+                    // Concat plugins
+                    '/MelisCore/js/pluginConcat/melis-core-concat-dataTables.js',
 
-                    // notifications
-                    '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/lib/js/jquery.gritter.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js?v=v1.2.3',
-
-                    // Data Table
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/js/jquery.dataTables.min.js',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/js/dataTables.bootstrap.js',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/js/dataTables.buttons.js',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/js/buttons.bootstrap.js',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/js/buttons.html5.js',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Select/js/dataTables.select.min.js',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/js/dataTables.rowReorder.min.js',
-
-                    // Data Table Responsive Plugin
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/js/dataTables.responsive.js',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/js/responsive.bootstrap.js',
-
-                    // Bootstrap Dialog
-                    'MelisCore/js/library/bs-dialog/bootstrap-dialog.min.js',
-
-                    // fancytree ---------------------------------->
-                    '/MelisCore/js/library/fancytree/src/jquery.fancytree.js',
-
-                    '/MelisCore/js/library/fancytree/src/jquery.fancytree.js',
-                    '/MelisCore/js/library/fancytree/src/jquery.fancytree.dnd.js',
-                    '/MelisCore/js/library/fancytree/src/jquery.fancytree.filter.js',
-                    '/MelisCore/js/library/fancytree/extensions/contextmenu/js/jquery.contextMenu-1.6.5.js',
-                    '/MelisCore/js/library/fancytree/extensions/contextmenu/js/jquery.fancytree.contextMenu.js',
+                    // Concat plugins
+                    '/MelisCore/js/pluginConcat/melis-core-concat-fancytree.js',
 
                     // tinyMCE
                     '/MelisCore/js/library/tinymce/tinymce.min.js?v='. time(),
@@ -172,14 +127,10 @@ return array(
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
 
-                    // BS FileStyle
-                    '/MelisCore/js/library/bs-filestyle/bootstrap-filestyle.min.js',
-
+                    '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
                     '/MelisCore/js/core/tabExpander.js',
                     '/MelisCore/js/core/melisSidebar.js',
-
                     '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
-
                     '/MelisCore/js/core/melisCore.js',
                     '/MelisCore/js/core/melisHelper.js',
                     '/MelisCore/js/tools/melisCoreTool.js',
@@ -190,18 +141,15 @@ return array(
                     '/MelisCore/js/tools/emailMngt.tools.js',
                     '/MelisCore/js/tools/melisPHPUnitTool.js',
                     '/MelisCore/js/tools/logs.tool.js',
+                    '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
                 ),
                 'css' => array(
-                    '/MelisCore/assets/css/admin/module.admin.page.index.min.css',
-                    '/MelisCore/assets/css/admin/module.admin.page.notifications.min.css',
-                    '/MelisCore/assets/css/admin/module.admin.page.shop_products.min.css',
-                    '/MelisCore/assets/css/admin/module.admin.page.widgets.min.css',
-                    '/MelisCore/css/daterangepicker.css',
-                    '/MelisCore/assets/css/admin/module.admin.page.timelines.min.css',
+                    // Melis Admin
+                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
 
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
@@ -217,13 +165,14 @@ return array(
                     
                     // Bootstrap Dialog
                     'MelisCore/css/bootstrap-dialog.min.css',
-                    '/MelisCore/assets/css/custom/custom.css',
+
+                    // Plugins Move css group
+                    'MelisCore/css/plugin.group.css',
 
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
                     '/MelisCore/css/diagnostic.css',
 
-                    // '/MelisCore/css/design-tool.css',
                     
                     // Custom font-awesome checkbox
                     '/MelisCore/css/custom-fontawesome.css'
@@ -235,6 +184,7 @@ return array(
                         'id' => 'id_meliscore_header',
                         'melisKey' => 'meliscore_header',
                         'name' => 'tr_meliscore_header',
+                        'rightsDisplay' => 'none',
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
@@ -248,7 +198,7 @@ return array(
                             'conf' => array(
                                 'id' => 'id_meliscore_header_flash_messenger',
                                 'melisKey' => 'meliscore_header_flash_messenger',
-                                'name' => 'tr_meliscore_header_flash_messenger',
+                                'name' => 'tr_meliscore_header_flash_messenger_title',
                             ),
                             'forward' => array(
                                 'module' => 'MelisCore',
@@ -315,6 +265,84 @@ return array(
                                 'jscallback' => '',
                                 'jsdatas' => array()
                             ),
+                            'interface' => array(
+                                'meliscore_user_profile' => array(
+                                    'conf' => array(
+                                        'id' => 'id_meliscore_user_profile',
+                                        'melisKey' => 'meliscore_user_profile',
+                                        'name' => 'tr_meliscore_user_profile',
+                                    ),
+                                    'forward' => array(
+                                        'module' => 'MelisCore',
+                                        'controller' => 'UserProfile',
+                                        'action' => 'render-user-profile',
+                                        'jscallback' => '',
+                                        'jsdatas' => array()
+                                    ),
+                                    'interface' => array(
+                                        'meliscore_user_profile_left' => array(
+                                            'conf' => array(
+                                                'id' => 'id_meliscore_user_profile_left',
+                                                'melisKey' => 'meliscore_user_profile_left',
+                                                'rightsDisplay' => 'none',
+                                            ),
+                                            'forward' => array(
+                                                'module' => 'MelisCore',
+                                                'controller' => 'UserProfile',
+                                                'action' => 'render-user-profile-left',
+                                                'jscallback' => '',
+                                                'jsdatas' => array()
+                                            ),
+                                        ),
+                                        'meliscore_user_profile_right' => array(
+                                            'conf' => array(
+                                                'id' => 'id_meliscore_user_profile_right',
+                                                'melisKey' => 'meliscore_user_profile_right',
+                                                'rightsDisplay' => 'none',
+                                            ),
+                                            'forward' => array(
+                                                'module' => 'MelisCore',
+                                                'controller' => 'UserProfile',
+                                                'action' => 'render-user-profile-right',
+                                                'jscallback' => '',
+                                                'jsdatas' => array()
+                                            ),
+                                            'interface' => array(
+                                                'meliscore_user_profile_tabs' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_meliscore_user_profile_tabs',
+                                                        'melisKey' => 'meliscore_user_profile_tabs',
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'UserProfile',
+                                                        'action' => 'render-user-profile-tabs',
+                                                        'jscallback' => '',
+                                                        'jsdatas' => array()
+                                                    ),
+                                                    'interface' =>  array(
+                                                        'meliscore_user_profile_form' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_meliscore_user_profile_form',
+                                                                'melisKey' => 'meliscore_user_profile_form',
+                                                                'name' => 'tr_meliscore_user_profile_profile_text',
+                                                                'icon' => 'user',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'UserProfile',
+                                                                'action' => 'render-user-profile-form',
+                                                                'jscallback' => '',
+                                                                'jsdatas' => array()
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            )
                         ),
                         'meliscore_leftmenu_dashboard' =>  array(
                             'conf' => array(
@@ -856,8 +884,6 @@ return array(
                                                 'name' => 'tr_meliscore_logs_tool',
                                                 'melisKey' => 'meliscore_logs_tool',
                                                 'icon' => 'fa-list',
-                                                'rights_checkbox_disable' => true,
-                                                'follow_regular_rendering' => false,
                                             ),
                                             'forward' => array(
                                                 'module' => 'MelisCore',
@@ -872,6 +898,7 @@ return array(
                                                         'id' => 'id_meliscore_logs_tool_header',
                                                         'name' => 'tr_meliscore_logs_tool_header',
                                                         'melisKey' => 'meliscore_logs_tool_header',
+                                                        'rightsDisplay' => 'none',
                                                     ),
                                                     'forward' => array(
                                                         'module' => 'MelisCore',
@@ -884,6 +911,7 @@ return array(
                                                         'id' => 'id_meliscore_logs_tool_content',
                                                         'name' => 'tr_meliscore_logs_tool_content',
                                                         'melisKey' => 'meliscore_logs_tool_content',
+                                                        'rightsDisplay' => 'none',
                                                     ),
                                                     'forward' => array(
                                                         'module' => 'MelisCore',
@@ -1108,7 +1136,20 @@ return array(
                                                                 'jsdatas' => array(),
                                                             ),
                                                         ),
-
+                                                        'meliscore_tool_user_microservice_modal_handler' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_meliscore_tool_user_microservice_handler',
+                                                                'name' => 'tr_meliscore_microservice_modal',
+                                                                'melisKey' => 'meliscore_tool_user_microservice_handler',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreMicroService',
+                                                                'action' => 'render-tool-user-view-micro-service-modal-handler',
+                                                                'jscallback' => 'setOnOff();',
+                                                                'jsdatas' => array(),
+                                                            ),
+                                                        ),
                                                     ), // end modal interface
                                                 ), // end tool modal
 
@@ -1220,7 +1261,7 @@ return array(
                     '/MelisCore/js/core/melispasswordservice.js',
                 ),
                 'css' => array(
-                    '/MelisCore/assets/css/admin/module.admin.page.index.min.css',
+                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
                 )
@@ -1451,5 +1492,10 @@ return array(
                 ),
             ),
         ),
+        'microservice' => array(
+            'conf' => array(
+                'rightsDisplay' => 'none',
+            ),
+        )
     )
 );

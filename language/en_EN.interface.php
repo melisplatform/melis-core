@@ -24,6 +24,7 @@
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
 		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
+		'tr_meliscore_header_flash_messenger_title' => 'Notifications',
 		'tr_meliscore_header_language' => 'Language',
 		'tr_meliscore_header_logout' => 'Logout',
 		'tr_meliscore_leftmenu_leftmenu' => 'Left menu',
@@ -49,7 +50,7 @@
 	    'tr_meliscore_all' => 'All',
 			
 		// Languages
-		'tr_meliscore_header_language_Language' => 'Languages', 
+		'tr_meliscore_header_language_Language' => 'BO Languages', 
 	    
 	    // Modals
 		'tr_meliscore_notification_modal_Close' => 'Close', 
@@ -105,6 +106,13 @@
         'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
         'tr_meliscore_tool_usrcd_last_connection_time' => 'Connection time',
 
+	    //USER PROFILE MANAGEMENT
+	    'tr_meliscore_user_profile' => 'User Profile Management',
+	    'tr_meliscore_user_profile_success_info' => 'Profile successfully updated',
+	    'tr_meliscore_user_profile_failed_info' => 'Unable to update profile',
+	    'tr_meliscore_user_profile_profile_text' => 'Profile',
+	    'tr_meliscore_user_profile_message_text' => 'Messages',
+	    'tr_meliscore_user_profile_creation_date' => 'User Creation Date',
 	    
 	    'tr_meliscore_tool_user_update_success_info' => 'User\'s info updated successfully',
 	    'tr_meliscore_tool_user_update_fail_info' => 'Unable to update User\'s information',
@@ -522,5 +530,28 @@
 	    'tr_meliscore_date_end' => 'End',
 
         'tr_melisore_tinymce_file_manager' => 'File Manager',
+
+        // Microservice
+        'tr_meliscore_microservice' => 'Microservice',
+        'tr_meliscore_microservice_tab_title' => 'Microservices',
+        'tr_meliscore_microservice_modal' => 'Microservice Modal',
+        'tr_meliscore_microservice_tool_user_desc' => ' Manage and view user\'s microservice accessibility and activies',
+        'tr_meliscore_microservice_date_requested' => 'Date Requested',
+        'tr_meliscore_microservice_api_key_invalid' => 'Invalid API key',
+        'tr_meliscore_microservice_api_key_no_access' => 'You don\'t have the access to perform this action',
+        'tr_meliscore_microservice_service_ko' => 'Service does not exists',
+        'tr_meliscore_microservice_module_ko' => 'Unable to use module, module maybe inactive or not found',
+        'tr_meliscore_microservice_method_ko' => 'Service method not found',
+        'tr_meliscore_microservice_form_ko' => 'Form configuration not found',
+        'tr_meliscore_microservice_request_ok' => 'Request has been executed',
+        'tr_meliscore_microservice_api_key_inactive' => 'API Key is inactive',
+
+        'tr_meliscore_microservice_generate_api_key' => 'Generate API Key',
+        'tr_meliscore_microservice_generate_api_key_ok' => 'You may access to the microservices at this URL:',
+        'tr_meliscore_microservice_generateD_api_key' => 'API Key',
+        //Microservice Listing
+        'tr_meliscore_microservice_title' => 'List of microservices available on the Platform',
+        'tr_meliscore_microservice_sub_title' => 'Parameters for this service needs to be POSTED. The return will be in JSON. This form will show up for easy testing if no data has been posted.'
+
 	);
 ?>

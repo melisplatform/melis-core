@@ -33,12 +33,20 @@ var tabExpander = (function($, window){
         
         // var innerUlWidthPercent = 99 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() ); 
         var innerUlWidthPercent = 100 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() );
-        
-        $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"});
+
+        $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"}); // change hidden to initial because of dropdown
         $navTabs.css({"width": navUlContainer });
         
         $(".melis-tabprev, .melis-tabnext").show();
-        
+
+        // toggle overflow for dropdown
+        $("#melis-navtabs-container-inner").hover(
+            function() {
+                $(this).css("overflow", "visible");
+            }, function() {
+                $(this).css("overflow", "hidden");
+            }
+        );
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
@@ -105,7 +113,7 @@ var tabExpander = (function($, window){
         $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
             ulWidth += $(this).outerWidth();
         });
-        
+
         var rightOffset = ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset;
         xleft = Math.abs( $navTabs.position().left );
         xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
@@ -114,10 +122,10 @@ var tabExpander = (function($, window){
     //NEXT 
     $(".melis-tabnext").on("click", function(){
         calcOffset();
-        if( xright > ulContainer ){
+        if( xright > ulContainer - 170 ){
             $navTabs.animate({
-                left: '-='+ulContainer
-            },0);   
+                left: '-='+ 170
+            },0);
         }
         else{
             $navTabs.animate({
@@ -129,9 +137,9 @@ var tabExpander = (function($, window){
     //PREV
     $(".melis-tabprev").on("click", function(){
         calcOffset();
-        if( xleft > ulContainer ){
+        if( xleft > ulContainer - 170){
             $navTabs.animate({
-                left: '+='+ulContainer
+                left: '+='+ 170
             },0);
         }
         else{

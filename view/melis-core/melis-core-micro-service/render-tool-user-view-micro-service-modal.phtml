@@ -1,0 +1,31 @@
+<?php
+$moduleStatus = 1;
+?>
+
+<div id="melis-core-user-auth-api-ok" class="hidden">
+    <p><?= $this->translate('tr_meliscore_microservice_generateD_api_key'); ?>:</p>
+    <div id="melis-core-user-auth-api-key" class="alert alert-success" role="alert"></div>
+    <div id="melis-core-microservices-url-cont">
+        <p><?= $this->translate('tr_meliscore_microservice_generate_api_key_ok'); ?></p>
+        <div id="melis-core-microservices-url"></div>
+    </div><br/>
+    <p><?= $this->translate('tr_meliscore_tool_user_col_status'); ?></p>
+    <div id="switch-user-api-status" class="make-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
+        <?php
+        $status = $moduleStatus > 0 ? 'checked' : '';
+        ?>
+        <input name="input-user-api-status" id="#input-user-api-status" type="checkbox" <?= $status; ?>/>
+    </div>
+    <div class="clearfix"></div>
+    <br/>
+    <?php
+    echo $this->melisModalInvoker()->render(
+        array(
+            'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+            'class' => 'btn btn-danger pull-left'
+        ), 'dismiss');
+    ?>
+</div>
+<div id="melis-core-user-auth-api-ko" class="hidden">
+    <button id="btn-melis-core-user-gen-api" class="btn btn-success"><?= $this->translate('tr_meliscore_microservice_generate_api_key'); ?></button>
+</div>
