@@ -17,12 +17,16 @@ if (!empty($this->zoneconfig['conf']['id']))
                     <h4>Modules</h4>
                 </div>
                 <div class="pull-right">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6  module-version-display">
-                            <h4>Version </h4>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 ">
-                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
+                    <div class="clearfix ms-cont">
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-6 col-xs-6"><!--  module-version-display -->
+                                <h4>Version </h4>
+                            </div>
+                            <div>
+                                <div class="icon-cont clearfix">
+                                    <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

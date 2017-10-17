@@ -2050,6 +2050,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
     padding: 16px 14px 13px;
     color: #fff;
     cursor: pointer;
+    display: block;
 }
 .module-settings .ms-heading .tooltip .tooltip-inner{
     background: #cb4040;
@@ -2181,6 +2182,27 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
 .input-button-hover-pointer{
 	cursor: pointer;
+}
+
+#id_meliscore_tool_user_module_management_content .ms-cont {
+    width: 280px;
+}
+#id_meliscore_tool_user_module_management_content .ms-cont h4 {
+    padding: 15px 0;
+}
+#id_meliscore_tool_user_module_management_content .ms-cont .icon-cont .fa {
+    display: block;
+    position: relative;
+    margin: 0;
+    height: 47px;
+    width: 27px;
+    top: 0;
+    right: 27px;
+    padding: 0;
+    line-height: 49px;
+    float: right;
+    text-align: center;
+    z-index: 1;
 }
 /* ===============================================================[ -= RESPONSIVE =- ]================================================================================ */
 
@@ -3066,7 +3088,7 @@ div#modal-user-management div.widget {
     height: 70px;
     border-bottom: 1px solid #fff;
 }
-.container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li:hover {
+.container-level-a .widget-user .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li:hover {
     height: 69px;
 }
 
