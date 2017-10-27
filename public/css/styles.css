@@ -2534,7 +2534,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
 }
 
-
+/*remove tinymce brand name*/
+.mce-branding-powered-by{
+    display: none;
+}
 
 @media ( max-width: 991px ) {
     #content .page-head-container .page-title .page-publishunpublish.title-switch {
