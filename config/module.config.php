@@ -125,6 +125,16 @@ return array(
                             ),
                         ),
                     ),
+                    'get-platform-color-css' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => 'platform-color-schemes.css',
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\PlatformColor',
+                                'action' => 'getStyleColorCss',
+                            ),
+                        ),
+                    ),
                     'application-MelisCore' => array(
                         'type' => 'Literal',
                         'options' => array(
@@ -261,6 +271,7 @@ return array(
             'MelisCore\Controller\Log' => 'MelisCore\Controller\LogController',
             'MelisCore\Controller\UserProfile' => 'MelisCore\Controller\UserProfileController',
             'MelisCore\Controller\MelisCoreMicroService' => 'MelisCore\Controller\MelisCoreMicroServiceController', 
+            'MelisCore\Controller\PlatformColor' => 'MelisCore\Controller\PlatformColorController',
         ),
     ),
 

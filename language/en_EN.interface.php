@@ -551,7 +551,10 @@
         'tr_meliscore_microservice_generateD_api_key' => 'API Key',
         //Microservice Listing
         'tr_meliscore_microservice_title' => 'List of microservices available on the Platform',
-        'tr_meliscore_microservice_sub_title' => 'Parameters for this service needs to be POSTED. The return will be in JSON. This form will show up for easy testing if no data has been posted.'
+        'tr_meliscore_microservice_sub_title' => 'Parameters for this service needs to be POSTED. The return will be in JSON. This form will show up for easy testing if no data has been posted.',
+
+        // Platform Colors
+        'tr_meliscore_platform_color' => 'Platform Color',
 
 	);
 ?>

@@ -950,6 +950,31 @@ return array(
                                             ),
                                         ),
                                         // END LOGS TOOL
+                                        'meliscore_tool_platform_color' => array(
+                                            'conf' => array(
+                                                'id' => 'id_meliscore_tool_platform_color_tool_content',
+                                                'name' => 'tr_meliscore_platform_color',
+                                                'melisKey' => 'meliscore_tool_platform_color',
+                                                'icon' => 'fa fa-fw icon-paint-palette',
+                                                'rights_checkbox_disable' => true,
+                                            ),
+                                            'interface' => array(
+                                                'meliscore_tool_platform_color_tool_content' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_meliscore_tool_platform_color_tool_content',
+                                                        'name' => 'tr_meliscore_platform_color',
+                                                        'melisKey' => 'meliscore_tool_platform_color_tool_content',
+                                                        'icon' => 'fa fa-fw icon-paint-palette',
+                                                        'rights_checkbox_disable' => false,
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'PlatformColor',
+                                                        'action' => 'tool-container',
+                                                    )
+                                                )
+                                            )
+                                        )
                                     ),
                                 ),
                                 'meliscore_tool_admin_section' => array(

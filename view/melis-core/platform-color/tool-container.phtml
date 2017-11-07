@@ -1,0 +1,25 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = $this->zoneconfig['conf']['id'];
+
+?>
+<div id="<?= $id; ?>" class="tab-pane container-level-a" data-melisKey='<?= $this->melisKey; ?>'>
+    <?php
+    if($this->hasAccess)
+    { ?>
+
+
+        you have access
+
+
+    <?php
+    }
+    else
+    {
+        echo '<h4>'.$this->translate('tr_meliscore_tool_user_modal_empty').'</h4>';
+    }
+
+    ?>
+</div>
+ 
