@@ -1,12 +1,293 @@
 <?php
-$primaryColor   = $this->primaryColor;
-$secondaryColor = $this->secondaryColor;
+    $primaryColor = $this->primaryColor;
+    $secondaryColor = $this->secondaryColor;
 ?>
 
-.navbar.main.navbar-primary .left-menu {
-background: <?= $this->primaryColor; ?>;
+a,
+a:hover {
+    color: <?= $this->primaryColor; ?>;
 }
 
-.sidebar.sidebar-inverse {
-background: <?= $this->primaryColor; ?>;
+body .navbar.main.navbar-primary {
+    background-color: <?= $this->primaryColor; ?>;
 }
+
+#melis-navtabs-container-outer {
+    background: <?= $this->primaryColor; ?>;
+}
+
+#melis-id-nav-bar-tabs {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.navbar.main.navbar-primary .nav > li.active > .dropdown-toggle,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle .fa,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle:hover,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle:hover .fa,
+.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover,
+.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover .fa {
+    color: <?= $this->primaryColor; ?> !important;
+}
+
+.nav-tabs.product-text-tab li.active a,
+.nav-tabs.product-text-tab li.active:focus a,
+.nav-tabs.product-text-tab li.active:active a,
+.nav-tabs.product-text-tab li a:hover {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.navbar.main.navbar-primary .left-menu {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.navbar.main .nav.navbar-right {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.sidebar.sidebar-inverse .user-profile ul li.active,
+.sidebar.sidebar-inverse .user-profile ul li.active:hover {
+    border-color: <?= $this->primaryColor; ?>;
+}
+
+.sidebar.sidebar-inverse .user-profile ul li.active a,
+.sidebar.sidebar-inverse .user-profile ul li.active:hover a {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-toggle="collapse"] {
+    background-color: <?= $this->primaryColor; ?>;
+}
+
+/* Widgets */
+.widget.widget-tabs>.widget-head ul li.active a.glyphicons,
+.widget.widget-tabs>.widget-head ul li.active a.glyphicons i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.widget.widget-tabs-icons-only-2>.widget-head ul li a.glyphicons:hover i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.widget.widget-tabs-double-2>.widget-head ul li:hover a {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.widget.widget-tabs-double-2>.widget-head ul li:hover a i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.dropdown-menu li.active a,
+.dropdown-menu li.active:hover a {
+    background-color: <?= $this->primaryColor; ?>;
+}
+
+.text-primary {
+    color: <?= $this->primaryColor; ?> !important;
+}
+
+.ra-username {
+    color: <?= $this->primaryColor; ?>;
+}
+
+/* Dashboard */
+.bg-primary {
+    background: <?= $this->primaryColor; ?> !important;
+}
+
+.overlay-loader {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.datepicker thead th.dow {
+    background: <?= $this->primaryColor; ?> !important;
+}
+
+.table-primary thead th {
+    border-color: <?= $this->primaryColor; ?>;
+    background-color: <?= $this->primaryColor; ?>;
+}
+
+.pagination > li.active > a,
+.pagination > li.active > a:focus,
+.pagination > li.active > a:hover {
+    background: <?= $this->primaryColor; ?>;
+    border-color: <?= $this->primaryColor; ?>;
+}
+
+.pagination>li>a:hover,
+.pagination>li.primary>a {
+    background: <?= $this->primaryColor; ?>;
+}
+
+/* Buttons */
+.btn-danger:hover {
+    background: <?= $this->primaryColor; ?>;
+    border-color: <?= $this->primaryColor; ?>;
+}
+
+.btn-primary {
+    background: <?= $this->primaryColor; ?>;
+    border-color: <?= $this->primaryColor; ?>;
+}
+
+.btn-group.open .btn-primary.dropdown-toggle,
+.btn-primary.disabled,
+.btn-primary[disabled],
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    color: <?= $this->primaryColor; ?>;
+    border-color: <?= $this->primaryColor; ?>;
+}
+
+/* Modal */
+.modal-content .widget .widget-head {
+    background: <?= $this->primaryColor; ?>;
+}
+
+/* Nav Tabs */
+.tabsbar .nav-group-dropdown li .tab-element {
+    background: <?= $this->primaryColor; ?>;
+}
+.tabsbar .nav-group-dropdown li:hover > .tab-element > i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.navbar.main.navbar-primary .tabsbar li:hover > .tab-element {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar .nav-group-dropdown li.active > a.tab-element {
+    color: <?= $this->primaryColor; ?> !important;
+}
+
+.tabsbar .has-sub.active > .tab-element i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar .has-sub:hover > .tab-element:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar .has-sub.active-parent.on > .tab-element i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar .has-sub.active-parent.on > .tab-element:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar .has-sub.active-parent.on > .tab-element {
+    color: <?= $this->primaryColor; ?> !important;
+}
+
+/* Accordion */
+.tab-pane a.btn.a-accordion.collapsed:hover,
+.tab-pane a.btn.a-accordion {
+    border-color: <?= $this->primaryColor; ?>;
+    background: <?= $this->primaryColor; ?>;
+}
+
+.tab-pane a.btn.a-accordion.collapsed {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.commerce-toggle .panel-heading {
+    background-color: <?= $this->primaryColor; ?>;
+}
+
+.commerce-toggle .accordion-toggle {
+    background-color: <?= $this->primaryColor; ?> !important;
+}
+
+.ranges li {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.ranges li.active {
+    background: <?= $this->primaryColor; ?>;
+    border: 1px solid <?= $this->primaryColor; ?>;
+}
+
+.ranges li:hover {
+    background: <?= $this->primaryColor; ?>;
+    border: 1px solid <?= $this->primaryColor; ?>;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+    border-left: 1px solid <?= $this->primaryColor; ?>;
+}
+
+.content-cont .nav-tabs.product-text-tab li.active a,
+.content-cont .nav-tabs.product-text-tab li.active:focus a,
+.content-cont .nav-tabs.product-text-tab li.active:active a,
+.content-cont .nav-tabs.product-text-tab li a:hover {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.orderPaymentCouponLink {
+    color: <?= $this->primaryColor; ?>;
+}
+
+@media (min-width: 768px) {
+    .navbar #melis-id-nav-bar-tabs > li {
+        background: <?= $this->primaryColor; ?>;
+    }
+
+    .navbar #melis-id-nav-bar-tabs > li:hover > a {
+        color: <?= $this->primaryColor; ?> !important;
+    }
+
+    .navbar #melis-id-nav-bar-tabs > li:hover > a > i {
+        color: <?= $this->primaryColor; ?>;
+    }
+
+    .melis-tabprev,
+    .melis-tabnext {
+        background: <?= $this->primaryColor; ?>;
+    }
+}
+
+/* MarketPlace */
+.melis-store .post-info a {
+    color: <?= $this->primaryColor; ?>;
+}
+
+/* Modules */
+.module-settings .ms-heading {
+    background: <?= $this->primaryColor; ?>;
+}
+
+/* DragnDrop */
+.melis-cms-dnd-box {
+    border-bottom: 4px solid <?= $this->primaryColor; ?>;
+    border-left: 4px solid <?= $this->primaryColor; ?>;
+}
+.melis-cms-dnd-title {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.module-display-heading .ms-heading {
+    background: <?= $this->primaryColor; ?>;
+}
+
+::-webkit-scrollbar-thumb {
+    background: <?= $this->primaryColor; ?>;
+}
+

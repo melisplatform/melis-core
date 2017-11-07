@@ -52,7 +52,7 @@ class PlatformColorController extends AbstractActionController
      */
     public function getStyleColorCssAction()
     {
-        $primaryColor   = '#ccc';
+        $primaryColor   = null;
         $secondaryColor = null;
 
         $response = $this->getResponse();
@@ -108,13 +108,15 @@ class PlatformColorController extends AbstractActionController
         $platformColorTable = $this->getServiceLocator()->get('MelisCorePlatformColorTable');
 
         $colors = array(
-            'primaryColor'   => '#ccc',
-            'secondaryColor' => '#c0c0c0',
+            'primaryColor'   => '#e31d28',
+            'secondaryColor' => '',
         );
 
         $platformColorTable->save([
-            'pcolor_settings' => json_encode($colors)
-        ]);
+            'pcolor_id'=> 1,
+            'pcolor_settings' => json_encode($colors),
+            'pcolor_is_active' => 1
+        ], 1);
 
         $platformColorData = $platformColorTable->fetchAll()->toArray();
 
