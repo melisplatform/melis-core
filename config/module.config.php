@@ -216,6 +216,7 @@ return array(
             'MelisCoreTableLogTypeTrans' => 'MelisCore\Model\Tables\MelisLogTypeTransTable',
             'MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\MelisMicroServiceAuthTable',
             'MelisUserConnectionDate' => 'MelisCore\Model\Tables\MelisUserConnectionDate' ,
+            'MelisCorePlatformColorTable' => 'MelisCore\Model\Tables\MelisCorePlatformColorTable' ,
         ),
         'factories' => array(
             'MelisCoreConfig' => 'MelisCore\Service\Factory\MelisCoreConfigServiceFactory',
@@ -247,6 +248,7 @@ return array(
             'MelisCore\Model\Tables\MelisLogTypeTransTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTypeTransTableFactory',
             'MelisCore\Model\Tables\MelisUserConnectionDate'    => 'MelisCore\Model\Tables\Factory\MelisCoreUserConnectionDateTableFactory',
             'MelisCore\Model\Tables\MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\Factory\MelisMicroServiceAuthTableFactory',
+            'MelisCore\Model\Tables\MelisCorePlatformColorTable' => 'MelisCore\Model\Tables\Factory\MelisCorePlatformColorTableFactory',
         ),
     ),
     'controllers' => array(

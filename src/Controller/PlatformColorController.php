@@ -52,6 +52,9 @@ class PlatformColorController extends AbstractActionController
      */
     public function getStyleColorCssAction()
     {
+        $primaryColor   = '#ccc';
+        $secondaryColor = null;
+
         $response = $this->getResponse();
         $response->getHeaders()
             ->addHeaderLine('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
@@ -61,8 +64,16 @@ class PlatformColorController extends AbstractActionController
         /**
          * @todo: this should be coming from the database
          */
-        $primaryColor   = '#ccc';
-        $secondaryColor = null;
+        $platformColorTable = $this->getServiceLocator()->get('MelisCorePlatformColorTable');
+        $platformColorData  = $platformColorTable->getEntryByField('pcolor_is_active', 1)->current();
+        if($platformColorData) {
+            $colors = json_decode($platformColorData->pcolor_settings);
+            if($colors) {
+                $primaryColor = $colors->primaryColor;
+                $secondaryColor = $colors->secondaryColor;
+            }
+        }
+
 
 
         $view = new ViewModel();
@@ -89,5 +100,24 @@ class PlatformColorController extends AbstractActionController
         $isAccessible    = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $key);
 
         return $isAccessible;
+    }
+
+    public function saveColorAction()
+    {
+
+        $platformColorTable = $this->getServiceLocator()->get('MelisCorePlatformColorTable');
+
+        $colors = array(
+            'primaryColor'   => '#ccc',
+            'secondaryColor' => '#c0c0c0',
+        );
+
+        $platformColorTable->save([
+            'pcolor_settings' => json_encode($colors)
+        ]);
+
+        $platformColorData = $platformColorTable->fetchAll()->toArray();
+
+        return new JsonModel($platformColorData);
     }
 }
