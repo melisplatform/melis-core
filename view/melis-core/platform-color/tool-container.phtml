@@ -5,12 +5,46 @@ if (!empty($this->zoneconfig['conf']['id']))
 
 ?>
 <div id="<?= $id; ?>" class="tab-pane container-level-a" data-melisKey='<?= $this->melisKey; ?>'>
+
     <?php
     if($this->hasAccess)
     { ?>
+        <div class="me-heading bg-white border-bottom" id="" data-meliskey="">
+            <div class="row">
+                <div class="me-hl col-xs-12 col-sm-8 col-md-9">
+                    <h1 class="content-heading">Platform Color</h1>
+                    <p>Change the color of the platform to what you like.</p>
+                </div>
+            </div>
+        </div>
 
-
-        you have access
+        <div id="" data-meliskey="">
+            <div class="spacing-x2 innerAll">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="form-group">
+                            <label for="">Primary Color * <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="Hexadecimal color code"></i></label>
+                            <div class="input-group colorpicker-component osta_color_code colorpicker-element">
+                                <input type="text" name="osta_color_code" value="" class="form-control">
+                                <span class="input-group-addon"><i style="background-color: rgb(255, 51, 0);"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <div class="form-group">
+                            <label for="">Secondary Color * <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="Hexadecimal color code"></i></label>
+                            <div class="input-group colorpicker-component osta_color_code colorpicker-element">
+                                <input type="text" name="osta_color_code" value="" class="form-control">
+                                <span class="input-group-addon"><i style="background-color: rgb(255, 51, 0);"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 text-right">
+                        <button id="savColor" class="btn btn-success btn-stroke">Save Color</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
     <?php
@@ -21,5 +55,6 @@ if (!empty($this->zoneconfig['conf']['id']))
     }
 
     ?>
+
 </div>
  
