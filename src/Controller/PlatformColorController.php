@@ -26,12 +26,25 @@ class PlatformColorController extends AbstractActionController
      */
     public function toolContainerAction()
     {
+
+        $form = $this->getForm();
+
         $view = new ViewModel();
 
         $view->melisKey  = $this->getMelisKey();
         $view->hasAccess = $this->hasAccess();
 
-        $view->setVariable('form', $this->getForm());
+        $platformColorTable = $this->getServiceLocator()->get('MelisCorePlatformColorTable');
+        $platformColorData  = $platformColorTable->getEntryByField('pcolor_is_active', 1)->current();
+
+        if($platformColorData) {
+            $colors = json_decode($platformColorData->pcolor_settings, true);
+            if($colors) {
+                $form->setData($colors);
+            }
+        }
+
+        $view->setVariable('form', $form);
 
         return $view;
     }
