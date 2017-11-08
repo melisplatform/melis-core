@@ -31,6 +31,8 @@ class PlatformColorController extends AbstractActionController
         $view->melisKey  = $this->getMelisKey();
         $view->hasAccess = $this->hasAccess();
 
+        $view->setVariable('form', $this->getForm());
+
         return $view;
     }
 
@@ -69,8 +71,8 @@ class PlatformColorController extends AbstractActionController
         if($platformColorData) {
             $colors = json_decode($platformColorData->pcolor_settings);
             if($colors) {
-                $primaryColor = $colors->primaryColor;
-                $secondaryColor = $colors->secondaryColor;
+                $primaryColor = $colors->melis_core_platform_color_primary_color;
+                $secondaryColor = $colors->melis_core_platform_color_secondary_color;
             }
         }
 
@@ -102,24 +104,93 @@ class PlatformColorController extends AbstractActionController
         return $isAccessible;
     }
 
-    public function saveColorAction()
+    public function saveColorsAction()
     {
 
-        $platformColorTable = $this->getServiceLocator()->get('MelisCorePlatformColorTable');
+        $translation = $this->getServiceLocator()->get('translator');
+        $success     = 0;
+        $errors      = array();
+        $textTitle   = 'tr_meliscore_platform_color';
+        $textMessage = 'tr_meliscore_platform_color_save_ko';
+        $request     = $this->getRequest();
 
-        $colors = array(
-            'primaryColor'   => '#e31d28',
-            'secondaryColor' => '',
+        if($request->isPost()) {
+
+            $post = get_object_vars($request->getPost());
+
+            $form = $this->getForm();
+            $form->setData($post);
+
+            if($form->isValid()) {
+
+                $platformColorTable = $this->getServiceLocator()->get('MelisCorePlatformColorTable');
+
+                $platformColorTable->save([
+                    'pcolor_id'=> 1,
+                    'pcolor_settings' => json_encode($post),
+                    'pcolor_is_active' => 1
+                ], 1);
+
+                $success = 1;
+                $textMessage = 'tr_meliscore_platform_color_save_ok';
+            }
+            else {
+                $errors = $this->formatErrorMessage($form->getMessages());
+            }
+
+        }
+
+        $response = array(
+            'success' => $success,
+            'errors'  => $errors,
+            'title' => $translation->translate($textTitle),
+            'message' => $translation->translate($textMessage)
         );
 
-        $platformColorTable->save([
-            'pcolor_id'=> 1,
-            'pcolor_settings' => json_encode($colors),
-            'pcolor_is_active' => 1
-        ], 1);
+        return new JsonModel($response);
 
-        $platformColorData = $platformColorTable->fetchAll()->toArray();
+    }
 
-        return new JsonModel($platformColorData);
+    /**
+     * @return \Zend\Form\ElementInterface
+     */
+    private function getForm()
+    {
+
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $formConfig = $config->getItem('meliscore/forms/melis_core_platform_color_form');
+
+        $factory      = new \Zend\Form\Factory();
+        $formElements = $this->getServiceLocator()->get('FormElementManager');
+
+        $factory->setFormElementManager($formElements);
+
+        $form = $factory->createForm($formConfig);
+
+        return $form;
+    }
+
+    /**
+     * Returns the a formatted error messages with its labels
+     * @param array $errors
+     * @return array
+     */
+    private function formatErrorMessage($errors = array())
+    {
+        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/forms/melis_core_platform_color_form');
+        $appConfigForm = $appConfigForm['elements'];
+
+        foreach ($errors as $keyError => $valueError)
+        {
+            foreach ($appConfigForm as $keyForm => $valueForm)
+            {
+                if ($valueForm['spec']['name'] == $keyError &&
+                    !empty($valueForm['spec']['options']['label']))
+                    $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+            }
+        }
+
+        return $errors;
     }
 }

@@ -1,27 +1,37 @@
-/**
- * Created by conta on 11/8/2017.
- */
-
 $(function() {
+
+
+    $("body").on("submit", "form#melis_core_platform_color_form", function(e) {
+        var formData = new FormData(this);
+
+        melisCoreTool.pending(".button");
+        $.ajax({
+            type    : 'POST',
+            url     : 'melis/MelisCore/PlatformColor/saveColors',
+            data    : formData,
+            processData : false,
+            cache       : false,
+            contentType : false,
+            dataType    : 'json',
+        }).success(function(data){
+            if(data.success) {
+                location.reload(true);
+            }
+            else {
+                melisHelper.melisKoNotification(data.title, data.message, data.errors);
+            }
+            melisCore.flashMessenger();
+            melisCoreTool.done(".button");
+        }).error(function(){
+            melisCoreTool.done(".button");
+        });
+
+        e.preventDefault();
+    });
+
     $(".osta_color_code").colorpicker({color : "", format: "hex"});
+
+
 });
 
-function getColors(primary, secondary) {
 
-    $.ajax({
-        type: 'POST',
-        url: "/melis/MelisCore/PlatformColor/saveColor",
-        data: datastring,
-        dataType: 'json',
-        success: function(data) {
-            if(data.success) {
-                // generate css
-                // refresh page
-            }
-        },
-        error: function() {
-            console.log("Something went wrong");
-        }
-    });
-}
-getColors("#000", "#bbb");

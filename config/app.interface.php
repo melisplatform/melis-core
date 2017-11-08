@@ -143,6 +143,7 @@ return array(
                     '/MelisCore/js/tools/logs.tool.js',
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
+                    '/MelisCore/js/tools/platform.color.tools.js',
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',

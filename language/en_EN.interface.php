@@ -555,6 +555,12 @@
 
         // Platform Colors
         'tr_meliscore_platform_color' => 'Platform Color',
+        'tr_meliscore_platform_color_primary' => 'Primary Color',
+        'tr_meliscore_platform_color_secondary' => 'Secondary Color',
+        'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
+        'tr_meliscore_platform_color_invalid_hex'   => 'Invalid HEX color, please choose a valid HEX color',
+        'tr_meliscore_platform_color_save_ok'   => 'Platform colors successfully saved',
+        'tr_meliscore_platform_color_save_ko'   => 'Unable to save platform colors',
 
 	);
 ?>
