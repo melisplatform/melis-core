@@ -144,6 +144,31 @@ class ModulesController extends AbstractActionController
         return new JsonModel($response);
     }
 
+    public function searchModules($useOnlySiteModule = false)
+    {
+
+        $modules = array();
+        $modulesList = null;
+        $moduleLoadList = file_exists(self::MODULE_LOADER_FILE) ? include(self::MODULE_LOADER_FILE) : array();
+        $moduleLoadFile = $this->getModuleSvc()->getModulePlugins(array('MelisModuleConfig', 'MelisFront'));
+
+        $modules = $moduleLoadList;
+        foreach($modules as $index => $modValues) {
+
+            $modulesList[$modValues] = 1;
+        }
+
+        // add the inactive modules
+        foreach($moduleLoadFile as $index => $module) {
+
+            if(!isset($modulesList[$module])) {
+                $modulesList[$module] = 0;
+            }
+
+        }
+
+        return $modulesList;
+    }
     /**
      * Returns all the available modules (enabled/disabled modules)
      * @param bool $useOnlySiteModule | used if you want to get only the Site Modules
@@ -198,6 +223,7 @@ class ModulesController extends AbstractActionController
         $modulesSvc = $this->getServiceLocator()->get('ModulesService');
         return $modulesSvc;
     }
+
 
 
 

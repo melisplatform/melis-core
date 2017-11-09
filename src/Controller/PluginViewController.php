@@ -242,6 +242,18 @@ class PluginViewController extends AbstractActionController
 		}
 		
 	}
+    public function renderViewRecList($zoneView)
+    {
+        foreach ($zoneView as $zoneViewChild)
+        {
+            $htmlZoneViewChild = $this->renderViewRec($zoneViewChild);
+            $keyInterface = $zoneViewChild->getVariable('keyInterface');
+            $zoneView->setVariable($keyInterface, $htmlZoneViewChild);
+        }
+        $htmlZoneView = array();
+
+        return $htmlZoneView;
+    }
 	
 	/**
 	 * Render a view
@@ -361,4 +373,5 @@ class PluginViewController extends AbstractActionController
 			return $zoneView;
 		}
     }
+
 }

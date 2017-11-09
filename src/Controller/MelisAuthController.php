@@ -489,7 +489,21 @@ class MelisAuthController extends AbstractActionController
         
         return new JsonModel(array('login' => $isLoggedIn));
     }
-    
+
+    public function getIdentityMenuAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+
+        $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+
+        return $view;
+    }
     /**
      * Remember me function creation cookie
      * 
@@ -571,4 +585,6 @@ class MelisAuthController extends AbstractActionController
 
         return;
     }
+
+
 }

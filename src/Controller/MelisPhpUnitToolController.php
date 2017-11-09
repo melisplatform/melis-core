@@ -299,6 +299,53 @@ class MelisPhpUnitToolController extends AbstractActionController
         return $this->getServiceLocator()->get('MelisPhpUnitTool');
     }
 
+    protected function deactivateModule()
+    {
+        $modSvc = $this->getServiceLocator()->get('ModulesService');
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $modules = $modSvc->getActiveModules(array('MelisDesign', 'MelisModuleConfig'));
+
+
+        $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites', 'melisassetmanager']);
+        $coreModules = array();
+        foreach($coreModulesArray as $module) {
+            //echo 'test';
+            $coreModules[] = $module;
+        }
+
+        $modules = array_merge($modules, $coreModules);
+
+        $testCfgDir = $_SERVER['DOCUMENT_ROOT'].'/../test';
+        $testCfgFile = $testCfgDir.'/test.application.config.php';
+        $logs = array();
+
+        foreach($modules as $module) {
+            $phpUnitCfg = $config->getItem('diagnostic/' . $module);
+
+            if($phpUnitCfg) {
+                $testFolder = isset($phpUnitCfg['testFolder']) ? $phpUnitCfg['testFolder'] : null;
+
+
+                if(file_exists($modulePath) && !file_exists($modulePath.'/'.$testFolder)) {
+                    $modulePathDisplay = $modSvc->getModulePath($module, false);
+                    if(!is_readable($modulePath)) {
+                        $logs[] = 'Unable to create diagnostic test on ' . $module .' (' . $modulePathDisplay .'), folder is not readable';
+                    }
+                    else {
+
+                    }
+                }
+
+            }
+            else {
+                $logs[] = $module . ' does not have a diagnostic configuration';
+            }
+
+        }
+
+
+        return $logs;
+    }
     protected function koMessage($msg)
     {
         $content = '<span class="text-danger">'.$msg.'</span><br/>';
@@ -340,5 +387,6 @@ class MelisPhpUnitToolController extends AbstractActionController
 
         return $isActivated;
     }
+
 
 }
