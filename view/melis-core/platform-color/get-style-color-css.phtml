@@ -2,7 +2,7 @@
     $primaryColor = $this->primaryColor;
     $secondaryColor = $this->secondaryColor;
 ?>
-
+/* =============== Primary Color =============== */
 a,
 a:hover {
     color: <?= $this->primaryColor; ?>;
@@ -44,6 +44,14 @@ body .navbar.main.navbar-primary {
     background: <?= $this->primaryColor; ?>;
 }
 
+.navbar.main.navbar-primary .nav>li>a:hover {
+    background: <?= $this->secondaryColor; ?>;
+}
+
+.navbar.main .nav.navbar-right li {
+    border-bottom: 1px solid <?= $this->secondaryColor; ?>;
+}
+
 .sidebar.sidebar-inverse .user-profile ul li.active,
 .sidebar.sidebar-inverse .user-profile ul li.active:hover {
     border-color: <?= $this->primaryColor; ?>;
@@ -73,6 +81,25 @@ body .navbar.main.navbar-primary {
 }
 
 .widget.widget-tabs-double-2>.widget-head ul li:hover a i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover i:before,
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover,
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.wizard.wizard-design .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons,
+.wizard.wizard-design .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons i:before {
     color: <?= $this->primaryColor; ?>;
 }
 
@@ -120,11 +147,6 @@ body .navbar.main.navbar-primary {
 }
 
 /* Buttons */
-.btn-danger:hover {
-    background: <?= $this->primaryColor; ?>;
-    border-color: <?= $this->primaryColor; ?>;
-}
-
 .btn-primary {
     background: <?= $this->primaryColor; ?>;
     border-color: <?= $this->primaryColor; ?>;
@@ -141,6 +163,17 @@ body .navbar.main.navbar-primary {
     border-color: <?= $this->primaryColor; ?>;
 }
 
+.btn-primary.btn-stroke {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.btn-primary.btn-stroke:hover,
+.btn-primary.btn-stroke:focus,
+.btn-primary.btn-stroke:active,
+.btn-primary.btn-stroke.active {
+    background: <?= $this->primaryColor; ?>;
+}
+
 /* Modal */
 .modal-content .widget .widget-head {
     background: <?= $this->primaryColor; ?>;
@@ -151,6 +184,10 @@ body .navbar.main.navbar-primary {
     background: <?= $this->primaryColor; ?>;
 }
 .tabsbar .nav-group-dropdown li:hover > .tab-element > i:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar .nav-group-dropdown li.active > a.tab-element > i:before {
     color: <?= $this->primaryColor; ?>;
 }
 
@@ -180,6 +217,26 @@ body .navbar.main.navbar-primary {
 
 .tabsbar .has-sub.active-parent.on > .tab-element {
     color: <?= $this->primaryColor; ?> !important;
+}
+
+.tabsbar .has-sub.active > .tab-element:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar.tabsbar-2 ul li.active {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar ul li.active a {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar.tabsbar-2 ul li:not(.active):hover a {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.tabsbar.tabsbar-2 ul li:not(.active):hover a i:before {
+    color: <?= $this->primaryColor; ?>;
 }
 
 /* Accordion */
@@ -245,6 +302,7 @@ input[type="color"]:focus,
     color: <?= $this->primaryColor; ?>;
 }
 
+/* Media Queries */
 @media (min-width: 768px) {
     .navbar #melis-id-nav-bar-tabs > li {
         background: <?= $this->primaryColor; ?>;
@@ -258,9 +316,18 @@ input[type="color"]:focus,
         color: <?= $this->primaryColor; ?>;
     }
 
+    .navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
+        color: <?= $this->primaryColor; ?>;
+    }
+
     .melis-tabprev,
     .melis-tabnext {
         background: <?= $this->primaryColor; ?>;
+    }
+
+    .melis-tabprev:hover,
+    .melis-tabnext:hover {
+        color: <?= $this->primaryColor; ?>;
     }
 }
 
@@ -293,7 +360,189 @@ input[type="color"]:focus,
     background: <?= $this->primaryColor; ?>;
 }
 
+
+.widget-red {
+    background: <?= $this->primaryColor; ?> !important;
+}
+
+
+.meliscms-search-box.sidebar-treeview-search .sbox-icon:hover {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.progress .progress-bar.progress-bar-primary {
+    background:  <?= $this->primaryColor; ?>;
+}
+
+.rating span.star.active:before, .rating span.star.active~span.star:before {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.page-elements .innerAll.spacing-x2 .widget.widget-primary {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.resume-documents li a i {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.timeline-activity li.active i.list-icon {
+    background-color: <?= $this->primaryColor; ?>;
+    border: 2px solid <?= $this->primaryColor; ?>;
+}
+
+.timeline-activity li:hover i.list-icon,
+.timeline-activity li.active:hover i.list-icon {
+    border-color: <?= $this->primaryColor; ?>;
+    color: <?= $this->primaryColor; ?>;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: <?= $this->primaryColor; ?>;
+}
+
+.table-pricing-2 th {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.list-group-1>li.active, .list-group-1>li.active:hover {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.table-primary tbody td.important {
+    color: <?= $this->primaryColor; ?>;
+}
+
+.table-pricing-3>ul>li.active .body {
+    border-color: <?= $this->secondaryColor; ?>;
+    background-color: <?= $this->primaryColor; ?>;
+}
+
+.innerAll.bg-primary .media {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.layout-timeline ul.timeline > li.active::before {
+    background: <?= $this->primaryColor; ?> none repeat scroll 0 0 !important;
+}
+
+.layout-timeline ul.timeline > li.active .type::before,
+.layout-timeline ul.timeline > li.active .type::after {
+    background: <?= $this->primaryColor; ?> none repeat scroll 0 0 !important;
+}
+
+.layout-timeline ul.timeline > li.active .type i::before {
+    color: <?= $this->primaryColor; ?> !important;
+}
+
+.layout-timeline ul.timeline > li.active .type {
+    color: <?= $this->primaryColor; ?> !important;
+}
+
+.pricing-table.primary .list-group {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.pricing-table.primary .caret {
+    border-top-color: <?= $this->primaryColor; ?>;
+}
+
+.bwizard-steps li.active {
+    background: <?= $this->primaryColor; ?>;
+}
+
+.bwizard-steps li.active:after {
+    border-left-color: <?= $this->primaryColor; ?>;
+}
+
 ::-webkit-scrollbar-thumb {
     background: <?= $this->primaryColor; ?>;
 }
 
+/* =============== Secondary Color =============== */
+.form-group i.fa-info-circle + .tooltip .tooltip-inner {
+    background-color: <?= $secondaryColor; ?>;
+}
+
+.tooltip .tooltip-inner {
+    background-color: <?= $secondaryColor; ?>;
+}
+
+.tooltip.left .tooltip-arrow {
+    border-left-color: <?= $secondaryColor; ?>;
+}
+
+.content-cont .widget.widget-tabs-double-2>.widget-head ul li a:hover {
+    color: <?= $secondaryColor; ?>;
+}
+
+.tickets li .media-heading {
+    color: <?= $secondaryColor; ?>;
+}
+
+.checkbox-custom i.checked {
+    color: <?= $secondaryColor; ?>;
+}
+
+#events-carousel.owl-theme .owl-controls .owl-page span {
+    background: <?= $secondaryColor; ?>;
+}
+
+#events-speakers.owl-theme .owl-controls .owl-page span {
+    background: <?= $secondaryColor; ?>;
+}
+
+.carousel.carousel-1 .carousel-indicators li.active {
+    background: <?= $secondaryColor; ?>;
+}
+
+.carousel.carousel-1 .carousel-indicators li {
+    background: <?= $secondaryColor; ?>;
+}
+
+.nav-timeline>li.active>a {
+    background: <?= $secondaryColor; ?>;
+}
+.nav-pills.nav-timeline>li>a:hover {
+    background: <?= $secondaryColor; ?>;
+}
+
+.nav-tabs>li>a:hover, .nav-pills>li>a, .nav-pills>li>a:hover {
+    color: <?= $secondaryColor; ?>;
+}
+
+.list-group-1>li:hover>a>[class*="fa-"] {
+    color: <?= $secondaryColor; ?>;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+    .navbar #melis-id-nav-bar-tabs > li {
+        border-right: 1px solid <?= $secondaryColor; ?>;
+    }
+
+    .navbar.main.navbar-primary .navbar-brand {
+        border-right: 1px solid <?= $secondaryColor; ?>;
+    }
+
+    .navbar.main .nav.navbar-right > li {
+        border-left-color: <?= $secondaryColor; ?>;
+    }
+
+    .navbar.main .nav.navbar-right > li {
+        border-right: 1px solid <?= $secondaryColor; ?>;
+    }
+
+    .container-level-a  .tooltabmodal .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
+        border-right: 1px solid <?= $secondaryColor; ?>;
+    }
+}
+
+/* Melis Default Color */
+.melis-primary-txt {
+    color: #932e2a !important;
+}
+
+.melis-primary-bg {
+    background: #932e2a !important;
+}

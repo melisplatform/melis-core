@@ -40,7 +40,7 @@ $form = $this->form;
 
                     <?php
                     }
-                    echo '<button type="submit" id="savColor" class="btn btn-success btn-stroke pull-right"><i class="fa fa-save"></i> '.$this->translate('tr_meliscore_tool_gen_save').'</button>
+                    echo '<button type="submit" id="savColor" class="btn btn-success pull-right"><i class="fa fa-save"></i> '.$this->translate('tr_meliscore_tool_gen_save').'</button>
                     <div class="clearfix"></div>';
                     echo $this->form()->closeTag();
                     ?>
@@ -65,6 +65,9 @@ $form = $this->form;
 <!--                    <div class="col-xs-12 text-right">-->
 <!--                        <button id="savColor" class="btn btn-success btn-stroke">Save Color</button>-->
 <!--                    </div>-->
+                    <script>
+                        $(".osta_color_code").colorpicker();
+                    </script>
                 </div>
             </div>
         </div>
