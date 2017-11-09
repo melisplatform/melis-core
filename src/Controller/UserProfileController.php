@@ -424,6 +424,21 @@ class UserProfileController extends AbstractActionController
         } // password and confirm password not empty
         return array("success"=>$success, "errors"=>$errors, 'newPass'=>$newPass);
     }
+    private function getLastUserInfo()
+    {
+        $user = $this->getServiceLocator()->get('MelisCoreTableUser');
+        foreach($usersInfo AS $key=>$val)
+        {
+            if($encodeImg)
+            {
+                $usersInfo[$key]['usr_image'] = ($usersInfo[$key]['usr_image'] != "" && $usersInfo[$key]['usr_image'] != null) ? "data:image/jpeg;base64,".base64_encode($usersInfo[$key]['usr_image']) : "/MelisCore/images/profile/default_picture.jpg";
+            }
+            //get the user role by role id
+            $r =  "";
+            $usersInfo[$key]['usr_role'] = $r[$key]['urole_name'];
+        }
+        return $usersInfo;
+    }
     
     /**
      * Function to get the current user information
@@ -473,4 +488,6 @@ class UserProfileController extends AbstractActionController
 
         return $melisKey;
     }
+
+
 }

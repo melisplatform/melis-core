@@ -145,4 +145,14 @@ class DashboardController extends AbstractActionController
     	$view->toolMelisKey = $toolMelisKey;
     	return $view;
     }
+
+    public function lastActivityAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
 }

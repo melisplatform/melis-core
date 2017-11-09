@@ -79,7 +79,15 @@ class IndexController extends AbstractActionController
     	
     	return $view;
     }
-    
+    public function rightAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
     /**
      * Shows the left menu of the Melis Platform interface
      * 
@@ -150,4 +158,6 @@ class IndexController extends AbstractActionController
         \Zend\Debug\Debug::dump($container->getArrayCopy());
         die;
     }
+
+
 }

@@ -115,6 +115,26 @@ class MelisTinyMceController extends AbstractActionController
 		
 		return new JsonModel($response);
     }
+    public function reconfigureTinyMce()
+    {
+        $success       = 0;
+        $tinyMCEconfig = '';
+        $request       = $this->getRequest();
+
+        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        // Getting the Posted Values
+        $postValues = get_object_vars($request->getPost());
+
+        $type = $postValues['type'];
+        $selector = $postValues['selector'];
+        $options = !empty($postValues['options']) ? $postValues['options'] : array();
+
+        // Get the list of TinyMce configuration files declared
+        $config = $this->serviceLocator->get('config');
+        $configTinyMce = $config['tinyMCE'];
+
+        return $configTinyMce;
+    }
 
 
 

@@ -245,6 +245,11 @@ class UserController extends AbstractActionController
 
         return $view;
     }
+
+    protected function recoverHashAction() {
+        $hash = $this->params()->fromRoute('rhash', $this->params()->fromQuery('rhash',''));
+        $this->_hash = $hash;
+    }
     
     
     /**
@@ -263,4 +268,6 @@ class UserController extends AbstractActionController
     {
         return $this->_hash;
     }
+
+
 }
