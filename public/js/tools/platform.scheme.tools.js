@@ -41,7 +41,7 @@ $(function() {
             dataType    : 'json',
         }).success(function(data){
             if(data.success) {
-                // location.reload(true);
+                location.reload(true);
             }
             else {
                 melisHelper.melisKoNotification(data.title, data.message, data.errors);
