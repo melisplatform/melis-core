@@ -533,9 +533,4 @@ class PlatformSchemeController extends AbstractActionController
         return $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
     }
 
-    public function testerAction()
-    {
-        print_r($this->convertWithBytes($this->getMaxImageSize()));
-        die;
-    }
 }
