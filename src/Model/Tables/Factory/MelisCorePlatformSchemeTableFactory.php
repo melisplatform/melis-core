@@ -15,17 +15,17 @@ use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Stdlib\Hydrator\ObjectProperty;
 
-use MelisCore\Model\MelisPlatformColor;
-use MelisCore\Model\Tables\MelisPlatformColorTable;
+use MelisCore\Model\MelisPlatformScheme;
+use MelisCore\Model\Tables\MelisPlatformSchemeTable;
 
-class MelisCorePlatformColorTableFactory implements FactoryInterface
+class MelisCorePlatformSchemeTableFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $sl)
     {
-        $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisPlatformColor());
-        $tableGateway = new TableGateway('melis_core_platform_color', $sl->get('Zend\Db\Adapter\Adapter'), null, $hydratingResultSet);
+        $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisPlatformScheme());
+        $tableGateway = new TableGateway('melis_core_platform_scheme', $sl->get('Zend\Db\Adapter\Adapter'), null, $hydratingResultSet);
 
-        return new MelisPlatformColorTable($tableGateway);
+        return new MelisPlatformSchemeTable($tableGateway);
     }
 
 }

@@ -33,7 +33,12 @@ class IndexController extends AbstractActionController
     	
     	$this->layout()->setVariable('jsCallBacks', $view->getVariable('jsCallBacks'));
     	$this->layout()->setVariable('datasCallback', $view->getVariable('datasCallback'));
-    	
+
+        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeData = $schemeSvc->getCurrentScheme();
+
+        $this->layout()->setVariable('schemes', $schemeData);
+
     	return $view;
     }
     
@@ -72,10 +77,14 @@ class IndexController extends AbstractActionController
     	}
     	else
     		$appsConfigCenter = array();
+
+        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeData = $schemeSvc->getCurrentScheme();
     	
-    	$view = new ViewModel();
-    	$view->melisKey = $melisKey;
+    	$view                   = new ViewModel();
+    	$view->melisKey         = $melisKey;
     	$view->appsConfigCenter = $appsConfigCenter;
+    	$view->schemes          = $schemeData;
     	
     	return $view;
     }

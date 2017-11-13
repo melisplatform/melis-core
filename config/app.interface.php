@@ -143,7 +143,7 @@ return array(
                     '/MelisCore/js/tools/logs.tool.js',
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
-                    '/MelisCore/js/tools/platform.color.tools.js',
+                    '/MelisCore/js/tools/platform.scheme.tools.js',
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
@@ -951,18 +951,24 @@ return array(
                                             ),
                                         ),
                                         // END LOGS TOOL
-                                        'meliscore_tool_platform_color' => array(
+                                        'meliscore_tool_platform_scheme' => array(
                                             'conf' => array(
-                                                'id' => 'id_meliscore_tool_platform_color_tool_content',
-                                                'name' => 'tr_meliscore_platform_color',
-                                                'melisKey' => 'meliscore_tool_platform_color',
+                                                'id' => 'id_meliscore_tool_platform_scheme_tool_content',
+                                                'name' => 'tr_meliscore_platform_scheme',
+                                                'melisKey' => 'meliscore_tool_platform_scheme',
                                                 'icon' => 'fa fa-fw icon-paint-palette',
                                                 'rights_checkbox_disable' => true,
                                             ),
+                                            'datas' => array(
+                                                // 3MB
+                                                'image_size_limit' => '3145728',
+                                                'allowed_file_extension' => 'jpeg,jpg,png,gif,svg,ico',
+                                                'platform_scheme_dir' => '/media/platform-scheme/'
+                                            ),
                                             'interface' => array(
-                                                'meliscore_tool_platform_color_tool_content' => array(
+                                                'meliscore_tool_platform_scheme_tool_content' => array(
                                                     'conf' => array(
-                                                        'id' => 'id_meliscore_tool_platform_color_tool_content',
+                                                        'id' => 'id_meliscore_tool_platform_scheme_tool_content',
                                                         'name' => 'tr_meliscore_platform_color',
                                                         'melisKey' => 'meliscore_tool_platform_color_tool_content',
                                                         'icon' => 'fa fa-fw icon-paint-palette',
@@ -970,7 +976,7 @@ return array(
                                                     ),
                                                     'forward' => array(
                                                         'module' => 'MelisCore',
-                                                        'controller' => 'PlatformColor',
+                                                        'controller' => 'PlatformScheme',
                                                         'action' => 'tool-container',
                                                     )
                                                 )

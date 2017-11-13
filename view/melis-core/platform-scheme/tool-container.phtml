@@ -1,0 +1,160 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = $this->zoneconfig['conf']['id'];
+
+$form               = $this->form;
+$scheme             = $this->schemes;
+$loginBackground    = '/MelisCore/images/login/melis-blackboard.jpg';
+$loginLogo          = '/MelisCore/images/login/melis-box.png';
+$sidebarHeaderTitle = strtoupper($this->translate('tr_meliscore_header Title'));
+$sidebarHeaderLogo  = '/MelisCore/images/dashboard/melis-logo.svg';
+$favicon            = 'favicon.ico';
+
+if($scheme) {
+
+    if($scheme->getLoginBackground())
+        $loginBackground = $scheme->getLoginBackground();
+
+    if($scheme->getLoginLogo())
+        $loginLogo = $scheme->getLoginLogo();
+
+    if($scheme->getSidebarHeaderText())
+        $sidebarHeaderTitle = $scheme->getSidebarHeaderText();
+
+    if($scheme->getSidebarHeaderLogo())
+        $sidebarHeaderLogo = $scheme->getSidebarHeaderLogo();
+
+    if($scheme->getFavicon())
+        $sidebarHeaderLogo = $scheme->getFavicon();
+}
+
+?>
+<div id="<?= $id; ?>" class="tab-pane container-level-a" data-melisKey='<?= $this->melisKey; ?>'>
+    <?php
+    if($this->hasAccess)
+    { ?>
+        <div class="me-heading bg-white border-bottom">
+            <div class="row">
+                <div class="me-hl col-xs-12 col-sm-8 col-md-9">
+                    <h1 class="content-heading"><?= $this->translate('tr_meliscore_platform_scheme') ?></h1>
+                    <p><?= $this->translate('tr_meliscore_platform_scheme_subtitle') ?></p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="spacing-x2 innerAll">
+            <div class="row">
+                <h3><?= $this->translate('tr_meliscore_platform_color_scheme') ?></h3>
+                <hr/>
+                <?php
+                echo $this->form()->openTag($form);
+                foreach($form->getElements() as $elementKey => $element) {
+                    $el = $element->getValue();
+                    ?>
+
+                    <div class="col-xs-12 col-md-12">
+                        <div class="form-group">
+                            <label for=""><?= $element->getLabel(); ?> <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_color_tooltip'); ?>"></i></label>
+                            <div class="input-group colorpicker-component osta_color_code colorpicker-element">
+                                <?= $this->formRow($element->setLabel("")); ?>
+                                <span class="input-group-addon"><i style="background-color: <?=  $element->getValue(); ?>;"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php
+                }
+
+                echo $this->form()->closeTag();
+                ?>
+
+                <h3><?= $this->translate('tr_meliscore_platform_scheme_images'); ?></h3>
+                <hr/>
+
+                <form method="POST" name="melis_core_platform_scheme_images" id="melis_core_platform_scheme_images" enctype="multipart/form-data">
+
+                    <!-- FAVICON -->
+                    <div class="meliscore-platform-scheme-favicon">
+                        <img src="<?= $favicon ?>" class="img-responsive" width="64" height="64" id="platform-scheme-favicon">
+                    </div>
+                    <div class="form-group">
+                        <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_favicon') ?></label>
+                        <div class="input-group">
+                            <input type="file" id="favicon" name="favicon" onchange="melisCoreTool.changeImage('#platform-scheme-favicon', this)">
+                        </div>
+                    </div>
+                    <!-- /FAVICON -->
+
+                    <!-- LOGIN LOGO -->
+                    <div class="meliscore-platform-scheme-login-logo">
+                        <img class="melis-login-logo"  src="<?= $loginLogo ?>" id="platform-scheme-login-logo">
+                    </div>
+                    <div class="form-group">
+                        <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_login_logo') ?></label>
+                        <div class="input-group">
+                            <input type="file" id="login_logo" name="login_logo" onchange="melisCoreTool.changeImage('#platform-scheme-login-logo', this)">
+                        </div>
+                    </div>
+                    <!-- /LOGIN LOGO -->
+
+                    <!-- LOGIN BACKGROUND -->
+                    <div class="meliscore-platform-scheme-login-background">
+                        <img src="<?= $loginBackground ?>" width="488" height ="128" class="img-responsive img-rounded" id="platform-scheme-login-background">
+                    </div>
+                    <div class="form-group">
+                        <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_login_background') ?></label>
+                        <div class="input-group">
+                            <input type="file" id="login_background" name="login_background" onchange="melisCoreTool.changeImage('#platform-scheme-login-background', this)">
+                        </div>
+                    </div>
+                    <!-- /LOGIN BACKGROUND -->
+
+                    <!-- SIDEBAR ICON AND TITLE -->
+                    <div class="meliscore-platform-scheme-sidebar-container melis-primary-bg">
+                        <img alt="melis platform" src="<?= $sidebarHeaderLogo ?>" id="platform-scheme-sidebar-header-logo">
+                        <span id="platform-scheme-sidebar-header-title"><?= $sidebarHeaderTitle ?></span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_logo') ?></label>
+                        <div class="input-group">
+                            <input type="file" id="sidebar_header_logo" name="sidebar_header_logo" onchange="melisCoreTool.changeImage('#platform-scheme-sidebar-header-logo', this)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_title') ?></label>
+                        <div class="input-group">
+                            <input type="text" id="sidebar_header_text" name="sidebar_header_text" maxlength="45" class="form-control" value="<?= $sidebarHeaderTitle ?>">
+                        </div>
+                    </div>
+                    <!-- /SIDEBAR ICON AND TITLE -->
+
+                    <button type="submit" id="form-submit-button" class="btn btn-success pull-right"><i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_tool_gen_save') ?></button>
+                    <div class="clearfix"></div>
+                </form>
+
+
+
+                <script>
+                    $(".osta_color_code").colorpicker();
+                    $("input:file").filestyle({buttonBefore: true, input: true, buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
+                </script>
+            </div>
+        </div>
+
+
+
+        <?php
+    }
+    else
+    {
+        echo '<h4>'.$this->translate('tr_meliscore_tool_user_modal_empty').'</h4>';
+    }
+
+    ?>
+
+</div>
+ 

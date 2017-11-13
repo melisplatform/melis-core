@@ -177,11 +177,11 @@ return array(
 			        ),
 			    ),
 
-                // Platform Color form
-                'melis_core_platform_color_form' => array(
+                // Platform Color scheme form
+                'melis_core_platform_scheme_form' => array(
                     'attributes' => array(
-                        'name' => 'melis_core_platform_color_form',
-                        'id' => 'melis_core_platform_color_form',
+                        'name' => 'melis_core_platform_scheme_form',
+                        'id' => 'melis_core_platform_scheme_form',
                         'method' => 'POST',
                     ),
                     'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
@@ -257,7 +257,23 @@ return array(
                             ),
                         ),
                     )
-                )
+                ),
+                // End Platform Color scheme form
+
+                // Platform scheme images form
+                'melis_core_platform_scheme_images_form' => array(
+                    'attributes' => array(
+                        'name' => 'melis_core_platform_scheme_images_form',
+                        'id' => 'melis_core_platform_scheme_images_form',
+                        'method' => 'POST',
+                    ),
+                    'elements' => array(
+
+                    ),
+                    'input_filter' => array(
+
+                    )
+                ),
 			),
 		),
 	),

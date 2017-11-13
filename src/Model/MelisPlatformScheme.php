@@ -9,7 +9,7 @@
 
 namespace MelisCore\Model;
 
-class MelisPlatformColor
+class MelisPlatformScheme
 {
 
 }
