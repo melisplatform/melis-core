@@ -3228,8 +3228,8 @@ div#modal-user-management div.widget {
 }
 
 .meliscore-platform-scheme-login-background {
-    -webkit-clip-path: inset(30px 10px 30px 10px);
-    clip-path: inset(30px 10px 30px 10px);
+/*    -webkit-clip-path: inset(30px 10px 30px 10px);
+    clip-path: inset(30px 10px 30px 10px);*/
 }
 
 .meliscore-platform-scheme-sidebar-container {
@@ -3254,4 +3254,17 @@ div#modal-user-management div.widget {
 
 #melis_core_platform_scheme_images input#sidebar_header_text{
     text-transform: uppercase;
+}
+
+.icon-span-filestyle {
+    margin-right: 10px;
+}
+.melis-ptb20 {
+    padding: 20px 0;
+}
+.meliscore-platform-scheme-favicon img,
+.meliscore-platform-scheme-login-logo,
+.meliscore-platform-scheme-login-background img,
+.meliscore-platform-scheme-sidebar-container melis-primary-bg {
+    margin-top: 18px;
 }
