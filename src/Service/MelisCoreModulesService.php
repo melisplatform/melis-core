@@ -140,7 +140,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 $class = file_get_contents($class);
 
                 $package    = $module;
-                $version    = 'v1.0';
+                $version    = '1.0';
 
                 if (preg_match_all('/@(\w+)\s+(.*)\r?\n/m', $class, $matches)){
 
@@ -155,12 +155,9 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                     'version' => $version
                 );
 
-//                if($package == $module)
-//                    break;
             }
         }
 
-        //print_r($tmpModules);
 
         $modules = $tmpModules;
 
@@ -227,7 +224,9 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
     /**
      * Returns the full path of the module
-     * @param String $moduleName
+     * @param $moduleName
+     * @param bool $returnFullPath
+     * @return string
      */
     public function getModulePath($moduleName, $returnFullPath = true)
     {
@@ -293,7 +292,8 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
     /**
      * Returns all modules plugins that does not belong or treated as core modules
-     * @return unknown[]
+     * @param array $excludeModulesOnReturn
+     * @return array
      */
     public function getModulePlugins($excludeModulesOnReturn = array())
     {
@@ -327,7 +327,11 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
     /**
      * Creates module loader file
-     * @param unknown $pathToStore
+     * @param $pathToStore
+     * @param array $modules
+     * @param array $topModules
+     * @param array $bottomModules
+     * @return bool
      */
     public function createModuleLoader($pathToStore, $modules = array(), $topModules = array('meliscore', 'melisfront', 'melisengine'), $bottomModules = array('MelisModuleConfig'))
     {
@@ -405,8 +409,101 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     }
 
     /**
+     * Returns the dependencies of the module depending on what
+     * has been set on the @require DocBlock under its' Module.php file
+     * @param $moduleName
+     * @param bool $convertPackageNameToNamespace - set to "true" to convert all package name into their actual Module name
+     * @return array
+     */
+    public function getDependencies($moduleName, $convertPackageNameToNamespace = true)
+    {
+
+        $modulePath          = $this->getModulePath($moduleName);
+        $dependencies        = array();
+
+        if($modulePath) {
+            $defaultDependencies     = array('melis-core');
+            $dependencies            = $defaultDependencies;
+            $moduleClassPossiblePath = array($modulePath.'/Module.php', $modulePath.'/src/Module.php');
+            $moduleClass             = null;
+
+            // search for the Module.php file
+            foreach($moduleClassPossiblePath as $file) {
+                if(file_exists($file)) {
+                    $moduleClass = file_get_contents($file);
+                }
+            }
+
+            // if Module.php is found
+            if($moduleClass) {
+
+                // look for @require DocBlock
+                if (preg_match_all('/@(require)\s+(.*)\r?\n*/', $moduleClass, $matches)){
+
+                    // merge matches
+                    $result = array_combine($matches[1], $matches[2]);
+
+                    if($result) {
+                        $require = isset($result['require']) ? $result['require'] : $dependencies;
+                        if($require) {
+                            $dependencies = explode('|', $require);
+
+                            // trim and remove whitespace(s)
+                            $dependencies = array_map(function($a) {
+                                $d = str_replace(' ', '', trim($a));
+                                return $d;
+                            }, $dependencies);
+                        }
+                    }
+                }
+            }
+
+            if($convertPackageNameToNamespace) {
+                $tmpDependencies = array();
+                $toolSvc         = $this->getServiceLocator()->get('MelisCoreTool');
+
+                foreach($dependencies as $dependency) {
+                    $tmpDependencies[] = ucfirst($toolSvc->convertToNormalFunction($dependency));
+                }
+
+                $dependencies = $tmpDependencies;
+            }
+
+        }
+
+        return $dependencies;
+    }
+
+    /**
+     * Returns an array of modules or packages that is dependent to the module name provided
+     * @param $moduleName
+     * @param bool $convertPackageNameToNamespace
+     * @return array
+     */
+    public function getChildDependencies($moduleName, $convertPackageNameToNamespace = true)
+    {
+        $modules     = $this->getAllModules();
+        $matchModule = $convertPackageNameToNamespace ? $moduleName : $this->convertToPackageName($moduleName);
+        $dependents  = array();
+
+
+        foreach($modules as $module) {
+            $dependencies = $this->getDependencies($module, $convertPackageNameToNamespace);
+
+            if($dependencies) {
+                if(in_array($matchModule, $dependencies)) {
+                    $dependents[] = $convertPackageNameToNamespace ? $module : $this->convertToPackageName($module);
+                }
+            }
+        }
+
+        return $dependents;
+    }
+
+    /**
      * This will check if directory exists and it's a valid directory
-     * @param unknown $dir
+     * @param $dir
+     * @return bool
      */
     protected function checkDir($dir)
     {
@@ -440,5 +537,17 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         }
 
         return $directories;
+    }
+
+    /**
+     * convert module name into package name, example: MelisCore will become melis-core
+     * @param $module
+     * @return string
+     */
+    private function convertToPackageName($module)
+    {
+        $moduleName = strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $module));
+
+        return $moduleName;
     }
 }

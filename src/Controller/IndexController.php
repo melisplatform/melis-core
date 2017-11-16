@@ -159,5 +159,18 @@ class IndexController extends AbstractActionController
         die;
     }
 
+    public function testerAction()
+    {
+        echo '<pre>';
 
+        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+
+        $modules = $moduleSvc->getChildDependencies('MelisCms');
+
+        print_r($modules);
+
+        echo '</pre>';
+        die;
+
+    }
 }

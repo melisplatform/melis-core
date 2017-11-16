@@ -29,8 +29,14 @@ use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 
+/**
+ * Class Module
+ * @package MelisCore
+ * @require melis-core
+ */
 class Module
-{   
+{
+
     public function onBootstrap(MvcEvent $e)
     {
         $this->initShowErrorsByconfig($e);

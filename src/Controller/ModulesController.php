@@ -209,6 +209,40 @@ class ModulesController extends AbstractActionController
     }
 
     /**
+     * Returns the module that is dependent to the provided module
+     * @return JsonModel
+     */
+    public function getDependentsAction()
+    {
+        $success = 0;
+        $modules = array();
+        $request = $this->getRequest();
+        $message = 'tr_meliscore_module_management_no_dependencies';
+        $tool    = $this->getServiceLocator()->get('MelisCoreTool');
+
+        if($request->isPost()) {
+            $module = $tool->sanitize($request->getPost('module'));
+
+            if($module) {
+                $modules = $this->getModuleSvc()->getChildDependencies($module);
+                if($modules) {
+                    $message = $tool->getTranslation('tr_meliscore_module_management_inactive_confirm', array($module));
+                    $success = 1;
+                }
+            }
+        }
+
+        $response = array(
+            'success' => $success,
+            'modules' => $modules,
+            'message' => $tool->getTranslation($message)
+        );
+
+        return new JsonModel($response);
+
+    }
+
+    /**
      * Creates the module loader file and the temp holder for the enabled & disabled modules
      * @param array $modules
      */

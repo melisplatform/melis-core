@@ -812,7 +812,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	 * @param unknown $action
 	 * @return String
 	 */
-	private function convertToNormalFunction($action)
+	public function convertToNormalFunction($action)
 	{
 	    $actionStr = '';
 	    $actionView = explode('-', $action);
