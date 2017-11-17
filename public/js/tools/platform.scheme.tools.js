@@ -16,7 +16,9 @@ $(function() {
             return entityMap[s];
         });
     }
-
+    $("body").on("click", "#savePlatformScheme", function() {
+        $("form#melis_core_platform_scheme_images").submit();
+    });
     $("body").on("submit", "form#melis_core_platform_scheme_images", function(e) {
         var formData = new FormData(this);
 
@@ -41,6 +43,7 @@ $(function() {
             dataType    : 'json',
         }).success(function(data){
             if(data.success) {
+                melisCoreTool.processing();
                 location.reload(true);
             }
             else {

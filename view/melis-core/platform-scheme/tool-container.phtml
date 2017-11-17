@@ -40,6 +40,9 @@ if($scheme) {
                     <h1 class="content-heading"><?= $this->translate('tr_meliscore_platform_scheme') ?></h1>
                     <p><?= $this->translate('tr_meliscore_platform_scheme_subtitle') ?></p>
                 </div>
+                <div class="me-hr col-xs-12 col-md-3">
+                    <a id="savePlatformScheme" class="btn btn-success" title="Save"><i class="fa fa-save i-space""></i>Save</a>
+                </div>
             </div>
         </div>
 
@@ -142,6 +145,19 @@ if($scheme) {
                                         <input type="file" id="sidebar_header_logo" name="sidebar_header_logo" onchange="melisCoreTool.changeImage('#platform-scheme-sidebar-header-logo', this)">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4">
+                                <div class="meliscore-platform-scheme-sidebar-container">
+                                    <img alt="melis platform" src="<?= $sidebarHeaderLogo ?>" id="platform-scheme-sidebar-header-logo">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /SIDEBAR ICON AND TITLE -->
+                    <!-- SIDEBAR ICON AND TITLE -->
+                    <div class="melis-ptb20">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-3">
                                 <div class="form-group">
                                     <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_title') ?></label>
                                     <div class="input-group">
@@ -149,17 +165,15 @@ if($scheme) {
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-xs-12 col-md-4">
                                 <div class="meliscore-platform-scheme-sidebar-container melis-primary-bg">
-                                    <img alt="melis platform" src="<?= $sidebarHeaderLogo ?>" id="platform-scheme-sidebar-header-logo">
                                     <span id="platform-scheme-sidebar-header-title"><?= $sidebarHeaderTitle ?></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- /SIDEBAR ICON AND TITLE -->
-
-                    <button type="submit" id="form-submit-button" class="btn btn-success pull-right"><i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_tool_gen_save') ?></button>
+<!--                    <button type="submit" id="form-submit-button" class="btn btn-success pull-right"><i class="fa fa-save"></i> --><?//= $this->translate('tr_meliscore_tool_gen_save') ?><!--</button>-->
                     <div class="clearfix"></div>
                 </form>
 
@@ -168,6 +182,7 @@ if($scheme) {
                 <script>
                     $(".osta_color_code").colorpicker({format: 'hex', useAlpha: false});
                     $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
+                    $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
                 </script>
         </div>
 
