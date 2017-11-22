@@ -139,25 +139,14 @@ if($scheme) {
                     <div class="melis-ptb20">
                         <div class="row">
                             <div class="col-xs-12 col-md-3">
+
                                 <div class="form-group">
                                     <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_logo') ?></label>
                                     <div class="input-group">
                                         <input type="file" id="sidebar_header_logo" name="sidebar_header_logo" onchange="melisCoreTool.changeImage('#platform-scheme-sidebar-header-logo', this)">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-xs-12 col-md-4">
-                                <div class="meliscore-platform-scheme-sidebar-container">
-                                    <img alt="melis platform" src="<?= $sidebarHeaderLogo ?>" id="platform-scheme-sidebar-header-logo">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /SIDEBAR ICON AND TITLE -->
-                    <!-- SIDEBAR ICON AND TITLE -->
-                    <div class="melis-ptb20">
-                        <div class="row">
-                            <div class="col-xs-12 col-md-3">
+
                                 <div class="form-group">
                                     <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_title') ?></label>
                                     <div class="input-group">
@@ -166,9 +155,12 @@ if($scheme) {
                                 </div>
                             </div>
 
-                            <div class="col-xs-12 col-md-4">
-                                <div class="meliscore-platform-scheme-sidebar-container melis-primary-bg">
-                                    <span id="platform-scheme-sidebar-header-title"><?= $sidebarHeaderTitle ?></span>
+                            <div class="col-xs-12 col-md-12 col-lg-6">
+                                <div class="melis-core-platform-container">
+                                    <div class="meliscore-platform-scheme-sidebar-container melis-primary-bg">
+                                        <img alt="melis platform" src="<?= $sidebarHeaderLogo ?>" id="platform-scheme-sidebar-header-logo">
+                                        <span id="platform-scheme-sidebar-header-title"><?= $sidebarHeaderTitle ?></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

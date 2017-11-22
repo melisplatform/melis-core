@@ -3237,20 +3237,33 @@ div#modal-user-management div.widget {
     position: relative;
     top: -1px;
     padding: 10px 15px;
-    max-width: 274px;
+    max-width: 230px;
     width: auto;
     height: 47px;
     color: #fff;
-    max-width: 220px;
     text-transform: uppercase;
     font-weight: 700;
 
+}
+.melis-core-platform-container {
+    background: #dcdcdc;
+    padding: 50px;
+    text-align: center;
+}
+
+#platform-scheme-sidebar-header-title {
+    font-size: 18px;
+    display: inline-block;
 }
 .meliscore-platform-scheme-sidebar-container img {
     display: inline-block;
     margin-right: 10px;
     height: 30px;
     width: 30px;
+}
+
+#melis_core_platform_scheme_images .input-group {
+    width: 100%;
 }
 
 #melis_core_platform_scheme_images input#sidebar_header_text{
