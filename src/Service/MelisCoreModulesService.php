@@ -16,7 +16,6 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Config\Config;
 use Zend\Config\Writer\PhpArray;
-
 class MelisCoreModulesService implements ServiceLocatorAwareInterface
 {
 
@@ -417,44 +416,35 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      */
     public function getDependencies($moduleName, $convertPackageNameToNamespace = true)
     {
-
         $modulePath          = $this->getModulePath($moduleName);
         $dependencies        = array();
 
         if($modulePath) {
-            $defaultDependencies     = array('melis-core');
-            $dependencies            = $defaultDependencies;
-            $moduleClassPossiblePath = array($modulePath.'/Module.php', $modulePath.'/src/Module.php');
-            $moduleClass             = null;
 
-            // search for the Module.php file
-            foreach($moduleClassPossiblePath as $file) {
+            $defaultDependencies  = array('melis-core');
+            $dependencies         = $defaultDependencies;
+            $composerPossiblePath = array($modulePath.'/composer.json');
+            $composerFile         = null;
+
+            // search for the composer.json file
+            foreach($composerPossiblePath as $file) {
                 if(file_exists($file)) {
-                    $moduleClass = file_get_contents($file);
+                    $composerFile = file_get_contents($file);
                 }
             }
 
-            // if Module.php is found
-            if($moduleClass) {
+            // if composer.json is found
+            if($composerFile) {
 
-                // look for @require DocBlock
-                if (preg_match_all('/@(require)\s+(.*)\r?\n*/', $moduleClass, $matches)){
+                $composer = json_decode($composerFile, true);
+                $requires = isset($composer['require']) ? $composer['require']: null;
+                if($requires) {
+                    $requires = array_map(function($a) {
+                        // remove melisplatform prefix
+                        return str_replace(array('melisplatform/', ' '), '', trim($a));
+                    }, array_keys($requires));
 
-                    // merge matches
-                    $result = array_combine($matches[1], $matches[2]);
-
-                    if($result) {
-                        $require = isset($result['require']) ? $result['require'] : $dependencies;
-                        if($require) {
-                            $dependencies = explode('|', $require);
-
-                            // trim and remove whitespace(s)
-                            $dependencies = array_map(function($a) {
-                                $d = str_replace(' ', '', trim($a));
-                                return $d;
-                            }, $dependencies);
-                        }
-                    }
+                    $dependencies = $requires;
                 }
             }
 
