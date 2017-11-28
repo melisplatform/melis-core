@@ -72,7 +72,8 @@ class MelisFieldRow extends FormRow
 	        $switch  = '<div class="form-group">';
 	        $switch .= '<label for="'.$element->getName().'">'. $element->getLabel() . '</label>';
 	        $switch .=  '   <div id="'. $switchId .'" class="make-switch" data-on-label="'. $switchOptions['label-on'] .'" data-off-label="'. $switchOptions['label-off'] .'" data-text-label="'. $switchOptions['label'] .'">';
-	        $switch .= '       <input type="checkbox" name="'.$element->getName().'" id="'.$element->getName().'" '.$isChecked.' >';
+	        $element->setLabel('');
+	        $switch .= parent::render($element, $labelPosition);
             $switch .= '    </div>';
             $switch .= '</div>';
             $switch .= '<script type="text/javascript">';

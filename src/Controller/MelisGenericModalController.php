@@ -32,7 +32,17 @@ class MelisGenericModalController extends AbstractActionController
          
         return $view;
     }
-    
+
+    public function reloadGenericModalAction()
+    {
+        $view = new ViewModel();
+        $view->setTerminal(true);
+        $view->id = $id;
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
+
     public function emptyGenericModalAction()
     {
         $id = $this->params()->fromRoute('id', $this->params()->fromQuery('id', ''));
@@ -45,5 +55,6 @@ class MelisGenericModalController extends AbstractActionController
         
         return $view;
     }
+
 }
 
