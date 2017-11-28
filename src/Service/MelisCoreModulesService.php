@@ -162,7 +162,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
 
         if(!is_null($moduleName)) {
-            return $modules[$moduleName];
+            return isset($modules[$moduleName]) ? $modules[$moduleName] : null;
         }
 
         return $modules;
