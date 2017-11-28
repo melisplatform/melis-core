@@ -167,6 +167,5 @@ class IndexController extends AbstractActionController
         \Zend\Debug\Debug::dump($container->getArrayCopy());
         die;
     }
-
-
+    
 }

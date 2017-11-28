@@ -253,6 +253,11 @@
 	    'tr_meliscore_module_management_prompt_success' => 'Les paramètres des modules ont été mis à jour',
 	    'tr_meliscore_module_management_prompt_failed' => 'Impossible de mettre à jour les paramètres des modules',
 	    'tr_meliscore_module_management_notification_tip' => "Glisser/déposer les modules pour arranger l'ordre",
+        'tr_meliscore_module_management_inactive_confirm' => 'By deactivating %s, this will also deactivate the following modules: ',
+        'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
+        'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
+        'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
+        'tr_meliscore_general_proceed' => 'Proceed',
 	    
 	    // Common File Attachment and Images Deletion labels and messages
 	    // File
