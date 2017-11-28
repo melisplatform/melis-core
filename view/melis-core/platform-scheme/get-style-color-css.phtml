@@ -1,0 +1,557 @@
+<?php
+    // use default colors if platform scheme table is empty
+    $primaryColor   = $this->melis_core_platform_color_primary_color   ?: '#981a1f';
+    $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#c76c70';
+?>
+/* =============== Primary Color =============== */
+a,
+a:hover {
+    color: <?= $primaryColor; ?>;
+}
+
+body .navbar.main.navbar-primary {
+    background-color: <?= $primaryColor; ?>;
+}
+
+#melis-navtabs-container-outer {
+    background: <?= $primaryColor; ?>;
+}
+
+#melis-id-nav-bar-tabs {
+    background: <?= $primaryColor; ?>;
+}
+
+.navbar.main.navbar-primary .nav > li.active > .dropdown-toggle,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle .fa,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle:hover,
+.navbar.main.navbar-primary .nav > li.active .dropdown-toggle:hover .fa,
+.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover,
+.navbar.main.navbar-primary .nav > li .dropdown-toggle:hover .fa {
+    color: <?= $primaryColor; ?> !important;
+}
+
+.nav-tabs.product-text-tab li.active a,
+.nav-tabs.product-text-tab li.active:focus a,
+.nav-tabs.product-text-tab li.active:active a,
+.nav-tabs.product-text-tab li a:hover {
+    background: <?= $primaryColor; ?>;
+}
+
+.navbar.main.navbar-primary .left-menu {
+    background: <?= $primaryColor; ?>;
+}
+
+.navbar.main .nav.navbar-right {
+    background: <?= $primaryColor; ?>;
+}
+
+.navbar.main.navbar-primary .nav>li>a:hover {
+    background: <?= $secondaryColor; ?>;
+}
+
+.navbar.main .nav.navbar-right li {
+    border-bottom: 1px solid <?= $secondaryColor; ?>;
+}
+
+.sidebar.sidebar-inverse .user-profile ul li.active,
+.sidebar.sidebar-inverse .user-profile ul li.active:hover {
+    border-color: <?= $primaryColor; ?>;
+}
+
+.sidebar.sidebar-inverse .user-profile ul li.active a,
+.sidebar.sidebar-inverse .user-profile ul li.active:hover a {
+    background: <?= $primaryColor; ?>;
+}
+
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-toggle="collapse"] {
+    background-color: <?= $primaryColor; ?>;
+}
+
+/* Widgets */
+.widget.widget-tabs>.widget-head ul li.active a.glyphicons,
+.widget.widget-tabs>.widget-head ul li.active a.glyphicons i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.widget.widget-tabs-icons-only-2>.widget-head ul li a.glyphicons:hover i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.widget.widget-tabs-double-2>.widget-head ul li:hover a {
+    color: <?= $primaryColor; ?>;
+}
+
+.widget.widget-tabs-double-2>.widget-head ul li:hover a i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover {
+    color: <?= $primaryColor; ?>;
+}
+
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover i:before,
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover,
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover {
+    color: <?= $primaryColor; ?>;
+}
+
+.wizard.wizard-design .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons,
+.wizard.wizard-design .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.dropdown-menu li.active a,
+.dropdown-menu li.active:hover a {
+    background-color: <?= $primaryColor; ?>;
+}
+
+.text-primary {
+    color: <?= $primaryColor; ?> !important;
+}
+
+.ra-username {
+    color: <?= $primaryColor; ?>;
+}
+
+/* Dashboard */
+.bg-primary {
+    background: <?= $primaryColor; ?> !important;
+}
+
+.overlay-loader {
+    background: <?= $primaryColor; ?>;
+}
+
+.datepicker thead th.dow {
+    background: <?= $primaryColor; ?> !important;
+}
+
+.table-primary thead th {
+    border-color: <?= $primaryColor; ?>;
+    background-color: <?= $primaryColor; ?>;
+}
+
+.pagination > li.active > a,
+.pagination > li.active > a:focus,
+.pagination > li.active > a:hover {
+    background: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+
+.pagination>li>a:hover,
+.pagination>li.primary>a {
+    background: <?= $primaryColor; ?>;
+}
+
+/* Buttons */
+.btn-primary {
+    background: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+.btn-primary:active:hover,
+.btn-primary[disabled]:hover {
+    color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+    background: #fff;
+}
+
+
+
+.btn-group.open .btn-primary.dropdown-toggle,
+.btn-primary.disabled,
+.btn-primary[disabled],
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+
+.btn-primary.btn-stroke {
+    color: <?= $primaryColor; ?>;
+}
+
+.btn-primary.btn-stroke:hover,
+.btn-primary.btn-stroke:focus,
+.btn-primary.btn-stroke:active,
+.btn-primary.btn-stroke.active {
+    background: <?= $primaryColor; ?>;
+}
+
+/* Modal */
+.modal-content .widget .widget-head {
+    background: <?= $primaryColor; ?>;
+}
+
+/* Nav Tabs */
+.tabsbar .nav-group-dropdown li .tab-element {
+    background: <?= $primaryColor; ?>;
+}
+.tabsbar .nav-group-dropdown li:hover > .tab-element > i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.tabsbar .nav-group-dropdown li.active > a.tab-element > i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.navbar.main.navbar-primary .tabsbar li:hover > .tab-element {
+    color: <?= $primaryColor; ?>;
+}
+
+.tabsbar .nav-group-dropdown li.active > a.tab-element {
+    color: <?= $primaryColor; ?> !important;
+}
+
+.tabsbar .has-sub.active > .tab-element i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.tabsbar .has-sub:hover > .tab-element:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.tabsbar .has-sub.active-parent.on > .tab-element i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.tabsbar .has-sub.active-parent.on > .tab-element:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.tabsbar .has-sub.active-parent.on > .tab-element {
+    color: <?= $primaryColor; ?> !important;
+}
+
+.tabsbar .has-sub.active > .tab-element:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.tabsbar.tabsbar-2 ul li.active {
+    background: <?= $primaryColor; ?>;
+}
+
+.tabsbar ul li.active a {
+    background: <?= $primaryColor; ?>;
+}
+
+.tabsbar.tabsbar-2 ul li:not(.active):hover a {
+    color: <?= $primaryColor; ?>;
+}
+
+.tabsbar.tabsbar-2 ul li:not(.active):hover a i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+/* Accordion */
+.tab-pane a.btn.a-accordion.collapsed:hover,
+.tab-pane a.btn.a-accordion {
+    border-color: <?= $primaryColor; ?>;
+    background: <?= $primaryColor; ?>;
+}
+
+.tab-pane a.btn.a-accordion.collapsed {
+    background: <?= $primaryColor; ?>;
+}
+
+.commerce-toggle .panel-heading {
+    background-color: <?= $primaryColor; ?>;
+}
+
+.commerce-toggle .accordion-toggle {
+    background-color: <?= $primaryColor; ?> !important;
+}
+
+.ranges li {
+    color: <?= $primaryColor; ?>;
+}
+
+.ranges li.active {
+    background: <?= $primaryColor; ?>;
+    border: 1px solid <?= $primaryColor; ?>;
+}
+
+.ranges li:hover {
+    background: <?= $primaryColor; ?>;
+    border: 1px solid <?= $primaryColor; ?>;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+    border-left: 1px solid <?= $primaryColor; ?>;
+}
+
+.content-cont .nav-tabs.product-text-tab li.active a,
+.content-cont .nav-tabs.product-text-tab li.active:focus a,
+.content-cont .nav-tabs.product-text-tab li.active:active a,
+.content-cont .nav-tabs.product-text-tab li a:hover {
+    background: <?= $primaryColor; ?>;
+}
+
+.orderPaymentCouponLink {
+    color: <?= $primaryColor; ?>;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+    .navbar #melis-id-nav-bar-tabs > li {
+        background: <?= $primaryColor; ?>;
+    }
+
+    .navbar #melis-id-nav-bar-tabs > li:hover > a {
+        color: <?= $primaryColor; ?> !important;
+    }
+
+    .navbar #melis-id-nav-bar-tabs > li:hover > a > i {
+        color: <?= $primaryColor; ?>;
+    }
+
+    .navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
+        color: <?= $primaryColor; ?>;
+    }
+
+    .melis-tabprev,
+    .melis-tabnext {
+        background: <?= $primaryColor; ?>;
+    }
+
+    .melis-tabprev:hover,
+    .melis-tabnext:hover {
+        color: <?= $primaryColor; ?>;
+    }
+}
+
+/* MarketPlace */
+.melis-store .post-info a {
+    color: <?= $primaryColor; ?>;
+}
+
+/* Modules */
+.module-settings .ms-heading {
+    background: <?= $primaryColor; ?>;
+}
+
+/* DragnDrop */
+.melis-cms-dnd-box {
+    border-bottom: 4px solid <?= $primaryColor; ?>;
+    border-left: 4px solid <?= $primaryColor; ?>;
+}
+.melis-cms-dnd-title {
+    background: <?= $primaryColor; ?>;
+}
+
+.module-display-heading .ms-heading {
+    background: <?= $primaryColor; ?>;
+}
+
+/* Commerce */
+.red-box-panel h3 {
+    border-bottom: 1px solid <?= $primaryColor; ?>;
+    background: <?= $primaryColor; ?>;
+}
+
+
+.widget-red {
+    background: <?= $primaryColor; ?> !important;
+}
+
+
+.meliscms-search-box.sidebar-treeview-search .sbox-icon:hover {
+    background: <?= $primaryColor; ?>;
+}
+
+.progress .progress-bar.progress-bar-primary {
+    background:  <?= $primaryColor; ?>;
+}
+
+.rating span.star.active:before, .rating span.star.active~span.star:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.page-elements .innerAll.spacing-x2 .widget.widget-primary {
+    background: <?= $primaryColor; ?>;
+}
+
+.resume-documents li a i {
+    color: <?= $primaryColor; ?>;
+}
+
+.timeline-activity li.active i.list-icon {
+    background-color: <?= $primaryColor; ?>;
+    border: 2px solid <?= $primaryColor; ?>;
+}
+
+.timeline-activity li:hover i.list-icon,
+.timeline-activity li.active:hover i.list-icon {
+    border-color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?>;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: <?= $primaryColor; ?>;
+}
+
+.table-pricing-2 th {
+    background: <?= $primaryColor; ?>;
+}
+
+.list-group-1>li.active, .list-group-1>li.active:hover {
+    background: <?= $primaryColor; ?>;
+}
+
+.table-primary tbody td.important {
+    color: <?= $primaryColor; ?>;
+}
+
+.table-pricing-3>ul>li.active .body {
+    border-color: <?= $secondaryColor; ?>;
+    background-color: <?= $primaryColor; ?>;
+}
+
+.innerAll.bg-primary .media {
+    background: <?= $primaryColor; ?>;
+}
+
+.layout-timeline ul.timeline > li.active::before {
+    background: <?= $primaryColor; ?> none repeat scroll 0 0 !important;
+}
+
+.layout-timeline ul.timeline > li.active .type::before,
+.layout-timeline ul.timeline > li.active .type::after {
+    background: <?= $primaryColor; ?> none repeat scroll 0 0 !important;
+}
+
+.layout-timeline ul.timeline > li.active .type i::before {
+    color: <?= $primaryColor; ?> !important;
+}
+
+.layout-timeline ul.timeline > li.active .type {
+    color: <?= $primaryColor; ?> !important;
+}
+
+.pricing-table.primary .list-group {
+    background: <?= $primaryColor; ?>;
+}
+
+.pricing-table.primary .caret {
+    border-top-color: <?= $primaryColor; ?>;
+}
+
+.bwizard-steps li.active {
+    background: <?= $primaryColor; ?>;
+}
+
+.bwizard-steps li.active:after {
+    border-left-color: <?= $primaryColor; ?>;
+}
+
+::-webkit-scrollbar-thumb {
+    background: <?= $primaryColor; ?>;
+}
+
+/* =============== Secondary Color =============== */
+.form-group i.fa-info-circle + .tooltip .tooltip-inner {
+    background-color: <?= $secondaryColor; ?>;
+}
+
+.tooltip .tooltip-inner {
+    background-color: <?= $secondaryColor; ?>;
+}
+
+.tooltip.left .tooltip-arrow {
+    border-left-color: <?= $secondaryColor; ?>;
+}
+
+.content-cont .widget.widget-tabs-double-2>.widget-head ul li a:hover {
+    color: <?= $secondaryColor; ?>;
+}
+
+.tickets li .media-heading {
+    color: <?= $secondaryColor; ?>;
+}
+
+.checkbox-custom i.checked {
+    color: <?= $secondaryColor; ?>;
+}
+
+#events-carousel.owl-theme .owl-controls .owl-page span {
+    background: <?= $secondaryColor; ?>;
+}
+
+#events-speakers.owl-theme .owl-controls .owl-page span {
+    background: <?= $secondaryColor; ?>;
+}
+
+.carousel.carousel-1 .carousel-indicators li.active {
+    background: <?= $secondaryColor; ?>;
+}
+
+.carousel.carousel-1 .carousel-indicators li {
+    background: <?= $secondaryColor; ?>;
+}
+
+.nav-timeline>li.active>a {
+    background: <?= $secondaryColor; ?>;
+}
+.nav-pills.nav-timeline>li>a:hover {
+    background: <?= $secondaryColor; ?>;
+}
+
+.nav-tabs>li>a:hover, .nav-pills>li>a, .nav-pills>li>a:hover {
+    color: <?= $secondaryColor; ?>;
+}
+
+.list-group-1>li:hover>a>[class*="fa-"] {
+    color: <?= $secondaryColor; ?>;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+    .navbar #melis-id-nav-bar-tabs > li {
+        border-right: 1px solid <?= $secondaryColor; ?>;
+    }
+
+    .navbar.main.navbar-primary .navbar-brand {
+        border-right: 1px solid <?= $secondaryColor; ?>;
+    }
+
+    .navbar.main .nav.navbar-right > li {
+        border-left-color: <?= $secondaryColor; ?>;
+    }
+
+    .navbar.main .nav.navbar-right > li {
+        border-right: 1px solid <?= $secondaryColor; ?>;
+    }
+
+    .container-level-a  .tooltabmodal .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
+        border-right: 1px solid <?= $secondaryColor; ?>;
+    }
+}
+
+/* Melis Default Color */
+.melis-primary-txt {
+    color: <?= $secondaryColor; ?> !important;
+}
+
+.melis-primary-bg {
+    background: <?= $primaryColor; ?> !important;
+}

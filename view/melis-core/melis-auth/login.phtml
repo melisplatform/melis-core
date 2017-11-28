@@ -2,6 +2,15 @@
  $form = $this->meliscore_login;
  $form->prepare();
  $isChecked = $this->isChecked ? 'checked="checked"' : '';
+
+$schemes         = $this->layout()->schemes;
+$loginLogo       = $this->login_logo;
+
+if($schemes) {
+    if(!empty($schemes->getLoginBackground())) {
+        $loginLogo = $schemes->getLoginLogo();
+    }
+}
 ?>
 
 
@@ -12,7 +21,7 @@
      	<div class="placeholder main-login-page text-center">
      	
      		<div class="business-logo-container">
-     			<img class="melis-services-img" alt="melis technologies services" src="<?= $this->login_logo ?>">
+     			<img class="melis-services-img" alt="melis technologies services" src="<?= $loginLogo ?>">
      		</div>
      		
      	</div>

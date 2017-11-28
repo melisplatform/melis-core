@@ -527,7 +527,8 @@ var melisCore = (function(window){
         melisChangeLanguage                             :           melisChangeLanguage,
         resizeScreen                                    :           window.resizeScreen,
         screenSize										:			screenSize,
-        escapeHtml										: 			escapeHtml
+        escapeHtml										: 			escapeHtml,
+        tabDraggable                                    :           tabDraggable
     };
 
 

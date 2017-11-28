@@ -122,6 +122,7 @@ class Module
     	    'melis-backoffice/MelisInstaller',
     	    'melis-backoffice/microservice',
     	    'melis-backoffice/microservice_list',
+            'melis-backoffice/get-platform-color-css'
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;

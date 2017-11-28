@@ -567,6 +567,37 @@
         'tr_meliscore_microservice_generateD_api_key' => 'API Key',
 
         'tr_meliscore_microservice_title' => 'Liste des microservices existants sur la Platform',
-        'tr_meliscore_microservice_sub_title' => 'Les paramètres de ce service doivent être POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnée n\'est postée.'
+        'tr_meliscore_microservice_sub_title' => 'Les paramètres de ce service doivent être POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnée n\'est postée.',
+
+        // Platform Schemes
+        'tr_meliscore_platform_scheme' => 'Platform Scheme',
+        'tr_meliscore_platform_scheme_subtitle' => 'Allows you too modify the color schemes and the images of the platform.',
+        'tr_meliscore_platform_color_scheme' => 'Color schemes',
+        'tr_meliscore_platform_scheme_images' => 'Title &amp; Images',
+        'tr_meliscore_platform_color_primary' => 'Primary Color',
+        'tr_meliscore_platform_color_secondary' => 'Secondary Color',
+        'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
+        'tr_meliscore_platform_color_invalid_hex'   => 'Invalid HEX color, please choose a valid HEX color',
+
+        'tr_meliscore_platform_scheme_form_login_logo' => 'Login logo',
+        'tr_meliscore_platform_scheme_form_login_background' => 'Login background',
+        'tr_meliscore_platform_scheme_form_sidebar_header_logo' => 'Sidebar header logo',
+        'tr_meliscore_platform_scheme_form_sidebar_header_title' => 'Sidebar header title',
+        'tr_meliscore_platform_scheme_form_favicon' => 'Favicon',
+
+        'tr_meliscore_platform_scheme_image_is_invalid' => 'Invalid file image, make sure that the file being uploaded is a type of an image',
+
+        'tr_meliscore_platform_scheme_save_ok'   => 'Platform scheme successfully saved',
+        'tr_meliscore_platform_scheme_save_ko'   => 'Unable to save platform scheme',
+
+        'tr_meliscore_platform_scheme_folder_not_exists' => 'Platform scheme folder does not exists (/media/platform-scheme)',
+        'tr_meliscore_platform_scheme_folder_no_permission' => 'You don\'t have permission to upload on this folder <strong>/media/platform-scheme<strong>',
+
+        'tr_meliscore_platform_scheme_image_too_big' => 'File image is too big, it should not be more than %s',
+        'tr_meliscore_platform_scheme_image_not_exist' => 'File image uploaded doesn\'t seem to be existing, please choose another',
+        'tr_meliscore_platform_scheme_image_invalid_extension' => 'Invalid file extension, make sure that the file being uploaded is a type of an image',
+
+        'tr_meliscore_platform_scheme_sidebar_header_title_too_long' => 'Sidebar header title should not be more than 45 characters',
+        'tr_meliscore_platform_scheme_sidebar_header_title_too_short' => 'Sidebar header title should be more than 5 characters',
 	);
 ?>

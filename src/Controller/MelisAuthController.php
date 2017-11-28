@@ -40,10 +40,17 @@ class MelisAuthController extends AbstractActionController
     	$appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
     	if (!empty($appConfigForm['datas']['login_background']))
     	    $background = $appConfigForm['datas']['login_background'];
-    		
+
+        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeData = $schemeSvc->getCurrentScheme();
+
+
     	$this->layout()->addChild($view, 'content');
-    	$this->layout()->isLogin = 1;
+
+    	$this->layout()->isLogin          = 1;
     	$this->layout()->login_background = $background;
+    	$this->layout()->schemes          = $schemeData;
+    	$this->layout()->setVariable('test', 'look for me');
     	
     	return $view;
     	

@@ -1,11 +1,22 @@
 <?php
-
-
     $id = '';
     if (!empty($this->zoneconfig['conf']['id']))
         $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
     $data_melisKey = $this->melisKey;
+$schemes = $this->schemes;
 
+$sidebarHeaderLogo = '/MelisCore/images/dashboard/melis-logo.svg';
+$sidebarHeaderText = $this->translate('tr_meliscore_header Title');
+
+if($schemes) {
+    if(!empty($schemes->getSidebarHeaderLogo())) {
+        $sidebarHeaderLogo = $schemes->getSidebarHeaderLogo();
+    }
+
+    if(!empty($schemes->getSidebarHeaderText())) {
+        $sidebarHeaderText = $schemes->getSidebarHeaderText();
+    }
+}
 ?>
 <div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar  navbar-primary main" role="navigation">
 
@@ -21,8 +32,8 @@
               </div>
               <a href="/melis" class="appbrand innerL">
               
-              		<img alt="melis platform" src="/MelisCore/images/dashboard/melis-logo.svg">
-					<?php echo $this->escapeHtml($this->translate('tr_meliscore_header Title')); ?>
+              		<img alt="melis platform" src="<?= $sidebarHeaderLogo; ?>">
+					<?php echo $this->escapeHtml($sidebarHeaderText); ?>
               
               </a>
               
