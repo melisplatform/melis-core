@@ -337,7 +337,7 @@ Most helpers are located in the file:
 * loadingZone: wraps a div in a loading design
 * removeLoadingZone: removes the loading design  
 
-**[See Full documentation on back-office emails here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/module-functions/ZoneReloadHelper)**
+**[See Full documentation on Melis JS helpers here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/module-functions/ZoneReloadHelper)**
 
 
 
