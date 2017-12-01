@@ -408,8 +408,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Returns the dependencies of the module depending on what
-     * has been set on the @require DocBlock under its' Module.php file
+     * Returns the dependencies of the module
      * @param $moduleName
      * @param bool $convertPackageNameToNamespace - set to "true" to convert all package name into their actual Module name
      * @return array
@@ -468,9 +467,10 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      * Returns an array of modules or packages that is dependent to the module name provided
      * @param $moduleName
      * @param bool $convertPackageNameToNamespace
+     * @param bool $getOnlyActiveModules - returns only the active modules
      * @return array
      */
-    public function getChildDependencies($moduleName, $convertPackageNameToNamespace = true)
+    public function getChildDependencies($moduleName, $convertPackageNameToNamespace = true, $getOnlyActiveModules = true)
     {
         $modules     = $this->getAllModules();
         $matchModule = $convertPackageNameToNamespace ? $moduleName : $this->convertToPackageName($moduleName);
@@ -486,6 +486,20 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 }
             }
         }
+
+        if(true === $getOnlyActiveModules) {
+            $activeModules = $this->getActiveModules();
+            $modules       = array();
+
+            foreach($dependents as $module) {
+                if(in_array($module, $activeModules)) {
+                    $modules[] = $module;
+                }
+            }
+
+            $dependents = $modules;
+        }
+
 
         return $dependents;
     }

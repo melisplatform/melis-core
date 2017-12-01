@@ -258,6 +258,7 @@
         'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
         'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
         'tr_meliscore_general_proceed' => 'Proceed',
+        'tr_meliscore_general_confirm' => 'Confirm',
 	    
 	    // Common File Attachment and Images Deletion labels and messages
 	    // File
