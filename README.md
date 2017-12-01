@@ -88,7 +88,7 @@ All modules that add content to the back office must implement this system and m
 	),
 ),
 ```
-[See Full documentation here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/module-functions/MelisPlatformsinterfaceprinciple)
+**[See Full documentation on modules and interface designing here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/module-functions/MelisPlatformsinterfaceprinciple)**
 
 ### Reordering the children of an interface    
 
@@ -100,9 +100,9 @@ It is possible to define a specific order by creating a key 'interface_ordering'
 	'meliscore_leftmenu' => array(
 		'meliscore_leftmenu_identity',  // identity zone first
 		'meliscore_leftmenu_dashboard', // acces to dashboard second
-		'meliscms_sitetree',			// site tree 3rd
-		'meliscore_toolstree',			// tools tree 4th
-		'meliscore_footer',				// footer last
+		'meliscms_sitetree',		// site tree 3rd
+		'meliscore_toolstree',		// tools tree 4th
+		'meliscore_footer',		// footer last
 	),
 ```
 
@@ -112,7 +112,7 @@ It is possible to define a specific order by creating a key 'interface_ordering'
 MelisCore provides many services to be used in other modules.  
 Find them in the folder: /melis-core/src/Service  
 
-* MelisCoreConfig
+* MelisCoreConfig  
 This service deals with the interface config files that generates the back-office interface.  
 All files "/config/app.interface.php" from all modules are merged together to create a big configuration.  
 This service will then handle it and all the specificities from MelisPlatform.  
@@ -185,6 +185,7 @@ $melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');
 // Send the mail and fills the blanks in the mail (tags), get the language version
 $melisEmailBO->sendBoEmailByCode('ACCOUNTCREATION',  $tags, $email_to, $name_to, $langId);  
 ```
+**[See Full documentation on back-office emails here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/email-management-system/Presentationoftheemailmanagement)**
 
 
 ### MelisCore Forms  
@@ -334,7 +335,10 @@ Most helpers are located in the file:
 * tabClose: closes a tab
 * tabOpen: opens a tab
 * loadingZone: wraps a div in a loading design
-* removeLoadingZone: removes the loading design
+* removeLoadingZone: removes the loading design  
+
+**[See Full documentation on back-office emails here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/module-functions/ZoneReloadHelper)**
+
 
 
 #### TinyMCE and configurations  
@@ -355,6 +359,8 @@ Creating other config is possible. Add the config in a file then declare the fil
 	'html' => 'MelisCore/public/js/tinyMCE/tool.php',  
 ),  
 ```   
+**[See Full documentation on TinyMCE and Melis Platform here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/configuration-of-tinymce/Configurationfilesoverview)**
+
 
 ## Authors
 
