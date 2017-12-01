@@ -168,6 +168,8 @@ if($melisCoreAuth->hasIdentity())
 							'/meliscore_dashboard');
 }        
 ```  
+**[See Full documentation on rights management system here](https://www.melistechnology.com/MelisTechnology/resources/documentation/back-office/rights-management-system/ExplanationoftheRightsWayofSavin)**
+
 
 * MelisCoreFlashMessenger  
 Add logs to flash messenger and get some notifications in the back office  
