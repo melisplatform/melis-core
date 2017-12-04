@@ -10,6 +10,7 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreRightsService;
+use MelisZoho\Service\MelisZohoCampaignsService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
@@ -228,6 +229,14 @@ class UserProfileController extends AbstractActionController
                             //check if saving was success
                             if($res)
                             {
+                                /** @var MelisZohoCampaignsService $zohoCampaignsService */
+                                $zohoCampaignsService = $this->getServiceLocator()->get('MelisZohoCampaignsService');
+                                $zohoCampaignsService->getEventManager()->trigger(
+                                    'updateUserInformation.success',
+                                    null,
+                                    ['userId' => $this->getCurrentUserId()]
+                                );
+
                                 $userSession = $melisCoreAuth->getStorage()->read();
                                 // update session data
                                 $userSession->usr_email = $data['usr_email'];

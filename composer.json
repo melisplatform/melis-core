@@ -19,7 +19,10 @@
   },
   "require": {
     "php": "^5.5 || ^7.0",
-    "composer/composer": "~1.2"
+    "composer/composer": "~1.2",
+    "zendframework/zend-servicemanager": "^3.1.0",
+    "zendframework/zend-mvc": "^2.7.0",
+    "melisplatform/melis-zoho": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.8"
@@ -28,5 +31,11 @@
     "psr-4": {
       "MelisCore\\": "src/"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/melisplatform/melis-zoho"
+    }
+  ]
 }
