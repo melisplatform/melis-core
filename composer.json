@@ -20,7 +20,7 @@
   "require": {
     "php": "^5.5 || ^7.0",
     "composer/composer": "~1.2",
-    "zendframework/zend-servicemanager": "*",
+    "zendframework/zend-servicemanager": "^2.7.0",
     "zendframework/zend-mvc": "^2.7.0",
     "melisplatform/melis-zoho": "dev-master"
   },
