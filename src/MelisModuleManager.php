@@ -27,12 +27,16 @@ class MelisModuleManager
         error_reporting(E_ALL & ~E_USER_DEPRECATED);
         if (empty(date_default_timezone_get()))
             date_default_timezone_set('Europe/Paris');
-        
+
         $rootMelisSites = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
 
         $modules = array();
-        $docRoot = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '../..';
-        $modulesMelisBackOffice = include $docRoot . '/../config/melis.module.load.php';
+
+        $docRoot = php_sapi_name() !== 'cli' ?
+            ($_SERVER['DOCUMENT_ROOT'] ? rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/..' : '../../..') :
+            getcwd();
+
+        $modulesMelisBackOffice = include $docRoot . '/config/melis.module.load.php';
 
         if (array_key_exists('REQUEST_URI', $_SERVER)) {
 
@@ -60,7 +64,7 @@ class MelisModuleManager
                 $melisModuleName = getenv('MELIS_MODULE');
                 // include in module load if Melis Module exists on this folder
                 $modulePath      = $rootMelisSites . '/' . $melisModuleName;
-                $platformFile    = $docRoot . '/../config/autoload/platforms/'.$env.'.php';
+                $platformFile    = $docRoot . '/config/autoload/platforms/'.$env.'.php';
                 if($melisModuleName) {
                     $siteModuleLoad = $modulePath . '/config/module.load.php';
                     if(file_exists($siteModuleLoad) && file_exists($platformFile)) {
@@ -74,7 +78,12 @@ class MelisModuleManager
             }
 
         } else {
-            $modules = array();
+            $modules = array(
+                'MelisCore',
+                'MelisZoho',
+                'Tools',
+                'AwsModule'
+            );
         }
 
         return $modules;
