@@ -7,8 +7,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use MelisCore\Service\MelisCoreToolServiceInterface;
 use ReflectionClass;
 use Zend\Session\Container;
-use Zend\Http\Response;
+use Zend\Http\PhpEnvironment\Response as HttpResponse;
 use Zend\View\Model\JsonModel;
+use SplFileObject;
 /**
  * This Service helps you create your tool
  */
@@ -710,7 +711,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             }
 
 
-            $response = new Response();
+            $response = new HttpResponse();
             $headers  = $response->getHeaders();
             $headers->addHeaderLine('Content-Type', 'text/csv; charset=utf-8');
             $headers->addHeaderLine('Content-Disposition', "attachment; filename=\"".$csvFileName."\"");
@@ -812,7 +813,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	 * @param unknown $action
 	 * @return String
 	 */
-	private function convertToNormalFunction($action)
+	public function convertToNormalFunction($action)
 	{
 	    $actionStr = '';
 	    $actionView = explode('-', $action);
@@ -1139,6 +1140,94 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         }
 
         return $new;       
+    }
+
+    /**
+     * This returns a CSV file, this function must be used on return
+     * so it will return a CSV file
+     * @param $fileName
+     * @param $data
+     * @return HttpResponse
+     */
+    public function exportCsv($fileName, $data)
+    {
+        $response        = new HttpResponse();
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $csvConfig       = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
+        $separator       = $csvConfig['separator'];
+        $enclosed        = $csvConfig['enclosed'];
+
+        if(is_array($data)) {
+
+            // sanitize and convert to UTF-8
+            $rData = array();
+
+            foreach($data as $idx => $arrData) {
+                if(is_array($arrData)) {
+                    $rData[] = array_map(function($d) {
+                        $n = $this->sanitize($d);
+                        $n = mb_convert_encoding($n, 'UTF-16LE', 'UTF-8');
+                        return $n;
+                    },  $arrData);
+                }
+            }
+
+
+            $handler = fopen('php://output', 'w');
+            ob_start();
+            foreach($rData as $idx => $childData) {
+                fputcsv($handler, $childData, $separator, $enclosed);
+            }
+            fclose($handler);
+
+            $content = ob_get_clean();
+
+            $headers  = $response->getHeaders();
+            $headers->addHeaderLine('Content-Type', 'text/csv; charset=utf-8');
+            $headers->addHeaderLine('Content-Disposition', "attachment; filename=\"".$fileName."\"");
+            $headers->addHeaderLine('Accept-Ranges', 'bytes');
+            $headers->addHeaderLine('Content-Length', strlen($content));
+            $response->setHeaders($headers);
+            $response->setContent($content);
+
+        }
+
+        return $response;
+
+    }
+
+    /**
+     * Import CSV via file
+     * @param $file
+     * @return array
+     */
+    public function importCsv($file)
+    {
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $csvConfig       = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
+        $separator       = $csvConfig['separator'];
+        $enclosed        = $csvConfig['enclosed'];
+
+        $row = 1;
+        $data = array();
+        if(file_exists($file)) {
+            if (($handle = fopen($file, "r")) !== false) {
+                while (($csvData = fgetcsv($handle, 0, $separator)) !== false) {
+
+                    $num = count($csvData);
+
+                    for ($c=0; $c < $num; $c++) {
+                        $data[$row][] = mb_convert_encoding($csvData[$c], 'UTF-16LE', 'UTF-8');
+
+                    }
+                    $row++;
+                }
+                fclose($handle);
+            }
+        }
+
+        return $data;
+
     }
 
     /**
