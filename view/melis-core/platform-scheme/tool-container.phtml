@@ -11,6 +11,11 @@ $sidebarHeaderTitle = strtoupper($this->translate('tr_meliscore_header Title'));
 $sidebarHeaderLogo  = '/MelisCore/images/dashboard/melis-logo.svg';
 $favicon            = 'favicon.ico';
 
+$tooltips = array(
+    'melis_core_platform_color_primary_color' => 'tr_meliscore_platform_scheme_primary_tooltip',
+    'melis_core_platform_color_secondary_color' => 'tr_meliscore_platform_scheme_secondary_tooltip'
+);
+
 if($scheme) {
 
     if($scheme->getLoginBackground())
@@ -41,6 +46,7 @@ if($scheme) {
                     <p><?= $this->translate('tr_meliscore_platform_scheme_subtitle') ?></p>
                 </div>
                 <div class="me-hr col-xs-12 col-md-3">
+                    <a id="resetPlatformScheme" class="btn btn-danger" title="Reset"><i class="fa fa-rotate-left i-space""></i><?= $this->translate('tr_meliscore_platform_scheme_reset_text') ?></a>
                     <a id="savePlatformScheme" class="btn btn-success" title="Save"><i class="fa fa-save i-space""></i>Save</a>
                 </div>
             </div>
@@ -59,7 +65,7 @@ if($scheme) {
 
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for=""><?= $element->getLabel(); ?> <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_color_tooltip'); ?>"></i></label>
+                            <label for=""><?= $element->getLabel(); ?> <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($tooltips[$element->getName()]); ?>"></i></label>
                             <div class="input-group colorpicker-component osta_color_code colorpicker-element">
                                 <?= $this->formRow($element->setLabel("")); ?>
                                 <span class="input-group-addon"><i style="background-color: <?=  $element->getValue(); ?>;"></i></span>
@@ -82,7 +88,9 @@ if($scheme) {
                         <div class="row">
                             <div class="col-xs-12 col-md-3">
                                 <div class="form-group">
-                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_favicon') ?></label>
+                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_favicon') ?>
+                                        <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_favicon_tooltip'); ?>"></i>
+                                    </label>
                                     <div class="input-group">
                                         <input type="file" id="favicon" name="favicon" onchange="melisCoreTool.changeImage('#platform-scheme-favicon', this)">
                                     </div>
@@ -101,7 +109,9 @@ if($scheme) {
                         <div class="row">
                             <div class="col-xs-12 col-md-3">
                                 <div class="form-group">
-                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_login_logo') ?></label>
+                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_login_logo') ?>
+                                        <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_login_logo_tooltip'); ?>"></i>
+                                    </label>
                                     <div class="input-group">
                                         <input type="file" id="login_logo" name="login_logo" onchange="melisCoreTool.changeImage('#platform-scheme-login-logo', this)">
                                     </div>
@@ -120,7 +130,9 @@ if($scheme) {
                         <div class="row">
                             <div class="col-xs-12 col-md-3">
                                 <div class="form-group">
-                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_login_background') ?></label>
+                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_login_background') ?>
+                                        <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_login_background_tooltip'); ?>"></i>
+                                    </label>
                                     <div class="input-group">
                                         <input type="file" id="login_background" name="login_background" onchange="melisCoreTool.changeImage('#platform-scheme-login-background', this)">
                                     </div>
@@ -141,14 +153,18 @@ if($scheme) {
                             <div class="col-xs-12 col-md-3">
 
                                 <div class="form-group">
-                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_logo') ?></label>
+                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_logo') ?>
+                                        <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_sidebar_header_logo_tooltip'); ?>"></i>
+                                    </label>
                                     <div class="input-group">
                                         <input type="file" id="sidebar_header_logo" name="sidebar_header_logo" onchange="melisCoreTool.changeImage('#platform-scheme-sidebar-header-logo', this)">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_title') ?></label>
+                                    <label for="favicon"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_title') ?>
+                                        <i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_sidebar_header_title_tooltip'); ?>"></i>
+                                    </label>
                                     <div class="input-group">
                                         <input type="text" id="sidebar_header_text" name="sidebar_header_text" maxlength="45" class="form-control" value="<?= $sidebarHeaderTitle ?>">
                                     </div>

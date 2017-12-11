@@ -561,7 +561,7 @@
 
         // Platform Schemes
         'tr_meliscore_platform_scheme' => 'Platform Scheme',
-        'tr_meliscore_platform_scheme_subtitle' => 'Allows you too modify the color schemes and the images of the platform.',
+        'tr_meliscore_platform_scheme_subtitle' => 'Customize here the colors and images of the platform.',
         'tr_meliscore_platform_color_scheme' => 'Color schemes',
         'tr_meliscore_platform_scheme_images' => 'Title &amp; Images',
         'tr_meliscore_platform_color_primary' => 'Primary Color',
@@ -589,8 +589,7 @@
 
         'tr_meliscore_platform_scheme_sidebar_header_title_too_long' => 'Sidebar header title should not be more than 45 characters',
         'tr_meliscore_platform_scheme_sidebar_header_title_too_short' => 'Sidebar header title should be more than 5 characters',
-
-
-
+        'tr_meliscore_platform_scheme_reset_confirm' => 'Are you sure you want to restore this to default settings?',
+        'tr_meliscore_platform_scheme_reset_text' => 'Reset to default',
 	);
 ?>

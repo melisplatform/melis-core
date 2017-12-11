@@ -331,6 +331,29 @@ class PlatformSchemeController extends AbstractActionController
     }
 
     /**
+     * @return JsonModel
+     */
+    public function resetToDefaultAction()
+    {
+        $success      = 0;
+        $request      = $this->getRequest();
+
+        if ($request->isXmlHttpRequest()) {
+            /**
+             * for now directly modify the MELIS_SCHEME_1
+             */
+            $schemeId = 2;
+            $success = $this->getPlatformSchemeSvc()->resetScheme($schemeId);
+        }
+
+        $response = array(
+            'success' => $success,
+        );
+
+        return new JsonModel($response);
+    }
+
+    /**
      * Generates a dynamic CSS virtual file that will be rendered
      * in the platform
      * @return ViewModel

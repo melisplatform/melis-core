@@ -19,6 +19,40 @@ $(function() {
     $("body").on("click", "#savePlatformScheme", function() {
         $("form#melis_core_platform_scheme_images").submit();
     });
+
+    $("body").on("click", "#resetPlatformScheme", function() {
+        melisCoreTool.confirm(
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
+            translations.tr_meliscore_general_proceed,
+            translations.tr_meliscore_platform_scheme_reset_confirm,
+            function() {
+                melisCoreTool.pending(".button");
+                $.ajax({
+                    type    : 'GET',
+                    url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
+                    processData : false,
+                    cache       : false,
+                    contentType : false,
+                    dataType    : 'json',
+                }).success(function(data){
+                    if(data.success) {
+                        melisCoreTool.processing();
+                        location.reload(true);
+                    }
+                    else {
+                        melisHelper.melisKoNotification(data.title, data.message, data.errors);
+                    }
+                    melisCoreTool.done(".button");
+                }).error(function(){
+                    melisCoreTool.done(".button");
+                });
+            }
+        );
+
+
+    });
+
     $("body").on("submit", "form#melis_core_platform_scheme_images", function(e) {
         var formData = new FormData(this);
 
@@ -49,7 +83,6 @@ $(function() {
             else {
                 melisHelper.melisKoNotification(data.title, data.message, data.errors);
             }
-            melisCore.flashMessenger();
             melisCoreTool.done(".button");
         }).error(function(){
             melisCoreTool.done(".button");

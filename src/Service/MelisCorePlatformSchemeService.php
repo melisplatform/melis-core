@@ -116,4 +116,45 @@ class MelisCorePlatformSchemeService extends MelisCoreGeneralService
         return $arrayParameters['results'];
     }
 
+    /**
+     * Handles the event for resetting the whole scheme of the selected template
+     * @param $id
+     * @return mixed
+     */
+    public function resetScheme($id)
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        $results = false;
+
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_package_scheme_reset_start', $arrayParameters);
+        $defaultSchemeData = $this->schemeTable()->getDefaultScheme()->current();
+
+        if($defaultSchemeData) {
+            $data = array(
+                'pscheme_colors' =>  $defaultSchemeData->pscheme_colors,
+                'pscheme_sidebar_header_logo' =>  $defaultSchemeData->pscheme_sidebar_header_logo,
+                'pscheme_sidebar_header_text' =>  $defaultSchemeData->pscheme_sidebar_header_text,
+                'pscheme_login_logo' =>  $defaultSchemeData->pscheme_login_logo,
+                'pscheme_login_background' =>  $defaultSchemeData->pscheme_login_background,
+                'pscheme_favicon' =>  $defaultSchemeData->pscheme_favicon,
+                'pscheme_is_active' =>  1,
+
+            );
+
+            $success = $this->schemeTable()->save($data, $id);
+            if($success) {
+                $results = true;
+            }
+        }
+
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] = $results;
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_package_scheme_reset_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+
 }
