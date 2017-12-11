@@ -878,8 +878,10 @@ newplugin-cont span,
 .melis-modal-cont .modal-content p{
     margin-bottom: 4px;
 }
-
-
+/* css hack fix causing blur modal chrome only */
+.modal.in .modal-dialog {
+    -webkit-filter: blur(0.00001px);
+}
 
 
 
@@ -2534,7 +2536,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
 }
 
-
+/*remove tinymce brand name*/
+.mce-branding-powered-by{
+    display: none;
+}
 
 @media ( max-width: 991px ) {
     #content .page-head-container .page-title .page-publishunpublish.title-switch {
@@ -3205,4 +3210,79 @@ div#modal-user-management div.widget {
         float: left;
         min-width: 150px;
     }
+}
+
+.meliscore-platform-scheme-login-logo {
+    display: inline-block;
+    border: 5px solid #dadada;
+    padding: 5px;
+    border-radius: 100%;
+    box-shadow: inset 0 0 6px #000000;
+    background: #fff;
+
+}
+
+.meliscore-platform-scheme-login-logo .melis-login-logo {
+    height: 120px;
+    width: 120px;
+    border-radius: 41%;
+}
+
+.meliscore-platform-scheme-login-background {
+/*    -webkit-clip-path: inset(30px 10px 30px 10px);
+    clip-path: inset(30px 10px 30px 10px);*/
+}
+
+.meliscore-platform-scheme-sidebar-container {
+    position: relative;
+    top: -1px;
+    padding: 10px 15px;
+    max-width: 230px;
+    width: auto;
+    height: 47px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+
+}
+.melis-core-platform-container {
+    background: #dcdcdc;
+    padding: 50px;
+    text-align: center;
+}
+
+#platform-scheme-sidebar-header-title {
+    font-size: 18px;
+    display: inline-block;
+}
+.meliscore-platform-scheme-sidebar-container img {
+    display: inline-block;
+    margin-right: 10px;
+    height: 30px;
+    width: 30px;
+}
+
+#melis_core_platform_scheme_images .input-group {
+    width: 100%;
+}
+
+#melis_core_platform_scheme_images input#sidebar_header_text{
+    text-transform: uppercase;
+}
+
+.icon-span-filestyle {
+    margin-right: 10px;
+}
+.melis-ptb20 {
+    padding: 20px 0;
+}
+.meliscore-platform-scheme-favicon img,
+.meliscore-platform-scheme-login-logo,
+.meliscore-platform-scheme-login-background img,
+.meliscore-platform-scheme-sidebar-container melis-primary-bg {
+    margin-top: 18px;
+}
+
+.i-space {
+    margin-right: 10px;
 }

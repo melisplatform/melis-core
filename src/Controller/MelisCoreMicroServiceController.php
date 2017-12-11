@@ -230,16 +230,35 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                         $view->methodName = $method;
                                         return $view;
                                     }
-                                    
                                     else {
 
                                         $tmpInstance = new $servicePath();
                                         $tmpInstance->setServiceLocator($this->getServiceLocator());
                                         $reflectionMethod = new \ReflectionMethod($servicePath, $method);
-                                        /**
-                                         * allow method to accept dynamic arguments
-                                         */
-                                        $data = (array)$reflectionMethod->invokeArgs($tmpInstance, $post);
+
+                                         // Check data if it's an Object
+                                        if(is_object($data)){
+                                          
+                                            // This will check if the property of an object is protected
+                                            $obj = new \ReflectionObject($data);
+                                            $objIsProtected = $obj->getProperties(\ReflectionProperty::IS_PROTECTED);
+
+                                            // This is for HydratingResultSet Object
+                                            if($data instanceof HydratingResultSet){
+                                                $data = $data->toArray();
+                                            }
+
+                                            // This is for Object that is protected
+                                            if($objIsProtected){
+                                                $data = $this->tool()->convertObjectToArray($data);
+                                            }
+                                        }
+                                        // Check data if it's an array
+                                        if(is_array($data)){
+                                            
+                                            $data = $this->tool()->convertObjectToArray($data);
+                                        }
+
                                         $message = 'tr_meliscore_microservice_request_ok';
                                         $success = true;
 
@@ -439,6 +458,28 @@ class MelisCoreMicroServiceController extends AbstractActionController
 
         return new JsonModel($response);
     }
+    public function modifyResultAction()
+    {
+        $success = 0;
+        $data = [];
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            $userId = (int)$request->getPost('id');
+            $authData = $this->getMicroServiceAuthTable()->getUser($userId)->current();
+
+            $authData['result'] = $authData;
+
+        }
+
+        $response = [
+            'success' => $success,
+            'response' => $data
+        ];
+
+        return new JsonModel($response);
+    }
 
     public function updateStatusAction()
     {
@@ -470,7 +511,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
 
     private function generateCode($length = 16)
     {
-        $characters = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=$@';
+        $characters = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ=';
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
@@ -544,5 +585,6 @@ class MelisCoreMicroServiceController extends AbstractActionController
         $view->title       = 'tr_meliscore_microservice_title';
         return $view;
     }
+
 
 }

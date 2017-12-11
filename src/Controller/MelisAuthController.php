@@ -40,10 +40,17 @@ class MelisAuthController extends AbstractActionController
     	$appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
     	if (!empty($appConfigForm['datas']['login_background']))
     	    $background = $appConfigForm['datas']['login_background'];
-    		
+
+        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeData = $schemeSvc->getCurrentScheme();
+
+
     	$this->layout()->addChild($view, 'content');
-    	$this->layout()->isLogin = 1;
+
+    	$this->layout()->isLogin          = 1;
     	$this->layout()->login_background = $background;
+    	$this->layout()->schemes          = $schemeData;
+    	$this->layout()->setVariable('test', 'look for me');
     	
     	return $view;
     	
@@ -489,7 +496,21 @@ class MelisAuthController extends AbstractActionController
         
         return new JsonModel(array('login' => $isLoggedIn));
     }
-    
+
+    public function getIdentityMenuAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+
+        $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+
+        return $view;
+    }
     /**
      * Remember me function creation cookie
      * 
@@ -571,4 +592,6 @@ class MelisAuthController extends AbstractActionController
 
         return;
     }
+
+
 }

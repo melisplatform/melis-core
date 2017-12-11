@@ -36,6 +36,28 @@ class MelisFlashMessengerController extends AbstractActionController
         
         return $view;
     }
+    public function setFlashMessageAction()
+    {
+        // translator service
+        $translator = $this->serviceLocator->get('translator');
+
+        // tool service
+        $tool = $this->getServiceLocator()->get('MelisCoretool');
+
+        // flash messenger service
+        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+
+        $flashMessages = Json::decode($flashMessenger->getFlashMessengerMessages());
+
+        // flashMessages array, re-stored so we can apply translation to its content
+        $fmArray = array();
+        $fmCtr = 0;
+
+
+        return new JsonModel(array(
+            'flashMessage' => $fmArray,
+        ));
+    }
     
     /**
      * Returns the flash messages content
@@ -99,5 +121,6 @@ class MelisFlashMessengerController extends AbstractActionController
         $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
         $logSrv->saveLog($title, $message, $success, $typeCode, $itemId);
     }
-    
+
+
 }

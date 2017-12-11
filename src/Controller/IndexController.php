@@ -12,7 +12,7 @@ namespace MelisCore\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
-
+use Zend\Http\PhpEnvironment\Response as HttpResponse;
 
 /**
  * This class renders Melis CMS
@@ -33,7 +33,12 @@ class IndexController extends AbstractActionController
     	
     	$this->layout()->setVariable('jsCallBacks', $view->getVariable('jsCallBacks'));
     	$this->layout()->setVariable('datasCallback', $view->getVariable('datasCallback'));
-    	
+
+        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeData = $schemeSvc->getCurrentScheme();
+
+        $this->layout()->setVariable('schemes', $schemeData);
+
     	return $view;
     }
     
@@ -72,14 +77,26 @@ class IndexController extends AbstractActionController
     	}
     	else
     		$appsConfigCenter = array();
+
+        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeData = $schemeSvc->getCurrentScheme();
     	
-    	$view = new ViewModel();
-    	$view->melisKey = $melisKey;
+    	$view                   = new ViewModel();
+    	$view->melisKey         = $melisKey;
     	$view->appsConfigCenter = $appsConfigCenter;
+    	$view->schemes          = $schemeData;
     	
     	return $view;
     }
-    
+    public function rightAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
     /**
      * Shows the left menu of the Melis Platform interface
      * 
@@ -150,4 +167,29 @@ class IndexController extends AbstractActionController
         \Zend\Debug\Debug::dump($container->getArrayCopy());
         die;
     }
+
+    public function testAction()
+    {
+
+        $response        = new HttpResponse();
+        $tool =  $this->getServiceLocator()->get('MelisCoreTool');
+        $user = $this->getServiceLocator()->get('MelisCoreTableLang');
+
+        $users = $user->fetchAll()->toArray();
+//
+////        print '<pre>';
+////        print_r($users);
+////        print '</pre>';
+//
+//        $list = array (
+//            array('aaa', 'bbb', 'ccc', 'dddd'),
+//            array('123', '456', '789'),
+//            array('"aaa"', '"bbb"')
+//        );
+
+        print_r($tool->importCsv('C:\Users\melis-admin\Downloads\testfile (11).csv'));
+
+die;
+    }
+    
 }

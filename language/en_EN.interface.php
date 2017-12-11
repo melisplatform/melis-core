@@ -252,7 +252,13 @@
 	    'tr_meliscore_module_management_prompt_success' => 'Module settings has been updated',
 	    'tr_meliscore_module_management_prompt_failed' => 'Unable to update module settings',
 	    'tr_meliscore_module_management_notification_tip' => 'Drag and drop the modules to re-arrange',
-	    
+	    'tr_meliscore_module_management_inactive_confirm' => 'By deactivating %s, this will also deactivate the following modules: ',
+	    'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
+	    'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
+	    'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
+        'tr_meliscore_general_proceed' => 'Proceed',
+        'tr_meliscore_general_confirm' => 'Confirm',
+
 	    // Common File Attachment and Images Deletion labels and messages
 	    // File
 	    'tr_meliscore_delete_file_title' => 'Delete file',
@@ -535,7 +541,7 @@
         'tr_meliscore_microservice' => 'Microservice',
         'tr_meliscore_microservice_tab_title' => 'Microservices',
         'tr_meliscore_microservice_modal' => 'Microservice Modal',
-        'tr_meliscore_microservice_tool_user_desc' => ' Manage and view user\'s microservice accessibility and activies',
+        'tr_meliscore_microservice_tool_user_desc' => ' Manage and view user\'s microservice accessibility and activities',
         'tr_meliscore_microservice_date_requested' => 'Date Requested',
         'tr_meliscore_microservice_api_key_invalid' => 'Invalid API key',
         'tr_meliscore_microservice_api_key_no_access' => 'You don\'t have the access to perform this action',
@@ -551,7 +557,39 @@
         'tr_meliscore_microservice_generateD_api_key' => 'API Key',
         //Microservice Listing
         'tr_meliscore_microservice_title' => 'List of microservices available on the Platform',
-        'tr_meliscore_microservice_sub_title' => 'Parameters for this service needs to be POSTED. The return will be in JSON. This form will show up for easy testing if no data has been posted.'
+        'tr_meliscore_microservice_sub_title' => 'Parameters for this service needs to be POSTED. The return will be in JSON. This form will show up for easy testing if no data has been posted.',
 
+        // Platform Schemes
+        'tr_meliscore_platform_scheme' => 'Platform Scheme',
+        'tr_meliscore_platform_scheme_subtitle' => 'Customize here the colors and images of the platform.',
+        'tr_meliscore_platform_color_scheme' => 'Color schemes',
+        'tr_meliscore_platform_scheme_images' => 'Title &amp; Images',
+        'tr_meliscore_platform_color_primary' => 'Primary Color',
+        'tr_meliscore_platform_color_secondary' => 'Secondary Color',
+        'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
+        'tr_meliscore_platform_color_invalid_hex'   => 'Invalid HEX color, please choose a valid HEX color',
+
+        'tr_meliscore_platform_scheme_form_login_logo' => 'Login logo',
+        'tr_meliscore_platform_scheme_form_login_background' => 'Login background',
+        'tr_meliscore_platform_scheme_form_sidebar_header_logo' => 'Sidebar header logo',
+        'tr_meliscore_platform_scheme_form_sidebar_header_title' => 'Sidebar header title',
+        'tr_meliscore_platform_scheme_form_favicon' => 'Favicon',
+
+        'tr_meliscore_platform_scheme_image_is_invalid' => 'Invalid file image, make sure that the file being uploaded is a type of an image',
+
+        'tr_meliscore_platform_scheme_save_ok'   => 'Platform scheme successfully saved',
+        'tr_meliscore_platform_scheme_save_ko'   => 'Unable to save platform scheme',
+
+        'tr_meliscore_platform_scheme_folder_not_exists' => 'Platform scheme folder does not exists (/media/platform-scheme)',
+        'tr_meliscore_platform_scheme_folder_no_permission' => 'You don\'t have permission to upload on this folder <strong>/media/platform-scheme<strong>',
+
+        'tr_meliscore_platform_scheme_image_too_big' => 'File image is too big, it should not be more than %s',
+        'tr_meliscore_platform_scheme_image_not_exist' => 'File image uploaded doesn\'t seem to be existing, please choose another',
+        'tr_meliscore_platform_scheme_image_invalid_extension' => 'Invalid file extension, make sure that the file being uploaded is a type of an image',
+
+        'tr_meliscore_platform_scheme_sidebar_header_title_too_long' => 'Sidebar header title should not be more than 45 characters',
+        'tr_meliscore_platform_scheme_sidebar_header_title_too_short' => 'Sidebar header title should be more than 5 characters',
+        'tr_meliscore_platform_scheme_reset_confirm' => 'Are you sure you want to restore this to default settings?',
+        'tr_meliscore_platform_scheme_reset_text' => 'Reset to default',
 	);
 ?>

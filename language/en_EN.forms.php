@@ -75,6 +75,15 @@
 	    'tr_meliscore_user_password_change_succes' => 'Password successfully changed.',
 
         'tr_meliscore_login_password_enc_update' => 'We have changed our encryption algorithm, please update your password to secure your account. To do so click on <strong>Forgot password</strong> to create a new password. We apologize for the inconvenience.',
-	    
+
+        // Platform Scheme
+        'tr_meliscore_platform_scheme_primary_tooltip' => 'Change the primary color of the platform by typing the hexadecimal color code or by using the color picker',
+        'tr_meliscore_platform_scheme_secondary_tooltip' => 'Change the secondary color of the platform by typing the hexadecimal color code or by using the color picker',
+        'tr_meliscore_platform_scheme_favicon_tooltip' => 'Change the favicon of the Back Office',
+        'tr_meliscore_platform_scheme_login_logo_tooltip' => 'Change the logo of the login of the Back Office',
+        'tr_meliscore_platform_scheme_login_background_tooltip' => 'Change the background of the login of the Back Office',
+        'tr_meliscore_platform_scheme_sidebar_header_logo_tooltip' => 'Change the logo at the top left corner of the platform',
+        'tr_meliscore_platform_scheme_sidebar_header_title_tooltip' => 'Change the title at the top left corner of the platform',
+
 	);
 ?>

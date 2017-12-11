@@ -938,6 +938,41 @@ class ToolUserController extends AbstractActionController
 
     }
 
+    public function getUserDataAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceLocator()->get('translator');
+        $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
+
+        if($request->isPost()) {
+
+            $post    = get_object_vars($request->getPost());
+
+            $columns = array_keys($melisTool->getColumns());
+
+            $data              = $userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection, $start, $length)->toArray();
+            $dataCount         = $userTbl->getTotalData();
+            $dataFilteredCount = $userTbl->getTotalFiltered();
+            $tableData         = $data;
+
+            for($ctr = 0; $ctr < count($tableData); $ctr++) {
+                // apply text limits
+
+            }
+        }
+
+        $response = [
+            'draw' => $draw,
+            'data' => $tableData,
+            'recordsFiltered' => $dataFilteredCount,
+            'recordsTotal' => $dataCount
+        ];
+
+        return new JsonModel($response);
+    }
+
     /**
      * Handles the event of updating user's information
      */
@@ -1400,4 +1435,5 @@ class ToolUserController extends AbstractActionController
 
         return new JsonModel($response);
     }
+
 }

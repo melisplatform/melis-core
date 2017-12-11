@@ -115,4 +115,39 @@ class TreeToolsController extends AbstractActionController
     	 
      	return $view;
     }
+    public function renderFirstTreeToolsAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisKeys = $melisAppConfig->getMelisKeys();
+
+        // Get the order list for ordering tools
+        $appconfigpath = $melisKeys['meliscore_toolstree'];
+        $appsConfig = $melisAppConfig->getItem($appconfigpath);
+        $orderInterface = $melisAppConfig->getOrderInterfaceConfig('meliscore_toolstree');
+        $tools = array();
+
+        $sections = $tools;
+
+        // Reordering tools inside sections
+        foreach ($toolsOrdered as $keySection => $toolsSection)
+        {
+            $sectionOrderInterface = array();
+            if (!empty($orderInterface[$keySection]))
+                $sectionOrderInterface = $orderInterface[$keySection];
+            $toolsSectionOrdered = array();
+
+
+            foreach ($tools[$keySection]['toolsection_children'] as $keyInterface => $childinterface)
+            {
+                $toolsOrdered[$keySection]['toolsection_children'][$keyInterface] = $childinterface;
+            }
+        }
+
+        $view = new ViewModel();
+        $view->tools = $toolsOrdered;
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
 }

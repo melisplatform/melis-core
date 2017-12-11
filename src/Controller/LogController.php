@@ -236,6 +236,44 @@ class LogController extends AbstractActionController
         $view = new ViewModel();
         return $view;
     }
+    public function getEventLogsAction()
+    {
+        $colId = array();
+        $dataCount = 0;
+        $recordsFiltered = 0;
+        $draw = 0;
+        $tableData = array();
+
+        if($this->getRequest()->isPost())
+        {
+            // Get the locale used from meliscore session
+            $container = new Container('meliscore');
+            $locale = $container['melis-lang-locale'];
+
+            // Get Cureent User ID
+            $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+            $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+            $userId = (int) $userAuthDatas->usr_id;
+
+            /**
+             * If the user is Admin type this will allow to filter the result to any users,
+             * else this will only show current user's logs
+             */
+            $userId = ($isAdmin) ? $this->getRequest()->getPost('userId') : $userId;
+
+            $typeId = $this->getRequest()->getPost('typeId');
+
+            $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+
+        }
+
+        return new JsonModel(array(
+            'draw' => (int) $draw,
+            'recordsTotal' => "",
+            'recordsFiltered' =>  count($recordsFiltered),
+            'data' => $tableData,
+        ));
+    }
 
     /**
      * Retrieving all the list of logs for DataTable
@@ -553,4 +591,6 @@ class LogController extends AbstractActionController
 
         return new JsonModel($response);
     }
+
+
 }

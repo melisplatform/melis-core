@@ -1,6 +1,19 @@
 
 <?php  
-$loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
+$loginClas       = (int) $this->isLogin == 1 ? 'login-page' : '';
+$schemes         = $this->layout()->schemes;
+$loginBackground = $this->login_background;
+$favicon         = '/favicon.ico';
+
+if($schemes) {
+    if(!empty($schemes->getLoginBackground())) {
+        $loginBackground = $schemes->getLoginBackground();
+    }
+
+    if(!empty($schemes->getFavicon())) {
+        $favicon = $schemes->getFavicon();
+    }
+}
 
 ?>
 <?php echo $this->doctype(); ?>
@@ -13,11 +26,13 @@ $loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
 <!-- <![endif]-->
 	<head>
         <meta charset="utf-8">
-		<?= $this->headTitle('MELIS Platform V2.0'); ?>
+		<?= $this->headTitle('Melis Platform'); ?>
         <?= $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
         ?>
+        <link rel="icon" href="<?= $favicon; ?>" type="image/x-icon" />
+        <link rel="shortcut icon" href="<?= $favicon; ?>" type="image/x-icon" />
         <script type="text/javascript">
        		var ua = window.navigator.userAgent;
         	var msie = ua.indexOf("MSIE ");
@@ -58,7 +73,10 @@ $loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
         		
         	echo $this->headLink();
 		?>
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--        <link href="/MelisCore/melis/platform-color-schemes.css" media="screen" rel="stylesheet" type="text/css">-->
+        <link href="/melis/platform-color-schemes.css" media="screen" rel="stylesheet" type="text/css">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script><![endif]-->
@@ -97,7 +115,7 @@ $loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
                  <style>
     
     	     	 body.login-page{
-    	     	    background: url(../' . $this->login_background . ') fixed no-repeat;
+    	     	    background: url(' . $loginBackground . ') fixed no-repeat;
     	     	    background-size: cover;
     	     	    height: 100%;
     	     	 }
