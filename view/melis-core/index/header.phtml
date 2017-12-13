@@ -17,6 +17,16 @@ if($schemes) {
         $sidebarHeaderText = $schemes->getSidebarHeaderText();
     }
 }
+
+
+$headerTitle = '<span>'.$this->escapeHtml($sidebarHeaderText).'</span>';
+$headerTitleLen = str_replace(' ', '', trim($sidebarHeaderText));
+$headerTitleLen = strlen($headerTitleLen);
+
+if($headerTitleLen > 13) {
+    $headerTitle = '<span class="ml-header">'.$this->escapeHtml($sidebarHeaderText).'</span>';
+}
+
 ?>
 <div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar  navbar-primary main" role="navigation">
 
@@ -33,7 +43,7 @@ if($schemes) {
               <a href="/melis" class="appbrand innerL">
               
               		<img alt="melis platform" src="<?= $sidebarHeaderLogo; ?>">
-					<?php echo $this->escapeHtml($sidebarHeaderText); ?>
+                    <?= $headerTitle ?>
               
               </a>
               

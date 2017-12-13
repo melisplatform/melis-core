@@ -24,7 +24,8 @@ $(function() {
         melisCoreTool.confirm(
             translations.tr_meliscore_common_yes,
             translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
-            translations.tr_meliscore_general_proceed,
+            // translations.tr_meliscore_general_proceed,
+            translations.tr_meliscore_platform_scheme_reset_text,
             translations.tr_meliscore_platform_scheme_reset_confirm,
             function() {
                 melisCoreTool.pending(".button");
@@ -93,11 +94,15 @@ $(function() {
 
     $("body").on("keyup", "input#sidebar_header_text", function() {
         var text = escapeHtml($(this).val());
-
+        var textLength = text.replace(/\s/g, "").length;
         if(!text) {
             text = translations['tr_meliscore_header Title'];
         }
-
+        if(textLength > 13) {
+            $("#platform-scheme-sidebar-header-title").addClass("ml-header");
+        } else {
+            $("#platform-scheme-sidebar-header-title").removeClass("ml-header");
+        }
         $("span#platform-scheme-sidebar-header-title").html(text);
     })
 });

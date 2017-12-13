@@ -77,10 +77,10 @@
         // Platform Scheme
         'tr_meliscore_platform_scheme_primary_tooltip' => 'Change la couleur principale de la plateforme en saisissant le code hexadécimal ou en utilisant le selecteur de couleur',
         'tr_meliscore_platform_scheme_secondary_tooltip' => 'Change la couleur secondaire de la plateforme en saisissant le code hexadécimal ou en utilisant le selecteur de couleur',
-        'tr_meliscore_platform_scheme_favicon_tooltip' => 'Change le favicon du Back Office',
-        'tr_meliscore_platform_scheme_login_logo_tooltip' => 'Change le logo du login du Back Office',
-        'tr_meliscore_platform_scheme_login_background_tooltip' => 'Change l\'arrière-plan du login du Back Office',
-        'tr_meliscore_platform_scheme_sidebar_header_logo_tooltip' => 'Change le logo en haut à gauche de la plateforme',
+        'tr_meliscore_platform_scheme_favicon_tooltip' => 'Change le favicon du Back Office (size: 16 x 16)',
+        'tr_meliscore_platform_scheme_login_logo_tooltip' => 'Change le logo du login du Back Office (size: 120 x 120)',
+        'tr_meliscore_platform_scheme_login_background_tooltip' => 'Change l\'arrière-plan du login du Back Office (size: 1920 x 1080)',
+        'tr_meliscore_platform_scheme_sidebar_header_logo_tooltip' => 'Change le logo en haut à gauche de la plateforme (size: 30 x 30)',
         'tr_meliscore_platform_scheme_sidebar_header_title_tooltip' => 'Change le titre en haut à gauche de la plateforme',
 	);
 ?>

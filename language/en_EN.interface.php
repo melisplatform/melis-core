@@ -589,7 +589,8 @@
 
         'tr_meliscore_platform_scheme_sidebar_header_title_too_long' => 'Sidebar header title should not be more than 45 characters',
         'tr_meliscore_platform_scheme_sidebar_header_title_too_short' => 'Sidebar header title should be more than 5 characters',
-        'tr_meliscore_platform_scheme_reset_confirm' => 'Are you sure you want to restore this to default settings?',
-        'tr_meliscore_platform_scheme_reset_text' => 'Reset to default',
+        'tr_meliscore_platform_scheme_reset_confirm' => 'By clicking on this button you will restaure all items to the default scheme of Melis Platform. Are you sure you wish to proceed ?',
+        'tr_meliscore_platform_scheme_reset_text' => 'Restore to default',
+        'tr_meliscore_platform_scheme_reset_alt' => 'Restore to default all of the items'
 	);
 ?>

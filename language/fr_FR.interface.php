@@ -605,7 +605,9 @@
 
         'tr_meliscore_platform_scheme_sidebar_header_title_too_long' => 'Sidebar header title should not be more than 45 characters',
         'tr_meliscore_platform_scheme_sidebar_header_title_too_short' => 'Sidebar header title should be more than 5 characters',
-        'tr_meliscore_platform_scheme_reset_confirm' => 'Are you sure you want to restore this to default settings?',
-        'tr_meliscore_platform_scheme_reset_text' => 'Reset to default',
-	);
+        'tr_meliscore_platform_scheme_reset_confirm' => 'En cliquant sur ce bouton vous allez restaurer tous les élements par défault au thème de Melis Platform. Est-ce vous sûr de vouloir procéder ?',
+        'tr_meliscore_platform_scheme_reset_text' => 'Restaurer par defaut',
+        'tr_meliscore_platform_scheme_reset_alt' => 'Restaure tous les éléments par défaut'
+
+    );
 ?>
