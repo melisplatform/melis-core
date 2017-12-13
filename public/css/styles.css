@@ -3286,3 +3286,32 @@ div#modal-user-management div.widget {
 .i-space {
     margin-right: 10px;
 }
+
+.ml-header {
+    display: -webkit-box !important;
+    font-size: 13px !important;
+    width: 155px;
+    float: right;
+    text-align: left;
+    margin-top: 8px;
+    height: 30px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.meliscore-platform-scheme-sidebar-container #platform-scheme-sidebar-header-title.ml-header {
+    display: -webkit-box !important;
+    font-size: 13px !important;
+    width: 155px;
+    float: right;
+    text-align: left;
+    margin-top: 0px;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
