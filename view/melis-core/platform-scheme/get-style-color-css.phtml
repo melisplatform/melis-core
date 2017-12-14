@@ -1,7 +1,7 @@
 <?php
     // use default colors if platform scheme table is empty
     $primaryColor   = $this->melis_core_platform_color_primary_color   ?: '#981a1f';
-    $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#c76c70';
+    $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#e64444';
 ?>
 /* =============== Primary Color =============== */
 a,
@@ -44,7 +44,9 @@ body .navbar.main.navbar-primary {
 .navbar.main .nav.navbar-right {
     background: <?= $primaryColor; ?>;
 }
-
+.navbar.main .nav.navbar-right li:first-child {
+    border-left: 1px solid <?= $secondaryColor; ?>;
+}
 .navbar.main.navbar-primary .nav>li>a:hover {
     background: <?= $secondaryColor; ?>;
 }
@@ -464,11 +466,79 @@ input[type="color"]:focus,
     border-left-color: <?= $primaryColor; ?>;
 }
 
+.slider-nav .slick-track .slick-slide {
+    background:  <?= $primaryColor; ?>;
+}
+
+.slider-nav .slick-track .slick-slide:before {
+    border-top: 1px solid <?= $primaryColor; ?>;
+    border-bottom: 1px solid <?= $primaryColor; ?>;
+}
+
+.fc-event, .fc-event:hover {
+    background: <?= $primaryColor; ?>;
+}
+
+.event-icon {
+    background: <?= $primaryColor; ?>;
+}
+
+.update-event:hover {
+    background: <?= $primaryColor; ?>;
+}
+
 ::-webkit-scrollbar-thumb {
     background: <?= $primaryColor; ?>;
 }
 
+.nicescroll-cursors {
+    background: <?= $primaryColor; ?> !important;
+}
+
+.content-cont .widget.widget-tabs-double-2>.widget-head ul li a:hover {
+color: <?= $primaryColor; ?>;
+}
+
+#external-events li {
+    background: <?= $primaryColor; ?>;
+}
+
+
+.notyfy_wrapper.notyfy_primary {
+    background: <?= $primaryColor; ?>;
+}
+
+div.glyphicons.glyphicon-primary i:before,
+div.glyphicons-social.glyphicon-primary i:before {
+    color: <?= $primaryColor; ?>;
+}
+
+.nav-pills.nav-timeline>li>a {
+    background: <?= $primaryColor; ?>;
+}
+
+.widget.widget-wizard-pills .widget-head ul li.primary a {
+    background: <?= $primaryColor; ?>;
+}
+
+.wizard-design .pagination > li.next > a:focus {
+    background: <?= $primaryColor; ?>;
+}
+
+.activity-line .icon.primary {
+    background: <?= $primaryColor; ?>;
+}
+
+.activity-line .color-widget.primary {
+    background: <?= $primaryColor; ?>;
+}
+
+
 /* =============== Secondary Color =============== */
+.widget.widget-body-primary>.widget-body {
+    background-color: <?= $secondaryColor; ?>;
+}
+
 .form-group i.fa-info-circle + .tooltip .tooltip-inner {
     background-color: <?= $secondaryColor; ?>;
 }
@@ -481,9 +551,7 @@ input[type="color"]:focus,
     border-left-color: <?= $secondaryColor; ?>;
 }
 
-.content-cont .widget.widget-tabs-double-2>.widget-head ul li a:hover {
-    color: <?= $secondaryColor; ?>;
-}
+
 
 .tickets li .media-heading {
     color: <?= $secondaryColor; ?>;
@@ -526,6 +594,27 @@ input[type="color"]:focus,
 
 .navbar.main.navbar-primary .toggle-button i {
     color: <?= $secondaryColor; ?>;
+}
+.widget.widget-tabs>.widget-head ul li {
+    border-right: 1px solid <?= $secondaryColor; ?>;
+}
+
+.module-settings .ms-heading .tooltip .tooltip-inner {
+    background: <?= $secondaryColor; ?>;
+}
+.pagination>li>a, .pagination>li>span {
+    color: <?= $secondaryColor; ?>;
+}
+
+.calendar-highlight {
+    background: <?= $secondaryColor; ?>;
+}
+
+.datepicker .table-condensed tr td.active,
+.datepicker .table-condensed tr td.active:hover,
+.datepicker .table-condensed tr td.active.disabled,
+.datepicker .table-condensed tr td.active.disabled:hover {
+    background: <?= $secondaryColor; ?> !important;
 }
 
 /* Media Queries */

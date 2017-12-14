@@ -725,6 +725,14 @@ newplugin-cont span,
     height: auto;
     display: none;
 }
+
+.navbar.main .nav.navbar-right li:first-child {
+    border-left: 1px solid #AD6565;
+}
+.navbar.main .nav.navbar-right .dropdown-menu {
+    border-left: 0px;
+}
+
 .navbar.main .nav.navbar-right li{
     height: auto;
     border-bottom: 1px solid #AD6565;
@@ -3314,6 +3322,9 @@ div#modal-user-management div.widget {
     text-overflow: ellipsis;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+}
+.wizard-design .widget.widget-tabs>.widget-head ul li {
+    border-right: 1px solid #e5e5e5;
 }
 @media (max-width: 767px) {
     #resetPlatformScheme {
