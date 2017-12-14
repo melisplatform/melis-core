@@ -36,7 +36,7 @@
 		'tr_meliscore_tool_gen_refresh' => 'Rafraichir',
 		'tr_meliscore_tool_gen_content' => 'Contenu',
 		'tr_meliscore_tool_gen_edit' => 'Edition',
-		'tr_meliscore_tool_gen_save' => 'Sauvegarder',
+		'tr_meliscore_tool_gen_save' => 'Enregistrer',
 		'tr_meliscore_tool_gen_delete' => 'Supression',
 		'tr_meliscore_tool_gen_modal' => 'Modal',
 		'tr_meliscore_tool_user_modal_rights' => 'Droits',
@@ -576,24 +576,24 @@
         'tr_meliscore_microservice_sub_title' => 'Les paramètres de ce service doivent être POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnée n\'est postée.',
 
         // Platform Schemes
-        'tr_meliscore_platform_scheme' => 'Platform Scheme',
+        'tr_meliscore_platform_scheme' => 'Thème de la plateforme',
         'tr_meliscore_platform_scheme_subtitle' => 'Personnalisez ici les couleurs et images de la plateforme.',
         'tr_meliscore_platform_color_scheme' => 'Color schemes',
-        'tr_meliscore_platform_scheme_images' => 'Title &amp; Images',
-        'tr_meliscore_platform_color_primary' => 'Primary Color',
-        'tr_meliscore_platform_color_secondary' => 'Secondary Color',
+        'tr_meliscore_platform_scheme_images' => 'Titre &amp; Images',
+        'tr_meliscore_platform_color_primary' => 'Couleur primaire',
+        'tr_meliscore_platform_color_secondary' => 'Couleur secondaire',
         'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
         'tr_meliscore_platform_color_invalid_hex'   => 'Invalid HEX color, please choose a valid HEX color',
 
-        'tr_meliscore_platform_scheme_form_login_logo' => 'Login logo',
-        'tr_meliscore_platform_scheme_form_login_background' => 'Login background',
-        'tr_meliscore_platform_scheme_form_sidebar_header_logo' => 'Sidebar header logo',
-        'tr_meliscore_platform_scheme_form_sidebar_header_title' => 'Sidebar header title',
+        'tr_meliscore_platform_scheme_form_login_logo' => 'Logo login',
+        'tr_meliscore_platform_scheme_form_login_background' => 'Arrière plan login',
+        'tr_meliscore_platform_scheme_form_sidebar_header_logo' => 'Logo en-tête',
+        'tr_meliscore_platform_scheme_form_sidebar_header_title' => 'Titre en-tête',
         'tr_meliscore_platform_scheme_form_favicon' => 'Favicon',
 
         'tr_meliscore_platform_scheme_image_is_invalid' => 'Invalid file image, make sure that the file being uploaded is a type of an image',
 
-        'tr_meliscore_platform_scheme_save_ok'   => 'Platform scheme successfully saved',
+        'tr_meliscore_platform_scheme_save_ok'   => 'Thème de la plateforme sauvegardé avec succès',
         'tr_meliscore_platform_scheme_save_ko'   => 'Unable to save platform scheme',
 
         'tr_meliscore_platform_scheme_folder_not_exists' => 'Platform scheme folder does not exists (/media/platform-scheme)',
@@ -605,9 +605,13 @@
 
         'tr_meliscore_platform_scheme_sidebar_header_title_too_long' => 'Sidebar header title should not be more than 45 characters',
         'tr_meliscore_platform_scheme_sidebar_header_title_too_short' => 'Sidebar header title should be more than 5 characters',
-        'tr_meliscore_platform_scheme_reset_confirm' => 'En cliquant sur ce bouton vous allez restaurer tous les élements par défault au thème de Melis Platform. Est-ce vous sûr de vouloir procéder ?',
+        'tr_meliscore_platform_scheme_reset_confirm' => 'En cliquant sur ce bouton vous allez restaurer tous les élements par défault au thème de Melis Platform. Êtes-vous sûr de vouloir procéder ?',
         'tr_meliscore_platform_scheme_reset_text' => 'Restaurer par defaut',
-        'tr_meliscore_platform_scheme_reset_alt' => 'Restaure tous les éléments par défaut'
+        'tr_meliscore_platform_scheme_reset_alt' => 'Restaure tous les éléments par défaut',
+
+        'tr_meliscore_platform_scheme_failed_restore_message' => 'Echec de la restauration du thème de la plateforme',
+        'tr_meliscore_platform_scheme_failed_restore_title' => 'Restaurer le thème de la plateforme',
+        'tr_meliscore_platform_scheme_success_restore_message' => 'Thème de la plateforme restauré avec succès',
 
     );
 ?>

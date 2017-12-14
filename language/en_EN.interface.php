@@ -563,7 +563,7 @@
         'tr_meliscore_platform_scheme' => 'Platform Scheme',
         'tr_meliscore_platform_scheme_subtitle' => 'Customize here the colors and images of the platform.',
         'tr_meliscore_platform_color_scheme' => 'Color schemes',
-        'tr_meliscore_platform_scheme_images' => 'Title &amp; Images',
+        'tr_meliscore_platform_scheme_images' => 'Title &amp; images',
         'tr_meliscore_platform_color_primary' => 'Primary Color',
         'tr_meliscore_platform_color_secondary' => 'Secondary Color',
         'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
@@ -589,8 +589,12 @@
 
         'tr_meliscore_platform_scheme_sidebar_header_title_too_long' => 'Sidebar header title should not be more than 45 characters',
         'tr_meliscore_platform_scheme_sidebar_header_title_too_short' => 'Sidebar header title should be more than 5 characters',
-        'tr_meliscore_platform_scheme_reset_confirm' => 'By clicking on this button you will restaure all items to the default scheme of Melis Platform. Are you sure you wish to proceed ?',
+        'tr_meliscore_platform_scheme_reset_confirm' => 'By clicking on this button you will restore all items to the default scheme of Melis Platform. Are you sure you wish to proceed ?',
         'tr_meliscore_platform_scheme_reset_text' => 'Restore to default',
-        'tr_meliscore_platform_scheme_reset_alt' => 'Restore to default all of the items'
+        'tr_meliscore_platform_scheme_reset_alt' => 'Restore to default all of the items',
+
+        'tr_meliscore_platform_scheme_failed_restore_message' => 'Failed to restore platform scheme',
+        'tr_meliscore_platform_scheme_failed_restore_title' => 'Restore platform scheme',
+        'tr_meliscore_platform_scheme_success_restore_message' => 'Platform scheme restored successfully',
 	);
 ?>

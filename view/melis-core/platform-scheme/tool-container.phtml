@@ -55,7 +55,7 @@ if($headerTitleLen > 13) {
                 </div>
                 <div class="me-hr col-xs-12 col-md-3">
                     <a id="resetPlatformScheme" class="btn btn-danger" title="<?=$this->translate('tr_meliscore_platform_scheme_reset_alt') ?>"><i class="fa fa-rotate-left i-space""></i><?= $this->translate('tr_meliscore_platform_scheme_reset_text') ?></a>
-                    <a id="savePlatformScheme" class="btn btn-success" title="Save"><i class="fa fa-save i-space""></i>Save</a>
+                    <a id="savePlatformScheme" class="btn btn-success" title="Save"><i class="fa fa-save i-space""></i><?=$this->translate('tr_meliscore_tool_gen_save') ?></a>
                 </div>
             </div>
         </div>
@@ -197,8 +197,8 @@ if($headerTitleLen > 13) {
 
                 <script>
                     $(".osta_color_code").colorpicker({format: 'hex', useAlpha: false});
-                    $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
-                    $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
+                    $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+                    $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
                 </script>
         </div>
 

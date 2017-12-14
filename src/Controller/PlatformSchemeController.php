@@ -322,9 +322,11 @@ class PlatformSchemeController extends AbstractActionController
         $response = array(
             'success' => $success,
             'errors'  => array_merge($errors, $imgErrors, $folderErrors),
-            'title'   => $this->melisTool()->getTranslation($textTitle),
-            'message' => $this->melisTool()->getTranslation($textMessage)
+            'textTitle'   => $this->melisTool()->getTranslation($textTitle),
+            'textMessage' => $this->melisTool()->getTranslation($textMessage)
         );
+
+        $this->getEventManager()->trigger('melis_core_platform_scheme_save_end', $this, $response);
 
         return new JsonModel($response);
 
@@ -337,6 +339,10 @@ class PlatformSchemeController extends AbstractActionController
     {
         $success      = 0;
         $request      = $this->getRequest();
+        /*$message      = 'Failed to restore platform scheme';
+        $title        = 'Restore platform scheme';*/
+        $message      = 'tr_meliscore_platform_scheme_failed_restore_message';
+        $title        = 'tr_meliscore_platform_scheme_failed_restore_title';
 
         if ($request->isXmlHttpRequest()) {
             /**
@@ -344,11 +350,18 @@ class PlatformSchemeController extends AbstractActionController
              */
             $schemeId = 2;
             $success = $this->getPlatformSchemeSvc()->resetScheme($schemeId);
+//            $message      = 'Platform scheme has been restored';
+            $message      = 'tr_meliscore_platform_scheme_success_restore_message';
         }
 
         $response = array(
             'success' => $success,
+
+            'textTitle'   => $this->melisTool()->getTranslation($title),
+            'textMessage' => $this->melisTool()->getTranslation($message)
         );
+
+        $this->getEventManager()->trigger('melis_core_platform_scheme_reset_end', $this, $response);
 
         return new JsonModel($response);
     }

@@ -3315,3 +3315,8 @@ div#modal-user-management div.widget {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
+@media (max-width: 767px) {
+    #resetPlatformScheme {
+        margin: 0 10px;
+    }
+}

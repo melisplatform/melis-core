@@ -82,9 +82,10 @@ $(function() {
                 location.reload(true);
             }
             else {
-                melisHelper.melisKoNotification(data.title, data.message, data.errors);
+                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
             }
             melisCoreTool.done(".button");
+            melisCore.flashMessenger();
         }).error(function(){
             melisCoreTool.done(".button");
         });

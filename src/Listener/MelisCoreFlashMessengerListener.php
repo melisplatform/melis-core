@@ -36,6 +36,8 @@ class MelisCoreFlashMessengerListener extends MelisCoreGeneralListener implement
         	    'meliscore_tool_bo_emails_end',
         	    'meliscore_save_log_type_trans',
                 'meliscore_profile_save_end',
+                'melis_core_platform_scheme_save_end',
+                'melis_core_platform_scheme_reset_end'
         	),
         	function($e){
 
