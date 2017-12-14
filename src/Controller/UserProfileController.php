@@ -158,7 +158,8 @@ class UserProfileController extends AbstractActionController
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-        $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_user_profile_management/forms/meliscore_user_profile_form');
+        $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_user_profile_management/forms/meliscore_user_profile_form','meliscore_user_profile_form');
+
         $appConfigForm = $appConfigForm['elements'];
         
         //check if the request is on POST
