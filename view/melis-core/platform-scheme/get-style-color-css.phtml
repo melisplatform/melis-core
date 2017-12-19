@@ -532,8 +532,37 @@ div.glyphicons-social.glyphicon-primary i:before {
 .activity-line .color-widget.primary {
     background: <?= $primaryColor; ?>;
 }
+/* User Profile */
+.profile-photo .image-tool-tip {
+    background: <?= $primaryColor; ?>;
+}
 
+.profile-photo:hover .photo-overlay {
+    background: <?= $primaryColor; ?>;
+    opacity: 0.5;
+}
 
+.u-username {
+    color: <?= $primaryColor; ?>;
+}
+
+.u-lists .fa {
+    color: <?= $primaryColor; ?>;
+}
+.
+/* Language */
+.language-list .site i {
+    color: <?= $primaryColor; ?>;
+}
+.open-page-from-lan-tab[data-opentab]:hover {
+    color: <?= $primaryColor; ?>;
+}
+.open-page-from-lan-tab[data-opentab]:hover .site {
+    color: <?= $primaryColor; ?>;
+}
+.login-page .navbar.main .nav.navbar-right {
+    background: <?= $primaryColor; ?>;
+}
 /* =============== Secondary Color =============== */
 .reponsive-menu-tabs:hover span, .reponsive-menu-tabs:hover .fa {
     color:  <?= $secondaryColor; ?>;
@@ -541,9 +570,7 @@ div.glyphicons-social.glyphicon-primary i:before {
 .navbar #melis-id-nav-bar-tabs > li {
     border-bottom: 1px solid <?= $secondaryColor; ?>;
 }
-.login-page .navbar.main .nav.navbar-right {
-    background: <?= $secondaryColor; ?>;
-}
+
 .cb-cont .cbmask-outer {
     border: 2px solid <?= $secondaryColor; ?>;
 }
@@ -639,6 +666,11 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 /* Media Queries */
+@media (max-width: 768px) {
+     .login-page .navbar.main .nav>li .dropdown-menu li {
+        border-color: <?= $secondaryColor; ?>;
+    }
+}
 @media (min-width: 768px) {
     .navbar #melis-id-nav-bar-tabs > li {
         border-right: 1px solid <?= $secondaryColor; ?>;
