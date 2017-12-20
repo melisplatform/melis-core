@@ -3326,8 +3326,16 @@ div#modal-user-management div.widget {
 .wizard-design .widget.widget-tabs>.widget-head ul li {
     border-right: 1px solid #e5e5e5;
 }
+
+@media (max-width: 420px) {
+    .panel-title {
+        font-size: 12px;
+    }
+}
+
 @media (max-width: 767px) {
     #resetPlatformScheme {
         margin: 0 10px;
     }
 }
+
