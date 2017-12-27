@@ -259,6 +259,7 @@ class Module
 	        include __DIR__ . '/../config/app.emails.php',
 	        include __DIR__ . '/../config/diagnostic.config.php',
 	        include __DIR__ . '/../config/app.microservice.php',
+	        include __DIR__ . '/../config/app.install.php',
     	);
     	
     	foreach ($configFiles as $file) 

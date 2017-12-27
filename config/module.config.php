@@ -261,6 +261,7 @@ return array(
             'MelisCore\Controller\Log' => 'MelisCore\Controller\LogController',
             'MelisCore\Controller\UserProfile' => 'MelisCore\Controller\UserProfileController',
             'MelisCore\Controller\MelisCoreMicroService' => 'MelisCore\Controller\MelisCoreMicroServiceController', 
+            'MelisCore\Controller\MelisSetup' => 'MelisCore\Controller\MelisSetupController',
         ),
     ),
 

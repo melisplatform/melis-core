@@ -1,0 +1,32 @@
+<?php
+$form   = $this->form;
+
+$name   = $form['attributes']['name'];
+$frmId  = $form['attributes']['id'];
+$method = $form['attributes']['method'];
+
+$elements = $form['elements'];
+//echo "<pre>";
+//print_r($elements);
+//echo "</pre>";
+?>
+
+<form  name="<?= $name ?>" id="<?= $frmId ?>" method="<?= $method ?>">
+    <?php for($i = 0; $i < count($elements); $i++):?>
+        <?php
+            $input = $elements[$i]['spec'];
+            $name  = $input['name'];
+            $type  = $input['type'];
+            $label = $input['options']['label'];
+
+            $toolTip     = $input['options']['tooltip'];
+            $inputId     = $input['attributes']['id'];
+            $placeholder = $input['attributes']['placeholder'];
+
+        ?>
+        <label><?= $this->translate($label); ?></label><br>
+        <input type="<?= $type ?>" name="<?= $name ?>" id="<?= $inputId ?>" title="<?= $toolTip ?>" placeholder="<?= $placeholder ?>"/> <br>
+    <?php endfor;?>
+    <br>
+    <button type="submit" style="margin-left:50px">Setup</button>
+</form>
