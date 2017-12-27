@@ -223,6 +223,7 @@ class Module
     	    $translationType = array(
     	        'interface',
     	        'forms',
+                'install'
     	    );
     	    
     	    $translationList = array();
