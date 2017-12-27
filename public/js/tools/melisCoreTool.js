@@ -220,6 +220,17 @@ var melisCoreTool = (function(window){
 	        ranges: rangeStringParam,
 	    }, cb);
 	}
+
+    function changeImage(target, src)
+    {
+        if(src.files && src.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $(target).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(src.files[0]);
+        }
+    }
 	
 	
 	return {
@@ -260,6 +271,9 @@ var melisCoreTool = (function(window){
 		
 		// date
 		init			: init,
+
+		// image changer
+        changeImage 	: changeImage
 	}
 		
 })(window);

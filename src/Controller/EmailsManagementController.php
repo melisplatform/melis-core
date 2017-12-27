@@ -815,7 +815,31 @@ class EmailsManagementController extends AbstractActionController
     
         return new JsonModel($response);
     }
-    
+
+    public function searchEmailAction(){
+
+        $translator = $this->getServiceLocator()->get('translator');
+
+        $request = $this->getRequest();
+        $datas = get_object_vars($request->getPost());
+
+        $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($datas['codename']);
+
+        $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $BoEmailId = $melisCoreBOEmailService->deleteEmail("Get");
+
+        $
+        $response = array(
+            'success' => 1,
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage
+        );
+
+        $this->getEventManager()->trigger('meliscore_tool_bo_emails_end', $this, array_merge($response, array('typeCode' => 'CORE_BO_EMAIL_DELETE', 'itemId' => $BoEmailId)));
+
+        return new JsonModel($response);
+    }
     /**
      * USER ACCESS SECTION
      * Checks wether the user has access to this tools or not

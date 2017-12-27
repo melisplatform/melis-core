@@ -29,8 +29,14 @@ use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 
+/**
+ * Class Module
+ * @package MelisCore
+ * @require melis-core
+ */
 class Module
-{   
+{
+
     public function onBootstrap(MvcEvent $e)
     {
         $this->initShowErrorsByconfig($e);
@@ -122,6 +128,7 @@ class Module
     	    'melis-backoffice/MelisInstaller',
     	    'melis-backoffice/microservice',
     	    'melis-backoffice/microservice_list',
+            'melis-backoffice/get-platform-color-css'
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;

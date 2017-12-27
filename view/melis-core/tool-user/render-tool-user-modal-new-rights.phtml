@@ -11,4 +11,5 @@ echo $this->melisModalInvoker()->render(
     ), 'dismiss');
 ?>
 
-<button type="button" class="btn btn-success pull-right" id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
+<button type="button" class="btn btn-success pull-right hidden-xs hidden-sm" id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
+<button type="submit" class="btn btn-success pull-right visible-xs visible-sm" id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></button>

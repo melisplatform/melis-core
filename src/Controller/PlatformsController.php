@@ -515,6 +515,24 @@ class PlatformsController extends AbstractActionController
         
         return new JsonModel($response);
     }
+    public function removePlatformByIdAction()
+    {
+        $data = array();
+        if($this->getRequest()->isPost())
+        {
+            $platformId = $this->getRequest()->getPost('id');
+            $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
+
+            $platformData = $data;
+            foreach($platformData as $roleKey => $roleValues) {
+                $data[$roleKey] = $roleValues;
+            }
+
+        }
+        return new JsonModel(array(
+            'platform' =>  $data
+        ));
+    }
     
     public function getCurrentPlatformAction()
     {
@@ -541,4 +559,5 @@ class PlatformsController extends AbstractActionController
     
         return $isAccessible;
     }
+
 }

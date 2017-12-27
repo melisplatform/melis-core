@@ -192,11 +192,14 @@ var melisCore = (function(window){
 
         // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
         setTimeout(function(){
-            iframeLoad();
 
+            var $f = $("#"+ activeTabId + " .melis-iframe");
+            if( $($f).length ) {
+                $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
+            }
             // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
             $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
-        }, 300);
+        }, 1000);
     }
 
     // MAIN TAB MENU CLICK - run codes when a tab in the main tab menu is clicked
@@ -344,6 +347,12 @@ var melisCore = (function(window){
     // detect IE8 and above, and edge
     if (document.documentMode || /Edge/.test(navigator.userAgent)) {
         // remove flickering issue on edge
+        // $('html').css('overflow', 'hidden');
+        // $body.css('overflow', 'auto');
+        $("#id_meliscore_leftmenu").css("-webkit-transform", "translate3d(0px, 0px, 0px)");
+    }
+    var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+    if(isIE11) {
         $('html').css('overflow', 'hidden');
         $body.css('overflow', 'auto');
     }
@@ -518,7 +527,8 @@ var melisCore = (function(window){
         melisChangeLanguage                             :           melisChangeLanguage,
         resizeScreen                                    :           window.resizeScreen,
         screenSize										:			screenSize,
-        escapeHtml										: 			escapeHtml
+        escapeHtml										: 			escapeHtml,
+        tabDraggable                                    :           tabDraggable
     };
 
 

@@ -158,7 +158,8 @@ class UserProfileController extends AbstractActionController
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-        $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_user_profile_management/forms/meliscore_user_profile_form');
+        $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_user_profile_management/forms/meliscore_user_profile_form','meliscore_user_profile_form');
+
         $appConfigForm = $appConfigForm['elements'];
         
         //check if the request is on POST
@@ -292,7 +293,7 @@ class UserProfileController extends AbstractActionController
             'reLoad'        => $reloadPage,
         );
         //save notifications - whether success or not
-        $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId)));
+        $this->getEventManager()->trigger('meliscore_profile_save_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId)));
         
         return new JsonModel($response);
     }
@@ -424,6 +425,21 @@ class UserProfileController extends AbstractActionController
         } // password and confirm password not empty
         return array("success"=>$success, "errors"=>$errors, 'newPass'=>$newPass);
     }
+    private function getLastUserInfo()
+    {
+        $user = $this->getServiceLocator()->get('MelisCoreTableUser');
+        foreach($usersInfo AS $key=>$val)
+        {
+            if($encodeImg)
+            {
+                $usersInfo[$key]['usr_image'] = ($usersInfo[$key]['usr_image'] != "" && $usersInfo[$key]['usr_image'] != null) ? "data:image/jpeg;base64,".base64_encode($usersInfo[$key]['usr_image']) : "/MelisCore/images/profile/default_picture.jpg";
+            }
+            //get the user role by role id
+            $r =  "";
+            $usersInfo[$key]['usr_role'] = $r[$key]['urole_name'];
+        }
+        return $usersInfo;
+    }
     
     /**
      * Function to get the current user information
@@ -473,4 +489,6 @@ class UserProfileController extends AbstractActionController
 
         return $melisKey;
     }
+
+
 }

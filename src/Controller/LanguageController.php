@@ -142,7 +142,7 @@ class LanguageController extends AbstractActionController
         // Set the headers of this route
         $response = $this->getResponse();
         $response->getHeaders()
-            ->addHeaderLine('Content-Type:', 'text/javascript; charset=utf-8');
+            ->addHeaderLine('Content-Type', 'text/javascript; charset=utf-8');
 
         $translationCompilation = '';
         foreach($melisTranslation->getTranslationMessages($locale) as $transKey => $transValue)
@@ -580,6 +580,23 @@ class LanguageController extends AbstractActionController
 
         return new JsonModel($response);
     }
+    public function getTranslationOfContentAction()
+    {
+        $translator = $this->getServiceLocator()->get('translator');
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
+
+
+        $columns = "";
+        // pre-add Action Columns
+        $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'));
+
+
+        $view = new ViewModel();
+
+        return $view;
+    }
 
     /**
      * This allows the selected language to get new translations from melisplatform
@@ -703,6 +720,8 @@ class LanguageController extends AbstractActionController
 
         return $isAccessible;
     }
+
+
 
 
 }
