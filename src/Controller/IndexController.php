@@ -119,16 +119,27 @@ class IndexController extends AbstractActionController
      */
     public function footerAction()
     {
-    	$melisKey = $this->params()->fromRoute('melisKey', '');
+        $melisKey = $this->params()->fromRoute('melisKey', '');
 
-    	$moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
-    	$platformVersion =  $moduleSvc->getModulesAndVersions('MelisCore');
+        $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+        $modules         =  $moduleSvc->getAllModules();
+        $platformVersion =  $moduleSvc->getModulesAndVersions('MelisCore');
 
-    	$view = new ViewModel();
-    	$view->melisKey = $melisKey;
-    	$view->platformVersion = $platformVersion['version'];
+        $request = $this->getRequest();
+        $uri     = $request->getUri();
 
-    	return $view;
+        $domain   = $uri->getHost();
+        $scheme   = $uri->getScheme();
+
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+        $view->platformVersion = $platformVersion['version'];
+        $view->modules = serialize($modules);
+        $view->scheme  = $scheme;
+        $view->domain  = $domain;
+
+        return $view;
     }
     
     /**
