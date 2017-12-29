@@ -32,7 +32,10 @@ class ModulesController extends AbstractActionController
      */
     public function renderToolModulesAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator      = $this->getServiceLocator()->get('translator');
+        $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+        $modules         = $moduleSvc->getAllModules();
+
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $noAccessPrompt = '';
 
@@ -40,11 +43,13 @@ class ModulesController extends AbstractActionController
             $noAccessPrompt = $translator->translate('tr_tool_no_access');
         }
 
+        $request = $this->getRequest();
+
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
-
+        $view->modules = serialize($modules);
         return $view;
     }
 
