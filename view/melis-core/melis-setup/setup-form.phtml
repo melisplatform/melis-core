@@ -24,9 +24,7 @@ $elements = $form['elements'];
             $placeholder = $input['attributes']['placeholder'];
 
         ?>
-        <label><?= $this->translate($label); ?></label><br>
+        <label><?= $this->translate($label); ?></label>
         <input type="<?= $type ?>" name="<?= $name ?>" id="<?= $inputId ?>" title="<?= $toolTip ?>" placeholder="<?= $placeholder ?>"/> <br>
     <?php endfor;?>
-    <br>
-    <button type="submit" style="margin-left:50px">Setup</button>
 </form>
