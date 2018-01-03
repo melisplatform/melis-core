@@ -6,12 +6,10 @@ $frmId  = $form['attributes']['id'];
 $method = $form['attributes']['method'];
 
 $elements = $form['elements'];
-//echo "<pre>";
-//print_r($elements);
-//echo "</pre>";
 ?>
 
-<form  name="<?= $name ?>" id="<?= $frmId ?>" method="<?= $method ?>">
+<form  name="<?= $name ?>" id="<?= $frmId ?>" >
+    <div class="environment-cont entry">
     <?php for($i = 0; $i < count($elements); $i++):?>
         <?php
             $input = $elements[$i]['spec'];
@@ -24,7 +22,18 @@ $elements = $form['elements'];
             $placeholder = $input['attributes']['placeholder'];
 
         ?>
-        <label><?= $this->translate($label); ?></label>
-        <input type="<?= $type ?>" name="<?= $name ?>" id="<?= $inputId ?>" title="<?= $toolTip ?>" placeholder="<?= $placeholder ?>"/> <br>
+
+        <div class="form-group">
+            <label><?= $this->translate($label); ?>
+                <i class="fa fa-info-circle fa-lg pull-right" data-toggle="tooltip" data-placement="left" title="<?= $this->translate($toolTip) ?>" data-original-title=""></i>
+            </label>
+            <input type="text" name="<?= $name ?>" class="form-control" placeholder="<?= $this->translate($placeholder); ?>"  required>
+        </div>
+
     <?php endfor;?>
+    </div>
 </form>
+
+
+
+
