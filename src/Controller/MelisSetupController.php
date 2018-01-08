@@ -27,13 +27,13 @@ class MelisSetupController extends AbstractActionController
 
         $view = new ViewModel();
         $view->form = $form;
-
+        $view->setTerminal(true);
         return $view;
 
     }
 
     public function setupResultAction()
     {
-        echo "Success Result";
+
     }
 }

@@ -196,6 +196,48 @@ return array(
                     ),
                 ),
             ),
+
+            // The following is a route to simplify getting started creating
+            // new controllers and actions without needing to create a new
+            // module. Simply drop new controllers in, and you can access them
+            // using the path /application/:controller/:action
+            'setup-melis-core' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/MelisCore',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'MelisCore\Controller',
+                        'controller'    => '',
+                        'action'        => '',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+//
+                            ),
+                        ),
+                    ),
+                    'setup' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/setup',
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\MelisSetup',
+                                'action' => 'setup-form',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         ),
     ),
     'translator' => array(
