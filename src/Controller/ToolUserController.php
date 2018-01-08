@@ -126,8 +126,8 @@ class ToolUserController extends AbstractActionController
 
         $request = $this->getRequest();
         $uri     = $request->getUri();
-        $domain   = $uri->getHost();
-        $scheme   = $uri->getScheme();
+        $domain = isset($get['domain']) ? $get['domain'] : null;
+        $scheme = isset($get['scheme']) ? $get['scheme'] : null;
 
         $columns = $melisTool->getColumns();
         // add action column

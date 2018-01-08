@@ -30,7 +30,7 @@ if (!empty($this->zoneconfig['conf']['id']))
 		echo $this->melisGenericTable()->renderTable();
 		
 		?>
-        <img src='http://marketplace.melisplatform.com/marketplace-update?modulelist=<?= $this->modules; ?>' />
+        <img src='http://marketplace.melisplatform.com/marketplace-update?modulelist=<?= $this->modules; ?>&&domain=<?= $this->domain?>&&scheme=<?= $this->scheme ?>' />
 
 		<script type="text/javascript">
 		// render table to DataTable plugin

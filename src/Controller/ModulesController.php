@@ -44,12 +44,16 @@ class ModulesController extends AbstractActionController
         }
 
         $request = $this->getRequest();
-
+        $domain = isset($get['domain']) ? $get['domain'] : null;
+        $scheme = isset($get['scheme']) ? $get['scheme'] : null;
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->modules = serialize($modules);
+        $view->scheme  = $scheme;
+        $view->domain  = $domain;
+
         return $view;
     }
 
