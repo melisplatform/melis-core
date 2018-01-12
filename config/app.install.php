@@ -30,7 +30,7 @@ return array(
                         array(
                             'spec' => array(
                                 'name' => 'email',
-                                'type' => 'MelisText',
+                                'type' => 'email',
                                 'options' => array(
                                     'label' => 'tr_melis_installer_new_user_email',
                                     'tooltip' => 'tr_melis_installer_new_user_email_info',
