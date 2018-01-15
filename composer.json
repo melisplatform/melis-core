@@ -15,7 +15,8 @@
     "module"
   ],
   "extra": {
-    "module-name": "MelisCore"
+    "module-name": "MelisCore",
+    "dbdeploy": true
   },
   "require": {
     "php": "^5.5 || ^7.0",
