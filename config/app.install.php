@@ -39,6 +39,7 @@ return array(
                                     'id' => 'email',
                                     'value' => '',
                                     'placeholder' => 'tr_melis_installer_new_user_email',
+                                    'class' => 'form-control',
                                 )
                             )
                         ),

@@ -84,7 +84,7 @@ class MelisSetupController extends AbstractActionController
         else {
             $errors = $this->formatErrorMessage($errors);
         }
-        
+
         $response = array(
             'success' => $success,
             'message' => $this->getTool()->getTranslation($message),
@@ -129,7 +129,7 @@ class MelisSetupController extends AbstractActionController
     private function formatErrorMessage($errors = array())
     {
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-        $appConfigForm = $melisMelisCoreConfig->getItem('album/tools/album_tool/forms/album_form');
+        $appConfigForm = $melisMelisCoreConfig->getItem('melis_core_setup/forms/melis_core_setup_user_form');
         $appConfigForm = $appConfigForm['elements'];
 
         foreach ($errors as $keyError => $valueError)
