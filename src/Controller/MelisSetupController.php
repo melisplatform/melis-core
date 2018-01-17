@@ -12,11 +12,6 @@ namespace MelisCore\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
-use Zend\Validator\File\Size;
-use Zend\Validator\File\IsImage;
-use Zend\Validator\File\Upload;
-use Zend\File\Transfer\Adapter\Http;
-use Zend\Session\Container;
 
 class MelisSetupController extends AbstractActionController
 {
@@ -48,47 +43,46 @@ class MelisSetupController extends AbstractActionController
         $form = $this->getForm();
         $form->setData($data);
 
+
         if($form->isValid()) {
 
             $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
             $tableUser     = $this->getServiceLocator()->get('MelisCoreTableUser');
 
+            $userLogin      = $form->get('login');
+            $userEmail      = $form->get('email');
+            $password       = $melisCoreAuth->encryptPassword($form->get('password'));
+            $userFirstname  = $form->get('firstname');
+            $userLastname   = $form->get('lastname');
 
-            if(!empty($userData)){
+            //Save userData
+            $tableUser->save(array(
+                'usr_status'        => 1,
+                'usr_login'         => $userLogin,
+                'usr_email'         => $userEmail,
+                'usr_password'      => $password,
+                'usr_firstname'     => $userFirstname,
+                'usr_lastname'      => $userLastname,
+                'usr_lang_id'       => 1,
+                'usr_admin'         => 0,
+                'usr_role_id'       => 1,
+                'usr_rights'        => '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages> <id>-1</id></meliscms_pages><meliscore_interface></meliscore_interface><meliscore_tools> <id>meliscore_tools_root</id></meliscore_tools></document>',
+                'usr_creation_date' => date('Y-m-d H  '),
+            ));
 
-                $userLogin      = $userData->get('login');
-                $userEmail      = $userData->get('email');
-                $password       = $melisCoreAuth->encryptPassword($userData->get('password'));
-                $userFirstname  = $userData->get('firstname');
-                $userLastname   = $userData->get('lastname');
+            $success = 1;
+            $message = 'tr_install_setup_message_ok';
 
-                //Save userData
-                $tableUser->save(array(
-                    'usr_status'        => 1,
-                    'usr_login'         => $userLogin,
-                    'usr_email'         => $userEmail,
-                    'usr_password'      => $password,
-                    'usr_firstname'     => $userFirstname,
-                    'usr_lastname'      => $userLastname,
-                    'usr_lang_id'       => 1,
-                    'usr_admin'         => 0,
-                    'usr_role_id'       => 1,
-                    'usr_rights'        => '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages>	<id>-1</id></meliscms_pages><meliscore_interface></meliscore_interface><meliscore_tools>	<id>meliscore_tools_root</id></meliscore_tools></document>',
-                    'usr_creation_date' => date('Y-m-d H:i:s'),
-                ));
-
-                $success = 1;
-                $message = 'tr_install_setup_message_ok';
-            }
         }
         else {
-            $errors = $this->formatErrorMessage($errors);
+            $errors = $this->formatErrorMessage($form->getMessages());
         }
 
         $response = array(
             'success' => $success,
             'message' => $this->getTool()->getTranslation($message),
-            'errors'  => $errors
+            'errors'  => $errors,
+            'form'    => 'melis_core_setup_user_form'
         );
 
         return new JsonModel($response);

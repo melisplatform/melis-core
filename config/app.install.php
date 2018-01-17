@@ -5,8 +5,8 @@ return array(
             'forms' => array(
                 'melis_core_setup_user_form' => array(
                     'attributes' => array(
-                        'name' => 'form_user_data',
-                        'id'   => 'id_from_user_data',
+                        'name' => 'melis_core_setup_user_form',
+                        'id'   => 'melis_core_setup_user_form',
                         'method' => 'POST',
                         'action' => '',
                     ),
