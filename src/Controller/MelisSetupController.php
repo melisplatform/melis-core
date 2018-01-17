@@ -22,8 +22,6 @@ class MelisSetupController extends AbstractActionController
 {
     public function setupFormAction()
     {
-        $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $form = $coreConfig->getItem('melis_core_setup/forms/melis_installer_user_data');
 
         $request = $this->getRequest();
 
@@ -31,8 +29,8 @@ class MelisSetupController extends AbstractActionController
         $btnStatus = (bool) $request->getQuery()->get('btnStatus');
 
         $view = new ViewModel();
-        $view->form = $form;
         $view->setTerminal(true);
+        $view->form = $this->getForm();
         $view->btnStatus = $btnStatus;
         return $view;
 
@@ -42,20 +40,20 @@ class MelisSetupController extends AbstractActionController
     {
         $success = 0;
         $message = 'tr_install_setup_message_ko';
-        $title   = 'tr_install_setup_title';
         $errors  = array();
 
-        $request = $this->getRequest();
+        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
 
-        if($request->isPost()){
 
-            //Services
-            $melisCore     = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $form = $this->getForm();
+        $form->setData($data);
+
+        if($form->isValid()) {
+
             $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
             $tableUser     = $this->getServiceLocator()->get('MelisCoreTableUser');
 
-            //FormData
-            $userData = $request->getPost();
+
             if(!empty($userData)){
 
                 $userLogin      = $userData->get('login');
@@ -82,9 +80,11 @@ class MelisSetupController extends AbstractActionController
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
             }
-
         }
-
+        else {
+            $errors = $this->formatErrorMessage($errors);
+        }
+        
         $response = array(
             'success' => $success,
             'message' => $this->getTool()->getTranslation($message),
@@ -106,5 +106,42 @@ class MelisSetupController extends AbstractActionController
 
         return $melisTool;
 
+    }
+    /**
+     * Create a form from the configuration
+     * @param $formConfig
+     * @return \Zend\Form\ElementInterface
+     */
+    private function getForm()
+    {
+        $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $form = $coreConfig->getItem('melis_core_setup/forms/melis_core_setup_user_form');
+
+        $factory = new \Zend\Form\Factory();
+        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory->setFormElementManager($formElements);
+        $form = $factory->createForm($form);
+
+        return $form;
+
+    }
+
+    private function formatErrorMessage($errors = array())
+    {
+        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $appConfigForm = $melisMelisCoreConfig->getItem('album/tools/album_tool/forms/album_form');
+        $appConfigForm = $appConfigForm['elements'];
+
+        foreach ($errors as $keyError => $valueError)
+        {
+            foreach ($appConfigForm as $keyForm => $valueForm)
+            {
+                if ($valueForm['spec']['name'] == $keyError &&
+                    !empty($valueForm['spec']['options']['label']))
+                    $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+            }
+        }
+
+        return $errors;
     }
 }

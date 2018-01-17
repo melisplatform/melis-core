@@ -3,7 +3,7 @@ return array(
     'plugins' => array(
         'melis_core_setup' => array(
             'forms' => array(
-                'melis_installer_user_data' => array(
+                'melis_core_setup_user_form' => array(
                     'attributes' => array(
                         'name' => 'form_user_data',
                         'id'   => 'id_from_user_data',

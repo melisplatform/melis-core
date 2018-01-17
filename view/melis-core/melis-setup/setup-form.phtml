@@ -1,4 +1,18 @@
 <?php
+
+$form = $this->form;
+echo "
+<h3>MelisCore Setup</h3>";
+foreach($form->getElements() as $element => $attributes)  {
+    $el =  $form->get((string) $element);
+    $label=$el->getLabel();
+    $attributes = $el->getAttributes();
+
+}
+echo $this->form()->openTag($form);
+echo $this->melisFieldCollection($form);
+echo $this->form()->closeTag();
+/*
 $form   = $this->form;
 
 $name   = $form['attributes']['name'];
@@ -7,7 +21,6 @@ $method = $form['attributes']['method'];
 
 $elements = $form['elements'];
 ?>
-<h3>MelisCore Setup</h3>
 <form  name="<?= $name ?>" id="<?= $frmId ?>" method="<?= $method ?>" >
     <div class="environment-cont entry">
     <?php for($i = 0; $i < count($elements); $i++):?>
@@ -36,3 +49,4 @@ $elements = $form['elements'];
 <!--      <button id="melis-core-start-setup-btn" type="submit" >Start setup</button>-->
 <!--    --><?php //endif;?>
 </form>
+*/
