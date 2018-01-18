@@ -17,7 +17,7 @@ return array(
     'tr_melis_installer_new_user_last_name_info' => 'Lastname',
 
     //setupResult
-    'tr_install_setup_message_ko' => 'Unable to finished installation',
+    'tr_install_setup_message_ko' => 'Unable to save configuration',
     'tr_install_setup_message_ok' => 'Setup complete',
 
 );

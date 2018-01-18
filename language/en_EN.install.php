@@ -18,7 +18,7 @@ return array(
 
 
     //setupResult
-    'tr_install_setup_message_ko' => 'Unable to finished installation',
+    'tr_install_setup_message_ko' => 'Unable to save configuration',
     'tr_install_setup_message_ok' => 'Setup complete',
 
 );
