@@ -56,12 +56,15 @@ class MelisSetupController extends AbstractActionController
             $userLastname   = $form->get('lastname')->getValue();
 
 
-            $container = new \Zend\Session\Container('melismodules');
-            $installerModuleConfigurationSuccess = isset($container['module_configuration']['success']) ?
-                (bool) $container['module_configuration']['success'] : false;
+            $container = new \Zend\Session\Container('melis_modules_configuration_status');
+            $hasErrors = false;
 
+            foreach($container->getArrayCopy() as $module) {
+                if(!$module)
+                    $hasErrors = true;
+            }
 
-            if($installerModuleConfigurationSuccess) {
+            if(false === $hasErrors) {
 
                 $tableUser->save(array(
                     'usr_status'        => 1,
@@ -79,8 +82,6 @@ class MelisSetupController extends AbstractActionController
 
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
-
-                $container['module_configuration_status'] = (bool) $success;
             }
 
         }
