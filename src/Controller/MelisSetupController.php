@@ -49,19 +49,20 @@ class MelisSetupController extends AbstractActionController
             $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
             $tableUser     = $this->getServiceLocator()->get('MelisCoreTableUser');
 
-            $userLogin      = $form->get('login');
-            $userEmail      = $form->get('email');
-            $password       = $melisCoreAuth->encryptPassword($form->get('password'));
-            $userFirstname  = $form->get('firstname');
-            $userLastname   = $form->get('lastname');
-
+            $userLogin      = $form->get('login')->getValue();
+            $userEmail      = $form->get('email')->getValue();
+            $password       = $melisCoreAuth->encryptPassword($form->get('password')->getValue());
+            $userFirstname  = $form->get('firstname')->getValue();
+            $userLastname   = $form->get('lastname')->getValue();
 
 
             $container = new \Zend\Session\Container('melismodules');
             $installerModuleConfigurationSuccess = isset($container['module_configuration']['success']) ?
                 (bool) $container['module_configuration']['success'] : false;
 
+
             if($installerModuleConfigurationSuccess) {
+
                 $tableUser->save(array(
                     'usr_status'        => 1,
                     'usr_login'         => $userLogin,
@@ -70,15 +71,16 @@ class MelisSetupController extends AbstractActionController
                     'usr_firstname'     => $userFirstname,
                     'usr_lastname'      => $userLastname,
                     'usr_lang_id'       => 1,
-                    'usr_admin'         => 0,
+                    'usr_admin'         => 1,
                     'usr_role_id'       => 1,
                     'usr_rights'        => '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages> <id>-1</id></meliscms_pages><meliscore_interface></meliscore_interface><meliscore_tools> <id>meliscore_tools_root</id></meliscore_tools></document>',
-                    'usr_creation_date' => date('Y-m-d H  '),
+                    'usr_creation_date' => date('Y-m-d H  :i:s'),
                 ));
 
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
             }
+
         }
         else {
             $errors = $this->formatErrorMessage($form->getMessages());

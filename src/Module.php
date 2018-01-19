@@ -65,8 +65,6 @@ class Module
         $eventManager->attach(new MelisCoreFlashMessengerListener());
         $eventManager->attach(new MelisCoreNewPlatformListener());
         $eventManager->attach(new MelisCoreUserRecentLogsListener());
-        
-        $eventManager->attach(new MelisCoreInstallNewPlatformListener());
 
         $eventManager->attach(new MelisCoreAuthSuccessListener());
         $eventManager->attach(new MelisCoreCheckUserRightsListener());
