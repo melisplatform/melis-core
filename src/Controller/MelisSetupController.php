@@ -79,6 +79,8 @@ class MelisSetupController extends AbstractActionController
 
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
+
+                $container['module_configuration_status'] = (bool) $success;
             }
 
         }
