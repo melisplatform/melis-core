@@ -81,7 +81,7 @@ class MelisSetupController extends AbstractActionController
                 ));
 
                 // save platforms
-                $melisCorePlatformTable = $this->getServiceLocator()->get('MelisPlatformTable');
+                $melisCorePlatformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
                 $defaultPlatform = getenv('MELIS_PLATFORM');
                 $platforms       = isset($container['platforms']) ? $container['platforms'] :null;
 
