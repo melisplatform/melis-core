@@ -3,10 +3,10 @@ return array(
     'plugins' => array(
         'melis_core_setup' => array(
             'forms' => array(
-                'melis_installer_user_data' => array(
+                'melis_core_setup_user_form' => array(
                     'attributes' => array(
-                        'name' => 'form_user_data',
-                        'id'   => 'id_from_user_data',
+                        'name' => 'melis_core_setup_user_form',
+                        'id'   => 'melis_core_setup_user_form',
                         'method' => 'POST',
                         'action' => '',
                     ),
@@ -30,7 +30,7 @@ return array(
                         array(
                             'spec' => array(
                                 'name' => 'email',
-                                'type' => 'MelisText',
+                                'type' => 'email',
                                 'options' => array(
                                     'label' => 'tr_melis_installer_new_user_email',
                                     'tooltip' => 'tr_melis_installer_new_user_email_info',
@@ -39,6 +39,7 @@ return array(
                                     'id' => 'email',
                                     'value' => '',
                                     'placeholder' => 'tr_melis_installer_new_user_email',
+                                    'class' => 'form-control',
                                 )
                             )
                         ),

@@ -236,12 +236,20 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
         
         $configPath = 'meliscore/datas';
         $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $cfg = $melisConfig->getItem('meliscore/datas/default');
         
-        $isActive = 1;
+        $cfg = $melisConfig->getItem('meliscore/datas/'.getenv('MELIS_PLATFORM'));
+        
+        if (empty($cfg))
+            $cfg = $melisConfig->getItem('meliscore/datas/default');
+        
+        $isActive = false;
+        if (!empty($cfg['emails']))
+            if (!empty($cfg['emails']['active']))
+                $isActive = true;
+            
         $url = $cfg['host'].'/melis/reset-password/'.$hash;
         
-        if($isActive == 1){
+        if($isActive){
             // Tags to be replace at email content with the corresponding value
             $tags = array(
                 'USER_Login' => $login,
