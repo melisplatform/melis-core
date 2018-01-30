@@ -80,6 +80,19 @@ class MelisSetupController extends AbstractActionController
                     'usr_creation_date' => date('Y-m-d H  :i:s'),
                 ));
 
+                // save platforms
+                $melisCorePlatformTable = $this->getServiceLocator()->get('MelisPlatformTable');
+                $defaultPlatform = getenv('MELIS_PLATFORM');
+                $platforms       = isset($container['platforms']) ? $container['platforms'] :null;
+
+                $melisCorePlatformTable->save(array('plf_name' => $defaultPlatform));
+
+                if($platforms) {
+                    foreach($platforms as $platform) {
+                        $melisCorePlatformTable->save($platform);
+                    }
+                }
+
                 $success = 1;
                 $message = 'tr_install_setup_message_ok';
             }
