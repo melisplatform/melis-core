@@ -652,7 +652,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 	 * {@inheritDoc}
 	 * @see \MelisCore\Service\MelisCoreToolServiceInterface::exportDataToCsv()
 	 */
-	public function exportDataToCsv($data)
+	public function exportDataToCsv($data, $fileName = null)
 	{
 	    $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
 
@@ -710,6 +710,8 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 $content .= PHP_EOL;
             }
 
+            if(!is_null($fileName) || !empty($fileName))
+                $csvFileName = $fileName;
 
             $response = new HttpResponse();
             $headers  = $response->getHeaders();
@@ -717,6 +719,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $headers->addHeaderLine('Content-Disposition', "attachment; filename=\"".$csvFileName."\"");
             $headers->addHeaderLine('Accept-Ranges', 'bytes');
             $headers->addHeaderLine('Content-Length', strlen($content));
+            $headers->addHeaderLine('fileName', $csvFileName);
             $response->setContent($content);
 	    }
 
