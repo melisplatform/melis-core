@@ -63,18 +63,23 @@ var melisCore = (function(window){
     });
 
     function sessionCheck() {
+    	isLogin();
         var checkEvery = 1;
         setInterval(function() {
-            $.ajax({
-                type: 'GET',
-                url: '/melis/islogin',
-                dataType: 'json',
-            }).success(function(data){
-                if(!data.login) {
-                    window.location.reload(true);
-                }
-            });
+        	isLogin();
         }, (checkEvery * 60) * 1000);
+    }
+    
+    function isLogin() {
+    	$.ajax({
+            type: 'GET',
+            url: '/melis/islogin',
+            dataType: 'json',
+        }).success(function(data){
+            if(!data.login) {
+                window.location.reload(true);
+            }
+        });
     }
 
     function escapeHtml (string) {
