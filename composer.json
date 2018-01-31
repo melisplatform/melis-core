@@ -33,7 +33,6 @@
     "ext-openssl": "*",
     "ext-json": "*",
     "ext-pdo_mysql": "*",
-    "ext-mcrypt": "*",
     "justinrainbow/json-schema": "5.2.1",
     "composer/composer": "~1.2"
   },
