@@ -24,6 +24,7 @@ return array(
                                     'id' => 'login',
                                     'value' => '',
                                     'placeholder' => 'tr_melis_installer_new_user_login',
+                                    'text-required' => '*',
                                 )
                             )
                         ),
@@ -40,6 +41,7 @@ return array(
                                     'value' => '',
                                     'placeholder' => 'tr_melis_installer_new_user_email',
                                     'class' => 'form-control',
+                                    'text-required' => '*',
                                 )
                             )
                         ),
@@ -56,6 +58,7 @@ return array(
                                     'value' => '',
                                     'placeholder' => 'tr_melis_installer_new_user_password',
                                     'class' => 'form-control',
+                                    'text-required' => '*',
                                 ),
                             ),
                         ),
@@ -72,6 +75,7 @@ return array(
                                     'value' => '',
                                     'placeholder' => 'tr_Melis_installer_new_user_confirm_password',
                                     'class' => 'form-control',
+                                    'text-required' => '*',
                                 ),
                             ),
                         ),
@@ -87,6 +91,7 @@ return array(
                                     'id' => 'firstname',
                                     'value' => '',
                                     'placeholder' => 'tr_melis_installer_new_user_first_name',
+                                    'text-required' => '*',
                                 )
                             )
                         ),
@@ -102,6 +107,7 @@ return array(
                                     'id' => 'lastname',
                                     'value' => '',
                                     'placeholder' => 'tr_melis_installer_new_user_last_name',
+                                    'text-required' => '*',
                                 )
                             )
                         ),
