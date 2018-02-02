@@ -170,7 +170,6 @@ var melisCore = (function(window){
 
     // SIDEBAR MENU CLICK (toggle)
     function sidebarMenuClick(){
-        $body.toggleClass('sidebar-mini');
 
         // for the sidebar functionalities
         var sidebarOffsetLeft = $( "#id_meliscore_leftmenu" ).position().left;
@@ -178,9 +177,14 @@ var melisCore = (function(window){
 
         if( sidebarOffsetLeft == 0){
             $( "#id_meliscore_leftmenu" ).css("left", -sidebarWidth );
+            $body.addClass('sidebar-mini');
+
+            $("#id_meliscore_footer").addClass('slide-left');
         }
         else{
             $( "#id_meliscore_leftmenu" ).css("left", '0' );
+            $body.removeClass('sidebar-mini');
+            $("#id_meliscore_footer").removeClass('slide-left');
         }
 
         $("#newplugin-cont").removeClass("show-menu");
@@ -191,9 +195,6 @@ var melisCore = (function(window){
         if (matches != null) {
             $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
         }
-
-        // footer display
-        $("#id_meliscore_footer").toggleClass('slide-left');
 
         // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
         setTimeout(function(){
@@ -381,7 +382,7 @@ var melisCore = (function(window){
     $body.on("click", "#plugin-menu", function(){
 
         $("#id_meliscore_leftmenu").removeAttr('style');
-        $("#id_meliscore_footer").removeClass('slide-left');
+        $("#id_meliscore_footer").addClass('slide-left');
 
         $("#newplugin-cont").toggleClass("show-menu");
         $body.removeClass('sidebar-mini');
