@@ -302,6 +302,10 @@
 	    'tr_meliscore_tool_platform_forms_name_empty' => 'Please enter the platform name',
 	    'tr_meliscore_tool_platform_forms_button_add' => 'Add',
 	    'tr_meliscore_tool_platform_forms_button_edit' => 'Edit',
+	    'tr_meliscore_tool_platform_generic_form' => 'Platform modal form',
+	    'tr_meliscore_tool_platform_marketplace' => 'Marketplace',
+	    'tr_meliscore_tool_platform_update_marketplace' => 'Allow updates from the marketplace',
+	    'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
 	    
 	    // Language Tool Translations
 	    'tr_meliscore_tool_language' => 'Back-Office languages',

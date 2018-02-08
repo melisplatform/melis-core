@@ -30,6 +30,36 @@ class MelisSetupController extends AbstractActionController
         return $view;
 
     }
+	
+	public function setupValidateDataAction()
+	{
+		$success = 0;
+        $message = 'tr_install_setup_message_ko';
+        $errors  = array();
+		
+		$data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
+		
+		$form = $this->getForm();
+        $form->setData($data);
+		
+		if($form->isValid()) {
+			$success = 1;
+			$message = 'tr_install_setup_message_ok';
+		}
+		else {
+			$errors = $this->formatErrorMessage($form->getMessages());
+		}
+		
+		
+		$response = array(
+            'success' => $success,
+            'message' => $this->getTool()->getTranslation($message),
+            'errors'  => $errors,
+            'form'    => 'melis_core_setup_user_form'
+        );
+
+        return new JsonModel($response);
+	}
 
     public function setupResultAction()
     {
@@ -66,35 +96,42 @@ class MelisSetupController extends AbstractActionController
 
             if(false === $hasErrors) {
 
-                $tableUser->save(array(
-                    'usr_status'        => 1,
-                    'usr_login'         => $userLogin,
-                    'usr_email'         => $userEmail,
-                    'usr_password'      => $password,
-                    'usr_firstname'     => $userFirstname,
-                    'usr_lastname'      => $userLastname,
-                    'usr_lang_id'       => 1,
-                    'usr_admin'         => 1,
-                    'usr_role_id'       => 1,
-                    'usr_rights'        => '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages> <id>-1</id></meliscms_pages><meliscore_interface></meliscore_interface><meliscore_tools> <id>meliscore_tools_root</id></meliscore_tools></document>',
-                    'usr_creation_date' => date('Y-m-d H  :i:s'),
-                ));
+                try {
+                    $tableUser->save(array(
+                        'usr_status'        => 1,
+                        'usr_login'         => $userLogin,
+                        'usr_email'         => $userEmail,
+                        'usr_password'      => $password,
+                        'usr_firstname'     => $userFirstname,
+                        'usr_lastname'      => $userLastname,
+                        'usr_lang_id'       => 1,
+                        'usr_admin'         => 1,
+                        'usr_role_id'       => 1,
+                        'usr_rights'        => '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages> <id>-1</id></meliscms_pages><meliscore_interface></meliscore_interface><meliscore_tools> <id>meliscore_tools_root</id></meliscore_tools></document>',
+                   
+                    ));
 
-                // save platforms
-                $melisCorePlatformTable = $this->getServiceLocator()->get('MelisPlatformTable');
-                $defaultPlatform = getenv('MELIS_PLATFORM');
-                $platforms       = isset($container['platforms']) ? $container['platforms'] :null;
+                    // save platforms
+                    $melisCorePlatformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
+                    $defaultPlatform = getenv('MELIS_PLATFORM');
+                    $platforms       = isset($container['platforms']) ? $container['platforms'] :null;
 
-                $melisCorePlatformTable->save(array('plf_name' => $defaultPlatform));
+                    $melisCorePlatformTable->save(array('plf_name' => $defaultPlatform));
 
-                if($platforms) {
-                    foreach($platforms as $platform) {
-                        $melisCorePlatformTable->save($platform);
+                    if($platforms) {
+                        foreach($platforms as $platform) {
+                            $melisCorePlatformTable->save($platform);
+                        }
                     }
+
+                    $success = 1;
+                    $message = 'tr_install_setup_message_ok';
+
+                }catch(\Exception $e) {
+                    $errors = $e->getMessage();
                 }
 
-                $success = 1;
-                $message = 'tr_install_setup_message_ok';
+
             }
 
         }

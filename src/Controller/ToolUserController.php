@@ -854,12 +854,13 @@ class ToolUserController extends AbstractActionController
                 
                 $userConnectionTable = $this->getServiceLocator()->get('MelisUserConnectionDate');
                 $userConnectionData  = $userConnectionTable->getUserLastConnectionTime($userId, null, array(), 'usrcd_last_connection_time')->current();
-                if($userConnectionData && $online == 'text-success') 
+                
+                if($userConnectionData && $online == 'text-success')
                 {
                     $now                = new \DateTime(date("H:i:s"));
                     $lastConnectionTime = new \DateTime(date('H:i:s', strtotime($userConnectionData->usrcd_last_connection_time)));
                     $difference         = $lastConnectionTime->diff($now)->i;
-
+    
                     // if user has been away for 5mins, automatically set the user status to "offline"
                     if((int) $difference > 5) {
                         // update user status

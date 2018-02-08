@@ -349,8 +349,7 @@ class LogController extends AbstractActionController
             $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
 
             // Retreiving the list of logs using Log Service with filters as parameters
-            $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, $start, $length, $sortOrder, $search);
-            $recordsFiltered = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, $sortOrder, $search);
+            $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, $sortOrder);
 
             $logTypeBtn = '<button class="btn btn-default btn-sm logTypeButon" data-typeid="%s">%s</button>';
 
@@ -391,7 +390,33 @@ class LogController extends AbstractActionController
                 array_push($tableData, $rowData);
             }
 
+            /**
+             * we need to manipulate again the array to filter the title and message
+             * because in the db, some of the title and message are translated text
+             * so we cannot compare the search with the translated text
+             * we need to translate the text first before can compare it
+             * */
+            if(!empty($search))
+            {
+                $a = [];
+                for ($i = 0; $i < sizeof($tableData); $i++) {
+                    //loop through each field to get its text, and check if has contain the $search value
+                    foreach ($colId as $key => $val) {
+                        if (strpos(strtolower($tableData[$i][$val]), strtolower($search)) !== false) {
+                            //if found push the data
+                            array_push($a, $tableData[$i]);
+                            break;
+                        }
+                    }
+                }
+                //we need to make sure that there is no duplicate data in the array, and we need to re-index it again
+                $tableData = array_values(array_unique($a, SORT_REGULAR ));
+                $recordsFiltered = $a;
+            }else{
+                $recordsFiltered = $logs;
+            }
 
+            $tableData = array_splice($tableData, $start, $length);
         }
 
         return new JsonModel(array(

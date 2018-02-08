@@ -1,117 +1,58 @@
-window.getCurrentPlatform = function() { 
-	//$(document).on("init.dt", function(e, settings) {
-		$.ajax({
-	        type        : 'GET', 
-	        url         : '/melis/MelisCore/Platforms/getCurrentPlatform',
-	        dataType    : 'json',
-	        encode		: true,
-	     }).success(function(data){
-	    	 $('#tablePlatforms td:nth-child(2):contains("'+ data.env +'")').siblings(':last').html('-');
-	     });
-	//});
-}
-
 $(document).ready(function() {
 	var formAdd  = "#formplatformadd form#idformsite";
 	var formEdit = "#formplatformedit form#idformsite";
 	
-	
-	addEvent("#id_meliscore_tool_platform_header_add", function() {
-		// id text input
-		melisCoreTool.clearForm("idformsite");
-		$(formAdd + " input#id_plf_id").css("display", "none");
-		$(formAdd + " label[for='id_plf_id']").css("display", "none");
-		melisCoreTool.showOnlyTab('#modal-platforms', '#id_meliscore_platform_modal_content_new');
+	addEvent(".addCorePlatform", function(){
+		platformFormModal();
 	});
 	
 	addEvent(".btnPlatformEdit", function() {
-		melisCoreTool.showOnlyTab('#modal-platforms', '#id_meliscore_platform_modal_content_edit');
-		var getId = $(this).parents("tr").attr("id");
-		
-		$.ajax({
-	        type        : 'POST', 
-	        url         : '/melis/MelisCore/Platforms/getPlatformById',
-	        data		: {id : getId},
-	        dataType    : 'json',
-	        encode		: true,
-	     }).success(function(data){
-	    	 	melisCoreTool.pending(".btn");
- 	    		$(formEdit + " input[type='text']").each(function(index) {
- 	    			var name = $(this).attr('name');
- 	    			$("input#" + $(this).attr('id')).val(data.platform[name]);
- 	    			$("span#platformupdateid").html(data.platform['plf_id']);
- 	    		});
- 	    		melisCoreTool.done(".btn");
-	     }).error(function(){
-	    	 alert( translations.tr_meliscore_error_message );
-	     });
+		var platformId = $(this).parents("tr").attr("id");
+		platformFormModal(platformId);
 	});
 	
-	addEvent("#btnPlatformAdd", function() {
-		var dataString = $(formAdd).serializeArray();
+	function platformFormModal(platformId){
+		var platformId  = (typeof platformId !== "undefined") ? platformId : null;
+		// initialation of local variable
+        zoneId = 'id_meliscore_tool_platform_generic_form';
+        melisKey = 'meliscore_tool_platform_generic_form';
+        modalUrl = '/melis/MelisCore/MelisGenericModal/emptyGenericModal';
+        window.parent.melisHelper.createModal(zoneId, melisKey, false, {plf_id : platformId}, modalUrl);
+	}
+	
+	addEvent("#btnPlatformSave", function(){
+		var dataString = $("#corePlatform").serializeArray();
 		
-		dataString = $.param(dataString);
-		melisCoreTool.pending("#btnPlatformAdd");
-		melisCoreTool.processing();
+		platformId = $("#corePlatform").find("#plf_id").val();
+		
+		if(platformId){
+			dataString.push({
+				name: "plf_id",
+				value: platformId
+			});
+		}
+		
 		$.ajax({
 	        type        : 'POST', 
-	        url         : '/melis/MelisCore/Platforms/addPlatform',
+	        url         : '/melis/MelisCore/Platforms/savePlatform',
 	        data		: dataString,
 	        dataType    : 'json',
 	        encode		: true
-		}).done(function(data) {
-			if(data.success) {
-				$('#modal-platforms').modal('hide');
-				melisHelper.zoneReload("id_meliscore_tool_platform", "meliscore_tool_platform");
+		}).done(function(data){
+			if(data.success){
+				$("#id_meliscore_tool_platform_generic_form_container").modal("hide");
+				melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
 				// Show Pop-up Notification
 	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-			}
-			else {
+			}else{
 				melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
 				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-				melisCoreTool.highlightErrors(data.success, data.errors, "formplatformadd form#idformsite");
+				melisCoreTool.highlightErrors(data.success, data.errors, "corePlatform");
 			}
-			melisCoreTool.done("#btnPlatformAdd");
+			
     		melisCore.flashMessenger();
     		melisCoreTool.processDone();
     		
-    		
-    		
-		}).fail(function(){
-			alert( translations.tr_meliscore_error_message );
-		});
-	});
-	
-	addEvent("#btnPlatformEdit", function() {
-		var dataString = $(formEdit).serializeArray();
-		dataString.push({
-			name: "id",
-			value: $("#platformupdateid").html()
-		});
-		dataString = $.param(dataString);
-		melisCoreTool.pending("#btnPlatformEdit");
-		melisCoreTool.processing();
-		$.ajax({
-	        type        : 'POST', 
-	        url         : '/melis/MelisCore/Platforms/editPlatform',
-	        data		: dataString,
-	        dataType    : 'json',
-	        encode		: true
-		}).done(function(data) {
-			if(data.success) {
-				$('#modal-platforms').modal('hide');
-				melisHelper.zoneReload("id_meliscore_tool_platform", "meliscore_tool_platform");
-				// Show Pop-up Notification
-	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-			}
-			else {
-				melisCoreTool.alertDanger("#platformeditalert", '', data.textMessage);
-				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-				melisCoreTool.highlightErrors(data.success, data.errors, "formplatformedit form#idformsite");
-			}
-			melisCoreTool.done("#btnPlatformEdit");
-    		melisCore.flashMessenger();
-    		melisCoreTool.processDone();
 		}).fail(function(){
 			alert( translations.tr_meliscore_error_message );
 		});
@@ -135,7 +76,7 @@ $(document).ready(function() {
 	    	     }).success(function(data ){
 	    	    	 	melisCoreTool.pending(".btn-danger");
 		    	    	if(data.success) {
-		    	    		melisHelper.zoneReload("id_meliscore_tool_platform", "meliscore_tool_platform");
+		    	    		melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
 		    	    		melisCore.flashMessenger();
 		    	    		
 		    	    		// Show Pop-up Notification
@@ -147,9 +88,16 @@ $(document).ready(function() {
 	    	     });
 		});
 	});
-
-
+	
 	function addEvent(target, fn) {
 		$("body").on("click", target, fn);
 	}
 });
+
+window.initCorePlatformListTable = function() { 
+	
+	// Core platform list init to remove delete buttons
+	$('.noPlatformDeleteBtn').each(function(){
+		$('#'+$(this).attr('id')+' .btnPlatformDelete').remove();
+	});
+}

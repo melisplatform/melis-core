@@ -482,22 +482,39 @@ class MelisAuthController extends AbstractActionController
                 $table = $this->getServiceLocator()->get('MelisUserConnectionDate');
                 $data  = $table->getUserLastConnectionDate((int) $user->usr_id, $user->usr_last_login_date)->current();
                 
+                $currentData = date('Y-m-d H:i:s');
+                $userCmId = null;
+                $userCm = array();
                 if($data) {
                     
-                    $currentData = date('Y-m-d H:i:s');
-                    $table->save([
+                    $userCmId = $data->usrcd_id;
+                    $userCm = array(
                         'usrcd_last_connection_time' => $currentData
-                    ], $data->usrcd_id);
+                    );
                     
-                    // Updating new last login of the current user
-                    $user->usr_last_login_date = $currentData;
+                }else{
+                    $userCm = array(
+                        'usrcd_usr_login' => $user->usr_id,
+                        'usrcd_last_login_date' => $currentData,
+                        'usrcd_last_connection_time' => $currentData
+                    );
                 }
+                
+                $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+                $userTable->save(array(
+                    'usr_is_online' => 1
+                ), $user->usr_id);
+                
+                $table->save($userCm, $userCmId);
+                
+                // Updating new last login of the current user
+                $user->usr_last_login_date = $currentData;
             }
         }
         
         return new JsonModel(array('login' => $isLoggedIn));
     }
-
+    
     public function getIdentityMenuAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');

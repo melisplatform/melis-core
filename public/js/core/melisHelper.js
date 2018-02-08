@@ -391,6 +391,8 @@ var melisHelper = (function(){
 
                 // close sidebar after opening a page from it
                 $body.removeClass('sidebar-mini');
+                // hide sidebar footer when opening tab
+                $("#id_meliscore_footer").addClass('slide-left');
                 $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
 
                 // slide up the dropdown menu
