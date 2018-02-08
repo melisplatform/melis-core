@@ -20,23 +20,25 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 	public function getServiceLocator(){
 		return $this->serviceLocator;
 	}
-	
-	/**
-	 * Sending Email
-	 * @param String $emailFrom - Email Address of the recipient
-	 * @param String $fromName - Name of the recipient
-	 * @param String $emailTo  - Email Address of the Email Reciever
-	 * @param String $toName - Name of the Email Reciever
-	 * @param String $replyTo - Email Address where Reciever can reply
-	 * @param String $subject - Subject of the Email
-	 * @param String $message_html - Html Content of the Email
-	 * @param String $message_text - Text Conetent of the Email
-	 */
-	public function sendEmail($emailFrom, $fromName, $emailTo, $toName = '', $replyTo = null, $subject, $message_html, $message_text = null ) {
+
+    /**
+     * Sending Email
+     * @param $emailFrom
+     * @param $fromName
+     * @param $emailTo
+     * @param string $toName
+     * @param null $replyTo
+     * @param $subject
+     * @param $message_html
+     * @param null $message_text
+     * @param null $transportConfig
+     * @throws \Exception
+     */
+	public function sendEmail($emailFrom, $fromName, $emailTo, $toName = '', $replyTo = null, $subject, $message_html, $message_text = null, $transportConfig = null) {
 	    
 	    $html = new MimePart($message_html);
 	    $html->type = 'text/html';
-	    
+
 	    $body = new MimeMessage();
 	    
 	    if ($message_text!=null){
@@ -61,8 +63,33 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 	    if ($replyTo!=null){
 	        $message->addReplyTo($replyTo);
 	    }
-	    
-	    $transport = new Sendmail();
+
+        $transport = new Sendmail();
+
+	    if(is_array($transportConfig) && $transportConfig) {
+            /**
+             * Program executes these lines when user passes
+             * custom Transport Configuration Options ($transportConfig)
+             * to specify their own Mailing Service Provider
+             */
+            $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
+            try{
+                $smtpOptions->setHost($transportConfig['host'])                 // ex. 'smtp.gmail.com'
+                    ->setConnectionClass($transportConfig['connectionClass'])   // ex. 'login'
+                    ->setName($transportConfig['name'])                         // ex. 'smtp.gmail.com'
+                    ->setConnectionConfig(array(
+                        'username'  => $transportConfig['username'],            // Your Gmail address
+                        'password'  => $transportConfig['password'],
+                        'ssl'       => $transportConfig['ssl'],                 // ex. 'tls'
+                    ));
+
+                $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+            }
+            catch (\Exception $exception){
+                throw new \Exception($exception->getMessage());
+            }
+        }
+
 	    $transport->send($message);
 	}
 	
