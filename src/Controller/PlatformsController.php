@@ -140,7 +140,13 @@ class PlatformsController extends AbstractActionController
         return new ViewModel();
     }
     
-    public function renderPlatformModalsContainerAction()
+    /**
+     * Renders the Generic form of the Platform 
+     * for creating new and updating new platform
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function renderPlatformGenericFormAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
         
@@ -150,88 +156,40 @@ class PlatformsController extends AbstractActionController
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
         
+        $platformForm = $melisTool->getForm('meliscore_platform_generic_form');
+        
+        $plfId = $this->params()->fromQuery('plf_id', '');
+        
+        if ($plfId)
+        {
+            $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
+            
+            $platform = $platformTable->getEntryById($plfId)->current();
+            
+            if (!empty($platform))
+            {
+                $platformForm->bind($platform);
+                
+                if (getenv('MELIS_PLATFORM') == $platform->plf_name)
+                {
+                    // Deactivating the platform name if the current platform is same to the requested platform
+                    $platformForm->get('plf_name')->setAttribute('disabled', true);
+                }
+            }
+        }
+        
         $view = new ViewModel();
+        $view->meliscore_platform_generic_form = $platformForm;
         $view->melisKey = $melisKey;
-        $view->emptyModal = $melisTool->getModal('meliscore_platform_modal_handler_empty');
-        
+        $view->platformId = $plfId;
         return $view;
     }
     
-    public function renderPlatformModalsHandlerEmptyAction()
-    {
-        $melisKey = $this->params()->fromRoute('melisKey', '');
-        
-        $view = new ViewModel();
-        $view->melisKey = $melisKey;
-        
-        return $view;
-    }
-    
-    public function renderPlatformModalsHandlerAddAction()
-    {
-        $melisKey = $this->params()->fromRoute('melisKey', '');
-        
-        // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-        
-        // tell the Tool what configuration in the app.tool.php that will be used.
-        $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-        
-        $view = new ViewModel();
-        $view->melisKey = $melisKey;
-        $view->addModalHandler = $melisTool->getModal('meliscore_platform_modal_content_new');
-        
-        return $view;
-    }
-    
-    public function renderPlatformModalsContentAddAction()
-    {
-        // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-    
-        // tell the Tool what configuration in the app.tool.php that will be used.
-        $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-    
-        $view = new ViewModel();
-    
-        $view->setVariable('meliscore_platform_generic_form', $melisTool->getForm('meliscore_platform_generic_form'));
-    
-        return $view;
-    }
-    
-    public function renderPlatformModalsHandlerEditAction()
-    { 
-        $melisKey = $this->params()->fromRoute('melisKey', '');
-        
-        // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-        
-        // tell the Tool what configuration in the app.tool.php that will be used.
-        $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-        
-        $view = new ViewModel();
-        $view->melisKey = $melisKey;
-        $view->editModalHandler = $melisTool->getModal('meliscore_platform_modal_content_edit');
-        
-        return $view;
-    }
-    
-    public function renderPlatformModalsContentEditAction()
-    {
-        // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-    
-        // tell the Tool what configuration in the app.tool.php that will be used.
-        $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-    
-        $view = new ViewModel();
-    
-        $view->setVariable('meliscore_platform_generic_form', $melisTool->getForm('meliscore_platform_generic_form'));
-    
-        return $view;
-    }
-    
-    
+    /**
+     * This method return the list of core platform available
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
     public function getPlatformsAction()
     {
         $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
@@ -288,18 +246,24 @@ class PlatformsController extends AbstractActionController
                 {
                     $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue);
                 }
-        
-                // manually modify value of the desired row
-                // no specific row to be modified
-        
-        
+                
+                // Updating marketplace status
+                $marketPlaceIconn = '<i class="fa fa-fw fa-circle text-success"></i>';
+                if (!$tableData[$ctr]['plf_update_marketplace'])
+                {
+                    $marketPlaceIconn = '<i class="fa fa-fw fa-circle text-danger"></i>';
+                }
+                $tableData[$ctr]['plf_update_marketplace'] = $marketPlaceIconn;
+                
+                // Adding class flag to remove the delete button of the current Platform
+                if (getenv('MELIS_PLATFORM') == $tableData[$ctr]['plf_name']){
+                    $tableData[$ctr]['DT_RowClass'] = 'noPlatformDeleteBtn';
+                }
+                
                 // add DataTable RowID, this will be added in the <tr> tags in each rows
                 $tableData[$ctr]['DT_RowId'] = $tableData[$ctr]['plf_id'];
-        
             }
-        
         }
-        
         
         return new JsonModel(array(
             'draw' => (int) $draw,
@@ -309,146 +273,119 @@ class PlatformsController extends AbstractActionController
         ));
     }
     
-    public function getPlatformByIdAction()
-    {
-        $data = array();
-        if($this->getRequest()->isPost())
-        {
-            $platformId = $this->getRequest()->getPost('id');
-            $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
-        
-            $platformData = $platformTable->getEntryById($platformId)->current();
-            foreach($platformData as $roleKey => $roleValues) {
-                $data[$roleKey] = $roleValues;
-            }
-
-        }
-        return new JsonModel(array(
-            'platform' =>  $data
-        ));
-    }
-    
-    public function addPlatformAction() 
+    /**
+     * This method saving the platform info
+     * this include adding and updating platform
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function savePlatformAction() 
     {
         $response = array();
-        $this->getEventManager()->trigger('meliscore_platform_new_start', $this, $response);
+        $this->getEventManager()->trigger('meliscore_platform_save_start', $this, $response);
         $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
         $translator = $this->getServiceLocator()->get('translator');
         
+        $request = $this->getRequest();
         $success = 0;
         $errors  = array();
         $textTitle = 'tr_meliscore_tool_platform_title';
-        $textMessage = 'tr_meliscore_tool_platform_prompts_new_failed';
+        $textMessage = '';
         
         $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
         $id = 0;
         $form = $melisTool->getForm('meliscore_platform_generic_form');
-        if($this->getRequest()->isPost()) {
+        if($request->isPost()) {
             
             $postValues = get_object_vars($this->getRequest()->getPost());
-            $postValues = $melisTool->sanitizePost($postValues);
-            $form->setData($postValues);
             
-            if($form->isValid()) {
-                
-                $data = $form->getData();
-                $isExistData = $platformTable->getEntryByField('plf_name', $data['plf_name']);
-                $isExistData = $isExistData->current();
-                if(empty($isExistData)) {
-                    
-                    $id = $platformTable->save($data);
-                    $textMessage = 'tr_meliscore_tool_platform_prompts_new_success';
-                    $success = 1;
-                }
-                else {
-                    $errors = array(
-                        'plf_name' => array(
-                            'platform_exists' => $translator->translate('tr_meliscore_tool_platform_prompts_new_exists')
-                        ),
-                    );
-                }
-
-            }
-            else {
-                $errors = $form->getMessages();
-            }
-            
-            $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-            $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_platform_tool/forms/meliscore_platform_generic_form');
-            $appConfigForm = $appConfigForm['elements'];
-            
-            foreach ($errors as $keyError => $valueError)
+            $textMessage = 'tr_meliscore_tool_platform_prompts_new_failed';
+            $logCode = 'CORE_PLATFORM_ADD';
+            if (!empty($postValues['plf_id']))
             {
-                foreach ($appConfigForm as $keyForm => $valueForm)
+                $id = $postValues['plf_id'];
+                $textMessage = 'tr_meliscore_tool_platform_prompts_edit_failed';
+                $logCode = 'CORE_PLATFORM_UPDATE';
+            }
+            
+            $postValues = $melisTool->sanitizePost($postValues);
+            
+            $data = array();
+            
+            if (!empty($postValues['plf_id']) && !isset($postValues['plf_name']))
+            {
+                $platform = $platformTable->getEntryById($postValues['plf_id'])->current();
+                $postValues['plf_name'] = $platform->plf_name;
+            }
+            elseif (!empty($postValues['plf_name']))
+            {
+                $platform = $platformTable->getEntryByField('plf_name', $postValues['plf_name'])->current();
+                
+                if (!empty($platform))
                 {
-                    if ($valueForm['spec']['name'] == $keyError &&
-                        !empty($valueForm['spec']['options']['label']))
-                        $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                    $exist = false;
+                    
+                    if (!empty($postValues['plf_id']))
+                    {
+                        if ($postValues['plf_id'] != $platform->plf_id && $postValues['plf_name'] == $platform->plf_name)
+                        {
+                            $exist = true;
+                        }
+                    }
+                    else
+                    {
+                        if ($postValues['plf_name'] == $platform->plf_name)
+                        {
+                            $exist = true;
+                        }
+                    }
+                    
+                    if ($exist)
+                    {
+                        $errors = array(
+                            'plf_name' => array(
+                                'platform_exists' => $translator->translate('tr_meliscore_tool_platform_prompts_new_exists')
+                            ),
+                        );
+                        
+                        $form->setMessages($errors);
+                    }
                 }
             }
-        }
-        
-        $response = array(
-            'success' => $success,
-            'textTitle' => $textTitle,
-            'textMessage' => $textMessage,
-            'errors' => $errors
-        );
-        
-        $this->getEventManager()->trigger('meliscore_platform_new_end', $this, array_merge($response, array('typeCode' => 'CORE_PLATFORM_ADD', 'itemId' => $id, 'id' => $id)));
-         
-        return new JsonModel($response);
-    }
-    
-    public function editPlatformAction()
-    {
-        $response = array();
-        $this->getEventManager()->trigger('meliscore_platform_update_start', $this, $response);
-        $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
-        $translator = $this->getServiceLocator()->get('translator');
-        
-        $id = null;
-        $success = 0;
-        $errors  = array();
-        $textTitle = 'tr_meliscore_tool_platform_title';
-        $textMessage = 'tr_meliscore_tool_platform_prompts_edit_failed';
-        
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-        $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-        
-        $form = $melisTool->getForm('meliscore_platform_generic_form');
-        
-        if($this->getRequest()->isPost()) {
-        
-            $postValues = get_object_vars($this->getRequest()->getPost());
-            $postValues = $melisTool->sanitizePost($postValues);
+                
             $form->setData($postValues);
-        
-            $id = $postValues['id'];
             
-            if($form->isValid()) {
+            if($form->isValid() && empty($errors)) 
+            {
                 $data = $form->getData();
-                $data['plf_id'] = $id;
-                $platformTable->save($data, $id);
-                $textMessage = 'tr_meliscore_tool_platform_prompts_edit_success';
+                    
+                $textMessage = 'tr_meliscore_tool_platform_prompts_new_success';
+                if ($id)
+                {
+                    $textMessage = 'tr_meliscore_tool_platform_prompts_edit_success';
+                }
+                
+                $id = $platformTable->save($data, $id);
                 $success = 1;
             }
-            else {
+            else 
+            {
                 $errors = $form->getMessages();
             }
-        
+            
             $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
             $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_platform_tool/forms/meliscore_platform_generic_form');
             $appConfigForm = $appConfigForm['elements'];
-        
+            
             foreach ($errors as $keyError => $valueError)
             {
                 foreach ($appConfigForm as $keyForm => $valueForm)
                 {
-                    if ($valueForm['spec']['name'] == $keyError &&
-                        !empty($valueForm['spec']['options']['label']))
+                    if ($valueForm['spec']['name'] == $keyError && !empty($valueForm['spec']['options']['label']))
+                    {
                         $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                    }
                 }
             }
         }
@@ -460,11 +397,16 @@ class PlatformsController extends AbstractActionController
             'errors' => $errors
         );
         
-        $this->getEventManager()->trigger('meliscore_platform_update_end', $this, array_merge($response, array('typeCode' => 'CORE_PLATFORM_UPDATE', 'itemId' => $id)));
+        $this->getEventManager()->trigger('meliscore_platform_save_end', $this, array_merge($response, array('typeCode' => $logCode, 'itemId' => $id, 'id' => $id)));
          
         return new JsonModel($response);
     }
     
+    /**
+     * Deletion of the platform
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
     public function deletePlatformAction()
     {
         $response = array();
