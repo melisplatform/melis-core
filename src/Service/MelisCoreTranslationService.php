@@ -222,21 +222,19 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         // get the full path of User Modules
         foreach($userModules as $uModule) {
             $uPath = $moduleSvc->getModulePath($uModule) . '/language/';
-            if(file_exists($uPath) && is_writable($uPath)) {
+            // if(file_exists($uPath) && is_writable($uPath)) {
+            if(file_exists($uPath)) {
                 $fullPathUserModules[] = array('module' => $uModule, 'path' => $uPath);
             }
-
         }
 
         foreach($vendorModules as $vModule) {
-
             $vPath = $moduleSvc->getModulePath($vModule) . '/language/';
-            if(file_exists($vPath) && is_writable($vPath)) {
+            //if(file_exists($vPath) && is_writable($vPath)) {
+            if(file_exists($vPath)) {
                 $fullPathVendorModules[] = array('module' => $vModule, 'path' => $vPath);
             }
         }
-
-
 
         if($fullPathUserModules) {
             foreach($fullPathUserModules as $uModuleConf) {
