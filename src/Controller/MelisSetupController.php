@@ -30,6 +30,36 @@ class MelisSetupController extends AbstractActionController
         return $view;
 
     }
+	
+	public function setupValidateDataAction()
+	{
+		$success = 0;
+        $message = 'tr_install_setup_message_ko';
+        $errors  = array();
+		
+		$data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
+		
+		$form = $this->getForm();
+        $form->setData($data);
+		
+		if($form->isValid()) {
+			$success = 1;
+			$message = 'tr_install_setup_message_ok';
+		}
+		else {
+			$errors = $this->formatErrorMessage($form->getMessages());
+		}
+		
+		
+		$response = array(
+            'success' => $success,
+            'message' => $this->getTool()->getTranslation($message),
+            'errors'  => $errors,
+            'form'    => 'melis_core_setup_user_form'
+        );
+
+        return new JsonModel($response);
+	}
 
     public function setupResultAction()
     {
