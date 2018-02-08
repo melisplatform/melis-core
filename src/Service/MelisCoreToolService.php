@@ -409,7 +409,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $actionCount = 0;
             foreach($actionContainer as $actionKey => $actionContent)
             {
-                $actionButtons .= $this->getViewContent($actionContent);
+                $actionButtons .= $this->getViewContent($actionContent).' ';
             }
 
             // remove unnecessary new lines and text paragraphs (not <p> tags)

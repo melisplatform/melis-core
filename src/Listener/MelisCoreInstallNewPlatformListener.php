@@ -43,7 +43,7 @@ class MelisCoreInstallNewPlatformListener extends MelisCoreGeneralListener imple
                         $platformData = $tablePlatform->getEntryByField('plf_name', $platform['plf_name']);
                         $platformData = $platformData->current();
                          if(!$platformData) 
-                             $tablePlatform->save(array('plf_name' => $platform['plf_name']));
+                             $tablePlatform->save(array('plf_name' => $platform['plf_name'], 'plf_update_marketplace' => 1));
                     }
                 }
         	},

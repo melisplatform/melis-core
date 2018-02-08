@@ -1,0 +1,1 @@
+ALTER TABLE `melis_core_platform` ADD `plf_update_marketplace` TINYINT(1) NOT NULL DEFAULT '1' AFTER `plf_name`;
