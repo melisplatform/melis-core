@@ -1697,10 +1697,10 @@ span.fancytree-active span.fancytree-title{
 }
 /* footer fix */
 #id_meliscore_footer{
-    left: -100%;
+    left: 0;
 }
 #id_meliscore_footer.slide-left{
-    left: 0;
+    left: -100%;
 }
 
 
@@ -3325,6 +3325,19 @@ div#modal-user-management div.widget {
 }
 .wizard-design .widget.widget-tabs>.widget-head ul li {
     border-right: 1px solid #e5e5e5;
+}
+
+/* Modify Tab Bootstrap */
+.tab-content>.tab-pane {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+}
+.tab-content>.active {
+    height: auto;
+    overflow: auto;
+    opacity: 1;
 }
 
 @media (max-width: 420px) {
