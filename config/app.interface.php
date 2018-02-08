@@ -566,51 +566,20 @@ return array(
                                                         'jsdatas' => array()
                                                     ),
                                                     'interface' => array(
-
-                                                    ),
-                                                ),
-                                                'meliscore_tool_platform_modals' => array(
-                                                    'conf' => array(
-                                                        'id' => 'id_meliscore_tool_platform_modals',
-                                                        'name' => 'tr_meliscore_tool_platform_modals',
-                                                        'melisKey' => 'meliscore_tool_platform_modals',
-                                                    ),
-                                                    'forward' => array(
-                                                        'module' => 'MelisCore',
-                                                        'controller' => 'Platforms',
-                                                        'action' => 'render-platform-modals-container',
-                                                        'jscallback' => '',
-                                                        'jsdatas' => array()
-                                                    ),
-                                                    'interface' => array(
-                                                        'meliscore_tool_platform_modals_add_handler' => array(
+                                                        'meliscore_tool_platform_generic_form' => array(
                                                             'conf' => array(
-                                                                'id' => 'id_meliscore_tool_platform_modals_add_handler',
-                                                                'name' => 'tr_meliscore_tool_platform_modal_new',
-                                                                'melisKey' => 'meliscore_tool_platform_modals_add_handler',
+                                                                'id' => 'id_meliscore_tool_platform_generic_form',
+                                                                'name' => 'tr_meliscore_tool_platform_generic_form',
+                                                                'melisKey' => 'meliscore_tool_platform_generic_form',
                                                             ),
                                                             'forward' => array(
                                                                 'module' => 'MelisCore',
                                                                 'controller' => 'Platforms',
-                                                                'action' => 'render-platform-modals-handler-add',
+                                                                'action' => 'render-platform-generic-form',
                                                                 'jscallback' => '',
                                                                 'jsdatas' => array()
                                                             ),
-                                                        ),
-                                                        'meliscore_tool_platform_modals_edit_handler' => array(
-                                                            'conf' => array(
-                                                                'id' => 'id_meliscore_tool_platform_modals_edit_handler',
-                                                                'name' => 'tr_meliscore_tool_platform_modal_edit',
-                                                                'melisKey' => 'meliscore_tool_platform_modals_edit_handler',
-                                                            ),
-                                                            'forward' => array(
-                                                                'module' => 'MelisCore',
-                                                                'controller' => 'Platforms',
-                                                                'action' => 'render-platform-modals-handler-edit',
-                                                                'jscallback' => '',
-                                                                'jsdatas' => array()
-                                                            ),
-                                                        ),
+                                                        )
                                                     ),
                                                 ),
                                             ),
