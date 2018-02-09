@@ -3171,7 +3171,7 @@ div#modal-user-management div.widget {
     }
 
     .tabsbar .has-sub.active-parent.on > .tab-element {
-        background: #932e2a;
+        background: #fff;
         color: #fff !important;
     }
     .tabsbar .has-sub.active-parent.on > .tab-element i:before {
