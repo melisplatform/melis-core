@@ -24,7 +24,18 @@ class ModulesController extends AbstractActionController
 {
 
     const MODULE_LOADER_FILE     = 'config/melis.module.load.php';
-    private $exclude_modules     = array('MelisAssetManager', 'MelisCore', '.', '..', 'MelisSites', 'MelisEngine', 'MelisInstaller', 'MelisFront', '.gitignore', 'MelisModuleConfig');
+    private $exclude_modules     = array(
+        'MelisAssetManager',
+        'MelisCore', '.', '..',
+        'MelisSites',
+        'MelisEngine',
+        'MelisInstaller',
+        'MelisFront',
+        '.gitignore',
+        'MelisModuleConfig',
+        'MelisComposerDeploy',
+        'MelisDbDeploy'
+    );
 
     /**
      * Main Tool Container
@@ -245,6 +256,33 @@ class ModulesController extends AbstractActionController
             'success' => $success,
             'modules' => $modules,
             'message' => $tool->getTranslation($message)
+        );
+
+        return new JsonModel($response);
+
+    }
+
+    public function getRequiredDependenciesAction()
+    {
+        $success = 0;
+        $modules = array();
+        $request = $this->getRequest();
+        $tool    = $this->getServiceLocator()->get('MelisCoreTool');
+
+        if($request->isPost()) {
+            $module = $tool->sanitize($request->getPost('module'));
+
+            if($module) {
+                $modules = $this->getModuleSvc()->getDependencies($module);
+                if($modules) {
+                    $success = 1;
+                }
+            }
+        }
+
+        $response = array(
+            'success' => $success,
+            'modules' => $modules,
         );
 
         return new JsonModel($response);

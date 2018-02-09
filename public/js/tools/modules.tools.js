@@ -5,6 +5,7 @@ $(document).ready(function() {
 		var moduleName = $(this).data("module-name");
 		var value 	   = data.value;
 		var isInactive = false;
+		var isActive   = true;
 
 		if(value === isInactive) {
 
@@ -51,6 +52,34 @@ $(document).ready(function() {
                 });
 
 		}
+
+
+		if(value === isActive) {
+            $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_checking_dependencies);
+            $('div[data-module-name]').bootstrapSwitch('setActive', false);
+
+            $.ajax({
+                type        : 'POST',
+                url         : '/melis/MelisCore/Modules/getRequiredDependencies',
+                data		: {module : moduleName},
+                dataType    : 'json',
+                encode		: true,
+            }).success(function(data){
+                if(data.success) {
+					$.each(data.modules, function(i, v) {
+						// this will trigger a switch-change event
+						// $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
+						// this will just trigger an animate switch
+						switchButtonWithoutEvent(v, "on");
+					});
+
+                }
+                $('div[data-module-name]').bootstrapSwitch('setActive', true);
+                $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
+            });
+		}
+
+
 
     });
 
