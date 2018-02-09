@@ -3327,19 +3327,6 @@ div#modal-user-management div.widget {
     border-right: 1px solid #e5e5e5;
 }
 
-/* Modify Tab Bootstrap */
-.tab-content>.tab-pane {
-    display: block;
-    height: 0;
-    overflow: hidden;
-    opacity: 0;
-}
-.tab-content>.active {
-    height: auto;
-    overflow: auto;
-    opacity: 1;
-}
-
 @media (max-width: 420px) {
     .panel-title {
         font-size: 12px;
