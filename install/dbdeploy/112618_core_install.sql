@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS `melis_core_platform` ;
 CREATE TABLE IF NOT EXISTS `melis_core_platform` (
   `plf_id` INT(11) NOT NULL AUTO_INCREMENT,
   `plf_name` VARCHAR(100) NOT NULL,
+  `plf_update_marketplace` VARCHAR(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`plf_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
