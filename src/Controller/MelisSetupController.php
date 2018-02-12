@@ -123,13 +123,16 @@ class MelisSetupController extends AbstractActionController
                     // save platforms
                     $melisCorePlatformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
                     $defaultPlatform = getenv('MELIS_PLATFORM');
-                    $platforms       = isset($container['platforms']) ? $container['platforms'] :null;
+                    $platforms       = isset($container['environments']) ? $container['environments'] :null;
 
                     $melisCorePlatformTable->save(array('plf_name' => $defaultPlatform));
 
-                    if($platforms) {
+                    if(isset($platforms['new'])) {
                         foreach($platforms as $platform) {
-                            $melisCorePlatformTable->save($platform);
+                            $melisCorePlatformTable->save(array(
+                                'plf_name' => $platform['sdom_env'],
+                                'plf_update_marketplace' => 1
+                            ));
                         }
                     }
 
