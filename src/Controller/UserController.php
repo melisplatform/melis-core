@@ -29,19 +29,20 @@ class UserController extends AbstractActionController
     {
 
         $view = $this->forward()->dispatch('MelisCore\Controller\PluginView',
-            array('action' => 'generate',
-                'appconfigpath' => '/meliscore_lost_password',
-                'keyview' => 'meliscore_lost_password'));
-            
-            $background = '';
-            $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-            $appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
-            if (!empty($appConfigForm['datas']['login_background']))
-                $background = $appConfigForm['datas']['login_background'];
-            
-            $this->layout()->addChild($view, 'content');
-            $this->layout()->isLogin = 1;
-            $this->layout()->login_background = $background;
+        array('action' => 'generate',
+            'appconfigpath' => '/meliscore_lost_password',
+            'keyview' => 'meliscore_lost_password'));
+
+        $background = '';
+        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
+        if (!empty($appConfigForm['datas']['login_background']))
+            $background = $appConfigForm['datas']['login_background'];
+
+        $this->layout()->addChild($view, 'content');
+        $this->layout()->isLogin = 1;
+        $this->layout()->login_background = $background;
+        $this->layout()->schemes          = $this->getSchemes();
              
         return $view;
     }
@@ -73,6 +74,8 @@ class UserController extends AbstractActionController
         $view->setVariable('meliscore_forgot', $forgotForm);
         $view->setVariable('formFactory', $factory);
         $view->setVariable('formConfig', $appConfigForm);
+        $this->layout()->schemes = $this->getSchemes();
+
         return $view;
     }
     
@@ -154,6 +157,7 @@ class UserController extends AbstractActionController
         $this->layout()->addChild($view, 'content');
         $this->layout()->isLogin = 1;
         $this->layout()->login_background = $background;
+        $this->layout()->schemes = $this->getSchemes();
 
         return $view;
     }
@@ -242,6 +246,7 @@ class UserController extends AbstractActionController
         $view->hashExists = $hashExists;
         $view->message = $translator->translate($textMessage);
         $view->success = $success;
+        $this->layout()->schemes = $this->getSchemes();
 
         return $view;
     }
@@ -267,6 +272,14 @@ class UserController extends AbstractActionController
     protected function getHash() 
     {
         return $this->_hash;
+    }
+
+    private function getSchemes()
+    {
+        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeData = $schemeSvc->getCurrentScheme();
+
+        return $schemeData;
     }
 
 

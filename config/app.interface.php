@@ -1283,7 +1283,7 @@ return array(
             'datas' => array(
                 'askaccount_email' => 'askaccount@test.com',
                 'lostpassword_email' => 'lostpassword@test.com',
-                'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
+                'login_background' => '/MelisCore/images/login/melis-blackboard.jpg',
                 'login_logo' => '/MelisCore/images/login/melis-box.png',
             ),
             'interface' => array(
