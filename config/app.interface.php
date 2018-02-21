@@ -207,7 +207,7 @@ return array(
                             'conf' => array(
                                 'id' => 'id_meliscore_header_close_all_tabs',
                                 'melisKey' => 'meliscore_header_close_all_tabs',
-                                'name' => 'tr_melis_user_tabs_title',
+                                'name' => 'tr_melis_user_tabs_close_all_open_tabs',
                             ),
                             'forward' => array(
                                 'module' => 'MelisCore',
