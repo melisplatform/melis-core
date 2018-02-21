@@ -526,7 +526,7 @@
 	    'tr_meliscore_logs_tool_log_type' => 'Type',
 	    'tr_meliscore_logs_tool_log_item_id' => 'ID élément',
 	    'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
-	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajouté',
+	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajoutée',
 	     
 	    // Log type details
 	    'tr_meliscore_logs_tool_log_type_name' => 'Nom',
