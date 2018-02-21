@@ -50,7 +50,6 @@ class MelisAuthController extends AbstractActionController
     	$this->layout()->isLogin          = 1;
     	$this->layout()->login_background = $background;
     	$this->layout()->schemes          = $schemeData;
-    	$this->layout()->setVariable('test', 'look for me');
     	
     	return $view;
     	

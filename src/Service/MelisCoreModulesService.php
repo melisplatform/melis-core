@@ -202,6 +202,8 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     public function getCoreModules($excludeModulesOnReturn = array())
     {
         $modules = array(
+            'melisdbdeploy' => 'MelisDbDeploy',
+            'meliscomposerdeploy' => 'MelisComposerDeploy',
             'meliscore' => 'MelisCore',
             'melisinstaller' => 'MelisInstaller',
             'melisengine' => 'MelisEngine',
@@ -332,7 +334,9 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      * @param array $bottomModules
      * @return bool
      */
-    public function createModuleLoader($pathToStore, $modules = array(), $topModules = array('meliscore', 'melisfront', 'melisengine'), $bottomModules = array('MelisModuleConfig'))
+    public function createModuleLoader($pathToStore, $modules = array(),
+                                       $topModules = array('melisdbdeploy', 'meliscomposerdeploy', 'meliscore', 'melisfront', 'melisengine'),
+                                       $bottomModules = array('MelisModuleConfig'))
     {
         $tmpFileName = 'melis.module.load.php.tmp';
         $fileName = 'melis.module.load.php';

@@ -303,7 +303,7 @@ class ModulesController extends AbstractActionController
      */
     protected function createModuleLoaderFile($modules = array())
     {
-        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','meliscore', 'melisengine', 'melisfront'));
+        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','melisdbdeploy', 'meliscomposerdeploy', 'meliscore', 'melisengine', 'melisfront'));
         return $status;
     }
 
