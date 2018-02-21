@@ -617,5 +617,6 @@
         'tr_meliscore_platform_scheme_failed_restore_title' => 'Restaurer le thème de la plateforme',
         'tr_meliscore_platform_scheme_success_restore_message' => 'Thème de la plateforme restauré avec succès',
 
+        'tr_melis_user_tabs_close_all_open_tabs' => 'Fermer tous les onglets',
     );
 ?>
