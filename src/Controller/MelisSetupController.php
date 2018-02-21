@@ -106,6 +106,7 @@ class MelisSetupController extends AbstractActionController
             if(false === $hasErrors) {
 
                 try {
+
                     $tableUser->save(array(
                         'usr_status'        => 1,
                         'usr_login'         => $userLogin,
@@ -117,23 +118,28 @@ class MelisSetupController extends AbstractActionController
                         'usr_admin'         => 1,
                         'usr_role_id'       => 1,
                         'usr_rights'        => '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages> <id>-1</id></meliscms_pages><meliscore_interface></meliscore_interface><meliscore_tools> <id>meliscore_tools_root</id></meliscore_tools></document>',
-                   
+
                     ));
 
+                    $installerSession = new Container('melisinstaller');
                     // save platforms
                     $melisCorePlatformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
                     $defaultPlatform = getenv('MELIS_PLATFORM');
-                    $platforms       = isset($container['platforms']) ? $container['platforms'] :null;
+                    $platforms       = isset($installerSession['environments']) ? $installerSession['environments'] :null;
 
                     $melisCorePlatformTable->save(array('plf_name' => $defaultPlatform));
 
-                    if($platforms) {
-                        foreach($platforms as $platform) {
-                            $melisCorePlatformTable->save($platform);
+                    if(isset($platforms['new'])) {
+                        foreach($platforms['new'] as $platform) {
+                            $melisCorePlatformTable->save(array(
+                                'plf_name' => $platform[0]['sdom_env'],
+                                'plf_update_marketplace' => 1
+                            ));
                         }
                     }
 
-                    $success = 1;
+
+                    $success = 0;
                     $message = 'tr_install_setup_message_ok';
 
                 }catch(\Exception $e) {

@@ -6,7 +6,7 @@
 		'language' => 'en',
 		'inline' => false,
 		'menubar' => false,
-		'forced_root_block' => 'p',
+		'forced_root_block' => '',
 		'cleanup' => false,
 		'verify_html' => false,
 	    'setup' => 'melisTinyMCE.tinyMceActionEvent',

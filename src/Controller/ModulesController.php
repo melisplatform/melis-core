@@ -23,18 +23,18 @@ use MelisCalendar\Service\MelisCalendarService;
 class ModulesController extends AbstractActionController
 {
 
-    const MODULE_LOADER_FILE     = 'config/melis.module.load.php';
-    private $exclude_modules     = array(
+    const MODULE_LOADER_FILE = 'config/melis.module.load.php';
+    private $exclude_modules = array(
         'MelisAssetManager',
-        'MelisCore', '.', '..',
+        'MelisCore',
         'MelisSites',
         'MelisEngine',
         'MelisInstaller',
         'MelisFront',
-        '.gitignore',
         'MelisModuleConfig',
         'MelisComposerDeploy',
-        'MelisDbDeploy'
+        'MelisDbDeploy',
+        '.', '..','.gitignore',
     );
 
     /**
@@ -200,9 +200,10 @@ class ModulesController extends AbstractActionController
         $modules = array();
         $modulesList = null;
         $moduleLoadList = file_exists(self::MODULE_LOADER_FILE) ? include(self::MODULE_LOADER_FILE) : array();
-        $moduleLoadFile = $this->getModuleSvc()->getModulePlugins(array('MelisModuleConfig', 'MelisFront'));
+        $moduleLoadFile = $this->getModuleSvc()->getModulePlugins($this->exclude_modules);
 
         $modules = $moduleLoadList;
+
         foreach($modules as $index => $modValues) {
 
             if(!in_array($modValues, $this->exclude_modules)) {
@@ -226,6 +227,13 @@ class ModulesController extends AbstractActionController
         }
 
         return $modulesList;
+    }
+
+    public function testerAction()
+    {
+
+        print_r($this->getModules());
+        die;
     }
 
     /**
@@ -295,7 +303,7 @@ class ModulesController extends AbstractActionController
      */
     protected function createModuleLoaderFile($modules = array())
     {
-        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','meliscore', 'melisengine', 'melisfront'));
+        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','melisdbdeploy', 'meliscomposerdeploy', 'meliscore', 'melisengine', 'melisfront'));
         return $status;
     }
 

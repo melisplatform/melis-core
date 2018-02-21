@@ -321,7 +321,7 @@
 	    'tr_meliscore_tool_platform_generic_form' => 'Platform modal form',
 	    'tr_meliscore_tool_platform_marketplace' => 'Marketplace',
 	    'tr_meliscore_tool_platform_update_marketplace' => 'Autoriser les mises à jour du markeplace',
-	    'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Cochier pour les mises à jour du marketplace ou décocher pour les bloquer',
+	    'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Cocher pour autoriser les mises à jour du marketplace ou décocher pour les bloquer',
 	    
 	    // Language Tool Translations
 	    'tr_meliscore_tool_language' => 'Langages du back-office',
