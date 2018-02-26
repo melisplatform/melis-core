@@ -1224,7 +1224,7 @@ return array(
                         'target' => '#tablePlatforms',
                         'ajaxUrl' => '/melis/MelisCore/Platforms/getPlatforms',
                         'dataFunction' => '',
-                        'ajaxCallback' => 'getCurrentPlatform()',
+                        'ajaxCallback' => 'initCorePlatformListTable()',
                         'filters' => array(
                             'left' => array(
                                 'platform_limit' => array(
@@ -1251,12 +1251,17 @@ return array(
                         'columns' => array(
                             'plf_id' => array(
                                 'text' => 'tr_meliscore_tool_platform_forms_id',
-                                'css' => array('width' => '1%', 'padding-right' => '0'),
+                                'css' => array('width' => '1%'),
+                                'sortable' => true,
+                            ),
+                            'plf_update_marketplace' => array(
+                                'text' => 'Marketplace',
+                                'css' => array('width' => '10%'),
                                 'sortable' => true,
                             ),
                             'plf_name' => array(
                                 'text' => 'tr_meliscore_tool_platform_forms_name',
-                                'css' => array('width' => '89%', 'padding-right' => '0'),
+                                'css' => array('width' => '79%'),
                                 'sortable' => true,
                             ),
                         ),
@@ -1278,46 +1283,11 @@ return array(
                         ),
                         
                     ),
-                    'modals' => array(
-                        'meliscore_platform_modal_handler_empty' => array( // empty modal content
-                            'id' => 'id_meliscore_platform_modal_handler_empty',
-                            'class' => 'glyphicons remove',
-                            'tab-header' => 'tr_meliscore_tool_user',
-                            'tab-text' => 'tr_meliscore_tool_user_modal_empty',
-                            'content' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'Platforms',
-                                'action' => 'render-platform-modals-handler-empty'
-                            ),
-                        ),
-                        'meliscore_platform_modal_content_new' => array(
-                            'id' => 'id_meliscore_platform_modal_content_new',
-                            'class' => 'glyphicons plus',
-                            'tab-header' => '',
-                            'tab-text' => 'tr_meliscore_tool_platform_modal_new',
-                            'content' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'Platforms',
-                                'action' => 'render-platform-modals-content-add'
-                            ),
-                        ),
-                        'meliscore_platform_modal_content_edit' => array(
-                            'id' => 'id_meliscore_platform_modal_content_edit',
-                            'class' => 'glyphicons pencil',
-                            'tab-header' => '',
-                            'tab-text' => 'tr_meliscore_tool_platform_modal_edit',
-                            'content' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'Platforms',
-                                'action' => 'render-platform-modals-content-edit'
-                            ),
-                        ),
-                    ),
                     'forms' => array(
                         'meliscore_platform_generic_form' => array(
                             'attributes' => array(
-                                'name' => 'formsite',
-                                'id' => 'idformsite',
+                                'name' => 'corePlatform',
+                                'id' => 'corePlatform',
                                 'method' => 'POST',
                                 'action' => '',
                             ),
@@ -1332,7 +1302,7 @@ return array(
                                             'tooltip' => 'tr_meliscore_tool_platform_forms_id tooltip',
                                         ),
                                         'attributes' => array(
-                                            'id' => 'id_plf_id',
+                                            'id' => 'plf_id',
                                             'value' => '',
                                             'disabled' => 'disabled',
                                         ),
@@ -1347,9 +1317,28 @@ return array(
                                             'tooltip' => 'tr_meliscore_tool_platform_forms_name tooltip',
                                         ),
                                         'attributes' => array(
-                                            'id' => 'id_plf_name',
+                                            'id' => 'plf_name',
                                             'value' => '',
                                             'required' => 'required',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'plf_update_marketplace',
+                                        'type' => 'Checkbox',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_tool_platform_update_marketplace',
+                                            'tooltip' => 'tr_meliscore_tool_platform_update_marketplace tooltip',
+                                            'switchOptions' => array(
+                                                'label-on' => 'tr_meliscore_common_yes',
+                                                'label-off' => 'tr_meliscore_common_no',
+                                                'icon' => "glyphicon glyphicon-resize-horizontal",
+                                            )
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'plf_update_marketplace',
+                                            'value' => 1,
                                         ),
                                     ),
                                 ),

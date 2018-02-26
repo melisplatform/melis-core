@@ -63,18 +63,23 @@ var melisCore = (function(window){
     });
 
     function sessionCheck() {
+    	isLogin();
         var checkEvery = 1;
         setInterval(function() {
-            $.ajax({
-                type: 'GET',
-                url: '/melis/islogin',
-                dataType: 'json',
-            }).success(function(data){
-                if(!data.login) {
-                    window.location.reload(true);
-                }
-            });
+        	isLogin();
         }, (checkEvery * 60) * 1000);
+    }
+    
+    function isLogin() {
+    	$.ajax({
+            type: 'GET',
+            url: '/melis/islogin',
+            dataType: 'json',
+        }).success(function(data){
+            if(!data.login) {
+                window.location.reload(true);
+            }
+        });
     }
 
     function escapeHtml (string) {
@@ -165,7 +170,6 @@ var melisCore = (function(window){
 
     // SIDEBAR MENU CLICK (toggle)
     function sidebarMenuClick(){
-        $body.toggleClass('sidebar-mini');
 
         // for the sidebar functionalities
         var sidebarOffsetLeft = $( "#id_meliscore_leftmenu" ).position().left;
@@ -173,9 +177,14 @@ var melisCore = (function(window){
 
         if( sidebarOffsetLeft == 0){
             $( "#id_meliscore_leftmenu" ).css("left", -sidebarWidth );
+            $body.addClass('sidebar-mini');
+
+            $("#id_meliscore_footer").addClass('slide-left');
         }
         else{
             $( "#id_meliscore_leftmenu" ).css("left", '0' );
+            $body.removeClass('sidebar-mini');
+            $("#id_meliscore_footer").removeClass('slide-left');
         }
 
         $("#newplugin-cont").removeClass("show-menu");
@@ -186,9 +195,6 @@ var melisCore = (function(window){
         if (matches != null) {
             $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
         }
-
-        // footer display
-        $("#id_meliscore_footer").toggleClass('slide-left');
 
         // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
         setTimeout(function(){
@@ -245,6 +251,24 @@ var melisCore = (function(window){
 
         // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
         $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+    }
+
+    /*
+     * This function will close all opened tabs
+     */
+    function closedOpenTabs() {
+        var listData = $("#melis-id-nav-bar-tabs li");
+        // loop all tab list
+        listData.each(function() {
+            var dataID =  $(this).attr('data-tool-id');
+            if(dataID != "id_meliscore_center_dashboard"){
+                melisHelper.tabClose(dataID);
+            }
+        });
+        // detect if mobile / tablet
+        if( screenSize <= 767 ) {
+            $("#newplugin-cont").toggleClass("show-menu");
+        }
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
@@ -376,7 +400,7 @@ var melisCore = (function(window){
     $body.on("click", "#plugin-menu", function(){
 
         $("#id_meliscore_leftmenu").removeAttr('style');
-        $("#id_meliscore_footer").removeClass('slide-left');
+        $("#id_meliscore_footer").addClass('slide-left');
 
         $("#newplugin-cont").toggleClass("show-menu");
         $body.removeClass('sidebar-mini');
@@ -405,6 +429,9 @@ var melisCore = (function(window){
 
     // refresh tables
     $body.on("click", '.melis-refreshTable', refreshTable);
+
+    // close all open tab
+    $body.on('click', "#close-all-tab", closedOpenTabs);
 
 
 
@@ -527,7 +554,10 @@ var melisCore = (function(window){
         melisChangeLanguage                             :           melisChangeLanguage,
         resizeScreen                                    :           window.resizeScreen,
         screenSize										:			screenSize,
-        escapeHtml										: 			escapeHtml
+        escapeHtml										: 			escapeHtml,
+        tabDraggable                                    :           tabDraggable,
+        closedOpenTabs                                  :           closedOpenTabs,
+
     };
 
 

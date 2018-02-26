@@ -36,7 +36,7 @@
 		'tr_meliscore_tool_gen_refresh' => 'Rafraichir',
 		'tr_meliscore_tool_gen_content' => 'Contenu',
 		'tr_meliscore_tool_gen_edit' => 'Edition',
-		'tr_meliscore_tool_gen_save' => 'Sauvegarder',
+		'tr_meliscore_tool_gen_save' => 'Enregistrer',
 		'tr_meliscore_tool_gen_delete' => 'Supression',
 		'tr_meliscore_tool_gen_modal' => 'Modal',
 		'tr_meliscore_tool_user_modal_rights' => 'Droits',
@@ -253,6 +253,12 @@
 	    'tr_meliscore_module_management_prompt_success' => 'Les paramètres des modules ont été mis à jour',
 	    'tr_meliscore_module_management_prompt_failed' => 'Impossible de mettre à jour les paramètres des modules',
 	    'tr_meliscore_module_management_notification_tip' => "Glisser/déposer les modules pour arranger l'ordre",
+        'tr_meliscore_module_management_inactive_confirm' => 'By deactivating %s, this will also deactivate the following modules: ',
+        'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
+        'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
+        'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
+        'tr_meliscore_general_proceed' => 'Proceed',
+        'tr_meliscore_general_confirm' => 'Confirm',
 	    
 	    // Common File Attachment and Images Deletion labels and messages
 	    // File
@@ -312,6 +318,10 @@
 	    'tr_meliscore_tool_platform_forms_name_empty' => 'Merci d\'entrer le nom de la plateforme',
 	    'tr_meliscore_tool_platform_forms_button_add' => 'Ajouter',
 	    'tr_meliscore_tool_platform_forms_button_edit' => 'Sauvegarder',
+	    'tr_meliscore_tool_platform_generic_form' => 'Platform modal form',
+	    'tr_meliscore_tool_platform_marketplace' => 'Marketplace',
+	    'tr_meliscore_tool_platform_update_marketplace' => 'Autoriser les mises à jour du markeplace',
+	    'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Cocher pour autoriser les mises à jour du marketplace ou décocher pour les bloquer',
 	    
 	    // Language Tool Translations
 	    'tr_meliscore_tool_language' => 'Langages du back-office',
@@ -516,7 +526,7 @@
 	    'tr_meliscore_logs_tool_log_type' => 'Type',
 	    'tr_meliscore_logs_tool_log_item_id' => 'ID élément',
 	    'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
-	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajouté',
+	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajoutée',
 	     
 	    // Log type details
 	    'tr_meliscore_logs_tool_log_type_name' => 'Nom',
@@ -567,6 +577,46 @@
         'tr_meliscore_microservice_generateD_api_key' => 'API Key',
 
         'tr_meliscore_microservice_title' => 'Liste des microservices existants sur la Platform',
-        'tr_meliscore_microservice_sub_title' => 'Les paramètres de ce service doivent être POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnée n\'est postée.'
-	);
+        'tr_meliscore_microservice_sub_title' => 'Les paramètres de ce service doivent être POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnée n\'est postée.',
+
+        // Platform Schemes
+        'tr_meliscore_platform_scheme' => 'Thème de la plateforme',
+        'tr_meliscore_platform_scheme_subtitle' => 'Personnalisez ici les couleurs et images de la plateforme.',
+        'tr_meliscore_platform_color_scheme' => 'Color schemes',
+        'tr_meliscore_platform_scheme_images' => 'Titre &amp; Images',
+        'tr_meliscore_platform_color_primary' => 'Couleur primaire',
+        'tr_meliscore_platform_color_secondary' => 'Couleur secondaire',
+        'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
+        'tr_meliscore_platform_color_invalid_hex'   => 'Invalid HEX color, please choose a valid HEX color',
+
+        'tr_meliscore_platform_scheme_form_login_logo' => 'Logo login',
+        'tr_meliscore_platform_scheme_form_login_background' => 'Arrière plan login',
+        'tr_meliscore_platform_scheme_form_sidebar_header_logo' => 'Logo en-tête',
+        'tr_meliscore_platform_scheme_form_sidebar_header_title' => 'Titre en-tête',
+        'tr_meliscore_platform_scheme_form_favicon' => 'Favicon',
+
+        'tr_meliscore_platform_scheme_image_is_invalid' => 'Invalid file image, make sure that the file being uploaded is a type of an image',
+
+        'tr_meliscore_platform_scheme_save_ok'   => 'Thème de la plateforme sauvegardé avec succès',
+        'tr_meliscore_platform_scheme_save_ko'   => 'Unable to save platform scheme',
+
+        'tr_meliscore_platform_scheme_folder_not_exists' => 'Platform scheme folder does not exists (/media/platform-scheme)',
+        'tr_meliscore_platform_scheme_folder_no_permission' => 'You don\'t have permission to upload on this folder <strong>/media/platform-scheme<strong>',
+
+        'tr_meliscore_platform_scheme_image_too_big' => 'File image is too big, it should not be more than %s',
+        'tr_meliscore_platform_scheme_image_not_exist' => 'File image uploaded doesn\'t seem to be existing, please choose another',
+        'tr_meliscore_platform_scheme_image_invalid_extension' => 'Invalid file extension, make sure that the file being uploaded is a type of an image',
+
+        'tr_meliscore_platform_scheme_sidebar_header_title_too_long' => 'Sidebar header title should not be more than 45 characters',
+        'tr_meliscore_platform_scheme_sidebar_header_title_too_short' => 'Sidebar header title should be more than 5 characters',
+        'tr_meliscore_platform_scheme_reset_confirm' => 'En cliquant sur ce bouton vous allez restaurer tous les élements par défault au thème de Melis Platform. Êtes-vous sûr de vouloir procéder ?',
+        'tr_meliscore_platform_scheme_reset_text' => 'Restaurer par defaut',
+        'tr_meliscore_platform_scheme_reset_alt' => 'Restaure tous les éléments par défaut',
+
+        'tr_meliscore_platform_scheme_failed_restore_message' => 'Echec de la restauration du thème de la plateforme',
+        'tr_meliscore_platform_scheme_failed_restore_title' => 'Restaurer le thème de la plateforme',
+        'tr_meliscore_platform_scheme_success_restore_message' => 'Thème de la plateforme restauré avec succès',
+
+        'tr_melis_user_tabs_close_all_open_tabs' => 'Fermer tous les onglets',
+    );
 ?>

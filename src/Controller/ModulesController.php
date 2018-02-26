@@ -23,8 +23,19 @@ use MelisCalendar\Service\MelisCalendarService;
 class ModulesController extends AbstractActionController
 {
 
-    const MODULE_LOADER_FILE     = 'config/melis.module.load.php';
-    private $exclude_modules     = array('MelisAssetManager', 'MelisCore', '.', '..', 'MelisSites', 'MelisEngine', 'MelisInstaller', 'MelisFront', '.gitignore', 'MelisModuleConfig');
+    const MODULE_LOADER_FILE = 'config/melis.module.load.php';
+    private $exclude_modules = array(
+        'MelisAssetManager',
+        'MelisCore',
+        'MelisSites',
+        'MelisEngine',
+        'MelisInstaller',
+        'MelisFront',
+        'MelisModuleConfig',
+        'MelisComposerDeploy',
+        'MelisDbDeploy',
+        '.', '..','.gitignore',
+    );
 
     /**
      * Main Tool Container
@@ -32,7 +43,10 @@ class ModulesController extends AbstractActionController
      */
     public function renderToolModulesAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator      = $this->getServiceLocator()->get('translator');
+        $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+        $modules         = $moduleSvc->getAllModules();
+
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $noAccessPrompt = '';
 
@@ -40,10 +54,16 @@ class ModulesController extends AbstractActionController
             $noAccessPrompt = $translator->translate('tr_tool_no_access');
         }
 
+        $request = $this->getRequest();
+        $domain = isset($get['domain']) ? $get['domain'] : null;
+        $scheme = isset($get['scheme']) ? $get['scheme'] : null;
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
+        $view->modules = serialize($modules);
+        $view->scheme  = $scheme;
+        $view->domain  = $domain;
 
         return $view;
     }
@@ -144,6 +164,31 @@ class ModulesController extends AbstractActionController
         return new JsonModel($response);
     }
 
+    public function searchModules($useOnlySiteModule = false)
+    {
+
+        $modules = array();
+        $modulesList = null;
+        $moduleLoadList = file_exists(self::MODULE_LOADER_FILE) ? include(self::MODULE_LOADER_FILE) : array();
+        $moduleLoadFile = $this->getModuleSvc()->getModulePlugins(array('MelisModuleConfig', 'MelisFront'));
+
+        $modules = $moduleLoadList;
+        foreach($modules as $index => $modValues) {
+
+            $modulesList[$modValues] = 1;
+        }
+
+        // add the inactive modules
+        foreach($moduleLoadFile as $index => $module) {
+
+            if(!isset($modulesList[$module])) {
+                $modulesList[$module] = 0;
+            }
+
+        }
+
+        return $modulesList;
+    }
     /**
      * Returns all the available modules (enabled/disabled modules)
      * @param bool $useOnlySiteModule | used if you want to get only the Site Modules
@@ -155,9 +200,10 @@ class ModulesController extends AbstractActionController
         $modules = array();
         $modulesList = null;
         $moduleLoadList = file_exists(self::MODULE_LOADER_FILE) ? include(self::MODULE_LOADER_FILE) : array();
-        $moduleLoadFile = $this->getModuleSvc()->getModulePlugins(array('MelisModuleConfig', 'MelisFront'));
+        $moduleLoadFile = $this->getModuleSvc()->getModulePlugins($this->exclude_modules);
 
         $modules = $moduleLoadList;
+
         foreach($modules as $index => $modValues) {
 
             if(!in_array($modValues, $this->exclude_modules)) {
@@ -183,13 +229,81 @@ class ModulesController extends AbstractActionController
         return $modulesList;
     }
 
+    public function testerAction()
+    {
+
+        print_r($this->getModules());
+        die;
+    }
+
+    /**
+     * Returns the module that is dependent to the provided module
+     * @return JsonModel
+     */
+    public function getDependentsAction()
+    {
+        $success = 0;
+        $modules = array();
+        $request = $this->getRequest();
+        $message = 'tr_meliscore_module_management_no_dependencies';
+        $tool    = $this->getServiceLocator()->get('MelisCoreTool');
+
+        if($request->isPost()) {
+            $module = $tool->sanitize($request->getPost('module'));
+
+            if($module) {
+                $modules = $this->getModuleSvc()->getChildDependencies($module);
+                if($modules) {
+                    $message = $tool->getTranslation('tr_meliscore_module_management_inactive_confirm', array($module));
+                    $success = 1;
+                }
+            }
+        }
+
+        $response = array(
+            'success' => $success,
+            'modules' => $modules,
+            'message' => $tool->getTranslation($message)
+        );
+
+        return new JsonModel($response);
+
+    }
+
+    public function getRequiredDependenciesAction()
+    {
+        $success = 0;
+        $modules = array();
+        $request = $this->getRequest();
+        $tool    = $this->getServiceLocator()->get('MelisCoreTool');
+
+        if($request->isPost()) {
+            $module = $tool->sanitize($request->getPost('module'));
+
+            if($module) {
+                $modules = $this->getModuleSvc()->getDependencies($module);
+                if($modules) {
+                    $success = 1;
+                }
+            }
+        }
+
+        $response = array(
+            'success' => $success,
+            'modules' => $modules,
+        );
+
+        return new JsonModel($response);
+
+    }
+
     /**
      * Creates the module loader file and the temp holder for the enabled & disabled modules
      * @param array $modules
      */
     protected function createModuleLoaderFile($modules = array())
     {
-        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','meliscore', 'melisengine', 'melisfront'));
+        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','melisdbdeploy', 'meliscomposerdeploy', 'meliscore', 'melisengine', 'melisfront'));
         return $status;
     }
 
@@ -198,6 +312,7 @@ class ModulesController extends AbstractActionController
         $modulesSvc = $this->getServiceLocator()->get('ModulesService');
         return $modulesSvc;
     }
+
 
 
 

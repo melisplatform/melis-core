@@ -176,6 +176,104 @@ return array(
 			            ),
 			        ),
 			    ),
+
+                // Platform Color scheme form
+                'melis_core_platform_scheme_form' => array(
+                    'attributes' => array(
+                        'name' => 'melis_core_platform_scheme_form',
+                        'id' => 'melis_core_platform_scheme_form',
+                        'method' => 'POST',
+                    ),
+                    'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                    'elements' => array(
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_color_primary_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_color_primary',
+                                    'tooltip' => 'tr_meliscore_platform_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_color_primary_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_color_primary',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_color_secondary_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_color_secondary',
+                                    'tooltip' => 'tr_meliscore_platform_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_color_secondary_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_platform_color_secondary',
+                                ),
+                            ),
+                        ),
+                    ),
+                    'input_filter' => array(
+                        'melis_core_platform_color_primary_color' => array(
+                            'name'     => 'melis_core_platform_color_primary_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex', false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
+                                        'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_color_secondary_color' => array(
+                            'name'     => 'melis_core_platform_color_secondary_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex', false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
+                                        'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                    )
+                ),
+                // End Platform Color scheme form
+
+                // Platform scheme images form
+                'melis_core_platform_scheme_images_form' => array(
+                    'attributes' => array(
+                        'name' => 'melis_core_platform_scheme_images_form',
+                        'id' => 'melis_core_platform_scheme_images_form',
+                        'method' => 'POST',
+                    ),
+                    'elements' => array(
+
+                    ),
+                    'input_filter' => array(
+
+                    )
+                ),
 			),
 		),
 	),

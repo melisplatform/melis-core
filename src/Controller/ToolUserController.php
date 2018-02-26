@@ -121,6 +121,14 @@ class ToolUserController extends AbstractActionController
         $translator = $this->getServiceLocator()->get('translator');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
+        $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+        $modules         = $moduleSvc->getAllModules();
+
+        $request = $this->getRequest();
+        $uri     = $request->getUri();
+        $domain = isset($get['domain']) ? $get['domain'] : null;
+        $scheme = isset($get['scheme']) ? $get['scheme'] : null;
+
         $columns = $melisTool->getColumns();
         // add action column
         $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'), 'css' => 'width:10%');
@@ -133,6 +141,10 @@ class ToolUserController extends AbstractActionController
 
         $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
         $view->getToolDataTableConfigForDateConnection = $melisTool->getDataTableConfiguration('#tableUserViewDateConnection', null, null, array('order' => '[[ 0, "desc" ]]'));
+        $view->modules = serialize($modules);
+
+        $view->scheme  = $scheme;
+        $view->domain  = $domain;
 
         return $view;
     }
@@ -842,12 +854,13 @@ class ToolUserController extends AbstractActionController
                 
                 $userConnectionTable = $this->getServiceLocator()->get('MelisUserConnectionDate');
                 $userConnectionData  = $userConnectionTable->getUserLastConnectionTime($userId, null, array(), 'usrcd_last_connection_time')->current();
-                if($userConnectionData && $online == 'text-success') 
+                
+                if($userConnectionData && $online == 'text-success')
                 {
                     $now                = new \DateTime(date("H:i:s"));
                     $lastConnectionTime = new \DateTime(date('H:i:s', strtotime($userConnectionData->usrcd_last_connection_time)));
                     $difference         = $lastConnectionTime->diff($now)->i;
-
+    
                     // if user has been away for 5mins, automatically set the user status to "offline"
                     if((int) $difference > 5) {
                         // update user status
@@ -936,6 +949,41 @@ class ToolUserController extends AbstractActionController
 
         }
 
+    }
+
+    public function getUserDataAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceLocator()->get('translator');
+        $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
+
+        if($request->isPost()) {
+
+            $post    = get_object_vars($request->getPost());
+
+            $columns = array_keys($melisTool->getColumns());
+
+            $data              = $userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection, $start, $length)->toArray();
+            $dataCount         = $userTbl->getTotalData();
+            $dataFilteredCount = $userTbl->getTotalFiltered();
+            $tableData         = $data;
+
+            for($ctr = 0; $ctr < count($tableData); $ctr++) {
+                // apply text limits
+
+            }
+        }
+
+        $response = [
+            'draw' => $draw,
+            'data' => $tableData,
+            'recordsFiltered' => $dataFilteredCount,
+            'recordsTotal' => $dataCount
+        ];
+
+        return new JsonModel($response);
     }
 
     /**
@@ -1400,4 +1448,5 @@ class ToolUserController extends AbstractActionController
 
         return new JsonModel($response);
     }
+
 }

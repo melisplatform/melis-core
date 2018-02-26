@@ -1,0 +1,56 @@
+<?php
+
+$form = $this->form;
+echo "
+<h3>MelisCore Setup</h3>";
+foreach($form->getElements() as $element => $attributes)  {
+    $el =  $form->get((string) $element);
+    $label=$el->getLabel();
+    $attributes = $el->getAttributes();
+    if($attributes && isset($attributes['text-required'])) {
+        $dataType = $this->translate($attributes['text-required']);
+        $form->get((string) $element)->setLabel($label.' '.$dataType.'');
+    }
+
+}
+echo $this->form()->openTag($form);
+echo $this->melisFieldCollection($form);
+echo $this->form()->closeTag();
+/*
+$form   = $this->form;
+
+$name   = $form['attributes']['name'];
+$frmId  = $form['attributes']['id'];
+$method = $form['attributes']['method'];
+
+$elements = $form['elements'];
+?>
+<form  name="<?= $name ?>" id="<?= $frmId ?>" method="<?= $method ?>" >
+    <div class="environment-cont entry">
+    <?php for($i = 0; $i < count($elements); $i++):?>
+        <?php
+            $input = $elements[$i]['spec'];
+            $name  = $input['name'];
+            $type  = $input['type'];
+            $label = $input['options']['label'];
+
+            $toolTip     = $input['options']['tooltip'];
+            $inputId     = $input['attributes']['id'];
+            $placeholder = $input['attributes']['placeholder'];
+
+        ?>
+
+        <div class="form-group">
+            <label><?= $this->translate($label); ?>
+                <i class="fa fa-info-circle fa-lg pull-right" data-toggle="tooltip" data-placement="left" title="<?= $this->translate($toolTip) ?>" data-original-title=""></i>
+            </label>
+            <input type="<?= $type ?>" name="<?= $name ?>" class="form-control" placeholder="<?= $this->translate($placeholder); ?>"  required>
+        </div>
+
+    <?php endfor;?>
+    </div>
+<!--    --><?php //if($this->btnStatus == false ) :?>
+<!--      <button id="melis-core-start-setup-btn" type="submit" >Start setup</button>-->
+<!--    --><?php //endif;?>
+</form>
+*/

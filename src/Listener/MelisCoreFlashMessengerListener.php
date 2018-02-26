@@ -27,8 +27,7 @@ class MelisCoreFlashMessengerListener extends MelisCoreGeneralListener implement
         	    'meliscore_tooluser_save_end', 
         	    'meliscore_tooluser_delete_end',
         	    'meliscore_module_management_save_end', 
-        	    'meliscore_platform_new_end', 
-        	    'meliscore_platform_update_end',
+        	    'meliscore_platform_save_end', 
         	    'meliscore_platform_delete_end', 
         	    'meliscore_language_new_end',
                 'meliscore_language_update_end',
@@ -36,6 +35,8 @@ class MelisCoreFlashMessengerListener extends MelisCoreGeneralListener implement
         	    'meliscore_tool_bo_emails_end',
         	    'meliscore_save_log_type_trans',
                 'meliscore_profile_save_end',
+                'melis_core_platform_scheme_save_end',
+                'melis_core_platform_scheme_reset_end'
         	),
         	function($e){
 

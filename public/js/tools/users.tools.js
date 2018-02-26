@@ -29,9 +29,9 @@ window.setUserDateConnection = function(d) {
 $(document).ready(function() {
 
     $("body").on("switch-change", "#switch-user-api-status", function(e) {
-    	
+
         var id = $(this).attr("data-userid"); 
-        
+
         var status = 0;
         if($(this).find("div").hasClass("switch-on")) {
         	status = 1;
@@ -52,6 +52,9 @@ $(document).ready(function() {
 		melisCoreTool.hideTabs('#modal-user-management','#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal','#id_meliscore_tool_user_edit_modal');
 		melisCoreTool.resetLabels("#idusermanagement");
 		toolUserManagement.retrieveUser(id);
+        // Micro service status
+        $("#switch-user-api-status").attr("data-userid", id);
+
 		_tmpUserId = id;
         $("#tableUserViewDateConnection").DataTable().destroy();
         fntableUserViewDateConnectioninit();
@@ -69,10 +72,7 @@ $(document).ready(function() {
 				$("#melis-core-user-auth-api-key").html(data.response.api_key);
 				$("#melis-core-microservices-url").html('<a href="'+data.response.url+'" target="_blank">'+data.response.url+'</a>');
 				$("#melis-core-user-auth-api-ok").removeClass("hidden");
-				
-				
-				// Micro service status 
-				$("#switch-user-api-status").attr("data-userid", id);
+
                 if(data.response.status == 1){
                 	$("#switch-user-api-status .switch-animate").removeClass("switch-off");
                 	$("#switch-user-api-status .switch-animate").addClass("switch-on");
@@ -105,6 +105,10 @@ $(document).ready(function() {
                 $("#melis-core-microservices-url").html('<a href="'+data.response.url+'" target="_blank">'+data.response.url+'</a>');
                 $("#melis-core-user-auth-api-ok").removeClass("hidden");
 
+                if(!$("#switch-user-api-status").find("div").hasClass("switch-on")){
+                    $("#switch-user-api-status").find("div").removeClass("switch-off");
+                    $("#switch-user-api-status").find("div").addClass("switch-on");
+				}
             }
             else {
                 $("#melis-core-user-auth-api-ko").removeClass("hidden");

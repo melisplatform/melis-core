@@ -1,8 +1,9 @@
 $(document).ready(function() {
 	
 	// LOGIN 
-    $('#idformmeliscorelogin').submit(function(event) {
-        var datastring = $("#idformmeliscorelogin").serialize();
+    $('form#idformmeliscorelogin').submit(function(event) {
+        var datastring = $("form#idformmeliscorelogin").serialize();
+        $(this).find("input").attr("disabled", "disabled");
         $.ajax({
             type        : 'POST', 
             url         : '/melis/authenticate',
@@ -14,6 +15,7 @@ $(document).ready(function() {
                 window.location.replace("/melis");
             }
             else{
+
                 var errorTxt = "";
                 $.each(data.errors, function(i,v) {
                     errorTxt = v;
@@ -25,10 +27,11 @@ $(document).ready(function() {
                 else {
                     melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
                 }
-
+                $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
 
             }
         }).error(function(){
+            $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
         	alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();

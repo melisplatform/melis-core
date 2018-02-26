@@ -29,8 +29,14 @@ use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 
+/**
+ * Class Module
+ * @package MelisCore
+ * @require melis-core
+ */
 class Module
-{   
+{
+
     public function onBootstrap(MvcEvent $e)
     {
         $this->initShowErrorsByconfig($e);
@@ -59,9 +65,6 @@ class Module
         $eventManager->attach(new MelisCoreFlashMessengerListener());
         $eventManager->attach(new MelisCoreNewPlatformListener());
         $eventManager->attach(new MelisCoreUserRecentLogsListener());
-        
-        $eventManager->attach(new MelisCoreInstallNewPlatformListener());
-        $eventManager->attach(new MelisCoreInstallCreateNewUserListener());
 
         $eventManager->attach(new MelisCoreAuthSuccessListener());
         $eventManager->attach(new MelisCoreCheckUserRightsListener());
@@ -122,6 +125,7 @@ class Module
     	    'melis-backoffice/MelisInstaller',
     	    'melis-backoffice/microservice',
     	    'melis-backoffice/microservice_list',
+            'melis-backoffice/get-platform-color-css'
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;
@@ -216,6 +220,7 @@ class Module
     	    $translationType = array(
     	        'interface',
     	        'forms',
+                'install'
     	    );
     	    
     	    $translationList = array();
@@ -259,6 +264,7 @@ class Module
 	        include __DIR__ . '/../config/app.emails.php',
 	        include __DIR__ . '/../config/diagnostic.config.php',
 	        include __DIR__ . '/../config/app.microservice.php',
+	        include __DIR__ . '/../config/app.install.php',
     	);
     	
     	foreach ($configFiles as $file) 

@@ -143,6 +143,15 @@ return array(
                     '/MelisCore/js/tools/logs.tool.js',
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
+                    '/MelisCore/js/tools/platform.scheme.tools.js',
+
+                    // flot charts
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/custom/js/flotcharts.common.js?v=v1.2.3',
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
@@ -194,6 +203,20 @@ return array(
                         'jsdatas' => array()
                     ),
                     'interface' => array(
+                        'meliscore_header_close_all_tabs' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_header_close_all_tabs',
+                                'melisKey' => 'meliscore_header_close_all_tabs',
+                                'name' => 'tr_melis_user_tabs_close_all_open_tabs',
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'Index',
+                                'action' => 'close-all-tabs',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                        ),
                         'meliscore_header_flash_messenger' => array(
                             'conf' => array(
                                 'id' => 'id_meliscore_header_flash_messenger',
@@ -557,51 +580,20 @@ return array(
                                                         'jsdatas' => array()
                                                     ),
                                                     'interface' => array(
-
-                                                    ),
-                                                ),
-                                                'meliscore_tool_platform_modals' => array(
-                                                    'conf' => array(
-                                                        'id' => 'id_meliscore_tool_platform_modals',
-                                                        'name' => 'tr_meliscore_tool_platform_modals',
-                                                        'melisKey' => 'meliscore_tool_platform_modals',
-                                                    ),
-                                                    'forward' => array(
-                                                        'module' => 'MelisCore',
-                                                        'controller' => 'Platforms',
-                                                        'action' => 'render-platform-modals-container',
-                                                        'jscallback' => '',
-                                                        'jsdatas' => array()
-                                                    ),
-                                                    'interface' => array(
-                                                        'meliscore_tool_platform_modals_add_handler' => array(
+                                                        'meliscore_tool_platform_generic_form' => array(
                                                             'conf' => array(
-                                                                'id' => 'id_meliscore_tool_platform_modals_add_handler',
-                                                                'name' => 'tr_meliscore_tool_platform_modal_new',
-                                                                'melisKey' => 'meliscore_tool_platform_modals_add_handler',
+                                                                'id' => 'id_meliscore_tool_platform_generic_form',
+                                                                'name' => 'tr_meliscore_tool_platform_generic_form',
+                                                                'melisKey' => 'meliscore_tool_platform_generic_form',
                                                             ),
                                                             'forward' => array(
                                                                 'module' => 'MelisCore',
                                                                 'controller' => 'Platforms',
-                                                                'action' => 'render-platform-modals-handler-add',
+                                                                'action' => 'render-platform-generic-form',
                                                                 'jscallback' => '',
                                                                 'jsdatas' => array()
                                                             ),
-                                                        ),
-                                                        'meliscore_tool_platform_modals_edit_handler' => array(
-                                                            'conf' => array(
-                                                                'id' => 'id_meliscore_tool_platform_modals_edit_handler',
-                                                                'name' => 'tr_meliscore_tool_platform_modal_edit',
-                                                                'melisKey' => 'meliscore_tool_platform_modals_edit_handler',
-                                                            ),
-                                                            'forward' => array(
-                                                                'module' => 'MelisCore',
-                                                                'controller' => 'Platforms',
-                                                                'action' => 'render-platform-modals-handler-edit',
-                                                                'jscallback' => '',
-                                                                'jsdatas' => array()
-                                                            ),
-                                                        ),
+                                                        )
                                                     ),
                                                 ),
                                             ),
@@ -950,6 +942,37 @@ return array(
                                             ),
                                         ),
                                         // END LOGS TOOL
+                                        'meliscore_tool_platform_scheme' => array(
+                                            'conf' => array(
+                                                'id' => 'id_meliscore_tool_platform_scheme_tool_content',
+                                                'name' => 'tr_meliscore_platform_scheme',
+                                                'melisKey' => 'meliscore_tool_platform_scheme',
+                                                'icon' => 'fa fa-fw icon-paint-palette',
+                                                'rights_checkbox_disable' => true,
+                                            ),
+                                            'datas' => array(
+                                                // 3MB
+                                                'image_size_limit' => '3145728',
+                                                'allowed_file_extension' => 'jpeg,jpg,png,gif,svg,ico',
+                                                'platform_scheme_dir' => '/media/platform-scheme/'
+                                            ),
+                                            'interface' => array(
+                                                'meliscore_tool_platform_scheme_tool_content' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_meliscore_tool_platform_scheme_tool_content',
+                                                        'name' => 'tr_meliscore_platform_color',
+                                                        'melisKey' => 'meliscore_tool_platform_color_tool_content',
+                                                        'icon' => 'fa fa-fw icon-paint-palette',
+                                                        'rights_checkbox_disable' => false,
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'PlatformScheme',
+                                                        'action' => 'tool-container',
+                                                    )
+                                                )
+                                            )
+                                        )
                                     ),
                                 ),
                                 'meliscore_tool_admin_section' => array(
@@ -1274,7 +1297,7 @@ return array(
             'datas' => array(
                 'askaccount_email' => 'askaccount@test.com',
                 'lostpassword_email' => 'lostpassword@test.com',
-                'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
+                'login_background' => '/MelisCore/images/login/melis-blackboard.jpg',
                 'login_logo' => '/MelisCore/images/login/melis-box.png',
             ),
             'interface' => array(
