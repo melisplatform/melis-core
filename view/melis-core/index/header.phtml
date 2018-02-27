@@ -27,6 +27,10 @@ if($headerTitleLen > 13) {
     $headerTitle = '<span class="ml-header">'.$this->escapeHtml($sidebarHeaderText).'</span>';
 }
 
+$headerExclusions = array(
+'meliscore_header_close_all_tabs', 'market_place_header_icon', 'meliscore_header_logout'
+);
+
 ?>
 <div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar  navbar-primary main" role="navigation">
 
@@ -115,9 +119,8 @@ if($headerTitleLen > 13) {
                         echo $this->meliscore_header_close_all_tabs;
                         foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
                         {
-                            if($keyConfig != 'meliscore_header_close_all_tabs' &&  $keyConfig != 'market_place_header_icon' && $keyConfig != 'meliscore_header_logout'){
+                            if(!in_array($keyConfig, $headerExclusions))
                                 echo $this->$keyConfig;
-                            }
                         }
 
                         echo $this->market_place_header_icon;
