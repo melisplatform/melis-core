@@ -400,12 +400,8 @@ class MelisAuthController extends AbstractActionController
 				'usr_is_online' => 0
 			), (array) $userData);
 
-			print_r($data);
 
-            $userTable->save([
-                'usr_login' => $userData->usr_login,
-                'usr_is_online' => 0
-            ], $userData->usr_id);
+            $userTable->save($data, $userData->usr_id);
 
             $this->getEventManager()->trigger('meliscore_logout_event', $this, array('usr_id' => $userData->usr_id));
         }
