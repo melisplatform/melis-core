@@ -618,5 +618,7 @@
         'tr_meliscore_platform_scheme_success_restore_message' => 'Thème de la plateforme restauré avec succès',
 
         'tr_melis_user_tabs_close_all_open_tabs' => 'Fermer tous les onglets',
+        'tr_melis_core_common_close' => 'Annuler',
+        'tr_melis_core_common_add' => 'Ajouter',
     );
 ?>
