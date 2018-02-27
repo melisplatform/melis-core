@@ -20,7 +20,7 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
     public function attach(EventManagerInterface $events)
     {
         $sharedEvents    = $events->getSharedManager();
-        $callBackHandler = $sharedEvents->attach('*',MvcEvent::EVENT_DISPATCH,
+        $callBackHandler = $sharedEvents->attach('*', MvcEvent::EVENT_DISPATCH,
             function($e){
 
                 // update the session last check and interval
@@ -69,7 +69,7 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
 
                 }
 
-            });
+            }, -10000);
 
         $this->listeners[] = $callBackHandler;
     }
