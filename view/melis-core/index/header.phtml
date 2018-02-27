@@ -112,10 +112,16 @@ if($headerTitleLen > 13) {
                 <?php 
                     if (!empty($this->zoneconfig['interface']))
                     {
+                        echo $this->meliscore_header_close_all_tabs;
                         foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
                         {
-                            echo $this->$keyConfig;
+                            if($keyConfig != 'meliscore_header_close_all_tabs' &&  $keyConfig != 'market_place_header_icon' && $keyConfig != 'meliscore_header_logout'){
+                                echo $this->$keyConfig;
+                            }
                         }
+
+                        echo $this->market_place_header_icon;
+                        echo $this->meliscore_header_logout;
                     }
                 ?>
             </ul>
