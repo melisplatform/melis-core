@@ -395,6 +395,13 @@ class MelisAuthController extends AbstractActionController
         if($melisCoreAuth->hasIdentity()) {
             $userData = $melisCoreAuth->getIdentity();
             $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+
+			$data = array_merge(array(
+				'usr_is_online' => 0
+			), (array) $userData);
+
+			print_r($data);
+
             $userTable->save([
                 'usr_login' => $userData->usr_login,
                 'usr_is_online' => 0
@@ -402,9 +409,10 @@ class MelisAuthController extends AbstractActionController
 
             $this->getEventManager()->trigger('meliscore_logout_event', $this, array('usr_id' => $userData->usr_id));
         }
+
         $melisCoreAuth->getStorage()->clear();
     	// Redirect
-    	$this->plugin('redirect')->toUrl('/melis/login');
+		$this->plugin('redirect')->toUrl('/melis/login');
     	
     	return new JsonModel();
     }
