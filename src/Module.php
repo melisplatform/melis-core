@@ -58,12 +58,8 @@ class Module
 
         });
 
-        $sm = $e->getApplication()->getServiceManager();
 
-        $auth = $sm->get('MelisCoreAuth');
-
-        if($auth->hasIdentity() && !$this->isInInstallMode($e)) {
-
+        if(!$this->isInInstallMode($e)) {
             $eventManager->attach(new MelisCoreGetRightsTreeViewListener());
             $eventManager->attach(new MelisCoreToolUserAddNewUserListener());
             $eventManager->attach(new MelisCoreToolUserUpdateUserListener());
@@ -74,9 +70,9 @@ class Module
             $eventManager->attach(new MelisCoreCheckUserRightsListener());
             $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
             $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
-        }
 
-        $eventManager->attach(new MelisCoreAuthSuccessListener());
+            $eventManager->attach(new MelisCoreAuthSuccessListener());
+        }
 
     }
     
