@@ -381,6 +381,36 @@ return array(
                                 'jsdatas' => array()
                             ),
                         ),
+                        'meliscore_center_dashboard_2' =>  array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_center_dashboard_2',
+                                'melisKey' => 'meliscore_center_dashboard_2',
+                                'name' => 'Dashboard 2',
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'Dashboard',
+                                'action' => 'leftmenu-dashboard2',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                            'interface' => array(
+                                'meliscore_leftmenu_dashboard_content_2' => array(
+                                    'conf' => array(
+                                        'id' => 'id_meliscore_leftmenu_dashboard_content_2',
+                                        'melisKey' => 'meliscore_leftmenu_dashboard_content_2',
+                                        'name' => 'tr_meliscore_center_Dashboard',
+                                    ),
+                                    'forward' => array(
+                                        'module' => 'MelisCore',
+                                        'controller' => 'Dashboard',
+                                        'action' => 'dashboard2',
+                                        'jscallback' => '',
+                                        'jsdatas' => array()
+                                    ),
+                                )
+                            )
+                        ),
                         'meliscore_toolstree' =>  array(
                             'conf' => array(
                                 'id' => 'id_meliscore_menu_toolstree',

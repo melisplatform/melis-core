@@ -36,6 +36,36 @@ class DashboardController extends AbstractActionController
     }
     
     /**
+     * Shows the leftmenu dasboard entry point
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function leftmenuDashboard2Action()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+        
+        return $view;
+    }
+    
+    /**
+     * Shows the leftmenu dasboard entry point
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function dashboard2Action()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+        
+        return $view;
+    }
+    
+    /**
      * Shows the Dashboard page
      * 
      * @return \Zend\View\Model\ViewModel
