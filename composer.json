@@ -33,7 +33,8 @@
     "ext-openssl": "*",
     "ext-json": "*",
     "ext-pdo_mysql": "*",
-    "justinrainbow/json-schema": "5.2.1",
+    "justinrainbow/json-schema": "5.2.1",,
+    "melisplatform/melis-asset-manager": "^2.3.0",
     "composer/composer": "~1.2"
   },
   "require-dev": {

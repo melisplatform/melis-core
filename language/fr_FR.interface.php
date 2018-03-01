@@ -526,7 +526,7 @@
 	    'tr_meliscore_logs_tool_log_type' => 'Type',
 	    'tr_meliscore_logs_tool_log_item_id' => 'ID élément',
 	    'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
-	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajouté',
+	    'tr_meliscore_logs_tool_log_date_added' => 'Date ajoutée',
 	     
 	    // Log type details
 	    'tr_meliscore_logs_tool_log_type_name' => 'Nom',
@@ -617,5 +617,8 @@
         'tr_meliscore_platform_scheme_failed_restore_title' => 'Restaurer le thème de la plateforme',
         'tr_meliscore_platform_scheme_success_restore_message' => 'Thème de la plateforme restauré avec succès',
 
+        'tr_melis_user_tabs_close_all_open_tabs' => 'Fermer tous les onglets',
+        'tr_melis_core_common_close' => 'Annuler',
+        'tr_melis_core_common_add' => 'Ajouter',
     );
 ?>

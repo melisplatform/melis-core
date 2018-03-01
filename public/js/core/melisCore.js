@@ -253,6 +253,24 @@ var melisCore = (function(window){
         $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
     }
 
+    /*
+     * This function will close all opened tabs
+     */
+    function closedOpenTabs() {
+        var listData = $("#melis-id-nav-bar-tabs li");
+        // loop all tab list
+        listData.each(function() {
+            var dataID =  $(this).attr('data-tool-id');
+            if(dataID != "id_meliscore_center_dashboard"){
+                melisHelper.tabClose(dataID);
+            }
+        });
+        // detect if mobile / tablet
+        if( screenSize <= 767 ) {
+            $("#newplugin-cont").toggleClass("show-menu");
+        }
+    }
+
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
         var zIndex = 1040 + (10 * $('.modal:visible').length);
@@ -412,6 +430,9 @@ var melisCore = (function(window){
     // refresh tables
     $body.on("click", '.melis-refreshTable', refreshTable);
 
+    // close all open tab
+    $body.on('click', "#close-all-tab", closedOpenTabs);
+
 
 
 
@@ -534,7 +555,9 @@ var melisCore = (function(window){
         resizeScreen                                    :           window.resizeScreen,
         screenSize										:			screenSize,
         escapeHtml										: 			escapeHtml,
-        tabDraggable                                    :           tabDraggable
+        tabDraggable                                    :           tabDraggable,
+        closedOpenTabs                                  :           closedOpenTabs,
+
     };
 
 

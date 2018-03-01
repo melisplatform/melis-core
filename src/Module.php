@@ -59,17 +59,20 @@ class Module
         });
 
 
-        $eventManager->attach(new MelisCoreGetRightsTreeViewListener());
-        $eventManager->attach(new MelisCoreToolUserAddNewUserListener());
-        $eventManager->attach(new MelisCoreToolUserUpdateUserListener());
-        $eventManager->attach(new MelisCoreFlashMessengerListener());
-        $eventManager->attach(new MelisCoreNewPlatformListener());
-        $eventManager->attach(new MelisCoreUserRecentLogsListener());
+        if(!$this->isInInstallMode($e)) {
+            $eventManager->attach(new MelisCoreGetRightsTreeViewListener());
+            $eventManager->attach(new MelisCoreToolUserAddNewUserListener());
+            $eventManager->attach(new MelisCoreToolUserUpdateUserListener());
+            $eventManager->attach(new MelisCoreFlashMessengerListener());
+            $eventManager->attach(new MelisCoreNewPlatformListener());
+            $eventManager->attach(new MelisCoreUserRecentLogsListener());
 
-        $eventManager->attach(new MelisCoreAuthSuccessListener());
-        $eventManager->attach(new MelisCoreCheckUserRightsListener());
-        $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
-        $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
+            $eventManager->attach(new MelisCoreCheckUserRightsListener());
+            $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
+            $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
+
+            $eventManager->attach(new MelisCoreAuthSuccessListener());
+        }
 
     }
     
@@ -288,5 +291,17 @@ class Module
                 ),
             ),
         );
+    }
+
+    private function isInInstallMode($e)
+    {
+        $sm = $e->getApplication()->getServiceManager();
+        $mm = $sm->get('ModuleManager');
+        $loadedModules = array_keys($mm->getLoadedModules());
+
+        if(in_array('MelisInstaller', $loadedModules))
+            return true;
+
+        return false;
     }
 }

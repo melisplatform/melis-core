@@ -171,6 +171,18 @@ class IndexController extends AbstractActionController
     	return $view;
     }
 
+    /**
+     * Shows the close button for closing of tabs
+     */
+    public function closeAllTabsAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+        return $view;
+    }
+
     public function viewSessionAction()
     {
         $container = new \Zend\Session\Container('meliscore');
