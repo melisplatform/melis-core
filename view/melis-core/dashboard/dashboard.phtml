@@ -14,10 +14,14 @@
     	    	if ($this->isAccessible)
     	    	{
     	    	    echo $this->MelisDashboardDragDropZone($this->zoneconfig['conf']['id']);
+                    ?>
+
+                    <?php
     	    	}
     	    	else 
     	    	{
     	    	    echo $this->translate('tr_meliscore_rights_Not allowed dashboard');
+
     	    	}
 	    	?>
 	    </div>

@@ -3327,6 +3327,266 @@ div#modal-user-management div.widget {
     border-right: 1px solid #e5e5e5;
 }
 
+/* Dashboard UI */
+.dashboard-container {
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+/*
+ * Dashboard Plugins Box Container
+ */
+.melis-core-dashboard-dnd-box {
+    position: fixed;
+    top: 47px;
+    right: 0px;
+    width: 224px;
+    height: calc(100% - 47px);
+    font-family: 'Lato', sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 25px;
+    border-bottom: 4px solid #932e2a;
+    border-left: 4px solid #932e2a;
+    background: #373737;
+    transform: translate3d(224px, 0, 0);
+    -webkit-transform: translate3d(224px, 0, 0);
+    -moz-transform: translate3d(224px, 0, 0);
+    -ms-transform: translate3d(224px, 0, 0);
+    transition: transform 0.4s, height 0.4s;
+    -webkit-transition: transform 0.4s, height 0.4s;
+    -moz-transition: transform 0.4s, height 0.4s;
+    z-index: 90;
+}
+
+/* dashboard plugin show */
+.melis-core-dashboard-dnd-box.show {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+}
+
+/* dashboard inner box */
+.melis-core-dashboard-dnd-fix-menu {
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* dashboard title */
+.melis-core-dashboard-dnd-title {
+    padding: 0 15px;
+    background: #932e2a;
+    color: #fff;
+    text-align: center;
+    line-height: 47px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 4px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* dashboard plugin box */
+.melis-core-dashboard-plugin-filter-box .melis-core-dashboard-ps-box:first-child {
+    border-top: 1px solid #2c2c2c;
+}
+
+/* dashboard plugin category */
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn,
+.melis-core-dashboard-category-btn {
+    display: block;
+    position: relative;
+    padding: 7px 15px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    border-bottom: 1px solid #2c2c2c;
+    background: #373737;
+    -webkit-transition: background 0.4s, border 0.4s;
+    -moz-transition: background 0.4s, border 0.4s;
+    -ms-transition: background 0.4s, border 0.4s;
+    transition: background 0.4s;
+    cursor: pointer;
+}
+
+/* dashboard plugin category hover */
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn:hover,
+.melis-core-dashboard-category-btn:hover {
+    background: #2c2c2c;
+    border-color: #2c2c2c;
+}
+
+/* dashboard button */
+.melis-core-dashboard-category-btn {
+    padding: 4px 15px 4px 30px;
+}
+
+/* dashboard button active / open */
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active,
+.melis-core-dashboard-category-btn.active {
+    background: #932e2a;
+    border-color: #932e2a;
+}
+
+/* dashboard button icon */
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn .fa,
+.melis-core-dashboard-category-btn .fa {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    font-size: 20px;
+    transition: transform 0.4s;
+}
+
+/* dashboard button active / open icon */
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active .fa,
+.melis-core-dashboard-category-btn.active .fa {
+    -webkit-transform: rotateZ(-90deg);
+    -moz-transform: rotateZ(-90deg);
+    -ms-transform: rotateZ(-90deg);
+    transform: rotateZ(-90deg);
+}
+
+/* plugin title */
+.melis-core-dashboard-plugin-title {
+    display: block;
+    margin-top: 10px;
+    color: #fff;
+    letter-spacing: 0.4px;
+    font-size: 10px;
+    transition: color 0.4s;
+    -webkit-transition: color 0.4s;
+    -moz-transition: color 0.4s;
+}
+/* default hide plugins */
+.melis-core-dashboard-plugin-snippets-box,
+.melis-core-dashboard-category-plugins-box {
+    display: none;
+}
+
+/* plugins div */
+.melis-core-dashboard-plugin-snippets {
+    display: block;
+    color: #fff;
+    letter-spacing: 0.4px;
+    font-size: 10px;
+    transition: color 0.4s;
+    -webkit-transition: color 0.4s;
+    -moz-transition: color 0.4s;
+}
+
+/* plugins div hover */
+.melis-core-dashboard-plugin-snippets:hover {
+    opacity: 1;
+    background: #932e2a;
+}
+
+.melis-core-dashboard-plugin-snippets,
+.melis-core-dashboard-category-plugins {
+    position: relative;
+    padding: 15px 0 10px;
+    border-bottom: 1px solid #3e3e3e;
+    background: #2c2c2c;
+    text-align: center;
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.4s, background 0.4s;
+    -webkit-transition: opacity 0.4s, background 0.4s;
+    -moz-transition: opacity 0.4s, background 0.4s;
+}
+
+/* plugins image */
+.melis-core-dashboard-plugin-snippets img,
+.melis-core-dashboard-category-plugins img {
+    border-radius: 2px;
+    transition: transform 0.4s;
+    -webkit-transition: transform 0.4s;
+    -moz-transition: transform 0.4s;
+    transition: transform 0.4s;
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    transform: scale(0.8);
+}
+
+/* plugins hover image */
+.melis-core-dashboard-plugin-snippets:hover img,
+.melis-core-dashboard-category-plugins:hover img {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+}
+
+/* dashboard plugin button */
+.melis-core-dashboard-dnd-box #melisDashBoardPluginBtn {
+    position: absolute;
+    top: 50px;
+    left: -38px;
+    padding: 8px 10px 5px;
+    background-color: #932e2a;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/*.melis-plugin-tooltip {
+    position: absolute;
+    right: calc(100% + 20px);
+    width: 280px;
+    padding: 20px;
+    background: #212121;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 4px;
+    opacity: 1;
+    box-shadow: 0px 0px 2px rgba(0,0,0,0.6);
+    font-family: Lato, sans-serif;
+    letter-spacing: 0.4px;
+    line-height: 1.3;
+    font-weight: normal;
+    z-index: 10;
+}*/
+
+/*
+ *
+ * Dashboard Plugin Tooltip
+ */
+.melis-plugin-tooltip.tooltip.left .tooltip-arrow {
+    border-left-color: #212121;
+}
+
+.melis-plugin-tooltip.tooltip .tooltip-inner {
+    max-width: 280px;
+    padding: 20px;
+    background: #212121;
+    border-radius: 4px;
+    font-family: Lato;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    line-height: 1.3;
+    font-weight: normal;
+    box-shadow: 0px 0px 2px rgba(0,0,0,0.6);
+}
+
+/*
+
+.dashboard-container .ui-state-highlight {
+    float: left;
+    border: 1px solid #691215;
+    background: #691215;
+    color: #363636;
+    width: 790px;
+    height: 425px;
+}
+*/
+
 @media (max-width: 420px) {
     .panel-title {
         font-size: 12px;
