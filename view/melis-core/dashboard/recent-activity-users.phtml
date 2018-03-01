@@ -11,7 +11,7 @@
 		$tagsOpening = 'class="melis-opentooltreeview" data-tool-name="' . $this->toolName . '" data-tool-id="' . $this->toolId . '" data-tool-meliskey="' . $this->toolMelisKey . '"';
 	}
 ?>
-<div class="tab-pane" <?= $id; ?>>
+<div class="tab-pane widget-activity" <?= $id; ?> data-meliskey="<?= $data_melisKey?>">
 	<ul class="list">
 		<?php 
 			foreach ($this->users as $user)

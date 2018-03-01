@@ -1,0 +1,12 @@
+<div class="widget-activity">
+    <ul class="list">
+    	<?php foreach ($this->users as $user){ ?>
+        	<li class="disable-widget-hover">
+        		<span ><?= $user['usr_last_login_date']; ?> : 
+        			<span class="ra-username"><?php echo $user['usr_firstname'] . ' ' . $user['usr_lastname'] ?></span> <?php echo $this->translate('tr_meliscore_dashboard_recent_activity_Logged in'); ?>
+    			</span>
+        		<div class="clearfix"></div>
+        	</li>
+    	<?php }?>				
+    </ul>
+</div>

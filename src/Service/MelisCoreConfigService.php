@@ -96,6 +96,23 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 				$subarray = $this->getMelisKeys($valueConfig['interface'], $fullPathTmp . '/interface');
 				$final = array_merge($final, $subarray);
 			}
+			
+			if (!empty($valueConfig['dashboard_plugins']))
+			{
+			    
+			    $dashboardPlugins = $valueConfig['dashboard_plugins'];
+			    
+			    foreach ($dashboardPlugins As $dKeyConfig => $dValConfig)
+			    {
+			        $fullPathTmp = $fullPath . '/' .$keyConfig .'/dashboard_plugins/'. $dKeyConfig;
+			        
+			        if (!empty($dValConfig['interface']))
+			        {
+			            $subarray = $this->getMelisKeys($dValConfig['interface'], $fullPathTmp . '/interface');
+			            $final = array_merge($final, $subarray);
+			        }
+			    }
+			}
 		}
 		
 		return $final;

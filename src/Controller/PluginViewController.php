@@ -13,6 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * This class renders Melis CMS appConfig views recursively
@@ -42,6 +43,22 @@ class PluginViewController extends AbstractActionController
 		 */
 		$itemConfig = $melisAppConfig->getItem($fullKey);
 		
+		/**
+		 * Dashboard interface
+		 */
+		if (isset($itemConfig['conf']['dashboard']) && $itemConfig['conf']['dashboard'])
+		{
+		    // Dashboard Controller renderer
+		    $itemConfig['forward'] = array(
+		        'module' => 'MelisCore',
+		        'controller' => 'Dashboard',
+		        'action' => 'dashboard',
+		        'jscallback' => '',
+		        'jsdatas' => ''
+		    );
+		}
+		    
+		    
 		if (!empty($itemConfig['datas']))
 			$recDatas = array_merge_recursive($recDatas, $itemConfig['datas']);
 		
@@ -183,6 +200,15 @@ class PluginViewController extends AbstractActionController
 
                 }
             }
+            
+            if (isset($itemConfig['conf']['dashboard']) && $itemConfig['conf']['dashboard'])
+            {
+                $melisDashboardSrv = $this->getServiceLocator()->get('MelisCoreDashboardService');
+                list($jsCallBacks, $datasCallback) = $melisDashboardSrv->getDashboardPluginsJsCallbackJsDatas($fullKey, $itemConfig['conf']['id']);
+                
+                $view->setVariable('jsCallBacks', $jsCallBacks);
+                $view->setVariable('datasCallback', $datasCallback);
+            }
 
             $view->setVariable('keyInterface', $key);
 
@@ -310,6 +336,9 @@ class PluginViewController extends AbstractActionController
     		$lastKey = explode('/', $appconfigpath);
     		$keyView = $lastKey[count($lastKey) - 1];
     	}
+    	
+    	if ($this->getRequest()->getQuery('forceFlagXmlHttpRequestTofalse', false))
+    	    $isXmlHttpRequest = false;
 
     	/**
 		 * Get the appConfig
@@ -345,7 +374,16 @@ class PluginViewController extends AbstractActionController
 		 * Add JS calls and datas found in config, 
 		 * so that it will be added in head when generating
 		 */
+		if (!empty($zoneView->getVariable('jsCallBacks')) && is_array($zoneView->getVariable('jsCallBacks')))
+		{
+		    $jsCallBacks = ArrayUtils::merge($zoneView->getVariable('jsCallBacks'), $jsCallBacks);
+		}
 		$zoneView->setVariable('jsCallBacks', $jsCallBacks);
+		
+		if (!empty($zoneView->getVariable('datasCallback')) && is_array($zoneView->getVariable('datasCallback')))
+		{
+		    $datasCallback = ArrayUtils::merge($zoneView->getVariable('datasCallback'), $datasCallback);
+		}
 		$zoneView->setVariable('datasCallback', $datasCallback);
 		
 		/**

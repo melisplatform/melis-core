@@ -1201,65 +1201,66 @@ return array(
                                 'id' => 'id_meliscore_center_dashboard',
                                 'name' => 'tr_meliscore_center_Dashboard',
                                 'melisKey' => 'meliscore_center_dashboard',
-                                'icon' => 'fa-tachometer',
-                                'type' => '/meliscore_dashboard'
+                                'icon' => 'fa-tachometers',
+                                'dashboard' => true
+//                                 'type' => '/meliscore_dashboard',
                             ),
                         ),
                     )
                 ),
             )
         ),
-        'meliscore_dashboard' => array(
-            'conf' => array(
-                'id' => 'id_meliscore_center_dashboard',
-                'name' => 'tr_meliscore_center_Melis Dashboard',
-                'melisKey' => 'meliscore_center_dashboard',
-                'icon' => 'fa-tachometer'
-            ),
-            'forward' => array(
-                'module' => 'MelisCore',
-                'controller' => 'Dashboard',
-                'action' => 'dashboard',
-                'jscallback' => '',
-                'jsdatas' => array()
-            ),
-            'interface' => array(
-                'meliscore_dashboard_recent_activity' => array(
-                    'conf' => array(
-                        'id' => 'id_meliscore_dashboard_recent_activity',
-                        'name' => 'tr_meliscore_dashboard_Recent Activity',
-                        'melisKey' => 'meliscore_dashboard_recent_activity',
-                        'width' => 6,
-                        'height' => 'dashboard-medium',
-                    ),
-                    'forward' => array(
-                        'module' => 'MelisCore',
-                        'controller' => 'Dashboard',
-                        'action' => 'recentActivity',
-                        'jscallback' => '',
-                        'jsdatas' => array()
-                    ),
-                    'interface' => array(
-                        'meliscore_dashboard_recent_activity_users' => array(
-                            'conf' => array(
-                                'id' => 'id_meliscore_dashboard_recent_activity_users',
-                                'name' => 'tr_meliscore_dashboard_recent_activity_Users',
-                                'melisKey' => 'meliscore_dashboard_recent_activity_users',
-                                'icon' => 'parents',
-                                'maxLines' => 8,
-                            ),
-                            'forward' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'Dashboard',
-                                'action' => 'recentActivityUsers',
-                                'jscallback' => '',
-                                'jsdatas' => array()
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
+//         'meliscore_dashboard' => array(
+//             'conf' => array(
+//                 'id' => 'id_meliscore_center_dashboard',
+//                 'name' => 'tr_meliscore_center_Melis Dashboard',
+//                 'melisKey' => 'meliscore_center_dashboard',
+//                 'icon' => 'fa-tachometer'
+//             ),
+//             'forward' => array(
+//                 'module' => 'MelisCore',
+//                 'controller' => 'Dashboard',
+//                 'action' => 'dashboard',
+//                 'jscallback' => '',
+//                 'jsdatas' => array()
+//             ),
+//             'interface' => array(
+//                 'meliscore_dashboard_recent_activity' => array(
+//                     'conf' => array(
+//                         'id' => 'id_meliscore_dashboard_recent_activity',
+//                         'name' => 'tr_meliscore_dashboard_Recent Activity',
+//                         'melisKey' => 'meliscore_dashboard_recent_activity',
+//                         'width' => 6,
+//                         'height' => 'dashboard-medium',
+//                     ),
+//                     'forward' => array(
+//                         'module' => 'MelisCore',
+//                         'controller' => 'Dashboard',
+//                         'action' => 'recentActivity',
+//                         'jscallback' => '',
+//                         'jsdatas' => array()
+//                     ),
+//                     'interface' => array(
+//                         'meliscore_dashboard_recent_activity_users' => array(
+//                             'conf' => array(
+//                                 'id' => 'id_meliscore_dashboard_recent_activity_users',
+//                                 'name' => 'tr_meliscore_dashboard_recent_activity_Users',
+//                                 'melisKey' => 'meliscore_dashboard_recent_activity_users',
+//                                 'icon' => 'parents',
+//                                 'maxLines' => 8,
+//                             ),
+//                             'forward' => array(
+//                                 'module' => 'MelisCore',
+//                                 'controller' => 'Dashboard',
+//                                 'action' => 'recentActivityUsers',
+//                                 'jscallback' => '',
+//                                 'jsdatas' => array()
+//                             ),
+//                         ),
+//                     ),
+//                 ),
+//             ),
+//         ),
         'meliscore_login' => array(
             'ressources' => array(
                 'js' => array(

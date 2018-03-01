@@ -265,6 +265,9 @@ class Module
 	        include __DIR__ . '/../config/diagnostic.config.php',
 	        include __DIR__ . '/../config/app.microservice.php',
 	        include __DIR__ . '/../config/app.install.php',
+    	    
+	        include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZone.config.php',
+	        include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
     	);
     	
     	foreach ($configFiles as $file) 
