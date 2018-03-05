@@ -231,6 +231,11 @@ var melisHelper = (function(){
         var removedWidth = currentParent.width();
         var currentGrandParent = currentParent.parent().parent("li").find(".tab-element").data("id");
 
+        //This is for not showing the close all tab button
+        if(prevActiveTab == 'id_meliscore_center_dashboard' && !nextActiveTab){
+            $("#close-all-tab").hide();
+        }
+
         var navBox = currentParent.closest(".scroll");
         var hasdropdown = $(navBox).find(".nav-group-dropdown");
         if(currentParent.hasClass("active-parent")) {
@@ -321,6 +326,10 @@ var melisHelper = (function(){
 
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
+        //Show the close(X) button on header
+        if(melisKey != 'meliscore_center_dashboard'){
+            $("#close-all-tab").show();
+        }
         //check if the tab is already open and added to the main nav
         var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='"+ zoneId +"']");
 
