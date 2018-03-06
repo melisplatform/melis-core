@@ -16,7 +16,7 @@ class MelisDashboardDragDropZonePluginHelper extends AbstractHelper
 	
 	public function __invoke($dashboardId)
 	{
-	    $melisDashboardDragDropZone = $this->serviceManager->get('ControllerPluginManager')->get('MelisDashboardDragDropZonePlugin');
+	    $melisDashboardDragDropZone = $this->serviceManager->get('ControllerPluginManager')->get('MelisCoreDashboardDragDropZonePlugin');
 		
 	    $melisDashboardDragDropZoneView = $melisDashboardDragDropZone->render(array(
 	        'dashboard_id' => $dashboardId,

@@ -125,126 +125,19 @@ if($schemes) {
         
 	</head>
 	<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null?>>
+		<!-- content -->
+		<?php echo $this->content; ?>
+		<!-- echo of content -->
 		
-		<?= $this->content; ?>
-
+		<!-- dashboard menu plugins -->
+		<?php echo $this->dashboardMenu; ?>
+		<!-- end dashboard menu plugins -->
+		
 		<!-- modals container -->
 		<div id="melis-modals-container"></div>
-
-        <!--dashboard menu plugins -->
-        <div class="melis-core-dashboard-dnd-box">
-            <div class="melis-core-dashboard-dnd-fix-menu">
-                <div class="melis-core-dashboard-dnd-title">Plugins</div>
-                <div class="melis-core-dashboard-plugin-filter-box">
-                    <div class="melis-core-dashboard-ps-box">
-                        <span class="melis-core-dashboard-filter-btn">Melis Cms <i class="fa fa-angle-down"></i></span>
-                        <div class="melis-core-dashboard-plugin-snippets-box">
-
-                            <div class="melis-core-dashboard-category-box">
-                                <span class="melis-core-dashboard-category-btn">Tags <i class="fa fa-angle-down"></i></span>
-                                <div class="melis-core-dashboard-category-plugins-box">
-                                    <div class="melis-core-dashboard-plugin-snippets" data-module-name="melisfront" data-plugin-name="MelisFrontTagHtmlPlugin" data-plugin-site-module="MelisDemoCms" title="The HTML tag plugin provides a wysiwig editable zone for your templates. It comes preconfigured with a wysiwig editor and rich text oriented configuration.">
-                                        <img src="/MelisFront/plugins/images/MelisFrontTagHtmlPlugin_thumb.jpg" alt="">
-                                        <span class="melis-core-dashboard-plugin-title">Html tag</span>
-                                    </div>
-                                    <div class="melis-core-dashboard-plugin-snippets" data-module-name="melisfront" data-plugin-name="MelisFrontTagTextareaPlugin" data-plugin-site-module="MelisDemoCms" title="The Textarea tag plugin provides a wysiwig editable zone for your templates. It comes preconfigured with a wysiwig editor and basic text oriented configuration.">
-                                        <img src="/MelisFront/plugins/images/MelisFrontTagTextareaPlugin_thumb.jpg" alt="">
-                                        <span class="melis-core-dashboard-plugin-title">Textarea tag</span>
-                                    </div>
-                                    <div class="melis-core-dashboard-plugin-snippets" data-module-name="melisfront" data-plugin-name="MelisFrontTagMediaPlugin" data-plugin-site-module="MelisDemoCms" title="The Media tag plugin provides a wysiwig editable zone for your templates. It comes preconfigured with a wysiwig editor and media oriented configuration.">
-                                        <img src="/MelisFront/plugins/images/MelisFrontTagMediaPlugin_thumb.jpg" alt="">
-                                        <span class="melis-core-dashboard-plugin-title">Media tag</span>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="melis-core-dashboard-category-box">
-                                <span class="melis-core-dashboard-category-btn">Page basics <i class="fa fa-angle-down"></i></span>
-                                <div class="melis-core-dashboard-category-plugins-box">
-                                    <div class="melis-core-dashboard-plugin-snippets" data-module-name="melisfront" data-plugin-name="MelisFrontBreadcrumbPlugin" data-plugin-site-module="MelisDemoCms" title="The breadcrumb plugin provides the typical ressources to generate a page breadcrumb from the treeview.">
-                                        <img src="/MelisFront/plugins/images/MelisFrontBreadcrumbPlugin_thumb.jpg" alt="">
-                                        <span class="melis-core-dashboard-plugin-title">Breadcrumb</span>
-                                    </div>
-                                    <div class="melis-core-dashboard-plugin-snippets" data-module-name="melisfront" data-plugin-name="MelisFrontMenuPlugin" data-plugin-site-module="MelisDemoCms" title="The menu plugin provides the typical ressources to generate a page menu from the treeview.">
-                                        <img src="/MelisFront/plugins/images/MelisFrontMenuPlugin_thumb.jpg" alt="">
-                                        <span class="melis-core-dashboard-plugin-title">Menu</span>
-                                    </div>
-                                    <div class="melis-core-dashboard-plugin-snippets" data-module-name="melisfront" data-plugin-name="MelisFrontShowListFromFolderPlugin" data-plugin-site-module="MelisDemoCms" title="The folder listing plugin provides a list of subpages from the treeview, that allows to create lists of elements suchs as news or page details of an item.">
-                                        <img src="/MelisFront/plugins/images/MelisFrontShowListFromFolderPlugin_thumb.jpg" alt="">
-                                        <span class="melis-core-dashboard-plugin-title">Folder listing</span>
-                                    </div>
-                                    <div class="melis-core-dashboard-plugin-snippets" data-module-name="melisfront" data-plugin-name="MelisFrontSearchResultsPlugin" data-plugin-site-module="MelisDemoCms" title="The search results plugin provides the results from Melis Platform based on Zend Search and displays them on the page.">
-                                        <img src="/MelisFront/plugins/images/MelisFrontSearchResultsPlugin_thumb.jpg" alt="">
-                                        <span class="melis-core-dashboard-plugin-title">Search results</span>
-                                    </div>
-                                    <div class="melis-core-dashboard-plugin-snippets" data-module-name="melisfront" data-plugin-name="MelisFrontBlockSectionPlugin" data-plugin-site-module="MelisDemoCms" title="Add a section block in the drag drop zone">
-                                        <img src="/MelisFront/plugins/images/MelisFrontBlockPlugin_thumb.jpg" alt="">
-                                        <span class="melis-core-dashboard-plugin-title">Block</span>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="melis-core-dashboard-ps-box">
-                        <span class="melis-core-dashboard-filter-btn">Melis Cms News <i class="fa fa-angle-down"></i></span>
-                        <div class="melis-core-dashboard-plugin-snippets-box">
-
-                            <div class="melis-core-dashboard-plugin-snippets" data-module-name="meliscmsnews" data-plugin-name="MelisCmsNewsLatestNewsPlugin" data-plugin-site-module="MelisDemoCms" title="The latest news plugin displays a list of the latest news, based on the news tool.">
-                                <img src="/MelisCmsNews/plugins/images/MelisCmsNewsLatestNewsPlugin_thumb.jpg" alt="">
-                                <span class="melis-core-dashboard-plugin-title">Latest news</span>
-                            </div>
-                            <div class="melis-core-dashboard-plugin-snippets" data-module-name="meliscmsnews" data-plugin-name="MelisCmsNewsListNewsPlugin" data-plugin-site-module="MelisDemoCms" title="The news list plugin displays a list of news, based on the news tool.">
-                                <img src="/MelisCmsNews/plugins/images/MelisCmsNewsListNewsPlugin_thumb.jpg" alt="">
-                                <span class="melis-core-dashboard-plugin-title">News list</span>
-                            </div>
-                            <div class="melis-core-dashboard-plugin-snippets" data-module-name="meliscmsnews" data-plugin-name="MelisCmsNewsShowNewsPlugin" data-plugin-site-module="MelisDemoCms" title="The news details plugin displays a specific news, based on the news tool.">
-                                <img src="/MelisCmsNews/plugins/images/MelisCmsNewsShowNewsPlugin_thumb.jpg" alt="">
-                                <span class="melis-core-dashboard-plugin-title">News details</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="melis-core-dashboard-ps-box">
-                        <span class="melis-core-dashboard-filter-btn">Melis Cms Prospects <i class="fa fa-angle-down"></i></span>
-                        <div class="melis-core-dashboard-plugin-snippets-box">
-
-                            <div class="melis-core-dashboard-plugin-snippets" data-module-name="meliscmsprospects" data-plugin-name="MelisCmsProspectsShowFormPlugin" data-plugin-site-module="MelisDemoCms" title="The contact form plugin displays the form and handles prospect saving">
-                                <img src="/MelisCmsProspects/plugins/images/MelisCmsProspectsShowFormPlugin_thumb.jpg" alt="">
-                                <span class="melis-core-dashboard-plugin-title">Contact Form</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="melis-core-dashboard-ps-box">
-                        <span class="melis-core-dashboard-filter-btn">Melis Cms Slider <i class="fa fa-angle-down"></i></span>
-                        <div class="melis-core-dashboard-plugin-snippets-box">
-
-                            <div class="melis-core-dashboard-plugin-snippets" data-module-name="meliscmsslider" data-plugin-name="MelisCmsSliderShowSliderPlugin" data-plugin-site-module="MelisDemoCms" title="The slider plugin displays a specific slider based on the slider tool.">
-                                <img src="/MelisCmsSlider/plugins/images/MelisCmsSliderShowSliderPlugin_thumb.jpg" alt="">
-                                <span class="melis-core-dashboard-plugin-title">Slider</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="melisDashBoardPluginBtn" title="Dashboard Plugins">
-                <i class="fa fa-plug"></i>
-            </div>
-
-        </div>
-        <!-- end dashboard menu plugins -->
-
+        <!-- end modals container -->
+        
         <?php
-            // load callbacks
-            // 		if (!empty($this->jsCallBacks))
-            // 		{
-            // 		    $this->headScript()->captureStart();
-            // 		    echo '$(document).ready(function() {' . "\r\n";
-            // 		    foreach ($this->jsCallBacks as $jsCallback)
-            // 		        echo $jsCallback . "\r\n";
-            // 		        echo '});';
-            // 		        $this->headScript()->captureEnd();
-            // 		}
             if(!$this->isMelisInstallerRoute)
                 echo $this->headScript();
         ?>

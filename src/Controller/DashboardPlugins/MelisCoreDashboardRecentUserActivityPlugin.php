@@ -9,24 +9,19 @@
 
 namespace MelisCore\Controller\DashboardPlugins;
 
-use MelisCore\Controller\DashboardPlugins\MelisDashboardTemplatingPlugin;
-use Zend\Session\Container;
+use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
 
-class MelisCoreDashboardRecentUserActivityPlugin extends MelisDashboardTemplatingPlugin
+class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTemplatingPlugin
 {
-    public function __construct($updatesPluginConfig = array())
+    public function __construct()
     {
         $this->pluginName = 'MelisCoreDashboardRecentUserActivityPlugin';
         $this->pluginModule = 'meliscore';
-        parent::__construct($updatesPluginConfig);
     }
     
     public function modelVars()
     {
         $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-        
-        $container = new Container('meliscore');
-        $locale = $container['melis-lang-locale'];
         
         // Max lines
         $maxLines = 8;
@@ -39,7 +34,7 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisDashboardTemplatin
             $users = $users->toArray();
             foreach ($users as $keyUser => $user)
             {
-                $users[$keyUser]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($user['usr_last_login_date']));
+                $users[$keyUser]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($this->locale), strtotime($user['usr_last_login_date']));
             }
         }
         

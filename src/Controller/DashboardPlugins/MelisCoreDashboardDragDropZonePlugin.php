@@ -9,15 +9,14 @@
 
 namespace MelisCore\Controller\DashboardPlugins;
 
-use MelisCore\Controller\DashboardPlugins\MelisDashboardTemplatingPlugin;
+use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
 
-class MelisDashboardDragDropZonePlugin extends MelisDashboardTemplatingPlugin
+class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingPlugin
 {
-    public function __construct($updatesPluginConfig = array())
+    public function __construct()
     {
-        $this->pluginName = 'MelisDashboardDragDropZonePlugin';
+        $this->pluginName = 'MelisCoreDashboardDragDropZonePlugin';
         $this->pluginModule = 'meliscore';
-        parent::__construct($updatesPluginConfig);
     }
     
     public function modelVars()

@@ -604,5 +604,8 @@
         'tr_melis_user_tabs_close_all_open_tabs' => 'Close all tabs',
         'tr_melis_core_common_close' => 'Close',
         'tr_meliscms_common_add' => 'Add',
+	    
+	    // Dashboard Plugins
+	    'tr_melisore_Plugins' => 'Plugins'
 	);
 ?>

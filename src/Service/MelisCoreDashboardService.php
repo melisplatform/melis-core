@@ -65,4 +65,30 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	    
 	    return array($jsCallBacks, $datasCallback);
 	}
+	
+	public function getActiveDashboardPlugins()
+	{
+	    $plugins = array();
+	    
+	    $config = $this->getServiceLocator()->get('config');
+	    
+	    foreach ($config['plugins'] As $key => $val)
+	    {
+	        if (!empty($val['dashboard_plugins']))
+	        {
+	            $modulePlugins = $val['dashboard_plugins'];
+	            foreach ($modulePlugins As $keyPlugin => $plugin)
+	            {
+	                array_push($plugins[$key], array(
+	                    'name' => $plugin['name'],
+	                    'description' => $plugin['description'],
+	                    'icon' => $plugin['icon'],
+	                    'thumnail' => $plugin['thumnail'],
+	                ));
+	            }
+	        }
+	    }
+	    
+	    return $plugins;
+	}
 }
