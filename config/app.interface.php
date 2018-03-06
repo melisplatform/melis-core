@@ -155,6 +155,12 @@ return array(
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
+
+                    // gridstack
+                    '/MelisCore/assets/components/plugins/gridstack/js/lodash.min.js',
+                    '/MelisCore/assets/components/plugins/gridstack/js/gridstack.min.js',
+                    '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
+                    '/MelisCore/js/core/gridstack.init.js',
                 ),
                 'css' => array(
                     // Melis Admin
@@ -177,6 +183,9 @@ return array(
 
                     // Plugins Move css group
                     'MelisCore/css/plugin.group.css',
+
+                    // gridstack
+                    '/MelisCore/assets/components/plugins/gridstack/css/gridstack.min.css',
 
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',

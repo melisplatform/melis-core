@@ -251,6 +251,17 @@ var melisCore = (function(window){
 
         // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
         $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+
+        // detect dashboard tab panel
+        if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
+            // show dashboard plugin menu
+            $("body .melis-core-dashboard-dnd-box").fadeIn();
+            $("body .melis-core-dashboard-dnd-box.show").fadeIn();
+        } else {
+            // hide dashboard plugin menu
+            $("body .melis-core-dashboard-dnd-box").fadeOut();
+            $("body .melis-core-dashboard-dnd-box.show").fadeOut();
+        }
     }
 
     /*
@@ -444,7 +455,7 @@ var melisCore = (function(window){
      });*/
 
     $body.on("click", "#melisDashBoardPluginBtn", function() {
-        $(this).closest(".melis-core-dashboard-dnd-box").toggleClass("show");
+        $(this).closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
     });
 
     $body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);

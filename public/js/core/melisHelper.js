@@ -219,6 +219,17 @@ var melisHelper = (function(){
 
         //show current selected container
         $("#" + tabID).addClass("active");
+
+        // detect dashboard tab panel
+        if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
+            // show dashboard plugin menu
+            $("body .melis-core-dashboard-dnd-box").fadeIn();
+            $("body .melis-core-dashboard-dnd-box.show").fadeIn();
+        } else {
+            // hide dashboard plugin menu
+            $("body .melis-core-dashboard-dnd-box").fadeOut();
+            $("body .melis-core-dashboard-dnd-box.show").fadeOut();
+        }
     }
 
     // CLOSE TAB AND REMOVE ===========================================================================================================

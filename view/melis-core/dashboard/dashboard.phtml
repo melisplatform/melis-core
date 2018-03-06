@@ -7,9 +7,9 @@
 ?>
 
 
-<div data-melisKey='<?= $data_melisKey; ?>'<?= $id; ?> class="tab-pane container-level-a">
-	<div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2" id="id-maintabs-home" style="background: #981a1f21;">
-	    <div class="row">
+<div data-melisKey='<?= $data_melisKey; ?>'<?= $id; ?> class="tab-pane container-level-a tab-panel-dashboard">
+	<div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2" id="id-maintabs-home">
+            <div class="grid-stack  grid-stack-animate">
 	    	<?php 
     	    	if ($this->isAccessible)
     	    	{
@@ -24,6 +24,18 @@
 
     	    	}
 	    	?>
-	    </div>
+            </div>
     </div>
 </div>
+<script>
+
+    var options = {
+        cellHeight: 80,
+        verticalMargin: 20,
+        animate: true,
+        handle: ".grid-stack-item-content .widget-head:first",
+    };
+    if(window.jQuery) {
+        $('.grid-stack').gridstack(options);
+    }
+</script>
