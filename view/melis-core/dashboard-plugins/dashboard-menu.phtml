@@ -1,0 +1,26 @@
+<div class="melis-core-dashboard-dnd-box">
+    <div class="melis-core-dashboard-dnd-fix-menu">
+        <div class="melis-core-dashboard-dnd-title"><?php echo $this->translate('tr_melisore_Plugins')?></div>
+        <div class="melis-core-dashboard-plugin-filter-box">
+            <?php foreach ($this->plugins As $module => $plugins){ ?>
+                <div class="melis-core-dashboard-ps-box">
+                    <span class="melis-core-dashboard-filter-btn"><?php echo $module?> <i class="fa fa-angle-down"></i></span>
+                    <div class="melis-core-dashboard-plugin-snippets-box">
+                   		<?php foreach ($plugins As $plugin => $pluginDetails){ ?>
+                   			<div class="melis-core-dashboard-plugin-snippets" 
+                   				data-module-name="<?php echo $module ?>" 
+                   				data-plugin-name="<?php echo $plugin ?>" 
+                   				title="<?php echo $this->translate($pluginDetails['description'])?>">
+                                <img src="<?php echo $pluginDetails['thumbnail']?>" alt="">
+                                <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($pluginDetails['name'])?></span>
+                            </div>
+                   		<?php }?>
+                    </div>
+                </div>
+            <?php }?>
+        </div>
+    </div>
+    <div id="melisDashBoardPluginBtn" title="Dashboard Plugins">
+        <i class="fa fa-plug"></i>
+    </div>
+</div>

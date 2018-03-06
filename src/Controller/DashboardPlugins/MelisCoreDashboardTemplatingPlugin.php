@@ -18,12 +18,13 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Stdlib\Parameters;
+use Zend\Session\Container;
 // use Zend\Session\Container;
 
 /**
  *  
  */
-abstract class MelisDashboardTemplatingPlugin extends AbstractPlugin  implements ServiceLocatorAwareInterface
+abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implements ServiceLocatorAwareInterface
 {
     protected $pluginName;
     protected $pluginModule   = '';
@@ -35,9 +36,14 @@ abstract class MelisDashboardTemplatingPlugin extends AbstractPlugin  implements
     protected $serviceLocator;
     protected $eventManager;
     
-    public function __construct($updatesPluginConfig = array())
+    protected $locale;
+    
+    
+    public function __construct()
     {
         $this->setEventManager(new EventManager());
+        $container = new Container('meliscore');
+        $this->locale = $container['melis-lang-locale'];
     }
     
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator) 
@@ -131,7 +137,7 @@ abstract class MelisDashboardTemplatingPlugin extends AbstractPlugin  implements
         
         $pluginView->pluginConfig = $this->pluginConfig;
         
-        if (isset($this->pluginConfig['plugin_container']))
+        if (isset($this->pluginConfig['skip_plugin_container']))
             return $pluginView;
             
         return $this->setPluginContainer($pluginView);

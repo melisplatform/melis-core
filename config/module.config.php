@@ -368,6 +368,7 @@ return array(
             'layout/layoutCore' => __DIR__ . '/../view/layout/layoutCore.phtml',
             'layout/layoutLogin' => __DIR__ . '/../view/layout/layoutLogin.phtml',
             'layout/layoutBlank' => __DIR__ . '/../view/layout/layoutBlank.phtml',
+            'layout/layout' => __DIR__ . '/../view/layout/layoutBlank.phtml',
             'melis-core/index/index' => __DIR__ . '/../view/melis-core/index/index.phtml',
             'melis-core/plugin-view/generate' => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',

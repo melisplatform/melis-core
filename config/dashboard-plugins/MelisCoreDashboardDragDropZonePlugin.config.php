@@ -9,17 +9,17 @@
                     )
                 ),
                 'dashboard_plugins' => array(
-                    'MelisDashboardDragDropZonePlugin' => array(
+                    'MelisCoreDashboardDragDropZonePlugin' => array(
                         'template_path' => 'melis-core/dashboard-plugin/dragdropzone',
-                        'plugin_container' => true,
-                        'dashboard_id' => '',
+                        'skip_plugin_container' => true,
+                        'dashboard_type' => '',
                     )
                 )
             )
         ),
         'controller_plugins' => array(
             'invokables' => array(
-                'MelisDashboardDragDropZonePlugin' => 'MelisCore\Controller\DashboardPlugins\MelisDashboardDragDropZonePlugin',
+                'MelisCoreDashboardDragDropZonePlugin' => 'MelisCore\Controller\DashboardPlugins\MelisCoreDashboardDragDropZonePlugin',
             )
         ),
         'view_helpers' => array(
@@ -32,6 +32,7 @@
                 'melis-core/dashboard-plugin/dragdropzone'          => __DIR__ . '/../../view/melis-core/dashboard-plugins/dragdropzone.phtml',
                 'melis-core/dashboard-plugin/plugin-container'      => __DIR__ . '/../../view/melis-core/dashboard-plugins/plugin-container.phtml',
                 'melis-core/dashboard-plugin/no-template'           => __DIR__ . '/../../view/melis-core/dashboard-plugins/no-template.phtml',
+                'melis-core/dashboard-plugin/dashboard-menu'        => __DIR__ . '/../../view/melis-core/dashboard-plugins/dashboard-menu.phtml',
             ),
         ),
     );
