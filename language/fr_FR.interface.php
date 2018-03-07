@@ -257,6 +257,7 @@
         'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
         'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
         'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
+        'tr_meliscore_module_management_select_deselect_all_module_noti' => 'Sélectionner / désélectionner tous les modules',
         'tr_meliscore_general_proceed' => 'Proceed',
         'tr_meliscore_general_confirm' => 'Confirm',
 	    
