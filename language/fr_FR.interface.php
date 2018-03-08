@@ -621,5 +621,9 @@
         'tr_melis_user_tabs_close_all_open_tabs' => 'Fermer tous les onglets',
         'tr_melis_core_common_close' => 'Annuler',
         'tr_melis_core_common_add' => 'Ajouter',
+
+        //Diagnostic translation
+        'tr_melis_core_diagnostic_error_message' => 'n\'a pas de configuration de diagnostic'
+
     );
 ?>
