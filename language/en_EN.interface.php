@@ -256,6 +256,7 @@
 	    'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
 	    'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
 	    'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
+	    'tr_meliscore_module_management_select_deselect_all_module_noti' => 'Select / deselect all modules',
         'tr_meliscore_general_proceed' => 'Proceed',
         'tr_meliscore_general_confirm' => 'Confirm',
 
@@ -602,5 +603,7 @@
         'tr_meliscore_platform_scheme_success_restore_message' => 'Platform scheme restored successfully',
 
         'tr_melis_user_tabs_close_all_open_tabs' => 'Close all tabs',
+        'tr_melis_core_common_close' => 'Close',
+        'tr_melis_core_common_add' => 'Add',
 	);
 ?>

@@ -1,5 +1,15 @@
 $(document).ready(function() {
 
+    $("body").on("switch-change", "#select-deselect-all-module", function(e, data){
+        var val = "";
+        if(data.value === false){
+            val = "off";
+        }else{
+            val = "on";
+        }
+        $('.module-switch').find("div.switch-animate").removeClass("switch-on switch-off").addClass("switch-"+val);
+    });
+
     $("body").on('switch-change', 'div[data-module-name]', function (e, data) {
 
 		var moduleName = $(this).data("module-name");

@@ -269,6 +269,7 @@ var melisCore = (function(window){
         if( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
+        $("#close-all-tab").hide();
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
