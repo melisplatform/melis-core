@@ -70,19 +70,24 @@ class MelisModuleManager
                     $modulePath =  self::getPackagePath($melisModuleName);
 
 
-                $platformFile    = $docRoot . '/../config/autoload/platforms/'.$env.'.php';
-                if($melisModuleName) {
-                    $siteModuleLoad = $modulePath . '/config/module.load.php';
-                    if(file_exists($siteModuleLoad) && file_exists($platformFile)) {
-                        $modules = include $siteModuleLoad;
-                    }
-                    else {
-                        $modules = $modulesMelisBackOffice;
+                if($modulePath) {
+                    $platformFile = $docRoot . '/../config/autoload/platforms/'.$env.'.php';
+
+                    if($melisModuleName) {
+                        $siteModuleLoad = $modulePath . '/config/module.load.php';
+                        if(file_exists($siteModuleLoad) && file_exists($platformFile)) {
+                            $modules = include $siteModuleLoad;
+                        }
+                        else {
+                            $modules = $modulesMelisBackOffice;
+                        }
                     }
                 }
-
+                else {
+                    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+                    die;
+                }
             }
-
         } else {
             $modules = array();
         }
@@ -106,7 +111,6 @@ class MelisModuleManager
         $factory = new Factory();
 
         $composer = $factory->createComposer(new NullIO());
-
 
         return $composer;
     }
@@ -156,13 +160,34 @@ class MelisModuleManager
          */
         $package = $packages->findPackage($packageName, $packageVersion);
 
+
         if(!$package)
             return null;
+
+        /**
+         * Check if the package is a Melis Site
+         */
+        $extra       = $package->getExtra();
+        $isMelisSite = false;
+
+        if(!isset($extra['melis-site']))
+            return null;
+
+        $isMelisSite = (bool) $extra['melis-site'];
+
+        /**
+         * Check if the package is treated as Melis Site
+         */
+        if(!$isMelisSite)
+            return null;
+
 
         /**
          * Get the package source
          */
         foreach($package->getRequires() as $req) {
+
+
             $source = $req->getsource();
         }
 
@@ -186,7 +211,7 @@ class MelisModuleManager
     {
         $docRoot = dirname(__DIR__);
         $parts   = explode(DIRECTORY_SEPARATOR, $docRoot);
-        $path = null;
+        $path    = null;
         foreach($parts as $idx => $part) {
             $path .= $part . DIRECTORY_SEPARATOR;
             if($part == 'vendor')
