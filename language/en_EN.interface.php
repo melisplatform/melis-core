@@ -605,5 +605,8 @@
         'tr_melis_user_tabs_close_all_open_tabs' => 'Close all tabs',
         'tr_melis_core_common_close' => 'Close',
         'tr_melis_core_common_add' => 'Add',
+
+        //Diagnostic
+        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration'
 	);
 ?>
