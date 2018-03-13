@@ -253,10 +253,11 @@
 	    'tr_meliscore_module_management_prompt_success' => 'Les paramètres des modules ont été mis à jour',
 	    'tr_meliscore_module_management_prompt_failed' => 'Impossible de mettre à jour les paramètres des modules',
 	    'tr_meliscore_module_management_notification_tip' => "Glisser/déposer les modules pour arranger l'ordre",
-        'tr_meliscore_module_management_inactive_confirm' => 'By deactivating %s, this will also deactivate the following modules: ',
+        'tr_meliscore_module_management_inactive_confirm' => 'En désactivant %s, cela désactivera également les modules suivants: ',
         'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
         'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
         'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
+        'tr_meliscore_module_management_select_deselect_all_module_noti' => 'Sélectionner / désélectionner tous les modules',
         'tr_meliscore_general_proceed' => 'Proceed',
         'tr_meliscore_general_confirm' => 'Confirm',
 	    
@@ -620,5 +621,9 @@
         'tr_melis_user_tabs_close_all_open_tabs' => 'Fermer tous les onglets',
         'tr_melis_core_common_close' => 'Annuler',
         'tr_melis_core_common_add' => 'Ajouter',
+
+        //Diagnostic translation
+        'tr_melis_core_diagnostic_error_message' => 'n\'a pas de configuration de diagnostic'
+
     );
 ?>

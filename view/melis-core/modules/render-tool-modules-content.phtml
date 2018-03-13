@@ -9,9 +9,22 @@ if (!empty($this->zoneconfig['conf']['id']))
 
 <div <?= $id; ?> data-melisKey="<?= $data_melisKey; ?>">
 	<div class="spacing-x2 innerAll">
+        <div class="switch-all-container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="select-deselect-all-module" class="make-switch " data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
+                        <input type="checkbox" <?= $status; ?> checked/>
+                    </div>
+                </div>
+                <div class="switch-all-noti">
+                    <div class="icon-cont clearfix">
+                        <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_select_deselect_all_module_noti'); ?>"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- modules -->
         <div class="module-settings">
-
             <div class="ms-heading">
                 <div class="pull-left">
                     <h4 id="meliscore-tool-module-content-title"><?= $this->translate('tr_meliscore_module_management_modules'); ?></h4>

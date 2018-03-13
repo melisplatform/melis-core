@@ -2,6 +2,9 @@
 return array(
     'plugins' => array(
         'melis_core_setup' => array(
+            'conf' => array(
+                'rightsDisplay' => 'none'
+            ),
             'forms' => array(
                 'melis_core_setup_user_form' => array(
                     'attributes' => array(
