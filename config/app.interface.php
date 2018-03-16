@@ -409,6 +409,7 @@ return array(
                                         'id' => 'id_meliscore_leftmenu_dashboard_content_2',
                                         'melisKey' => 'meliscore_leftmenu_dashboard_content_2',
                                         'name' => 'tr_meliscore_center_Dashboard',
+                                        'dashboard' => true
                                     ),
                                     'forward' => array(
                                         'module' => 'MelisCore',
