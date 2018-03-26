@@ -8,6 +8,8 @@
                     <div class="melis-core-dashboard-plugin-snippets-box">
                    		<?php foreach ($plugins As $plugin => $pluginDetails){ ?>
                    			<div class="melis-core-dashboard-plugin-snippets"
+                                 data-gs-width="6"
+                                 data-gs-min-width="6"
                    				data-module-name="<?php echo $module ?>" 
                    				data-plugin-name="<?php echo $plugin ?>"
                    				title="<?php echo $this->translate($pluginDetails['description'])?>">
