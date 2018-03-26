@@ -141,6 +141,8 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadDbXmlToPluginConfig());
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadGetDataPluginConfig());
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadPostDataPluginConfig());
+
+        $this->pluginConfig = $this->translateConfig($this->pluginConfig);
     }
     
     public function sendViewResult($modelVars)
@@ -232,7 +234,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         {
             if (is_array($value))
             {
-                $children = $this->translateAppConfig($value);
+                $children = $this->translateConfig($value);
                 $final[$key] = $children;
             }
             else

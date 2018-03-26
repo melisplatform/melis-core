@@ -29,13 +29,14 @@
                                     'module' => 'MelisCore',
                                     'controller' => 'Dashboard',
                                     'action' => 'recentActivityUsers',
-                                    'jscallback' => '',
+                                    'jscallback' => 'console.log("test");',
                                     'jsdatas' => array()
                                 ),
                             ),
                         )
                     )
                 ),
+                
             )
         ),
         'controller_plugins' => array(
