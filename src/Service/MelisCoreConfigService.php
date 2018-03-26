@@ -63,6 +63,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 		
 		$items = $this->getItemRec($pathTab, 0, $this->appConfig);
 		$items = $this->addItemsLinkedByType($items);
+		$items = $this->setItemsDashboadForwardConfig($items);
 		$items = $this->translateAppConfig($items);
 		
 		if ($prefix != '')
@@ -142,6 +143,33 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 		}
 		
 		return $array;
+	}
+	
+	private function setItemsDashboadForwardConfig($array)
+	{
+	    if (isset($array['conf']['dashboard']) && $array['conf']['dashboard'])
+	    {
+	        $array['forward'] = array(
+		        'module' => 'MelisCore',
+		        'controller' => 'Dashboard',
+		        'action' => 'dashboard',
+		        'jscallback' => 'melisDashBoardDragnDrop.init();',
+		        'jsdatas' => ''
+		    );
+	    }
+	    
+	    foreach($array as $key => $value)
+	    {
+	        if (is_array($value) && $key == 'interface' && !empty($value['interface']))
+	        {
+	            $children = $this->setItemsDashboadForwardConfig($value);
+	            $array[$key] = $children;
+	        }
+	        else
+	            $final[$key] = $value;
+	    }
+	    
+	    return $array;
 	}
 
 	public function prefixIdsKeysRec($array, $prefix)

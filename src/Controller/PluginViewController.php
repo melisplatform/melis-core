@@ -43,22 +43,6 @@ class PluginViewController extends AbstractActionController
 		 */
 		$itemConfig = $melisAppConfig->getItem($fullKey);
 		
-		/**
-		 * Dashboard interface
-		 */
-		if (isset($itemConfig['conf']['dashboard']) && $itemConfig['conf']['dashboard'])
-		{
-		    // Dashboard Controller renderer
-		    $itemConfig['forward'] = array(
-		        'module' => 'MelisCore',
-		        'controller' => 'Dashboard',
-		        'action' => 'dashboard',
-		        'jscallback' => 'melisDashBoardDragnDrop.init();',
-		        'jsdatas' => ''
-		    );
-		}
-		    
-		    
 		if (!empty($itemConfig['datas']))
 			$recDatas = array_merge_recursive($recDatas, $itemConfig['datas']);
 		
@@ -115,8 +99,6 @@ class PluginViewController extends AbstractActionController
 		 */
 		$view = new ViewModel();
         $melisKeyFollow = isset($itemConfig['conf']['follow_regular_rendering']) ? $itemConfig['conf']['follow_regular_rendering'] : true;
-
-//        echo $fullKey . PHP_EOL;
 
         if($melisKeyFollow || $isXmlHttpRequest)
         {
