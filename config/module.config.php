@@ -321,8 +321,7 @@ return array(
             'MelisCore\Controller\MelisCoreMicroService' => 'MelisCore\Controller\MelisCoreMicroServiceController',
             'MelisCore\Controller\MelisSetup' => 'MelisCore\Controller\MelisSetupController',
             'MelisCore\Controller\PlatformScheme' => 'MelisCore\Controller\PlatformSchemeController',
-            
-            'MelisCore\Controller\MelisDashboard' => 'MelisCore\Controller\MelisDashboardController',
+            'MelisCore\Controller\DashboardPlugins' => 'MelisCore\Controller\DashboardPluginsController',
         ),
     ),
 

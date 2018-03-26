@@ -151,8 +151,8 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 	    {
 	        $array['forward'] = array(
 		        'module' => 'MelisCore',
-		        'controller' => 'Dashboard',
-		        'action' => 'dashboard',
+		        'controller' => 'DashboardPlugins',
+		        'action' => 'render-dashboard-plugins',
 		        'jscallback' => 'melisDashBoardDragnDrop.init();',
 		        'jsdatas' => ''
 		    );
