@@ -7,14 +7,15 @@
                     <span class="melis-core-dashboard-filter-btn"><?php echo $module?> <i class="fa fa-angle-down"></i></span>
                     <div class="melis-core-dashboard-plugin-snippets-box">
                    		<?php foreach ($plugins As $plugin => $pluginDetails){ ?>
-                   			<div class="melis-core-dashboard-plugin-snippets"
-                                 data-gs-width="6"
-                                 data-gs-min-width="6"
-                   				data-module-name="<?php echo $module ?>" 
-                   				data-plugin-name="<?php echo $plugin ?>"
-                   				title="<?php echo $this->translate($pluginDetails['description'])?>">
-                                <img src="<?php echo $pluginDetails['thumbnail']?>" alt="">
-                                <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($pluginDetails['name'])?></span>
+                   			<div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($pluginDetails['plugin-description'])?>">
+                   				<div class="plugin-config-cata" 
+                       				<?php 
+                       				    foreach ($pluginDetails As $key => $val)
+                       				        echo 'data-'.$key.'="'.$val.'"';
+               				        ?>
+                   				></div>
+                                <img src="<?php echo $pluginDetails['plugin-thumbnail']?>" alt="">
+                                <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($pluginDetails['plugin-name'])?></span>
                             </div>
                    		<?php }?>
                     </div>

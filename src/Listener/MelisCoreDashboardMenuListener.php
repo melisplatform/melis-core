@@ -49,11 +49,15 @@ class MelisCoreDashboardMenuListener extends MelisCoreGeneralListener implements
                             if ($keyPlugin != 'MelisCoreDashboardDragDropZonePlugin')
                             {
                                 $plugins[$key][$keyPlugin] = array(
-                                    'plugin'        => $keyPlugin,
-                                    'name'          => !empty($plugin['name'])           ? $plugin['name'] : $keyPlugin,
-                                    'description'   => !empty($plugin['description'])    ? $plugin['description']  : '',
-                                    'icon'          => !empty($plugin['icon'])           ? $plugin['icon'] : '',
-                                    'thumbnail'     => !empty($plugin['thumbnail'])      ? $plugin['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
+                                    'plugin-module'         => $keyPlugin,
+                                    'plugin-name'           => !empty($plugin['name'])          ? $plugin['name'] : $keyPlugin,
+                                    'plugin-id'             => !empty($plugin['plugin_id'])     ? $plugin['plugin_id']  : '',
+                                    'plugin-width'          => !empty($plugin['width'])         ? $plugin['width']  : '',
+                                    'plugin-height'         => !empty($plugin['height'])        ? $plugin['height']  : '',
+                                    'plugin-description'    => !empty($plugin['description'])   ? $plugin['description']  : '',
+                                    'plugin-icon'           => !empty($plugin['icon'])          ? $plugin['icon'] : '',
+                                    'plugin-thumbnail'      => !empty($plugin['thumbnail'])     ? $plugin['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
+                                    'plugin-is-drag'        => true,
                                 );
                             }
                         }
