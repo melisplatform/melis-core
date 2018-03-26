@@ -44,4 +44,9 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
         
         return $modelVariable;
     }
+    
+    public function testAction()
+    {
+        return array('test_sucks');
+    }
 }

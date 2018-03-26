@@ -26,7 +26,9 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
         $plugins = $this->getDashboardPlugins();
         
         $html = '';
+        $pluginsHtml = array();
         $jsCallBacks = array();
+        
         foreach ($plugins As $key => $val)
         {
             foreach ($val['d_content']->plugin As $xKey => $xVal)
@@ -35,15 +37,19 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
                  *  CHECKING IF THE PLUGIN IS ACCESSABLE OR MODULE IS ACTIVATED
                  */
                 $plugin = $pluginManager->get((string)$xVal->attributes()->name);
-                $pluginModel = $plugin->render();
+                $pluginModel = $plugin->render(
+                    array(
+                        'dashboard_id' => $this->pluginConfig['dashboard_id'],
+                        'plugin_id' => (string)$xVal->attributes()->plugin_id
+                    )
+                );
                 $html .= $viewRender->render($pluginModel);
             }
         }
         
-        $this->getServiceLocator()->get('config');
-        
         $data = array(
             'htmlPlugins' => $html,
+            'pluginsHtml' => $pluginsHtml,
         );
         
         return $data;
@@ -63,7 +69,6 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
         {
             $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
             $plugins = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->toArray();
-            
             
             foreach ($plugins As $key => $val)
             {

@@ -53,7 +53,7 @@ class PluginViewController extends AbstractActionController
 		        'module' => 'MelisCore',
 		        'controller' => 'Dashboard',
 		        'action' => 'dashboard',
-		        'jscallback' => '',
+		        'jscallback' => 'melisDashBoardDragnDrop.init();',
 		        'jsdatas' => ''
 		    );
 		}

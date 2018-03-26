@@ -19,6 +19,7 @@ use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Stdlib\Parameters;
 use Zend\Session\Container;
+use Zend\Stdlib\ArrayUtils;
 // use Zend\Session\Container;
 
 /**
@@ -32,6 +33,8 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     protected $pluginConfig = array();
     
     protected $updatesPluginConfig = array();
+    
+    protected $pluginXmlDbValue = '';
     
     protected $serviceLocator;
     protected $eventManager;
@@ -67,6 +70,23 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     }
     
     abstract public function modelVars();
+    
+    public function loadDbXmlToPluginConfig()
+    {
+        return array();
+    }
+    
+    public function loadGetDataPluginConfig()
+    {
+        $request = $this->getServiceLocator()->get('request');
+        return $request->getQuery()->toArray();
+    }
+    
+    public function loadPostDataPluginConfig()
+    {
+        $request = $this->getServiceLocator()->get('request');
+        return $request->getPost()->toArray();
+    }
     
     public function render($pluginConfig = array())
     {
@@ -114,7 +134,13 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         
         $pluginConfig = $config['plugins'][$this->pluginModule]['dashboard_plugins'][$this->pluginName];
         
-        $this->pluginConfig = array_merge($pluginConfig, $this->updatesPluginConfig);
+        $this->pluginConfig = ArrayUtils::merge($pluginConfig, $this->updatesPluginConfig);
+        
+        $this->getPluginValueFromDb();
+        
+        $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadDbXmlToPluginConfig());
+        $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadGetDataPluginConfig());
+        $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadPostDataPluginConfig());
     }
     
     public function sendViewResult($modelVars)
@@ -146,7 +172,6 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     public function setPluginContainer($pluginView)
     {
         // Setting the plugin view container
-        // CAN SET THE WIDTH AND HEIGHT OF THE PLUGIN
         $plugin = new ViewModel();
         $plugin->setTemplate('melis-core/dashboard-plugin/plugin-container');
         $plugin->setVariables($pluginView->getVariables());
@@ -156,6 +181,46 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $plugin->pluginView = $pluginHtml;
         
         return $plugin;
+    }
+    
+    public function getPluginValueFromDb()
+    {
+        $this->pluginXmlDbValue = '';
+        
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+        $userId = (int) $userAuthDatas->usr_id;
+        
+        $dashboardId = $this->pluginConfig['dashboard_id'];
+        
+        $pluginId = isset($this->pluginConfig['plugin_id']) ? $this->pluginConfig['plugin_id'] : null;
+        
+        if (!empty($dashboardId))
+        {
+            $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
+            $plugins = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->toArray();
+            
+            foreach ($plugins As $key => $val)
+            {
+                if (!empty($val['d_content']))
+                {
+                    $pluginXmlContent = simplexml_load_string($val['d_content']);
+                    
+                    foreach ($pluginXmlContent As $xKey => $xVal)
+                    {
+                        if ((string)$xVal->attributes()->plugin_id == $pluginId)
+                        {
+                            $this->pluginXmlDbValue = $xVal;
+                            
+                            foreach ($xVal->attributes() As $key => $val)
+                            {
+                                $this->pluginConfig[$key] = (string)$val;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     public function translateConfig($array)

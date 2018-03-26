@@ -1,8 +1,9 @@
 <div class="grid-stack-item  grid-stack-animate"
      data-gs-id="Dashboard"
-     data-gs-x="0" data-gs-y="0"
-     data-gs-width="6"
-     data-gs-height="6">
+     data-gs-x="<?php echo $this->pluginConfig['x-axis']?>" 
+     data-gs-y="<?php echo $this->pluginConfig['y-axis']?>"
+     data-gs-width="<?php echo $this->pluginConfig['width']?>"
+     data-gs-height="<?php echo $this->pluginConfig['height']?>">
     <div class="grid-stack-item-content">
         <div class="widget widget-inverse">
             <div class="widget-parent">
@@ -15,13 +16,10 @@
                     <h3 class="heading"><i class="<?php echo $this->translate($this->pluginConfig['icon']); ?>"></i> <?php echo $this->translate($this->pluginConfig['name']); ?></h3>
                 </div>
                 <div class="widget-body padding-none">
-                    <!--<div class="alert alert-warning">
-                        <h3>Plugin container</h3>
-                    </div>-->
-                    <pre><?php //print_r($this->pluginConfig)?></pre>
+                	<pre><?php print_r($this->pluginConfig)?></pre>
                     <?php echo $this->pluginView ?>
                 </div>
             </div>
         </div>
-    </div
+    </div>
 </div>

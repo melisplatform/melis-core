@@ -11,11 +11,12 @@
                 'dashboard_plugins' => array(
                     'MelisCoreDashboardRecentUserActivityPlugin' => array(
                         'template_path' => 'melis-core/dashboard-plugin/recent-user-activity',
+                        'plugin_id' => 'RecentUserActivity',
                         'name' => 'tr_meliscore_dashboard_Recent Activity',
                         'description' => 'tr_meliscore_dashboard_Recent Activity description',
                         'icon' => 'fa fa-users',
                         'thumbnail' => '',
-                        'jscallback' => 'test()',
+                        'jscallback' => '',
                         
                         'interface' => array(
                             'meliscore_dashboard_recent_activity_users' => array(
@@ -28,14 +29,13 @@
                                     'module' => 'MelisCore',
                                     'controller' => 'Dashboard',
                                     'action' => 'recentActivityUsers',
-                                    'jscallback' => 'console.log("test");',
+                                    'jscallback' => '',
                                     'jsdatas' => array()
                                 ),
                             ),
                         )
                     )
                 ),
-                
             )
         ),
         'controller_plugins' => array(

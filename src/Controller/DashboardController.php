@@ -35,6 +35,16 @@ class DashboardController extends AbstractActionController
     	return $view;
     }
     
+    public function testAction(){
+        
+        $result = $this->forward()->dispatch('MelisCore\\Controller\\DashboardPlugins\\MelisCoreDashboardRecentUserActivityPlugin', array(
+            'action' => 'test'
+        ));
+        
+        var_dump($result);
+        die();
+    }
+    
     /**
      * Shows the leftmenu dasboard entry point
      *
