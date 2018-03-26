@@ -2108,6 +2108,23 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
     cursor: move;
 }
 
+.switch-all-container{
+    width: 100%;
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+#select-deselect-all-module{
+    margin-right:21px;
+}
+
+.switch-all-noti{
+    top: -27px;
+    position: relative;
+    right: 10px;
+}
+
 
 /* bootstrap switch */
 .has-switch{

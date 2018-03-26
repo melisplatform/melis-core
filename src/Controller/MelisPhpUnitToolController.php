@@ -120,7 +120,7 @@ class MelisPhpUnitToolController extends AbstractActionController
         $modSvc = $this->getServiceLocator()->get('ModulesService');
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
         $modules = $modSvc->getActiveModules(array('MelisDesign', 'MelisModuleConfig'));
-
+        $translate = $this->getServiceLocator()->get('translator');
 
         $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites', 'melisassetmanager']);
         $coreModules = array();
@@ -185,7 +185,7 @@ class MelisPhpUnitToolController extends AbstractActionController
 
             }
             else {
-                $logs[] = $module . ' does not have a diagnostic configuration';
+                $logs[] = $module . ' ' . $translate->translate('tr_melis_core_diagnostic_error_message');
             }
 
         }
