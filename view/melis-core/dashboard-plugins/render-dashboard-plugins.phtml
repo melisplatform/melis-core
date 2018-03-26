@@ -1,0 +1,22 @@
+<?php
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$data_melisKey = $this->melisKey;
+?>
+
+
+<div data-melisKey='<?= $data_melisKey; ?>'<?= $id; ?> class="tab-pane container-level-a tab-panel-dashboard">
+	<div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2" id="id-maintabs-home">
+    	<?php 
+	    	if ($this->isAccessible)
+	    	{
+	    	    echo $this->MelisDashboardDragDropZone($this->zoneconfig['conf']['id']);
+	    	}
+	    	else 
+	    	{
+	    	    echo $this->translate('tr_meliscore_rights_Not allowed dashboard');
+	    	}
+    	?>
+    </div>
+</div>
