@@ -1,5 +1,5 @@
 <div class="grid-stack-item  grid-stack-animate"
-     data-gs-id="Dashboard"
+     data-gs-id="<?php echo $this->pluginConfig['plugin_id']?>"
      data-gs-x="<?php echo $this->pluginConfig['x-axis']?>" 
      data-gs-y="<?php echo $this->pluginConfig['y-axis']?>"
      data-gs-width="<?php echo $this->pluginConfig['width']?>"
@@ -16,7 +16,10 @@
                     <h3 class="heading"><i class="<?php echo $this->translate($this->pluginConfig['icon']); ?>"></i> <?php echo $this->translate($this->pluginConfig['name']); ?></h3>
                 </div>
                 <div class="widget-body padding-none">
-                	<pre><?php print_r($this->pluginConfig)?></pre>
+                	<div class="hidden">
+                		<?php echo json_encode($this->pluginConfig)?>
+                	</div>
+                	<pre><?php echo print_r($this->pluginConfig)?></pre>
                     <?php echo $this->pluginView ?>
                 </div>
             </div>
