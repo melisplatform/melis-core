@@ -304,6 +304,10 @@ class PlatformSchemeController extends AbstractActionController
 
                                         file_put_contents($assetsFolder.'schemes.css', $content);
                                     }
+                                    else {
+                                        mkdir($assetsFolder, 0777, true);
+                                        file_put_contents($assetsFolder.'schemes.css', $content);
+                                    }
 
                                     $success = 1;
                                     $textMessage = 'tr_meliscore_platform_scheme_save_ok';
@@ -378,7 +382,10 @@ class PlatformSchemeController extends AbstractActionController
             $assetsFolder = $_SERVER['DOCUMENT_ROOT'].'/assets/css/';
 
             if(file_exists($assetsFolder)) {
-
+                file_put_contents($assetsFolder.'schemes.css', $content);
+            }
+            else {
+                mkdir($assetsFolder, 0777, true);
                 file_put_contents($assetsFolder.'schemes.css', $content);
             }
             $message  = 'tr_meliscore_platform_scheme_success_restore_message';
