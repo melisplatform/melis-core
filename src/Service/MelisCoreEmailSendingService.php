@@ -8,6 +8,8 @@ use Zend\Mail\Message;
 use Zend\Mail\Transport\Sendmail;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
 
 class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 	protected $serviceLocator;
@@ -35,7 +37,7 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
      * @throws \Exception
      */
 	public function sendEmail($emailFrom, $fromName, $emailTo, $toName = '', $replyTo = null, $subject, $message_html, $message_text = null, $transportConfig = null) {
-	    
+
 	    $html = new MimePart($message_html);
 	    $html->type = 'text/html';
 
@@ -66,31 +68,34 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 
         $transport = new Sendmail();
 
-	    if(is_array($transportConfig) && $transportConfig) {
+        if(is_array($transportConfig) && $transportConfig) {
             /**
              * Program executes these lines when user passes
              * custom Transport Configuration Options ($transportConfig)
              * to specify their own Mailing Service Provider
              */
-            $smtpOptions = new \Zend\Mail\Transport\SmtpOptions();
             try{
-                $smtpOptions->setHost($transportConfig['host'])                 // ex. 'smtp.gmail.com'
-                    ->setConnectionClass($transportConfig['connectionClass'])   // ex. 'login'
-                    ->setName($transportConfig['name'])                         // ex. 'smtp.gmail.com'
-                    ->setConnectionConfig(array(
-                        'username'  => $transportConfig['username'],            // Your Gmail address
-                        'password'  => $transportConfig['password'],
-                        'ssl'       => $transportConfig['ssl'],                 // ex. 'tls'
-                    ));
-
-                $transport = new \Zend\Mail\Transport\Smtp($smtpOptions);
+                // Setup SMTP transport using LOGIN authentication
+                $transport = new SmtpTransport();
+                $options   = new SmtpOptions(array(
+                    'name'              => $transportConfig['name'],
+                    'host'              => $transportConfig['host'],
+                    'connection_class'  => $transportConfig['connectionClass'],
+                    'connection_config' => array(
+                        'username' => $transportConfig['username'],
+                        'password' => $transportConfig['password'],
+                        'ssl' => $transportConfig['ssl'],
+                    ),
+                    'port' => $transportConfig['port'],
+                ));
+                $transport->setOptions($options);
             }
             catch (\Exception $exception){
                 throw new \Exception($exception->getMessage());
             }
         }
 
-	    $transport->send($message);
+        $transport->send($message);
 	}
 	
 	public function send($email, $name, $subject, $content)
