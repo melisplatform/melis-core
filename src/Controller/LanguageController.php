@@ -139,10 +139,16 @@ class LanguageController extends AbstractActionController
         $translator = $this->getServiceLocator()->get('translator');
         $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
 
+        $secondsToCache = 60 * 60 * 24; // 24hrs
+        $ts = gmdate("D, d M Y H:i:s", time() + $secondsToCache) . " GMT";
+
         // Set the headers of this route
         $response = $this->getResponse();
         $response->getHeaders()
-            ->addHeaderLine('Content-Type', 'text/javascript; charset=utf-8');
+            ->addHeaderLine('Content-Type', 'text/javascript; charset=utf-8')
+            ->addHeaderLine('Pragma', 'cache')
+            ->addHeaderLine('Expires', $ts)
+            ->addHeaderLine('Cache-Control', 'max-age='.$secondsToCache);
 
         $translationCompilation = '';
         foreach($melisTranslation->getTranslationMessages($locale) as $transKey => $transValue)

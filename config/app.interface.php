@@ -108,7 +108,7 @@ return array(
             ),
             'ressources' => array(
                 'js' => array(
-                    '/melis/MelisCore/Language/getTranslations',
+                    '/melis/get-translations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
 
                     // Concat plugins
@@ -1317,8 +1317,8 @@ return array(
         'meliscore_login' => array(
             'ressources' => array(
                 'js' => array(
-                    '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
                     '/melis/get-translations',
+                    '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/core/login.js',
                     '/MelisCore/js/core/melispasswordservice.js',
