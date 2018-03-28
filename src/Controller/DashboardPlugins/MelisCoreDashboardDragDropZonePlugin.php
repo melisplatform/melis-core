@@ -35,7 +35,7 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
                 /**
                  *  CHECKING IF THE PLUGIN IS ACCESSABLE OR MODULE IS ACTIVATED
                  */
-                $plugin = $pluginManager->get((string)$xVal->attributes()->name);
+                $plugin = $pluginManager->get((string)$xVal->attributes()->plugin);
                 $pluginModel = $plugin->render(
                     array(
                         'dashboard_id' => $this->pluginConfig['dashboard_id'],

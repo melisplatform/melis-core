@@ -48,7 +48,7 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	            
                 foreach ($plugins->plugin As $xKey => $xVal)
                 {
-                    $pluginConfig = $config['plugins'][$module]['dashboard_plugins'][(string)$xVal->attributes()->name];
+                    $pluginConfig = $config['plugins'][$module]['dashboard_plugins'][(string)$xVal->attributes()->plugin];
                     
                     if (!empty($pluginConfig['interface']) && is_array($pluginConfig['interface']))
                     {

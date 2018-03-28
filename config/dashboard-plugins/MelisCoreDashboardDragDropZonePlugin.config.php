@@ -12,7 +12,7 @@
                     'MelisCoreDashboardDragDropZonePlugin' => array(
                         'template_path' => 'melis-core/dashboard-plugin/dragdropzone',
                         'skip_plugin_container' => true,
-                        'dashboard_type' => '',
+                        'dashboard_id' => '',
                     )
                 )
             )

@@ -141,7 +141,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadDbXmlToPluginConfig());
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadGetDataPluginConfig());
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadPostDataPluginConfig());
-
+        
         $this->pluginConfig = $this->translateConfig($this->pluginConfig);
     }
     
@@ -185,20 +185,29 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         return $plugin;
     }
     
+    /**
+     * This method will get the xml value of the dashboard
+     * and set to the pluginXmlDbValue as xml
+     * and pluginConfig
+     */
     public function getPluginValueFromDb()
     {
         $this->pluginXmlDbValue = '';
         
+        // Retreiving the current user in-order to get the User dashboard
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         $userAuthDatas =  $melisCoreAuth->getStorage()->read();
         $userId = (int) $userAuthDatas->usr_id;
         
+        // Dashboard Id
         $dashboardId = $this->pluginConfig['dashboard_id'];
         
+        // Plugin Id
         $pluginId = isset($this->pluginConfig['plugin_id']) ? $this->pluginConfig['plugin_id'] : null;
         
         if (!empty($dashboardId))
         {
+            // Retreiving User dashboard from database
             $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
             $plugins = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->toArray();
             
@@ -208,13 +217,16 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
                 {
                     $pluginXmlContent = simplexml_load_string($val['d_content']);
                     
+                    $this->pluginXmlDbValue = $val['d_content'];
+                    
                     foreach ($pluginXmlContent As $xKey => $xVal)
                     {
                         if ((string)$xVal->attributes()->plugin_id == $pluginId)
                         {
-                            $this->pluginXmlDbValue = $xVal;
+                            $this->pluginConfig['plugin'] = (string)$xVal->attributes()->plugin;
+                            $this->pluginConfig['plugin_id'] = (string)$xVal->attributes()->plugin_id;
                             
-                            foreach ($xVal->attributes() As $key => $val)
+                            foreach ($xVal As $key => $val)
                             {
                                 $this->pluginConfig[$key] = (string)$val;
                             }
@@ -225,12 +237,18 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         }
     }
     
-    public function translateConfig($array)
+    /**
+     * This method translate possible values from the config
+     * 
+     * @param array $config
+     * @return array
+     */
+    private function translateConfig($config)
     {
         $translator = $this->getServiceLocator()->get('translator');
         
         $final = array();
-        foreach($array as $key => $value)
+        foreach($config as $key => $value)
         {
             if (is_array($value))
             {
@@ -239,6 +257,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
             }
             else
             {
+                // Checking of prefix of the tranlation value
                 if (substr($value, 0, 3) == 'tr_')
                 {
                     $value = $translator->translate($value);

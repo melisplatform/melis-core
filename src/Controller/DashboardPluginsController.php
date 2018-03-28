@@ -21,9 +21,6 @@ class DashboardPluginsController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $isAccessible = null;
         
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $datas = $melisAppConfig->getItemPerPlatform('/meliscore/datas');
-        
         // Check if dashboard is available
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');

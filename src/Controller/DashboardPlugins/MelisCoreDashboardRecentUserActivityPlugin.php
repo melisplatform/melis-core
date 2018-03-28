@@ -45,8 +45,46 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
         return $modelVariable;
     }
     
-    public function testAction()
+    /**
+     * This method will decode the XML in DB to make it in the form of the plugin config file
+     * so it can overide it. Only front key is needed to update.
+     * The part of the XML corresponding to this plugin can be found in $this->pluginXmlDbValue
+     */
+    public function loadDbXmlToPluginConfig()
     {
-        return array('test_sucks');
+        $configValues = array();
+        
+        /* $xml = simplexml_load_string($this->pluginXmlDbValue);
+        if ($xml)
+        {
+            if (!empty($xml->template_path))
+                $configValues['template_path'] = (string)$xml->template_path;
+            if (!empty($xml->pageIdRootBreadcrumb))
+                $configValues['pageIdRootBreadcrumb'] = (string)$xml->pageIdRootBreadcrumb;
+        }
+         */
+        return $configValues;
+    }
+    
+    /**
+     * This method saves the XML version of this plugin in DB, for this pageId
+     * Automatically called from savePageSession listenner in PageEdition
+     */
+    public function savePluginConfigToXml($parameters)
+    {
+        $xmlValueFormatted = '';
+        
+        // template_path is mendatory for all plugins
+        if (!empty($parameters['template_path']))
+            $xmlValueFormatted .= "\t\t" . '<template_path><![CDATA[' . $parameters['template_path'] . ']]></template_path>';
+        if (!empty($parameters['pageIdRootBreadcrumb']))
+            $xmlValueFormatted .= "\t\t" . '<pageIdRootBreadcrumb><![CDATA[' . $parameters['pageIdRootBreadcrumb'] . ']]></pageIdRootBreadcrumb>';
+            
+        // Something has been saved, let's generate an XML for DB
+        $xmlValueFormatted = "\t" . '<' . $this->pluginXmlDbKey . ' id="' . $parameters['melisPluginId'] . '">' .
+            $xmlValueFormatted .
+        "\t" . '</' . $this->pluginXmlDbKey . '>' . "\n";
+        
+        return $xmlValueFormatted;
     }
 }
