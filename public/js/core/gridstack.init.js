@@ -12,8 +12,7 @@
                 draggable: {
                     scroll: true
                 },
-
-                // handle: ".grid-stack-item-content .widget-head:first",
+                handle: ".grid-stack-item-content .widget-head:first",
             };
 
             $('.grid-stack').gridstack(options);
@@ -36,25 +35,35 @@
                 // accept: ".melis-core-dashboard-plugin-snippets",
                 tolerance: 'pointer',
                 drop: function( event, ui ) {
-                    // adding Widget
-                    var grid = $('.grid-stack').data('gridstack');
-                    var gridData = grid.placeholder.data();
-                    var widgetHTML = '<div class="grid-stack-item" data-gs-height="6" data-gs-width="6">';
-                    widgetHTML += ' <div class="grid-stack-item-content added">';
-                    widgetHTML += '     <p>Dashboard (added)</p>';
-                    widgetHTML += ' </div>';
-                    widgetHTML += '</div>';
+                    var request = $.get( "/melis/MelisCore/DashboardPlugins/getPlugin");
+                    request.done(function(data){
+                        // adding Widget
+                        var grid = $('.grid-stack').data('gridstack');
+                        var gridData = grid.placeholder.data();
+                        console.log('data ', $(data.html));
+                        var html = $(data.html);
+                        var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, 6, 6);
 
-                    var widget = grid.addWidget(widgetHTML, gridData.gsX, gridData.gsY, 6, 6);
+                        // remove clone widgets
+                        grid.removeWidget($(widget).prev());
 
-                    // remove clone widgets
-                    grid.removeWidget($(widget).prev());
+
+                    });
 
                 }
             });
         },
 
         serializeWidgetMap: function(items) {
+            $.each(items, function(key, value) {
+                var dataString = $(items[key].el).find('.hidden').text();
+                if(dataString) {
+                    // send dashboard lists
+                    console.log('items ', JSON.parse(dataString) );
+                }
+
+            });
+
             var deffered = [];
 
             var postDashboardNew = $.post( "test.php", { 'choices[]': items[0].x } );
@@ -72,6 +81,8 @@
             var self = this;
             // gridstack change
             $('.grid-stack').on('change', function(event, items) {
+                console.log('event change ', event);
+                console.log('items change ', items);
                 // hide plugin menu
                 $(".melis-core-dashboard-dnd-box").removeClass("shown");
                 self.serializeWidgetMap(items);
