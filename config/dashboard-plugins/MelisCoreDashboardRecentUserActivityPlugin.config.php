@@ -29,7 +29,7 @@
                                     'module' => 'MelisCore',
                                     'controller' => 'Dashboard',
                                     'action' => 'recentActivityUsers',
-                                    'jscallback' => 'console.log("test");',
+                                    'jscallback' => '',
                                     'jsdatas' => array()
                                 ),
                             ),
