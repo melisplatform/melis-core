@@ -8,12 +8,7 @@
                     <div class="melis-core-dashboard-plugin-snippets-box">
                    		<?php foreach ($plugins As $plugin => $pluginDetails){ ?>
                    			<div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($pluginDetails['plugin-description'])?>">
-                   				<div class="plugin-config-cata" 
-                       				<?php 
-                       				    foreach ($pluginDetails As $key => $val)
-                       				        echo 'data-'.$key.'="'.$val.'"';
-               				        ?>
-                   				></div>
+                   				<div class="hidden plugin-json-config"><?php echo json_encode($pluginDetails) ?></div>
                                 <img src="<?php echo $pluginDetails['plugin-thumbnail']?>" alt="">
                                 <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($pluginDetails['plugin-name'])?></span>
                             </div>
