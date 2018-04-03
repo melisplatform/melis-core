@@ -89,13 +89,18 @@ class DashboardPluginsController extends AbstractActionController
         return new JsonModel($data);
     }
     
-    public function savePluginAction()
+    public function saveDashboardPluginsAction()
     {
-        // saving plugin to the dashboard
-    }
-    
-    public function removePlugin()
-    {
-        // removing plugin from dashboard
+        $success = 0;
+        $request = $this->getRequest();
+        $post = $request->getPost();
+        
+        try{
+            $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
+            $dragDropPlugin = $pluginManager->get('MelisCoreDashboardDragDropZonePlugin');
+            $success = $dragDropPlugin->savePlugins(get_object_vars($post));
+        }catch (\Exception $e){}
+        
+        return new JsonModel(array('success' => $success));
     }
 }

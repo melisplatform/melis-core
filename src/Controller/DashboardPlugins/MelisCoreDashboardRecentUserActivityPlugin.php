@@ -65,26 +65,4 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
          */
         return $configValues;
     }
-    
-    /**
-     * This method saves the XML version of this plugin in DB, for this pageId
-     * Automatically called from savePageSession listenner in PageEdition
-     */
-    public function savePluginConfigToXml($parameters)
-    {
-        $xmlValueFormatted = '';
-        
-        // template_path is mendatory for all plugins
-        if (!empty($parameters['template_path']))
-            $xmlValueFormatted .= "\t\t" . '<template_path><![CDATA[' . $parameters['template_path'] . ']]></template_path>';
-        if (!empty($parameters['pageIdRootBreadcrumb']))
-            $xmlValueFormatted .= "\t\t" . '<pageIdRootBreadcrumb><![CDATA[' . $parameters['pageIdRootBreadcrumb'] . ']]></pageIdRootBreadcrumb>';
-            
-        // Something has been saved, let's generate an XML for DB
-        $xmlValueFormatted = "\t" . '<' . $this->pluginXmlDbKey . ' id="' . $parameters['melisPluginId'] . '">' .
-            $xmlValueFormatted .
-        "\t" . '</' . $this->pluginXmlDbKey . '>' . "\n";
-        
-        return $xmlValueFormatted;
-    }
 }

@@ -64,10 +64,6 @@
 
             });
 
-            var deffered = [];
-
-            var postDashboardNew = $.post( "test.php", { 'choices[]': items[0].x } );
-
             /*postDashboardNew.done(function(data) {
              console.log('Success ', data);
              });

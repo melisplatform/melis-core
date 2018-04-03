@@ -28,9 +28,9 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
         $html = '';
         $jsCallBacks = array();
         
-        foreach ($plugins As $key => $val)
+        if (!empty($plugins['plugins']))
         {
-            foreach ($val['d_content']->plugin As $xKey => $xVal)
+            foreach ($plugins['plugins']->plugin As $xKey => $xVal)
             {
                 /**
                  *  CHECKING IF THE PLUGIN IS ACCESSABLE OR MODULE IS ACTIVATED
@@ -41,7 +41,7 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
                         'dashboard_id' => $this->pluginConfig['dashboard_id'],
                         'plugin_id' => (string)$xVal->attributes()->plugin_id
                     )
-                );
+                    );
                 $html .= $viewRender->render($pluginModel);
             }
         }
@@ -67,30 +67,82 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
         if (!empty($dashboardId))
         {
             $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
-            $plugins = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->toArray();
+            $plugin = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->current();
             
-            foreach ($plugins As $key => $val)
+            if (!empty($plugin->d_content))
             {
-                if (!empty($val['d_content']))
-                {
-                    $plugins[$key]['d_content'] = simplexml_load_string($val['d_content']);
-                }
+                $plugins['plugins'] = simplexml_load_string($plugin->d_content);
             }
         }
         
         return $plugins;
     }
     
-    public function savePlugin($plugins)
+    public function savePlugins($plugins)
     {
-        // Dashboard Type
-        // Dashboard Id
-        // Plugin Params to xml
-    }
-    
-    public function removePlugin()
-    {
-        // Dashboard Type
-        // Dashboard Id
+        $success = 0;
+        
+        if (!empty($plugins['dashboard_id']))
+        {
+            if (!empty($plugins['plugins']))
+            {
+                $pluginXml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<Plugins>%s'."\n".'</Plugins>';
+                $pluginXmlData = '';
+                
+                $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
+                
+                foreach ($plugins['plugins'] As $pluginName => $pluginIds)
+                {
+                    $plugin = $pluginManager->get($pluginName);
+                    
+                    if (!empty($pluginIds))
+                    {
+                        foreach ($pluginIds As $pluginId => $config)
+                        {
+                            $pluginXmlData .= "\n".'<plugin plugin="'.$pluginName.'" plugin_id="'.$pluginId.'">'."\n";
+                            $pluginXmlData .= "\t".'<x-axis><![CDATA['.$config['x-axis'].']]></x-axis>'."\n";
+                            $pluginXmlData .= "\t".'<y-axis><![CDATA['.$config['y-axis'].']]></y-axis>'."\n";
+                            $pluginXmlData .= "\t".'<height><![CDATA['.$config['height'].']]></height>'."\n";
+                            $pluginXmlData .= "\t".'<width><![CDATA['.$config['width'].']]></width>'."\n";
+                            $pluginXmlData .= $plugin->savePluginConfigToXml($config);
+                            $pluginXmlData .= '</plugin>';
+                        }
+                    }
+                }
+                
+                $pluginXml = sprintf($pluginXml, $pluginXmlData);
+                
+                $pluginDashboardId = null;
+                
+                $dashboardId = $plugins['dashboard_id'];
+                
+                $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+                $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+                $userId = (int) $userAuthDatas->usr_id;
+                
+                $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
+                $pluginDbData = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->current();
+                
+                if (!empty($pluginDbData))
+                {
+                    $pluginDashboardId = $pluginDbData->d_id;
+                }
+                
+                $pluginDashboard = array(
+                    'd_dashboard_id' => $dashboardId,
+                    'd_user_id' => $userId,
+                    'd_content' => $pluginXml,
+                );
+                
+                $res = $dashboardPluginsTbl->save($pluginDashboard, $pluginDashboardId);
+                
+                if ($res)
+                {
+                    $success = 1;
+                }
+            }
+        }
+        
+        return $success;
     }
 }

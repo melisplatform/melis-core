@@ -46,20 +46,23 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	            
 	            $plugins = simplexml_load_string($plugins->d_content);
 	            
-                foreach ($plugins->plugin As $xKey => $xVal)
-                {
-                    $pluginConfig = $config['plugins'][$module]['dashboard_plugins'][(string)$xVal->attributes()->plugin];
-                    
-                    if (!empty($pluginConfig['interface']) && is_array($pluginConfig['interface']))
-                    {
-                        list($jsCallBacks, $datasCallback) = $melisAppConfig->getJsCallbacksDatas($pluginConfig);
-                    }
-                    
-                    if (!empty($pluginConfig['jscallback']))
-                    {
-                        array_push($jsCallBacks, $pluginConfig['jscallback']);
-                    }
-                }
+	            if (!empty($plugins->plugin))
+	            {
+	                foreach ($plugins->plugin As $xKey => $xVal)
+	                {
+	                    $pluginConfig = $config['plugins'][$module]['dashboard_plugins'][(string)$xVal->attributes()->plugin];
+	                    
+	                    if (!empty($pluginConfig['interface']) && is_array($pluginConfig['interface']))
+	                    {
+	                        list($jsCallBacks, $datasCallback) = $melisAppConfig->getJsCallbacksDatas($pluginConfig);
+	                    }
+	                    
+	                    if (!empty($pluginConfig['jscallback']))
+	                    {
+	                        array_push($jsCallBacks, $pluginConfig['jscallback']);
+	                    }
+	                }
+	            }
 	        }
 	    }
 	    

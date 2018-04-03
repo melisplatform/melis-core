@@ -88,6 +88,11 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         return $request->getPost()->toArray();
     }
     
+    public function savePluginConfigToXml($config)
+    {
+        return '';
+    }
+    
     public function render($pluginConfig = array())
     {
         $this->updatesPluginConfig = $pluginConfig;
@@ -164,6 +169,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         }
         
         $pluginView->pluginConfig = $this->pluginConfig;
+        $pluginView->jsonPluginConfig = json_encode($this->pluginConfig);
         
         if (isset($this->pluginConfig['skip_plugin_container']))
             return $pluginView;
