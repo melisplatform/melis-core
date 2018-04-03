@@ -7,10 +7,10 @@
                     <span class="melis-core-dashboard-filter-btn"><?php echo $module?> <i class="fa fa-angle-down"></i></span>
                     <div class="melis-core-dashboard-plugin-snippets-box">
                    		<?php foreach ($plugins As $plugin => $pluginDetails){ ?>
-                   			<div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($pluginDetails['plugin-description'])?>">
+                   			<div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($pluginDetails['description'])?>">
                    				<div class="hidden plugin-json-config"><?php echo json_encode($pluginDetails) ?></div>
-                                <img src="<?php echo $pluginDetails['plugin-thumbnail']?>" alt="">
-                                <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($pluginDetails['plugin-name'])?></span>
+                                <img src="<?php echo $pluginDetails['thumbnail']?>" alt="">
+                                <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($pluginDetails['name'])?></span>
                             </div>
                    		<?php }?>
                     </div>

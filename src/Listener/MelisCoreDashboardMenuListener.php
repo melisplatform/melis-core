@@ -32,8 +32,6 @@ class MelisCoreDashboardMenuListener extends MelisCoreGeneralListener implements
                     
                     $sm = $e->getApplication()->getServiceManager();
                     
-                    $view = $e->getApplication()->getMvcEvent()->getViewModel();
-                    
                     $plugins = array();
                     
                     $config = $sm->get('config');
@@ -51,15 +49,15 @@ class MelisCoreDashboardMenuListener extends MelisCoreGeneralListener implements
                                 if ($keyPlugin != 'MelisCoreDashboardDragDropZonePlugin')
                                 {
                                     $plugins[$key][$keyPlugin] = array(
-                                        'plugin-module'         => $keyPlugin,
-                                        'plugin-name'           => !empty($plugin['name'])          ? $plugin['name'] : $keyPlugin,
-                                        'plugin-id'             => !empty($plugin['plugin_id'])     ? $plugin['plugin_id']  : '',
-                                        'plugin-width'          => !empty($plugin['width'])         ? $plugin['width']  : '',
-                                        'plugin-height'         => !empty($plugin['height'])        ? $plugin['height']  : '',
-                                        'plugin-description'    => !empty($plugin['description'])   ? $plugin['description']  : '',
-                                        'plugin-icon'           => !empty($plugin['icon'])          ? $plugin['icon'] : '',
-                                        'plugin-thumbnail'      => !empty($plugin['thumbnail'])     ? $plugin['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
-                                        'plugin-is-drag'        => true,
+                                        'module'         => $key,
+                                        'name'           => !empty($plugin['name'])          ? $plugin['name'] : $keyPlugin,
+                                        'plugin_id'      => !empty($plugin['plugin_id'])     ? $plugin['plugin_id']  : '',
+                                        'width'          => !empty($plugin['width'])         ? $plugin['width']  : '',
+                                        'height'         => !empty($plugin['height'])        ? $plugin['height']  : '',
+                                        'description'    => !empty($plugin['description'])   ? $plugin['description']  : '',
+                                        'icon'           => !empty($plugin['icon'])          ? $plugin['icon'] : '',
+                                        'thumbnail'      => !empty($plugin['thumbnail'])     ? $plugin['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
+                                        'is_new_plugin'  => true,
                                     );
                                 }
                             }
@@ -70,9 +68,7 @@ class MelisCoreDashboardMenuListener extends MelisCoreGeneralListener implements
                     $menu->setTemplate('melis-core/dashboard-plugin/dashboard-menu');
                     $menu->setVariable('plugins', $plugins);
                     
-                    $view->addChild($menu, 'dashboardMenu');
-                    
-                    $e->getApplication()->getMvcEvent()->setViewModel($view);
+                    $e->getApplication()->getMvcEvent()->getViewModel()->addChild($menu, 'dashboardMenu');
                 }
             });
         
