@@ -15,6 +15,11 @@ if($schemes) {
     }
 }
 
+$bundle = $this->layout()->bundle;
+
+if($this->layout()->isLogin)
+    $bundle = $this->MelisCoreHeadPlugin('/meliscore_login');
+
 ?>
 <?php echo $this->doctype(); ?>
 <!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -55,21 +60,17 @@ if($schemes) {
 		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
 		        
 		<!-- fonts -->  
-		<link href='/MelisCore/assets/fonts/Open+Sans.css' rel='stylesheet' type='text/css'>
-		<link href='/MelisCore/assets/fonts/Roboto.css' rel='stylesheet' type='text/css'>
-        <link href="/MelisCore/assets/fonts/Monseratt.css" rel="stylesheet">
+		
+
 		      
         <?php 
-            if (!$this->isLogin && !$this->isMelisInstallerRoute)
-                $pluginsFiles = $this->MelisCoreHeadPlugin();
-            else    
-                $pluginsFiles = $this->MelisCoreHeadPlugin('/meliscore_login');
-        	
-        	foreach ($pluginsFiles['css'] as $cssFile) {
-        	    if(strpos($cssFile, 'MelisInstaller') === false) {
-        	        $this->headLink()->appendStylesheet($this->basePath($cssFile));
-        	    }
+        	foreach ($bundle['css'] as $cssFile) {
+				$this->headLink()->appendStylesheet($this->basePath($cssFile));
         	}
+			
+			foreach($bundle['js'] as $jsFile) {
+				$this->headScript()->appendFile($this->basePath($jsFile));
+			}
         		
         	echo $this->headLink();
 		?>
@@ -99,15 +100,6 @@ if($schemes) {
 		 
 		</script>
 		
-		<?php
-        	foreach ($pluginsFiles['js'] as $jsFile) {
-        	    if(strpos($jsFile, 'MelisInstaller') === false) {
-        	        $this->headScript()->appendFile($this->basePath($jsFile));
-        	    }
-        	}
-        		
-        ?>
-        
          <!-- Login page backgroun <style> -->
 	     <?php 
 	     	echo '
@@ -125,13 +117,7 @@ if($schemes) {
 	</head>
 	<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null?>>
 		<?= $this->content; ?>
-		
-		
-		<?php
-        if(!$this->isMelisInstallerRoute)
-		  echo $this->headScript();
-		?>
-		
+		<?= $this->headScript() ?>
 		<!-- modals container -->
 		<div id="melis-modals-container"></div>
 	</body>
