@@ -17,7 +17,7 @@
 
             $('.grid-stack').gridstack(options);
             this.widgetDrag(".melis-core-dashboard-plugin-snippets");
-            this.dropWidget(target);
+            this.dropWidget();
             this.changeWidget();
         },
 
@@ -62,6 +62,10 @@
                         });
                     }
 
+                    // loading effect 
+                    $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets')
+                        .html("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
+
 
                     var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
                     request.done(function(data){
@@ -69,6 +73,9 @@
                         var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
                         // get placeholder data
                         var gridData = grid.placeholder.data();
+
+
+                        console.log('gridata ', $(grid.placeholder) );
                         var html = $(data.html);
                         // add widget to dashboard
                         var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, 6, 6);
@@ -125,7 +132,7 @@
             // gridstack change
             $('.grid-stack').on('change', function(event, items) {
                 // hide plugin menu
-                $(".melis-core-dashboard-dnd-box").removeClass("shown");
+                // $(".melis-core-dashboard-dnd-box").removeClass("shown");
                 self.serializeWidgetMap(items);
             });
         },
