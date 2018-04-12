@@ -62,7 +62,7 @@
                         });
                     }
 
-                    // loading effect 
+                    // loading effect
                     $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets')
                         .html("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
 
@@ -72,14 +72,10 @@
                         // get dashboard gridstack data
                         var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
                         // get placeholder data
-                        var gridData = grid.placeholder.data();
-
-
-                        console.log('gridata ', $(grid.placeholder) );
+                        var gridData = $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets').data()
                         var html = $(data.html);
-                        // add widget to dashboard
+                        // add widget to dashboard default size 6 x 6
                         var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, 6, 6);
-
                         // remove clone widgets
                          grid.removeWidget($(widget).prev());
                     });
@@ -132,7 +128,7 @@
             // gridstack change
             $('.grid-stack').on('change', function(event, items) {
                 // hide plugin menu
-                // $(".melis-core-dashboard-dnd-box").removeClass("shown");
+                $(".melis-core-dashboard-dnd-box").removeClass("shown");
                 self.serializeWidgetMap(items);
             });
         },
