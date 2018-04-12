@@ -97,7 +97,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     {
         $this->updatesPluginConfig = $pluginConfig;
         
-        $this->getPluginConfig();
+        $this->getPluginConfig($generatePluginId);
         
         if (!empty($this->pluginConfig['interface']) && is_array($this->pluginConfig['interface']))
         {

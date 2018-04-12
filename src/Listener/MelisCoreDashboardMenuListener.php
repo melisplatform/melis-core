@@ -50,8 +50,11 @@ class MelisCoreDashboardMenuListener extends MelisCoreGeneralListener implements
                                 {
                                     $plugins[$key][$keyPlugin] = array(
                                         'module'         => $key,
+                                        'plugin'         => $keyPlugin,
                                         'name'           => !empty($plugin['name'])          ? $plugin['name'] : $keyPlugin,
                                         'plugin_id'      => !empty($plugin['plugin_id'])     ? $plugin['plugin_id']  : '',
+                                        'x-axis'         => !empty($plugin['x-axis'])         ? $plugin['x-axis']  : '',
+                                        'y-axis'         => !empty($plugin['y-axis'])        ? $plugin['y-axis']  : '',
                                         'width'          => !empty($plugin['width'])         ? $plugin['width']  : '',
                                         'height'         => !empty($plugin['height'])        ? $plugin['height']  : '',
                                         'description'    => !empty($plugin['description'])   ? $plugin['description']  : '',

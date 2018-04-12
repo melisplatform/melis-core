@@ -42,7 +42,7 @@ class DashboardPluginsController extends AbstractActionController
     {
         // return plugin view
         $request = $this->getRequest();
-        $pluginConfigPost = $request->getPost();
+        $pluginConfigPost = get_object_vars($request->getPost());
         
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
