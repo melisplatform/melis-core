@@ -138,9 +138,11 @@ return array(
 					'/MelisCore/assets/components/modules/admin/forms/elements/select2/assets/lib/css/select2.css',
 					'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css',
 					'/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css',
-				
-                    // Melis Admin
-                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
+
+                    // Data Tables
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css',
 
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
@@ -149,11 +151,11 @@ return array(
                     '/MelisCore/assets/css/admin/module.admin.page.form_elements.min.css',
                     '/MelisCore/assets/css/admin/module.admin.page.tables_responsive.min.css',
 
-                    // Data Tables
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css',
-                    
+
+                    // Melis Admin
+                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
+
+
                     // Bootstrap Dialog
                     '/MelisCore/css/bootstrap-dialog.min.css',
 
@@ -189,6 +191,19 @@ return array(
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
+
+
+                    // flot charts
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/custom/js/flotcharts.common.js?v=v1.2.3',
+
+                    //datepicker translations
+                    '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
+
                     '/MelisCore/js/core/tabExpander.js',
                     '/MelisCore/js/core/melisSidebar.js',
                     '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
@@ -206,19 +221,6 @@ return array(
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
-                    // flot charts
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/custom/js/flotcharts.common.js?v=v1.2.3',
-
-                    //datepicker translations
-                    '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
-					
-					'/MelisCore/js/core/login.js',
-                    '/MelisCore/js/core/melispasswordservice.js',
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
