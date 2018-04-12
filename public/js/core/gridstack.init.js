@@ -98,10 +98,11 @@ var melisDashBoardDragnDrop = {
             // check dashboard data
             if(dataTxt) {
                 // get dynamic dashboard value
-                var dashboardX = value.x;
-                var dashboardY = value.y;
-                var dashboardWidth = value.width;
-                var dashboardHeight = value.height;
+                var itemData = $(value).data();
+                var dashboardX = itemData.gsX;
+                var dashboardY = itemData.gsY;
+                var dashboardWidth = itemData.gsWidth;
+                var dashboardHeight = itemData.gsHeight;
                 // JSON parse dashboard txt
                 var pluginConfig = JSON.parse(dataTxt);
                 $.each(pluginConfig, function(index, value){
