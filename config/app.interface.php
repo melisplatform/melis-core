@@ -108,17 +108,9 @@ return array(
             ),
             'ressources' => array(
                 'css' => array(
-					'/MelisCore/css/OpenSans.css',
-					'/MelisCore/css/Roboto.css',
-					'/MelisCore/css/Monseratt.css',
-				
-					'/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
-					'/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
-					'/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
-					'/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
-					'/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
-					'/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
-					'/MelisCore/assets/components/library/animate/animate.min.css',
+					'https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700',
+					'https://fonts.googleapis.com/css?family=Roboto:400,300,700',
+					'https://fonts.googleapis.com/css?family=Montserrat:300,400,700',
 
 					'/MelisCore/assets/components/library/jquery-ui/css/jquery-ui.min.css',
 					'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
@@ -155,6 +147,14 @@ return array(
                     // Melis Admin
                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
 
+                    '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
+                    '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
+                    '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
+                    '/MelisCore/assets/components/library/animate/animate.min.css',
+                    '/MelisCore/assets/components/modules/admin/tables/responsive/assets/lib/css/footable.core.min.css',
 
                     // Bootstrap Dialog
                     '/MelisCore/css/bootstrap-dialog.min.css',
@@ -228,7 +228,7 @@ return array(
                  */
                 'build' => [
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => true,
+                    'use_build_assets' =>  true,
 
                     // path to where the build CSS and JS are located
                     'css_build_path' => 'public/assets/css/',
