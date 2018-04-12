@@ -3421,7 +3421,7 @@ div#modal-user-management div.widget {
     font-weight: normal;
     letter-spacing: 1px;
     color: #fff;
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 1px;
     border-radius: 2px;
     border-bottom: 1px solid #2c2c2c;
@@ -3477,7 +3477,7 @@ div#modal-user-management div.widget {
     margin-top: 10px;
     color: #fff;
     letter-spacing: 0.4px;
-    font-size: 10px;
+    font-size: 12px;
     transition: color 0.4s;
     -webkit-transition: color 0.4s;
     -moz-transition: color 0.4s;
