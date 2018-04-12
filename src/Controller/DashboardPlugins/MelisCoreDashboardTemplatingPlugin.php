@@ -93,7 +93,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         return '';
     }
     
-    public function render($pluginConfig = array())
+    public function render($pluginConfig = array(), $generatePluginId = false)
     {
         $this->updatesPluginConfig = $pluginConfig;
         
@@ -133,7 +133,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         return $this->sendViewResult($model);
     }
     
-    public function getPluginConfig()
+    public function getPluginConfig($generatePluginId = false)
     {
         $config = $this->getServiceLocator()->get('config');
         
@@ -146,6 +146,15 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadDbXmlToPluginConfig());
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadGetDataPluginConfig());
         $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadPostDataPluginConfig());
+        
+        // Generate pluginId if needed
+        if ($generatePluginId)
+        {
+            if (!empty($this->pluginConfig['plugin_id']))
+            {
+                $this->pluginConfig['plugin_id'] .= '_'.time();
+            }
+        }
         
         $this->pluginConfig = $this->translateConfig($this->pluginConfig);
     }

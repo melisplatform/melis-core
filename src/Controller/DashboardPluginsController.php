@@ -42,23 +42,18 @@ class DashboardPluginsController extends AbstractActionController
     {
         // return plugin view
         $request = $this->getRequest();
-        $postVals = $request->getPost();
+        $pluginConfigPost = $request->getPost();
         
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
         
-        $module = 'meliscore';
-        $pluginName = 'MelisCoreDashboardRecentUserActivityPlugin';
-        $dashboardid = 'id_meliscore_center_dashboard';
-        $pluginid = 'RecentUserActivity_2';
+        $module = $pluginConfigPost['module'];
+        $pluginName = $pluginConfigPost['plugin'];
+        
+        $newPlugin = (isset($pluginConfigPost['is_new_plugin'])) ? true : false;
         
         $plugin = $pluginManager->get($pluginName);
-        $pluginModel = $plugin->render(
-            array(
-                'dashboard_id' => $dashboardid,
-                'plugin_id' => $pluginid
-            )
-        );
+        $pluginModel = $plugin->render($pluginConfigPost, $newPlugin);
         
         $html = $viewRender->render($pluginModel);
         

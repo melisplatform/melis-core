@@ -41,7 +41,7 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
                         'dashboard_id' => $this->pluginConfig['dashboard_id'],
                         'plugin_id' => (string)$xVal->attributes()->plugin_id
                     )
-                    );
+                );
                 $html .= $viewRender->render($pluginModel);
             }
         }
