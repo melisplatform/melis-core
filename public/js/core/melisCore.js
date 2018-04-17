@@ -137,6 +137,36 @@ var melisCore = (function(window){
         });
     }
 
+    $body.find("#flash-messenger").mouseleave(function () {
+        clearFlashMessages();
+    });
+
+    function  clearFlashMessages() {
+        $.ajax({
+            type: 'GET',
+            url: '/melis/MelisCore/MelisFlashMessenger/clearFlashMessage',
+            dataType: 'json',
+        }).success(function(data, status, xhr){
+            if(data.flashMessage) {
+                if($flashMessenger.hasClass("empty-notif")===false)
+                    $flashMessenger.addClass("empty-notif");
+                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
+                    $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
+
+                $body.find("#flash-messenger").empty();
+                tempData = "" +
+                    '<li class="empty-notif-li">' +
+                    '<div class="media">' +
+                    "<span>"+data.trans+"</span>" +
+                    '</div>' +
+                    '</li>';
+                $body.find("#flash-messenger").append(tempData);
+            }
+        }).error(function(){
+            alert( translations.tr_meliscore_error_message );
+        });
+    }
+
     // FIRST RENDER - runs when the page is first loaded
     function firstRender(){
         $(".nav-tabs li:first-child").addClass("active")
