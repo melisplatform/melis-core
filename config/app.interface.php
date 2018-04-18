@@ -231,17 +231,16 @@ return array(
                     'use_build_assets' =>  true,
 
                     // path to where the build CSS and JS are located
-                    'css_build_path' => 'public/assets/css/',
-                    'js_build_path'  => 'public/assets/js/',
+                    'build_path' => 'public/build/',
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/assets/css/bundle.css',
+                        '/MelisCore/build/css/bundle.css',
 
                     ],
                     'js' => [
 						'/melis/get-translations',
-                        '/assets/js/bundle.js',
+                        '/MelisCore/build/js/bundle.js',
                     ]
                 ]
             ),
