@@ -108,10 +108,6 @@ return array(
             ),
             'ressources' => array(
                 'css' => array(
-					'https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700',
-					'https://fonts.googleapis.com/css?family=Roboto:400,300,700',
-					'https://fonts.googleapis.com/css?family=Montserrat:300,400,700',
-
 					'/MelisCore/assets/components/library/jquery-ui/css/jquery-ui.min.css',
 					'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
 					'/MelisCore/assets/components/modules/admin/charts/easy-pie/assets/lib/css/jquery.easy-pie-chart.css',
