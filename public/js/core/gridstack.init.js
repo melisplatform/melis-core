@@ -94,15 +94,14 @@ var melisDashBoardDragnDrop = {
         $.each(items, function(key, value) {
             // var dataTxt = $(items[key].el).find('.dashboard-plugin-json-config').text();
             var dataTxt = $(value).find('.dashboard-plugin-json-config').text();
-
             // check dashboard data
             if(dataTxt) {
                 // get dynamic dashboard value
                 var itemData = $(value).data();
-                var dashboardX = itemData.gsX;
-                var dashboardY = itemData.gsY;
-                var dashboardWidth = itemData.gsWidth;
-                var dashboardHeight = itemData.gsHeight;
+                var dashboardX = itemData._gridstack_node.x;
+                var dashboardY = itemData._gridstack_node.y;
+                var dashboardWidth = itemData._gridstack_node.width;
+                var dashboardHeight = itemData._gridstack_node.height;
                 // JSON parse dashboard txt
                 var pluginConfig = JSON.parse(dataTxt);
                 $.each(pluginConfig, function(index, value){
