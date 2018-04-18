@@ -886,9 +886,14 @@ newplugin-cont span,
 .melis-modal-cont .modal-content p{
     margin-bottom: 4px;
 }
-/* css hack fix causing blur modal chrome only */
-.modal.in .modal-dialog {
-    -webkit-filter: blur(0.00001px);
+/* css hack fix causing blur and flicker modal chrome only */
+/* css hack fix causing tooltip blur modal mozilla only */
+.modal.in .modal-dialog,
+.modal.fade .modal-dialog {
+    -webkit-transform: inherit;
+    -moz-transform: inherit;
+    -o-transform: inherit;
+    transform: inherit;
 }
 
 
