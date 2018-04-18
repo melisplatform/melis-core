@@ -136,13 +136,6 @@ return array(
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
                     '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
 
-                    '/MelisCore/assets/css/admin/module.admin.page.form_elements.min.css',
-                    '/MelisCore/assets/css/admin/module.admin.page.tables_responsive.min.css',
-
-
-                    // Melis Admin
-                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
-
                     '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
                     '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
@@ -151,6 +144,16 @@ return array(
                     '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
                     '/MelisCore/assets/components/library/animate/animate.min.css',
                     '/MelisCore/assets/components/modules/admin/tables/responsive/assets/lib/css/footable.core.min.css',
+
+                    // admin
+                    '/MelisCore/assets/css/admin/module.admin.page.form_elements.min.css',
+                    '/MelisCore/assets/css/admin/module.admin.page.tables_responsive.min.css',
+
+
+                    // Melis Admin
+                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
+
+
 
                     // Bootstrap Dialog
                     '/MelisCore/css/bootstrap-dialog.min.css',
@@ -225,7 +228,6 @@ return array(
                 'build' => [
                     // set to "true" if you want to use the build assets
                     'use_build_assets' =>  true,
-
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 

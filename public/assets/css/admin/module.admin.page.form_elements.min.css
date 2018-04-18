@@ -2356,6 +2356,9 @@ textarea.form-control:focus {
 }
 
 .btn {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
     text-shadow: none;
     box-shadow: none !important;
     -moz-box-shadow: none !important;
@@ -4567,7 +4570,7 @@ html.csstransitions.csstransforms3d .panel-3d.panel-flip .back {
     border: 1px solid #e5e5e5;
     position: relative;
     overflow: hidden;
-    margin: 0 0 15px
+    margin: 0;
 }
 
 .tabsbar ul {
@@ -10772,13 +10775,6 @@ html.csstransitions.csstransforms3d .panel-3d.panel-flip .back {
     }
 }
 
-.tabsbar {
-    height: 62px;
-    border: 1px solid #e5e5e5;
-    position: relative;
-    overflow: hidden;
-    margin: 0 0 15px
-}
 
 .tabsbar ul {
     list-style: none;
