@@ -19,6 +19,7 @@ var melisDashBoardDragnDrop = {
         this.widgetDrag(".melis-core-dashboard-plugin-snippets");
         this.dropWidget();
         this.changeWidget();
+        this.deleteWidget();
     },
 
     widgetDrag: function(widget) {
@@ -133,6 +134,13 @@ var melisDashBoardDragnDrop = {
             self.serializeWidgetMap( $(items[0]._grid.container[0].children) );
         });
     },
+
+    deleteWidget: function() {
+        var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
+        $("body").on("click", ".dashboard-plugin-delete", function() {
+            grid.removeWidget($(this).closest('.grid-stack-item'));
+        });
+    }
 };
 
 // init
