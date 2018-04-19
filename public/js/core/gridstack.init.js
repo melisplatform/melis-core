@@ -2,6 +2,15 @@
  * Created by conta on 2/23/2018.
  */
 
+// Binding elements
+$("body").on("click", ".dashboard-plugin-delete", function() {
+    melisDashBoardDragnDrop.deleteWidget($(this));
+});
+
+$("body").on("click", ".dashboard-plugin-refresh", function() {
+    melisDashBoardDragnDrop.refreshWidget($(this));
+});
+
 var melisDashBoardDragnDrop = {
     init: function() {
         var options = {
@@ -94,16 +103,14 @@ var melisDashBoardDragnDrop = {
         $.each(items, function(key, value) {
             // var dataTxt = $(items[key].el).find('.dashboard-plugin-json-config').text();
             var dataTxt = $(value).find('.dashboard-plugin-json-config').text();
-
             // check dashboard data
             if(dataTxt) {
                 // get dynamic dashboard value
                 var itemData = $(value).data();
-                console.log('itemData', itemData);
-                var dashboardX = itemData.gsX;
-                var dashboardY = itemData.gsY;
-                var dashboardWidth = itemData.gsWidth;
-                var dashboardHeight = itemData.gsHeight;
+                var dashboardX = itemData._gridstack_node.x;
+                var dashboardY = itemData._gridstack_node.y;
+                var dashboardWidth = itemData._gridstack_node.width;
+                var dashboardHeight = itemData._gridstack_node.height;
                 // JSON parse dashboard txt
                 var pluginConfig = JSON.parse(dataTxt);
                 $.each(pluginConfig, function(index, value){
@@ -130,11 +137,91 @@ var melisDashBoardDragnDrop = {
         var self = this;
         // gridstack change
         $('.grid-stack').on('change', function(event, items) {
-            // hide plugin menu
-            $(".melis-core-dashboard-dnd-box").removeClass("shown");
-            self.serializeWidgetMap( $(items[0]._grid.container[0].children) );
+            if(items) {
+                // hide plugin menu
+                $(".melis-core-dashboard-dnd-box").removeClass("shown");
+                self.serializeWidgetMap( $(items[0]._grid.container[0].children) );
+            }
         });
     },
+
+    deleteWidget: function(el) {
+        var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
+            var self = el;
+            melisCoreTool.confirm(
+                translations.tr_melistoolcalendar_delete_event_btn_yes,
+                translations.tr_melistoolcalendar_delete_event_btn_no,
+                'Delete Dashboard',
+                'Are you sure you want to delete this dashboard',
+                function() {
+                    grid.removeWidget(self.closest('.grid-stack-item'));
+                    if( $('#'+activeTabId+' .grid-stack .grid-stack-item').length === 0 ) {
+                        var dataString = new Array;
+                        // create dashboard array
+                        dataString.push({
+                            name: 'dashboard_id',
+                            value: activeTabId
+                        });
+                        // save dashboard lists
+                        var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+                    }
+                }
+            );
+    },
+    refreshWidget: function(el) {
+        var dataString = new Array;
+        // create dashboard array
+        dataString.push({
+            name: 'dashboard_id',
+            value: activeTabId
+        });
+        var dashboardItem = $(el).closest('.grid-stack-item');
+        var dataTxt = $(dashboardItem).find('.dashboard-plugin-json-config').text();
+
+        // check dataTxt
+        if(dataTxt) {
+            console.log('dataTxt if ', dataTxt);
+            var pluginConfig = JSON.parse(dataTxt);
+            $.each(pluginConfig, function(index, value){
+                // check and modify w h value
+                if(index == "width" && value == "") { value = 6 };
+                if(index == "height" && value == "") { value = 6 };
+                // push to dashboard array
+                dataString.push({
+                    name: index,
+                    value: value
+                });
+            });
+            var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+
+            request.done(function(data){
+                console.log('data ', data);
+                /*// get dashboard gridstack data
+                var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
+                // get placeholder data
+                var gridData = $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets').data()
+                var html = $(data.html);
+                // add widget to dashboard default size 6 x 6
+                var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, 6, 6);
+                // remove clone widgets
+                grid.removeWidget($(widget).prev());*/
+            });
+        }
+        // $(el).closest('.grid-stack-item').append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
+        // get plugin menu data
+        /*var pluginMenu = $(ui.helper[0]).find(".plugin-json-config").text();
+
+
+
+        // loading effect
+        $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets')
+            .html("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");*!/
+
+        var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+        request.done(function(data){
+
+        });*/
+    }
 };
 
 // init
