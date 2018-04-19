@@ -177,15 +177,18 @@ var melisDashBoardDragnDrop = {
         });
         var dashboardItem = $(el).closest('.grid-stack-item');
         var dataTxt = $(dashboardItem).find('.dashboard-plugin-json-config').text();
+        var dashboardData =  dashboardItem.data('_gridstack_node');
 
         // check dataTxt
         if(dataTxt) {
-            console.log('dataTxt if ', dataTxt);
             var pluginConfig = JSON.parse(dataTxt);
             $.each(pluginConfig, function(index, value){
-                // check and modify w h value
-                if(index == "width" && value == "") { value = 6 };
-                if(index == "height" && value == "") { value = 6 };
+                // here modify x y w h of the plugin
+                if(index == "x-axis") { value = dashboardData.x }
+                if(index == "y-axis") { value = dashboardData.y }
+                if(index == "width") { value = dashboardData.width }
+                if(index == "height") { value = dashboardData.height }
+
                 // push to dashboard array
                 dataString.push({
                     name: index,
@@ -194,33 +197,29 @@ var melisDashBoardDragnDrop = {
             });
             var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
+            // loading effect
+            dashboardItem.append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
+
             request.done(function(data){
-                console.log('data ', data);
-                /*// get dashboard gridstack data
+
+                // get dashboard gridstack data
                 var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
-                // get placeholder data
-                var gridData = $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets').data()
+
+                // remove loader
+                $(dashboardItem).find('.overlay-loader').remove();
+                grid.removeWidget($(dashboardItem));
                 var html = $(data.html);
+                if(data.jsCallbacks.length) {
+                    $.each(data.jsCallbacks, function(index, value) {
+                        eval(value);
+                    });
+
+                }
+
                 // add widget to dashboard default size 6 x 6
-                var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, 6, 6);
-                // remove clone widgets
-                grid.removeWidget($(widget).prev());*/
+                var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
             });
         }
-        // $(el).closest('.grid-stack-item').append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
-        // get plugin menu data
-        /*var pluginMenu = $(ui.helper[0]).find(".plugin-json-config").text();
-
-
-
-        // loading effect
-        $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets')
-            .html("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");*!/
-
-        var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
-        request.done(function(data){
-
-        });*/
     }
 };
 

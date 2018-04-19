@@ -16,7 +16,7 @@
                         'description' => 'tr_meliscore_dashboard_Recent Activity description',
                         'icon' => 'fa fa-users',
                         'thumbnail' => '',
-                        'jscallback' => '',
+                        'jscallback' => 'console.log("James")',
                         
                         'interface' => array(
                             'meliscore_dashboard_recent_activity_users' => array(
@@ -29,7 +29,7 @@
                                     'module' => 'MelisCore',
                                     'controller' => 'Dashboard',
                                     'action' => 'recentActivityUsers',
-                                    'jscallback' => '',
+                                    'jscallback' => 'console.log("Bryan")',
                                     'jsdatas' => array()
                                 ),
                             ),
