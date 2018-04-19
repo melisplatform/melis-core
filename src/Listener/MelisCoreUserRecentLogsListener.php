@@ -34,7 +34,7 @@ class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implement
     		    $userId = (int) $userAuthDatas->usr_id;
     		    
     		    $logSrv = $sm->get('MelisCoreLogService');
-    		    $recentUserLogs = $logSrv->getLogList(null, null, $userId, null, null, null, 50, 'desc');
+    		    $recentUserLogs = $logSrv->getLogList(null, null, $userId, null, null, null, 10, 'desc');
     		    
     		    $flashMsgSrv = $sm->get('MelisCoreFlashMessenger');
     		    
@@ -42,6 +42,7 @@ class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implement
     		    
         		foreach ($recentUserLogs As $key => $val)
         		{
+
         		    // Retrieving the Log from Log Entity
         		    $log = $val->getLog();
         		    

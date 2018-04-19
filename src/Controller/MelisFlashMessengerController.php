@@ -58,6 +58,23 @@ class MelisFlashMessengerController extends AbstractActionController
             'flashMessage' => $fmArray,
         ));
     }
+    public function clearFlashMessageAction(){
+        // translator service
+        $translator = $this->serviceLocator->get('translator');
+
+        // flash messenger service
+        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+
+        // clear flash message
+        $flashMessenger->clearFlashMessage();
+
+        $noNotiff = $translator->translate('tr_meliscore_no_notificaions');
+
+        return new JsonModel(array(
+            'flashMessage' => true,
+            'trans' => $noNotiff,
+        ));
+    }
     
     /**
      * Returns the flash messages content
