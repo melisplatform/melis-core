@@ -10,3 +10,7 @@
 .grid-stack .grid-stack-placeholder>.placeholder-content {
     background: #981a1f;
 }
+
+.grid-stack {
+    min-height: 700px;
+}
