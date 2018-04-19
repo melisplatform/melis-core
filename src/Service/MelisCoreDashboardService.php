@@ -25,13 +25,17 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	    $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
 	    $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
 	    
+	    $userId = null;
 	    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-	    $userId = (int) $userAuthDatas->usr_id;
+	    if (!empty($userAuthDatas->usr_id))
+	    {
+	        $userId = (int) $userAuthDatas->usr_id;
+	    }
 	    
 	    $jsCallBacks = array();
 	    $datasCallback = array();
 	    
-	    if (!empty($dashboardId) && !empty($userId))
+	    if (!empty($dashboardId) && !is_null($userId))
 	    {
 	        $plugins = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->current();
 	        
