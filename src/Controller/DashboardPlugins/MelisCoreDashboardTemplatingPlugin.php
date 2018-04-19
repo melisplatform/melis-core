@@ -44,6 +44,11 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     
     public function __construct()
     {
+        $className = explode('\\', get_class($this));
+        if (count($className) > 0)
+            $className = $className[count($className) - 1];
+            $this->pluginName = $className;
+            
         $this->setEventManager(new EventManager());
         $container = new Container('meliscore');
         $this->locale = $container['melis-lang-locale'];
@@ -155,6 +160,8 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
                 $this->pluginConfig['plugin_id'] .= '_'.time();
             }
         }
+        
+        $this->pluginConfig['module'] = $this->pluginModule;
         
         $this->pluginConfig = $this->translateConfig($this->pluginConfig);
     }

@@ -10,13 +10,14 @@
 namespace MelisCore\Controller\DashboardPlugins;
 
 use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
+use Zend\View\Model\ViewModel;
 
 class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTemplatingPlugin
 {
     public function __construct()
     {
-        $this->pluginName = 'MelisCoreDashboardRecentUserActivityPlugin';
         $this->pluginModule = 'meliscore';
+        parent::__construct();
     }
     
     public function modelVars()
@@ -43,6 +44,14 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
         );
         
         return $modelVariable;
+    }
+    
+    public function testAction()
+    {
+        $view = new ViewModel();
+        
+        $view->setTemplate('melis-core/dashboard-plugin/no-template');
+        return $view;
     }
     
     /**
