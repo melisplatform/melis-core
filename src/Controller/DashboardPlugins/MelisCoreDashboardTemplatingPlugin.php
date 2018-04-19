@@ -75,7 +75,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     }
     
     abstract public function modelVars();
-    
+
     public function loadDbXmlToPluginConfig()
     {
         return array();
@@ -132,7 +132,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         else 
         {
             $model = $this->modelVars();
-            
+
         }
         
         return $this->sendViewResult($model);
@@ -183,7 +183,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         {
             $pluginView = $modelVars;
         }
-        
+
         $pluginView->pluginConfig = $this->pluginConfig;
         $pluginView->jsonPluginConfig = json_encode($this->pluginConfig);
         

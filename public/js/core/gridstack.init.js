@@ -169,7 +169,58 @@ var melisDashBoardDragnDrop = {
             );
     },
     refreshWidget: function(el) {
+        var dataString = new Array;
+        // create dashboard array
+        dataString.push({
+            name: 'dashboard_id',
+            value: activeTabId
+        });
+        var dashboardItem = $(el).closest('.grid-stack-item');
+        var dataTxt = $(dashboardItem).find('.dashboard-plugin-json-config').text();
 
+        // check dataTxt
+        if(dataTxt) {
+            console.log('dataTxt if ', dataTxt);
+            var pluginConfig = JSON.parse(dataTxt);
+            $.each(pluginConfig, function(index, value){
+                // check and modify w h value
+                if(index == "width" && value == "") { value = 6 };
+                if(index == "height" && value == "") { value = 6 };
+                // push to dashboard array
+                dataString.push({
+                    name: index,
+                    value: value
+                });
+            });
+            var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+
+            request.done(function(data){
+                console.log('data ', data);
+                /*// get dashboard gridstack data
+                var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
+                // get placeholder data
+                var gridData = $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets').data()
+                var html = $(data.html);
+                // add widget to dashboard default size 6 x 6
+                var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, 6, 6);
+                // remove clone widgets
+                grid.removeWidget($(widget).prev());*/
+            });
+        }
+        // $(el).closest('.grid-stack-item').append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
+        // get plugin menu data
+        /*var pluginMenu = $(ui.helper[0]).find(".plugin-json-config").text();
+
+
+
+        // loading effect
+        $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets')
+            .html("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");*!/
+
+        var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+        request.done(function(data){
+
+        });*/
     }
 };
 
