@@ -22,7 +22,6 @@ class LogController extends AbstractActionController
     {
         $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
 
-//         $result = $logSrv->getLogList();
         $result = $logSrv->getLogTypeByTypeCode('UPDATE_USER_INFO');;
 
         echo '<pre>';

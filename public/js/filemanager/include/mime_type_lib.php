@@ -550,8 +550,3 @@ if ( ! function_exists('get_file_mime_type'))
  * php mime_type_lib.php
  ********************/
 
-
-/* REMOVE ME TO TEST
-echo get_file_mime_type( 'test.txt' ) . "\n";
-echo print_r( get_file_mime_type( 'image.jpg', true ), true ) . "\n";
-REMOVE ME TO TEST */

@@ -457,10 +457,6 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $select = '';
             $selectColDef = '';
             if($selectCheckbox){
-//                $select = 'select: {
-//                             style:    "os",
-//                             selector: "td:first-child"
-//                          },';
                 $selectColDef = '{
                                 "targets": 0,                                   
                                  "bSortable":false,                                 
