@@ -18,18 +18,6 @@ use Zend\Session\Container;
  */
 class LogController extends AbstractActionController
 {
-    public function testFunctionAction()
-    {
-        $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
-
-        $result = $logSrv->getLogTypeByTypeCode('UPDATE_USER_INFO');;
-
-        echo '<pre>';
-        print_r($result);
-        echo '<pre>';
-        return new JsonModel();
-    }
-
     /**
      * Render Log Tool page
      *

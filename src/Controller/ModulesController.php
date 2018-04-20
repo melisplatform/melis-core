@@ -229,13 +229,6 @@ class ModulesController extends AbstractActionController
         return $modulesList;
     }
 
-    public function testerAction()
-    {
-
-        print_r($this->getModules());
-        die;
-    }
-
     /**
      * Returns the module that is dependent to the provided module
      * @return JsonModel
