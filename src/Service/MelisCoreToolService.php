@@ -1123,7 +1123,6 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 
         if(is_object($content))  {
             $content = $content->getArrayCopy();
-            // $content = get_object_vars($content);
         }
 
         if(is_array($content)) {
