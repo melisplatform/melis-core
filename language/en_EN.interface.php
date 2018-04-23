@@ -568,6 +568,7 @@
         'tr_meliscore_platform_scheme' => 'Platform Scheme',
         'tr_meliscore_platform_scheme_subtitle' => 'Customize here the colors and images of the platform.',
         'tr_meliscore_platform_color_scheme' => 'Color schemes',
+        'tr_meliscore_platform_color' => 'Color',
         'tr_meliscore_platform_scheme_images' => 'Title &amp; images',
         'tr_meliscore_platform_color_primary' => 'Primary Color',
         'tr_meliscore_platform_color_secondary' => 'Secondary Color',
