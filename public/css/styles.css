@@ -2269,7 +2269,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         display: none;
     }
     .navbar.main.navbar-primary .appbrand{
-        margin-left: -15px;
+        float: left;
+        margin: 0;
     }
     .navbar.main.navbar-primary .appbrand img{
         margin-right: 10px;
