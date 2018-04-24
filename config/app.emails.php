@@ -9,7 +9,7 @@ return array(
                     'headers' => array(
                         'from' => 'noreply@melistechnology.com',
                         'from_name' => 'Melis Technology',
-                        'replyTo' => '',
+                        'replyTo' => 'noreply@melistechnology.com',
                         'tags' => 'USER_LOGIN,URL',
                     ),
                     'contents' => array(
@@ -31,7 +31,7 @@ return array(
                     'headers' => array(
                         'from' => 'noreply@melistechnology.com',
                         'from_name' => 'Melis Technology',
-                        'replyTo' => '',
+                        'replyTo' => 'noreply@melistechnology.com',
                         'tags' => 'NAME,EMAIL,LOGIN,PASSWORD',
                     ),
                     'contents' => array(
@@ -53,7 +53,7 @@ return array(
                     'headers' => array(
                         'from' => 'noreply@melistechnology.com',
                         'from_name' => 'Melis Technology',
-                        'replyTo' => '',
+                        'replyTo' => 'noreply@melistechnology.com',
                         'tags' => 'NAME,PASSWORD',
                     ),
                     'contents' => array(
