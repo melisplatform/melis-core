@@ -268,6 +268,8 @@
 	    'tr_meliscore_delete_file_unable' => 'Unable to delete file, please try again later',
 	    'tr_meliscore_delete_file_rights_issue' => 'Unable to delete file, please check your rights',
 	    'tr_meliscore_delete_file_not_exists' => 'Unable to delete file, file does not exists',
+	    'tr_meliscore_file_not_exists' => 'File was not found.',
+	    'tr_meliscore_file_exists' => 'File was found.',
 	    // Image
 	    'tr_meliscore_delete_image_title' => 'Delete image',
 	    'tr_meliscore_delete_image_confirm_msg' => 'Are you sure you want to delete this image?',

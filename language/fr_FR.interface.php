@@ -269,6 +269,8 @@
 	    'tr_meliscore_delete_file_unable' => 'Impossible de supprimer le fichier, veuillez réessayer plus tard',
 	    'tr_meliscore_delete_file_rights_issue' => 'Impossible de supprimer le fichier, veuillez vérifier vos droits',
 	    'tr_meliscore_delete_file_not_exists' => 'Impossible de supprimer, le fichier n\'existe pas',
+        'tr_meliscore_file_not_exists' => 'Fichier non trouvé.',
+        'tr_meliscore_file_exists' => 'Fichier trouvé.',
 	    // Image
 	    'tr_meliscore_delete_image_title' => 'Supprimer l\'image',
 	    'tr_meliscore_delete_image_confirm_msg' => 'Êtes-vous sûr de vouloir supprimer cette image?',

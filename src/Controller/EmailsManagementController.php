@@ -589,13 +589,53 @@ class EmailsManagementController extends AbstractActionController
         $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $emailsDetails = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_emails_mngt_tool/forms/meliscore_emails_mngt_tool_emails_details_form','meliscore_emails_mngt_tool_emails_details_form');
         $emailsDetailsForm = $factory->createForm($emailsDetails);
+
+        // Get Layout file's status
+        $layoutStatus = $this->getLayoutFileStatus($generalPropertiesForm->get('boe_content_layout')->getValue());
         
         $view->coreLangDatas =  $coreLangResult;
         $view->setVariable('meliscore_emails_mngt_tool_general_properties_form', $generalPropertiesForm);
         $view->setVariable('meliscore_emails_mngt_tool_emails_details_form', $emailsDetailsForm);
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         $view->codename = $codename;
+        $view->layout   = $layoutStatus;
+
         return $view;
+    }
+
+    /**
+     * Returns true when the file exists on the specified path
+     * @return array
+     */
+    protected function getLayoutFileStatus(string $path = '') : array
+    {
+        if (empty($path)) return [];
+
+        $translator = $this->getServiceLocator()->get('translator');
+        $fileStatus= [
+            'status' => false,
+            'msg' => $translator->translate('tr_meliscore_file_not_exists') // File was not found.
+        ];
+        // construct file path
+        $internalPath   = explode('/', $path);
+        $fileName       = $internalPath[count($internalPath) - 1];
+        $module         = $internalPath[0]; //str_replace(' ', '', ucwords(str_replace('-', ' ', $internalPath[0])));
+
+        // Getting subfolders
+        $subfolders     = '';
+        for ($i = 1; $i < count($internalPath) - 1; $i++) {
+            $subfolders .= $internalPath[$i] . '/';
+        }
+
+        $internalPath   = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/' . $module .'/' . $subfolders . $fileName;
+
+        // Scan the path for the layout file
+        if (is_file($internalPath) && file_exists($internalPath)) {
+            $fileStatus['status']   = true;
+            $fileStatus['msg']      = $translator->translate('tr_meliscore_file_exists'); // File was found.
+        }
+
+        return $fileStatus;
     }
 
     /*
