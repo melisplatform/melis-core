@@ -1238,5 +1238,24 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         return str_replace(array("'", "’"), chr(92) . "'", $text);
     }
 
+    /**
+     * Check if the platform has connected to internet
+     * @return bool
+     */
+    public function isConnected()
+    {
+        $connected = @fsockopen("www.google.com", 80);
+        //website, port  (try 80 or 443)
+        if ($connected){
+            $isCon = true; //action when connected
+            fclose($connected);
+        }else{
+            $isCon = false; //action in connection failure
+        }
+
+        return $isCon;
+
+    }
+
 	
 }

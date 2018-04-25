@@ -122,15 +122,16 @@ class IndexController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+        $coreTool        =  $this->getServiceLocator()->get('MelisCoreTool');
         $modules         =  $moduleSvc->getAllModules();
         $platformVersion =  $moduleSvc->getModulesAndVersions('MelisCore');
 
         $request = $this->getRequest();
         $uri     = $request->getUri();
 
-        $domain   = $uri->getHost();
-        $scheme   = $uri->getScheme();
-
+        $domain        = $uri->getHost();
+        $scheme        = $uri->getScheme();
+        $netConnection = $coreTool->isConnected();
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -138,7 +139,7 @@ class IndexController extends AbstractActionController
         $view->modules = serialize($modules);
         $view->scheme  = $scheme;
         $view->domain  = $domain;
-
+        $view->netConn = $netConnection;
         return $view;
     }
     
@@ -183,5 +184,4 @@ class IndexController extends AbstractActionController
         return $view;
     }
 
-    
 }

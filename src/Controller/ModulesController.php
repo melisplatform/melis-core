@@ -45,6 +45,7 @@ class ModulesController extends AbstractActionController
     {
         $translator      = $this->getServiceLocator()->get('translator');
         $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+        $coreTool        =  $this->getServiceLocator()->get('MelisCoreTool');
         $modules         = $moduleSvc->getAllModules();
 
         $melisKey = $this->params()->fromRoute('melisKey', '');
@@ -58,12 +59,14 @@ class ModulesController extends AbstractActionController
         $domain = isset($get['domain']) ? $get['domain'] : null;
         $scheme = isset($get['scheme']) ? $get['scheme'] : null;
         $melisKey = $this->params()->fromRoute('melisKey', '');
+        $netStatus = $coreTool->isConnected();
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->modules = serialize($modules);
         $view->scheme  = $scheme;
         $view->domain  = $domain;
+        $view->netStatus  = $netStatus;
 
         return $view;
     }

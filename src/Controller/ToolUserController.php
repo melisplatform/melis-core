@@ -133,6 +133,8 @@ class ToolUserController extends AbstractActionController
         // add action column
         $columns['actions'] = array('text' => $translator->translate('tr_meliscore_global_action'), 'css' => 'width:10%');
 
+        $netStatus = $melisTool->isConnected();
+
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -145,6 +147,7 @@ class ToolUserController extends AbstractActionController
 
         $view->scheme  = $scheme;
         $view->domain  = $domain;
+        $view->netStatus  = $netStatus;
 
         return $view;
     }
