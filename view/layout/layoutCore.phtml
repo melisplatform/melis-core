@@ -65,18 +65,23 @@ if($this->layout()->isLogin)
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
 
 		      
-        <?php 
+        <?php
+        if(isset($bundle['css'])) {
         	foreach ($bundle['css'] as $cssFile) {
 				$this->headLink()->appendStylesheet($this->basePath($cssFile));
         	}
-			
-			foreach($bundle['js'] as $jsFile) {
-				$this->headScript()->appendFile($this->basePath($jsFile));
-			}
-        		
+
+
         	echo $this->headLink();
+        }
+
+        if(isset($bundle['js'])) {
+            foreach($bundle['js'] as $jsFile) {
+                $this->headScript()->appendFile($this->basePath($jsFile));
+            }
+        }
 		?>
-<!--        <link href="/MelisCore/melis/platform-color-schemes.css" media="screen" rel="stylesheet" type="text/css">-->
+        
         <link href="/assets/css/schemes.css" media="screen" rel="stylesheet" type="text/css">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
