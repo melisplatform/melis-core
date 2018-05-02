@@ -24,13 +24,18 @@ class MelisCoreDashboardMenuListener extends MelisCoreGeneralListener implements
         $callBackHandler = $events->attach(
             MvcEvent::EVENT_DISPATCH,
             function(MvcEvent $e){
+                
+                $sm = $e->getApplication()->getServiceManager();
+                
+                $melisCoreAuth = $sm->get('MelisCoreAuth');
+                
                 // Avoid ajax request
-                if (!$e->getApplication()->getMvcEvent()->getRequest()->isXmlHttpRequest())
+                if (!$e->getApplication()->getMvcEvent()->getRequest()->isXmlHttpRequest() && $melisCoreAuth->hasIdentity())
                 {
                     // Get route match to know if we are displaying in back or front
                     $routeMatch = $e->getRouteMatch();
                     
-                    $sm = $e->getApplication()->getServiceManager();
+                    
                     
                     $plugins = array();
                     
