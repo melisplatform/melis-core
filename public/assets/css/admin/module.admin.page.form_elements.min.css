@@ -9975,7 +9975,7 @@ html.csstransitions.csstransforms3d .panel-3d.panel-flip .back {
 
 .modal-backdrop {
     z-index: 10000;
-    background: #fff
+    background: #000;
 }
 
 .modal-backdrop,
