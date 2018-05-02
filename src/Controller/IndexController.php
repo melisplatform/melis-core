@@ -36,8 +36,11 @@ class IndexController extends AbstractActionController
 
         $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
+		
+		$bundleAsset = $this->getServiceLocator()->get('MelisAssetManagerWebPack')->getAssets();
 
         $this->layout()->setVariable('schemes', $schemeData);
+        $this->layout()->setVariable('bundle', $bundleAsset);
 
     	return $view;
     }
