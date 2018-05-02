@@ -447,8 +447,6 @@ class PlatformSchemeController extends AbstractActionController
             'action' => 'getStyleColorCss'
         ]);
 
-//        $css = $this->forward()->dispatch(__NAMESPACE__.'\\'.'PlatformScheme', ['action' => 'getStyleColorCss']);
-//        print_r($css->getContent());
         echo $content;
         die;
     }

@@ -57,17 +57,9 @@ class MelisGenericTable extends AbstractHelper
         $colCss = array();
         $dataClass = '';
         $thClass = '';
-//         if(is_array($css) && count($css) > 0)
-//         {
-//             foreach($css as $cssVal)
-//             {
-//                 $colCss[] = $cssVal;
-//             }
-//         }
-        
+
         foreach($columnText as $values)
         {
-            //$text .= '<th '.$dataClass.' style="'.$colCss[$ctr].'" class="'.$class.'">' . $values . '</th>';
             $text .= '<th '.$dataClass.' class="'.$class.'">' . $values . '</th>';
             $ctr++;
         }

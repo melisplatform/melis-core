@@ -74,14 +74,7 @@ if (isset($_POST['name']))
 		exit;
 	}
 }
-//echo $_GET['action'];
 $info = pathinfo($path);
-//print_r($info);
-//if (isset($info['extension']) && !(isset($_GET['action']) && $_GET['action']=='delete_folder') && !in_array(strtolower($info['extension']), $ext) && $_GET['action'] != 'create_file')
-//{
-//	response(trans('wrong extension').AddErrorLocation())->send();
-//	exit;
-//}
 
 if (isset($_GET['action']))
 {
@@ -162,14 +155,11 @@ if (isset($_GET['action']))
 			}
 			break;
 		case 'create_folder':
-//			if ($create_folders)
-//			{
 
 				$name = fix_filename($_POST['name'],$config);
 				$path .= $name;
 				$path_thumb .= $name;
 				create_folder(fix_path($path,$config),fix_path($path_thumb,$config),$ftp,$config);
-//			}
 			break;
 		case 'rename_folder':
 			if ($rename_folders){
@@ -478,8 +468,6 @@ if (isset($_GET['action']))
 			break;
 		case 'save_text_file':
 			$content = $_POST['new_content'];
-			// $content = htmlspecialchars($content); not needed
-			// $content = stripslashes($content);
 
 			if($ftp){
 				$tmp = time();

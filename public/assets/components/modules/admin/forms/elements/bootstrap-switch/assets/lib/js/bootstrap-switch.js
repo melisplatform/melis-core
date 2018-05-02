@@ -120,14 +120,6 @@
             });
 
             // commented to disable clicks except the middle separator
-            
-//            $switchLeft.on('click', function (e) {
-//              changeStatus($(this));
-//            });
-
-//            $switchRight.on('click', function (e) {
-//              changeStatus($(this));
-//            });
 
             $element.find(inputSelector).on('change', function (e, skipOnChange) {
               var $this = $(this)
