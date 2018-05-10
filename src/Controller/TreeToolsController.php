@@ -18,14 +18,15 @@ use MelisCore\Service\MelisCoreRightsService;
  */
 class TreeToolsController extends AbstractActionController
 {
-    const CORE           = 'core';
-    const CMS            = 'cms';
-    const MARKETING      = 'marketing';
-    const COMMERCE       = 'commerce';
-    const OTHERS         = 'others';
-    const BUSINESS_APPS  = 'business_apps';
-    private $tools       = [];
-    private $loadedTools = [];
+    const CORE             = 'core';
+    const CMS              = 'cms';
+    const MARKETING        = 'marketing';
+    const COMMERCE         = 'commerce';
+    const OTHERS           = 'others';
+    const BUSINESS_APPS    = 'business_apps';
+    private $tools         = [];
+    private $loadedTools   = [];
+    private $businessTools = [];
 
 	/**
 	 * Renders the leftmenu accordion/tree of tools 
@@ -167,6 +168,9 @@ class TreeToolsController extends AbstractActionController
     public function categorizedAction()
     {
         print_r($this->getOrderedToolsTree());
+//        $this->getOrderedToolsTree();
+//        print_r($this->loadedTools);
+
         die;
     }
 
@@ -174,7 +178,7 @@ class TreeToolsController extends AbstractActionController
     {
         $path            = 'meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree/interface';
         $toolsTreeConfig = $this->getServiceLocator()->get('MelisCoreConfig')->getItem($path);
-        $toolsTree       = $this->getToolsTreeConfigByCategory($toolsTreeConfig);
+        $toolsTree       = array_merge($this->getToolsTreeConfigByCategory($toolsTreeConfig), $this->getBusinessAppToolsTree($toolsTreeConfig));
 
         return $toolsTree;
     }
@@ -214,25 +218,44 @@ class TreeToolsController extends AbstractActionController
 
                     if (isset($item['interface'])) {
                         foreach($item as $childKey => $childItem) {
-                            if (!in_array($childKey, $this->loadedTools)) {
-                                $this->getToolsTreeConfigByCategory($childItem);
-                            }
+                            $this->getToolsTreeConfigByCategory($childItem);
                         }
                     }
 
                     $this->loadedTools[$key] = $key;
 
                 } else {
-
-                    if (!in_array($key, $this->loadedTools)) {
-                        $this->tools[self::BUSINESS_APPS][$key] = $item;
-                    }
-
                     $this->getToolsTreeConfigByCategory($item);
                 }
+
+
             }
         }
 
         return $this->tools;
+    }
+
+    protected function getBusinessAppToolsTree($items)
+    {
+        if (is_array($items)) {
+
+            foreach ($items as $key => $item) {
+                if(!in_array($key, $this->loadedTools)) {
+                    $this->loadedTools[$key] = $key;
+                    $this->businessTools[self::BUSINESS_APPS][$key] = $item;
+
+                    if (isset($item['interface'])) {
+                        foreach($item as $childKey => $childItem) {
+                            $this->getToolsTreeConfigByCategory($childItem);
+                        }
+                    }
+
+                    $this->getBusinessAppToolsTree($item);
+                }
+            }
+        }
+
+
+        return $this->businessTools;
     }
 }
