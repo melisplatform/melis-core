@@ -227,7 +227,7 @@ return array(
                  */
                 'build' => [
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' =>  true,
+                    'use_build_assets' =>  false,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
@@ -456,6 +456,7 @@ return array(
                                         'name' => 'tr_meliscore_system_configuration',
                                         'icon' => 'fa-sliders',
                                         'rights_checkbox_disable' => true,
+                                        'category' => 'others'
                                     ),
                                     'interface' => array(
                                         // PhpUnit
@@ -761,6 +762,7 @@ return array(
                                                 'icon' => 'fa-envelope-o',
                                                 'rights_checkbox_disable' => true,
                                                 'follow_regular_rendering' => false,
+                                                'category' => 'cms'
                                             ),
                                             'forward' => array(
                                                 'module' => 'MelisCore',
@@ -1036,6 +1038,8 @@ return array(
                                         'name' => 'tr_meliscore_menu_toolstree_section_Admin',
                                         'icon' => 'fa-institution',
                                         'rights_checkbox_disable' => true,
+
+                                        'category' => 'core',
                                     ),
                                     'interface' => array(
                                         'meliscore_tool_user' => array( // tool User Management
@@ -1046,6 +1050,8 @@ return array(
                                                 'icon' => 'fa-users',
                                                 'rights_checkbox_disable' => true,
                                                 'follow_regular_rendering' => false,
+
+
                                             ),
                                             'forward' => array(
                                                 'module' => 'MelisCore',
@@ -1060,6 +1066,7 @@ return array(
                                                         'id' => 'id_meliscore_tool_user_header',
                                                         'name' => 'tr_meliscore_tool_gen_header',
                                                         'melisKey' => 'meliscore_tool_user_header',
+
                                                     ),
                                                     'forward' => array(
                                                         'module' => 'MelisCore',
@@ -1205,6 +1212,7 @@ return array(
                                                                 'id' => 'id_meliscore_tool_user_view_date_connection_handler',
                                                                 'name' => 'tr_meliscore_tool_user_view_date_connection_handler',
                                                                 'melisKey' => 'meliscore_tool_user_view_date_connection_handler',
+
                                                             ),
                                                             'forward' => array(
                                                                 'module' => 'MelisCore',

@@ -1,6 +1,3 @@
-
-
-
 <div id="menu">
     <?php
     
@@ -39,20 +36,20 @@
 
         	    		foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
         	    		{
-//        	    			if ($keyConfig != 'meliscore_leftmenu_identity' && $keyConfig != 'meliscore_footer')
-//        	    			{
+        	    			if ($keyConfig != 'meliscore_leftmenu_identity' && $keyConfig != 'meliscore_footer')
+        	    			{
 //        	    				echo $this->$keyConfig;
-//        	    			}
-                            if ($keyConfig == 'meliscore_leftmenu_dashboard')
-                            {
-                                echo $this->$keyConfig;
-                            }
+        	    			}
+//                            if ($keyConfig == 'meliscore_leftmenu_dashboard')
+//                            {
+//                                echo $this->$keyConfig;
+//                            }
         	    		}
         	    	}
         	 	?>
 
-                <li class="toolstree" id="toolstre_meliscore" class="hasSubmenu" data-meliskey="toolstre_meliscore">
-                    <a data-target="#tools" data-toggle="collapse" class="" aria-expanded="true">
+                <li id="toolstre_meliscore" class="toolstree hasSubmenu" data-meliskey="toolstre_meliscore">
+                    <a data-target="#meliscore_tools" data-toggle="collapse" class="" aria-expanded="true">
                         <div class="melis-svg-icon pull-left">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                 <g>
@@ -67,10 +64,26 @@
                         <label class="toolstree-label"><?= $this->translate('MelisCore') ?></label>
                         <div class="clearfix"></div>
                     </a>
+                    <ul class="collapse" id="meliscore_tools" aria-expanded="false">
+
+                        <?php
+                        if (!empty($this->zoneconfig['interface']))
+                        {
+                            foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+                            {
+                                if ($keyConfig != 'meliscore_leftmenu_identity' && $keyConfig != 'meliscore_footer')
+                                {
+        	    				    echo $this->$keyConfig;
+                                }
+
+                            }
+                        }
+                        ?>
+                    </ul>
                 </li>
 
-                <li class="toolstree" id="toolstre_meliscms" class="hasSubmenu" data-meliskey="toolstre_meliscms">
-                    <a data-target="#tools" data-toggle="collapse" class="" aria-expanded="true">
+                <li class="toolstree_meliscms" id="toolstre_meliscms" class="hasSubmenu" data-meliskey="toolstre_meliscms">
+                    <a data-target="#meliscms_tools" data-toggle="collapse" class="" aria-expanded="true">
                         <div class="melis-svg-icon pull-left">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                 <g>
@@ -87,8 +100,8 @@
                     </a>
                 </li>
 
-                <li class="toolstree" id="toolstre_melismarketing" class="hasSubmenu" data-meliskey="toolstre_melismarketing">
-                    <a data-target="#tools" data-toggle="collapse" class="" aria-expanded="true">
+                <li class="toolstree_marketing" id="toolstre_melismarketing" class="hasSubmenu" data-meliskey="toolstre_melismarketing">
+                    <a data-target="#marketing_tools" data-toggle="collapse" class="" aria-expanded="true">
                         <div class="melis-svg-icon pull-left">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                 <g>
@@ -105,8 +118,8 @@
                     </a>
                 </li>
 
-                <li class="toolstree" id="toolstre_meliscommerce" class="hasSubmenu" data-meliskey="toolstre_meliscommerce">
-                    <a data-target="#tools" data-toggle="collapse" class="" aria-expanded="true">
+                <li class="toolstree_meliscommerce" id="toolstre_meliscommerce" class="hasSubmenu" data-meliskey="toolstre_meliscommerce">
+                    <a data-target="#meliscommerce_tools" data-toggle="collapse" class="" aria-expanded="true">
                         <div class="melis-svg-icon pull-left">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                 <g>
@@ -123,8 +136,8 @@
                     </a>
                 </li>
 
-                <li class="toolstree" id="toolstre_others" class="hasSubmenu" data-meliskey="toolstre_others">
-                    <a data-target="#tools" data-toggle="collapse" aria-expanded="true">
+                <li class="toolstree_others" id="toolstre_others" class="hasSubmenu" data-meliskey="toolstre_others">
+                    <a data-target="#tools_others" data-toggle="collapse" aria-expanded="true">
                         <div class="melis-svg-icon pull-left">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                 <g>
