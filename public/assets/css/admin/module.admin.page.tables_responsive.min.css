@@ -1,13 +1,3 @@
-@import '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css';
-@import '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css';
-@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css';
-@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css';
-@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css';
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700);
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
-@import '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css';
-@import '/MelisCore/assets/components/library/animate/animate.min.css';
-@import '/MelisCore/assets/components/modules/admin/tables/responsive/assets/lib/css/footable.core.min.css';
 html {
     -webkit-font-smoothing: antialiased !important;
     height: 100%

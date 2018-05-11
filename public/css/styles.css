@@ -3622,3 +3622,8 @@ div#modal-user-management div.widget {
     }
 }
 
+@media (min-width: 768px){
+    .modal-error-cont b {
+        width: 31% !important;
+    }
+}
