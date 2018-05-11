@@ -12,11 +12,18 @@
                     	<a class="btn btn-default dashboard-plugin-delete"><i class="fa fa-trash"></i></a>
                         <a class="btn btn-default dashboard-plugin-refresh"><i class="fa fa-refresh"></i></a>
                     </div>
-                    <h3 class="heading"><i class="<?php echo $this->translate($this->pluginConfig['icon']); ?>"></i> <?php echo $this->translate($this->pluginConfig['name']); ?> - <?php echo $this->pluginConfig['plugin_id'] ?></h3>
+                    <h3 class="heading"><i class="<?php echo $this->translate($this->pluginConfig['icon']); ?>"></i> <?php echo $this->translate($this->pluginConfig['name']); ?></h3>
                 </div>
                 <div class="widget-body padding-none">
                 	<div class="hidden dashboard-plugin-json-config">
-                		<?php echo $this->jsonPluginConfig?>
+                		<?php 
+                		    /**
+                		     * Plugin config hidden, this plugin congif
+                		     * used to generate plugin by using this to a POST/GET request
+                		     * in generating plugin
+                		     */
+                		    echo $this->jsonPluginConfig
+        		        ?>
                 	</div>
                     <?php echo $this->pluginView ?>
                 </div>

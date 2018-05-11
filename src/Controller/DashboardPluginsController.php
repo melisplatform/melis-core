@@ -14,8 +14,17 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
 
+/**
+ * This class handles the request from AJAX call in 
+ * generating plugin and saving Dashboard plugins
+ */
 class DashboardPluginsController extends AbstractActionController
 {
+    /**
+     * This render the Dashboard plugins Drag and Drop Zone
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
     public function renderDashboardPluginsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
@@ -38,6 +47,34 @@ class DashboardPluginsController extends AbstractActionController
         return $view;
     }
     
+    /**
+     * This method used to generate Dashboard plugin 
+     * requested from a forward() request
+     * 
+     * @return Zend\View\Model\ViewModel;
+     */
+    public function generateDahsboardPluginAction()
+    {
+        $plugin = $this->params()->fromRoute('plugin');
+        $function = $this->params()->fromRoute('function');
+        
+        try 
+        {
+            $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
+            $tmp = $pluginManager->get($plugin);
+            return $tmp->$function(); 
+        }
+        catch (\Exception $e)
+        {
+            echo $e->getMessage();
+        }
+    }
+    
+    /**
+     * This method handles the AJAX request to generate plugin
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
     public function getPluginAction()
     {
         // return plugin view
@@ -84,18 +121,37 @@ class DashboardPluginsController extends AbstractActionController
         return new JsonModel($data);
     }
     
+    /**
+     * This method manage saving Dashboard plugins
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
     public function saveDashboardPluginsAction()
     {
         $success = 0;
         $request = $this->getRequest();
         $post = $request->getPost();
+        $result = array();
         
         try{
+            /**
+             * Calling MelisCoreDashboardDragDropZonePlugin to save Dashboard plugins
+             */
             $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
             $dragDropPlugin = $pluginManager->get('MelisCoreDashboardDragDropZonePlugin');
             $success = $dragDropPlugin->savePlugins(get_object_vars($post));
-        }catch (\Exception $e){}
+            
+            $result = array(
+                'success' => $success
+            );
+            
+        }catch (\Exception $e){ 
+            $result = array(
+                'success' => $success,
+                'message' => $e->getMessage()
+            );
+        }
         
-        return new JsonModel(array('success' => $success));
+        return new JsonModel($result);
     }
 }

@@ -12,6 +12,9 @@ namespace MelisCore\Controller\DashboardPlugins;
 use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
 use Zend\View\Model\ViewModel;
 
+use MelisCore\Service\MelisCoreRightsService;
+use Zend\Session\Container;
+
 class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTemplatingPlugin
 {
     public function __construct()
@@ -46,32 +49,63 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
         return $modelVariable;
     }
     
-    public function testAction()
+    public function recentActivityUsers()
     {
-        $view = new ViewModel();
+        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
         
-        $view->setTemplate('melis-core/dashboard-plugin/no-template');
-        return $view;
-    }
-    
-    /**
-     * This method will decode the XML in DB to make it in the form of the plugin config file
-     * so it can overide it. Only front key is needed to update.
-     * The part of the XML corresponding to this plugin can be found in $this->pluginXmlDbValue
-     */
-    public function loadDbXmlToPluginConfig()
-    {
-        $configValues = array();
+        $melisKeys = $melisAppConfig->getMelisKeys();
+        $fullKeyToolUser = $melisKeys['meliscore_tool_user'];
         
-        /* $xml = simplexml_load_string($this->pluginXmlDbValue);
-        if ($xml)
+        // Check if User can access the users' tool for making links on users' names
+        $xmlRights = $melisCoreAuth->getAuthRights();
+        $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, 'meliscore_tool_user');
+        
+        $toolName = '';
+        $toolId = '';
+        $toolMelisKey = '';
+        $toolIcon = '';
+        $itemConfigToolUser = $melisAppConfig->getItem($fullKeyToolUser);
+        if ($itemConfigToolUser)
         {
-            if (!empty($xml->template_path))
-                $configValues['template_path'] = (string)$xml->template_path;
-            if (!empty($xml->pageIdRootBreadcrumb))
-                $configValues['pageIdRootBreadcrumb'] = (string)$xml->pageIdRootBreadcrumb;
+            $toolName = $itemConfigToolUser['conf']['name'];
+            $toolId = $itemConfigToolUser['conf']['id'];
+            $toolMelisKey = $itemConfigToolUser['conf']['melisKey'];
+            $toolIcon = $itemConfigToolUser['conf']['icon'];
         }
-         */
-        return $configValues;
+        else
+            $isAccessible = false; // Not possible in theory
+            
+        $container = new Container('meliscore');
+        $locale = $container['melis-lang-locale'];
+        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        
+        // Max lines
+        $maxLines = 8;
+        if (!empty($this->pluginConfig['max_lines']))
+            $maxLines = $this->pluginConfig['max_lines'];
+            
+        // Getting last users' logged in
+        $users = $userTable->getLastLoggedInUsers((int)$maxLines);
+        if ($users)
+        {
+            $users = $users->toArray();
+            foreach ($users as $keyUser => $user)
+            {
+                $users[$keyUser]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($user['usr_last_login_date']));
+            }
+        }
+        
+        $view = new ViewModel();
+        $view->setTemplate('melis-core/dashboard-plugin/recent-user-activity');
+        $view->users = $users;
+        $view->toolIsAccessible = $isAccessible;
+        $view->toolName = $toolName;
+        $view->toolId = $toolId;
+        $view->toolMelisKey = $toolMelisKey;
+        $view->toolIcon = $toolIcon;
+        return $view;
     }
 }

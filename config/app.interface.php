@@ -91,6 +91,13 @@ return array(
                              * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
                              */
                         ),
+                        'dashboard_plugin' => array(
+                            'default_ctrl' => '',
+                            'default_action' => '',
+                            'default_plugins' => array(
+                                
+                            )
+                        )
                     ),
                     'langauges' => array(
                         'default_trans_files' => array(
@@ -155,12 +162,6 @@ return array(
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
-
-                    // gridstack
-                    '/MelisCore/assets/components/plugins/gridstack/js/lodash.min.js',
-                    '/MelisCore/assets/components/plugins/gridstack/js/gridstack.min.js',
-                    '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
-                    '/MelisCore/js/core/gridstack.init.js',
                 ),
                 'css' => array(
                     // Melis Admin
@@ -184,13 +185,9 @@ return array(
                     // Plugins Move css group
                     'MelisCore/css/plugin.group.css',
 
-                    // gridstack
-                    '/MelisCore/assets/components/plugins/gridstack/css/gridstack.min.css',
-
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
                     '/MelisCore/css/diagnostic.css',
-
                     
                     // Custom font-awesome checkbox
                     '/MelisCore/css/custom-fontawesome.css'
@@ -1263,57 +1260,6 @@ return array(
                 ),
             )
         ),
-//         'meliscore_dashboard' => array(
-//             'conf' => array(
-//                 'id' => 'id_meliscore_center_dashboard',
-//                 'name' => 'tr_meliscore_center_Melis Dashboard',
-//                 'melisKey' => 'meliscore_center_dashboard',
-//                 'icon' => 'fa-tachometer'
-//             ),
-//             'forward' => array(
-//                 'module' => 'MelisCore',
-//                 'controller' => 'Dashboard',
-//                 'action' => 'dashboard',
-//                 'jscallback' => '',
-//                 'jsdatas' => array()
-//             ),
-//             'interface' => array(
-//                 'meliscore_dashboard_recent_activity' => array(
-//                     'conf' => array(
-//                         'id' => 'id_meliscore_dashboard_recent_activity',
-//                         'name' => 'tr_meliscore_dashboard_Recent Activity',
-//                         'melisKey' => 'meliscore_dashboard_recent_activity',
-//                         'width' => 6,
-//                         'height' => 'dashboard-medium',
-//                     ),
-//                     'forward' => array(
-//                         'module' => 'MelisCore',
-//                         'controller' => 'Dashboard',
-//                         'action' => 'recentActivity',
-//                         'jscallback' => '',
-//                         'jsdatas' => array()
-//                     ),
-//                     'interface' => array(
-//                         'meliscore_dashboard_recent_activity_users' => array(
-//                             'conf' => array(
-//                                 'id' => 'id_meliscore_dashboard_recent_activity_users',
-//                                 'name' => 'tr_meliscore_dashboard_recent_activity_Users',
-//                                 'melisKey' => 'meliscore_dashboard_recent_activity_users',
-//                                 'icon' => 'parents',
-//                                 'maxLines' => 8,
-//                             ),
-//                             'forward' => array(
-//                                 'module' => 'MelisCore',
-//                                 'controller' => 'Dashboard',
-//                                 'action' => 'recentActivityUsers',
-//                                 'jscallback' => '',
-//                                 'jsdatas' => array()
-//                             ),
-//                         ),
-//                     ),
-//                 ),
-//             ),
-//         ),
         'meliscore_login' => array(
             'ressources' => array(
                 'js' => array(

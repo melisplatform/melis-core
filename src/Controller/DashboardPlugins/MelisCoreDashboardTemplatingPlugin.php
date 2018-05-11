@@ -20,10 +20,9 @@ use Zend\EventManager\EventManagerInterface;
 use Zend\Stdlib\Parameters;
 use Zend\Session\Container;
 use Zend\Stdlib\ArrayUtils;
-// use Zend\Session\Container;
 
 /**
- *  
+ *  Class that handle the Dashboard plugin 
  */
 abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implements ServiceLocatorAwareInterface
 {
@@ -74,8 +73,6 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         return $this->eventManager;
     }
     
-    abstract public function modelVars();
-
     public function loadDbXmlToPluginConfig()
     {
         return array();
@@ -98,12 +95,21 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         return '';
     }
     
+    /**
+     * This method render a plugin to a view
+     * 
+     * @param array $pluginConfig - plugin array that applies to a plugin 
+     * @param string $generatePluginId - option to generate plugin id
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
     public function render($pluginConfig = array(), $generatePluginId = false)
     {
         $this->updatesPluginConfig = $pluginConfig;
         
         $this->getPluginConfig($generatePluginId);
         
+        // Checking plugin interface otherwise return view with error message
         if (!empty($this->pluginConfig['interface']) && is_array($this->pluginConfig['interface']))
         {
             foreach ($this->pluginConfig['interface'] As $cKey => $cVal)
@@ -131,13 +137,22 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         }
         else 
         {
-            $model = $this->modelVars();
-
+            /*  
+             * Plugin config no interface
+             */
+            $model = new ViewModel();
+            $model->setTemplate('melis-core/dashboard-plugin/no-plugin-interface');
         }
         
         return $this->sendViewResult($model);
     }
     
+    /**
+     * This method return plugin final config
+     * includes Dabatase, Post and Get dats and construct a final config
+     * 
+     * @param boolean $generatePluginId - option to generate plugin id
+     */
     public function getPluginConfig($generatePluginId = false)
     {
         $config = $this->getServiceLocator()->get('config');
@@ -148,9 +163,9 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         
         $this->getPluginValueFromDb();
         
-        $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadDbXmlToPluginConfig());
-        $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadGetDataPluginConfig());
-        $this->pluginConfig = ArrayUtils::merge($this->pluginConfig, $this->loadPostDataPluginConfig());
+        $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadDbXmlToPluginConfig());
+        $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadGetDataPluginConfig());
+        $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadPostDataPluginConfig());
         
         // Generate pluginId if needed
         if ($generatePluginId)
@@ -166,39 +181,37 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $this->pluginConfig = $this->translateConfig($this->pluginConfig);
     }
     
+    /**
+     * Creating view of the plugin
+     * with adding datas to to view and setting up the container of the plugin
+     * 
+     * @param unknown $modelVars - the view generate from interface
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
     public function sendViewResult($modelVars)
     {
-        if (empty($this->pluginConfig['interface']))
-        {
-            $pluginView = new ViewModel();
-            
-            $pluginView->setTemplate($this->pluginConfig['template_path']);
-            
-            foreach ($modelVars As $key => $var)
-            {
-                $pluginView->$key = $var;
-            }
-            
-        }
-        else 
-        {
-            $pluginView = $modelVars;
-            
-            // TODO : removing interface from plugin rendered view config json
-            unset($this->pluginConfig['interface']);
-        }
         
-        
+        // Removing interface from plugin rendered view config json
+        unset($this->pluginConfig['interface']);
 
-        $pluginView->pluginConfig = $this->pluginConfig;
-        $pluginView->jsonPluginConfig = json_encode($this->pluginConfig);
+        $modelVars->pluginConfig = $this->pluginConfig;
+        $modelVars->jsonPluginConfig = json_encode($this->pluginConfig);
         
+        // Skipping container of a plugin
         if (isset($this->pluginConfig['skip_plugin_container']))
-            return $pluginView;
+            return $modelVars;
             
-        return $this->setPluginContainer($pluginView);
+        return $this->setPluginContainer($modelVars);
     }
     
+    /**
+     * Setting up plugin container
+     * 
+     * @param unknown $pluginView - plugin view
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
     public function setPluginContainer($pluginView)
     {
         // Setting the plugin view container
@@ -263,6 +276,65 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
                 }
             }
         }
+    }
+    
+    /**
+     * Updating the current plugin config values to from
+     * a new config values
+     *
+     * This will only update keys that only existing on the
+     * plugin config array
+     *
+     * @param array $pluginConfig
+     * @param array $newPluginConfig
+     * @return array
+     */
+    public function updateFrontConfig($pluginConfig, $newPluginConfig)
+    {
+        if (!empty($newPluginConfig))
+        {
+            foreach ($pluginConfig As $key => $val)
+            {
+                /*
+                 * Checking if the key is exisitng on the new config
+                 */
+                if (isset($newPluginConfig[$key]))
+                {
+                    
+                    if (is_array($val) && is_array($newPluginConfig[$key]))
+                    {
+                        /**
+                         * Checking if the value are the same interger array
+                         * this will override the current
+                         *
+                         * else the key of the array is a associative
+                         */
+                        if ((is_numeric(key($val)) || empty($val)) && is_numeric(key($newPluginConfig[$key])))
+                        {
+                            $pluginConfig[$key] = $newPluginConfig[$key];
+                        }
+                        else
+                        {
+                            $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig[$key]);
+                        }
+                    }
+                    else
+                    {
+                        // Assigning new data
+                        $pluginConfig[$key] = $newPluginConfig[$key];
+                    }
+                }
+                else
+                {
+                    if (is_array($val))
+                    {
+                        $pluginConfig[$key] = $this->updateFrontConfig($val, $newPluginConfig);
+                    }
+                }
+            }
+        }
+        
+        return $pluginConfig;
     }
     
     /**

@@ -217,11 +217,6 @@
 	    
 	    'tr_meliscore_common_online' => 'Online',
 			
-		// Dashboard
-	    'tr_meliscore_dashboard_Recent Activity' => 'Recent activity',
-	    'tr_meliscore_dashboard_recent_activity_Users' => 'Users',
-	    'tr_meliscore_dashboard_recent_activity_Logged in' => 'logged in',
-
 		'tr_meliscore_dashboard_Calendar' => 'Calendar',
 	    
 	    // Date Picker
@@ -608,11 +603,23 @@
         'tr_melis_user_tabs_close_all_open_tabs' => 'Close all tabs',
 	    
 	    // Dashboard Plugins
-	    'tr_melisore_Plugins' => 'Plugins',
-        'tr_melis_core_common_close' => 'Close',
-        'tr_melis_core_common_add' => 'Add',
+	    
 
         //Diagnostic
-        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration'
+        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
+	    
+	    // Dashboard plugins
+	    'tr_melisore_Plugins' => 'Plugins',
+	    'tr_melis_core_common_close' => 'Close',
+	    'tr_melis_core_common_add' => 'Add',
+	    'tr_melis_core_remove_dashboard_plugin' => 'Remove dashboard plugin',
+	    'tr_melis_core_remove_dashboard_plugin_msg' => 'Are you sure you want to remove this plugin',
+	    
+	    'tr_PluginSection_meliscore' => 'Melis Core',
+	    
+	    'tr_meliscore_dashboard_Recent Activity' => 'Recent activity',
+	    'tr_meliscore_dashboard_Recent Activity description' => 'This plugin display the list of User recent activity',
+	    'tr_meliscore_dashboard_recent_activity_Users' => 'Users',
+	    'tr_meliscore_dashboard_recent_activity_Logged in' => 'logged in',
 	);
 ?>

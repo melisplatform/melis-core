@@ -102,6 +102,20 @@ class PluginViewController extends AbstractActionController
 
         if($melisKeyFollow || $isXmlHttpRequest)
         {
+            /**
+             * Dashboard plugin interface
+             */
+            if (!empty($itemConfig['forward']) && !empty($itemConfig['forward']['plugin']))
+            {
+                // Setting the controller calling the dashboard plugins after forward
+                $itemConfig['forward']['controller'] = 'DashboardPlugins';
+                $itemConfig['forward']['action'] = 'generateDahsboardPlugin';
+                
+                // Adding dashboard plugin controller to generate plugin interface
+                $recDatas['plugin'] = $itemConfig['forward']['plugin'];
+                $recDatas['function'] = $itemConfig['forward']['function'];
+            }
+            
             if (!empty($itemConfig['forward']) && !empty($itemConfig['forward']['controller'])
                 && !empty($itemConfig['forward']['action']))
             {

@@ -10,6 +10,7 @@
 namespace MelisCore\Controller\DashboardPlugins;
 
 use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
+use Zend\View\Model\ViewModel;
 
 class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingPlugin
 {
@@ -19,30 +20,44 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
         parent::__construct();
     }
     
-    public function modelVars()
+    /**
+     * Render Dashboard plugin to Drag and Drop Zone
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function dragdropzone()
     {
+        $view = new ViewModel();
+        $view->setTemplate('melis-core/dashboard-plugin/dragdropzone');
+        
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
         $plugins = $this->getDashboardPlugins();
         
+        $activePlugins = $this->getActivePlugins();
+        
         $html = '';
-        $jsCallBacks = array();
         
         if (!empty($plugins['plugins']))
         {
             foreach ($plugins['plugins']->plugin As $xKey => $xVal)
             {
-                /**
-                 *  CHECKING IF THE PLUGIN IS ACCESSABLE OR MODULE IS ACTIVATED
-                 */
-                $plugin = $pluginManager->get((string)$xVal->attributes()->plugin);
-                $pluginModel = $plugin->render(
-                    array(
-                        'dashboard_id' => $this->pluginConfig['dashboard_id'],
-                        'plugin_id' => (string)$xVal->attributes()->plugin_id
-                    )
-                );
-                $html .= $viewRender->render($pluginModel);
+                $pluginName = (string)$xVal->attributes()->plugin;
+                
+                // Checking if the plugin is active 
+                if (in_array($pluginName, $activePlugins))
+                {
+                    $plugin = $pluginManager->get($pluginName);
+                    $pluginModel = $plugin->render(
+                        array(
+                            'dashboard_id' => $this->pluginConfig['dashboard_id'],
+                            'plugin_id' => (string)$xVal->attributes()->plugin_id
+                        )
+                    );
+                    
+                    // Concatinating plugin view after redering to html
+                    $html .= $viewRender->render($pluginModel);
+                }
             }
         }
         
@@ -51,10 +66,17 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
             'dashboardId' => $this->pluginConfig['dashboard_id'],
         );
         
-        return $data;
+        $view->setVariables($data);
+        
+        return $view;
     }
     
-    public function getDashboardPlugins()
+    /**
+     * Getting active plugins saved from User Dashboard plugins
+     * 
+     * @return SimpleXMLElement[]
+     */
+    private function getDashboardPlugins()
     {
         $plugins = array();
         
@@ -78,6 +100,9 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
         return $plugins;
     }
     
+    /**
+     * This method saving the dashboard plugin in Drag and drop zone
+     */
     public function savePlugins($plugins)
     {
         $success = 0;
@@ -105,6 +130,9 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
                             $pluginXmlData .= "\t".'<y-axis><![CDATA['.$config['y-axis'].']]></y-axis>'."\n";
                             $pluginXmlData .= "\t".'<height><![CDATA['.$config['height'].']]></height>'."\n";
                             $pluginXmlData .= "\t".'<width><![CDATA['.$config['width'].']]></width>'."\n";
+                            /**
+                             * Adding custom xml data from plugin 
+                             */
                             $pluginXmlData .= $plugin->savePluginConfigToXml($config);
                             $pluginXmlData .= '</plugin>';
                         }
@@ -136,6 +164,9 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
                 'd_content' => $pluginXml,
             );
             
+            /**
+             * Saving dashboard plugins to database
+             */
             $res = $dashboardPluginsTbl->save($pluginDashboard, $pluginDashboardId);
             
             if ($res)
@@ -145,5 +176,30 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
         }
         
         return $success;
+    }
+    
+    /**
+     * Returns active plugins based on module activation
+     * 
+     * @return array
+     */
+    private function getActivePlugins()
+    {
+        $activePlugins = array();
+        
+        $config = $this->getServiceLocator()->get('config');
+        
+        foreach ($config['plugins'] As $module)
+        {
+            if (!empty($module['dashboard_plugins']))
+            {
+                foreach ($module['dashboard_plugins'] As $pluginName => $config)
+                {
+                    array_push($activePlugins, $pluginName);
+                }
+            }
+        }
+        
+        return $activePlugins;
     }
 }

@@ -151,8 +151,8 @@ var melisDashBoardDragnDrop = {
             melisCoreTool.confirm(
                 translations.tr_melistoolcalendar_delete_event_btn_yes,
                 translations.tr_melistoolcalendar_delete_event_btn_no,
-                'Delete Dashboard',
-                'Are you sure you want to delete this dashboard',
+                translations.tr_melis_core_remove_dashboard_plugin,
+                translations.tr_melis_core_remove_dashboard_plugin_msg,
                 function() {
                     grid.removeWidget(self.closest('.grid-stack-item'));
                     if( $('#'+activeTabId+' .grid-stack .grid-stack-item').length === 0 ) {
