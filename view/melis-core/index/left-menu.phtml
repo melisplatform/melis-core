@@ -24,26 +24,11 @@
             <ul class="list-unstyled sideMenu">
 
             	<?php 
-        	    	if (!empty($this->zoneconfig['interface']))
-        	    	{
-
-
-//        	    	    print '<pre>';
-//        	    	    print_r($this->zoneconfig['interface']);
-//        	    	    print '</pre>';
-//        	    	    die;
-                        // MelisCore
-
-        	    		foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
-        	    		{
-        	    			if ($keyConfig != 'meliscore_leftmenu_identity' && $keyConfig != 'meliscore_footer')
-        	    			{
-//        	    				echo $this->$keyConfig;
-        	    			}
-//                            if ($keyConfig == 'meliscore_leftmenu_dashboard')
-//                            {
-//                                echo $this->$keyConfig;
-//                            }
+        	    	if (!empty($this->zoneconfig['interface'])) {
+        	    		foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                            if ($keyConfig == 'meliscore_leftmenu_dashboard') {
+                                echo $this->$keyConfig;
+                            }
         	    		}
         	    	}
         	 	?>
@@ -67,15 +52,11 @@
                     <ul class="collapse" id="meliscore_tools" aria-expanded="false">
 
                         <?php
-                        if (!empty($this->zoneconfig['interface']))
-                        {
-                            foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
-                            {
-                                if ($keyConfig != 'meliscore_leftmenu_identity' && $keyConfig != 'meliscore_footer')
-                                {
-        	    				    echo $this->$keyConfig;
+                        if (!empty($this->zoneconfig['interface'])) {
+                            foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                                if ($keyConfig == 'meliscore_toolstree_section') {
+                                    echo $this->$keyConfig;
                                 }
-
                             }
                         }
                         ?>

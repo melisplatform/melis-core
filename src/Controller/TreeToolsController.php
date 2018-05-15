@@ -10,6 +10,7 @@
 namespace MelisCore\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
 
@@ -18,15 +19,13 @@ use MelisCore\Service\MelisCoreRightsService;
  */
 class TreeToolsController extends AbstractActionController
 {
-    const CORE             = 'core';
-    const CMS              = 'cms';
-    const MARKETING        = 'marketing';
-    const COMMERCE         = 'commerce';
-    const OTHERS           = 'others';
-    const BUSINESS_APPS    = 'business_apps';
-    private $tools         = [];
-    private $loadedTools   = [];
-    private $businessTools = [];
+    const CORE      = 'meliscore';
+    const CMS       = 'meliscms';
+    const MARKETING = 'melismarketing';
+    const COMMERCE  = 'meliscommerce';
+    const OTHERS    = 'melisothers';
+    const CUSTOM    = 'meliscustom';
+
 
 	/**
 	 * Renders the leftmenu accordion/tree of tools 
@@ -39,9 +38,10 @@ class TreeToolsController extends AbstractActionController
     	$melisKeys = $melisAppConfig->getMelisKeys();
 
     	// Get the order list for ordering tools
-    	$appconfigpath = $melisKeys['meliscore_toolstree'];
-    	$appsConfig = $melisAppConfig->getItem($appconfigpath);	
-		$orderInterface = $melisAppConfig->getOrderInterfaceConfig('meliscore_toolstree');
+    	$appconfigpath = $melisKeys[$melisKey];
+
+    	$appsConfig = $melisAppConfig->getItem($appconfigpath);
+		$orderInterface = $melisAppConfig->getOrderInterfaceConfig('meliscore_toolstree_section');
     	$tools = array();
     	
     	// Gets the rights of the user
@@ -50,6 +50,8 @@ class TreeToolsController extends AbstractActionController
     	$xmlRights = $melisCoreAuth->getAuthRights();
         
     	// Show sections first
+//        print_r($appsConfig['interface']);die;
+
     	foreach($appsConfig['interface'] as $key => $toolSectionName)
     	{
     		// First level, sections
@@ -167,95 +169,12 @@ class TreeToolsController extends AbstractActionController
      */
     public function categorizedAction()
     {
-        print_r($this->getOrderedToolsTree());
-//        $this->getOrderedToolsTree();
-//        print_r($this->loadedTools);
-
-        die;
-    }
-
-    public function getOrderedToolsTree()
-    {
-        $path            = 'meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree/interface';
+        $path = 'meliscore/interface/meliscore_leftmenu/interface/';
         $toolsTreeConfig = $this->getServiceLocator()->get('MelisCoreConfig')->getItem($path);
-        $toolsTree       = array_merge($this->getToolsTreeConfigByCategory($toolsTreeConfig), $this->getBusinessAppToolsTree($toolsTreeConfig));
 
-        return $toolsTree;
+
+        return new JsonModel($toolsTreeConfig);
+
     }
 
-    protected function getToolsTreeConfigByCategory($items)
-    {
-        foreach ($items as $key => $item) {
-            if(is_array($item)) {
-                if (isset($item['conf']['category'])) {
-                    switch ($item['conf']['category']) {
-                        case self::CORE:
-                            if (!in_array($key, $this->loadedTools)) {
-                                $this->tools[self::CORE][$key] = $item;
-                            }
-                            break;
-                        case self::CMS:
-                            if (!in_array($key, $this->loadedTools)) {
-                                $this->tools[self::CMS][$key] = $item;
-                            }
-                            break;
-                        case self::MARKETING:
-                            if (!in_array($key, $this->loadedTools)) {
-                                $this->tools[self::MARKETING][$key] = $item;
-                            }
-                            break;
-                        case self::COMMERCE:
-                            if (!in_array($key, $this->loadedTools)) {
-                                $this->tools[self::COMMERCE][$key] = $item;
-                            }
-                            break;
-                        case self::OTHERS:
-                            if (!in_array($key, $this->loadedTools)) {
-                                $this->tools[self::OTHERS][$key] = $item;
-                            }
-                            break;
-                    }
-
-                    if (isset($item['interface'])) {
-                        foreach($item as $childKey => $childItem) {
-                            $this->getToolsTreeConfigByCategory($childItem);
-                        }
-                    }
-
-                    $this->loadedTools[$key] = $key;
-
-                } else {
-                    $this->getToolsTreeConfigByCategory($item);
-                }
-
-
-            }
-        }
-
-        return $this->tools;
-    }
-
-    protected function getBusinessAppToolsTree($items)
-    {
-        if (is_array($items)) {
-
-            foreach ($items as $key => $item) {
-                if(!in_array($key, $this->loadedTools)) {
-                    $this->loadedTools[$key] = $key;
-                    $this->businessTools[self::BUSINESS_APPS][$key] = $item;
-
-                    if (isset($item['interface'])) {
-                        foreach($item as $childKey => $childItem) {
-                            $this->getToolsTreeConfigByCategory($childItem);
-                        }
-                    }
-
-                    $this->getBusinessAppToolsTree($item);
-                }
-            }
-        }
-
-
-        return $this->businessTools;
-    }
 }
