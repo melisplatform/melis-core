@@ -21,6 +21,56 @@ use MelisCore\Service\MelisCoreRightsService;
 class DashboardPluginsController extends AbstractActionController
 {
     /**
+     * Render Dashboard Menu
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function dashboardMenuAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        
+        $plugins = array();
+        $config = $this->getServiceLocator()->get('config');
+        
+        foreach ($config['plugins'] As $key => $val)
+        {
+            if (!empty($val['dashboard_plugins']))
+            {
+                $plugins[$key] = array();
+                
+                $modulePlugins = $val['dashboard_plugins'];
+                
+                foreach ($modulePlugins As $keyPlugin => $plugin)
+                {
+                    // Skipping DragDropZone plugin
+                    if ($keyPlugin != 'MelisCoreDashboardDragDropZonePlugin')
+                    {
+                        $plugins[$key][$keyPlugin] = array(
+                            'module'         => $key,
+                            'plugin'         => $keyPlugin,
+                            'name'           => !empty($plugin['name'])          ? $plugin['name'] : $keyPlugin,
+                            'plugin_id'      => !empty($plugin['plugin_id'])     ? $plugin['plugin_id']  : '',
+                            'x-axis'         => !empty($plugin['x-axis'])         ? $plugin['x-axis']  : '',
+                            'y-axis'         => !empty($plugin['y-axis'])        ? $plugin['y-axis']  : '',
+                            'width'          => !empty($plugin['width'])         ? $plugin['width']  : '',
+                            'height'         => !empty($plugin['height'])        ? $plugin['height']  : '',
+                            'description'    => !empty($plugin['description'])   ? $plugin['description']  : '',
+                            'icon'           => !empty($plugin['icon'])          ? $plugin['icon'] : '',
+                            'thumbnail'      => !empty($plugin['thumbnail'])     ? $plugin['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
+                            'is_new_plugin'  => true,
+                        );
+                    }
+                }
+            }
+        }
+        
+        $view = new ViewModel();
+        $view->setVariable('plugins', $plugins);
+        $view->melisKey = $melisKey;
+        return $view;
+    }
+    
+    /**
      * This render the Dashboard plugins Drag and Drop Zone
      * 
      * @return \Zend\View\Model\ViewModel
@@ -33,11 +83,11 @@ class DashboardPluginsController extends AbstractActionController
         // Check if dashboard is available
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-        if($melisCoreAuth->hasIdentity()){
+        
+        if($melisCoreAuth->hasIdentity())
+        {
             $xmlRights = $melisCoreAuth->getAuthRights();
-            $isAccessible = $melisCoreRights->isAccessible($xmlRights,
-                MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE,
-                '/meliscore_dashboard');
+            $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, '/meliscore_dashboard');
         }
         
         $view = new ViewModel();

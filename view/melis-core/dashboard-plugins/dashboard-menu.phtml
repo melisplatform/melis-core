@@ -1,4 +1,9 @@
-<div class="melis-core-dashboard-dnd-box">
+<?php
+	$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+	$melisKey = 'data-melisKey="'.$this->zoneconfig['conf']['melisKey'].'"';
+?>
+
+<div class="melis-core-dashboard-dnd-box" <?= $melisKey.' '.$id; ?>>
     <div class="melis-core-dashboard-dnd-fix-menu">
         <div class="melis-core-dashboard-dnd-title"><?php echo $this->translate('tr_melisore_Plugins')?></div>
         <div class="melis-core-dashboard-plugin-filter-box">

@@ -1,3 +1,4 @@
+
 <?php  
 $loginClas       = (int) $this->isLogin == 1 ? 'login-page' : '';
 $schemes         = $this->layout()->schemes;
@@ -123,11 +124,6 @@ if($this->layout()->isLogin)
 	</head>
 	<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null?>>
 		<?= $this->content; ?>
-		
-		<!-- dashboard menu plugins -->
-		<?php echo $this->dashboardMenu; ?>
-		<!-- end dashboard menu plugins -->
-		
 		<?= $this->headScript() ?>
 		<!-- modals container -->
 		<div id="melis-modals-container"></div>

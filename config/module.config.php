@@ -382,7 +382,6 @@ return array(
             'melis-core/dashboard-plugin/plugin-container'      => __DIR__ . '/../view/melis-core/dashboard-plugins/plugin-container.phtml',
             'melis-core/dashboard-plugin/no-template'           => __DIR__ . '/../view/melis-core/dashboard-plugins/no-template.phtml',
             'melis-core/dashboard-plugin/no-plugin-interface'   => __DIR__ . '/../view/melis-core/dashboard-plugins/no-plugin-interface.phtml',
-            'melis-core/dashboard-plugin/dashboard-menu'        => __DIR__ . '/../view/melis-core/dashboard-plugins/dashboard-menu.phtml',
             
             'melis-core/dashboard-plugin/recent-user-activity'  => __DIR__ . '/../view/melis-core/dashboard-plugins/recent-user-activity.phtml',
         ),

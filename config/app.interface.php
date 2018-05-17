@@ -1270,64 +1270,27 @@ return array(
                                 'id' => 'id_meliscore_center_dashboard',
                                 'name' => 'tr_meliscore_center_Dashboard',
                                 'melisKey' => 'meliscore_center_dashboard',
-                                'icon' => 'fa-tachometer',
-                                'type' => '/meliscore_dashboard'
+                                'icon' => 'fa-tachometers',
+                                'dashboard' => true
                             ),
                         ),
                     )
                 ),
-            )
-        ),
-        'meliscore_dashboard' => array(
-            'conf' => array(
-                'id' => 'id_meliscore_center_dashboard',
-                'name' => 'tr_meliscore_center_Melis Dashboard',
-                'melisKey' => 'meliscore_center_dashboard',
-                'icon' => 'fa-tachometer'
-            ),
-            'forward' => array(
-                'module' => 'MelisCore',
-                'controller' => 'Dashboard',
-                'action' => 'dashboard',
-                'jscallback' => '',
-                'jsdatas' => array()
-            ),
-            'interface' => array(
-                'meliscore_dashboard_recent_activity' => array(
+                'meliscore_dashboard_menu' => array(
                     'conf' => array(
-                        'id' => 'id_meliscore_dashboard_recent_activity',
-                        'name' => 'tr_meliscore_dashboard_Recent Activity',
-                        'melisKey' => 'meliscore_dashboard_recent_activity',
-                        'width' => 6,
-                        'height' => 'dashboard-medium',
+                        'id' => 'id_meliscore_center_dashboard_menu',
+                        'melisKey' => 'meliscore_center_dashboard_menu',
+                        'name' => 'tr_meliscore_center_dashboard_menu'
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
-                        'controller' => 'Dashboard',
-                        'action' => 'recentActivity',
+                        'controller' => 'DashboardPlugins',
+                        'action' => 'dashboard-menu',
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
-                    'interface' => array(
-                        'meliscore_dashboard_recent_activity_users' => array(
-                            'conf' => array(
-                                'id' => 'id_meliscore_dashboard_recent_activity_users',
-                                'name' => 'tr_meliscore_dashboard_recent_activity_Users',
-                                'melisKey' => 'meliscore_dashboard_recent_activity_users',
-                                'icon' => 'parents',
-                                'maxLines' => 8,
-                            ),
-                            'forward' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'Dashboard',
-                                'action' => 'recentActivityUsers',
-                                'jscallback' => '',
-                                'jsdatas' => array()
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+                )
+            )
         ),
         'meliscore_login' => array(
             'ressources' => array(

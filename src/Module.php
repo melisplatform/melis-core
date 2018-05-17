@@ -73,7 +73,6 @@ class Module
             $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
 
             $eventManager->attach(new MelisCoreAuthSuccessListener());
-            $eventManager->attach(new MelisCoreDashboardMenuListener());
         }
 
     }
