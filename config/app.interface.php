@@ -1270,7 +1270,7 @@ return array(
                                 'id' => 'id_meliscore_center_dashboard',
                                 'name' => 'tr_meliscore_center_Dashboard',
                                 'melisKey' => 'meliscore_center_dashboard',
-                                'icon' => 'fa-tachometers',
+                                'icon' => 'fa-tachometer',
                                 'dashboard' => true
                             ),
                         ),

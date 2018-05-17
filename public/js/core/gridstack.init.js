@@ -149,8 +149,8 @@ var melisDashBoardDragnDrop = {
         var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
             var self = el;
             melisCoreTool.confirm(
-                translations.tr_melistoolcalendar_delete_event_btn_yes,
-                translations.tr_melistoolcalendar_delete_event_btn_no,
+                translations.tr_meliscore_common_yes,
+                translations.tr_meliscore_common_no,
                 translations.tr_melis_core_remove_dashboard_plugin,
                 translations.tr_melis_core_remove_dashboard_plugin_msg,
                 function() {
