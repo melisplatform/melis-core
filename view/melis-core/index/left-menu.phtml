@@ -53,14 +53,11 @@
 
                         <?php
                         if (!empty($this->zoneconfig['interface'])) {
-                            foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
-                                if ($keyConfig == 'meliscore_toolstree_section') {
-                                    echo $this->$keyConfig;
-                                }
-                            }
+                            echo $this->meliscore_toolstree_section;
                         }
                         ?>
                     </ul>
+                </li>
                 </li>
 
                 <li class="toolstree_meliscms" id="toolstre_meliscms" class="hasSubmenu" data-meliskey="toolstre_meliscms">
@@ -79,10 +76,18 @@
                         <label class="toolstree-label"><?= $this->translate('MelisCms') ?></label>
                         <div class="clearfix"></div>
                     </a>
+                    <ul class="collapse" id="meliscms_tools" aria-expanded="false">
+
+                        <?php
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->meliscms_toolstree_section;
+                        }
+                        ?>
+                    </ul>
                 </li>
 
                 <li class="toolstree_marketing" id="toolstre_melismarketing" class="hasSubmenu" data-meliskey="toolstre_melismarketing">
-                    <a data-target="#marketing_tools" data-toggle="collapse" class="" aria-expanded="true">
+                    <a data-target="#melismarketing_tools" data-toggle="collapse" class="" aria-expanded="true">
                         <div class="melis-svg-icon pull-left">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                 <g>
@@ -97,6 +102,14 @@
                         <label class="toolstree-label"><?= $this->translate('MelisMarketing') ?></label>
                         <div class="clearfix"></div>
                     </a>
+                    <ul class="collapse" id="melismarketing_tools" aria-expanded="false">
+
+                        <?php
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->melismarketing_toolstree_section;
+                        }
+                        ?>
+                    </ul>
                 </li>
 
                 <li class="toolstree_meliscommerce" id="toolstre_meliscommerce" class="hasSubmenu" data-meliskey="toolstre_meliscommerce">
@@ -115,10 +128,18 @@
                         <label class="toolstree-label"><?= $this->translate('MelisCommerce') ?></label>
                         <div class="clearfix"></div>
                     </a>
+                    <ul class="collapse" id="meliscommerce_tools" aria-expanded="false">
+
+                        <?php
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->meliscommerce_toolstree_section;
+                        }
+                        ?>
+                    </ul>
                 </li>
 
-                <li class="toolstree_others" id="toolstre_others" class="hasSubmenu" data-meliskey="toolstre_others">
-                    <a data-target="#tools_others" data-toggle="collapse" aria-expanded="true">
+                <li class="toolstree_others" id="toolstre_others" class="hasSubmenu" data-meliskey="toolstree_others">
+                    <a data-target="#melisothers_tools" data-toggle="collapse" aria-expanded="true">
                         <div class="melis-svg-icon pull-left">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                 <g>
@@ -133,10 +154,18 @@
                         <label class="toolstree-label"><?= $this->translate('Others') ?></label>
                         <div class="clearfix"></div>
                     </a>
+                    <ul class="collapse" id="melisothers_tools" aria-expanded="false">
+
+                        <?php
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->melisothers_toolstree_section;
+                        }
+                        ?>
+                    </ul>
                 </li>
 
-                <li class="toolstree" id="id_meliscore_menu_toolstree" class="hasSubmenu" data-meliskey="meliscore_menu_toolstree">
-                    <a data-target="#tools" data-toggle="collapse" class="" aria-expanded="true">
+                <li class="meliscustom_toolstree" id="id_melicustom_menu_toolstree" class="hasSubmenu" data-meliskey="meliscustom_menu_toolstree">
+                    <a data-target="#meliscustom_tools" data-toggle="collapse" class="" aria-expanded="true">
                         <div class="melis-svg-icon pull-left">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                 <g>
@@ -151,6 +180,14 @@
                         <label class="toolstree-label"><?= $this->translate('Custom / Projects') ?></label>
                         <div class="clearfix"></div>
                     </a>
+                    <ul class="collapse" id="meliscustom_tools" aria-expanded="false">
+
+                        <?php
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->meliscustom_toolstree_section;
+                        }
+                        ?>
+                    </ul>
                 </li>
 
             </ul>

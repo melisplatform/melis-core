@@ -41,7 +41,7 @@ class TreeToolsController extends AbstractActionController
     	$appconfigpath = $melisKeys[$melisKey];
 
     	$appsConfig = $melisAppConfig->getItem($appconfigpath);
-		$orderInterface = $melisAppConfig->getOrderInterfaceConfig('meliscore_toolstree_section');
+		$orderInterface = $melisAppConfig->getOrderInterfaceConfig($melisKey);
     	$tools = array();
     	
     	// Gets the rights of the user
