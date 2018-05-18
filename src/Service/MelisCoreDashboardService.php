@@ -19,7 +19,14 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 		return $this->serviceLocator;
 	}
 	
-	public function getDashboardPluginsJsCallbackJsDatas($fullKey, $dashboardId)
+	/**
+	 * This method return JsCallbacks of active plugins
+	 * 
+	 * @param unknown $fullKey
+	 * @param unknown $dashboardId
+	 * @return array[]
+	 */
+	public function getDashboardPluginsJsCallbackJsDatas($dashboardId)
 	{
 	    $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
 	    $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
@@ -41,29 +48,30 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	        
 	        if (!empty($plugins))
 	        {
-	            $fullKey = explode('/', $fullKey);
-	            $module = $fullKey[1];
-	            
-	            $pluginConfigs = array();
-	            
-	            $config = $this->getServiceLocator()->get('config');
+	            $configs = $this->getServiceLocator()->get('config');
 	            
 	            $plugins = simplexml_load_string($plugins->d_content);
 	            
 	            if (!empty($plugins->plugin))
 	            {
-	                foreach ($plugins->plugin As $xKey => $xVal)
+	                foreach ($configs['plugins'] As $module => $config)
 	                {
-	                    $pluginConfig = $config['plugins'][$module]['dashboard_plugins'][(string)$xVal->attributes()->plugin];
-	                    
-	                    if (!empty($pluginConfig['interface']) && is_array($pluginConfig['interface']))
+	                    foreach ($plugins->plugin As $xKey => $xVal)
 	                    {
-	                        list($jsCallBacks, $datasCallback) = $melisAppConfig->getJsCallbacksDatas($pluginConfig);
-	                    }
-	                    
-	                    if (!empty($pluginConfig['jscallback']))
-	                    {
-	                        array_push($jsCallBacks, $pluginConfig['jscallback']);
+	                        if (!empty($config['dashboard_plugins'][(string)$xVal->attributes()->plugin]))
+	                        {
+	                            $pluginConfig = $config['dashboard_plugins'][(string)$xVal->attributes()->plugin];
+	                            
+	                            if (!empty($pluginConfig['interface']) && is_array($pluginConfig['interface']))
+	                            {
+	                                list($jsCallBacks, $datasCallback) = $melisAppConfig->getJsCallbacksDatas($pluginConfig);
+	                            }
+	                            
+	                            if (!empty($pluginConfig['jscallback']))
+	                            {
+	                                array_push($jsCallBacks, $pluginConfig['jscallback']);
+	                            }
+	                        }
 	                    }
 	                }
 	            }

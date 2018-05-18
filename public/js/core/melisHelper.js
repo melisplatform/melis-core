@@ -466,7 +466,7 @@ var melisHelper = (function(){
     }
 
     // EXECUTE CALLBACK FUNCTIONS FROM ZONE RELOADING =================================================================================
-    function executeCallbackFunction(functionName, context) {
+    /*function executeCallbackFunction(functionName, context) {
         var namespaces = functionName.split(".");
         var func = namespaces.pop();
         for(var i = 0; i < namespaces.length; i++) {
@@ -477,7 +477,7 @@ var melisHelper = (function(){
         if( context[func] !== undefined){
             return context[func].apply(context);
         }
-    }
+    }*/
 
     // ZONE RELOADING =================================================================================================================
     function zoneReload(zoneId, melisKey, parameters, callback){
@@ -527,7 +527,7 @@ var melisHelper = (function(){
                         // example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
                         var splitFunctions = value.split(" ");
 
-                        if( splitFunctions.length > 1){
+                        /*if( splitFunctions.length > 1){
                             // run all the function extracted from a single jsCallback
                             $.each( splitFunctions, function( key, value ) {
                                 value = value.slice(0, -3);
@@ -537,7 +537,17 @@ var melisHelper = (function(){
                         else{
                             value = value.slice(0, -3);
                             executeCallbackFunction(value, window);
-                        }
+                        }*/
+                        
+                        $.each( splitFunctions, function( key, value ) {
+                        	
+                        	try {
+                        	    eval(value);
+                        	}
+                        	catch(err) {
+                        	    console.log(err);
+                        	}
+                        });
                     });
                 }
                 else{

@@ -84,9 +84,16 @@ var melisDashBoardDragnDrop = {
                     var gridData = $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets').data()
                     var html = $(data.html);
                     // add widget to dashboard default size 6 x 6
-                    var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, 6, 6);
+                    var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, html.data("gsWidth"), html.data("gsHeight"));
                     // remove clone widgets
                     grid.removeWidget($(widget).prev());
+                    
+                    if(data.jsCallbacks.length) {
+                        $.each(data.jsCallbacks, function(index, value) {
+                            eval(value);
+                        });
+
+                    }
                 });
             }
         });
@@ -223,6 +230,8 @@ var melisDashBoardDragnDrop = {
     }
 };
 
-// init
-melisDashBoardDragnDrop.init();
+$(function(){
+	// init
+	melisDashBoardDragnDrop.init();
+});
 

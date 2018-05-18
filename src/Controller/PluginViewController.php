@@ -108,6 +108,7 @@ class PluginViewController extends AbstractActionController
             if (!empty($itemConfig['forward']) && !empty($itemConfig['forward']['plugin']))
             {
                 // Setting the controller calling the dashboard plugins after forward
+                $itemConfig['forward']['module'] = 'MelisCore';
                 $itemConfig['forward']['controller'] = 'DashboardPlugins';
                 $itemConfig['forward']['action'] = 'generateDahsboardPlugin';
                 
@@ -200,7 +201,7 @@ class PluginViewController extends AbstractActionController
             if (isset($itemConfig['conf']['dashboard']) && $itemConfig['conf']['dashboard'])
             {
                 $melisDashboardSrv = $this->getServiceLocator()->get('MelisCoreDashboardService');
-                list($jsCallBacks, $datasCallback) = $melisDashboardSrv->getDashboardPluginsJsCallbackJsDatas($fullKey, $itemConfig['conf']['id']);
+                list($jsCallBacks, $datasCallback) = $melisDashboardSrv->getDashboardPluginsJsCallbackJsDatas($itemConfig['conf']['id']);
                 
                 $view->setVariable('jsCallBacks', $jsCallBacks);
                 $view->setVariable('datasCallback', $datasCallback);
