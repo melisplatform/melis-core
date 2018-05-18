@@ -50,29 +50,42 @@ class TreeToolsController extends AbstractActionController
     	$xmlRights = $melisCoreAuth->getAuthRights();
         
     	// Show sections first
-//        print_r($appsConfig['interface']);die;
-
     	foreach($appsConfig['interface'] as $key => $toolSectionName)
     	{
+            $isNavChild   = false;
+
     		// First level, sections
     		$tools[$key] = array(
     			'toolsection_id' => $toolSectionName['conf']['id'],
     			'toolsection_name' => $toolSectionName['conf']['name'],
+    			'toolsection_meliskey' => $toolSectionName['conf']['melisKey'],
     			'toolsection_icon' => (!empty($toolSectionName['conf']['icon'])?($toolSectionName['conf']['icon']):('')),
-    			'toolsection_children' => array(),
+                'toolsection_forward' => isset($toolSectionName['forward']) ? $toolSectionName['forward'] : [],
+                'toolsection_children' => array(),
     		);
     		
     		// Second level, tools
     		foreach($toolSectionName['interface'] as $keyTool => $toolName)
     		{
+
+    		    $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : null;
+
+    		    if ($icon) {
+    		       $isNavChild = true;
+                }
+
+
     			$isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $keyTool);
     			if ($isAccessible)
     				$tools[$key]['toolsection_children'][$keyTool] = array('tool_id' => $toolName['conf']['id'], 
     																	   'tool_name' => $toolName['conf']['name'], 
-    																	   'tool_icon' => (!empty($toolName['conf']['icon'])?($toolName['conf']['icon']):('')), 
+    																	   'tool_icon' => $icon,
+    																	   'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
     																	   'tool_melisKey' => $toolName['conf']['melisKey']);
     			 
     		}
+
+    		$tools[$key]['toolsection_has_nav_chid'] = $isNavChild;
     	}
     	
     	$sections = $tools;
@@ -97,7 +110,7 @@ class TreeToolsController extends AbstractActionController
     		$toolsOrdered[$keyInterfaceSection] = $tools[$keyInterfaceSection];
     		unset($toolsOrdered[$keyInterfaceSection]['toolsection_children']);
     	}
-    	
+
     	// Reordering tools inside sections
     	foreach ($toolsOrdered as $keySection => $toolsSection)
     	{
@@ -105,7 +118,7 @@ class TreeToolsController extends AbstractActionController
     		if (!empty($orderInterface[$keySection]))
     			$sectionOrderInterface = $orderInterface[$keySection];
     		$toolsSectionOrdered = array();
-	    	
+
     		foreach ($sectionOrderInterface as $orderKey)
     		{
     			if (!empty($tools[$keySection]['toolsection_children'][$orderKey]))
@@ -114,7 +127,7 @@ class TreeToolsController extends AbstractActionController
     				unset($tools[$keySection]['toolsection_children'][$orderKey]);
     			}
     		}
-	    	
+
     		foreach ($tools[$keySection]['toolsection_children'] as $keyInterface => $childinterface)
     		{
     			$toolsOrdered[$keySection]['toolsection_children'][$keyInterface] = $childinterface;
