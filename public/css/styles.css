@@ -1688,10 +1688,6 @@ span.fancytree-active span.fancytree-title{
 .widget-activity ul.list li.highlight.disable-widget-hover:after{
     content: "";
 }
-#id_meliscms_dashboard_pages_indicators .innerAll{
-    padding: 25px 10px;
-    margin: 5px 0;
-}
 
 
 
@@ -2586,14 +2582,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         margin-bottom: 15px;
     }
 }
-@media ( max-width: 768px ) {
-    #id_meliscms_dashboard_pages_indicators .innerAll {
-        margin: 0;
-    }
-    .dashboard-medium {
-        height: auto;
-    }
-}
+
 @media ( min-width: 980px ) {
     .melisToolContainer .filter-bar .tool-btn-actions{
         float: right;
@@ -2608,8 +2597,6 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
 }
 
-
-
 @media ( min-width: 1200px ) {
 
     #id_meliscore_center_dashboard .col-xs-12{
@@ -2617,13 +2604,6 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
 
 
-}
-
-
-@media (min-width: 1200px) and (max-width: 1600px) {
-    #id_meliscms_dashboard_pages_indicators p.lead {
-        font-size: 15px;
-    }
 }
 
 /* TinyMCE responsive */
@@ -3550,8 +3530,8 @@ div#modal-user-management div.widget {
 .melis-core-dashboard-dnd-box #melisDashBoardPluginBtn {
     position: absolute;
     top: 50px;
-    left: -38px;
-    padding: 10px 10px 10px;
+    left: -47px;
+    padding: 10px 13px 10px 15px;
     background-color: #932e2a;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
