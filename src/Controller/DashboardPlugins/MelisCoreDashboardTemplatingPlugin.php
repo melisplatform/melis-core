@@ -173,6 +173,12 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
             if (!empty($this->pluginConfig['plugin_id']))
             {
                 $this->pluginConfig['plugin_id'] .= '_'.time();
+                
+                if (isset($this->pluginConfig['is_new_plugin']))
+                {
+                    // Unsetting after generate plugin id
+                    unset($this->pluginConfig['is_new_plugin']);
+                }
             }
         }
         
