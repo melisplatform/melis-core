@@ -15,7 +15,7 @@ class MelisFieldRow extends FormRow
     const MELIS_INPUT_GROUP_BUTTON    = 'melis-input-group-button';
     const MELIS_TEXT_REQUIRED         = 'required';
     const MELIS_TEXT_WITH_BUTTON      = 'MelisTextButton';
-    const MELIS_MSGR_MSG_BOX          = 'melis-messenger-msg-box';
+    const MELIS_MSGR_MSG_BOX         = 'melis-messenger-msg-box';
  
 	public function render(ElementInterface $element, $labelPosition = null)
 	{
@@ -29,6 +29,7 @@ class MelisFieldRow extends FormRow
 	    if(!empty($element->getOption('tooltip')))
 	    {
 	        $element->setLabelOptions(array('disable_html_escape' => true));
+// 	        $label = $element->getLabel().'<i class="fa fa-info-circle fa-lg" title="'.$element->getOption('tooltip').'"></i>';
 	        $label = $element->getLabel().'<i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$element->getOption('tooltip').'"></i>';
 	        $element->setLabel($label);
 	    }
@@ -46,10 +47,11 @@ class MelisFieldRow extends FormRow
 	            ></i>';
 	         
 	        $element->setLabel($label);
+	    
 	    }
 	    
 	    $formElement = '';
-	    if($this->getClass($element) == self::MELIS_TOGGLE_BUTTON_FACTORY)
+	    if ($this->getClass($element) == self::MELIS_TOGGLE_BUTTON_FACTORY)
 	    {
 	        // recreate checkbox to render into a toggle button
 	        $markup = '<div class="make-switch" data-on="1" data-off="0"><input type="%s" class="switch" name="%s" id="%s" value="%s" onchange="%s" %s></div>';
@@ -60,44 +62,32 @@ class MelisFieldRow extends FormRow
 	        
 	        // disect label and element so it would not be included in the switch feature
 	        $formElement .= '<div class="form-group"><label for="'.$attrib['name'].'">'.$element->getLabel().'</label> '.$toggleButton.'</div>';
-	    }
-	    
-	    elseif(!empty($element->getOption('switchOptions')))
+	    } elseif (!empty($element->getOption('switchOptions')))
 	    {
 	        $switchId = $element->getAttribute('id');
-	        $checkboxId = $switchId.'-'.uniqid();
 	        $isChecked = !empty($element->getValue())? 'checked' : '';
-	        
 	        $switchOptions = $element->getOption('switchOptions');
-	        $labelOn = (!empty($switchOptions['label-on'])) ? $switchOptions['label-on'] : '';
-	        $labelOff = (!empty($switchOptions['label-off'])) ? $switchOptions['label-off'] : '';
-	        $label = (!empty($switchOptions['label'])) ? $switchOptions['label'] : '';
-	        $icon = (!empty($switchOptions['icon'])) ? $switchOptions['icon'] : '';
-	        
-	        $element->setOption('checked_value', 1);
-	        $element->setOption('unchecked_value', 0);
-	        
 	        $switch  = '<div class="form-group">';
 	        $switch .= '<label for="'.$element->getName().'">'. $element->getLabel() . '</label>';
-	        $switch .=  '   <div data-checkbox-id="'. $checkboxId .'" id="'. $switchId .'" class="make-switch" data-on-label="'. $labelOn .'" data-off-label="'. $labelOff .'" data-text-label="'. $label .'" data-label-icon="'. $icon .'">';
-	        $element->setLabel('');
-	        $switch .= parent::render($element, $labelPosition);
-	        $switch .= '    </div>';
-	        $switch .= '</div>';
-	        $switch .= '<script type="text/javascript">';
-	        $switch .= ' $("div[data-checkbox-id='. $checkboxId .']").bootstrapSwitch();';
+	        $switch .=  '   <div id="'. $switchId .'" class="make-switch" data-on-label="'. $switchOptions['label-on'] .'" data-off-label="'. $switchOptions['label-off'] .'" data-text-label="'. $switchOptions['label'] .'">';
+	        $switch .= '       <input type="checkbox" name="'.$element->getName().'" id="'.$element->getName().'" '.$isChecked.' >';
+            $switch .= '    </div>';
+            $switch .= '</div>';
+            $switch .= '<script type="text/javascript">';
+	        $switch .= ' $("#'. $switchId .'").bootstrapSwitch();';
 	        $switch .= '</script>';
 	        
 	        $formElement .= $switch;
-	    }
-	    elseif($element->getAttribute('type') == self::MELIS_SELECT_FACTORY)
+	    } elseif ($element->getAttribute('type') == self::MELIS_SELECT_FACTORY)
 	    {
 	        // render to bootstrap select element
-    		$element->setAttribute('class', 'form-control');
+            $elementClass = $element->getAttribute('class');
+            $elementClass = implode(' ', ['form-control', $elementClass]);
+
+    		$element->setAttribute('class', $elementClass);
     		$element->setLabelOption('class','col-sm-2 control-label');
     		$formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
-	    }
-	    elseif($element->getAttribute('class') == self::MELIS_MULTI_VAL_INPUT)
+	    } elseif ($element->getAttribute('class') == self::MELIS_MULTI_VAL_INPUT)
 	    {
 	        // Get Value
 	        $dataTags = $element->getValue();
@@ -132,13 +122,11 @@ class MelisFieldRow extends FormRow
 	                               '.parent::render($element, $labelPosition).'
                             	<span class="input-group-addon bg-primary"><i class="fa fa-arrows fa-lg" aria-hidden="true"></i></span>
                             </div>';
-	        }
-	        else 
+	        } else
 	        {
 	            $formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
 	        }
-	    }
-	    elseif (strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE))
+	    } elseif (strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE))
 	    {
 	        $label = $element->getLabel();
 	        $element->setLabel('');
@@ -152,18 +140,17 @@ class MelisFieldRow extends FormRow
                                     </span>
                                 </div>
 	                        </div>';
-	    }
-	    elseif ($element->getAttribute('class') == self::MELIS_COLOR_PICKER)
+	    } elseif ($element->getAttribute('class') == self::MELIS_COLOR_PICKER)
 	    {
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
-    	                        <label for="">'.$element->getLabel().'</label>
-    	                        <div class="input-group colorpicker-component '.$attrib['name'].'">
-                                     <input type="text" name="'.$attrib['name'].'" value="" class="form-control" />
-                                    <span class="input-group-addon"><i></i></span>
-                                </div>
+	                        <label for="">'.$element->getLabel().'</label>
+	                        <div class="input-group colorpicker-component '.$attrib['name'].'">
+                                 <input type="text" name="'.$attrib['name'].'" value="" class="form-control" />
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
 	                        </div>';
-	    }elseif (!empty($element->getOption('button'))){
+	    } elseif (!empty($element->getOption('button'))){
 	        
 	        $label = $element->getLabel();
 	        $element->setLabel('');
@@ -251,6 +238,7 @@ class MelisFieldRow extends FormRow
 									 <button id="btn-send-message" type="submit" class="btn btn-primary"><i class="fa fa-paper-plane fa-2x"></i></button>
 								</div>
 							</div>';
+
 	    }elseif ($element->getAttribute('type') != 'hidden') 
 	    {
 	        $formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
