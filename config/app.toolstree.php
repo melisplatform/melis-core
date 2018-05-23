@@ -28,7 +28,6 @@ return [
                                         'name' => 'tr_meliscore_system_configuration',
                                         'icon' => 'fa-sliders',
                                         'rights_checkbox_disable' => true,
-                                        'category' => 'others',
                                         'melisKey' => 'meliscore_tool_system_config'
 
                                     ),
@@ -823,50 +822,85 @@ return [
                             'conf' => [
                                 'id' => 'meliscms_toolstree_section',
                                 'melisKey' => 'meliscms_toolstree_section',
-                                'name' => 'MelisCore',
+                                'name' => 'MelisCms',
                                 'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'TreeTools',
+                                'action' => 'render-tree-tools',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
                             'interface' => []
                         ],
                         'melismarketing_toolstree_section' => [
                             'conf' => [
                                 'id' => 'melismarketing_toolstree_section',
                                 'melisKey' => 'melismarketing_toolstree_section',
-                                'name' => 'MelisCore',
+                                'name' => 'MelisMarketing',
                                 'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'TreeTools',
+                                'action' => 'render-tree-tools',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
                             'interface' => []
                         ],
                         'meliscommerce_toolstree_section' => [
                             'conf' => [
                                 'id' => 'meliscommerce_toolstree_section',
                                 'melisKey' => 'meliscommerce_toolstree_section',
-                                'name' => 'MelisCore',
+                                'name' => 'MelisCommerce',
                                 'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'TreeTools',
+                                'action' => 'render-tree-tools',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
                             'interface' => []
                         ],
                         'melisothers_toolstree_section' => [
                             'conf' => [
                                 'id' => 'melisothers_toolstree_section',
                                 'melisKey' => 'melisothers_toolstree_section',
-                                'name' => 'MelisCore',
+                                'name' => 'Others',
                                 'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'TreeTools',
+                                'action' => 'render-tree-tools',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
                             'interface' => []
                         ],
                         'meliscustom_toolstree_section' => [
                             'conf' => [
                                 'id' => 'meliscustom_toolstree_section',
                                 'melisKey' => 'meliscustom_toolstree_section',
-                                'name' => 'MelisCore',
+                                'name' => 'Custom / Projects',
                                 'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'TreeTools',
+                                'action' => 'render-tree-tools',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
                             'interface' => []
                         ]
                     ]

@@ -6,7 +6,7 @@ return array(
         'meliscore' => array(
             'conf' => array(
                 'id' => 'id_melis_core',
-                'name' => 'tr_meliscore_meliscore',
+                'name' => 'tr_meliscore_header Title',
                 'rights_checkbox_disable' => true,
             ),
             'datas' => array(

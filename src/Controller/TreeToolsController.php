@@ -75,7 +75,7 @@ class TreeToolsController extends AbstractActionController
                 }
 
 
-    			$isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $keyTool);
+    			$isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX, $keyTool);
     			if ($isAccessible)
     				$tools[$key]['toolsection_children'][$keyTool] = array('tool_id' => $toolName['conf']['id'], 
     																	   'tool_name' => $toolName['conf']['name'], 
@@ -188,6 +188,25 @@ class TreeToolsController extends AbstractActionController
 
         return new JsonModel($toolsTreeConfig);
 
+    }
+
+    public function getRightsAction()
+    {
+        $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
+        $melisRights = $this->getServiceLocator()->get('MelisCoreRights');
+        $xml = $melisCoreUser->getUserXmlRights(1);
+        echo $xml . PHP_EOL;
+        $data = $melisCoreUser->isItemRightChecked($xml, 'meliscore_leftmenu', 'meliscms_tool_templates');
+        $isAccessible = $melisRights->isAccessible($xml, 'meliscore_leftmenu', 'meliscms_tool_site');
+
+        echo PHP_EOL . 'Rights from Session' . PHP_EOL;
+
+        $container = new \Zend\Session\Container('meliscore');
+        print_r($container->getArrayCopy());
+
+//        var_dump($data);
+        var_dump($isAccessible);
+        die;
     }
 
 }

@@ -38,28 +38,27 @@ $data_melisKey = $this->melisKey;
                         </a>
                         <ul class="collapse secondlvl-container" id="sub-load-<?= $keySection; ?>">
                             <?php
-                            foreach ($sectionTool['toolsection_children'] as $keyTool => $tool)
-                            {
-                                $toolIcon = 'fa-wrench';
-                                if (!empty($tool['tool_icon']))
-                                    $toolIcon = $tool['tool_icon'];
+                            if (isset($sectionTool['toolsection_children']) && $sectionTool['toolsection_children']) {
+                                foreach ($sectionTool['toolsection_children'] as $keyTool => $tool)
+                                {
+                                    $toolIcon = 'fa-wrench';
+                                    if (!empty($tool['tool_icon']))
+                                        $toolIcon = $tool['tool_icon'];
 
-                                $data_tool_id = $tool['tool_id'];
-                                $data_tool_name = $tool['tool_name'];
-                                $data_tool_meliskey = $tool['tool_melisKey'];
+                                    $data_tool_id = $tool['tool_id'];
+                                    $data_tool_name = $tool['tool_name'];
+                                    $data_tool_meliskey = $tool['tool_melisKey'];
 
-//                                if (!$tool['tool_icon']) {
-//                                    break;
-//                                }
 
-                                ?>
-                                <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
-                                    <a href="#">
-                                        <i class="fa <?= $toolIcon ?>"></i>
-                                        <span><?= $data_tool_name ?> </span>
-                                    </a>
-                                </li>
-                                <?php
+                                    ?>
+                                    <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
+                                        <a href="#">
+                                            <i class="fa <?= $toolIcon ?>"></i>
+                                            <span><?= $data_tool_name ?> </span>
+                                        </a>
+                                    </li>
+                                    <?php
+                                }
                             }
                             ?>
                         </ul>
