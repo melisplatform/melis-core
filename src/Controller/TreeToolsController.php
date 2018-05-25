@@ -65,7 +65,7 @@ class TreeToolsController extends AbstractActionController
     			'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
     			'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
     			'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
-    			'toolsection_icon' => $toolSectionName['conf']['icon'] ?? '',
+    			'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-close',
                 'toolsection_forward' => $toolSectionName['forward'] ?? [],
                 'toolsection_children' => array(),
     		);
@@ -74,7 +74,7 @@ class TreeToolsController extends AbstractActionController
     		foreach($toolSectionName['interface'] as $keyTool => $toolName)
     		{
 
-    		    $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : null;
+    		    $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-close';
 
     		    if ($icon) {
     		       $isNavChild = true;
@@ -84,7 +84,7 @@ class TreeToolsController extends AbstractActionController
     			$isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX, $keyTool);
     			if ($isAccessible)
     				$tools[$key]['toolsection_children'][$keyTool] = array('tool_id' => $toolName['conf']['id'] ?? $keyTool,
-    																	   'tool_name' => $toolName['conf']['name'] ?? $keyTool,
+    																	   'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
     																	   'tool_icon' => $icon,
     																	   'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
     																	   'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool);
