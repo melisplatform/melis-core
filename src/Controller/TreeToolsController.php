@@ -13,7 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
-
+use MelisCore\Service\MelisCoreConfigService;
 /**
  * This class renders Melis CMS
  */
@@ -29,11 +29,12 @@ class TreeToolsController extends AbstractActionController
 
 	/**
 	 * Renders the leftmenu accordion/tree of tools 
-	 * @return \Zend\View\Model\ViewModel
+	 * @return ViewModel
 	 */
-    public function renderTreeToolsAction()
+    public function renderTreeToolsAction(): ViewModel
     {
     	$melisKey = $this->params()->fromRoute('melisKey', '');
+
     	$melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
     	$melisKeys = $melisAppConfig->getMelisKeys();
 
@@ -48,7 +49,12 @@ class TreeToolsController extends AbstractActionController
     	$melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
     	$melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
     	$xmlRights = $melisCoreAuth->getAuthRights();
-        
+
+    	// Merge config if melisKey is "Others"
+        if ($melisKey == 'melisothers_toolstree_section') {
+            $appsConfig['interface'] = array_merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
+        }
+
     	// Show sections first
     	foreach($appsConfig['interface'] as $key => $toolSectionName)
     	{
@@ -56,11 +62,11 @@ class TreeToolsController extends AbstractActionController
 
     		// First level, sections
     		$tools[$key] = array(
-    			'toolsection_id' => $toolSectionName['conf']['id'],
-    			'toolsection_name' => $toolSectionName['conf']['name'],
-    			'toolsection_meliskey' => $toolSectionName['conf']['melisKey'],
-    			'toolsection_icon' => (!empty($toolSectionName['conf']['icon'])?($toolSectionName['conf']['icon']):('')),
-                'toolsection_forward' => isset($toolSectionName['forward']) ? $toolSectionName['forward'] : [],
+    			'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
+    			'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
+    			'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
+    			'toolsection_icon' => $toolSectionName['conf']['icon'] ?? '',
+                'toolsection_forward' => $toolSectionName['forward'] ?? [],
                 'toolsection_children' => array(),
     		);
     		
@@ -77,11 +83,11 @@ class TreeToolsController extends AbstractActionController
 
     			$isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX, $keyTool);
     			if ($isAccessible)
-    				$tools[$key]['toolsection_children'][$keyTool] = array('tool_id' => $toolName['conf']['id'], 
-    																	   'tool_name' => $toolName['conf']['name'], 
+    				$tools[$key]['toolsection_children'][$keyTool] = array('tool_id' => $toolName['conf']['id'] ?? $keyTool,
+    																	   'tool_name' => $toolName['conf']['name'] ?? $keyTool,
     																	   'tool_icon' => $icon,
     																	   'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
-    																	   'tool_melisKey' => $toolName['conf']['melisKey']);
+    																	   'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool);
     			 
     		}
 
@@ -140,6 +146,50 @@ class TreeToolsController extends AbstractActionController
     	 
      	return $view;
     }
+
+    /**
+     * Retrieves all configuration under left menu configuration
+     * with an exception to those allowable left menu configurations
+     *
+     * @return array
+     */
+    private function moveToolsToOthersCategory(): array
+    {
+        $leftMenu = $this->getConfig()->getItem('meliscore/interface/meliscore_leftmenu/interface');
+        $mergeToOthers = [];
+
+        foreach ($leftMenu as $melisKey => $item) {
+            if (!in_array($melisKey, $this->getAllowedLeftMenuConfig())) {
+                $mergeToOthers[$melisKey] = $item;
+            }
+        }
+
+        return $mergeToOthers;
+    }
+
+    /**
+     * Returns the melisKeys of the allowed left menu configuration
+     * @return array
+     */
+    private function getAllowedLeftMenuConfig(): array
+    {
+        return [
+            'meliscore_leftmenu_identity',
+            'meliscore_leftmenu_dashboard',
+            'meliscore_toolstree_section',
+            'meliscms_sitetree',
+            'meliscms_toolstree_section',
+            'melismarketing_toolstree_section',
+            'meliscommerce_toolstree_section',
+            'melisothers_toolstree_section',
+            'meliscustom_toolstree_section',
+            'meliscore_footer'
+        ];
+    }
+
+    /**
+     * @return ViewModel
+     */
     public function renderFirstTreeToolsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
@@ -176,37 +226,13 @@ class TreeToolsController extends AbstractActionController
         return $view;
     }
 
+
     /**
-     * http://winland-tower.local/melis/MelisCore/TreeTools/categorized
-     * melisHelper.zoneReload('id_meliscore_leftmenu', 'meliscore_leftmenu');
+     * @return MelisCoreConfigService
      */
-    public function categorizedAction()
+    private function getConfig(): MelisCoreConfigService
     {
-        $path = 'meliscore/interface/meliscore_leftmenu/interface/';
-        $toolsTreeConfig = $this->getServiceLocator()->get('MelisCoreConfig')->getItem($path);
-
-
-        return new JsonModel($toolsTreeConfig);
-
-    }
-
-    public function getRightsAction()
-    {
-        $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
-        $melisRights = $this->getServiceLocator()->get('MelisCoreRights');
-        $xml = $melisCoreUser->getUserXmlRights(1);
-        echo $xml . PHP_EOL;
-        $data = $melisCoreUser->isItemRightChecked($xml, 'meliscore_leftmenu', 'meliscms_tool_templates');
-        $isAccessible = $melisRights->isAccessible($xml, 'meliscore_leftmenu', 'meliscms_tool_site');
-
-        echo PHP_EOL . 'Rights from Session' . PHP_EOL;
-
-        $container = new \Zend\Session\Container('meliscore');
-        print_r($container->getArrayCopy());
-
-//        var_dump($data);
-        var_dump($isAccessible);
-        die;
+        return $this->getServiceLocator()->get('MelisCoreConfig');
     }
 
 }
