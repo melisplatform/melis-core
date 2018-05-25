@@ -34,6 +34,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         return $this->serviceLocator;
     }
 
+
     /**
      * Extends the functionality of $this->isAccessible method
      * but can only be used on tools

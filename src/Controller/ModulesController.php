@@ -110,18 +110,15 @@ class ModulesController extends AbstractActionController
     }
 
     /**
-     * Checks wether the user has access to this tools or not
-     * @return boolean
+     * Checks whether the user has access to this tools or not
+     * @param $key
+     * @return bool
      */
-    private function hasAccess($key)
+    private function hasAccess($key): bool
     {
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-        $xmlRights = $melisCoreAuth->getAuthRights();
+        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccessTool($key);
 
-        $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $key);
-
-        return $isAccessible;
+        return $hasAccess;
     }
 
 

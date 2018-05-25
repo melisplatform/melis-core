@@ -535,17 +535,14 @@ class PlatformSchemeController extends AbstractActionController
 
     /**
      * Checks whether the user has access to this tools or not
-     * @return boolean
+     * @param $key
+     * @return bool
      */
-    private function hasAccess()
+    private function hasAccess($key): bool
     {
-        $key             = 'meliscore_tool_platform_scheme_tool_content';
-        $melisCoreAuth   = $this->getServiceLocator()->get('MelisCoreAuth');
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-        $xmlRights       = $melisCoreAuth->getAuthRights();
-        $isAccessible    = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $key);
+        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccessTool($key);
 
-        return $isAccessible;
+        return $hasAccess;
     }
 
     /**
