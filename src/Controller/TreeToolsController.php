@@ -65,7 +65,7 @@ class TreeToolsController extends AbstractActionController
     			'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
     			'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
     			'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
-    			'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-close',
+    			'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
                 'toolsection_forward' => $toolSectionName['forward'] ?? [],
                 'toolsection_children' => array(),
     		);
