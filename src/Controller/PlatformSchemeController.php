@@ -35,11 +35,11 @@ class PlatformSchemeController extends AbstractActionController
     {
 
         $form = $this->getForm();
-
+        $melisKey = $this->params()->fromRoute('melisKey', '');
         $view = new ViewModel();
 
         $view->melisKey = $this->getMelisKey();
-        $view->hasAccess = $this->hasAccess();
+        $view->hasAccess = $this->hasAccess($melisKey);
 
         $schemeData = $this->getPlatformSchemeSvc()->getCurrentScheme();
 

@@ -74,7 +74,7 @@ class TreeToolsController extends AbstractActionController
     		foreach($toolSectionName['interface'] as $keyTool => $toolName)
     		{
 
-    		    $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-close';
+    		    $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-cube';
 
     		    if ($icon) {
     		       $isNavChild = true;
