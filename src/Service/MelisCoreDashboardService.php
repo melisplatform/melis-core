@@ -28,7 +28,6 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	 */
 	public function getDashboardPluginsJsCallbackJsDatas($dashboardId)
 	{
-	    $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
 	    $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
 	    $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
 	    
@@ -61,11 +60,6 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	                        if (!empty($config['dashboard_plugins'][(string)$xVal->attributes()->plugin]))
 	                        {
 	                            $pluginConfig = $config['dashboard_plugins'][(string)$xVal->attributes()->plugin];
-	                            
-	                            if (!empty($pluginConfig['interface']) && is_array($pluginConfig['interface']))
-	                            {
-	                                list($jsCallBacks, $datasCallback) = $melisAppConfig->getJsCallbacksDatas($pluginConfig);
-	                            }
 	                            
 	                            if (!empty($pluginConfig['jscallback']))
 	                            {

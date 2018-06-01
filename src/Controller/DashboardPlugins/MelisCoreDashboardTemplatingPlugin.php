@@ -201,6 +201,11 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         // Removing interface from plugin rendered view config json
         unset($this->pluginConfig['interface']);
 
+        if (!empty($this->pluginConfig['plugin_id']))
+        {
+            $modelVars->pluginId = $this->pluginConfig['plugin_id'];
+        }
+        
         $modelVars->pluginConfig = $this->pluginConfig;
         $modelVars->jsonPluginConfig = json_encode($this->pluginConfig);
         

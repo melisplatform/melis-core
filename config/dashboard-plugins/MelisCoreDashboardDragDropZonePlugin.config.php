@@ -25,8 +25,6 @@
                                     'module' => 'MelisCore',
                                     'plugin' => 'MelisCoreDashboardDragDropZonePlugin',
                                     'function' => 'dragdropzone',
-                                    'jscallback' => '',
-                                    'jsdatas' => array()
                                 ),
                             ),
                         )

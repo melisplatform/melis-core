@@ -97,23 +97,32 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 				$subarray = $this->getMelisKeys($valueConfig['interface'], $fullPathTmp . '/interface');
 				$final = array_merge($final, $subarray);
 			}
-			
-			if (!empty($valueConfig['dashboard_plugins']))
-			{
-			    
-			    $dashboardPlugins = $valueConfig['dashboard_plugins'];
-			    
-			    foreach ($dashboardPlugins As $dKeyConfig => $dValConfig)
-			    {
-			        $fullPathTmp = $fullPath . '/' .$keyConfig .'/dashboard_plugins/'. $dKeyConfig;
-			        
-			        if (!empty($dValConfig['interface']))
-			        {
-			            $subarray = $this->getMelisKeys($dValConfig['interface'], $fullPathTmp . '/interface');
-			            $final = array_merge($final, $subarray);
-			        }
-			    }
-			}
+		}
+		
+		// Dashboard plugins interfaces
+		foreach($array as $keyConfig => $valueConfig)
+		{
+		    $fullPathTmp = $fullPath . '/' . $keyConfig;
+		    if (!empty($valueConfig['conf']) && !empty($valueConfig['conf']['melisKey']))
+		    {
+		        $final[$valueConfig['conf']['melisKey']] = $fullPathTmp;
+		    }
+		    
+		    if (!empty($valueConfig['dashboard_plugins']))
+		    {
+		        $dashboardPlugins = $valueConfig['dashboard_plugins'];
+		        
+		        foreach ($dashboardPlugins As $dKeyConfig => $dValConfig)
+		        {
+		            $fullPathTmp = $fullPath . '/' .$keyConfig .'/dashboard_plugins/'. $dKeyConfig;
+		            
+		            if (!empty($dValConfig['interface']))
+		            {
+		                $subarray = $this->getMelisKeys($dValConfig['interface'], $fullPathTmp . '/interface');
+		                $final = array_merge($final, $subarray);
+		            }
+		        }
+		    }
 		}
 		
 		return $final;
@@ -153,7 +162,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 		        'module' => 'MelisCore',
 		        'controller' => 'DashboardPlugins',
 		        'action' => 'render-dashboard-plugins',
-		        'jscallback' => 'melisDashBoardDragnDrop.init();',
+		        'jscallback' => 'melisDashBoardDragnDrop.init()',
 		        'jsdatas' => ''
 		    );
 	    }

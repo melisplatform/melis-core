@@ -23,32 +23,6 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
         parent::__construct();
     }
     
-    public function modelVars()
-    {
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-        
-        // Max lines
-        $maxLines = 8;
-            
-        // Getting last users' logged in
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $users = $userTable->getLastLoggedInUsers($maxLines);
-        if ($users)
-        {
-            $users = $users->toArray();
-            foreach ($users as $keyUser => $user)
-            {
-                $users[$keyUser]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($this->locale), strtotime($user['usr_last_login_date']));
-            }
-        }
-        
-        $modelVariable = array(
-            'users' => $users
-        );
-        
-        return $modelVariable;
-    }
-    
     public function recentActivityUsers()
     {
         $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');

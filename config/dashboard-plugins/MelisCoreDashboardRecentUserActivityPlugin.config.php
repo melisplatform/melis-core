@@ -17,6 +17,7 @@
                         'thumbnail' => '/MelisCore/plugins/images/MelisCoreDashboardRecentUserActivityPlugin.jpg',
                         'jscallback' => '',
                         'max_lines' => 8,
+                        'height' => 4,
                         
                         'interface' => array(
                             'meliscore_dashboard_recent_activity_users' => array(
