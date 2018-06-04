@@ -3579,6 +3579,14 @@ div#modal-user-management div.widget {
 	font-family: inherit;
 }
 
+.melis-svg-icon {
+    position: static;
+    width: 32px;
+    height: 25px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
 /*
 
 .dashboard-container .ui-state-highlight {
