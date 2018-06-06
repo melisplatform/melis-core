@@ -1634,38 +1634,38 @@ span.fancytree-active span.fancytree-title{
 }
 
 /* dashboard widgets */
-#id_meliscore_center_dashboard .col-xs-12{
+.melis-dashboard-plugins .col-xs-12{
     margin-bottom: 20px;
 }
 .dashboard-small{
     height: 200px;
 }
-#id_meliscore_center_dashboard .widget .dashboard-widget-content-small{
+.melis-dashboard-plugins .widget .dashboard-widget-content-small{
     max-height: 118px;
     overflow-y: auto;
 }
 .dashboard-medium{
     height: 400px;
 }
-#id_meliscore_center_dashboard .widget .dashboard-widget-content-medium{
+.melis-dashboard-plugins .widget .dashboard-widget-content-medium{
     max-height: 318px;
     overflow-y: auto;
 }
 .dashboard-large{
     height: 800px;
 }
-#id_meliscore_center_dashboard .widget .dashboard-widget-content-large{
+.melis-dashboard-plugins .widget .dashboard-widget-content-large{
     max-height: 718px;
     overflow-y: auto;
 }
-#id_meliscore_center_dashboard .widget-activity ul.list li{
+.melis-dashboard-plugins .widget-activity ul.list li{
     padding: 11px 0 8px 15px;
     position: relative;
     height: auto;
     line-height: normal;
     font-weight: bold;
 }
-#id_meliscore_center_dashboard .widget-activity ul.list li>span{
+.melis-dashboard-plugins .widget-activity ul.list li>span{
     color: #7D7B7B;
     text-transform: uppercase;
     font-size: 12px;

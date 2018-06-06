@@ -7,7 +7,6 @@
 		'tr_meliscore_footer_2015 by Melis Technology' => '© ' . date('Y') . ' par Melis Technology',
 		'tr_meliscore_footer_all rights reserved' => 'Tous droits réservés.',
 		'tr_meliscore_center_dashboard_title' => 'Melis Technology',
-	    
 
 		'tr_meliscore_menu_toolstree_Name' => 'Modules',
 		'tr_meliscore_menu_toolstree_section_Admin' => 'Administration',
@@ -15,10 +14,8 @@
 		'tr_meliscore_leftmenu_tools_No tools available' => 'Aucun outil accessible !',
 
 		// Dashboard
-		'tr_meliscore_center_Dashboard' => 'Dashboard',
-		'tr_meliscore_center_Melis Dashboard' => 'Melis Dashboard',
-		'tr_meliscore_center_dashboard_Logo' => 'Logo',
-		'tr_meliscore_center_dashboard_Calendar' => 'Calendrier',
+		'tr_meliscore_dashboard' => 'Dashboard',
+		'tr_meliscore_melis_dashboard' => 'Melis Dashboard',
 
         'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
 

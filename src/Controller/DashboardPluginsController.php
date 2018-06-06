@@ -78,6 +78,10 @@ class DashboardPluginsController extends AbstractActionController
     public function renderDashboardPluginsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
+        
+        // Dashboard ID
+        $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_dashboard');
+        
         $isAccessible = null;
         
         // Check if dashboard is available
@@ -93,6 +97,7 @@ class DashboardPluginsController extends AbstractActionController
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->isAccessible = $isAccessible;
+        $view->dashboardId = $dashboardId;
         
         return $view;
     }

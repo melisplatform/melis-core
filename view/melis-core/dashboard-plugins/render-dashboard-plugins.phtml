@@ -1,22 +1,21 @@
-<?php
-	$id = '';
-	if (!empty($this->zoneconfig['conf']['id']))
-		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
-	$data_melisKey = $this->melisKey;
-?>
-
-
-<div data-melisKey='<?= $data_melisKey; ?>'<?= $id; ?> class="tab-pane container-level-a tab-panel-dashboard">
-	<div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2" id="id-maintabs-home">
+<div id="<?= $this->dashboardId ?>" data-melisKey="<?= $this->melisKey ?>" class="tab-pane container-level-a tab-panel-dashboard">
+	<div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2 melis-dashboard-plugins">
     	<?php 
 	    	if ($this->isAccessible)
 	    	{
-	    	    echo $this->MelisDashboardDragDropZone($this->zoneconfig['conf']['id']);
+	    	    $plugins = $this->MelisDashboardDragDropZone($this->dashboardId);
+	    	    
+	    	    if(empty($plugins))
+	    	        echo '<div class="alert alert-default">Dashboard is empty, try to add a plugin(s) from Dashboard plugin sidebar by dragging a plugin to the dashboard zone. </div>';
+	    	    else 
+	    	        echo $plugins;
 	    	}
 	    	else 
 	    	{
 	    	    echo $this->translate('tr_meliscore_rights_Not allowed dashboard');
 	    	}
     	?>
+    	
+    	
     </div>
 </div>

@@ -14,10 +14,8 @@
 		'tr_meliscore_leftmenu_tools_No tools available' => 'No tools available!',
 
 		// Dashboard
-		'tr_meliscore_center_Dashboard' => 'Dashboard',
-		'tr_meliscore_center_Melis Dashboard' => 'Melis Dashboard',
-		'tr_meliscore_center_dashboard_Logo' => 'Logo',
-		'tr_meliscore_center_dashboard_Calendar' => 'Calendar',
+		'tr_meliscore_dashboard' => 'Dashboard',
+		'tr_meliscore_melis_dashboard' => 'Melis Dashboard',
 
 		'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
 
