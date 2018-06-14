@@ -289,6 +289,26 @@ class PlatformSchemeController extends AbstractActionController
                                  * Return "1" if saving was successful
                                  */
                                 if($success) {
+
+                                    // generate a new scheme.css file in public
+                                    ini_set('memory_limit', '-1');
+                                    set_time_limit(0);
+                                    $content = $this->melisTool()->getViewContent([
+                                        'module' => 'MelisCore',
+                                        'controller' => 'PlatformScheme',
+                                        'action' => 'getStyleColorCss'
+                                    ]);
+                                    $assetsFolder = $_SERVER['DOCUMENT_ROOT'].'/assets/css/';
+
+                                    if(file_exists($assetsFolder)) {
+
+                                        file_put_contents($assetsFolder.'schemes.css', $content);
+                                    }
+                                    else {
+                                        mkdir($assetsFolder, 0777, true);
+                                        file_put_contents($assetsFolder.'schemes.css', $content);
+                                    }
+
                                     $success = 1;
                                     $textMessage = 'tr_meliscore_platform_scheme_save_ok';
                                 }
@@ -332,6 +352,7 @@ class PlatformSchemeController extends AbstractActionController
 
     }
 
+
     /**
      * @return JsonModel
      */
@@ -349,9 +370,25 @@ class PlatformSchemeController extends AbstractActionController
              * for now directly modify the MELIS_SCHEME_1
              */
             $schemeId = 2;
-            $success = $this->getPlatformSchemeSvc()->resetScheme($schemeId);
-//            $message      = 'Platform scheme has been restored';
-            $message      = 'tr_meliscore_platform_scheme_success_restore_message';
+            $success  = $this->getPlatformSchemeSvc()->resetScheme($schemeId);
+            // generate a new scheme.css file in public
+            ini_set('memory_limit', '-1');
+            set_time_limit(0);
+            $content = $this->melisTool()->getViewContent([
+                'module' => 'MelisCore',
+                'controller' => 'PlatformScheme',
+                'action' => 'getStyleColorCss'
+            ]);
+            $assetsFolder = $_SERVER['DOCUMENT_ROOT'].'/assets/css/';
+
+            if(file_exists($assetsFolder)) {
+                file_put_contents($assetsFolder.'schemes.css', $content);
+            }
+            else {
+                mkdir($assetsFolder, 0777, true);
+                file_put_contents($assetsFolder.'schemes.css', $content);
+            }
+            $message  = 'tr_meliscore_platform_scheme_success_restore_message';
         }
 
         $response = array(
@@ -399,6 +436,19 @@ class PlatformSchemeController extends AbstractActionController
         }
 
         return $view;
+    }
+
+    public function getCssAction()
+    {
+
+        $content = $this->melisTool()->getViewContent([
+            'module' => 'MelisCore',
+            'controller' => 'PlatformScheme',
+            'action' => 'getStyleColorCss'
+        ]);
+
+        echo $content;
+        die;
     }
 
     /**

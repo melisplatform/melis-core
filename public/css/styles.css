@@ -886,9 +886,14 @@ newplugin-cont span,
 .melis-modal-cont .modal-content p{
     margin-bottom: 4px;
 }
-/* css hack fix causing blur modal chrome only */
-.modal.in .modal-dialog {
-    -webkit-filter: blur(0.00001px);
+/* css hack fix causing blur and flicker modal chrome only */
+/* css hack fix causing tooltip blur modal mozilla only */
+.modal.in .modal-dialog,
+.modal.fade .modal-dialog {
+    -webkit-transform: inherit;
+    -moz-transform: inherit;
+    -o-transform: inherit;
+    transform: inherit;
 }
 
 
@@ -2264,7 +2269,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         display: none;
     }
     .navbar.main.navbar-primary .appbrand{
-        margin-left: -15px;
+        float: left;
+        margin: 0;
     }
     .navbar.main.navbar-primary .appbrand img{
         margin-right: 10px;
@@ -3356,3 +3362,8 @@ div#modal-user-management div.widget {
     }
 }
 
+@media (min-width: 768px){
+    .modal-error-cont b {
+        width: 31% !important;
+    }
+}

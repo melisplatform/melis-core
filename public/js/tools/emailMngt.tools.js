@@ -82,6 +82,14 @@ $(function(){
 				melisHelper.tabOpen(translations.tr_meliscore_tool_emails_mngt, 'fa-envelope-o', 'id_meliscore_tool_emails_mngt', 'meliscore_tool_emails_mngt');
 				melisHelper.zoneReload("id_meliscore_tool_emails_mngt", "meliscore_tool_emails_mngt");
 			} else {
+				var layoutStatus = $("body").find(".melis-core-layout-status");
+				if (layoutStatus.length) {
+                    layoutStatus.removeClass("text-success");
+                    // Change tooltip text
+                    var layoutStatusTooltip = layoutStatus.children("i:first");
+                    if (layoutStatusTooltip.length) layoutStatusTooltip.attr('data-original-title', translations.tr_meliscore_file_not_exists);
+                }
+
 				melisCoreTool.alertDanger("#siteaddalert", '', data.textMessage);
 				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
 				melisCoreTool.highlightErrors(data.success, data.errors, codename+'_generalPropertiesform');

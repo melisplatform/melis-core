@@ -36,8 +36,11 @@ class IndexController extends AbstractActionController
 
         $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
+		
+		$bundleAsset = $this->getServiceLocator()->get('MelisAssetManagerWebPack')->getAssets();
 
         $this->layout()->setVariable('schemes', $schemeData);
+        $this->layout()->setVariable('bundle', $bundleAsset);
 
     	return $view;
     }
@@ -122,15 +125,16 @@ class IndexController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+        $coreTool        =  $this->getServiceLocator()->get('MelisCoreTool');
         $modules         =  $moduleSvc->getAllModules();
         $platformVersion =  $moduleSvc->getModulesAndVersions('MelisCore');
 
         $request = $this->getRequest();
         $uri     = $request->getUri();
 
-        $domain   = $uri->getHost();
-        $scheme   = $uri->getScheme();
-
+        $domain        = $uri->getHost();
+        $scheme        = $uri->getScheme();
+        $netConnection = $coreTool->isConnected();
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -138,7 +142,7 @@ class IndexController extends AbstractActionController
         $view->modules = serialize($modules);
         $view->scheme  = $scheme;
         $view->domain  = $domain;
-
+        $view->netConn = $netConnection;
         return $view;
     }
     
@@ -183,36 +187,4 @@ class IndexController extends AbstractActionController
         return $view;
     }
 
-    public function viewSessionAction()
-    {
-        $container = new \Zend\Session\Container('meliscore');
-
-        \Zend\Debug\Debug::dump($container->getArrayCopy());
-        die;
-    }
-
-    public function testAction()
-    {
-
-        $response        = new HttpResponse();
-        $tool =  $this->getServiceLocator()->get('MelisCoreTool');
-        $user = $this->getServiceLocator()->get('MelisCoreTableLang');
-
-        $users = $user->fetchAll()->toArray();
-//
-////        print '<pre>';
-////        print_r($users);
-////        print '</pre>';
-//
-//        $list = array (
-//            array('aaa', 'bbb', 'ccc', 'dddd'),
-//            array('123', '456', '789'),
-//            array('"aaa"', '"bbb"')
-//        );
-
-        print_r($tool->importCsv('C:\Users\melis-admin\Downloads\testfile (11).csv'));
-
-die;
-    }
-    
 }

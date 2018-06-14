@@ -457,10 +457,6 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $select = '';
             $selectColDef = '';
             if($selectCheckbox){
-//                $select = 'select: {
-//                             style:    "os",
-//                             selector: "td:first-child"
-//                          },';
                 $selectColDef = '{
                                 "targets": 0,                                   
                                  "bSortable":false,                                 
@@ -1127,7 +1123,6 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 
         if(is_object($content))  {
             $content = $content->getArrayCopy();
-            // $content = get_object_vars($content);
         }
 
         if(is_array($content)) {
@@ -1241,6 +1236,25 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     private function replaceQuotes($text)
     {
         return str_replace(array("'", "’"), chr(92) . "'", $text);
+    }
+
+    /**
+     * Check if the platform has connected to internet
+     * @return bool
+     */
+    public function isConnected()
+    {
+        $connected = @fsockopen("www.google.com", 80);
+        //website, port  (try 80 or 443)
+        if ($connected){
+            $isCon = true; //action when connected
+            fclose($connected);
+        }else{
+            $isCon = false; //action in connection failure
+        }
+
+        return $isCon;
+
     }
 
 	

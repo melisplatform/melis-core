@@ -23,7 +23,7 @@ function getRightsTree(userId){
 var _tmpUserId = null;
 window.setUserDateConnection = function(d) {
 	d.usr_id = _tmpUserId;
-}
+};
 
 // action buttons
 $(document).ready(function() {
@@ -159,7 +159,7 @@ function melisNewUserRights(){
 window.initRetrieveUser = function() { 
 	 var btnDelete = $('#tableToolUserManagement tr.clsCurrent td').find(".btnUserDelete");
 	 btnDelete.remove();
-}
+};
 
 var toolUserManagement = { 
 		

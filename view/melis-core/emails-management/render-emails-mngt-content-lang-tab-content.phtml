@@ -8,6 +8,18 @@
             	$form = $this->meliscore_emails_mngt_tool_general_properties_form;
             	$form->setAttribute('id',$this->codename.'_generalPropertiesform');
             	$form->get('boe_tag_accepted_list')->setAttribute('id',$this->codename.'_boe_tag_accepted_list');
+
+            	if (!empty($this->layout)) {
+                    // Update Form's layout status
+                    $layoutOptions = $form->get('boe_content_layout')->getOptions();
+                    if (!empty($layoutOptions['label'])) {
+                        $layoutOptions['label'] = '<span class="melis-core-layout-status text-'.($layout['status']? 'success' : 'danger').'">
+                        <i class="fa fa-fw fa-circle" data-toggle="tooltip" data-placement="top" title="" data-original-title="'. $layout['msg'] .'"></i></span>'
+                            . $layoutOptions['label'];
+                        $form->get('boe_content_layout')->setOptions($layoutOptions);
+                    }
+                }
+
             	$form->prepare();
             	echo $this->form()->openTag($form); 
             	echo $this->melisFieldCollection($form);

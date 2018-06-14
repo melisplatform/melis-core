@@ -1,6 +1,3 @@
-/**
- * Created by conta on 8/18/2017.
- */
 /* jquery.fancytree.js */
 /*!
  * jquery.fancytree.js
@@ -15,12 +12,9 @@
  * @date @DATE
  */
 
-/** Core Fancytree module.
- */
-
 
 // Start of local namespace
-;(function($, window, document, undefined) {
+(function($, window, document, undefined) {
     "use strict";
 
 // prevent duplicate loading
@@ -7604,7 +7598,6 @@
     function inputLabel(node) {
         return (node.id && $('label[for="'+ node.id +'"]').val()) || node.name;
     }
-
 // convert <menu> to items object
     function menuChildren(items, $children, counter) {
         if (!counter) {
@@ -7770,7 +7763,7 @@
         });
 
         return counter;
-    }
+    };
 
 // convert html5 menu
     $.contextMenu.fromMenu = function(element) {

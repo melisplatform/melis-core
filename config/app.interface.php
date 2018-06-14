@@ -107,8 +107,70 @@ return array(
                 ),
             ),
             'ressources' => array(
+                'css' => array(
+					'/MelisCore/assets/components/library/jquery-ui/css/jquery-ui.min.css',
+					'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
+					'/MelisCore/assets/components/modules/admin/charts/easy-pie/assets/lib/css/jquery.easy-pie-chart.css',
+					'/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/jquery.notyfy.css',
+					'/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/notyfy.theme.default.css',
+
+					'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-select/assets/lib/css/bootstrap-select.css',
+					'/MelisCore/assets/components/modules/admin/forms/elements/uniform/assets/lib/css/uniform.default.css',
+
+					'/MelisCore/assets/components/modules/admin/gallery/blueimp-gallery/assets/lib/css/blueimp-gallery.min.css',
+
+					'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/lib/css/bootstrap-switch.css',
+					'/MelisCore/assets/components/modules/admin/notifications/gritter/assets/lib/css/jquery.gritter.css',
+					'/MelisCore/assets/components/modules/admin/forms/editors/wysihtml5/assets/lib/css/bootstrap-wysihtml5-0.0.2.css',
+					'/MelisCore/assets/components/modules/admin/forms/elements/jasny-fileupload/assets/css/fileupload.css',
+					'/MelisCore/assets/components/modules/admin/forms/elements/select2/assets/lib/css/select2.css',
+					'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css',
+					'/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css',
+
+                    // Data Tables
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css',
+
+                    // fancytree
+                    '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
+                    '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
+
+                    '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
+                    '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
+                    '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
+                    '/MelisCore/assets/components/library/animate/animate.min.css',
+                    '/MelisCore/assets/components/modules/admin/tables/responsive/assets/lib/css/footable.core.min.css',
+
+                    // admin
+                    '/MelisCore/assets/css/admin/module.admin.page.form_elements.min.css',
+                    '/MelisCore/assets/css/admin/module.admin.page.tables_responsive.min.css',
+
+
+                    // Melis Admin
+                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
+
+
+
+                    // Bootstrap Dialog
+                    '/MelisCore/css/bootstrap-dialog.min.css',
+
+                    // Plugins Move css group
+                    '/MelisCore/css/plugin.group.css',
+
+                    // MelisCore main CSS - should always be in bottom
+                    '/MelisCore/css/styles.css',
+                    '/MelisCore/css/diagnostic.css',
+
+                    
+                    // Custom font-awesome checkbox
+                    '/MelisCore/css/custom-fontawesome.css'
+                ),
                 'js' => array(
-                    '/melis/MelisCore/Language/getTranslations',
+                    '/melis/get-translations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
 
                     // Concat plugins
@@ -128,6 +190,19 @@ return array(
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
+
+
+                    // flot charts
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/custom/js/flotcharts.common.js?v=v1.2.3',
+
+                    //datepicker translations
+                    '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
+
                     '/MelisCore/js/core/tabExpander.js',
                     '/MelisCore/js/core/melisSidebar.js',
                     '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
@@ -145,47 +220,27 @@ return array(
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
-                    // flot charts
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v1.2.3',
-                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/custom/js/flotcharts.common.js?v=v1.2.3',
-
-                    //datepicker translations
-                    '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
                 ),
-                'css' => array(
-                    // Melis Admin
-                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
+                /**
+                 * the "build" configuration compiles all assets into one file to make
+                 * lesser requests
+                 */
+                'build' => [
+                    // set to "true" if you want to use the build assets
+                    'use_build_assets' =>  true,
+                    // path to where the build CSS and JS are located
+                    'build_path' => 'public/build/',
 
-                    // fancytree
-                    '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
-                    '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
+                    // lists of assets that will be loaded in the layout
+                    'css' => [
+                        '/MelisCore/build/css/bundle.css',
 
-                    '/MelisCore/assets/css/admin/module.admin.page.form_elements.min.css',
-                    '/MelisCore/assets/css/admin/module.admin.page.tables_responsive.min.css',
-
-                    // Data Tables
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css',
-                    
-                    // Bootstrap Dialog
-                    'MelisCore/css/bootstrap-dialog.min.css',
-
-                    // Plugins Move css group
-                    'MelisCore/css/plugin.group.css',
-
-                    // MelisCore main CSS - should always be in bottom
-                    '/MelisCore/css/styles.css',
-                    '/MelisCore/css/diagnostic.css',
-
-                    
-                    // Custom font-awesome checkbox
-                    '/MelisCore/css/custom-fontawesome.css'
-                ),
+                    ],
+                    'js' => [
+						'/melis/get-translations',
+                        '/MelisCore/build/js/bundle.js',
+                    ]
+                ]
             ),
             'interface' => array(
                 'meliscore_header' => array(
@@ -1276,18 +1331,50 @@ return array(
         ),
         'meliscore_login' => array(
             'ressources' => array(
-                'js' => array(
-                    '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
-                    '/melis/get-translations',
-                    '/MelisCore/js/tools/melisCoreTool.js',
-                    '/MelisCore/js/core/login.js',
-                    '/MelisCore/js/core/melispasswordservice.js',
-                ),
-                'css' => array(
-                    '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
+				'css' => array(
+					 '/MelisCore/css/OpenSans.css',
+					 '/MelisCore/css/Roboto.css',
+					 '/MelisCore/css/Monseratt.css',
+				
+					 '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
+					 '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
+					 '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
+					 '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
+					 '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
+					 '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
+					 '/MelisCore/assets/components/library/animate/animate.min.css',
+
+					 '/MelisCore/assets/components/library/jquery-ui/css/jquery-ui.min.css',
+					 '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
+					 '/MelisCore/assets/components/modules/admin/charts/easy-pie/assets/lib/css/jquery.easy-pie-chart.css',
+					 '/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/jquery.notyfy.css',
+					 '/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/notyfy.theme.default.css',
+
+					 '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-select/assets/lib/css/bootstrap-select.css',
+					 '/MelisCore/assets/components/modules/admin/forms/elements/uniform/assets/lib/css/uniform.default.css',
+
+					 '/MelisCore/assets/components/modules/admin/gallery/blueimp-gallery/assets/lib/css/blueimp-gallery.min.css',
+
+					 '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/lib/css/bootstrap-switch.css',
+					 '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/lib/css/jquery.gritter.css',
+					 '/MelisCore/assets/components/modules/admin/forms/editors/wysihtml5/assets/lib/css/bootstrap-wysihtml5-0.0.2.css',
+					 '/MelisCore/assets/components/modules/admin/forms/elements/jasny-fileupload/assets/css/fileupload.css',
+					 '/MelisCore/assets/components/modules/admin/forms/elements/select2/assets/lib/css/select2.css',
+					 '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css',
+					 '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css',
+				
+				
+                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
                     // MelisCore main CSS - should always be in bottom
-                    '/MelisCore/css/styles.css',
-                )
+                     '/MelisCore/css/styles.css',
+                ),
+                'js' => array(
+                     '/melis/get-translations',
+                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
+                     '/MelisCore/js/tools/melisCoreTool.js',
+                     '/MelisCore/js/core/login.js',
+                     '/MelisCore/js/core/melispasswordservice.js',
+                ),
             ),
             'conf' => array(
                 'id' => 'id_melis_core_login',

@@ -26,7 +26,9 @@
   ],
   "extra": {
     "module-name": "MelisCore",
-    "dbdeploy": true
+    "dbdeploy": true,
+    "melis-site": false,
+    "melis-module-category": "core"
   },
   "require": {
     "php": "^5.5 || ^7.0",
@@ -34,7 +36,7 @@
     "ext-json": "*",
     "ext-pdo_mysql": "*",
     "justinrainbow/json-schema": "5.2.1",
-    "melisplatform/melis-asset-manager": "^2.3.0",
+    "melisplatform/melis-asset-manager": "^2.4",
     "composer/composer": "~1.2"
   },
   "require-dev": {

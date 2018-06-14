@@ -1,0 +1,59 @@
+<melis-core>
+	<package_info>
+		<mp_title>Melis Core</mp_title>
+		<mp_subtitle>The module that brings you a complete default back-office.</mp_subtitle>
+		<mp_description>
+			Melis Core is the main Melis Platform module.
+			<br />
+			This module will bring you a complete back-office ready to be used and customized, with default components such as:
+			<br />
+			- a login system<br />
+			- a user's administration with advanced right system<br />
+			- a profile's edition<br />
+			- a profile's edition<br />
+			- a multilingual back-office<br />
+			- a default dashboard to be customized<br />
+			- a log system for back-office's actions<br />
+			- a mail management system for the back-office
+		</mp_description>
+		<mp_maintainers>melisplatform</mp_maintainers>
+		<mp_group>Melis Core</mp_group>
+	</package_info>
+	<package_images>
+		<img_1>
+			<mpi_image_title>MelisCore's dashboard</mpi_image_title>
+			<mpi_image_file>melis-core.png</mpi_image_file>
+			<mpi_image_main>0</mpi_image_main>
+		</img_1>
+		<img_2>
+			<mpi_image_title>MelisCore's login</mpi_image_title>
+			<mpi_image_file>melis-core_2.JPG</mpi_image_file>
+			<mpi_image_main>1</mpi_image_main>
+		</img_2>
+		<img_3>
+			<mpi_image_title>MelisCore's Email Management System</mpi_image_title>
+			<mpi_image_file>melis-core_3.JPG</mpi_image_file>
+			<mpi_image_main>0</mpi_image_main>
+		</img_3>
+		<img_4>
+			<mpi_image_title>MelisCore's User Edition</mpi_image_title>
+			<mpi_image_file>melis-core_4.JPG</mpi_image_file>
+			<mpi_image_main>0</mpi_image_main>
+		</img_4>
+		<img_5>
+			<mpi_image_title>MelisCore's User's rights Edition</mpi_image_title>
+			<mpi_image_file>melis-core_5.JPG</mpi_image_file>
+			<mpi_image_main>0</mpi_image_main>
+		</img_5>
+		<img_6>
+			<mpi_image_title>MelisCore's Menu for Tablet</mpi_image_title>
+			<mpi_image_file>melis-core_6.JPG</mpi_image_file>
+			<mpi_image_main>0</mpi_image_main>
+		</img_6>
+		<img_7>
+			<mpi_image_title>MelisCore's Log Tool in Tablet</mpi_image_title>
+			<mpi_image_file>melis-core_7.JPG</mpi_image_file>
+			<mpi_image_main>0</mpi_image_main>
+		</img_7>
+	</package_images>
+</melis-core>

@@ -122,7 +122,6 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
             if(!$hasAgoWord) {
                 $ago = null;
             }
-//            print_r($output);
 
             return $output ? implode(' ', $output) . ' ' . $ago : $now;
         }

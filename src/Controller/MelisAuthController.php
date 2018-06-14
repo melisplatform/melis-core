@@ -43,6 +43,8 @@ class MelisAuthController extends AbstractActionController
 
         $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
+		
+		$bundleAsset = $this->getServiceLocator()->get('MelisAssetManagerWebPack')->getAssets();
 
 
     	$this->layout()->addChild($view, 'content');
@@ -50,6 +52,7 @@ class MelisAuthController extends AbstractActionController
     	$this->layout()->isLogin          = 1;
     	$this->layout()->login_background = $background;
     	$this->layout()->schemes          = $schemeData;
+		$this->layout()->bundle			  = $bundleAsset;
     	
     	return $view;
     	
