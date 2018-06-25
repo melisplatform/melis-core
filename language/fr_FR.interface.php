@@ -626,13 +626,13 @@
 	    'tr_melisore_Plugins' => 'Plugins',
 	    'tr_melis_core_common_close' => 'Annuler',
 	    'tr_melis_core_common_add' => 'Ajouter',
-	    'tr_melis_core_remove_dashboard_plugin' => 'Remove dashboard plugin',
-	    'tr_melis_core_remove_dashboard_plugin_msg' => 'Are you sure you want to remove this plugin',
+	    'tr_melis_core_remove_dashboard_plugin' => 'Supprimer le plugin du tableau de bord',
+	    'tr_melis_core_remove_dashboard_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer ce plugin?',
 	    
 	    'tr_PluginSection_meliscore' => 'Melis Core',
 	    
 	    'tr_meliscore_dashboard_Recent Activity' => 'Activité récente',
-	    'tr_meliscore_dashboard_Recent Activity description' => 'This plugin display the list of User recent activity',
+	    'tr_meliscore_dashboard_Recent Activity description' => 'Ce plugin affiche la liste des activités récentes de l\'utilisateur.',
 	    'tr_meliscore_dashboard_recent_activity_Users' => 'Utilisateurs',
 	    'tr_meliscore_dashboard_recent_activity_Logged in' => 's\'est connecté',
     );
