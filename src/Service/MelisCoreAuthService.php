@@ -10,8 +10,7 @@ class MelisCoreAuthService
 	implements MelisCoreAuthServiceInterface, ServiceLocatorAwareInterface
 {
 	public $serviceLocator;
-	
-	
+
 	public function setServiceLocator(ServiceLocatorInterface $sl)
 	{
 		$this->serviceLocator = $sl;
@@ -22,18 +21,28 @@ class MelisCoreAuthService
 	{
 		return $this->serviceLocator;
 	}
+
+
 	
 	public function getAuthRights()
 	{
-    	$melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
-		$user = $this->getIdentity();
-		
+	/**
+	 * @var \Zend\EventManager\EventManagerInterface $e
+	 */
+	    $e = $this->getServiceLocator()->get('Application')->getEventManager();
+	$e->trigger('melis_core_check_user_rights', $this);
+
+	$melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+		$user = $melisCoreAuth->getIdentity();
+
 		$rightsXML = '';
-		if (!empty($user))
-			$rightsXML = $user->usr_rights;
-		
-		return $rightsXML;
+		if (!empty($user)) {
+	    $rightsXML = $user->usr_rights;
 	}
+
+
+	return $rightsXML;
+    }
 
     public function encryptPassword($password)
     {
