@@ -19,6 +19,8 @@ class MelisFieldRow extends FormRow
  
 	public function render(ElementInterface $element, $labelPosition = null)
 	{
+	    $translator = $this->getTranslator();
+
 	    if ($element->getAttribute('required') == self::MELIS_TEXT_REQUIRED)
 	    {
 	        $element->setLabelOptions(array('disable_html_escape' => true));
@@ -67,9 +69,10 @@ class MelisFieldRow extends FormRow
 	        $switchId = $element->getAttribute('id');
 	        $isChecked = !empty($element->getValue())? 'checked' : '';
 	        $switchOptions = $element->getOption('switchOptions');
+	        $switchLabel = $switchOptions['label'] ?? $translator->translate('tr_meliscore_tool_user_col_status');
 	        $switch  = '<div class="form-group">';
 	        $switch .= '<label for="'.$element->getName().'">'. $element->getLabel() . '</label>';
-	        $switch .=  '   <div id="'. $switchId .'" class="make-switch" data-on-label="'. $switchOptions['label-on'] .'" data-off-label="'. $switchOptions['label-off'] .'" data-text-label="'. $switchOptions['label'] .'">';
+	        $switch .=  '   <div id="'. $switchId .'" class="make-switch" data-on-label="'. $switchOptions['label-on'] .'" data-off-label="'. $switchOptions['label-off'] .'" data-text-label="'. $switchLabel .'">';
 	        $switch .= '       <input type="checkbox" name="'.$element->getName().'" id="'.$element->getName().'" '.$isChecked.' >';
             $switch .= '    </div>';
             $switch .= '</div>';
@@ -197,36 +200,36 @@ class MelisFieldRow extends FormRow
 	                            <label for="">'.$element->getLabel().'</label>
 	                            <div class="input-group">';
 	                                
-	                                if ($type == true)
-	                                {
-	                                    $formElement .='<span class="input-group-btn">
-                                            	           <button class="btn btn-default" id="'.$buttonId.'" type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
-                                            	        </span>';
-	                                }
-	                                
-	                                $inputAttr = array();
-	                                foreach ($element->getattributes() As $key => $val)
-	                                {
-	                                    if ($key == 'class')
-	                                    {
-	                                        array_push($inputAttr, $key.'="form-control '.$val.'"');
-	                                    }
-	                                    else 
-	                                    {
-	                                        array_push($inputAttr, $key.'="'.$val.'"');
-	                                    }
-	                                }
-	                                
-	                                $formElement .= '<input '.implode(' ', $inputAttr).' value="'.$element->getValue().'">';
-                        	           
-    	                            if (empty($type))
-    	                            {
-    	                                $formElement .='<span class="input-group-btn">
-                                            	           <button class="btn btn-default '.$buttonClass.'" id="'.$buttonId.'" type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
-                                            	        </span>';
-    	                            }  
+            if ($type == true)
+            {
+                $formElement .='<span class="input-group-btn">
+                                   <button class="btn btn-default" id="'.$buttonId.'" type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
+                                </span>';
+            }
+
+            $inputAttr = array();
+            foreach ($element->getattributes() As $key => $val)
+            {
+                if ($key == 'class')
+                {
+                    array_push($inputAttr, $key.'="form-control '.$val.'"');
+                }
+                else
+                {
+                    array_push($inputAttr, $key.'="'.$val.'"');
+                }
+            }
+
+            $formElement .= '<input '.implode(' ', $inputAttr).' value="'.$element->getValue().'">';
+
+            if (empty($type))
+            {
+                $formElement .='<span class="input-group-btn">
+                                   <button class="btn btn-default '.$buttonClass.'" id="'.$buttonId.'" type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
+                                </span>';
+            }
     	                            
-	            $formElement .= '</div>
+            $formElement .= '</div>
 	                        </div>';
 	    }elseif(strpos($element->getAttribute('class'), self::MELIS_MSGR_MSG_BOX)){
             $element->setLabel('');
