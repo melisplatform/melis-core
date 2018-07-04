@@ -23,6 +23,7 @@ var melisDashBoardDragnDrop = {
         this.gsSetOptions();
         
         this.dragWidget(this.melisWidgetHandle);
+        this.docuReady();
         this.dropWidget();
         //this.dragStartWidget();
         this.dragStopWidget();
@@ -75,23 +76,18 @@ var melisDashBoardDragnDrop = {
                 gridPH.attr('data-gs-width', 6);
                 gridPH.attr('data-gs-height', 4);
 
-                /*if( grid.find('.grid-stack-placeholder') ) {
-                    // grid stack placeholder w and h with issue
-                    gridPH[0].attributes[3].value = 6;
-                    gridPH[0].attributes[4].value = 3;
-                }*/
             }
         });
     },
 
-    docuReady: function() {
+    docuReady: function() {       
         //.tab-pane .page-loaded height: calc(100vh - 48px);
         if( this.$body.find('.grid-stack') ) {
-            this.$body.find('.tab-pane').css('height', 'calc(100vh - 50px)');
-            this.$body.find('.tab-pane .grid-stack').css('height', '100%');
+            this.$body.find('.grid-stack').closest('.tab-pane').css('height', 'calc(100vh - 50px)');
+            this.$body.find('.grid-stack').css('height', '100%');
         } else {
-            this.$body.find('.tab-pane').css('height', '100%');
-            this.$body.find('.tab-pane .grid-stack').css('height', '700px');
+            this.$body.find('.tab-pane').closest('.tab-pane').css('height', '100%');
+            this.$body.find('.grid-stack').css('height', '700px');
         }
     },
 
