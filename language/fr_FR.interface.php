@@ -20,6 +20,8 @@
 		'tr_meliscore_center_dashboard_Logo' => 'Logo',
 		'tr_meliscore_center_dashboard_Calendar' => 'Calendrier',
 
+        'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
+
 		// Rights
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',

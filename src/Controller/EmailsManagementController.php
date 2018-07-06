@@ -856,8 +856,11 @@ class EmailsManagementController extends AbstractActionController
         return new JsonModel($response);
     }
 
-    public function searchEmailAction(){
+    public function searchEmailAction()
+    {
 
+        $textTitle = '';
+        $textMessage = '';
         $translator = $this->getServiceLocator()->get('translator');
 
         $request = $this->getRequest();
@@ -869,7 +872,7 @@ class EmailsManagementController extends AbstractActionController
         $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
         $BoEmailId = $melisCoreBOEmailService->deleteEmail("Get");
 
-        $
+
         $response = array(
             'success' => 1,
             'textTitle' => $textTitle,
@@ -880,17 +883,17 @@ class EmailsManagementController extends AbstractActionController
 
         return new JsonModel($response);
     }
+
     /**
-     * USER ACCESS SECTION
-     * Checks wether the user has access to this tools or not
-     * @return boolean
+     * Checks whether the user has access to this tools or not
+     * @param $key
+     * @return bool
      */
-    private function hasAccess($key) {
-        $melisCmsAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $melisCmsRights = $this->getServiceLocator()->get('MelisCoreRights');
-        $xmlRights = $melisCmsAuth->getAuthRights();
-        $isAccessible = $melisCmsRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $key);
-        return $isAccessible;
+    private function hasAccess($key): bool
+    {
+        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccessTool($key);
+
+        return $hasAccess;
     }
 
 }
