@@ -27,6 +27,7 @@ var melisDashBoardDragnDrop = {
         this.dropWidget();
         //this.dragStartWidget();
         this.dragStopWidget();
+        //this.resizeStartWidget();
         this.resizeStopWidget();
     },
 
@@ -170,7 +171,12 @@ var melisDashBoardDragnDrop = {
 
             // serialize widget and save to db
             self.serializeWidgetMap( grid.container[0].children );
-         
+
+            // pass data width and height for resizeStopWidget
+            //self.resizeStopWidget( grid.container[0].children ); // items
+
+            //pass data x and y for dragStopWidget
+                    
             // Assigning current plugin
             self.setCurrentPlugin(widget);
             
@@ -241,7 +247,7 @@ var melisDashBoardDragnDrop = {
     dragStopWidget: function() {
         var self = this;
 
-        // gridstack widget drag and stop position
+        // grid stack widget drag and stop position
         this.$gs.on('dragstop', function(event, ui) {
             var $this = $(this);
 
@@ -250,16 +256,33 @@ var melisDashBoardDragnDrop = {
         });
     },
 
-    resizeStopWidget: function() {
+    /*resizeStartWidget: function() {
         var self = this;
 
-        // gridstack widget resize
-        this.$gs.on('gsresizestop', function(event, elem) {
-            var $this = $(this);
+        // grid stack start widget resize
+        this.$gs.on('resizestart', function(event, ui) {
+            console.log('resizestart: ',ui);
+        });
+    },*/
+
+    resizeStopWidget: function( items ) {
+        var self = this;
+
+        // grid stack stop widget resize
+        this.$gs.on('gsresizestop', function(event, ui) {
+            var $this   = $(this);
+
+            //console.log('gsresizestop: ',ui);
+            // check widget if resized ?
+            //self.checkWidgetResize();
             
             // update position / size of widget
             self.updateWidgetPosSize($this);
         });
+    },
+
+    checkWidgetResize: function( oW, oH, aW, aH ) {
+
     },
 
     updateWidgetPosSize: function(gs) {
@@ -269,12 +292,14 @@ var melisDashBoardDragnDrop = {
         var $grid       = $(gs);
         var items       = [];
         var gsiUiDrag   = $grid.find('.grid-stack-item.ui-draggable');
-        var gsiContent  = '.grid-stack-item-content';
+        var posChanged  = false;
 
         gsiUiDrag.each(function() {
             // refer to gsiUiDrag
             var $this   = $(this);
             var node    = $this.data('_gridstack_node');
+
+            console.log( 'node: ', node );
 
             items.push({
                 x: node.x,
@@ -284,38 +309,41 @@ var melisDashBoardDragnDrop = {
                 content: $this.data()
             });
 
-        });
+            if( node.x != node._beforeDragX || node.y != node._beforeDragY ) {
+                posChanged = true;
+            }
 
-        // serialize widget
-        self.serializeWidgetMap( $(items[0].content._gridstack_node._grid.container[0].children) );
+        });
+        
+        if(posChanged) {
+            // serialize widget
+            self.serializeWidgetMap( $(items[0].content._gridstack_node._grid.container[0].children) );
+        }
     },
 
     deleteWidget: function(el) {
+        var self = this;
+        var $del = el;
         var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
-        //var self = el;
-
+        
         melisCoreTool.confirm(
             translations.tr_meliscore_common_yes,
             translations.tr_meliscore_common_no,
             translations.tr_melis_core_remove_dashboard_plugin,
             translations.tr_melis_core_remove_dashboard_plugin_msg,
             function() {
+                grid.removeWidget($del.closest('.grid-stack-item'));
 
-                // Should check if plugin box is shown and slide out animate
-                
-                grid.removeWidget(el.closest('.grid-stack-item'));
-                if( $('#'+activeTabId+' .grid-stack .grid-stack-item').length === 0 ) {
-                    var dataString = new Array;
+                var dataString = new Array;
 
-                    // create dashboard array
-                    dataString.push({
-                        name: 'dashboard_id',
-                        value: activeTabId
-                    });
+                //create dashboard array
+                dataString.push({
+                    name: 'dashboard_id',
+                    value: activeTabId
+                });
 
-                    // save dashboard lists
-                    var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
-                }
+                //save dashboard lists
+                self.saveDBWidgets(dataString);
             }
         );
     },
