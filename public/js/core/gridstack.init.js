@@ -250,20 +250,18 @@ var melisDashBoardDragnDrop = {
         // grid stack widget drag and stop position
         this.$gs.on('dragstop', function(event, ui) {
             var $this = $(this);
+            var element = $(event.target);
+
+            /*var node = element.data('_gridstack_node');
+
+            console.log(node.y);
+
+            console.log(node);*/
 
             // update position / size of the widget
-            self.updateWidgetPosSize($this);
+            self.updateWidgetPosSize(element);
         });
     },
-
-    /*resizeStartWidget: function() {
-        var self = this;
-
-        // grid stack start widget resize
-        this.$gs.on('resizestart', function(event, ui) {
-            console.log('resizestart: ',ui);
-        });
-    },*/
 
     resizeStopWidget: function( items ) {
         var self = this;
@@ -271,13 +269,14 @@ var melisDashBoardDragnDrop = {
         // grid stack stop widget resize
         this.$gs.on('gsresizestop', function(event, ui) {
             var $this   = $(this);
+            var element = $(event.target);
 
             //console.log('gsresizestop: ',ui);
             //check widget if resized ?
             //self.checkWidgetResize();
             
             // update position / size of widget
-            self.updateWidgetPosSize($this);
+            self.updateWidgetPosSize(element);
         });
     },
 
@@ -285,19 +284,22 @@ var melisDashBoardDragnDrop = {
 
     },
 
-    updateWidgetPosSize: function(gs) {
+    updateWidgetPosSize: function(el) {
         var self        = this;
 
-        // jQuery element / $('.grid-stack')
-        var $grid       = $(gs);
+        // jQuery element
         var items       = [];
-        var gsiUiDrag   = $grid.find('.grid-stack-item');
+        var gsiUiDrag   = el;
         var posChanged  = false;
+
+        //console.log(gsiUiDrag.data('_gridstack_node'));
 
         gsiUiDrag.each(function() {
             // refer to gsiUiDrag
             var $this   = $(this);
             var node    = $this.data('_gridstack_node');
+
+            //console.log(node);
 
             items.push({
                 x: node.x,
@@ -307,7 +309,7 @@ var melisDashBoardDragnDrop = {
                 content: $this.data()
             });
 
-            console.log( 'node: ', node );
+            //console.log( 'node: ', node );
 
             if( node.x != node._beforeDragX || node.y != node._beforeDragY ) {
                 posChanged = true;
@@ -376,12 +378,6 @@ var melisDashBoardDragnDrop = {
                 });
             });
 
-            /*
-             * This part can be in one single function on addWidget with consideration on 
-             * who is the caller adjust accordingly if refreshWidget or dropWidget.
-
-             * Should also check if the plugin side bar is shown and animate to slide out.
-             */
             var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
             // loading effect
