@@ -273,7 +273,7 @@ var melisDashBoardDragnDrop = {
             var $this   = $(this);
 
             //console.log('gsresizestop: ',ui);
-            // check widget if resized ?
+            //check widget if resized ?
             //self.checkWidgetResize();
             
             // update position / size of widget
@@ -291,15 +291,13 @@ var melisDashBoardDragnDrop = {
         // jQuery element / $('.grid-stack')
         var $grid       = $(gs);
         var items       = [];
-        var gsiUiDrag   = $grid.find('.grid-stack-item.ui-draggable');
+        var gsiUiDrag   = $grid.find('.grid-stack-item');
         var posChanged  = false;
 
         gsiUiDrag.each(function() {
             // refer to gsiUiDrag
             var $this   = $(this);
             var node    = $this.data('_gridstack_node');
-
-            console.log( 'node: ', node );
 
             items.push({
                 x: node.x,
@@ -308,6 +306,8 @@ var melisDashBoardDragnDrop = {
                 height: node.height,
                 content: $this.data()
             });
+
+            console.log( 'node: ', node );
 
             if( node.x != node._beforeDragX || node.y != node._beforeDragY ) {
                 posChanged = true;
