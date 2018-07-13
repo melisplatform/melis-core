@@ -7,6 +7,7 @@ $data_melisKey = $this->melisKey;
 ?>
 <div<?= $id; ?>  class="tab-pane container-level-a" data-melisKey='<?= $data_melisKey; ?>'>
     <?php
+    if ($this->hasAccess):
     if($this->isActive) {
         if (empty($this->noAccess)) {
             if (!empty($this->zoneconfig['interface'])) {
@@ -45,6 +46,9 @@ $data_melisKey = $this->melisKey;
 
 <?php
     }
+    else :
+        echo '<h4>'.$this->translate('tr_meliscore_no_access_to_tool').'</h4>';
+    endif;
 ?>
 </div>
 

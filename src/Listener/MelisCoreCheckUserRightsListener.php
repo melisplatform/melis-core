@@ -22,24 +22,22 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
         $sharedEvents    = $events->getSharedManager();
         $callBackHandler = $sharedEvents->attach('*', MvcEvent::EVENT_DISPATCH,
             function($e){
-
+                $sm = $e->getTarget()->getServiceLocator();
                 // update the session last check and interval
-                $container = new Container('meliscore');
-
+                $container  = new Container('meliscore');
+                $userSvc    = $sm->get('MelisCoreAuth');
+                $user       = $userSvc->getIdentity();
                 $lastUpdate = new \DateTime(date('H:i:s', strtotime($container->melis_user_session_last_update)));
                 $timeNow    = new \DateTime(date("H:i:s"));
                 $difference = $lastUpdate->diff($timeNow)->i;
 
                 // checks the user accessibility in every 5 minutes
                 if($difference >= 5) {
-                    $container->melis_user_session_last_update = date('H:i:s');
 
-                    $sm   = $e->getTarget()->getServiceLocator();
+                    $container->melis_user_session_last_update = date('H:i:s');
                     $uri  = $_SERVER['REQUEST_URI'];
-                    $user = $sm->get('MelisCoreAuth');
 
                     if($user->hasIdentity()) {
-                        $user     = $user->getIdentity();
                         $userId   = (int) $user->usr_id;
                         $tblUser  = $sm->get('MelisCoreTableUser');
                         $userData = $tblUser->getEntryById($userId)->current();
@@ -67,6 +65,17 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                         }
                     }
 
+                }
+
+                if ($userSvc->hasIdentity()) {
+                    // update rights to a new rights structure
+                    $oldToolNode = 'meliscore_tools';
+                    $newToolNode = 'meliscore_leftmenu';
+                    $rightsXml   = $user->usr_rights;
+                    if (mb_strpos($rightsXml, $oldToolNode) !== false) {
+                        $newRightsXml = str_replace($oldToolNode, $newToolNode, $rightsXml);
+                        $user->usr_rights = $newRightsXml;
+                    }
                 }
 
             }, -10000);

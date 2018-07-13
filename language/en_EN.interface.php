@@ -18,9 +18,9 @@
 		'tr_meliscore_center_Melis Dashboard' => 'Melis Dashboard',
 		'tr_meliscore_center_dashboard_Logo' => 'Logo',
 		'tr_meliscore_center_dashboard_Calendar' => 'Calendar',
-			
-			
-		// 
+
+		'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
+
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
 		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
@@ -610,6 +610,9 @@
         'tr_melis_core_common_add' => 'Add',
 
         //Diagnostic
-        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration'
+        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
+
+        //Language Back Office
+        'tr_melis_core_common_apply_language' => 'Switch the current language to ',
 	);
 ?>

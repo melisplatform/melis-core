@@ -3362,8 +3362,18 @@ div#modal-user-management div.widget {
     }
 }
 
+
 @media (min-width: 768px){
     .modal-error-cont b {
         width: 31% !important;
     }
 }
+
+.melis-svg-icon {
+    position: static;
+    width: 32px;
+    height: 25px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+

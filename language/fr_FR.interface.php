@@ -20,6 +20,8 @@
 		'tr_meliscore_center_dashboard_Logo' => 'Logo',
 		'tr_meliscore_center_dashboard_Calendar' => 'Calendrier',
 
+        'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
+
 		// Rights
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
@@ -626,7 +628,10 @@
         'tr_melis_core_common_add' => 'Ajouter',
 
         //Diagnostic translation
-        'tr_melis_core_diagnostic_error_message' => 'n\'a pas de configuration de diagnostic'
+        'tr_melis_core_diagnostic_error_message' => 'n\'a pas de configuration de diagnostic',
+
+        //Language Back Office
+        'tr_melis_core_common_apply_language' => 'Changer le langage courrant vers ',
 
     );
 ?>
