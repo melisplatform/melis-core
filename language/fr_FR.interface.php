@@ -327,8 +327,10 @@
 	    'tr_meliscore_tool_platform_marketplace' => 'Marketplace',
 	    'tr_meliscore_tool_platform_update_marketplace' => 'Autoriser les mises à jour du markeplace',
 	    'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Cocher pour autoriser les mises à jour du marketplace ou décocher pour les bloquer',
-	    
-	    // Language Tool Translations
+        'tr_meliscore_common_allow' => 'Autoriser',
+
+
+        // Language Tool Translations
 	    'tr_meliscore_tool_language' => 'Langages du back-office',
 	    'tr_meliscore_tool_language_description' => 'Définissez ici les différents langages qui peuvent être utilisés dans le Back Office.',
 	    'tr_meliscore_tool_language_header' => 'Header',

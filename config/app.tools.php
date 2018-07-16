@@ -1331,6 +1331,7 @@ return array(
                                             'label' => 'tr_meliscore_tool_platform_update_marketplace',
                                             'tooltip' => 'tr_meliscore_tool_platform_update_marketplace tooltip',
                                             'switchOptions' => array(
+                                                'label' => 'tr_meliscore_common_allow',
                                                 'label-on' => 'tr_meliscore_common_yes',
                                                 'label-off' => 'tr_meliscore_common_no',
                                                 'icon' => "glyphicon glyphicon-resize-horizontal",

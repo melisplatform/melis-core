@@ -309,6 +309,7 @@
 	    'tr_meliscore_tool_platform_marketplace' => 'Marketplace',
 	    'tr_meliscore_tool_platform_update_marketplace' => 'Allow updates from the marketplace',
 	    'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
+	    'tr_meliscore_common_allow' => 'Allow',
 	    
 	    // Language Tool Translations
 	    'tr_meliscore_tool_language' => 'Back-Office languages',
