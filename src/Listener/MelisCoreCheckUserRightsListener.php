@@ -37,7 +37,7 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                     $container->melis_user_session_last_update = date('H:i:s');
                     $uri  = $_SERVER['REQUEST_URI'];
 
-                    if($user->hasIdentity()) {
+                    if($userSvc->hasIdentity()) {
                         $userId   = (int) $user->usr_id;
                         $tblUser  = $sm->get('MelisCoreTableUser');
                         $userData = $tblUser->getEntryById($userId)->current();
@@ -63,18 +63,6 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                                 $user->usr_rights = $userData->usr_rights;
                             }
                         }
-                    }
-
-                }
-
-                if ($userSvc->hasIdentity()) {
-                    // update rights to a new rights structure
-                    $oldToolNode = 'meliscore_tools';
-                    $newToolNode = 'meliscore_leftmenu';
-                    $rightsXml   = $user->usr_rights;
-                    if (mb_strpos($rightsXml, $oldToolNode) !== false) {
-                        $newRightsXml = str_replace($oldToolNode, $newToolNode, $rightsXml);
-                        $user->usr_rights = $newRightsXml;
                     }
                 }
 
