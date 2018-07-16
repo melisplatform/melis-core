@@ -610,6 +610,9 @@
         'tr_melis_core_common_add' => 'Add',
 
         //Diagnostic
-        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration'
+        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
+
+        //Language Back Office
+        'tr_melis_core_common_apply_language' => 'Switch the current language to ',
 	);
 ?>
