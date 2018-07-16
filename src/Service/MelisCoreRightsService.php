@@ -12,6 +12,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
     const MELISCORE_PREFIX_INTERFACE = 'meliscore_interface';
     const MELISCORE_PREFIX_TOOLS = 'meliscore_tools';
+    const MELIS_PLATFORM_TOOLS_PREFIX = 'meliscore_tools';
 
     public function setServiceLocator(ServiceLocatorInterface $sl)
     {
@@ -22,6 +23,20 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     public function getServiceLocator()
     {
         return $this->serviceLocator;
+    }
+
+    /**
+     * Extends the functionality of $this->isAccessible method
+     * but can only be used on tools
+     * @param $key
+     * @return bool
+     */
+    public function canAccessTool($key): bool
+    {
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $xmlRights     = $melisCoreAuth->getAuthRights();
+        $isAccessible  = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_TOOLS, $key);
+        return $isAccessible;
     }
 
 
@@ -46,6 +61,10 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         // Tools
         if ($sectionId == self::MELISCORE_PREFIX_TOOLS)
         {
+//            echo $sectionId;
+//            print_r($rightsObj);
+//            die;
+
             foreach ($rightsObj->$sectionId->id as $toolId)
             {
                 if ((string)$toolId == $itemId || (string)$toolId == self::MELISCORE_PREFIX_TOOLS . '_root')
