@@ -358,7 +358,7 @@ class PlatformsController extends AbstractActionController
             
             if($form->isValid() && empty($errors)) {
                 $data = $form->getData();
-                $data['plf_update_marketplace'] = $data['plf_update_marketplace'] ?? '';
+                $data['plf_update_marketplace'] = ($data['plf_update_marketplace'] == 'on') ?? '';
 
                 $textMessage = 'tr_meliscore_tool_platform_prompts_new_success';
                 if ($id) {
