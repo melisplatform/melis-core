@@ -356,21 +356,18 @@ class PlatformsController extends AbstractActionController
                 
             $form->setData($postValues);
             
-            if($form->isValid() && empty($errors)) 
-            {
+            if($form->isValid() && empty($errors)) {
                 $data = $form->getData();
-                    
+                $data['plf_update_marketplace'] = $data['plf_update_marketplace'] ?? '';
+
                 $textMessage = 'tr_meliscore_tool_platform_prompts_new_success';
-                if ($id)
-                {
+                if ($id) {
                     $textMessage = 'tr_meliscore_tool_platform_prompts_edit_success';
                 }
                 
                 $id = $platformTable->save($data, $id);
                 $success = 1;
-            }
-            else 
-            {
+            } else  {
                 $errors = $form->getMessages();
             }
             
@@ -378,12 +375,9 @@ class PlatformsController extends AbstractActionController
             $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_platform_tool/forms/meliscore_platform_generic_form');
             $appConfigForm = $appConfigForm['elements'];
             
-            foreach ($errors as $keyError => $valueError)
-            {
-                foreach ($appConfigForm as $keyForm => $valueForm)
-                {
-                    if ($valueForm['spec']['name'] == $keyError && !empty($valueForm['spec']['options']['label']))
-                    {
+            foreach ($errors as $keyError => $valueError) {
+                foreach ($appConfigForm as $keyForm => $valueForm) {
+                    if ($valueForm['spec']['name'] == $keyError && !empty($valueForm['spec']['options']['label'])) {
                         $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
                     }
                 }
