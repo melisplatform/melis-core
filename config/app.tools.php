@@ -1421,7 +1421,7 @@ return array(
                         'target' => '#tableLanguages',
                         'ajaxUrl' => '/melis/MelisCore/Language/getLanguages',
                         'dataFunction' => '',
-                        'ajaxCallback' => 'initLangJs()',
+                        'ajaxCallback' => 'initLangBOJs()',
                         'filters' => array(
                             'left' => array(
                                 'meliscore_tool_language_content_filters_limit' => array(
