@@ -18,7 +18,7 @@
 			{
 				$name = $user['usr_firstname'] . ' ' . $user['usr_lastname'];
 		?>
-		<li <?= $tagsOpening; ?>>
+		<li <?= $tagsOpening; ?> data-userid="<?= $user['usr_id'] ?>">
 			<span ><?= $user['usr_last_login_date']; ?> : 
 			<span class="ra-username"><?= $name; ?></span> <?= $this->translate('tr_meliscore_dashboard_recent_activity_Logged in'); ?>.</span>
 			<div class="clearfix"></div>
