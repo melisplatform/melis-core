@@ -255,7 +255,7 @@
 	    'tr_meliscore_module_management_prompt_success' => 'Les paramètres des modules ont été mis à jour',
 	    'tr_meliscore_module_management_prompt_failed' => 'Impossible de mettre à jour les paramètres des modules',
 	    'tr_meliscore_module_management_notification_tip' => "Glisser/déposer les modules pour arranger l'ordre",
-        'tr_meliscore_module_management_inactive_confirm' => 'En désactivant %s, cela désactivera également les modules suivants: ',
+        'tr_meliscore_module_management_inactive_confirm' => '<i class="fa fa-warning"></i> Voici les listes des modules dépendants de <strong>%s</strong>, êtes-vous sûr de vouloir désactiver <strong>%s</strong>?',
         'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
         'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
         'tr_meliscore_module_management_no_dependencies' => 'No dependencies',

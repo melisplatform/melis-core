@@ -28,9 +28,7 @@ class ModulesController extends AbstractActionController
         'MelisAssetManager',
         'MelisCore',
         'MelisSites',
-        'MelisEngine',
         'MelisInstaller',
-        'MelisFront',
         'MelisModuleConfig',
         'MelisComposerDeploy',
         'MelisDbDeploy',
@@ -97,8 +95,7 @@ class ModulesController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $zoneConfig = $this->params()->fromRoute('zoneconfig', array());
 
-        $moduleSvc   = $this->getServiceLocator()->get('ModulesService');
-        $modulesInfo = $moduleSvc->getModulesAndVersions();
+        $modulesInfo = $this->getModuleSvc()->getModulesAndVersions();
 
         $view = new ViewModel();
 
@@ -241,13 +238,13 @@ class ModulesController extends AbstractActionController
         $message = 'tr_meliscore_module_management_no_dependencies';
         $tool    = $this->getServiceLocator()->get('MelisCoreTool');
 
-        if($request->isPost()) {
+        if ($request->isPost()) {
             $module = $tool->sanitize($request->getPost('module'));
 
-            if($module) {
+            if ($module) {
                 $modules = $this->getModuleSvc()->getChildDependencies($module);
-                if($modules) {
-                    $message = $tool->getTranslation('tr_meliscore_module_management_inactive_confirm', array($module));
+                if ($modules) {
+                    $message = $tool->getTranslation('tr_meliscore_module_management_inactive_confirm', array($module, $module));
                     $success = 1;
                 }
             }
@@ -293,15 +290,22 @@ class ModulesController extends AbstractActionController
     /**
      * Creates the module loader file and the temp holder for the enabled & disabled modules
      * @param array $modules
+     * @return bool
      */
     protected function createModuleLoaderFile($modules = array())
     {
-        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','melisdbdeploy', 'meliscomposerdeploy', 'meliscore', 'melisengine', 'melisfront'));
+        $status = $this->getModuleSvc()->createModuleLoader('config/', $modules, array('MelisAssetManager','melisdbdeploy', 'meliscomposerdeploy', 'meliscore'));
         return $status;
     }
 
+    /**
+     * @return \MelisCore\Service\MelisCoreModulesService
+     */
     protected function getModuleSvc()
     {
+        /**
+         * @var \MelisCore\Service\MelisCoreModulesService $modulesSvc
+         */
         $modulesSvc = $this->getServiceLocator()->get('ModulesService');
         return $modulesSvc;
     }
