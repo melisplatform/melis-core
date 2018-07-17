@@ -58,7 +58,7 @@ $(function() {
         var formData = new FormData(this);
 
         var colorFormData = $("form#melis_core_platform_scheme_form").serializeArray();
-        var colors        = new Object();
+        var colors        = {};
 
         $.each(colorFormData, function(i, v) {
             colors[v['name']] = v['value'];
@@ -85,7 +85,6 @@ $(function() {
                 melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
             }
             melisCoreTool.done(".button");
-            melisCore.flashMessenger();
         }).error(function(){
             melisCoreTool.done(".button");
         });
