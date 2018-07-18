@@ -2,6 +2,14 @@
 return array(
     'plugins' => array(
         'meliscore' => array(
+            'datas' => array(
+                'default' => array(
+                    'emails' => array(
+                        'default_layout_title' => 'Melis Technology',
+                        'default_layout_ftr_info' => 'Melis Technology<br>Address: 4 rue du Dahomey, 75011 Paris France<br>Phone: (+33) 972 386 280<br>Mail: contact@melistechnology.com'
+                    )
+                )
+            ),
             'emails' => array(
                 'LOSTPASSWORD' => array(
                     'email_name' => 'Lost Password',
