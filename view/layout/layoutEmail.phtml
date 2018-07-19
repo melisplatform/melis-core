@@ -1,5 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
+        <title><?php echo $this->title ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	</head>
   	<body class="full-padding" style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;">
@@ -8,7 +9,7 @@
             <div class="logo emb-logo-margin-box" style="font-size: 26px;line-height: 32px;margin-top: 10px;margin-bottom: 20px;color: #c3ced9;font-family: Roboto,Tahoma,sans-serif;margin-left: 20px;margin-right: 20px;" align="center">
               	<div class="logo-left" style="font-size:0px !important;line-height:0 !important;" align="left" id="emb-email-header">
               		<a style="text-decoration: none;transition: opacity 0.1s ease-in;color: #c3ced9;" href="<?php echo $this->headerLogoLink; ?>">
-              			<img style="height: auto;width: 100%;border: 0;max-width: 243px;" src="<?php echo $this->headerLogo; ?>" alt="Melis Technology" width="243"/>
+              			<img style="height: auto;width: 100%;border: 0;max-width: 200px;" src="<?php echo $this->headerLogo; ?>" alt="Melis Technology" width="243"/>
           			</a>
           		</div>
             </div>
@@ -27,14 +28,7 @@
                 <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;">
                   	<div class="column wide" style='text-align: left;font-size: 12px;line-height: 19px;color: #363636;font-family: "Open Sans",sans-serif;Float: left;max-width: 400px;min-width: 320px; width: 320px;width: calc(8000% - 47600px);'>
                         <div style="margin-left: 20px;margin-right: 20px;margin-top: 10px;margin-bottom: 10px;">
-                          	<div>
-                            <div>
-                                Melis Technology<br/>
-                                Address:&nbsp;4 rue du Dahomey, 75011 Paris France<br/>
-                                Phone:&nbsp;(+33) 972 386 280<br/>
-                                Email:&nbsp;contact@melistechnology.com
-                        	</div>
-                          	</div>
+                          	<?php echo $this->footerInfo ?>
                         </div>
                   	</div>
                   	<div class="column narrow" style='text-align: left;font-size: 12px;line-height: 19px;color: #b9b9b9;font-family: "Open Sans",sans-serif;Float: left;max-width: 320px;min-width: 200px; width: 320px;width: calc(72200px - 12000%);'>

@@ -30,77 +30,73 @@ $(function(){
 		melisCoreTool.pending(".btnMelisCoreEmailMngtSave");
 		var codename = $(this).data("codename");
 		var formId = '#'+codename+'_generalPropertiesform';
-		var dataString = $(formId).serializeArray();
-		
-		// Modify Value of `boe_tag_accepted_list` from the Serialized Object
-		for (index = 0; index < dataString.length; ++index) {
-		    if (dataString[index].name == "boe_tag_accepted_list") {
-		    	dataString[index].value = $("#"+codename+"_boe_tag_accepted_list").data('tags');
-		        break;
-		    }
-		}
-		
-		$(this).closest('.container-level-a').find('.boed_lang_id_'+codename).each(function(){
-			$langID = $(this).val();
-			$langLocale = $(this).data('locale');
-			langFormId = '#'+codename+'_'+$langID+'_emailLangForm'
-			var langFormDataString = $(langFormId).serializeArray();
-//			for (index = 0; index < langFormDataString.length; index++) {
-//			    if (langFormDataString[index].name == "boed_html") {
-//			    	var kani = tinyMCE.get(codename+'_'+$langID+'_boed_html');
-//			    	if(kani == null){
-//			    		console.log(langFormDataString);
-//			    	}
-//			    	langFormDataString[index].value = kani.getContent();
-//			        break;
-//			    }
-//			}
-			
-			dataString.push({
-				name : $langLocale,
-				value: $.param(langFormDataString)
-			});
-		});
-		
-		dataString.push({
-			name : 'codename',
-			value: codename
-		});
-		
-		dataString = $.param(dataString);
-		
-		$.ajax({
-	        type        : 'POST', 
-	        url         : '/melis/MelisCore/EmailsManagement/saveEmail',
-	        data		: dataString,
-	        dataType    : 'json',
-	        encode		: true
-		}).done(function(data) {
-			if(data.success) {
-				melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-				melisHelper.tabClose(codename+"_id_meliscore_tool_emails_mngt_generic_from");
-				melisHelper.tabOpen(translations.tr_meliscore_tool_emails_mngt, 'fa-envelope-o', 'id_meliscore_tool_emails_mngt', 'meliscore_tool_emails_mngt');
-				melisHelper.zoneReload("id_meliscore_tool_emails_mngt", "meliscore_tool_emails_mngt");
-			} else {
-				var layoutStatus = $("body").find(".melis-core-layout-status");
-				if (layoutStatus.length) {
-                    layoutStatus.removeClass("text-success");
-                    // Change tooltip text
-                    var layoutStatusTooltip = layoutStatus.children("i:first");
-                    if (layoutStatusTooltip.length) layoutStatusTooltip.attr('data-original-title', translations.tr_meliscore_file_not_exists);
-                }
-
-				melisCoreTool.alertDanger("#siteaddalert", '', data.textMessage);
-				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-				melisCoreTool.highlightErrors(data.success, data.errors, codename+'_generalPropertiesform');
-			}
-			melisCore.flashMessenger();
-		}).fail(function(){
-			alert( translations.tr_meliscore_error_message );
-		});
-		
-		melisCoreTool.done(".btnMelisCoreEmailMngtSave");
+		// Submitting form tru ajax request
+        submitEmailProperties($(formId), codename);
 	});
+
+	submitEmailProperties  = function(form, codename){
+
+        form.unbind("submit");
+
+        form.on("submit", function(e){
+            e.preventDefault();
+            var formData = new FormData(this);
+
+            // Email Codename
+            formData.append('codename', codename);
+
+            // Getting the final value of the accepted lags
+            formData.append('boe_tag_accepted_list', $("#"+codename+"_boe_tag_accepted_list").data('tags'));
+
+            // Adding to formdata language tabs forms
+            $(this).closest('.container-level-a').find('.boed_lang_id_'+codename).each(function(){
+                $langID = $(this).val();
+                $langLocale = $(this).data('locale');
+                langFormId = '#'+codename+'_'+$langID+'_emailLangForm'
+                var langFormDataString = $(langFormId).serializeArray();
+
+                formData.append($langLocale, $.param(langFormDataString));
+            });
+
+            $.ajax({
+                type        :'POST',
+                url         : "/melis/MelisCore/EmailsManagement/saveEmail",
+                data        :formData,
+                cache       :false,
+                contentType : false,
+                processData : false,
+            }).done(function(data){
+                if(data.success) {
+                    melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                    melisHelper.tabClose(codename+"_id_meliscore_tool_emails_mngt_generic_from");
+                    melisHelper.tabOpen(translations.tr_meliscore_tool_emails_mngt, 'fa-envelope-o', 'id_meliscore_tool_emails_mngt', 'meliscore_tool_emails_mngt');
+                    melisHelper.zoneReload("id_meliscore_tool_emails_mngt", "meliscore_tool_emails_mngt");
+                } else {
+                    var layoutStatus = $("body").find(".melis-core-layout-status");
+                    if (layoutStatus.length) {
+                        layoutStatus.removeClass("text-success");
+                        // Change tooltip text
+                        var layoutStatusTooltip = layoutStatus.children("i:first");
+                        if (layoutStatusTooltip.length) layoutStatusTooltip.attr('data-original-title', translations.tr_meliscore_file_not_exists);
+                    }
+
+                    melisCoreTool.alertDanger("#siteaddalert", '', data.textMessage);
+                    melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                    melisCoreTool.highlightErrors(data.success, data.errors, codename+'_generalPropertiesform');
+                }
+                melisCore.flashMessenger();
+
+                melisCoreTool.done(".btnMelisCoreEmailMngtSave");
+
+            }).fail(function(){
+                alert(translations.tr_meliscore_error_message);
+
+                melisCoreTool.done(".btnMelisCoreEmailMngtSave");
+            });
+        });
+
+        form.submit();
+    }
 	
 	$("body").on("click", ".btnMelisCoreEmailMngtDelete", function(){
 		var codename = $(this).parents("tr").attr("id");
@@ -149,7 +145,23 @@ $(function(){
         		setupcontent_callback : cgeDawBeh(selector)
     		});
 		});
-		
+
+        // Filestyle layout logo
+        $("input[name='boe_content_layout_logo']").each(function(i, v){
+            $layoutLogoPlcHldr = $(this).data("file-value");
+            $layoutLogoTxt = $(this).data("text");
+            $(this).filestyle({
+                buttonBefore: true,
+                placeholder: $layoutLogoPlcHldr,
+                text: $layoutLogoTxt
+            });
+		});
+
+        $("textarea[name='boe_content_layout_ftr_info']").each(function(i, v){
+        	var selector = "#"+$(this).attr("id");
+            // Initialize TinyMCE editor
+            melisTinyMCE.createTinyMCE("tool", selector, {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});
+        });
 	}
 	
 	window.cgeDawBeh = function(selector){
