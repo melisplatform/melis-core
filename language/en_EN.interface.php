@@ -252,7 +252,7 @@
 	    'tr_meliscore_module_management_prompt_success' => 'Module settings has been updated',
 	    'tr_meliscore_module_management_prompt_failed' => 'Unable to update module settings',
 	    'tr_meliscore_module_management_notification_tip' => 'Drag and drop the modules to re-arrange',
-	    'tr_meliscore_module_management_inactive_confirm' => 'By deactivating %s, this will also deactivate the following modules: ',
+	    'tr_meliscore_module_management_inactive_confirm' => '<i class="fa fa-warning"></i> Below are the lists of module(s) that is dependent to <strong>%s</strong>, are you sure you want to deactivate <strong>%s</strong>? ',
 	    'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
 	    'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
 	    'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
@@ -309,6 +309,7 @@
 	    'tr_meliscore_tool_platform_marketplace' => 'Marketplace',
 	    'tr_meliscore_tool_platform_update_marketplace' => 'Allow updates from the marketplace',
 	    'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
+	    'tr_meliscore_common_allow' => 'Allow',
 	    
 	    // Language Tool Translations
 	    'tr_meliscore_tool_language' => 'Back-Office languages',

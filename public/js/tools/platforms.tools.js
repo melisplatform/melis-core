@@ -44,13 +44,12 @@ $(document).ready(function() {
 				melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
 				// Show Pop-up Notification
 	    		melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-			}else{
+			} else{
 				melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
 				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
 				melisCoreTool.highlightErrors(data.success, data.errors, "corePlatform");
 			}
-			
-    		melisCore.flashMessenger();
+
     		melisCoreTool.processDone();
     		
 		}).fail(function(){

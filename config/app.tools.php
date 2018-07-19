@@ -1326,16 +1326,22 @@ return array(
                                 array(
                                     'spec' => array(
                                         'name' => 'plf_update_marketplace',
-                                        'type' => 'Checkbox',
+                                        'type' => 'Select',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_platform_update_marketplace',
                                             'tooltip' => 'tr_meliscore_tool_platform_update_marketplace tooltip',
                                             'switchOptions' => array(
+                                                'label' => 'tr_meliscore_common_allow',
                                                 'label-on' => 'tr_meliscore_common_yes',
                                                 'label-off' => 'tr_meliscore_common_no',
                                                 'icon' => "glyphicon glyphicon-resize-horizontal",
-                                            )
+                                            ),
+                                            'value_options' => array(
+                                                'on' => 'on',
+                                            ),
+                                            'disable_inarray_validator' => true
                                         ),
+                                        'disable_inarray_validator' => true,
                                         'attributes' => array(
                                             'id' => 'plf_update_marketplace',
                                             'value' => 1,
@@ -1391,6 +1397,14 @@ return array(
                                         array('name' => 'StringTrim'),
                                     ),
                                 ),
+                                'plf_update_marketplace' => [
+                                    'name'     => 'plf_update_marketplace',
+                                    'required' => false,
+                                    'filters'  => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ]
                             ),
                         ),
                     ),
@@ -1407,7 +1421,7 @@ return array(
                         'target' => '#tableLanguages',
                         'ajaxUrl' => '/melis/MelisCore/Language/getLanguages',
                         'dataFunction' => '',
-                        'ajaxCallback' => 'initLangJs()',
+                        'ajaxCallback' => 'initLangBOJs()',
                         'filters' => array(
                             'left' => array(
                                 'meliscore_tool_language_content_filters_limit' => array(

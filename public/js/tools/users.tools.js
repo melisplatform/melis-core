@@ -45,7 +45,24 @@ $(document).ready(function() {
             encode		: true,
         });
     });
-    
+
+    $('body').on('click', '.melis-opentooltreeview', function (){
+        var toolName = $(this).data('tool-name');
+        var toolId = $(this).data('tool-id');
+        var melisKey = $(this).data('tool-meliskey');
+        var userId = $(this).data('userid');
+        melisHelper.tabOpen(toolName, 'fa-user', toolId, melisKey, {}, null, function () {
+			var checker = setInterval(function () {
+                var button = $('body').find('tr[id=' + userId + '] td .btnUserEdit');
+                if (button.length === 1) {
+					button.trigger('click');
+					clearInterval(checker);
+				}
+			}, 500);
+		});
+	})
+
+
 	$("body").on("click", '.btnUserEdit', function() {
 		var id = $(this).parents("tr").attr("id");
 		melisCoreTool.hideAlert("#editformalert");

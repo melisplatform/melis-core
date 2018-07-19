@@ -132,15 +132,13 @@ $(document).ready(function() {
 			        dataType    : 'json',
 			        encode		: true,
 			     }).success(function(data){
-		    	 	if(data.success == 1) {
+		    	 	if (data.success == 1) {
 		    	 		melisCoreTool.processing();
 		    	 		setTimeout(function() {window.location.reload(true) }, 3000);
-		    	 	}
-		    	 	else {
+		    	 	} else {
 		    	 		melisHelper.melisKoNotification(data.textTitle, data.textMessage);
 		    	 	}
-		    	 	
-		    	 	melisCore.flashMessenger();
+
 			     });
 			}
 		);
