@@ -8,6 +8,8 @@
             	$form = $this->meliscore_emails_mngt_tool_general_properties_form;
             	$form->setAttribute('id',$this->codename.'_generalPropertiesform');
             	$form->get('boe_tag_accepted_list')->setAttribute('id',$this->codename.'_boe_tag_accepted_list');
+            	$form->get('boe_content_layout_logo')->setAttribute('data-file-value', $form->get('boe_content_layout_logo')->getValue());
+            	$form->get('boe_content_layout_ftr_info')->setAttribute('id', $this->codename.'_boe_content_layout_ftr_info');
 
             	if (!empty($this->layout)) {
                     // Update Form's layout status
