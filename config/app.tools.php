@@ -371,6 +371,7 @@ return array(
                                         'options' => array(),
                                         'attributes' => array(
                                             'class' => 'usr_admin',
+                                            'id' => 'n_usr_admin',
                                             'data-label' => 'tr_meliscore_tool_user_col_admin',
                                             'data-tooltip' => 'tr_meliscore_tool_user_col_admin tooltip',
                                         ),
@@ -850,6 +851,7 @@ return array(
                                         'type' => 'MelisText',
                                         'options' => array(),
                                         'attributes' => array(
+                                            'id' => 'usr_admin',
                                             'class' => 'usr_admin',
                                             'data-label' => 'tr_meliscore_tool_user_col_admin',
                                         ),
