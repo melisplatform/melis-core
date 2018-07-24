@@ -172,9 +172,8 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     {
         $userModules = $_SERVER['DOCUMENT_ROOT'] . '/../module';
 
-
         $modules = array();
-        if($this->checkDir($userModules)) {
+        if ($this->checkDir($userModules)) {
             $modules = $this->getDir($userModules);
         }
 
@@ -206,8 +205,6 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
             'meliscomposerdeploy' => 'MelisComposerDeploy',
             'meliscore' => 'MelisCore',
             'melisinstaller' => 'MelisInstaller',
-            'melisengine' => 'MelisEngine',
-            'melisfront'  => 'MelisFront',
             'melissites' => 'MelisSites',
             'melisassetmanager' => 'MelisAssetManager'
         );
@@ -335,7 +332,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      * @return bool
      */
     public function createModuleLoader($pathToStore, $modules = array(),
-                                       $topModules = array('melisdbdeploy', 'meliscomposerdeploy', 'meliscore', 'melisfront', 'melisengine'),
+                                       $topModules = array('melisdbdeploy', 'meliscomposerdeploy', 'meliscore'),
                                        $bottomModules = array('MelisModuleConfig'))
     {
         $tmpFileName = 'melis.module.load.php.tmp';
@@ -480,30 +477,31 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         $matchModule = $convertPackageNameToNamespace ? $moduleName : $this->convertToPackageName($moduleName);
         $dependents  = array();
 
-
-        foreach($modules as $module) {
+        foreach ($modules as $module) {
             $dependencies = $this->getDependencies($module, $convertPackageNameToNamespace);
 
-            if($dependencies) {
-                if(in_array($matchModule, $dependencies)) {
+            if ($dependencies) {
+                if (in_array($matchModule, $dependencies)) {
                     $dependents[] = $convertPackageNameToNamespace ? $module : $this->convertToPackageName($module);
                 }
             }
         }
 
-        if(true === $getOnlyActiveModules) {
+
+
+        if (true === $getOnlyActiveModules) {
+
             $activeModules = $this->getActiveModules();
             $modules       = array();
 
-            foreach($dependents as $module) {
-                if(in_array($module, $activeModules)) {
+            foreach ($dependents as $module) {
+
                     $modules[] = $module;
-                }
+
             }
 
             $dependents = $modules;
         }
-
 
         return $dependents;
     }

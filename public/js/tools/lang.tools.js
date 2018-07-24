@@ -102,8 +102,13 @@ $(document).ready(function() {
 	}
 });
 
-window.initLangJs = function() {
+window.initLangBOJs = function() {
 	//$(document).on("init.dt", function(e, settings) {
-		$('#tableLanguages td:nth-child(3):contains("'+ melisLangId +'")').siblings(':last').html('-');
+		var btnApply = "<a class=\"btn btn-info btnLangApply\"  title='"+ translations.tr_melis_core_common_apply_language+"'><i class=\"fa fa-check\" ></i></a> ";
+         $('#tableLanguages td:nth-child(3):contains("en_EN")').siblings(':last').html(btnApply);
+         if(melisLangId !== 'en_EN'){
+             $('#tableLanguages td:nth-child(3):contains("'+ melisLangId +'")').siblings(':last').html('-');
+         }
+
 	//});
 }

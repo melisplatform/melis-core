@@ -9,6 +9,9 @@
 
 namespace MelisCore\Controller;
 
+use Zend\Diactoros\UploadedFile;
+use Zend\InputFilter\FileInput;
+use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
@@ -450,20 +453,35 @@ class EmailsManagementController extends AbstractActionController
             $emailsConfig = isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename]) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
             
             if (!empty($emailsConfig)){
+
+                $configPath = 'meliscore/datas';
+                $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+                $emailCfg = $melisConfig->getItemPerPlatform($configPath);
+                $cfgLayoutLogo = $emailCfg['logo'];
+                $cfgLayoutTitle = $emailCfg['emails']['default_layout_title'];
+                $cfgLayoutFtrInfo = $emailCfg['emails']['default_layout_ftr_info'];
+
                 // Emails Config Initialization
-                $emailName = (isset($emailsConfig['email_name'])) ? $emailsConfig['email_name'] : '';
-                $from = (isset($emailsConfig['headers']['from'])) ? $emailsConfig['headers']['from'] : '';
-                $from_name = (isset($emailsConfig['headers']['from_name'])) ? $emailsConfig['headers']['from_name'] : '';
-                $replyTo = (isset($emailsConfig['headers']['replyTo'])) ? $emailsConfig['headers']['replyTo'] : '';
-                $acceptedTags = (isset($emailsConfig['headers']['tags'])) ? $emailsConfig['headers']['tags'] : '';
-                $layout = (isset($emailsConfig['layout'])) ? $emailsConfig['layout'] : '';
-                
+                $emailName          = (isset($emailsConfig['email_name'])) ? $emailsConfig['email_name'] : '';
+                $from               = (isset($emailsConfig['headers']['from'])) ? $emailsConfig['headers']['from'] : '';
+                $from_name          = (isset($emailsConfig['headers']['from_name'])) ? $emailsConfig['headers']['from_name'] : '';
+                $replyTo            = (isset($emailsConfig['headers']['replyTo'])) ? $emailsConfig['headers']['replyTo'] : '';
+                $acceptedTags       = (isset($emailsConfig['headers']['tags'])) ? $emailsConfig['headers']['tags'] : '';
+                $layout             = (isset($emailsConfig['layout'])) ? $emailsConfig['layout'] : '';
+                $layoutLogoTitle    = (isset($emailsConfig['layout_title'])) ? $emailsConfig['layout_title'] : $cfgLayoutTitle;
+                $layoutLogo         = (isset($emailsConfig['layout_logo'])) ? $emailsConfig['layout_logo'] : $cfgLayoutLogo;
+                $layoutFtrInfo      = (isset($emailsConfig['layout_ftr_info'])) ? $emailsConfig['layout_ftr_info'] : $cfgLayoutFtrInfo;
+
                 if (!empty($emailsDatas)){
-                    $emailsDatas->boe_name = ($emailsDatas->boe_name) ? $emailsDatas->boe_name : $emailName;
-                    $emailsDatas->boe_from_email = ($emailsDatas->boe_from_email) ? $emailsDatas->boe_from_email : $from;
-                    $emailsDatas->boe_from_name = ($emailsDatas->boe_from_name) ? $emailsDatas->boe_from_name : $from_name;
-                    $emailsDatas->boe_reply_to = ($emailsDatas->boe_reply_to) ? $emailsDatas->boe_reply_to : $replyTo;
-//                     $emailsDatas->boe_content_layout = ($emailsDatas->boe_content_layout) ? $emailsDatas->boe_content_layout : $layout;
+                    $emailsDatas->boe_name                      = ($emailsDatas->boe_name) ? $emailsDatas->boe_name : $emailName;
+                    $emailsDatas->boe_from_email                = ($emailsDatas->boe_from_email) ? $emailsDatas->boe_from_email : $from;
+                    $emailsDatas->boe_from_name                 = ($emailsDatas->boe_from_name) ? $emailsDatas->boe_from_name : $from_name;
+                    $emailsDatas->boe_reply_to                  = ($emailsDatas->boe_reply_to) ? $emailsDatas->boe_reply_to : $replyTo;
+//                    $emailsDatas->boe_content_layout            = ($emailsDatas->boe_content_layout) ? $emailsDatas->boe_content_layout : $layout;
+                    $emailsDatas->boe_content_layout            = ($emailsDatas->boe_content_layout) ? $emailsDatas->boe_content_layout : $layout;
+                    $emailsDatas->boe_content_layout_title      = ($emailsDatas->boe_content_layout_title) ? $emailsDatas->boe_content_layout_title : $layoutLogoTitle;
+                    $emailsDatas->boe_content_layout_logo       = ($emailsDatas->boe_content_layout_logo) ? $emailsDatas->boe_content_layout_logo : $layoutLogo;
+                    $emailsDatas->boe_content_layout_ftr_info   = ($emailsDatas->boe_content_layout_ftr_info) ? $emailsDatas->boe_content_layout_ftr_info : $layoutFtrInfo;
 
                     if (!empty($emailsDatas->boe_code_name)){
                         if ($emailsDatas->boe_code_name==$codename){
@@ -473,17 +491,20 @@ class EmailsManagementController extends AbstractActionController
                 }else{
                     $dbExist = FALSE;
                     $emailsDatas = new MelisBOEmails();
-                    $emailsDatas->boe_name = $emailName;
-                    $emailsDatas->boe_from_email =  $from;
-                    $emailsDatas->boe_code_name =  $codename;
-                    $emailsDatas->boe_from_name = $from_name;
-                    $emailsDatas->boe_reply_to = $replyTo;
-                    $emailsDatas->boe_tag_accepted_list = $acceptedTags;
-                    $emailsDatas->boe_content_layout = $layout;
+                    $emailsDatas->boe_name                      = $emailName;
+                    $emailsDatas->boe_from_email                =  $from;
+                    $emailsDatas->boe_code_name                 = $codename;
+                    $emailsDatas->boe_from_name                 = $from_name;
+                    $emailsDatas->boe_reply_to                  = $replyTo;
+                    $emailsDatas->boe_tag_accepted_list         = $acceptedTags;
+                    $emailsDatas->boe_content_layout            = $layout;
+                    $emailsDatas->boe_content_layout_title      = $layoutLogoTitle;
+                    $emailsDatas->boe_content_layout_logo       = $layoutLogo;
+                    $emailsDatas->boe_content_layout_ftr_info   = $layoutFtrInfo;
+
                     $generalPropertiesForm->get('boe_code_name')->setAttribute('disabled','disabled');
                 }
-                
-                
+
                 if (!empty($emailsDatas->boe_tag_accepted_list)||!empty($acceptedTags)){
                      
                     $configEmail = (!empty($acceptedTags)) ? explode(',', $emailsConfig['headers']['tags']) : array();
@@ -675,18 +696,57 @@ class EmailsManagementController extends AbstractActionController
                 array_push($coreLangLocale, $val['lang_locale']);
             }
             
-            $datas = $melisTool->sanitizeRecursive(get_object_vars($request->getPost()), $coreLangLocale, true);
+            $datas = $melisTool->sanitizeRecursive($request->getPost()->toArray(), $coreLangLocale, true);
+
+            // avoiding sanitize the layout footr info content
+            $layoutFtrInfoPost['boe_content_layout_ftr_info'] = $request->getPost()->toArray()['boe_content_layout_ftr_info'];
+
+            $datas = array_merge($datas, $request->getFiles()->toArray(), $layoutFtrInfoPost);
+
+            // File Input Validator and Filter
+            $fileInput = new FileInput('boe_content_layout_logo');
+            $fileInput->setRequired(false);
+
+            // You only need to define validators and filters
+            // as if only one file was being uploaded. All files
+            // will be run through the same validators and filters
+            // automatically.
+            $fileInput->getValidatorChain()
+                        ->attachByName('filesize',array('max' => 250000)) // bytes
+                        ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpeg'))
+                        ->attachByName('fileimagesize', array('maxWidth' => 800, 'maxHeight' => 800));
+
+            if (!is_dir(__DIR__.'/../../../../../public/media/email-layout-logo'))
+                mkdir(__DIR__.'/../../../../../public/media/email-layout-logo', 0777);
+
+            // All files will be renamed, i.e.:
+            //   ../melis-logo_4b3403665fea6.png,
+            //   .../melis-logo_5c45147660fb7.png
+            $fileInput->getFilterChain()                  // Filters are run second w/ FileInput
+                ->attach(new \Zend\Filter\File\RenameUpload(
+                    array(
+                        'target'    => __DIR__.'/../../../../../public/media/email-layout-logo/melis-logo.png',
+                        'randomize' => true,
+                    )
+                )
+            );
+
+            $inputFilter = new InputFilter();
+            $inputFilter->add($fileInput);
+            $propertyForm->setInputFilter($inputFilter);
+
+            // File input end
 
             $codename = $datas['codename'];
-            
+
             if ($codename=='NEW'){
                 $logTypeCode = 'CORE_BO_EMAIL_ADD';
             }else{
                 $logTypeCode = 'CORE_BO_EMAIL_UPDATE';
             }
-            
+
             unset($datas['codename']);
-            
+
             // Response Temporary Initialized and can be overrided
             if ($codename!='NEW'){
                 $textTitle = 'tr_emails_management_edition';
@@ -695,14 +755,14 @@ class EmailsManagementController extends AbstractActionController
                 $textTitle = 'tr_emails_management_creation';
                 $textMessage = 'tr_emails_management_unable_to_add';
             }
-            
+
             // Reinitialize Codename if not Set
             // This means that Codename is Exist in App.mail that disabled on Email Edition
             if (!isset($datas['boe_code_name'])){
                 $datas['boe_code_name'] = $codename;
             }
-            
-            /* 
+
+            /*
              * Code Name Validation
              * Codename must be unique
              * */
@@ -715,17 +775,17 @@ class EmailsManagementController extends AbstractActionController
                         'adapter' => $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter')
                     )
                 );
-                
+
                 if(!$codeNameValidator->isValid($datas['boe_code_name'])){
                     //  Codename in already exist on Database
                     $codeNameError['boe_code_name'] = array(
                         'noUniqueBD' => $translator->translate('tr_emails_management_emal_boe_code_name_must_be_unique')
                         );
                 }
-                
+
                 $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
                 $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/'.$datas['boe_code_name']);
-                
+
                 if(!empty($emailsConfig)&&empty($codeNameError)){
                     // Codename in already exist on App.Email
                     $codeNameError['boe_code_name'] = array(
@@ -733,14 +793,14 @@ class EmailsManagementController extends AbstractActionController
                     );
                 }
             }
-            
+
             // Codename "NEW" is reserve Codename
             if ($datas['boe_code_name']=='NEW'){
                 $codeNameError['boe_code_name'] = array(
                     'codenameReserve' => $translator->translate('tr_emails_management_emal_boe_code_name_reserved')
                 );
             }
-            
+
             /*
              * Layout Path and extension validations
              * */
@@ -748,9 +808,9 @@ class EmailsManagementController extends AbstractActionController
             if (!empty($datas['boe_content_layout'])){
                 // Only allow files that exist in ~both~ directories
                 $layoutPathValidator = new \Zend\Validator\File\Exists();
-                
+
                 $layout = $datas['boe_content_layout'];
-                
+
                 $validLayout = false;
                 if ($layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)){
                     $layout = __DIR__ .'/../../../'.$layout;
@@ -759,11 +819,11 @@ class EmailsManagementController extends AbstractActionController
                     $layout = $_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout;
                     $validLayout = true;
                 }
-                
+
                 if ($validLayout){
                     // Allow file with 'phtml' extension
                     $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
-                    
+
                     if (!$layoutExtensionValidator->isValid($layout)) {
                         $layoutPathError['boe_content_layout'] = array(
                             'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_extension')
@@ -775,14 +835,28 @@ class EmailsManagementController extends AbstractActionController
                     );
                 }
             }
-            
+
             $propertyForm->setData($datas);
-            
+
             if($propertyForm->isValid()&&empty($codeNameError)&&empty($layoutPathError)) {
-                
+
+                // This will upload image to the target location
+                $formValue = $inputFilter->getValues();
+
+                if (!empty($formValue['boe_content_layout_logo']['tmp_name']))
+                {
+                    $layoutLogoPath = $formValue['boe_content_layout_logo']['tmp_name'];
+                    $layoutLogo = pathinfo($layoutLogoPath, PATHINFO_FILENAME);
+                    $datas['boe_content_layout_logo'] = '/media/email-layout-logo/'.$layoutLogo.'.png';
+                }
+                else
+                {
+                    unset($datas['boe_content_layout_logo']);
+                }
+
                 $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
                 $BoEmailId = $melisCoreBOEmailService->saveBoEmailByCode($codename, $datas);
-                
+
                 if ($codename=='NEW'){
                     $textTitle = 'tr_emails_management_title_creation';
                     $textMessage = $translator->translate('tr_emails_management_email').' '.$datas['boe_name'].' '.$translator->translate('tr_emails_management_created');
@@ -790,24 +864,42 @@ class EmailsManagementController extends AbstractActionController
                     $textTitle = 'tr_emails_management_title_edition';
                     $textMessage = $translator->translate('tr_emails_management_email').' '.$datas['boe_name'].' '.$translator->translate('tr_emails_management_edited');
                 }
-                
+
                 $status  = 1;
             }else{
                 $errors = $propertyForm->getMessages();
             }
-            
+
             $errors = array_merge($errors,$codeNameError,$layoutPathError);
-             
+
             $appConfigForm = $generalProperties['elements'];
-             
+
             foreach ($errors as $keyError => $valueError)
             {
                 foreach ($appConfigForm as $keyForm => $valueForm)
                 {
-                    if ($valueForm['spec']['name'] == $keyError &&
-                        !empty($valueForm['spec']['options']['label']))
+                    if ($valueForm['spec']['name'] == $keyError && !empty($valueForm['spec']['options']['label']))
                         $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
                 }
+            }
+
+            // Fileinput error messages
+            if (!empty($errors['boe_content_layout_logo']))
+            {
+                $fileInputErr = $errors['boe_content_layout_logo'];
+
+                // Unsetting error message for image sizze not detected
+                if (!empty($fileInputErr['fileImageSizeNotDetected']))
+                    unset($errors['boe_content_layout_logo']['fileImageSizeNotDetected']);
+
+                if (!empty($fileInputErr['fileMimeTypeFalse']))
+                    $errors['boe_content_layout_logo']['fileMimeTypeFalse'] = $translator->translate('tr_emails_management_invalid_image_type');
+
+                if (!empty($fileInputErr['fileImageSizeWidthTooBig']))
+                    $errors['boe_content_layout_logo']['fileImageSizeWidthTooBig'] = $translator->translate('Image width should be 800 pexils or less');
+
+                if (!empty($fileInputErr['fileSizeTooBig']))
+                    $errors['boe_content_layout_logo']['fileSizeTooBig'] = $translator->translate('tr_emails_management_invalid_image_size');
             }
         }
          
@@ -856,8 +948,11 @@ class EmailsManagementController extends AbstractActionController
         return new JsonModel($response);
     }
 
-    public function searchEmailAction(){
+    public function searchEmailAction()
+    {
 
+        $textTitle = '';
+        $textMessage = '';
         $translator = $this->getServiceLocator()->get('translator');
 
         $request = $this->getRequest();
@@ -869,7 +964,7 @@ class EmailsManagementController extends AbstractActionController
         $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
         $BoEmailId = $melisCoreBOEmailService->deleteEmail("Get");
 
-        $
+
         $response = array(
             'success' => 1,
             'textTitle' => $textTitle,
@@ -880,17 +975,17 @@ class EmailsManagementController extends AbstractActionController
 
         return new JsonModel($response);
     }
+
     /**
-     * USER ACCESS SECTION
-     * Checks wether the user has access to this tools or not
-     * @return boolean
+     * Checks whether the user has access to this tools or not
+     * @param $key
+     * @return bool
      */
-    private function hasAccess($key) {
-        $melisCmsAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $melisCmsRights = $this->getServiceLocator()->get('MelisCoreRights');
-        $xmlRights = $melisCmsAuth->getAuthRights();
-        $isAccessible = $melisCmsRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $key);
-        return $isAccessible;
+    private function hasAccess($key): bool
+    {
+        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccessTool($key);
+
+        return $hasAccess;
     }
 
 }

@@ -31,9 +31,10 @@ class ToolUserController extends AbstractActionController
     {
         $translator = $this->getServiceLocator()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $noAccessPrompt = '';
+        $noAccessPrompt = 'tr_meliscore_no_access_to_tool';
+        $hasAccess = $this->hasAccess($this::TOOL_KEY);
 
-        if(!$this->hasAccess($this::TOOL_KEY)) {
+        if(!$hasAccess) {
             $noAccessPrompt = $translator->translate('tr_tool_no_access');
         }
 
@@ -44,6 +45,7 @@ class ToolUserController extends AbstractActionController
         $view = new ViewModel();
         $view->title = $melisTool->getTitle();
         $view->melisKey = $melisKey;
+        $view->hasAccess = $hasAccess;
 
 
         return $view;
@@ -415,18 +417,15 @@ class ToolUserController extends AbstractActionController
 
 
     /**
-     * Checks wether the user has access to this tools or not
-     * @return boolean
+     * Checks whether the user has access to this tools or not
+     * @param $key
+     * @return bool
      */
-    private function hasAccess($key)
+    private function hasAccess($key): bool
     {
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-        $xmlRights = $melisCoreAuth->getAuthRights();
+        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccessTool($key);
 
-        $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, $key);
-
-        return $isAccessible;
+        return $hasAccess;
     }
 
     /**

@@ -26,22 +26,21 @@ class MelisCoreAuthService
 	
 	public function getAuthRights()
 	{
-	/**
-	 * @var \Zend\EventManager\EventManagerInterface $e
-	 */
+        /**
+         * @var \Zend\EventManager\EventManagerInterface $e
+         */
 	    $e = $this->getServiceLocator()->get('Application')->getEventManager();
-	$e->trigger('melis_core_check_user_rights', $this);
+	    $e->trigger('melis_core_check_user_rights', $this);
 
-	$melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+	    $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
 		$user = $melisCoreAuth->getIdentity();
 
 		$rightsXML = '';
 		if (!empty($user)) {
-	    $rightsXML = $user->usr_rights;
-	}
+	        $rightsXML = $user->usr_rights;
+	    }
 
-
-	return $rightsXML;
+	    return $rightsXML;
     }
 
     public function encryptPassword($password)

@@ -63,11 +63,14 @@ var melisCore = (function(window){
     });
 
     function sessionCheck() {
-    	isLogin();
-        var checkEvery = 1;
-        setInterval(function() {
-        	isLogin();
-        }, (checkEvery * 60) * 1000);
+        var isLoading = $('body #loader').length;
+        if (!isLoading) {
+            isLogin();
+            var checkEvery = 1;
+            setInterval(function() {
+                isLogin();
+            }, (checkEvery * 60) * 1000);
+        }
     }
     
     function isLogin() {

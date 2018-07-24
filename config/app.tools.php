@@ -1326,16 +1326,22 @@ return array(
                                 array(
                                     'spec' => array(
                                         'name' => 'plf_update_marketplace',
-                                        'type' => 'Checkbox',
+                                        'type' => 'Select',
                                         'options' => array(
                                             'label' => 'tr_meliscore_tool_platform_update_marketplace',
                                             'tooltip' => 'tr_meliscore_tool_platform_update_marketplace tooltip',
                                             'switchOptions' => array(
+                                                'label' => 'tr_meliscore_common_allow',
                                                 'label-on' => 'tr_meliscore_common_yes',
                                                 'label-off' => 'tr_meliscore_common_no',
                                                 'icon' => "glyphicon glyphicon-resize-horizontal",
-                                            )
+                                            ),
+                                            'value_options' => array(
+                                                'on' => 'on',
+                                            ),
+                                            'disable_inarray_validator' => true
                                         ),
+                                        'disable_inarray_validator' => true,
                                         'attributes' => array(
                                             'id' => 'plf_update_marketplace',
                                             'value' => 1,
@@ -1391,6 +1397,14 @@ return array(
                                         array('name' => 'StringTrim'),
                                     ),
                                 ),
+                                'plf_update_marketplace' => [
+                                    'name'     => 'plf_update_marketplace',
+                                    'required' => false,
+                                    'filters'  => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ]
                             ),
                         ),
                     ),
@@ -1407,7 +1421,7 @@ return array(
                         'target' => '#tableLanguages',
                         'ajaxUrl' => '/melis/MelisCore/Language/getLanguages',
                         'dataFunction' => '',
-                        'ajaxCallback' => 'initLangJs()',
+                        'ajaxCallback' => 'initLangBOJs()',
                         'filters' => array(
                             'left' => array(
                                 'meliscore_tool_language_content_filters_limit' => array(
@@ -1734,6 +1748,7 @@ return array(
                                 'id' => 'idGeneralPropertiesForm',
                                 'method' => 'POST',
                                 'action' => '',
+                                'enctype' => 'multipart/form-data',
                             ),
                             'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
                             'elements' => array(
@@ -1827,6 +1842,51 @@ return array(
                                         ),
                                         'attributes' => array(
                                             'id' => 'boe_content_layout',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'boe_content_layout_title',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip',
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'boe_content_layout_title',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'boe_content_layout_logo',
+                                        'type' => 'File',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo tooltip',
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'boe_content_layout_logo',
+                                            'value' => '',
+                                            'onchange' => '',
+                                            'class' => 'filestyle',
+                                            'data-buttonText' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo_select_image',
+                                        ),
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'boe_content_layout_ftr_info',
+                                        'type' => 'Textarea',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info tooltip',
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'boe_content_layout_ftr_info',
+                                            'class' => 'form-control',
+                                            'rows' => 5
                                         ),
                                     ),
                                 ),
@@ -1995,6 +2055,26 @@ return array(
                                 ),
                                 'boe_content_layout' => array(
                                     'name'     => 'boe_content_layout',
+                                    'required' => false,
+                                    'validators' => array(
+                                        array(
+                                            'name'    => 'StringLength',
+                                            'options' => array(
+                                                'encoding' => 'UTF-8',
+                                                'max'      => 255,
+                                                'messages' => array(
+                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    'filters'  => array(
+                                        array('name' => 'StripTags'),
+                                        array('name' => 'StringTrim'),
+                                    ),
+                                ),
+                                'boe_content_layout_title' => array(
+                                    'name'     => 'boe_content_layout_title',
                                     'required' => false,
                                     'validators' => array(
                                         array(
