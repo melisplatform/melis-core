@@ -29194,20 +29194,23 @@ var melisHelper = (function(){
     function initSwitch(selector){
         var targetInput = $(selector);
         if(targetInput.length){
-            var parentDiv = targetInput.parent("div.form-group");
-            var attribRequired = '';
-            if(typeof targetInput.data("required") != 'undefined'){
-                attribRequired = ' *';
-            }
-            var attribTooltip = '';
-            if(typeof targetInput.data("tooltip") != 'undefined'){
-                attribTooltip = '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' + targetInput.data("tooltip") +'"></i>';
-            }
-            var switchBtn = '<label for="'+targetInput.attr("name")+'">'+targetInput.data("label") + attribRequired + attribTooltip+'</label>'
-                +'<div class="make-switch user-admin-switch" data-label-icon="glyphicon glyphicon-resize-horizontal" data-on-label="'+translations.tr_meliscore_common_yes+'" data-off-label="'+translations.tr_meliscore_common_no+'" style="display: block;">'
-                +'<input type="checkbox" name="'+targetInput.attr("name")+'" id="'+targetInput.attr("name")+'">'
-                +'</div>';
-            parentDiv.html(switchBtn);
+            targetInput.each(function(){
+                var parentDiv = $(this).parent("div.form-group");
+                var attribRequired = '';
+                if(typeof $(this).data("required") != 'undefined'){
+                    attribRequired = ' *';
+                }
+                var attribTooltip = '';
+                if(typeof $(this).data("tooltip") != 'undefined'){
+                    attribTooltip = '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' + $(this).data("tooltip") +'"></i>';
+                }
+                var switchBtn = '<label for="'+$(this).attr("name")+'">'+$(this).data("label") + attribRequired + attribTooltip+'</label>'
+                    +'<div class="make-switch user-admin-switch" data-label-icon="glyphicon glyphicon-resize-horizontal" data-on-label="'+translations.tr_meliscore_common_yes+'" data-off-label="'+translations.tr_meliscore_common_no+'" style="display: block;">'
+                    +'<input type="checkbox" name="'+$(this).attr("name")+'" id="'+$(this).attr("id")+'">'
+                    +'</div>';
+                parentDiv.html(switchBtn);
+            });
+
             $('.user-admin-switch').bootstrapSwitch('destroy', true);
             $('.user-admin-switch').bootstrapSwitch();
         }else{
