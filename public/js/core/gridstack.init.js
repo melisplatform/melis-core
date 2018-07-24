@@ -75,7 +75,7 @@ var melisDashBoardDragnDrop = {
                 var gridPH      = $('#'+activeTabId+' .tab-pane .grid-stack .grid-stack-placeholder');
 
                 gridPH.attr('data-gs-width', 6);
-                gridPH.attr('data-gs-height', 4);
+                gridPH.attr('data-gs-height', 3);
 
             }
         });
@@ -142,7 +142,7 @@ var melisDashBoardDragnDrop = {
 
         var $mcDashPlugSnippets = $("#"+activeTabId+" .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
             $mcDashPlugSnippets.attr('data-gs-width', 6);
-            $mcDashPlugSnippets.attr('data-gs-height', 4);
+            $mcDashPlugSnippets.attr('data-gs-height', 3);
 
         var mcLoader            = "<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>";
 
@@ -171,11 +171,6 @@ var melisDashBoardDragnDrop = {
 
             // serialize widget and save to db
             self.serializeWidgetMap( grid.container[0].children );
-
-            // pass data width and height for resizeStopWidget
-            //self.resizeStopWidget( grid.container[0].children ); // items
-
-            //pass data x and y for dragStopWidget
                     
             // Assigning current plugin
             self.setCurrentPlugin(widget);
@@ -250,56 +245,40 @@ var melisDashBoardDragnDrop = {
         // grid stack widget drag and stop position
         this.$gs.on('dragstop', function(event, ui) {
             var $this = $(this);
-            var element = $(event.target);
-
-            /*var node = element.data('_gridstack_node');
-
-            console.log(node.y);
-
-            console.log(node);*/
 
             // update position / size of the widget
-            self.updateWidgetPosSize(element);
+            self.updateWidgetPosSize($this);
+
         });
     },
 
-    resizeStopWidget: function( items ) {
+    resizeStopWidget: function() {
         var self = this;
 
         // grid stack stop widget resize
         this.$gs.on('gsresizestop', function(event, ui) {
             var $this   = $(this);
-            var element = $(event.target);
-
-            //console.log('gsresizestop: ',ui);
-            //check widget if resized ?
-            //self.checkWidgetResize();
-            
+          
             // update position / size of widget
-            self.updateWidgetPosSize(element);
+            self.updateWidgetPosSize($this);
+
         });
     },
 
-    checkWidgetResize: function( oW, oH, aW, aH ) {
-
-    },
-
-    updateWidgetPosSize: function(el) {
+    updateWidgetPosSize: function(gs) {
         var self        = this;
 
         // jQuery element
+        var $grid       = $('#' + activeTabId ).find(gs);
         var items       = [];
-        var gsiUiDrag   = el;
+        var gsiUiDrag   = $grid.find('.grid-stack-item.ui-draggable.ui-resizable');
         var posChanged  = false;
-
-        //console.log(gsiUiDrag.data('_gridstack_node'));
+        var sizChanged  = false;
 
         gsiUiDrag.each(function() {
             // refer to gsiUiDrag
             var $this   = $(this);
             var node    = $this.data('_gridstack_node');
-
-            //console.log(node);
 
             items.push({
                 x: node.x,
@@ -309,11 +288,17 @@ var melisDashBoardDragnDrop = {
                 content: $this.data()
             });
 
-            //console.log( 'node: ', node );
-
             if( node.x != node._beforeDragX || node.y != node._beforeDragY ) {
                 posChanged = true;
             }
+
+            /*console.log('node width: ', node.width);
+            console.log('node height: ', node.height);
+            console.log('__________________________');
+            console.log('item width: ', items.width);
+            console.log('item height: ', items.height);
+
+            console.log('items:',items);*/
 
         });
         
