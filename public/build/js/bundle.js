@@ -31157,7 +31157,7 @@ $(function(){
 		
 		var zoneId = 'id_meliscore_logs_tool_log_type_form';
 		var melisKey = 'meliscore_logs_tool_log_type_form';
-		modalUrl = '/melis/MelisCms/SiteRedirect/renderToolSiteRedirectModal';
+		var modalUrl = '/melis/MelisCore/Log/renderLogsToolModalContainer';
 		// requesitng to create modal and display after
     	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
 	});
