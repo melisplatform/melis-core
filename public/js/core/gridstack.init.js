@@ -25,9 +25,7 @@ var melisDashBoardDragnDrop = {
         this.dragWidget(this.melisWidgetHandle);
         this.docuReady();
         this.dropWidget();
-        //this.dragStartWidget();
         this.dragStopWidget();
-        //this.resizeStartWidget();
         this.resizeStopWidget();
     },
 
@@ -292,14 +290,6 @@ var melisDashBoardDragnDrop = {
                 posChanged = true;
             }
 
-            /*console.log('node width: ', node.width);
-            console.log('node height: ', node.height);
-            console.log('__________________________');
-            console.log('item width: ', items.width);
-            console.log('item height: ', items.height);
-
-            console.log('items:',items);*/
-
         });
         
         if(posChanged) {
@@ -309,10 +299,13 @@ var melisDashBoardDragnDrop = {
     },
 
     deleteWidget: function(el) {
-        var self = this;
-        var $del = el;
-        var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
-        
+        var self        = this;
+
+        var $del        = el;
+        var grid        = $('#'+activeTabId+' .grid-stack').data('gridstack');
+        var nodeItem    = grid.container[0].children;
+        var gs          = $('#' + activeTabId ).find('.grid-stack');
+     
         melisCoreTool.confirm(
             translations.tr_meliscore_common_yes,
             translations.tr_meliscore_common_no,
@@ -320,17 +313,8 @@ var melisDashBoardDragnDrop = {
             translations.tr_melis_core_remove_dashboard_plugin_msg,
             function() {
                 grid.removeWidget($del.closest('.grid-stack-item'));
-
-                var dataString = new Array;
-
-                //create dashboard array
-                dataString.push({
-                    name: 'dashboard_id',
-                    value: activeTabId
-                });
-
-                //save dashboard lists
-                self.saveDBWidgets(dataString);
+              
+                self.updateWidgetPosSize(gs);
             }
         );
     },
