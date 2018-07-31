@@ -2236,7 +2236,59 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     text-align: center;
     z-index: 1;
 }
+/*
+ * Added by: Junry @ 07/19/2018
+ */
+.short-text {
+    display: block;
+}
+.long-text {
+    display: none;
+}
+.tooltip .tooltip-inner {
+    word-break: break-all;
+}
 /* ===============================================================[ -= RESPONSIVE =- ]================================================================================ */
+/* 
+ * Added by: Junry @ 07/18/2018
+ * Mantis issue id: 0002306
+ * Description: Found 2 elements with non-unique id #btnAdd under /render-tool-user-modal-new.phtml
+ * Removed: [hidden-xs, hidden-sm], [visible-xs, visible-sm]
+ */
+@media (max-width: 767px) {
+    .btn .short-text {
+        display: inline-block;
+    }
+
+    .btn .long-text {
+        display: none;
+    }
+}
+@media (min-width: 768px) {
+    .btn .short-text {
+        display: none;
+    }
+
+    .btn .long-text {
+        display: inline-block;
+    }
+}
+@media (max-width: 768px) {
+    #id_meliscore_tool_user_action_new_user {
+        margin-top: 3em;
+    }
+}
+
+@media (min-width: 992px) {
+    .btn .short-text {
+        display: none;
+    }
+
+    .btn .long-text {
+        display: inline-block;
+    }
+}
+/* End fixed */
 
 @media (min-width:396px) and (max-width:767px) {
 
