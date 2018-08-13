@@ -132,6 +132,9 @@ return array(
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css',
 
+                    // datetimepicker
+                    '/MelisCore/assets/components/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css',
+
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
                     '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
@@ -152,8 +155,6 @@ return array(
 
                     // Melis Admin
                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
-
-
 
                     // Bootstrap Dialog
                     '/MelisCore/css/bootstrap-dialog.min.css',
@@ -202,6 +203,9 @@ return array(
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
+
+                    // datetimepicker
+                    '/MelisCore/assets/components/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js',
 
                     '/MelisCore/js/core/tabExpander.js',
                     '/MelisCore/js/core/melisSidebar.js',
