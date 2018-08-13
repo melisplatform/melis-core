@@ -610,6 +610,33 @@
         'tr_melis_core_common_add' => 'Add',
 
         //Diagnostic
-        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration'
+        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
+
+        // Melis Core GDPR
+        'tr_melis_core_gdpr' => 'GDPR',
+        'tr_melis_core_gdpr_header_description' => 'Melis Platform provides a system to look for your user\'s datas. </br> All modules compliant to the Melis system will be able to interact with this interface and offer you possibilities to comply with the regulation.',
+
+        'tr_melis_core_gdpr_form_name' => 'Name',
+        'tr_melis_core_gdpr_form_email' => 'Email',
+        'tr_melis_core_gdpr_form_site' => 'Site',
+        'tr_melis_core_gdpr_search_user_title' => 'Search User',
+
+        'tr_melis_core_gdpr_notif_gdpr_search' => 'GDPR Search Form',
+        'tr_melis_core_gdpr_notif_extract_user' => 'GDPR Extract User',
+        'tr_melis_core_gdpr_notif_delete_user' => 'GDPR Delete User',
+
+        'tr_melis_core_gdpr_notif_delete_selected_confirm' => 'Delete Selected',
+        'tr_melis_core_gdpr_notif_delete_selected_confirm_message' => 'Are you sure you want to delete the selected records?',
+
+        'tr_melis_core_gdpr_search_user_error_message' => 'Unable to search for user info',
+        'tr_melis_core_gdpr_tool_form_input_too_long' => 'Input is too long',
+        'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Invalid email format',
+        'tr_melis_core_gdpr_tool_form_no_inputs' => 'Please input the user details',
+        'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'No user selected to extract',
+        'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'No user selected to delete',
+
+        'tr_melis_core_gdpr_view_search_button' => 'Search',
+        'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',
+        'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected'
 	);
 ?>
