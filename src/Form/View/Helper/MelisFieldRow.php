@@ -89,7 +89,21 @@ class MelisFieldRow extends FormRow
 
     		$element->setAttribute('class', $elementClass);
     		$element->setLabelOption('class','col-sm-2 control-label');
-    		$formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
+
+    		if ($element->getOption('form_type') == 'form-horizontal') {
+                $elementHelper       = $this->getElementHelper();
+                $elementString = $elementHelper->render($element);
+                //add style
+                $newElementString = substr_replace($elementString, 'style="border-radius:0px;border-color:#e5e5e5"',49, 0);
+                $formElement .= '<div class="form-group">
+                                <label for=" ' . $element->getName() . ' " class="col-sm-2 control-label"> ' . $element->getOption('label') . ' </label>
+                                <div class="col-sm-10">'
+                                    . $newElementString .
+                                '</div>
+                            </div>';
+            } else {
+                $formElement .= '<div class="form-group">' . parent::render($element, $labelPosition) . '</div>';
+            }
 	    } elseif ($element->getAttribute('class') == self::MELIS_MULTI_VAL_INPUT)
 	    {
 	        // Get Value
@@ -242,9 +256,19 @@ class MelisFieldRow extends FormRow
 								</div>
 							</div>';
 
-	    }elseif ($element->getAttribute('type') != 'hidden') 
+	    }elseif($element->getOption('form_type') == 'form-horizontal')
+        {
+
+            $formElement .= '<div class="form-group">
+                                <label for=" ' . $element->getName() . ' " class="col-sm-2 control-label"> ' . $element->getOption('label') . ' </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="' . $element->getName() . '">
+                                </div>
+                            </div>';
+
+        }elseif ($element->getAttribute('type') != 'hidden')
 	    {
-	        $formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
+	        $formElement .= '<div class="form-group ' . $element->getOption('form_type') . '">'. parent::render($element, $labelPosition).'</div>';
 	    }
 	    else
 	    {
