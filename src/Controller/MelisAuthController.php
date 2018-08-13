@@ -399,9 +399,7 @@ class MelisAuthController extends AbstractActionController
             $userData = $melisCoreAuth->getIdentity();
             $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
 
-			$data = array_merge(array(
-				'usr_is_online' => 0
-			), (array) $userData);
+			$data = ['usr_is_online' => 0];
 
 
             $userTable->save($data, $userData->usr_id);

@@ -106,8 +106,8 @@ class MelisSetupController extends AbstractActionController
             if(false === $hasErrors) {
 
                 try {
-
-                    $tableUser->save(array(
+                    // Saving user
+                    $userId = $tableUser->save(array(
                         'usr_status'        => 1,
                         'usr_login'         => $userLogin,
                         'usr_email'         => $userEmail,
@@ -122,7 +122,8 @@ class MelisSetupController extends AbstractActionController
                     ));
 
                     $installerSession = new Container('melisinstaller');
-                    // save platforms
+
+                    // Saving platforms
                     $melisCorePlatformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
                     $defaultPlatform = getenv('MELIS_PLATFORM');
                     $platforms       = isset($installerSession['environments']) ? $installerSession['environments'] :null;
@@ -138,6 +139,8 @@ class MelisSetupController extends AbstractActionController
                         }
                     }
 
+                    // Saving Dashboard plugins
+                    $this->generateDashboardPlugins($userId);
 
                     $success = 0;
                     $message = 'tr_install_setup_message_ok';
@@ -145,10 +148,7 @@ class MelisSetupController extends AbstractActionController
                 }catch(\Exception $e) {
                     $errors = $e->getMessage();
                 }
-
-
             }
-
         }
         else {
             $errors = $this->formatErrorMessage($form->getMessages());
@@ -162,7 +162,116 @@ class MelisSetupController extends AbstractActionController
         );
 
         return new JsonModel($response);
+    }
 
+    /**
+     * This method generate the dashboard plugins
+     * after the setup, this will take all the available dashboard plugins
+     * in every module and save to the newly user created
+     */
+    private function generateDashboardPlugins($userId)
+    {
+        $melisModules = $_SERVER['DOCUMENT_ROOT'].'/../vendor/melisplatform/';
+
+        $modulePlugins = array();
+
+        foreach (scandir($melisModules) As $val)
+        {
+            if (!in_array($val, array('.', '..')))
+            {
+                if (is_dir($melisModules.$val.'/config/dashboard-plugins'))
+                {
+                    $modulePluginConfigs = $melisModules.$val.'/config/dashboard-plugins';
+
+                    if (is_dir($modulePluginConfigs))
+                    {
+                        foreach (scandir($modulePluginConfigs) As $conf)
+                        {
+                            if (!in_array($conf, array('.', '..')))
+                            {
+                                $pluginConfig = require($modulePluginConfigs.'/'.$conf);
+
+                                if (is_array($pluginConfig['plugins']))
+                                {
+                                    /**
+                                     * Retrieving all available dashboard plugins in every module
+                                     * activated to the platform
+                                     */
+                                    foreach ($pluginConfig['plugins'] As $cKey => $cConf)
+                                    {
+                                        if(!empty($cConf['dashboard_plugins']))
+                                        {
+                                            foreach ($cConf['dashboard_plugins'] As $pluginKey => $pluginConf)
+                                            {
+                                                // Skipping DragDrapZone plugin
+                                                if (!in_array($pluginKey, array('MelisCoreDashboardDragDropZonePlugin')))
+                                                {
+                                                    $modulePlugins[$pluginKey] = $pluginConf;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Generating Dashboard Xml
+         */
+        $pluginXml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<Plugins>%s'."\n".'</Plugins>';
+        $pluginXmlData = '';
+
+        if (!empty($modulePlugins))
+        {
+            $pluginIdTime = time();
+            $xAxis = 0;
+            $yAxis = 0;
+            $ctr = 1;
+            foreach ($modulePlugins As $plugin => $conf)
+            {
+                $height = !empty($conf['height']) ? $conf['height'] : 6;
+                $width = !empty($conf['width']) ? $conf['width'] : 6;
+
+                // Xml data of each plugin
+                $pluginXmlData .= "\n\t".'<plugin plugin="'.$plugin.'" plugin_id="'.$conf['plugin_id'].'_'.$pluginIdTime.'">'."\n";
+                $pluginXmlData .= "\t\t".'<x-axis><![CDATA['.$xAxis.']]></x-axis>'."\n";
+                $pluginXmlData .= "\t\t".'<y-axis><![CDATA['.$yAxis.']]></y-axis>'."\n";
+                $pluginXmlData .= "\t\t".'<height><![CDATA['.$height.']]></height>'."\n";
+                $pluginXmlData .= "\t\t".'<width><![CDATA['.$width.']]></width>'."\n";
+                $pluginXmlData .= "\t".'</plugin>';
+
+                // Column number of the plugin
+                if ($xAxis == 0)
+                    $xAxis = 6;
+                elseif ($xAxis == 6)
+                    $xAxis = 0;
+
+                // Row number of the plugin
+                if ($ctr % 2 == 0)
+                    $yAxis += 6;
+
+                $ctr++;
+            }
+        }
+
+        // Creating the final xml of the dashboard plugins
+        $pluginXml = sprintf($pluginXml, $pluginXmlData);
+
+        /**
+         * Saving dashboard plugins to database
+         */
+        $pluginDashboard = array(
+            'd_dashboard_id' => 'id_meliscore_dashboard',
+            'd_user_id' => $userId,
+            'd_content' => $pluginXml,
+        );
+
+        $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
+        $dashboardPluginsTbl->save($pluginDashboard);
     }
 
     /**

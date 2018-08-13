@@ -11,8 +11,6 @@ namespace MelisCore\Controller\DashboardPlugins;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\ViewModel;
-// use Zend\View\Model\JsonModel;
-// use Zend\Stdlib\ArrayUtils;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\EventManager\EventManager;
@@ -106,7 +104,10 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     public function render($pluginConfig = array(), $generatePluginId = false)
     {
         $this->updatesPluginConfig = $pluginConfig;
-        
+
+        $melisCoreGeneralSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+        $this->updatesPluginConfig = $melisCoreGeneralSrv->sendEvent($this->pluginName . '_melisdashboard_render_start', $this->updatesPluginConfig);
+
         $this->getPluginConfig($generatePluginId);
         
         // Checking plugin interface otherwise return view with error message
@@ -185,6 +186,9 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $this->pluginConfig['module'] = $this->pluginModule;
         
         $this->pluginConfig = $this->translateConfig($this->pluginConfig);
+
+        $melisCoreGeneralSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+        $this->pluginConfig = $melisCoreGeneralSrv->sendEvent($this->pluginName . '_melisdashboard_getpluginconfig_end', $this->pluginConfig);
     }
     
     /**
@@ -197,7 +201,6 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      */
     public function sendViewResult($modelVars)
     {
-        
         // Removing interface from plugin rendered view config json
         unset($this->pluginConfig['interface']);
 
@@ -208,7 +211,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         
         $modelVars->pluginConfig = $this->pluginConfig;
         $modelVars->jsonPluginConfig = json_encode($this->pluginConfig);
-        
+
         // Skipping container of a plugin
         if (isset($this->pluginConfig['skip_plugin_container']))
             return $modelVars;
@@ -219,7 +222,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     /**
      * Setting up plugin container
      * 
-     * @param unknown $pluginView - plugin view
+     * @param ViewModel $pluginView - plugin view
      * 
      * @return \Zend\View\Model\ViewModel
      */

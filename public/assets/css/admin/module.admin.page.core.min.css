@@ -4881,7 +4881,7 @@ html.csstransitions.csstransforms3d .panel-3d.panel-flip .back {
 }
 
 .datepicker thead th.dow {
-    background: #932E2A;
+    /*background: #932E2A;*/
     color: #fff;
     -webkit-border-radius: 0 0 0 0;
     -moz-border-radius: 0 0 0 0;
@@ -8346,9 +8346,9 @@ body {
     background-color: #2c2c2c
 }
 
-.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li.active a {
-    background-color: #932E2A
-}
+/*.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li.active a {*/
+    /*background-color: #932E2A*/
+/*}*/
 
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li a {
     background-color: #272727

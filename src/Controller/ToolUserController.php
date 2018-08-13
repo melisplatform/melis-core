@@ -1086,17 +1086,16 @@ class ToolUserController extends AbstractActionController
                 $data['usr_image'] = $imageContent;
                 $newPass = '';
                 // check if the user exists
-                if($userInfo)
+                if ($userInfo)
                 {
                     if(!empty($password) || !empty($confirmPass))
                     {
-
                         if(strlen($password) >= 8) {
                             if(strlen($confirmPass) >= 8) {
-                                //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                                 $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                                 if($passValidator->isValid($password))
                                 {
+
                                     // password and confirm password matching
                                     if($password == $confirmPass)
                                     {
@@ -1173,11 +1172,13 @@ class ToolUserController extends AbstractActionController
 
 
                     if($success) {
+
+                        $savedPassword = !empty($newPass) ? $newPass : $userInfo['usr_password'];
                         // remove confirm pass when updating
                         unset($data['usr_confirm_password']);
 
                         $data['usr_login'] = $userInfo['usr_login'];
-                        $data['usr_password'] = !empty($newPass) ? $newPass : $userInfo['usr_password'];
+                        $data['usr_password'] = $savedPassword;
                         // $data['usr_lang_id'] = $userInfo['usr_lang_id'];
                         $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
                         $data['usr_rights'] = $userInfo['usr_rights'];
@@ -1185,9 +1186,7 @@ class ToolUserController extends AbstractActionController
                         $data['usr_last_login_date'] = $userInfo['usr_last_login_date'];
                         $data['usr_role_id'] = $userInfo['usr_role_id'];
 
-
-                        if($roleId == 0 || $roleId == 1)
-                        {
+                        if ($roleId == 0 || $roleId == 1) {
                             $data['usr_role_id'] = 1;
                             $container = new Container('meliscore');
                             if (!empty($container['action-tool-user-setrights-tmp']))
@@ -1200,9 +1199,7 @@ class ToolUserController extends AbstractActionController
 
                                 $data['usr_rights'] = $newXmlRights;
                             }
-                        }
-                        else
-                        {
+                        } else {
                             $data['usr_role_id'] = $roleId;
                             $rolesTable = $this->getServiceLocator()->get('MelisUserRole');
                             $roleData = $rolesTable->getEntryById($roleId);
@@ -1214,7 +1211,7 @@ class ToolUserController extends AbstractActionController
                         $userTable->save($data, $userId);
                         // check if you are updating your own info
                         $userSession = $melisCoreAuth->getStorage()->read();
-                        if($data['usr_login'] == $userSession->usr_login) {
+                        if ($data['usr_login'] == $userSession->usr_login) {
 
                             // update session data
                             $userSession->usr_status = $data['usr_status'];
@@ -1225,6 +1222,7 @@ class ToolUserController extends AbstractActionController
                             $userSession->usr_role_id = $data['usr_role_id'];
                             $userSession->usr_rights = $newXmlRights;
                             $userSession->usr_image = $data['usr_image'];
+                            $userSession->usr_password = $savedPassword;
 
                             $datas = array(
                                 'isMyInfo' => 1,

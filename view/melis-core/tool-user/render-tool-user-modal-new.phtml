@@ -13,8 +13,7 @@
 <script type="text/javascript">
 	$('.userimage').detach().insertAfter('fieldset#idnewusermanagement div:last');
 </script>
-<button type="submit" class="btn btn-success pull-right hidden-xs hidden-sm" id="btnAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
-<button type="submit" class="btn btn-success pull-right visible-xs visible-sm" id="btnAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></button>
+<button type="submit" class="btn btn-success pull-right" id="btnAdd"><i class="fa fa-plus"></i>  <span class="long-text"><?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></span> <span class="short-text"><?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></span></button>
 
 <?php 
     echo $this->melisModalInvoker()->render(

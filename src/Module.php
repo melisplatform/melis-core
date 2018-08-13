@@ -261,16 +261,16 @@ class Module
     	$config = array();
     	$configFiles = array(
 			include __DIR__ . '/../config/module.config.php',
-            include __DIR__ . '/../config/app.interface.php',
-            include __DIR__ . '/../config/app.toolstree.php',
+			include __DIR__ . '/../config/app.interface.php',
+			include __DIR__ . '/../config/app.tools.php',
             include __DIR__ . '/../config/app.interface.general.php',
-            include __DIR__ . '/../config/app.forms.php',
-            include __DIR__ . '/../config/app.tools.php',
-            include __DIR__ . '/../config/app.emails.php',
-            include __DIR__ . '/../config/diagnostic.config.php',
-            include __DIR__ . '/../config/app.microservice.php',
-            include __DIR__ . '/../config/app.install.php',
-            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
+			include __DIR__ . '/../config/app.forms.php',
+	        include __DIR__ . '/../config/app.tools.php',
+	        include __DIR__ . '/../config/app.emails.php',
+	        include __DIR__ . '/../config/diagnostic.config.php',
+	        include __DIR__ . '/../config/app.microservice.php',
+	        include __DIR__ . '/../config/app.install.php',
+	        include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
 	        include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
     	);
     	

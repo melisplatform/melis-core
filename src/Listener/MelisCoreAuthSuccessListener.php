@@ -36,11 +36,11 @@ class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements L
                 // update the session last_login_date
                 $user = $authSvc->getStorage()->read();
 
-                if (!empty($user)) {
+                if(!empty($user)) {
                     $user->usr_last_login_date = $params['login_date'];
                     $isOnline                  = (bool) $user->usr_is_online;
 
-                    if (!$isOnline) {
+                    if(!$isOnline) {
                         $table->save([
                             'usrcd_usr_login'            => $params['usr_id'],
                             'usrcd_last_login_date'      => $params['login_date'],
@@ -53,19 +53,9 @@ class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements L
                         'usr_is_online'       => true,
                     ), $params['usr_id']);
 
-                    // update rights to a new rights structure
-                    $oldToolNode = 'meliscore_tools';
-                    $newToolNode = 'meliscore_leftmenu';
-                    $rightsXml   = $user->usr_rights;
-
-                    if (mb_strpos($rightsXml, $oldToolNode) !== false) {
-                       $newRightsXml = str_replace($oldToolNode, $newToolNode, $rightsXml);
-                        $userTable->save(array(
-                            'usr_rights' => $newRightsXml,
-                        ), $params['usr_id']);
-                        $user->usr_rights = $newRightsXml;
-                    }
                 }
+
+
             },
             -10000);
 
