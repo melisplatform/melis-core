@@ -263,6 +263,7 @@ class Module
 			include __DIR__ . '/../config/module.config.php',
 			include __DIR__ . '/../config/app.interface.php',
 			include __DIR__ . '/../config/app.tools.php',
+			include __DIR__ . '/../config/app.toolstree.php',
             include __DIR__ . '/../config/app.interface.general.php',
 			include __DIR__ . '/../config/app.forms.php',
 	        include __DIR__ . '/../config/app.tools.php',
