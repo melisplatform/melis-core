@@ -28530,7 +28530,7 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard(){
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard', 'id_meliscore_center_dashboard', 'meliscore_center_dashboard' );
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard', 'id_meliscore_dashboard', 'meliscore_dashboard' );
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
@@ -28651,7 +28651,7 @@ var melisCore = (function(window){
         // loop all tab list
         listData.each(function() {
             var dataID =  $(this).attr('data-tool-id');
-            if(dataID != "id_meliscore_center_dashboard"){
+            if(dataID != "id_meliscore_dashboard"){
                 melisHelper.tabClose(dataID);
             }
         });
@@ -28863,6 +28863,13 @@ var melisCore = (function(window){
     $("body .melis-core-dashboard-plugin-snippets").hover(function() {
         $(this).children(".melis-plugin-tooltip").fadeIn();
     });
+    
+    $body.on("click", ".melis-dashboard-plugins-menu", function(){
+    	 data = $(this).data();
+    	 console.log(data);
+    	 melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
+    });
+    
 
     function showPlugLists() {
         if($(this).hasClass("active")) {
@@ -29268,7 +29275,7 @@ var melisHelper = (function(){
         var currentGrandParent = currentParent.parent().parent("li").find(".tab-element").data("id");
 
         //This is for not showing the close all tab button
-        if(prevActiveTab == 'id_meliscore_center_dashboard' && !nextActiveTab){
+        if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab){
             $("#close-all-tab").hide();
         }
 
