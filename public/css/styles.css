@@ -3579,6 +3579,30 @@ div#modal-user-management div.widget {
 	font-family: inherit;
 }
 
+.melis-plugin-tooltip.tooltip .tooltip-inner {
+    max-width: 280px;
+    padding: 20px;
+    background: #212121;
+    border-radius: 4px;
+    font-family: Lato;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    line-height: 1.3;
+    font-weight: normal;
+    box-shadow: 0px 0px 2px rgba(0,0,0,0.6);
+    font-family: inherit;
+}
+
+#melisDashBoardPluginBtn .fa-stack{
+    position: absolute;
+    top: -10px;
+    left: -12px;
+}
+
+#melisDashBoardPluginBtn .fa-stack .fa-circle{
+    color: #932e2a;
+}
+
 .melis-svg-icon {
     position: static;
     width: 32px;
