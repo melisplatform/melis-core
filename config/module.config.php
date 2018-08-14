@@ -361,6 +361,10 @@ return array(
             'MelisUserRoleSelect' => 'MelisCore\Form\Factory\MelisUserRoleSelectFactory',
             'MelisCoreMultiValInput' => 'MelisCore\Form\Factory\MelisCoreMultiValueInputFactory',
             'DateField' => 'MelisCore\Form\Factory\DateFieldFactory',
+            'DatePicker' => 'MelisCore\Form\Factory\DatePickerFactory',
+            'DateTimePicker' => 'MelisCore\Form\Factory\DateTimePickerFactory',
+            'MelisCoreUserSelect' => 'MelisCore\Form\Factory\MelisCoreUsersSelect2Factory',
+            'MelisCoreTinyMCE' => 'MelisCore\Form\Factory\MelisCoreTinyMCEFactory',
         ),
     ),
     'view_helpers' => array(

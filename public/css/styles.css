@@ -3694,3 +3694,25 @@ div#modal-user-management div.widget {
     margin-top: 5px;
 }
 
+.form-group span.select2-container {
+    width: 100%;
+}
+
+.select2-container--default .select2-selection--single {
+    height: 36px;
+    border: 1px solid #ccc;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    text-align: left;
+    padding: 7px 15px;
+    line-height: 21px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #555555 transparent transparent transparent;
+    border-width: 6px 3px 0 3px;
+}
