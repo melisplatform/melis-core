@@ -225,6 +225,7 @@ return array(
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
+                    '/MelisCore/js/tools/melis-core-gdpr-tool.js',
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
@@ -1238,6 +1239,75 @@ return array(
 
                                             ), // end tool interface
                                         ), // end user management tool
+                                        // tool GDPR start
+                                        'melis_core_gdpr' => array(
+                                            'conf' => array(
+                                                'id' => 'id_melis_core_gdpr',
+                                                'name' => 'tr_melis_core_gdpr',
+                                                'melisKey' => 'melis_core_gdpr',
+                                                'icon' => '',
+                                                'rights_checkbox_disable' => true,
+                                                'follow_regular_rendering' => false,
+                                            ),
+                                                'forward' => array(
+                                                'module' => 'MelisCore',
+                                                'controller' => 'MelisCoreGdpr',
+                                                'action' => 'renderMelisCoreGdprContainer',
+                                                'jscallback' => '',
+                                            ),
+                                            'interface' => array(
+                                                'melis_core_gdpr_gdpr_header' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_melis_core_gdpr_gdpr_header',
+                                                        'melisKey' => 'melis_core_gdpr_gdpr_header',
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'MelisCoreGdpr',
+                                                        'action' => 'renderMelisCoreGdprHeader',
+                                                        'jscallback' => '',
+                                                    ),
+                                                ),
+                                                'melis_core_gdpr_content' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_melis_core_gdpr_content',
+                                                        'melisKey' => 'melis_core_gdpr_content'
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'MelisCoreGdpr',
+                                                        'action' => 'renderMelisCoreGdprContent',
+                                                        'jscallback' => '',
+                                                    ),
+                                                    'interface' => array(
+                                                        'melis_core_gdpr_gdpr_search_form' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_melis_core_gdpr_gdpr_search_form',
+                                                                'melisKey' => 'melis_core_gdpr_gdpr_search_form',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreGdpr',
+                                                                'action' => 'renderMelisCoreGdprSearchForm',
+                                                                'jscallback' => '',
+                                                            ),
+                                                        ),
+                                                        'melis_core_gdpr_content_tabs' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_melis_core_gdpr_content_tabs',
+                                                                'melisKey' => 'melis_core_gdpr_content_tabs',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreGdpr',
+                                                                'action' => 'renderMelisCoreGdprTabs',
+                                                                'jscallback' => '',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),// end of GDPR
                                     ),
                                 ),
                             ),
