@@ -338,11 +338,8 @@ return array(
             'MelisCore\Controller\MelisCoreMicroService' => 'MelisCore\Controller\MelisCoreMicroServiceController',
             'MelisCore\Controller\MelisSetup' => 'MelisCore\Controller\MelisSetupController',
             'MelisCore\Controller\PlatformScheme' => 'MelisCore\Controller\PlatformSchemeController',
-<<<<<<< HEAD
             'MelisCore\Controller\DashboardPlugins' => 'MelisCore\Controller\DashboardPluginsController',
-=======
             'MelisCore\Controller\MelisCoreGdpr' => 'MelisCore\Controller\MelisCoreGdprController',
->>>>>>> features/MelisCoreGdpr
         ),
     ),
     'controller_plugins' => array(
