@@ -1,32 +1,33 @@
 <div id="menu">
     <?php
-    
-    	$id = '';
-    	if (!empty($this->zoneconfig['conf']['id']))
-    		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
-    	$data_melisKey = $this->melisKey;
-    	
+
+    $id = '';
+    if (!empty($this->zoneconfig['conf']['id']))
+        $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+    $data_melisKey = $this->melisKey;
     ?>
 
     <div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="sidebar sidebar-inverse transition3ms">
-    	<?php 
-    		if (!empty($this->zoneconfig['interface']['meliscore_leftmenu_identity']))
-    			echo $this->meliscore_leftmenu_identity;
-    	?>
+
+        <?php
+
+        if (!empty($this->zoneconfig['interface']['meliscore_leftmenu_identity']))
+            echo $this->meliscore_leftmenu_identity;
+        ?>
 
         <div class="sidebarMenuWrapper hasNiceScroll">
         
             <ul class="list-unstyled sideMenu">
 
-            	<?php 
-        	    	if (!empty($this->zoneconfig['interface'])) {
-        	    		foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
-                            if ($keyConfig == 'meliscore_leftmenu_dashboard') {
-                                echo $this->$keyConfig;
-                            }
-        	    		}
-        	    	}
-        	 	?>
+                <?php
+                if (!empty($this->zoneconfig['interface'])) {
+                    foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                        if ($keyConfig == 'meliscore_leftmenu_dashboard') {
+                            echo $this->$keyConfig;
+                        }
+                    }
+                }
+                ?>
 
                 <li id="toolstre_meliscore" class="toolstree hasSubmenu" data-meliskey="toolstre_meliscore">
                     <a data-target="#meliscore_tools" data-toggle="collapse" class="" aria-expanded="true">
@@ -46,9 +47,10 @@
                     </a>
                     <ul class="collapse" id="meliscore_tools" aria-expanded="false">
                         <?php
-                            if (!empty($this->zoneconfig['interface'])) {
-                                echo $this->meliscore_toolstree_section;
-                            }
+
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->meliscore_toolstree_section;
+                        }
                         ?>
                     </ul>
                 </li>
@@ -71,10 +73,11 @@
                     </a>
                     <ul class="collapse" id="meliscms_tools" aria-expanded="false">
                         <?php
-                            if (!empty($this->zoneconfig['interface'])) {
-                                echo $this->meliscms_sitetree;
-                                echo $this->meliscms_toolstree_section;
-                            }
+
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->meliscms_sitetree;
+                            echo $this->meliscms_toolstree_section;
+                        }
                         ?>
                     </ul>
                 </li>
@@ -97,9 +100,9 @@
                     </a>
                     <ul class="collapse" id="melismarketing_tools" aria-expanded="false">
                         <?php
-                            if (!empty($this->zoneconfig['interface'])) {
-                                echo $this->melismarketing_toolstree_section;
-                            }
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->melismarketing_toolstree_section;
+                        }
                         ?>
                     </ul>
                 </li>
@@ -122,9 +125,9 @@
                     </a>
                     <ul class="collapse" id="meliscommerce_tools" aria-expanded="false">
                         <?php
-                            if (!empty($this->zoneconfig['interface'])) {
-                                echo $this->meliscommerce_toolstree_section;
-                            }
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->meliscommerce_toolstree_section;
+                        }
                         ?>
                     </ul>
                 </li>
@@ -147,9 +150,9 @@
                     </a>
                     <ul class="collapse" id="melisothers_tools" aria-expanded="false">
                         <?php
-                            if (!empty($this->zoneconfig['interface'])) {
-                                echo $this->melisothers_toolstree_section;
-                            }
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->melisothers_toolstree_section;
+                        }
                         ?>
                     </ul>
                 </li>
@@ -172,17 +175,17 @@
                     </a>
                     <ul class="collapse" id="meliscustom_tools" aria-expanded="false">
                         <?php
-                            if (!empty($this->zoneconfig['interface'])) {
-                                echo $this->meliscustom_toolstree_section;
-                            }
+                        if (!empty($this->zoneconfig['interface'])) {
+                            echo $this->meliscustom_toolstree_section;
+                        }
                         ?>
                     </ul>
                 </li>
             </ul>
         </div>
-        <?php       
-        	if (!empty($this->zoneconfig['interface']['meliscore_footer']))
-        		echo $this->meliscore_footer;
-        ?>    
+        <?php
+        if (!empty($this->zoneconfig['interface']['meliscore_footer']))
+            echo $this->meliscore_footer;
+        ?>
     </div>
 </div>
