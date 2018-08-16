@@ -507,6 +507,34 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     }
 
     /**
+     * This method activating a single module
+     * and store to the module.load.php of the platform
+     *
+     * @param $module
+     * @return bool
+     */
+    public function activateModule(
+        $module,
+        $defaultModules = array('MelisAssetManager','MelisComposerDeploy', 'MelisDbDeploy', 'MelisCore'),
+        $excludeModule = array('MelisModuleConfig'))
+    {
+        // Default melis modules
+        $activeModules  = $this->getActiveModules($defaultModules);
+
+        // Removing "MelisModuleConfig" if exist on activated modules
+        foreach($activeModules as $key => $mod){
+            if(in_array($mod, $excludeModule)){
+                unset($activeModules[$key]);
+            }
+        }
+
+        array_push($activeModules, $module);
+
+        // Creating/updating module.load.php including new module
+        return $this->createModuleLoader('config/', $activeModules, $defaultModules);
+    }
+
+    /**
      * This will check if directory exists and it's a valid directory
      * @param $dir
      * @return bool
