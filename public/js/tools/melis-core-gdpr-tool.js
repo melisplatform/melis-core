@@ -63,10 +63,12 @@ $(document).ready(function() {
         if (this.checked) {
             if (!$(this).siblings('i').hasClass('checked')) {
                 $(this).siblings('i').addClass('checked');
+                $(this).parents('tr').addClass('checked');
             }
         } else {
             if ($(this).siblings('i').hasClass('checked')) {
                 $(this).siblings('i').removeClass('checked');
+                $(this).parents('tr').removeClass('checked');
             }
         }
 
@@ -110,6 +112,7 @@ $(document).ready(function() {
 
         //only send request if there are any ids
         if (hasData) {
+            console.log($.param(modules));
             melisCoreTool.exportData('/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected?'+$.param(modules));
         } else {
             melisHelper.melisKoNotification(
