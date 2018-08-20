@@ -95,13 +95,11 @@ class TreeToolsController extends AbstractActionController
 
     			// add third level for tool others
     			if ($melisKey == 'melisothers_toolstree_section') {
-//d($keyTool);
     			    if (isset($toolName['interface'])) {
     			        
     			        // third level, child tools
                         foreach($toolName['interface'] as $childKeyTool => $childToolname)
                         {
-//d($childKeyTool);
                             $icon = (!empty($childToolname['conf']['icon'])) ? $childToolname['conf']['icon'] : 'fa-cube';
 
                             if ($icon) {
