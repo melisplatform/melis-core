@@ -14,6 +14,8 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
 use MelisCore\Service\MelisCoreConfigService;
+use Zend\Stdlib\ArrayUtils;
+
 /**
  * This class renders Melis CMS
  */
@@ -51,7 +53,8 @@ class TreeToolsController extends AbstractActionController
 
     	// Merge config if melisKey is "Others"
         if ($melisKey == 'melisothers_toolstree_section') {
-            $appsConfig['interface'] = array_merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
+            $appsConfig['interface'] = ArrayUtils::merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
+//            d($appsConfig['interface']);
         }
 
     	// Show sections first
@@ -72,14 +75,14 @@ class TreeToolsController extends AbstractActionController
     		// Second level, tools
     		foreach($toolSectionName['interface'] as $keyTool => $toolName)
     		{
+    		    $isToolNavChild = false;
 
     		    $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-cube';
 
     		    if ($icon) {
     		       $isNavChild = true;
                 }
-
-
+                
     			$isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX, $keyTool);
     		    $isInterfaceAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $keyTool);
 
@@ -89,14 +92,45 @@ class TreeToolsController extends AbstractActionController
     																	   'tool_icon' => $icon,
     																	   'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
     																	   'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool);
-    			 
+
+    			// add third level for tool others
+    			if ($melisKey == 'melisothers_toolstree_section') {
+//d($keyTool);
+    			    if (isset($toolName['interface'])) {
+    			        
+    			        // third level, child tools
+                        foreach($toolName['interface'] as $childKeyTool => $childToolname)
+                        {
+//d($childKeyTool);
+                            $icon = (!empty($childToolname['conf']['icon'])) ? $childToolname['conf']['icon'] : 'fa-cube';
+
+                            if ($icon) {
+                                $isToolNavChild = true;
+                            }
+
+                            $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX, $childKeyTool);
+                            $isInterfaceAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $childKeyTool);
+
+                            if ($isAccessible && $isInterfaceAccessible)
+                                $tools[$key]['toolsection_children'][$keyTool]['toolsection_children'][$childKeyTool] = array('tool_id' => $childToolname['conf']['id'] ?? $keyTool,
+                                    'tool_name' => $childToolname['conf']['name'] ?? "<strike>$childKeyTool</strike>",
+                                    'tool_icon' => $icon,
+                                    'tool_forward' => isset($childToolname['forward']) ? $childToolname['forward'] : [],
+                                    'tool_melisKey' => $childToolname['conf']['melisKey'] ?? $keyTool);
+                            
+                        }
+
+                    }
+
+                }
+                $tools[$key]['toolsection_children'][$keyTool]['toolsection_has_nav_child'] = $isToolNavChild;
     		}
 
-    		$tools[$key]['toolsection_has_nav_chid'] = $isNavChild;
+    		$tools[$key]['toolsection_has_nav_child'] = $isNavChild;
     	}
-    	
+
     	$sections = $tools;
-    	
+
     	// Reordering sections
     	$toolsOrdered = array();
     	foreach ($orderInterface as $orderKeySection => $sectionTools)
@@ -140,7 +174,7 @@ class TreeToolsController extends AbstractActionController
     			$toolsOrdered[$keySection]['toolsection_children'][$keyInterface] = $childinterface;
     		}
     	}
-    	
+
     	$view = new ViewModel();
     	$view->tools = $toolsOrdered;
      	$view->melisKey = $melisKey;

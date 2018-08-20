@@ -7,7 +7,8 @@ if (!empty($this->zoneconfig['conf']['name']))
 if (!empty($this->zoneconfig['conf']['id']))
     $id = $this->zoneconfig['conf']['id'];
 $data_melisKey = $this->melisKey;
-
+//d($this->tools);
+// melisHelper.zoneReload('id_meliscore_leftmenu', 'meliscore_leftmenu');
 ?>
 <li id="<?= $id; ?>" class="hasSubmenu" data-melisKey='<?= $data_melisKey; ?>'>
     <a data-target="#<?= $id; ?>_tools" data-toggle="collapse" class="collapsed">
@@ -27,7 +28,7 @@ $data_melisKey = $this->melisKey;
                 ?>
 
                 <?php
-                if (!empty($sectionTool['toolsection_has_nav_chid']))
+                if (!empty($sectionTool['toolsection_has_nav_child']))
                 {
 
                     ?>
@@ -48,16 +49,43 @@ $data_melisKey = $this->melisKey;
                                     $data_tool_id = $tool['tool_id'];
                                     $data_tool_name = $tool['tool_name'];
                                     $data_tool_meliskey = $tool['tool_melisKey'];
-
-
                                     ?>
+                                    <?php if (isset($tool['toolsection_has_nav_child']) && (bool) $tool['toolsection_has_nav_child'] === true): ?>
+                                    <li class="hasSubmenu" data-meliskey="">
+                                        <a data-target="#sub-load-<?= $keyTool; ?>" data-toggle="collapse" class="collapsed">
+                                            <i class="fa <?= $toolIcon; ?>"></i>
+                                            <span><?= $data_tool_name ?></span>
+                                        </a>
+                                        <ul class="collapse secondlvl-container" id="sub-load-<?= $keyTool; ?>">
+                                            <?php
+                                            foreach ($tool['toolsection_children'] as $childKeyTool => $childTool) {
+                                                $toolIcon = 'fa-wrench';
+                                                if (!empty($childTool['tool_icon']))
+                                                    $toolIcon = $childTool['tool_icon'];
+
+                                                $data_tool_id = $childTool['tool_id'];
+                                                $data_tool_name = $childTool['tool_name'];
+                                                $data_tool_meliskey = $childTool['tool_melisKey'];
+                                                ?>
+                                                <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
+                                                    <a href="#">
+                                                        <i class="fa <?= $toolIcon ?>"></i>
+                                                        <span><?= $data_tool_name ?> </span>
+                                                    </a>
+                                                </li>
+                                            <?php }
+                                            ?>
+                                        </ul>
+                                    </li>
+                                    <?php else: ?>
                                     <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
                                         <a href="#">
                                             <i class="fa <?= $toolIcon ?>"></i>
                                             <span><?= $data_tool_name ?> </span>
                                         </a>
                                     </li>
-                                    <?php
+                                    <?php endif; ?>
+                                <?php
                                 }
                             }
                             ?>
