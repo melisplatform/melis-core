@@ -26,18 +26,6 @@ class TreeToolsController extends AbstractActionController
     const OTHERS    = 'melisothers';
     const CUSTOM    = 'meliscustom';
 
-    public function testAction()
-    {
-        /** @var \MelisCore\Service\MelisCoreRightsService $melisCoreRights */
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-        d($melisCoreRights->canAccess('melis_market_place_business_app_menu'));
-        d($melisCoreRights->canAccess('meliscore_tool_system_config'));
-        d($melisCoreRights->canAccess('meliscore_dashboard_recent_activity'));
-//        $canAccess = $melisCoreRights->canAccess('/meliscore');
-//        $canAccess = $melisCoreRights->canAccess('meliscore_tool_system_config');
-        dd("done");
-    }
-
 	/**
 	 * Renders the leftmenu accordion/tree of tools
 	 * @return ViewModel
