@@ -47,7 +47,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         $xmlRights     = $melisCoreAuth->getAuthRights();
         $isAccessible  = $this->isAccessible($xmlRights, self::MELIS_PLATFORM_TOOLS_PREFIX, $key);
-        $isInterfaceAccessible = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_INTERFACE, $key);;
+        $isInterfaceAccessible = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_INTERFACE, $key);
 
         return $isAccessible && $isInterfaceAccessible;
     }
@@ -92,9 +92,6 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
             // If it reaches here, it means tools are not directly checked, but maybe some sections are
             $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
             $melisKeys = $melisAppConfig->getMelisKeys();
-//            dd($melisKeys);
-//            dd($melisKeys);
-//            $appconfigpath = $melisKeys[self::MELIS_PLATFORM_TOOLS_PREFIX];
 
             foreach ($this->getMelisKeyPaths() as $appConfigPath) {
 
