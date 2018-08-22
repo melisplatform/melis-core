@@ -613,7 +613,8 @@
         'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
 
         // Melis Core GDPR
-        'tr_melis_core_gdpr' => 'GDPR (General Data Protection Regulation)',
+        'tr_melis_core_gdpr' => 'GDPR',
+        'tr_melis_core_gdpr_header_title' => 'GDPR (General Data Protection Regulation)',
         'tr_melis_core_gdpr_header_description' => 'Melis Platform provides a system to look for your user\'s datas. </br> All modules compliant to the Melis system will be able to interact with this interface and offer you possibilities to comply with the regulation.',
 
         'tr_melis_core_gdpr_form_name' => 'Name',
