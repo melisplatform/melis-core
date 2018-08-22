@@ -246,7 +246,7 @@ var melisHelper = (function(){
         var currentGrandParent = currentParent.parent().parent("li").find(".tab-element").data("id");
 
         //This is for not showing the close all tab button
-        if(prevActiveTab == 'id_meliscore_center_dashboard' && !nextActiveTab){
+        if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab){
             $("#close-all-tab").hide();
         }
 

@@ -1,5 +1,6 @@
 <div id="menu">
     <?php
+
     $id = '';
     if (!empty($this->zoneconfig['conf']['id']))
         $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
@@ -15,7 +16,7 @@
         ?>
 
         <div class="sidebarMenuWrapper hasNiceScroll">
-
+        
             <ul class="list-unstyled sideMenu">
 
                 <?php
@@ -30,7 +31,7 @@
 
                 <li id="toolstre_meliscore" class="toolstree hasSubmenu" data-meliskey="toolstre_meliscore">
                     <a data-target="#meliscore_tools" data-toggle="collapse" class="" aria-expanded="true">
-                        <div class="melis-svg-icon pull-left">
+                        <div class="melis-svg-icon pull-left melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $this->translate('MelisCore') ?>" data-dash-id="id_meliscore_dashboard">
                             <?= $this->melisCoreIcon() ?>
                         </div>
                         <label class="toolstree-label"><?= $this->translate('MelisCore') ?></label>
@@ -38,6 +39,7 @@
                     </a>
                     <ul class="collapse" id="meliscore_tools" aria-expanded="false">
                         <?php
+
                         if (!empty($this->zoneconfig['interface'])) {
                             echo $this->meliscore_toolstree_section;
                         }
@@ -47,7 +49,7 @@
 
                 <li id="toolstree_meliscms" class="hasSubmenu" data-meliskey="toolstre_meliscms">
                     <a data-target="#meliscms_tools" data-toggle="collapse" class="" aria-expanded="true">
-                        <div class="melis-svg-icon pull-left">
+                        <div class="melis-svg-icon pull-left melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $this->translate('MelisCms') ?>" data-dash-id="id_meliscms_dashboard">
                             <?= $this->melisCmsIcon() ?>
                         </div>
                         <label class="toolstree-label"><?= $this->translate('MelisCms') ?></label>
@@ -55,6 +57,7 @@
                     </a>
                     <ul class="collapse" id="meliscms_tools" aria-expanded="false">
                         <?php
+
                         if (!empty($this->zoneconfig['interface'])) {
                             echo $this->meliscms_sitetree;
                             echo $this->meliscms_toolstree_section;
@@ -65,7 +68,7 @@
 
                 <li id="toolstree_marketing" class="hasSubmenu" data-meliskey="toolstre_melismarketing">
                     <a data-target="#melismarketing_tools" data-toggle="collapse" class="" aria-expanded="true">
-                        <div class="melis-svg-icon pull-left">
+                        <div class="melis-svg-icon pull-left melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $this->translate('MelisMarketing') ?>" data-dash-id="id_melismarketing_dashboard">
                             <?= $this->melisMarketingIcon() ?>
                         </div>
                         <label class="toolstree-label"><?= $this->translate('MelisMarketing') ?></label>
@@ -82,7 +85,7 @@
 
                 <li id="toolstre_meliscommerce" class="hasSubmenu" data-meliskey="toolstre_meliscommerce">
                     <a data-target="#meliscommerce_tools" data-toggle="collapse" class="" aria-expanded="true">
-                        <div class="melis-svg-icon pull-left">
+                        <div class="melis-svg-icon pull-left melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $this->translate('MelisCommerce') ?>" data-dash-id="id_meliscommerce_dashboard">
                             <?= $this->melisCommerceIcon() ?>
                         </div>
                         <label class="toolstree-label"><?= $this->translate('MelisCommerce') ?></label>
@@ -99,7 +102,7 @@
 
                 <li id="toolstre_others" class="hasSubmenu" data-meliskey="toolstree_others">
                     <a data-target="#melisothers_tools" data-toggle="collapse" aria-expanded="true">
-                        <div class="melis-svg-icon pull-left">
+                        <div class="melis-svg-icon pull-left melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $this->translate('Others') ?>" data-dash-id="id_melisothers_dashboard">
                             <?= $this->melisOthersIcon() ?>
                         </div>
                         <label class="toolstree-label"><?= $this->translate('Others') ?></label>
@@ -116,7 +119,7 @@
 
                 <li id="meliscustom_toolstree" class="hasSubmenu" data-meliskey="meliscustom_menu_toolstree">
                     <a data-target="#meliscustom_tools" data-toggle="collapse" class="" aria-expanded="true">
-                        <div class="melis-svg-icon pull-left">
+                        <div class="melis-svg-icon pull-left melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $this->translate('Custom / Projects') ?>" data-dash-id="id_meliscustom_dashboard">
                             <?= $this->melisCustomIcon() ?>
                         </div>
                         <label class="toolstree-label"><?= $this->translate('Custom / Projects') ?></label>
