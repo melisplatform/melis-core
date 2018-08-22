@@ -9,6 +9,7 @@
 
 namespace MelisCore;
 
+use MelisCore\Listener\MelisCorePhpWarningListener;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\ModuleManager;
@@ -72,8 +73,8 @@ class Module
             $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
 
             $eventManager->attach(new MelisCoreAuthSuccessListener());
+            $eventManager->attach(new MelisCorePhpWarningListener());
         }
-
     }
     
     public function initShowErrorsByconfig(MvcEvent $e)
