@@ -397,7 +397,7 @@ class MelisPhpUnitToolController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccessTool($key);
+        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }
