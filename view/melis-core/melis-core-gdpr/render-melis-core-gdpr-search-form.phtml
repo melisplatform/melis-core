@@ -5,16 +5,18 @@
 ?>
 <div class="row" <?= $id; ?> data-melisKey='<?= $this->melisKey; ?>'>
     <div class="col-md-5">
-            <?php
-                $form = clone $this->form;
-                $form->prepare();
-                echo $this->form()->openTag($form);
-                echo $this->melisFieldCollection($form);
-            ?>
-            <button type="submit" id="melis-core-gdpr-search-form-submit" class="btn btn-primary" style="margin-left: 16.5%;"><i class="fa fa-search"></i> <?= $this->translate('tr_melis_core_gdpr_view_search_button') ?></button>
-            <?php
-                echo $this->form()->closeTag();
-            ?>
+        <h1 style="margin-left: 6.5%;">Search a user:</h1>
+        </br>
+        <?php
+            $form = clone $this->form;
+            $form->prepare();
+            echo $this->form()->openTag($form);
+            echo $this->melisFieldCollection($form);
+        ?>
+        <button type="submit" id="melis-core-gdpr-search-form-submit" class="btn btn-primary" style="margin-left: 16.5%;"><i class="fa fa-search"></i> <?= $this->translate('tr_melis_core_gdpr_view_search_button') ?></button>
+        <?php
+            echo $this->form()->closeTag();
+        ?>
     </div>
 </div>
 </br>
