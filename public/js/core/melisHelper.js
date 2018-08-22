@@ -567,7 +567,8 @@ var melisHelper = (function(){
             }, 300);
         }).error(function(xhr, textStatus, errorThrown){
 
-            alert( translations.tr_meliscore_error_message );
+            // alert( translations.tr_meliscore_error_message );
+            alert(xhr.responseText);
 
             //hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');

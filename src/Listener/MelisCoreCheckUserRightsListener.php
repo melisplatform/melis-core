@@ -37,7 +37,7 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                     $container->melis_user_session_last_update = date('H:i:s');
                     $uri  = $_SERVER['REQUEST_URI'];
 
-                    if($user->hasIdentity()) {
+                    if($userSvc->hasIdentity()) {
                         $userId   = (int) $user->usr_id;
                         $tblUser  = $sm->get('MelisCoreTableUser');
                         $userData = $tblUser->getEntryById($userId)->current();
