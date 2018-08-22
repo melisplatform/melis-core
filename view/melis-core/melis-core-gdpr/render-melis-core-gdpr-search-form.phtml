@@ -4,9 +4,6 @@
         $id = ' id="'. $this->zoneconfig['conf']['id'] . '"';
 ?>
 <div class="row" <?= $id; ?> data-melisKey='<?= $this->melisKey; ?>'>
-    <div id="message-alert">
-
-    </div>
     <div class="col-md-5">
             <?php
                 $form = clone $this->form;
@@ -14,7 +11,7 @@
                 echo $this->form()->openTag($form);
                 echo $this->melisFieldCollection($form);
             ?>
-            <button type="submit" id="melis-core-gdpr-search-form-submit" class="btn btn-primary" style="margin-left: 108px;"><i class="fa fa-search"></i> <?= $this->translate('tr_melis_core_gdpr_view_search_button') ?></button>
+            <button type="submit" id="melis-core-gdpr-search-form-submit" class="btn btn-primary" style="margin-left: 16.5%;"><i class="fa fa-search"></i> <?= $this->translate('tr_melis_core_gdpr_view_search_button') ?></button>
             <?php
                 echo $this->form()->closeTag();
             ?>
