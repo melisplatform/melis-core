@@ -113,20 +113,30 @@
                                     </table>
                                     <script>
                                         $(document).ready(function() {
+
                                             //redraw table when tab is shown where the table is located so that the headers will have the right size
-
                                             $(document).on('shown.bs.tab', 'a[href="<?php echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
-                                                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-
                                                 if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                    console.log("less than");
                                                     $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
                                                 } else {
-                                                    console.log("gg1");
+                                                    ;
                                                     $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "overlay");
                                                 }
 
                                                 $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+
+                                                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+
+                                                //setTimeout(function() {
+                                                //    if ($("body").find("<?php //echo '#' . $module['moduleName']; ?>//-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
+                                                //        $("<?php //echo '#' . $module['moduleName']; ?>//").closest('.dataTables_scrollBody').css("overflow", "");
+                                                //    } else {
+                                                //        ;
+                                                //        $("<?php //echo '#' . $module['moduleName']; ?>//").closest('.dataTables_scrollBody').css("overflow", "overlay");
+                                                //    }
+                                                //
+                                                //    $("<?php //echo '#' . $module['moduleName']; ?>//").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                //}, 1);
                                             });
 
                                             setTimeout(function(){
@@ -140,16 +150,16 @@
                                                         orderable: false,
                                                         targets: "no-sort",
                                                     }],
-                                                });
-                                                //remove overflow so that upon changing icons it will not change 1st row size
-                                                if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                    console.log("less than ubus");
-                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
-                                                } else {
-                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "overlay");
-                                                }
+                                                    "drawCallback": function() {
+                                                        if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
+                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
+                                                        } else {
+                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "overlay");
+                                                        }
 
-                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                        $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                    }
+                                                });
                                             }, 1);
 
                                         });
