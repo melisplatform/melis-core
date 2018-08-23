@@ -169,43 +169,32 @@ class MelisSetupController extends AbstractActionController
      * after the setup, this will take all the available dashboard plugins
      * in every module and save to the newly user created
      */
-    private function generateDashboardPlugins($userId)
+    private function generateDashboardPluginsAction($userId = 1)
     {
         $melisModules = $_SERVER['DOCUMENT_ROOT'].'/../vendor/melisplatform/';
 
         $modulePlugins = array();
 
-        foreach (scandir($melisModules) As $val)
-        {
-            if (!in_array($val, array('.', '..')))
-            {
-                if (is_dir($melisModules.$val.'/config/dashboard-plugins'))
-                {
+        foreach (scandir($melisModules) As $val){
+            if (!in_array($val, array('.', '..'))){
+                if (is_dir($melisModules.$val.'/config/dashboard-plugins')){
+
                     $modulePluginConfigs = $melisModules.$val.'/config/dashboard-plugins';
+                    if (is_dir($modulePluginConfigs)){
+                        foreach (scandir($modulePluginConfigs) As $conf){
+                            if (!in_array($conf, array('.', '..'))){
 
-                    if (is_dir($modulePluginConfigs))
-                    {
-                        foreach (scandir($modulePluginConfigs) As $conf)
-                        {
-                            if (!in_array($conf, array('.', '..')))
-                            {
                                 $pluginConfig = require($modulePluginConfigs.'/'.$conf);
-
-                                if (is_array($pluginConfig['plugins']))
-                                {
+                                if (is_array($pluginConfig['plugins'])){
                                     /**
                                      * Retrieving all available dashboard plugins in every module
                                      * activated to the platform
                                      */
-                                    foreach ($pluginConfig['plugins'] As $cKey => $cConf)
-                                    {
-                                        if(!empty($cConf['dashboard_plugins']))
-                                        {
-                                            foreach ($cConf['dashboard_plugins'] As $pluginKey => $pluginConf)
-                                            {
+                                    foreach ($pluginConfig['plugins'] As $cKey => $cConf){
+                                        if(!empty($cConf['dashboard_plugins'])){
+                                            foreach ($cConf['dashboard_plugins'] As $pluginKey => $pluginConf){
                                                 // Skipping DragDrapZone plugin
-                                                if (!in_array($pluginKey, array('MelisCoreDashboardDragDropZonePlugin')))
-                                                {
+                                                if (!in_array($pluginKey, array('MelisCoreDashboardDragDropZonePlugin'))){
                                                     $modulePlugins[$pluginKey] = $pluginConf;
                                                 }
                                             }
@@ -225,14 +214,12 @@ class MelisSetupController extends AbstractActionController
         $pluginXml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<Plugins>%s'."\n".'</Plugins>';
         $pluginXmlData = '';
 
-        if (!empty($modulePlugins))
-        {
+        if (!empty($modulePlugins)){
             $pluginIdTime = time();
             $xAxis = 0;
             $yAxis = 0;
             $ctr = 1;
-            foreach ($modulePlugins As $plugin => $conf)
-            {
+            foreach ($modulePlugins As $plugin => $conf){
                 $height = !empty($conf['height']) ? $conf['height'] : 6;
                 $width = !empty($conf['width']) ? $conf['width'] : 6;
 
