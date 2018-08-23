@@ -55,15 +55,31 @@ class MelisCoreGdprController extends AbstractActionController
      */
     public function melisCoreGdprExtractSelectedAction()
     {
-        $idsToBeExtracted = $this->params()->fromQuery();
+        $idsToBeExtracted = $this->getRequest()->getPost('id');
 
+        /** @var \MelisCore\Service\MelisCoreGdprService $melisCoreGdprService */
         $melisCoreGdprService = $this->getServiceLocator()->get('MelisCoreGdprService');
         $xml = $melisCoreGdprService->extractSelected($idsToBeExtracted);
 
         $name = "melisplatformgdpr.xml";
-        $response = $this->downloadXml($name, $xml);
+        //$response = $this->downloadXml($name, $xml);
 
-        return $response;
+        $response = $this->getResponse();
+
+        $headers  = $response->getHeaders();
+        $headers->addHeaderLine('Content-Type', 'text/xml; charset=utf-8');
+        $headers->addHeaderLine('Content-Disposition', "attachment; filename=\"".$name."\"");
+        $headers->addHeaderLine('Accept-Ranges', 'bytes');
+        $headers->addHeaderLine('Content-Length', strlen($xml));
+        $headers->addHeaderLine('fileName', $name);
+        $response->setContent($xml);
+        $response->setStatusCode(200);
+
+        $view = new ViewModel();
+        $view->setTerminal(true);
+        $view->content = $response->getContent();
+
+        return $view;
     }
 
 
@@ -247,7 +263,8 @@ class MelisCoreGdprController extends AbstractActionController
      */
     private function downloadXml($fileName, $xml)
     {
-        $response = new HttpResponse();
+        //$response = new HttpResponse();
+        $response = $this->getResponse();
 
         $headers  = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'text/xml; charset=utf-8');
@@ -256,6 +273,7 @@ class MelisCoreGdprController extends AbstractActionController
         $headers->addHeaderLine('Content-Length', strlen($xml));
         $headers->addHeaderLine('fileName', $fileName);
         $response->setContent($xml);
+        $response->setStatusCode(200);
 
         return $response;
     }

@@ -113,7 +113,23 @@ $(document).ready(function() {
         //only send request if there are any ids
         if (hasData) {
             console.log($.param(modules));
-            melisCoreTool.exportData('/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected?'+$.param(modules));
+            $.ajax({
+                type: 'POST',
+                url:'/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected',
+            data: {'id' : modules},
+            success: function (data, textStatus, request) {
+                console.log(data);
+                console.log(request);
+                // if data is not empty
+                if (data) {
+                    var fileName = request.getResponseHeader("fileName");
+                    var mime = request.getResponseHeader("Content-Type");
+                    var blob = new Blob([request.responseText], {type: mime});
+                    saveAs(blob, fileName);
+                }
+            }
+                });
+            // melisCoreTool.exportData('/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected?'+$.param(modules));
         } else {
             melisHelper.melisKoNotification(
                 translations.tr_melis_core_gdpr_notif_extract_user,
