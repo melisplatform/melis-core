@@ -203,6 +203,8 @@ return array(
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
 
+                    '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
+
                     '/MelisCore/js/core/tabExpander.js',
                     '/MelisCore/js/core/melisSidebar.js',
                     '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
