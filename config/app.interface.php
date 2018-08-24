@@ -207,6 +207,7 @@ return array(
 
                     // datetimepicker
                     '/MelisCore/assets/components/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js',
+                    '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 
                     '/MelisCore/js/core/tabExpander.js',
                     '/MelisCore/js/core/melisSidebar.js',

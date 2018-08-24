@@ -638,8 +638,12 @@
         //Diagnostic
         'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
 
+        //Language Back Office
+        'tr_melis_core_common_apply_language' => 'Switch the current language to ',
+
         // Melis Core GDPR
         'tr_melis_core_gdpr' => 'GDPR',
+        'tr_melis_core_gdpr_header_title' => 'GDPR (General Data Protection Regulation)',
         'tr_melis_core_gdpr_header_description' => 'Melis Platform provides a system to look for your user\'s datas. </br> All modules compliant to the Melis system will be able to interact with this interface and offer you possibilities to comply with the regulation.',
 
         'tr_melis_core_gdpr_form_name' => 'Name',
@@ -663,6 +667,6 @@
 
         'tr_melis_core_gdpr_view_search_button' => 'Search',
         'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',
-        'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected'
+        'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected',
 	);
 ?>

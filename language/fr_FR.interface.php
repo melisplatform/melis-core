@@ -654,6 +654,7 @@
 
         // Melis Core GDPR
         'tr_melis_core_gdpr' => 'RGPD',
+        'tr_melis_core_gdpr_header_title' => 'RGPD (Règlement Général sur la Protection des Données)',
         'tr_melis_core_gdpr_header_description' => 'Melis Platform fourni un system pour chercher les données de vos utilisateurs. </br> Tous les modules qui implémentent le système de Melis pourront intéragir avec cette interface et vous offir la possibilité de respecter le règlement.',
 
         'tr_melis_core_gdpr_form_name' => 'Name',
