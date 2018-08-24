@@ -22,9 +22,11 @@ class MelisPhpUnitToolController extends AbstractActionController
 
     public function renderPhpunitContainerAction()
     {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
 
         $view = new ViewModel();
         $view->isActive = $this->isActivated();
+        $view->hasAccess = $this->hasAccess($melisKey);
         return $view;
     }
 
@@ -386,6 +388,18 @@ class MelisPhpUnitToolController extends AbstractActionController
         $isActivated = (bool) $isActivated['diagnostics']['active'];
 
         return $isActivated;
+    }
+
+    /**
+     * Checks whether the user has access to this tools or not
+     * @param $key
+     * @return bool
+     */
+    private function hasAccess($key): bool
+    {
+        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
+
+        return $hasAccess;
     }
 
 
