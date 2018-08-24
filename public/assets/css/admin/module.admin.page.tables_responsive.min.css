@@ -4881,7 +4881,7 @@ body {
 }
 
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li.active a {
-    background-color: #932E2A
+    /*background-color: #932E2A*/
 }
 
 .sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu .hasSubmenu.active ul li a {

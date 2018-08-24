@@ -18,9 +18,9 @@
 		'tr_meliscore_center_Melis Dashboard' => 'Melis Dashboard',
 		'tr_meliscore_center_dashboard_Logo' => 'Logo',
 		'tr_meliscore_center_dashboard_Calendar' => 'Calendar',
-			
-			
-		// 
+
+		'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
+
 		'tr_meliscore_meliscore' => 'MelisCore',
 		'tr_meliscore_header' => 'Header',
 		'tr_meliscore_header_flash_messenger' => 'Flash messenger',
@@ -252,7 +252,7 @@
 	    'tr_meliscore_module_management_prompt_success' => 'Module settings has been updated',
 	    'tr_meliscore_module_management_prompt_failed' => 'Unable to update module settings',
 	    'tr_meliscore_module_management_notification_tip' => 'Drag and drop the modules to re-arrange',
-	    'tr_meliscore_module_management_inactive_confirm' => 'By deactivating %s, this will also deactivate the following modules: ',
+	    'tr_meliscore_module_management_inactive_confirm' => '<i class="fa fa-warning"></i> Below are the lists of module(s) that is dependent to <strong>%s</strong>, are you sure you want to deactivate <strong>%s</strong>? ',
 	    'tr_meliscore_module_management_inactive_title' => 'Deactivate module',
 	    'tr_meliscore_module_management_checking_dependencies' => 'Checking dependencies...',
 	    'tr_meliscore_module_management_no_dependencies' => 'No dependencies',
@@ -309,6 +309,7 @@
 	    'tr_meliscore_tool_platform_marketplace' => 'Marketplace',
 	    'tr_meliscore_tool_platform_update_marketplace' => 'Allow updates from the marketplace',
 	    'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
+	    'tr_meliscore_common_allow' => 'Allow',
 	    
 	    // Language Tool Translations
 	    'tr_meliscore_tool_language' => 'Back-Office languages',
@@ -401,9 +402,16 @@
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to' => 'Reply To',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to tooltip' => 'Email to which the user will reply to (reply To)',
         'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])"></i>',
-	    'tr_emails_management_emal_boe_code_name_must_be_unique' => 'Codename is already exist, Try another one.',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout' => 'Layout',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout tooltip' => 'Path to the physical file of the template of the email',
+	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Layout title',
+	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip' => 'Additional options if you wish to use the default emails',
+	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo' => 'Layout logo',
+	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo Tooltip' => 'Additional options if you wish to use the default emails',
+	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo_select_image' => 'Select image',
+	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info' => 'Layout information',
+	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info tooltip' => 'Additional options if you wish to use the default emails',
+
 	    // Emails Details Form
 	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject' => 'Subject',
 	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject tooltip' => 'Email Subject',
@@ -412,20 +420,27 @@
 	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text' => 'Text Version',
 	    'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text tooltip' => 'Content of the email without html (usage of tags possible)',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder' => 'Separate options with a comma',
+
 	    // Form Error Message
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_empty' => 'Value is required and can\'t be empty',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_long' => 'Value is too long, it shoule be less than 255 characters',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_invalid_email' => 'Value is not a valid email address',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_path' => 'Invalid layout path',
 	    'tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_extension' => 'Invalid layout extension, layout must be in ".phtml" extension',
+        'tr_emails_management_emal_boe_code_name_must_be_unique' => 'Codename is already exist, Try another one.',
 	    'tr_emails_management_emal_boe_code_name_reserved' => 'Codename "NEW" is a reserved codename, please try another codename',
 	    'tr_emails_management_emal_boe_code_name_invalid' => 'Invalid code',
 	    'tr_emails_management_unable_to_update' => 'Unable to update email',
 	    'tr_emails_management_unable_to_add' => 'Unable to add new email',
+        'tr_emails_management_invalid_image_type' => 'Invalid image type',
+        'tr_emails_management_invalid_image_width' => 'Image width should be 800 pexils or less',
+        'tr_emails_management_invalid_image_size' => 'Maximum allowed size for file is 250 kilobytes or less',
+
 	    // Action Messages
 	    'tr_emails_management_emal_added_success' => 'Email added successfully',
 	    'tr_emails_management_emal_updated_success' => 'Email Updated successfully',
 	    'tr_emails_management_emal_deleted_success' => 'Email deleted successfully',
+	    
 	    // Delete
 	    'tr_emails_management_delete' => 'Delete email',
 	    'tr_emails_management_confirm_msg' => 'Are you sure you want to delete this email?',
@@ -610,6 +625,9 @@
         'tr_melis_core_common_add' => 'Add',
 
         //Diagnostic
-        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration'
+        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
+
+        //Language Back Office
+        'tr_melis_core_common_apply_language' => 'Switch the current language to ',
 	);
 ?>

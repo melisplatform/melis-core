@@ -138,6 +138,9 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	 *         **** Data From "melis_core_bo_emails" ****
 	 *         'email_name' => '',
      *         'layout' => '',
+     *         'layout_title' => '',
+     *         'layou_logo' => '',
+     *         'layout_ftr_inofo' => '',
 	 *         'Header' => Array
 	 *         (
 	 *             'from' => '',
@@ -179,31 +182,46 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	    $result['contents'] = array();
 	    
 	    if (!empty($codename)){
-	        
+
+            $configPath = 'meliscore/datas';
+            $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+            $emailCfg = $melisConfig->getItemPerPlatform($configPath);
+            $cfgLayoutLogo = $emailCfg['logo'];
+            $cfgLayoutTitle = $emailCfg['emails']['default_layout_title'];
+            $cfgLayoutFtrInfo = $emailCfg['emails']['default_layout_ftr_info'];
+
 	        $melisBOEmailsResult = $melisBOEmails->getEntryByField('boe_code_name',$codename);
 	        
 	        if (!empty($melisBOEmailsResult)){
 	            
 	            $melisBOEmailsData = $melisBOEmailsResult->current();
 	            if(!empty($melisBOEmailsData)){
-	                
+
 	                // Get Email App
 	                $melisMelisCoreConfig = $this->getServiceLocator()->get('config');
 	                $emailsConfig = (isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename])) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
 	                
                     // Emails Config Initialization
-	                $emailName = (isset($emailsConfig['email_name'])) ? $emailsConfig['email_name'] : '';
-                    $from = (isset($emailsConfig['headers']['from'])) ? $emailsConfig['headers']['from'] : '';
-                    $from_name = (isset($emailsConfig['headers']['from_name'])) ? $emailsConfig['headers']['from_name'] : '';
-                    $replyTo = (isset($emailsConfig['headers']['replyTo'])) ? $emailsConfig['headers']['replyTo'] : '';
-                    $tags = (isset($emailsConfig['headers']['tags'])) ? $emailsConfig['headers']['tags'] : '';
-                    $layout = (isset($emailsConfig['layout'])) ? $emailsConfig['layout'] : '';
-	                
-	                $result['email_name'] = ($melisBOEmailsData->boe_name) ? $melisBOEmailsData->boe_name : $emailName;
-	                $result['headers']['from'] = ($melisBOEmailsData->boe_from_email) ? $melisBOEmailsData->boe_from_email : $from;
+	                $emailName      = (isset($emailsConfig['email_name'])) ? $emailsConfig['email_name'] : '';
+                    $from           = (isset($emailsConfig['headers']['from'])) ? $emailsConfig['headers']['from'] : '';
+                    $from_name      = (isset($emailsConfig['headers']['from_name'])) ? $emailsConfig['headers']['from_name'] : '';
+                    $replyTo        = (isset($emailsConfig['headers']['replyTo'])) ? $emailsConfig['headers']['replyTo'] : '';
+                    $tags           = (isset($emailsConfig['headers']['tags'])) ? $emailsConfig['headers']['tags'] : '';
+                    $layout         = (isset($emailsConfig['layout'])) ? $emailsConfig['layout'] : '';
+                    $layoutTitle    = (isset($emailsConfig['layout_title'])) ? $emailsConfig['layout_title'] : $cfgLayoutTitle;
+                    $layoutLogo     = (isset($emailsConfig['layout_logo'])) ? $emailsConfig['layout_logo'] : $cfgLayoutLogo;
+                    $layoutFtrInfo  = (isset($emailsConfig['layout_ftr_info'])) ? $emailsConfig['layout_ftr_info'] : $cfgLayoutFtrInfo;
+
+	                $result['email_name']           = ($melisBOEmailsData->boe_name) ? $melisBOEmailsData->boe_name : $emailName;
+	                $result['headers']['from']      = ($melisBOEmailsData->boe_from_email) ? $melisBOEmailsData->boe_from_email : $from;
 	                $result['headers']['from_name'] = ($melisBOEmailsData->boe_from_name) ? $melisBOEmailsData->boe_from_name : $from_name;
-	                $result['headers']['replyTo'] = ($melisBOEmailsData->boe_reply_to) ? $melisBOEmailsData->boe_reply_to : $replyTo;
-	                $result['layout'] = $melisBOEmailsData->boe_content_layout;
+	                $result['headers']['replyTo']   = ($melisBOEmailsData->boe_reply_to) ? $melisBOEmailsData->boe_reply_to : $replyTo;
+	                $result['layout']               = $melisBOEmailsData->boe_content_layout;
+	                $result['layout_title']         = ($melisBOEmailsData->boe_content_layout_title) ? $melisBOEmailsData->boe_content_layout_title : $layoutTitle;
+	                $result['layout_logo']          = ($melisBOEmailsData->boe_content_layout_logo) ? $melisBOEmailsData->boe_content_layout_logo : $layoutLogo;
+	                $result['layout_ftr_info']      = ($melisBOEmailsData->boe_content_layout_ftr_info) ? $melisBOEmailsData->boe_content_layout_ftr_info : $layoutFtrInfo;
+
+
 	                $result['headers']['tags'] = '';
 	                if (!empty($melisBOEmailsData->boe_tag_accepted_list)||!empty($tags)){
 	                    
@@ -262,13 +280,16 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	            $melisMelisCoreConfig = $this->getServiceLocator()->get('config');
 	            $emailsConfig = (isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename])) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
 	             
-	            $result['email_name'] = (isset($emailsConfig['email_name'])) ? $emailsConfig['email_name'] : '';
-	            $result['layout'] = (isset($emailsConfig['layout'])) ? $emailsConfig['layout'] : '';
-	            $result['headers']['from'] = (isset($emailsConfig['headers']['from'])) ? $emailsConfig['headers']['from'] : '';
+	            $result['email_name']           = (isset($emailsConfig['email_name'])) ? $emailsConfig['email_name'] : '';
+	            $result['layout']               = (isset($emailsConfig['layout'])) ? $emailsConfig['layout'] : '';
+	            $result['headers']['from']      = (isset($emailsConfig['headers']['from'])) ? $emailsConfig['headers']['from'] : '';
 	            $result['headers']['from_name'] = (isset($emailsConfig['headers']['from_name'])) ? $emailsConfig['headers']['from_name'] : '';
-	            $result['headers']['replyTo'] = (isset($emailsConfig['headers']['replyTo'])) ? $emailsConfig['headers']['replyTo'] : '';
-	            $result['headers']['tags'] = (isset($emailsConfig['headers']['tags'])) ? $emailsConfig['headers']['tags'] : '';
-	                
+	            $result['headers']['replyTo']   = (isset($emailsConfig['headers']['replyTo'])) ? $emailsConfig['headers']['replyTo'] : '';
+	            $result['headers']['tags']      = (isset($emailsConfig['headers']['tags'])) ? $emailsConfig['headers']['tags'] : '';
+	            $result['layout_title']         = (isset($emailsConfig['layout_title'])) ? $emailsConfig['layout_title'] : $cfgLayoutTitle;
+	            $result['layout_logo']          = (isset($emailsConfig['layout_logo'])) ? $emailsConfig['layout_logo'] : $cfgLayoutLogo;
+	            $result['layout_ftr_info']      = (isset($emailsConfig['layout_ftr_info'])) ? $emailsConfig['layout_ftr_info'] : $cfgLayoutFtrInfo;
+
                 $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
                 
                 $localeLang = 'en_EN';
@@ -327,12 +348,15 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	            $emailHeaders = $emailsPropertiesAndDetails['headers'];
 	            
 	            // Email Headers variables
-	            $email_from = $emailHeaders['from'];
-	            $from_name = $emailHeaders['from_name'];
-	            $replyTo = $emailHeaders['replyTo'];
-	            $emailAcceptedTags = explode(',', $emailHeaders['tags']);
-	            $layout = $emailsPropertiesAndDetails['layout'];
-	            
+	            $email_from         = $emailHeaders['from'];
+	            $from_name          = $emailHeaders['from_name'];
+	            $replyTo            = $emailHeaders['replyTo'];
+	            $emailAcceptedTags  = explode(',', $emailHeaders['tags']);
+	            $layout             = $emailsPropertiesAndDetails['layout'];
+	            $layoutTitle        = $emailsPropertiesAndDetails['layout_title'];
+	            $layoutLogo         = $emailsPropertiesAndDetails['layout_logo'];
+	            $layoutFtrInfo      = $emailsPropertiesAndDetails['layout_ftr_info'];
+
 	            $emailPropertiesDetails = $emailsPropertiesAndDetails['contents'];
 	            
 	            if (!empty($emailPropertiesDetails)&&!empty($email_to)&&!empty($email_from)){
@@ -407,17 +431,19 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
             	                    $view->setResolver($resolver);
             	                     
             	                    $host = $emailCfg['host'];
+
             	                    $headerLogo = $emailCfg['logo'];
             	                    $viewModel  = new \Zend\View\Model\ViewModel();
             	                    $viewModel->setTemplate('mailTemplate')->setVariables(array(
-            	                        'headerLogo' => $host.$headerLogo,
-            	                        'headerLogoLink' => $host,
+                                        'title' => $layoutTitle,
+                                        'headerLogoLink' => $host,
+            	                        'headerLogo' => $host.$layoutLogo,
+            	                        'footerInfo' => $layoutFtrInfo,
             	                        'content' => wordwrap($message_html,FALSE),
             	                        'fromName' => $from_name
             	                    ));
             	                    
             	                    $message_html = $view->render($viewModel);
-            	                    
     	                        }
     	                    }
     	                    

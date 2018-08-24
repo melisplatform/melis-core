@@ -1257,5 +1257,22 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 
     }
 
-	
+    /**
+     * Retrieve table configuration
+     * @return mixed
+     */
+    public function getTableConfig()
+    {
+        return $this->_appConfig['table'];
+    }
+
+    /**
+     * Programmatically modify the table configuration during runtime
+     * to fit the module's needs
+     * @param array $tableConfig
+     */
+    public function setTableConfig(array $tableConfig = [])
+    {
+        $this->_appConfig['table'] = $tableConfig;
+    }
 }
