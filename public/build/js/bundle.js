@@ -27706,195 +27706,6 @@ API.txt for details.
  * released under MIT License, 2012
 */ 
 (function(t){var i={tooltip:!1,tooltipOpts:{content:"%s | X: %x | Y: %y",xDateFormat:null,yDateFormat:null,shifts:{x:10,y:20},defaultTheme:!0,onHover:function(){}}},o=function(t){this.tipPosition={x:0,y:0},this.init(t)};o.prototype.init=function(i){var o=this;i.hooks.bindEvents.push(function(i,e){if(o.plotOptions=i.getOptions(),o.plotOptions.tooltip!==!1&&void 0!==o.plotOptions.tooltip){o.tooltipOptions=o.plotOptions.tooltipOpts;var s=o.getDomElement();t(i.getPlaceholder()).bind("plothover",function(t,i,e){if(e){var n;n=o.stringFormat(o.tooltipOptions.content,e),s.html(n),o.updateTooltipPosition({x:i.pageX,y:i.pageY}),s.css({left:o.tipPosition.x+o.tooltipOptions.shifts.x,top:o.tipPosition.y+o.tooltipOptions.shifts.y}).show(),"function"==typeof o.tooltipOptions.onHover&&o.tooltipOptions.onHover(e,s)}else s.hide().html("")}),e.mousemove(function(t){var i={};i.x=t.pageX,i.y=t.pageY,o.updateTooltipPosition(i)})}})},o.prototype.getDomElement=function(){var i;return t("#flotTip").length>0?i=t("#flotTip"):(i=t("<div />").attr("id","flotTip"),i.appendTo("body").hide().css({position:"absolute"}),this.tooltipOptions.defaultTheme&&i.css({background:"#fff","z-index":"100",padding:"0.4em 0.6em","border-radius":"0.5em","font-size":"0.8em",border:"1px solid #111",display:"inline-block","white-space":"nowrap"})),i},o.prototype.updateTooltipPosition=function(i){var o=t("#flotTip").outerWidth()+this.tooltipOptions.shifts.x,e=t("#flotTip").outerHeight()+this.tooltipOptions.shifts.y;i.x-t(window).scrollLeft()>t(window).innerWidth()-o&&(i.x-=o),i.y-t(window).scrollTop()>t(window).innerHeight()-e&&(i.y-=e),this.tipPosition.x=i.x,this.tipPosition.y=i.y},o.prototype.stringFormat=function(t,i){var o=/%p\.{0,1}(\d{0,})/,e=/%s/,s=/%x\.{0,1}(?:\d{0,})/,n=/%y\.{0,1}(?:\d{0,})/;return"function"==typeof t&&(t=t(i.series.label,i.series.data[i.dataIndex][0],i.series.data[i.dataIndex][1])),i.series.percent!==void 0&&(t=this.adjustValPrecision(o,t,i.series.percent)),i.series.label!==void 0&&(t=t.replace(e,i.series.label)),this.isTimeMode("xaxis",i)&&this.isXDateFormat(i)&&(t=t.replace(s,this.timestampToDate(i.series.data[i.dataIndex][0],this.tooltipOptions.xDateFormat))),this.isTimeMode("yaxis",i)&&this.isYDateFormat(i)&&(t=t.replace(n,this.timestampToDate(i.series.data[i.dataIndex][1],this.tooltipOptions.yDateFormat))),"number"==typeof i.series.data[i.dataIndex][0]&&(t=this.adjustValPrecision(s,t,i.series.data[i.dataIndex][0])),"number"==typeof i.series.data[i.dataIndex][1]&&(t=this.adjustValPrecision(n,t,i.series.data[i.dataIndex][1])),i.series.xaxis.tickFormatter!==void 0&&(t=t.replace(s,i.series.xaxis.tickFormatter(i.series.data[i.dataIndex][0],i.series.xaxis))),i.series.yaxis.tickFormatter!==void 0&&(t=t.replace(n,i.series.yaxis.tickFormatter(i.series.data[i.dataIndex][1],i.series.yaxis))),t},o.prototype.isTimeMode=function(t,i){return i.series[t].options.mode!==void 0&&"time"===i.series[t].options.mode},o.prototype.isXDateFormat=function(){return this.tooltipOptions.xDateFormat!==void 0&&null!==this.tooltipOptions.xDateFormat},o.prototype.isYDateFormat=function(){return this.tooltipOptions.yDateFormat!==void 0&&null!==this.tooltipOptions.yDateFormat},o.prototype.timestampToDate=function(i,o){var e=new Date(i);return t.plot.formatDate(e,o)},o.prototype.adjustValPrecision=function(t,i,o){var e,s=i.match(t);return null!==s&&""!==RegExp.$1&&(e=RegExp.$1,o=o.toFixed(e),i=i.replace(t,o)),i};var e=function(t){new o(t)};t.plot.plugins.push({init:e,options:i,name:"tooltip",version:"0.6.1"})})(jQuery);
-/* Flot plugin for stacking data sets rather than overlyaing them.
-
-Copyright (c) 2007-2014 IOLA and Ole Laursen.
-Licensed under the MIT license.
-
-The plugin assumes the data is sorted on x (or y if stacking horizontally).
-For line charts, it is assumed that if a line has an undefined gap (from a
-null point), then the line above it should have the same gap - insert zeros
-instead of "null" if you want another behaviour. This also holds for the start
-and end of the chart. Note that stacking a mix of positive and negative values
-in most instances doesn't make sense (so it looks weird).
-
-Two or more series are stacked when their "stack" attribute is set to the same
-key (which can be any number or string or just "true"). To specify the default
-stack, you can set the stack option like this:
-
-	series: {
-		stack: null/false, true, or a key (number/string)
-	}
-
-You can also specify it for a single series, like this:
-
-	$.plot( $("#placeholder"), [{
-		data: [ ... ],
-		stack: true
-	}])
-
-The stacking order is determined by the order of the data series in the array
-(later series end up on top of the previous).
-
-Internally, the plugin modifies the datapoints in each series, adding an
-offset to the y value. For line series, extra data points are inserted through
-interpolation. If there's a second y value, it's also adjusted (e.g for bar
-charts or filled areas).
-
-*/
-
-(function ($) {
-    var options = {
-        series: { stack: null } // or number/string
-    };
-    
-    function init(plot) {
-        function findMatchingSeries(s, allseries) {
-            var res = null;
-            for (var i = 0; i < allseries.length; ++i) {
-                if (s == allseries[i])
-                    break;
-                
-                if (allseries[i].stack == s.stack)
-                    res = allseries[i];
-            }
-            
-            return res;
-        }
-        
-        function stackData(plot, s, datapoints) {
-            if (s.stack == null || s.stack === false)
-                return;
-
-            var other = findMatchingSeries(s, plot.getData());
-            if (!other)
-                return;
-
-            var ps = datapoints.pointsize,
-                points = datapoints.points,
-                otherps = other.datapoints.pointsize,
-                otherpoints = other.datapoints.points,
-                newpoints = [],
-                px, py, intery, qx, qy, bottom,
-                withlines = s.lines.show,
-                horizontal = s.bars.horizontal,
-                withbottom = ps > 2 && (horizontal ? datapoints.format[2].x : datapoints.format[2].y),
-                withsteps = withlines && s.lines.steps,
-                fromgap = true,
-                keyOffset = horizontal ? 1 : 0,
-                accumulateOffset = horizontal ? 0 : 1,
-                i = 0, j = 0, l, m;
-
-            while (true) {
-                if (i >= points.length)
-                    break;
-
-                l = newpoints.length;
-
-                if (points[i] == null) {
-                    // copy gaps
-                    for (m = 0; m < ps; ++m)
-                        newpoints.push(points[i + m]);
-                    i += ps;
-                }
-                else if (j >= otherpoints.length) {
-                    // for lines, we can't use the rest of the points
-                    if (!withlines) {
-                        for (m = 0; m < ps; ++m)
-                            newpoints.push(points[i + m]);
-                    }
-                    i += ps;
-                }
-                else if (otherpoints[j] == null) {
-                    // oops, got a gap
-                    for (m = 0; m < ps; ++m)
-                        newpoints.push(null);
-                    fromgap = true;
-                    j += otherps;
-                }
-                else {
-                    // cases where we actually got two points
-                    px = points[i + keyOffset];
-                    py = points[i + accumulateOffset];
-                    qx = otherpoints[j + keyOffset];
-                    qy = otherpoints[j + accumulateOffset];
-                    bottom = 0;
-
-                    if (px == qx) {
-                        for (m = 0; m < ps; ++m)
-                            newpoints.push(points[i + m]);
-
-                        newpoints[l + accumulateOffset] += qy;
-                        bottom = qy;
-                        
-                        i += ps;
-                        j += otherps;
-                    }
-                    else if (px > qx) {
-                        // we got past point below, might need to
-                        // insert interpolated extra point
-                        if (withlines && i > 0 && points[i - ps] != null) {
-                            intery = py + (points[i - ps + accumulateOffset] - py) * (qx - px) / (points[i - ps + keyOffset] - px);
-                            newpoints.push(qx);
-                            newpoints.push(intery + qy);
-                            for (m = 2; m < ps; ++m)
-                                newpoints.push(points[i + m]);
-                            bottom = qy; 
-                        }
-
-                        j += otherps;
-                    }
-                    else { // px < qx
-                        if (fromgap && withlines) {
-                            // if we come from a gap, we just skip this point
-                            i += ps;
-                            continue;
-                        }
-                            
-                        for (m = 0; m < ps; ++m)
-                            newpoints.push(points[i + m]);
-                        
-                        // we might be able to interpolate a point below,
-                        // this can give us a better y
-                        if (withlines && j > 0 && otherpoints[j - otherps] != null)
-                            bottom = qy + (otherpoints[j - otherps + accumulateOffset] - qy) * (px - qx) / (otherpoints[j - otherps + keyOffset] - qx);
-
-                        newpoints[l + accumulateOffset] += bottom;
-                        
-                        i += ps;
-                    }
-
-                    fromgap = false;
-                    
-                    if (l != newpoints.length && withbottom)
-                        newpoints[l + 2] += bottom;
-                }
-
-                // maintain the line steps invariant
-                if (withsteps && l != newpoints.length && l > 0
-                    && newpoints[l] != null
-                    && newpoints[l] != newpoints[l - ps]
-                    && newpoints[l + 1] != newpoints[l - ps + 1]) {
-                    for (m = 0; m < ps; ++m)
-                        newpoints[l + ps + m] = newpoints[l + m];
-                    newpoints[l + 1] = newpoints[l - ps + 1];
-                }
-            }
-
-            datapoints.points = newpoints;
-        }
-        
-        plot.hooks.processDatapoints.push(stackData);
-    }
-    
-    $.plot.plugins.push({
-        init: init,
-        options: options,
-        name: 'stack',
-        version: '1.2'
-    });
-})(jQuery);
-
 var charts = 
 {
 	// utility class
@@ -27939,6 +27750,8 @@ var charts =
 	};
 }(jQuery));
 
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+var saveAs=saveAs||function(e){"use strict";if(typeof e==="undefined"||typeof navigator!=="undefined"&&/MSIE [1-9]\./.test(navigator.userAgent)){return}var t=e.document,n=function(){return e.URL||e.webkitURL||e},r=t.createElementNS("http://www.w3.org/1999/xhtml","a"),o="download"in r,a=function(e){var t=new MouseEvent("click");e.dispatchEvent(t)},i=/constructor/i.test(e.HTMLElement)||e.safari,f=/CriOS\/[\d]+/.test(navigator.userAgent),u=function(t){(e.setImmediate||e.setTimeout)(function(){throw t},0)},s="application/octet-stream",d=1e3*40,c=function(e){var t=function(){if(typeof e==="string"){n().revokeObjectURL(e)}else{e.remove()}};setTimeout(t,d)},l=function(e,t,n){t=[].concat(t);var r=t.length;while(r--){var o=e["on"+t[r]];if(typeof o==="function"){try{o.call(e,n||e)}catch(a){u(a)}}}},p=function(e){if(/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(e.type)){return new Blob([String.fromCharCode(65279),e],{type:e.type})}return e},v=function(t,u,d){if(!d){t=p(t)}var v=this,w=t.type,m=w===s,y,h=function(){l(v,"writestart progress write writeend".split(" "))},S=function(){if((f||m&&i)&&e.FileReader){var r=new FileReader;r.onloadend=function(){var t=f?r.result:r.result.replace(/^data:[^;]*;/,"data:attachment/file;");var n=e.open(t,"_blank");if(!n)e.location.href=t;t=undefined;v.readyState=v.DONE;h()};r.readAsDataURL(t);v.readyState=v.INIT;return}if(!y){y=n().createObjectURL(t)}if(m){e.location.href=y}else{var o=e.open(y,"_blank");if(!o){e.location.href=y}}v.readyState=v.DONE;h();c(y)};v.readyState=v.INIT;if(o){y=n().createObjectURL(t);setTimeout(function(){r.href=y;r.download=u;a(r);h();c(y);v.readyState=v.DONE});return}S()},w=v.prototype,m=function(e,t,n){return new v(e,t||e.name||"download",n)};if(typeof navigator!=="undefined"&&navigator.msSaveOrOpenBlob){return function(e,t,n){t=t||e.name||"download";if(!n){e=p(e)}return navigator.msSaveOrOpenBlob(e,t)}}w.abort=function(){};w.readyState=w.INIT=0;w.WRITING=1;w.DONE=2;w.error=w.onwritestart=w.onprogress=w.onwrite=w.onabort=w.onerror=w.onwriteend=null;return m}(typeof self!=="undefined"&&self||typeof window!=="undefined"&&window||this.content);if(typeof module!=="undefined"&&module.exports){module.exports.saveAs=saveAs}else if(typeof define!=="undefined"&&define!==null&&define.amd!==null){define("FileSaver.js",function(){return saveAs})}
 /* 
    tabExpander ---------------------------------------------------------------------------------------------------------------------
    script that handles when there are too many tabs open.
@@ -31393,3 +31206,233 @@ $(function() {
 });
 
 
+
+$(document).ready(function() {
+    var $body = $('body');
+
+    /**
+     * Submiting search form
+     */
+    $body.on('submit', '#id_melis_core_gdpr_search_form', function(e) {
+        var formInputs = $(this).serializeArray();
+        var hasData = false;
+
+        $.each (formInputs, function(i, field) {
+            if (field.value != '') {
+                hasData = true;
+            }
+        });
+
+        //only send request if there are any inputs
+        if (hasData) {
+            melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
+            GdprTool.getUserInfo(formInputs);
+            melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+        } else {
+            melisHelper.melisKoNotification(
+                translations.tr_melis_core_gdpr_notif_gdpr_search,
+                translations.tr_melis_core_gdpr_tool_form_no_inputs
+            );
+        }
+
+        e.preventDefault();
+    });
+
+    /**
+     * On checking all checkbox
+     */
+    $body.on('click', '#id_melis_core_gdpr_content_tabs .check-all', function() {
+        var status = this.checked;
+        var $iconPlaceholder = $(this).siblings('i');
+
+        $iconPlaceholder.toggleClass("checked");
+        $iconPlaceholder.closest('.dataTables_scrollHead').siblings('.dataTables_scrollBody').find('.checkRow').each(function() {
+            $i = $(this).siblings('i');
+            $row = $(this).parents('tr');
+            this.checked = status;
+
+            if (status) {
+                if (!$i.hasClass('checked')) {
+                    $i.addClass('checked');
+                    $row.addClass('checked');
+                }
+            } else {
+                if ($i.hasClass('checked')) {
+                    $i.removeClass('checked');
+                    $row.removeClass('checked');
+                }
+            }
+        });
+    });
+
+    /**
+     * On checking a single checkbox
+     */
+    $body.on('click', '#id_melis_core_gdpr_content_tabs .checkRow', function() {
+        if (this.checked) {
+            if (!$(this).siblings('i').hasClass('checked')) {
+                $(this).siblings('i').addClass('checked');
+                $(this).parents('tr').addClass('checked');
+            }
+        } else {
+            if ($(this).siblings('i').hasClass('checked')) {
+                $(this).siblings('i').removeClass('checked');
+                $(this).parents('tr').removeClass('checked');
+            }
+        }
+
+        var numberOfCheckedCheckBoxes = $(this).closest('table').find('.checkRow:checked').length;
+        var numberOfCheckboxes = $(this).closest('table').find('.checkRow').length;
+
+        if (numberOfCheckedCheckBoxes < numberOfCheckboxes) {
+            var checkAll = $(this).closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+            if (checkAll.prop('checked')) {
+                checkAll.prop('checked', false);
+                $(checkAll).siblings('i').removeClass("checked");
+            }
+        } else if (numberOfCheckedCheckBoxes == numberOfCheckboxes && numberOfCheckboxes != 0) {
+            var checkAll = $(this).closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+            if (checkAll.prop('checked') == false) {
+                checkAll.prop('checked', true);
+                $(checkAll).siblings('i').addClass("checked");
+            }
+        }
+    });
+
+    /**
+     * On clicking extract selected button
+     */
+    $body.on('click', '#id_melis_core_gdpr_content_tabs .extract-selected', function() {
+        var modules = {};
+        var tableId;
+        var ids;
+        var hasData = false;
+
+        $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
+            tableId = $(this).find('.dataTables_scrollBody .table').attr('id');
+            ids = [];
+
+            $(this).find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                ids.push($(this).val());
+                hasData = true;
+            });
+            modules[tableId] = ids;
+        });
+
+        //only send request if there are any ids
+        if (hasData) {
+            console.log($.param(modules));
+            $.ajax({
+                type: 'POST',
+                url:'/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected',
+            data: {'id' : modules},
+            success: function (data, textStatus, request) {
+                console.log(data);
+                console.log(request);
+                // if data is not empty
+                if (data) {
+                    var fileName = request.getResponseHeader("fileName");
+                    var mime = request.getResponseHeader("Content-Type");
+                    var blob = new Blob([request.responseText], {type: mime});
+                    saveAs(blob, fileName);
+                }
+            }
+                });
+            // melisCoreTool.exportData('/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected?'+$.param(modules));
+        } else {
+            melisHelper.melisKoNotification(
+                translations.tr_melis_core_gdpr_notif_extract_user,
+                translations.tr_melis_core_gdpr_notif_no_selected_extract_user
+            );
+        }
+    });
+
+    /**
+     * On clicking delete selected button
+     */
+    $body.on('click', '#id_melis_core_gdpr_content_tabs .delete-selected', function() {
+        var modules = {};
+        var tableId;
+        var ids;
+        var hasData = false;
+
+        $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
+            tableId = $(this).find('.dataTables_scrollBody .table').attr('id');
+            ids = [];
+
+            //push all selected ids to array
+            $(this).find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                ids.push($(this).val());
+                hasData = true;
+            });
+            modules[tableId] = ids;
+        });
+
+        if (hasData) {
+            GdprTool.deleteSelected(modules);
+        } else {
+            melisHelper.melisKoNotification(
+                translations.tr_melis_core_gdpr_notif_delete_user,
+                translations.tr_melis_core_gdpr_notif_no_selected_delete_user
+            );
+        }
+    });
+
+
+    var GdprTool = {
+        getUserInfo: function(formData) {
+            $.ajax({
+                type     : 'POST',
+                url      : '/melis/MelisCore/MelisCoreGdpr/checkForm',
+                data     : $.param(formData)
+            }).success(function (data) {
+                if (data.success) {
+                    //show the tabs so that the loading view will be shown to the user
+                    $('#id_melis_core_gdpr_content_tabs').show();
+                    melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
+                        show: true,
+                        formData: formData,
+                    });
+                    //reset form
+                    $('#id_melis_core_gdpr_search_form').trigger('reset');
+                } else {
+                    melisHelper.melisKoNotification(
+                        translations.tr_melis_core_gdpr_search_user_title,
+                        translations.tr_melis_core_gdpr_search_user_error_message,
+                        data.errors
+                    );
+                }
+            }).error(function () {
+
+            });
+            melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+        },
+
+        deleteSelected: function(modules) {
+            melisCoreTool.confirm (
+                translations.tr_meliscore_common_yes,
+                translations.tr_meliscore_common_no,
+                translations.tr_melis_core_gdpr_notif_delete_selected_confirm,
+                translations.tr_melis_core_gdpr_notif_delete_selected_confirm_message,
+                function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/melis/MelisCore/MelisCoreGdpr/melisCoreGdprDeleteSelected',
+                        data: $.param(modules),
+                        dataType: 'json',
+                        encode: true,
+                    }).success(function (data) {
+                        $.each(modules, function (key, value) {
+                            var moduleName = key
+
+                            //remove selected rows in data table
+                            $('#' + moduleName).DataTable().rows('.checked').remove().draw();
+                        });
+                    }).error(function () {
+
+                    });
+                }
+            );
+        },
+    };
+});
