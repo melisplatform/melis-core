@@ -34931,6 +34931,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     display: none;
 }
 
+.dataTable span.dtr-data:after{
+    content: "\00a0";
+}
+
 @media ( max-width: 991px ) {
     #content .page-head-container .page-title .page-publishunpublish.title-switch {
         margin-top: 0px;
