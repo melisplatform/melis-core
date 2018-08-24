@@ -169,7 +169,7 @@ class MelisSetupController extends AbstractActionController
      * after the setup, this will take all the available dashboard plugins
      * in every module and save to the newly user created
      */
-    private function generateDashboardPluginsAction($userId = 1)
+    private function generateDashboardPlugins($userId)
     {
         $melisModules = $_SERVER['DOCUMENT_ROOT'].'/../vendor/melisplatform/';
 
