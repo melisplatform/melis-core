@@ -54,6 +54,30 @@ $(document).ready(function() {
                 }
             }
         });
+
+        var moduleName = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
+
+        $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
+            countOfRows = $(this).find('table tbody tr').length;
+            moduleName = $(this).find('table').attr('id');
+            var p = $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p');
+
+            var charIndex = p.text().indexOf(" (");
+            var lengthToDelete = charIndex - p.text().length;
+            console.log(lengthToDelete);
+            p.text().slice(charIndex, lengthToDelete);
+            p.append( "texting");
+        });
+
+        var moduleName = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
+        var countOfRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tbody tr').length;
+        var pTag = $body.find('.widget-head ul #' + moduleName + '-left-tab p');
+        var charIndex = pTag.html().indexOf(" (");
+        var lengthToDelete = charIndex - pTag.html().length;
+        var countOfCheckedRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
+
+        pTag.html().slice(0, lengthToDelete);
+        pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
     });
 
     /**
@@ -88,6 +112,14 @@ $(document).ready(function() {
                 $(checkAll).siblings('i').addClass("checked");
             }
         }
+
+        var moduleName = $(this).closest('table').attr('id');
+        var pTag = $body.find('.widget-head ul #' + moduleName + '-left-tab p');
+        var charIndex = pTag.html().indexOf(" (");
+        var lengthToDelete = charIndex - pTag.html().length;
+
+        pTag.html().slice(0, lengthToDelete);
+        pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + numberOfCheckedCheckBoxes + "/" + numberOfCheckboxes + ")");
     });
 
     /**
@@ -185,7 +217,7 @@ $(document).ready(function() {
                         formData: formData,
                     });
                     //reset form
-                    $('#id_melis_core_gdpr_search_form').trigger('reset');
+                    //$('#id_melis_core_gdpr_search_form').trigger('reset');
                 } else {
                     melisHelper.melisKoNotification(
                         translations.tr_melis_core_gdpr_search_user_title,
