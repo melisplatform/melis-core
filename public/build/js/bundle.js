@@ -31570,7 +31570,7 @@ $(document).ready(function() {
 
             var charIndex = p.text().indexOf(" (");
             var lengthToDelete = charIndex - p.text().length;
-            console.log(lengthToDelete);
+
             p.text().slice(charIndex, lengthToDelete);
             p.append( "texting");
         });
