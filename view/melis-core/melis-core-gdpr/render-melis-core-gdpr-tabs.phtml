@@ -26,7 +26,7 @@
                         <?php foreach ($modules as $module) { ?>
 
                             <?php if(isset($module['moduleName']) && isset($module['icon'])) { ?>
-                                <li class="<?php echo $firstItem ? 'active' : ''; ?>" style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="#<?= $module['moduleName'] ?>-left-tab" data-toggle="tab" class="">
+                                <li class="<?php echo $firstItem ? 'active' : ''; ?>" style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="<?= $module['moduleName'] ?>-left-tab" data-toggle="tab" class="">
                                         <p style="margin-bottom: 0px;margin-top: 5px;"><i class="<?= $module['icon'] ?>" style="margin-left: 20px;margin-right: 12px; width: 22.86px;"></i><?= $module['moduleName'] ?></p></a>
                                 </li>
                             <?php } ?>
@@ -55,8 +55,8 @@
                                             <th class="no-sort sort-all">
                                                 <div class="checkbox checkbox-single margin-none">
                                                     <label class="checkbox-custom">
-                                                        <i class="fa fa-fw fa-square-o checked" style="color:white;"></i>
-                                                        <input type="checkbox" class="check-all" checked="checked">
+                                                        <i class="fa fa-fw fa-square-o" style="color:white;"></i>
+                                                        <input type="checkbox" class="check-all">
                                                     </label>
                                                 </div>
                                             </th>
@@ -68,13 +68,13 @@
                                         <tbody>
                                         <?php if(isset($module['values']['datas'])) { ?>
                                             <?php foreach($module['values']['datas'] as $dataArrayKey => $dataArrayValue) { ?>
-                                                <tr role="row" class="checked">
+                                                <tr role="row" class="">
                                                     <td><?= $dataArrayKey ?></td>
                                                     <td class="not-included">
                                                         <div class="checkbox checkbox-single margin-none">
                                                             <label class="checkbox-custom">
-                                                                <i class="fa fa-fw fa-square-o checked"></i>
-                                                                <input type="checkbox" class="checkRow" checked="checked" value="<?= $dataArrayKey ?>">
+                                                                <i class="fa fa-fw fa-square-o"></i>
+                                                                <input type="checkbox" class="checkRow" value="<?= $dataArrayKey ?>">
                                                             </label>
                                                         </div>
                                                     </td>
@@ -126,17 +126,6 @@
                                                 $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
 
                                                 $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-
-                                                //setTimeout(function() {
-                                                //    if ($("body").find("<?php //echo '#' . $module['moduleName']; ?>//-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                //        $("<?php //echo '#' . $module['moduleName']; ?>//").closest('.dataTables_scrollBody').css("overflow", "");
-                                                //    } else {
-                                                //        ;
-                                                //        $("<?php //echo '#' . $module['moduleName']; ?>//").closest('.dataTables_scrollBody').css("overflow", "overlay");
-                                                //    }
-                                                //
-                                                //    $("<?php //echo '#' . $module['moduleName']; ?>//").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
-                                                //}, 1);
                                             });
 
                                             setTimeout(function(){
@@ -179,7 +168,18 @@
             <button type="button" class="btn btn-danger delete-selected"><i class="fa fa-times" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_delete_selected_button'); ?></button>
             <!-- END OF CONDITION -->
         </div>
-    <?php }else { ?>
-        <h1>No Data Found</h1>
     <?php } ?>
+    <script>
+        if ( $("#id_melis_core_gdpr_content_tabs .tab-content").length ) {
+            var countOfRows = 0;
+            var moduleName;
+
+            $("body").find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
+                countOfRows = $(this).find('table tbody tr').length;
+                moduleName = $(this).find('table').attr('id');
+
+                $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p').append(' (0/' + countOfRows + ')');
+            });
+        }
+    </script>
 </div>
