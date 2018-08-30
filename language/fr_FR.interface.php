@@ -675,6 +675,7 @@
         'tr_melis_core_gdpr_tool_form_no_inputs' => 'Please input the user details',
         'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'No user selected to extract',
         'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'No user selected to delete',
+        'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',
 
         'tr_melis_core_gdpr_view_search_button' => 'Search',
         'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',
