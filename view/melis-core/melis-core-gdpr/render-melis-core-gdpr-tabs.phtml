@@ -181,5 +181,12 @@
                 $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p').append(' (0/' + countOfRows + ')');
             });
         }
+
+        if ($("#id_melis_core_gdpr_content_tabs .tab-content").length == 0 && $("#id_melis_core_gdpr_content_tabs").css('display') != 'none') {
+            melisHelper.melisKoNotification(
+                'Melis Core GDPR',
+                'no data found',
+            );
+        }
     </script>
 </div>
