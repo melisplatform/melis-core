@@ -170,11 +170,15 @@
         </div>
     <?php } ?>
     <script>
-        if ( $("#id_melis_core_gdpr_content_tabs .tab-content").length ) {
+        var $body = $("body");
+        var $tabContent = $("#id_melis_core_gdpr_content_tabs .tab-content");
+        var $contentTabs = $("#id_melis_core_gdpr_content_tabs");
+
+        if ($tabContent.length) {
             var countOfRows = 0;
             var moduleName;
 
-            $("body").find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
+            $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
                 countOfRows = $(this).find('table tbody tr').length;
                 moduleName = $(this).find('table').attr('id');
 
@@ -182,10 +186,10 @@
             });
         }
 
-        if ($("#id_melis_core_gdpr_content_tabs .tab-content").length == 0 && $("#id_melis_core_gdpr_content_tabs").css('display') != 'none') {
+        if ($tabContent.length == 0 && $contentTabs.css('display') != 'none') {
             melisHelper.melisKoNotification(
-                'Melis Core GDPR',
-                'no data found',
+                translations.tr_melis_core_gdpr,
+                translations.tr_melis_core_gdpr_notif_no_user_data_found,
             );
         }
     </script>
