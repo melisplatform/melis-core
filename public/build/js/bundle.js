@@ -31582,7 +31582,6 @@ $(document).ready(function() {
         var lengthToDelete = charIndex - pTag.html().length;
         var countOfCheckedRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
 
-        pTag.html().slice(0, lengthToDelete);
         pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
     });
 
@@ -31650,24 +31649,7 @@ $(document).ready(function() {
 
         //only send request if there are any ids
         if (hasData) {
-            console.log($.param(modules));
-            $.ajax({
-                type: 'POST',
-                url:'/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected',
-            data: {'id' : modules},
-            success: function (data, textStatus, request) {
-                console.log(data);
-                console.log(request);
-                // if data is not empty
-                if (data) {
-                    var fileName = request.getResponseHeader("fileName");
-                    var mime = request.getResponseHeader("Content-Type");
-                    var blob = new Blob([request.responseText], {type: mime});
-                    saveAs(blob, fileName);
-                }
-            }
-                });
-            // melisCoreTool.exportData('/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected?'+$.param(modules));
+            GdprTool.extractSelected(modules);
         } else {
             melisHelper.melisKoNotification(
                 translations.tr_melis_core_gdpr_notif_extract_user,
@@ -31722,8 +31704,6 @@ $(document).ready(function() {
                         show: true,
                         formData: formData,
                     });
-                    //reset form
-                    //$('#id_melis_core_gdpr_search_form').trigger('reset');
                 } else {
                     melisHelper.melisKoNotification(
                         translations.tr_melis_core_gdpr_search_user_title,
@@ -31751,18 +31731,55 @@ $(document).ready(function() {
                         dataType: 'json',
                         encode: true,
                     }).success(function (data) {
-                        $.each(modules, function (key, value) {
-                            var moduleName = key
+                        if (data.success) {
+                            $.each(modules, function (key, value) {
+                                var moduleName = key
 
-                            //remove selected rows in data table
-                            $('#' + moduleName).DataTable().rows('.checked').remove().draw();
-                        });
+                                //remove selected rows in data table
+                                $('#' + moduleName).DataTable().rows('.checked').remove().draw();
+                            });
+
+                            var countOfRows = 0;
+                            var moduleName;
+
+                            $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function () {
+                                countOfRows = $(this).find('tbody tr').length;
+                                moduleName = $(this).find('tbody').closest('table').attr('id');
+
+                                var pTag = $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p');
+                                var charIndex = pTag.html().indexOf(" (");
+                                var lengthToDelete = charIndex - pTag.html().length;
+
+                                pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (0/" + countOfRows + ")");
+                            });
+                        } else {
+                            melisHelper.melisKoNotification(
+                                translations.tr_melis_core_gdpr_notif_delete_user,
+                                translations.tr_melis_core_gdpr_notif_error_on_deleting_data,
+                            );
+                        }
                     }).error(function () {
 
                     });
                 }
             );
         },
+        extractSelected: function(modules) {
+            $.ajax({
+                type: 'POST',
+                url:'/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected',
+                data: {'id' : modules},
+                success: function (data, textStatus, request) {
+                    // if data is not empty
+                    if (data) {
+                        var fileName = request.getResponseHeader("fileName");
+                        var mime = request.getResponseHeader("Content-Type");
+                        var blob = new Blob([request.responseText], {type: mime});
+                        saveAs(blob, fileName);
+                    }
+                }
+            });
+        }
     };
 });
 
