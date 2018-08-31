@@ -76,7 +76,6 @@ $(document).ready(function() {
         var lengthToDelete = charIndex - pTag.html().length;
         var countOfCheckedRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
 
-        pTag.html().slice(0, lengthToDelete);
         pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
     });
 
@@ -250,6 +249,20 @@ $(document).ready(function() {
 
                             //remove selected rows in data table
                             $('#' + moduleName).DataTable().rows('.checked').remove().draw();
+                        });
+
+                        var countOfRows = 0;
+                        var moduleName;
+
+                        $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
+                            countOfRows = $(this).find('tbody tr').length;
+                            moduleName = $(this).find('tbody').closest('table').attr('id');
+
+                            var pTag = $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p');
+                            var charIndex = pTag.html().indexOf(" (");
+                            var lengthToDelete = charIndex - pTag.html().length;
+
+                            pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (0/" + countOfRows + ")");
                         });
                     }).error(function () {
 
