@@ -177,6 +177,7 @@
         if ($tabContent.length) {
             var countOfRows = 0;
             var moduleName;
+
             $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
                 countOfRows = $(this).find('table tbody tr').length;
                 moduleName = $(this).find('table').attr('id');
