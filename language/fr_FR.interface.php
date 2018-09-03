@@ -673,7 +673,7 @@
         'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'No user selected to extract',
         'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'No user selected to delete',
         'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Error on deleting data',
-        'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',
+        'tr_melis_core_gdpr_notif_no_user_data_found' => 'Aucun utilisateur trouvé',
         'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Error on deleting data',
 
         'tr_melis_core_gdpr_view_search_button' => 'Search',
