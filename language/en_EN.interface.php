@@ -660,5 +660,6 @@
         'tr_melis_core_gdpr_view_search_button' => 'Search',
         'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',
         'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected',
+        'tr_melis_core_gdpr_tabs_header_title' => 'Search a user:',
 	);
 ?>
