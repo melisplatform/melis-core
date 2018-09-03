@@ -654,7 +654,7 @@
         'tr_melis_core_gdpr_header_title' => 'RGPD (Règlement Général sur la Protection des Données)',
         'tr_melis_core_gdpr_header_description' => 'Melis Platform fourni un system pour chercher les données de vos utilisateurs. </br> Tous les modules qui implémentent le système de Melis pourront intéragir avec cette interface et vous offir la possibilité de respecter le règlement.',
 
-        'tr_melis_core_gdpr_form_name' => 'Name',
+        'tr_melis_core_gdpr_form_name' => 'Nom',
         'tr_melis_core_gdpr_form_email' => 'Email',
         'tr_melis_core_gdpr_form_site' => 'Site',
         'tr_melis_core_gdpr_search_user_title' => 'Search User',
@@ -676,8 +676,9 @@
         'tr_melis_core_gdpr_notif_no_user_data_found' => 'Aucun utilisateur trouvé',
         'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Error on deleting data',
 
-        'tr_melis_core_gdpr_view_search_button' => 'Search',
+        'tr_melis_core_gdpr_view_search_button' => 'Rechercher',
         'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',
-        'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected'
+        'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected',
+        'tr_melis_core_gdpr_tabs_header_title' => 'Rechercher un utilisateur:',
     );
 ?>
