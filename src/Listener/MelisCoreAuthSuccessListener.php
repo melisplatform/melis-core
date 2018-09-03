@@ -54,15 +54,16 @@ class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements L
                     ), $params['usr_id']);
 
                     // update rights to a new rights structure
+                    $oldToolNode = 'meliscore_tools>';
+                    $newToolNode = 'meliscore_leftmenu>';
+                    $rightsXml   = $user->usr_rights;
+
+                    // update rights to a new rights structure
                     $oldToolNode = 'meliscore_tools';
                     $newToolNode = 'meliscore_leftmenu';
                     $rightsXml   = $user->usr_rights;
-
                     if (mb_strpos($rightsXml, $oldToolNode) !== false) {
-                        $newRightsXml = str_replace($oldToolNode, $newToolNode, $rightsXml);
-                        $userTable->save(array(
-                            'usr_rights' => $newRightsXml,
-                        ), $params['usr_id']);
+                        $newRightsXml = preg_replace("/$oldToolNode\/>/", $newToolNode.'>', $rightsXml);
                         $user->usr_rights = $newRightsXml;
                     }
                 }

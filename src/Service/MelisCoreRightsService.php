@@ -8,7 +8,9 @@ use Zend\Json\Json;
 
 class MelisCoreRightsService implements MelisCoreRightsServiceInterface, ServiceLocatorAwareInterface
 {
+    /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
     public $serviceLocator;
+    /** @var array  */
     private $tools = [];
 
     const MELISCORE_PREFIX_INTERFACE    = 'meliscore_interface';
@@ -21,6 +23,11 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     const MELISCUSTOM_PREFIX_TOOLS      = 'meliscustom_toolstree_section';
     const MELIS_DASHBOARD               = '/meliscore_dashboard';
 
+    /**
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     *
+     * @return $this
+     */
     public function setServiceLocator(ServiceLocatorInterface $sl)
     {
         $this->serviceLocator = $sl;
@@ -28,7 +35,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     }
 
     /**
-     * @return ServiceLocatorInterface
+     * @return \Zend\ServiceManager\ServiceLocatorInterface
      */
     public function getServiceLocator(): ServiceLocatorInterface
     {
@@ -39,6 +46,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     /**
      * Extends the functionality of $this->isAccessible method
      * but can only be used on tools
+     *
      * @param $key
      * @return bool
      */
@@ -53,10 +61,10 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     }
 
     /**
-     * Checks if the user can access a specific function
      * @param $xmlRights
      * @param $sectionId
      * @param $itemId
+     *
      * @return bool
      */
     public function isAccessible($xmlRights, $sectionId, $itemId): bool
@@ -74,7 +82,6 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -83,8 +90,13 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         {
             foreach ($rightsObj->$sectionId->id as $toolId)
             {
-                if ( (string) $toolId == $itemId ||
-                     in_array($toolId, $this->getRightsToolKeys())) {
+                $toolId = (string) $toolId;
+
+                if ($toolId == $itemId) {
+                    return true;
+                }
+
+                if (in_array($toolId, $this->getRightsToolKeys()) || in_array($itemId, $this->getRightsToolKeys())) {
                     return true;
                 }
             }
@@ -120,6 +132,12 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         return false;
     }
 
+    /**
+     * @param $keyInterface
+     * @param $userXml
+     *
+     * @return array
+     */
     private function getInterfaceKeysRecursive($keyInterface, $userXml)
     {
         $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
@@ -204,6 +222,11 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         return $item;
     }
 
+    /**
+     * @param $userXml
+     *
+     * @return array
+     */
     private function getToolsKeys($userXml)
     {
         $melisCoreUser  = $this->getServiceLocator()->get('MelisCoreUser');
@@ -359,7 +382,12 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
     }
 
-
+    /**
+     * @param $id
+     * @param bool $isRole
+     *
+     * @return array
+     */
     public function getRightsValues($id, $isRole = false)
     {
         $translator = $this->serviceLocator->get('translator');
