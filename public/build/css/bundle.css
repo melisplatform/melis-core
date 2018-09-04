@@ -33229,6 +33229,11 @@ newplugin-cont span,
     vertical-align: middle;
     padding-right: 5px;
 }
+.melis-modal-cont .modal-error-cont b{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .melis-modal-cont .modal-content span.btn-primary{
     margin-top: 40px;
     display: block;

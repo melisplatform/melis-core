@@ -42,6 +42,10 @@ $data_melisKey = $this->melisKey;
                             if (isset($sectionTool['toolsection_children']) && $sectionTool['toolsection_children']) {
                                 foreach ($sectionTool['toolsection_children'] as $keyTool => $tool)
                                 {
+                                    if (empty($tool)) {
+                                        break;
+                                    }
+
                                     $toolIcon = 'fa-wrench';
                                     if (!empty($tool['tool_icon']))
                                         $toolIcon = $tool['tool_icon'];
