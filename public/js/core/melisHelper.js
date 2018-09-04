@@ -37,7 +37,9 @@ var melisHelper = (function(){
         errorTexts +='<h4>'+ melisTranslator(message) +'</h4>';
         $.each( errors, function( key, error ) {
             if(key !== 'label'){
-                errorTexts += '<p class="modal-error-cont"><b>'+ (( errors[key]['label'] == undefined ) ? ((errors['label']== undefined) ? key : errors['label'] ) : errors[key]['label'] )+ ': </b>  ';
+
+                var label = (( errors[key]['label'] == undefined ) ? ((errors['label']== undefined) ? key : errors['label'] ) : errors[key]['label'] );
+                errorTexts += '<p class="modal-error-cont"><b title="'+ label + '">'+ label + ': </b>  ';
 
                 // catch error level of object
                 try {
