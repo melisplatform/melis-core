@@ -372,6 +372,7 @@ return array(
             'melis-core/plugin-view/generate' => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
+            'layout/warning' => __DIR__ . '/../view/warning/warning.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

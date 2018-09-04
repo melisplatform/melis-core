@@ -866,6 +866,11 @@ newplugin-cont span,
     vertical-align: middle;
     padding-right: 5px;
 }
+.melis-modal-cont .modal-error-cont b{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .melis-modal-cont .modal-content span.btn-primary{
     margin-top: 40px;
     display: block;
@@ -2622,6 +2627,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 /*remove tinymce brand name*/
 .mce-branding-powered-by{
     display: none;
+}
+
+.dataTable span.dtr-data:after{
+    content: "\00a0";
 }
 
 @media ( max-width: 991px ) {

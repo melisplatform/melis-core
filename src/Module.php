@@ -9,6 +9,7 @@
 
 namespace MelisCore;
 
+use MelisCore\Listener\MelisCorePhpWarningListener;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\ModuleManager;
@@ -72,8 +73,8 @@ class Module
             $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
 
             $eventManager->attach(new MelisCoreAuthSuccessListener());
+            $eventManager->attach(new MelisCorePhpWarningListener());
         }
-
     }
     
     public function initShowErrorsByconfig(MvcEvent $e)
@@ -128,7 +129,8 @@ class Module
     	    'melis-backoffice/MelisInstaller',
     	    'melis-backoffice/microservice',
     	    'melis-backoffice/microservice_list',
-            'melis-backoffice/get-platform-color-css'
+            'melis-backoffice/get-platform-color-css',
+		'melis-backoffice/webpack_builder'
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;
