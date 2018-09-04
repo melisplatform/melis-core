@@ -52,9 +52,9 @@ var melisDashBoardDragnDrop = {
             verticalMargin: 20,
             animate: true,
             acceptWidgets: this.melisWidgetHandle,
-            draggable: {
+            /*draggable: {
                 scroll: true
-            },
+            },*/
             handle: this.gsOptHandle
         };
 
@@ -65,7 +65,8 @@ var melisDashBoardDragnDrop = {
         // set up draggable element / this.melisWidgetHandle
         $(widget).draggable({
             helper: "clone",
-            revert: true,
+            revert: 'invalid',
+            /*revert: false,*/
             appendTo: 'body',
 
             drag: function(event, ui) {
@@ -79,14 +80,22 @@ var melisDashBoardDragnDrop = {
         });
     },
 
-    docuReady: function() {       
+    docuReady: function() {
+        var gs      = this.$body.find('.grid-stack'),
+            tabPane = this.$body.find('.tab-pane');
         //.tab-pane .page-loaded height: calc(100vh - 48px);
-        if( this.$body.find('.grid-stack') ) {
-            this.$body.find('.grid-stack').closest('.tab-pane').css('height', 'calc(100vh - 50px)');
-            this.$body.find('.grid-stack').css('height', '100%');
+        if( gs ) {
+            gs.closest('.tab-pane').css('height', 'calc(100vh - 50px)');
+            gs.css({
+                'height' : '100%',
+                'width' : '100%'
+            });
         } else {
-            this.$body.find('.tab-pane').closest('.tab-pane').css('height', '100%');
-            this.$body.find('.grid-stack').css('height', '700px');
+            tabPane.closest('.tab-pane').css('height', '100%');
+            gs.css({
+                'height' : '700px',
+                'width' : '100%'
+            });
         }
     },
 
@@ -179,6 +188,7 @@ var melisDashBoardDragnDrop = {
                     eval(value);
                 });
             }
+
         });
     },
 
@@ -258,25 +268,49 @@ var melisDashBoardDragnDrop = {
             var $this   = $(this);
           
             // update position / size of widget
-            self.updateWidgetPosSize($this);
+            self.updateWidgetPosSize();
 
         });
     },
 
-    updateWidgetPosSize: function(gs) {
-        var self        = this;
+    updateWidgetPosSize: function() {
+        var self         = this;
 
         // jQuery element
-        var $grid       = $('#' + activeTabId ).find(gs);
-        var items       = [];
-        var gsiUiDrag   = $grid.find('.grid-stack-item.ui-draggable.ui-resizable');
-        var posChanged  = false;
-        var sizChanged  = false;
+        //var $grid       = $('#' + activeTabId ).find(gs);
+        var $grid        = $('#' + activeTabId ).find('.grid-stack'),
+            $gsiUiDrag   = $grid.find('.grid-stack-item.ui-draggable.ui-resizable'),
+            gsi          = $grid.find('.grid-stack-item.ui-draggable.ui-resizable'),
+            items        = [],
+            posChanged   = false,
+            sizeChanged  = false;
 
-        gsiUiDrag.each(function() {
+        $gsiUiDrag.each( function() {
             // refer to gsiUiDrag
-            var $this   = $(this);
-            var node    = $this.data('_gridstack_node');
+            var $this    = $(this),
+                node     = $this.data('_gridstack_node');
+
+            //console.log('node: ', node);
+
+            items.push({
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height,
+                content: $this.data()
+            });
+
+            /*if( node.x != node._beforeDragX || node.y != node._beforeDragY ) {
+                posChanged = true;
+            }*/
+        });
+
+        /*$gsiUiDrag.each(function() {
+            // refer to gsiUiDrag
+            var $this    = $(this),
+                node     = $this.data('_gridstack_node');
+
+            console.log( 'node: ', node );
 
             items.push({
                 x: node.x,
@@ -289,13 +323,29 @@ var melisDashBoardDragnDrop = {
             if( node.x != node._beforeDragX || node.y != node._beforeDragY ) {
                 posChanged = true;
             }
+        });*/
 
-        });
-        
-        if(posChanged) {
+        /*var updatedWidgets = {};
+          for (var i = 0; i < items.length; i++) {
+            var widget = items[i].el;
+            console.log(widget.data('gs-x') != items[i].x || widget.data('gs-y') != items[i].y);
+          }*/
+
+        var udpatedWidgets = {};
+        for ( var i = 0; i < items.length; i++ ) {
+            var widget = items[i].el;
+
+            //console.log( 'widget.data(gs-width): ', widget.data('gs-width') );
+            console.log( 'items[i]: ', items[i] );
+            console.log( 'items[i].el: ', items[i].content._gridstack_node.el );
+            console.log( 'items[i].width: ', items[i].width );
+        }
+
+        /*if( posChanged || sizeChanged ) {
             // serialize widget
             self.serializeWidgetMap( $(items[0].content._gridstack_node._grid.container[0].children) );
-        }
+        }*/
+
     },
 
     deleteWidget: function(el) {
