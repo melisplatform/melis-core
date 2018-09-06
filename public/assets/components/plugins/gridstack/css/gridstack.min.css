@@ -12,6 +12,7 @@
 }
 
 .grid-stack {
-	background-color: lightgoldenrodyellow;
-    min-height: 100%;
+	display: block;
+    min-height: 700px;
+    position: relative;
 }
