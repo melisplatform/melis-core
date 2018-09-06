@@ -70,7 +70,8 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                     $newToolNode = 'meliscore_leftmenu';
                     $rightsXml   = $user->usr_rights;
                     if (mb_strpos($rightsXml, $oldToolNode) !== false) {
-                        $newRightsXml = preg_replace("/$oldToolNode\/>/", $newToolNode.'>', $rightsXml);
+                        $rule = str_replace('>', '\/>', $oldToolNode);
+                        $newRightsXml = preg_replace("/$rule/", $newToolNode.'>', $rightsXml);
                         $user->usr_rights = $newRightsXml;
                     }
                 }
