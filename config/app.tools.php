@@ -2448,17 +2448,6 @@ return array(
                                         ),
                                     ),
                                 ),
-                                array(
-                                    'spec' => array(
-                                        'name' => 'site_id',
-                                        'type' => 'MelisCoreSiteSelect',
-                                        'options' => array(
-                                            'label' => 'tr_melis_core_gdpr_form_site',
-                                            'form_type' => 'form-horizontal',
-                                            'empty_option' => 'tr_meliscore_common_choose',
-                                        ),
-                                    ),
-                                ),
                             ),
                             'input_filter' => array(
                                 'user_name' => array(
@@ -2496,26 +2485,10 @@ return array(
 
                                     ),
                                 ),
-                                'site_id' => array(
-                                    'name' => 'site_id',
-                                    'required' => false,
-                                    'validators' => array(
-                                        array(
-                                            'name'    => 'regex', false,
-                                            'options' => array(
-                                                'pattern' => '/^[0-9]+$/',
-                                                'message'=> 'sayop ang format',
-                                            ),
-                                        ),
-                                    ),
-                                    'filters' => array(
-
-                                    ),
-                                ),
                             ),
                         ),
                     ),
-                ),
+                ),//end gdpr
             ),
         ),
     ),
