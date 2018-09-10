@@ -270,4 +270,24 @@ class TreeToolsController extends AbstractActionController
         return $this->getServiceLocator()->get('MelisCoreConfig');
     }
 
+    protected function getAccessReport()
+    {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasRightsAction()
+    {
+        /** @var \MelisCore\Service\MelisCoreConfigService $config */
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        /** @var \MelisCore\Service\MelisCoreRightsService $rights */
+        $rights = $this->getServiceLocator()->get('MelisCoreRights');
+        /** @var \MelisCore\Service\MelisCoreAuthService $user */
+        $user = $this->getServiceLocator()->get('MelisCoreAuth');
+
+        $userRights = $user->getAuthRights();
+    }
+
 }

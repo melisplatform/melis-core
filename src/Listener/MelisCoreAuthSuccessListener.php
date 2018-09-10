@@ -55,18 +55,18 @@ class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements L
 
                     // update rights to a new rights structure
                     $oldToolNode = 'meliscore_tools>';
-                    $newToolNode = 'meliscore_leftmenu>';
-                    $rightsXml   = $user->usr_rights;
-
-                    // update rights to a new rights structure
-                    $oldToolNode = 'meliscore_tools';
                     $newToolNode = 'meliscore_leftmenu';
                     $rightsXml   = $user->usr_rights;
+
                     if (mb_strpos($rightsXml, $oldToolNode) !== false) {
-                        $rule = str_replace('>', '\/>', $oldToolNode);
-                        $newRightsXml = preg_replace("/$rule/", $newToolNode.'>', $rightsXml);
-                        $newRightsXml = str_replace("meliscore_tools_root", 'meliscore_leftmenu_root', $newRightsXml);
-                        $user->usr_rights = $newRightsXml;
+                        if (preg_match("/$oldToolNode/", $rightsXml)) {
+                            $newRightsXml = preg_replace("/$oldToolNode/", $newToolNode.'>', $rightsXml);
+                            if (preg_match("/meliscore_tools_root/", $newRightsXml)) {
+                                $newRightsXml = preg_replace("/meliscore_tools_root/", $newToolNode . '_root', $newRightsXml);
+                            }
+
+                            $user->usr_rights = $newRightsXml . '</document>';
+                        }
                     }
                 }
             },
