@@ -26,6 +26,7 @@
                         }
                     }
                 }
+
                 ?>
 
                 <?php
@@ -34,23 +35,13 @@
                 }
                 ?>
 
-                <li id="toolstree_meliscms" class="hasSubmenu" data-meliskey="toolstre_meliscms">
-                    <a data-target="#meliscms_tools" data-toggle="collapse" class="" aria-expanded="true">
-                        <div class="melis-svg-icon pull-left">
-                            <?= $this->melisCmsIcon() ?>
-                        </div>
-                        <label class="toolstree-label"><?= $this->translate('MelisCms') ?></label>
-                        <div class="clearfix"></div>
-                    </a>
-                    <ul class="collapse" id="meliscms_tools" aria-expanded="false">
-                        <?php
-                        if (!empty($this->zoneconfig['interface'])) {
-                            echo $this->meliscms_sitetree;
-                            echo $this->meliscms_toolstree_section;
-                        }
-                        ?>
-                    </ul>
-                </li>
+                <?php
+                if (!empty($this->zoneconfig['interface'])) {
+
+                    echo "<div id='site-tree-cont' class='hidden'>$this->meliscms_sitetree</div>";
+                    echo $this->meliscms_toolstree_section;
+                }
+                ?>
 
                 <?php
                 if (!empty($this->zoneconfig['interface'])) {

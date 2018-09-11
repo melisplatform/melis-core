@@ -1,5 +1,4 @@
 <?php
-
 $name = '';
 $id = '';
 if (!empty($this->zoneconfig['conf']['name']))
@@ -9,6 +8,7 @@ if (!empty($this->zoneconfig['conf']['id']))
 $melisKey = $this->melisKey;
 $sections = [
     'meliscore_toolstree_section' => $this->melisCoreIcon(),
+    'meliscms_toolstree_section' => $this->melisCmsIcon(),
     'melismarketing_toolstree_section' => $this->melisMarketingIcon(),
     'meliscommerce_toolstree_section' => $this->melisCommerceIcon(),
     'melisothers_toolstree_section' => $this->melisOthersIcon(),
@@ -35,7 +35,6 @@ $sections = [
     <?php endif; ?>
     <ul class="collapse" id="<?= $id; ?>_tools">
         <?php
-
         if (!empty($this->tools))
         {
             foreach ($this->tools as $keySection => $sectionTool)
