@@ -325,6 +325,7 @@ return array(
     'validators' => array(
         'invokables' => array(
             'MelisPasswordValidator' => 'MelisCore\Validator\MelisPasswordValidator',
+            'MelisImageValidator' => 'MelisCore\Validator\MelisImageValidator',
         ),
     ),
 

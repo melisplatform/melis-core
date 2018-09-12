@@ -272,6 +272,7 @@ class TreeToolsController extends AbstractActionController
      */
     public function hasRightsAction()
     {
+        // melis/MelisCore/TreeTools/hasRights
         /** @var \MelisCore\Service\MelisCoreConfigService $config */
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
         /** @var \MelisCore\Service\MelisCoreRightsService $rights */
@@ -280,6 +281,8 @@ class TreeToolsController extends AbstractActionController
         $user = $this->getServiceLocator()->get('MelisCoreAuth');
 
         $userRights = $user->getAuthRights();
+
+        dd($userRights);
     }
 
     protected function getAccessReport()

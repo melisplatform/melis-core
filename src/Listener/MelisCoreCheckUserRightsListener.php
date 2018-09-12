@@ -77,7 +77,7 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                                 $newRightsXml = preg_replace("/meliscore_tools_root/", $newToolNode . '_root', $newRightsXml);
                             }
 
-                            $user->usr_rights = $newRightsXml . '</document>';
+                            $user->usr_rights = $newRightsXml;
                         }
                     }
                 }
