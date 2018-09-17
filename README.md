@@ -49,6 +49,7 @@ In case of problems, SQL files are located here:
 * Back-Office Email Management Tool
 * Back-Office Language Tool
 * Microservices system
+* GDPR Tool
 
 ## Running the code
 
