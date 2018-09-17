@@ -326,14 +326,15 @@ public function attach(EventManagerInterface $events)
 
 ### GDPR Tool 
 
-MelisCore provides a system to look for your user's data.
+MelisCore provides a system to look for your user's data. By allowing other modules to plug / interact with it, and allow
+to see, extract, and delete the user's data.
 
 #### Events: <br/>
-**melis_core_gdpr_user_info_event** : when generating the tool's view after searching a user, which will be showing the results 
-given back by every module. <br/><br/>
-**melis_core_gdpr_user_extract_event** : when clicking on the button "Extract Selected", this event will be triggered. Modules
-will then format and send back whatever they have for the items selected in parameters. <br/><br/>
-**melis_core_gdpr_user_delete_event** : this event will be triggered when the "Delete Selected" button is clicked.
+**melis_core_gdpr_user_info_event** : This event will trigger after searching a user. Modules that are listening to this event will send back the data they 
+have on the user or it will stay silent if there are none. <br/><br/>
+**melis_core_gdpr_user_extract_event** : This event will trigger when the button "Extract Selected" button is clicked, Modules
+will then format and send back whatever they have for the items selected. <br/><br/>
+**melis_core_gdpr_user_delete_event** : This event will trigger when the "Delete Selected" button is clicked. The items that are selected will then be deleted or updated by their respective modules.
 
 #### Listening to the Events : <br/>
 **melis_core_gdpr_user_info_event** <br/>
