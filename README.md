@@ -335,7 +335,7 @@ will then format and send back whatever they have for the items selected in para
 **melis_core_gdpr_user_delete_event** : this event will be triggered when the "Delete Selected" button is clicked.
 
 #### Listening to the Events : <br/>
-**melis_core_gdpr_user_info_event** <br/><br/>
+**melis_core_gdpr_user_info_event** <br/>
 The parameter of this event is the form inputs.
 ```
 [
@@ -403,7 +403,7 @@ You can have your own logic for this event as long as you will follow this struc
 ]
 ```
 The columns index is the columns that will be shown in the table. while the datas index is the rows on the table. <br/><br/>
-**melis_core_gdpr_user_extract_event** <br/><br/>
+**melis_core_gdpr_user_extract_event** <br/>
 The parameter of this event are the modules containing the selected ids that will be extracted. <br/>
 ```      
 [
@@ -423,7 +423,7 @@ The modules that will catch the event will then provide their own results using 
     ],
 ]
 ```
-**melis_core_gdpr_user_delete_event** <br/><br/>
+**melis_core_gdpr_user_delete_event** <br/>
 The parameter of this event are the list of modules containing all the Ids that are selected.
 ```
 [
