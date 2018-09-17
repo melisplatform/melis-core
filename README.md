@@ -327,14 +327,14 @@ public function attach(EventManagerInterface $events)
 
 MelisCore provides a system to look for your user's data.
 
-####Events: <br/>
+#### Events: <br/>
 **melis_core_gdpr_user_info_event** : when generating the tool's view after searching a user, which will be showing the results 
 given back by every module. <br/><br/>
 **melis_core_gdpr_user_extract_event** : when clicking on the button "Extract Selected", this event will be triggered. Modules
 will then format and send back whatever they have for the items selected in parameters. <br/><br/>
 **melis_core_gdpr_user_delete_event** : this event will be triggered when the "Delete Selected" button is clicked.
 
-####Listening to the Events : <br/>
+#### Listening to the Events : <br/>
 **melis_core_gdpr_user_info_event** <br/><br/>
 The parameter of this event is the form inputs.
 ```
