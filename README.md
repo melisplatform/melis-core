@@ -323,6 +323,128 @@ public function attach(EventManagerInterface $events)
 }
 ```  
 
+### GDPR Tool 
+
+MelisCore provides a system to look for your user's data.
+
+####Events: <br/>
+**melis_core_gdpr_user_info_event** : when generating the tool's view after searching a user, which will be showing the results 
+given back by every module. <br/><br/>
+**melis_core_gdpr_user_extract_event** : when clicking on the button "Extract Selected", this event will be triggered. Modules
+will then format and send back whatever they have for the items selected in parameters. <br/><br/>
+**melis_core_gdpr_user_delete_event** : this event will be triggered when the "Delete Selected" button is clicked.
+
+####Listening to the Events : <br/>
+**melis_core_gdpr_user_info_event** <br/><br/>
+The parameter of this event is the form inputs.
+```
+[
+    'search' => [
+      'user_name'  => 'Doe',
+      'user_email' => 'john@doe.com,
+      'site'       => 2 //siteId,
+      etc ..,
+    ],
+]
+```
+You can have your own logic for this event as long as you will follow this structure for the value that will be returned.
+```      
+[
+    'results' => [
+      'MelisCmsProspects' => [...],
+      'MelisCmsNewsletters' => [...],
+      'YourModule' => [...],
+    ]
+]
+```
+```
+[
+    'results' => [
+        'YourModule' => [                   
+            'icon' => '...', //icon that will be displayed
+            'moduleName' => 'YourModule', //text that will be displayed
+            'values' => [
+            ...
+            ],
+        ],
+    ],
+]
+```
+```
+'values' => [
+    'columns' => [
+        //IDs and checkbox will be provided already in the table
+        'name' => [
+           'id' => 'meliscmsprospects_col_name',
+           'text' => 'Name'
+        ],
+        'email' => [
+           'id' => 'meliscmsprospects_col_email',
+           'text' => 'Email'
+        ],
+        'date' => [
+           'id' => 'meliscmsprospects_col_date',
+           'text' => 'Date'
+        ],
+    ],
+    'datas' => [
+        //The keys are the IDs of the items (13, 15)
+        '13' => [
+           'name' => 'Doe',
+           'email' => 'Doe@John.com'
+           'date' => 11/13/2017 13:13:00
+        ],
+        '15' => [
+           'name' => 'Doe',
+           'email' => 'Doe@John2.com'
+           'date' => 11/15/2017 15:15:00
+        ],
+    ],
+]
+```
+The columns index is the columns that will be shown in the table. while the datas index is the rows on the table. <br/><br/>
+**melis_core_gdpr_user_extract_event** <br/><br/>
+The parameter of this event are the modules containing the selected ids that will be extracted. <br/>
+```      
+[
+    'selected' => [
+      'MelisCmsProspects'  => [13,15],
+      'MelisCmsNewsletter' => [2],
+    ]
+]
+```
+The modules that will catch the event will then provide their own results using this structure.
+```     
+[
+    'results' => [
+      'MelisCmsProspects'  => '<xml><MelisCmsProspects>...</MelisCmsProspects></xml>',
+      'MelisCmsNewsletter' => '<xml><MelisCmsNewsletter>...</MelisCmsNewsletter></xml>',
+      'yourModule' => '<xml>...</xml>';
+    ],
+]
+```
+**melis_core_gdpr_user_delete_event** <br/><br/>
+The parameter of this event are the list of modules containing all the Ids that are selected.
+```
+[
+    'selected' => [
+        'MelisCmsProspects'  => [13,15],
+        'MelisCmsNewsletter' => '[2],
+    ],
+]
+```
+The modules that will catch the event will then return an acknowledgement message if the items are succesfully deleted.
+```
+[
+    'results' => [
+        'MelisCmsProspects'  => true,
+        'MelisCmsNewsletter' => true,
+    ],  
+]
+```
+
+
+
 ### Javascript helpers provided with MelisCore    
 
 #### Melis Helpers
