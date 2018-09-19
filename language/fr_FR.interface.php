@@ -679,5 +679,7 @@
         'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extraire la séléction',
         'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Supprimer la séléction',
         'tr_melis_core_gdpr_tabs_header_title' => 'Rechercher un utilisateur:',
+        'tr_melis_core_gdpr_column_is_admin' => 'Oui',
+        'tr_melis_core_gdpr_column_is_not_admin' => 'Non',
     );
 ?>
