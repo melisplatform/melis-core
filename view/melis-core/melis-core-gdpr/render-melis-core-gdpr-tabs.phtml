@@ -51,8 +51,8 @@
                                     <table id="<?= $module['moduleName']; ?>" class="table table-striped table-primary dt-responsive stripe" style="width: 100%;">
                                         <thead>
                                         <tr role="row">
-                                            <th style="width:1%;">ID</th>
-                                            <th class="sorting_disabled sort-all" style="width:1%;">
+                                            <th style="padding-right: 10px !important;">ID</th>
+                                            <th class="sorting_disabled sort-all" style="padding-left: 15px !important;padding-right: 15px !important;">
                                                 <div class="checkbox checkbox-single margin-none">
                                                     <label class="checkbox-custom">
                                                         <i class="fa fa-fw fa-square-o" style="color:white;"></i>
@@ -98,7 +98,7 @@
                                             <?php foreach($module['values']['datas'] as $dataArrayKey => $dataArrayValue) { ?>
                                                 <tr role="row" class="">
                                                     <td style="width:1%;"><?= $dataArrayKey ?></td>
-                                                    <td class="not-included" style="width:1%;">
+                                                    <td class="not-included" style="width:1%;padding-left: 15px !important;padding-right: 15px !important;">
                                                         <div class="checkbox checkbox-single margin-none">
                                                             <label class="checkbox-custom">
                                                                 <i class="fa fa-fw fa-square-o"></i>
@@ -129,9 +129,9 @@
                                                             <!-- TYPE ADMIN -->
                                                             <?php if ($module['values']['columns'][$dataKey]['type'] == 'admin') { ?>
                                                                 <?php if ($dataValue == 1) { ?>
-                                                                    <td style="color:#72af46;<?= $style ?>">Yes</td>
+                                                                    <td style="color:#72af46;<?= $style ?>"><?= $this->translate('tr_melis_core_gdpr_column_is_admin'); ?></td>
                                                                 <?php } else if ($dataValue == 0) { ?>
-                                                                    <td style="color:#bd362f;<?= $style ?>">No</td>
+                                                                    <td style="color:#bd362f;<?= $style ?>"><?= $this->translate('tr_melis_core_gdpr_column_is_not_admin'); ?></td>
                                                                 <?php } else { ?>
                                                                     <td></td>
                                                                 <?php } ?>
