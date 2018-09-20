@@ -71,6 +71,11 @@ class TreeToolsController extends AbstractActionController
             ];
 
             // Second level, tools
+            if (! isset($toolSectionName['interface'])) {
+                // hash issue on commerce
+                break;
+            }
+
             foreach ($toolSectionName['interface'] as $keyTool => $toolName) {
                 $isToolNavChild = false;
 
