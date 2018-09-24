@@ -31514,24 +31514,39 @@ $(document).ready(function() {
      */
     $body.on('submit', '#id_melis_core_gdpr_search_form', function(e) {
         var formInputs = $(this).serializeArray();
-        var hasData = false;
+        var hasSite = false;
+        var hasName = false;
+        var hasEmail = false;
 
         $.each (formInputs, function(i, field) {
             if (field.value != '') {
-                hasData = true;
+                if (field.name == 'user_name') {
+                    hasName = true;
+                } else if (field.name == 'user_email') {
+                    hasEmail = true
+                } else if (field.name == 'site_id') {
+                    hasSite = true;
+                }
             }
         });
 
         //only send request if there are any inputs
-        if (hasData) {
+        if (hasName == true || hasEmail == true) {
             melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
             GdprTool.getUserInfo(formInputs);
             melisCoreTool.done("#melis-core-gdpr-search-form-submit");
         } else {
-            melisHelper.melisKoNotification(
-                translations.tr_melis_core_gdpr_notif_gdpr_search,
-                translations.tr_melis_core_gdpr_tool_form_no_inputs
-            );
+            if (hasName == false && hasEmail == false && hasSite == true) {
+                melisHelper.melisKoNotification(
+                    translations.tr_melis_core_gdpr_notif_gdpr_search,
+                    translations.tr_melis_core_gdpr_notif_name_or_email_required
+                );
+            } else {
+                melisHelper.melisKoNotification(
+                    translations.tr_melis_core_gdpr_notif_gdpr_search,
+                    translations.tr_melis_core_gdpr_tool_form_no_inputs
+                );
+            }
         }
 
         e.preventDefault();
