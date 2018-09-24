@@ -674,5 +674,6 @@
         'tr_melis_core_gdpr_tabs_header_title' => 'Search a user:',
         'tr_melis_core_gdpr_column_is_admin' => 'Yes',
         'tr_melis_core_gdpr_column_is_not_admin' => 'No',
+        'tr_melis_core_gdpr_notif_name_or_email_required' => 'Name or Email field is required',
 	);
 ?>
