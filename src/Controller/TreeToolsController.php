@@ -287,7 +287,7 @@ class TreeToolsController extends AbstractActionController
 
         $userRights = $user->getAuthRights();
 
-        dd($userRights);
+        dd($rights->canAccess('melisSB_tool_userrole'));
     }
 
     protected function getAccessReport()

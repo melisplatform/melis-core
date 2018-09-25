@@ -123,7 +123,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                         foreach ($rightsObj->$sectionId->$toolSection->id as $toolId) {
                             $toolId = trim((string) $toolId);
                             if ($toolId == $itemId || in_array($toolId, $toolSectionRoots)) {
-                                return true;
+//                                return true;
                             }
                         }
 
@@ -139,7 +139,9 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                         foreach ($tmpToolIds as $tool) {
                             $parent = null;
                             if (self::MELIS_DASHBOARD !==  $tool) {
-                                $parent = $this->getParentViaMelisKeyString($melisKeys[$tool], $tool);
+                                if (isset($melisKeys[$tool])) {
+                                    $parent = $this->getParentViaMelisKeyString($melisKeys[$tool], $tool);
+                                }
                             }
 
                             // old MelisCms tool section
@@ -627,7 +629,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     public function getToolParent($melisKeys, $child)
     {
         $parent = null;
-        $toolsTreeKeys = array_merge($this->getMelisKeyPaths(), $this->getOldMelisKeyPaths());
+        $toolsTreeKeys = array_merge($this->getMelisKeyPaths(), $this->getOldMelisKeyPathsAndExclusions());
 
         if (isset($melisKeys[$child])) {
             $melisKey = $melisKeys[$child];
