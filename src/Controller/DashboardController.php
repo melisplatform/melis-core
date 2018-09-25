@@ -54,7 +54,7 @@ class DashboardController extends AbstractActionController
     	if($melisCoreAuth->hasIdentity()){
     	    $xmlRights = $melisCoreAuth->getAuthRights();
     	    $isAccessible = $melisCoreRights->isAccessible($xmlRights,
-    	        MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX,
+    	        MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE,
     	        '/meliscore_dashboard');
     	}
     	
