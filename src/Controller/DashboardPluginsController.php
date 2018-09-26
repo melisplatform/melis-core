@@ -139,14 +139,14 @@ class DashboardPluginsController extends AbstractActionController
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
         
-        $module = $pluginConfigPost['module'];
-        $pluginName = $pluginConfigPost['plugin'];
+        $module = $pluginConfigPost['module'] ?? null;
+        $pluginName = $pluginConfigPost['plugin'] ?? null;
         
         $newPlugin = (isset($pluginConfigPost['is_new_plugin'])) ? true : false;
         
         $plugin = $pluginManager->get($pluginName);
         $pluginModel = $plugin->render($pluginConfigPost, $newPlugin);
-        
+       
         $html = $viewRender->render($pluginModel);
         
         $jsCallBacks = array();
@@ -170,8 +170,8 @@ class DashboardPluginsController extends AbstractActionController
         $data = array(
             'html' => $html,
             'jsCallbacks' => $jsCallBacks,
-            'jsDatas' => $datasCallback
-        );
+            'jsDatas' => $datasCallback,
+        );    
         
         return new JsonModel($data);
     }
