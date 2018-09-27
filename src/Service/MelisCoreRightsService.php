@@ -153,7 +153,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                         foreach ($rightsObj->$sectionId->$toolSection->id as $toolId) {
                             $toolId = trim((string) $toolId);
                             $parent = $this->getToolParent($melisKeys, $itemId) . '_root';
-d($parent);
+
                             if (in_array($parent, $toolSectionRoots) && $parent == $toolId) {
                                 return true;
                             }
@@ -166,7 +166,7 @@ d($parent);
                         $toolIds = (array) $rightsObj->$sectionId->$toolSection->id;
                         $toolIds[] = self::MELIS_DASHBOARD;
                         $tmpToolIds = $toolIds;
-echo 'here';
+
                         // include specified section parents
                         foreach ($tmpToolIds as $tool) {
                             $parent = null;
