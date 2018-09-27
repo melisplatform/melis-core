@@ -1,6 +1,17 @@
 $(document).ready(function() {
     var $body = $('body');
 
+    $body.on('input', '#melis_core_gdpr_search_form_name input', function(){
+        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#686868");
+        $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#686868");
+    });
+
+    $body.on('input', '#melis_core_gdpr_search_form_email input', function(){
+        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#686868");
+        $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#686868");
+    });
+
+
     /**
      * Submiting search form
      */
@@ -29,11 +40,17 @@ $(document).ready(function() {
             melisCoreTool.done("#melis-core-gdpr-search-form-submit");
         } else {
             if (hasName == false && hasEmail == false && hasSite == true) {
+                $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#981a1f");
+                $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#981a1f");
+
                 melisHelper.melisKoNotification(
                     translations.tr_melis_core_gdpr_notif_gdpr_search,
                     translations.tr_melis_core_gdpr_notif_name_or_email_required
                 );
             } else {
+                $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#981a1f");
+                $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#981a1f");
+                
                 melisHelper.melisKoNotification(
                     translations.tr_melis_core_gdpr_notif_gdpr_search,
                     translations.tr_melis_core_gdpr_tool_form_no_inputs
