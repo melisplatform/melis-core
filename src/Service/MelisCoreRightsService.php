@@ -65,34 +65,6 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
     public function isAccessible($xmlRights, $sectionId, $itemId)
     {
-        $xmlRights ='
-<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages>
-	<id>-1</id>
-</meliscms_pages>
-<meliscore_interface>
-</meliscore_interface>
-<meliscore_leftmenu>
-	<meliscore_toolstree_section>
-		<id>meliscore_tool_phpunit</id>
-		<id>meliscore_tool_user_module_management</id>
-		<id>meliscore_tool_platform</id>
-		<id>meliscore_tool_user</id>
-        <noparent>melis_newsletter_tool_business_app_menu</noparent>
-	</meliscore_toolstree_section>
-	<meliscms_toolstree_section>
-		<id>meliscms_toolstree_section_root</id>
-	</meliscms_toolstree_section>
-	<melismarketing_toolstree_section>
-	</melismarketing_toolstree_section>
-	<meliscommerce_toolstree_section>
-	</meliscommerce_toolstree_section>
-	<melisothers_toolstree_section>
-	</melisothers_toolstree_section>
-	<meliscustom_toolstree_section>
-	</meliscustom_toolstree_section>
-</meliscore_leftmenu>
-</document>
-';
         $rightsObj = simplexml_load_string(trim($xmlRights));
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $melisKeys = $melisAppConfig->getMelisKeys();
