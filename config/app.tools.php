@@ -2436,6 +2436,9 @@ return array(
                                             'label' => 'tr_melis_core_gdpr_form_name',
                                             'form_type' => 'form-horizontal',
                                         ),
+                                        'attributes' => [
+                                            'id' => 'melis_core_gdpr_search_form_name',
+                                        ]
                                     ),
                                 ),
                                 array(
@@ -2446,6 +2449,9 @@ return array(
                                             'label' => 'tr_melis_core_gdpr_form_email',
                                             'form_type' => 'form-horizontal',
                                         ),
+                                        'attributes' => [
+                                            'id' => 'melis_core_gdpr_search_form_email',
+                                        ]
                                     ),
                                 ),
                             ),

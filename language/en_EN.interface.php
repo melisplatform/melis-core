@@ -661,7 +661,7 @@
         'tr_melis_core_gdpr_search_user_error_message' => 'Unable to search for user info',
         'tr_melis_core_gdpr_tool_form_input_too_long' => 'Input is too long',
         'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Invalid email format',
-        'tr_melis_core_gdpr_tool_form_no_inputs' => 'Please input the user details',
+        'tr_melis_core_gdpr_tool_form_no_inputs' => 'Please input the user details. Either the Name or Email field is required',
         'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'No user selected to extract',
         'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'No user selected to delete',
         'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',

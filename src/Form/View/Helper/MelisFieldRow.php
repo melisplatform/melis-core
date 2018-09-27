@@ -301,10 +301,9 @@ class MelisFieldRow extends FormRow
 								</div>
 							</div>';
 
-	    }elseif($element->getOption('form_type') == 'form-horizontal')
-        {
+	    } elseif ($element->getOption('form_type') == 'form-horizontal') {
 
-            $formElement .= '<div class="form-group">
+            $formElement .= '<div id="' . $element->getAttribute('id') . '" class="form-group">
                                 <label for=" ' . $element->getName() . ' " class="col-sm-2 control-label"> ' . $element->getOption('label') . ' </label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="' . $element->getName() . '">
