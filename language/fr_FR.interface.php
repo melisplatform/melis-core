@@ -669,7 +669,7 @@
         'tr_melis_core_gdpr_search_user_error_message' => 'Impossible de rechercher des informations utilisateurs',
         'tr_melis_core_gdpr_tool_form_input_too_long' => 'Input is too long',
         'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Format d\'email invalide',
-        'tr_melis_core_gdpr_tool_form_no_inputs' => 'Veuillez renseigner l\'utilisateur',
+        'tr_melis_core_gdpr_tool_form_no_inputs' => 'Veuillez saisir les détails de l\'utilisateur. Le nom ou le champ email est requis',
         'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'Aucun utilisateur séléctionné',
         'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'Aucun utilisateur séléctionnée',
         'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Erreur lors de la suppression des données',
