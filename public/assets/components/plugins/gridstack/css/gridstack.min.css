@@ -12,13 +12,16 @@
 }
 
 .grid-stack {
-	background-color: #d07174;
 	display: block;
-    min-height: 870px;
-    min-width: 870px;
     position: relative;
 }
 
-.ui-draggable-disabled.ui-resizable-disabled {
-	opacity: 0;
+#grid1 {
+	/* background-color: #d07174; */
+	min-height: 870px;
+}
+
+.melis-core-dashboard-plugin-filter-box .grid-stack-item {
+	width: 220px;
+	height: auto;
 }

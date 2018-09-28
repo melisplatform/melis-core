@@ -3362,8 +3362,8 @@ div#modal-user-management div.widget {
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
-    /* z-index: 90; */
-    z-index: 90999; /* added by: Junry @ 09/25/2018 */
+    z-index: 90;
+    /*z-index: 90999;*/ /* added by: Junry @ 09/25/2018 */
 }
 
 /* dashboard plugin show */
@@ -3377,7 +3377,8 @@ div#modal-user-management div.widget {
 /* dashboard inner box */
 .melis-core-dashboard-dnd-fix-menu {
     height: 100%;
-    overflow-y: auto;
+    /* overflow-y: auto; */
+    overflow: visible;
 }
 
 /* dashboard title */

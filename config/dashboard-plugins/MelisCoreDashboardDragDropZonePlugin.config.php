@@ -6,11 +6,9 @@
                     'css' => array(
                         // Gridstack
                         '/MelisCore/assets/components/plugins/gridstack/css/gridstack.min.css',
-                        '/MelisCore/assets/components/library/jquery-ui/css/jquery-ui.min.css',
                     ),
                     'js' => array(
                         // Gridstack
-                        //'/MelisCore/assets/components/library/jquery-ui-v1.11.4/jquery-ui.js',
                         '/MelisCore/assets/components/plugins/gridstack/js/lodash.min.js',
                         '/MelisCore/assets/components/plugins/gridstack/js/gridstack.js',
                         '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',

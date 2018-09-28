@@ -6,13 +6,13 @@
 <div class="melis-core-dashboard-dnd-box" <?= $melisKey.' '.$id; ?>>
     <div class="melis-core-dashboard-dnd-fix-menu">
         <div class="melis-core-dashboard-dnd-title"><?php echo $this->translate('tr_melisore_Plugins')?></div>
-        <div class="melis-core-dashboard-plugin-filter-box">
+        <div class="melis-core-dashboard-plugin-filter-box grid-stack" id="grid2">
             <?php foreach ($this->plugins As $module => $plugins){ ?>
                 <div class="melis-core-dashboard-ps-box">
                     <span class="melis-core-dashboard-filter-btn"><?php echo $this->translate('tr_PluginSection_'.$module) ?><i class="fa fa-angle-down"></i></span>
                     <div class="melis-core-dashboard-plugin-snippets-box">
                    		<?php foreach ($plugins As $plugin => $pluginDetails){ ?>
-                   			<div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($pluginDetails['description'])?>">
+                   			<div class="melis-core-dashboard-plugin-snippets grid-stack-item" title="<?php echo $this->translate($pluginDetails['description'])?>" data-gs-x="5" data-gs-y="0" data-gs-width="3" data-gs-height="2">
                    				<div class="hidden plugin-json-config"><?php echo json_encode($pluginDetails) ?></div>
                                 <img src="<?php echo $pluginDetails['thumbnail']?>" alt="">
                                 <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($pluginDetails['name'])?></span>
@@ -23,7 +23,7 @@
             <?php }?>
         </div>
         <div class="melis-core-dashboard-plugin-delete-all">
-            <button class='btn btn-primary btn-md' id='dashboard-plugin-delete-all'>Delete All</button>
+            <button class='btn btn-primary btn-md' id='dashboard-plugin-delete-all'>Reset dashboard</button>
         </div>
     </div>
     <div id="melisDashBoardPluginBtn" title="Dashboard Plugins">

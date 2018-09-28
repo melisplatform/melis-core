@@ -1,5 +1,5 @@
 $(function(){
-	var $body = $("body");
+	var $body 	= $("body");
 	
 	$body.on("click", "#melisDashBoardPluginBtn", function() {
 	    $(this).closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
