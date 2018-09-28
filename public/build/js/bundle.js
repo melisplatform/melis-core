@@ -31909,8 +31909,6 @@ var melisDashBoardDragnDrop = {
     addWidget: function(dataString) {
         var self = this;
 
-        console.log('addWidget this: ', this);
-
         var $mcDashPlugSnippets = $("#"+activeTabId+" .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
             $mcDashPlugSnippets.attr('data-gs-width', 6);
             $mcDashPlugSnippets.attr('data-gs-height', 3);
