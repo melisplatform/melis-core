@@ -2464,7 +2464,7 @@ return array(
                                             'name'    => 'regex', false,
                                             'options' => array(
                                                 'pattern' => '/[\D-+#$]/',
-                                                'message'=> 'sayop ang format',
+                                                'message'=> 'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error',
                                             ),
                                         ),
                                     ),

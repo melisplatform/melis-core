@@ -102,8 +102,7 @@ class MelisFieldRow extends FormRow
 	        $switch .= '</script>';
 	        
 	        $formElement .= $switch;
-	    } elseif ($element->getAttribute('type') == self::MELIS_SELECT_FACTORY)
-	    {
+	    } elseif ($element->getAttribute('type') == self::MELIS_SELECT_FACTORY) {
 	        // render to bootstrap select element
             $elementClass = $element->getAttribute('class');
             $elementClass = implode(' ', ['form-control', $elementClass]);
@@ -113,15 +112,16 @@ class MelisFieldRow extends FormRow
 
     		if ($element->getOption('form_type') == 'form-horizontal') {
                 $elementHelper       = $this->getElementHelper();
-                $elementString = $elementHelper->render($element);
+                $elementString = str_replace('id="'. $element->getAttribute('id') .'"', "", $elementHelper->render($element));
+
                 //add style
-                $newElementString = substr_replace($elementString, 'style="border-radius:0px;border-color:#e5e5e5"',49, 0);
+                $newElementString = substr_replace($elementString, 'style="border-radius:0px;border-color:#e5e5e5"',50, 0);
                 $formElement .= '<div class="form-group">
-                                <label for=" ' . $element->getName() . ' " class="col-sm-2 control-label"> ' . $element->getOption('label') . ' </label>
-                                <div class="col-sm-10">'
-                                    . $newElementString .
-                                '</div>
-                            </div>';
+	                                <label for=" ' . $element->getName() . ' " class="col-sm-2 control-label"> ' . $element->getOption('label') . ' </label>
+	                                <div class="col-sm-10">'
+	                                    . $newElementString .
+	                                '</div>
+                            	</div>';
             } else {
                 $formElement .= '<div class="form-group">' . parent::render($element, $labelPosition) . '</div>';
             }
