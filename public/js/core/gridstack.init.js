@@ -93,10 +93,11 @@ var melisDashBoardDragnDrop = {
          * Subtracts the #grid1 width with the plugins sidebar's width so that it would not overlap
          * Workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
          */
+        var $gs = this.$gs1;
+
         this.$body.on("click", "#melisDashBoardPluginBtn", function() {
             var $this   = $(this),
                 $window = $(window),
-                $gs     = this.$gs1,
                 $shown  = $this.closest(".melis-core-dashboard-dnd-box").hasClass('shown');
 
                 if( $window.width() >= 768 ) {

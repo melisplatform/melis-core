@@ -31831,7 +31831,7 @@ var melisDashBoardDragnDrop = {
          * Workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
          */
         var $gs = this.$gs1;
-        
+
         this.$body.on("click", "#melisDashBoardPluginBtn", function() {
             var $this   = $(this),
                 $window = $(window),
