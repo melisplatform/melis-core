@@ -196,7 +196,7 @@ var melisDashBoardDragnDrop = {
             var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, html.data("gsWidth"), html.data("gsHeight"));
 
             // remove clone widgets
-            grid.removeWidget($(widget).prev());
+            grid.removeWidget($(widget).prev());           
 
             // serialize widget and save to db
             self.serializeWidgetMap( grid.container[0].children );
