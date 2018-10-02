@@ -423,7 +423,7 @@ class ToolUserController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccessTool($key);
+        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }
@@ -1205,7 +1205,7 @@ class ToolUserController extends AbstractActionController
                             $roleData = $rolesTable->getEntryById($roleId);
                             $roleData = $roleData->current();
                             $newXmlRights = $roleData->urole_rights;
-                            $data['usr_rights'] = null;//$roleData->urole_rights;
+                            $data['usr_rights'] = $roleData->urole_rights;
                         }
 
                         $userTable->save($data, $userId);
