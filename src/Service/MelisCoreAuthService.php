@@ -32,7 +32,10 @@ class MelisCoreAuthService
         $rightsXML = '';
 
         if (!empty($user)) {
-            $user->usr_rights = $this->isRightsUpdated($user->usr_rights) ? $user->usr_rights : $this->toNewXmlStructure($this->convertToNewRightsStructure());
+            if (! $this->isRightsUpdated($user->usr_rights)) {
+                $user->usr_rights = $this->toNewXmlStructure($this->convertToNewRightsStructure());
+            }
+
             $rightsXML = $user->usr_rights;
         }
 
@@ -93,7 +96,10 @@ class MelisCoreAuthService
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
         $melisKeys = $config->getMelisKeys();
 
-        $oldRights = $this->getAuthRights();
+        /** @var \MelisCore\Service\MelisCore $melisCoreAuth */
+        $user = $this->getIdentity();
+
+        $oldRights = $user->usr_rights;
 
         $oldRights = simplexml_load_string(trim($oldRights));
         $oldRights = json_decode(json_encode($oldRights),1);
@@ -153,10 +159,16 @@ class MelisCoreAuthService
                 }
 
                 if (isset($itemId['id']) && ($itemId['id'] === $oldToolParentNodeRoot)) {
-                    if  (in_array($oldToolParentNodeRoot, $itemId['id'])) {
-                        echo 'here';
-                        $newRights[$toolNode]['id'] = $newToolParentNodeRoot;
+                    if (is_array($itemId['id'])) {
+                        if  (in_array($oldToolParentNodeRoot, $itemId['id'])) {
+                            $newRights[$toolNode]['id'] = $newToolParentNodeRoot;
+                        }
+                    } else {
+                        if  (in_array($oldToolParentNodeRoot, $itemId)) {
+                            $newRights[$toolNode]['id'] = $newToolParentNodeRoot;
+                        }
                     }
+
                 }
 
             } else {
