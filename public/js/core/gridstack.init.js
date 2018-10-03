@@ -19,6 +19,8 @@ $body.on("click", ".dashboard-plugin-refresh", function() {
 });
 
 var melisDashBoardDragnDrop = {
+
+    pluginCounter: 0,
         
     currentPlugin: null,
 
@@ -32,7 +34,7 @@ var melisDashBoardDragnDrop = {
         this.dragWidget();
         this.docuReady();
 
-        this.dropWidget(this.melisWidgetHandle);
+        this.dropWidget( this.melisWidgetHandle, this.pluginCounter );
         this.dragStopWidget();
         this.resizeStopWidget();
     },
@@ -41,9 +43,10 @@ var melisDashBoardDragnDrop = {
         // jQuery DOM element
         this.$body              = $("body");
         this.$document          = $(document);
-        this.$gs1               = $("#grid1");
-        this.$gs2               = $("#grid2");
-        this.$pluginBox         = $(".melis-core-dashboard-dnd-box");
+        this.$gs1               = this.$body.find("#grid1");
+        this.$gs2               = this.$body.find("#grid2");
+        this.$gs                = this.$body.find(".grid-stack");
+        this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
         this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
 
         // strings
@@ -88,7 +91,6 @@ var melisDashBoardDragnDrop = {
 
     docuReady: function() {
         var self = this;
-
         /* 
          * Subtracts the #grid1 width with the plugins sidebar's width so that it would not overlap
          * Workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
@@ -112,7 +114,6 @@ var melisDashBoardDragnDrop = {
                     }
                 }
         });
-
         // Animate to full width size of #grid1
         this.$body.on("click", "#dashboard-plugin-delete-all", function() {
             $gs.animate({
@@ -121,50 +122,74 @@ var melisDashBoardDragnDrop = {
         });
     },
 
-    dropWidget: function(widget) {
-        var self = this;
+    dropWidget: function( widget, pluginCounter ) {
+        console.log('pluginCounter: ', pluginCounter);
 
-        var grid = $("#"+activeTabId+" .tab-pane .grid-stack");
+        var self        = this,
+            tabPane     = $("#"+activeTabId+" .tab-pane");
+            grid        = $("#"+activeTabId+" .tab-pane .grid-stack"),
+            gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
 
-        var enabledGrid = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
-
-        var grid1Drop = enabledGrid.container.droppable({
+        var grid1Drop = gridstack.container.droppable({
             accept: widget,
             tolerance: 'pointer',
             drop: function(event, ui) {
+
                 var dataString  = new Array;
 
-                // create dashboard array
-                dataString.push({
-                    name: 'dashboard_id',
-                    value: activeTabId
-                });
+                // pluginCounter + 1 on drop
+                pluginCounter++;
 
-                // get plugin menu data
-                var pluginMenu = $(ui.helper[0]).find(".plugin-json-config").text();
+                // add element on grid
+                tabPane.prepend("<div class='pluginCounter' style='position: absolute; top: 0; left: 0; z-index: 9999;'>"+pluginCounter+"</div>");
+                
+                console.log('grid: ', grid);
 
-                // check plugin menu
-                if(pluginMenu) {
+                console.log('droppable pluginCounter: ', pluginCounter);
 
-                    // parse to JSON
-                    var pluginConfig = JSON.parse(pluginMenu);
+                // number of plugin that is allowable to dropped
+                if( pluginCounter === 1 ) {
 
-                    $.each(pluginConfig, function(index, value){
-
-                        // check and modify w h value 6
-                        if(index == "width" && value == "") { value = 6 };
-                        if(index == "height" && value == "") { value = 6 };
-
-                        // push to dashboard array
-                        dataString.push({
-                            name: index,
-                            value: value
-                        });
+                    // create dashboard array
+                    dataString.push({
+                        name: 'dashboard_id',
+                        value: activeTabId
                     });
+
+                    // get plugin menu data
+                    var pluginMenu = $(ui.helper[0]).find(".plugin-json-config").text();
+
+                    // check plugin menu
+                    if(pluginMenu) {
+
+                        // parse to JSON
+                        var pluginConfig = JSON.parse(pluginMenu);
+
+                        $.each(pluginConfig, function(index, value){
+
+                            // check and modify w h value 6
+                            if(index == "width" && value == "") { value = 6 };
+                            if(index == "height" && value == "") { value = 6 };
+
+                            // push to dashboard array
+                            dataString.push({
+                                name: index,
+                                value: value
+                            });
+                        });
+                    }
+
+                    // addWidget passing dataString
+                    self.addWidget(dataString);
+
+                    // disabling grid-stack
+                    gridstack.disable();
+
+                } else {
+
+                    // popup message on number of allowed droppable plugin
+                    melisCoreTool.alertInfo( this, 'Dashboard is still saving', 'Saving plugin information...', 'info' );
                 }
-
-                self.addWidget(dataString);
-
             }
         });
     },
@@ -264,8 +289,18 @@ var melisDashBoardDragnDrop = {
     },
 
     saveDBWidgets: function(dataString) {
+        console.log('saveDBWidgets this.pluginCounter: ', this.pluginCounter);
+
+        // gridstack definition
+        var gridstack = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
+
         // save the lists of widgets on the dashboard to db
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+        
+        saveDashboardLists.done(function() {
+            // enabling droppable after dropping a plugin
+            gridstack.enable();
+        });
     },
 
     dragStopWidget: function() {
@@ -352,7 +387,8 @@ var melisDashBoardDragnDrop = {
                 translations.tr_melis_core_remove_dashboard_plugin_msg,
                 function() {
                     grid.removeAll();
-                  
+                    
+                    // save widgets position / size on db
                     self.saveDBWidgets(dataString);
                 }
             );
@@ -404,16 +440,18 @@ var melisDashBoardDragnDrop = {
 
                 // remove loader
                 $(dashboardItem).find('.overlay-loader').remove();
+
                 grid.removeWidget($(dashboardItem));
+
                 var html = $(data.html);
 
                 // add widget to dashboard default size 6 x 6
                 var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
                 
-                // Assigning current plugin
-                melisDashBoardDragnDrop.setCurrentPlugin(widget);
+                // assigning current plugin
+                self.setCurrentPlugin(widget);
                 
-                // Executing plugin JsCallback
+                // executing plugin JsCallback
                 if(data.jsCallbacks.length) {
                     $.each(data.jsCallbacks, function(index, value) {
                         eval(value);
