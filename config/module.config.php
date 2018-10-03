@@ -194,21 +194,6 @@ return array(
                             ),
                         ),
                     ),
-                    'dashboard_plugin'  => array(
-                        'type'      => 'Segment',
-                        'options'   => array(
-                            'route' => 'dashboard-plugin[/:plugin][/:function]',
-                            'constraint' => array(
-                                'plugin'         => '[A-Z][a-zA-Z0-9_-]*',
-                                'function'  => '[A-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                '__NAMESPACE__' => 'MelisCore\Controller',
-                                'controller'    => 'DashboardPlugins',
-                                'action'        => 'generateDahsboardPlugin'
-                            ),
-                        ),
-                    ),
                 ),
             ),
 
@@ -274,7 +259,6 @@ return array(
             'MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\MelisMicroServiceAuthTable',
             'MelisUserConnectionDate' => 'MelisCore\Model\Tables\MelisUserConnectionDate' ,
             'MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\MelisCorePlatformSchemeTable' ,
-            'MelisCoreDashboardsTable' => 'MelisCore\Model\Tables\MelisDashboardsTable' ,
         ),
         'factories' => array(
             'MelisCoreConfig' => 'MelisCore\Service\Factory\MelisCoreConfigServiceFactory',
@@ -294,8 +278,6 @@ return array(
             'MelisPhpUnitTool' => 'MelisCore\Service\Factory\MelisPhpUnitToolServiceFactory',
             'MelisCoreMicroServiceTestService' => 'MelisCore\Service\Factory\MelisCoreMicroServiceTestServiceFactory',
             'MelisCorePlatformSchemeService' => 'MelisCore\Service\Factory\MelisCorePlatformSchemeServiceFactory',
-            'MelisCoreDashboardService' => 'MelisCore\Service\Factory\MelisCoreDashboardServiceFactory',
-            'MelisCoreGeneralService' => 'MelisCore\Service\Factory\MelisCoreGeneralServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',
@@ -310,7 +292,6 @@ return array(
             'MelisCore\Model\Tables\MelisUserConnectionDate'    => 'MelisCore\Model\Tables\Factory\MelisCoreUserConnectionDateTableFactory',
             'MelisCore\Model\Tables\MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\Factory\MelisMicroServiceAuthTableFactory',
             'MelisCore\Model\Tables\MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\Factory\MelisCorePlatformSchemeTableFactory',
-            'MelisCore\Model\Tables\MelisDashboardsTable' => 'MelisCore\Model\Tables\Factory\MelisDashboardsTableFactory',
         ),
     ),
     'controllers' => array(
@@ -337,20 +318,16 @@ return array(
             'MelisCore\Controller\MelisCoreMicroService' => 'MelisCore\Controller\MelisCoreMicroServiceController',
             'MelisCore\Controller\MelisSetup' => 'MelisCore\Controller\MelisSetupController',
             'MelisCore\Controller\PlatformScheme' => 'MelisCore\Controller\PlatformSchemeController',
-            'MelisCore\Controller\DashboardPlugins' => 'MelisCore\Controller\DashboardPluginsController',
+
         ),
     ),
-    'controller_plugins' => array(
-        'invokables' => array(
-            'MelisCoreDashboardDragDropZonePlugin' => 'MelisCore\Controller\DashboardPlugins\MelisCoreDashboardDragDropZonePlugin',
-            'MelisCoreDashboardRecentUserActivityPlugin' => 'MelisCore\Controller\DashboardPlugins\MelisCoreDashboardRecentUserActivityPlugin',
-        )
-    ),
+
     'validators' => array(
         'invokables' => array(
             'MelisPasswordValidator' => 'MelisCore\Validator\MelisPasswordValidator'
         ),
     ),
+
     'form_elements' => array(
         'factories' => array(
             'MelisSelect' => 'MelisCore\Form\Factory\MelisSelectFactory',
@@ -361,6 +338,10 @@ return array(
             'MelisUserRoleSelect' => 'MelisCore\Form\Factory\MelisUserRoleSelectFactory',
             'MelisCoreMultiValInput' => 'MelisCore\Form\Factory\MelisCoreMultiValueInputFactory',
             'DateField' => 'MelisCore\Form\Factory\DateFieldFactory',
+            'DatePicker' => 'MelisCore\Form\Factory\DatePickerFactory',
+            'DateTimePicker' => 'MelisCore\Form\Factory\DateTimePickerFactory',
+            'MelisCoreTinyMCE' => 'MelisCore\Form\Factory\MelisCoreTinyMCEFactory',
+            'MelisCoreUserSelect' => 'MelisCore\Form\Factory\MelisCoreUsersSelect2Factory',
         ),
     ),
     'view_helpers' => array(
@@ -374,7 +355,6 @@ return array(
         ),
         'factories' => array(
             'MelisCoreHeadPlugin' => 'MelisCore\View\Helper\Factory\MelisCoreHeadPluginHelperFactory',
-            'MelisDashboardDragDropZone' => 'MelisCore\View\Helper\Factory\MelisDashboardDragDropZonePluginFactory',
         ),
     ),
     'view_manager' => array(
@@ -384,23 +364,15 @@ return array(
         'not_found_template' => 'error/404',
         'exception_template' => 'error/index',
         'template_map' => array(
-            'layout/layoutError'                            => __DIR__ . '/../view/layout/layoutError.phtml',
-            'layout/layoutCore'                             => __DIR__ . '/../view/layout/layoutCore.phtml',
-            'layout/layoutBlank'                            => __DIR__ . '/../view/layout/layoutBlank.phtml',
-            'layout/layout'                                 => __DIR__ . '/../view/layout/layoutBlank.phtml',
-            'melis-core/index/index'                        => __DIR__ . '/../view/melis-core/index/index.phtml',
-            'melis-core/plugin-view/generate'               => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
-            'error/404'                                     => __DIR__ . '/../view/error/404.phtml',
-            'error/index'                                   => __DIR__ . '/../view/error/index.phtml',
-            'layout/warning'                                => __DIR__ . '/../view/warning/warning.phtml',
-            
-            // Dashboard plugin templates
-            'melis-core/dashboard-plugin/dragdropzone'          => __DIR__ . '/../view/melis-core/dashboard-plugins/dragdropzone.phtml',
-            'melis-core/dashboard-plugin/plugin-container'      => __DIR__ . '/../view/melis-core/dashboard-plugins/plugin-container.phtml',
-            'melis-core/dashboard-plugin/no-template'           => __DIR__ . '/../view/melis-core/dashboard-plugins/no-template.phtml',
-            'melis-core/dashboard-plugin/no-plugin-interface'   => __DIR__ . '/../view/melis-core/dashboard-plugins/no-plugin-interface.phtml',
-            
-            'melis-core/dashboard-plugin/recent-user-activity'  => __DIR__ . '/../view/melis-core/dashboard-plugins/recent-user-activity.phtml',
+            'layout/layoutError' => __DIR__ . '/../view/layout/layoutError.phtml',
+            'layout/layoutCore' => __DIR__ . '/../view/layout/layoutCore.phtml',
+            'layout/layoutBlank' => __DIR__ . '/../view/layout/layoutBlank.phtml',
+            'layout/layout' => __DIR__ . '/../view/layout/layoutBlank.phtml',
+            'melis-core/index/index' => __DIR__ . '/../view/melis-core/index/index.phtml',
+            'melis-core/plugin-view/generate' => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
+            'error/404' => __DIR__ . '/../view/error/404.phtml',
+            'error/index' => __DIR__ . '/../view/error/index.phtml',
+            'layout/warning' => __DIR__ . '/../view/warning/warning.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
