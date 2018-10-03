@@ -13,8 +13,9 @@
 
 .grid-stack {
 	display: block;
-    position: relative;
-    min-height, min-width: 870px;
+	position: relative;
+	min-height: 870px;
+	min-width: 870px;
 }
 
 #grid1 {
