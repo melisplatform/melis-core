@@ -64,24 +64,6 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                     }
                 }
 
-                if ($userSvc->hasIdentity()) {
-                    // update rights to a new rights structure
-                    $oldToolNode = 'meliscore_tools>';
-                    $newToolNode = 'meliscore_leftmenu';
-                    $rightsXml   = $user->usr_rights;
-
-                    if (mb_strpos($rightsXml, $oldToolNode) !== false) {
-                        if (preg_match("/$oldToolNode/", $rightsXml)) {
-                            $newRightsXml = preg_replace("/$oldToolNode/", $newToolNode.'>', $rightsXml);
-                            if (preg_match("/meliscore_tools_root/", $newRightsXml)) {
-                                $newRightsXml = preg_replace("/meliscore_tools_root/", $newToolNode . '_root', $newRightsXml);
-                            }
-
-                            $user->usr_rights = $newRightsXml;
-                        }
-                    }
-                }
-
             }, -10000);
 
         $this->listeners[] = $callBackHandler;
