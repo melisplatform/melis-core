@@ -71,6 +71,11 @@ class TreeToolsController extends AbstractActionController
             ];
 
             // Second level, tools
+            if (! isset($toolSectionName['interface'])) {
+                // hash issue on commerce
+                break;
+            }
+
             foreach ($toolSectionName['interface'] as $keyTool => $toolName) {
                 $isToolNavChild = false;
 
@@ -282,7 +287,7 @@ class TreeToolsController extends AbstractActionController
 
         $userRights = $user->getAuthRights();
 
-        dd($userRights);
+        dd($rights->canAccess('melisSB_tool_userrole'));
     }
 
     protected function getAccessReport()

@@ -640,10 +640,12 @@
 	    
         // Dashboard plugins
 	    'tr_melisore_Plugins' => 'Plugins',
+	    'tr_melisore_remove_all_plugins' => 'Supprimer tous les plugins',
 	    'tr_melis_core_common_close' => 'Annuler',
 	    'tr_melis_core_common_add' => 'Ajouter',
 	    'tr_melis_core_remove_dashboard_plugin' => 'Supprimer le plugin du tableau de bord',
 	    'tr_melis_core_remove_dashboard_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer ce plugin?',
+	    'tr_melis_core_remove_dashboard_all_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer tous les plugins?',
 	    
 	    'tr_PluginSection_meliscore' => 'Melis Core',
 	    

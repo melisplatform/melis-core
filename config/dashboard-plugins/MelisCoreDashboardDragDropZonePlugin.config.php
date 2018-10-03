@@ -10,8 +10,9 @@
                     'js' => array(
                         // Gridstack
                         '/MelisCore/assets/components/plugins/gridstack/js/lodash.min.js',
-                        '/MelisCore/assets/components/plugins/gridstack/js/gridstack.min.js',
+                        '/MelisCore/assets/components/plugins/gridstack/js/gridstack.js',
                         '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
+                        
                         '/MelisCore/js/core/gridstack.init.js',
                     )
                 ),

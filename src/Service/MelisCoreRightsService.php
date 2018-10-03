@@ -2,36 +2,45 @@
 
 namespace MelisCore\Service;
 
+use Zend\Json\Json;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Json\Json;
 
 class MelisCoreRightsService implements MelisCoreRightsServiceInterface, ServiceLocatorAwareInterface
 {
+    const MELISCORE_PREFIX_INTERFACE = 'meliscore_interface';
+    const MELIS_PLATFORM_TOOLS_PREFIX = 'meliscore_leftmenu';
+    const MELISCORE_PREFIX_TOOLS = 'meliscore_toolstree_section';
+    const MELISCMS_PREFIX_TOOLS = 'meliscms_toolstree_section';
+    const MELISMARKETING_PREFIX_TOOLS = 'melismarketing_toolstree_section';
+    const MELISCOMMERCE_PREFIX_TOOLS = 'meliscommerce_toolstree_section';
+    const MELISOTHERS_PREFIX_TOOLS = 'melisothers_toolstree_section';
+    const MELISCUSTOM_PREFIX_TOOLS = 'meliscustom_toolstree_section';
+    const MELIS_DASHBOARD = '/meliscore_dashboard';
+    const MELIS_CMS_SITE_TOOLS = 'meliscms_site_tools';
+
+    const OLD_MELISCMS_TOOLSTREE = 'meliscms_toolstree';
     /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
     public $serviceLocator;
-    /** @var array  */
+    /** @var array */
     private $tools = [];
 
-    const MELISCORE_PREFIX_INTERFACE    = 'meliscore_interface';
-    const MELIS_PLATFORM_TOOLS_PREFIX   = 'meliscore_leftmenu';
-    const MELISCORE_PREFIX_TOOLS        = 'meliscore_toolstree_section';
-    const MELISCMS_PREFIX_TOOLS         = 'meliscms_toolstree_section';
-    const MELISMARKETING_PREFIX_TOOLS   = 'melismarketing_toolstree_section';
-    const MELISCOMMERCE_PREFIX_TOOLS    = 'meliscommerce_toolstree_section';
-    const MELISOTHERS_PREFIX_TOOLS      = 'melisothers_toolstree_section';
-    const MELISCUSTOM_PREFIX_TOOLS      = 'meliscustom_toolstree_section';
-    const MELIS_DASHBOARD               = '/meliscore_dashboard';
-
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     * Extends the functionality of $this->isAccessible method
+     * but can only be used on tools
      *
-     * @return $this
+     * @param $key
+     *
+     * @return bool
      */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
+    public function canAccess($key): bool
     {
-        $this->serviceLocator = $sl;
-        return $this;
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $xmlRights = $melisCoreAuth->getAuthRights();
+        $isAccessible = $this->isAccessible($xmlRights, self::MELIS_PLATFORM_TOOLS_PREFIX, $key);
+        $isInterfaceAccessible = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_INTERFACE, $key);
+
+        return $isAccessible && $isInterfaceAccessible;
     }
 
     /**
@@ -42,106 +51,222 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         return $this->serviceLocator;
     }
 
-
     /**
-     * Extends the functionality of $this->isAccessible method
-     * but can only be used on tools
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
      *
-     * @param $key
-     * @return bool
+     * @return $this
      */
-    public function canAccess($key): bool
+    public function setServiceLocator(ServiceLocatorInterface $sl)
     {
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $xmlRights     = $melisCoreAuth->getAuthRights();
-        $isAccessible  = $this->isAccessible($xmlRights, self::MELIS_PLATFORM_TOOLS_PREFIX, $key);
-        $isInterfaceAccessible = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_INTERFACE, $key);
+        $this->serviceLocator = $sl;
 
-        return $isAccessible && $isInterfaceAccessible;
+        return $this;
     }
 
-    /**
-     * @param $xmlRights
-     * @param $sectionId
-     * @param $itemId
-     *
-     * @return bool
-     */
-    public function isAccessible($xmlRights, $sectionId, $itemId): bool
+    public function isAccessible($xmlRights, $sectionId, $itemId)
     {
-        $rightsObj = simplexml_load_string($xmlRights);
-        if (empty($rightsObj))
+        $rightsObj = simplexml_load_string(trim($xmlRights));
+        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisKeys = $melisAppConfig->getMelisKeys();
+
+        if (empty($rightsObj)) {
             return true;
+        }
 
         // Interface case is opposite, we list items where the user is not allowed
-        if ($sectionId == self::MELISCORE_PREFIX_INTERFACE)
-        {
-            foreach ($rightsObj->$sectionId->id as $interfaceId)
-            {
-                if ( (string) $interfaceId == $itemId || (string) $interfaceId == self::MELISCORE_PREFIX_INTERFACE . '_root') {
+        if ($sectionId == self::MELISCORE_PREFIX_INTERFACE) {
+            foreach ($rightsObj->$sectionId->id as $interfaceId) {
+                if ((string)$interfaceId == $itemId || (string)$interfaceId == self::MELISCORE_PREFIX_INTERFACE . '_root')
                     return false;
-                }
             }
             return true;
         }
 
         // Tools
-        if ($sectionId == self::MELIS_PLATFORM_TOOLS_PREFIX)
-        {
-            foreach ($rightsObj->$sectionId->id as $toolId)
-            {
-                $toolId = (string) $toolId;
+        if ($sectionId == self::MELIS_PLATFORM_TOOLS_PREFIX) {
 
-                if ($toolId == $itemId) {
-                    return true;
+            // check if the user has access to all business app tools
+            if (isset($rightsObj->$sectionId->id)) {
+                foreach ($rightsObj->$sectionId->id as $toolId) {
+                    $toolId = (string) $toolId;
+                    if ($toolId == $itemId || $toolId == self::MELIS_PLATFORM_TOOLS_PREFIX . '_root') {
+                        return true;
+                    }
                 }
 
-                if (in_array($toolId, $this->getRightsToolKeys()) || in_array($itemId, $this->getRightsToolKeys())) {
+                // If it reaches here, it means tools are not directly checked, but maybe some sections are
+                $appconfigpath = $melisKeys['meliscore_toolstree'];
+                $appsConfig = $melisAppConfig->getItem($appconfigpath);
+                foreach ($appsConfig['interface'] as $keySection => $section) {
+                    foreach ($section['interface'] as $keyTool => $tool) {
+                        if ($keyTool == $itemId) {
+                            // We found the item's section, now let's check the rights to maybe find the section
+                            foreach ($rightsObj->$sectionId->id as $toolId) {
+                                if ((string)$toolId == $keySection)
+                                    return true;
+                            }
+                            return false;
+                        }
+                    }
+                }
+
+            } else {
+                $toolSectionRoots = array_map(function ($a) {
+                    return $a . '_root';
+                }, $this->getMelisKeyPaths());
+
+                // check individual business app sections
+                foreach ($this->getMelisKeyPaths() as $toolSection) {
+                    if (isset($rightsObj->$sectionId->$toolSection->id)) {
+
+                        // check for root section access
+                        $toolSectionsRightsId = (array) $rightsObj->$sectionId->$toolSection->id;
+
+                        foreach ($rightsObj->$sectionId->$toolSection->id as $toolId) {
+                            $toolId = trim((string) $toolId);
+                            $parent = $this->getToolParent($melisKeys, $itemId) . '_root';
+
+                            if (in_array($parent, $toolSectionRoots) && $parent == $toolId) {
+                                return true;
+                            }
+                        }
+
+                        // If it reaches here, it means tools are not directly checked, but maybe some sections are
+                        $tooldIds = [];
+                        $appconfigpath = $melisKeys[$toolSection];
+                        $appsConfig = $melisAppConfig->getItem($appconfigpath);
+                        $toolIds = (array) $rightsObj->$sectionId->$toolSection->id;
+                        $toolIds[] = self::MELIS_DASHBOARD;
+                        $tmpToolIds = $toolIds;
+
+                        // include specified section parents
+                        foreach ($tmpToolIds as $tool) {
+                            $parent = null;
+                            if (self::MELIS_DASHBOARD !==  $tool) {
+                                if (isset($melisKeys[$tool])) {
+                                    $parent = $this->getParentViaMelisKeyString($melisKeys[$tool], $tool);
+                                }
+                            }
+
+                            // old MelisCms tool section
+                            if ($parent == self::OLD_MELISCMS_TOOLSTREE) {
+                                $parent = self::MELISCMS_PREFIX_TOOLS;
+                            }
+
+                            if (! is_null($parent) && ! in_array($parent, $toolIds)) {
+                                $toolIds[] = $parent;
+                            }
+                        }
+
+                        // load those rights that doesn't have proper tool section assignments
+                        if (isset($rightsObj->$sectionId->$toolSection->noparent)) {
+                            $toolIds = array_merge($toolIds, (array) $rightsObj->$sectionId->$toolSection->noparent);
+                        }
+
+                        if (in_array($itemId, $toolIds)) {
+                            return true;
+                        }
+                    }
+
+                }
+
+                // direct rights access checking to tool section
+                if (in_array($itemId, $this->getMelisKeyPaths())  &&
+                    count($rightsObj->$sectionId->$itemId->id) > 1
+                ) {
+                    return true;
+                } elseif (in_array($itemId, $this->getOldMelisKeyPathsAndExclusions())) {
                     return true;
                 }
             }
 
-            // If it reaches here, it means tools are not directly checked, but maybe some sections are
-            $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-            $melisKeys = $melisAppConfig->getMelisKeys();
+        }
+        return false;
+    }
 
-            foreach ($this->getMelisKeyPaths() as $appConfigPath) {
+    /**
+     * @param $id
+     * @param bool $isRole
+     *
+     * @return array
+     */
+    public function getRightsValues($id, $isRole = false)
+    {
+        $translator = $this->serviceLocator->get('translator');
+        /** @var \MelisCore\Service\MelisCoreUserService $melisCoreUser */
+        $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
+        if (!$isRole) {
 
-                $appsConfig = isset($melisKeys[$appConfigPath]) ?
-                    $melisAppConfig->getItem($melisKeys[$appConfigPath]) : $melisAppConfig->getItem($appConfigPath);
-
-                if ($appsConfig && isset($appsConfig['interface'])) {
-                    foreach ($appsConfig['interface'] as $keySection => $section) {
-                        if (isset($section['interface'])) {
-                            foreach ($section['interface'] as $keyTool => $tool) {
-                                if ($keyTool == $itemId) {
-                                    // We found the item's section, now let's check the rights to maybe find the section
-                                    foreach ($rightsObj->$sectionId->id as $toolId) {
-                                        if ( (string) $toolId == $keySection)
-                                            return true;
-                                    }
-                                    return false;
-                                }
-                            }
-                        }
-                    }
+            $xml = $melisCoreUser->getUserXmlRights($id);
+        } else {
+            $xml = '';
+            $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
+            $datasRole = $tableUserRole->getEntryById($id);
+            if ($datasRole) {
+                $datasRole = $datasRole->current();
+                if (!empty($datasRole)) {
+                    $xml = $datasRole->urole_rights;
                 }
             }
         }
 
-        return false;
+        $selectedRootInterface = $melisCoreUser->isItemRightChecked($xml, self::MELISCORE_PREFIX_INTERFACE, self::MELISCORE_PREFIX_INTERFACE . '_root');
+        $selectedRootTools = $melisCoreUser->isItemRightChecked($xml, self::MELIS_PLATFORM_TOOLS_PREFIX, self::MELIS_PLATFORM_TOOLS_PREFIX . '_root');
+
+        $rightsItems = [
+            [
+                'key' => self::MELISCORE_PREFIX_INTERFACE . '_root',
+                'title' => $translator->translate('tr_meliscore_rights_Interface exclusion'),
+                'lazy' => false,
+                'selected' => $selectedRootInterface,
+                'iconTab' => '',
+                'melisData' => [
+                    'colorSelected' => '#CB4040',
+                ],
+            ],
+            [
+                'key' => self::MELIS_PLATFORM_TOOLS_PREFIX . '_root',
+                'title' => $translator->translate('tr_meliscore_rights_Tools'),
+                'lazy' => false,
+                'selected' => $selectedRootTools,
+                'iconTab' => '',
+                'melisData' => [
+                    'colorSelected' => '#99C975',
+                ],
+            ],
+        ];
+
+        // interface rights
+        $interfaceItems = [];
+        $config = $this->getServiceLocator()->get('config');
+        foreach ($config['plugins'] as $pluginName => $plugin) {
+            $child = $this->getInterfaceKeysRecursive('/' . $pluginName, $xml);
+            if ($child) {
+                $interfaceItems[] = $child;
+            }
+        }
+        $rightsItems[0]['children'] = $interfaceItems;
+
+
+        // tools rights
+        $toolsItems = $this->getToolsKeys($xml);
+        $rightsItems[1]['children'] = $toolsItems;
+
+        // Return values
+        return $rightsItems;
     }
 
     /**
      * @param $keyInterface
      * @param $userXml
      *
-     * @return array
+     * @return arraygetInterfaceKeysRecursive
+     *
      */
     private function getInterfaceKeysRecursive($keyInterface, $userXml)
     {
         $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
-        $melisAppConfig =$this->getServiceLocator()->get('MelisCoreConfig');
+        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $configInterface = $melisAppConfig->getItem($keyInterface);
 
         if (!empty($configInterface['conf']) && !empty($configInterface['conf']['type'])) {
@@ -156,25 +281,28 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         }
 
 
-
-        if (isset($configInterface['conf']['rightsDisplay']))
-        {
+        if (isset($configInterface['conf']['rightsDisplay'])) {
             $isReference = false;
-            if (!empty($configInterface['conf']['type']))
+            if (!empty($configInterface['conf']['type'])) {
                 $isReference = true;
+            }
 
-            switch ($configInterface['conf']['rightsDisplay'])
-            {
-                case 'source' 			:   if ($isReference)
-                    return null;
+            switch ($configInterface['conf']['rightsDisplay']) {
+                case 'source'            :
+                    if ($isReference) {
+                        return null;
+                    }
                     break;
-                case 'referencesonly' 	: 	if (!$isReference)
-                    return null;
+                case 'referencesonly'    :
+                    if (!$isReference) {
+                        return null;
+                    }
                     break;
-                case 'none' 			: 	return null;
+                case 'none'            :
+                    return null;
                     break;;
-                case 'all' 				:
-                default					:
+                case 'all'                :
+                default                    :
                     break;
             }
         }
@@ -183,39 +311,38 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         $keyPrefixed = self::MELISCORE_PREFIX_INTERFACE . '_' . $keyInterface;
 
         $name = '';
-        if (!empty($configInterface['conf']['name']))
+        if (!empty($configInterface['conf']['name'])) {
             $name = $configInterface['conf']['name'];
-        else
-        {
+        } else {
             $tabName = explode('/', $keyInterface);
             $name = $tabName[count($tabName) - 1];
         }
 
         $showCheckbox = true;
-        if (!empty($configInterface['conf']['rights_checkbox_disable']))
+        if (!empty($configInterface['conf']['rights_checkbox_disable'])) {
             $showCheckbox = false;
+        }
 
-        $item = array(
+        $item = [
             'key' => $keyPrefixed,
             'title' => $name,
             'lazy' => false,
             'selected' => $selectedInterface,
             'iconTab' => '',
             'checkbox' => $showCheckbox,
-            'melisData' => array(
+            'melisData' => [
                 'colorSelected' => '#CB4040',
-            ),
-            'children' => array(),
-        );
+            ],
+            'children' => [],
+        ];
 
 
-        if (!empty($configInterface['interface']))
-        {
-            foreach ($configInterface['interface'] as $keyChildConfig => $valueChildConfig)
-            {
+        if (!empty($configInterface['interface'])) {
+            foreach ($configInterface['interface'] as $keyChildConfig => $valueChildConfig) {
                 $child = $this->getInterfaceKeysRecursive($keyInterface . '/interface/' . $keyChildConfig, $userXml);
-                if ($child)
+                if ($child) {
                     $item['children'][] = $child;
+                }
             }
         }
 
@@ -229,9 +356,9 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
      */
     private function getToolsKeys($userXml)
     {
-        $melisCoreUser  = $this->getServiceLocator()->get('MelisCoreUser');
+        $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $melisKeys      = $melisAppConfig->getMelisKeys();
+        $melisKeys = $melisAppConfig->getMelisKeys();
 
         $appConfigPaths = [
             self::MELISCORE_PREFIX_TOOLS,
@@ -245,133 +372,128 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         $tools = [];
 
         foreach ($appConfigPaths as $idx => $path) {
-            $appConfigPath  = $melisKeys[$path];
-            $appsConfig     = $melisAppConfig->getItem($appConfigPath);
+            $appConfigPath = $melisKeys[$path];
+            $appsConfig = $melisAppConfig->getItem($appConfigPath);
             $orderInterface = $melisAppConfig->getOrderInterfaceConfig($path);
             $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $path);
 
 
             // tool category
-            $tools[$idx] = array(
+            $tools[$idx] = [
                 'key' => $path,
                 'title' => $appsConfig['conf']['name'] ?? $path,
                 'lazy' => false,
-                'children' => array(),
+                'children' => [],
                 'selected' => $selectedTools,
                 'iconTab' => '',
-                'melisData' => array(
+                'melisData' => [
                     'colorSelected' => '#99C975',
-                ),
-            );
+                ],
+            ];
 
             // first level, sections
             $appCtr = 0;
             foreach ($appsConfig['interface'] as $appKey => $appSection) {
 
                 $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $appKey);
-                $tools[$idx]['children'][$appCtr] = array(
+                $tools[$idx]['children'][$appCtr] = [
                     'key' => $appKey,
                     'title' => $appSection['conf']['name'] ?? $appKey,
                     'lazy' => false,
-                    'children' => array(),
+                    'children' => [],
                     'selected' => $selectedTools,
                     'iconTab' => '',
-                    'melisData' => array(
+                    'melisData' => [
                         'colorSelected' => '#99C975',
-                    ),
-                );
+                    ],
+                ];
 
                 // Second level, tools
                 $appToolCtr = 0;
-                foreach($appSection['interface'] as $toolKey => $toolName)
-                {
-                    $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $toolKey);
-                    $icon = $toolName['conf']['icon'] ?? null;
+                if (isset($appSection['interface'])) {
+                    foreach ($appSection['interface'] as $toolKey => $toolName) {
+                        $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $toolKey);
+                        $icon = $toolName['conf']['icon'] ?? null;
 
-                    if ($icon) {
-                        $tools[$idx]['children'][$appCtr]['children'][$appToolCtr] = array(
-                            'key' => $toolKey,
-                            'title' => $toolName['conf']['name'] ?? $toolKey,
-                            'children' => array(),
-                            'lazy' => false,
-                            'selected' => $selectedTools,
-                            'iconTab' => '',
-                            'melisData' => array(
-                                'colorSelected' => '#99C975',
-                            ),
-                        );
+                        if ($icon) {
+                            $tools[$idx]['children'][$appCtr]['children'][$appToolCtr] = [
+                                'key' => $toolKey,
+                                'title' => $toolName['conf']['name'] ?? $toolKey,
+                                'children' => [],
+                                'lazy' => false,
+                                'selected' => $selectedTools,
+                                'iconTab' => '',
+                                'melisData' => [
+                                    'colorSelected' => '#99C975',
+                                ],
+                            ];
+                        }
+                        $appToolCtr++;
                     }
-                    $appToolCtr++;
+                    $appCtr++;
                 }
-                $appCtr++;
+
             }
 
         }
 
         // Reordering sections
         $sections = $tools;
-        $toolsOrdered = array();
-        foreach ($orderInterface as $orderKeySection => $sectionTools)
-        {
-            if (!empty($sections[$orderKeySection]))
-            {
-                if (empty($toolsOrdered[$orderKeySection]))
-                    $toolsOrdered[$orderKeySection] = array();
+        $toolsOrdered = [];
+        foreach ($orderInterface as $orderKeySection => $sectionTools) {
+            if (!empty($sections[$orderKeySection])) {
+                if (empty($toolsOrdered[$orderKeySection])) {
+                    $toolsOrdered[$orderKeySection] = [];
+                }
                 $toolsOrdered[$orderKeySection] = $tools[$orderKeySection];
                 // commented because the child nodes of some business apps doesn't show
                 //unset($toolsOrdered[$orderKeySection]['children']);
                 //unset($sections[$orderKeySection]);
             }
         }
-        foreach ($sections as $keyInterfaceSection => $childinterface)
-        {
-            if (empty($toolsOrdered[$keyInterfaceSection]))
-                $toolsOrdered[$keyInterfaceSection] = array();
+        foreach ($sections as $keyInterfaceSection => $childinterface) {
+            if (empty($toolsOrdered[$keyInterfaceSection])) {
+                $toolsOrdered[$keyInterfaceSection] = [];
+            }
             $toolsOrdered[$keyInterfaceSection] = $tools[$keyInterfaceSection];
             // commented because the child nodes of some business apps doesn't show
             //unset($toolsOrdered[$keyInterfaceSection]['children']);
         }
 
         // Reordering tools inside sections
-        if ($toolsOrdered)
-        {
-            foreach ($toolsOrdered as $keySection => $toolsSection)
-            {
-                $sectionOrderInterface = array();
-                if (!empty($orderInterface[$keySection]))
+        if ($toolsOrdered) {
+            foreach ($toolsOrdered as $keySection => $toolsSection) {
+                $sectionOrderInterface = [];
+                if (!empty($orderInterface[$keySection])) {
                     $sectionOrderInterface = $orderInterface[$keySection];
-                $toolsSectionOrdered = array();
+                }
+                $toolsSectionOrdered = [];
 
-                if (!empty($sectionOrderInterface))
-                {
-                    foreach ($sectionOrderInterface as $orderKey)
-                    {
-                        if (!empty($tools[$keySection]['children'][$orderKey]))
-                        {
+                if (!empty($sectionOrderInterface)) {
+                    foreach ($sectionOrderInterface as $orderKey) {
+                        if (!empty($tools[$keySection]['children'][$orderKey])) {
                             $toolsOrdered[$keySection]['children'][$orderKey] = $tools[$keySection]['children'][$orderKey];
                             // commented because the child nodes of some business apps doesn't show
                             //unset($tools[$keySection]['children'][$orderKey]);
                         }
                     }
 
-                    foreach ($tools[$keySection]['children'] as $keyInterface => $childinterface)
-                    {
+                    foreach ($tools[$keySection]['children'] as $keyInterface => $childinterface) {
                         $toolsOrdered[$keySection]['children'][$keyInterface] = $childinterface;
                     }
                 }
             }
         }
 
-        $finalToolsOrdered = array();
-        foreach ($toolsOrdered as $key => $sectionTool)
-        {
-            $toolsTmp = array();
-            if (!empty($sectionTool['children']))
+        $finalToolsOrdered = [];
+        foreach ($toolsOrdered as $key => $sectionTool) {
+            $toolsTmp = [];
+            if (!empty($sectionTool['children'])) {
                 $toolsTmp = $sectionTool['children'];
-            $newTools = array();
+            }
+            $newTools = [];
 
-            foreach ($toolsTmp as $keyTool => $tool)
-            {
+            foreach ($toolsTmp as $keyTool => $tool) {
                 $newTools[] = $tool;
             }
             $sectionTool['children'] = $newTools;
@@ -383,133 +505,85 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     }
 
     /**
+     * Generates an XML rights
+     *
      * @param $id
+     * @param $datas
      * @param bool $isRole
      *
      * @return array
      */
-    public function getRightsValues($id, $isRole = false)
-    {
-        $translator = $this->serviceLocator->get('translator');
-        $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
-        if (!$isRole)
-        {
-
-            $xml = $melisCoreUser->getUserXmlRights($id);
-        }
-        else
-        {
-            $xml = '';
-            $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
-            $datasRole = $tableUserRole->getEntryById($id);
-            if ($datasRole)
-            {
-                $datasRole = $datasRole->current();
-                if (!empty($datasRole))
-                    $xml = $datasRole->urole_rights;
-            }
-        }
-
-        $selectedRootInterface = $melisCoreUser->isItemRightChecked($xml, self::MELISCORE_PREFIX_INTERFACE, self::MELISCORE_PREFIX_INTERFACE . '_root');
-        $selectedRootTools = $melisCoreUser->isItemRightChecked($xml, self::MELIS_PLATFORM_TOOLS_PREFIX, self::MELIS_PLATFORM_TOOLS_PREFIX . '_root');
-
-        $rightsItems = array(
-            array(
-                'key' => self::MELISCORE_PREFIX_INTERFACE . '_root',
-                'title' => $translator->translate('tr_meliscore_rights_Interface exclusion'),
-                'lazy' => false,
-                'selected' => $selectedRootInterface,
-                'iconTab' => '',
-                'melisData' => array(
-                    'colorSelected' => '#CB4040',
-                ),
-            ),
-            array(
-                'key' => self::MELIS_PLATFORM_TOOLS_PREFIX . '_root',
-                'title' => $translator->translate('tr_meliscore_rights_Tools'),
-                'lazy' => false,
-                'selected' => $selectedRootTools,
-                'iconTab' => '',
-                'melisData' => array(
-                    'colorSelected' => '#99C975',
-                ),
-            ),
-        );
-
-        // interface rights
-        $interfaceItems = array();
-        $config = $this->getServiceLocator()->get('config');
-        foreach ($config['plugins'] as $pluginName => $plugin)
-        {
-            $child = $this->getInterfaceKeysRecursive('/' . $pluginName, $xml);
-            if ($child)
-                $interfaceItems[] = $child;
-        }
-        $rightsItems[0]['children'] = $interfaceItems;
-
-
-        // tools rights
-        $toolsItems = $this->getToolsKeys($xml);
-        $rightsItems[1]['children'] = $toolsItems;
-
-        // Return values
-        return $rightsItems;
-    }
-
-    /**
-     * Generates an XML rights
-     * @param $id
-     * @param $datas
-     * @param bool $isRole
-     * @return array
-     */
     public function createXmlRightsValues($id, $datas, $isRole = false): array
     {
+        /** @var \MelisCore\Service\MelisCoreConfigService $melisAppConfig */
+        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisKeys = $melisAppConfig->getMelisKeys();
+
         /**
          * Core rights make no difference between user or userrole because
          * all nodes are shown, so we just need to check what was posted.
          * There's no lazy tree, so no need to compare whatever in the user or role xml
          * already existing.
          */
-
         $nodesSeen = Json::decode($datas['treeStatus']);
         $nodesSeen = $nodesSeen->treeStatus;
         $nodesInterface = Json::decode($datas[self::MELISCORE_PREFIX_INTERFACE . '_root']);
         $nodesTools = Json::decode($datas[self::MELIS_PLATFORM_TOOLS_PREFIX . '_root']);
 
         // Creating interface xml
-        $interfaceNode  = self::MELISCORE_PREFIX_INTERFACE . '_root';
+        $interfaceNode = self::MELISCORE_PREFIX_INTERFACE . '_root';
         $xmlRights = '<' . self::MELISCORE_PREFIX_INTERFACE . '>' . self::XML_ENDLINE;
-        if (!empty($nodesInterface) && !empty($nodesInterface->$interfaceNode))
-        {
-            foreach ($nodesInterface->$interfaceNode as $idInterface)
-            {
-                if ($idInterface != $interfaceNode)
+        if (!empty($nodesInterface) && !empty($nodesInterface->$interfaceNode)) {
+            foreach ($nodesInterface->$interfaceNode as $idInterface) {
+                if ($idInterface != $interfaceNode) {
                     $idUnPrefixed = str_replace(self::MELISCORE_PREFIX_INTERFACE . '_', '', $idInterface);
-                else
+                } else {
                     $idUnPrefixed = $idInterface;
+                }
                 $xmlRights .= self::XML_SPACER . '<id>' . $idUnPrefixed . '</id>' . self::XML_ENDLINE;
             }
         }
         $xmlRights .= '</' . self::MELISCORE_PREFIX_INTERFACE . '>' . self::XML_ENDLINE;
 
         // Creating tools xml
-        $toolsNode  = self::MELIS_PLATFORM_TOOLS_PREFIX . '_root';
+        $toolsNode = self::MELIS_PLATFORM_TOOLS_PREFIX . '_root';
         $xmlRights .= '<' . self::MELIS_PLATFORM_TOOLS_PREFIX . '>' . self::XML_ENDLINE;
-        if (!empty($nodesTools) && !empty($nodesTools->$toolsNode))
-        {
-            foreach ($nodesTools->$toolsNode as $idTool)
-            {
-                if ($idTool != $toolsNode)
-                    $idUnPrefixed = str_replace(self::MELIS_PLATFORM_TOOLS_PREFIX . '_', '', $idTool);
-                else
-                    $idUnPrefixed = $idTool;
-                $xmlRights .= self::XML_SPACER . '<id>' . $idUnPrefixed . '</id>' . self::XML_ENDLINE;
+
+        // here we list all the available tool sections
+        foreach ($this->getMelisKeyPaths() as $toolSection) {
+            $xmlRights .=  self::XML_SPACER . '<' . $toolSection . '>' . self::XML_ENDLINE;
+            if (!empty($nodesTools) && !empty($nodesTools->$toolsNode)) {
+                foreach ($nodesTools->$toolsNode as $idTool) {
+                    $parent = $this->getToolParent($melisKeys, $idTool) ?? null;
+
+                    if (! $parent) {
+                        // check if this tool ID exists in xml
+                        if (! preg_match("/$idTool/", $xmlRights) && $idTool !== $toolsNode) {
+                            $xmlRights .= self::XML_SPACER . self::XML_SPACER . '<noparent>' . $idTool . '</noparent>' . self::XML_ENDLINE;
+                        }
+                    } else {
+                        if ($parent === $toolSection) {
+                            $id = $idTool === $parent ? $idTool . '_root' : $idTool;
+                            $xmlRights .= self::XML_SPACER . self::XML_SPACER . '<id>' . $id . '</id>' . self::XML_ENDLINE;
+                        }
+                    }
+                }
+            }
+            $xmlRights .=  self::XML_SPACER . '</' . $toolSection . '>' . self::XML_ENDLINE;
+        }
+
+        // for general business, if it's checked then we just saved its root
+        if (!empty($nodesTools) && !empty($nodesTools->$toolsNode)) {
+            foreach ($nodesTools->$toolsNode as $idTool) {
+                if ($idTool === $toolsNode) {
+                    $xmlRights .= self::XML_SPACER . '<id>' . $toolsNode . '</id>' . self::XML_ENDLINE;
+                }
             }
         }
+
         $xmlRights .= '</' . self::MELIS_PLATFORM_TOOLS_PREFIX . '>' . self::XML_ENDLINE;
 
-        return array('meliscore_rights' => $xmlRights);
+        return ['meliscore_rights' => $xmlRights];
     }
 
     /**
@@ -534,9 +608,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
      */
     public function getMelisKeyPaths()
     {
-
         return [
-            self::MELIS_PLATFORM_TOOLS_PREFIX,
             self::MELISCORE_PREFIX_TOOLS,
             self::MELISCMS_PREFIX_TOOLS,
             self::MELISMARKETING_PREFIX_TOOLS,
@@ -544,5 +616,67 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
         ];
+    }
+
+    public function getOldMelisKeyPathsAndExclusions()
+    {
+        return [
+            self::OLD_MELISCMS_TOOLSTREE,
+            self::MELIS_CMS_SITE_TOOLS
+        ];
+    }
+
+    /**
+     * @param $melisKeys
+     * @param $child
+     *
+     * @return mixed|null
+     */
+    public function getToolParent($melisKeys, $child)
+    {
+        $parent = null;
+        $toolsTreeKeys = array_merge($this->getMelisKeyPaths(), $this->getOldMelisKeyPathsAndExclusions());
+
+        if (isset($melisKeys[$child])) {
+            $melisKey = $melisKeys[$child];
+            if (in_array($child, $toolsTreeKeys)) {
+                $parent = $child;
+            } else {
+                $parent = $this->getParentViaMelisKeyString($melisKey,  $child);
+                if (! in_array($parent, $toolsTreeKeys)) {
+                    $parent = $this->getToolParent($melisKeys, $parent);
+                }
+            }
+        }
+
+        switch ($parent) {
+            case self::OLD_MELISCMS_TOOLSTREE:
+                $parent = self::MELISCMS_PREFIX_TOOLS;
+                break;
+        }
+
+        return $parent;
+    }
+
+    /**
+     * @param $melisKey
+     * @param $child
+     *
+     * @return mixed|null
+     */
+    public function getParentViaMelisKeyString($melisKey, $child)
+    {
+        if (! $melisKey) {
+            return $child;
+        }
+
+        $melisKeys = explode('/', $melisKey);
+        if (is_array($melisKeys) && count($melisKeys) > 1) {
+            $parentIdx = array_search($child, $melisKeys) - 1;
+            if (isset($melisKeys[$parentIdx]) && 'interface' === $melisKeys[$parentIdx]) {
+                $parentIdx = array_search($child, $melisKeys) - 2;
+            }
+            return $melisKeys[$parentIdx] ?? null;
+        }
     }
 }
