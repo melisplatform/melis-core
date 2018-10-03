@@ -310,7 +310,7 @@ return array(
             'MelisCore\Model\Tables\MelisUserConnectionDate'    => 'MelisCore\Model\Tables\Factory\MelisCoreUserConnectionDateTableFactory',
             'MelisCore\Model\Tables\MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\Factory\MelisMicroServiceAuthTableFactory',
             'MelisCore\Model\Tables\MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\Factory\MelisCorePlatformSchemeTableFactory',
-            'MelisCore\Model\Tables\MelisDashboardsTable' => 'MelisCore\Model\Tables\Factory\MelisDashboardsTableFactory',
+            'MelisCore\Model\Tables\MelisDashboardsTable' => 'MelisCore\Model\Tables\Factory\MelisDashboardsTableFactory', 
         ),
     ),
     'controllers' => array(
