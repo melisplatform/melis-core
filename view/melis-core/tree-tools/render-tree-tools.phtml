@@ -35,6 +35,7 @@ $sections = [
     <?php endif; ?>
     <ul class="collapse" id="<?= $id; ?>_tools">
         <?php
+//        d($this->tools);
         if (!empty($this->tools))
         {
             foreach ($this->tools as $keySection => $sectionTool)
@@ -113,14 +114,6 @@ $sections = [
                             }
                             ?>
                         </ul>
-                    </li>
-                    <?php
-                } else { ?>
-                    <li class="melis-opentools" data-tool-icon="<?= $sectionIcon ?>" data-tool-name="<?= $sectionTool['toolsection_name'] ?>" data-tool-id="<?= $sectionTool['toolsection_id'] ?>" data-tool-meliskey="<?= $sectionTool['toolsection_meliskey'] ?>">
-                        <a href="#">
-                            <i class="fa <?= $sectionIcon ?>"></i>
-                            <span><?= $sectionTool['toolsection_name'] ?> </span>
-                        </a>
                     </li>
                     <?php
                 }
