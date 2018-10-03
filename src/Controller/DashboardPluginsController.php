@@ -80,7 +80,7 @@ class DashboardPluginsController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
         
         // Dashboard ID
-        $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_dashboard');
+        $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_toolstree_section_dashboard');
         
         $isAccessible = null;
         

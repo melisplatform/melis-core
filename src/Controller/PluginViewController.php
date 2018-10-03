@@ -90,6 +90,12 @@ class PluginViewController extends AbstractActionController
         }
 
         /**
+         * Forcing to set the request to http request
+         */
+        if ($this->getRequest()->getQuery('forceFlagXmlHttpRequestTofalse', false))
+            $isXmlHttpRequest = false;
+
+        /**
          * Get the appConfig
          */
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');

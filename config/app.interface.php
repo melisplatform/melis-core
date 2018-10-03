@@ -482,7 +482,7 @@ return array(
                     'interface' => array(
                         'meliscore_dashboard' => array(
                             'conf' => array(
-                                'id' => 'id_meliscore_dashboard',
+                                'id' => 'id_meliscore_toolstree_section_dashboard',
                                 'name' => 'tr_meliscore_dashboard',
                                 'melisKey' => 'meliscore_dashboard',
                                 'icon' => 'fa-tachometer',

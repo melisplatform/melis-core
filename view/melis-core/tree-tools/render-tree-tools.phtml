@@ -19,7 +19,7 @@ $sections = [
     <?php
     if (in_array($melisKey, array_keys($sections))) : ?>
         <a data-target="#<?= $id ?>_tools" data-toggle="collapse" class="collapsed">
-            <div class="melis-svg-icon pull-left melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $name ?>" data-dash-id="<?php echo $melisKey ?>">
+            <div class="melis-svg-icon pull-left  melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $name ?>" data-dash-id="id_<?php echo $melisKey ?>_dashboard">
                 <?= $sections[$melisKey] ?>
             </div>
             <span class="toolstree-label"><?= $name; ?></span>
