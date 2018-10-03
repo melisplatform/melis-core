@@ -340,8 +340,8 @@ return array(
             'DateField' => 'MelisCore\Form\Factory\DateFieldFactory',
             'DatePicker' => 'MelisCore\Form\Factory\DatePickerFactory',
             'DateTimePicker' => 'MelisCore\Form\Factory\DateTimePickerFactory',
-            'MelisCoreUserSelect' => 'MelisCore\Form\Factory\MelisCoreUsersSelect2Factory',
             'MelisCoreTinyMCE' => 'MelisCore\Form\Factory\MelisCoreTinyMCEFactory',
+            'MelisCoreUserSelect' => 'MelisCore\Form\Factory\MelisCoreUsersSelect2Factory',
         ),
     ),
     'view_helpers' => array(
