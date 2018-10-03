@@ -184,7 +184,7 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard(){
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard', 'id_meliscore_dashboard', 'meliscore_dashboard' );
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
@@ -520,7 +520,6 @@ var melisCore = (function(window){
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
     	 data = $(this).data();
-    	 console.log(data);
     	 melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
     });
     

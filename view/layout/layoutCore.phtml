@@ -1,115 +1,119 @@
-
-<?php  
-$loginClas       = (int) $this->isLogin == 1 ? 'login-page' : '';
-$schemes         = $this->layout()->schemes;
+<?php
+$loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
+$schemes = $this->layout()->schemes;
 $loginBackground = $this->login_background;
-$favicon         = '/favicon.ico';
+$favicon = '/favicon.ico';
 
-if($schemes) {
-    if(!empty($schemes->getLoginBackground())) {
+if ($schemes) {
+    if (!empty($schemes->getLoginBackground())) {
         $loginBackground = $schemes->getLoginBackground();
     }
 
-    if(!empty($schemes->getFavicon())) {
+    if (!empty($schemes->getFavicon())) {
         $favicon = $schemes->getFavicon();
     }
 }
 
 $bundle = $this->layout()->bundle;
 
-if($this->layout()->isLogin)
+if ($this->layout()->isLogin) {
     $bundle = $this->MelisCoreHeadPlugin('/meliscore_login');
+}
 
 ?>
 <?php echo $this->doctype(); ?>
-<!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>    <html class="ie lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>    <html class="ie lt-ie9"> <![endif]-->
-<!--[if gt IE 8]> <html> <![endif]-->
+<!--[if lt IE 7]>
+<html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="ie lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="ie lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>
+<html> <![endif]-->
 <!--[if !IE]><!-->
 <html <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null; ?>>
 <!-- <![endif]-->
-	<head>
-        <meta charset="utf-8">
-		<?= $this->headTitle('Melis Platform'); ?>
-        <?= $this->headMeta()
-            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
-            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
-        ?>
-        <link rel="icon" href="<?= $favicon; ?>" type="image/x-icon" />
-<!--        <link rel="shortcut icon" href="--><?//= $favicon; ?><!--" type="image/x-icon" />-->
-        <script type="text/javascript">
-       		var ua = window.navigator.userAgent;
-        	var msie = ua.indexOf("MSIE ");
-        	if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {// If Internet Explorer set timeoutHandle
-        		// self executing function
-        		(function() {
-				  	if( window.localStorage ) {
-					    if (!localStorage.getItem('firstLoad')) {
-					     	localStorage['firstLoad'] = true;
-					     	window.location.reload();
-					    } else {
-					      localStorage.removeItem('firstLoad');
-					    }
-				  	}
-				})();
- 			}
-		</script>
-        <!--[if lt IE 9]>
-		<link rel="stylesheet" href="../assets/components/library/bootstrap/css/bootstrap.min.css"/><![endif]-->
-		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
-		        
-		<!-- fonts -->
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
-        <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle('Melis Platform'); ?>
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+    <link rel="icon" href="<?= $favicon; ?>" type="image/x-icon"/>
+    <!--        <link rel="shortcut icon" href="--><? //= $favicon; ?><!--" type="image/x-icon" />-->
+    <script type="text/javascript">
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {// If Internet Explorer set timeoutHandle
+            // self executing function
+            (function () {
+                if (window.localStorage) {
+                    if (!localStorage.getItem('firstLoad')) {
+                        localStorage['firstLoad'] = true;
+                        window.location.reload();
+                    } else {
+                        localStorage.removeItem('firstLoad');
+                    }
+                }
+            })();
+        }
+    </script>
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" href="../assets/components/library/bootstrap/css/bootstrap.min.css"/><![endif]-->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
 
-		      
-        <?php
-        if(isset($bundle['css'])) {
-        	foreach ($bundle['css'] as $cssFile) {
-				$this->headLink()->appendStylesheet($this->basePath($cssFile));
-        	}
+    <!-- fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
 
 
-        	echo $this->headLink();
+    <?php
+    if (isset($bundle['css'])) {
+        foreach ($bundle['css'] as $cssFile) {
+            $this->headLink()->appendStylesheet($this->basePath($cssFile));
         }
 
-        if(isset($bundle['js'])) {
-            foreach($bundle['js'] as $jsFile) {
-                $this->headScript()->appendFile($this->basePath($jsFile));
-            }
+
+        echo $this->headLink();
+    }
+
+    if (isset($bundle['js'])) {
+        foreach ($bundle['js'] as $jsFile) {
+            $this->headScript()->appendFile($this->basePath($jsFile));
         }
-		?>
-        
-        <link href="/assets/css/schemes.css" media="screen" rel="stylesheet" type="text/css">
+    }
+    ?>
 
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script><![endif]-->
-		<script>
-		 var basePath = '',
-		 commonPath = '../assets/',
-		 rootPath = '../',
-		 DEV = false,
-		 componentsPath = '../assets/components/';
-		
-		 var primaryColor = '#cb4040',
-		 dangerColor = '#b55151',
-		 infoColor = '#466baf',
-		 successColor = '#8baf46',
-		 warningColor = '#ab7a4b',
-		 inverseColor = '#45484d';
-		
-		 var themerPrimaryColor = primaryColor;
+    <link href="/assets/css/schemes.css" media="screen" rel="stylesheet" type="text/css">
 
-		 
-		</script>
-		
-         <!-- Login page backgroun <style> -->
-	     <?php 
-	     	echo '
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script><![endif]-->
+    <script>
+        var basePath = '',
+            commonPath = '../assets/',
+            rootPath = '../',
+            DEV = false,
+            componentsPath = '../assets/components/';
+
+        var primaryColor = '#cb4040',
+            dangerColor = '#b55151',
+            infoColor = '#466baf',
+            successColor = '#8baf46',
+            warningColor = '#ab7a4b',
+            inverseColor = '#45484d';
+
+        var themerPrimaryColor = primaryColor;
+
+
+    </script>
+
+    <!-- Login page backgroun <style> -->
+    <?php
+    echo '
                  <style>
     
     	     	 body.login-page{
@@ -118,14 +122,14 @@ if($this->layout()->isLogin)
     	     	    height: 100%;
     	     	 }
     
-                 </style>' ;
-	     ?>
-        
-	</head>
-	<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null?>>
-		<?= $this->content; ?>
-		<?= $this->headScript() ?>
-		<!-- modals container -->
-		<div id="melis-modals-container"></div>
-	</body>
+                 </style>';
+    ?>
+
+</head>
+<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null ?>>
+    <?= $this->content; ?>
+    <?= $this->headScript() ?>
+    <!-- modals container -->
+    <div id="melis-modals-container"></div>
+</body>
 </html>

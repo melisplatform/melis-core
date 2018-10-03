@@ -82,7 +82,7 @@ class MelisPasswordValidator extends AbstractValidator
         }
         
         if (!preg_match('/\d/', $value)) {
-            $this->error(self::NO_DIGIT);
+            $this->error(self::NO_DIGIT, $value);
             $isValid = false;
         }
             

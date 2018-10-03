@@ -348,7 +348,7 @@ return array(
     ),
     'validators' => array(
         'invokables' => array(
-            'MelisPasswordValidator' => 'MelisCore\Validator\MelisPasswordValidator',
+            'MelisPasswordValidator' => 'MelisCore\Validator\MelisPasswordValidator'
         ),
     ),
     'form_elements' => array(
@@ -392,6 +392,7 @@ return array(
             'melis-core/plugin-view/generate'               => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
             'error/404'                                     => __DIR__ . '/../view/error/404.phtml',
             'error/index'                                   => __DIR__ . '/../view/error/index.phtml',
+            'layout/warning'                                => __DIR__ . '/../view/warning/warning.phtml',
             
             // Dashboard plugin templates
             'melis-core/dashboard-plugin/dragdropzone'          => __DIR__ . '/../view/melis-core/dashboard-plugins/dragdropzone.phtml',

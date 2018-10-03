@@ -14,18 +14,19 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
 use MelisCore\Service\MelisCoreConfigService;
+use Zend\Stdlib\ArrayUtils;
+
 /**
  * This class renders Melis CMS
  */
 class TreeToolsController extends AbstractActionController
 {
-    const CORE      = 'meliscore';
-    const CMS       = 'meliscms';
+    const CORE = 'meliscore';
+    const CMS = 'meliscms';
     const MARKETING = 'melismarketing';
-    const COMMERCE  = 'meliscommerce';
-    const OTHERS    = 'melisothers';
-    const CUSTOM    = 'meliscustom';
-
+    const COMMERCE = 'meliscommerce';
+    const OTHERS = 'melisothers';
+    const CUSTOM = 'meliscustom';
 
     /**
      * Renders the leftmenu accordion/tree of tools
@@ -43,7 +44,7 @@ class TreeToolsController extends AbstractActionController
 
         $appsConfig = $melisAppConfig->getItem($appconfigpath);
         $orderInterface = $melisAppConfig->getOrderInterfaceConfig($melisKey);
-        $tools = array();
+        $tools = [];
 
         // Gets the rights of the user
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
@@ -52,27 +53,31 @@ class TreeToolsController extends AbstractActionController
 
         // Merge config if melisKey is "Others"
         if ($melisKey == 'melisothers_toolstree_section') {
-            $appsConfig['interface'] = array_merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
+            $appsConfig['interface'] = ArrayUtils::merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
         }
 
         // Show sections first
-        foreach($appsConfig['interface'] as $key => $toolSectionName)
-        {
-            $isNavChild   = false;
+        foreach ($appsConfig['interface'] as $key => $toolSectionName) {
+            $isNavChild = false;
 
             // First level, sections
-            $tools[$key] = array(
+            $tools[$key] = [
                 'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
                 'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
                 'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
                 'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
                 'toolsection_forward' => $toolSectionName['forward'] ?? [],
-                'toolsection_children' => array(),
-            );
+                'toolsection_children' => [],
+            ];
 
             // Second level, tools
-            foreach($toolSectionName['interface'] as $keyTool => $toolName)
-            {
+            if (! isset($toolSectionName['interface'])) {
+                // hash issue on commerce
+                break;
+            }
+
+            foreach ($toolSectionName['interface'] as $keyTool => $toolName) {
+                $isToolNavChild = false;
 
                 $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-cube';
 
@@ -80,67 +85,99 @@ class TreeToolsController extends AbstractActionController
                     $isNavChild = true;
                 }
 
-
                 $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX, $keyTool);
-                if ($isAccessible)
-                    $tools[$key]['toolsection_children'][$keyTool] = array('tool_id' => $toolName['conf']['id'] ?? $keyTool,
+                $isInterfaceAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $keyTool);
+
+                if ($isAccessible && $isInterfaceAccessible) {
+                    $tools[$key]['toolsection_children'][$keyTool] = [
+                        'tool_id' => $toolName['conf']['id'] ?? $keyTool,
                         'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
                         'tool_icon' => $icon,
                         'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
-                        'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool);
+                        'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool,
+                    ];
+                }
 
+                // add third level for tool others
+                if ($melisKey == 'melisothers_toolstree_section') {
+                    if (isset($toolName['interface'])) {
+
+                        // third level, child tools
+                        foreach ($toolName['interface'] as $childKeyTool => $childToolname) {
+                            $icon = (!empty($childToolname['conf']['icon'])) ? $childToolname['conf']['icon'] : 'fa-cube';
+
+                            if ($icon) {
+                                $isToolNavChild = true;
+                            }
+
+                            $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX, $childKeyTool);
+                            $isInterfaceAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $childKeyTool);
+
+                            if ($isAccessible && $isInterfaceAccessible) {
+                                $tools[$key]['toolsection_children'][$keyTool]['toolsection_children'][$childKeyTool] = [
+                                    'tool_id' => $childToolname['conf']['id'] ?? $keyTool,
+                                    'tool_name' => $childToolname['conf']['name'] ?? "<strike>$childKeyTool</strike>",
+                                    'tool_icon' => $icon,
+                                    'tool_forward' => isset($childToolname['forward']) ? $childToolname['forward'] : [],
+                                    'tool_melisKey' => $childToolname['conf']['melisKey'] ?? $keyTool,
+                                ];
+                            }
+
+                        }
+
+                    }
+
+                }
+                $tools[$key]['toolsection_children'][$keyTool]['toolsection_has_nav_child'] = $isToolNavChild;
             }
 
-            $tools[$key]['toolsection_has_nav_chid'] = $isNavChild;
+            $tools[$key]['toolsection_has_nav_child'] = $isNavChild;
         }
 
         $sections = $tools;
 
         // Reordering sections
-        $toolsOrdered = array();
-        foreach ($orderInterface as $orderKeySection => $sectionTools)
-        {
-            if (!empty($sections[$orderKeySection]))
-            {
-                if (empty($toolsOrdered[$orderKeySection]))
-                    $toolsOrdered[$orderKeySection] = array();
+        $toolsOrdered = [];
+        foreach ($orderInterface as $orderKeySection => $sectionTools) {
+            if (!empty($sections[$orderKeySection])) {
+                if (empty($toolsOrdered[$orderKeySection])) {
+                    $toolsOrdered[$orderKeySection] = [];
+                }
                 $toolsOrdered[$orderKeySection] = $tools[$orderKeySection];
                 unset($toolsOrdered[$orderKeySection]['toolsection_children']);
                 unset($sections[$orderKeySection]);
             }
         }
-        foreach ($sections as $keyInterfaceSection => $childinterface)
-        {
-            if (empty($toolsOrdered[$keyInterfaceSection]))
-                $toolsOrdered[$keyInterfaceSection] = array();
+        foreach ($sections as $keyInterfaceSection => $childinterface) {
+            if (empty($toolsOrdered[$keyInterfaceSection])) {
+                $toolsOrdered[$keyInterfaceSection] = [];
+            }
             $toolsOrdered[$keyInterfaceSection] = $tools[$keyInterfaceSection];
             unset($toolsOrdered[$keyInterfaceSection]['toolsection_children']);
         }
 
         // Reordering tools inside sections
-        foreach ($toolsOrdered as $keySection => $toolsSection)
-        {
-            $sectionOrderInterface = array();
-            if (!empty($orderInterface[$keySection]))
+        foreach ($toolsOrdered as $keySection => $toolsSection) {
+            $sectionOrderInterface = [];
+            if (!empty($orderInterface[$keySection])) {
                 $sectionOrderInterface = $orderInterface[$keySection];
-            $toolsSectionOrdered = array();
+            }
+            $toolsSectionOrdered = [];
 
-            foreach ($sectionOrderInterface as $orderKey)
-            {
-                if (!empty($tools[$keySection]['toolsection_children'][$orderKey]))
-                {
+            foreach ($sectionOrderInterface as $orderKey) {
+                if (!empty($tools[$keySection]['toolsection_children'][$orderKey])) {
                     $toolsOrdered[$keySection]['toolsection_children'][$orderKey] = $tools[$keySection]['toolsection_children'][$orderKey];
                     unset($tools[$keySection]['toolsection_children'][$orderKey]);
                 }
             }
 
-            foreach ($tools[$keySection]['toolsection_children'] as $keyInterface => $childinterface)
-            {
+            foreach ($tools[$keySection]['toolsection_children'] as $keyInterface => $childinterface) {
                 $toolsOrdered[$keySection]['toolsection_children'][$keyInterface] = $childinterface;
             }
         }
 
         $view = new ViewModel();
+
         $view->tools = $toolsOrdered;
         $view->melisKey = $melisKey;
 
@@ -168,6 +205,14 @@ class TreeToolsController extends AbstractActionController
     }
 
     /**
+     * @return MelisCoreConfigService
+     */
+    private function getConfig(): MelisCoreConfigService
+    {
+        return $this->getServiceLocator()->get('MelisCoreConfig');
+    }
+
+    /**
      * Returns the melisKeys of the allowed left menu configuration
      * @return array
      */
@@ -183,7 +228,7 @@ class TreeToolsController extends AbstractActionController
             'meliscommerce_toolstree_section',
             'melisothers_toolstree_section',
             'meliscustom_toolstree_section',
-            'meliscore_footer'
+            'meliscore_footer',
         ];
     }
 
@@ -193,28 +238,29 @@ class TreeToolsController extends AbstractActionController
     public function renderFirstTreeToolsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
+        /** @var \MelisCore\Service\MelisCoreConfigService $melisAppConfig */
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+
         $melisKeys = $melisAppConfig->getMelisKeys();
 
         // Get the order list for ordering tools
         $appconfigpath = $melisKeys['meliscore_toolstree'];
         $appsConfig = $melisAppConfig->getItem($appconfigpath);
         $orderInterface = $melisAppConfig->getOrderInterfaceConfig('meliscore_toolstree');
-        $tools = array();
+        $tools = [];
 
         $sections = $tools;
 
         // Reordering tools inside sections
-        foreach ($toolsOrdered as $keySection => $toolsSection)
-        {
-            $sectionOrderInterface = array();
-            if (!empty($orderInterface[$keySection]))
+        foreach ($toolsOrdered as $keySection => $toolsSection) {
+            $sectionOrderInterface = [];
+            if (!empty($orderInterface[$keySection])) {
                 $sectionOrderInterface = $orderInterface[$keySection];
-            $toolsSectionOrdered = array();
+            }
+            $toolsSectionOrdered = [];
 
 
-            foreach ($tools[$keySection]['toolsection_children'] as $keyInterface => $childinterface)
-            {
+            foreach ($tools[$keySection]['toolsection_children'] as $keyInterface => $childinterface) {
                 $toolsOrdered[$keySection]['toolsection_children'][$keyInterface] = $childinterface;
             }
         }
@@ -226,13 +272,27 @@ class TreeToolsController extends AbstractActionController
         return $view;
     }
 
-
     /**
-     * @return MelisCoreConfigService
+     * @inheritdoc
      */
-    private function getConfig(): MelisCoreConfigService
+    public function hasRightsAction()
     {
-        return $this->getServiceLocator()->get('MelisCoreConfig');
+        // melis/MelisCore/TreeTools/hasRights
+        /** @var \MelisCore\Service\MelisCoreConfigService $config */
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        /** @var \MelisCore\Service\MelisCoreRightsService $rights */
+        $rights = $this->getServiceLocator()->get('MelisCoreRights');
+        /** @var \MelisCore\Service\MelisCoreAuthService $user */
+        $user = $this->getServiceLocator()->get('MelisCoreAuth');
+
+        $userRights = $user->getAuthRights();
+
+        dd($rights->canAccess('melisSB_tool_userrole'));
+    }
+
+    protected function getAccessReport()
+    {
+
     }
 
 }
