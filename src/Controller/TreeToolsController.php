@@ -62,7 +62,7 @@ class TreeToolsController extends AbstractActionController
         // Show sections first
         foreach ($appsConfig['interface'] as $key => $toolSectionName) {
             $isNavChild = false;
-//            d($key . ($melisCoreRights->canAccess($key) ? ' HAS ACCESS' : ' NO ACCESS'));
+
             if ($melisCoreRights->canAccess($key)) {
 
                 $tools[$key] = [
@@ -72,7 +72,6 @@ class TreeToolsController extends AbstractActionController
                     'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
                     'toolsection_forward' => $toolSectionName['forward'] ?? [],
                     'toolsection_children' => [],
-                    'accessible' => true,
                 ];
 
                 // Second level, tools

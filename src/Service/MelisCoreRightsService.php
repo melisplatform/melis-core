@@ -63,6 +63,13 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         return $this;
     }
 
+    /**
+     * @param $xmlRights
+     * @param $sectionId
+     * @param $itemId
+     *
+     * @return bool
+     */
     public function isAccessible($xmlRights, $sectionId, $itemId)
     {
         $rightsObj = simplexml_load_string(trim($xmlRights));
@@ -618,6 +625,9 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getOldMelisKeyPathsAndExclusions()
     {
         return [
