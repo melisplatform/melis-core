@@ -194,6 +194,21 @@ return array(
                             ),
                         ),
                     ),
+                    'dashboard_plugin'  => array(
+                        'type'      => 'Segment',
+                        'options'   => array(
+                            'route' => 'dashboard-plugin[/:plugin][/:function]',
+                            'constraint' => array(
+                                'plugin'         => '[A-Z][a-zA-Z0-9_-]*',
+                                'function'  => '[A-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'MelisCore\Controller',
+                                'controller'    => 'DashboardPlugins',
+                                'action'        => 'generateDahsboardPlugin'
+                            ),
+                        ),
+                    ),
                 ),
             ),
 
