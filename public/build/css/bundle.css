@@ -33300,6 +33300,13 @@ newplugin-cont span,
     color: #932E2A;
 }
 
+/* Added by: Junry @ 10/01/2018 */
+@media (min-width: 320px) and (max-width: 767px) {
+    .tab-content > .active {
+        margin-top: 47px;
+    }
+}
+
 #content > .innerAll.px2 {
     padding: 0;
 }
