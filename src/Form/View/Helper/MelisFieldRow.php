@@ -65,25 +65,28 @@ class MelisFieldRow extends FormRow
 	        $formElement .= '<div class="form-group"><label for="'.$attrib['name'].'">'.$element->getLabel().'</label> '.$toggleButton.'</div>';
 	    }elseif ($element->hasAttribute('meliscore-user-select2'))
         {
+            $slct2Id = 'selec2-'.uniqid();
             $element->setEmptyOption('tr_meliscore_common_choose');
             $attrib = $element->getAttributes();
-	        $element->setAttribute('id','selec2-'.$attrib['id']);
+	        $element->setAttribute('data-slct2-id', $slct2Id);
             $formElement = '<div class="form-group">
     	                       '.parent::render($element).'
 	                        </div>';
             $formElement .= '<script type="text/javascript">';
-            $formElement .= '$("#selec2-'.$attrib['id'].'").select2();';
-            $formElement .= '$("#selec2-'.$attrib['id'].'").next("span").css("width", "100%");';
+            $formElement .= '$("select[data-slct2-id=\''.$slct2Id.'\']").select2();';
+            $formElement .= '$("select[data-slct2-id=\''.$slct2Id.'\']").next("span").css("width", "100%");';
             $formElement .= '</script>';
         }elseif ($element->hasAttribute('meliscore-tinymce-textarea'))
         {
+            $tinyceId = 'tinyce-textarea-'.uniqid();
             $attrib = $element->getAttributes();
-	        $element->setAttribute('id','tinyce-textarea-'.$attrib['id']);
+	        $element->setAttribute('id', 'tinyce-textarea-'.$attrib['id']);
+	        $element->setAttribute('data-tinymce-id', $tinyceId);
             $formElement = '<div class="form-group">
     	                       '.parent::render($element).'
 	                        </div>';
             $formElement .= '<script type="text/javascript">';
-            $formElement .= 'melisTinyMCE.createTinyMCE("tool", "#tinyce-textarea-'.$attrib['id'].'", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});';
+            $formElement .= 'melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\''.$tinyceId.'\']", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});';
             $formElement .= '</script>';
         } elseif (!empty($element->getOption('switchOptions')))
 	    {
@@ -171,7 +174,7 @@ class MelisFieldRow extends FormRow
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
     	                       <label for="">'.$label.'</label>
-    	                        <div class="form-group input-group date '.$attrib['dateId'].'">
+    	                        <div class="input-group date '.$attrib['dateId'].'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
@@ -179,14 +182,14 @@ class MelisFieldRow extends FormRow
                                 </div>
 	                        </div>';
 	    }elseif ($element->hasAttribute('meliscore-datetimepicker')){
+            $datePickerId = 'datetimepicker-'.uniqid();
             $label = $element->getLabel();
             $element->setLabel('');
-            $attrib = $element->getAttributes();
             $icon = (!empty($element->getOption('icon'))) ? $element->getOption('icon') : 'glyphicon glyphicon-calendar';
             $element->setAttributes(array('autocomplete' => 'off'));
             $formElement = '<div class="form-group">
     	                       <label for="">'.$label.'</label>
-    	                        <div class="form-group input-group date" id="datetimepicker-'.$attrib['id'].'">
+    	                        <div class="input-group date" id="'.$datePickerId.'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon">
                                         <span class="'.$icon.'"></span>
@@ -200,7 +203,7 @@ class MelisFieldRow extends FormRow
             $elemOption = $element->getOptions();
             $dateFormat = (!empty($element->getOption('format'))) ? $element->getOption('format') : $defaultFormat;
             $formElement .= '<script type="text/javascript">';
-            $formElement .= '$("#datetimepicker-'.$attrib['id'].'").datetimepicker({format: "'.$dateFormat.'"});';
+            $formElement .= '$("#'.$datePickerId.'").datetimepicker({format: "'.$dateFormat.'"});';
             $formElement .= '</script>';
         } elseif ($element->getAttribute('class') == self::MELIS_COLOR_PICKER)
 	    {

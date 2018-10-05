@@ -29147,8 +29147,10 @@ var melisHelper = (function(){
             $.each( errors, function( key, error ) {
                 if("form" in error){
                     $.each(this.form, function( fkey, fvalue ){
-                        $("#" + fvalue + " .form-control[name='"+key +"']").prev("label").css("color","red");
+                        $("#" + fvalue + " .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
                     });
+                }else{
+                    $( selector + " .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
                 }
             });
         }
@@ -29866,7 +29868,7 @@ var melisCoreTool = (function(window){
 		if(success === 0){
 			$("#" + divContainer + " .form-group label").css("color","#686868");
 			$.each( errors, function( key, error ) { 
-				$("#" + divContainer + " .form-control[name='"+key +"']").prev("label").css("color","red");
+				$("#" + divContainer + " .form-control[name='"+key +"']").parents(".form-group").children(":first").css("color","red");
 			});
 		}
 		// remove red color for correctly inputted fields
