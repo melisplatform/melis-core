@@ -16,7 +16,7 @@ $(function(){
 	$("body .melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
 	
 	// Tooltip
-	/*  $("body .melis-core-dashboard-plugin-snippets").tooltip({
+	/*$("body .melis-core-dashboard-plugin-snippets").tooltip({
 	 position: {
 	 my: "left center",
 	 at: "left+110% center",
