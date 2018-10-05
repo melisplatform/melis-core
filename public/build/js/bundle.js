@@ -31792,9 +31792,10 @@ var melisDashBoardDragnDrop = {
 
     gsSetOptions: function() {
         var options = {
-            cellHeight: 80,
+            cellHeight: 90,
             verticalMargin: 20,
             animate: true,
+            float: false,
             acceptWidgets: '.melis-core-dashboard-plugin-snippets', // .grid-stack-item
             draggable: {
                 scroll: true
@@ -31802,7 +31803,7 @@ var melisDashBoardDragnDrop = {
             handle: this.gsOptHandle
         };
 
-        $(".grid-stack").gridstack(options);
+        this.$gs.gridstack(options);
         //$("#grid-draggable.grid-stack").gridstack(_.defaults({ acceptWidgets: false }), options);
     },
 
@@ -31817,7 +31818,7 @@ var melisDashBoardDragnDrop = {
                 var gridPH      = $('#'+activeTabId+' .tab-pane .grid-stack .grid-stack-placeholder');
 
                 gridPH.attr('data-gs-width', 6);
-                gridPH.attr('data-gs-height', 3);
+                gridPH.attr('data-gs-height', 4);
             }
         });
     },
@@ -31834,6 +31835,20 @@ var melisDashBoardDragnDrop = {
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $dWidth = $gs.width() - $box.width(), // shrink, 1584 - 220 = 1364
             $nWidth = $dWidth + $box.width();
+
+        var gridDetect = "<div class=\"device-xs visible-xs\"></div>" +
+                         "<div class=\"device-sm visible-sm\"></div>" + 
+                         "<div class=\"device-md visible-md\"></div>" +
+                         "<div class=\"device-lg visible-lg\"></div>" +
+                         "<div class=\"device-xl visible-xl\"></div>" + 
+                         "<div class=\"gridDetector\"><span>Number of Columns:</span> <span id=\"grid-size\"></span></div>";
+
+        // appends html structure for checking
+        //this.$body.append( gridDetect );
+
+        // call resize grid on document ready
+        //self.resizeGrid();
+
         /* 
          * subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
          * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
@@ -31870,6 +31885,41 @@ var melisDashBoardDragnDrop = {
             }, 3);
         });
     },
+
+    /*isBreakpoint: function(alias) {
+        return $('.device-' + alias).is(':visible');
+    },
+
+    resizeGrid: function() {
+        var self = this;
+
+        // waitForFinalEvent http://stackoverflow.com/a/22885503
+        var waitForFinalEvent = function(){var b={};return function(c,d,a){a||(a="I am a banana!");b[a]&&clearTimeout(b[a]);b[a]=setTimeout(c,d)}}();
+        var fullDateString  = new Date(),
+            $gridSize       = $("#grid-size"),
+            grid            = this.$gs.data('gridstack');
+
+        function gridResize() {
+            if ( self.isBreakpoint('xs') ) {
+                $gridSize.text('One column mode');
+            } else if ( self.isBreakpoint('sm') ) {
+                grid.setGridWidth(3);
+                $gridSize.text(3);
+            } else if ( self.isBreakpoint('md') ) {
+                grid.setGridWidth(6);
+                $gridSize.text(6);
+            } else if ( self.isBreakpoint('lg') ) {
+                grid.setGridWidth(12);
+                $gridSize.text(12);
+            }
+        }
+
+        $(window).resize(function() {
+            waitForFinalEvent(function() {
+                gridResize();
+            }, 300, fullDateString.getTime());
+        });
+    },*/
 
     dropWidget: function( widget ) {
         var self        = this,
@@ -31927,7 +31977,7 @@ var melisDashBoardDragnDrop = {
 
         var $mcDashPlugSnippets = $("#"+activeTabId+" .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
             $mcDashPlugSnippets.attr('data-gs-width', 6);
-            $mcDashPlugSnippets.attr('data-gs-height', 3);
+            $mcDashPlugSnippets.attr('data-gs-height', 4);
 
         var mcLoader            = "<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>";
 

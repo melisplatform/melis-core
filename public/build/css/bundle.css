@@ -27351,6 +27351,12 @@ html.csstransitions.csstransforms3d .panel-3d.panel-flip .back {
     color: #666
 }
 
+@media screen and (max-width: 600px) {
+  .grid-stack-item-content .flotchart-holder {
+    margin-top: 60px;
+  }
+}
+
 .flotchart-holder {
     margin: 30px 0 15px;
     height: 250px;
@@ -33295,9 +33301,16 @@ newplugin-cont span,
     color: #932E2A;
 }
 
-/* Added by: Junry @ 10/01/2018 */
+/*
+ * Added by: Junry @ 10/01/2018
+ * Fix for top most plugin header is overlapped adding an id selector
+ * so that it won't conflict with other elements with the same class
+ */
+.grid-stack-item-content .tab-content > .active {
+    margin-top: 0;
+}
 @media (min-width: 320px) and (max-width: 767px) {
-    .tab-content > .active {
+    .tab-content > .tab-panel-dashboard.active {
         margin-top: 47px;
     }
 }
@@ -36180,7 +36193,7 @@ div#modal-user-management div.widget {
     border: 0;
 }
 .grid-stack .grid-stack-placeholder>.placeholder-content {
-    background: #981a1f;
+    background-color: #981a1f;
 }
 
 .grid-stack {
@@ -36189,12 +36202,6 @@ div#modal-user-management div.widget {
 	min-height: 870px;
 	min-width: 870px;
 	width: 100%;
-	background-color: lightgoldenrodyellow;
-}
-
-#grid1 {
-	/* background-color: #d07174; */
-	min-height: 870px;
 }
 
 .melis-core-dashboard-plugin-filter-box .grid-stack-item {

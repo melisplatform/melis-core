@@ -937,9 +937,16 @@ newplugin-cont span,
     color: #932E2A;
 }
 
-/* Added by: Junry @ 10/01/2018 */
+/*
+ * Added by: Junry @ 10/01/2018
+ * Fix for top most plugin header is overlapped adding an id selector
+ * so that it won't conflict with other elements with the same class
+ */
+.grid-stack-item-content .tab-content > .active {
+    margin-top: 0;
+}
 @media (min-width: 320px) and (max-width: 767px) {
-    .tab-content > .active {
+    .tab-content > .tab-panel-dashboard.active {
         margin-top: 47px;
     }
 }
