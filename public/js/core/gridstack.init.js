@@ -340,7 +340,7 @@ var melisDashBoardDragnDrop = {
               
                 self.saveDBWidgets(dataString);
 
-                // Plguin delete callback
+                // Plugin delete callback
                 if (typeof $del.data('callback') !== "undefined") {
                     var callback = eval($del.data("callback"));
                     if (typeof callback === "function") {
@@ -386,15 +386,15 @@ var melisDashBoardDragnDrop = {
             // hide plugin menu
             this.$pluginBox.removeClass("shown");
 
-            // Plguin delete callback
-            $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v)){
+            // Plugins delete callback
+            $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
                 if (typeof $(this).data('callback') !== "undefined") {
                     var callback = eval($(this).data("callback"));
                     if (typeof callback === "function") {
                         callback($(this).closest('.grid-stack-item'));
                     }
                 }
-            }
+            });
         }
     },
 
