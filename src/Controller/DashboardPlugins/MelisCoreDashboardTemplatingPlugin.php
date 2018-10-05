@@ -232,7 +232,12 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $plugin = new ViewModel();
         $plugin->setTemplate('melis-core/dashboard-plugin/plugin-container');
         $plugin->setVariables($pluginView->getVariables());
-        
+
+        // Delete Callback datas
+        if (!empty($this->pluginConfig['deleteCallback'])){
+            $plugin->deleteCallBack = $this->pluginConfig['deleteCallback'];
+        }
+
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
         $pluginHtml = $viewRender->render($pluginView);
         $plugin->pluginView = $pluginHtml;

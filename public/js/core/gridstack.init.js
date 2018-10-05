@@ -334,6 +334,14 @@ var melisDashBoardDragnDrop = {
                 grid.removeWidget($del.closest('.grid-stack-item'));
               
                 self.saveDBWidgets(dataString);
+
+                // Plguin delete callback
+                if (typeof $del.data('callback') !== "undefined") {
+                    var callback = eval($del.data("callback"));
+                    if (typeof callback === "function") {
+                        callback($del.closest('.grid-stack-item'));
+                    }
+                }
             }
         );
     },
