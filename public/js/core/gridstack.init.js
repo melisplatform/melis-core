@@ -322,13 +322,7 @@ var melisDashBoardDragnDrop = {
         var $del        = el,
             grid        = $('#'+activeTabId+' .grid-stack').data('gridstack');
 
-        var dataString = new Array;
-
-            // create dashboard array
-            dataString.push({
-                name: 'dashboard_id',
-                value: activeTabId
-            });
+            //console.log('el: ', el);
      
         melisCoreTool.confirm(
             translations.tr_meliscore_common_yes,
@@ -336,6 +330,14 @@ var melisDashBoardDragnDrop = {
             translations.tr_melis_core_remove_dashboard_plugin,
             translations.tr_melis_core_remove_dashboard_plugin_msg,
             function() {
+                var dataString = new Array;
+
+                // create dashboard array
+                dataString.push({
+                    name: 'dashboard_id',
+                    value: activeTabId
+                });
+
                 /*grid.removeWidget($del.closest('.grid-stack-item'));
                 
                 if( $('#'+activeTabId+' .grid-stack .grid-stack-item').length === 0 ) {
@@ -387,8 +389,11 @@ var melisDashBoardDragnDrop = {
 
             // hide plugin menu
             this.$pluginBox.removeClass("shown");
+
         } else {
+
             melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');
+
         }
     },
 
