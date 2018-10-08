@@ -291,6 +291,7 @@ class TreeToolsController extends AbstractActionController
         $user = $this->getServiceLocator()->get('MelisCoreAuth');
 
         $userRights = $user->getAuthRights();
+        dd($userRights, $user->isRightsUpdated($userRights));
 
         dd($rights->canAccess('melis_newsletter_tool_config'));
         dd($rights->canAccess('meliscommerce_toolstree_section_root'));
