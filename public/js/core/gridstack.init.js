@@ -56,6 +56,7 @@ var melisDashBoardDragnDrop = {
             cellHeight: 80,
             verticalMargin: 20,
             animate: true,
+            float: false,
             acceptWidgets: '.melis-core-dashboard-plugin-snippets', // .grid-stack-item
             draggable: {
                 scroll: true
@@ -63,7 +64,7 @@ var melisDashBoardDragnDrop = {
             handle: this.gsOptHandle
         };
 
-        $(".grid-stack").gridstack(options);
+        this.$gs.gridstack(options);
         //$("#grid-draggable.grid-stack").gridstack(_.defaults({ acceptWidgets: false }), options);
     },
 
@@ -95,6 +96,7 @@ var melisDashBoardDragnDrop = {
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $dWidth = $gs.width() - $box.width(), // shrink, 1584 - 220 = 1364
             $nWidth = $dWidth + $box.width();
+
         /* 
          * subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
          * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
@@ -318,9 +320,7 @@ var melisDashBoardDragnDrop = {
         var self        = this;
 
         var $del        = el,
-            grid        = $('#'+activeTabId+' .grid-stack').data('gridstack'),
-            nodeItem    = grid.container[0].children,
-            gs          = $('#' + activeTabId ).find('.grid-stack');
+            grid        = $('#'+activeTabId+' .grid-stack').data('gridstack');
 
         var dataString = new Array;
 
@@ -336,8 +336,18 @@ var melisDashBoardDragnDrop = {
             translations.tr_melis_core_remove_dashboard_plugin,
             translations.tr_melis_core_remove_dashboard_plugin_msg,
             function() {
+                /*grid.removeWidget($del.closest('.grid-stack-item'));
+                
+                if( $('#'+activeTabId+' .grid-stack .grid-stack-item').length === 0 ) {
+                    // save dashboard lists
+                    //var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+                    self.saveDBWidgets(dataString);
+                }*/
+
+                // remove the item from the dashboard
                 grid.removeWidget($del.closest('.grid-stack-item'));
-              
+                
+                // save dashboard lists
                 self.saveDBWidgets(dataString);
 
                 // Plugin delete callback
@@ -395,6 +405,8 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             });
+        } else {
+            melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');
         }
     },
 

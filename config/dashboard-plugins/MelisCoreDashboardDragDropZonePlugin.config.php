@@ -6,6 +6,7 @@
                     'css' => array(
                         // Gridstack
                         '/MelisCore/assets/components/plugins/gridstack/css/gridstack.min.css',
+                        '/MelisCore/assets/components/plugins/gridstack/css/gridstack-extra.css',
                     ),
                     'js' => array(
                         // Gridstack

@@ -109,7 +109,8 @@ class MelisSetupController extends AbstractActionController
 
                 try {
 
-                    $tableUser->save([
+                    $userId = $tableUser->save([
+
                         'usr_status' => 1,
                         'usr_login' => $userLogin,
                         'usr_email' => $userEmail,
@@ -120,27 +121,26 @@ class MelisSetupController extends AbstractActionController
                         'usr_admin' => 1,
                         'usr_role_id' => 1,
                         'usr_rights' => '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0"><meliscms_pages>
-	<id>-1</id>
-</meliscms_pages>
-<meliscore_interface>
-</meliscore_interface>
-<meliscore_leftmenu>
-	<meliscore_toolstree_section>
-	</meliscore_toolstree_section>
-	<meliscms_toolstree_section>
-	</meliscms_toolstree_section>
-	<melismarketing_toolstree_section>
-	</melismarketing_toolstree_section>
-	<meliscommerce_toolstree_section>
-	</meliscommerce_toolstree_section>
-	<melisothers_toolstree_section>
-	</melisothers_toolstree_section>
-	<meliscustom_toolstree_section>
-	</meliscustom_toolstree_section>
-	<id>meliscore_leftmenu_root</id>
-</meliscore_leftmenu>
-</document>',
-
+                                        	<id>-1</id>
+                                        </meliscms_pages>
+                                        <meliscore_interface>
+                                        </meliscore_interface>
+                                        <meliscore_leftmenu>
+                                        	<meliscore_toolstree_section>
+                                        	</meliscore_toolstree_section>
+                                        	<meliscms_toolstree_section>
+                                        	</meliscms_toolstree_section>
+                                        	<melismarketing_toolstree_section>
+                                        	</melismarketing_toolstree_section>
+                                        	<meliscommerce_toolstree_section>
+                                        	</meliscommerce_toolstree_section>
+                                        	<melisothers_toolstree_section>
+                                        	</melisothers_toolstree_section>
+                                        	<meliscustom_toolstree_section>
+                                        	</meliscustom_toolstree_section>
+                                        	<id>meliscore_leftmenu_root</id>
+                                        </meliscore_leftmenu>
+                                        </document>',
                     ]);
 
                     $installerSession = new Container('melisinstaller');
@@ -159,6 +159,9 @@ class MelisSetupController extends AbstractActionController
                             ]);
                         }
                     }
+
+                    // Dashboard
+                    $this->generateDashboardPlugins($userId);
 
 
                     $success = 0;
@@ -183,7 +186,100 @@ class MelisSetupController extends AbstractActionController
         ];
 
         return new JsonModel($response);
+    }
 
+    /**
+     * This method generate the dashboard plugins
+     * after the setup, this will take all the available dashboard plugins
+     * in every module and save to the newly user created
+     */
+    private function generateDashboardPlugins($userId = 1)
+    {
+        $melisModules = $_SERVER['DOCUMENT_ROOT'].'/../vendor/melisplatform/';
+
+        $modulePlugins = array();
+
+        foreach (scandir($melisModules) As $val){
+            if (!in_array($val, array('.', '..'))){
+                if (is_dir($melisModules.$val.'/config/dashboard-plugins')){
+
+                    $modulePluginConfigs = $melisModules.$val.'/config/dashboard-plugins';
+                    if (is_dir($modulePluginConfigs)){
+                        foreach (scandir($modulePluginConfigs) As $conf){
+                            if (!in_array($conf, array('.', '..'))){
+
+                                $pluginConfig = require($modulePluginConfigs.'/'.$conf);
+                                if (is_array($pluginConfig['plugins'])){
+                                    /**
+                                     * Retrieving all available dashboard plugins in every module
+                                     * activated to the platform
+                                     */
+                                    foreach ($pluginConfig['plugins'] As $cKey => $cConf){
+                                        if(!empty($cConf['dashboard_plugins'])){
+                                            foreach ($cConf['dashboard_plugins'] As $pluginKey => $pluginConf){
+                                                // Skipping DragDrapZone plugin
+                                                if (!in_array($pluginKey, array('MelisCoreDashboardDragDropZonePlugin'))){
+                                                    $modulePlugins[$pluginKey] = $pluginConf;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Generating Dashboard Xml
+         */
+        $pluginXml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<Plugins>%s'."\n".'</Plugins>';
+        $pluginXmlData = '';
+
+        if (!empty($modulePlugins)){
+            $pluginIdTime = time();
+            $xAxis = 0;
+            $yAxis = 0;
+            $ctr = 1;
+            foreach ($modulePlugins As $plugin => $conf){
+                $height = !empty($conf['height']) ? $conf['height'] : 6;
+                $width = !empty($conf['width']) ? $conf['width'] : 6;
+
+                // Xml data of each plugin
+                $pluginXmlData .= "\n\t".'<plugin plugin="'.$plugin.'" plugin_id="'.$conf['plugin_id'].'_'.$pluginIdTime.'">'."\n";
+                $pluginXmlData .= "\t\t".'<x-axis><![CDATA['.$xAxis.']]></x-axis>'."\n";
+                $pluginXmlData .= "\t\t".'<y-axis><![CDATA['.$yAxis.']]></y-axis>'."\n";
+                $pluginXmlData .= "\t\t".'<height><![CDATA['.$height.']]></height>'."\n";
+                $pluginXmlData .= "\t\t".'<width><![CDATA['.$width.']]></width>'."\n";
+                $pluginXmlData .= "\t".'</plugin>';
+
+                // Column number of the plugin
+                if ($xAxis == 0)
+                    $xAxis = 6;
+                elseif ($xAxis == 6)
+                    $xAxis = 0;
+
+                // Row number of the plugin
+                if ($ctr % 2 == 0)
+                    $yAxis += 6;
+
+                $ctr++;
+            }
+        }
+
+        // Creating the final xml of the dashboard plugins
+        $pluginXml = sprintf($pluginXml, $pluginXmlData);
+
+        /**
+         * Saving dashboard plugins to database
+         */
+        $pluginDashboard = array(
+            'd_dashboard_id' => 'id_meliscore_toolstree_section_dashboard',
+            'd_user_id' => $userId,
+            'd_content' => $pluginXml,
+        );
     }
 
     /**

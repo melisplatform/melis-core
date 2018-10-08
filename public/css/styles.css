@@ -937,9 +937,16 @@ newplugin-cont span,
     color: #932E2A;
 }
 
-/* Added by: Junry @ 10/01/2018 */
+/*
+ * Added by: Junry @ 10/01/2018
+ * Fix for top most plugin header is overlapped adding an id selector
+ * so that it won't conflict with other elements with the same class
+ */
+.grid-stack-item-content .tab-content > .active {
+    margin-top: 0;
+}
 @media (min-width: 320px) and (max-width: 767px) {
-    .tab-content > .active {
+    .tab-content > .tab-panel-dashboard.active {
         margin-top: 47px;
     }
 }
@@ -3378,8 +3385,8 @@ div#modal-user-management div.widget {
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
-    z-index: 90;
-    /*z-index: 90999;*/ /* added by: Junry @ 09/25/2018 */
+    /* z-index: 90; */
+    z-index: 90999; /* added by: Junry @ 09/25/2018 */
 }
 
 /* dashboard plugin show */
@@ -3393,9 +3400,22 @@ div#modal-user-management div.widget {
 /* dashboard inner box */
 .melis-core-dashboard-dnd-fix-menu {
     height: 100%;
-    /* overflow-y: auto; */
-    overflow: visible;
+    overflow-y: auto;
+    /* overflow: visible; */
 }
+
+/*
+ * Added by: Junry @ 10/08/2018
+ * Responsive add a space at the bottom of the last child of the plugin list
+ * to make way for the remove all plugins botton
+ */
+.melis-core-dashboard-plugin-filter-box .melis-core-dashboard-ps-box .melis-core-dashboard-plugin-snippets-box {
+    margin-bottom: 40px;
+}
+.melis-commerce-dashboard-plugin-order-messages-parent .message-count {
+    margin-top: 10px;
+}
+/* End /Added */
 
 /* dashboard title */
 .melis-core-dashboard-dnd-title {
@@ -3498,8 +3518,8 @@ div#modal-user-management div.widget {
     color: #fff;
     letter-spacing: 0.4px;
     font-size: 10px;
-    transition: color 0.4s;
-    -webkit-transition: color 0.4s;
+    /* transition: color 0.4s; */
+    /* -webkit-transition: color 0.4s; */
     -moz-transition: color 0.4s;
 }
 
@@ -3518,8 +3538,8 @@ div#modal-user-management div.widget {
     text-align: center;
     opacity: 0.4;
     cursor: pointer;
-    transition: opacity 0.4s, background 0.4s;
-    -webkit-transition: opacity 0.4s, background 0.4s;
+    /* transition: opacity 0.4s, background 0.4s; */
+    /* -webkit-transition: opacity 0.4s, background 0.4s; */
     -moz-transition: opacity 0.4s, background 0.4s;
 }
 
@@ -3635,6 +3655,19 @@ div#modal-user-management div.widget {
  *
  * Dashboard Plugin Tooltip
  */
+
+/*
+ * Added by: Junry 10/08/2018
+ * Responsive
+ */
+@media screen and (max-width: 462px) {
+    .melis-core-dashboard-plugin-snippets-box .tooltip.melis-plugin-tooltip.fade.left.in {
+        top: 112.5px !important;
+        left: -84px !important;
+        width: 75% !important;
+    }
+}
+
 .melis-plugin-tooltip.tooltip.left .tooltip-arrow {
     border-left-color: #212121;
 }
