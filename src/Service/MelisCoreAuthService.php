@@ -263,9 +263,10 @@ class MelisCoreAuthService
         $rights = simplexml_load_string(trim($xmlRights));
         $rights = json_decode(json_encode($rights),1);
 
-        /** @var \MelisCore\Service\MelisCoreRightsService $rights */
+        /** @var \MelisCore\Service\MelisCoreRightsService $rightsSvc */
         $rightsSvc = $this->getServiceLocator()->get('MelisCoreRights');
         $nodesToCheck = $rightsSvc->getMelisKeyPaths();
+        $nodesToCheck[] = 'id';
         $toolParentNode = $rightsSvc::MELIS_PLATFORM_TOOLS_PREFIX;
 
         $isToolParentNodeExists = false;
@@ -279,6 +280,7 @@ class MelisCoreAuthService
                     if (in_array($toolNodeKey, $nodesToCheck)) {
                         $isToolChildExistsAndComplete = true;
                     } else {
+
                         $isToolChildExistsAndComplete = false;
                     }
                 }
