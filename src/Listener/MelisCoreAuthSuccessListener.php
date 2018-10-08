@@ -11,51 +11,48 @@ namespace MelisCore\Listener;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
 
 class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
 
     public function attach(EventManagerInterface $events)
     {
-        $sharedEvents      = $events->getSharedManager();
+        $sharedEvents = $events->getSharedManager();
 
         $callBackHandler = $sharedEvents->attach(
             'MelisCore',
-            array(
+            [
                 'melis_core_auth_login_ok',
-            ),
-            function($e){
+            ],
+            function ($e) {
 
-                $sm        = $e->getTarget()->getServiceLocator();
-                $table     = $sm->get('MelisUserConnectionDate');
-                $params    = $e->getParams();
+                $sm = $e->getTarget()->getServiceLocator();
+                $table = $sm->get('MelisUserConnectionDate');
+                $params = $e->getParams();
                 $userTable = $sm->get('MelisCoreTableUser');
-                $authSvc   = $sm->get('MelisCoreAuth');
+                $authSvc = $sm->get('MelisCoreAuth');
 
                 // update the session last_login_date
                 $user = $authSvc->getStorage()->read();
 
-                if(!empty($user)) {
+                if (!empty($user)) {
                     $user->usr_last_login_date = $params['login_date'];
-                    $isOnline                  = (bool) $user->usr_is_online;
+                    $isOnline = (bool) $user->usr_is_online;
 
-                    if(!$isOnline) {
+                    if (!$isOnline) {
                         $table->save([
-                            'usrcd_usr_login'            => $params['usr_id'],
-                            'usrcd_last_login_date'      => $params['login_date'],
+                            'usrcd_usr_login' => $params['usr_id'],
+                            'usrcd_last_login_date' => $params['login_date'],
                             'usrcd_last_connection_time' => $params['login_date'],
                         ]);
                     }
 
-                    $userTable->save(array(
+                    $userTable->save([
                         'usr_last_login_date' => $params['login_date'],
-                        'usr_is_online'       => true,
-                    ), $params['usr_id']);
+                        'usr_is_online' => true,
+                    ], $params['usr_id']);
 
                 }
-
-
             },
             -10000);
 

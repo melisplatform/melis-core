@@ -80,7 +80,7 @@ var melisCoreTool = (function(window){
 		if(success === 0){
 			$("#" + divContainer + " .form-group label").css("color","#686868");
 			$.each( errors, function( key, error ) { 
-				$("#" + divContainer + " .form-control[name='"+key +"']").prev("label").css("color","red");
+				$("#" + divContainer + " .form-control[name='"+key +"']").parents(".form-group").children(":first").css("color","red");
 			});
 		}
 		// remove red color for correctly inputted fields

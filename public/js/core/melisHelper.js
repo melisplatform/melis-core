@@ -37,7 +37,9 @@ var melisHelper = (function(){
         errorTexts +='<h4>'+ melisTranslator(message) +'</h4>';
         $.each( errors, function( key, error ) {
             if(key !== 'label'){
-                errorTexts += '<p class="modal-error-cont"><b>'+ (( errors[key]['label'] == undefined ) ? ((errors['label']== undefined) ? key : errors['label'] ) : errors[key]['label'] )+ ': </b>  ';
+
+                var label = (( errors[key]['label'] == undefined ) ? ((errors['label']== undefined) ? key : errors['label'] ) : errors[key]['label'] );
+                errorTexts += '<p class="modal-error-cont"><b title="'+ label + '">'+ label + ': </b>  ';
 
                 // catch error level of object
                 try {
@@ -115,8 +117,10 @@ var melisHelper = (function(){
             $.each( errors, function( key, error ) {
                 if("form" in error){
                     $.each(this.form, function( fkey, fvalue ){
-                        $("#" + fvalue + " .form-control[name='"+key +"']").prev("label").css("color","red");
+                        $("#" + fvalue + " .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
                     });
+                }else{
+                    $( selector + " .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
                 }
             });
         }
@@ -222,6 +226,17 @@ var melisHelper = (function(){
 
         //show current selected container
         $("#" + tabID).addClass("active");
+
+        // detect dashboard tab panel
+        if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
+            // show dashboard plugin menu
+            $("body .melis-core-dashboard-dnd-box").fadeIn();
+            $("body .melis-core-dashboard-dnd-box.show").fadeIn();
+        } else {
+            // hide dashboard plugin menu
+            $("body .melis-core-dashboard-dnd-box").fadeOut();
+            $("body .melis-core-dashboard-dnd-box.show").fadeOut();
+        }
     }
 
     // CLOSE TAB AND REMOVE ===========================================================================================================
@@ -235,7 +250,7 @@ var melisHelper = (function(){
         var currentGrandParent = currentParent.parent().parent("li").find(".tab-element").data("id");
 
         //This is for not showing the close all tab button
-        if(prevActiveTab == 'id_meliscore_center_dashboard' && !nextActiveTab){
+        if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab){
             $("#close-all-tab").hide();
         }
 
@@ -458,7 +473,7 @@ var melisHelper = (function(){
     }
 
     // EXECUTE CALLBACK FUNCTIONS FROM ZONE RELOADING =================================================================================
-    function executeCallbackFunction(functionName, context) {
+    /*function executeCallbackFunction(functionName, context) {
         var namespaces = functionName.split(".");
         var func = namespaces.pop();
         for(var i = 0; i < namespaces.length; i++) {
@@ -469,7 +484,7 @@ var melisHelper = (function(){
         if( context[func] !== undefined){
             return context[func].apply(context);
         }
-    }
+    }*/
 
     // ZONE RELOADING =================================================================================================================
     function zoneReload(zoneId, melisKey, parameters, callback){
@@ -519,7 +534,7 @@ var melisHelper = (function(){
                         // example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
                         var splitFunctions = value.split(" ");
 
-                        if( splitFunctions.length > 1){
+                        /*if( splitFunctions.length > 1){
                             // run all the function extracted from a single jsCallback
                             $.each( splitFunctions, function( key, value ) {
                                 value = value.slice(0, -3);
@@ -529,7 +544,17 @@ var melisHelper = (function(){
                         else{
                             value = value.slice(0, -3);
                             executeCallbackFunction(value, window);
-                        }
+                        }*/
+                        
+                        $.each( splitFunctions, function( key, value ) {
+                        	
+                        	try {
+                        	    eval(value);
+                        	}
+                        	catch(err) {
+                        	    console.log(err);
+                        	}
+                        });
                     });
                 }
                 else{
@@ -546,7 +571,8 @@ var melisHelper = (function(){
             }, 300);
         }).error(function(xhr, textStatus, errorThrown){
 
-            alert( translations.tr_meliscore_error_message );
+            // alert( translations.tr_meliscore_error_message );
+            alert(xhr.responseText);
 
             //hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');

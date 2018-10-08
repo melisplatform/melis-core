@@ -132,6 +132,9 @@ return array(
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css',
 
+                    // datetimepicker
+                    '/MelisCore/assets/components/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css',
+
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
                     '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
@@ -152,8 +155,6 @@ return array(
 
                     // Melis Admin
                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
-
-
 
                     // Bootstrap Dialog
                     '/MelisCore/css/bootstrap-dialog.min.css',
@@ -198,10 +199,15 @@ return array(
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v1.2.3',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v1.2.3',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v1.2.3',
+                    '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.stack.js',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/custom/js/flotcharts.common.js?v=v1.2.3',
 
                     //datepicker translations
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
+
+                    // datetimepicker
+                    '/MelisCore/assets/components/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js',
+                    '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 
                     '/MelisCore/js/core/tabExpander.js',
                     '/MelisCore/js/core/melisSidebar.js',
@@ -220,6 +226,7 @@ return array(
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
+                    '/MelisCore/js/tools/melis-core-gdpr-tool.js',
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
@@ -426,7 +433,7 @@ return array(
                             'conf' => array(
                                 'id' => 'id_meliscore_leftmenu_dashboard',
                                 'melisKey' => 'meliscore_leftmenu_dashboard',
-                                'name' => 'tr_meliscore_center_Dashboard',
+                                'name' => 'tr_meliscore_dashboard',
                             ),
                             'forward' => array(
                                 'module' => 'MelisCore',
@@ -1233,6 +1240,75 @@ return array(
 
                                             ), // end tool interface
                                         ), // end user management tool
+                                        // tool GDPR start
+                                        'melis_core_gdpr' => array(
+                                            'conf' => array(
+                                                'id' => 'id_melis_core_gdpr',
+                                                'name' => 'tr_melis_core_gdpr',
+                                                'melisKey' => 'melis_core_gdpr',
+                                                'icon' => '',
+                                                'rights_checkbox_disable' => true,
+                                                'follow_regular_rendering' => false,
+                                            ),
+                                                'forward' => array(
+                                                'module' => 'MelisCore',
+                                                'controller' => 'MelisCoreGdpr',
+                                                'action' => 'renderMelisCoreGdprContainer',
+                                                'jscallback' => '',
+                                            ),
+                                            'interface' => array(
+                                                'melis_core_gdpr_gdpr_header' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_melis_core_gdpr_gdpr_header',
+                                                        'melisKey' => 'melis_core_gdpr_gdpr_header',
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'MelisCoreGdpr',
+                                                        'action' => 'renderMelisCoreGdprHeader',
+                                                        'jscallback' => '',
+                                                    ),
+                                                ),
+                                                'melis_core_gdpr_content' => array(
+                                                    'conf' => array(
+                                                        'id' => 'id_melis_core_gdpr_content',
+                                                        'melisKey' => 'melis_core_gdpr_content'
+                                                    ),
+                                                    'forward' => array(
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'MelisCoreGdpr',
+                                                        'action' => 'renderMelisCoreGdprContent',
+                                                        'jscallback' => '',
+                                                    ),
+                                                    'interface' => array(
+                                                        'melis_core_gdpr_gdpr_search_form' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_melis_core_gdpr_gdpr_search_form',
+                                                                'melisKey' => 'melis_core_gdpr_gdpr_search_form',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreGdpr',
+                                                                'action' => 'renderMelisCoreGdprSearchForm',
+                                                                'jscallback' => '',
+                                                            ),
+                                                        ),
+                                                        'melis_core_gdpr_content_tabs' => array(
+                                                            'conf' => array(
+                                                                'id' => 'id_melis_core_gdpr_content_tabs',
+                                                                'melisKey' => 'melis_core_gdpr_content_tabs',
+                                                            ),
+                                                            'forward' => array(
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreGdpr',
+                                                                'action' => 'renderMelisCoreGdprTabs',
+                                                                'jscallback' => '',
+                                                            ),
+                                                        ),
+                                                    ),
+                                                ),
+                                            ),
+                                        ),// end of GDPR
                                     ),
                                 ),
                             ),
@@ -1265,69 +1341,32 @@ return array(
                         'jsdatas' => array()
                     ),
                     'interface' => array(
-                        'meliscore_center_dashboard' => array(
+                        'meliscore_dashboard' => array(
                             'conf' => array(
-                                'id' => 'id_meliscore_center_dashboard',
-                                'name' => 'tr_meliscore_center_Dashboard',
-                                'melisKey' => 'meliscore_center_dashboard',
+                                'id' => 'id_meliscore_toolstree_section_dashboard',
+                                'name' => 'tr_meliscore_dashboard',
+                                'melisKey' => 'meliscore_dashboard',
                                 'icon' => 'fa-tachometer',
-                                'type' => '/meliscore_dashboard'
+                                'dashboard' => true
                             ),
                         ),
                     )
                 ),
-            )
-        ),
-        'meliscore_dashboard' => array(
-            'conf' => array(
-                'id' => 'id_meliscore_center_dashboard',
-                'name' => 'tr_meliscore_center_Melis Dashboard',
-                'melisKey' => 'meliscore_center_dashboard',
-                'icon' => 'fa-tachometer'
-            ),
-            'forward' => array(
-                'module' => 'MelisCore',
-                'controller' => 'Dashboard',
-                'action' => 'dashboard',
-                'jscallback' => '',
-                'jsdatas' => array()
-            ),
-            'interface' => array(
-                'meliscore_dashboard_recent_activity' => array(
+                'meliscore_dashboard_menu' => array(
                     'conf' => array(
-                        'id' => 'id_meliscore_dashboard_recent_activity',
-                        'name' => 'tr_meliscore_dashboard_Recent Activity',
-                        'melisKey' => 'meliscore_dashboard_recent_activity',
-                        'width' => 6,
-                        'height' => 'dashboard-medium',
+                        'id' => 'id_meliscore_center_dashboard_menu',
+                        'melisKey' => 'meliscore_center_dashboard_menu',
+                        'name' => 'tr_meliscore_center_dashboard_menu'
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
-                        'controller' => 'Dashboard',
-                        'action' => 'recentActivity',
+                        'controller' => 'DashboardPlugins',
+                        'action' => 'dashboard-menu',
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
-                    'interface' => array(
-                        'meliscore_dashboard_recent_activity_users' => array(
-                            'conf' => array(
-                                'id' => 'id_meliscore_dashboard_recent_activity_users',
-                                'name' => 'tr_meliscore_dashboard_recent_activity_Users',
-                                'melisKey' => 'meliscore_dashboard_recent_activity_users',
-                                'icon' => 'parents',
-                                'maxLines' => 8,
-                            ),
-                            'forward' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'Dashboard',
-                                'action' => 'recentActivityUsers',
-                                'jscallback' => '',
-                                'jsdatas' => array()
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+                )
+            )
         ),
         'meliscore_login' => array(
             'ressources' => array(

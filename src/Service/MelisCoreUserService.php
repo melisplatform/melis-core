@@ -4,94 +4,104 @@ namespace MelisCore\Service;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Authentication\AuthenticationService;
 
 class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLocatorAwareInterface
 {
-	public $serviceLocator;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl)
-	{
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator()
-	{
-		return $this->serviceLocator;
-	}
-	
-	public function getUserXmlRights($userId = null)
-	{
-		$rightsXML = '';
-		
-		if (!empty($userId))
-		{
-			$tableUser = $this->serviceLocator->get('MelisCoreTableUser');
-			$user = $tableUser->getEntryById($userId);
-			if ($user)
-			{
-				$user = $user->current();
-				if (!empty($user))
-				{
-					if ($user->usr_role_id != self::ROLE_ID_CUSTOM)
-					{
-						// Get rights from Role table
-						$tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
-						$datasRole = $tableUserRole->getEntryById($user->usr_role_id);
-						if ($datasRole)
-						{
-							$datasRole = $datasRole->current();
-							if (!empty($datasRole))
-							{
-								$rightsXML = $datasRole->urole_rights;
-							}
-						}
-					}
-					else
-						$rightsXML = $user->usr_rights;
-				}
-			}
-		}
+    public $serviceLocator;
 
-	
-		return $rightsXML;
-	}
-	
-	
-	public function isItemRightChecked($xmlRights, $sectionId, $itemId)
-	{
-		$rightsObj = simplexml_load_string($xmlRights);
-		
-		if (empty($rightsObj))
-			return false;
-		
-		
-		if (!empty($rightsObj->$sectionId))
-		{
-			foreach ($rightsObj->$sectionId->id as $itemIdXml)
-			{
-				if ($itemIdXml == $itemId)
-					return true;
-			}
-		}
-		
-		return false;
-	}
-
-	public function getUserSessionTime($userId, $lastLoginDate, $displayMinimal = true, $hasAgoWord = false)
+    public function getUserXmlRights($userId = null)
     {
-        $table      = $this->getServiceLocator()->get('MelisUserConnectionDate');
-        $data       = $table->getUserConnectionData( (int) $userId, $lastLoginDate)->current();
+        $rightsXML = '';
+
+        if (!empty($userId)) {
+            $tableUser = $this->serviceLocator->get('MelisCoreTableUser');
+            $user = $tableUser->getEntryById($userId);
+            if ($user) {
+                $user = $user->current();
+                if (!empty($user)) {
+                    if ($user->usr_role_id != self::ROLE_ID_CUSTOM) {
+                        // Get rights from Role table
+                        $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
+                        $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
+                        if ($datasRole) {
+                            $datasRole = $datasRole->current();
+                            if (!empty($datasRole)) {
+                                $rightsXML = $datasRole->urole_rights;
+                            }
+                        }
+                    } else {
+                        $rightsXML = $user->usr_rights;
+                    }
+                }
+            }
+        }
+
+
+        return $rightsXML;
+    }
+
+    public function isItemRightChecked($xmlRights, $sectionId, $itemId)
+    {
+        /** @var \MelisCore\Service\MelisCoreRightsService $rightService */
+        $rightService = $this->getServiceLocator()->get('MelisCoreRights');
+        $rightsObj = simplexml_load_string(trim($xmlRights));
+
+        if (empty($rightsObj)) {
+            return false;
+        }
+
+        if (!empty($rightsObj->$sectionId)) {
+            if ($rightService::MELIS_PLATFORM_TOOLS_PREFIX === $sectionId) {
+                // for general business app
+                if (isset($rightsObj->$sectionId->id)) {
+                    foreach ($rightsObj->$sectionId->id as $item) {
+
+                        if ($item == $itemId) {
+                            return true;
+                        }
+                    }
+                }
+
+                foreach ($rightService->getMelisKeyPaths() as $toolSection) {
+                    foreach ($rightsObj->$sectionId->$toolSection->id as $item) {
+                        $itemId = in_array($itemId, $rightService->getMelisKeyPaths()) ? $itemId . '_root' : $itemId;
+                        if (trim($item) == $itemId) {
+                            return true;
+                        }
+                    }
+
+                    // for those tools that doesn't have a proper parent tool section
+                    foreach ($rightsObj->$sectionId->$toolSection->noparent as $item) {
+                        if ($item == $itemId) {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                foreach ($rightsObj->$sectionId->id as $itemIdXml) {
+                    if ($itemIdXml == $itemId) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function getUserSessionTime($userId, $lastLoginDate, $displayMinimal = true, $hasAgoWord = false)
+    {
+        $table = $this->getServiceLocator()->get('MelisUserConnectionDate');
+        $data = $table->getUserConnectionData((int) $userId, $lastLoginDate)->current();
         $translator = $this->getServiceLocator()->get('translator');
 
-        if(!empty($data)) {
-            $lastLoginDate  = new \DateTime($data->usrcd_last_login_date);
+        if (!empty($data)) {
+            $lastLoginDate = new \DateTime($data->usrcd_last_login_date);
             $connectionTime = new \DateTime($data->usrcd_last_connection_time);
 
             $diff = $lastLoginDate->diff($connectionTime);
 
-            $diff->w  = floor($diff->d / 7);
+            $diff->w = floor($diff->d / 7);
             $diff->d -= $diff->w * 7;
 
             $ago = $translator->translate('tr_meliscore_date_ago');
@@ -104,7 +114,7 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
                 'd' => $translator->translate('tr_meliscore_date_day'),
                 'h' => $translator->translate('tr_meliscore_date_hour'),
                 'i' => $translator->translate('tr_meliscore_date_minute'),
-                's' => $translator->translate('tr_meliscore_date_second')
+                's' => $translator->translate('tr_meliscore_date_second'),
             ];
 
             foreach ($output as $k => &$v) {
@@ -115,11 +125,11 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
                 }
             }
 
-            if($displayMinimal) {
+            if ($displayMinimal) {
                 $output = array_slice($output, 0, 1);
             }
 
-            if(!$hasAgoWord) {
+            if (!$hasAgoWord) {
                 $ago = null;
             }
 
@@ -129,10 +139,22 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
         return null;
     }
 
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    public function setServiceLocator(ServiceLocatorInterface $sl)
+    {
+        $this->serviceLocator = $sl;
+
+        return $this;
+    }
+
     public function getUserConnectionData($userId, $lastLoginDate = null, $search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
     {
         $table = $this->getServiceLocator()->get('MelisUserConnectionDate');
-        $data  = $table->getUserConnectionData($userId, $lastLoginDate, $search, $searchableColumns, $orderBy, $orderDirection, $start, $limit );
+        $data = $table->getUserConnectionData($userId, $lastLoginDate, $search, $searchableColumns, $orderBy, $orderDirection, $start, $limit);
 
         return $data;
     }

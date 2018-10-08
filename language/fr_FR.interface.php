@@ -7,7 +7,6 @@
 		'tr_meliscore_footer_2015 by Melis Technology' => '© ' . date('Y') . ' par Melis Technology',
 		'tr_meliscore_footer_all rights reserved' => 'Tous droits réservés.',
 		'tr_meliscore_center_dashboard_title' => 'Melis Technology',
-	    
 
 		'tr_meliscore_menu_toolstree_Name' => 'Modules',
 		'tr_meliscore_menu_toolstree_section_Admin' => 'Administration',
@@ -15,10 +14,8 @@
 		'tr_meliscore_leftmenu_tools_No tools available' => 'Aucun outil accessible !',
 
 		// Dashboard
-		'tr_meliscore_center_Dashboard' => 'Dashboard',
-		'tr_meliscore_center_Melis Dashboard' => 'Melis Dashboard',
-		'tr_meliscore_center_dashboard_Logo' => 'Logo',
-		'tr_meliscore_center_dashboard_Calendar' => 'Calendrier',
+		'tr_meliscore_dashboard' => 'Dashboard',
+		'tr_meliscore_melis_dashboard' => 'Melis Dashboard',
 
         'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
 
@@ -218,12 +215,6 @@
 	    'tr_meliscore_dt_sSortDescending' => ' activer pour trier la colonne par ordre d&eacute;croissant',
 	    
 	    'tr_meliscore_common_online' => 'Connecté',
-
- 
-		// Dashboard
-		'tr_meliscore_dashboard_Recent Activity' => 'Activité récente',
-		'tr_meliscore_dashboard_recent_activity_Users' => 'Utilisateurs',
-	    'tr_meliscore_dashboard_recent_activity_Logged in' => 's\'est connecté',
 
 		'tr_meliscore_dashboard_Calendar' => 'Calendrier',
 	    
@@ -640,14 +631,63 @@
         'tr_meliscore_platform_scheme_success_restore_message' => 'Thème de la plateforme restauré avec succès',
 
         'tr_melis_user_tabs_close_all_open_tabs' => 'Fermer tous les onglets',
-        'tr_melis_core_common_close' => 'Annuler',
-        'tr_melis_core_common_add' => 'Ajouter',
 
         //Diagnostic translation
         'tr_melis_core_diagnostic_error_message' => 'n\'a pas de configuration de diagnostic',
 
         //Language Back Office
         'tr_melis_core_common_apply_language' => 'Changer le langage courrant vers ',
+	    
+        // Dashboard plugins
+	    'tr_melisore_Plugins' => 'Plugins',
+	    'tr_melisore_remove_all_plugins' => 'Supprimer tous les plugins',
+	    'tr_melis_core_common_close' => 'Annuler',
+	    'tr_melis_core_common_add' => 'Ajouter',
+	    'tr_melis_core_remove_dashboard_plugin' => 'Supprimer le plugin du tableau de bord',
+	    'tr_melis_core_remove_dashboard_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer ce plugin?',
+	    'tr_melis_core_remove_dashboard_all_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer tous les plugins?',
+	    
+	    'tr_PluginSection_meliscore' => 'Melis Core',
+	    
+	    'tr_meliscore_dashboard_Recent Activity' => 'Activité récente',
+	    'tr_meliscore_dashboard_Recent Activity description' => 'Ce plugin affiche la liste des activités récentes de l\'utilisateur.',
+	    'tr_meliscore_dashboard_recent_activity_Users' => 'Utilisateurs',
+	    'tr_meliscore_dashboard_recent_activity_Logged in' => 's\'est connecté',
 
+        // Melis Core GDPR
+        'tr_melis_core_gdpr' => 'RGPD',
+        'tr_melis_core_gdpr_header_title' => 'RGPD (Règlement Général sur la Protection des Données)',
+        'tr_melis_core_gdpr_header_description' => 'Melis Platform fourni un system pour chercher les données de vos utilisateurs. </br> Tous les modules qui implémentent le système de Melis pourront intéragir avec cette interface et vous offir la possibilité de respecter le règlement.',
+
+        'tr_melis_core_gdpr_form_name' => 'Nom',
+        'tr_melis_core_gdpr_form_email' => 'Email',
+        'tr_melis_core_gdpr_form_site' => 'Site',
+        'tr_melis_core_gdpr_search_user_title' => 'Rechercher un utilisateur',
+
+        'tr_melis_core_gdpr_notif_gdpr_search' => 'Formulaire de Recherche RGPD',
+        'tr_melis_core_gdpr_notif_extract_user' => 'Extraction des utilisateurs RGPD',
+        'tr_melis_core_gdpr_notif_delete_user' => 'RGPD Suppression d\'utilisateur',
+
+        'tr_melis_core_gdpr_notif_delete_selected_confirm' => 'Supprimer la séléction',
+        'tr_melis_core_gdpr_notif_delete_selected_confirm_message' => 'Êtes-vous sûr de vouloir supprimer les enregistrements sélectionnés?',
+
+        'tr_melis_core_gdpr_search_user_error_message' => 'Impossible de rechercher des informations utilisateurs',
+        'tr_melis_core_gdpr_tool_form_input_too_long' => 'Input is too long',
+
+        'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Format d\'email invalide',
+        'tr_melis_core_gdpr_tool_form_no_inputs' => 'Veuillez saisir les détails de l\'utilisateur. Le nom ou le champ email est requis',
+        'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'Aucun utilisateur séléctionné',
+        'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'Aucun utilisateur séléctionnée',
+        'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Erreur lors de la suppression des données',
+        'tr_melis_core_gdpr_notif_no_user_data_found' => 'Aucun utilisateur trouvé',
+
+        'tr_melis_core_gdpr_view_search_button' => 'Rechercher',
+        'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extraire la séléction',
+        'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Supprimer la séléction',
+        'tr_melis_core_gdpr_tabs_header_title' => 'Rechercher un utilisateur:',
+        'tr_melis_core_gdpr_column_is_admin' => 'Oui',
+        'tr_melis_core_gdpr_column_is_not_admin' => 'Non',
+        'tr_melis_core_gdpr_notif_name_or_email_required' => 'Le nom ou l\'email sont requis',
+        'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Le nom ne doit pas être composé de chiffres',
     );
 ?>

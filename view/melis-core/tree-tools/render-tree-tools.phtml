@@ -1,35 +1,51 @@
 <?php
-
 $name = '';
 $id = '';
 if (!empty($this->zoneconfig['conf']['name']))
     $name = $this->zoneconfig['conf']['name'];
 if (!empty($this->zoneconfig['conf']['id']))
-    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
-$data_melisKey = $this->melisKey;
-
+    $id = $this->zoneconfig['conf']['id'];
+$melisKey = $this->melisKey;
+$sections = [
+    'meliscore_toolstree_section' => $this->melisCoreIcon(),
+    'meliscms_toolstree_section' => $this->melisCmsIcon(),
+    'melismarketing_toolstree_section' => $this->melisMarketingIcon(),
+    'meliscommerce_toolstree_section' => $this->melisCommerceIcon(),
+    'melisothers_toolstree_section' => $this->melisOthersIcon(),
+    'meliscustom_toolstree_section' => $this->melisCustomIcon()
+];
 ?>
-<li<?= $id; ?> class="hasSubmenu" data-melisKey='<?= $data_melisKey; ?>'>
-    <a data-target="#tools" data-toggle="collapse" class="collapsed">
+<li id="<?= $id; ?>" class="hasSubmenu" data-melisKey='<?= $melisKey; ?>'>
+    <?php
+    if (in_array($melisKey, array_keys($sections))) : ?>
+        <a data-target="#<?= $id ?>_tools" data-toggle="collapse" class="collapsed">
+            <div class="melis-svg-icon pull-left  melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $name ?>" data-dash-id="id_<?php echo $melisKey ?>_dashboard">
+                <?= $sections[$melisKey] ?>
+            </div>
+            <span class="toolstree-label"><?= $name; ?></span>
+            <div class="clearfix"></div>
+        </a>
+    <?php
+    else:
+    ?>
+    <a data-target="#<?= $id; ?>_tools" data-toggle="collapse" class="collapsed">
         <i class="fa fa-wrench"></i>
         <span><?= $name; ?></span>
     </a>
-    <ul class="collapse" id="tools">
+    <?php endif; ?>
+    <ul class="collapse" id="<?= $id; ?>_tools">
         <?php
-        if (!empty($this->tools))
-        {
-            foreach ($this->tools as $keySection => $sectionTool)
-            {
+
+        if (!empty($this->tools)) {
+            foreach ($this->tools as $keySection => $sectionTool) {
                 $sectionIcon = 'fa-folder';
                 if (!empty($sectionTool['toolsection_icon']))
                     $sectionIcon = $sectionTool['toolsection_icon'];
                 ?>
 
                 <?php
-                if (!empty($sectionTool['toolsection_children']))
-                {
-
-                    ?>
+                if (!empty($sectionTool['toolsection_has_nav_child'])):
+                ?>
                     <li class="hasSubmenu" data-meliskey="">
                         <a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
                             <i class="fa <?= $sectionIcon; ?>"></i>
@@ -37,37 +53,83 @@ $data_melisKey = $this->melisKey;
                         </a>
                         <ul class="collapse secondlvl-container" id="sub-load-<?= $keySection; ?>">
                             <?php
-                            foreach ($sectionTool['toolsection_children'] as $keyTool => $tool)
-                            {
-                                $toolIcon = 'fa-wrench';
-                                if (!empty($tool['tool_icon']))
-                                    $toolIcon = $tool['tool_icon'];
+                            if (isset($sectionTool['toolsection_children']) && $sectionTool['toolsection_children']) {
+                                foreach ($sectionTool['toolsection_children'] as $keyTool => $tool)
+                                {
+                                    if (empty($tool)) {
+                                        continue;
+                                    }
 
-                                $data_tool_id = $tool['tool_id'];
-                                $data_tool_name = $tool['tool_name'];
-                                $data_tool_meliskey = $tool['tool_melisKey'];
+                                    $toolIcon = 'fa-wrench';
+                                    if (!empty($tool['tool_icon']))
+                                        $toolIcon = $tool['tool_icon'];
 
-                                ?>
-                                <li class="melis-opentools" data-tool-icon="<?= $toolIcon; ?>" data-tool-name="<?= $data_tool_name; ?>" data-tool-id="<?= $data_tool_id; ?>" data-tool-meliskey="<?= $data_tool_meliskey; ?>">
-                                    <a href="#">
-                                        <i class="fa <?= $toolIcon; ?>"></i>
-                                        <span><?= $data_tool_name; ?> </span>
-                                    </a>
-                                </li>
+                                    if (isset( $tool['tool_id'])) :
+                                        $data_tool_id = $tool['tool_id'];
+                                        $data_tool_name = $tool['tool_name'];
+                                        $data_tool_meliskey = $tool['tool_melisKey'];
+                                    ?>
+                                        <?php if (isset($tool['toolsection_has_nav_child']) && (bool) $tool['toolsection_has_nav_child'] === true): ?>
+                                        <li class="hasSubmenu" data-meliskey="">
+                                            <a data-target="#sub-load-<?= $keyTool; ?>" data-toggle="collapse" class="collapsed">
+                                                <i class="fa <?= $toolIcon; ?>"></i>
+                                                <span><?= $data_tool_name ?></span>
+                                            </a>
+                                            <ul class="collapse secondlvl-container" id="sub-load-<?= $keyTool; ?>">
+                                                <?php
+                                                foreach ($tool['toolsection_children'] as $childKeyTool => $childTool) {
+                                                    $toolIcon = 'fa-wrench';
+                                                    if (!empty($childTool['tool_icon']))
+                                                        $toolIcon = $childTool['tool_icon'];
+
+                                                    $data_tool_id = $childTool['tool_id'];
+                                                    $data_tool_name = $childTool['tool_name'];
+                                                    $data_tool_meliskey = $childTool['tool_melisKey'];
+                                                    ?>
+                                                    <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
+                                                        <a href="#">
+                                                            <i class="fa <?= $toolIcon ?>"></i>
+                                                            <span><?= $data_tool_name ?> </span>
+                                                        </a>
+                                                    </li>
+                                                <?php }
+                                                ?>
+                                            </ul>
+                                        </li>
+                                        <?php else: ?>
+                                        <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
+                                            <a href="#">
+                                                <i class="fa <?= $toolIcon ?>"></i>
+                                                <span><?= $data_tool_name ?> </span>
+                                            </a>
+                                        </li>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                 <?php
+                                }
                             }
                             ?>
                         </ul>
                     </li>
                     <?php
-                }
+                else:
+                    // if the tool doesn't have a child tool, display it's main tool
+                    if (isset($sectionTool['toolsection_name'])):
                 ?>
+                    <li class="melis-opentools" data-tool-icon="<?= $sectionIcon ?>" data-tool-name="<?= $sectionTool['toolsection_name'] ?>"
+                        data-tool-id="<?= $sectionTool['toolsection_id'] ?>" data-tool-meliskey="<?= $sectionTool['toolsection_meliskey'] ?>">
+                        <a data-target="#">
+                            <i class="fa <?= $sectionIcon; ?>"></i>
+                            <span><?= $sectionTool['toolsection_name']; ?></span>
+                        </a>
+                    </li>
+        <?php
+                    endif;
+                endif;
 
-                <?php
             }
         }
-        else
-        {
+        else {
             echo '<span style="margin-left: 60px">' . $this->translate('tr_meliscore_leftmenu_tools_No tools available') . '</span>';
         }
         ?>

@@ -9,6 +9,7 @@
 
 namespace MelisCore;
 
+use MelisCore\Listener\MelisCorePhpWarningListener;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ModuleManager\ModuleManager;
@@ -28,6 +29,7 @@ use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
+use MelisCore\Listener\MelisCoreDashboardMenuListener;
 
 /**
  * Class Module
@@ -72,8 +74,8 @@ class Module
             $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
 
             $eventManager->attach(new MelisCoreAuthSuccessListener());
+            $eventManager->attach(new MelisCorePhpWarningListener());
         }
-
     }
     
     public function initShowErrorsByconfig(MvcEvent $e)
@@ -128,7 +130,8 @@ class Module
     	    'melis-backoffice/MelisInstaller',
     	    'melis-backoffice/microservice',
     	    'melis-backoffice/microservice_list',
-            'melis-backoffice/get-platform-color-css'
+            'melis-backoffice/get-platform-color-css',
+		'melis-backoffice/webpack_builder'
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
     		return true;
@@ -261,13 +264,15 @@ class Module
     	$configFiles = array(
 			include __DIR__ . '/../config/module.config.php',
             include __DIR__ . '/../config/app.interface.php',
-            include __DIR__ . '/../config/app.interface.general.php',
+            include __DIR__ . '/../config/app.toolstree.php',
             include __DIR__ . '/../config/app.forms.php',
             include __DIR__ . '/../config/app.tools.php',
             include __DIR__ . '/../config/app.emails.php',
             include __DIR__ . '/../config/diagnostic.config.php',
             include __DIR__ . '/../config/app.microservice.php',
             include __DIR__ . '/../config/app.install.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
+	        include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
     	);
     	
     	foreach ($configFiles as $file) 
