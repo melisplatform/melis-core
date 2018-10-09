@@ -1,5 +1,6 @@
 <div id="menu">
     <?php
+
     $id = '';
     if (!empty($this->zoneconfig['conf']['id']))
         $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
@@ -15,7 +16,7 @@
         ?>
 
         <div class="sidebarMenuWrapper hasNiceScroll">
-
+        
             <ul class="list-unstyled sideMenu">
 
                 <?php
@@ -28,7 +29,6 @@
                 }
 
                 ?>
-
                 <?php
                 if (!empty($this->zoneconfig['interface'])) {
                     echo $this->meliscore_toolstree_section;

@@ -1,55 +1,29 @@
-
 <div id="content" class="transition3ms">
-<?php /*
-	<div class="content-nav-tabs nav-tabs-fixed-top heading-buttons bg-white border-bottom clearfix" id="id-wrap-maintabs-tabs">
-	<h1 id="page-title" class="bg-white content-heading border-bottom page-title">Dashboard</h1>
-
-	<div class="bg-white innerAll border-bottom" data-directive-id="bWVudS1iYXItb3B0aW9ucw=="
-         data-directive-template="http://melis2.melistechnology.fr/html/back/templates/options.php"
-         data-directive-replace="false">
-	
-		<ul class="menubar">
-			<li class="active"><a href="#" onclick="MelisHelper.tabs.open('55da1e00be9b7215f5ab3b-a2-b1-c1-d4')">Open Support</a></li>
-			<li><a href="#" onclick="MelisHelper.tabs.close('55da1e00be9b7215f5ab3b-a2-b1-c1-d4')"><span class="badge badge-primary pull-right">30</span> Close Support</a></li>
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-				<ul class="dropdown-menu">
-					<li><a href="#" onclick="MelisHelper.directive.load('bWVudS1iYXItb3B0aW9ucw==')">Change menu bar</a></li>
-					<li><a href="#">Dropdown Link #2</a></li>
-					<li><a href="#">Dropdown Link #3</a></li>
-				</ul>
-			</li>
-		</ul>
-	
+    <div class="innerAll px2">
+    	<!-- Tabs -->
+    	<div class="relativeWrap full-width">
+    		<!-- Melis content loader -->
+    		<div class="tab-content" id="melis-id-body-content-load">
+    			<?php 
+    			
+    				if (!empty($this->zoneconfig['interface'])) 
+    				{
+    					$cpt = 0;
+    					foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+    					{
+    						echo $this->$keyConfig;
+    						$cpt++;
+    					}
+    				}
+    			?>		
+    		</div>
+    		<!-- // Melis content loader -->
+    	</div>
+    	<!-- // Tabs END -->
     </div>
-
-</div>
-*/ ?>
-<div class="innerAll px2">
-	<!-- Tabs -->
-	<div class="relativeWrap full-width">
-		<!-- Melis content loader -->
-		<div class="tab-content" id="melis-id-body-content-load">
-			<?php 
-			
-				if (!empty($this->zoneconfig['interface'])) 
-				{
-					$cpt = 0;
-					foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
-					{
-						echo $this->$keyConfig;
-						$cpt++;
-					}
-				}
-			?>		
-		</div>
-		<!-- // Melis content loader -->
-	</div>
-	<!-- // Tabs END -->
-</div>
-  
-<!-- // Content END -->
-<div class="clearfix"></div>
-<!-- // Sidebar menu & content wrapper END -->
+      
+    <!-- // Content END -->
+    <div class="clearfix"></div>
+    <!-- // Sidebar menu & content wrapper END -->
 </div>
 <!-- // Main Container Fluid END -->

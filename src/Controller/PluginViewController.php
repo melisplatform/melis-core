@@ -12,6 +12,7 @@ namespace MelisCore\Controller;
 use MelisCore\Service\MelisCoreRightsService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
+use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -89,6 +90,12 @@ class PluginViewController extends AbstractActionController
         }
 
         /**
+         * Forcing to set the request to http request
+         */
+        if ($this->getRequest()->getQuery('forceFlagXmlHttpRequestTofalse', false))
+            $isXmlHttpRequest = false;
+
+        /**
          * Get the appConfig
          */
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
@@ -124,7 +131,16 @@ class PluginViewController extends AbstractActionController
          * Add JS calls and datas found in config,
          * so that it will be added in head when generating
          */
+        if (!empty($zoneView->getVariable('jsCallBacks')) && is_array($zoneView->getVariable('jsCallBacks')))
+        {
+            $jsCallBacks = ArrayUtils::merge($zoneView->getVariable('jsCallBacks'), $jsCallBacks);
+        }
         $zoneView->setVariable('jsCallBacks', $jsCallBacks);
+
+        if (!empty($zoneView->getVariable('datasCallback')) && is_array($zoneView->getVariable('datasCallback')))
+        {
+            $datasCallback = ArrayUtils::merge($zoneView->getVariable('datasCallback'), $datasCallback);
+        }
         $zoneView->setVariable('datasCallback', $datasCallback);
 
         /**
@@ -276,9 +292,22 @@ class PluginViewController extends AbstractActionController
         $view = new ViewModel();
         $melisKeyFollow = isset($itemConfig['conf']['follow_regular_rendering']) ? $itemConfig['conf']['follow_regular_rendering'] : true;
 
-//        echo $fullKey . PHP_EOL;
-
-        if ($melisKeyFollow || $isXmlHttpRequest) {
+        if($melisKeyFollow || $isXmlHttpRequest)
+        {
+            /**
+             * Dashboard plugin interface
+             */
+            if (!empty($itemConfig['forward']) && !empty($itemConfig['forward']['plugin'])) {
+                // Setting the controller calling the dashboard plugins after forward
+                $itemConfig['forward']['module'] = 'MelisCore';
+                $itemConfig['forward']['controller'] = 'DashboardPlugins';
+                $itemConfig['forward']['action'] = 'generateDahsboardPlugin';
+                
+                // Adding dashboard plugin controller to generate plugin interface
+                $recDatas['plugin'] = $itemConfig['forward']['plugin'];
+                $recDatas['function'] = $itemConfig['forward']['function'];
+            }
+            
             if (!empty($itemConfig['forward']) && !empty($itemConfig['forward']['controller'])
                 && !empty($itemConfig['forward']['action'])) {
                 // Preparing dispatch
@@ -353,6 +382,17 @@ class PluginViewController extends AbstractActionController
 
                 }
             }
+            
+            if (isset($itemConfig['conf']['dashboard']) && $itemConfig['conf']['dashboard'])
+            {
+                $melisDashboardSrv = $this->getServiceLocator()->get('MelisCoreDashboardService');
+                list($jsCallBacks, $datasCallback) = $melisDashboardSrv->getDashboardPluginsJsCallbackJsDatas($itemConfig['conf']['id']);
+                
+                $view->setVariable('jsCallBacks', $jsCallBacks);
+                $view->setVariable('datasCallback', $datasCallback);
+
+
+            }
 
             $view->setVariable('keyInterface', $key);
 
@@ -361,6 +401,5 @@ class PluginViewController extends AbstractActionController
             return null;
         }
 
-    }
-
+	}
 }

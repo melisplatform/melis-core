@@ -55,17 +55,21 @@ class MelisCoreUserService implements MelisCoreUserServiceInterface, ServiceLoca
                 // for general business app
                 if (isset($rightsObj->$sectionId->id)) {
                     foreach ($rightsObj->$sectionId->id as $item) {
+
                         if ($item == $itemId) {
                             return true;
                         }
                     }
                 }
+
                 foreach ($rightService->getMelisKeyPaths() as $toolSection) {
                     foreach ($rightsObj->$sectionId->$toolSection->id as $item) {
-                        if ($item == $itemId) {
+                        $itemId = in_array($itemId, $rightService->getMelisKeyPaths()) ? $itemId . '_root' : $itemId;
+                        if (trim($item) == $itemId) {
                             return true;
                         }
                     }
+
                     // for those tools that doesn't have a proper parent tool section
                     foreach ($rightsObj->$sectionId->$toolSection->noparent as $item) {
                         if ($item == $itemId) {

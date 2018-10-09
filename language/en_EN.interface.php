@@ -14,10 +14,8 @@
 		'tr_meliscore_leftmenu_tools_No tools available' => 'No tools available!',
 
 		// Dashboard
-		'tr_meliscore_center_Dashboard' => 'Dashboard',
-		'tr_meliscore_center_Melis Dashboard' => 'Melis Dashboard',
-		'tr_meliscore_center_dashboard_Logo' => 'Logo',
-		'tr_meliscore_center_dashboard_Calendar' => 'Calendar',
+		'tr_meliscore_dashboard' => 'Dashboard',
+		'tr_meliscore_melis_dashboard' => 'Melis Dashboard',
 
 		'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
 
@@ -217,11 +215,6 @@
 	    
 	    'tr_meliscore_common_online' => 'Online',
 			
-		// Dashboard
-	    'tr_meliscore_dashboard_Recent Activity' => 'Recent activity',
-	    'tr_meliscore_dashboard_recent_activity_Users' => 'Users',
-	    'tr_meliscore_dashboard_recent_activity_Logged in' => 'logged in',
-
 		'tr_meliscore_dashboard_Calendar' => 'Calendar',
 	    
 	    // Date Picker
@@ -621,13 +614,69 @@
         'tr_meliscore_platform_scheme_success_restore_message' => 'Platform scheme restored successfully',
 
         'tr_melis_user_tabs_close_all_open_tabs' => 'Close all tabs',
+	    
+        //Diagnostic
+        'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
+
+        //Language Back Office
+        'tr_melis_core_common_apply_language' => 'Switch the current language to ',
+
+        // Dashboard plugins
+        'tr_melisore_Plugins' => 'Plugins',
+        'tr_melisore_remove_all_plugins' => 'Remove all plugins',
         'tr_melis_core_common_close' => 'Close',
         'tr_melis_core_common_add' => 'Add',
+        'tr_melis_core_remove_dashboard_plugin' => 'Remove dashboard plugin',
+        'tr_melis_core_remove_dashboard_plugin_msg' => 'Are you sure you want to remove this plugin',
+        'tr_melis_core_remove_dashboard_all_plugin_msg' => 'Are you sure you want to remove all plugin',
+
+        'tr_PluginSection_meliscore' => 'Melis Core',
+
+        'tr_meliscore_dashboard_Recent Activity' => 'Recent activity',
+        'tr_meliscore_dashboard_Recent Activity description' => 'This plugin display the list of User recent activity',
+        'tr_meliscore_dashboard_recent_activity_Users' => 'Users',
+        'tr_meliscore_dashboard_recent_activity_Logged in' => 'logged in',
 
         //Diagnostic
         'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
 
         //Language Back Office
         'tr_melis_core_common_apply_language' => 'Switch the current language to ',
+
+        // Melis Core GDPR
+        'tr_melis_core_gdpr' => 'GDPR',
+        'tr_melis_core_gdpr_header_title' => 'GDPR (General Data Protection Regulation)',
+        'tr_melis_core_gdpr_header_description' => 'Melis Platform provides a system to look for your user\'s datas. </br> All modules compliant to the Melis system will be able to interact with this interface and offer you possibilities to comply with the regulation.',
+
+        'tr_melis_core_gdpr_form_name' => 'Name',
+        'tr_melis_core_gdpr_form_email' => 'Email',
+        'tr_melis_core_gdpr_form_site' => 'Site',
+        'tr_melis_core_gdpr_search_user_title' => 'Search User',
+
+        'tr_melis_core_gdpr_notif_gdpr_search' => 'GDPR Search Form',
+        'tr_melis_core_gdpr_notif_extract_user' => 'GDPR Extract User',
+        'tr_melis_core_gdpr_notif_delete_user' => 'GDPR Delete User',
+
+        'tr_melis_core_gdpr_notif_delete_selected_confirm' => 'Delete Selected',
+        'tr_melis_core_gdpr_notif_delete_selected_confirm_message' => 'Are you sure you want to delete the selected records?',
+
+        'tr_melis_core_gdpr_search_user_error_message' => 'Unable to search for user info',
+        'tr_melis_core_gdpr_tool_form_input_too_long' => 'Input is too long',
+        'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Invalid email format',
+        'tr_melis_core_gdpr_tool_form_no_inputs' => 'Please input the user details. Either the Name or Email field is required',
+        'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'No user selected to extract',
+        'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'No user selected to delete',
+        'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',
+        'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Error on deleting data',
+        'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',
+
+        'tr_melis_core_gdpr_view_search_button' => 'Search',
+        'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',
+        'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected',
+        'tr_melis_core_gdpr_tabs_header_title' => 'Search a user:',
+        'tr_melis_core_gdpr_column_is_admin' => 'Yes',
+        'tr_melis_core_gdpr_column_is_not_admin' => 'No',
+        'tr_melis_core_gdpr_notif_name_or_email_required' => 'Name or Email field is required',
+        'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Name should not consist of numbers',
 	);
 ?>

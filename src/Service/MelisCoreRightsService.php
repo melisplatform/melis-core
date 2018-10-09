@@ -17,7 +17,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     const MELISOTHERS_PREFIX_TOOLS = 'melisothers_toolstree_section';
     const MELISCUSTOM_PREFIX_TOOLS = 'meliscustom_toolstree_section';
     const MELIS_DASHBOARD = '/meliscore_dashboard';
-    const MEIS_CMS_SITE_TOOLS = 'meliscms_site_tools';
+    const MELIS_CMS_SITE_TOOLS = 'meliscms_site_tools';
 
     const OLD_MELISCMS_TOOLSTREE = 'meliscms_toolstree';
     /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
@@ -63,6 +63,13 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         return $this;
     }
 
+    /**
+     * @param $xmlRights
+     * @param $sectionId
+     * @param $itemId
+     *
+     * @return bool
+     */
     public function isAccessible($xmlRights, $sectionId, $itemId)
     {
         $rightsObj = simplexml_load_string(trim($xmlRights));
@@ -120,10 +127,14 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                     if (isset($rightsObj->$sectionId->$toolSection->id)) {
 
                         // check for root section access
+                        $toolSectionsRightsId = (array) $rightsObj->$sectionId->$toolSection->id;
+
                         foreach ($rightsObj->$sectionId->$toolSection->id as $toolId) {
                             $toolId = trim((string) $toolId);
-                            if ($toolId == $itemId || in_array($toolId, $toolSectionRoots)) {
-//                                return true;
+                            $parent = $this->getToolParent($melisKeys, $itemId) . '_root';
+
+                            if (in_array($parent, $toolSectionRoots) && $parent == $toolId) {
+                                return true;
                             }
                         }
 
@@ -145,9 +156,9 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                             }
 
                             // old MelisCms tool section
-//                            if ($parent == self::OLD_MELISCMS_TOOLSTREE) {
-//                                $parent = self::MELISCMS_PREFIX_TOOLS;
-//                            }
+                            if ($parent == self::OLD_MELISCMS_TOOLSTREE) {
+                                $parent = self::MELISCMS_PREFIX_TOOLS;
+                            }
 
                             if (! is_null($parent) && ! in_array($parent, $toolIds)) {
                                 $toolIds[] = $parent;
@@ -170,6 +181,8 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                 if (in_array($itemId, $this->getMelisKeyPaths())  &&
                     count($rightsObj->$sectionId->$itemId->id) > 1
                 ) {
+                    return true;
+                } elseif (in_array($itemId, $this->getOldMelisKeyPathsAndExclusions())) {
                     return true;
                 }
             }
@@ -612,11 +625,14 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getOldMelisKeyPathsAndExclusions()
     {
         return [
             self::OLD_MELISCMS_TOOLSTREE,
-            self::MEIS_CMS_SITE_TOOLS
+            self::MELIS_CMS_SITE_TOOLS
         ];
     }
 
@@ -630,8 +646,11 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     {
         $parent = null;
         $toolsTreeKeys = array_merge($this->getMelisKeyPaths(), $this->getOldMelisKeyPathsAndExclusions());
+        $toolsNodeRoot = array_map (function ($a) {
+            return $a . '_root';
+        }, $this->getMelisKeyPaths());
 
-        if (isset($melisKeys[$child])) {
+        if (null !== $child && is_string($child) && isset($melisKeys[$child])) {
             $melisKey = $melisKeys[$child];
             if (in_array($child, $toolsTreeKeys)) {
                 $parent = $child;
@@ -640,6 +659,13 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                 if (! in_array($parent, $toolsTreeKeys)) {
                     $parent = $this->getToolParent($melisKeys, $parent);
                 }
+            }
+        }
+
+        // if the provided child is a root node
+        if (is_string($child)) {
+            if (in_array(trim($child), $toolsNodeRoot)) {
+                $parent = str_replace('_root', '', $child);
             }
         }
 
@@ -660,6 +686,10 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
      */
     public function getParentViaMelisKeyString($melisKey, $child)
     {
+        if (! $melisKey) {
+            return $child;
+        }
+
         $melisKeys = explode('/', $melisKey);
         if (is_array($melisKeys) && count($melisKeys) > 1) {
             $parentIdx = array_search($child, $melisKeys) - 1;

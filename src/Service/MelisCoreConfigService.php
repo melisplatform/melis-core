@@ -130,6 +130,8 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
             foreach ($elements as $keyElement => $element) {
                 if (!in_array($element['spec']['name'], $elementsFound)) {
                     array_push($oldElementsReordered, $element);
+
+
                     array_push($elementsFound, $element['spec']['name']);
                 } else {
                     continue;
@@ -225,6 +227,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
         $items = $this->getItemRec($pathTab, 0, $this->appConfig);
         $items = $this->addItemsLinkedByType($items);
+        $items = $this->setItemsDashboadForwardConfig($items);
         $items = $this->translateAppConfig($items);
 
         if ($prefix != '') {
@@ -422,5 +425,28 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
         }
 
         return $final;
+    }
+
+    private function setItemsDashboadForwardConfig($array)
+    {
+        if (isset($array['conf']['dashboard']) && $array['conf']['dashboard']){
+            $array['forward'] = [
+                'module' => 'MelisCore',
+                'controller' => 'DashboardPlugins',
+                'action' => 'render-dashboard-plugins',
+                'jscallback' => 'melisDashBoardDragnDrop.init()',
+                'jsdatas' => ''
+                ];
+        }
+
+        foreach($array as $key => $value){
+            if (is_array($value) && $key == 'interface' && !empty($value['interface'])){
+                $children = $this->setItemsDashboadForwardConfig($value);
+                $array[$key] = $children;
+            } else
+                $final[$key] = $value;
+        }
+
+        return $array;
     }
 }
