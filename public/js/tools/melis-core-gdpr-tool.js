@@ -259,7 +259,7 @@ $(document).ready(function() {
                     }).success(function (data) {
                         if (data.success) {
                             $.each(modules, function (key, value) {
-                                var moduleName = key
+                                var moduleName = key;
 
                                 //remove selected rows in data table
                                 $('#' + moduleName).DataTable().rows('.checked').remove().draw();
@@ -281,7 +281,7 @@ $(document).ready(function() {
                         } else {
                             melisHelper.melisKoNotification(
                                 translations.tr_melis_core_gdpr_notif_delete_user,
-                                translations.tr_melis_core_gdpr_notif_error_on_deleting_data,
+                                translations.tr_melis_core_gdpr_notif_error_on_deleting_data
                             );
                         }
                     }).error(function () {
