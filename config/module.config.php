@@ -296,6 +296,7 @@ return array(
             'MelisCorePlatformSchemeService' => 'MelisCore\Service\Factory\MelisCorePlatformSchemeServiceFactory',
             'MelisCoreGeneralService' => 'MelisCore\Service\Factory\MelisCoreGeneralServiceFactory',
             'MelisCoreDashboardService' => 'MelisCore\Service\Factory\MelisCoreDashboardServiceFactory',
+            'MelisCoreGdprService' => 'MelisCore\Service\Factory\MelisCoreGdprServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',
@@ -338,6 +339,7 @@ return array(
             'MelisCore\Controller\MelisSetup' => 'MelisCore\Controller\MelisSetupController',
             'MelisCore\Controller\PlatformScheme' => 'MelisCore\Controller\PlatformSchemeController',
             'MelisCore\Controller\DashboardPlugins' => 'MelisCore\Controller\DashboardPluginsController',
+            'MelisCore\Controller\MelisCoreGdpr' => 'MelisCore\Controller\MelisCoreGdprController',
         ),
     ),
     'controller_plugins' => array(
