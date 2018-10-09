@@ -3279,17 +3279,6 @@ li.plupload_droptext {
     font-size: 12px;
     color: #666
 }
-/*
- * added by: Junry 10/05/2018
- * For commerce dashboard plugin responsive fix
- *
- */
-@media screen and (max-width: 600px) {
-  .grid-stack-item-content .flotchart-holder {
-    margin-top: 60px;
-  }
-}
-/* End /added */
 .flotchart-holder {
     margin: 30px 0 15px;
     height: 250px;
