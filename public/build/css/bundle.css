@@ -32627,6 +32627,12 @@ body{
     position: relative;
     top: 0;
 }
+/*
+ * Added by: Junry @ 10/09/2018
+ */
+.sidebar > .sidebarMenuWrapper > .sideMenu li:last-child > .collapse.in > li:last-child.hasSubmenu {
+    margin-bottom: 8px;
+}
 
 /* input character counter */
 /* SEO text counter */
@@ -35882,8 +35888,8 @@ div#modal-user-management div.widget {
     color: #fff;
     letter-spacing: 0.4px;
     font-size: 10px;
-    /* transition: color 0.4s; */
-    /* -webkit-transition: color 0.4s; */
+    transition: color 0.4s;
+    -webkit-transition: color 0.4s;
     -moz-transition: color 0.4s;
 }
 
@@ -35902,8 +35908,8 @@ div#modal-user-management div.widget {
     text-align: center;
     opacity: 0.4;
     cursor: pointer;
-    /* transition: opacity 0.4s, background 0.4s; */
-    /* -webkit-transition: opacity 0.4s, background 0.4s; */
+    transition: opacity 0.4s, background 0.4s;
+    -webkit-transition: opacity 0.4s, background 0.4s;
     -moz-transition: opacity 0.4s, background 0.4s;
 }
 

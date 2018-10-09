@@ -67,7 +67,7 @@ var melisDashBoardDragnDrop = {
 
         this.$gs.gridstack(options);
         //this.$gs.addTouch();
-        this.$gs.css("touch-action", "none");
+        //this.$gs.css("touch-action", "none");
         //this.$gs2.gridstack(_.defaults({ acceptWidgets: false }), options);
     },
 
@@ -338,6 +338,14 @@ var melisDashBoardDragnDrop = {
                     
                     // serialize & save db remaining gridstack items
                     self.serializeWidgetMap( $items );
+
+                    // Plugin delete callback
+                    if (typeof $del.data('callback') !== "undefined") {
+                        var callback = eval($del.data("callback"));
+                        if (typeof callback === "function") {
+                            callback($del.closest('.grid-stack-item'));
+                        }
+                    }
                 }
             );
     },

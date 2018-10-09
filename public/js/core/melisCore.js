@@ -495,6 +495,7 @@ var melisCore = (function(window){
     $body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);
     $body.on("click", ".melis-core-dashboard-category-btn", showCatPlugLists);
 
+
     var dashboardTooltip = {
         placement: "left",
         template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
@@ -515,7 +516,9 @@ var melisCore = (function(window){
      });*/
 
     $("body .melis-core-dashboard-plugin-snippets").hover(function() {
-        $(this).children(".melis-plugin-tooltip").fadeIn();
+        setTimeout(function() {
+            $(this).children(".melis-plugin-tooltip").fadeIn();
+        }, 600);
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
