@@ -109,8 +109,8 @@ class MelisSetupController extends AbstractActionController
 
                 try {
 
-
                     $userId = $tableUser->save([
+
                         'usr_status' => 1,
                         'usr_login' => $userLogin,
                         'usr_email' => $userEmail,
@@ -144,8 +144,7 @@ class MelisSetupController extends AbstractActionController
                     ]);
 
                     $installerSession = new Container('melisinstaller');
-
-                    // Saving platforms
+                    // save platforms
                     $melisCorePlatformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
                     $defaultPlatform = getenv('MELIS_PLATFORM');
                     $platforms = isset($installerSession['environments']) ? $installerSession['environments'] : null;
@@ -161,8 +160,9 @@ class MelisSetupController extends AbstractActionController
                         }
                     }
 
-                    // Saving Dashboard plugins
+                    // Dashboard
                     $this->generateDashboardPlugins($userId);
+
 
                     $success = 0;
                     $message = 'tr_install_setup_message_ok';
@@ -170,6 +170,8 @@ class MelisSetupController extends AbstractActionController
                 } catch (\Exception $e) {
                     $errors = $e->getMessage();
                 }
+
+
             }
 
         } else {
@@ -278,9 +280,6 @@ class MelisSetupController extends AbstractActionController
             'd_user_id' => $userId,
             'd_content' => $pluginXml,
         );
-
-        $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
-        $dashboardPluginsTbl->save($pluginDashboard);
     }
 
     /**

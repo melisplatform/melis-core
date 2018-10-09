@@ -32,11 +32,11 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
         
         $melisKeys = $melisAppConfig->getMelisKeys();
         $fullKeyToolUser = $melisKeys['meliscore_tool_user'];
-        
-        // Check if User can access the users' tool for making links on users' names
-        $xmlRights = $melisCoreAuth->getAuthRights();
-        $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_TOOLS, 'meliscore_tool_user');
-        
+
+        // Checks wether the user has access to this tools or not
+        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+        $isAccessible = $melisCoreRights->canAccess('meliscore_tool_user');
+
         $toolName = '';
         $toolId = '';
         $toolMelisKey = '';

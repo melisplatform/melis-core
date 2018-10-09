@@ -27939,6 +27939,10 @@ var charts =
 	};
 }(jQuery));
 
+!function(a){"use strict";if("function"==typeof define&&define.amd)define(["jquery","moment"],a);else if("object"==typeof exports)module.exports=a(require("jquery"),require("moment"));else{if("undefined"==typeof jQuery)throw"bootstrap-datetimepicker requires jQuery to be loaded first";if("undefined"==typeof moment)throw"bootstrap-datetimepicker requires Moment.js to be loaded first";a(jQuery,moment)}}(function(a,b){"use strict";if(!b)throw new Error("bootstrap-datetimepicker requires Moment.js to be loaded first");var c=function(c,d){var e,f,g,h,i,j,k,l={},m=!0,n=!1,o=!1,p=0,q=[{clsName:"days",navFnc:"M",navStep:1},{clsName:"months",navFnc:"y",navStep:1},{clsName:"years",navFnc:"y",navStep:10},{clsName:"decades",navFnc:"y",navStep:100}],r=["days","months","years","decades"],s=["top","bottom","auto"],t=["left","right","auto"],u=["default","top","bottom"],v={up:38,38:"up",down:40,40:"down",left:37,37:"left",right:39,39:"right",tab:9,9:"tab",escape:27,27:"escape",enter:13,13:"enter",pageUp:33,33:"pageUp",pageDown:34,34:"pageDown",shift:16,16:"shift",control:17,17:"control",space:32,32:"space",t:84,84:"t",delete:46,46:"delete"},w={},x=function(){return void 0!==b.tz&&void 0!==d.timeZone&&null!==d.timeZone&&""!==d.timeZone},y=function(a){var c;return c=void 0===a||null===a?b():b.isDate(a)||b.isMoment(a)?b(a):x()?b.tz(a,j,d.useStrict,d.timeZone):b(a,j,d.useStrict),x()&&c.tz(d.timeZone),c},z=function(a){if("string"!=typeof a||a.length>1)throw new TypeError("isEnabled expects a single character string parameter");switch(a){case"y":return i.indexOf("Y")!==-1;case"M":return i.indexOf("M")!==-1;case"d":return i.toLowerCase().indexOf("d")!==-1;case"h":case"H":return i.toLowerCase().indexOf("h")!==-1;case"m":return i.indexOf("m")!==-1;case"s":return i.indexOf("s")!==-1;default:return!1}},A=function(){return z("h")||z("m")||z("s")},B=function(){return z("y")||z("M")||z("d")},C=function(){var b=a("<thead>").append(a("<tr>").append(a("<th>").addClass("prev").attr("data-action","previous").append(a("<span>").addClass(d.icons.previous))).append(a("<th>").addClass("picker-switch").attr("data-action","pickerSwitch").attr("colspan",d.calendarWeeks?"6":"5")).append(a("<th>").addClass("next").attr("data-action","next").append(a("<span>").addClass(d.icons.next)))),c=a("<tbody>").append(a("<tr>").append(a("<td>").attr("colspan",d.calendarWeeks?"8":"7")));return[a("<div>").addClass("datepicker-days").append(a("<table>").addClass("table-condensed").append(b).append(a("<tbody>"))),a("<div>").addClass("datepicker-months").append(a("<table>").addClass("table-condensed").append(b.clone()).append(c.clone())),a("<div>").addClass("datepicker-years").append(a("<table>").addClass("table-condensed").append(b.clone()).append(c.clone())),a("<div>").addClass("datepicker-decades").append(a("<table>").addClass("table-condensed").append(b.clone()).append(c.clone()))]},D=function(){var b=a("<tr>"),c=a("<tr>"),e=a("<tr>");return z("h")&&(b.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1",title:d.tooltips.incrementHour}).addClass("btn").attr("data-action","incrementHours").append(a("<span>").addClass(d.icons.up)))),c.append(a("<td>").append(a("<span>").addClass("timepicker-hour").attr({"data-time-component":"hours",title:d.tooltips.pickHour}).attr("data-action","showHours"))),e.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1",title:d.tooltips.decrementHour}).addClass("btn").attr("data-action","decrementHours").append(a("<span>").addClass(d.icons.down))))),z("m")&&(z("h")&&(b.append(a("<td>").addClass("separator")),c.append(a("<td>").addClass("separator").html(":")),e.append(a("<td>").addClass("separator"))),b.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1",title:d.tooltips.incrementMinute}).addClass("btn").attr("data-action","incrementMinutes").append(a("<span>").addClass(d.icons.up)))),c.append(a("<td>").append(a("<span>").addClass("timepicker-minute").attr({"data-time-component":"minutes",title:d.tooltips.pickMinute}).attr("data-action","showMinutes"))),e.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1",title:d.tooltips.decrementMinute}).addClass("btn").attr("data-action","decrementMinutes").append(a("<span>").addClass(d.icons.down))))),z("s")&&(z("m")&&(b.append(a("<td>").addClass("separator")),c.append(a("<td>").addClass("separator").html(":")),e.append(a("<td>").addClass("separator"))),b.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1",title:d.tooltips.incrementSecond}).addClass("btn").attr("data-action","incrementSeconds").append(a("<span>").addClass(d.icons.up)))),c.append(a("<td>").append(a("<span>").addClass("timepicker-second").attr({"data-time-component":"seconds",title:d.tooltips.pickSecond}).attr("data-action","showSeconds"))),e.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1",title:d.tooltips.decrementSecond}).addClass("btn").attr("data-action","decrementSeconds").append(a("<span>").addClass(d.icons.down))))),h||(b.append(a("<td>").addClass("separator")),c.append(a("<td>").append(a("<button>").addClass("btn btn-primary").attr({"data-action":"togglePeriod",tabindex:"-1",title:d.tooltips.togglePeriod}))),e.append(a("<td>").addClass("separator"))),a("<div>").addClass("timepicker-picker").append(a("<table>").addClass("table-condensed").append([b,c,e]))},E=function(){var b=a("<div>").addClass("timepicker-hours").append(a("<table>").addClass("table-condensed")),c=a("<div>").addClass("timepicker-minutes").append(a("<table>").addClass("table-condensed")),d=a("<div>").addClass("timepicker-seconds").append(a("<table>").addClass("table-condensed")),e=[D()];return z("h")&&e.push(b),z("m")&&e.push(c),z("s")&&e.push(d),e},F=function(){var b=[];return d.showTodayButton&&b.push(a("<td>").append(a("<a>").attr({"data-action":"today",title:d.tooltips.today}).append(a("<span>").addClass(d.icons.today)))),!d.sideBySide&&B()&&A()&&b.push(a("<td>").append(a("<a>").attr({"data-action":"togglePicker",title:d.tooltips.selectTime}).append(a("<span>").addClass(d.icons.time)))),d.showClear&&b.push(a("<td>").append(a("<a>").attr({"data-action":"clear",title:d.tooltips.clear}).append(a("<span>").addClass(d.icons.clear)))),d.showClose&&b.push(a("<td>").append(a("<a>").attr({"data-action":"close",title:d.tooltips.close}).append(a("<span>").addClass(d.icons.close)))),a("<table>").addClass("table-condensed").append(a("<tbody>").append(a("<tr>").append(b)))},G=function(){var b=a("<div>").addClass("bootstrap-datetimepicker-widget dropdown-menu"),c=a("<div>").addClass("datepicker").append(C()),e=a("<div>").addClass("timepicker").append(E()),f=a("<ul>").addClass("list-unstyled"),g=a("<li>").addClass("picker-switch"+(d.collapse?" accordion-toggle":"")).append(F());return d.inline&&b.removeClass("dropdown-menu"),h&&b.addClass("usetwentyfour"),z("s")&&!h&&b.addClass("wider"),d.sideBySide&&B()&&A()?(b.addClass("timepicker-sbs"),"top"===d.toolbarPlacement&&b.append(g),b.append(a("<div>").addClass("row").append(c.addClass("col-md-6")).append(e.addClass("col-md-6"))),"bottom"===d.toolbarPlacement&&b.append(g),b):("top"===d.toolbarPlacement&&f.append(g),B()&&f.append(a("<li>").addClass(d.collapse&&A()?"collapse in":"").append(c)),"default"===d.toolbarPlacement&&f.append(g),A()&&f.append(a("<li>").addClass(d.collapse&&B()?"collapse":"").append(e)),"bottom"===d.toolbarPlacement&&f.append(g),b.append(f))},H=function(){var b,e={};return b=c.is("input")||d.inline?c.data():c.find("input").data(),b.dateOptions&&b.dateOptions instanceof Object&&(e=a.extend(!0,e,b.dateOptions)),a.each(d,function(a){var c="date"+a.charAt(0).toUpperCase()+a.slice(1);void 0!==b[c]&&(e[a]=b[c])}),e},I=function(){var b,e=(n||c).position(),f=(n||c).offset(),g=d.widgetPositioning.vertical,h=d.widgetPositioning.horizontal;if(d.widgetParent)b=d.widgetParent.append(o);else if(c.is("input"))b=c.after(o).parent();else{if(d.inline)return void(b=c.append(o));b=c,c.children().first().after(o)}if("auto"===g&&(g=f.top+1.5*o.height()>=a(window).height()+a(window).scrollTop()&&o.height()+c.outerHeight()<f.top?"top":"bottom"),"auto"===h&&(h=b.width()<f.left+o.outerWidth()/2&&f.left+o.outerWidth()>a(window).width()?"right":"left"),"top"===g?o.addClass("top").removeClass("bottom"):o.addClass("bottom").removeClass("top"),"right"===h?o.addClass("pull-right"):o.removeClass("pull-right"),"static"===b.css("position")&&(b=b.parents().filter(function(){return"static"!==a(this).css("position")}).first()),0===b.length)throw new Error("datetimepicker component should be placed within a non-static positioned container");o.css({top:"top"===g?"auto":e.top+c.outerHeight(),bottom:"top"===g?b.outerHeight()-(b===c?0:e.top):"auto",left:"left"===h?b===c?0:e.left:"auto",right:"left"===h?"auto":b.outerWidth()-c.outerWidth()-(b===c?0:e.left)})},J=function(a){"dp.change"===a.type&&(a.date&&a.date.isSame(a.oldDate)||!a.date&&!a.oldDate)||c.trigger(a)},K=function(a){"y"===a&&(a="YYYY"),J({type:"dp.update",change:a,viewDate:f.clone()})},L=function(a){o&&(a&&(k=Math.max(p,Math.min(3,k+a))),o.find(".datepicker > div").hide().filter(".datepicker-"+q[k].clsName).show())},M=function(){var b=a("<tr>"),c=f.clone().startOf("w").startOf("d");for(d.calendarWeeks===!0&&b.append(a("<th>").addClass("cw").text("#"));c.isBefore(f.clone().endOf("w"));)b.append(a("<th>").addClass("dow").text(c.format("dd"))),c.add(1,"d");o.find(".datepicker-days thead").append(b)},N=function(a){return d.disabledDates[a.format("YYYY-MM-DD")]===!0},O=function(a){return d.enabledDates[a.format("YYYY-MM-DD")]===!0},P=function(a){return d.disabledHours[a.format("H")]===!0},Q=function(a){return d.enabledHours[a.format("H")]===!0},R=function(b,c){if(!b.isValid())return!1;if(d.disabledDates&&"d"===c&&N(b))return!1;if(d.enabledDates&&"d"===c&&!O(b))return!1;if(d.minDate&&b.isBefore(d.minDate,c))return!1;if(d.maxDate&&b.isAfter(d.maxDate,c))return!1;if(d.daysOfWeekDisabled&&"d"===c&&d.daysOfWeekDisabled.indexOf(b.day())!==-1)return!1;if(d.disabledHours&&("h"===c||"m"===c||"s"===c)&&P(b))return!1;if(d.enabledHours&&("h"===c||"m"===c||"s"===c)&&!Q(b))return!1;if(d.disabledTimeIntervals&&("h"===c||"m"===c||"s"===c)){var e=!1;if(a.each(d.disabledTimeIntervals,function(){if(b.isBetween(this[0],this[1]))return e=!0,!1}),e)return!1}return!0},S=function(){for(var b=[],c=f.clone().startOf("y").startOf("d");c.isSame(f,"y");)b.push(a("<span>").attr("data-action","selectMonth").addClass("month").text(c.format("MMM"))),c.add(1,"M");o.find(".datepicker-months td").empty().append(b)},T=function(){var b=o.find(".datepicker-months"),c=b.find("th"),g=b.find("tbody").find("span");c.eq(0).find("span").attr("title",d.tooltips.prevYear),c.eq(1).attr("title",d.tooltips.selectYear),c.eq(2).find("span").attr("title",d.tooltips.nextYear),b.find(".disabled").removeClass("disabled"),R(f.clone().subtract(1,"y"),"y")||c.eq(0).addClass("disabled"),c.eq(1).text(f.year()),R(f.clone().add(1,"y"),"y")||c.eq(2).addClass("disabled"),g.removeClass("active"),e.isSame(f,"y")&&!m&&g.eq(e.month()).addClass("active"),g.each(function(b){R(f.clone().month(b),"M")||a(this).addClass("disabled")})},U=function(){var a=o.find(".datepicker-years"),b=a.find("th"),c=f.clone().subtract(5,"y"),g=f.clone().add(6,"y"),h="";for(b.eq(0).find("span").attr("title",d.tooltips.prevDecade),b.eq(1).attr("title",d.tooltips.selectDecade),b.eq(2).find("span").attr("title",d.tooltips.nextDecade),a.find(".disabled").removeClass("disabled"),d.minDate&&d.minDate.isAfter(c,"y")&&b.eq(0).addClass("disabled"),b.eq(1).text(c.year()+"-"+g.year()),d.maxDate&&d.maxDate.isBefore(g,"y")&&b.eq(2).addClass("disabled");!c.isAfter(g,"y");)h+='<span data-action="selectYear" class="year'+(c.isSame(e,"y")&&!m?" active":"")+(R(c,"y")?"":" disabled")+'">'+c.year()+"</span>",c.add(1,"y");a.find("td").html(h)},V=function(){var a,c=o.find(".datepicker-decades"),g=c.find("th"),h=b({y:f.year()-f.year()%100-1}),i=h.clone().add(100,"y"),j=h.clone(),k=!1,l=!1,m="";for(g.eq(0).find("span").attr("title",d.tooltips.prevCentury),g.eq(2).find("span").attr("title",d.tooltips.nextCentury),c.find(".disabled").removeClass("disabled"),(h.isSame(b({y:1900}))||d.minDate&&d.minDate.isAfter(h,"y"))&&g.eq(0).addClass("disabled"),g.eq(1).text(h.year()+"-"+i.year()),(h.isSame(b({y:2e3}))||d.maxDate&&d.maxDate.isBefore(i,"y"))&&g.eq(2).addClass("disabled");!h.isAfter(i,"y");)a=h.year()+12,k=d.minDate&&d.minDate.isAfter(h,"y")&&d.minDate.year()<=a,l=d.maxDate&&d.maxDate.isAfter(h,"y")&&d.maxDate.year()<=a,m+='<span data-action="selectDecade" class="decade'+(e.isAfter(h)&&e.year()<=a?" active":"")+(R(h,"y")||k||l?"":" disabled")+'" data-selection="'+(h.year()+6)+'">'+(h.year()+1)+" - "+(h.year()+12)+"</span>",h.add(12,"y");m+="<span></span><span></span><span></span>",c.find("td").html(m),g.eq(1).text(j.year()+1+"-"+h.year())},W=function(){var b,c,g,h=o.find(".datepicker-days"),i=h.find("th"),j=[],k=[];if(B()){for(i.eq(0).find("span").attr("title",d.tooltips.prevMonth),i.eq(1).attr("title",d.tooltips.selectMonth),i.eq(2).find("span").attr("title",d.tooltips.nextMonth),h.find(".disabled").removeClass("disabled"),i.eq(1).text(f.format(d.dayViewHeaderFormat)),R(f.clone().subtract(1,"M"),"M")||i.eq(0).addClass("disabled"),R(f.clone().add(1,"M"),"M")||i.eq(2).addClass("disabled"),b=f.clone().startOf("M").startOf("w").startOf("d"),g=0;g<42;g++)0===b.weekday()&&(c=a("<tr>"),d.calendarWeeks&&c.append('<td class="cw">'+b.week()+"</td>"),j.push(c)),k=["day"],b.isBefore(f,"M")&&k.push("old"),b.isAfter(f,"M")&&k.push("new"),b.isSame(e,"d")&&!m&&k.push("active"),R(b,"d")||k.push("disabled"),b.isSame(y(),"d")&&k.push("today"),0!==b.day()&&6!==b.day()||k.push("weekend"),J({type:"dp.classify",date:b,classNames:k}),c.append('<td data-action="selectDay" data-day="'+b.format("L")+'" class="'+k.join(" ")+'">'+b.date()+"</td>"),b.add(1,"d");h.find("tbody").empty().append(j),T(),U(),V()}},X=function(){var b=o.find(".timepicker-hours table"),c=f.clone().startOf("d"),d=[],e=a("<tr>");for(f.hour()>11&&!h&&c.hour(12);c.isSame(f,"d")&&(h||f.hour()<12&&c.hour()<12||f.hour()>11);)c.hour()%4===0&&(e=a("<tr>"),d.push(e)),e.append('<td data-action="selectHour" class="hour'+(R(c,"h")?"":" disabled")+'">'+c.format(h?"HH":"hh")+"</td>"),c.add(1,"h");b.empty().append(d)},Y=function(){for(var b=o.find(".timepicker-minutes table"),c=f.clone().startOf("h"),e=[],g=a("<tr>"),h=1===d.stepping?5:d.stepping;f.isSame(c,"h");)c.minute()%(4*h)===0&&(g=a("<tr>"),e.push(g)),g.append('<td data-action="selectMinute" class="minute'+(R(c,"m")?"":" disabled")+'">'+c.format("mm")+"</td>"),c.add(h,"m");b.empty().append(e)},Z=function(){for(var b=o.find(".timepicker-seconds table"),c=f.clone().startOf("m"),d=[],e=a("<tr>");f.isSame(c,"m");)c.second()%20===0&&(e=a("<tr>"),d.push(e)),e.append('<td data-action="selectSecond" class="second'+(R(c,"s")?"":" disabled")+'">'+c.format("ss")+"</td>"),c.add(5,"s");b.empty().append(d)},$=function(){var a,b,c=o.find(".timepicker span[data-time-component]");h||(a=o.find(".timepicker [data-action=togglePeriod]"),b=e.clone().add(e.hours()>=12?-12:12,"h"),a.text(e.format("A")),R(b,"h")?a.removeClass("disabled"):a.addClass("disabled")),c.filter("[data-time-component=hours]").text(e.format(h?"HH":"hh")),c.filter("[data-time-component=minutes]").text(e.format("mm")),c.filter("[data-time-component=seconds]").text(e.format("ss")),X(),Y(),Z()},_=function(){o&&(W(),$())},aa=function(a){var b=m?null:e;if(!a)return m=!0,g.val(""),c.data("date",""),J({type:"dp.change",date:!1,oldDate:b}),void _();if(a=a.clone().locale(d.locale),x()&&a.tz(d.timeZone),1!==d.stepping)for(a.minutes(Math.round(a.minutes()/d.stepping)*d.stepping).seconds(0);d.minDate&&a.isBefore(d.minDate);)a.add(d.stepping,"minutes");R(a)?(e=a,f=e.clone(),g.val(e.format(i)),c.data("date",e.format(i)),m=!1,_(),J({type:"dp.change",date:e.clone(),oldDate:b})):(d.keepInvalid?J({type:"dp.change",date:a,oldDate:b}):g.val(m?"":e.format(i)),J({type:"dp.error",date:a,oldDate:b}))},ba=function(){var b=!1;return o?(o.find(".collapse").each(function(){var c=a(this).data("collapse");return!c||!c.transitioning||(b=!0,!1)}),b?l:(n&&n.hasClass("btn")&&n.toggleClass("active"),o.hide(),a(window).off("resize",I),o.off("click","[data-action]"),o.off("mousedown",!1),o.remove(),o=!1,J({type:"dp.hide",date:e.clone()}),g.blur(),f=e.clone(),l)):l},ca=function(){aa(null)},da=function(a){return void 0===d.parseInputDate?(!b.isMoment(a)||a instanceof Date)&&(a=y(a)):a=d.parseInputDate(a),a},ea={next:function(){var a=q[k].navFnc;f.add(q[k].navStep,a),W(),K(a)},previous:function(){var a=q[k].navFnc;f.subtract(q[k].navStep,a),W(),K(a)},pickerSwitch:function(){L(1)},selectMonth:function(b){var c=a(b.target).closest("tbody").find("span").index(a(b.target));f.month(c),k===p?(aa(e.clone().year(f.year()).month(f.month())),d.inline||ba()):(L(-1),W()),K("M")},selectYear:function(b){var c=parseInt(a(b.target).text(),10)||0;f.year(c),k===p?(aa(e.clone().year(f.year())),d.inline||ba()):(L(-1),W()),K("YYYY")},selectDecade:function(b){var c=parseInt(a(b.target).data("selection"),10)||0;f.year(c),k===p?(aa(e.clone().year(f.year())),d.inline||ba()):(L(-1),W()),K("YYYY")},selectDay:function(b){var c=f.clone();a(b.target).is(".old")&&c.subtract(1,"M"),a(b.target).is(".new")&&c.add(1,"M"),aa(c.date(parseInt(a(b.target).text(),10))),A()||d.keepOpen||d.inline||ba()},incrementHours:function(){var a=e.clone().add(1,"h");R(a,"h")&&aa(a)},incrementMinutes:function(){var a=e.clone().add(d.stepping,"m");R(a,"m")&&aa(a)},incrementSeconds:function(){var a=e.clone().add(1,"s");R(a,"s")&&aa(a)},decrementHours:function(){var a=e.clone().subtract(1,"h");R(a,"h")&&aa(a)},decrementMinutes:function(){var a=e.clone().subtract(d.stepping,"m");R(a,"m")&&aa(a)},decrementSeconds:function(){var a=e.clone().subtract(1,"s");R(a,"s")&&aa(a)},togglePeriod:function(){aa(e.clone().add(e.hours()>=12?-12:12,"h"))},togglePicker:function(b){var c,e=a(b.target),f=e.closest("ul"),g=f.find(".in"),h=f.find(".collapse:not(.in)");if(g&&g.length){if(c=g.data("collapse"),c&&c.transitioning)return;g.collapse?(g.collapse("hide"),h.collapse("show")):(g.removeClass("in"),h.addClass("in")),e.is("span")?e.toggleClass(d.icons.time+" "+d.icons.date):e.find("span").toggleClass(d.icons.time+" "+d.icons.date)}},showPicker:function(){o.find(".timepicker > div:not(.timepicker-picker)").hide(),o.find(".timepicker .timepicker-picker").show()},showHours:function(){o.find(".timepicker .timepicker-picker").hide(),o.find(".timepicker .timepicker-hours").show()},showMinutes:function(){o.find(".timepicker .timepicker-picker").hide(),o.find(".timepicker .timepicker-minutes").show()},showSeconds:function(){o.find(".timepicker .timepicker-picker").hide(),o.find(".timepicker .timepicker-seconds").show()},selectHour:function(b){var c=parseInt(a(b.target).text(),10);h||(e.hours()>=12?12!==c&&(c+=12):12===c&&(c=0)),aa(e.clone().hours(c)),ea.showPicker.call(l)},selectMinute:function(b){aa(e.clone().minutes(parseInt(a(b.target).text(),10))),ea.showPicker.call(l)},selectSecond:function(b){aa(e.clone().seconds(parseInt(a(b.target).text(),10))),ea.showPicker.call(l)},clear:ca,today:function(){var a=y();R(a,"d")&&aa(a)},close:ba},fa=function(b){return!a(b.currentTarget).is(".disabled")&&(ea[a(b.currentTarget).data("action")].apply(l,arguments),!1)},ga=function(){var b,c={year:function(a){return a.month(0).date(1).hours(0).seconds(0).minutes(0)},month:function(a){return a.date(1).hours(0).seconds(0).minutes(0)},day:function(a){return a.hours(0).seconds(0).minutes(0)},hour:function(a){return a.seconds(0).minutes(0)},minute:function(a){return a.seconds(0)}};return g.prop("disabled")||!d.ignoreReadonly&&g.prop("readonly")||o?l:(void 0!==g.val()&&0!==g.val().trim().length?aa(da(g.val().trim())):m&&d.useCurrent&&(d.inline||g.is("input")&&0===g.val().trim().length)&&(b=y(),"string"==typeof d.useCurrent&&(b=c[d.useCurrent](b)),aa(b)),o=G(),M(),S(),o.find(".timepicker-hours").hide(),o.find(".timepicker-minutes").hide(),o.find(".timepicker-seconds").hide(),_(),L(),a(window).on("resize",I),o.on("click","[data-action]",fa),o.on("mousedown",!1),n&&n.hasClass("btn")&&n.toggleClass("active"),I(),o.show(),d.focusOnShow&&!g.is(":focus")&&g.focus(),J({type:"dp.show"}),l)},ha=function(){return o?ba():ga()},ia=function(a){var b,c,e,f,g=null,h=[],i={},j=a.which,k="p";w[j]=k;for(b in w)w.hasOwnProperty(b)&&w[b]===k&&(h.push(b),parseInt(b,10)!==j&&(i[b]=!0));for(b in d.keyBinds)if(d.keyBinds.hasOwnProperty(b)&&"function"==typeof d.keyBinds[b]&&(e=b.split(" "),e.length===h.length&&v[j]===e[e.length-1])){for(f=!0,c=e.length-2;c>=0;c--)if(!(v[e[c]]in i)){f=!1;break}if(f){g=d.keyBinds[b];break}}g&&(g.call(l,o),a.stopPropagation(),a.preventDefault())},ja=function(a){w[a.which]="r",a.stopPropagation(),a.preventDefault()},ka=function(b){var c=a(b.target).val().trim(),d=c?da(c):null;return aa(d),b.stopImmediatePropagation(),!1},la=function(){g.on({change:ka,blur:d.debug?"":ba,keydown:ia,keyup:ja,focus:d.allowInputToggle?ga:""}),c.is("input")?g.on({focus:ga}):n&&(n.on("click",ha),n.on("mousedown",!1))},ma=function(){g.off({change:ka,blur:blur,keydown:ia,keyup:ja,focus:d.allowInputToggle?ba:""}),c.is("input")?g.off({focus:ga}):n&&(n.off("click",ha),n.off("mousedown",!1))},na=function(b){var c={};return a.each(b,function(){var a=da(this);a.isValid()&&(c[a.format("YYYY-MM-DD")]=!0)}),!!Object.keys(c).length&&c},oa=function(b){var c={};return a.each(b,function(){c[this]=!0}),!!Object.keys(c).length&&c},pa=function(){var a=d.format||"L LT";i=a.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,function(a){var b=e.localeData().longDateFormat(a)||a;return b.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,function(a){return e.localeData().longDateFormat(a)||a})}),j=d.extraFormats?d.extraFormats.slice():[],j.indexOf(a)<0&&j.indexOf(i)<0&&j.push(i),h=i.toLowerCase().indexOf("a")<1&&i.replace(/\[.*?\]/g,"").indexOf("h")<1,z("y")&&(p=2),z("M")&&(p=1),z("d")&&(p=0),k=Math.max(p,k),m||aa(e)};if(l.destroy=function(){ba(),ma(),c.removeData("DateTimePicker"),c.removeData("date")},l.toggle=ha,l.show=ga,l.hide=ba,l.disable=function(){return ba(),n&&n.hasClass("btn")&&n.addClass("disabled"),g.prop("disabled",!0),l},l.enable=function(){return n&&n.hasClass("btn")&&n.removeClass("disabled"),g.prop("disabled",!1),l},l.ignoreReadonly=function(a){if(0===arguments.length)return d.ignoreReadonly;if("boolean"!=typeof a)throw new TypeError("ignoreReadonly () expects a boolean parameter");return d.ignoreReadonly=a,l},l.options=function(b){if(0===arguments.length)return a.extend(!0,{},d);if(!(b instanceof Object))throw new TypeError("options() options parameter should be an object");return a.extend(!0,d,b),a.each(d,function(a,b){if(void 0===l[a])throw new TypeError("option "+a+" is not recognized!");l[a](b)}),l},l.date=function(a){if(0===arguments.length)return m?null:e.clone();if(!(null===a||"string"==typeof a||b.isMoment(a)||a instanceof Date))throw new TypeError("date() parameter must be one of [null, string, moment or Date]");return aa(null===a?null:da(a)),l},l.format=function(a){if(0===arguments.length)return d.format;if("string"!=typeof a&&("boolean"!=typeof a||a!==!1))throw new TypeError("format() expects a string or boolean:false parameter "+a);return d.format=a,i&&pa(),l},l.timeZone=function(a){if(0===arguments.length)return d.timeZone;if("string"!=typeof a)throw new TypeError("newZone() expects a string parameter");return d.timeZone=a,l},l.dayViewHeaderFormat=function(a){if(0===arguments.length)return d.dayViewHeaderFormat;if("string"!=typeof a)throw new TypeError("dayViewHeaderFormat() expects a string parameter");return d.dayViewHeaderFormat=a,l},l.extraFormats=function(a){if(0===arguments.length)return d.extraFormats;if(a!==!1&&!(a instanceof Array))throw new TypeError("extraFormats() expects an array or false parameter");return d.extraFormats=a,j&&pa(),l},l.disabledDates=function(b){if(0===arguments.length)return d.disabledDates?a.extend({},d.disabledDates):d.disabledDates;if(!b)return d.disabledDates=!1,_(),l;if(!(b instanceof Array))throw new TypeError("disabledDates() expects an array parameter");return d.disabledDates=na(b),d.enabledDates=!1,_(),l},l.enabledDates=function(b){if(0===arguments.length)return d.enabledDates?a.extend({},d.enabledDates):d.enabledDates;if(!b)return d.enabledDates=!1,_(),l;if(!(b instanceof Array))throw new TypeError("enabledDates() expects an array parameter");return d.enabledDates=na(b),d.disabledDates=!1,_(),l},l.daysOfWeekDisabled=function(a){if(0===arguments.length)return d.daysOfWeekDisabled.splice(0);if("boolean"==typeof a&&!a)return d.daysOfWeekDisabled=!1,_(),l;if(!(a instanceof Array))throw new TypeError("daysOfWeekDisabled() expects an array parameter");if(d.daysOfWeekDisabled=a.reduce(function(a,b){return b=parseInt(b,10),b>6||b<0||isNaN(b)?a:(a.indexOf(b)===-1&&a.push(b),a)},[]).sort(),d.useCurrent&&!d.keepInvalid){for(var b=0;!R(e,"d");){if(e.add(1,"d"),31===b)throw"Tried 31 times to find a valid date";b++}aa(e)}return _(),l},l.maxDate=function(a){if(0===arguments.length)return d.maxDate?d.maxDate.clone():d.maxDate;if("boolean"==typeof a&&a===!1)return d.maxDate=!1,_(),l;"string"==typeof a&&("now"!==a&&"moment"!==a||(a=y()));var b=da(a);if(!b.isValid())throw new TypeError("maxDate() Could not parse date parameter: "+a);if(d.minDate&&b.isBefore(d.minDate))throw new TypeError("maxDate() date parameter is before options.minDate: "+b.format(i));return d.maxDate=b,d.useCurrent&&!d.keepInvalid&&e.isAfter(a)&&aa(d.maxDate),f.isAfter(b)&&(f=b.clone().subtract(d.stepping,"m")),_(),l},l.minDate=function(a){if(0===arguments.length)return d.minDate?d.minDate.clone():d.minDate;if("boolean"==typeof a&&a===!1)return d.minDate=!1,_(),l;"string"==typeof a&&("now"!==a&&"moment"!==a||(a=y()));var b=da(a);if(!b.isValid())throw new TypeError("minDate() Could not parse date parameter: "+a);if(d.maxDate&&b.isAfter(d.maxDate))throw new TypeError("minDate() date parameter is after options.maxDate: "+b.format(i));return d.minDate=b,d.useCurrent&&!d.keepInvalid&&e.isBefore(a)&&aa(d.minDate),f.isBefore(b)&&(f=b.clone().add(d.stepping,"m")),_(),l},l.defaultDate=function(a){if(0===arguments.length)return d.defaultDate?d.defaultDate.clone():d.defaultDate;if(!a)return d.defaultDate=!1,l;"string"==typeof a&&(a="now"===a||"moment"===a?y():y(a));var b=da(a);if(!b.isValid())throw new TypeError("defaultDate() Could not parse date parameter: "+a);if(!R(b))throw new TypeError("defaultDate() date passed is invalid according to component setup validations");return d.defaultDate=b,(d.defaultDate&&d.inline||""===g.val().trim())&&aa(d.defaultDate),l},l.locale=function(a){if(0===arguments.length)return d.locale;if(!b.localeData(a))throw new TypeError("locale() locale "+a+" is not loaded from moment locales!");return d.locale=a,e.locale(d.locale),f.locale(d.locale),i&&pa(),o&&(ba(),ga()),l},l.stepping=function(a){return 0===arguments.length?d.stepping:(a=parseInt(a,10),(isNaN(a)||a<1)&&(a=1),d.stepping=a,l)},l.useCurrent=function(a){var b=["year","month","day","hour","minute"];if(0===arguments.length)return d.useCurrent;if("boolean"!=typeof a&&"string"!=typeof a)throw new TypeError("useCurrent() expects a boolean or string parameter");if("string"==typeof a&&b.indexOf(a.toLowerCase())===-1)throw new TypeError("useCurrent() expects a string parameter of "+b.join(", "));return d.useCurrent=a,l},l.collapse=function(a){if(0===arguments.length)return d.collapse;if("boolean"!=typeof a)throw new TypeError("collapse() expects a boolean parameter");return d.collapse===a?l:(d.collapse=a,o&&(ba(),ga()),l)},l.icons=function(b){if(0===arguments.length)return a.extend({},d.icons);if(!(b instanceof Object))throw new TypeError("icons() expects parameter to be an Object");return a.extend(d.icons,b),o&&(ba(),ga()),l},l.tooltips=function(b){if(0===arguments.length)return a.extend({},d.tooltips);if(!(b instanceof Object))throw new TypeError("tooltips() expects parameter to be an Object");return a.extend(d.tooltips,b),o&&(ba(),ga()),l},l.useStrict=function(a){if(0===arguments.length)return d.useStrict;if("boolean"!=typeof a)throw new TypeError("useStrict() expects a boolean parameter");return d.useStrict=a,l},l.sideBySide=function(a){if(0===arguments.length)return d.sideBySide;if("boolean"!=typeof a)throw new TypeError("sideBySide() expects a boolean parameter");return d.sideBySide=a,o&&(ba(),ga()),l},l.viewMode=function(a){if(0===arguments.length)return d.viewMode;if("string"!=typeof a)throw new TypeError("viewMode() expects a string parameter");if(r.indexOf(a)===-1)throw new TypeError("viewMode() parameter must be one of ("+r.join(", ")+") value");return d.viewMode=a,k=Math.max(r.indexOf(a),p),L(),l},l.toolbarPlacement=function(a){if(0===arguments.length)return d.toolbarPlacement;if("string"!=typeof a)throw new TypeError("toolbarPlacement() expects a string parameter");if(u.indexOf(a)===-1)throw new TypeError("toolbarPlacement() parameter must be one of ("+u.join(", ")+") value");return d.toolbarPlacement=a,o&&(ba(),ga()),l},l.widgetPositioning=function(b){if(0===arguments.length)return a.extend({},d.widgetPositioning);if("[object Object]"!=={}.toString.call(b))throw new TypeError("widgetPositioning() expects an object variable");if(b.horizontal){if("string"!=typeof b.horizontal)throw new TypeError("widgetPositioning() horizontal variable must be a string");if(b.horizontal=b.horizontal.toLowerCase(),t.indexOf(b.horizontal)===-1)throw new TypeError("widgetPositioning() expects horizontal parameter to be one of ("+t.join(", ")+")");d.widgetPositioning.horizontal=b.horizontal}if(b.vertical){if("string"!=typeof b.vertical)throw new TypeError("widgetPositioning() vertical variable must be a string");if(b.vertical=b.vertical.toLowerCase(),s.indexOf(b.vertical)===-1)throw new TypeError("widgetPositioning() expects vertical parameter to be one of ("+s.join(", ")+")");d.widgetPositioning.vertical=b.vertical}return _(),l},l.calendarWeeks=function(a){if(0===arguments.length)return d.calendarWeeks;if("boolean"!=typeof a)throw new TypeError("calendarWeeks() expects parameter to be a boolean value");return d.calendarWeeks=a,_(),l},l.showTodayButton=function(a){if(0===arguments.length)return d.showTodayButton;if("boolean"!=typeof a)throw new TypeError("showTodayButton() expects a boolean parameter");return d.showTodayButton=a,o&&(ba(),ga()),l},l.showClear=function(a){if(0===arguments.length)return d.showClear;if("boolean"!=typeof a)throw new TypeError("showClear() expects a boolean parameter");return d.showClear=a,o&&(ba(),ga()),l},l.widgetParent=function(b){if(0===arguments.length)return d.widgetParent;if("string"==typeof b&&(b=a(b)),null!==b&&"string"!=typeof b&&!(b instanceof a))throw new TypeError("widgetParent() expects a string or a jQuery object parameter");return d.widgetParent=b,o&&(ba(),ga()),l},l.keepOpen=function(a){if(0===arguments.length)return d.keepOpen;if("boolean"!=typeof a)throw new TypeError("keepOpen() expects a boolean parameter");return d.keepOpen=a,l},l.focusOnShow=function(a){if(0===arguments.length)return d.focusOnShow;if("boolean"!=typeof a)throw new TypeError("focusOnShow() expects a boolean parameter");return d.focusOnShow=a,l},l.inline=function(a){if(0===arguments.length)return d.inline;if("boolean"!=typeof a)throw new TypeError("inline() expects a boolean parameter");return d.inline=a,l},l.clear=function(){return ca(),l},l.keyBinds=function(a){return 0===arguments.length?d.keyBinds:(d.keyBinds=a,l)},l.getMoment=function(a){return y(a)},l.debug=function(a){if("boolean"!=typeof a)throw new TypeError("debug() expects a boolean parameter");return d.debug=a,l},l.allowInputToggle=function(a){if(0===arguments.length)return d.allowInputToggle;if("boolean"!=typeof a)throw new TypeError("allowInputToggle() expects a boolean parameter");return d.allowInputToggle=a,l},l.showClose=function(a){if(0===arguments.length)return d.showClose;if("boolean"!=typeof a)throw new TypeError("showClose() expects a boolean parameter");return d.showClose=a,l},l.keepInvalid=function(a){if(0===arguments.length)return d.keepInvalid;if("boolean"!=typeof a)throw new TypeError("keepInvalid() expects a boolean parameter");
+return d.keepInvalid=a,l},l.datepickerInput=function(a){if(0===arguments.length)return d.datepickerInput;if("string"!=typeof a)throw new TypeError("datepickerInput() expects a string parameter");return d.datepickerInput=a,l},l.parseInputDate=function(a){if(0===arguments.length)return d.parseInputDate;if("function"!=typeof a)throw new TypeError("parseInputDate() sholud be as function");return d.parseInputDate=a,l},l.disabledTimeIntervals=function(b){if(0===arguments.length)return d.disabledTimeIntervals?a.extend({},d.disabledTimeIntervals):d.disabledTimeIntervals;if(!b)return d.disabledTimeIntervals=!1,_(),l;if(!(b instanceof Array))throw new TypeError("disabledTimeIntervals() expects an array parameter");return d.disabledTimeIntervals=b,_(),l},l.disabledHours=function(b){if(0===arguments.length)return d.disabledHours?a.extend({},d.disabledHours):d.disabledHours;if(!b)return d.disabledHours=!1,_(),l;if(!(b instanceof Array))throw new TypeError("disabledHours() expects an array parameter");if(d.disabledHours=oa(b),d.enabledHours=!1,d.useCurrent&&!d.keepInvalid){for(var c=0;!R(e,"h");){if(e.add(1,"h"),24===c)throw"Tried 24 times to find a valid date";c++}aa(e)}return _(),l},l.enabledHours=function(b){if(0===arguments.length)return d.enabledHours?a.extend({},d.enabledHours):d.enabledHours;if(!b)return d.enabledHours=!1,_(),l;if(!(b instanceof Array))throw new TypeError("enabledHours() expects an array parameter");if(d.enabledHours=oa(b),d.disabledHours=!1,d.useCurrent&&!d.keepInvalid){for(var c=0;!R(e,"h");){if(e.add(1,"h"),24===c)throw"Tried 24 times to find a valid date";c++}aa(e)}return _(),l},l.viewDate=function(a){if(0===arguments.length)return f.clone();if(!a)return f=e.clone(),l;if(!("string"==typeof a||b.isMoment(a)||a instanceof Date))throw new TypeError("viewDate() parameter must be one of [string, moment or Date]");return f=da(a),K(),l},c.is("input"))g=c;else if(g=c.find(d.datepickerInput),0===g.length)g=c.find("input");else if(!g.is("input"))throw new Error('CSS class "'+d.datepickerInput+'" cannot be applied to non input element');if(c.hasClass("input-group")&&(n=0===c.find(".datepickerbutton").length?c.find(".input-group-addon"):c.find(".datepickerbutton")),!d.inline&&!g.is("input"))throw new Error("Could not initialize DateTimePicker without an input element");return e=y(),f=e.clone(),a.extend(!0,d,H()),l.options(d),pa(),la(),g.prop("disabled")&&l.disable(),g.is("input")&&0!==g.val().trim().length?aa(da(g.val().trim())):d.defaultDate&&void 0===g.attr("placeholder")&&aa(d.defaultDate),d.inline&&ga(),l};return a.fn.datetimepicker=function(b){b=b||{};var d,e=Array.prototype.slice.call(arguments,1),f=!0,g=["destroy","hide","show","toggle"];if("object"==typeof b)return this.each(function(){var d,e=a(this);e.data("DateTimePicker")||(d=a.extend(!0,{},a.fn.datetimepicker.defaults,b),e.data("DateTimePicker",c(e,d)))});if("string"==typeof b)return this.each(function(){var c=a(this),g=c.data("DateTimePicker");if(!g)throw new Error('bootstrap-datetimepicker("'+b+'") method was called on an element that is not using DateTimePicker');d=g[b].apply(g,e),f=d===g}),f||a.inArray(b,g)>-1?this:d;throw new TypeError("Invalid arguments for DateTimePicker: "+b)},a.fn.datetimepicker.defaults={timeZone:"",format:!1,dayViewHeaderFormat:"MMMM YYYY",extraFormats:!1,stepping:1,minDate:!1,maxDate:!1,useCurrent:!0,collapse:!0,locale:b.locale(),defaultDate:!1,disabledDates:!1,enabledDates:!1,icons:{time:"glyphicon glyphicon-time",date:"glyphicon glyphicon-calendar",up:"glyphicon glyphicon-chevron-up",down:"glyphicon glyphicon-chevron-down",previous:"glyphicon glyphicon-chevron-left",next:"glyphicon glyphicon-chevron-right",today:"glyphicon glyphicon-screenshot",clear:"glyphicon glyphicon-trash",close:"glyphicon glyphicon-remove"},tooltips:{today:"Go to today",clear:"Clear selection",close:"Close the picker",selectMonth:"Select Month",prevMonth:"Previous Month",nextMonth:"Next Month",selectYear:"Select Year",prevYear:"Previous Year",nextYear:"Next Year",selectDecade:"Select Decade",prevDecade:"Previous Decade",nextDecade:"Next Decade",prevCentury:"Previous Century",nextCentury:"Next Century",pickHour:"Pick Hour",incrementHour:"Increment Hour",decrementHour:"Decrement Hour",pickMinute:"Pick Minute",incrementMinute:"Increment Minute",decrementMinute:"Decrement Minute",pickSecond:"Pick Second",incrementSecond:"Increment Second",decrementSecond:"Decrement Second",togglePeriod:"Toggle Period",selectTime:"Select Time"},useStrict:!1,sideBySide:!1,daysOfWeekDisabled:!1,calendarWeeks:!1,viewMode:"days",toolbarPlacement:"default",showTodayButton:!1,showClear:!1,showClose:!1,widgetPositioning:{horizontal:"auto",vertical:"auto"},widgetParent:null,ignoreReadonly:!1,keepOpen:!1,focusOnShow:!0,inline:!1,keepInvalid:!1,datepickerInput:".datepickerinput",keyBinds:{up:function(a){if(a){var b=this.date()||this.getMoment();a.find(".datepicker").is(":visible")?this.date(b.clone().subtract(7,"d")):this.date(b.clone().add(this.stepping(),"m"))}},down:function(a){if(!a)return void this.show();var b=this.date()||this.getMoment();a.find(".datepicker").is(":visible")?this.date(b.clone().add(7,"d")):this.date(b.clone().subtract(this.stepping(),"m"))},"control up":function(a){if(a){var b=this.date()||this.getMoment();a.find(".datepicker").is(":visible")?this.date(b.clone().subtract(1,"y")):this.date(b.clone().add(1,"h"))}},"control down":function(a){if(a){var b=this.date()||this.getMoment();a.find(".datepicker").is(":visible")?this.date(b.clone().add(1,"y")):this.date(b.clone().subtract(1,"h"))}},left:function(a){if(a){var b=this.date()||this.getMoment();a.find(".datepicker").is(":visible")&&this.date(b.clone().subtract(1,"d"))}},right:function(a){if(a){var b=this.date()||this.getMoment();a.find(".datepicker").is(":visible")&&this.date(b.clone().add(1,"d"))}},pageUp:function(a){if(a){var b=this.date()||this.getMoment();a.find(".datepicker").is(":visible")&&this.date(b.clone().subtract(1,"M"))}},pageDown:function(a){if(a){var b=this.date()||this.getMoment();a.find(".datepicker").is(":visible")&&this.date(b.clone().add(1,"M"))}},enter:function(){this.hide()},escape:function(){this.hide()},"control space":function(a){a&&a.find(".timepicker").is(":visible")&&a.find('.btn[data-action="togglePeriod"]').click()},t:function(){this.date(this.getMoment())},delete:function(){this.clear()}},debug:!1,allowInputToggle:!1,disabledTimeIntervals:!1,disabledHours:!1,enabledHours:!1,viewDate:!1},a.fn.datetimepicker});
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+var saveAs=saveAs||function(e){"use strict";if(typeof e==="undefined"||typeof navigator!=="undefined"&&/MSIE [1-9]\./.test(navigator.userAgent)){return}var t=e.document,n=function(){return e.URL||e.webkitURL||e},r=t.createElementNS("http://www.w3.org/1999/xhtml","a"),o="download"in r,a=function(e){var t=new MouseEvent("click");e.dispatchEvent(t)},i=/constructor/i.test(e.HTMLElement)||e.safari,f=/CriOS\/[\d]+/.test(navigator.userAgent),u=function(t){(e.setImmediate||e.setTimeout)(function(){throw t},0)},s="application/octet-stream",d=1e3*40,c=function(e){var t=function(){if(typeof e==="string"){n().revokeObjectURL(e)}else{e.remove()}};setTimeout(t,d)},l=function(e,t,n){t=[].concat(t);var r=t.length;while(r--){var o=e["on"+t[r]];if(typeof o==="function"){try{o.call(e,n||e)}catch(a){u(a)}}}},p=function(e){if(/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(e.type)){return new Blob([String.fromCharCode(65279),e],{type:e.type})}return e},v=function(t,u,d){if(!d){t=p(t)}var v=this,w=t.type,m=w===s,y,h=function(){l(v,"writestart progress write writeend".split(" "))},S=function(){if((f||m&&i)&&e.FileReader){var r=new FileReader;r.onloadend=function(){var t=f?r.result:r.result.replace(/^data:[^;]*;/,"data:attachment/file;");var n=e.open(t,"_blank");if(!n)e.location.href=t;t=undefined;v.readyState=v.DONE;h()};r.readAsDataURL(t);v.readyState=v.INIT;return}if(!y){y=n().createObjectURL(t)}if(m){e.location.href=y}else{var o=e.open(y,"_blank");if(!o){e.location.href=y}}v.readyState=v.DONE;h();c(y)};v.readyState=v.INIT;if(o){y=n().createObjectURL(t);setTimeout(function(){r.href=y;r.download=u;a(r);h();c(y);v.readyState=v.DONE});return}S()},w=v.prototype,m=function(e,t,n){return new v(e,t||e.name||"download",n)};if(typeof navigator!=="undefined"&&navigator.msSaveOrOpenBlob){return function(e,t,n){t=t||e.name||"download";if(!n){e=p(e)}return navigator.msSaveOrOpenBlob(e,t)}}w.abort=function(){};w.readyState=w.INIT=0;w.WRITING=1;w.DONE=2;w.error=w.onwritestart=w.onprogress=w.onwrite=w.onabort=w.onerror=w.onwriteend=null;return m}(typeof self!=="undefined"&&self||typeof window!=="undefined"&&window||this.content);if(typeof module!=="undefined"&&module.exports){module.exports.saveAs=saveAs}else if(typeof define!=="undefined"&&define!==null&&define.amd!==null){define("FileSaver.js",function(){return saveAs})}
 /* 
    tabExpander ---------------------------------------------------------------------------------------------------------------------
    script that handles when there are too many tabs open.
@@ -29148,8 +29152,10 @@ var melisHelper = (function(){
             $.each( errors, function( key, error ) {
                 if("form" in error){
                     $.each(this.form, function( fkey, fvalue ){
-                        $("#" + fvalue + " .form-control[name='"+key +"']").prev("label").css("color","red");
+                        $("#" + fvalue + " .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
                     });
+                }else{
+                    $( selector + " .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
                 }
             });
         }
@@ -29867,7 +29873,7 @@ var melisCoreTool = (function(window){
 		if(success === 0){
 			$("#" + divContainer + " .form-group label").css("color","#686868");
 			$.each( errors, function( key, error ) { 
-				$("#" + divContainer + " .form-control[name='"+key +"']").prev("label").css("color","red");
+				$("#" + divContainer + " .form-control[name='"+key +"']").parents(".form-group").children(":first").css("color","red");
 			});
 		}
 		// remove red color for correctly inputted fields
@@ -31504,6 +31510,317 @@ $(function() {
 
 
 
+$(document).ready(function() {
+    var $body = $('body');
+
+    $body.on('input', '#melis_core_gdpr_search_form_name input', function(){
+        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#686868");
+        $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#686868");
+    });
+
+    $body.on('input', '#melis_core_gdpr_search_form_email input', function(){
+        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#686868");
+        $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#686868");
+    });
+
+
+    /**
+     * Submiting search form
+     */
+    $body.on('submit', '#id_melis_core_gdpr_search_form', function(e) {
+        var formInputs = $(this).serializeArray();
+        var hasSite = false;
+        var hasName = false;
+        var hasEmail = false;
+
+        $.each (formInputs, function(i, field) {
+            if (field.value != '') {
+                if (field.name == 'user_name') {
+                    hasName = true;
+                } else if (field.name == 'user_email') {
+                    hasEmail = true
+                } else if (field.name == 'site_id') {
+                    hasSite = true;
+                }
+            }
+        });
+
+        //only send request if there are any inputs
+        if (hasName == true || hasEmail == true) {
+            melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
+            GdprTool.getUserInfo(formInputs);
+            melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+        } else {
+            if (hasName == false && hasEmail == false && hasSite == true) {
+                $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#981a1f");
+                $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#981a1f");
+
+                melisHelper.melisKoNotification(
+                    translations.tr_melis_core_gdpr_notif_gdpr_search,
+                    translations.tr_melis_core_gdpr_notif_name_or_email_required
+                );
+            } else {
+                $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#981a1f");
+                $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#981a1f");
+                
+                melisHelper.melisKoNotification(
+                    translations.tr_melis_core_gdpr_notif_gdpr_search,
+                    translations.tr_melis_core_gdpr_tool_form_no_inputs
+                );
+            }
+        }
+
+        e.preventDefault();
+    });
+
+    /**
+     * On checking all checkbox
+     */
+    $body.on('click', '#id_melis_core_gdpr_content_tabs .check-all', function() {
+        var status = this.checked;
+        var $iconPlaceholder = $(this).siblings('i');
+
+        $iconPlaceholder.toggleClass("checked");
+        $iconPlaceholder.closest('.dataTables_scrollHead').siblings('.dataTables_scrollBody').find('.checkRow').each(function() {
+            $i = $(this).siblings('i');
+            $row = $(this).parents('tr');
+            this.checked = status;
+
+            if (status) {
+                if (!$i.hasClass('checked')) {
+                    $i.addClass('checked');
+                    $row.addClass('checked');
+                }
+            } else {
+                if ($i.hasClass('checked')) {
+                    $i.removeClass('checked');
+                    $row.removeClass('checked');
+                }
+            }
+        });
+
+        var moduleName = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
+
+        $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
+            countOfRows = $(this).find('table tbody tr').length;
+            moduleName = $(this).find('table').attr('id');
+            var p = $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p');
+
+            var charIndex = p.text().indexOf(" (");
+            var lengthToDelete = charIndex - p.text().length;
+
+            p.text().slice(charIndex, lengthToDelete);
+            p.append( "texting");
+        });
+
+        var moduleName = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
+        var countOfRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tbody tr').length;
+        var pTag = $body.find('.widget-head ul #' + moduleName + '-left-tab p');
+        var charIndex = pTag.html().indexOf(" (");
+        var lengthToDelete = charIndex - pTag.html().length;
+        var countOfCheckedRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
+
+        pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
+    });
+
+    /**
+     * On checking a single checkbox
+     */
+    $body.on('click', '#id_melis_core_gdpr_content_tabs .checkRow', function() {
+        if (this.checked) {
+            if (!$(this).siblings('i').hasClass('checked')) {
+                $(this).siblings('i').addClass('checked');
+                $(this).parents('tr').addClass('checked');
+            }
+        } else {
+            if ($(this).siblings('i').hasClass('checked')) {
+                $(this).siblings('i').removeClass('checked');
+                $(this).parents('tr').removeClass('checked');
+            }
+        }
+
+        var numberOfCheckedCheckBoxes = $(this).closest('table').find('.checkRow:checked').length;
+        var numberOfCheckboxes = $(this).closest('table').find('.checkRow').length;
+
+        if (numberOfCheckedCheckBoxes < numberOfCheckboxes) {
+            var checkAll = $(this).closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+            if (checkAll.prop('checked')) {
+                checkAll.prop('checked', false);
+                $(checkAll).siblings('i').removeClass("checked");
+            }
+        } else if (numberOfCheckedCheckBoxes == numberOfCheckboxes && numberOfCheckboxes != 0) {
+            var checkAll = $(this).closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+            if (checkAll.prop('checked') == false) {
+                checkAll.prop('checked', true);
+                $(checkAll).siblings('i').addClass("checked");
+            }
+        }
+
+        var moduleName = $(this).closest('table').attr('id');
+        var pTag = $body.find('.widget-head ul #' + moduleName + '-left-tab p');
+        var charIndex = pTag.html().indexOf(" (");
+        var lengthToDelete = charIndex - pTag.html().length;
+
+        pTag.html().slice(0, lengthToDelete);
+        pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + numberOfCheckedCheckBoxes + "/" + numberOfCheckboxes + ")");
+    });
+
+    /**
+     * On clicking extract selected button
+     */
+    $body.on('click', '#id_melis_core_gdpr_content_tabs .extract-selected', function() {
+        var modules = {};
+        var tableId;
+        var ids;
+        var hasData = false;
+
+        $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
+            tableId = $(this).find('.dataTables_scrollBody .table').attr('id');
+            ids = [];
+
+            $(this).find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                ids.push($(this).val());
+                hasData = true;
+            });
+            modules[tableId] = ids;
+        });
+
+        //only send request if there are any ids
+        if (hasData) {
+            GdprTool.extractSelected(modules);
+        } else {
+            melisHelper.melisKoNotification(
+                translations.tr_melis_core_gdpr_notif_extract_user,
+                translations.tr_melis_core_gdpr_notif_no_selected_extract_user
+            );
+        }
+    });
+
+    /**
+     * On clicking delete selected button
+     */
+    $body.on('click', '#id_melis_core_gdpr_content_tabs .delete-selected', function() {
+        var modules = {};
+        var tableId;
+        var ids;
+        var hasData = false;
+
+        $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
+            tableId = $(this).find('.dataTables_scrollBody .table').attr('id');
+            ids = [];
+
+            //push all selected ids to array
+            $(this).find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                ids.push($(this).val());
+                hasData = true;
+            });
+            modules[tableId] = ids;
+        });
+
+        if (hasData) {
+            GdprTool.deleteSelected(modules);
+        } else {
+            melisHelper.melisKoNotification(
+                translations.tr_melis_core_gdpr_notif_delete_user,
+                translations.tr_melis_core_gdpr_notif_no_selected_delete_user
+            );
+        }
+    });
+
+
+    var GdprTool = {
+        getUserInfo: function(formData) {
+            $.ajax({
+                type     : 'POST',
+                url      : '/melis/MelisCore/MelisCoreGdpr/checkForm',
+                data     : $.param(formData)
+            }).success(function (data) {
+                if (data.success) {
+                    //show the tabs so that the loading view will be shown to the user
+                    $('#id_melis_core_gdpr_content_tabs').show();
+                    melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
+                        show: true,
+                        formData: formData,
+                    });
+                } else {
+                    melisHelper.melisKoNotification(
+                        translations.tr_melis_core_gdpr_search_user_title,
+                        translations.tr_melis_core_gdpr_search_user_error_message,
+                        data.errors
+                    );
+                }
+            }).error(function () {
+
+            });
+            melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+        },
+
+        deleteSelected: function(modules) {
+            melisCoreTool.confirm (
+                translations.tr_meliscore_common_yes,
+                translations.tr_meliscore_common_no,
+                translations.tr_melis_core_gdpr_notif_delete_selected_confirm,
+                translations.tr_melis_core_gdpr_notif_delete_selected_confirm_message,
+                function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/melis/MelisCore/MelisCoreGdpr/melisCoreGdprDeleteSelected',
+                        data: $.param(modules),
+                        dataType: 'json',
+                        encode: true,
+                    }).success(function (data) {
+                        if (data.success) {
+                            $.each(modules, function (key, value) {
+                                var moduleName = key
+
+                                //remove selected rows in data table
+                                $('#' + moduleName).DataTable().rows('.checked').remove().draw();
+                            });
+
+                            var countOfRows = 0;
+                            var moduleName;
+
+                            $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function () {
+                                countOfRows = $(this).find('tbody tr').length;
+                                moduleName = $(this).find('tbody').closest('table').attr('id');
+
+                                var pTag = $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p');
+                                var charIndex = pTag.html().indexOf(" (");
+                                var lengthToDelete = charIndex - pTag.html().length;
+
+                                pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (0/" + countOfRows + ")");
+                            });
+                        } else {
+                            melisHelper.melisKoNotification(
+                                translations.tr_melis_core_gdpr_notif_delete_user,
+                                translations.tr_melis_core_gdpr_notif_error_on_deleting_data,
+                            );
+                        }
+                    }).error(function () {
+
+                    });
+                }
+            );
+        },
+        extractSelected: function(modules) {
+            $.ajax({
+                type: 'POST',
+                url:'/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected',
+                data: {'id' : modules},
+                success: function (data, textStatus, request) {
+                    // if data is not empty
+                    if (data) {
+                        var fileName = request.getResponseHeader("fileName");
+                        var mime = request.getResponseHeader("Content-Type");
+                        var blob = new Blob([request.responseText], {type: mime});
+                        saveAs(blob, fileName);
+                    }
+                }
+            });
+        }
+    };
+});
+
 /**
  * @license
  * Lodash lodash.com/license | Underscore.js 1.8.3 underscorejs.org/LICENSE
@@ -31642,8 +31959,1852 @@ u=-1,i=t[o];++u<c;){var h=f[u],s=h.type,h=(0,h.iteratee)(i);if(2==s)i=h;else if(
 var e=$e(r);e.__index__=0,e.__values__=T,t?u.__wrapped__=e:t=e;var u=e,r=r.__wrapped__}return u.__wrapped__=n,t},An.prototype.reverse=function(){var n=this.__wrapped__;return n instanceof Un?(this.__actions__.length&&(n=new Un(this)),n=n.reverse(),n.__actions__.push({func:Ye,args:[Ke],thisArg:T}),new On(n,this.__chain__)):this.thru(Ke)},An.prototype.toJSON=An.prototype.valueOf=An.prototype.value=function(){return wr(this.__wrapped__,this.__actions__)},An.prototype.first=An.prototype.head,ji&&(An.prototype[ji]=Qe),
 An}();typeof define=="function"&&typeof define.amd=="object"&&define.amd?($n._=rt, define(function(){return rt})):Nn?((Nn.exports=rt)._=rt,Fn._=rt):$n._=rt}).call(this);
 
-!function(t){if("function"==typeof define&&define.amd)define(["jquery","lodash"],t);else if("undefined"!=typeof exports){try{jQuery=require("jquery")}catch(t){}try{_=require("lodash")}catch(t){}t(jQuery,_)}else t(jQuery,_)}(function(_,g){var t=window,e=function(t,e,i){var o=function(){return console.warn("gridstack.js: Function `"+e+"` is deprecated as of v0.2.5 and has been replaced with `"+i+"`. It will be **completely** removed in v1.0."),t.apply(this,arguments)};return o.prototype=t.prototype,o},d=function(t,e){console.warn("gridstack.js: Option `"+t+"` is deprecated as of v0.2.5 and has been replaced with `"+e+"`. It will be **completely** removed in v1.0.")},u={isIntercepted:function(t,e){return!(t.x+t.width<=e.x||e.x+e.width<=t.x||t.y+t.height<=e.y||e.y+e.height<=t.y)},sort:function(t,e,i){return i=i||g.chain(t).map(function(t){return t.x+t.width}).max().value(),e=-1!=e?1:-1,g.sortBy(t,[function(t){return e*(t.x+t.y*i)}])},createStylesheet:function(t){var e=document.createElement("style");return e.setAttribute("type","text/css"),e.setAttribute("data-gs-style-id",t),e.styleSheet?e.styleSheet.cssText="":e.appendChild(document.createTextNode("")),document.getElementsByTagName("head")[0].appendChild(e),e.sheet},removeStylesheet:function(t){_("STYLE[data-gs-style-id="+t+"]").remove()},insertCSSRule:function(t,e,i,o){"function"==typeof t.insertRule?t.insertRule(e+"{"+i+"}",o):"function"==typeof t.addRule&&t.addRule(e,i,o)},toBool:function(t){return"boolean"==typeof t?t:"string"==typeof t?!(""===(t=t.toLowerCase())||"no"==t||"false"==t||"0"==t):Boolean(t)},_collisionNodeCheck:function(t){return t!=this.node&&u.isIntercepted(t,this.nn)},_didCollide:function(t){return u.isIntercepted({x:this.n.x,y:this.newY,width:this.n.width,height:this.n.height},t)},_isAddNodeIntercepted:function(t){return u.isIntercepted({x:this.x,y:this.y,width:this.node.width,height:this.node.height},t)},parseHeight:function(t){var e=t,i="px";if(e&&g.isString(e)){var o=e.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw)?$/);if(!o)throw new Error("Invalid height");i=o[2]||"px",e=parseFloat(o[1])}return{height:e,unit:i}},removePositioningStyles:function(t){var e=t[0].style;e.position&&e.removeProperty("position"),e.left&&e.removeProperty("left"),e.top&&e.removeProperty("top"),e.width&&e.removeProperty("width"),e.height&&e.removeProperty("height")},getScrollParent:function(t){return null==t?null:t.scrollHeight>t.clientHeight?t:u.getScrollParent(t.parentNode)},updateScrollPosition:function(t,e,i){var o=t.getBoundingClientRect(),a=window.innerHeight||document.documentElement.clientHeight;if(o.top<0||o.bottom>a){var s=o.bottom-a,r=o.top,n=u.getScrollParent(t);if(null!=n){var d=n.scrollTop;o.top<0&&i<0?t.offsetHeight>a?n.scrollTop+=i:n.scrollTop+=Math.abs(r)>Math.abs(i)?i:r:0<i&&(t.offsetHeight>a?n.scrollTop+=i:n.scrollTop+=i<s?i:s),e.position.top+=n.scrollTop-d}}}};function c(t){this.grid=t}u.is_intercepted=e(u.isIntercepted,"is_intercepted","isIntercepted"),u.create_stylesheet=e(u.createStylesheet,"create_stylesheet","createStylesheet"),u.remove_stylesheet=e(u.removeStylesheet,"remove_stylesheet","removeStylesheet"),u.insert_css_rule=e(u.insertCSSRule,"insert_css_rule","insertCSSRule"),c.registeredPlugins=[],c.registerPlugin=function(t){c.registeredPlugins.push(t)},c.prototype.resizable=function(t,e){return this},c.prototype.draggable=function(t,e){return this},c.prototype.droppable=function(t,e){return this},c.prototype.isDroppable=function(t){return!1},c.prototype.on=function(t,e,i){return this};var s=0,m=function(t,e,i,o,a){this.width=t,this.float=i||!1,this.height=o||0,this.nodes=a||[],this.onchange=e||function(){},this._updateCounter=0,this._float=this.float,this._addedNodes=[],this._removedNodes=[]};m.prototype.batchUpdate=function(){this._updateCounter=1,this.float=!0},m.prototype.commit=function(){0!==this._updateCounter&&(this._updateCounter=0,this.float=this._float,this._packNodes(),this._notify())},m.prototype.getNodeDataByDOMEl=function(e){return g.find(this.nodes,function(t){return e.get(0)===t.el.get(0)})},m.prototype._fixCollisions=function(t){this._sortNodes(-1);var e=t,i=Boolean(g.find(this.nodes,function(t){return t.locked}));for(this.float||i||(e={x:0,y:t.y,width:this.width,height:t.height});;){var o=g.find(this.nodes,g.bind(u._collisionNodeCheck,{node:t,nn:e}));if(void 0===o)return;this.moveNode(o,o.x,t.y+t.height,o.width,o.height,!0)}},m.prototype.isAreaEmpty=function(t,e,i,o){var a={x:t||0,y:e||0,width:i||1,height:o||1},s=g.find(this.nodes,g.bind(function(t){return u.isIntercepted(t,a)},this));return null==s},m.prototype._sortNodes=function(t){this.nodes=u.sort(this.nodes,t,this.width)},m.prototype._packNodes=function(){this._sortNodes(),this.float?g.each(this.nodes,g.bind(function(t,e){if(!t._updating&&void 0!==t._origY&&t.y!=t._origY)for(var i=t.y;i>=t._origY;){g.chain(this.nodes).take(e).find(g.bind(u._didCollide,{n:t,newY:i})).value()||(t._dirty=!0,t.y=i),--i}},this)):g.each(this.nodes,g.bind(function(t,e){if(!t.locked)for(;0<t.y;){var i=t.y-1,o=0===e;if(0<e)o=void 0===g.chain(this.nodes).take(e).find(g.bind(u._didCollide,{n:t,newY:i})).value();if(!o)break;t._dirty=t.y!=i,t.y=i}},this))},m.prototype._prepareNode=function(t,e){return(t=g.defaults(t||{},{width:1,height:1,x:0,y:0})).x=parseInt(""+t.x),t.y=parseInt(""+t.y),t.width=parseInt(""+t.width),t.height=parseInt(""+t.height),t.autoPosition=t.autoPosition||!1,t.noResize=t.noResize||!1,t.noMove=t.noMove||!1,t.width>this.width?t.width=this.width:t.width<1&&(t.width=1),t.height<1&&(t.height=1),t.x<0&&(t.x=0),t.x+t.width>this.width&&(e?t.width=this.width-t.x:t.x=this.width-t.width),t.y<0&&(t.y=0),t},m.prototype._notify=function(){var t=Array.prototype.slice.call(arguments,0);if(t[0]=void 0===t[0]?[]:[t[0]],t[1]=void 0===t[1]||t[1],!this._updateCounter){var e=t[0].concat(this.getDirtyNodes());this.onchange(e,t[1])}},m.prototype.cleanNodes=function(){this._updateCounter||g.each(this.nodes,function(t){t._dirty=!1})},m.prototype.getDirtyNodes=function(){return g.filter(this.nodes,function(t){return t._dirty})},m.prototype.addNode=function(t,e){if(void 0!==(t=this._prepareNode(t)).maxWidth&&(t.width=Math.min(t.width,t.maxWidth)),void 0!==t.maxHeight&&(t.height=Math.min(t.height,t.maxHeight)),void 0!==t.minWidth&&(t.width=Math.max(t.width,t.minWidth)),void 0!==t.minHeight&&(t.height=Math.max(t.height,t.minHeight)),t._id=++s,t._dirty=!0,t.autoPosition){this._sortNodes();for(var i=0;;++i){var o=i%this.width,a=Math.floor(i/this.width);if(!(o+t.width>this.width)&&!g.find(this.nodes,g.bind(u._isAddNodeIntercepted,{x:o,y:a,node:t}))){t.x=o,t.y=a;break}}}return this.nodes.push(t),void 0!==e&&e&&this._addedNodes.push(g.clone(t)),this._fixCollisions(t),this._packNodes(),this._notify(),t},m.prototype.removeNode=function(t,e){e=void 0===e||e,this._removedNodes.push(g.clone(t)),t._id=null,this.nodes=g.without(this.nodes,t),this._packNodes(),this._notify(t,e)},m.prototype.canMoveNode=function(e,t,i,o,a){if(!this.isNodeChangedPosition(e,t,i,o,a))return!1;var s,r=Boolean(g.find(this.nodes,function(t){return t.locked}));if(!this.height&&!r)return!0;var n=new m(this.width,null,this.float,0,g.map(this.nodes,function(t){return t==e?s=_.extend({},t):_.extend({},t)}));if(void 0===s)return!0;n.moveNode(s,t,i,o,a);var d=!0;return r&&(d&=!Boolean(g.find(n.nodes,function(t){return t!=s&&Boolean(t.locked)&&Boolean(t._dirty)}))),this.height&&(d&=n.getGridHeight()<=this.height),d},m.prototype.canBePlacedWithRespectToHeight=function(t){if(!this.height)return!0;var e=new m(this.width,null,this.float,0,g.map(this.nodes,function(t){return _.extend({},t)}));return e.addNode(t),e.getGridHeight()<=this.height},m.prototype.isNodeChangedPosition=function(t,e,i,o,a){return"number"!=typeof e&&(e=t.x),"number"!=typeof i&&(i=t.y),"number"!=typeof o&&(o=t.width),"number"!=typeof a&&(a=t.height),void 0!==t.maxWidth&&(o=Math.min(o,t.maxWidth)),void 0!==t.maxHeight&&(a=Math.min(a,t.maxHeight)),void 0!==t.minWidth&&(o=Math.max(o,t.minWidth)),void 0!==t.minHeight&&(a=Math.max(a,t.minHeight)),t.x!=e||t.y!=i||t.width!=o||t.height!=a},m.prototype.moveNode=function(t,e,i,o,a,s){if(!this.isNodeChangedPosition(t,e,i,o,a))return t;if("number"!=typeof e&&(e=t.x),"number"!=typeof i&&(i=t.y),"number"!=typeof o&&(o=t.width),"number"!=typeof a&&(a=t.height),void 0!==t.maxWidth&&(o=Math.min(o,t.maxWidth)),void 0!==t.maxHeight&&(a=Math.min(a,t.maxHeight)),void 0!==t.minWidth&&(o=Math.max(o,t.minWidth)),void 0!==t.minHeight&&(a=Math.max(a,t.minHeight)),t.x==e&&t.y==i&&t.width==o&&t.height==a)return t;var r=t.width!=o;return t._dirty=!0,t.x=e,t.y=i,t.width=o,t.height=a,t.lastTriedX=e,t.lastTriedY=i,t.lastTriedWidth=o,t.lastTriedHeight=a,t=this._prepareNode(t,r),this._fixCollisions(t),s||(this._packNodes(),this._notify()),t},m.prototype.getGridHeight=function(){return g.reduce(this.nodes,function(t,e){return Math.max(t,e.y+e.height)},0)},m.prototype.beginUpdate=function(t){g.each(this.nodes,function(t){t._origY=t.y}),t._updating=!0},m.prototype.endUpdate=function(){g.each(this.nodes,function(t){t._origY=t.y});var t=g.find(this.nodes,function(t){return t._updating});t&&(t._updating=!1)};var i=function(t,e){var i,o,h=this;e=e||{},this.container=_(t),void 0!==e.handle_class&&(e.handleClass=e.handle_class,d("handle_class","handleClass")),void 0!==e.item_class&&(e.itemClass=e.item_class,d("item_class","itemClass")),void 0!==e.placeholder_class&&(e.placeholderClass=e.placeholder_class,d("placeholder_class","placeholderClass")),void 0!==e.placeholder_text&&(e.placeholderText=e.placeholder_text,d("placeholder_text","placeholderText")),void 0!==e.cell_height&&(e.cellHeight=e.cell_height,d("cell_height","cellHeight")),void 0!==e.vertical_margin&&(e.verticalMargin=e.vertical_margin,d("vertical_margin","verticalMargin")),void 0!==e.min_width&&(e.minWidth=e.min_width,d("min_width","minWidth")),void 0!==e.static_grid&&(e.staticGrid=e.static_grid,d("static_grid","staticGrid")),void 0!==e.is_nested&&(e.isNested=e.is_nested,d("is_nested","isNested")),void 0!==e.always_show_resize_handle&&(e.alwaysShowResizeHandle=e.always_show_resize_handle,d("always_show_resize_handle","alwaysShowResizeHandle")),e.itemClass=e.itemClass||"grid-stack-item";var a=0<this.container.closest("."+e.itemClass).length;if(this.opts=g.defaults(e||{},{width:parseInt(this.container.attr("data-gs-width"))||12,height:parseInt(this.container.attr("data-gs-height"))||0,itemClass:"grid-stack-item",placeholderClass:"grid-stack-placeholder",placeholderText:"",handle:".grid-stack-item-content",handleClass:null,cellHeight:60,verticalMargin:20,auto:!0,minWidth:768,float:!1,staticGrid:!1,_class:"grid-stack-instance-"+(1e4*Math.random()).toFixed(0),animate:Boolean(this.container.attr("data-gs-animate"))||!1,alwaysShowResizeHandle:e.alwaysShowResizeHandle||!1,resizable:g.defaults(e.resizable||{},{autoHide:!e.alwaysShowResizeHandle,handles:"se"}),draggable:g.defaults(e.draggable||{},{handle:(e.handleClass?"."+e.handleClass:e.handle?e.handle:"")||".grid-stack-item-content",scroll:!1,appendTo:"body"}),disableDrag:e.disableDrag||!1,disableResize:e.disableResize||!1,rtl:"auto",removable:!1,removableOptions:g.defaults(e.removableOptions||{},{accept:"."+e.itemClass}),removeTimeout:2e3,verticalMarginUnit:"px",cellHeightUnit:"px",disableOneColumnMode:e.disableOneColumnMode||!1,oneColumnModeClass:e.oneColumnModeClass||"grid-stack-one-column-mode",ddPlugin:null}),!1===this.opts.ddPlugin?this.opts.ddPlugin=c:null===this.opts.ddPlugin&&(this.opts.ddPlugin=g.first(c.registeredPlugins)||c),this.dd=new this.opts.ddPlugin(this),"auto"===this.opts.rtl&&(this.opts.rtl="rtl"===this.container.css("direction")),this.opts.rtl&&this.container.addClass("grid-stack-rtl"),this.opts.isNested=a,(o="auto"===this.opts.cellHeight)?h.cellHeight(h.cellWidth(),!0):this.cellHeight(this.opts.cellHeight,!0),this.verticalMargin(this.opts.verticalMargin,!0),this.container.addClass(this.opts._class),this._setStaticClass(),a&&this.container.addClass("grid-stack-nested"),this._initStyles(),this.grid=new m(this.opts.width,function(t,e){e=void 0===e||e;var i=0;g.each(this.nodes,function(t){i=Math.max(i,t.y+t.height)}),g.each(t,function(t){e&&null===t._id?t.el&&t.el.remove():t.el.attr("data-gs-x",t.x).attr("data-gs-y",t.y).attr("data-gs-width",t.width).attr("data-gs-height",t.height)}),h._updateStyles(i+10)},this.opts.float,this.opts.height),this.opts.auto){var s=[],r=this;this.container.children("."+this.opts.itemClass+":not(."+this.opts.placeholderClass+")").each(function(t,e){e=_(e),s.push({el:e,i:parseInt(e.attr("data-gs-x"))+parseInt(e.attr("data-gs-y"))*r.opts.width})}),g.chain(s).sortBy(function(t){return t.i}).each(function(t){h._prepareElement(t.el)}).value()}if(this.setAnimation(this.opts.animate),this.placeholder=_('<div class="'+this.opts.placeholderClass+" "+this.opts.itemClass+'"><div class="placeholder-content">'+this.opts.placeholderText+"</div></div>").hide(),this._updateContainerHeight(),this._updateHeightsOnResize=g.throttle(function(){h.cellHeight(h.cellWidth(),!1)},100),this.onResizeHandler=function(){if(o&&h._updateHeightsOnResize(),h._isOneColumnMode()&&!h.opts.disableOneColumnMode){if(i)return;h.container.addClass(h.opts.oneColumnModeClass),i=!0,h.grid._sortNodes(),g.each(h.grid.nodes,function(t){h.container.append(t.el),h.opts.staticGrid||(h.dd.draggable(t.el,"disable"),h.dd.resizable(t.el,"disable"),t.el.trigger("resize"))})}else{if(!i)return;if(h.container.removeClass(h.opts.oneColumnModeClass),i=!1,h.opts.staticGrid)return;g.each(h.grid.nodes,function(t){t.noMove||h.opts.disableDrag||h.dd.draggable(t.el,"enable"),t.noResize||h.opts.disableResize||h.dd.resizable(t.el,"enable"),t.el.trigger("resize")})}},_(window).resize(this.onResizeHandler),this.onResizeHandler(),!h.opts.staticGrid&&"string"==typeof h.opts.removable){var n=_(h.opts.removable);this.dd.isDroppable(n)||this.dd.droppable(n,h.opts.removableOptions),this.dd.on(n,"dropover",function(t,e){var i=_(e.draggable);i.data("_gridstack_node")._grid===h&&(i.data("inTrashZone",!0),h._setupRemovingTimeout(i))}).on(n,"dropout",function(t,e){var i=_(e.draggable);i.data("_gridstack_node")._grid===h&&(i.data("inTrashZone",!1),h._clearRemovingTimeout(i))})}if(!h.opts.staticGrid&&h.opts.acceptWidgets){var l=null,p=function(t,e){var i=l,o=i.data("_gridstack_node"),a=h.getCellFromPixel({left:t.pageX,top:t.pageY},!0),s=Math.max(0,a.x),r=Math.max(0,a.y);o._added||(o._added=!0,o.el=i,o.autoPosition=!0,o.x=s,o.y=r,h.grid.cleanNodes(),h.grid.beginUpdate(o),h.grid.addNode(o),h.container.append(h.placeholder),h.placeholder.attr("data-gs-x",o.x).attr("data-gs-y",o.y).attr("data-gs-width",o.width).attr("data-gs-height",o.height).show(),o.el=h.placeholder,o._beforeDragX=o.x,o._beforeDragY=o.y,h._updateContainerHeight()),h.grid.canMoveNode(o,s,r)&&(h.grid.moveNode(o,s,r),h._updateContainerHeight())};this.dd.droppable(h.container,{accept:function(t){var e=(t=_(t)).data("_gridstack_node");return(!e||e._grid!==h)&&t.is(!0===h.opts.acceptWidgets?".grid-stack-item":h.opts.acceptWidgets)}}).on(h.container,"dropover",function(t,e){h.container.offset();var i=_(e.draggable),o=h.cellWidth(),a=h.cellHeight(),s=i.data("_gridstack_node"),r=s?s.width:Math.ceil(i.outerWidth()/o),n=s?s.height:Math.ceil(i.outerHeight()/a);l=i;var d=h.grid._prepareNode({width:r,height:n,_added:!1,_temporary:!0});i.data("_gridstack_node",d),i.data("_gridstack_node_orig",s),i.on("drag",p)}).on(h.container,"dropout",function(t,e){var i=_(e.draggable);if(i.data("_gridstack_node")){i.unbind("drag",p);var o=i.data("_gridstack_node");o.el=null,h.grid.removeNode(o),h.placeholder.detach(),h._updateContainerHeight(),i.data("_gridstack_node",i.data("_gridstack_node_orig"))}}).on(h.container,"drop",function(t,e){h.placeholder.detach();var i=_(e.draggable).data("_gridstack_node");i._grid=h;var o=_(e.draggable).clone(!1);o.data("_gridstack_node",i);var a=_(e.draggable).data("_gridstack_node_orig");void 0!==a&&void 0!==a._grid&&a._grid._triggerRemoveEvent(),_(e.helper).remove(),i.el=o,h.placeholder.hide(),u.removePositioningStyles(o),o.find("div.ui-resizable-handle").remove(),o.attr("data-gs-x",i.x).attr("data-gs-y",i.y).attr("data-gs-width",i.width).attr("data-gs-height",i.height).addClass(h.opts.itemClass).enableSelection().removeData("draggable").removeClass("ui-draggable ui-draggable-dragging ui-draggable-disabled").unbind("drag",p),h.container.append(o),h._prepareElementsByNode(o,i),h._updateContainerHeight(),h.grid._addedNodes.push(i),h._triggerAddEvent(),h._triggerChangeEvent(),h.grid.endUpdate(),_(e.draggable).unbind("drag",p),_(e.draggable).removeData("_gridstack_node"),_(e.draggable).removeData("_gridstack_node_orig"),h.container.trigger("dropped",[a,i])})}};return i.prototype._triggerChangeEvent=function(t){var e=this.grid.getDirtyNodes(),i=!1,o=[];e&&e.length&&(o.push(e),i=!0),(i||!0===t)&&this.container.trigger("change",o)},i.prototype._triggerAddEvent=function(){this.grid._addedNodes&&0<this.grid._addedNodes.length&&(this.container.trigger("added",[g.map(this.grid._addedNodes,g.clone)]),this.grid._addedNodes=[])},i.prototype._triggerRemoveEvent=function(){this.grid._removedNodes&&0<this.grid._removedNodes.length&&(this.container.trigger("removed",[g.map(this.grid._removedNodes,g.clone)]),this.grid._removedNodes=[])},i.prototype._initStyles=function(){this._stylesId&&u.removeStylesheet(this._stylesId),this._stylesId="gridstack-style-"+(1e5*Math.random()).toFixed(),this._styles=u.createStylesheet(this._stylesId),null!==this._styles&&(this._styles._max=0)},i.prototype._updateStyles=function(t){if(null!==this._styles&&void 0!==this._styles){var e,i="."+this.opts._class+" ."+this.opts.itemClass,o=this;if(void 0===t&&(t=this._styles._max),this._initStyles(),this._updateContainerHeight(),this.opts.cellHeight&&!(0!==this._styles._max&&t<=this._styles._max)&&(e=this.opts.verticalMargin&&this.opts.cellHeightUnit!==this.opts.verticalMarginUnit?function(t,e){return t&&e?"calc("+(o.opts.cellHeight*t+o.opts.cellHeightUnit)+" + "+(o.opts.verticalMargin*e+o.opts.verticalMarginUnit)+")":o.opts.cellHeight*t+o.opts.verticalMargin*e+o.opts.cellHeightUnit}:function(t,e){return o.opts.cellHeight*t+o.opts.verticalMargin*e+o.opts.cellHeightUnit},0===this._styles._max&&u.insertCSSRule(this._styles,i,"min-height: "+e(1,0)+";",0),t>this._styles._max)){for(var a=this._styles._max;a<t;++a)u.insertCSSRule(this._styles,i+'[data-gs-height="'+(a+1)+'"]',"height: "+e(a+1,a)+";",a),u.insertCSSRule(this._styles,i+'[data-gs-min-height="'+(a+1)+'"]',"min-height: "+e(a+1,a)+";",a),u.insertCSSRule(this._styles,i+'[data-gs-max-height="'+(a+1)+'"]',"max-height: "+e(a+1,a)+";",a),u.insertCSSRule(this._styles,i+'[data-gs-y="'+a+'"]',"top: "+e(a,a)+";",a);this._styles._max=t}}},i.prototype._updateContainerHeight=function(){if(!this.grid._updateCounter){var t=this.grid.getGridHeight(),e=parseInt(this.container.css("min-height"));if(0<e){var i=(e+this.opts.verticalMargin)/(this.cellHeight()+this.opts.verticalMargin);t<i&&(t=i)}this.container.attr("data-gs-current-height",t),this.opts.cellHeight&&(this.opts.verticalMargin?this.opts.cellHeightUnit===this.opts.verticalMarginUnit?this.container.css("height",t*(this.opts.cellHeight+this.opts.verticalMargin)-this.opts.verticalMargin+this.opts.cellHeightUnit):this.container.css("height","calc("+(t*this.opts.cellHeight+this.opts.cellHeightUnit)+" + "+(t*(this.opts.verticalMargin-1)+this.opts.verticalMarginUnit)+")"):this.container.css("height",t*this.opts.cellHeight+this.opts.cellHeightUnit))}},i.prototype._isOneColumnMode=function(){return(window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth)<=this.opts.minWidth},i.prototype._setupRemovingTimeout=function(t){var e=_(t).data("_gridstack_node");!e._removeTimeout&&this.opts.removable&&(e._removeTimeout=setTimeout(function(){t.addClass("grid-stack-item-removing"),e._isAboutToRemove=!0},this.opts.removeTimeout))},i.prototype._clearRemovingTimeout=function(t){var e=_(t).data("_gridstack_node");e._removeTimeout&&(clearTimeout(e._removeTimeout),e._removeTimeout=null,t.removeClass("grid-stack-item-removing"),e._isAboutToRemove=!1)},i.prototype._prepareElementsByNode=function(h,l){var p,g,c=this,t=function(t,e){var i,o,a=Math.round(e.position.left/p),s=Math.floor((e.position.top+g/2)/g);if("drag"!=t.type&&(i=Math.round(e.size.width/p),o=Math.round(e.size.height/g)),"drag"==t.type){var r=e.position.top-l._prevYPix;if(l._prevYPix=e.position.top,u.updateScrollPosition(h[0],e,r),h.data("inTrashZone")||a<0||a>=c.grid.width||s<0||!c.grid.float&&s>c.grid.getGridHeight()){if(l._temporaryRemoved)return;!0===c.opts.removable&&c._setupRemovingTimeout(h),a=l._beforeDragX,s=l._beforeDragY,c.placeholder.detach(),c.placeholder.hide(),c.grid.removeNode(l),c._updateContainerHeight(),l._temporaryRemoved=!0}else c._clearRemovingTimeout(h),l._temporaryRemoved&&(c.grid.addNode(l),c.placeholder.attr("data-gs-x",a).attr("data-gs-y",s).attr("data-gs-width",i).attr("data-gs-height",o).show(),c.container.append(c.placeholder),l.el=c.placeholder,l._temporaryRemoved=!1)}else if("resize"==t.type&&a<0)return;var n=void 0!==i?i:l.lastTriedWidth,d=void 0!==o?o:l.lastTriedHeight;!c.grid.canMoveNode(l,a,s,i,o)||l.lastTriedX===a&&l.lastTriedY===s&&l.lastTriedWidth===n&&l.lastTriedHeight===d||(l.lastTriedX=a,l.lastTriedY=s,l.lastTriedWidth=i,l.lastTriedHeight=o,c.grid.moveNode(l,a,s,i,o),c._updateContainerHeight())},e=function(t,e){c.container.append(c.placeholder);var i=_(this);c.grid.cleanNodes(),c.grid.beginUpdate(l),p=c.cellWidth();var o=Math.ceil(i.outerHeight()/i.attr("data-gs-height"));g=c.container.height()/parseInt(c.container.attr("data-gs-current-height")),c.placeholder.attr("data-gs-x",i.attr("data-gs-x")).attr("data-gs-y",i.attr("data-gs-y")).attr("data-gs-width",i.attr("data-gs-width")).attr("data-gs-height",i.attr("data-gs-height")).show(),l.el=c.placeholder,l._beforeDragX=l.x,l._beforeDragY=l.y,l._prevYPix=e.position.top,c.dd.resizable(h,"option","minWidth",p*(l.minWidth||1)),c.dd.resizable(h,"option","minHeight",o*(l.minHeight||1)),"resizestart"==t.type&&i.find(".grid-stack-item").trigger("resizestart")},i=function(t,e){var i=_(this);if(i.data("_gridstack_node")){var o=!1;if(c.placeholder.detach(),l.el=i,c.placeholder.hide(),l._isAboutToRemove)o=!0,h.data("_gridstack_node")._grid._triggerRemoveEvent(),h.removeData("_gridstack_node"),h.remove();else c._clearRemovingTimeout(h),l._temporaryRemoved?(u.removePositioningStyles(i),i.attr("data-gs-x",l._beforeDragX).attr("data-gs-y",l._beforeDragY).attr("data-gs-width",l.width).attr("data-gs-height",l.height),l.x=l._beforeDragX,l.y=l._beforeDragY,l._temporaryRemoved=!1,c.grid.addNode(l)):(u.removePositioningStyles(i),i.attr("data-gs-x",l.x).attr("data-gs-y",l.y).attr("data-gs-width",l.width).attr("data-gs-height",l.height));c._updateContainerHeight(),c._triggerChangeEvent(o),c.grid.endUpdate();var a=i.find(".grid-stack");a.length&&"resizestop"==t.type&&(a.each(function(t,e){_(e).data("gridstack").onResizeHandler()}),i.find(".grid-stack-item").trigger("resizestop"),i.find(".grid-stack-item").trigger("gsresizestop")),"resizestop"==t.type&&c.container.trigger("gsresizestop",i)}};this.dd.draggable(h,{start:e,stop:i,drag:t}).resizable(h,{start:e,stop:i,resize:t}),(l.noMove||this._isOneColumnMode()&&!c.opts.disableOneColumnMode||this.opts.disableDrag||this.opts.staticGrid)&&this.dd.draggable(h,"disable"),(l.noResize||this._isOneColumnMode()&&!c.opts.disableOneColumnMode||this.opts.disableResize||this.opts.staticGrid)&&this.dd.resizable(h,"disable"),h.attr("data-gs-locked",l.locked?"yes":null)},i.prototype._prepareElement=function(t,e){e=void 0!==e&&e;(t=_(t)).addClass(this.opts.itemClass);var i=this.grid.addNode({x:parseInt(t.attr("data-gs-x"),10),y:parseInt(t.attr("data-gs-y"),10),width:t.attr("data-gs-width"),height:t.attr("data-gs-height"),maxWidth:t.attr("data-gs-max-width"),minWidth:t.attr("data-gs-min-width"),maxHeight:t.attr("data-gs-max-height"),minHeight:t.attr("data-gs-min-height"),autoPosition:u.toBool(t.attr("data-gs-auto-position")),noResize:u.toBool(t.attr("data-gs-no-resize")),noMove:u.toBool(t.attr("data-gs-no-move")),locked:u.toBool(t.attr("data-gs-locked")),resizeHandles:t.attr("data-gs-resize-handles"),el:t,id:t.attr("data-gs-id"),_grid:this},e);t.data("_gridstack_node",i),this._prepareElementsByNode(t,i)},i.prototype.setAnimation=function(t){t?this.container.addClass("grid-stack-animate"):this.container.removeClass("grid-stack-animate")},i.prototype.addWidget=function(t,e,i,o,a,s,r,n,d,h,l){return t=_(t),void 0!==e&&t.attr("data-gs-x",e),void 0!==i&&t.attr("data-gs-y",i),void 0!==o&&t.attr("data-gs-width",o),void 0!==a&&t.attr("data-gs-height",a),void 0!==s&&t.attr("data-gs-auto-position",s?"yes":null),void 0!==r&&t.attr("data-gs-min-width",r),void 0!==n&&t.attr("data-gs-max-width",n),void 0!==d&&t.attr("data-gs-min-height",d),void 0!==h&&t.attr("data-gs-max-height",h),void 0!==l&&t.attr("data-gs-id",l),this.container.append(t),this._prepareElement(t,!0),this._triggerAddEvent(),this._updateContainerHeight(),this._triggerChangeEvent(!0),t},i.prototype.makeWidget=function(t){return t=_(t),this._prepareElement(t,!0),this._triggerAddEvent(),this._updateContainerHeight(),this._triggerChangeEvent(!0),t},i.prototype.willItFit=function(t,e,i,o,a){var s={x:t,y:e,width:i,height:o,autoPosition:a};return this.grid.canBePlacedWithRespectToHeight(s)},i.prototype.removeWidget=function(t,e){e=void 0===e||e;var i=(t=_(t)).data("_gridstack_node");i||(i=this.grid.getNodeDataByDOMEl(t)),this.grid.removeNode(i,e),t.removeData("_gridstack_node"),this._updateContainerHeight(),e&&t.remove(),this._triggerChangeEvent(!0),this._triggerRemoveEvent()},i.prototype.removeAll=function(e){g.each(this.grid.nodes,g.bind(function(t){this.removeWidget(t.el,e)},this)),this.grid.nodes=[],this._updateContainerHeight()},i.prototype.destroy=function(t){_(window).off("resize",this.onResizeHandler),this.disable(),void 0===t||t?this.container.remove():(this.removeAll(!1),this.container.removeData("gridstack")),u.removeStylesheet(this._stylesId),this.grid&&(this.grid=null)},i.prototype.resizable=function(t,o){var a=this;return(t=_(t)).each(function(t,e){var i=(e=_(e)).data("_gridstack_node");null!=i&&(i.noResize=!o,i.noResize||a._isOneColumnMode()&&!a.opts.disableOneColumnMode?a.dd.resizable(e,"disable"):a.dd.resizable(e,"enable"))}),this},i.prototype.movable=function(t,o){var a=this;return(t=_(t)).each(function(t,e){var i=(e=_(e)).data("_gridstack_node");null!=i&&(i.noMove=!o,i.noMove||a._isOneColumnMode()&&!a.opts.disableOneColumnMode?(a.dd.draggable(e,"disable"),e.removeClass("ui-draggable-handle")):(a.dd.draggable(e,"enable"),e.addClass("ui-draggable-handle")))}),this},i.prototype.enableMove=function(t,e){this.movable(this.container.children("."+this.opts.itemClass),t),e&&(this.opts.disableDrag=!t)},i.prototype.enableResize=function(t,e){this.resizable(this.container.children("."+this.opts.itemClass),t),e&&(this.opts.disableResize=!t)},i.prototype.disable=function(){this.movable(this.container.children("."+this.opts.itemClass),!1),this.resizable(this.container.children("."+this.opts.itemClass),!1),this.container.trigger("disable")},i.prototype.enable=function(){this.movable(this.container.children("."+this.opts.itemClass),!0),this.resizable(this.container.children("."+this.opts.itemClass),!0),this.container.trigger("enable")},i.prototype.locked=function(t,o){return(t=_(t)).each(function(t,e){var i=(e=_(e)).data("_gridstack_node");null!=i&&(i.locked=o||!1,e.attr("data-gs-locked",i.locked?"yes":null))}),this},i.prototype.maxHeight=function(t,o){return(t=_(t)).each(function(t,e){var i=(e=_(e)).data("_gridstack_node");null!=i&&(isNaN(o)||(i.maxHeight=o||!1,e.attr("data-gs-max-height",o)))}),this},i.prototype.minHeight=function(t,o){return(t=_(t)).each(function(t,e){var i=(e=_(e)).data("_gridstack_node");null!=i&&(isNaN(o)||(i.minHeight=o||!1,e.attr("data-gs-min-height",o)))}),this},i.prototype.maxWidth=function(t,o){return(t=_(t)).each(function(t,e){var i=(e=_(e)).data("_gridstack_node");null!=i&&(isNaN(o)||(i.maxWidth=o||!1,e.attr("data-gs-max-width",o)))}),this},i.prototype.minWidth=function(t,o){return(t=_(t)).each(function(t,e){var i=(e=_(e)).data("_gridstack_node");null!=i&&(isNaN(o)||(i.minWidth=o||!1,e.attr("data-gs-min-width",o)))}),this},i.prototype._updateElement=function(t,e){var i=(t=_(t).first()).data("_gridstack_node");if(null!=i){var o=this;o.grid.cleanNodes(),o.grid.beginUpdate(i),e.call(this,t,i),o._updateContainerHeight(),o._triggerChangeEvent(),o.grid.endUpdate()}},i.prototype.resize=function(t,i,o){this._updateElement(t,function(t,e){i=null!=i?i:e.width,o=null!=o?o:e.height,this.grid.moveNode(e,e.x,e.y,i,o)})},i.prototype.move=function(t,i,o){this._updateElement(t,function(t,e){i=null!=i?i:e.x,o=null!=o?o:e.y,this.grid.moveNode(e,i,o,e.width,e.height)})},i.prototype.update=function(t,i,o,a,s){this._updateElement(t,function(t,e){i=null!=i?i:e.x,o=null!=o?o:e.y,a=null!=a?a:e.width,s=null!=s?s:e.height,this.grid.moveNode(e,i,o,a,s)})},i.prototype.verticalMargin=function(t,e){if(void 0===t)return this.opts.verticalMargin;var i=u.parseHeight(t);this.opts.verticalMarginUnit===i.unit&&this.opts.height===i.height||(this.opts.verticalMarginUnit=i.unit,this.opts.verticalMargin=i.height,e||this._updateStyles())},i.prototype.cellHeight=function(t,e){if(void 0===t){if(this.opts.cellHeight)return this.opts.cellHeight;var i=this.container.children("."+this.opts.itemClass).first();return Math.ceil(i.outerHeight()/i.attr("data-gs-height"))}var o=u.parseHeight(t);this.opts.cellHeightUnit===o.unit&&this.opts.cellHeight===o.height||(this.opts.cellHeightUnit=o.unit,this.opts.cellHeight=o.height,e||this._updateStyles())},i.prototype.cellWidth=function(){return Math.round(this.container.outerWidth()/this.opts.width)},i.prototype.getCellFromPixel=function(t,e){var i=void 0!==e&&e?this.container.offset():this.container.position(),o=t.left-i.left,a=t.top-i.top,s=Math.floor(this.container.width()/this.opts.width),r=Math.floor(this.container.height()/parseInt(this.container.attr("data-gs-current-height")));return{x:Math.floor(o/s),y:Math.floor(a/r)}},i.prototype.batchUpdate=function(){this.grid.batchUpdate()},i.prototype.commit=function(){this.grid.commit(),this._updateContainerHeight()},i.prototype.isAreaEmpty=function(t,e,i,o){return this.grid.isAreaEmpty(t,e,i,o)},i.prototype.setStatic=function(t){this.opts.staticGrid=!0===t,this.enableMove(!t),this.enableResize(!t),this._setStaticClass()},i.prototype._setStaticClass=function(){var t="grid-stack-static";!0===this.opts.staticGrid?this.container.addClass(t):this.container.removeClass(t)},i.prototype._updateNodeWidths=function(t,e){this.grid._sortNodes(),this.grid.batchUpdate();for(var i={},o=0;o<this.grid.nodes.length;o++)i=this.grid.nodes[o],this.update(i.el,Math.round(i.x*e/t),void 0,Math.round(i.width*e/t),void 0);this.grid.commit()},i.prototype.setGridWidth=function(t,e){this.container.removeClass("grid-stack-"+this.opts.width),!0!==e&&this._updateNodeWidths(this.opts.width,t),this.opts.width=t,this.grid.width=t,this.container.addClass("grid-stack-"+t)},m.prototype.batch_update=e(m.prototype.batchUpdate),m.prototype._fix_collisions=e(m.prototype._fixCollisions,"_fix_collisions","_fixCollisions"),m.prototype.is_area_empty=e(m.prototype.isAreaEmpty,"is_area_empty","isAreaEmpty"),m.prototype._sort_nodes=e(m.prototype._sortNodes,"_sort_nodes","_sortNodes"),m.prototype._pack_nodes=e(m.prototype._packNodes,"_pack_nodes","_packNodes"),m.prototype._prepare_node=e(m.prototype._prepareNode,"_prepare_node","_prepareNode"),m.prototype.clean_nodes=e(m.prototype.cleanNodes,"clean_nodes","cleanNodes"),m.prototype.get_dirty_nodes=e(m.prototype.getDirtyNodes,"get_dirty_nodes","getDirtyNodes"),m.prototype.add_node=e(m.prototype.addNode,"add_node","addNode, "),m.prototype.remove_node=e(m.prototype.removeNode,"remove_node","removeNode"),m.prototype.can_move_node=e(m.prototype.canMoveNode,"can_move_node","canMoveNode"),m.prototype.move_node=e(m.prototype.moveNode,"move_node","moveNode"),m.prototype.get_grid_height=e(m.prototype.getGridHeight,"get_grid_height","getGridHeight"),m.prototype.begin_update=e(m.prototype.beginUpdate,"begin_update","beginUpdate"),m.prototype.end_update=e(m.prototype.endUpdate,"end_update","endUpdate"),m.prototype.can_be_placed_with_respect_to_height=e(m.prototype.canBePlacedWithRespectToHeight,"can_be_placed_with_respect_to_height","canBePlacedWithRespectToHeight"),i.prototype._trigger_change_event=e(i.prototype._triggerChangeEvent,"_trigger_change_event","_triggerChangeEvent"),i.prototype._init_styles=e(i.prototype._initStyles,"_init_styles","_initStyles"),i.prototype._update_styles=e(i.prototype._updateStyles,"_update_styles","_updateStyles"),i.prototype._update_container_height=e(i.prototype._updateContainerHeight,"_update_container_height","_updateContainerHeight"),i.prototype._is_one_column_mode=e(i.prototype._isOneColumnMode,"_is_one_column_mode","_isOneColumnMode"),i.prototype._prepare_element=e(i.prototype._prepareElement,"_prepare_element","_prepareElement"),i.prototype.set_animation=e(i.prototype.setAnimation,"set_animation","setAnimation"),i.prototype.add_widget=e(i.prototype.addWidget,"add_widget","addWidget"),i.prototype.make_widget=e(i.prototype.makeWidget,"make_widget","makeWidget"),i.prototype.will_it_fit=e(i.prototype.willItFit,"will_it_fit","willItFit"),i.prototype.remove_widget=e(i.prototype.removeWidget,"remove_widget","removeWidget"),i.prototype.remove_all=e(i.prototype.removeAll,"remove_all","removeAll"),i.prototype.min_height=e(i.prototype.minHeight,"min_height","minHeight"),i.prototype.min_width=e(i.prototype.minWidth,"min_width","minWidth"),i.prototype._update_element=e(i.prototype._updateElement,"_update_element","_updateElement"),i.prototype.cell_height=e(i.prototype.cellHeight,"cell_height","cellHeight"),i.prototype.cell_width=e(i.prototype.cellWidth,"cell_width","cellWidth"),i.prototype.get_cell_from_pixel=e(i.prototype.getCellFromPixel,"get_cell_from_pixel","getCellFromPixel"),i.prototype.batch_update=e(i.prototype.batchUpdate,"batch_update","batchUpdate"),i.prototype.is_area_empty=e(i.prototype.isAreaEmpty,"is_area_empty","isAreaEmpty"),i.prototype.set_static=e(i.prototype.setStatic,"set_static","setStatic"),i.prototype._set_static_class=e(i.prototype._setStaticClass,"_set_static_class","_setStaticClass"),t.GridStackUI=i,t.GridStackUI.Utils=u,t.GridStackUI.Engine=m,t.GridStackUI.GridStackDragDropPlugin=c,_.fn.gridstack=function(e){return this.each(function(){var t=_(this);t.data("gridstack")||t.data("gridstack",new i(this,e))})},t.GridStackUI});
-//# sourceMappingURL=gridstack.min.map
+/**
+ * gridstack.js 1.0.0-dev
+ * http://troolee.github.io/gridstack.js/
+ * (c) 2014-2018 Pavel Reznikov, Dylan Weiss
+ * gridstack.js may be freely distributed under the MIT license.
+ * @preserve
+*/
+(function(factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery', 'lodash'], factory);
+    } else if (typeof exports !== 'undefined') {
+        try { jQuery = require('jquery'); } catch (e) {}
+        try { _ = require('lodash'); } catch (e) {}
+        factory(jQuery, _);
+    } else {
+        factory(jQuery, _);
+    }
+})(function($, _) {
+
+    var scope = window;
+
+    var obsolete = function(f, oldName, newName) {
+        var wrapper = function() {
+            console.warn('gridstack.js: Function `' + oldName + '` is deprecated as of v0.2.5 and has been replaced ' +
+            'with `' + newName + '`. It will be **completely** removed in v1.0.');
+            return f.apply(this, arguments);
+        };
+        wrapper.prototype = f.prototype;
+
+        return wrapper;
+    };
+
+    var obsoleteOpts = function(oldName, newName) {
+        console.warn('gridstack.js: Option `' + oldName + '` is deprecated as of v0.2.5 and has been replaced with `' +
+            newName + '`. It will be **completely** removed in v1.0.');
+    };
+
+    var Utils = {
+        isIntercepted: function(a, b) {
+            return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
+        },
+
+        sort: function(nodes, dir, width) {
+            width = width || _.chain(nodes).map(function(node) { return node.x + node.width; }).max().value();
+            dir = dir != -1 ? 1 : -1;
+            return _.sortBy(nodes, [function(n) { return dir * (n.x + n.y * width); }]);
+        },
+
+        createStylesheet: function(id) {
+            var style = document.createElement('style');
+            style.setAttribute('type', 'text/css');
+            style.setAttribute('data-gs-style-id', id);
+            if (style.styleSheet) {
+                style.styleSheet.cssText = '';
+            } else {
+                style.appendChild(document.createTextNode(''));
+            }
+            document.getElementsByTagName('head')[0].appendChild(style);
+            return style.sheet;
+        },
+
+        removeStylesheet: function(id) {
+            $('STYLE[data-gs-style-id=' + id + ']').remove();
+        },
+
+        insertCSSRule: function(sheet, selector, rules, index) {
+            if (typeof sheet.insertRule === 'function') {
+                sheet.insertRule(selector + '{' + rules + '}', index);
+            } else if (typeof sheet.addRule === 'function') {
+                sheet.addRule(selector, rules, index);
+            }
+        },
+
+        toBool: function(v) {
+            if (typeof v == 'boolean') {
+                return v;
+            }
+            if (typeof v == 'string') {
+                v = v.toLowerCase();
+                return !(v === '' || v == 'no' || v == 'false' || v == '0');
+            }
+            return Boolean(v);
+        },
+
+        _collisionNodeCheck: function(n) {
+            return n != this.node && Utils.isIntercepted(n, this.nn);
+        },
+
+        _didCollide: function(bn) {
+            return Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
+        },
+
+        _isAddNodeIntercepted: function(n) {
+            return Utils.isIntercepted({x: this.x, y: this.y, width: this.node.width, height: this.node.height}, n);
+        },
+
+        parseHeight: function(val) {
+            var height = val;
+            var heightUnit = 'px';
+            if (height && _.isString(height)) {
+                var match = height.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw)?$/);
+                if (!match) {
+                    throw new Error('Invalid height');
+                }
+                heightUnit = match[2] || 'px';
+                height = parseFloat(match[1]);
+            }
+            return {height: height, unit: heightUnit};
+        },
+
+        removePositioningStyles: function(el) {
+            var style = el[0].style;
+            if (style.position) {
+                style.removeProperty('position');
+            }
+            if (style.left) {
+                style.removeProperty('left');
+            }
+            if (style.top) {
+                style.removeProperty('top');
+            }
+            if (style.width) {
+                style.removeProperty('width');
+            }
+            if (style.height) {
+                style.removeProperty('height');
+            }
+        },
+        getScrollParent: function(el) {
+            var returnEl;
+            if (el == null) {
+                returnEl = null;
+            } else if (el.scrollHeight > el.clientHeight) {
+                returnEl = el;
+            } else {
+                returnEl = Utils.getScrollParent(el.parentNode);
+            }
+            return returnEl;
+        },
+        updateScrollPosition: function(el, ui, distance) {
+            // is widget in view?
+            var rect = el.getBoundingClientRect();
+            var innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
+            if (rect.top < 0 ||
+                rect.bottom > innerHeightOrClientHeight
+            ) {
+                // set scrollTop of first parent that scrolls
+                // if parent is larger than el, set as low as possible
+                // to get entire widget on screen
+                var offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
+                var offsetDiffUp = rect.top;
+                var scrollEl = Utils.getScrollParent(el);
+                if (scrollEl != null) {
+                    var prevScroll = scrollEl.scrollTop;
+                    if (rect.top < 0 && distance < 0) {
+                        // moving up
+                        if (el.offsetHeight > innerHeightOrClientHeight) {
+                            scrollEl.scrollTop += distance;
+                        } else {
+                            scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
+                        }
+                    } else if (distance > 0) {
+                        // moving down
+                        if (el.offsetHeight > innerHeightOrClientHeight) {
+                            scrollEl.scrollTop += distance;
+                        } else {
+                            scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
+                        }
+                    }
+                    // move widget y by amount scrolled
+                    ui.position.top += scrollEl.scrollTop - prevScroll;
+                }
+            }
+        }
+    };
+
+    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+    Utils.is_intercepted = obsolete(Utils.isIntercepted, 'is_intercepted', 'isIntercepted');
+
+    Utils.create_stylesheet = obsolete(Utils.createStylesheet, 'create_stylesheet', 'createStylesheet');
+
+    Utils.remove_stylesheet = obsolete(Utils.removeStylesheet, 'remove_stylesheet', 'removeStylesheet');
+
+    Utils.insert_css_rule = obsolete(Utils.insertCSSRule, 'insert_css_rule', 'insertCSSRule');
+    // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+
+    /**
+    * @class GridStackDragDropPlugin
+    * Base class for drag'n'drop plugin.
+    */
+    function GridStackDragDropPlugin(grid) {
+        this.grid = grid;
+    }
+
+    GridStackDragDropPlugin.registeredPlugins = [];
+
+    GridStackDragDropPlugin.registerPlugin = function(pluginClass) {
+        GridStackDragDropPlugin.registeredPlugins.push(pluginClass);
+    };
+
+    GridStackDragDropPlugin.prototype.resizable = function(el, opts) {
+        return this;
+    };
+
+    GridStackDragDropPlugin.prototype.draggable = function(el, opts) {
+        return this;
+    };
+
+    GridStackDragDropPlugin.prototype.droppable = function(el, opts) {
+        return this;
+    };
+
+    GridStackDragDropPlugin.prototype.isDroppable = function(el) {
+        return false;
+    };
+
+    GridStackDragDropPlugin.prototype.on = function(el, eventName, callback) {
+        return this;
+    };
+
+
+    var idSeq = 0;
+
+    var GridStackEngine = function(width, onchange, floatMode, height, items) {
+        this.width = width;
+        this.float = floatMode || false;
+        this.height = height || 0;
+
+        this.nodes = items || [];
+        this.onchange = onchange || function() {};
+
+        this._updateCounter = 0;
+        this._float = this.float;
+
+        this._addedNodes = [];
+        this._removedNodes = [];
+    };
+
+    GridStackEngine.prototype.batchUpdate = function() {
+        this._updateCounter = 1;
+        this.float = true;
+    };
+
+    GridStackEngine.prototype.commit = function() {
+        if (this._updateCounter !== 0) {
+            this._updateCounter = 0;
+            this.float = this._float;
+            this._packNodes();
+            this._notify();
+        }
+    };
+
+    // For Meteor support: https://github.com/troolee/gridstack.js/pull/272
+    GridStackEngine.prototype.getNodeDataByDOMEl = function(el) {
+        return _.find(this.nodes, function(n) { return el.get(0) === n.el.get(0); });
+    };
+
+    GridStackEngine.prototype._fixCollisions = function(node) {
+        var self = this;
+        this._sortNodes(-1);
+
+        var nn = node;
+        var hasLocked = Boolean(_.find(this.nodes, function(n) { return n.locked; }));
+        if (!this.float && !hasLocked) {
+            nn = {x: 0, y: node.y, width: this.width, height: node.height};
+        }
+        while (true) {
+            var collisionNode = _.find(this.nodes, _.bind(Utils._collisionNodeCheck, {node: node, nn: nn}));
+            if (typeof collisionNode == 'undefined') {
+                return;
+            }
+            this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
+                collisionNode.width, collisionNode.height, true);
+        }
+    };
+
+    GridStackEngine.prototype.isAreaEmpty = function(x, y, width, height) {
+        var nn = {x: x || 0, y: y || 0, width: width || 1, height: height || 1};
+        var collisionNode = _.find(this.nodes, _.bind(function(n) {
+            return Utils.isIntercepted(n, nn);
+        }, this));
+        return collisionNode === null || typeof collisionNode === 'undefined';
+    };
+
+    GridStackEngine.prototype._sortNodes = function(dir) {
+        this.nodes = Utils.sort(this.nodes, dir, this.width);
+    };
+
+    GridStackEngine.prototype._packNodes = function() {
+        this._sortNodes();
+
+        if (this.float) {
+            _.each(this.nodes, _.bind(function(n, i) {
+                if (n._updating || typeof n._origY == 'undefined' || n.y == n._origY) {
+                    return;
+                }
+
+                var newY = n.y;
+                while (newY >= n._origY) {
+                    var collisionNode = _.chain(this.nodes)
+                        .take(i)
+                        .find(_.bind(Utils._didCollide, {n: n, newY: newY}))
+                        .value();
+
+                    if (!collisionNode) {
+                        n._dirty = true;
+                        n.y = newY;
+                    }
+                    --newY;
+                }
+            }, this));
+        } else {
+            _.each(this.nodes, _.bind(function(n, i) {
+                if (n.locked) {
+                    return;
+                }
+                while (n.y > 0) {
+                    var newY = n.y - 1;
+                    var canBeMoved = i === 0;
+
+                    if (i > 0) {
+                        var collisionNode = _.chain(this.nodes)
+                            .take(i)
+                            .find(_.bind(Utils._didCollide, {n: n, newY: newY}))
+                            .value();
+                        canBeMoved = typeof collisionNode == 'undefined';
+                    }
+
+                    if (!canBeMoved) {
+                        break;
+                    }
+                    n._dirty = n.y != newY;
+                    n.y = newY;
+                }
+            }, this));
+        }
+    };
+
+    GridStackEngine.prototype._prepareNode = function(node, resizing) {
+        node = _.defaults(node || {}, {width: 1, height: 1, x: 0, y: 0});
+
+        node.x = parseInt('' + node.x);
+        node.y = parseInt('' + node.y);
+        node.width = parseInt('' + node.width);
+        node.height = parseInt('' + node.height);
+        node.autoPosition = node.autoPosition || false;
+        node.noResize = node.noResize || false;
+        node.noMove = node.noMove || false;
+
+        if (node.width > this.width) {
+            node.width = this.width;
+        } else if (node.width < 1) {
+            node.width = 1;
+        }
+
+        if (node.height < 1) {
+            node.height = 1;
+        }
+
+        if (node.x < 0) {
+            node.x = 0;
+        }
+
+        if (node.x + node.width > this.width) {
+            if (resizing) {
+                node.width = this.width - node.x;
+            } else {
+                node.x = this.width - node.width;
+            }
+        }
+
+        if (node.y < 0) {
+            node.y = 0;
+        }
+
+        return node;
+    };
+
+    GridStackEngine.prototype._notify = function() {
+        var args = Array.prototype.slice.call(arguments, 0);
+        args[0] = typeof args[0] === 'undefined' ? [] : [args[0]];
+        args[1] = typeof args[1] === 'undefined' ? true : args[1];
+        if (this._updateCounter) {
+            return;
+        }
+        var deletedNodes = args[0].concat(this.getDirtyNodes());
+        this.onchange(deletedNodes, args[1]);
+    };
+
+    GridStackEngine.prototype.cleanNodes = function() {
+        if (this._updateCounter) {
+            return;
+        }
+        _.each(this.nodes, function(n) {n._dirty = false; });
+    };
+
+    GridStackEngine.prototype.getDirtyNodes = function() {
+        return _.filter(this.nodes, function(n) { return n._dirty; });
+    };
+
+    GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
+        node = this._prepareNode(node);
+
+        if (typeof node.maxWidth != 'undefined') { node.width = Math.min(node.width, node.maxWidth); }
+        if (typeof node.maxHeight != 'undefined') { node.height = Math.min(node.height, node.maxHeight); }
+        if (typeof node.minWidth != 'undefined') { node.width = Math.max(node.width, node.minWidth); }
+        if (typeof node.minHeight != 'undefined') { node.height = Math.max(node.height, node.minHeight); }
+
+        node._id = ++idSeq;
+        node._dirty = true;
+
+        if (node.autoPosition) {
+            this._sortNodes();
+
+            for (var i = 0;; ++i) {
+                var x = i % this.width;
+                var y = Math.floor(i / this.width);
+                if (x + node.width > this.width) {
+                    continue;
+                }
+                if (!_.find(this.nodes, _.bind(Utils._isAddNodeIntercepted, {x: x, y: y, node: node}))) {
+                    node.x = x;
+                    node.y = y;
+                    break;
+                }
+            }
+        }
+
+        this.nodes.push(node);
+        if (typeof triggerAddEvent != 'undefined' && triggerAddEvent) {
+            this._addedNodes.push(_.clone(node));
+        }
+
+        this._fixCollisions(node);
+        this._packNodes();
+        this._notify();
+        return node;
+    };
+
+    GridStackEngine.prototype.removeNode = function(node, detachNode) {
+        detachNode = typeof detachNode === 'undefined' ? true : detachNode;
+        this._removedNodes.push(_.clone(node));
+        node._id = null;
+        this.nodes = _.without(this.nodes, node);
+        this._packNodes();
+        this._notify(node, detachNode);
+    };
+
+    GridStackEngine.prototype.canMoveNode = function(node, x, y, width, height) {
+        if (!this.isNodeChangedPosition(node, x, y, width, height)) {
+            return false;
+        }
+        var hasLocked = Boolean(_.find(this.nodes, function(n) { return n.locked; }));
+
+        if (!this.height && !hasLocked) {
+            return true;
+        }
+
+        var clonedNode;
+        var clone = new GridStackEngine(
+            this.width,
+            null,
+            this.float,
+            0,
+            _.map(this.nodes, function(n) {
+                if (n == node) {
+                    clonedNode = $.extend({}, n);
+                    return clonedNode;
+                }
+                return $.extend({}, n);
+            }));
+
+        if (typeof clonedNode === 'undefined') {
+            return true;
+        }
+
+        clone.moveNode(clonedNode, x, y, width, height);
+
+        var res = true;
+
+        if (hasLocked) {
+            res &= !Boolean(_.find(clone.nodes, function(n) {
+                return n != clonedNode && Boolean(n.locked) && Boolean(n._dirty);
+            }));
+        }
+        if (this.height) {
+            res &= clone.getGridHeight() <= this.height;
+        }
+
+        return res;
+    };
+
+    GridStackEngine.prototype.canBePlacedWithRespectToHeight = function(node) {
+        if (!this.height) {
+            return true;
+        }
+
+        var clone = new GridStackEngine(
+            this.width,
+            null,
+            this.float,
+            0,
+            _.map(this.nodes, function(n) { return $.extend({}, n); }));
+        clone.addNode(node);
+        return clone.getGridHeight() <= this.height;
+    };
+
+    GridStackEngine.prototype.isNodeChangedPosition = function(node, x, y, width, height) {
+        if (typeof x != 'number') { x = node.x; }
+        if (typeof y != 'number') { y = node.y; }
+        if (typeof width != 'number') { width = node.width; }
+        if (typeof height != 'number') { height = node.height; }
+
+        if (typeof node.maxWidth != 'undefined') { width = Math.min(width, node.maxWidth); }
+        if (typeof node.maxHeight != 'undefined') { height = Math.min(height, node.maxHeight); }
+        if (typeof node.minWidth != 'undefined') { width = Math.max(width, node.minWidth); }
+        if (typeof node.minHeight != 'undefined') { height = Math.max(height, node.minHeight); }
+
+        if (node.x == x && node.y == y && node.width == width && node.height == height) {
+            return false;
+        }
+        return true;
+    };
+
+    GridStackEngine.prototype.moveNode = function(node, x, y, width, height, noPack) {
+        if (!this.isNodeChangedPosition(node, x, y, width, height)) {
+            return node;
+        }
+        if (typeof x != 'number') { x = node.x; }
+        if (typeof y != 'number') { y = node.y; }
+        if (typeof width != 'number') { width = node.width; }
+        if (typeof height != 'number') { height = node.height; }
+
+        if (typeof node.maxWidth != 'undefined') { width = Math.min(width, node.maxWidth); }
+        if (typeof node.maxHeight != 'undefined') { height = Math.min(height, node.maxHeight); }
+        if (typeof node.minWidth != 'undefined') { width = Math.max(width, node.minWidth); }
+        if (typeof node.minHeight != 'undefined') { height = Math.max(height, node.minHeight); }
+
+        if (node.x == x && node.y == y && node.width == width && node.height == height) {
+            return node;
+        }
+
+        var resizing = node.width != width;
+        node._dirty = true;
+
+        node.x = x;
+        node.y = y;
+        node.width = width;
+        node.height = height;
+
+        node.lastTriedX = x;
+        node.lastTriedY = y;
+        node.lastTriedWidth = width;
+        node.lastTriedHeight = height;
+
+        node = this._prepareNode(node, resizing);
+
+        this._fixCollisions(node);
+        if (!noPack) {
+            this._packNodes();
+            this._notify();
+        }
+        return node;
+    };
+
+    GridStackEngine.prototype.getGridHeight = function() {
+        return _.reduce(this.nodes, function(memo, n) { return Math.max(memo, n.y + n.height); }, 0);
+    };
+
+    GridStackEngine.prototype.beginUpdate = function(node) {
+        _.each(this.nodes, function(n) {
+            n._origY = n.y;
+        });
+        node._updating = true;
+    };
+
+    GridStackEngine.prototype.endUpdate = function() {
+        _.each(this.nodes, function(n) {
+            n._origY = n.y;
+        });
+        var n = _.find(this.nodes, function(n) { return n._updating; });
+        if (n) {
+            n._updating = false;
+        }
+    };
+
+    var GridStack = function(el, opts) {
+        var self = this;
+        var oneColumnMode, isAutoCellHeight;
+
+        opts = opts || {};
+
+        this.container = $(el);
+
+        // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+        if (typeof opts.handle_class !== 'undefined') {
+            opts.handleClass = opts.handle_class;
+            obsoleteOpts('handle_class', 'handleClass');
+        }
+        if (typeof opts.item_class !== 'undefined') {
+            opts.itemClass = opts.item_class;
+            obsoleteOpts('item_class', 'itemClass');
+        }
+        if (typeof opts.placeholder_class !== 'undefined') {
+            opts.placeholderClass = opts.placeholder_class;
+            obsoleteOpts('placeholder_class', 'placeholderClass');
+        }
+        if (typeof opts.placeholder_text !== 'undefined') {
+            opts.placeholderText = opts.placeholder_text;
+            obsoleteOpts('placeholder_text', 'placeholderText');
+        }
+        if (typeof opts.cell_height !== 'undefined') {
+            opts.cellHeight = opts.cell_height;
+            obsoleteOpts('cell_height', 'cellHeight');
+        }
+        if (typeof opts.vertical_margin !== 'undefined') {
+            opts.verticalMargin = opts.vertical_margin;
+            obsoleteOpts('vertical_margin', 'verticalMargin');
+        }
+        if (typeof opts.min_width !== 'undefined') {
+            opts.minWidth = opts.min_width;
+            obsoleteOpts('min_width', 'minWidth');
+        }
+        if (typeof opts.static_grid !== 'undefined') {
+            opts.staticGrid = opts.static_grid;
+            obsoleteOpts('static_grid', 'staticGrid');
+        }
+        if (typeof opts.is_nested !== 'undefined') {
+            opts.isNested = opts.is_nested;
+            obsoleteOpts('is_nested', 'isNested');
+        }
+        if (typeof opts.always_show_resize_handle !== 'undefined') {
+            opts.alwaysShowResizeHandle = opts.always_show_resize_handle;
+            obsoleteOpts('always_show_resize_handle', 'alwaysShowResizeHandle');
+        }
+        // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+
+        opts.itemClass = opts.itemClass || 'grid-stack-item';
+        var isNested = this.container.closest('.' + opts.itemClass).length > 0;
+
+        this.opts = _.defaults(opts || {}, {
+            width: parseInt(this.container.attr('data-gs-width')) || 12,
+            height: parseInt(this.container.attr('data-gs-height')) || 0,
+            itemClass: 'grid-stack-item',
+            placeholderClass: 'grid-stack-placeholder',
+            placeholderText: '',
+            handle: '.grid-stack-item-content',
+            handleClass: null,
+            cellHeight: 60,
+            verticalMargin: 20,
+            auto: true,
+            minWidth: 768,
+            float: false,
+            staticGrid: false,
+            _class: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
+            animate: Boolean(this.container.attr('data-gs-animate')) || false,
+            alwaysShowResizeHandle: opts.alwaysShowResizeHandle || false,
+            resizable: _.defaults(opts.resizable || {}, {
+                autoHide: !(opts.alwaysShowResizeHandle || false),
+                handles: 'se'
+            }),
+            draggable: _.defaults(opts.draggable || {}, {
+                handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) ||
+                    '.grid-stack-item-content',
+                scroll: false,
+                appendTo: 'body'
+            }),
+            disableDrag: opts.disableDrag || false,
+            disableResize: opts.disableResize || false,
+            rtl: 'auto',
+            removable: false,
+            removableOptions: _.defaults(opts.removableOptions || {}, {
+                accept: '.' + opts.itemClass
+            }),
+            removeTimeout: 2000,
+            verticalMarginUnit: 'px',
+            cellHeightUnit: 'px',
+            disableOneColumnMode: opts.disableOneColumnMode || false,
+            oneColumnModeClass: opts.oneColumnModeClass || 'grid-stack-one-column-mode',
+            ddPlugin: null
+        });
+
+        if (this.opts.ddPlugin === false) {
+            this.opts.ddPlugin = GridStackDragDropPlugin;
+        } else if (this.opts.ddPlugin === null) {
+            this.opts.ddPlugin = _.first(GridStackDragDropPlugin.registeredPlugins) || GridStackDragDropPlugin;
+        }
+
+        this.dd = new this.opts.ddPlugin(this);
+
+        if (this.opts.rtl === 'auto') {
+            this.opts.rtl = this.container.css('direction') === 'rtl';
+        }
+
+        if (this.opts.rtl) {
+            this.container.addClass('grid-stack-rtl');
+        }
+
+        this.opts.isNested = isNested;
+
+        isAutoCellHeight = this.opts.cellHeight === 'auto';
+        if (isAutoCellHeight) {
+            self.cellHeight(self.cellWidth(), true);
+        } else {
+            this.cellHeight(this.opts.cellHeight, true);
+        }
+        this.verticalMargin(this.opts.verticalMargin, true);
+
+        this.container.addClass(this.opts._class);
+
+        this._setStaticClass();
+
+        if (isNested) {
+            this.container.addClass('grid-stack-nested');
+        }
+
+        this._initStyles();
+
+        this.grid = new GridStackEngine(this.opts.width, function(nodes, detachNode) {
+            detachNode = typeof detachNode === 'undefined' ? true : detachNode;
+            var maxHeight = 0;
+            _.each(this.nodes, function(n) {
+                maxHeight = Math.max(maxHeight, n.y + n.height);
+            });
+            _.each(nodes, function(n) {
+                if (detachNode && n._id === null) {
+                    if (n.el) {
+                        n.el.remove();
+                    }
+                } else {
+                    n.el
+                        .attr('data-gs-x', n.x)
+                        .attr('data-gs-y', n.y)
+                        .attr('data-gs-width', n.width)
+                        .attr('data-gs-height', n.height);
+                }
+            });
+            self._updateStyles(maxHeight + 10);
+        }, this.opts.float, this.opts.height);
+
+        if (this.opts.auto) {
+            var elements = [];
+            var _this = this;
+            this.container.children('.' + this.opts.itemClass + ':not(.' + this.opts.placeholderClass + ')')
+                .each(function(index, el) {
+                el = $(el);
+                elements.push({
+                    el: el,
+                    i: parseInt(el.attr('data-gs-x')) + parseInt(el.attr('data-gs-y')) * _this.opts.width
+                });
+            });
+            _.chain(elements).sortBy(function(x) { return x.i; }).each(function(i) {
+                self._prepareElement(i.el);
+            }).value();
+        }
+
+        this.setAnimation(this.opts.animate);
+
+        this.placeholder = $(
+            '<div class="' + this.opts.placeholderClass + ' ' + this.opts.itemClass + '">' +
+            '<div class="placeholder-content">' + this.opts.placeholderText + '</div></div>').hide();
+
+        this._updateContainerHeight();
+
+        this._updateHeightsOnResize = _.throttle(function() {
+            self.cellHeight(self.cellWidth(), false);
+        }, 100);
+
+        this.onResizeHandler = function() {
+            if (isAutoCellHeight) {
+                self._updateHeightsOnResize();
+            }
+
+            if (self._isOneColumnMode() && !self.opts.disableOneColumnMode) {
+                if (oneColumnMode) {
+                    return;
+                }
+                self.container.addClass(self.opts.oneColumnModeClass);
+                oneColumnMode = true;
+
+                self.grid._sortNodes();
+                _.each(self.grid.nodes, function(node) {
+                    self.container.append(node.el);
+
+                    if (self.opts.staticGrid) {
+                        return;
+                    }
+                    self.dd.draggable(node.el, 'disable');
+                    self.dd.resizable(node.el, 'disable');
+
+                    node.el.trigger('resize');
+                });
+            } else {
+                if (!oneColumnMode) {
+                    return;
+                }
+
+                self.container.removeClass(self.opts.oneColumnModeClass);
+                oneColumnMode = false;
+
+                if (self.opts.staticGrid) {
+                    return;
+                }
+
+                _.each(self.grid.nodes, function(node) {
+                    if (!node.noMove && !self.opts.disableDrag) {
+                        self.dd.draggable(node.el, 'enable');
+                    }
+                    if (!node.noResize && !self.opts.disableResize) {
+                        self.dd.resizable(node.el, 'enable');
+                    }
+
+                    node.el.trigger('resize');
+                });
+            }
+        };
+
+        $(window).resize(this.onResizeHandler);
+        this.onResizeHandler();
+
+        if (!self.opts.staticGrid && typeof self.opts.removable === 'string') {
+            var trashZone = $(self.opts.removable);
+            if (!this.dd.isDroppable(trashZone)) {
+                this.dd.droppable(trashZone, self.opts.removableOptions);
+            }
+            this.dd
+                .on(trashZone, 'dropover', function(event, ui) {
+                    var el = $(ui.draggable);
+                    var node = el.data('_gridstack_node');
+                    if (node._grid !== self) {
+                        return;
+                    }
+                    el.data('inTrashZone', true);
+                    self._setupRemovingTimeout(el);
+                })
+                .on(trashZone, 'dropout', function(event, ui) {
+                    var el = $(ui.draggable);
+                    var node = el.data('_gridstack_node');
+                    if (node._grid !== self) {
+                        return;
+                    }
+                    el.data('inTrashZone', false);
+                    self._clearRemovingTimeout(el);
+                });
+        }
+
+        if (!self.opts.staticGrid && self.opts.acceptWidgets) {
+            var draggingElement = null;
+
+            var onDrag = function(event, ui) {
+                var el = draggingElement;
+                var node = el.data('_gridstack_node');
+                var pos = self.getCellFromPixel({left: event.pageX, top: event.pageY}, true);
+                var x = Math.max(0, pos.x);
+                var y = Math.max(0, pos.y);
+                if (!node._added) {
+                    node._added = true;
+
+                    node.el = el;
+                    node.autoPosition = true;
+                    node.x = x;
+                    node.y = y;
+                    self.grid.cleanNodes();
+                    self.grid.beginUpdate(node);
+                    self.grid.addNode(node);
+
+                    self.container.append(self.placeholder);
+                    self.placeholder
+                        .attr('data-gs-x', node.x)
+                        .attr('data-gs-y', node.y)
+                        .attr('data-gs-width', node.width)
+                        .attr('data-gs-height', node.height)
+                        .show();
+                    node.el = self.placeholder;
+                    node._beforeDragX = node.x;
+                    node._beforeDragY = node.y;
+
+                    self._updateContainerHeight();
+                }
+                if (!self.grid.canMoveNode(node, x, y)) {
+                    return;
+                }
+                self.grid.moveNode(node, x, y);
+                self._updateContainerHeight();
+            };
+
+            this.dd
+                .droppable(self.container, {
+                    accept: function(el) {
+                        el = $(el);
+                        var node = el.data('_gridstack_node');
+                        if (node && node._grid === self) {
+                            return false;
+                        }
+                        return el.is(self.opts.acceptWidgets === true ? '.grid-stack-item' : self.opts.acceptWidgets);
+                    }
+                })
+                .on(self.container, 'dropover', function(event, ui) {
+                    var offset = self.container.offset();
+                    var el = $(ui.draggable);
+                    var cellWidth = self.cellWidth();
+                    var cellHeight = self.cellHeight();
+                    var origNode = el.data('_gridstack_node');
+
+                    var width = origNode ? origNode.width : (Math.ceil(el.outerWidth() / cellWidth));
+                    var height = origNode ? origNode.height : (Math.ceil(el.outerHeight() / cellHeight));
+
+                    draggingElement = el;
+
+                    var node = self.grid._prepareNode({width: width, height: height, _added: false, _temporary: true});
+                    el.data('_gridstack_node', node);
+                    el.data('_gridstack_node_orig', origNode);
+
+                    el.on('drag', onDrag);
+                })
+                .on(self.container, 'dropout', function(event, ui) {
+                    var el = $(ui.draggable);
+                    if (!el.data('_gridstack_node')) {
+                        return;
+                    }
+                    el.unbind('drag', onDrag);
+                    var node = el.data('_gridstack_node');
+                    node.el = null;
+                    self.grid.removeNode(node);
+                    self.placeholder.detach();
+                    self._updateContainerHeight();
+                    el.data('_gridstack_node', el.data('_gridstack_node_orig'));
+                })
+                .on(self.container, 'drop', function(event, ui) {
+                    self.placeholder.detach();
+
+                    var node = $(ui.draggable).data('_gridstack_node');
+                    node._grid = self;
+                    var el = $(ui.draggable).clone(false);
+                    el.data('_gridstack_node', node);
+                    var originalNode = $(ui.draggable).data('_gridstack_node_orig');
+                    if (typeof originalNode !== 'undefined' && typeof originalNode._grid !== 'undefined') {
+                        originalNode._grid._triggerRemoveEvent();
+                    }
+                    $(ui.helper).remove();
+                    node.el = el;
+                    self.placeholder.hide();
+                    Utils.removePositioningStyles(el);
+                    el.find('div.ui-resizable-handle').remove();
+
+                    el
+                        .attr('data-gs-x', node.x)
+                        .attr('data-gs-y', node.y)
+                        .attr('data-gs-width', node.width)
+                        .attr('data-gs-height', node.height)
+                        .addClass(self.opts.itemClass)
+                        .enableSelection()
+                        .removeData('draggable')
+                        .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
+                        .unbind('drag', onDrag);
+                    self.container.append(el);
+                    self._prepareElementsByNode(el, node);
+                    self._updateContainerHeight();
+                    self.grid._addedNodes.push(node);
+                    self._triggerAddEvent();
+                    self._triggerChangeEvent();
+
+                    self.grid.endUpdate();
+                    $(ui.draggable).unbind('drag', onDrag);
+                    $(ui.draggable).removeData('_gridstack_node');
+                    $(ui.draggable).removeData('_gridstack_node_orig');
+                    self.container.trigger('dropped', [originalNode, node]);
+                });
+        }
+    };
+
+    GridStack.prototype._triggerChangeEvent = function(forceTrigger) {
+        var elements = this.grid.getDirtyNodes();
+        var hasChanges = false;
+
+        var eventParams = [];
+        if (elements && elements.length) {
+            eventParams.push(elements);
+            hasChanges = true;
+        }
+
+        if (hasChanges || forceTrigger === true) {
+            this.container.trigger('change', eventParams);
+        }
+    };
+
+    GridStack.prototype._triggerAddEvent = function() {
+        if (this.grid._addedNodes && this.grid._addedNodes.length > 0) {
+            this.container.trigger('added', [_.map(this.grid._addedNodes, _.clone)]);
+            this.grid._addedNodes = [];
+        }
+    };
+
+    GridStack.prototype._triggerRemoveEvent = function() {
+        if (this.grid._removedNodes && this.grid._removedNodes.length > 0) {
+            this.container.trigger('removed', [_.map(this.grid._removedNodes, _.clone)]);
+            this.grid._removedNodes = [];
+        }
+    };
+
+    GridStack.prototype._initStyles = function() {
+        if (this._stylesId) {
+            Utils.removeStylesheet(this._stylesId);
+        }
+        this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
+        this._styles = Utils.createStylesheet(this._stylesId);
+        if (this._styles !== null) {
+            this._styles._max = 0;
+        }
+    };
+
+    GridStack.prototype._updateStyles = function(maxHeight) {
+        if (this._styles === null || typeof this._styles === 'undefined') {
+            return;
+        }
+
+        var prefix = '.' + this.opts._class + ' .' + this.opts.itemClass;
+        var self = this;
+        var getHeight;
+
+        if (typeof maxHeight == 'undefined') {
+            maxHeight = this._styles._max;
+        }
+        this._initStyles();
+        this._updateContainerHeight();
+        if (!this.opts.cellHeight) { // The rest will be handled by CSS
+            return ;
+        }
+        if (this._styles._max !== 0 && maxHeight <= this._styles._max) { // Keep this._styles._max increasing
+            return ;
+        }
+
+        if (!this.opts.verticalMargin || this.opts.cellHeightUnit === this.opts.verticalMarginUnit) {
+            getHeight = function(nbRows, nbMargins) {
+                return (self.opts.cellHeight * nbRows + self.opts.verticalMargin * nbMargins) +
+                    self.opts.cellHeightUnit;
+            };
+        } else {
+            getHeight = function(nbRows, nbMargins) {
+                if (!nbRows || !nbMargins) {
+                    return (self.opts.cellHeight * nbRows + self.opts.verticalMargin * nbMargins) +
+                        self.opts.cellHeightUnit;
+                }
+                return 'calc(' + ((self.opts.cellHeight * nbRows) + self.opts.cellHeightUnit) + ' + ' +
+                    ((self.opts.verticalMargin * nbMargins) + self.opts.verticalMarginUnit) + ')';
+            };
+        }
+
+        if (this._styles._max === 0) {
+            Utils.insertCSSRule(this._styles, prefix, 'min-height: ' + getHeight(1, 0) + ';', 0);
+        }
+
+        if (maxHeight > this._styles._max) {
+            for (var i = this._styles._max; i < maxHeight; ++i) {
+                Utils.insertCSSRule(this._styles,
+                    prefix + '[data-gs-height="' + (i + 1) + '"]',
+                    'height: ' + getHeight(i + 1, i) + ';',
+                    i
+                );
+                Utils.insertCSSRule(this._styles,
+                    prefix + '[data-gs-min-height="' + (i + 1) + '"]',
+                    'min-height: ' + getHeight(i + 1, i) + ';',
+                    i
+                );
+                Utils.insertCSSRule(this._styles,
+                    prefix + '[data-gs-max-height="' + (i + 1) + '"]',
+                    'max-height: ' + getHeight(i + 1, i) + ';',
+                    i
+                );
+                Utils.insertCSSRule(this._styles,
+                    prefix + '[data-gs-y="' + i + '"]',
+                    'top: ' + getHeight(i, i) + ';',
+                    i
+                );
+            }
+            this._styles._max = maxHeight;
+        }
+    };
+
+    GridStack.prototype._updateContainerHeight = function() {
+        if (this.grid._updateCounter) {
+            return;
+        }
+        var height = this.grid.getGridHeight();
+        // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
+        var cssMinHeight = parseInt(this.container.css('min-height'));
+        if (cssMinHeight > 0) {
+            var minHeight = (cssMinHeight + this.opts.verticalMargin) / (this.cellHeight() + this.opts.verticalMargin);
+            if (height < minHeight) {
+                height = minHeight;
+            }
+        }
+        this.container.attr('data-gs-current-height', height);
+        if (!this.opts.cellHeight) {
+            return ;
+        }
+        if (!this.opts.verticalMargin) {
+            this.container.css('height', (height * (this.opts.cellHeight)) + this.opts.cellHeightUnit);
+        } else if (this.opts.cellHeightUnit === this.opts.verticalMarginUnit) {
+            this.container.css('height', (height * (this.opts.cellHeight + this.opts.verticalMargin) -
+                this.opts.verticalMargin) + this.opts.cellHeightUnit);
+        } else {
+            this.container.css('height', 'calc(' + ((height * (this.opts.cellHeight)) + this.opts.cellHeightUnit) +
+                ' + ' + ((height * (this.opts.verticalMargin - 1)) + this.opts.verticalMarginUnit) + ')');
+        }
+    };
+
+    GridStack.prototype._isOneColumnMode = function() {
+        return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <=
+            this.opts.minWidth;
+    };
+
+    GridStack.prototype._setupRemovingTimeout = function(el) {
+        var self = this;
+        var node = $(el).data('_gridstack_node');
+
+        if (node._removeTimeout || !self.opts.removable) {
+            return;
+        }
+        node._removeTimeout = setTimeout(function() {
+            el.addClass('grid-stack-item-removing');
+            node._isAboutToRemove = true;
+        }, self.opts.removeTimeout);
+    };
+
+    GridStack.prototype._clearRemovingTimeout = function(el) {
+        var node = $(el).data('_gridstack_node');
+
+        if (!node._removeTimeout) {
+            return;
+        }
+        clearTimeout(node._removeTimeout);
+        node._removeTimeout = null;
+        el.removeClass('grid-stack-item-removing');
+        node._isAboutToRemove = false;
+    };
+
+    GridStack.prototype._prepareElementsByNode = function(el, node) {
+        var self = this;
+
+        var cellWidth;
+        var cellHeight;
+
+        var dragOrResize = function(event, ui) {
+            var x = Math.round(ui.position.left / cellWidth);
+            var y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
+            var width;
+            var height;
+
+            if (event.type != 'drag') {
+                width = Math.round(ui.size.width / cellWidth);
+                height = Math.round(ui.size.height / cellHeight);
+            }
+
+            if (event.type == 'drag') {
+                var distance = ui.position.top - node._prevYPix;
+                node._prevYPix = ui.position.top;
+                Utils.updateScrollPosition(el[0], ui, distance);
+                if (el.data('inTrashZone') || x < 0 || x >= self.grid.width || y < 0 ||
+                    (!self.grid.float && y > self.grid.getGridHeight())) {
+                    if (!node._temporaryRemoved) {
+                        if (self.opts.removable === true) {
+                            self._setupRemovingTimeout(el);
+                        }
+
+                        x = node._beforeDragX;
+                        y = node._beforeDragY;
+
+                        self.placeholder.detach();
+                        self.placeholder.hide();
+                        self.grid.removeNode(node);
+                        self._updateContainerHeight();
+
+                        node._temporaryRemoved = true;
+                    } else {
+                        return;
+                    }
+                } else {
+                    self._clearRemovingTimeout(el);
+
+                    if (node._temporaryRemoved) {
+                        self.grid.addNode(node);
+                        self.placeholder
+                            .attr('data-gs-x', x)
+                            .attr('data-gs-y', y)
+                            .attr('data-gs-width', width)
+                            .attr('data-gs-height', height)
+                            .show();
+                        self.container.append(self.placeholder);
+                        node.el = self.placeholder;
+                        node._temporaryRemoved = false;
+                    }
+                }
+            } else if (event.type == 'resize')  {
+                if (x < 0) {
+                    return;
+                }
+            }
+            // width and height are undefined if not resizing
+            var lastTriedWidth = typeof width !== 'undefined' ? width : node.lastTriedWidth;
+            var lastTriedHeight = typeof height !== 'undefined' ? height : node.lastTriedHeight;
+            if (!self.grid.canMoveNode(node, x, y, width, height) ||
+                (node.lastTriedX === x && node.lastTriedY === y &&
+                node.lastTriedWidth === lastTriedWidth && node.lastTriedHeight === lastTriedHeight)) {
+                return;
+            }
+            node.lastTriedX = x;
+            node.lastTriedY = y;
+            node.lastTriedWidth = width;
+            node.lastTriedHeight = height;
+            self.grid.moveNode(node, x, y, width, height);
+            self._updateContainerHeight();
+        };
+
+        var onStartMoving = function(event, ui) {
+            self.container.append(self.placeholder);
+            var o = $(this);
+            self.grid.cleanNodes();
+            self.grid.beginUpdate(node);
+            cellWidth = self.cellWidth();
+            var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
+            cellHeight = self.container.height() / parseInt(self.container.attr('data-gs-current-height'));
+            self.placeholder
+                .attr('data-gs-x', o.attr('data-gs-x'))
+                .attr('data-gs-y', o.attr('data-gs-y'))
+                .attr('data-gs-width', o.attr('data-gs-width'))
+                .attr('data-gs-height', o.attr('data-gs-height'))
+                .show();
+            node.el = self.placeholder;
+            node._beforeDragX = node.x;
+            node._beforeDragY = node.y;
+            node._prevYPix = ui.position.top;
+
+            self.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
+            self.dd.resizable(el, 'option', 'minHeight', strictCellHeight * (node.minHeight || 1));
+
+            if (event.type == 'resizestart') {
+                o.find('.grid-stack-item').trigger('resizestart');
+            }
+        };
+
+        var onEndMoving = function(event, ui) {
+            var o = $(this);
+            if (!o.data('_gridstack_node')) {
+                return;
+            }
+
+            var forceNotify = false;
+            self.placeholder.detach();
+            node.el = o;
+            self.placeholder.hide();
+
+            if (node._isAboutToRemove) {
+                forceNotify = true;
+                var gridToNotify = el.data('_gridstack_node')._grid;
+                gridToNotify._triggerRemoveEvent();
+                el.removeData('_gridstack_node');
+                el.remove();
+            } else {
+                self._clearRemovingTimeout(el);
+                if (!node._temporaryRemoved) {
+                    Utils.removePositioningStyles(o);
+                    o
+                        .attr('data-gs-x', node.x)
+                        .attr('data-gs-y', node.y)
+                        .attr('data-gs-width', node.width)
+                        .attr('data-gs-height', node.height);
+                } else {
+                    Utils.removePositioningStyles(o);
+                    o
+                        .attr('data-gs-x', node._beforeDragX)
+                        .attr('data-gs-y', node._beforeDragY)
+                        .attr('data-gs-width', node.width)
+                        .attr('data-gs-height', node.height);
+                    node.x = node._beforeDragX;
+                    node.y = node._beforeDragY;
+                    node._temporaryRemoved = false;
+                    self.grid.addNode(node);
+                }
+            }
+            self._updateContainerHeight();
+            self._triggerChangeEvent(forceNotify);
+
+            self.grid.endUpdate();
+
+            var nestedGrids = o.find('.grid-stack');
+            if (nestedGrids.length && event.type == 'resizestop') {
+                nestedGrids.each(function(index, el) {
+                    $(el).data('gridstack').onResizeHandler();
+                });
+                o.find('.grid-stack-item').trigger('resizestop');
+                o.find('.grid-stack-item').trigger('gsresizestop');
+            }
+            if (event.type == 'resizestop') {
+                self.container.trigger('gsresizestop', o);
+            }
+        };
+
+        this.dd
+            .draggable(el, {
+                start: onStartMoving,
+                stop: onEndMoving,
+                drag: dragOrResize
+            })
+            .resizable(el, {
+                start: onStartMoving,
+                stop: onEndMoving,
+                resize: dragOrResize
+            });
+
+        if (node.noMove || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableDrag ||
+            this.opts.staticGrid) {
+            this.dd.draggable(el, 'disable');
+        }
+
+        if (node.noResize || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableResize ||
+            this.opts.staticGrid) {
+            this.dd.resizable(el, 'disable');
+        }
+
+        el.attr('data-gs-locked', node.locked ? 'yes' : null);
+    };
+
+    GridStack.prototype._prepareElement = function(el, triggerAddEvent) {
+        triggerAddEvent = typeof triggerAddEvent != 'undefined' ? triggerAddEvent : false;
+        var self = this;
+        el = $(el);
+
+        el.addClass(this.opts.itemClass);
+        var node = self.grid.addNode({
+            x: parseInt(el.attr('data-gs-x'), 10),
+            y: parseInt(el.attr('data-gs-y'), 10),
+            width: el.attr('data-gs-width'),
+            height: el.attr('data-gs-height'),
+            maxWidth: el.attr('data-gs-max-width'),
+            minWidth: el.attr('data-gs-min-width'),
+            maxHeight: el.attr('data-gs-max-height'),
+            minHeight: el.attr('data-gs-min-height'),
+            autoPosition: Utils.toBool(el.attr('data-gs-auto-position')),
+            noResize: Utils.toBool(el.attr('data-gs-no-resize')),
+            noMove: Utils.toBool(el.attr('data-gs-no-move')),
+            locked: Utils.toBool(el.attr('data-gs-locked')),
+            resizeHandles: el.attr('data-gs-resize-handles'),
+            el: el,
+            id: el.attr('data-gs-id'),
+            _grid: self
+        }, triggerAddEvent);
+        el.data('_gridstack_node', node);
+
+        this._prepareElementsByNode(el, node);
+    };
+
+    GridStack.prototype.setAnimation = function(enable) {
+        if (enable) {
+            this.container.addClass('grid-stack-animate');
+        } else {
+            this.container.removeClass('grid-stack-animate');
+        }
+    };
+
+    GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition, minWidth, maxWidth,
+        minHeight, maxHeight, id) {
+        el = $(el);
+        if (typeof x != 'undefined') { el.attr('data-gs-x', x); }
+        if (typeof y != 'undefined') { el.attr('data-gs-y', y); }
+        if (typeof width != 'undefined') { el.attr('data-gs-width', width); }
+        if (typeof height != 'undefined') { el.attr('data-gs-height', height); }
+        if (typeof autoPosition != 'undefined') { el.attr('data-gs-auto-position', autoPosition ? 'yes' : null); }
+        if (typeof minWidth != 'undefined') { el.attr('data-gs-min-width', minWidth); }
+        if (typeof maxWidth != 'undefined') { el.attr('data-gs-max-width', maxWidth); }
+        if (typeof minHeight != 'undefined') { el.attr('data-gs-min-height', minHeight); }
+        if (typeof maxHeight != 'undefined') { el.attr('data-gs-max-height', maxHeight); }
+        if (typeof id != 'undefined') { el.attr('data-gs-id', id); }
+        this.container.append(el);
+        this._prepareElement(el, true);
+        this._triggerAddEvent();
+        this._updateContainerHeight();
+        this._triggerChangeEvent(true);
+
+        return el;
+    };
+
+    GridStack.prototype.makeWidget = function(el) {
+        el = $(el);
+        this._prepareElement(el, true);
+        this._triggerAddEvent();
+        this._updateContainerHeight();
+        this._triggerChangeEvent(true);
+
+        return el;
+    };
+
+    GridStack.prototype.willItFit = function(x, y, width, height, autoPosition) {
+        var node = {x: x, y: y, width: width, height: height, autoPosition: autoPosition};
+        return this.grid.canBePlacedWithRespectToHeight(node);
+    };
+
+    GridStack.prototype.removeWidget = function(el, detachNode) {
+        detachNode = typeof detachNode === 'undefined' ? true : detachNode;
+        el = $(el);
+        var node = el.data('_gridstack_node');
+
+        // For Meteor support: https://github.com/troolee/gridstack.js/pull/272
+        if (!node) {
+            node = this.grid.getNodeDataByDOMEl(el);
+        }
+
+        this.grid.removeNode(node, detachNode);
+        el.removeData('_gridstack_node');
+        this._updateContainerHeight();
+        if (detachNode) {
+            el.remove();
+        }
+        this._triggerChangeEvent(true);
+        this._triggerRemoveEvent();
+    };
+
+    GridStack.prototype.removeAll = function(detachNode) {
+        _.each(this.grid.nodes, _.bind(function(node) {
+            this.removeWidget(node.el, detachNode);
+        }, this));
+        this.grid.nodes = [];
+        this._updateContainerHeight();
+    };
+
+    GridStack.prototype.destroy = function(detachGrid) {
+        $(window).off('resize', this.onResizeHandler);
+        this.disable();
+        if (typeof detachGrid != 'undefined' && !detachGrid) {
+            this.removeAll(false);
+            this.container.removeData('gridstack');
+        } else {
+            this.container.remove();
+        }
+        Utils.removeStylesheet(this._stylesId);
+        if (this.grid) {
+            this.grid = null;
+        }
+    };
+
+    GridStack.prototype.resizable = function(el, val) {
+        var self = this;
+        el = $(el);
+        el.each(function(index, el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            if (typeof node == 'undefined' || node === null) {
+                return;
+            }
+
+            node.noResize = !(val || false);
+            if (node.noResize || (self._isOneColumnMode() && !self.opts.disableOneColumnMode)) {
+                self.dd.resizable(el, 'disable');
+            } else {
+                self.dd.resizable(el, 'enable');
+            }
+        });
+        return this;
+    };
+
+    GridStack.prototype.movable = function(el, val) {
+        var self = this;
+        el = $(el);
+        el.each(function(index, el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            if (typeof node == 'undefined' || node === null) {
+                return;
+            }
+
+            node.noMove = !(val || false);
+            if (node.noMove || (self._isOneColumnMode() && !self.opts.disableOneColumnMode)) {
+                self.dd.draggable(el, 'disable');
+                el.removeClass('ui-draggable-handle');
+            } else {
+                self.dd.draggable(el, 'enable');
+                el.addClass('ui-draggable-handle');
+            }
+        });
+        return this;
+    };
+
+    GridStack.prototype.enableMove = function(doEnable, includeNewWidgets) {
+        this.movable(this.container.children('.' + this.opts.itemClass), doEnable);
+        if (includeNewWidgets) {
+            this.opts.disableDrag = !doEnable;
+        }
+    };
+
+    GridStack.prototype.enableResize = function(doEnable, includeNewWidgets) {
+        this.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
+        if (includeNewWidgets) {
+            this.opts.disableResize = !doEnable;
+        }
+    };
+
+    GridStack.prototype.disable = function() {
+        this.movable(this.container.children('.' + this.opts.itemClass), false);
+        this.resizable(this.container.children('.' + this.opts.itemClass), false);
+        this.container.trigger('disable');
+    };
+
+    GridStack.prototype.enable = function() {
+        this.movable(this.container.children('.' + this.opts.itemClass), true);
+        this.resizable(this.container.children('.' + this.opts.itemClass), true);
+        this.container.trigger('enable');
+    };
+
+    GridStack.prototype.locked = function(el, val) {
+        el = $(el);
+        el.each(function(index, el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            if (typeof node == 'undefined' || node === null) {
+                return;
+            }
+
+            node.locked = (val || false);
+            el.attr('data-gs-locked', node.locked ? 'yes' : null);
+        });
+        return this;
+    };
+
+    GridStack.prototype.maxHeight = function(el, val) {
+        el = $(el);
+        el.each(function(index, el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            if (typeof node === 'undefined' || node === null) {
+                return;
+            }
+
+            if (!isNaN(val)) {
+                node.maxHeight = (val || false);
+                el.attr('data-gs-max-height', val);
+            }
+        });
+        return this;
+    };
+
+    GridStack.prototype.minHeight = function(el, val) {
+        el = $(el);
+        el.each(function(index, el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            if (typeof node === 'undefined' || node === null) {
+                return;
+            }
+
+            if (!isNaN(val)) {
+                node.minHeight = (val || false);
+                el.attr('data-gs-min-height', val);
+            }
+        });
+        return this;
+    };
+
+    GridStack.prototype.maxWidth = function(el, val) {
+        el = $(el);
+        el.each(function(index, el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            if (typeof node === 'undefined' || node === null) {
+                return;
+            }
+
+            if (!isNaN(val)) {
+                node.maxWidth = (val || false);
+                el.attr('data-gs-max-width', val);
+            }
+        });
+        return this;
+    };
+
+    GridStack.prototype.minWidth = function(el, val) {
+        el = $(el);
+        el.each(function(index, el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            if (typeof node === 'undefined' || node === null) {
+                return;
+            }
+
+            if (!isNaN(val)) {
+                node.minWidth = (val || false);
+                el.attr('data-gs-min-width', val);
+            }
+        });
+        return this;
+    };
+
+    GridStack.prototype._updateElement = function(el, callback) {
+        el = $(el).first();
+        var node = el.data('_gridstack_node');
+        if (typeof node == 'undefined' || node === null) {
+            return;
+        }
+
+        var self = this;
+
+        self.grid.cleanNodes();
+        self.grid.beginUpdate(node);
+
+        callback.call(this, el, node);
+
+        self._updateContainerHeight();
+        self._triggerChangeEvent();
+
+        self.grid.endUpdate();
+    };
+
+    GridStack.prototype.resize = function(el, width, height) {
+        this._updateElement(el, function(el, node) {
+            width = (width !== null && typeof width != 'undefined') ? width : node.width;
+            height = (height !== null && typeof height != 'undefined') ? height : node.height;
+
+            this.grid.moveNode(node, node.x, node.y, width, height);
+        });
+    };
+
+    GridStack.prototype.move = function(el, x, y) {
+        this._updateElement(el, function(el, node) {
+            x = (x !== null && typeof x != 'undefined') ? x : node.x;
+            y = (y !== null && typeof y != 'undefined') ? y : node.y;
+
+            this.grid.moveNode(node, x, y, node.width, node.height);
+        });
+    };
+
+    GridStack.prototype.update = function(el, x, y, width, height) {
+        this._updateElement(el, function(el, node) {
+            x = (x !== null && typeof x != 'undefined') ? x : node.x;
+            y = (y !== null && typeof y != 'undefined') ? y : node.y;
+            width = (width !== null && typeof width != 'undefined') ? width : node.width;
+            height = (height !== null && typeof height != 'undefined') ? height : node.height;
+
+            this.grid.moveNode(node, x, y, width, height);
+        });
+    };
+
+    GridStack.prototype.verticalMargin = function(val, noUpdate) {
+        if (typeof val == 'undefined') {
+            return this.opts.verticalMargin;
+        }
+
+        var heightData = Utils.parseHeight(val);
+
+        if (this.opts.verticalMarginUnit === heightData.unit && this.opts.height === heightData.height) {
+            return ;
+        }
+        this.opts.verticalMarginUnit = heightData.unit;
+        this.opts.verticalMargin = heightData.height;
+
+        if (!noUpdate) {
+            this._updateStyles();
+        }
+    };
+
+    GridStack.prototype.cellHeight = function(val, noUpdate) {
+        if (typeof val == 'undefined') {
+            if (this.opts.cellHeight) {
+                return this.opts.cellHeight;
+            }
+            var o = this.container.children('.' + this.opts.itemClass).first();
+            return Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
+        }
+        var heightData = Utils.parseHeight(val);
+
+        if (this.opts.cellHeightUnit === heightData.unit && this.opts.cellHeight === heightData.height) {
+            return ;
+        }
+        this.opts.cellHeightUnit = heightData.unit;
+        this.opts.cellHeight = heightData.height;
+
+        if (!noUpdate) {
+            this._updateStyles();
+        }
+
+    };
+
+    GridStack.prototype.cellWidth = function() {
+        return Math.round(this.container.outerWidth() / this.opts.width);
+    };
+
+    GridStack.prototype.getCellFromPixel = function(position, useOffset) {
+        var containerPos = (typeof useOffset != 'undefined' && useOffset) ?
+            this.container.offset() : this.container.position();
+        var relativeLeft = position.left - containerPos.left;
+        var relativeTop = position.top - containerPos.top;
+
+        var columnWidth = Math.floor(this.container.width() / this.opts.width);
+        var rowHeight = Math.floor(this.container.height() / parseInt(this.container.attr('data-gs-current-height')));
+
+        return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
+    };
+
+    GridStack.prototype.batchUpdate = function() {
+        this.grid.batchUpdate();
+    };
+
+    GridStack.prototype.commit = function() {
+        this.grid.commit();
+        this._updateContainerHeight();
+    };
+
+    GridStack.prototype.isAreaEmpty = function(x, y, width, height) {
+        return this.grid.isAreaEmpty(x, y, width, height);
+    };
+
+    GridStack.prototype.setStatic = function(staticValue) {
+        this.opts.staticGrid = (staticValue === true);
+        this.enableMove(!staticValue);
+        this.enableResize(!staticValue);
+        this._setStaticClass();
+    };
+
+    GridStack.prototype._setStaticClass = function() {
+        var staticClassName = 'grid-stack-static';
+
+        if (this.opts.staticGrid === true) {
+            this.container.addClass(staticClassName);
+        } else {
+            this.container.removeClass(staticClassName);
+        }
+    };
+
+    GridStack.prototype._updateNodeWidths = function(oldWidth, newWidth) {
+        this.grid._sortNodes();
+        this.grid.batchUpdate();
+        var node = {};
+        for (var i = 0; i < this.grid.nodes.length; i++) {
+            node = this.grid.nodes[i];
+            this.update(node.el, Math.round(node.x * newWidth / oldWidth), undefined,
+                Math.round(node.width * newWidth / oldWidth), undefined);
+        }
+        this.grid.commit();
+    };
+
+    GridStack.prototype.setGridWidth = function(gridWidth,doNotPropagate) {
+        this.container.removeClass('grid-stack-' + this.opts.width);
+        if (doNotPropagate !== true) {
+            this._updateNodeWidths(this.opts.width, gridWidth);
+        }
+        this.opts.width = gridWidth;
+        this.grid.width = gridWidth;
+        this.container.addClass('grid-stack-' + gridWidth);
+    };
+
+    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+    GridStackEngine.prototype.batch_update = obsolete(GridStackEngine.prototype.batchUpdate);
+    GridStackEngine.prototype._fix_collisions = obsolete(GridStackEngine.prototype._fixCollisions,
+        '_fix_collisions', '_fixCollisions');
+    GridStackEngine.prototype.is_area_empty = obsolete(GridStackEngine.prototype.isAreaEmpty,
+        'is_area_empty', 'isAreaEmpty');
+    GridStackEngine.prototype._sort_nodes = obsolete(GridStackEngine.prototype._sortNodes,
+        '_sort_nodes', '_sortNodes');
+    GridStackEngine.prototype._pack_nodes = obsolete(GridStackEngine.prototype._packNodes,
+        '_pack_nodes', '_packNodes');
+    GridStackEngine.prototype._prepare_node = obsolete(GridStackEngine.prototype._prepareNode,
+        '_prepare_node', '_prepareNode');
+    GridStackEngine.prototype.clean_nodes = obsolete(GridStackEngine.prototype.cleanNodes,
+        'clean_nodes', 'cleanNodes');
+    GridStackEngine.prototype.get_dirty_nodes = obsolete(GridStackEngine.prototype.getDirtyNodes,
+        'get_dirty_nodes', 'getDirtyNodes');
+    GridStackEngine.prototype.add_node = obsolete(GridStackEngine.prototype.addNode,
+        'add_node', 'addNode, ');
+    GridStackEngine.prototype.remove_node = obsolete(GridStackEngine.prototype.removeNode,
+        'remove_node', 'removeNode');
+    GridStackEngine.prototype.can_move_node = obsolete(GridStackEngine.prototype.canMoveNode,
+        'can_move_node', 'canMoveNode');
+    GridStackEngine.prototype.move_node = obsolete(GridStackEngine.prototype.moveNode,
+        'move_node', 'moveNode');
+    GridStackEngine.prototype.get_grid_height = obsolete(GridStackEngine.prototype.getGridHeight,
+        'get_grid_height', 'getGridHeight');
+    GridStackEngine.prototype.begin_update = obsolete(GridStackEngine.prototype.beginUpdate,
+        'begin_update', 'beginUpdate');
+    GridStackEngine.prototype.end_update = obsolete(GridStackEngine.prototype.endUpdate,
+        'end_update', 'endUpdate');
+    GridStackEngine.prototype.can_be_placed_with_respect_to_height =
+        obsolete(GridStackEngine.prototype.canBePlacedWithRespectToHeight,
+        'can_be_placed_with_respect_to_height', 'canBePlacedWithRespectToHeight');
+    GridStack.prototype._trigger_change_event = obsolete(GridStack.prototype._triggerChangeEvent,
+        '_trigger_change_event', '_triggerChangeEvent');
+    GridStack.prototype._init_styles = obsolete(GridStack.prototype._initStyles,
+        '_init_styles', '_initStyles');
+    GridStack.prototype._update_styles = obsolete(GridStack.prototype._updateStyles,
+        '_update_styles', '_updateStyles');
+    GridStack.prototype._update_container_height = obsolete(GridStack.prototype._updateContainerHeight,
+        '_update_container_height', '_updateContainerHeight');
+    GridStack.prototype._is_one_column_mode = obsolete(GridStack.prototype._isOneColumnMode,
+        '_is_one_column_mode','_isOneColumnMode');
+    GridStack.prototype._prepare_element = obsolete(GridStack.prototype._prepareElement,
+        '_prepare_element', '_prepareElement');
+    GridStack.prototype.set_animation = obsolete(GridStack.prototype.setAnimation,
+        'set_animation', 'setAnimation');
+    GridStack.prototype.add_widget = obsolete(GridStack.prototype.addWidget,
+        'add_widget', 'addWidget');
+    GridStack.prototype.make_widget = obsolete(GridStack.prototype.makeWidget,
+        'make_widget', 'makeWidget');
+    GridStack.prototype.will_it_fit = obsolete(GridStack.prototype.willItFit,
+        'will_it_fit', 'willItFit');
+    GridStack.prototype.remove_widget = obsolete(GridStack.prototype.removeWidget,
+        'remove_widget', 'removeWidget');
+    GridStack.prototype.remove_all = obsolete(GridStack.prototype.removeAll,
+        'remove_all', 'removeAll');
+    GridStack.prototype.min_height = obsolete(GridStack.prototype.minHeight,
+        'min_height', 'minHeight');
+    GridStack.prototype.min_width = obsolete(GridStack.prototype.minWidth,
+        'min_width', 'minWidth');
+    GridStack.prototype._update_element = obsolete(GridStack.prototype._updateElement,
+        '_update_element', '_updateElement');
+    GridStack.prototype.cell_height = obsolete(GridStack.prototype.cellHeight,
+        'cell_height', 'cellHeight');
+    GridStack.prototype.cell_width = obsolete(GridStack.prototype.cellWidth,
+        'cell_width', 'cellWidth');
+    GridStack.prototype.get_cell_from_pixel = obsolete(GridStack.prototype.getCellFromPixel,
+        'get_cell_from_pixel', 'getCellFromPixel');
+    GridStack.prototype.batch_update = obsolete(GridStack.prototype.batchUpdate,
+        'batch_update', 'batchUpdate');
+    GridStack.prototype.is_area_empty = obsolete(GridStack.prototype.isAreaEmpty,
+        'is_area_empty', 'isAreaEmpty');
+    GridStack.prototype.set_static = obsolete(GridStack.prototype.setStatic,
+        'set_static', 'setStatic');
+    GridStack.prototype._set_static_class = obsolete(GridStack.prototype._setStaticClass,
+        '_set_static_class', '_setStaticClass');
+    // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+
+    scope.GridStackUI = GridStack;
+
+    scope.GridStackUI.Utils = Utils;
+    scope.GridStackUI.Engine = GridStackEngine;
+    scope.GridStackUI.GridStackDragDropPlugin = GridStackDragDropPlugin;
+
+    $.fn.gridstack = function(opts) {
+        return this.each(function() {
+            var o = $(this);
+            if (!o.data('gridstack')) {
+                o
+                    .data('gridstack', new GridStack(this, opts));
+            }
+        });
+    };
+
+    return scope.GridStackUI;
+});
+
 /**
  * gridstack.js 1.0.0-dev
  * http://troolee.github.io/gridstack.js/
@@ -32072,6 +34233,7 @@ var melisDashBoardDragnDrop = {
                 translations.tr_melis_core_remove_dashboard_plugin_msg,
                 function() {
 
+<<<<<<< HEAD
                     // remove the item from the dashboard
                     grid.removeWidget( $item.el[0] );
 
@@ -32082,6 +34244,43 @@ var melisDashBoardDragnDrop = {
                     self.serializeWidgetMap( $items );
                 }
             );
+=======
+            // create dashboard array
+            dataString.push({
+                name: 'dashboard_id',
+                value: activeTabId
+            });
+     
+        melisCoreTool.confirm(
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
+            translations.tr_melis_core_remove_dashboard_plugin,
+            translations.tr_melis_core_remove_dashboard_plugin_msg,
+            function() {
+                /*grid.removeWidget($del.closest('.grid-stack-item'));
+                
+                if( $('#'+activeTabId+' .grid-stack .grid-stack-item').length === 0 ) {
+                    // save dashboard lists
+                    //var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+                    self.saveDBWidgets(dataString);
+                }*/
+
+                // remove the item from the dashboard
+                grid.removeWidget($del.closest('.grid-stack-item'));
+                
+                // save dashboard lists
+                self.saveDBWidgets(dataString);
+
+                // Plugin delete callback
+                if (typeof $del.data('callback') !== "undefined") {
+                    var callback = eval($del.data("callback"));
+                    if (typeof callback === "function") {
+                        callback($del.closest('.grid-stack-item'));
+                    }
+                }
+            }
+        );
+>>>>>>> develop
     },
 
     deleteAllWidget: function(el) {
@@ -32118,6 +34317,18 @@ var melisDashBoardDragnDrop = {
             // hide plugin menu
             this.$pluginBox.removeClass("shown");
 
+<<<<<<< HEAD
+=======
+            // Plugins delete callback
+            $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
+                if (typeof $(this).data('callback') !== "undefined") {
+                    var callback = eval($(this).data("callback"));
+                    if (typeof callback === "function") {
+                        callback($(this).closest('.grid-stack-item'));
+                    }
+                }
+            });
+>>>>>>> develop
         } else {
 
             melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');

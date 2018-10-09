@@ -296,6 +296,7 @@ return array(
             'MelisCorePlatformSchemeService' => 'MelisCore\Service\Factory\MelisCorePlatformSchemeServiceFactory',
             'MelisCoreGeneralService' => 'MelisCore\Service\Factory\MelisCoreGeneralServiceFactory',
             'MelisCoreDashboardService' => 'MelisCore\Service\Factory\MelisCoreDashboardServiceFactory',
+            'MelisCoreGdprService' => 'MelisCore\Service\Factory\MelisCoreGdprServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',
@@ -310,7 +311,7 @@ return array(
             'MelisCore\Model\Tables\MelisUserConnectionDate'    => 'MelisCore\Model\Tables\Factory\MelisCoreUserConnectionDateTableFactory',
             'MelisCore\Model\Tables\MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\Factory\MelisMicroServiceAuthTableFactory',
             'MelisCore\Model\Tables\MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\Factory\MelisCorePlatformSchemeTableFactory',
-            'MelisCore\Model\Tables\MelisDashboardsTable' => 'MelisCore\Model\Tables\Factory\MelisDashboardsTableFactory', 
+            'MelisCore\Model\Tables\MelisDashboardsTable' => 'MelisCore\Model\Tables\Factory\MelisDashboardsTableFactory',
         ),
     ),
     'controllers' => array(
@@ -338,6 +339,7 @@ return array(
             'MelisCore\Controller\MelisSetup' => 'MelisCore\Controller\MelisSetupController',
             'MelisCore\Controller\PlatformScheme' => 'MelisCore\Controller\PlatformSchemeController',
             'MelisCore\Controller\DashboardPlugins' => 'MelisCore\Controller\DashboardPluginsController',
+            'MelisCore\Controller\MelisCoreGdpr' => 'MelisCore\Controller\MelisCoreGdprController',
         ),
     ),
     'controller_plugins' => array(
@@ -351,6 +353,7 @@ return array(
             'MelisPasswordValidator' => 'MelisCore\Validator\MelisPasswordValidator'
         ),
     ),
+
     'form_elements' => array(
         'factories' => array(
             'MelisSelect' => 'MelisCore\Form\Factory\MelisSelectFactory',
@@ -361,6 +364,10 @@ return array(
             'MelisUserRoleSelect' => 'MelisCore\Form\Factory\MelisUserRoleSelectFactory',
             'MelisCoreMultiValInput' => 'MelisCore\Form\Factory\MelisCoreMultiValueInputFactory',
             'DateField' => 'MelisCore\Form\Factory\DateFieldFactory',
+            'DatePicker' => 'MelisCore\Form\Factory\DatePickerFactory',
+            'DateTimePicker' => 'MelisCore\Form\Factory\DateTimePickerFactory',
+            'MelisCoreTinyMCE' => 'MelisCore\Form\Factory\MelisCoreTinyMCEFactory',
+            'MelisCoreUserSelect' => 'MelisCore\Form\Factory\MelisCoreUsersSelect2Factory',
         ),
     ),
     'view_helpers' => array(
@@ -384,22 +391,22 @@ return array(
         'not_found_template' => 'error/404',
         'exception_template' => 'error/index',
         'template_map' => array(
-            'layout/layoutError'                            => __DIR__ . '/../view/layout/layoutError.phtml',
-            'layout/layoutCore'                             => __DIR__ . '/../view/layout/layoutCore.phtml',
-            'layout/layoutBlank'                            => __DIR__ . '/../view/layout/layoutBlank.phtml',
-            'layout/layout'                                 => __DIR__ . '/../view/layout/layoutBlank.phtml',
-            'melis-core/index/index'                        => __DIR__ . '/../view/melis-core/index/index.phtml',
-            'melis-core/plugin-view/generate'               => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
-            'error/404'                                     => __DIR__ . '/../view/error/404.phtml',
-            'error/index'                                   => __DIR__ . '/../view/error/index.phtml',
-            'layout/warning'                                => __DIR__ . '/../view/warning/warning.phtml',
-            
+            'layout/layoutError' => __DIR__ . '/../view/layout/layoutError.phtml',
+            'layout/layoutCore' => __DIR__ . '/../view/layout/layoutCore.phtml',
+            'layout/layoutBlank' => __DIR__ . '/../view/layout/layoutBlank.phtml',
+            'layout/layout' => __DIR__ . '/../view/layout/layoutBlank.phtml',
+            'melis-core/index/index' => __DIR__ . '/../view/melis-core/index/index.phtml',
+            'melis-core/plugin-view/generate' => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
+            'error/404' => __DIR__ . '/../view/error/404.phtml',
+            'error/index' => __DIR__ . '/../view/error/index.phtml',
+            'layout/warning' => __DIR__ . '/../view/warning/warning.phtml',
+
             // Dashboard plugin templates
             'melis-core/dashboard-plugin/dragdropzone'          => __DIR__ . '/../view/melis-core/dashboard-plugins/dragdropzone.phtml',
             'melis-core/dashboard-plugin/plugin-container'      => __DIR__ . '/../view/melis-core/dashboard-plugins/plugin-container.phtml',
             'melis-core/dashboard-plugin/no-template'           => __DIR__ . '/../view/melis-core/dashboard-plugins/no-template.phtml',
             'melis-core/dashboard-plugin/no-plugin-interface'   => __DIR__ . '/../view/melis-core/dashboard-plugins/no-plugin-interface.phtml',
-            
+
             'melis-core/dashboard-plugin/recent-user-activity'  => __DIR__ . '/../view/melis-core/dashboard-plugins/recent-user-activity.phtml',
         ),
         'template_path_stack' => array(
