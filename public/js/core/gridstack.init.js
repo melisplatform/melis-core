@@ -67,7 +67,7 @@ var melisDashBoardDragnDrop = {
 
         this.$gs.gridstack(options);
         //this.$gs.addTouch();
-        this.$gs.css("touch-action", "none");
+        //this.$gs.css("touch-action", "none");
         //this.$gs2.gridstack(_.defaults({ acceptWidgets: false }), options);
     },
 
