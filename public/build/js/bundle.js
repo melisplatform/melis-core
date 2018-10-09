@@ -31771,7 +31771,7 @@ $(document).ready(function() {
                     }).success(function (data) {
                         if (data.success) {
                             $.each(modules, function (key, value) {
-                                var moduleName = key
+                                var moduleName = key;
 
                                 //remove selected rows in data table
                                 $('#' + moduleName).DataTable().rows('.checked').remove().draw();
@@ -31793,7 +31793,7 @@ $(document).ready(function() {
                         } else {
                             melisHelper.melisKoNotification(
                                 translations.tr_melis_core_gdpr_notif_delete_user,
-                                translations.tr_melis_core_gdpr_notif_error_on_deleting_data,
+                                translations.tr_melis_core_gdpr_notif_error_on_deleting_data
                             );
                         }
                     }).error(function () {
@@ -34233,7 +34233,6 @@ var melisDashBoardDragnDrop = {
                 translations.tr_melis_core_remove_dashboard_plugin_msg,
                 function() {
 
-<<<<<<< HEAD
                     // remove the item from the dashboard
                     grid.removeWidget( $item.el[0] );
 
@@ -34242,45 +34241,16 @@ var melisDashBoardDragnDrop = {
                     
                     // serialize & save db remaining gridstack items
                     self.serializeWidgetMap( $items );
-                }
-            );
-=======
-            // create dashboard array
-            dataString.push({
-                name: 'dashboard_id',
-                value: activeTabId
-            });
-     
-        melisCoreTool.confirm(
-            translations.tr_meliscore_common_yes,
-            translations.tr_meliscore_common_no,
-            translations.tr_melis_core_remove_dashboard_plugin,
-            translations.tr_melis_core_remove_dashboard_plugin_msg,
-            function() {
-                /*grid.removeWidget($del.closest('.grid-stack-item'));
-                
-                if( $('#'+activeTabId+' .grid-stack .grid-stack-item').length === 0 ) {
-                    // save dashboard lists
-                    //var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
-                    self.saveDBWidgets(dataString);
-                }*/
 
-                // remove the item from the dashboard
-                grid.removeWidget($del.closest('.grid-stack-item'));
-                
-                // save dashboard lists
-                self.saveDBWidgets(dataString);
-
-                // Plugin delete callback
-                if (typeof $del.data('callback') !== "undefined") {
-                    var callback = eval($del.data("callback"));
-                    if (typeof callback === "function") {
-                        callback($del.closest('.grid-stack-item'));
+                    // Plugin delete callback
+                    if (typeof $del.data('callback') !== "undefined") {
+                        var callback = eval($del.data("callback"));
+                        if (typeof callback === "function") {
+                            callback($del.closest('.grid-stack-item'));
+                        }
                     }
                 }
-            }
-        );
->>>>>>> develop
+            );
     },
 
     deleteAllWidget: function(el) {
@@ -34317,8 +34287,6 @@ var melisDashBoardDragnDrop = {
             // hide plugin menu
             this.$pluginBox.removeClass("shown");
 
-<<<<<<< HEAD
-=======
             // Plugins delete callback
             $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
                 if (typeof $(this).data('callback') !== "undefined") {
@@ -34328,7 +34296,6 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             });
->>>>>>> develop
         } else {
 
             melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');
