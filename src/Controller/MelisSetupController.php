@@ -280,6 +280,8 @@ class MelisSetupController extends AbstractActionController
             'd_user_id' => $userId,
             'd_content' => $pluginXml,
         );
+        $dashboardTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
+        $dashboardTbl->save($pluginDashboard);
     }
 
     /**
