@@ -3409,7 +3409,7 @@ div#modal-user-management div.widget {
  * Responsive add a space at the bottom of the last child of the plugin list
  * to make way for the remove all plugins botton
  */
-.melis-core-dashboard-plugin-filter-box .melis-core-dashboard-ps-box .melis-core-dashboard-plugin-snippets-box {
+.melis-core-dashboard-plugin-filter-box .melis-core-dashboard-ps-box:last-child .melis-core-dashboard-plugin-snippets-box {
     margin-bottom: 40px;
 }
 .melis-commerce-dashboard-plugin-order-messages-parent .message-count {
@@ -3660,13 +3660,16 @@ div#modal-user-management div.widget {
  * Added by: Junry 10/08/2018
  * Responsive
  */
-@media screen and (max-width: 462px) {
+/* .melis-core-dashboard-plugin-snippets-box .tooltip.melis-plugin-tooltip.fade.left.in {
+    left: -84px !important;
+    width: 75% !important;
+} */
+/* @media screen and (max-width: 462px) {
     .melis-core-dashboard-plugin-snippets-box .tooltip.melis-plugin-tooltip.fade.left.in {
-        top: 112.5px !important;
         left: -84px !important;
         width: 75% !important;
     }
-}
+} */
 @media screen and (max-width: 600px) {
   .grid-stack-item-content .flotchart-holder {
     margin-top: 60px;

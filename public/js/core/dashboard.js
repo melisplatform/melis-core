@@ -1,5 +1,4 @@
 $(function(){
-	/* dashboard */
 	var $body 	= $("body");
 	
 	$body.on("click", "#melisDashBoardPluginBtn", function() {
