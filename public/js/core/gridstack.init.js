@@ -69,6 +69,8 @@ var melisDashBoardDragnDrop = {
         //this.$gs.addTouch();
         //this.$gs.css("touch-action", "none");
         //this.$gs2.gridstack(_.defaults({ acceptWidgets: false }), options);
+        //$(".melis-core-dashboard-plugin-snippets").addTouch();
+        //$(".melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     dragWidget: function() {
@@ -85,6 +87,8 @@ var melisDashBoardDragnDrop = {
                 gridPH.attr('data-gs-height', 3);
             }
         });
+        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").addTouch();
+        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     bindEvents: function() {

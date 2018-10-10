@@ -478,7 +478,7 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', "#close-all-tab", closedOpenTabs);
 
-// Dashboard Draggable need to remove
+    // Dashboard Draggable need to remove
     /*$( ".dashboard-container" ).sortable({
      revert: true,
      animation: 400,
@@ -497,14 +497,20 @@ var melisCore = (function(window){
 
 
     var dashboardTooltip = {
-        placement: "left",
+        placement: 'left',
+        delay: {
+            show: 800
+        },
+        viewport: {
+            selector: '.melis-core-dashboard-plugin-snippets-box:visible .melis-core-dashboard-plugin-snippets'
+        },
         template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
     };
 
-    $("body .melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
+    $body.find(".melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
 
     // Tooltip
-    /*  $("body .melis-core-dashboard-plugin-snippets").tooltip({
+    /*$("body .melis-core-dashboard-plugin-snippets").tooltip({
      position: {
      my: "left center",
      at: "left+110% center",
@@ -515,10 +521,8 @@ var melisCore = (function(window){
      },
      });*/
 
-    $("body .melis-core-dashboard-plugin-snippets").hover(function() {
-        setTimeout(function() {
-            $(this).children(".melis-plugin-tooltip").fadeIn();
-        }, 600);
+    $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
+        $(this).children(".melis-plugin-tooltip").fadeIn();
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
