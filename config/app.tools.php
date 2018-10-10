@@ -2405,10 +2405,97 @@ return array(
                         'searchables' => array('usrcd_last_login_date', 'usrcd_last_connection_time'),
                         'actionButtons' => array(
 
-                        )
-                    )
-                )
-             ),
+                        ),
+                    ),
+                ),
+                'melis_core_gdpr_tool' => array(
+                    'conf' => array(
+                        'title' => 'gdpr tool',
+                        'id' => 'id_melis_core_gdpr_tool'
+                    ),
+                    'export' => array(
+                        'csvFileName' => '',
+                    ),
+                    'forms' => array(
+                        'melis_core_gdpr_search_form' => array(
+                            'attributes' => array(
+                                'name' => 'melis_core_gdpr_search_form',
+                                'id' => 'id_melis_core_gdpr_search_form',
+                                'method' => 'POST',
+                                'action' => '',
+                                'class' => 'form-horizontal',
+                                'role' => 'form',
+                            ),
+                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => array(
+                                array(
+                                    'spec' => array(
+                                        'name' => 'user_name',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_melis_core_gdpr_form_name',
+                                            'form_type' => 'form-horizontal',
+                                        ),
+                                        'attributes' => [
+                                            'id' => 'melis_core_gdpr_search_form_name',
+                                        ]
+                                    ),
+                                ),
+                                array(
+                                    'spec' => array(
+                                        'name' => 'user_email',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_melis_core_gdpr_form_email',
+                                            'form_type' => 'form-horizontal',
+                                        ),
+                                        'attributes' => [
+                                            'id' => 'melis_core_gdpr_search_form_email',
+                                        ]
+                                    ),
+                                ),
+                            ),
+                            'input_filter' => array(
+                                'user_name' => array(
+                                    'name' => 'user_name',
+                                    'required' => false,
+                                    'validators' => array(
+                                        array(
+                                            'name'    => 'regex', false,
+                                            'options' => array(
+                                                'pattern' => '/[\D-+#$]/',
+                                                'message'=> 'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error',
+                                            ),
+                                        ),
+                                    ),
+                                    'filters' => array(
+
+                                    ),
+                                ),
+                                'user_email' => array(
+                                    'name' => 'user_email',
+                                    'required' => false,
+                                    'validators' => array(
+                                        array(
+                                            'name' => 'EmailAddress',
+                                            'options' => array(
+                                                'domain'   => 'true',
+                                                'hostname' => 'true',
+                                                'mx'       => 'true',
+                                                'deep'     => 'true',
+                                                'message'  => 'tr_melis_core_gdpr_tool_form_email_invalid_format',
+                                            ),
+                                        ),
+                                    ),
+                                    'filters' => array(
+
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),//end gdpr
+            ),
         ),
     ),
 );

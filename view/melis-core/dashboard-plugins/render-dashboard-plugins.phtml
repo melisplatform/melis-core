@@ -1,0 +1,16 @@
+<div id="<?= $this->dashboardId ?>" data-melisKey="<?= $this->melisKey ?>" class="tab-pane container-level-a tab-panel-dashboard">
+	<div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2 melis-dashboard-plugins">
+    	<?php
+	    	if ($this->isAccessible){
+	    	    $plugins = $this->MelisDashboardDragDropZone($this->dashboardId);
+	    	    
+	    	    if(empty($plugins))
+	    	        echo '<div class="alert alert-default">Dashboard is empty, try to add a plugin(s) from Dashboard plugin sidebar by dragging a plugin to the dashboard zone. </div>';
+	    	    else 
+	    	        echo $plugins;
+	    	}else {
+	    	    echo $this->translate('tr_meliscore_rights_Not allowed dashboard');
+	    	}
+    	?>
+    </div>
+</div>

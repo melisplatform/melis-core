@@ -29,6 +29,7 @@ use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
+use MelisCore\Listener\MelisCoreDashboardMenuListener;
 
 /**
  * Class Module
@@ -270,6 +271,8 @@ class Module
             include __DIR__ . '/../config/diagnostic.config.php',
             include __DIR__ . '/../config/app.microservice.php',
             include __DIR__ . '/../config/app.install.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
+	        include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
     	);
     	
     	foreach ($configFiles as $file) 

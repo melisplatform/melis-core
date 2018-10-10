@@ -1,0 +1,33 @@
+<div class="grid-stack-item  grid-stack-animate"
+     data-gs-id="<?php echo $this->pluginConfig['plugin_id']?>"
+     data-gs-x="<?php echo $this->pluginConfig['x-axis']?>" 
+     data-gs-y="<?php echo $this->pluginConfig['y-axis']?>"
+     data-gs-width="<?php echo $this->pluginConfig['width']?>"
+     data-gs-height="<?php echo $this->pluginConfig['height']?>">
+    <div class="grid-stack-item-content">
+        <div class="widget widget-inverse">
+            <div class="widget-parent">
+                <div class="widget-head">
+                    <div class="btn-group pull-right btn-group-xs">
+                    	<a class="btn btn-default dashboard-plugin-delete" <?php echo !empty($this->deleteCallBack) ? 'data-callback="' . $this->deleteCallBack . '"' : '' ?>><i class="fa fa-trash"></i></a>
+                        <a class="btn btn-default dashboard-plugin-refresh"><i class="fa fa-refresh"></i></a>
+                    </div>
+                    <h3 class="heading"><i class="<?php echo $this->translate($this->pluginConfig['icon']); ?>"></i> <?php echo $this->translate($this->pluginConfig['name']); ?></h3>
+                </div>
+                <div class="widget-body padding-none">
+                	<?php echo $this->pluginView ?>
+                	<div class="hidden dashboard-plugin-json-config">
+                		<?php 
+                		    /**
+                		     * Plugin config hidden, this plugin congif
+                		     * used to generate plugin by using this to a POST/GET request
+                		     * in generating plugin
+                		     */
+                		    echo $this->jsonPluginConfig
+        		        ?>
+                	</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

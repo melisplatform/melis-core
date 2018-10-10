@@ -184,7 +184,7 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard(){
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard', 'id_meliscore_center_dashboard', 'meliscore_center_dashboard' );
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
@@ -284,6 +284,17 @@ var melisCore = (function(window){
 
         // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
         $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+
+        // detect dashboard tab panel
+        if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
+            // show dashboard plugin menu
+            $("body .melis-core-dashboard-dnd-box").fadeIn();
+            $("body .melis-core-dashboard-dnd-box.show").fadeIn();
+        } else {
+            // hide dashboard plugin menu
+            $("body .melis-core-dashboard-dnd-box").fadeOut();
+            $("body .melis-core-dashboard-dnd-box.show").fadeOut();
+        }
     }
 
     /*
@@ -294,7 +305,7 @@ var melisCore = (function(window){
         // loop all tab list
         listData.each(function() {
             var dataID =  $(this).attr('data-tool-id');
-            if(dataID != "id_meliscore_center_dashboard"){
+            if(dataID != "id_meliscore_dashboard"){
                 melisHelper.tabClose(dataID);
             }
         });
@@ -466,6 +477,82 @@ var melisCore = (function(window){
 
     // close all open tab
     $body.on('click', "#close-all-tab", closedOpenTabs);
+
+// Dashboard Draggable need to remove
+    /*$( ".dashboard-container" ).sortable({
+     revert: true,
+     animation: 400,
+     placeholder: "ui-state-highlight"
+     // start
+     // change
+     // stop
+     });*/
+
+    $body.on("click", "#melisDashBoardPluginBtn", function() {
+        $(this).closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+    });
+
+    $body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);
+    $body.on("click", ".melis-core-dashboard-category-btn", showCatPlugLists);
+
+
+    var dashboardTooltip = {
+        placement: "left",
+        template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+    };
+
+    $("body .melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
+
+    // Tooltip
+    /*  $("body .melis-core-dashboard-plugin-snippets").tooltip({
+     position: {
+     my: "left center",
+     at: "left+110% center",
+     using: function( position, feedback ) {
+     $( this ).css( position );
+     $(this).addClass( "melis-plugin-tooltip" ).addClass( feedback.vertical ).addClass( feedback.horizontal ).appendTo( this );
+     }
+     },
+     });*/
+
+    $("body .melis-core-dashboard-plugin-snippets").hover(function() {
+        setTimeout(function() {
+            $(this).children(".melis-plugin-tooltip").fadeIn();
+        }, 600);
+    });
+    
+    $body.on("click", ".melis-dashboard-plugins-menu", function(){
+    	 data = $(this).data();
+    	 melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
+    });
+    
+
+    function showPlugLists() {
+        if($(this).hasClass("active")) {
+            $(this).removeClass("active")
+                .siblings(".melis-core-dashboard-plugin-snippets-box")
+                .slideUp();
+            $(this).siblings(".melis-core-dashboard-plugin-snippets-box")
+                .find(".melis-core-dashboard-category-btn.active")
+                .removeClass("active")
+                .siblings(".melis-core-dashboard-category-plugins-box")
+                .slideUp();
+        } else {
+            $(".melis-core-dashboard-filter-btn.active").removeClass("active").siblings(".melis-core-dashboard-plugin-snippets-box").slideUp();
+            $(this).addClass("active");
+            $(".melis-core-dashboard-filter-btn.active").siblings(".melis-core-dashboard-plugin-snippets-box").slideDown();
+        }
+    }
+
+    function showCatPlugLists() {
+        if($(this).hasClass("active")) {
+            $(this).removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
+        } else {
+            $(".melis-core-dashboard-category-btn.active").removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
+            $(this).addClass("active");
+            $(".melis-core-dashboard-category-btn.active").siblings(".melis-core-dashboard-category-plugins-box").slideDown();
+        }
+    }
 
 
 

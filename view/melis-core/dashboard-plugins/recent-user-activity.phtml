@@ -1,0 +1,22 @@
+<?php 
+    $tagsOpening = '';
+    if ($this->toolIsAccessible)
+        $tagsOpening = 'class="melis-opentools" data-tool-icon="'.$this->toolIcon.'" data-tool-name="' . $this->toolName . '" data-tool-id="' . $this->toolId . '" data-tool-meliskey="' . $this->toolMelisKey . '"';
+?>
+<div class="widget-activity">
+    <ul class="list">
+        <?php
+            foreach ($this->users as $user)
+            {
+                $name = $user['usr_firstname'] . ' ' . $user['usr_lastname'];
+                ?>
+                <li <?= $tagsOpening; ?> data-userid="<?= $user['usr_id'] ?>">
+                <span ><?= $user['usr_last_login_date']; ?> :
+                <span class="ra-username"><?= $name; ?></span> <?= $this->translate('tr_meliscore_dashboard_recent_activity_Logged in'); ?>.</span>
+                    <div class="clearfix"></div>
+                </li>
+                <?php
+            }
+        ?>
+    </ul>
+</div>

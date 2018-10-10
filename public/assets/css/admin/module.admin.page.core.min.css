@@ -1038,7 +1038,8 @@ a.widget i.display-block {
 }
 
 .widget .widget-body p.lead {
-    font-size: 25px
+    /* font-size: 25px; */
+    font-size: 2.083em;
 }
 
 .widget .widget-body>pre:last-child,

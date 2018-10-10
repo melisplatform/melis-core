@@ -51,7 +51,6 @@ class MelisFieldRow extends FormRow
 	        $element->setLabel($label);
 	    
 	    }
-	    
 	    $formElement = '';
 	    if ($this->getClass($element) == self::MELIS_TOGGLE_BUTTON_FACTORY)
 	    {
@@ -64,7 +63,32 @@ class MelisFieldRow extends FormRow
 	        
 	        // disect label and element so it would not be included in the switch feature
 	        $formElement .= '<div class="form-group"><label for="'.$attrib['name'].'">'.$element->getLabel().'</label> '.$toggleButton.'</div>';
-	    } elseif (!empty($element->getOption('switchOptions')))
+	    }elseif ($element->hasAttribute('meliscore-user-select2'))
+        {
+            $slct2Id = 'selec2-'.uniqid();
+            $element->setEmptyOption('tr_meliscore_common_choose');
+            $attrib = $element->getAttributes();
+	        $element->setAttribute('data-slct2-id', $slct2Id);
+            $formElement = '<div class="form-group">
+    	                       '.parent::render($element).'
+	                        </div>';
+            $formElement .= '<script type="text/javascript">';
+            $formElement .= '$("select[data-slct2-id=\''.$slct2Id.'\']").select2();';
+            $formElement .= '$("select[data-slct2-id=\''.$slct2Id.'\']").next("span").css("width", "100%");';
+            $formElement .= '</script>';
+        }elseif ($element->hasAttribute('meliscore-tinymce-textarea'))
+        {
+            $tinyceId = 'tinyce-textarea-'.uniqid();
+            $attrib = $element->getAttributes();
+	        $element->setAttribute('id', 'tinyce-textarea-'.$attrib['id']);
+	        $element->setAttribute('data-tinymce-id', $tinyceId);
+            $formElement = '<div class="form-group">
+    	                       '.parent::render($element).'
+	                        </div>';
+            $formElement .= '<script type="text/javascript">';
+            $formElement .= 'melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\''.$tinyceId.'\']", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});';
+            $formElement .= '</script>';
+        } elseif (!empty($element->getOption('switchOptions')))
 	    {
 	        $switchId = $element->getAttribute('id');
 	        $isChecked = !empty($element->getValue())? 'checked' : '';
@@ -81,15 +105,29 @@ class MelisFieldRow extends FormRow
 	        $switch .= '</script>';
 	        
 	        $formElement .= $switch;
-	    } elseif ($element->getAttribute('type') == self::MELIS_SELECT_FACTORY)
-	    {
+	    } elseif ($element->getAttribute('type') == self::MELIS_SELECT_FACTORY) {
 	        // render to bootstrap select element
             $elementClass = $element->getAttribute('class');
             $elementClass = implode(' ', ['form-control', $elementClass]);
 
     		$element->setAttribute('class', $elementClass);
     		$element->setLabelOption('class','col-sm-2 control-label');
-    		$formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
+
+    		if ($element->getOption('form_type') == 'form-horizontal') {
+                $elementHelper       = $this->getElementHelper();
+                $elementString = str_replace('id="'. $element->getAttribute('id') .'"', "", $elementHelper->render($element));
+
+                //add style
+                $newElementString = substr_replace($elementString, 'style="border-radius:0px;border-color:#e5e5e5"',50, 0);
+                $formElement .= '<div class="form-group">
+	                                <label for=" ' . $element->getName() . ' " class="col-sm-2 control-label"> ' . $element->getOption('label') . ' </label>
+	                                <div class="col-sm-10">'
+	                                    . $newElementString .
+	                                '</div>
+                            	</div>';
+            } else {
+                $formElement .= '<div class="form-group">' . parent::render($element, $labelPosition) . '</div>';
+            }
 	    } elseif ($element->getAttribute('class') == self::MELIS_MULTI_VAL_INPUT)
 	    {
 	        // Get Value
@@ -136,14 +174,38 @@ class MelisFieldRow extends FormRow
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
     	                       <label for="">'.$label.'</label>
-    	                        <div class="form-group input-group date '.$attrib['dateId'].'">
+    	                        <div class="input-group date '.$attrib['dateId'].'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
 	                        </div>';
-	    } elseif ($element->getAttribute('class') == self::MELIS_COLOR_PICKER)
+	    }elseif ($element->hasAttribute('meliscore-datetimepicker')){
+            $datePickerId = 'datetimepicker-'.uniqid();
+            $label = $element->getLabel();
+            $element->setLabel('');
+            $icon = (!empty($element->getOption('icon'))) ? $element->getOption('icon') : 'glyphicon glyphicon-calendar';
+            $element->setAttributes(array('autocomplete' => 'off'));
+            $formElement = '<div class="form-group">
+    	                       <label for="">'.$label.'</label>
+    	                        <div class="input-group date" id="'.$datePickerId.'">
+    	                        '.parent::render($element).'
+                                    <span class="input-group-addon">
+                                        <span class="'.$icon.'"></span>
+                                    </span>
+                                </div>
+	                        </div>';
+            $defaultFormat = 'YYYY-MM-DD HH:mm:ss';
+            if ($element->hasAttribute('melis-datepicker')){
+                $defaultFormat = 'YYYY-MM-DD';
+            }
+            $elemOption = $element->getOptions();
+            $dateFormat = (!empty($element->getOption('format'))) ? $element->getOption('format') : $defaultFormat;
+            $formElement .= '<script type="text/javascript">';
+            $formElement .= '$("#'.$datePickerId.'").datetimepicker({format: "'.$dateFormat.'"});';
+            $formElement .= '</script>';
+        } elseif ($element->getAttribute('class') == self::MELIS_COLOR_PICKER)
 	    {
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
@@ -242,9 +304,18 @@ class MelisFieldRow extends FormRow
 								</div>
 							</div>';
 
-	    }elseif ($element->getAttribute('type') != 'hidden') 
+	    } elseif ($element->getOption('form_type') == 'form-horizontal') {
+
+            $formElement .= '<div id="' . $element->getAttribute('id') . '" class="form-group">
+                                <label for=" ' . $element->getName() . ' " class="col-sm-2 control-label"> ' . $element->getOption('label') . ' </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="' . $element->getName() . '">
+                                </div>
+                            </div>';
+
+        }elseif ($element->getAttribute('type') != 'hidden')
 	    {
-	        $formElement .= '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
+	        $formElement .= '<div class="form-group ' . $element->getOption('form_type') . '">'. parent::render($element, $labelPosition).'</div>';
 	    }
 	    else
 	    {
