@@ -117,8 +117,10 @@ var melisHelper = (function(){
             $.each( errors, function( key, error ) {
                 if("form" in error){
                     $.each(this.form, function( fkey, fvalue ){
-                        $("#" + fvalue + " .form-control[name='"+key +"']").prev("label").css("color","red");
+                        $("#" + fvalue + " .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
                     });
+                }else{
+                    $( selector + " .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
                 }
             });
         }

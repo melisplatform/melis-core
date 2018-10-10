@@ -342,6 +342,14 @@ var melisDashBoardDragnDrop = {
                     
                     // serialize & save db remaining gridstack items
                     self.serializeWidgetMap( $items );
+
+                    // Plugin delete callback
+                    if (typeof $del.data('callback') !== "undefined") {
+                        var callback = eval($del.data("callback"));
+                        if (typeof callback === "function") {
+                            callback($del.closest('.grid-stack-item'));
+                        }
+                    }
                 }
             );
     },
@@ -380,6 +388,15 @@ var melisDashBoardDragnDrop = {
             // hide plugin menu
             this.$pluginBox.removeClass("shown");
 
+            // Plugins delete callback
+            $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
+                if (typeof $(this).data('callback') !== "undefined") {
+                    var callback = eval($(this).data("callback"));
+                    if (typeof callback === "function") {
+                        callback($(this).closest('.grid-stack-item'));
+                    }
+                }
+            });
         } else {
 
             melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');

@@ -18,6 +18,12 @@
 	min-height: 870px;
 	min-width: 870px;
 	width: 100%;
+	/*background-color: lightgoldenrodyellow;*/
+}
+
+#grid1 {
+	/* background-color: #d07174; */
+	min-height: 870px;
 }
 
 .melis-core-dashboard-plugin-filter-box .grid-stack-item {
