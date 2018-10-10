@@ -278,6 +278,8 @@ return array(
             'MelisPhpUnitTool' => 'MelisCore\Service\Factory\MelisPhpUnitToolServiceFactory',
             'MelisCoreMicroServiceTestService' => 'MelisCore\Service\Factory\MelisCoreMicroServiceTestServiceFactory',
             'MelisCorePlatformSchemeService' => 'MelisCore\Service\Factory\MelisCorePlatformSchemeServiceFactory',
+            'MelisCoreForm' => 'MelisCore\Form\Factory\MelisFormFactory',
+            'MelisCoreFormService' => 'MelisCore\Service\Factory\MelisFormServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',
@@ -292,6 +294,8 @@ return array(
             'MelisCore\Model\Tables\MelisUserConnectionDate'    => 'MelisCore\Model\Tables\Factory\MelisCoreUserConnectionDateTableFactory',
             'MelisCore\Model\Tables\MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\Factory\MelisMicroServiceAuthTableFactory',
             'MelisCore\Model\Tables\MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\Factory\MelisCorePlatformSchemeTableFactory',
+
+
         ),
     ),
     'controllers' => array(
@@ -329,6 +333,9 @@ return array(
     ),
 
     'form_elements' => array(
+        'aliases' => [
+            'Form' => 'MelisCore\Form\Factory\Form',
+        ],
         'factories' => array(
             'MelisSelect' => 'MelisCore\Form\Factory\MelisSelectFactory',
             'MelisCoreLanguageSelect' => 'MelisCore\Form\Factory\LanguageSelectFactory',
@@ -338,6 +345,7 @@ return array(
             'MelisUserRoleSelect' => 'MelisCore\Form\Factory\MelisUserRoleSelectFactory',
             'MelisCoreMultiValInput' => 'MelisCore\Form\Factory\MelisCoreMultiValueInputFactory',
             'DateField' => 'MelisCore\Form\Factory\DateFieldFactory',
+            MelisCore\Form\Factory\FormFactory::class => \Zend\ServiceManager\Factory\InvokableFactory::class
         ),
     ),
     'view_helpers' => array(
