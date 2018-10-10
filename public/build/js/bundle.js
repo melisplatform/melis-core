@@ -28828,7 +28828,7 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', "#close-all-tab", closedOpenTabs);
 
-// Dashboard Draggable need to remove
+    // Dashboard Draggable need to remove
     /*$( ".dashboard-container" ).sortable({
      revert: true,
      animation: 400,
@@ -28845,16 +28845,24 @@ var melisCore = (function(window){
     $body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);
     $body.on("click", ".melis-core-dashboard-category-btn", showCatPlugLists);
 
+    $(window).on("resize", function() {
+        var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
+        var dashboardTooltip = {
+            placement: pos,
+            delay: {
+                show: 800
+            },
+            template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+        };
 
-    var dashboardTooltip = {
-        placement: "left",
-        template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-    };
+        $body.find(".melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
 
-    $("body .melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
+    }).trigger('resize');
+
+    //$body.find(".melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
 
     // Tooltip
-    /*  $("body .melis-core-dashboard-plugin-snippets").tooltip({
+    /*$("body .melis-core-dashboard-plugin-snippets").tooltip({
      position: {
      my: "left center",
      at: "left+110% center",
@@ -28865,10 +28873,10 @@ var melisCore = (function(window){
      },
      });*/
 
-    $("body .melis-core-dashboard-plugin-snippets").hover(function() {
-        setTimeout(function() {
-            $(this).children(".melis-plugin-tooltip").fadeIn();
-        }, 600);
+    $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
+    }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeOut();
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
@@ -28876,7 +28884,6 @@ var melisCore = (function(window){
     	 melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
     });
     
-
     function showPlugLists() {
         if($(this).hasClass("active")) {
             $(this).removeClass("active")
@@ -31959,6 +31966,17 @@ u=-1,i=t[o];++u<c;){var h=f[u],s=h.type,h=(0,h.iteratee)(i);if(2==s)i=h;else if(
 var e=$e(r);e.__index__=0,e.__values__=T,t?u.__wrapped__=e:t=e;var u=e,r=r.__wrapped__}return u.__wrapped__=n,t},An.prototype.reverse=function(){var n=this.__wrapped__;return n instanceof Un?(this.__actions__.length&&(n=new Un(this)),n=n.reverse(),n.__actions__.push({func:Ye,args:[Ke],thisArg:T}),new On(n,this.__chain__)):this.thru(Ke)},An.prototype.toJSON=An.prototype.valueOf=An.prototype.value=function(){return wr(this.__wrapped__,this.__actions__)},An.prototype.first=An.prototype.head,ji&&(An.prototype[ji]=Qe),
 An}();typeof define=="function"&&typeof define.amd=="object"&&define.amd?($n._=rt, define(function(){return rt})):Nn?((Nn.exports=rt)._=rt,Fn._=rt):$n._=rt}).call(this);
 
+/*!
+ * jQuery UI Touch Punch 0.2.3
+ *
+ * Copyright 2011–2014, Dave Furfero
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * Depends:
+ *  jquery.ui.widget.js
+ *  jquery.ui.mouse.js
+ */
+!function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
 /**
  * gridstack.js 1.0.0-dev
  * http://troolee.github.io/gridstack.js/
@@ -33972,6 +33990,8 @@ var melisDashBoardDragnDrop = {
         //this.$gs.addTouch();
         //this.$gs.css("touch-action", "none");
         //this.$gs2.gridstack(_.defaults({ acceptWidgets: false }), options);
+        //$(".melis-core-dashboard-plugin-snippets").addTouch();
+        //$(".melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     dragWidget: function() {
@@ -33988,6 +34008,8 @@ var melisDashBoardDragnDrop = {
                 gridPH.attr('data-gs-height', 3);
             }
         });
+        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").addTouch();
+        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     bindEvents: function() {
@@ -34223,8 +34245,8 @@ var melisDashBoardDragnDrop = {
         var self    = this;
 
         var grid    = $('#'+activeTabId+' .grid-stack').data('gridstack'),
-            del     = el,
-            $item   = del.closest('.grid-stack-item').data('_gridstack_node');
+            $del    = el,
+            $item   = $del.closest('.grid-stack-item').data('_gridstack_node');
 
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
@@ -34274,7 +34296,7 @@ var melisDashBoardDragnDrop = {
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_common_no,
-                translations.tr_melis_core_remove_dashboard_plugin,
+                translations.tr_melisore_remove_all_plugins,
                 translations.tr_melis_core_remove_dashboard_all_plugin_msg,
                 function() {
                     grid.removeAll();
