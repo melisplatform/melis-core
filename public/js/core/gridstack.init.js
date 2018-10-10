@@ -139,6 +139,8 @@ var melisDashBoardDragnDrop = {
                 width: $nWidth
             }, 3);
         });
+
+        //console.log('mouseover mouseout');
     },
 
     dropWidget: function( widget ) {
@@ -324,8 +326,8 @@ var melisDashBoardDragnDrop = {
         var self    = this;
 
         var grid    = $('#'+activeTabId+' .grid-stack').data('gridstack'),
-            del     = el,
-            $item   = del.closest('.grid-stack-item').data('_gridstack_node');
+            $del    = el,
+            $item   = $del.closest('.grid-stack-item').data('_gridstack_node');
 
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,

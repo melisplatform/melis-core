@@ -522,7 +522,9 @@ var melisCore = (function(window){
      });*/
 
     $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
-        $(this).children(".melis-plugin-tooltip").fadeIn();
+        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
+    }).mouseout(function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeOut();
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
