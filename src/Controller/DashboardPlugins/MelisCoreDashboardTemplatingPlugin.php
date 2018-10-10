@@ -239,6 +239,19 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         }
 
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+
+        // Rendering sub plugin interface
+        if (!empty($pluginView->getChildren())) {
+            foreach ($pluginView->getChildren() as $key => $value) {
+                if ($value instanceof ViewModel) {
+                    try {
+                        $pluginView->setVariable($value->captureTo(), $viewRender->render($value));
+                    } catch (Exception $e) {}
+                }
+            }
+        }
+        
+        // Rending the plugin first interface        
         $pluginHtml = $viewRender->render($pluginView);
         $plugin->pluginView = $pluginHtml;
         
