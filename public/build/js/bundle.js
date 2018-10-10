@@ -28845,6 +28845,10 @@ var melisCore = (function(window){
     $body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);
     $body.on("click", ".melis-core-dashboard-category-btn", showCatPlugLists);
 
+    /*
+     * Added by: Junry @ 10/10/208
+     * For responsive placement
+     */
     $(window).on("resize", function() {
         var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
         var dashboardTooltip = {
@@ -28855,7 +28859,7 @@ var melisCore = (function(window){
             template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
         };
 
-        $body.find(".melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
+        $body.find(".melis-core-dashboard-plugin-snippets-box .melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
 
     }).trigger('resize');
 
@@ -28872,7 +28876,10 @@ var melisCore = (function(window){
      }
      },
      });*/
-
+    /*
+     * Added by: Junry @ 10/10/2018
+     * For blinking issue on hover
+     */
     $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
         $(this).children(".melis-plugin-tooltip").stop().fadeIn();
     }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
