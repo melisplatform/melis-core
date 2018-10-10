@@ -139,8 +139,6 @@ var melisDashBoardDragnDrop = {
                 width: $nWidth
             }, 3);
         });
-
-        //console.log('mouseover mouseout');
     },
 
     dropWidget: function( widget ) {
@@ -377,7 +375,7 @@ var melisDashBoardDragnDrop = {
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_common_no,
-                translations.tr_melis_core_remove_dashboard_plugin,
+                translations.tr_melisore_remove_all_plugins,
                 translations.tr_melis_core_remove_dashboard_all_plugin_msg,
                 function() {
                     grid.removeAll();
