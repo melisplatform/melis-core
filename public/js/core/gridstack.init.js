@@ -69,6 +69,8 @@ var melisDashBoardDragnDrop = {
         //this.$gs.addTouch();
         //this.$gs.css("touch-action", "none");
         //this.$gs2.gridstack(_.defaults({ acceptWidgets: false }), options);
+        //$(".melis-core-dashboard-plugin-snippets").addTouch();
+        //$(".melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     dragWidget: function() {
@@ -85,6 +87,8 @@ var melisDashBoardDragnDrop = {
                 gridPH.attr('data-gs-height', 3);
             }
         });
+        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").addTouch();
+        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     bindEvents: function() {
@@ -320,8 +324,8 @@ var melisDashBoardDragnDrop = {
         var self    = this;
 
         var grid    = $('#'+activeTabId+' .grid-stack').data('gridstack'),
-            del     = el,
-            $item   = del.closest('.grid-stack-item').data('_gridstack_node');
+            $del    = el,
+            $item   = $del.closest('.grid-stack-item').data('_gridstack_node');
 
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
@@ -371,7 +375,7 @@ var melisDashBoardDragnDrop = {
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_common_no,
-                translations.tr_melis_core_remove_dashboard_plugin,
+                translations.tr_melisore_remove_all_plugins,
                 translations.tr_melis_core_remove_dashboard_all_plugin_msg,
                 function() {
                     grid.removeAll();
