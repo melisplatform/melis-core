@@ -36,9 +36,8 @@
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
-  border: 1px solid #e6e6e6;
   background-color: #fff;
-  
+
   margin: 0;
   position: absolute;
   top: 0;

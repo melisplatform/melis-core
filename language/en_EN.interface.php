@@ -623,7 +623,7 @@
 
         // Dashboard plugins
         'tr_melisore_Plugins' => 'Plugins',
-        'tr_melisore_remove_all_plugins' => 'Remove all dashboard plugins',
+        'tr_melisore_remove_all_plugins' => 'Remove all plugins',
         'tr_melis_core_common_close' => 'Close',
         'tr_melis_core_common_add' => 'Add',
         'tr_melis_core_remove_dashboard_plugin' => 'Remove dashboard plugin',
