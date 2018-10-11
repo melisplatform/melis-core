@@ -204,9 +204,13 @@ var melisDashBoardDragnDrop = {
         // loading effect
         $mcDashPlugSnippets.html(mcLoader);
 
+        // disable grid
+
         var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
         request.done(function(data){
+            // enable grid
+
             // get dashboard gridstack data
             var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
 
@@ -219,7 +223,10 @@ var melisDashBoardDragnDrop = {
             var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, html.data("gsWidth"), html.data("gsHeight"));
 
             // remove clone widgets
-            grid.removeWidget( $(widget).prev() );           
+            grid.removeWidget( $(widget).prev() );
+
+            // hide plugin menu
+            this.$pluginBox.removeClass("shown");
 
             // serialize widget and save to db
             self.serializeWidgetMap( grid.container[0].children );
