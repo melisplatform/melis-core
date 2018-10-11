@@ -5,14 +5,16 @@
                 'ressources' => array(
                     'css' => array(
                         // Gridstack
-                        '/MelisCore/assets/components/plugins/gridstack/css/gridstack.min.css',
-                        '/MelisCore/assets/components/plugins/gridstack/css/gridstack-extra.css',
+                        '/MelisCore/assets/components/plugins/gridstack/css/gridstack.css',
+                        //'/MelisCore/assets/components/plugins/gridstack/css/gridstack-extra.css',
                     ),
                     'js' => array(
                         // Gridstack
                         '/MelisCore/assets/components/plugins/gridstack/js/lodash.min.js',
-                        '/MelisCore/assets/components/library/jquery-ui-v1.11.4/jquery-ui.min.js',
+                        //'/MelisCore/assets/components/library/jquery-ui-v1.11.4/jquery-ui.min.js',
+                        //'/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
                         '/MelisCore/assets/components/library/jquery-ui-touch/jquery.ui.touch-punch.min.js',
+                        //'/MelisCore/assets/components/library/jquery-ui-touch/jquery.ui.touch.js',
                         '/MelisCore/assets/components/plugins/gridstack/js/gridstack.js',
                         '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
                         

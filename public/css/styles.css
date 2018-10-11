@@ -3643,44 +3643,29 @@ div#modal-user-management div.widget {
     text-align: center;
 }
 
-/* grid */
-/*.grid-stack,
-#grid {
-    background-color: #d07174;
-    display: block;
-    min-height: 870px;
-    min-width: 870px;
-    position: relative;
-}
-.grid-item {
-    width: 50%;
-    height: 380px;
-}*/
-
 /*
  *
  * Dashboard Plugin Tooltip
  */
-
 /*
- * Added by: Junry 10/08/2018
- * Responsive
+ * Added by: Junry @ 10/10/2018
  */
-/* .melis-core-dashboard-plugin-snippets-box .tooltip.melis-plugin-tooltip.fade.left.in {
-    left: -84px !important;
-    width: 75% !important;
-} */
-/* @media screen and (max-width: 462px) {
-    .melis-core-dashboard-plugin-snippets-box .tooltip.melis-plugin-tooltip.fade.left.in {
-        left: -84px !important;
-        width: 75% !important;
-    }
-} */
 @media screen and (max-width: 600px) {
   .grid-stack-item-content .flotchart-holder {
     margin-top: 60px;
   }
 }
+
+.tooltip.top {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.tooltip.top .tooltip-arrow {
+    border-top-color: #212121;
+    opacity: 0.9;
+}
+/* End /added */
 
 .melis-plugin-tooltip.tooltip.left .tooltip-arrow {
     border-left-color: #212121;

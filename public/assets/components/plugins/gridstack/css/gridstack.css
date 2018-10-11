@@ -4,6 +4,7 @@
 
 .grid-stack {
   position: relative;
+  min-height: 870px;
 }
 
 .grid-stack.grid-stack-rtl {
@@ -15,6 +16,7 @@
 }
 
 .grid-stack .grid-stack-placeholder > .placeholder-content {
+  background-color: #981a1f;
   border: 1px dashed lightgray;
   margin: 0;
   position: absolute;
@@ -34,6 +36,8 @@
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
+  background-color: #fff;
+
   margin: 0;
   position: absolute;
   top: 0;
