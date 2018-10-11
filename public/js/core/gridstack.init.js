@@ -142,8 +142,6 @@ var melisDashBoardDragnDrop = {
             $grid       = $("#"+activeTabId+" .tab-pane .grid-stack"),
             gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
 
-            //console.log('2 dropWidget: ', gridstack.container);
-
         var dropTimer,
             dropCount = 0;
 
@@ -413,7 +411,7 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             });
-            
+
         } else {
 
             melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');
