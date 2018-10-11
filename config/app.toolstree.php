@@ -972,15 +972,6 @@ return [
                             ),
                             'interface' => []
                         ],
-                        'meliscore_toolstree' => array(
-                            'conf' => array(
-                                'id' => 'id_meliscore_menu_toolstree',
-                                'name' => 'tr_meliscore_menu_toolstree_Name',
-                                'melisKey' => 'meliscore_toolstree',
-                                'icon' => 'fa-folder',
-                            ),
-                            'interface' => array(),
-                        ),
                     ]
                 ]
             ]

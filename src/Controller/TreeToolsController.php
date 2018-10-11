@@ -72,6 +72,7 @@ class TreeToolsController extends AbstractActionController
                     'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
                     'toolsection_forward' => $toolSectionName['forward'] ?? [],
                     'toolsection_children' => [],
+                    'toolsection_is_tool' => isset($toolSectionName['forward']) && !empty($toolSectionName['forward']) ? true : false
                 ];
 
                 // Second level, tools
@@ -95,6 +96,7 @@ class TreeToolsController extends AbstractActionController
                                 'tool_icon' => $icon,
                                 'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
                                 'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool,
+                                'toolsection_is_tool' => isset($toolName['forward']) && !empty($toolName['forward']) ? true : false
                             ];
                         }
 
@@ -119,6 +121,7 @@ class TreeToolsController extends AbstractActionController
                                             'tool_icon' => $icon,
                                             'tool_forward' => isset($childToolname['forward']) ? $childToolname['forward'] : [],
                                             'tool_melisKey' => $childToolname['conf']['melisKey'] ?? $keyTool,
+                                            'toolsection_is_tool' => isset($childToolname['forward']) && !empty($childToolname['forward']) ? true : false
                                         ];
                                     }
 
