@@ -66,11 +66,6 @@ var melisDashBoardDragnDrop = {
         };
 
         this.$gs.gridstack(options);
-        //this.$gs.addTouch();
-        //this.$gs.css("touch-action", "none");
-        //this.$gs2.gridstack(_.defaults({ acceptWidgets: false }), options);
-        //$(".melis-core-dashboard-plugin-snippets").addTouch();
-        //$(".melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     dragWidget: function() {
@@ -87,8 +82,6 @@ var melisDashBoardDragnDrop = {
                 gridPH.attr('data-gs-height', 3);
             }
         });
-        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").addTouch();
-        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     bindEvents: function() {
@@ -130,7 +123,9 @@ var melisDashBoardDragnDrop = {
 
         // remove class shown on plugin box
         this.$body.on('click', 'ul.sideMenu li a[data-toggle="collapse"]', function() {
-            $box.removeClass("shown");
+            if ($box.hasClass("shown")) {
+                $box.removeClass("shown");
+            }
         });
 
         // animate to full width size of #grid1
@@ -146,6 +141,8 @@ var melisDashBoardDragnDrop = {
             $tabPane    = $("#"+activeTabId+" .tab-pane"),
             $grid       = $("#"+activeTabId+" .tab-pane .grid-stack"),
             gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
+
+            //console.log('2 dropWidget: ', gridstack.container);
 
         var dropTimer,
             dropCount = 0;
@@ -193,13 +190,18 @@ var melisDashBoardDragnDrop = {
     },
 
     addWidget: function(dataString) {
-        var self = this;
+        var self    = this;
+
+        var $gs     = $("#"+activeTabId+" .tab-pane .grid-stack"),
+            $btn    = $("#melisDashBoardPluginBtn"),
+            $box    = $btn.closest(".melis-core-dashboard-dnd-box");
 
         var $mcDashPlugSnippets = $("#"+activeTabId+" .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
             $mcDashPlugSnippets.attr('data-gs-width', 6);
             $mcDashPlugSnippets.attr('data-gs-height', 3);
 
         var mcLoader            = "<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>";
+        var $pluginBox          = this.$body.find(".melis-core-dashboard-dnd-box");
 
         // loading effect
         $mcDashPlugSnippets.html(mcLoader);
@@ -209,6 +211,7 @@ var melisDashBoardDragnDrop = {
         var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
         request.done(function(data){
+
             // enable grid
 
             // get dashboard gridstack data
@@ -225,8 +228,14 @@ var melisDashBoardDragnDrop = {
             // remove clone widgets
             grid.removeWidget( $(widget).prev() );
 
-            // hide plugin menu
-            this.$pluginBox.removeClass("shown");
+            if ( $pluginBox.hasClass("shown") ) {
+                // hide plugin menu
+                $pluginBox.removeClass("shown");
+
+                $gs.animate({
+                    width: $gs.width() + $box.width()
+                }, 3);
+            }
 
             // serialize widget and save to db
             self.serializeWidgetMap( grid.container[0].children );
@@ -404,6 +413,7 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             });
+            
         } else {
 
             melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');
