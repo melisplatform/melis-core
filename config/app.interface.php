@@ -443,23 +443,6 @@ return array(
                                 'jsdatas' => array()
                             ),
                         ),
-                        'meliscore_toolstree' =>  array(
-                            'conf' => array(
-                                'id' => 'id_meliscore_menu_toolstree',
-                                'name' => 'tr_meliscore_menu_toolstree_Name',
-                                'melisKey' => 'meliscore_toolstree',
-                            ),
-                            'forward' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'TreeTools',
-                                'action' => 'render-tree-tools',
-                                'jscallback' => '',
-                                'jsdatas' => array()
-                            ),
-                            'interface' => array(
-                               
-                            ),
-                        ),
                         'meliscore_footer' => array(
                             'conf' => array(
                                 'id' => 'id_meliscore_footer',

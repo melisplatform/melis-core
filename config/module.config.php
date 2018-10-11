@@ -7,7 +7,6 @@
  *
  */
 
-
 return array(
     'router' => array(
         'routes' => array(
@@ -294,6 +293,8 @@ return array(
             'MelisPhpUnitTool' => 'MelisCore\Service\Factory\MelisPhpUnitToolServiceFactory',
             'MelisCoreMicroServiceTestService' => 'MelisCore\Service\Factory\MelisCoreMicroServiceTestServiceFactory',
             'MelisCorePlatformSchemeService' => 'MelisCore\Service\Factory\MelisCorePlatformSchemeServiceFactory',
+            'MelisCoreForm' => 'MelisCore\Form\Factory\MelisFormFactory',
+            'MelisCoreFormService' => 'MelisCore\Service\Factory\MelisFormServiceFactory',
             'MelisCoreGeneralService' => 'MelisCore\Service\Factory\MelisCoreGeneralServiceFactory',
             'MelisCoreDashboardService' => 'MelisCore\Service\Factory\MelisCoreDashboardServiceFactory',
             'MelisCoreGdprService' => 'MelisCore\Service\Factory\MelisCoreGdprServiceFactory',
@@ -355,6 +356,9 @@ return array(
     ),
 
     'form_elements' => array(
+        'aliases' => [
+            'Form' => 'MelisCore\Form\Factory\Form',
+        ],
         'factories' => array(
             'MelisSelect' => 'MelisCore\Form\Factory\MelisSelectFactory',
             'MelisCoreLanguageSelect' => 'MelisCore\Form\Factory\LanguageSelectFactory',
