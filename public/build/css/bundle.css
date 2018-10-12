@@ -24774,8 +24774,7 @@ a.widget i.display-block {
 }
 
 .widget .widget-body p.lead {
-    /* font-size: 25px; */
-    font-size: 2.083em;
+    font-size: 25px;
 }
 
 .widget .widget-body>pre:last-child,
@@ -36028,6 +36027,10 @@ div#modal-user-management div.widget {
 .tooltip.top .tooltip-arrow {
     border-top-color: #212121;
     opacity: 0.9;
+}
+
+.cms-page-indicators-plugin .innerAll.bg-primary .lead { 
+    font-size: 1.9em;
 }
 /* End /added */
 
