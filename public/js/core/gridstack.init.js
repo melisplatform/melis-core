@@ -41,8 +41,6 @@ var melisDashBoardDragnDrop = {
         // jQuery DOM element
         this.$body              = $("body");
         this.$document          = $(document);
-        this.$gs1               = this.$body.find("#grid-droppable");
-        this.$gs2               = this.$body.find("#grid-draggable");
         this.$gs                = $(".grid-stack");
         this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
         this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
@@ -303,6 +301,16 @@ var melisDashBoardDragnDrop = {
     saveDBWidgets: function(dataString) {
         // save the lists of widgets on the dashboard to db
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+    },
+
+    saveCurrentDashboard: function(el) {
+        var self    = this,
+            $grid   = $('#'+activeTabId+' .grid-stack').data('gridstack'),
+            $item   = el.closest('.grid-stack-item').data('_gridstack_node'),
+            $items  = $item._grid.container[0].children;
+
+            // serialize & save to db the current gridstack items
+            self.serializeWidgetMap( $items );
     },
 
     dragStopWidget: function() {

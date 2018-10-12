@@ -33969,8 +33969,6 @@ var melisDashBoardDragnDrop = {
         // jQuery DOM element
         this.$body              = $("body");
         this.$document          = $(document);
-        this.$gs1               = this.$body.find("#grid-droppable");
-        this.$gs2               = this.$body.find("#grid-draggable");
         this.$gs                = $(".grid-stack");
         this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
         this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
@@ -33994,11 +33992,6 @@ var melisDashBoardDragnDrop = {
         };
 
         this.$gs.gridstack(options);
-        //this.$gs.addTouch();
-        //this.$gs.css("touch-action", "none");
-        //this.$gs2.gridstack(_.defaults({ acceptWidgets: false }), options);
-        //$(".melis-core-dashboard-plugin-snippets").addTouch();
-        //$(".melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     dragWidget: function() {
@@ -34015,8 +34008,6 @@ var melisDashBoardDragnDrop = {
                 gridPH.attr('data-gs-height', 3);
             }
         });
-        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").addTouch();
-        //$(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").css("touch-action", "none");
     },
 
     bindEvents: function() {
@@ -34076,8 +34067,6 @@ var melisDashBoardDragnDrop = {
             $tabPane    = $("#"+activeTabId+" .tab-pane"),
             $grid       = $("#"+activeTabId+" .tab-pane .grid-stack"),
             gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
-
-            //console.log('2 dropWidget: ', gridstack.container);
 
         var dropTimer,
             dropCount = 0;
@@ -34242,6 +34231,16 @@ var melisDashBoardDragnDrop = {
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
     },
 
+    saveCurrentDashboard: function(el) {
+        var self    = this,
+            $grid   = $('#'+activeTabId+' .grid-stack').data('gridstack'),
+            $item   = el.closest('.grid-stack-item').data('_gridstack_node'),
+            $items  = $item._grid.container[0].children;
+
+            // serialize & save to db the current gridstack items
+            self.serializeWidgetMap( $items );
+    },
+
     dragStopWidget: function() {
         var self = this;
 
@@ -34348,6 +34347,7 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             });
+
         } else {
 
             melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');
