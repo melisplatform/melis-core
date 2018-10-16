@@ -629,6 +629,7 @@
         'tr_melis_core_remove_dashboard_plugin' => 'Remove dashboard plugin',
         'tr_melis_core_remove_dashboard_plugin_msg' => 'Are you sure you want to remove this plugin?',
         'tr_melis_core_remove_dashboard_all_plugin_msg' => 'Are you sure you want to remove all plugin?',
+        'tr_melis_core_remove_dashboard_no_plugin_msg' => 'No plugins to delete',
 
         'tr_PluginSection_meliscore' => 'Melis Core',
 

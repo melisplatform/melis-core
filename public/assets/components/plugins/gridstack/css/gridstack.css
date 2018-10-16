@@ -36,6 +36,8 @@
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
+  /* Added by: Junry @ 10/16/2018 */
+  border: 1px solid #ebebeb;
   background-color: #fff;
 
   margin: 0;
@@ -48,6 +50,11 @@
   z-index: 0;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/* Added by: Junry @ 10/16/2018 */
+.grid-stack > .grid-stack-item > .grid-stack-item-content > .widget {
+  border: 0;
 }
 
 .grid-stack > .grid-stack-item > .ui-resizable-handle {

@@ -3647,13 +3647,12 @@ div#modal-user-management div.widget {
  *
  * Dashboard Plugin Tooltip
  */
+
 /*
  * Added by: Junry @ 10/10/2018
  */
-@media screen and (max-width: 600px) {
-  .grid-stack-item-content .flotchart-holder {
+.grid-stack-item-content .flotchart-holder {
     margin-top: 60px;
-  }
 }
 
 .tooltip.top {
@@ -3664,6 +3663,10 @@ div#modal-user-management div.widget {
 .tooltip.top .tooltip-arrow {
     border-top-color: #212121;
     opacity: 0.9;
+}
+
+.cms-page-indicators-plugin .innerAll.bg-primary .lead { 
+    font-size: 1.9em;
 }
 /* End /added */
 
