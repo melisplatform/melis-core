@@ -35,7 +35,7 @@
 	 * animate closing of the submenu to its main menu.
 	 */
 
-	/*$('li.hasSubmenu > ul.collapse')
+	/*$('ul.collapse')
 	.on('show.bs.collapse', function(e){
 		console.log('2. .collapse .show.bs.collapse melisSidebar!!');
 		
