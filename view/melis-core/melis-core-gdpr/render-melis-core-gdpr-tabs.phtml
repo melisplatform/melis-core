@@ -114,32 +114,7 @@
                                                                 $style = $module['values']['columns'][$dataKey]['style'];
                                                             }
                                                         ?>
-                                                        <?php if (isset($module['values']['columns'][$dataKey]['type'])) { ?>
-                                                            <!-- TYPE STATUS -->
-                                                            <?php if ($module['values']['columns'][$dataKey]['type'] == 'status') { ?>
-                                                                <?php if ($dataValue == 1) { ?>
-                                                                    <td style="<?= $style ?>"><span class="text-success"><i class="fa fa-fw fa-circle"></i></span></td>
-                                                                <?php } else if ($dataValue == 0) { ?>
-                                                                    <td style="<?= $style ?>"><span class="text-danger"><i class="fa fa-fw fa-circle"></i></span></td>
-                                                                <?php } else { ?>
-                                                                    <td></td>
-                                                                <?php } ?>
-                                                            <?php } ?>
-                                                            <!-- END OF TYPE STATUS -->
-                                                            <!-- TYPE ADMIN -->
-                                                            <?php if ($module['values']['columns'][$dataKey]['type'] == 'admin') { ?>
-                                                                <?php if ($dataValue == 1) { ?>
-                                                                    <td style="color:#72af46;<?= $style ?>"><?= $this->translate('tr_melis_core_gdpr_column_is_admin'); ?></td>
-                                                                <?php } else if ($dataValue == 0) { ?>
-                                                                    <td style="color:#bd362f;<?= $style ?>"><?= $this->translate('tr_melis_core_gdpr_column_is_not_admin'); ?></td>
-                                                                <?php } else { ?>
-                                                                    <td></td>
-                                                                <?php } ?>
-                                                            <?php } ?>
-                                                            <!-- END OF TYPE ADMIN -->
-                                                        <?php } else { ?>
                                                         <td style="<?= $style ?>"><?= $dataValue ?></td>
-                                                        <?php } ?>
                                                     <?php } ?>
                                                 </tr>
                                             <?php } ?>
