@@ -33969,9 +33969,14 @@ var melisDashBoardDragnDrop = {
         // jQuery DOM element
         this.$body              = $("body");
         this.$document          = $(document);
-        this.$gs                = $(".grid-stack");
+        this.$window            = $(window);
+        this.$gs                = this.$body.find("#"+activeTabId+" .grid-stack");
         this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
         this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
+        this.$box               = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
+        this.$deleteAllWidget   = this.$body.find("#dashboard-plugin-delete-all");
+        this.$dWidth            = this.$gs.width() - this.$box.width(); // shrink, 1584 - 220 = 1364
+        this.$nWidth            = this.$dWidth + this.$box.width();
 
         // strings
         this.gsOptHandle        = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
@@ -34015,14 +34020,12 @@ var melisDashBoardDragnDrop = {
     },
 
     docuReady: function() {
-        var self    = this,
-            $gs     = this.$gs,
-            $btn    = $("#melisDashBoardPluginBtn"),
-            $window = $(window),
+        var $btn    = $("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $dWidth = $gs.width() - $box.width(), // shrink, 1584 - 220 = 1364
+            $window = $(window),
+            $gs     = this.$gs,
+            $dWidth = $gs.width() - $box.width(); // shrink, 1584 - 220 = 1364
             $nWidth = $dWidth + $box.width();
-
         /* 
          * subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
          * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
@@ -34116,16 +34119,16 @@ var melisDashBoardDragnDrop = {
     addWidget: function(dataString) {
         var self    = this;
 
-        var $gs     = $("#"+activeTabId+" .tab-pane .grid-stack"),
-            $btn    = $("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box");
+        var $btn = $("#melisDashBoardPluginBtn"),
+            $box = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $window = $(window),
+            $gs = this.$gs;
 
         var $mcDashPlugSnippets = $("#"+activeTabId+" .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
             $mcDashPlugSnippets.attr('data-gs-width', 6);
             $mcDashPlugSnippets.attr('data-gs-height', 3);
 
         var mcLoader            = "<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>";
-        var $pluginBox          = this.$body.find(".melis-core-dashboard-dnd-box");
 
         // loading effect
         $mcDashPlugSnippets.html(mcLoader);
@@ -34152,9 +34155,9 @@ var melisDashBoardDragnDrop = {
             // remove clone widgets
             grid.removeWidget( $(widget).prev() );
 
-            if ( $pluginBox.hasClass("shown") ) {
+            if ( $box.hasClass("shown") ) {
                 // hide plugin menu
-                $pluginBox.removeClass("shown");
+                $box.removeClass("shown");
 
                 $gs.animate({
                     width: $gs.width() + $box.width()
@@ -34308,7 +34311,6 @@ var melisDashBoardDragnDrop = {
         var self        = this;
 
         var grid        = $('#'+activeTabId+' .grid-stack').data('gridstack'),
-            nodeItem    = grid.container[0].children,
             $gs         = $('#' + activeTabId ).find('.grid-stack'),
             $items      = $gs.find('.grid-stack-item');
 
@@ -34349,8 +34351,13 @@ var melisDashBoardDragnDrop = {
             });
 
         } else {
-
-            melisCoreTool.confirm('Ok', 'Close', 'Remove all plugins', 'No plugins to delete.');
+            // 'Ok', 'Close', 'Remove all plugins', 'No plugins to delete.'
+            melisCoreTool.confirm(
+                translations.tr_meliscore_common_yes,
+                translations.tr_meliscore_common_no,
+                translations.tr_melisore_remove_all_plugins,
+                translations.tr_melis_core_remove_dashboard_no_plugin_msg
+            );
 
         }
     },
