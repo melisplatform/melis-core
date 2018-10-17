@@ -499,7 +499,20 @@ var melisCore = (function(window){
      * Added by: Junry @ 10/10/208
      * For responsive placement
      */
-    $(window).on("resize", function() {
+
+    var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
+
+    var dashboardTooltip = {
+        placement: pos,
+        delay: {
+            show: 800
+        },
+        template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+    };
+
+    $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip );
+
+    /*$(window).on("resize", function() {
         var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
         var dashboardTooltip = {
             placement: pos,
@@ -509,11 +522,14 @@ var melisCore = (function(window){
             template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
         };
 
-        $body.find(".melis-core-dashboard-plugin-snippets-box .melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
+        showToolTip( dashboardTooltip );
 
     }).trigger('resize');
 
-    //$body.find(".melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
+    function showToolTip( dTooltip ) {
+        console.log('showToolTip');
+        $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dTooltip );        
+    }*/
 
     // Tooltip
     /*$("body .melis-core-dashboard-plugin-snippets").tooltip({
@@ -526,19 +542,26 @@ var melisCore = (function(window){
      }
      },
      });*/
+
     /*
      * Added by: Junry @ 10/10/2018
      * For blinking issue on hover
      */
     $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
+
         $(this).children(".melis-plugin-tooltip").stop().fadeIn();
+
     }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
+
         $(this).children(".melis-plugin-tooltip").stop().fadeOut();
+
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
-    	 data = $(this).data();
-    	 melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
+
+    	data = $(this).data();
+    	melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
+
     });
     
     function showPlugLists() {
