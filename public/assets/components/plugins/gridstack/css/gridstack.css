@@ -16,7 +16,7 @@
 }
 
 .grid-stack .grid-stack-placeholder > .placeholder-content {
-  background-color: #981a1f;
+  background-color: #e61c23;
   border: 1px dashed lightgray;
   margin: 0;
   position: absolute;
@@ -396,3 +396,10 @@
 .grid-stack.grid-stack-one-column-mode > .grid-stack-item > .ui-resizable-handle {
   display: none;
 }
+
+/* changed the width for mobile */
+/* @media (min-width: 320px) and (max-width: 640px) {
+  .grid-stack {
+    width: auto !important;
+  }
+} */

@@ -21,9 +21,8 @@
 			} 
 		}
 	});
-	$('ul.sideMenu > li.hasSubmenu > a').on('click',function(e){
-		console.log('1. .sideMenu .hasSubmenu melisSidebar!!');
 
+	$('ul.sideMenu > li.hasSubmenu > a').on('click',function(e){
 		if($(this).position().top > 0) {
 			$('#id_meliscore_leftmenu')
 			.stop()
@@ -37,8 +36,7 @@
 
 	/*$('ul.collapse')
 	.on('show.bs.collapse', function(e){
-		console.log('2. .collapse .show.bs.collapse melisSidebar!!');
-		
+	
 		e.stopPropagation();
     
 		if ($(this).closest('#menu').length)
