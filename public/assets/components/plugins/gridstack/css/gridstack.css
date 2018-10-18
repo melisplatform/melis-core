@@ -7,6 +7,13 @@
   min-height: 870px;
 }
 
+/* changed the width for mobile */
+@media only screen and (max-width: 640px) {
+  .grid-stack {
+    width: auto !important;
+  }
+}
+
 .grid-stack.grid-stack-rtl {
   direction: ltr;
 }
@@ -16,7 +23,7 @@
 }
 
 .grid-stack .grid-stack-placeholder > .placeholder-content {
-  background-color: #981a1f;
+  background-color: #e61c23;
   border: 1px dashed lightgray;
   margin: 0;
   position: absolute;
