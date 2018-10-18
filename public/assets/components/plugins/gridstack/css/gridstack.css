@@ -396,10 +396,3 @@
 .grid-stack.grid-stack-one-column-mode > .grid-stack-item > .ui-resizable-handle {
   display: none;
 }
-
-/* changed the width for mobile */
-/* @media (min-width: 320px) and (max-width: 640px) {
-  .grid-stack {
-    width: auto !important;
-  }
-} */
