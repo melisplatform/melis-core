@@ -258,6 +258,7 @@ body{
     cursor: pointer;
     padding-left: 10px;
 }
+
 .sidebar>.sidebarMenuWrapper{
     overflow: auto;
     position: relative;
