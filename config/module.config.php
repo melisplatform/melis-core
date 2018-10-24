@@ -64,6 +64,19 @@ return array(
                             ),
                         ),
                     ),
+                    'reset-old-password' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => 'reset-old-password[/:rhash]',
+                            'constraints' => array(
+                                'rhash' => '[a-f0-9]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\User',
+                                'action' => 'resetOldPassword',
+                            ),
+                        ),
+                    ),
                     'authenticate' => array(
                         'type' => 'Segment',
                         'options' => array(

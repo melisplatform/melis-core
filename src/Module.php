@@ -131,6 +131,7 @@ class Module
     	    'melis-backoffice/microservice',
     	    'melis-backoffice/microservice_list',
             'melis-backoffice/get-platform-color-css',
+            'melis-backoffice/reset-old-password',
 		'melis-backoffice/webpack_builder'
     	);
     	if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli')
