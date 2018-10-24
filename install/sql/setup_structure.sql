@@ -53,8 +53,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_user_role` (
   `urole_creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`urole_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COMMENT = 'Melis Users\' roles';
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -78,9 +77,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_user` (
   `usr_creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `usr_last_login_date` DATETIME NULL DEFAULT NULL,
   `usr_is_online` TINYINT(1) NULL DEFAULT 0,
-  PRIMARY KEY (`usr_id`),
-  INDEX `roleId_idx` (`usr_role_id` ASC) VISIBLE,
-  INDEX `langId_idx` (`usr_lang_id` ASC) VISIBLE)
+  PRIMARY KEY (`usr_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COMMENT = 'Melis users';
@@ -105,8 +102,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_bo_emails` (
   `boe_content_layout_ftr_info` TEXT NULL,
   `boe_last_edit_date` DATETIME NOT NULL,
   `boe_last_user_id` INT(11) NOT NULL,
-  PRIMARY KEY (`boe_id`),
-  INDEX `fk_melis_core_bo_emails_melis_core_user1_idx` (`boe_last_user_id` ASC) VISIBLE)
+  PRIMARY KEY (`boe_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -123,8 +119,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_bo_emails_details` (
   `boed_subject` VARCHAR(255) NOT NULL,
   `boed_html` LONGTEXT NOT NULL,
   `boed_text` TEXT NOT NULL,
-  PRIMARY KEY (`boed_id`),
-  INDEX `fk_melis_core_bo_emails_details_melis_core_bo_emails1_idx` (`boed_email_id` ASC) VISIBLE)
+  PRIMARY KEY (`boed_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -155,9 +150,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_log` (
   `log_item_id` INT(11) NULL COMMENT 'Log item Id is the foreign key of the item (item can be UserId, SiteId, TemplateId, ProspectId etc...)',
   `log_user_id` INT(11) NOT NULL COMMENT 'User Id who trigger the event',
   `log_date_added` DATETIME NOT NULL COMMENT 'Log date added/created',
-  PRIMARY KEY (`log_id`),
-  INDEX `fk_melis_core_logs_melis_core_user1_idx` (`log_user_id` ASC) VISIBLE,
-  INDEX `fk_melis_core_logs_melis_core_logs_type1_idx` (`log_type_id` ASC) VISIBLE)
+  PRIMARY KEY (`log_id`))
 ENGINE = InnoDB
 COMMENT = 'Melis Core Logs';
 
@@ -173,9 +166,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_log_type_trans` (
   `logtt_type_id` INT NOT NULL COMMENT 'Log type id foreign key of melis_core_logs_type',
   `logtt_name` VARCHAR(255) NULL COMMENT 'Log type name',
   `logtt_description` VARCHAR(255) NULL COMMENT 'Log type description',
-  PRIMARY KEY (`logtt_id`),
-  INDEX `fk_melis_core_logs_type_trans_melis_core_lang1_idx` (`logtt_lang_id` ASC) VISIBLE,
-  INDEX `fk_melis_core_logs_type_trans_melis_core_logs_type1_idx` (`logtt_type_id` ASC) VISIBLE)
+  PRIMARY KEY (`logtt_id`))
 ENGINE = InnoDB;
 
 
@@ -204,9 +195,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_user_connection_date` (
   `usrcd_usr_login` INT NOT NULL,
   `usrcd_last_login_date` DATETIME NOT NULL,
   `usrcd_last_connection_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`usrcd_id`),
-  INDEX `fk_usr_login_idx` (`usrcd_usr_login` ASC) VISIBLE,
-  INDEX `fk_usr_last_login_date_idx` (`usrcd_last_login_date` ASC) VISIBLE)
+  PRIMARY KEY (`usrcd_id`))
 ENGINE = InnoDB;
 
 
@@ -220,8 +209,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_microservice_auth` (
   `msoa_user_id` INT NOT NULL,
   `msoa_status` TINYINT(1) NULL DEFAULT 0,
   `msoa_api_key` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`msoa_id`),
-  INDEX `fk_user_id_idx` (`msoa_user_id` ASC) VISIBLE)
+  PRIMARY KEY (`msoa_id`))
 ENGINE = InnoDB;
 
 
@@ -237,8 +225,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_microservice_logs` (
   `msl_response` TEXT NULL,
   `msl_url` TEXT NOT NULL,
   `msl_date_requested` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`msl_id`),
-  INDEX `fk_user_id_idx` (`msl_user_id` ASC) VISIBLE)
+  PRIMARY KEY (`msl_id`))
 ENGINE = InnoDB;
 
 
@@ -271,8 +258,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_dashboards` (
   `d_dashboard_id` VARCHAR(45) NOT NULL COMMENT 'Dashboard ID',
   `d_user_id` INT(11) NOT NULL COMMENT 'Dashboard plugin user ID',
   `d_content` TEXT NULL COMMENT 'Plugins xml data',
-  PRIMARY KEY (`d_id`),
-  INDEX `fk_melis_core_dashboards_melis_core_user1_idx` (`d_user_id` ASC) VISIBLE)
+  PRIMARY KEY (`d_id`))
 ENGINE = InnoDB;
 
 
@@ -307,4 +293,3 @@ INSERT INTO `melis_core_platform_scheme` (`pscheme_id`, `pscheme_name`, `pscheme
 INSERT INTO `melis_core_platform_scheme` (`pscheme_id`, `pscheme_name`, `pscheme_colors`, `pscheme_sidebar_header_logo`, `pscheme_sidebar_header_text`, `pscheme_login_logo`, `pscheme_login_background`, `pscheme_favicon`, `pscheme_is_active`) VALUES (2, 'MELIS_SCHEME_1', '{\"melis_core_platform_color_primary_color\":\"#e61c23\",\"melis_core_platform_color_secondary_color\":\"#ce5459\"}', '/MelisCore/images/dashboard/melis-logo.svg', 'MELIS PLATFORM', '/MelisCore/images/login/melis-box.png', '/MelisCore/images/login/melis-blackboard.jpg', '/favicon.ico', 1);
 
 COMMIT;
-

@@ -248,9 +248,9 @@ class PluginViewController extends AbstractActionController
                 $recDatas = array_merge_recursive($recDatas, $itemConfig['datas']);
             }
 
-//            if ($itemConfig) {
-//                $itemConfig['conf'] = array_merge($itemConfig['conf'], $itemConfigOld['conf']);
-//            }
+            if ($itemConfig) {
+                $itemConfig['conf'] = array_merge($itemConfig['conf'], $itemConfigOld['conf']);
+            }
 
         }
 
