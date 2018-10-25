@@ -19,7 +19,7 @@ $body.on("click", ".dashboard-plugin-refresh", function() {
 });
 
 var melisDashBoardDragnDrop = {
-      
+
     currentPlugin: null,
 
     melisWidgetHandle: '.melis-core-dashboard-plugin-snippets',
@@ -96,30 +96,26 @@ var melisDashBoardDragnDrop = {
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $window = $(window),
             $gs     = this.$gs,
-            $dWidth = $gs.width() - $box.width(); // shrink, 1584 - 220 = 1364
+            $dWidth = $gs.width() - $box.width(), // shrink, 1584 - 220 = 1364
             $nWidth = $dWidth + $box.width();
         /* 
          * subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
          * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
+         * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
          */
         $btn.toggle(function() {
             $box.addClass("shown");
 
-            //if ( $window.width() >= 768 ) {
-                $gs.animate({
-                    width: $dWidth
-                }, 3);
-            //}
-            
+            $gs.animate({
+                width: $dWidth
+            }, 3);
+
         }, function() {
             $box.removeClass("shown");
 
-            //if( $window.width() >= 768 ) {
-                $gs.animate({
-                    width: $nWidth
-                }, 3);
-            //}
-
+            $gs.animate({
+                width: $nWidth
+            }, 3);
         });
 
         // remove class shown on plugin box
@@ -131,11 +127,9 @@ var melisDashBoardDragnDrop = {
 
         // animate to full width size of #grid1
         this.$body.on("click", "#dashboard-plugin-delete-all", function() {
-            //if ( $window.with() >= 768 ) {
-                $gs.animate({
-                    width: $nWidth
-                }, 3);
-            //}
+            $gs.animate({
+                width: $nWidth
+            }, 3);
         });
     },
 

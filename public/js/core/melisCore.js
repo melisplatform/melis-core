@@ -478,6 +478,9 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', "#close-all-tab", closedOpenTabs);
 
+    // check if there is child nodes after clicking closedOpenTabs
+    //$body.on('')
+
     // Dashboard Draggable need to remove
     /*$( ".dashboard-container" ).sortable({
      revert: true,

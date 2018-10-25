@@ -567,9 +567,9 @@ class MelisAuthController extends AbstractActionController
                 }
 
                 $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-                $userTable->save([
+                $userTable->update([
                     'usr_is_online' => 1,
-                ], $user->usr_id);
+                ], 'usr_login',$user->usr_id);
 
                 $table->save($userCm, $userCmId);
 
