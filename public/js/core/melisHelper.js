@@ -674,8 +674,7 @@ var melisHelper = (function(){
     }
 
     // disabled all tabs
-    function disableAllTabs()
-    {
+    function disableAllTabs() {
         $.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
             var tabId = $(v).data("id");
             disableTab(tabId);
@@ -688,8 +687,7 @@ var melisHelper = (function(){
     }
 
     // enables all tabs
-    function enableAllTabs()
-    {
+    function enableAllTabs() {
         $.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
             var tabId = $(v).data("id");
             enableTab(tabId);

@@ -34,6 +34,7 @@ var melisDashBoardDragnDrop = {
 
         this.dropWidget( this.melisWidgetHandle );
         this.dragStopWidget();
+        this.resizeStartWidget();
         this.resizeStopWidget();
     },
 
@@ -88,6 +89,7 @@ var melisDashBoardDragnDrop = {
     },
 
     bindEvents: function() {
+        // document ready
         this.$document.ready(this.docuReady.bind(this));
     },
 
@@ -328,17 +330,71 @@ var melisDashBoardDragnDrop = {
         });
     },
 
-    resizeStopWidget: function() {
+    resizeStartWidget: function() {
+        var self = this;
+
+        this.$gs.on("resizestart", function(event, ui) {
+            var startWidth = $(event.target).attr('data-gs-width');
+
+            console.log('start element width: ', startWidth);
+
+            // pass the start width of widget
+            self.resizeStopWidget( startWidth );
+        });
+    },
+
+    resizeStopWidget: function( sw ) {
         var self = this;
 
         // grid stack stop widget resize
         this.$gs.on('gsresizestop', function(event, elem) {
-            var $grid   = $(this),
-                node    = $(elem).data('_gridstack_node');
-                items   = node._grid.container[0].children;
+            var $grid       = $(this),
+                //node        = $(elem).data('_gridstack_node'),
+                //items       = node._grid.container[0].children,
+                itemArray   = [],
+                newWidth    = $(elem).attr('data-gs-width'),
+                $gsItem     = $grid.find('.grid-stack-item.ui-resizable'),
+                widthLimit  = 3;
 
+            $gsItem.each(function() {
+                var $this   = $(this),
+                    node    = $this.data('_gridstack_node');
+
+                if ( newWidth < widthLimit ) {
+                    itemArray.push({
+                        x: node.x,
+                        y: node.y,
+                        width: widthLimit,
+                        height: node.height,
+                        content: $this.data()
+                    });
+                } else {
+                    itemArray.push({
+                        x: node.x,
+                        y: node.y,
+                        width: node.width,
+                        height: node.height,
+                        content: $this.data()
+                    });
+                }
+
+            });
+
+                /*console.log('node: ', node);
+                console.log('grid: ', grid);*/
+
+                /*if ( newWidth <= widthLimit ) {
+                    //alert( 'Smallest width limit reached!' );
+                    //$(elem).attr('data-gs-width', widthLimit);
+                    itemArray.push({
+                        width: node.width
+                    });
+                }*/
+
+                console.log('itemArray: ', itemArray);
+                
                 // update size of widgets passes array of .grid-stack-items
-                self.serializeWidgetMap( $(items) );
+                //self.serializeWidgetMap( $(items) );
         });
     },
 
@@ -374,6 +430,8 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             );
+
+
     },
 
     deleteAllWidget: function(el) {
