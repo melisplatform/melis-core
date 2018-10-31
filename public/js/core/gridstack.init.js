@@ -186,14 +186,9 @@ var melisDashBoardDragnDrop = {
             $mcDashPlugSnippets.html(mcLoader);
 
         var gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
-        //var isDisabled  = gridstack.container.droppable("option", "disable", true);
+            gridstack.container.droppable("disable");
 
-            //if ( this.$body.find('.grids-stack .melis-core-dashboard-plugin-snippets') ) {
-                // disable grid
-                gridstack.container.droppable("disable");
-
-                //alert( 'A plugin is still loading..' );
-            //}
+        var isDisabled  = gridstack.container.droppable("option", "disable", true);
 
         var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
@@ -330,16 +325,14 @@ var melisDashBoardDragnDrop = {
                 widthLimit  = 3;
                 
                 if ( elemWidth <= widthLimit ) {
-                    node.width = widthLimit;
+                    node.width = parseInt(widthLimit);
                     $(elem).attr('data-gs-width', widthLimit);
                 } else {
                     node.width = parseInt(elemWidth);
                 }
 
-                //console.log('node: ', node._grid.container[0].children);
-
                 // update size of widgets passes array of .grid-stack-items
-                self.serializeWidgetMap( items );
+                self.serializeWidgetMap( node._grid.container[0].children );
         });
     },
 
