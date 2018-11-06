@@ -479,7 +479,6 @@ class LanguageController extends AbstractActionController
             $form->setData($postValues);
 
             if($form->isValid()) {
-
                 $data = $form->getData();
                 $isExistData = $langTable->getEntryByField('lang_locale', $data['lang_locale']);
                 $isExistData = $isExistData->current();
