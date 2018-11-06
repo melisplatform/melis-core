@@ -4,6 +4,7 @@
 
 .grid-stack {
   position: relative;
+  min-height: 870px;
 }
 
 .grid-stack.grid-stack-rtl {
@@ -15,6 +16,7 @@
 }
 
 .grid-stack .grid-stack-placeholder > .placeholder-content {
+  background-color: #e61c23;
   border: 1px dashed lightgray;
   margin: 0;
   position: absolute;
@@ -34,6 +36,10 @@
 }
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
+  /* Added by: Junry @ 10/16/2018 */
+  border: 1px solid #ebebeb;
+  background-color: #fff;
+
   margin: 0;
   position: absolute;
   top: 0;
@@ -44,6 +50,11 @@
   z-index: 0;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/* Added by: Junry @ 10/16/2018 */
+.grid-stack > .grid-stack-item > .grid-stack-item-content > .widget {
+  border: 0;
 }
 
 .grid-stack > .grid-stack-item > .ui-resizable-handle {

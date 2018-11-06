@@ -215,7 +215,7 @@ class UserController extends AbstractActionController
                                 $melisLostPass->processUpdatePassword($rhash, $password);
                                 $textMessage = "tr_meliscore_user_password_change_succes";
                                 $success = 1;
-                                header( "refresh:3;url=/melis/login");
+                                header( "location:/melis/login");
                             }
                             else
                             {
@@ -246,9 +246,95 @@ class UserController extends AbstractActionController
         $view->hashExists = $hashExists;
         $view->message = $translator->translate($textMessage);
         $view->success = $success;
+        $view->rhash =  $rhash;
         $this->layout()->schemes = $this->getSchemes();
 
         return $view;
+    }
+
+    /**
+     *
+     * This will reset your old password with the new password
+     *
+     * @return JsonModel
+     */
+    public function resetOldPasswordAction()
+    {
+        $pathAppConfigForm = '/meliscore/forms/meliscore_resetpass';
+        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
+        $translator = $this->getServiceLocator()->get('translator');
+
+        $postValues = get_object_vars($this->getRequest()->getPost());
+        $rhash = $postValues['rhash'] ?? null;
+        $melisLostPass = $this->getServiceLocator()->get('MelisCoreLostPassword');
+        $hashExists = false;
+        $textMessage = '';
+        $success = 0;
+        $login = '';
+        $data = array();
+        if($melisLostPass->hashExists($rhash)) {
+            $hashExists = true;
+            $data = $melisLostPass->getPasswordRequestData($rhash);
+            foreach($data as $val) {
+                $login = $val->rh_login;
+            }
+        }
+
+        $factory = new \Zend\Form\Factory();
+        $forgotForm = $factory->createForm($appConfigForm);
+
+        $translator = $this->getServiceLocator()->get('translator');
+        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
+
+        $view = new ViewModel();
+        if($this->getRequest()->isPost())
+        {
+            $password = $this->getRequest()->getPost('usr_pass');
+            $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
+            $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+
+            if(strlen($password) >= 8) {
+                if(strlen($confirmPass) >= 8) {
+                    //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
+                    $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                    if($passValidator->isValid($password))
+                    {
+                        // password and confirm password matching
+                        if($password == $confirmPass)
+                        {
+                            $melisLostPass->processUpdatePassword($rhash, $password);
+                            $textMessage = "tr_meliscore_user_password_change_succes";
+                            $success = 1;
+                        }
+                        else
+                        {
+                            $success = 0;
+                            $textMessage = 'tr_meliscore_tool_user_usr_password_not_match';
+                        } // password and confirm password matching
+                    }
+                    else {
+                        $success = 0;
+                        $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
+                    } // password regex validator
+                }
+                else {
+                    $success = 0;
+                    $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
+                }// end confirm password length
+            }
+            else {
+                $success = 0;
+                $textMessage = 'tr_meliscore_tool_user_usr_password_error_low';
+            }// end password length
+        }
+
+
+        $data = [
+            'success' => $success,
+            'message' => $translator->translate($textMessage)
+        ];
+        return new JsonModel($data);
     }
 
     protected function recoverHashAction() {

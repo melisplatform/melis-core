@@ -478,7 +478,10 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', "#close-all-tab", closedOpenTabs);
 
-// Dashboard Draggable need to remove
+    // check if there is child nodes after clicking closedOpenTabs
+    //$body.on('')
+
+    // Dashboard Draggable need to remove
     /*$( ".dashboard-container" ).sortable({
      revert: true,
      animation: 400,
@@ -487,24 +490,71 @@ var melisCore = (function(window){
      // change
      // stop
      });*/
+    $(document).ready(function() {
+        var clicks  = 0,
+            $btn    = $("#melisDashBoardPluginBtn"),
+            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
+            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth  = dWidth + $box.width();
 
-    $body.on("click", "#melisDashBoardPluginBtn", function() {
-        $(this).closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+        $body.on("click", "#melisDashBoardPluginBtn", function() {
+            var $this = $(this);
+                $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+
+                if ( $box.hasClass("shown") ) {
+                    $gs.animate({
+                        width: dWidth
+                    }, 3);
+                } else {
+                    $gs.animate({
+                        width: nWidth
+                    }, 3);
+                }
+        });
     });
 
     $body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);
     $body.on("click", ".melis-core-dashboard-category-btn", showCatPlugLists);
 
+    /*
+     * Added by: Junry @ 10/10/208
+     * For responsive placement
+     */
+
+    var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
 
     var dashboardTooltip = {
-        placement: "left",
+        placement: pos,
+        delay: {
+            show: 800
+        },
         template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
     };
 
-    $("body .melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
+    $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip );
+
+    /*$(window).on("resize", function() {
+        var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
+        var dashboardTooltip = {
+            placement: pos,
+            delay: {
+                show: 800
+            },
+            template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+        };
+
+        showToolTip( dashboardTooltip );
+
+    }).trigger('resize');
+
+    function showToolTip( dTooltip ) {
+        console.log('showToolTip');
+        $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dTooltip );        
+    }*/
 
     // Tooltip
-    /*  $("body .melis-core-dashboard-plugin-snippets").tooltip({
+    /*$("body .melis-core-dashboard-plugin-snippets").tooltip({
      position: {
      my: "left center",
      at: "left+110% center",
@@ -515,18 +565,27 @@ var melisCore = (function(window){
      },
      });*/
 
-    $("body .melis-core-dashboard-plugin-snippets").hover(function() {
-        setTimeout(function() {
-            $(this).children(".melis-plugin-tooltip").fadeIn();
-        }, 600);
+    /*
+     * Added by: Junry @ 10/10/2018
+     * For blinking issue on hover
+     */
+    $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
+
+        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
+
+    }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
+
+        $(this).children(".melis-plugin-tooltip").stop().fadeOut();
+
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
-    	 data = $(this).data();
-    	 melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
+
+    	data = $(this).data();
+    	melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
+
     });
     
-
     function showPlugLists() {
         if($(this).hasClass("active")) {
             $(this).removeClass("active")

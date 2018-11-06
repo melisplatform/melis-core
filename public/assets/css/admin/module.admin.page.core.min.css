@@ -1038,8 +1038,7 @@ a.widget i.display-block {
 }
 
 .widget .widget-body p.lead {
-    /* font-size: 25px; */
-    font-size: 2.083em;
+    font-size: 25px;
 }
 
 .widget .widget-body>pre:last-child,
@@ -8093,7 +8092,7 @@ body {
 .sidebar>.sidebarMenuWrapper>ul li a i {
     font-size: 1.3em;
     vertical-align: middle;
-    width: 30px;
+    width: 10px;
     margin-right: 10px;
     display: inline-block;
     text-align: center

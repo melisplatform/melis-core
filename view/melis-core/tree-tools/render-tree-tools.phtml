@@ -15,7 +15,7 @@ $sections = [
     'meliscustom_toolstree_section' => $this->melisCustomIcon()
 ];
 ?>
-<li id="<?= $id; ?>" class="hasSubmenu" data-melisKey='<?= $melisKey; ?>'>
+<li id="<?= $id; ?>" class="hasSubmenu <?= empty($this->tools) ? 'hidden' : null ?>" data-melisKey='<?= $melisKey; ?>'>
     <?php
     if (in_array($melisKey, array_keys($sections))) : ?>
         <a data-target="#<?= $id ?>_tools" data-toggle="collapse" class="collapsed">
@@ -35,7 +35,6 @@ $sections = [
     <?php endif; ?>
     <ul class="collapse" id="<?= $id; ?>_tools">
         <?php
-
         if (!empty($this->tools)) {
             foreach ($this->tools as $keySection => $sectionTool) {
                 $sectionIcon = 'fa-folder';

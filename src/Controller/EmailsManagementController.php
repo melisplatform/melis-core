@@ -439,7 +439,7 @@ class EmailsManagementController extends AbstractActionController
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $generalPropertiesForm = $factory->createForm($generalProperties);
-        
+
         if ($codename!='NEW'){
 	        
             $melisBOEmails = $this->getServiceLocator()->get('MelisCoreTableBOEmails');
@@ -477,7 +477,6 @@ class EmailsManagementController extends AbstractActionController
                     $emailsDatas->boe_from_email                = ($emailsDatas->boe_from_email) ? $emailsDatas->boe_from_email : $from;
                     $emailsDatas->boe_from_name                 = ($emailsDatas->boe_from_name) ? $emailsDatas->boe_from_name : $from_name;
                     $emailsDatas->boe_reply_to                  = ($emailsDatas->boe_reply_to) ? $emailsDatas->boe_reply_to : $replyTo;
-//                    $emailsDatas->boe_content_layout            = ($emailsDatas->boe_content_layout) ? $emailsDatas->boe_content_layout : $layout;
                     $emailsDatas->boe_content_layout            = ($emailsDatas->boe_content_layout) ? $emailsDatas->boe_content_layout : $layout;
                     $emailsDatas->boe_content_layout_title      = ($emailsDatas->boe_content_layout_title) ? $emailsDatas->boe_content_layout_title : $layoutLogoTitle;
                     $emailsDatas->boe_content_layout_logo       = ($emailsDatas->boe_content_layout_logo) ? $emailsDatas->boe_content_layout_logo : $layoutLogo;
@@ -604,22 +603,21 @@ class EmailsManagementController extends AbstractActionController
                     $view->emailsDetailsDatas = $emailsDetailsData;
                 }
             }
+
+            // Get Layout file's status
+            $view->layout = $this->getLayoutFileStatus($generalPropertiesForm->get('boe_content_layout')->getValue());
         }
         
         // Get Cms Platform ID form from  App Tool
         $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $emailsDetails = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_emails_mngt_tool/forms/meliscore_emails_mngt_tool_emails_details_form','meliscore_emails_mngt_tool_emails_details_form');
         $emailsDetailsForm = $factory->createForm($emailsDetails);
-
-        // Get Layout file's status
-        $layoutStatus = $this->getLayoutFileStatus($generalPropertiesForm->get('boe_content_layout')->getValue());
         
         $view->coreLangDatas =  $coreLangResult;
         $view->setVariable('meliscore_emails_mngt_tool_general_properties_form', $generalPropertiesForm);
         $view->setVariable('meliscore_emails_mngt_tool_emails_details_form', $emailsDetailsForm);
         $view->melisKey = $this->params()->fromRoute('melisKey', '');
         $view->codename = $codename;
-        $view->layout   = $layoutStatus;
 
         return $view;
     }

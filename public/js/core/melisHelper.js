@@ -316,14 +316,21 @@ var melisHelper = (function(){
         if( navUlContainer < $("#melis-navtabs-container-inner").width() ){
             tabExpander.checkTE();
         }
-        else{
+        else {
+
             var leftOffset = $navTabs.position().left;
+
             if( leftOffset === -1 ) {}
-            else if( leftOffset !== 0 ){
+            else if( leftOffset !== 0 ) {
                 $("#melis-id-nav-bar-tabs").animate({
                     left: (leftOffset + removedWidth)
                 }, 0);
             }
+            /*else if ( leftOffset === 0 ) {
+                $("#melis-id-nav-bar-tabs").animate({
+                    left: leftOffset
+                }, 0);
+            }*/
         }
         checkSubMenu();
 
@@ -344,6 +351,7 @@ var melisHelper = (function(){
 
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
+
         //Show the close(X) button on header
         if(melisKey != 'meliscore_center_dashboard'){
             $("#close-all-tab").show();
@@ -388,7 +396,8 @@ var melisHelper = (function(){
                     }
                 } else {
                     $("body #melis-id-nav-bar-tabs").append(li);
-/*                    if(navTabsGroup == "design_module") {
+
+                    /* if(navTabsGroup == "design_module") {
                         var liTest = "<li>";
                         liTest += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
                         liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
@@ -403,7 +412,7 @@ var melisHelper = (function(){
 
                 }
             } else {
-                // append the <li> to the menu
+                // append the <li> to the menumelis-tabnext
                 $("body #melis-id-nav-bar-tabs").append(li);
             }
 
@@ -456,7 +465,7 @@ var melisHelper = (function(){
 
         }
         else{
-            //make the new tab and content active instead of realoading
+            //make the new tab and content active instead of reloading
             tabSwitch(zoneId);
         }
     }
@@ -561,7 +570,7 @@ var melisHelper = (function(){
                     $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
                     $('#'+zoneId).remove();
 
-                    melisHelper.melisKoNotification( "Error Fetching data", "No result was retreived while doing this operation.", "no error datas returned", '#000' );
+                    melisHelper.melisKoNotification( "Error Fetching data", "No result was retrieved while doing this operation.", "no error datas returned", '#000' );
                 }
                 if ( callback !== undefined || callback !== null) {
                     if (callback) {
@@ -665,8 +674,7 @@ var melisHelper = (function(){
     }
 
     // disabled all tabs
-    function disableAllTabs()
-    {
+    function disableAllTabs() {
         $.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
             var tabId = $(v).data("id");
             disableTab(tabId);
@@ -679,8 +687,7 @@ var melisHelper = (function(){
     }
 
     // enables all tabs
-    function enableAllTabs()
-    {
+    function enableAllTabs() {
         $.each($("#melis-id-nav-bar-tabs li a"), function(i, v) {
             var tabId = $(v).data("id");
             enableTab(tabId);
