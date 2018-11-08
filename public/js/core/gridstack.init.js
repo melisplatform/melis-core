@@ -170,11 +170,12 @@ var melisDashBoardDragnDrop = {
     },
 
     addWidget: function(dataString) {
-        var self    = this;
+        var self        = this;
 
-        var $btn = $("#melisDashBoardPluginBtn"),
-            $box = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs = this.$gs;
+        var $btn        = $("#melisDashBoardPluginBtn"),
+            $box        = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs         = this.$gs,
+            dropCount   = 0;
 
         var $mcDashPlugSnippets = $("#"+activeTabId+" .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
             $mcDashPlugSnippets.attr('data-gs-width', 6);
@@ -185,17 +186,28 @@ var melisDashBoardDragnDrop = {
             // loading effect
             $mcDashPlugSnippets.html(mcLoader);
 
-        var gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
-            gridstack.container.droppable("disable");
+        var gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack");
 
-        var isDisabled  = gridstack.container.droppable("option", "disable", true);
+            // disable grid / droppable
+            gridstack.droppable("disable");
+
+            // drop count
+            dropCount++;
+
+        var isDisabled  = gridstack.droppable("option", "disabled");
+
+            /*if ( isDisabled === true && dropCount === 1 ) {
+                console.log('isDisabled: ', isDisabled + ", dropCount: " + dropCount);
+            }
+
+            console.log('OUTSIDE isDisabled: ', isDisabled + ", dropCount: " + dropCount);*/
 
         var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
             request.done(function(data){
 
-                // enable grid
-                gridstack.container.droppable("enable");
+                // enable grid / droppable
+                gridstack.droppable("enable");
 
                 // get dashboard gridstack data
                 var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
@@ -231,6 +243,8 @@ var melisDashBoardDragnDrop = {
                         eval(value);
                     });
                 }
+
+                dropCount = 0;
             });
     },
 
