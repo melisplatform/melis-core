@@ -54,7 +54,10 @@ class MelisForm extends Form implements ServiceLocatorAwareInterface
                 ->getServiceLocator()->get('eventmanager');
 
             if ($triggerEvent) {
-                return $e->trigger($triggerEvent, $this, array_merge($data, $params));
+                return $e->trigger($triggerEvent, $this, [
+                    'elements' => $this->getElements(),
+                    'data' => array_merge($data, $params)
+                ]);
             }
         }
 

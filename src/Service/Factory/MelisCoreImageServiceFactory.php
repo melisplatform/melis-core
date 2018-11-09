@@ -15,12 +15,12 @@ use MelisCore\Service\MelisCoreImageService;
 
 class MelisCoreImageServiceFactory implements FactoryInterface
 {
-	public function createService(ServiceLocatorInterface $sl)
-	{
-		$melisCoreImage = new MelisCoreImageService();
-		$melisCoreImage->setServiceLocator($sl);
-		
-		return $melisCoreImage;
-	}
+    public function createService(ServiceLocatorInterface $sl)
+    {
+        $melisCoreImage = new MelisCoreImageService();
+        $melisCoreImage->setServiceLocator($sl);
+
+        return $melisCoreImage;
+    }
 
 }
