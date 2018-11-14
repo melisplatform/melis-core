@@ -972,6 +972,23 @@ return [
                             ),
                             'interface' => []
                         ],
+                        'melismarketplace_toolstree_section' => [
+                            'conf' => [
+                                'id' => 'melismarketplace_toolstree_section',
+                                'melisKey' => 'melismarketplace_toolstree_section',
+                                'name' => 'tr_market_place',
+                                'icon' => 'fa fa-shopping-cart',
+                                'rights_checkbox_disable' => false,
+                            ],
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'TreeTools',
+                                'action' => 'render-tree-tools',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                            'interface' => []
+                        ],
                     ]
                 ]
             ]

@@ -27,6 +27,7 @@ class TreeToolsController extends AbstractActionController
     const COMMERCE = 'meliscommerce';
     const OTHERS = 'melisothers';
     const CUSTOM = 'meliscustom';
+    const MARKETPLACE = 'melismarketplace';
 
     /**
      * Renders the leftmenu accordion/tree of tools
@@ -236,6 +237,7 @@ class TreeToolsController extends AbstractActionController
             'meliscommerce_toolstree_section',
             'melisothers_toolstree_section',
             'meliscustom_toolstree_section',
+            'melismarketplace_toolstree_section',
             'meliscore_footer',
         ];
     }
