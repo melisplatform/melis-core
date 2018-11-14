@@ -510,7 +510,7 @@ class PlatformSchemeController extends AbstractActionController
     {
         $uriPath = '/media/platform-scheme/';
         $config  = $this->getServiceLocator()->get('MelisCoreConfig');
-        $path    = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
+        $path    = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree_section/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
 
         if($path) {
             $uriPath = isset($path['datas']['platform_scheme_dir']) ? $path['datas']['platform_scheme_dir'] : '/media/platform-scheme/';
@@ -578,7 +578,7 @@ class PlatformSchemeController extends AbstractActionController
     private function getMaxImageSize()
     {
         $config    = $this->getServiceLocator()->get('MelisCoreConfig');
-        $path      = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
+        $path      = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree_section/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
         $imagesize = null;
 
 
@@ -596,7 +596,7 @@ class PlatformSchemeController extends AbstractActionController
     public function getAllowedUploadableExtension()
     {
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
-        $path   = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
+        $path   = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree_section/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
         $ext    = null;
 
 
