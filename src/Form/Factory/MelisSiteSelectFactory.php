@@ -26,7 +26,7 @@ class MelisSiteSelectFactory extends MelisSelectFactory
 		for ($i = 0; $i < $max; $i++)
 		{
 			$site = $sites->current();
-			$valueoptions[$site->site_id] = $site->site_name;
+			$valueoptions[$site->site_id] = $site->site_label;
 			$sites->next();
 		}
 		
