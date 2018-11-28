@@ -77,7 +77,7 @@ $(document).ready(function(){
 		{
 			if (this.plot == null){
 				// hook the init function for plotting the chart
-				simpleChartInit();
+//				simpleChartInit();
 			}
 		}
 	};
