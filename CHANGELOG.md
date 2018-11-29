@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 
 ### Changed
-  
+* Changed Site select factory from site name to site label 
 
 ### Removed
 ## Release Notes

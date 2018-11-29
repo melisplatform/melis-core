@@ -338,7 +338,9 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
             if (!empty($configInterface['datas'])) {
                 $recDatas = array_merge_recursive($recDatas, $configInterface['datas']);
             }
-            $configInterface['conf'] = array_merge($configInterface['conf'], $configInterfaceOld['conf']);
+            if (!empty($configInterface['conf']) && !empty($configInterfaceOld['conf'])) {
+                $configInterface['conf'] = array_merge($configInterface['conf'], $configInterfaceOld['conf']);
+            }
             $keyInterface = $fullKey;
         }
 
