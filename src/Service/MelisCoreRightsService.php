@@ -135,85 +135,83 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                 }, $this->getMelisKeyPaths());
                 $toolSection = $this->getSectionParent($itemId);
                 $toolIds = [];
+
                 foreach ($this->getMelisKeyPaths() as $section) {
-                    if ($rightsObj->meliscore_leftmenu->$section->id) {
-                        foreach ((array) $rightsObj->meliscore_leftmenu->$section->id as $id) {
+                    if ($rightsObj->$sectionId->$section->id) {
+                        foreach ((array) $rightsObj->$sectionId->$section->id as $id) {
                             $toolIds[] =  $id;
                         }
                     }
 
-                    if ($rightsObj->meliscore_leftmenu->$section->noparent) {
-                        foreach ((array) $rightsObj->meliscore_leftmenu->$section->noparent as $noParent) {
+                    if ($rightsObj->$sectionId->$section->noparent) {
+                        foreach ((array) $rightsObj->$sectionId->$section->noparent as $noParent) {
                             $toolIds[] =  $noParent;
                         }
                     }
                 }
                 $toolIds[] = self::MELIS_DASHBOARD;
 
-                // check individual business app sections
-                if (isset($rightsObj->$sectionId->$toolSection->id)) {
+                // check for root section access
+                $toolSectionsRightsId = (array) $rightsObj->$sectionId->$toolSection->id;
 
-                    // check for root section access
-                    $toolSectionsRightsId = (array) $rightsObj->$sectionId->$toolSection->id;
+                foreach ($rightsObj->$sectionId->$toolSection->id as $toolId) {
+                    $toolId = trim((string) $toolId);
+                    $parent = $toolSection . '_root';
 
-                    foreach ($rightsObj->$sectionId->$toolSection->id as $toolId) {
-                        $toolId = trim((string) $toolId);
-                        $parent = $toolSection . '_root';
+                    if (in_array($parent, $toolSectionRoots) && $parent == $toolId) {
+                        return true;
+                    }
+                }
 
-                        if (in_array($parent, $toolSectionRoots) && $parent == $toolId) {
-                            return true;
+                // If it reaches here, it means tools are not directly checked, but maybe some sections are
+                $tooldIds = [];
+                $appconfigpath = $melisKeys[$toolSection];
+                $appsConfig = $melisAppConfig->getItem($appconfigpath);
+                $tmpToolIds = $toolIds;
+
+                // include specified section parents
+                foreach ($tmpToolIds as $tool) {
+
+                    $parent = null;
+                    if (self::MELIS_DASHBOARD !==  $tool) {
+                        if (isset($melisKeys[$tool])) {
+                            $parent = $this->getParentViaMelisKeyString($melisKeys[$tool], $tool);
                         }
                     }
 
-                    // If it reaches here, it means tools are not directly checked, but maybe some sections are
-                    $tooldIds = [];
-                    $appconfigpath = $melisKeys[$toolSection];
-                    $appsConfig = $melisAppConfig->getItem($appconfigpath);
-                    $tmpToolIds = $toolIds;
-
-                    // include specified section parents
-                    foreach ($tmpToolIds as $tool) {
-
-                        $parent = null;
-                        if (self::MELIS_DASHBOARD !==  $tool) {
-                            if (isset($melisKeys[$tool])) {
-                                $parent = $this->getParentViaMelisKeyString($melisKeys[$tool], $tool);
-                            }
-                        }
-
-                        // old MelisCms tool section
-                        if ($parent == self::OLD_MELISCMS_TOOLSTREE) {
-                            $parent = self::MELISCMS_PREFIX_TOOLS;
-                        }
-
-                        // only the add their parents if the item key is in the rights
-                        if (in_array($itemId, $toolIds) ) {
-                            if (! is_null($parent) && ! in_array($parent, $toolIds)) {
-                                $toolIds[] = $parent;
-                            }
-
-                            // check the new list tool IDs with their parents
-                            return $this->grantAccess($itemId, $toolIds);
-                        }
-
-
-                        // if item ID is a parent, check if one of their children is in the rights
-                        if ($this->getConfig()->isParentOf($tool, $itemId)) {
-                            return $this->grantAccess($tool, $toolIds);
-                        }
-
-                        // check wether the child has a parent that is in the rights
-                        $parentTool = str_replace('_root', '', $tool);
-                        if ($this->isParentOf($itemId, $parentTool)) {
-                            return $this->grantAccess($parentTool, $toolIds);
-                        }
+                    // old MelisCms tool section
+                    if ($parent == self::OLD_MELISCMS_TOOLSTREE) {
+                        $parent = self::MELISCMS_PREFIX_TOOLS;
                     }
 
-                    // check the rights of those who doesn't have proper tool section assignments
-                    if (isset($rightsObj->$sectionId->$toolSection->noparent)) {
-                        $toolIds = array_merge($toolIds, (array) $rightsObj->$sectionId->$toolSection->noparent);
+                    // only the add their parents if the item key is in the rights
+
+                    if (in_array($itemId, $toolIds) ) {
+                        if (! is_null($parent) && ! in_array($parent, $toolIds)) {
+                            $toolIds[] = $parent;
+                        }
+
+                        // check the new list tool IDs with their parents
                         return $this->grantAccess($itemId, $toolIds);
                     }
+
+
+                    // if item ID is a parent, check if one of their children is in the rights
+                    if ($this->getConfig()->isParentOf($tool, $itemId)) {
+                        return $this->grantAccess($tool, $toolIds);
+                    }
+
+                    // check wether the child has a parent that is in the rights
+                    $parentTool = str_replace('_root', '', $tool);
+                    if ($this->isParentOf($itemId, $parentTool)) {
+                        return $this->grantAccess($parentTool, $toolIds);
+                    }
+                }
+
+                // check the rights of those who doesn't have proper tool section assignments
+                if (isset($rightsObj->$sectionId->$toolSection->noparent)) {
+                    $toolIds = array_merge($toolIds, (array) $rightsObj->$sectionId->$toolSection->noparent);
+                    return $this->grantAccess($itemId, $toolIds);
                 }
 
                 // direct rights access checking to tool section

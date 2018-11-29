@@ -290,7 +290,7 @@ class TreeToolsController extends AbstractActionController
         $user = $this->getServiceLocator()->get('MelisCoreAuth');
 
 //        d($rights->getToolSectionMap());
-        d('can access: melis_cms_slider_tool', $rights->canAccess('melis_cms_slider_tool'));
+        d('can access: meliscalendar_leftnemu', $rights->canAccess('meliscalendar_leftnemu'));
 //        d($config->getMelisKeyData('meliscmsblog_left_menu'));
 //        d($config->getMelisKeyData('meliscms_blog_tool_section'));
 
