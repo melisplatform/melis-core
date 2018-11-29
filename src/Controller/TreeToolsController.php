@@ -73,7 +73,7 @@ class TreeToolsController extends AbstractActionController
                     'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
                     'toolsection_forward' => $toolSectionName['forward'] ?? [],
                     'toolsection_children' => [],
-                    'toolsection_is_tool' => isset($toolSectionName['forward']) && !empty($toolSectionName['forward']) ? true : false
+                    'toolsection_is_tool' => isset($toolSectionName['forward']) && !empty($toolSectionName['forward']) ? true : false,
                 ];
 
                 // Second level, tools
@@ -87,10 +87,7 @@ class TreeToolsController extends AbstractActionController
                             $isNavChild = true;
                         }
 
-                        $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELIS_PLATFORM_TOOLS_PREFIX, $keyTool);
-                        $isInterfaceAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $keyTool);
-
-                        if ($isAccessible && $isInterfaceAccessible) {
+                        if ($melisCoreRights->canAccess($keyTool)) {
                             $tools[$key]['toolsection_children'][$keyTool] = [
                                 'tool_id' => $toolName['conf']['id'] ?? $keyTool,
                                 'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
@@ -113,9 +110,7 @@ class TreeToolsController extends AbstractActionController
                                         $isToolNavChild = true;
                                     }
 
-                                    $isChildAccessible = $melisCoreRights->canAccess($childKeyTool);
-
-                                    if ($isChildAccessible) {
+                                    if ($melisCoreRights->canAccess($childKeyTool)) {
                                         $tools[$key]['toolsection_children'][$keyTool]['toolsection_children'][$childKeyTool] = [
                                             'tool_id' => $childToolname['conf']['id'] ?? $keyTool,
                                             'tool_name' => $childToolname['conf']['name'] ?? "<strike>$childKeyTool</strike>",
@@ -187,7 +182,6 @@ class TreeToolsController extends AbstractActionController
         $view = new ViewModel();
 
         $view->tools = $toolsOrdered;
-//        $view->tools = $sections;
         $view->melisKey = $melisKey;
 
         return $view;
@@ -295,11 +289,15 @@ class TreeToolsController extends AbstractActionController
         /** @var \MelisCore\Service\MelisCoreAuthService $user */
         $user = $this->getServiceLocator()->get('MelisCoreAuth');
 
-        $userRights = $user->getAuthRights();
-        dd($userRights, $user->isRightsUpdated($userRights));
+//        d($rights->getToolSectionMap());
+        d('can access: melis_cms_slider_tool', $rights->canAccess('melis_cms_slider_tool'));
+//        d($config->getMelisKeyData('meliscmsblog_left_menu'));
+//        d($config->getMelisKeyData('meliscms_blog_tool_section'));
 
-        dd($rights->canAccess('melis_newsletter_tool_config'));
-        dd($rights->canAccess('meliscommerce_toolstree_section_root'));
+        die;
     }
+
+
+
 
 }

@@ -226,7 +226,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
         $pathTab = explode('/', $pathString);
 
         $items = $this->getItemRec($pathTab, 0, $this->appConfig);
-        $items = $this->addItemsLinkedByType($items);
+        $items = $this->addItemsLinkedByType($items, $pathString);
         $items = $this->setItemsDashboadForwardConfig($items);
         $items = $this->translateAppConfig($items);
 
@@ -237,11 +237,47 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
         return $items;
     }
 
+    /**
+     * @param $itemId
+     * @param $parentId
+     *
+     * @return bool
+     */
+    public function isParentOf($itemId, $parentId)
+    {
+        $path = $this->getMelisKeyData($itemId);
+        $paths = explode('/', $path);
+
+        if (count($paths) > 0) {
+            if (in_array($parentId, $paths)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isChildOf($parentId, $itemId)
+    {
+        $path = $this->getMelisKeyData($parentId);
+    }
+
+    /**
+     * @param $melisKey
+     *
+     * @return mixed|null
+     */
+    public function getMelisKeyData($melisKey)
+    {
+        return $this->getMelisKeys()[$melisKey] ?? null;
+    }
+
     public function getMelisKeys($array = [], $fullPath = '')
     {
         $final = [];
 
         if (empty($array)) {
+
             $config = $this->getServiceLocator()->get('config');
             if (!empty($config['plugins'])) {
                 $array = $config['plugins'];
@@ -251,9 +287,10 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
         }
 
         foreach ($array as $keyConfig => $valueConfig) {
+
             $fullPathTmp = $fullPath . '/' . $keyConfig;
             if (!empty($valueConfig['conf']) && !empty($valueConfig['conf']['melisKey'])) {
-                $final[$valueConfig['conf']['melisKey']] = $fullPathTmp;
+                $final[$valueConfig['conf']['melisKey']] = $valueConfig['conf']['path'] ?? $fullPathTmp;
             }
             if (!empty($valueConfig['interface'])) {
                 $subarray = $this->getMelisKeys($valueConfig['interface'], $fullPathTmp . '/interface');
@@ -296,7 +333,13 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
     }
 
-    private function addItemsLinkedByType($array)
+    /**
+     * @param $array
+     * @param null $path
+     *
+     * @return array
+     */
+    private function addItemsLinkedByType($array, $path = null)
     {
         if (!empty($array['conf']['type'])) {
             $type = $array['conf']['type'];
@@ -309,8 +352,10 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
         foreach ($array as $key => $value) {
             if (is_array($value) && $key != 'conf') {
-                $children = $this->addItemsLinkedByType($value);
+                $children = $this->addItemsLinkedByType($value, $path . "/$key");
                 $array[$key] = $children;
+            } elseif ($key === 'conf') {
+                $array['conf']['path'] = $path;
             } else {
                 $final[$key] = $value;
             }
