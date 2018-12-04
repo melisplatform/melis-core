@@ -137,13 +137,13 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                 $toolIds = [];
 
                 foreach ($this->getMelisKeyPaths() as $section) {
-                    if ($rightsObj->$sectionId->$section->id) {
+                    if (isset($rightsObj->$sectionId->$section->id)) {
                         foreach ((array) $rightsObj->$sectionId->$section->id as $id) {
                             $toolIds[] =  $id;
                         }
                     }
 
-                    if ($rightsObj->$sectionId->$section->noparent) {
+                    if (isset($rightsObj->$sectionId->$section->noparent)) {
                         foreach ((array) $rightsObj->$sectionId->$section->noparent as $noParent) {
                             $toolIds[] =  $noParent;
                         }
@@ -152,14 +152,18 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                 $toolIds[] = self::MELIS_DASHBOARD;
 
                 // check for root section access
-                $toolSectionsRightsId = (array) $rightsObj->$sectionId->$toolSection->id;
+                if (isset($rightsObj->$sectionId->$toolSection->id)) {
+                    $toolSectionsRightsId = (array) $rightsObj->$sectionId->$toolSection->id;
+                }
 
-                foreach ($rightsObj->$sectionId->$toolSection->id as $toolId) {
-                    $toolId = trim((string) $toolId);
-                    $parent = $toolSection . '_root';
+                if (isset($rightsObj->$sectionId->$toolSection->id)) {
+                    foreach ($rightsObj->$sectionId->$toolSection->id as $toolId) {
+                        $toolId = trim((string) $toolId);
+                        $parent = $toolSection . '_root';
 
-                    if (in_array($parent, $toolSectionRoots) && $parent == $toolId) {
-                        return true;
+                        if (in_array($parent, $toolSectionRoots) && $parent == $toolId) {
+                            return true;
+                        }
                     }
                 }
 
@@ -185,7 +189,6 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                     }
 
                     // only the add their parents if the item key is in the rights
-
                     if (in_array($itemId, $toolIds) ) {
                         if (! is_null($parent) && ! in_array($parent, $toolIds)) {
                             $toolIds[] = $parent;
