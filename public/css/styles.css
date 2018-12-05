@@ -992,9 +992,9 @@ newplugin-cont span,
 #meliscore_leftmenu_identity_container{
     position: relative;
 }
-.overlay-loader{
+.overlay-loader {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
     z-index: 9998;
     min-height: 47px;
@@ -2349,7 +2349,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
 
     /* pre-loader */
-    #content .overlay-loader{
+    #content #loader.overlay-loader {
+        height: calc(100vh - 47px);
+    }
+    #content .overlay-loader {
         top: 0;
     }
 
@@ -3716,6 +3719,11 @@ div#modal-user-management div.widget {
     height: 25px;
     margin-right: 5px;
     margin-top: 5px;
+}
+
+.meliscore-dashboard-icon {
+    font-size: 2.3em !important;
+    width: 25px !important;
 }
 
 /*
