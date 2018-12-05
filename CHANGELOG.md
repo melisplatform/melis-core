@@ -1,16 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-### Added
-
-
-### Changed
-* Changed Site select factory from site name to site label 
-
-### Removed
 ## Release Notes
-## [2.5.0] - 2018-07-31
-* Modules Tool: Fixed issue on not deactivating the modules that are dependent to a specific module
-* Scheme Tool: and possibility to cutomize colors, logos and backgrounds  
+## [3.0.0] - 2018-10-17
+* Improved sidebar's tools tree
+* Added GDPR Tool
+* Bugs fixes on Tools
 * Updated webpack bundles (bundle.css and bundle.js)

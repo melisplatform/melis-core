@@ -305,7 +305,8 @@ var melisCore = (function(window){
         // loop all tab list
         listData.each(function() {
             var dataID =  $(this).attr('data-tool-id');
-            if(dataID != "id_meliscore_dashboard"){
+            //if(dataID != "id_meliscore_dashboard"){
+            if ( dataID != "id_meliscore_toolstree_section_dashboard" ) {
                 melisHelper.tabClose(dataID);
             }
         });
