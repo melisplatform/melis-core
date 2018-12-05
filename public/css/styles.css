@@ -3718,6 +3718,11 @@ div#modal-user-management div.widget {
     margin-top: 5px;
 }
 
+.meliscore-dashboard-icon {
+    font-size: 2.3em !important;
+    width: 25px !important;
+}
+
 /*
 
 .dashboard-container .ui-state-highlight {
