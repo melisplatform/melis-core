@@ -533,7 +533,7 @@ var melisCore = (function(window){
         nWidth  = dWidth + $box.width();
 
     function toggleGrid() {
-        var $this = $("#melisDashBoardPluginBtn");
+        var $this = $("#melisDashBoardPluginBtn"),
             $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
 
             if ( $box.hasClass("shown") ) {
