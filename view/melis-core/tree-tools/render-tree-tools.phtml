@@ -5,6 +5,8 @@ if (!empty($this->zoneconfig['conf']['name']))
     $name = $this->zoneconfig['conf']['name'];
 if (!empty($this->zoneconfig['conf']['id']))
     $id = $this->zoneconfig['conf']['id'];
+
+$parentIcon = $this->zoneconfig['conf']['icon'] ?? 'fa fa-wrench';
 $melisKey = $this->melisKey;
 $sections = [
     'meliscore_toolstree_section' => $this->melisCoreIcon(),
@@ -29,7 +31,7 @@ $sections = [
     else:
     ?>
     <a data-target="#<?= $id; ?>_tools" data-toggle="collapse" class="collapsed">
-        <i class="fa fa-wrench"></i>
+        <i class="<?= $parentIcon ?>"></i>
         <span><?= $name; ?></span>
     </a>
     <?php endif; ?>
@@ -125,7 +127,6 @@ $sections = [
         <?php
                     endif;
                 endif;
-
             }
         }
         else {

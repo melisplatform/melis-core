@@ -215,7 +215,7 @@ class UserController extends AbstractActionController
                                 $melisLostPass->processUpdatePassword($rhash, $password);
                                 $textMessage = "tr_meliscore_user_password_change_succes";
                                 $success = 1;
-                                header( "refresh:3;url=/melis/login");
+                                header( "location:/melis/login");
                             }
                             else
                             {

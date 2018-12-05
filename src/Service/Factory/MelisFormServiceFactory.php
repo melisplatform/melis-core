@@ -11,16 +11,21 @@ namespace MelisCore\Service\Factory;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
-use MelisCore\Service\MelisCoreImageService;
+use MelisCore\Service\MelisFormService;
 
-class MelisCoreImageServiceFactory implements FactoryInterface
+class MelisFormServiceFactory implements FactoryInterface
 {
+    /**
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     *
+     * @return \MelisCore\Service\MelisFormService|mixed
+     */
     public function createService(ServiceLocatorInterface $sl)
     {
-        $melisCoreImage = new MelisCoreImageService();
-        $melisCoreImage->setServiceLocator($sl);
+        $service = new MelisFormService();
+        $service->setServiceLocator($sl);
 
-        return $melisCoreImage;
+        return $service;
     }
 
 }

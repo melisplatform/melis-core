@@ -19,7 +19,7 @@ $body.on("click", ".dashboard-plugin-refresh", function() {
 });
 
 var melisDashBoardDragnDrop = {
-      
+
     currentPlugin: null,
 
     melisWidgetHandle: '.melis-core-dashboard-plugin-snippets',
@@ -88,65 +88,45 @@ var melisDashBoardDragnDrop = {
     },
 
     bindEvents: function() {
+        // document ready
         this.$document.ready(this.docuReady.bind(this));
     },
 
     docuReady: function() {
-        var $btn    = $("#melisDashBoardPluginBtn"),
+        var $btn    = this.$body.find("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $window = $(window),
             $gs     = this.$gs,
-            $dWidth = $gs.width() - $box.width(); // shrink, 1584 - 220 = 1364
-            $nWidth = $dWidth + $box.width();
+            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth  = dWidth + $box.width();
         /* 
-         * subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
+         * Subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
          * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
+         * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
+         * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
          */
-        $btn.toggle(function() {
-            $box.addClass("shown");
-
-            //if ( $window.width() >= 768 ) {
-                $gs.animate({
-                    width: $dWidth
-                }, 3);
-            //}
-            
-        }, function() {
-            $box.removeClass("shown");
-
-            //if( $window.width() >= 768 ) {
-                $gs.animate({
-                    width: $nWidth
-                }, 3);
-            //}
-
-        });
 
         // remove class shown on plugin box
-        this.$body.on('click', 'ul.sideMenu li a[data-toggle="collapse"]', function() {
+        this.$body.on("click", "ul.sideMenu li a[data-toggle='collapse']", function() {
             if ($box.hasClass("shown")) {
                 $box.removeClass("shown");
+
+                $gs.animate({
+                    width: nWidth
+                }, 3);
             }
         });
 
         // animate to full width size of #grid1
         this.$body.on("click", "#dashboard-plugin-delete-all", function() {
-            //if ( $window.with() >= 768 ) {
-                $gs.animate({
-                    width: $nWidth
-                }, 3);
-            //}
+            $gs.animate({
+                width: nWidth
+            }, 3);
         });
     },
 
     dropWidget: function( widget ) {
         var self        = this,
-            $tabPane    = $("#"+activeTabId+" .tab-pane"),
-            $grid       = $("#"+activeTabId+" .tab-pane .grid-stack"),
             gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
-
-        var dropTimer,
-            dropCount = 0;
 
         var gridDrop = gridstack.container.droppable({
             accept: widget,
@@ -190,12 +170,12 @@ var melisDashBoardDragnDrop = {
     },
 
     addWidget: function(dataString) {
-        var self    = this;
+        var self        = this;
 
-        var $btn = $("#melisDashBoardPluginBtn"),
-            $box = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $window = $(window),
-            $gs = this.$gs;
+        var $btn        = $("#melisDashBoardPluginBtn"),
+            $box        = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs         = this.$gs,
+            dropCount   = 0;
 
         var $mcDashPlugSnippets = $("#"+activeTabId+" .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
             $mcDashPlugSnippets.attr('data-gs-width', 6);
@@ -206,17 +186,28 @@ var melisDashBoardDragnDrop = {
             // loading effect
             $mcDashPlugSnippets.html(mcLoader);
 
-        // disable grid
-        var gridstack  = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
+        var gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack");
 
-            gridstack.container.droppable("disable");
+            // disable grid / droppable
+            gridstack.droppable("disable");
+
+            // drop count
+            dropCount++;
+
+        var isDisabled  = gridstack.droppable("option", "disabled");
+
+            /*if ( isDisabled === true && dropCount === 1 ) {
+                console.log('isDisabled: ', isDisabled + ", dropCount: " + dropCount);
+            }
+
+            console.log('OUTSIDE isDisabled: ', isDisabled + ", dropCount: " + dropCount);*/
 
         var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
             request.done(function(data){
 
-                // enable grid
-                gridstack.container.droppable("enable");
+                // enable grid / droppable
+                gridstack.droppable("enable");
 
                 // get dashboard gridstack data
                 var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
@@ -235,12 +226,9 @@ var melisDashBoardDragnDrop = {
                 if ( $box.hasClass("shown") ) {
                     // hide plugin menu
                     $box.removeClass("shown");
-
-                    //if ( $window.width() <= 768 ) {
-                        $gs.animate({
-                            width: $gs.width() + $box.width()
-                        }, 3);
-                    //}
+                    $gs.animate({
+                        width: $gs.width() + $box.width()
+                    }, 3);
                 }
 
                 // serialize widget and save to db
@@ -255,6 +243,8 @@ var melisDashBoardDragnDrop = {
                         eval(value);
                     });
                 }
+
+                dropCount = 0;
             });
     },
 
@@ -334,7 +324,7 @@ var melisDashBoardDragnDrop = {
                 items   = node._grid.container[0].children;
 
                 // update size of widgets .grid-stack-items
-                self.serializeWidgetMap( $(items) );
+                self.serializeWidgetMap( items );
         });
     },
 
@@ -343,12 +333,20 @@ var melisDashBoardDragnDrop = {
 
         // grid stack stop widget resize
         this.$gs.on('gsresizestop', function(event, elem) {
-            var $grid   = $(this),
-                node    = $(elem).data('_gridstack_node');
-                items   = node._grid.container[0].children;
+            var node        = $(elem).data('_gridstack_node'),
+                items       = node._grid.container[0].children,
+                elemWidth   = $(elem).attr('data-gs-width'),
+                widthLimit  = 3;
+                
+                if ( elemWidth <= widthLimit ) {
+                    node.width = parseInt(widthLimit);
+                    $(elem).attr('data-gs-width', widthLimit);
+                } else {
+                    node.width = parseInt(elemWidth);
+                }
 
                 // update size of widgets passes array of .grid-stack-items
-                self.serializeWidgetMap( $(items) );
+                self.serializeWidgetMap( node._grid.container[0].children );
         });
     },
 
@@ -362,8 +360,8 @@ var melisDashBoardDragnDrop = {
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_common_no,
-                translations.tr_melis_core_remove_dashboard_plugin,
-                translations.tr_melis_core_remove_dashboard_plugin_msg,
+                translations.tr_meliscore_remove_dashboard_plugin,
+                translations.tr_meliscore_remove_dashboard_plugin_msg,
                 function() {
 
                     // remove the item from the dashboard
@@ -406,8 +404,8 @@ var melisDashBoardDragnDrop = {
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_common_no,
-                translations.tr_melisore_remove_all_plugins,
-                translations.tr_melis_core_remove_dashboard_all_plugin_msg,
+                translations.tr_meliscore_remove_all_plugins,
+                translations.tr_meliscore_remove_dashboard_all_plugin_msg,
                 function() {
                     grid.removeAll();
                     
@@ -421,10 +419,12 @@ var melisDashBoardDragnDrop = {
 
             // Plugins delete callback
             $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
-                if (typeof $(this).data('callback') !== "undefined") {
-                    var callback = eval($(this).data("callback"));
+                var $this = $(this);
+
+                if (typeof $this.data('callback') !== "undefined") {
+                    var callback = eval($this.data("callback"));
                     if (typeof callback === "function") {
-                        callback($(this).closest('.grid-stack-item'));
+                        callback($this.closest('.grid-stack-item'));
                     }
                 }
             });
@@ -434,8 +434,8 @@ var melisDashBoardDragnDrop = {
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_common_no,
-                translations.tr_melisore_remove_all_plugins,
-                translations.tr_melis_core_remove_dashboard_no_plugin_msg
+                translations.tr_meliscore_remove_all_plugins,
+                translations.tr_meliscore_remove_dashboard_no_plugin_msg
             );
         }
     },

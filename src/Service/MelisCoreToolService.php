@@ -113,7 +113,9 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $formConfig = $this->_appConfig['forms'][$formKey];
         }
 
-        $factory = new \Zend\Form\Factory();
+//        $factory = new \MelisCore\Form\Factory\FormFactory();
+        /** @var \MelisCore\Service\MelisFormService $factory */
+        $factory = $this->getServiceLocator()->get('MelisCoreFormService');
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);

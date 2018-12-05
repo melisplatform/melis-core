@@ -12,7 +12,10 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 class MelisCoreImageService implements ServiceLocatorAwareInterface, MelisCoreImageServiceInterface 
 {
-    
+    const EXT_PNG = 'png';
+    const EXT_GIF = 'gif';
+    const EXT_JPG = 'jpg';
+
     public $serviceLocator;
     
     public function setServiceLocator(ServiceLocatorInterface $sl)
@@ -49,12 +52,12 @@ class MelisCoreImageService implements ServiceLocatorAwareInterface, MelisCoreIm
      * @param int $width
      * @param int $height
      */
-    protected function resizeImage($savePath, $image, $newImageName, $width, $height) 
+    public function resizeImage($savePath, $image, $newImageName, $width, $height)
     {
         
         $fileImage = $image;
-        //echo $fileImage;
         $outputImg = null;
+        $ext = pathinfo($image, PATHINFO_EXTENSION);
 
         $thumb = imagecreatetruecolor($width, $height);
         list($w, $h) = getimagesize($fileImage);
@@ -73,7 +76,18 @@ class MelisCoreImageService implements ServiceLocatorAwareInterface, MelisCoreIm
         
         imagecopyresampled($thumb, $image, 0, 0, 0, 0, $width, $height, $w, $h);
 
-        $outputImg = imagejpeg($thumb, $savePath.$newImageName, 100);
+        switch ($ext) {
+            case self::EXT_PNG:
+                $outputImg = imagepng($thumb, $savePath.'/'.$newImageName, 9);
+                break;
+            case self::EXT_GIF:
+                $outputImg = imagegif($thumb, $savePath.'/'.$newImageName);
+                break;
+            case self::EXT_JPG:
+                $outputImg = imagejpeg($thumb, $savePath.'/'.$newImageName, 100);
+                break;
+        }
+
         imagedestroy($thumb);
     
     }

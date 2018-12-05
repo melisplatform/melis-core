@@ -305,7 +305,8 @@ var melisCore = (function(window){
         // loop all tab list
         listData.each(function() {
             var dataID =  $(this).attr('data-tool-id');
-            if(dataID != "id_meliscore_dashboard"){
+            //if(dataID != "id_meliscore_dashboard"){
+            if ( dataID != "id_meliscore_toolstree_section_dashboard" ) {
                 melisHelper.tabClose(dataID);
             }
         });
@@ -478,6 +479,9 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', "#close-all-tab", closedOpenTabs);
 
+    // check if there is child nodes after clicking closedOpenTabs
+    //$body.on('')
+
     // Dashboard Draggable need to remove
     /*$( ".dashboard-container" ).sortable({
      revert: true,
@@ -487,9 +491,28 @@ var melisCore = (function(window){
      // change
      // stop
      });*/
+    $(document).ready(function() {
+        var clicks  = 0,
+            $btn    = $("#melisDashBoardPluginBtn"),
+            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
+            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth  = dWidth + $box.width();
 
-    $body.on("click", "#melisDashBoardPluginBtn", function() {
-        $(this).closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+        $body.on("click", "#melisDashBoardPluginBtn", function() {
+            var $this = $(this);
+                $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+
+                if ( $box.hasClass("shown") ) {
+                    $gs.animate({
+                        width: dWidth
+                    }, 3);
+                } else {
+                    $gs.animate({
+                        width: nWidth
+                    }, 3);
+                }
+        });
     });
 
     $body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);

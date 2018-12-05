@@ -108,7 +108,8 @@ var tabExpander = (function($, window){
     function calcOffset(){
         ulContainer = $("#melis-navtabs-container-inner").outerWidth();
         var leftOffset = $navTabs.position().left;
-        
+        //var liIndex = $navTabs.find("li").index();
+
         var ulWidth = 1; 
         $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
             ulWidth += $(this).outerWidth();
@@ -120,12 +121,19 @@ var tabExpander = (function($, window){
     }
     
     //NEXT 
-    $(".melis-tabnext").on("click", function(){
+    $(".melis-tabnext").on("click", function() {
         calcOffset();
-        if( xright > ulContainer - 170 ){
-            $navTabs.animate({
-                left: '-='+ 170
-            },0);
+        if( xright > ulContainer - 170 ) {
+            var liIndex = $navTabs.find("li").index();
+
+            if ( liIndex === 0 ) {
+                $navTabs.css("left", "0");
+            }
+            else {
+                $navTabs.animate({
+                    left: '-='+ 170
+                },0);
+            }
         }
         else{
             $navTabs.animate({
@@ -137,7 +145,7 @@ var tabExpander = (function($, window){
     //PREV
     $(".melis-tabprev").on("click", function(){
         calcOffset();
-        if( xleft > ulContainer - 170){
+        if( xleft > ulContainer - 170) {
             $navTabs.animate({
                 left: '+='+ 170
             },0);
