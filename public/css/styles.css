@@ -258,6 +258,12 @@ body{
     cursor: pointer;
     padding-left: 10px;
 }
+.sidebar.sidebar-inverse>.sidebarMenuWrapper > ul li a .fa-tachometer {
+    width: 32px;
+    height: 25px;
+    margin-right: 5px;
+    padding-top: 4px;
+}
 
 .sidebar>.sidebarMenuWrapper{
     overflow: auto;
@@ -1744,7 +1750,7 @@ span.fancytree-active span.fancytree-title{
     display: none;
 }
 .login-page .navbar.main.navbar-primary .appbrand{
-    margin-left: 0;
+    margin-left: 13px;
 }
 .login-page #melis-navtabs-container-outer,
 .login-page #res-plugin-cont{
