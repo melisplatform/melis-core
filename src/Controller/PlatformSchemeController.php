@@ -60,7 +60,6 @@ class PlatformSchemeController extends AbstractActionController
 
     public function saveAction()
     {
-
         $success      = 0;
         $errors       = array();
         $textTitle    = 'tr_meliscore_platform_scheme';
@@ -68,13 +67,10 @@ class PlatformSchemeController extends AbstractActionController
         $request      = $this->getRequest();
         $imgErrors    = array();
         $folderErrors = array();
+        // for now directly modify the MELIS_SCHEME_1
+        $schemeId = 2;
 
         if ($request->isPost()) {
-
-            /**
-             * for now directly modify the MELIS_SCHEME_1
-             */
-            $schemeId = 2;
 
             $invalidImageError = $this->melisTool()->getTranslation('tr_meliscore_platform_scheme_image_is_invalid');
             $post              = $this->melisTool()->sanitizeRecursive($request->getPost()->toArray());
@@ -346,7 +342,7 @@ class PlatformSchemeController extends AbstractActionController
             'textMessage' => $this->melisTool()->getTranslation($textMessage)
         );
 
-        $this->getEventManager()->trigger('melis_core_platform_scheme_save_end', $this, $response);
+        $this->getEventManager()->trigger('melis_core_platform_scheme_save_end', $this, array_merge($response, array('typeCode' => 'CORE_PLATFORM_SCHEME_SAVE', 'itemId' => $schemeId, 'id' => $schemeId)));
 
         return new JsonModel($response);
 
@@ -364,12 +360,11 @@ class PlatformSchemeController extends AbstractActionController
         $title        = 'Restore platform scheme';*/
         $message      = 'tr_meliscore_platform_scheme_failed_restore_message';
         $title        = 'tr_meliscore_platform_scheme_failed_restore_title';
+        // for now directly modify the MELIS_SCHEME_1
+        $schemeId = 2;
 
         if ($request->isXmlHttpRequest()) {
-            /**
-             * for now directly modify the MELIS_SCHEME_1
-             */
-            $schemeId = 2;
+
             $success  = $this->getPlatformSchemeSvc()->resetScheme($schemeId);
             // generate a new scheme.css file in public
             ini_set('memory_limit', '-1');
@@ -398,7 +393,7 @@ class PlatformSchemeController extends AbstractActionController
             'textMessage' => $this->melisTool()->getTranslation($message)
         );
 
-        $this->getEventManager()->trigger('melis_core_platform_scheme_reset_end', $this, $response);
+        $this->getEventManager()->trigger('melis_core_platform_scheme_save_end', $this, array_merge($response, array('typeCode' => 'CORE_PLATFORM_SCHEME_RESET', 'itemId' => $schemeId, 'id' => $schemeId)));
 
         return new JsonModel($response);
     }
