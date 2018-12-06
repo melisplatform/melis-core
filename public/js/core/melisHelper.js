@@ -361,7 +361,7 @@ var melisHelper = (function(){
 
         if(alreadyOpen.length < 1){
             var li = "<li data-tool-name='"+ title +"' data-tool-icon='"+ icon +"' data-tool-id='"+ zoneId +"' data-tool-meliskey='"+melisKey+"'>";
-            li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='" + zoneId + "' title='"+ title +"'>";
+            li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='" + zoneId + "' title='"+ title.replace(/'/g,"&apos;") +"'>";
             li += "<i class='fa "+ icon +" fa-2x'></i><span class='navtab-pagename'>";
             li += title + "</span></a>";
             li += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
