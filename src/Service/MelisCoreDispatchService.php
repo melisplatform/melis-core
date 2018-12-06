@@ -77,7 +77,7 @@ class MelisCoreDispatchService implements MelisCoreDispatchServiceInterface, Ser
 		        	
 		        // add datas to session
 		        if (!empty($resultTmp['datas']))
-		            $datas = array_merge($datas, $resultTmp['datas']);
+		            $datas = array_merge_recursive($datas, $resultTmp['datas']);
 		            	
 		            // Final table to send back
 		            $result = array('success' => $success, 'errors' => $errors, 'datas' => $datas);

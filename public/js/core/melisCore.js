@@ -477,46 +477,16 @@ var melisCore = (function(window){
     $body.on("click", '.melis-refreshTable', refreshTable);
 
     // close all open tab
-    $body.on('click', "#close-all-tab", closedOpenTabs);
+    $body.on('click', '#close-all-tab', closedOpenTabs);
+
+    // toggleClass shown and animate gridstack width
+    $body.on('click', '#melisDashBoardPluginBtn', toggleGrid);
 
     // check if there is child nodes after clicking closedOpenTabs
     //$body.on('')
 
-    // Dashboard Draggable need to remove
-    /*$( ".dashboard-container" ).sortable({
-     revert: true,
-     animation: 400,
-     placeholder: "ui-state-highlight"
-     // start
-     // change
-     // stop
-     });*/
-    $(document).ready(function() {
-        var clicks  = 0,
-            $btn    = $("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
-            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth  = dWidth + $box.width();
-
-        $body.on("click", "#melisDashBoardPluginBtn", function() {
-            var $this = $(this);
-                $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
-
-                if ( $box.hasClass("shown") ) {
-                    $gs.animate({
-                        width: dWidth
-                    }, 3);
-                } else {
-                    $gs.animate({
-                        width: nWidth
-                    }, 3);
-                }
-        });
-    });
-
-    $body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);
-    $body.on("click", ".melis-core-dashboard-category-btn", showCatPlugLists);
+    $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
+    $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
     /*
      * Added by: Junry @ 10/10/208
@@ -534,37 +504,6 @@ var melisCore = (function(window){
     };
 
     $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip );
-
-    /*$(window).on("resize", function() {
-        var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
-        var dashboardTooltip = {
-            placement: pos,
-            delay: {
-                show: 800
-            },
-            template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-        };
-
-        showToolTip( dashboardTooltip );
-
-    }).trigger('resize');
-
-    function showToolTip( dTooltip ) {
-        console.log('showToolTip');
-        $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dTooltip );        
-    }*/
-
-    // Tooltip
-    /*$("body .melis-core-dashboard-plugin-snippets").tooltip({
-     position: {
-     my: "left center",
-     at: "left+110% center",
-     using: function( position, feedback ) {
-     $( this ).css( position );
-     $(this).addClass( "melis-plugin-tooltip" ).addClass( feedback.vertical ).addClass( feedback.horizontal ).appendTo( this );
-     }
-     },
-     });*/
 
     /*
      * Added by: Junry @ 10/10/2018
@@ -586,6 +525,28 @@ var melisCore = (function(window){
     	melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
 
     });
+
+    var $btn    = $("#melisDashBoardPluginBtn"),
+        $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
+        $gs     = $body.find("#"+activeTabId+" .grid-stack"),
+        dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
+        nWidth  = dWidth + $box.width();
+
+    function toggleGrid() {
+        var $this = $("#melisDashBoardPluginBtn");
+
+        $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+
+        if ( $box.hasClass("shown") ) {
+            $gs.animate({
+                width: dWidth
+            }, 3);
+        } else {
+            $gs.animate({
+                width: nWidth
+            }, 3);
+        }
+    }
     
     function showPlugLists() {
         if($(this).hasClass("active")) {
@@ -713,6 +674,11 @@ var melisCore = (function(window){
 
     /* Responsive Fix on Dashboard */
     $('.dashboard-workflow-container .nav-tabs li').height($('.dashboard-workflow-container .nav-tabs').height());
+
+    // melis cms tools tree
+    if ( $("#meliscms_toolstree_section").length > 0 ) {
+        $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('hidden').show();
+    }
 
 
 
