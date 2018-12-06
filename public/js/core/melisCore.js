@@ -533,18 +533,19 @@ var melisCore = (function(window){
         nWidth  = dWidth + $box.width();
 
     function toggleGrid() {
-        var $this = $("#melisDashBoardPluginBtn"),
-            $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+        var $this = $("#melisDashBoardPluginBtn");
 
-            if ( $box.hasClass("shown") ) {
-                $gs.animate({
-                    width: dWidth
-                }, 3);
-            } else {
-                $gs.animate({
-                    width: nWidth
-                }, 3);
-            }
+        $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+
+        if ( $box.hasClass("shown") ) {
+            $gs.animate({
+                width: dWidth
+            }, 3);
+        } else {
+            $gs.animate({
+                width: nWidth
+            }, 3);
+        }
     }
     
     function showPlugLists() {
