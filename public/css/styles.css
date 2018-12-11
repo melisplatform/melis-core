@@ -260,9 +260,9 @@ body{
 }
 .sidebar.sidebar-inverse>.sidebarMenuWrapper > ul li a .fa-tachometer {
     width: 32px;
-    height: 25px;
-    margin-right: 5px;
-    padding-top: 4px;
+    height: 32px;
+    margin-right: 9px;
+    /*padding-top: 4px;*/
 }
 
 .sidebar>.sidebarMenuWrapper{
