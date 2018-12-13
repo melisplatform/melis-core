@@ -17,6 +17,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     const MELISOTHERS_PREFIX_TOOLS = 'melisothers_toolstree_section';
     const MELISCUSTOM_PREFIX_TOOLS = 'meliscustom_toolstree_section';
     const MELISMARKETPLACE_PREFIX_TOOLS = 'melismarketplace_toolstree_section';
+    const MELISDASHBOARDPLUGIN_PREFIX_TOOLS = 'melisdashboardplugin_section';
     const MELIS_DASHBOARD = '/meliscore_dashboard';
     const MELIS_CMS_SITE_TOOLS = 'meliscms_site_tools';
 
@@ -323,11 +324,11 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
      * @param $keyInterface
      * @param $userXml
      *
-     * @return arraygetInterfaceKeysRecursive
-     *
+     * @return array
      */
     private function getInterfaceKeysRecursive($keyInterface, $userXml)
     {
+        /** @var \MelisCore\Service\MelisCoreUserService $melisCoreUser */
         $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $configInterface = $melisAppConfig->getItem($keyInterface);
@@ -423,20 +424,10 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     {
         $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $melisKeys = $melisAppConfig->getMelisKeys();
+        $melisKeys = $this->getConfig()->getMelisKeys();
 
-        $appConfigPaths = [
-            self::MELISCORE_PREFIX_TOOLS,
-            self::MELISCMS_PREFIX_TOOLS,
-            self::MELISMARKETING_PREFIX_TOOLS,
-            self::MELISCOMMERCE_PREFIX_TOOLS,
-            self::MELISOTHERS_PREFIX_TOOLS,
-            self::MELISCUSTOM_PREFIX_TOOLS,
-            self::MELISMARKETPLACE_PREFIX_TOOLS
-        ];
-
+        $appConfigPaths = $this->getMelisKeyPaths();
         $tools = [];
-
         foreach ($appConfigPaths as $idx => $path) {
             $appConfigPath = $melisKeys[$path];
             $appsConfig = $melisAppConfig->getItem($appConfigPath);
@@ -614,7 +605,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
             $xmlRights .=  self::XML_SPACER . '<' . $toolSection . '>' . self::XML_ENDLINE;
             if (!empty($nodesTools) && !empty($nodesTools->$toolsNode)) {
                 foreach ($nodesTools->$toolsNode as $idTool) {
-                    $parent = $this->getToolParent($melisKeys, $idTool) ?? null;
+                    $parent = $this->getSectionParent($idTool) ?? null;
 
                     if (! $parent) {
                         // check if this tool ID exists in xml
@@ -622,7 +613,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                             $xmlRights .= self::XML_SPACER . self::XML_SPACER . '<noparent>' . $idTool . '</noparent>' . self::XML_ENDLINE;
                         }
                     } else {
-                        if ($parent === $toolSection) {
+                        if ($parent === $toolSection && $idTool !== $toolsNode) {
                             $id = $idTool === $parent ? $idTool . '_root' : $idTool;
                             $xmlRights .= self::XML_SPACER . self::XML_SPACER . '<id>' . $id . '</id>' . self::XML_ENDLINE;
                         }
@@ -660,7 +651,8 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
             self::MELISCOMMERCE_PREFIX_TOOLS,
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
-            self::MELISMARKETPLACE_PREFIX_TOOLS
+            self::MELISMARKETPLACE_PREFIX_TOOLS,
+            self::MELISDASHBOARDPLUGIN_PREFIX_TOOLS
         ];
     }
 
@@ -676,7 +668,8 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
             self::MELISCOMMERCE_PREFIX_TOOLS,
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
-            self::MELISMARKETPLACE_PREFIX_TOOLS
+            self::MELISMARKETPLACE_PREFIX_TOOLS,
+            self::MELISDASHBOARDPLUGIN_PREFIX_TOOLS
         ];
     }
 
@@ -808,15 +801,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     {
         $melisKeys = $this->getConfig()->getMelisKeys();
 
-        $appConfigPaths = [
-            self::MELISCORE_PREFIX_TOOLS,
-            self::MELISCMS_PREFIX_TOOLS,
-            self::MELISMARKETING_PREFIX_TOOLS,
-            self::MELISCOMMERCE_PREFIX_TOOLS,
-            self::MELISOTHERS_PREFIX_TOOLS,
-            self::MELISCUSTOM_PREFIX_TOOLS,
-            self::MELISMARKETPLACE_PREFIX_TOOLS
-        ];
+        $appConfigPaths = $this->getMelisKeyPaths();
 
         $tools = [];
 

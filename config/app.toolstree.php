@@ -989,6 +989,16 @@ return [
                             ),
                             'interface' => []
                         ],
+                        'melisdashboardplugin_section' => [
+                            'conf' => [
+                                'id' => 'melisdashboardplugin_section',
+                                'melisKey' => 'melisdashboardplugin_section',
+                                'name' => 'tr_melisdashboardplugin_section',
+                                'icon' => 'fa fa-shopping-cart',
+                                'rights_checkbox_disable' => false,
+                            ],
+                            'interface' => []
+                        ]
                     ]
                 ]
             ]
