@@ -28842,12 +28842,7 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', '#close-all-tab', closedOpenTabs);
 
-    // toggleClass shown and animate gridstack width
-    $body.on('click', '#melisDashBoardPluginBtn', toggleGrid);
-
-    // check if there is child nodes after clicking closedOpenTabs
-    //$body.on('')
-
+    //$body.on("click", '.melis-core-dashboard-filter-btn', disableShowPlugLists);
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
@@ -28889,27 +28884,32 @@ var melisCore = (function(window){
 
     });
 
-    var $btn    = $("#melisDashBoardPluginBtn"),
-        $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-        $gs     = $body.find("#"+activeTabId+" .grid-stack"),
-        dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-        nWidth  = dWidth + $box.width();
+    /* 
+     * Subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
+     * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
+     * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
+     * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
+     */
 
-    function toggleGrid() {
-        var $this = $("#melisDashBoardPluginBtn");
+    $body.on("click", "#melisDashBoardPluginBtn", function() {
+        var $btn    = $("#melisDashBoardPluginBtn"),
+            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
+            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth  = $gs.width() + $box.width();
 
-        $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+            $box.toggleClass("shown");
 
-        if ( $box.hasClass("shown") ) {
-            $gs.animate({
-                width: dWidth
-            }, 3);
-        } else {
-            $gs.animate({
-                width: nWidth
-            }, 3);
-        }
-    }
+            if ( $box.hasClass("shown") ) {
+                $gs.animate({
+                    width: dWidth
+                }, 3);
+            } else {
+                $gs.animate({
+                    width: nWidth
+                }, 3);
+            }
+    });
     
     function showPlugLists() {
         if($(this).hasClass("active")) {
@@ -34014,8 +34014,11 @@ var melisDashBoardDragnDrop = {
         this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
         this.$box               = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
         this.$deleteAllWidget   = this.$body.find("#dashboard-plugin-delete-all");
-        this.$dWidth            = this.$gs.width() - this.$box.width(); // shrink, 1584 - 220 = 1364
-        this.$nWidth            = this.$dWidth + this.$box.width();
+
+        // plugin sidebar
+        this.$dashPsBox         = $(".melis-core-dashboard-ps-box");
+        this.$dashPluginBtn     = this.$dashPsBox.find(".melis-core-dashboard-filter-btn");
+        this.$dashSnipsBox      = this.$dashPsBox.find(".melis-core-dashboard-plugin-snippets-box");
 
         // strings
         this.gsOptHandle        = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
@@ -34062,17 +34065,11 @@ var melisDashBoardDragnDrop = {
     docuReady: function() {
         var $btn    = this.$body.find("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs     = this.$gs,
+            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = dWidth + $box.width();
-        /* 
-         * Subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
-         * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
-         * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
-         * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
-         */
 
-        // remove class shown on plugin box
+        // remove class shown on plugin box when clicking on the left sideMenu
         this.$body.on("click", "ul.sideMenu li a[data-toggle='collapse']", function() {
             if ($box.hasClass("shown")) {
                 $box.removeClass("shown");
@@ -34136,6 +34133,7 @@ var melisDashBoardDragnDrop = {
         });
     },
 
+    // adding of plugins / disable droppable .gridstack while processing the plugin data
     addWidget: function(dataString) {
         var self        = this;
 
@@ -34158,23 +34156,12 @@ var melisDashBoardDragnDrop = {
             // disable grid / droppable
             gridstack.droppable("disable");
 
-            // drop count
-            dropCount++;
-
-        var isDisabled  = gridstack.droppable("option", "disabled");
-
-            /*if ( isDisabled === true && dropCount === 1 ) {
-                console.log('isDisabled: ', isDisabled + ", dropCount: " + dropCount);
-            }
-
-            console.log('OUTSIDE isDisabled: ', isDisabled + ", dropCount: " + dropCount);*/
+            // disable sidebar plugins
+            self.disablePlugSidebar();
 
         var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
             request.done(function(data){
-
-                // enable grid / droppable
-                gridstack.droppable("enable");
 
                 // get dashboard gridstack data
                 var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
@@ -34190,13 +34177,19 @@ var melisDashBoardDragnDrop = {
                 // remove clone widgets
                 grid.removeWidget( $(widget).prev() );
 
-                if ( $box.hasClass("shown") ) {
+                // enable grid / droppable
+                gridstack.droppable("enable");
+
+                // disable sidebar plugins
+                self.enablePlugSidebar();
+
+                /*if ( $box.hasClass("shown") ) {
                     // hide plugin menu
                     $box.removeClass("shown");
                     $gs.animate({
                         width: $gs.width() + $box.width()
                     }, 3);
-                }
+                }*/
 
                 // serialize widget and save to db
                 self.serializeWidgetMap( grid.container[0].children );
@@ -34210,11 +34203,10 @@ var melisDashBoardDragnDrop = {
                         eval(value);
                     });
                 }
-
-                dropCount = 0;
             });
     },
 
+    // serializing plugins / re-enable dropppable .gridstack after serializing
     serializeWidgetMap: function(items) {
         var self = this;
 
@@ -34268,6 +34260,18 @@ var melisDashBoardDragnDrop = {
     saveDBWidgets: function(dataString) {
         // save the lists of widgets on the dashboard to db
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+    },
+
+    disablePlugSidebar: function() {
+        // disables the plugins sidebar
+        this.$dashPluginBtn.prop("disabled", true);
+        this.$dashPluginBtn.removeClass("active");
+        this.$dashSnipsBox.hide();
+    },
+
+    enablePlugSidebar: function() {
+        // enables the plugins sidebar
+        this.$dashPluginBtn.prop("disabled", false);
     },
 
     saveCurrentDashboard: function(el) {
@@ -34340,7 +34344,7 @@ var melisDashBoardDragnDrop = {
                     // serialize & save db remaining gridstack items
                     self.serializeWidgetMap( $items );
 
-                    // Plugin delete callback
+                    // plugin delete callback
                     if (typeof $del.data('callback') !== "undefined") {
                         var callback = eval($del.data("callback"));
                         if (typeof callback === "function") {
@@ -34356,8 +34360,13 @@ var melisDashBoardDragnDrop = {
 
         var grid        = $('#'+activeTabId+' .grid-stack').data('gridstack'),
             $gs         = $('#' + activeTabId ).find('.grid-stack'),
-            $items      = $gs.find('.grid-stack-item');
+            $items      = $gs.find('.grid-stack-item'),
+            $btn        = $("#melisDashBoardPluginBtn"),
+            $box        = $btn.closest(".melis-core-dashboard-dnd-box"),
+            dWidth      = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth      = $gs.width() + $box.width();
 
+        // checks if there is a plugin available to delete
         if( $items.length != 0 ) {
 
             var dataString = new Array;
@@ -34374,17 +34383,24 @@ var melisDashBoardDragnDrop = {
                 translations.tr_meliscore_remove_all_plugins,
                 translations.tr_meliscore_remove_dashboard_all_plugin_msg,
                 function() {
+
+                    // remove all nodes on grid
                     grid.removeAll();
                     
                     // save widgets position / size on db
-                    self.saveDBWidgets(dataString);
+                    self.saveDBWidgets(dataString);                    
                 }
             );
 
             // hide plugin menu
             this.$pluginBox.removeClass("shown");
 
-            // Plugins delete callback
+            // droppable / .gridstack to original width
+            $gs.animate({
+                width: nWidth
+            }, 3);
+
+            // plugins delete callback
             $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
                 var $this = $(this);
 
@@ -34397,6 +34413,7 @@ var melisDashBoardDragnDrop = {
             });
 
         } else {
+
             // 'Ok', 'Close', 'Remove all plugins', 'No plugins to delete.'
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
@@ -34404,6 +34421,26 @@ var melisDashBoardDragnDrop = {
                 translations.tr_meliscore_remove_all_plugins,
                 translations.tr_meliscore_remove_dashboard_no_plugin_msg
             );
+
+            // hide plugin menu
+            this.$pluginBox.removeClass("shown");
+
+            // droppable / .gridstack to original width
+            $gs.animate({
+                width: nWidth
+            }, 3);
+
+            // plugins delete callback
+            $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
+                var $this = $(this);
+
+                if (typeof $this.data('callback') !== "undefined") {
+                    var callback = eval($this.data("callback"));
+                    if (typeof callback === "function") {
+                        callback($this.closest('.grid-stack-item'));
+                    }
+                }
+            });
         }
     },
 
@@ -34470,12 +34507,12 @@ var melisDashBoardDragnDrop = {
         }
     },
 
-    setCurrentPlugin: function(widget){
+    setCurrentPlugin: function(widget) {
         // set current plugin
         this.currentPlugin = widget;
     },
     
-    getCurrentPlugin: function(){
+    getCurrentPlugin: function() {
         // get current plugin
         return this.currentPlugin;
     }
