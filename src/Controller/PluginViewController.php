@@ -336,6 +336,10 @@ class PluginViewController extends AbstractActionController
 
                     $view = $this->forward()->setMaxNestedForwards($specialConfigZf2['maxNestedForwards'])->dispatch($ctrlPath, $datas);
 
+                    $melisCoreGeneralSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+                    $eventRes = $melisCoreGeneralSrv->sendEvent('meliscore_generate_interface_'.$datas['melisKey'], array('view' => $view));
+                    $view = $eventRes['view'];
+
                 } catch (\Exception $e) {
                     $view = new ViewModel();
                     $view->setTemplate('melis-core/plugin-view/generate');
