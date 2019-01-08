@@ -1,9 +1,5 @@
-# Changelog
-All notable changes to this project will be documented in this file.
-
 ## Release Notes
-## [3.0.0] - 2018-10-17
-* Improved sidebar's tools tree
-* Added GDPR Tool
-* Bugs fixes on Tools
+## [3.1.0] - 2019-01-08
+* Updated GDPR Tool
+* Bugs fixes on Core Tools
 * Updated webpack bundles (bundle.css and bundle.js)
