@@ -34183,14 +34183,6 @@ var melisDashBoardDragnDrop = {
                 // disable sidebar plugins
                 self.enablePlugSidebar();
 
-                /*if ( $box.hasClass("shown") ) {
-                    // hide plugin menu
-                    $box.removeClass("shown");
-                    $gs.animate({
-                        width: $gs.width() + $box.width()
-                    }, 3);
-                }*/
-
                 // serialize widget and save to db
                 self.serializeWidgetMap( grid.container[0].children );
                         
