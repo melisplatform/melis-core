@@ -14,12 +14,10 @@ use Zend\Session\Container;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
-class MelisSetupController extends AbstractActionController
+class MelisSetupController extends AbstractActionController implements MelisSetupInterface
 {
     public function setupFormAction()
     {
-
-
         $request = $this->getRequest();
 
         //startSetup button indicator
