@@ -170,7 +170,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
                 // If it reaches here, it means tools are not directly checked, but maybe some sections are
                 $tooldIds = [];
-                $appconfigpath = $melisKeys[$toolSection];
+                $appconfigpath = $melisKeys[$toolSection] ?? null;
                 $appsConfig = $melisAppConfig->getItem($appconfigpath);
                 $tmpToolIds = $toolIds;
 
