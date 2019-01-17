@@ -61,12 +61,12 @@ $sections = [
 //                        }
                         ?>
                         <li class="hasSubmenu" data-meliskey="">
-                            <?php if ($toolSection > 0){?>
+
                                 <a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
                                     <i class="fa <?= $sectionIcon; ?>"></i>
                                     <span><?= $sectionTool['toolsection_name']; ?></span>
                                 </a>
-                            <?php }?>
+
                             <ul class="collapse secondlvl-container" id="sub-load-<?= $keySection; ?>">
                                 <?php
                                 if (isset($sectionTool['toolsection_children']) && $sectionTool['toolsection_children']) {
