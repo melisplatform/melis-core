@@ -32369,8 +32369,10 @@ body {
 ______________________________________________________________________________________________*/
 /* 
  * MelisCommerce [Products] [Text - Add product text]
+ * Catalogs / Categories
  * Added by: Junry fix overflow .overlay-loader @ 15/01/2019
  */
+#content #meliscommerce_categories_list_search_input #loader.overlay-loader,
 #content #idAddProductText #loader.overlay-loader {
     height: 100%;
 }
@@ -32643,6 +32645,12 @@ body{
     margin-right: 12px;
     /*padding-top: 4px;*/
 }
+
+.sidebar.sidebar-inverse>.sidebarMenuWrapper > ul li.melis-opentools a .fa-tachometer {
+    width: 10px;
+    height: auto;
+    margin-right: 10px;
+ }
 
 .sidebar>.sidebarMenuWrapper{
     overflow: auto;
