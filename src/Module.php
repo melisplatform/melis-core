@@ -148,7 +148,7 @@ class Module
     
     public function init(ModuleManager $mm) 
     {
-        $mm->getEventManager()->getSharedManager()->attach('MelisCore', MvcEvent::EVENT_DISPATCH, function($e) {
+        $mm->getEventManager()->getSharedManager()->attach('MelisCore', MvcEvent::EVENT_DISPATCH, function ($e) {
             
             $routeMatch  = $e->getRouteMatch();
             $routeParams = $routeMatch->getParams();
