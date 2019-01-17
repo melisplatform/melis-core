@@ -136,6 +136,26 @@ class TreeToolsController extends AbstractActionController
             $tools[$key]['toolsection_has_nav_child'] = $isNavChild;
         }
 
+        # count the section that is a tool
+        $toolCountNavChild = 0;
+        foreach ($tools as $key => $val ) {
+            # print_r($val);
+            if ($val['toolsection_has_nav_child']) {
+                # for meliscms only
+                # because it has a given structure
+                if ($melisKey == 'meliscms_toolstree_section') {
+                    foreach ($val['toolsection_children'] as $cmsKey => $cmsTool) {
+                        if (isset($cmsTool['toolsection_is_tool']) && $cmsTool['toolsection_is_tool']) {
+                            $toolCountNavChild = $toolCountNavChild + 1;
+                        }
+                    }
+                } else {
+                    $toolCountNavChild = $toolCountNavChild + 1;
+                }
+            }
+
+        }
+
         $sections = $tools;
 
         // Reordering sections
@@ -184,7 +204,7 @@ class TreeToolsController extends AbstractActionController
 
         $view->tools = $toolsOrdered;
         $view->melisKey = $melisKey;
-
+        $view->toolCountNavChild = $toolCountNavChild;
         return $view;
     }
 

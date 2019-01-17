@@ -333,7 +333,7 @@ return array(
                         'module' => 'MelisCore',
                         'controller' => 'Index',
                         'action' => 'left-menu',
-                        'jscallback' => 'enableSidebarScroll();',
+                        'jscallback' => '',
                         'jsdatas' => array()
                     ),
                     'interface' => array(

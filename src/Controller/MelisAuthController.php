@@ -459,6 +459,8 @@ class MelisAuthController extends AbstractActionController
         if ($melisCoreAuth->hasIdentity()) {
             $userData = $melisCoreAuth->getIdentity();
             $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            # get the latest rights
+            $userData  = $userTable->getEntryById($userData->usr_id)->current();
 
             $data = [
                 'usr_is_online' => 0,
