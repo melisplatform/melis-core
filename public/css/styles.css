@@ -3,6 +3,21 @@
 * ---------------------  */
 /* Base
 ______________________________________________________________________________________________*/
+/* 
+ * MelisCommerce [Products] [Text - Add product text]
+ * Added by: Junry fix overflow .overlay-loader @ 15/01/2019
+ */
+#content #idAddProductText #loader.overlay-loader {
+    height: 100%;
+}
+#idAddProductText.tab-pane.active {
+    position: relative;
+    overflow: hidden;
+}
+#idAddProductText.tab-pane.active .row .col-md-12 .row {
+    margin: 0;
+}
+/* End add */
 
 #content > .innerAll.px2{
 /* padding: 25px; */

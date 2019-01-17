@@ -14,12 +14,23 @@ use Zend\Session\Container;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
-class MelisSetupController extends AbstractActionController
+/**
+ * @property bool $displayFormOnMarketPlaceDownload
+ * @property bool $displayFormOnMarketPlaceUpdate
+ */
+class MelisSetupController extends AbstractActionController implements MelisSetupInterface
 {
+    /** @var bool $displayFormOnMarketPlaceDownload - flag for Marketplace whether to display the setup form or not when downloading */
+    public $displayFormOnMarketPlaceDownload = false;
+
+    /** @var bool $displayFormOnMarketPlaceUpdate - flag for Marketplace whether to display the setup form or not when updating */
+    public $displayFormOnMarketPlaceUpdate = false;
+
+    /**
+     * @return \Zend\View\Model\ViewModel
+     */
     public function setupFormAction()
     {
-
-
         $request = $this->getRequest();
 
         //startSetup button indicator
@@ -39,9 +50,11 @@ class MelisSetupController extends AbstractActionController
         $view->btnStatus = $btnStatus;
 
         return $view;
-
     }
 
+    /**
+     * @return \Zend\View\Model\JsonModel
+     */
     public function setupValidateDataAction()
     {
         $success = 0;
@@ -60,7 +73,6 @@ class MelisSetupController extends AbstractActionController
             $errors = $this->formatErrorMessage($form->getMessages());
         }
 
-
         $response = [
             'success' => $success,
             'message' => $this->getTool()->getTranslation($message),
@@ -71,6 +83,9 @@ class MelisSetupController extends AbstractActionController
         return new JsonModel($response);
     }
 
+    /**
+     * @return \Zend\View\Model\JsonModel
+     */
     public function setupResultAction()
     {
         $success = 0;
@@ -318,6 +333,11 @@ class MelisSetupController extends AbstractActionController
 
     }
 
+    /**
+     * @param array $errors
+     *
+     * @return array
+     */
     private function formatErrorMessage($errors = [])
     {
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
