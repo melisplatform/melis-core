@@ -20,7 +20,7 @@ $sections = [
     'meliscustom_toolstree_section' => $this->melisCustomIcon()
 ];
 ?>
-<?php //if (! empty($toolCountNav) && $toolCountNav > 0) {?>
+
     <li id="<?= $id; ?>" class="hasSubmenu <?= empty($this->tools) ? 'hidden' : null ?>" data-melisKey='<?= $melisKey; ?>'>
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
@@ -150,7 +150,7 @@ $sections = [
             ?>
         </ul>
     </li>
-<?php// }?>
+
 
 <?php if ($melisKey == 'meliscms_toolstree_section') {?>
     <script>
