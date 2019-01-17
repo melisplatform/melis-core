@@ -16,6 +16,15 @@ use Zend\View\Model\ViewModel;
 
 class MelisSetupController extends AbstractActionController implements MelisSetupInterface
 {
+    /** @var bool $displayFormOnMarketPlaceDownload - flag for Marketplace whether to display the setup form or not when downloading */
+    public $displayFormOnMarketPlaceDownload = false;
+
+    /** @var bool $displayFormOnMarketPlaceUpdate - flag for Marketplace whether to display the setup form or not when updating */
+    public $displayFormOnMarketPlaceUpdate = false;
+
+    /**
+     * @return \Zend\View\Model\ViewModel
+     */
     public function setupFormAction()
     {
         $request = $this->getRequest();
@@ -37,9 +46,11 @@ class MelisSetupController extends AbstractActionController implements MelisSetu
         $view->btnStatus = $btnStatus;
 
         return $view;
-
     }
 
+    /**
+     * @return \Zend\View\Model\JsonModel
+     */
     public function setupValidateDataAction()
     {
         $success = 0;
@@ -58,7 +69,6 @@ class MelisSetupController extends AbstractActionController implements MelisSetu
             $errors = $this->formatErrorMessage($form->getMessages());
         }
 
-
         $response = [
             'success' => $success,
             'message' => $this->getTool()->getTranslation($message),
@@ -69,6 +79,9 @@ class MelisSetupController extends AbstractActionController implements MelisSetu
         return new JsonModel($response);
     }
 
+    /**
+     * @return \Zend\View\Model\JsonModel
+     */
     public function setupResultAction()
     {
         $success = 0;
@@ -316,6 +329,11 @@ class MelisSetupController extends AbstractActionController implements MelisSetu
 
     }
 
+    /**
+     * @param array $errors
+     *
+     * @return array
+     */
     private function formatErrorMessage($errors = [])
     {
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
