@@ -14,6 +14,10 @@ use Zend\Session\Container;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
+/**
+ * @property bool $displayFormOnMarketPlaceDownload
+ * @property bool $displayFormOnMarketPlaceUpdate
+ */
 class MelisSetupController extends AbstractActionController implements MelisSetupInterface
 {
     /** @var bool $displayFormOnMarketPlaceDownload - flag for Marketplace whether to display the setup form or not when downloading */
