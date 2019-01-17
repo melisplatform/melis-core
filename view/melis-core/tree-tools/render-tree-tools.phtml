@@ -20,7 +20,7 @@ $sections = [
     'meliscustom_toolstree_section' => $this->melisCustomIcon()
 ];
 ?>
-<?php if (! empty($toolCountNav) && $toolCountNav > 0) {?>
+<?php //if (! empty($toolCountNav) && $toolCountNav > 0) {?>
     <li id="<?= $id; ?>" class="hasSubmenu <?= empty($this->tools) ? 'hidden' : null ?>" data-melisKey='<?= $melisKey; ?>'>
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
@@ -52,13 +52,13 @@ $sections = [
                     if (!empty($sectionTool['toolsection_has_nav_child'])):
                     ?>
                         <?php
-                        # pre-checked of the child data if it has a tool
-                        $toolSection = 0;
-                        foreach ($sectionTool['toolsection_children'] as $child1 => $a) {
-                            if (isset($a['toolsection_is_tool']) && $a['toolsection_is_tool']) {
-                                $toolSection = $toolSection + 1;
-                            }
-                        }
+//                        # pre-checked of the child data if it has a tool
+//                        $toolSection = 0;
+//                        foreach ($sectionTool['toolsection_children'] as $child1 => $a) {
+//                            if (isset($a['toolsection_is_tool']) && $a['toolsection_is_tool']) {
+//                                $toolSection = $toolSection + 1;
+//                            }
+//                        }
                         ?>
                         <li class="hasSubmenu" data-meliskey="">
                             <?php if ($toolSection > 0){?>
@@ -150,7 +150,7 @@ $sections = [
             ?>
         </ul>
     </li>
-<?php }?>
+<?php// }?>
 
 <?php if ($melisKey == 'meliscms_toolstree_section') {?>
     <script>
