@@ -54,7 +54,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
      */
     public function validateFormAction()
     {
-        $success = 0;
+        $success = false;
         $message = 'tr_install_setup_message_ko';
         $errors = [];
 
@@ -64,7 +64,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
         $form->setData($data);
 
         if ($form->isValid()) {
-            $success = 1;
+            $success = true;
             $message = 'tr_install_setup_message_ok';
         } else {
             $errors = $this->formatErrorMessage($form->getMessages());
@@ -85,7 +85,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
      */
     public function submitAction()
     {
-        $success = 0;
+        $success = false;
         $message = 'tr_install_setup_message_ko';
         $errors = [];
 
@@ -176,14 +176,12 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                     $this->generateDashboardPlugins($userId);
 
 
-                    $success = 0;
+                    $success = true;
                     $message = 'tr_install_setup_message_ok';
 
                 } catch (\Exception $e) {
                     $errors = $e->getMessage();
                 }
-
-
             }
 
         } else {
