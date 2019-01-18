@@ -1,5 +1,8 @@
 <?php
-namespace MelisCore\Controller;
+namespace MelisCore;
+
+use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 
 interface MelisSetupInterface
 {
@@ -8,14 +11,14 @@ interface MelisSetupInterface
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function setupFormAction();
+    public function getFormAction();
 
     /**
      * This action returns the status of the form validation
      *
      * @return \Zend\View\Model\JsonModel
      */
-    public function setupValidateDataAction();
+    public function validateFormAction();
 
     /**
      * This action executes the submitted data, depending on what execution is being done
@@ -24,5 +27,5 @@ interface MelisSetupInterface
      *
      * @return \Zend\View\Model\JsonModel
      */
-    public function setupResultAction();
+    public function submitAction();
 }

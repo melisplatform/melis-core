@@ -13,23 +13,20 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
+use MelisCore\MelisSetupInterface;
 
 /**
  * @property bool $displayFormOnMarketPlaceDownload
- * @property bool $displayFormOnMarketPlaceUpdate
  */
-class MelisSetupController extends AbstractActionController implements MelisSetupInterface
+class MelisSetupPostDownloadController extends AbstractActionController implements MelisSetupInterface
 {
     /** @var bool $displayFormOnMarketPlaceDownload - flag for Marketplace whether to display the setup form or not when downloading */
     public $displayFormOnMarketPlaceDownload = false;
 
-    /** @var bool $displayFormOnMarketPlaceUpdate - flag for Marketplace whether to display the setup form or not when updating */
-    public $displayFormOnMarketPlaceUpdate = false;
-
     /**
      * @return \Zend\View\Model\ViewModel
      */
-    public function setupFormAction()
+    public function getFormAction()
     {
         $request = $this->getRequest();
 
@@ -55,7 +52,7 @@ class MelisSetupController extends AbstractActionController implements MelisSetu
     /**
      * @return \Zend\View\Model\JsonModel
      */
-    public function setupValidateDataAction()
+    public function validateFormAction()
     {
         $success = 0;
         $message = 'tr_install_setup_message_ko';
@@ -86,7 +83,7 @@ class MelisSetupController extends AbstractActionController implements MelisSetu
     /**
      * @return \Zend\View\Model\JsonModel
      */
-    public function setupResultAction()
+    public function submitAction()
     {
         $success = 0;
         $message = 'tr_install_setup_message_ko';
