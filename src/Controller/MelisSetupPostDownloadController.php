@@ -16,12 +16,12 @@ use Zend\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
 
 /**
- * @property bool $displayFormOnMarketPlaceDownload
+ * @property bool $showOnMarketplacePostSetup
  */
 class MelisSetupPostDownloadController extends AbstractActionController implements MelisSetupInterface
 {
-    /** @var bool $displayFormOnMarketPlaceDownload - flag for Marketplace whether to display the setup form or not when downloading */
-    public $displayFormOnMarketPlaceDownload = false;
+    /** @var bool $showOnMarketplacePostSetup - flag for Marketplace whether to display the setup form or not */
+    public $showOnMarketplacePostSetup = false;
 
     /**
      * @return \Zend\View\Model\ViewModel
