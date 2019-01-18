@@ -20,7 +20,10 @@ use MelisCore\MelisSetupInterface;
  */
 class MelisSetupPostDownloadController extends AbstractActionController implements MelisSetupInterface
 {
-    /** @var bool $showOnMarketplacePostSetup - flag for Marketplace whether to display the setup form or not */
+    /**
+     * flag for Marketplace whether to display the setup form or not
+     * @var bool $showOnMarketplacePostSetup
+     */
     public $showOnMarketplacePostSetup = false;
 
     /**
