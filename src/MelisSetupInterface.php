@@ -1,9 +1,6 @@
 <?php
 namespace MelisCore;
 
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-
 interface MelisSetupInterface
 {
     /**
