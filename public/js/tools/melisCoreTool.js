@@ -77,7 +77,7 @@ var melisCoreTool = (function(window){
 	
 	function highlightErrors(success, errors, divContainer) {
 		// if all form fields are error color them red
-		if(success === 0){
+		if(success === 0 || success === false){
 			$("#" + divContainer + " .form-group label").css("color","#686868");
 			$.each( errors, function( key, error ) { 
 				$("#" + divContainer + " .form-control[name='"+key +"']").parents(".form-group").children(":first").css("color","red");

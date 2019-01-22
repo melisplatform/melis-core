@@ -184,6 +184,7 @@
 	    'tr_meliscore_common_apply' => 'Apply',
 	    'tr_meliscore_common_update' => 'Update',
 	    'tr_meliscore_common_clear' => 'Clear',
+	    'tr_meliscore_common_submit' => 'Submit',
 	    
 	    'tr_meliscore_login_remember_me' => 'Remember my details',
 	    'tr_meliscore_login_header' => 'Login to your Account',
