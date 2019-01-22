@@ -38,7 +38,6 @@ return [
     'tr_meliscore_tool_gen_save' => 'Save',
     'tr_meliscore_tool_gen_delete' => 'Delete',
     'tr_meliscore_tool_gen_modal' => 'Modal',
-    'tr_meliscore_tool_user_modal_rights' => 'Rights',
     'tr_meliscore_tool_user_modal_new_rights' => 'Rights for new',
     'tr_meliscore_rights_Interface exclusion' => 'Interface\'s exclusion',
     'tr_meliscore_rights_Not allowed dashboard' => 'Your rights don\'t allow you to see the dashboard',
@@ -616,9 +615,6 @@ return [
 
     'tr_melis_user_tabs_close_all_open_tabs' => 'Close all tabs',
 
-    //Diagnostic
-    'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
-
     //Language Back Office
     'tr_melis_core_common_apply_language' => 'Switch the current language to ',
 
@@ -641,9 +637,6 @@ return [
 
     //Diagnostic
     'tr_melis_core_diagnostic_error_message' => 'does not have a diagnostic configuration',
-
-    //Language Back Office
-    'tr_melis_core_common_apply_language' => 'Switch the current language to ',
 
     // Melis Core GDPR
     'tr_melis_core_gdpr' => 'GDPR',
@@ -670,7 +663,6 @@ return [
     'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'No user selected to delete',
     'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',
     'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Error on deleting data',
-    'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',
 
     'tr_melis_core_gdpr_view_search_button' => 'Search',
     'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',

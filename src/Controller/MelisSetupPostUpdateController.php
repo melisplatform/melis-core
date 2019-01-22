@@ -23,7 +23,7 @@ class MelisSetupPostUpdateController extends AbstractActionController implements
      * flag for Marketplace whether to display the setup form or not
      * @var bool $showOnMarketplacePostSetup
      */
-    public $showOnMarketplacePostSetup = false;
+    public $showOnMarketplacePostSetup = true;
 
     /**
      * @return \Zend\View\Model\ViewModel
