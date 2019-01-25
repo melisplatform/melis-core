@@ -312,7 +312,8 @@ Version: @@ver@@ Timestamp: @@timestamp@@
     margin: 4px 4px 4px 0;
     position: relative;
     overflow-x: hidden;
-    overflow-y: auto;
+    /* overflow-y: auto; */
+    overflow-y: hidden;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
