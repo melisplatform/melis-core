@@ -186,8 +186,8 @@ return [
     'tr_meliscore_common_apply' => 'Appliquer',
     'tr_meliscore_common_update' => 'Mettre a jour',
     'tr_meliscore_common_clear' => 'Effacer',
-
-
+    'tr_meliscore_common_submit' => 'Submit',
+    
     'tr_meliscore_login_remember_me' => 'Se rappeler de moi',
     'tr_meliscore_login_header' => 'Connexion à votre compte',
 
