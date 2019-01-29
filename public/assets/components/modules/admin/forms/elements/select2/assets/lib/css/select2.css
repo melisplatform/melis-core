@@ -301,14 +301,19 @@ Version: @@ver@@ Timestamp: @@timestamp@@
     background-position: -18px 1px;
 }
 
-/* results */
+/* Results
+ * Revision by: Junry @ 01/24/2019
+ * Fix for cms user account on add comment pop up
+ */
 .select2-results {
-    max-height: 200px;
+    /* max-height: 200px; */
+    max-height: 150px;
     padding: 0 0 0 4px;
     margin: 4px 4px 4px 0;
     position: relative;
     overflow-x: hidden;
-    overflow-y: auto;
+    /* overflow-y: auto; */
+    overflow-y: hidden;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 

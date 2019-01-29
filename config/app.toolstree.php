@@ -976,7 +976,7 @@ return [
                             'conf' => [
                                 'id' => 'melismarketplace_toolstree_section',
                                 'melisKey' => 'melismarketplace_toolstree_section',
-                                'name' => 'tr_market_place',
+                                'name' => 'tr_meliscore_tool_platform_marketplace',
                                 'icon' => 'fa fa-shopping-cart',
                                 'rights_checkbox_disable' => false,
                             ],
