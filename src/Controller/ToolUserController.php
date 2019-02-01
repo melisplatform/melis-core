@@ -543,18 +543,14 @@ class ToolUserController extends AbstractActionController
                 $userDatas = $userDatas->current();
                 if (!empty($userDatas->usr_login)) {
                     $textMessage = 'tr_meliscore_tool_user_new_fail_user_exists';
-                    $errors[] = [
-                        'usr_login' => [
-                            'user_exists' => $translator->translate($textMessage),
-                            'label' => $translator->translate('tr_meliscore_tool_user_col_username')
-                        ],
+                    $errors['usr_login'] = [
+                        'user_exists' => $translator->translate($textMessage),
+                        'label' => $translator->translate('tr_meliscore_tool_user_col_username')
                     ];
                 } elseif (empty($language)) {
-                    $errors[] = [
-                        'usr_lang_id' => [
-                            'invalidLanguageSelection' => $translator->translate('tr_meliscore_tool_user_usr_lang_id_error_invalid'),
-                            'label' => $translator->translate('tr_meliscore_tool_user_form_language')
-                        ],
+                    $errors['usr_lang_id'] = [
+                        'invalidLanguageSelection' => $translator->translate('tr_meliscore_tool_user_usr_lang_id_error_invalid'),
+                        'label' => $translator->translate('tr_meliscore_tool_user_form_language')
                     ];
                 } else {
                     if ($password == $confirmPass) {
@@ -571,11 +567,9 @@ class ToolUserController extends AbstractActionController
                             /** Ensuring file is an image */
                             $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
                             if ($sourceImg === false) {
-                                $errors[] = [
-                                    'usr_image' => [
-                                        'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
-                                        'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
-                                    ]
+                                $errors['usr_image'] = [
+                                    'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
+                                    'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
                                 ];
                             } else {
                                 if (!empty($imageFile['tmp_name'])) {
@@ -643,11 +637,9 @@ class ToolUserController extends AbstractActionController
                     } else {
                         $success = false;
                         $textMessage = 'tr_meliscore_tool_user_new_fail_pass';
-                        $errors[] = [
-                            'usr_password' => [
-                                'user_exists' => $translator->translate($textMessage),
-                                'label' => $translator->translate('tr_meliscore_tool_user_col_password'),
-                            ],
+                        $errors['usr_password'] = [
+                            'user_exists' => $translator->translate($textMessage),
+                            'label' => $translator->translate('tr_meliscore_tool_user_col_password'),
                         ];
                     }
                 }
@@ -671,7 +663,6 @@ class ToolUserController extends AbstractActionController
             'datas' => $data
         ];
         $this->getEventManager()->trigger('meliscore_tooluser_savenew_info_end', $this, $response);
-
 
         return new JsonModel($response);
     }
@@ -1012,11 +1003,9 @@ class ToolUserController extends AbstractActionController
                     $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
                     if ($sourceImg === false) {
                         $success = false;
-                        $errors[] = [
-                            'usr_image' => [
-                                'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
-                                'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
-                            ]
+                        $errors['usr_image'] = [
+                            'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
+                            'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
                         ];
                     } else {
                         if (!empty($imageFile['tmp_name'])) {
@@ -1067,39 +1056,31 @@ class ToolUserController extends AbstractActionController
                                         }
                                     } else {
                                         $success = false;
-                                        $errors[] = [
-                                            'usr_password' => [
-                                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
-                                                'label' => 'Password',
-                                            ],
-                                            'usr_confirm_password' => [
-                                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
-                                                'label' => 'Password',
-                                            ],
+                                        $errors['usr_password'] = [
+                                            'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
+                                            'label' => 'Password',
+                                        ];
+                                        $errors['usr_confirm_password'] = [
+                                            'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
+                                            'label' => 'Password',
                                         ];
                                     } // password and confirm password matching
                                 } else {
-                                    $errors[] = [
-                                        'usr_password' => [
-                                            'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_regex_not_match'),
-                                            'label' => 'Password',
-                                        ]
+                                    $errors['usr_password'] = [
+                                        'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_regex_not_match'),
+                                        'label' => 'Password',
                                     ];
                                 } // password regex validator
                             } else {
-                                $errors[] = [
-                                    'usr_confirm_password' => [
-                                        'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_confirm_password_error_low'),
-                                        'label' => 'Password',
-                                    ]
+                                $errors['usr_confirm_password'] = [
+                                    'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_confirm_password_error_low'),
+                                    'label' => 'Password',
                                 ];
                             }// end confirm password length
                         } else {
-                            $errors[] = [
-                                'usr_password' => [
-                                    'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_error_low'),
-                                    'label' => 'Password',
-                                ]
+                            $errors['usr_password'] = [
+                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_error_low'),
+                                'label' => 'Password',
                             ];
                         }// end password length
                     } else {
