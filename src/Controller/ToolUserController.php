@@ -522,6 +522,7 @@ class ToolUserController extends AbstractActionController
             $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
             $translator = $this->getServiceLocator()->get('translator');
+            /** @var \Zend\Form\Form $userAddForm */
             $userAddForm = $melisTool->getForm('meliscore_tool_user_form_new');
             $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
             $imgService = $this->getServiceLocator()->get('MelisCoreImage');
@@ -544,13 +545,15 @@ class ToolUserController extends AbstractActionController
                     $textMessage = 'tr_meliscore_tool_user_new_fail_user_exists';
                     $errors[] = [
                         'usr_login' => [
-                            'user_exists' => $translator->translate($textMessage)
+                            'user_exists' => $translator->translate($textMessage),
+                            'label' => $translator->translate('tr_meliscore_tool_user_col_username')
                         ],
                     ];
                 } elseif (empty($language)) {
                     $errors[] = [
                         'usr_lang_id' => [
                             'invalidLanguageSelection' => $translator->translate('tr_meliscore_tool_user_usr_lang_id_error_invalid'),
+                            'label' => $translator->translate('tr_meliscore_tool_user_form_language')
                         ],
                     ];
                 } else {
@@ -640,16 +643,21 @@ class ToolUserController extends AbstractActionController
                     } else {
                         $success = false;
                         $textMessage = 'tr_meliscore_tool_user_new_fail_pass';
-                        $errors = [
+                        $errors[] = [
                             'usr_password' => [
-                                'user_exists' => $translator->translate($textMessage)
+                                'user_exists' => $translator->translate($textMessage),
+                                'label' => $translator->translate('tr_meliscore_tool_user_col_password'),
                             ],
                         ];
                     }
                 }
             } else {
                 $success = false;
-                $errors = $userAddForm->getMessages();
+                $formErrors = $userAddForm->getMessages();
+                foreach ($formErrors as $fieldName => $fieldErrors) {
+                    $errors[$fieldName] = $fieldErrors;
+                    $errors[$fieldName]['label'] = $userAddForm->get($fieldName)->getLabel();
+                }
             }
         }
 
@@ -659,10 +667,11 @@ class ToolUserController extends AbstractActionController
 
         $response = [
             'success' => $success,
-            'errors' => $errors,
+            'errors' => [$errors],
             'datas' => $data
         ];
         $this->getEventManager()->trigger('meliscore_tooluser_savenew_info_end', $this, $response);
+
 
         return new JsonModel($response);
     }
@@ -1159,7 +1168,11 @@ class ToolUserController extends AbstractActionController
                 }
             } else {
                 $success = false;
-                $errors = $userUpdateForm->getMessages();
+                $formErrors = $userUpdateForm->getMessages();
+                foreach ($formErrors as $fieldName => $fieldErrors) {
+                    $errors[$fieldName] = $fieldErrors;
+                    $errors[$fieldName]['label'] = $userUpdateForm->get($fieldName)->getLabel();
+                }
             }
         }
         if (!empty($errors)) {
@@ -1168,7 +1181,7 @@ class ToolUserController extends AbstractActionController
 
         $response = [
             'success' => $success,
-            'errors' => $errors,
+            'errors' => [$errors],
             'datas' => $datas
         ];
         $this->getEventManager()->trigger('meliscore_tooluser_save_info_end', $this, $response);
