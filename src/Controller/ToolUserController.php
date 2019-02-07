@@ -9,12 +9,12 @@
 
 namespace MelisCore\Controller;
 
+use MelisCore\Validator\MelisPasswordValidator;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Stdlib\ArrayUtils;
 use Zend\Session\Container;
-use MelisCore\Service\MelisCoreRightsService;
+use Zend\View\Model\JsonModel;
+use Zend\View\Model\ViewModel;
+
 /**
  * User Management Tool
  */
@@ -434,172 +434,153 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Adds a new user to the database
-     * @return \Zend\View\Model\JsonModel
+     * @return JsonModel
      */
     public function addNewUserAction()
     {
         $container = new Container('meliscore');
-        $translator = $this->getServiceLocator()->get('translator');
-
-        $response = array();
+        $response = [];
         $this->getEventManager()->trigger('meliscore_tooluser_savenew_start', $this, $response);
-
 
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_tool_user/forms/meliscore_tool_user_form_new');
         $appConfigForm = $appConfigForm['elements'];
 
         $success = 0;
-        $errors = array();
-        $datas = array();
+        $errors = [];
+        $datas = [];
         $textTitle = 'tr_meliscore_tool_user';
-        $textMessage = '';
 
-        if(!empty($container['action-tool-user-tmp']))
-        {
-            if (!empty($container['action-tool-user-tmp']['success']))
+        if (!empty($container['action-tool-user-tmp'])) {
+            if (!empty($container['action-tool-user-tmp']['success'])) {
                 $success = $container['action-tool-user-tmp']['success'];
+            }
 
-            if (!empty($container['action-tool-user-tmp']['errors']))
+            if (!empty($container['action-tool-user-tmp']['errors'])) {
                 $errors = $container['action-tool-user-tmp']['errors'];
+            }
 
-            if (!empty($container['action-tool-user-tmp']['datas']))
+            if (!empty($container['action-tool-user-tmp']['datas'])) {
                 $datas = $container['action-tool-user-tmp']['datas'];
-
+            }
         }
 
         unset($container['action-tool-user-tmp']);
         unset($container['action-tool-user-setrights-tmp']);
 
-        foreach ($errors as $keyError => $valueError)
-        {
-            foreach ($appConfigForm as $keyForm => $valueForm)
-            {
+        foreach ($errors as $keyError => $valueError) {
+            foreach ($appConfigForm as $keyForm => $valueForm) {
                 if ($valueForm['spec']['name'] == $keyError &&
-                    !empty($valueForm['spec']['options']['label']))
+                    !empty($valueForm['spec']['options']['label'])) {
                     $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                }
             }
         }
 
-        if($success == 0)
-        {
+        if ($success == 0) {
             $textMessage = 'tr_meliscore_tool_user_new_fail_info';
-        }
-        else
-        {
+        } else {
             $textMessage = 'tr_meliscore_tool_user_new_success_info';
         }
 
         $userId = null;
-        if (!empty($datas['usr_id']))
-        {
+        if (!empty($datas['usr_id'])) {
             $userId = $datas['usr_id'];
             unset($datas['usr_id']);
         }
 
-        $response = array(
+        $response = [
             'success' => $success,
             'textTitle' => $textTitle,
             'textMessage' => $textMessage,
             'errors' => $errors,
             'datas' => $datas
-        );
+        ];
 
-        $this->getEventManager()->trigger('meliscore_tooluser_savenew_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_ADD', 'itemId' => $userId)));
+        $this->getEventManager()->trigger('meliscore_tooluser_savenew_end', $this, array_merge($response, ['typeCode' => 'CORE_USER_ADD', 'itemId' => $userId]));
 
         unset($response['datas']);
 
         return new JsonModel($response);
     }
 
+    /**
+     * Handles the addition of user's information
+     * @return JsonModel
+     */
     public function addNewUserInfoAction()
     {
-        $data = array();
-        $imageFile = '';
-        $userData = array();
+        $data = [];
         $success = false;
-        $errors = array();
-        $textTitle = 'tr_meliscore_tool_user Add New User';
-        $textMessage = '';
-
-        $response = array();
+        $errors = [];
+        $response = [];
         $this->getEventManager()->trigger('meliscore_tooluser_savenew_info_start', $this, $response);
 
-        // translator
-        $translator = $this->getServiceLocator()->get('translator');
+        if ($this->getRequest()->isPost()) {
+            // tell the Tool what configuration in the app.tool.php that will be used.
+            $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+            $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
-        // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+            $translator = $this->getServiceLocator()->get('translator');
+            /** @var \Zend\Form\Form $userAddForm */
+            $userAddForm = $melisTool->getForm('meliscore_tool_user_form_new');
+            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $imgService = $this->getServiceLocator()->get('MelisCoreImage');
+            $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
 
-        // tell the Tool what configuration in the app.tool.php that will be used.
-        $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
-
-        $userAddForm = $melisTool->getForm('meliscore_tool_user_form_new');
-
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-
-        $imgService = $this->getServiceLocator()->get('MelisCoreImage');
-
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
-
-        if($this->getRequest()->isPost())
-        {
-            $postValues = get_object_vars($this->getRequest()->getPost());
-            $postValues = $melisTool->sanitizePost($postValues);
+            $postValues = $melisTool->sanitizePost($this->getRequest()->getPost()->toArray());
             $userAddForm->setData($postValues);
 
-            $userLogin = $this->getRequest()->getPost('usr_login');
-            $password  = $this->getRequest()->getPost('usr_password');
-            $confirmPass = $this->getRequest()->getPost('usr_confirm_password');
-            $language  = (int) $this->getRequest()->getPost('usr_lang_id');
-            $roleId    = (int) $this->getRequest()->getPost('usr_role_id');
+            $userLogin = empty($postValues['usr_login']) ? null : $postValues['usr_login'];
+            $password = empty($postValues['usr_password']) ? '' : $postValues['usr_password'];
+            $confirmPass = empty($postValues['usr_confirm_password']) ? '' : $postValues['usr_confirm_password'];
+            $language = empty($postValues['usr_lang_id']) ? 0 : (int)$postValues['usr_lang_id'];
+            $roleId = empty($postValues['usr_role_id']) ? 0 : (int)$postValues['usr_role_id'];
 
-
-            if($userAddForm->isValid())
-            {
+            if ($userAddForm->isValid()) {
                 // check if the user exists
                 $userDatas = $userTable->getEntryByField('usr_login', $userLogin);
                 $userDatas = $userDatas->current();
-                if(!empty($userDatas->usr_login))
-                {
-                    $success = false;
+                if (!empty($userDatas->usr_login)) {
                     $textMessage = 'tr_meliscore_tool_user_new_fail_user_exists';
-                    $errors= array(
-                        'usr_login' => array(
-                            'user_exists' => $translator->translate($textMessage)
-                        ),
-                    );
-                }
-                elseif(empty($language))
-                {
-                    $success = false;
-                    $textMessage = 'tr_meliscore_tool_user_update_fail_info';
-                    $errors = array(
-                        'usr_lang_id' => array(
-                            'invalidLanguageSelection' => $translator->translate('tr_meliscore_tool_user_usr_lang_id_error_invalid'),
-                        ),
-                    );
-                }
-                else
-                {
-                    if($password == $confirmPass)
-                    {
+                    $errors['usr_login'] = [
+                        'user_exists' => $translator->translate($textMessage),
+                        'label' => $translator->translate('tr_meliscore_tool_user_col_username')
+                    ];
+                } elseif (empty($language)) {
+                    $errors['usr_lang_id'] = [
+                        'invalidLanguageSelection' => $translator->translate('tr_meliscore_tool_user_usr_lang_id_error_invalid'),
+                        'label' => $translator->translate('tr_meliscore_tool_user_form_language')
+                    ];
+                } else {
+                    if ($password == $confirmPass) {
                         $imageContent = null;
                         // create tmp folder if not exists
-                        $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/';
-                        if(!file_exists($dirName) && is_writable($dirName)) {
-                            $oldmask = umask(0);
-                            mkdir($dirName, 0777,  true);
+                        $dirName = $_SERVER['DOCUMENT_ROOT'] . '/media/';
+                        if (!file_exists($dirName) && is_writable($dirName)) {
+                            mkdir($dirName, 0777, true);
                         }
 
-                        if(file_exists($dirName)) {
+                        if (file_exists($dirName)) {
                             $imageFile = $this->params()->fromFiles('usr_image');
-                            $tempImg = !empty($imageFile['tmp_name']) ? $imgService->createThumbnail($dirName,$imageFile['name'],$imageFile['tmp_name']) : null;
-                            $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName.'tmb_'.$imageFile['name']) : null;
 
-                            // delete tmp image
-                            if(!empty($imageFile['tmp_name'])) {
-                                unlink($dirName.'tmb_'.$imageFile['name']);
+                            /** Ensuring file is an image */
+                            $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
+                            if ($sourceImg === false) {
+                                $errors['usr_image'] = [
+                                    'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
+                                    'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
+                                ];
+                            } else {
+                                if (!empty($imageFile['tmp_name'])) {
+                                    $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
+                                }
+                                $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : null;
+
+                                // delete tmp image
+                                if (!empty($imageFile['tmp_name'])) {
+                                    unlink($dirName . 'tmb_' . $imageFile['name']);
+                                }
                             }
                         }
 
@@ -614,81 +595,78 @@ class ToolUserController extends AbstractActionController
                         $data['usr_creation_date'] = date('Y-m-d H:i:s');
                         $data['usr_last_login_date'] = null;
 
-
-                        if($roleId == 0 || $roleId == 1)
-                        {
+                        if ($roleId == 0 || $roleId == 1) {
                             $data['usr_role_id'] = 1;
                             $container = new Container('meliscore');
-                            if (!empty($container['action-tool-user-setrights-tmp']))
-                            {
+                            if (!empty($container['action-tool-user-setrights-tmp'])) {
                                 $newXmlRights = '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0">';
-                                foreach ($container['action-tool-user-setrights-tmp'] as $xmlrights)
+                                foreach ($container['action-tool-user-setrights-tmp'] as $xmlrights) {
                                     $newXmlRights .= $xmlrights;
+                                }
 
                                 $newXmlRights .= '</document>';
 
                                 $data['usr_rights'] = $newXmlRights;
                             }
-                        }
-                        else
-                        {
+                        } else {
                             $data['usr_role_id'] = $roleId;
-                            $rolesTable = $this->getServiceLocator()->get('MelisUserRole');
-                            $roleData = $rolesTable->getEntryById($roleId);
-                            $roleData = $roleData->current();
                             $data['usr_rights'] = null;
                         }
 
-                        $melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+                        if (empty($errors)) {
+                            $data['usr_id'] = $userTable->save($data);
+                            if ($data['usr_id'] > 0) {
+                                $success = true;
+                                $melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');
 
-                        // Tags to be replace at email content with the corresponding value
-                        $tags = array(
-                            'NAME' => $data['usr_firstname'].' '.$data['usr_lastname'],
-                            'EMAIL' => $data['usr_email'],
-                            'LOGIN' => $data['usr_login'],
-                            'PASSWORD' => $password
-                        );
+                                // Tags to be replace at email content with the corresponding value
+                                $tags = [
+                                    'NAME' => $data['usr_firstname'] . ' ' . $data['usr_lastname'],
+                                    'EMAIL' => $data['usr_email'],
+                                    'LOGIN' => $data['usr_login'],
+                                    'PASSWORD' => $password
+                                ];
 
-                        $name_to = $tags['NAME'];
-                        $email_to = $tags['EMAIL'];
-                        $langId = $language;
+                                $name_to = $tags['NAME'];
+                                $email_to = $tags['EMAIL'];
+                                $langId = $language;
 
-                        $melisEmailBO->sendBoEmailByCode('ACCOUNTCREATION',  $tags, $email_to, $name_to, $langId);
-
-                        $data['usr_id'] = $userTable->save($data);
-                        $textMessage = 'tr_meliscore_tool_user_new_success_info';
-                        $success = true;
-                    }
-                    else
-                    {
+                                $melisEmailBO->sendBoEmailByCode('ACCOUNTCREATION', $tags, $email_to, $name_to, $langId);
+                            }
+                        }
+                    } else {
                         $success = false;
                         $textMessage = 'tr_meliscore_tool_user_new_fail_pass';
-                        $errors= array(
-                            'usr_password' => array(
-                                'user_exists' => $translator->translate($textMessage)
-                            ),
-                        );
+                        $errors['usr_password'] = [
+                            'user_exists' => $translator->translate($textMessage),
+                            'label' => $translator->translate('tr_meliscore_tool_user_col_password'),
+                        ];
                     }
                 }
-            }
-            else
-            {
+            } else {
                 $success = false;
-                $errors = $userAddForm->getMessages();
-                $textMessage = 'tr_meliscore_tool_user_new_fail_info';
+                $formErrors = $userAddForm->getMessages();
+                foreach ($formErrors as $fieldName => $fieldErrors) {
+                    $errors[$fieldName] = $fieldErrors;
+                    $errors[$fieldName]['label'] = $userAddForm->get($fieldName)->getLabel();
+                }
             }
         }
 
-        $response = array(
+        if (!empty($errors)) {
+            $success = false;
+        }
+
+        $response = [
             'success' => $success,
-            'errors' => array($errors),
+            'errors' => [$errors],
             'datas' => $data
-        );
+        ];
         $this->getEventManager()->trigger('meliscore_tooluser_savenew_info_end', $this, $response);
 
         return new JsonModel($response);
-
     }
+
     /**
      * Handles the Delete User event
      * @return \Zend\View\Model\JsonModel
@@ -953,58 +931,20 @@ class ToolUserController extends AbstractActionController
 
     }
 
-    public function getUserDataAction()
-    {
-        $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-        $translator = $this->getServiceLocator()->get('translator');
-        $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
-
-        if($request->isPost()) {
-
-            $post    = get_object_vars($request->getPost());
-
-            $columns = array_keys($melisTool->getColumns());
-
-            $data              = $userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection, $start, $length)->toArray();
-            $dataCount         = $userTbl->getTotalData();
-            $dataFilteredCount = $userTbl->getTotalFiltered();
-            $tableData         = $data;
-
-            for($ctr = 0; $ctr < count($tableData); $ctr++) {
-                // apply text limits
-
-            }
-        }
-
-        $response = [
-            'draw' => $draw,
-            'data' => $tableData,
-            'recordsFiltered' => $dataFilteredCount,
-            'recordsTotal' => $dataCount
-        ];
-
-        return new JsonModel($response);
-    }
-
     /**
      * Handles the event of updating user's information
+     *
+     * @return JsonModel
      */
     public function updateUserInfoAction()
     {
-        $response = array();
+        $response = [];
         $this->getEventManager()->trigger('meliscore_tooluser_save_info_start', $this, $response);
 
-        $data = array();
-        $imageFile = '';
-        $userData = array();
         $success = false;
-        $errors = array();
-        $datas = array();
-        $textTitle = 'tr_meliscore_tool_user';
-        $textMessage = '';
-        $userInfo = array();
+        $errors = [];
+        $datas = [];
+        $userInfo = [];
         // translator
         $translator = $this->getServiceLocator()->get('translator');
 
@@ -1013,40 +953,28 @@ class ToolUserController extends AbstractActionController
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
-
+        /** @var \Zend\Form\Form $userUpdateForm */
         $userUpdateForm = $melisTool->getForm('meliscore_tool_user_form_edit');
 
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-
-        $imgService = $this->getServiceLocator()->get('MelisCoreImage');
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-
-        // xml rights temp holder
-        $newXmlRights = '';
-
-        if($this->getRequest()->isPost())
-        {
-
-
-            $postValues = get_object_vars($this->getRequest()->getPost());
-            $postValues = $melisTool->sanitizePost($postValues);
-
-            $postValues = $this->getRequest()->getPost();
-
+        if ($this->getRequest()->isPost()) {
+            $postValues = $melisTool->sanitizePost($this->getRequest()->getPost()->toArray());
             $userUpdateForm->setData($postValues);
 
             // get the user id for sql wildcard
-            $userId = $this->getRequest()->getPost('usr_id');
-            $password  = $this->getRequest()->getPost('usr_password');
-            $confirmPass = $this->getRequest()->getPost('usr_confirm_password');
-            $roleId    = (int) $this->getRequest()->getPost('usr_role_id');
+            $userId = empty($postValues['usr_id']) ? null : $postValues['usr_id'];
+            $password = empty($postValues['usr_password']) ? '' : $postValues['usr_password'];
+            $confirmPass = empty($postValues['usr_confirm_password']) ? '' : $postValues['usr_confirm_password'];
+            $roleId = empty($postValues['usr_role_id']) ? 0 : (int)$postValues['usr_role_id'];
 
-            if($userUpdateForm->isValid())
-            {
+            if ($userUpdateForm->isValid()) {
+                $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+                $imgService = $this->getServiceLocator()->get('MelisCoreImage');
+                $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+                $newXmlRights = ''; // xml rights temp holder
+
                 // pass values that should not be changed
-                foreach($userTable->getEntryById($userId) as $user)
-                {
-                    $userInfo = array(
+                foreach ($userTable->getEntryById($userId) as $user) {
+                    $userInfo = [
                         'usr_login' => $user->usr_login,
                         'usr_password' => $user->usr_password,
                         'usr_lang_id' => $user->usr_lang_id,
@@ -1055,50 +983,54 @@ class ToolUserController extends AbstractActionController
                         'usr_last_login_date' => $user->usr_last_login_date,
                         'usr_image' => $user->usr_image,
                         'usr_role_id' => $user->usr_role_id
-                    );
-
+                    ];
                 }
                 $data = $userUpdateForm->getData();
 
                 $imageContent = null;
 
                 // create tmp folder if not exists
-                $dirName = $_SERVER['DOCUMENT_ROOT'].'/media/';
-                if(!file_exists($dirName) && is_writable($dirName)) {
-                    $oldmask = umask(0);
+                $dirName = $_SERVER['DOCUMENT_ROOT'] . '/media/';
+                if (!file_exists($dirName) && is_writable($dirName)) {
                     mkdir($dirName, 0777, true);
                 }
 
-                if(file_exists($dirName)) {
+                if (file_exists($dirName)) {
                     // process image, convert image content into mysql BLOB || image validation needed (file size & file type)
                     $imageFile = $this->params()->fromFiles('usr_image');
-                    $tempImg = !empty($imageFile['tmp_name']) ? $imgService->createThumbnail($dirName,$imageFile['name'],$imageFile['tmp_name']) : null;
-                    $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName.'tmb_'.$imageFile['name']) : $userInfo['usr_image'];
 
+                    /** Ensuring file is an image */
+                    $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
+                    if ($sourceImg === false) {
+                        $success = false;
+                        $errors['usr_image'] = [
+                            'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
+                            'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
+                        ];
+                    } else {
+                        if (!empty($imageFile['tmp_name'])) {
+                            $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
+                        }
+                        $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : $userInfo['usr_image'];
 
-                    // delete tmp image
-                    if(!empty($imageFile['tmp_name'])) {
-                        unlink($dirName.'tmb_'.$imageFile['name']);
+                        // delete tmp image
+                        if (!empty($imageFile['tmp_name'])) {
+                            unlink($dirName . 'tmb_' . $imageFile['name']);
+                        }
                     }
                 }
-
 
                 $data['usr_image'] = $imageContent;
                 $newPass = '';
                 // check if the user exists
-                if ($userInfo)
-                {
-                    if(!empty($password) || !empty($confirmPass))
-                    {
-                        if(strlen($password) >= 8) {
-                            if(strlen($confirmPass) >= 8) {
-                                $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
-                                if($passValidator->isValid($password))
-                                {
-
+                if ($userInfo) {
+                    if (!empty($password) || !empty($confirmPass)) {
+                        if (strlen($password) >= 8) {
+                            if (strlen($confirmPass) >= 8) {
+                                $passValidator = new MelisPasswordValidator();
+                                if ($passValidator->isValid($password)) {
                                     // password and confirm password matching
-                                    if($password == $confirmPass)
-                                    {
+                                    if ($password == $confirmPass) {
                                         $melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');
 
                                         // Fetching user language Id
@@ -1107,72 +1039,56 @@ class ToolUserController extends AbstractActionController
                                         $userDatas = $userDataResult->current();
 
                                         // Tags to be replace at email content with the corresponding value
-                                        $tags = array(
-                                            'NAME' => $userDatas->usr_firstname.' '.$userDatas->usr_lastname,
+                                        $tags = [
+                                            'NAME' => $userDatas->usr_firstname . ' ' . $userDatas->usr_lastname,
                                             'PASSWORD' => $password,
-                                        );
+                                        ];
 
                                         $email_to = $userDatas->usr_email;
                                         $name_to = $userDatas->usr_login;
                                         $langId = $userDatas->usr_lang_id;
 
-                                        $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION',  $tags, $email_to, $name_to, $langId);
+                                        $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION', $tags, $email_to, $name_to, $langId);
 
                                         $newPass = $melisCoreAuth->encryptPassword($password);
-                                        $success = true;
-                                    }
-                                    else
-                                    {
+                                        if (empty($errors)) {
+                                            $success = true;
+                                        }
+                                    } else {
                                         $success = false;
-                                        $textMessage = 'tr_meliscore_tool_user_update_fail_info';
-                                        $errors = array(
-                                            'usr_password' => array(
-                                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
-                                                'label' => 'Password',
-                                            ),
-                                            'usr_confirm_password' => array(
-                                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
-                                                'label' => 'Password',
-                                            ),
-                                        );
-                                    } // password and confirm password matching
-                                }
-                                else {
-                                    $errors = array(
-                                        'usr_password' => array(
-                                            'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_regex_not_match'),
+                                        $errors['usr_password'] = [
+                                            'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
                                             'label' => 'Password',
-                                        )
-                                    );
-                                } // password regex validator
-                            }
-                            else {
-                                $errors = array(
-                                    'usr_confirm_password' => array(
-                                        'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_confirm_password_error_low'),
+                                        ];
+                                        $errors['usr_confirm_password'] = [
+                                            'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
+                                            'label' => 'Password',
+                                        ];
+                                    } // password and confirm password matching
+                                } else {
+                                    $errors['usr_password'] = [
+                                        'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_regex_not_match'),
                                         'label' => 'Password',
-                                    )
-                                );
-                            }// end confirm password length
-                        }
-                        else {
-                            $errors = array(
-                                'usr_password' => array(
-                                    'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_error_low'),
+                                    ];
+                                } // password regex validator
+                            } else {
+                                $errors['usr_confirm_password'] = [
+                                    'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_confirm_password_error_low'),
                                     'label' => 'Password',
-                                )
-                            );
+                                ];
+                            }// end confirm password length
+                        } else {
+                            $errors['usr_password'] = [
+                                'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_error_low'),
+                                'label' => 'Password',
+                            ];
                         }// end password length
-                    }
-                    else {
-
+                    } else {
                         // update without touching the password
                         $success = true;
                     } // password and confirm password not empty
 
-
-                    if($success) {
-
+                    if ($success && empty($errors)) {
                         $savedPassword = !empty($newPass) ? $newPass : $userInfo['usr_password'];
                         // remove confirm pass when updating
                         unset($data['usr_confirm_password']);
@@ -1189,8 +1105,7 @@ class ToolUserController extends AbstractActionController
                         if ($roleId == 0 || $roleId == 1) {
                             $data['usr_role_id'] = 1;
                             $container = new Container('meliscore');
-                            if (!empty($container['action-tool-user-setrights-tmp']))
-                            {
+                            if (!empty($container['action-tool-user-setrights-tmp'])) {
                                 $newXmlRights = '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0">';
                                 foreach ($container['action-tool-user-setrights-tmp'] as $xmlrights)
                                     $newXmlRights .= $xmlrights;
@@ -1212,7 +1127,6 @@ class ToolUserController extends AbstractActionController
                         // check if you are updating your own info
                         $userSession = $melisCoreAuth->getStorage()->read();
                         if ($data['usr_login'] == $userSession->usr_login) {
-
                             // update session data
                             $userSession->usr_status = $data['usr_status'];
                             $userSession->usr_email = $data['usr_email'];
@@ -1224,32 +1138,33 @@ class ToolUserController extends AbstractActionController
                             $userSession->usr_image = $data['usr_image'];
                             $userSession->usr_password = $savedPassword;
 
-                            $datas = array(
+                            $datas = [
                                 'isMyInfo' => 1,
-                                'loadProfile' => 'data:image/jpeg;base64,'. base64_encode($userSession->usr_image),
-                            );
-
+                                'loadProfile' => 'data:image/jpeg;base64,' . base64_encode($userSession->usr_image),
+                            ];
                         }
                         // free up memory
                         unset($data);
-                        $textMessage = 'tr_meliscore_tool_user_update_success_info';
                     }
-
+                }
+            } else {
+                $success = false;
+                $formErrors = $userUpdateForm->getMessages();
+                foreach ($formErrors as $fieldName => $fieldErrors) {
+                    $errors[$fieldName] = $fieldErrors;
+                    $errors[$fieldName]['label'] = $userUpdateForm->get($fieldName)->getLabel();
                 }
             }
-            else
-            {
-                $success = false;
-                $errors = $userUpdateForm->getMessages();
-                $textMessage = 'tr_meliscore_tool_user_update_fail_info';
-            }
+        }
+        if (!empty($errors)) {
+            $success = false;
         }
 
-        $response = array(
+        $response = [
             'success' => $success,
-            'errors' => array($errors),
+            'errors' => [$errors],
             'datas' => $datas
-        );
+        ];
         $this->getEventManager()->trigger('meliscore_tooluser_save_info_end', $this, $response);
 
         return new JsonModel($response);
@@ -1279,79 +1194,76 @@ class ToolUserController extends AbstractActionController
         return $melisTool->exportDataToCsv($userData);
     }
 
-
+    /**
+     * Saves user account details
+     * @return JsonModel
+     */
     public function updateUserAction()
     {
-        $response = array();
+        $response = [];
         $this->getEventManager()->trigger('meliscore_tooluser_save_start', $this, $response);
 
         $container = new Container('meliscore');
-        $translator = $this->getServiceLocator()->get('translator');
 
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_tool_user/forms/meliscore_tool_user_form_edit');
         $appConfigForm = $appConfigForm['elements'];
 
         $success = 0;
-        $errors = array();
-        $datas = array();
+        $errors = [];
+        $datas = [];
         $textTitle = 'tr_meliscore_tool_user';
-        $textMessage = '';
+        //$textMessage = '';
 
-        if(!empty($container['action-tool-user-tmp']))
-        {
-            if (!empty($container['action-tool-user-tmp']['success']))
+        if (!empty($container['action-tool-user-tmp'])) {
+            if (!empty($container['action-tool-user-tmp']['success'])) {
                 $success = $container['action-tool-user-tmp']['success'];
+            }
 
-            if (!empty($container['action-tool-user-tmp']['errors']))
+            if (!empty($container['action-tool-user-tmp']['errors'])) {
                 $errors = $container['action-tool-user-tmp']['errors'];
+            }
 
-            if (!empty($container['action-tool-user-tmp']['datas']))
+            if (!empty($container['action-tool-user-tmp']['datas'])) {
                 $datas = $container['action-tool-user-tmp']['datas'];
-
+            }
         }
 
-        foreach ($errors as $keyError => $valueError)
-        {
-            foreach ($appConfigForm as $keyForm => $valueForm)
-            {
+        foreach ($errors as $keyError => $valueError) {
+            foreach ($appConfigForm as $keyForm => $valueForm) {
                 if ($valueForm['spec']['name'] == $keyError &&
-                    !empty($valueForm['spec']['options']['label']))
+                    !empty($valueForm['spec']['options']['label'])) {
                     $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                }
             }
         }
 
         unset($container['action-tool-user-tmp']);
         unset($container['action-tool-user-setrights-tmp']);
 
-
-
-        if($success == 0)
-        {
+        if ($success == 0) {
             $textMessage = 'tr_meliscore_tool_user_update_fail_info';
-        }
-        else
-        {
+        } else {
             $textMessage = 'tr_meliscore_tool_user_update_success_info';
         }
 
         $userId = null;
         $request = $this->getRequest();
-        $postData = get_object_vars($request->getPost());
-        if (!empty($postData['usr_id']))
-        {
+        $postData = $request->getPost()->toArray();
+
+        if (!empty($postData['usr_id'])) {
             $userId = $postData['usr_id'];
         }
 
-        $response = array(
+        $response = [
             'success' => $success,
             'textTitle' => $textTitle,
             'textMessage' => $textMessage,
             'errors' => $errors,
             'datas' => $datas
-        );
+        ];
 
-        $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, array_merge($response, array('typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId)));
+        $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, array_merge($response, ['typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId]));
 
         return new JsonModel($response);
     }
