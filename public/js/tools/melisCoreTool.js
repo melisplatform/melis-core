@@ -18,7 +18,7 @@ var melisCoreTool = (function (window) {
     }
 
     // FOR MODALS
-    function confirm(textOk, textNo, title, msg, callBackOnYes) {
+    function confirm(textOk, textNo, title, msg, callBackOnYes, callBackOnNo) {
         BootstrapDialog.show({
             title: title,
             message: msg,
@@ -28,6 +28,7 @@ var melisCoreTool = (function (window) {
                 label: textNo, //translations.tr_meliscore_common_no
                 cssClass: 'btn-danger pull-left',
                 action: function (dialog) {
+                    callBackOnNo();
                     dialog.close();
                 }
             }, {
