@@ -9,6 +9,7 @@
 
 namespace MelisCore;
 
+use MelisCore\Listener\MelisCoreDashboardPluginRightsTreeViewListener;
 use MelisCore\Listener\MelisCorePhpWarningListener;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -75,6 +76,8 @@ class Module
 
             $eventManager->attach(new MelisCoreAuthSuccessListener());
             $eventManager->attach(new MelisCorePhpWarningListener());
+
+            $eventManager->attach(new MelisCoreDashboardPluginRightsTreeViewListener());
         }
     }
     

@@ -692,5 +692,6 @@
         'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Le nom ne doit pas être composé de chiffres',
 
         'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
+        'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.',
     );
 ?>

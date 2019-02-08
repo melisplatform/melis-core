@@ -39,9 +39,17 @@ class MelisCoreToolUserAddNewUserListener extends MelisCoreGeneralListener imple
         		    
         		if (empty($container['action-tool-user-setrights-tmp']))
         			$container['action-tool-user-setrights-tmp'] = array();
+
         		$melisCoreRights = $sm->get('MelisCoreRights');
         		$melisCoreRights = $melisCoreRights->createXmlRightsValues($userId, $postUser);
-        		$container['action-tool-user-setrights-tmp'] = array_merge($container['action-tool-user-setrights-tmp'], $melisCoreRights);
+
+        		// Dashboard plugins
+                $melisDashboardPluginRights = $sm->get('MelisCoreDashboardPluginsService');
+                $dashboardPluginRights = $melisDashboardPluginRights->createXmlRightsValues($userId, $postUser);
+
+        		$container['action-tool-user-setrights-tmp'] = array_merge($container['action-tool-user-setrights-tmp'],
+                    $melisCoreRights,
+                    $dashboardPluginRights);
         		    
         		list($success, $errors, $data) = $melisCoreDispatchService->dispatchPluginAction(
         			$e,

@@ -1,4 +1,5 @@
 <?php
+
 return [
 // meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree/interface
     'plugins' => [
@@ -989,12 +990,16 @@ return [
                             ),
                             'interface' => []
                         ],
+                    ]
+                ],
+                'melis_dashboardplugin' => [
+                    'interface' => [
                         'melisdashboardplugin_section' => [
                             'conf' => [
                                 'id' => 'melisdashboardplugin_section',
                                 'melisKey' => 'melisdashboardplugin_section',
                                 'name' => 'tr_melisdashboardplugin_section',
-                                'icon' => 'fa fa-shopping-cart',
+                                'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
                             'interface' => []

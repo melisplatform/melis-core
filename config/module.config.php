@@ -311,6 +311,7 @@ return array(
             'MelisCoreGeneralService' => 'MelisCore\Service\Factory\MelisCoreGeneralServiceFactory',
             'MelisCoreDashboardService' => 'MelisCore\Service\Factory\MelisCoreDashboardServiceFactory',
             'MelisCoreGdprService' => 'MelisCore\Service\Factory\MelisCoreGdprServiceFactory',
+            'MelisCoreDashboardPluginsService' => 'MelisCore\Service\Factory\MelisCoreDashboardPluginsRightsServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',

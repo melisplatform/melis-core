@@ -85,12 +85,30 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     public function loadPostDataPluginConfig()
     {
         $request = $this->getServiceLocator()->get('request');
-        return $request->getPost()->toArray();
+        return $this->decodeStringData($request->getPost()->toArray());
     }
     
     public function savePluginConfigToXml($config)
     {
         return '';
+    }
+
+    private function decodeStringData($data)
+    {
+        /**
+         * decode the string
+         */
+        if(!empty($data)) {
+            foreach ($data as $key => $value) {
+                if (!is_array($value)) {
+                    $tempValue = json_decode($value, true);
+                    if (is_array($tempValue)) {
+                        $data[$key] = $tempValue;
+                    }
+                }
+            }
+        }
+        return $data;
     }
     
     /**
@@ -109,18 +127,13 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $this->updatesPluginConfig = $melisCoreGeneralSrv->sendEvent($this->pluginName . '_melisdashboard_render_start', $this->updatesPluginConfig);
 
         $this->getPluginConfig($generatePluginId);
-        
+
         // Checking plugin interface otherwise return view with error message
-        if (!empty($this->pluginConfig['interface']) && is_array($this->pluginConfig['interface']))
+        if (!empty($this->pluginConfig['conf']) && is_array($this->pluginConfig['conf']))
         {
-            foreach ($this->pluginConfig['interface'] As $cKey => $cVal)
-            {
-                $appconfigpath = '/'.$this->pluginModule.'/dashboard_plugins/'.$this->pluginName.'/interface/'.$cKey;
-                break;
-            }
-            
+            $appconfigpath = $this->pluginConfig['conf']['path'];
             $request = $this->getServiceLocator()->get('request');
-            
+
             if ($request->isXmlHttpRequest())
             {
                 $postParam = new Parameters();
@@ -128,7 +141,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
                 $postParam->set('forceFlagXmlHttpRequestTofalse', true);
                 $request->setQuery($postParam);
             }
-            
+
             $model = $this->getController()->forward()->dispatch('MelisCore\Controller\PluginView',
                 array(
                     'action' => 'generate',
@@ -136,15 +149,14 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
                 )
             );
         }
-        else 
+        else
         {
-            /*  
+            /*
              * Plugin config no interface
              */
             $model = new ViewModel();
             $model->setTemplate('melis-core/dashboard-plugin/no-plugin-interface');
         }
-        
         return $this->sendViewResult($model);
     }
     
@@ -156,33 +168,29 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      */
     public function getPluginConfig($generatePluginId = false)
     {
-        $config = $this->getServiceLocator()->get('config');
-        
-        $pluginConfig = $config['plugins'][$this->pluginModule]['dashboard_plugins'][$this->pluginName];
-        
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $pluginConfig = $config->getItem("/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section/interface/$this->pluginName");
         $this->pluginConfig = ArrayUtils::merge($pluginConfig, $this->updatesPluginConfig);
-        
+
         $this->getPluginValueFromDb();
-        
         $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadDbXmlToPluginConfig());
         $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadGetDataPluginConfig());
         $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadPostDataPluginConfig());
-        
         // Generate pluginId if needed
         if ($generatePluginId)
         {
-            if (!empty($this->pluginConfig['plugin_id']))
+            if (!empty($this->pluginConfig['datas']['plugin_id']))
             {
-                $this->pluginConfig['plugin_id'] .= '_'.time();
+                $this->pluginConfig['plugin_id'] = $this->pluginConfig['datas']['plugin_id'].'_'.time();
                 
-                if (isset($this->pluginConfig['is_new_plugin']))
+                if (isset($this->pluginConfig['datas']['is_new_plugin']))
                 {
                     // Unsetting after generate plugin id
-                    unset($this->pluginConfig['is_new_plugin']);
+                    unset($this->pluginConfig['datas']['is_new_plugin']);
                 }
             }
         }
-        
+
         $this->pluginConfig['module'] = $this->pluginModule;
         
         $this->pluginConfig = $this->translateConfig($this->pluginConfig);
@@ -208,12 +216,11 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         {
             $modelVars->pluginId = $this->pluginConfig['plugin_id'];
         }
-        
         $modelVars->pluginConfig = $this->pluginConfig;
         $modelVars->jsonPluginConfig = json_encode($this->pluginConfig);
 
         // Skipping container of a plugin
-        if (isset($this->pluginConfig['skip_plugin_container']))
+        if (isset($this->pluginConfig['datas']['skip_plugin_container']))
             return $modelVars;
             
         return $this->setPluginContainer($modelVars);
@@ -271,19 +278,18 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         $userAuthDatas =  $melisCoreAuth->getStorage()->read();
         $userId = (int) $userAuthDatas->usr_id;
-        
         // Dashboard Id
-        $dashboardId = $this->pluginConfig['dashboard_id'];
+        $dashboardId = isset($this->pluginConfig['dashboard_id']) ? $this->pluginConfig['dashboard_id'] : $this->pluginConfig['datas']['dashboard_id'];
         
         // Plugin Id
         $pluginId = isset($this->pluginConfig['plugin_id']) ? $this->pluginConfig['plugin_id'] : null;
-        
+
         if (!empty($dashboardId))
         {
             // Retreiving User dashboard from database
             $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
             $plugins = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->toArray();
-            
+
             foreach ($plugins As $key => $val)
             {
                 if (!empty($val['d_content']))
@@ -301,7 +307,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
                             
                             foreach ($xVal As $key => $val)
                             {
-                                $this->pluginConfig[$key] = (string)$val;
+                                $this->pluginConfig['datas'][$key] = (string)$val;
                             }
                         }
                     }
