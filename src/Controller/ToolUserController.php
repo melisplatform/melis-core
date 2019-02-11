@@ -565,21 +565,23 @@ class ToolUserController extends AbstractActionController
                             $imageFile = $this->params()->fromFiles('usr_image');
 
                             /** Ensuring file is an image */
-                            $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
-                            if ($sourceImg === false) {
-                                $errors['usr_image'] = [
-                                    'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
-                                    'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
-                                ];
-                            } else {
-                                if (!empty($imageFile['tmp_name'])) {
-                                    $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
-                                }
-                                $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : null;
+                            if($imageFile['tmp_name'] !== ""){
+                                $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
+                                if ($sourceImg === false) {
+                                    $errors['usr_image'] = [
+                                        'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
+                                        'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
+                                    ];
+                                } else {
+                                    if (!empty($imageFile['tmp_name'])) {
+                                        $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
+                                    }
+                                    $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : null;
 
-                                // delete tmp image
-                                if (!empty($imageFile['tmp_name'])) {
-                                    unlink($dirName . 'tmb_' . $imageFile['name']);
+                                    // delete tmp image
+                                    if (!empty($imageFile['tmp_name'])) {
+                                        unlink($dirName . 'tmb_' . $imageFile['name']);
+                                    }
                                 }
                             }
                         }
@@ -1000,22 +1002,24 @@ class ToolUserController extends AbstractActionController
                     $imageFile = $this->params()->fromFiles('usr_image');
 
                     /** Ensuring file is an image */
-                    $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
-                    if ($sourceImg === false) {
-                        $success = false;
-                        $errors['usr_image'] = [
-                            'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
-                            'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
-                        ];
-                    } else {
-                        if (!empty($imageFile['tmp_name'])) {
-                            $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
-                        }
-                        $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : $userInfo['usr_image'];
+                    if($imageFile['tmp_name'] !== ""){
+                        $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
+                        if ($sourceImg === false) {
+                            $success = false;
+                            $errors['usr_image'] = [
+                                'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
+                                'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
+                            ];
+                        } else {
+                            if (!empty($imageFile['tmp_name'])) {
+                                $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
+                            }
+                            $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : $userInfo['usr_image'];
 
-                        // delete tmp image
-                        if (!empty($imageFile['tmp_name'])) {
-                            unlink($dirName . 'tmb_' . $imageFile['name']);
+                            // delete tmp image
+                            if (!empty($imageFile['tmp_name'])) {
+                                unlink($dirName . 'tmb_' . $imageFile['name']);
+                            }
                         }
                     }
                 }
