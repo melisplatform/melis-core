@@ -21,24 +21,10 @@ use Zend\Db\TableGateway\TableGateway;
  */
 class MelisPlatformTable extends MelisGenericTable
 {
-    /**
-     * @string model property
-     */
-    const ID = 'plf_id';
-
-    /**
-     * @string model property
-     */
-    const NAME = 'plf_name';
-
-    /**
-     * @string model property
-     */
-    const CAN_UPDATE_MARKETPLACE = 'plf_update_marketplace';
-
     public function __construct(TableGateway $tableGateway)
     {
         parent::__construct($tableGateway);
         $this->idField = 'plf_id';
     }
+
 }
