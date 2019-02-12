@@ -28,14 +28,20 @@ var melisCoreTool = (function (window) {
                 label: textNo, //translations.tr_meliscore_common_no
                 cssClass: 'btn-danger pull-left',
                 action: function (dialog) {
-                    callBackOnNo();
+                    //callBackOnNo();
+                    if (callBackOnNo !== null || typeof callBackOnNo !== 'undefined') {
+                        callBackOnNo();
+                    }
                     dialog.close();
                 }
             }, {
                 label: textOk, //translations.tr_meliscore_common_yes
                 cssClass: 'btn-success',
                 action: function (dialog) {
-                    callBackOnYes();
+                    //callBackOnYes();
+                    if (callBackOnYes !== null || typeof callBackOnYes !== 'undefined') {
+                        callBackOnYes();
+                    }
                     dialog.close();
                 }
             }]

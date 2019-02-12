@@ -41,7 +41,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
         $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
         $composer = (array) \Zend\Json\Json::decode(file_get_contents($composerFile));
-        dd($composer);
+       
 
         foreach ($composer as $package) {
             $packageModuleName = isset($package->extra) ? (array) $package->extra : null;

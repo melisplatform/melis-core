@@ -973,7 +973,6 @@ class ToolUserController extends AbstractActionController
                 $imgService = $this->getServiceLocator()->get('MelisCoreImage');
                 $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
                 $newXmlRights = ''; // xml rights temp holder
-
                 // pass values that should not be changed
                 foreach ($userTable->getEntryById($userId) as $user) {
                     $userInfo = [
@@ -1006,6 +1005,7 @@ class ToolUserController extends AbstractActionController
                         $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
                         if ($sourceImg === false) {
                             $success = false;
+
                             $errors['usr_image'] = [
                                 'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
                                 'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
@@ -1016,15 +1016,22 @@ class ToolUserController extends AbstractActionController
                             }
                             $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : $userInfo['usr_image'];
 
+
                             // delete tmp image
                             if (!empty($imageFile['tmp_name'])) {
                                 unlink($dirName . 'tmb_' . $imageFile['name']);
                             }
                         }
+                    } else {
+                        // it means you did not select an image
+                        // if you did not select an image then we will get the current usr_image
+                        if (! empty($userInfo)) {
+                            $imageContent = $userInfo['usr_image'];
+                        }
                     }
                 }
-
                 $data['usr_image'] = $imageContent;
+
                 $newPass = '';
                 // check if the user exists
                 if ($userInfo) {
