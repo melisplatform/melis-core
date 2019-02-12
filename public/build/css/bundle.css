@@ -32377,6 +32377,10 @@ ________________________________________________________________________________
  * Catalogs / Categories
  * Added by: Junry fix overflow .overlay-loader @ 15/01/2019
  */
+/* d n d */
+.melis-ui-outlined .container {
+    width: inherit;
+}
 #content #meliscommerce_categories_list_search_input #loader.overlay-loader,
 #content #idAddProductText #loader.overlay-loader {
     height: 100%;
