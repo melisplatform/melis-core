@@ -62,99 +62,95 @@ class TreeToolsController extends AbstractActionController
         }
 
         // Show sections first
-        foreach ($appsConfig['interface'] as $key => $toolSectionName) {
-            $isNavChild = false;
+        if (isset($appsConfig['interface'])) {
+            foreach ($appsConfig['interface'] as $key => $toolSectionName) {
+                $isNavChild = false;
 
-            if ($melisCoreRights->canAccess($key)) {
+                if ($melisCoreRights->canAccess($key)) {
 
-                $tools[$key] = [
-                    'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
-                    'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
-                    'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
-                    'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
-                    'toolsection_forward' => $toolSectionName['forward'] ?? [],
-                    'toolsection_children' => [],
-                    'toolsection_is_tool' => isset($toolSectionName['forward']) && !empty($toolSectionName['forward']) ? true : false,
-                ];
+                    $tools[$key] = [
+                        'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
+                        'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
+                        'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
+                        'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
+                        'toolsection_forward' => $toolSectionName['forward'] ?? [],
+                        'toolsection_children' => [],
+                        'toolsection_parent_tool' => false,
+                        'toolsection_is_tool' => isset($toolSectionName['forward']) && !empty($toolSectionName['forward']) ? true : false,
+                    ];
 
-                // Second level, tools
-                if (isset($toolSectionName['interface'])) {
-                    foreach ($toolSectionName['interface'] as $keyTool => $toolName) {
-                        $isToolNavChild = false;
+                    // Second level, tools
+                    if (isset($toolSectionName['interface'])) {
+                        foreach ($toolSectionName['interface'] as $keyTool => $toolName) {
+                            $isToolNavChild = false;
 
-                        $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-cube';
+                            $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-cube';
 
-                        if ($icon) {
-                            $isNavChild = true;
-                        }
+                            if ($icon) {
+                                $isNavChild = true;
+                            }
 
-                        if ($melisCoreRights->canAccess($keyTool)) {
-                            $tools[$key]['toolsection_children'][$keyTool] = [
-                                'tool_id' => $toolName['conf']['id'] ?? $keyTool,
-                                'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
-                                'tool_icon' => $icon,
-                                'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
-                                'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool,
-                                'toolsection_is_tool' => isset($toolName['forward']) && !empty($toolName['forward']) ? true : false
-                            ];
-                        }
+                            if ($melisCoreRights->canAccess($keyTool)) {
+                                $tools[$key]['toolsection_children'][$keyTool] = [
+                                    'tool_id' => $toolName['conf']['id'] ?? $keyTool,
+                                    'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
+                                    'tool_icon' => $icon,
+                                    'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
+                                    'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool,
+                                    'toolsection_is_tool' => isset($toolName['forward']) && !empty($toolName['forward']) ? true : false
+                                ];
+                            }
 
-                        // add third level for tool others
-                        if ($melisKey == 'melisothers_toolstree_section') {
-                            if (isset($toolName['interface'])) {
+                            // add third level for tool others
+                            if ($melisKey == 'melisothers_toolstree_section') {
+                                if (isset($toolName['interface'])) {
 
-                                // third level, child tools
-                                foreach ($toolName['interface'] as $childKeyTool => $childToolname) {
-                                    $icon = (!empty($childToolname['conf']['icon'])) ? $childToolname['conf']['icon'] : 'fa-cube';
+                                    // third level, child tools
+                                    foreach ($toolName['interface'] as $childKeyTool => $childToolname) {
+                                        $icon = (!empty($childToolname['conf']['icon'])) ? $childToolname['conf']['icon'] : 'fa-cube';
 
-                                    if ($icon) {
-                                        $isToolNavChild = true;
-                                    }
+                                        if ($icon) {
+                                            $isToolNavChild = true;
+                                        }
 
-                                    if ($melisCoreRights->canAccess($childKeyTool)) {
-                                        $tools[$key]['toolsection_children'][$keyTool]['toolsection_children'][$childKeyTool] = [
-                                            'tool_id' => $childToolname['conf']['id'] ?? $keyTool,
-                                            'tool_name' => $childToolname['conf']['name'] ?? "<strike>$childKeyTool</strike>",
-                                            'tool_icon' => $icon,
-                                            'tool_forward' => isset($childToolname['forward']) ? $childToolname['forward'] : [],
-                                            'tool_melisKey' => $childToolname['conf']['melisKey'] ?? $keyTool,
-                                            'toolsection_is_tool' => isset($childToolname['forward']) && !empty($childToolname['forward']) ? true : false
-                                        ];
+                                        if ($melisCoreRights->canAccess($childKeyTool)) {
+                                            $tools[$key]['toolsection_children'][$keyTool]['toolsection_children'][$childKeyTool] = [
+                                                'tool_id' => $childToolname['conf']['id'] ?? $keyTool,
+                                                'tool_name' => $childToolname['conf']['name'] ?? "<strike>$childKeyTool</strike>",
+                                                'tool_icon' => $icon,
+                                                'tool_forward' => isset($childToolname['forward']) ? $childToolname['forward'] : [],
+                                                'tool_melisKey' => $childToolname['conf']['melisKey'] ?? $keyTool,
+                                                'toolsection_is_tool' => isset($childToolname['forward']) && !empty($childToolname['forward']) ? true : false
+                                            ];
+                                        }
+
                                     }
 
                                 }
 
                             }
-
+                            $tools[$key]['toolsection_children'][$keyTool]['toolsection_has_nav_child'] = $isToolNavChild;
                         }
-                        $tools[$key]['toolsection_children'][$keyTool]['toolsection_has_nav_child'] = $isToolNavChild;
                     }
                 }
+
+                $tools[$key]['toolsection_has_nav_child'] = $isNavChild;
+            }
+        } else {
+            $key = $appsConfig['conf']['melisKey'];
+            if ($melisCoreRights->canAccess($key)) {
+                $tools[$key] = [
+                    'toolsection_id' => $appsConfig['conf']['id'] ?? $key,
+                    'toolsection_name' => $appsConfig['conf']['name'] ?? $key,
+                    'toolsection_meliskey' => $appsConfig['conf']['melisKey'] ?? $key,
+                    'toolsection_icon' => $appsConfig['conf']['icon'] ?? 'fa-cube',
+                    'toolsection_forward' => $appsConfig['forward'] ?? [],
+                    'toolsection_parent_tool' => true,
+                    'toolsection_is_tool' => true,
+                ];
             }
 
-
-            $tools[$key]['toolsection_has_nav_child'] = $isNavChild;
         }
-
-        # count the section that is a tool
-//        $toolCountNavChild = 0;
-//        foreach ($tools as $key => $val ) {
-//            # print_r($val);
-//            if ($val['toolsection_has_nav_child']) {
-//                # for meliscms only
-//                # because it has a given structure
-//                if ($melisKey == 'meliscms_toolstree_section') {
-//                    foreach ($val['toolsection_children'] as $cmsKey => $cmsTool) {
-//                        if (isset($cmsTool['toolsection_is_tool']) && $cmsTool['toolsection_is_tool']) {
-//                            $toolCountNavChild = $toolCountNavChild + 1;
-//                        }
-//                    }
-//                } else {
-//                    $toolCountNavChild = $toolCountNavChild + 1;
-//                }
-//            }
-//
-//        }
 
         $sections = $tools;
 
@@ -204,7 +200,7 @@ class TreeToolsController extends AbstractActionController
 
         $view->tools = $toolsOrdered;
         $view->melisKey = $melisKey;
-       # $view->toolCountNavChild = $toolCountNavChild;
+
         return $view;
     }
 
