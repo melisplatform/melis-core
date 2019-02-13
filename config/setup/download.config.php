@@ -2,8 +2,6 @@
 
 namespace MelisCore;
 
-use MelisMarketPlace\Support\MelisMarketPlace as MarketPlace;
-
 return [
     'plugins' => [
         __NAMESPACE__ => [
