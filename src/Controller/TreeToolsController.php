@@ -43,22 +43,24 @@ class TreeToolsController extends AbstractActionController
         $melisKeys = $melisAppConfig->getMelisKeys();
 
         // Get the order list for ordering tools
-        $appconfigpath = $melisKeys[$melisKey];
+        $appconfigpath = $melisKeys[$melisKey] ?? null;
 
-        $appsConfig = $melisAppConfig->getItem($appconfigpath);
-        $orderInterface = $melisAppConfig->getOrderInterfaceConfig($melisKey);
-        $tools = [];
+        if ($appconfigpath) {
+            $appsConfig = $melisAppConfig->getItem($appconfigpath);
+            $orderInterface = $melisAppConfig->getOrderInterfaceConfig($melisKey);
+            $tools = [];
 
-        /** @var \MelisCore\Service\MelisCoreAuthService $melisCoreAuth */
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+            /** @var \MelisCore\Service\MelisCoreAuthService $melisCoreAuth */
+            $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
 
-        /** @var \MelisCore\Service\MelisCoreRightsService $melisCoreRights */
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-        $xmlRights = $melisCoreAuth->getAuthRights();
+            /** @var \MelisCore\Service\MelisCoreRightsService $melisCoreRights */
+            $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+            $xmlRights = $melisCoreAuth->getAuthRights();
 
-        // Merge config if melisKey is "Others"
-        if ($melisKey == 'melisothers_toolstree_section') {
-            $appsConfig['interface'] = ArrayUtils::merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
+            // Merge config if melisKey is "Others"
+            if ($melisKey == 'melisothers_toolstree_section') {
+                $appsConfig['interface'] = ArrayUtils::merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
+            }
         }
 
         // Show sections first
@@ -137,19 +139,20 @@ class TreeToolsController extends AbstractActionController
                 $tools[$key]['toolsection_has_nav_child'] = $isNavChild;
             }
         } else {
-            $key = $appsConfig['conf']['melisKey'];
-            if ($melisCoreRights->canAccess($key)) {
-                $tools[$key] = [
-                    'toolsection_id' => $appsConfig['conf']['id'] ?? $key,
-                    'toolsection_name' => $appsConfig['conf']['name'] ?? $key,
-                    'toolsection_meliskey' => $appsConfig['conf']['melisKey'] ?? $key,
-                    'toolsection_icon' => $appsConfig['conf']['icon'] ?? 'fa-cube',
-                    'toolsection_forward' => $appsConfig['forward'] ?? [],
-                    'toolsection_parent_tool' => true,
-                    'toolsection_is_tool' => true,
-                ];
+            if ($appsConfig) {
+                $key = $appsConfig['conf']['melisKey'];
+                if ($melisCoreRights->canAccess($key)) {
+                    $tools[$key] = [
+                        'toolsection_id' => $appsConfig['conf']['id'] ?? $key,
+                        'toolsection_name' => $appsConfig['conf']['name'] ?? $key,
+                        'toolsection_meliskey' => $appsConfig['conf']['melisKey'] ?? $key,
+                        'toolsection_icon' => $appsConfig['conf']['icon'] ?? 'fa-cube',
+                        'toolsection_forward' => $appsConfig['forward'] ?? [],
+                        'toolsection_parent_tool' => true,
+                        'toolsection_is_tool' => true,
+                    ];
+                }
             }
-
         }
 
         $sections = $tools;
