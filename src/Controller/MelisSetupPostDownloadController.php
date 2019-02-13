@@ -24,7 +24,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
      * flag for Marketplace whether to display the setup form or not
      * @var bool $showOnMarketplacePostSetup
      */
-    public $showOnMarketplacePostSetup = true;
+    public $showOnMarketplacePostSetup = false;
 
     /**
      * @return \Zend\View\Model\ViewModel
@@ -320,7 +320,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     private function getForm()
     {
         $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $form = $coreConfig->getItem('melis_core_setup/forms/melis_core_setup_user_form');
+        $form = $coreConfig->getItem('MelisCore/setup/download/melis_core_setup_user_form');
 
         $factory = new \Zend\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
@@ -339,7 +339,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     private function formatErrorMessage($errors = [])
     {
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-        $appConfigForm = $melisMelisCoreConfig->getItem('melis_core_setup/forms/melis_core_setup_user_form');
+        $appConfigForm = $melisMelisCoreConfig->getItem('MelisCore/setup/download/melis_core_setup_user_form');
         $appConfigForm = $appConfigForm['elements'];
 
         foreach ($errors as $keyError => $valueError) {
