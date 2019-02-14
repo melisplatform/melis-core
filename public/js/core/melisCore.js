@@ -479,12 +479,7 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', '#close-all-tab', closedOpenTabs);
 
-    // toggleClass shown and animate gridstack width
-    $body.on('click', '#melisDashBoardPluginBtn', toggleGrid);
-
-    // check if there is child nodes after clicking closedOpenTabs
-    //$body.on('')
-
+    //$body.on("click", '.melis-core-dashboard-filter-btn', disableShowPlugLists);
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
@@ -526,27 +521,32 @@ var melisCore = (function(window){
 
     });
 
-    var $btn    = $("#melisDashBoardPluginBtn"),
-        $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-        $gs     = $body.find("#"+activeTabId+" .grid-stack"),
-        dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-        nWidth  = dWidth + $box.width();
+    /* 
+     * Subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
+     * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
+     * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
+     * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
+     */
 
-    function toggleGrid() {
-        var $this = $("#melisDashBoardPluginBtn");
+    $body.on("click", "#melisDashBoardPluginBtn", function() {
+        var $btn    = $("#melisDashBoardPluginBtn"),
+            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
+            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth  = $gs.width() + $box.width();
 
-        $this.closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
+            $box.toggleClass("shown");
 
-        if ( $box.hasClass("shown") ) {
-            $gs.animate({
-                width: dWidth
-            }, 3);
-        } else {
-            $gs.animate({
-                width: nWidth
-            }, 3);
-        }
-    }
+            if ( $box.hasClass("shown") ) {
+                $gs.animate({
+                    width: dWidth
+                }, 3);
+            } else {
+                $gs.animate({
+                    width: nWidth
+                }, 3);
+            }
+    });
     
     function showPlugLists() {
         if($(this).hasClass("active")) {

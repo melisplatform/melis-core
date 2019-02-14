@@ -16,7 +16,7 @@ return array(
 
                 // Override these datas in MelisModuleConfig !
                 'default' => array(
-                    'host' => 'http://www.melisv2url.local',
+                    'host' => 'https://www.melistechnology.com',
                     'logo' => '/img/MelisTech.png',
                     'errors' => array(
                         'error_reporting' => E_ALL & ~E_USER_DEPRECATED,
@@ -333,7 +333,7 @@ return array(
                         'module' => 'MelisCore',
                         'controller' => 'Index',
                         'action' => 'left-menu',
-                        'jscallback' => 'enableSidebarScroll();',
+                        'jscallback' => '',
                         'jsdatas' => array()
                     ),
                     'interface' => array(

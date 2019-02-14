@@ -57,7 +57,7 @@ class MelisCoreImageService implements ServiceLocatorAwareInterface, MelisCoreIm
         
         $fileImage = $image;
         $outputImg = null;
-        $ext = pathinfo($image, PATHINFO_EXTENSION);
+        $ext = pathinfo($newImageName, PATHINFO_EXTENSION);
 
         $thumb = imagecreatetruecolor($width, $height);
         list($w, $h) = getimagesize($fileImage);

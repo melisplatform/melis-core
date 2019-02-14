@@ -976,8 +976,8 @@ return [
                             'conf' => [
                                 'id' => 'melismarketplace_toolstree_section',
                                 'melisKey' => 'melismarketplace_toolstree_section',
-                                'name' => 'tr_market_place',
-                                'icon' => 'fa fa-shopping-cart',
+                                'name' => 'tr_meliscore_tool_platform_marketplace',
+                                'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
                             'forward' => array(
@@ -989,6 +989,16 @@ return [
                             ),
                             'interface' => []
                         ],
+                        'melisdashboardplugin_section' => [
+                            'conf' => [
+                                'id' => 'melisdashboardplugin_section',
+                                'melisKey' => 'melisdashboardplugin_section',
+                                'name' => 'tr_melisdashboardplugin_section',
+                                'icon' => 'fa fa-shopping-cart',
+                                'rights_checkbox_disable' => false,
+                            ],
+                            'interface' => []
+                        ]
                     ]
                 ]
             ]

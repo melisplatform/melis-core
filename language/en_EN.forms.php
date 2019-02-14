@@ -48,7 +48,7 @@
 	    'tr_meliscore_tool_user_usr_password_error_empty' => 'Please enter your password',
 	    'tr_meliscore_tool_user_usr_password_error_long'  => 'Password too long, it should be less than 255 characters',
 	    'tr_meliscore_tool_user_usr_password_not_match' => 'Password does not match',
-	    'tr_meliscore_tool_user_usr_password_regex_not_match' => 'The password must contain at least one letter AND one number.',
+	    'tr_meliscore_tool_user_usr_password_regex_not_match' => 'The password must contain at least one lowercase letter and one number',
 	    'tr_meliscore_tool_user_usr_password_error_low' => 'Password should be greater than or equal to 8 characters',
 	    
 	    'tr_meliscore_tool_user_usr_confirm_password_error_empty' => 'Please confirm your password',
