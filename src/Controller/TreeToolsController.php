@@ -43,28 +43,29 @@ class TreeToolsController extends AbstractActionController
         $melisKeys = $melisAppConfig->getMelisKeys();
 
         // Get the order list for ordering tools
-        $appconfigpath = $melisKeys[$melisKey] ?? null;
+        $appconfigpath = $melisKeys[$melisKey];
 
-        if ($appconfigpath) {
-            $appsConfig = $melisAppConfig->getItem($appconfigpath);
-            $orderInterface = $melisAppConfig->getOrderInterfaceConfig($melisKey);
-            $tools = [];
+        $appsConfig = $melisAppConfig->getItem($appconfigpath);
 
-            /** @var \MelisCore\Service\MelisCoreAuthService $melisCoreAuth */
-            $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
 
-            /** @var \MelisCore\Service\MelisCoreRightsService $melisCoreRights */
-            $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-            $xmlRights = $melisCoreAuth->getAuthRights();
+        $orderInterface = $melisAppConfig->getOrderInterfaceConfig($melisKey);
+        $tools = [];
 
-            // Merge config if melisKey is "Others"
-            if ($melisKey == 'melisothers_toolstree_section') {
-                $appsConfig['interface'] = ArrayUtils::merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
-            }
+        /** @var \MelisCore\Service\MelisCoreAuthService $melisCoreAuth */
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+
+        /** @var \MelisCore\Service\MelisCoreRightsService $melisCoreRights */
+        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+        $xmlRights = $melisCoreAuth->getAuthRights();
+
+        // Merge config if melisKey is "Others"
+        if ($melisKey == 'melisothers_toolstree_section') {
+            $appsConfig['interface'] = ArrayUtils::merge($appsConfig['interface'], $this->moveToolsToOthersCategory());
         }
 
-        // Show sections first
-        if (isset($appsConfig['interface'])) {
+        if (isset($appsConfig['interface']) && !empty($appsConfig['interface'])) {
+            // Show sections first
+
             foreach ($appsConfig['interface'] as $key => $toolSectionName) {
                 $isNavChild = false;
 
@@ -77,7 +78,6 @@ class TreeToolsController extends AbstractActionController
                         'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
                         'toolsection_forward' => $toolSectionName['forward'] ?? [],
                         'toolsection_children' => [],
-                        'toolsection_parent_tool' => false,
                         'toolsection_is_tool' => isset($toolSectionName['forward']) && !empty($toolSectionName['forward']) ? true : false,
                     ];
 
@@ -136,21 +136,14 @@ class TreeToolsController extends AbstractActionController
                     }
                 }
 
+
                 $tools[$key]['toolsection_has_nav_child'] = $isNavChild;
             }
         } else {
-            if ($appsConfig) {
-                $key = $appsConfig['conf']['melisKey'];
-                if ($melisCoreRights->canAccess($key)) {
-                    $tools[$key] = [
-                        'toolsection_id' => $appsConfig['conf']['id'] ?? $key,
-                        'toolsection_name' => $appsConfig['conf']['name'] ?? $key,
-                        'toolsection_meliskey' => $appsConfig['conf']['melisKey'] ?? $key,
-                        'toolsection_icon' => $appsConfig['conf']['icon'] ?? 'fa-cube',
-                        'toolsection_forward' => $appsConfig['forward'] ?? [],
-                        'toolsection_parent_tool' => true,
-                        'toolsection_is_tool' => true,
-                    ];
+            // for parent tool
+            if (isset($appsConfig['conf']['is_parent_tool']) && $appsConfig['conf']['is_parent_tool']) {
+                if ($melisCoreRights->canAccess($melisKey)) {
+                    $tools[$melisKey] = $appsConfig;
                 }
             }
         }
@@ -203,7 +196,6 @@ class TreeToolsController extends AbstractActionController
 
         $view->tools = $toolsOrdered;
         $view->melisKey = $melisKey;
-
         return $view;
     }
 
@@ -310,11 +302,8 @@ class TreeToolsController extends AbstractActionController
         /** @var \MelisCore\Service\MelisCoreAuthService $user */
         $user = $this->getServiceLocator()->get('MelisCoreAuth');
 
-//        d($rights->getToolSectionMap());
-        d('can access: MelisCoreDashboardRecentUserActivityPlugin', $rights->canAccess('MelisCoreDashboardRecentUserActivityPlugin'));
-        d($rights->getSectionParent('meliscore_leftmenu_root'));
-//        d($config->getMelisKeyData('meliscmsblog_left_menu'));
-//        d($config->getMelisKeyData('meliscms_blog_tool_section'));
+        dd($rights->canAccess('melismarketplace_toolstree_section'));
+
 
         die;
     }
