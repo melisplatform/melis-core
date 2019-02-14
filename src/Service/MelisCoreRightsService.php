@@ -42,6 +42,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         $xmlRights = $melisCoreAuth->getAuthRights();
         $isAccessible = $this->isAccessible($xmlRights, self::MELIS_PLATFORM_TOOLS_PREFIX, $key);
+
         $isInterfaceAccessible = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_INTERFACE, $key);
 
         return $isAccessible && $isInterfaceAccessible;
@@ -95,8 +96,15 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         // Interface case is opposite, we list items where the user is not allowed
         if ($sectionId == self::MELISCORE_PREFIX_INTERFACE) {
             foreach ($rightsObj->$sectionId->id as $interfaceId) {
-                if ((string)$interfaceId == $itemId || (string)$interfaceId == self::MELISCORE_PREFIX_INTERFACE . '_root')
+                $interfaceId = (string) $interfaceId;
+                $nonPath = ltrim($interfaceId, '/');
+
+                if ($interfaceId == $itemId ||
+                    $nonPath == $itemId ||
+                    $interfaceId == self::MELISCORE_PREFIX_INTERFACE . '_root'
+                ) {
                     return false;
+                }
             }
             return true;
         }
