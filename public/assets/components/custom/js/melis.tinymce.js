@@ -110,7 +110,7 @@ var MelisTinymce = (function (window) {
             media: {
                 inline: true,
                 plugins: [
-                //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
+                    //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
                     "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
                     "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
                     "save table directionality emoticons template paste code moxiemanager paste"
