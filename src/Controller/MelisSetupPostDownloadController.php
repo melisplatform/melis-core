@@ -13,13 +13,24 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
+use MelisCore\MelisSetupInterface;
 
-class MelisSetupController extends AbstractActionController
+/**
+ * @property bool $showOnMarketplacePostSetup
+ */
+class MelisSetupPostDownloadController extends AbstractActionController implements MelisSetupInterface
 {
-    public function setupFormAction()
+    /**
+     * flag for Marketplace whether to display the setup form or not
+     * @var bool $showOnMarketplacePostSetup
+     */
+    public $showOnMarketplacePostSetup = true;
+
+    /**
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function getFormAction()
     {
-
-
         $request = $this->getRequest();
 
         //startSetup button indicator
@@ -39,27 +50,28 @@ class MelisSetupController extends AbstractActionController
         $view->btnStatus = $btnStatus;
 
         return $view;
-
     }
 
-    public function setupValidateDataAction()
+    /**
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function validateFormAction()
     {
-        $success = 0;
+        $success = false;
         $message = 'tr_install_setup_message_ko';
         $errors = [];
 
-        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
+        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post'));
 
         $form = $this->getForm();
         $form->setData($data);
 
         if ($form->isValid()) {
-            $success = 1;
+            $success = true;
             $message = 'tr_install_setup_message_ok';
         } else {
             $errors = $this->formatErrorMessage($form->getMessages());
         }
-
 
         $response = [
             'success' => $success,
@@ -71,13 +83,16 @@ class MelisSetupController extends AbstractActionController
         return new JsonModel($response);
     }
 
-    public function setupResultAction()
+    /**
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function submitAction()
     {
-        $success = 0;
+        $success = false;
         $message = 'tr_install_setup_message_ko';
         $errors = [];
 
-        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute());
+        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post'));
 
 
         $form = $this->getForm();
@@ -164,14 +179,12 @@ class MelisSetupController extends AbstractActionController
                     $this->generateDashboardPlugins($userId);
 
 
-                    $success = 0;
+                    $success = true;
                     $message = 'tr_install_setup_message_ok';
 
                 } catch (\Exception $e) {
                     $errors = $e->getMessage();
                 }
-
-
             }
 
         } else {
@@ -318,6 +331,11 @@ class MelisSetupController extends AbstractActionController
 
     }
 
+    /**
+     * @param array $errors
+     *
+     * @return array
+     */
     private function formatErrorMessage($errors = [])
     {
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');

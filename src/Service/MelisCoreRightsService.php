@@ -171,6 +171,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                 $tooldIds = [];
 
                 $appconfigpath = $melisKeys[$toolSection];
+                $appconfigpath = $melisKeys[$toolSection] ?? null;
                 $appsConfig = $melisAppConfig->getItem($appconfigpath);
                 $tmpToolIds = $toolIds;
 

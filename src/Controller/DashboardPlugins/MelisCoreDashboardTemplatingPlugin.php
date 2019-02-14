@@ -241,8 +241,8 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $plugin->setVariables($pluginView->getVariables());
 
         // Delete Callback datas
-        if (!empty($this->pluginConfig['deleteCallback'])){
-            $plugin->deleteCallBack = $this->pluginConfig['deleteCallback'];
+        if (!empty($this->pluginConfig['datas']['deleteCallback'])){
+            $plugin->deleteCallBack = $this->pluginConfig['datas']['deleteCallback'];
         }
 
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');

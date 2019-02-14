@@ -353,7 +353,7 @@ var melisHelper = (function(){
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
 
         //Show the close(X) button on header
-        if(melisKey != 'meliscore_center_dashboard'){
+        if(melisKey != 'meliscore_dashboard'){
             $("#close-all-tab").show();
         }
         //check if the tab is already open and added to the main nav

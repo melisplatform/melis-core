@@ -5,18 +5,18 @@
   "license": "OSL-3.0",
   "homepage": "https://github.com/melisplatform/melis-core",
   "support": {
-	"email": "contact@melistechnology.com",
+    "email": "contact@melistechnology.com",
     "source": "https://github.com/melisplatform/melis-core",
     "issues": "https://github.com/melisplatform/melis-core/issues",
-	"docs": "https://www.melistechnology.com/melistechnology/resources/download-documentation/id/17#documentation"
+    "docs": "https://www.melistechnology.com/melistechnology/resources/download-documentation/id/17#documentation"
   },
   "authors": [
-	{
-		"name": "Melis Technology",
-		"email": "contact@melistechnology.com",
-		"homepage": "https://www.melistechnology.com",
-		"role": "Developer"
-	}
+    {
+      "name": "Melis Technology",
+      "email": "contact@melistechnology.com",
+      "homepage": "https://www.melistechnology.com",
+      "role": "Developer"
+    }
   ],
   "keywords": [
     "cms",
