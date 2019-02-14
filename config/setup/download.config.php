@@ -6,8 +6,8 @@ return [
     'plugins' => [
         __NAMESPACE__ => [
             'setup' => [
-                'form' => [
-                    'download' => [
+                'download' => [
+                    'form' => [
                         'melis_core_setup_user_form' => [
                             'attributes' => [
                                 'name' => 'melis_core_setup_user_form',
@@ -329,9 +329,9 @@ return [
                                 ],
                             ], // end input_filter
                         ],
-                    ]
-                ]
-            ]
-        ]
+                    ],
+                ],
+            ],
+        ],
     ],
 ];
