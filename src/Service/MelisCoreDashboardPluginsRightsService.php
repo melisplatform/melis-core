@@ -150,26 +150,6 @@ class MelisCoreDashboardPluginsRightsService implements MelisCoreRightsServiceIn
     {
         $xmlRights = '';
 
-//        if (!$isRole)
-//        {
-//            $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
-//            $xml = $melisCoreUser->getUserXmlRights($id);
-//        }
-//        else
-//        {
-//            $xml = '';
-//            $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
-//            $datasRole = $tableUserRole->getEntryById($id);
-//            if ($datasRole)
-//            {
-//                $datasRole = $datasRole->current();
-//                if (!empty($datasRole))
-//                    $xml = $datasRole->urole_rights;
-//            }
-//        }
-
-        $nodesSeen = Json::decode($datas['treeStatus']);
-//        $nodesSeen = $nodesSeen->treeStatus;
         $dashboardPlugins = json_decode($datas['melis_dashboardplugin_root'], true);
 
         // parent node

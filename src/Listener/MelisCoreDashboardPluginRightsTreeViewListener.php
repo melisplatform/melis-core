@@ -33,11 +33,11 @@ class MelisCoreDashboardPluginRightsTreeViewListener extends MelisCoreGeneralLis
                 if (empty($container['action-tool-user-getrights-tmp']))
                     $container['action-tool-user-getrights-tmp'] = array();
                 $melisCmsRights = $sm->get('MelisCoreDashboardPluginsService');
-                $rightsCms = $melisCmsRights->getRightsValues($userId);
+                $rightsDashboard = $melisCmsRights->getRightsValues($userId);
 
 
-                // Merge the CMS rights with other ones (from Core or other modules)
-                $container['action-tool-user-getrights-tmp'] = array_merge($container['action-tool-user-getrights-tmp'], $rightsCms);
+                // Merge the DashboardPlugin rights with other ones (from Core or other modules)
+                $container['action-tool-user-getrights-tmp'] = array_merge($container['action-tool-user-getrights-tmp'], $rightsDashboard);
             },
             100);
 
