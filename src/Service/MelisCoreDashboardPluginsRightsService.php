@@ -40,9 +40,11 @@ class MelisCoreDashboardPluginsRightsService implements MelisCoreRightsServiceIn
         }
 
         if ($sectionId == self::MELISCORE_DASHBOARDPLUGIN_PREFIX) {
-            foreach ($rightsObj->$sectionId->id as $interfaceId) {
-                if ((string)$interfaceId == $itemId || (string)$interfaceId == self::MELISCORE_DASHBOARDPLUGIN_PREFIX . '_root')
-                    return true;
+            if(!empty($rightsObj->$sectionId)) {
+                foreach ($rightsObj->$sectionId->id as $interfaceId) {
+                    if ((string)$interfaceId == $itemId || (string)$interfaceId == self::MELISCORE_DASHBOARDPLUGIN_PREFIX . '_root')
+                        return true;
+                }
             }
         }
         return false;
