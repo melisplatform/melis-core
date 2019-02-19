@@ -44,4 +44,9 @@ class MelisTables
      * @const AUTO_INCREMENT holds the string value of "%auto_increment%" which will be used to swap to a real value
      */
     const AUTO_INCREMENT = '%auto_increment';
+
+    /**
+     * @const PRIMARY_KEY holds the string value of "primary_key", primarily used to specify the value of the primary key
+     */
+    const PRIMARY_KEY = 'primary_key';
 }
