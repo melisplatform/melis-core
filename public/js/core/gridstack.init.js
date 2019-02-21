@@ -149,8 +149,8 @@ var melisDashBoardDragnDrop = {
                     $.each(pluginConfig, function(index, value){
 
                         // check and modify w h value 6
-                        if(index == "width" && value == "") { value = 6 };
-                        if(index == "height" && value == "") { value = 6 };
+                        if(index === "width" && value === "") { value = 6 };
+                        if(index === "height" && value === "") { value = 6 };
 
                         // push to dashboard array
                         dataString.push({
@@ -263,10 +263,10 @@ var melisDashBoardDragnDrop = {
                 $.each(pluginConfig, function(index, value){
 
                     // here modify x y w h of the plugin
-                    if(index == "x-axis") { value = dashboardX; }
-                    if(index == "y-axis") { value = dashboardY; }
-                    if(index == "width") { value = dashboardWidth; }
-                    if(index == "height") { value = dashboardHeight; }
+                    if(index === "x-axis") { value = dashboardX; }
+                    if(index === "y-axis") { value = dashboardY; }
+                    if(index === "width") { value = dashboardWidth; }
+                    if(index === "height") { value = dashboardHeight; }
 
                     // push to dashboard array
                     dataString.push({
@@ -392,7 +392,7 @@ var melisDashBoardDragnDrop = {
             nWidth      = $gs.width() + $box.width();
 
         // checks if there is a plugin available to delete
-        if( $items.length != 0 ) {
+        if( $items.length !== 0 ) {
 
             var dataString = new Array;
 
@@ -411,9 +411,9 @@ var melisDashBoardDragnDrop = {
 
                     // remove all nodes on grid
                     grid.removeAll();
-                    
+
                     // save widgets position / size on db
-                    self.saveDBWidgets(dataString);                    
+                    self.saveDBWidgets(dataString);
                 }
             );
 
@@ -487,10 +487,10 @@ var melisDashBoardDragnDrop = {
             var pluginConfig = JSON.parse(dataTxt);
             $.each(pluginConfig, function(index, value){
                 // here modify x y w h of the plugin
-                if(index == "x-axis") { value = dashboardData.x }
-                if(index == "y-axis") { value = dashboardData.y }
-                if(index == "width") { value = dashboardData.width }
-                if(index == "height") { value = dashboardData.height }
+                if(index === "x-axis") { value = dashboardData.x }
+                if(index === "y-axis") { value = dashboardData.y }
+                if(index === "width") { value = dashboardData.width }
+                if(index === "height") { value = dashboardData.height }
 
                 // push to dashboard array
                 dataString.push({

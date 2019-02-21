@@ -102,7 +102,6 @@ var melisCoreTool = (function (window) {
 
     function processing() {
         var overlay = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
-        ;
         $(overlay).appendTo('body');
     }
 
