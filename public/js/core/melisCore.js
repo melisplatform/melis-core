@@ -527,7 +527,6 @@ var melisCore = (function(window){
      * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
      * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
      */
-
     $body.on("click", "#melisDashBoardPluginBtn", function() {
         var $btn    = $("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),

@@ -3,18 +3,18 @@
  * Edited by Junry @ June - Sept 2018
  **/
 
-var $body = $("body");
+//var $body = $("body");
 
 // Binding elements
-$body.on("click", "#dashboard-plugin-delete-all", function() {
+$("body").on("click", "#dashboard-plugin-delete-all", function() {
     melisDashBoardDragnDrop.deleteAllWidget($(this));
 });
 
-$body.on("click", ".dashboard-plugin-delete", function() {
+$("body").on("click", ".dashboard-plugin-delete", function() {
     melisDashBoardDragnDrop.deleteWidget($(this));
 });
 
-$body.on("click", ".dashboard-plugin-refresh", function() {
+$("body").on("click", ".dashboard-plugin-refresh", function() {
     melisDashBoardDragnDrop.refreshWidget($(this));
 });
 
@@ -98,7 +98,7 @@ var melisDashBoardDragnDrop = {
     docuReady: function() {
         var $btn    = this.$body.find("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
+            $gs     = this.$body.find("#"+activeTabId+" .grid-stack"),
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = dWidth + $box.width();
 
@@ -329,20 +329,25 @@ var melisDashBoardDragnDrop = {
 
         // grid stack stop widget resize
         this.$gs.on('gsresizestop', function(event, elem) {
-            var node        = $(elem).data('_gridstack_node'),
-                items       = node._grid.container[0].children,
-                elemWidth   = $(elem).attr('data-gs-width'),
+            var $elem       = $(elem),
+                $node       = $elem.data('_gridstack_node'),
+                $items      = $node._grid.container[0].children,
+                elemWidth   = $elem.attr('data-gs-width'),
                 widthLimit  = 3;
                 
                 if ( elemWidth <= widthLimit ) {
-                    node.width = parseInt(widthLimit);
-                    $(elem).attr('data-gs-width', widthLimit);
+                    $node.width = parseInt(widthLimit);
+                    $elem.attr('data-gs-width', widthLimit);
                 } else {
-                    node.width = parseInt(elemWidth);
+                    $node.width = parseInt(elemWidth);
                 }
 
+                console.log("elem: ", $elem);
+                console.log("items: ", $items);
+
                 // update size of widgets passes array of .grid-stack-items
-                self.serializeWidgetMap( node._grid.container[0].children );
+                // $node._grid.container[0].children
+                self.serializeWidgetMap( $items );
         });
     },
 
