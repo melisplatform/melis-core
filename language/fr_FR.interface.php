@@ -652,7 +652,7 @@ return [
 
 	    'tr_PluginSection_meliscore' => 'Melis Core',
 	    
-	    'tr_meliscore_dashboard_Recent Activity' => 'Activité récente',
+	    'tr_meliscore_dashboard_Recent Activity' => 'Activité récente des utilisateurs',
 	    'tr_meliscore_dashboard_Recent Activity description' => 'Ce plugin affiche la liste des activités récentes de l\'utilisateur.',
 	    'tr_meliscore_dashboard_recent_activity_Users' => 'Utilisateurs',
 	    'tr_meliscore_dashboard_recent_activity_Logged in' => 's\'est connecté',

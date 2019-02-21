@@ -634,7 +634,7 @@ return [
 
     'tr_PluginSection_meliscore' => 'Melis Core',
 
-    'tr_meliscore_dashboard_Recent Activity' => 'Recent activity',
+    'tr_meliscore_dashboard_Recent Activity' => 'Recent user activity',
     'tr_meliscore_dashboard_Recent Activity description' => 'This plugin display the list of User recent activity',
     'tr_meliscore_dashboard_recent_activity_Users' => 'Users',
     'tr_meliscore_dashboard_recent_activity_Logged in' => 'logged in',
