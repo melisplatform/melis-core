@@ -978,7 +978,7 @@ return [
                                 'id' => 'melismarketplace_toolstree_section',
                                 'melisKey' => 'melismarketplace_toolstree_section',
                                 'name' => 'tr_meliscore_tool_platform_marketplace',
-                                'icon' => 'fa fa-shopping-cart',
+                                'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
                             'forward' => array(

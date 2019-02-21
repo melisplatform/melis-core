@@ -15,7 +15,7 @@ return array(
                             'interface' => [
                                 'MelisCoreDashboardRecentUserActivityPlugin' => array(
                                     'conf' => [
-                                        'name' => 'MelisCoreDashboardRecentUserActivityPlugin',
+                                        'name' => 'tr_meliscore_dashboard_Recent Activity',
                                         'melisKey' => 'MelisCoreDashboardRecentUserActivityPlugin'
                                     ],
                                     'datas' => [

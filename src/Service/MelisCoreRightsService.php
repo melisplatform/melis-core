@@ -41,6 +41,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         $xmlRights = $melisCoreAuth->getAuthRights();
         $isAccessible = $this->isAccessible($xmlRights, self::MELIS_PLATFORM_TOOLS_PREFIX, $key);
+
         $isInterfaceAccessible = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_INTERFACE, $key);
 
         return $isAccessible && $isInterfaceAccessible;
@@ -94,8 +95,15 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         // Interface case is opposite, we list items where the user is not allowed
         if ($sectionId == self::MELISCORE_PREFIX_INTERFACE) {
             foreach ($rightsObj->$sectionId->id as $interfaceId) {
-                if ((string)$interfaceId == $itemId || (string)$interfaceId == self::MELISCORE_PREFIX_INTERFACE . '_root')
+                $interfaceId = (string) $interfaceId;
+                $nonPath = ltrim($interfaceId, '/');
+
+                if ($interfaceId == $itemId ||
+                    $nonPath == $itemId ||
+                    $interfaceId == self::MELISCORE_PREFIX_INTERFACE . '_root'
+                ) {
                     return false;
+                }
             }
             return true;
         }
@@ -407,9 +415,14 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
         if (!empty($configInterface['interface'])) {
             foreach ($configInterface['interface'] as $keyChildConfig => $valueChildConfig) {
-                $child = $this->getInterfaceKeysRecursive($keyInterface . '/interface/' . $keyChildConfig, $userXml);
-                if ($child) {
-                    $item['children'][] = $child;
+                /**
+                 * don't include melis dashboard plugins
+                 */
+                if($keyChildConfig != 'melis_dashboardplugin' && $keyChildConfig != 'meliscore_dashboard_menu') {
+                    $child = $this->getInterfaceKeysRecursive($keyInterface . '/interface/' . $keyChildConfig, $userXml);
+                    if ($child) {
+                        $item['children'][] = $child;
+                    }
                 }
             }
         }

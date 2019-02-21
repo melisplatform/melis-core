@@ -146,7 +146,6 @@ var melisDashBoardDragnDrop = {
                     // parse to JSON
                     var pluginConfig = JSON.parse(pluginMenu);
                     $.each(pluginConfig, function(index, value){
-
                         // push to dashboard array
                         if($.isArray(value) || typeof value == "object"){
                             $.each(value, function (i, v) {
@@ -408,7 +407,7 @@ var melisDashBoardDragnDrop = {
             nWidth      = $gs.width() + $box.width();
 
         // checks if there is a plugin available to delete
-        if( $items.length != 0 ) {
+        if( $items.length !== 0 ) {
 
             var dataString = new Array;
 
@@ -427,9 +426,9 @@ var melisDashBoardDragnDrop = {
 
                     // remove all nodes on grid
                     grid.removeAll();
-                    
+
                     // save widgets position / size on db
-                    self.saveDBWidgets(dataString);                    
+                    self.saveDBWidgets(dataString);
                 }
             );
 
