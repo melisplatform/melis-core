@@ -683,7 +683,7 @@ return [
 
     'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
     'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.',
-    'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => ' Your account\'s rights doesn\'t allow you to use the dashboard plugins. Please contact your admin if neeeded.',
+    'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => 'Your account\'s rights do not allow you to use the dashboard plugins. Please contact your admin if needed.',
     'tr_meliscore_remove_all_plugins' => 'Removal of all dashboard plugins',
     ];
 ?>
