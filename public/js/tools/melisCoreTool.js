@@ -48,6 +48,25 @@ var melisCoreTool = (function (window) {
         });
     }
 
+    function closeDialog(title, msg, callBackOnNo){
+        BootstrapDialog.show({
+            title: title,
+            message: msg,
+            type: BootstrapDialog.TYPE_WARNING,
+            closable: true,
+            buttons: [{
+                label: translations.tr_meliscore_notification_modal_Close,
+                cssClass: 'btn-danger pull-right',
+                action: function (dialog) {
+                    if (callBackOnNo != null && typeof (callBackOnNo) === 'function') {
+                        callBackOnNo();
+                    }
+                    dialog.close();
+                }
+            }]
+        });
+    }
+
     // ALERTS
     function showAlert(target, highlight, message, type) {
         $(target).removeClass();
@@ -243,6 +262,7 @@ var melisCoreTool = (function (window) {
     return {
         // modal
         confirm: confirm,
+        closeDialog: closeDialog,
 
         // alert
         alertDanger: alertDanger,

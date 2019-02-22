@@ -648,7 +648,7 @@ return [
 	    'tr_meliscore_remove_dashboard_plugin' => 'Supprimer le plugin du tableau de bord',
 	    'tr_meliscore_remove_dashboard_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer ce plugin?',
 	    'tr_meliscore_remove_dashboard_all_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer tous les plugins?',
-	    'tr_meliscore_remove_dashboard_no_plugin_msg' => 'Aucun plugin à supprimer',
+	    'tr_meliscore_remove_dashboard_no_plugin_msg' => 'Le dashboard est vide et il n\'y a aucun plugin à supprimer',
 
 	    'tr_PluginSection_meliscore' => 'Melis Core',
 	    
@@ -695,5 +695,7 @@ return [
 
         'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
         'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.',
-    ];
+    	'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => 'Les droits de votre compte ne vous autorisent pas à utiliser les plugins du dashboard. Merci de contacter un admin si besoin.',
+    	'tr_meliscore_remove_all_plugins' => 'Suppression de tous les plugins du dashboard',
+	];
 ?>

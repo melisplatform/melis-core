@@ -3839,3 +3839,8 @@ div#modal-user-management div.widget {
         font-size: 12px;
     }
 }
+
+.no-plugin-on-menu{
+    color: #fff;
+    padding: 5px;
+}

@@ -630,7 +630,7 @@ return [
     'tr_meliscore_remove_dashboard_plugin' => 'Remove dashboard plugin',
     'tr_meliscore_remove_dashboard_plugin_msg' => 'Are you sure you want to remove this plugin?',
     'tr_meliscore_remove_dashboard_all_plugin_msg' => 'Are you sure you want to remove all plugin?',
-    'tr_meliscore_remove_dashboard_no_plugin_msg' => 'No plugins to delete',
+    'tr_meliscore_remove_dashboard_no_plugin_msg' => 'The dashboard is empty and there is no plugin to delete',
 
     'tr_PluginSection_meliscore' => 'Melis Core',
 
@@ -682,6 +682,8 @@ return [
     'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Name should not consist of numbers',
 
     'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
-    'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.'
-	];
+    'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.',
+    'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => ' Your account\'s rights doesn\'t allow you to use the dashboard plugins. Please contact your admin if neeeded.',
+    'tr_meliscore_remove_all_plugins' => 'Removal of all dashboard plugins',
+    ];
 ?>

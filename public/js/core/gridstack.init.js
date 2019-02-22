@@ -453,11 +453,7 @@ var melisDashBoardDragnDrop = {
             });
 
         } else {
-
-            // 'Ok', 'Close', 'Remove all plugins', 'No plugins to delete.'
-            melisCoreTool.confirm(
-                translations.tr_meliscore_common_yes,
-                translations.tr_meliscore_common_no,
+            melisCoreTool.closeDialog(
                 translations.tr_meliscore_remove_all_plugins,
                 translations.tr_meliscore_remove_dashboard_no_plugin_msg
             );
