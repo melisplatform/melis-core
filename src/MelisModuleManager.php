@@ -58,6 +58,7 @@ class MelisModuleManager
                     ) {
                         $modules = array_merge($modulesMelisBackOffice, include $siteModuleLoad);
                     }
+
                 }
                 else
                     $modules = $modulesMelisBackOffice;
@@ -71,14 +72,17 @@ class MelisModuleManager
                 $platformFile    = $docRoot . '/../config/autoload/platforms/'.$env.'.php';
                 if($melisModuleName) {
                     $siteModuleLoad = $modulePath . '/config/module.load.php';
-                    if(file_exists($siteModuleLoad) && file_exists($platformFile)) {
+
+                    if (file_exists($siteModuleLoad) ||
+                        file_exists($siteModuleLoad = $composer->getComposerModulePath($melisModuleName).'/config/module.load.php') &&
+                        file_exists($platformFile)
+                    ) {
                         $modules = include $siteModuleLoad;
                     }
                     else {
                         $modules = $modulesMelisBackOffice;
                     }
                 }
-
             }
 
         } else {
