@@ -3,18 +3,18 @@
  * Edited by Junry @ June - Sept 2018
  **/
 
-var $body = $("body");
+//var $body = $("body");
 
 // Binding elements
-$body.on("click", "#dashboard-plugin-delete-all", function() {
+$("body").on("click", "#dashboard-plugin-delete-all", function() {
     melisDashBoardDragnDrop.deleteAllWidget($(this));
 });
 
-$body.on("click", ".dashboard-plugin-delete", function() {
+$("body").on("click", ".dashboard-plugin-delete", function() {
     melisDashBoardDragnDrop.deleteWidget($(this));
 });
 
-$body.on("click", ".dashboard-plugin-refresh", function() {
+$("body").on("click", ".dashboard-plugin-refresh", function() {
     melisDashBoardDragnDrop.refreshWidget($(this));
 });
 
@@ -98,7 +98,7 @@ var melisDashBoardDragnDrop = {
     docuReady: function() {
         var $btn    = this.$body.find("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
+            $gs     = this.$body.find("#"+activeTabId+" .grid-stack"),
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = dWidth + $box.width();
 
@@ -149,8 +149,8 @@ var melisDashBoardDragnDrop = {
                     $.each(pluginConfig, function(index, value){
 
                         // check and modify w h value 6
-                        if(index == "width" && value == "") { value = 6 };
-                        if(index == "height" && value == "") { value = 6 };
+                        if(index === "width" && value === "") { value = 6 };
+                        if(index === "height" && value === "") { value = 6 };
 
                         // push to dashboard array
                         dataString.push({
@@ -263,10 +263,10 @@ var melisDashBoardDragnDrop = {
                 $.each(pluginConfig, function(index, value){
 
                     // here modify x y w h of the plugin
-                    if(index == "x-axis") { value = dashboardX; }
-                    if(index == "y-axis") { value = dashboardY; }
-                    if(index == "width") { value = dashboardWidth; }
-                    if(index == "height") { value = dashboardHeight; }
+                    if(index === "x-axis") { value = dashboardX; }
+                    if(index === "y-axis") { value = dashboardY; }
+                    if(index === "width") { value = dashboardWidth; }
+                    if(index === "height") { value = dashboardHeight; }
 
                     // push to dashboard array
                     dataString.push({
@@ -329,20 +329,25 @@ var melisDashBoardDragnDrop = {
 
         // grid stack stop widget resize
         this.$gs.on('gsresizestop', function(event, elem) {
-            var node        = $(elem).data('_gridstack_node'),
-                items       = node._grid.container[0].children,
-                elemWidth   = $(elem).attr('data-gs-width'),
+            var $elem       = $(elem),
+                $node       = $elem.data('_gridstack_node'),
+                $items      = $node._grid.container[0].children,
+                elemWidth   = $elem.attr('data-gs-width'),
                 widthLimit  = 3;
                 
                 if ( elemWidth <= widthLimit ) {
-                    node.width = parseInt(widthLimit);
-                    $(elem).attr('data-gs-width', widthLimit);
+                    $node.width = parseInt(widthLimit);
+                    $elem.attr('data-gs-width', widthLimit);
                 } else {
-                    node.width = parseInt(elemWidth);
+                    $node.width = parseInt(elemWidth);
                 }
 
+                console.log("elem: ", $elem);
+                console.log("items: ", $items);
+
                 // update size of widgets passes array of .grid-stack-items
-                self.serializeWidgetMap( node._grid.container[0].children );
+                // $node._grid.container[0].children
+                self.serializeWidgetMap( $items );
         });
     },
 
@@ -392,7 +397,7 @@ var melisDashBoardDragnDrop = {
             nWidth      = $gs.width() + $box.width();
 
         // checks if there is a plugin available to delete
-        if( $items.length != 0 ) {
+        if( $items.length !== 0 ) {
 
             var dataString = new Array;
 
@@ -411,9 +416,9 @@ var melisDashBoardDragnDrop = {
 
                     // remove all nodes on grid
                     grid.removeAll();
-                    
+
                     // save widgets position / size on db
-                    self.saveDBWidgets(dataString);                    
+                    self.saveDBWidgets(dataString);
                 }
             );
 
@@ -487,10 +492,10 @@ var melisDashBoardDragnDrop = {
             var pluginConfig = JSON.parse(dataTxt);
             $.each(pluginConfig, function(index, value){
                 // here modify x y w h of the plugin
-                if(index == "x-axis") { value = dashboardData.x }
-                if(index == "y-axis") { value = dashboardData.y }
-                if(index == "width") { value = dashboardData.width }
-                if(index == "height") { value = dashboardData.height }
+                if(index === "x-axis") { value = dashboardData.x }
+                if(index === "y-axis") { value = dashboardData.y }
+                if(index === "width") { value = dashboardData.width }
+                if(index === "height") { value = dashboardData.height }
 
                 // push to dashboard array
                 dataString.push({

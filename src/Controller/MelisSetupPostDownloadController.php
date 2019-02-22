@@ -14,6 +14,9 @@ use Zend\Session\Container;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
+use MelisMarketPlace\Support\MelisMarketPlace as MarketPlace;
+use MelisMarketPlace\Support\MelisMarketPlaceCmsTables as Melis;
+use MelisMarketPlace\Support\MelisMarketPlaceSiteInstall as Site;
 
 /**
  * @property bool $showOnMarketplacePostSetup
@@ -25,6 +28,8 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
      * @var bool $showOnMarketplacePostSetup
      */
     public $showOnMarketplacePostSetup = false;
+
+    protected $formConfigPath = 'MelisCore/' . MarketPlace::DOWNLOAD . '/' . MarketPlace::FORM . '/melis_core_setup_user_form';
 
     /**
      * @return \Zend\View\Model\ViewModel
@@ -61,7 +66,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
         $message = 'tr_install_setup_message_ko';
         $errors = [];
 
-        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post'));
+        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post', $this->getRequest()->getPost()));
 
         $form = $this->getForm();
         $form->setData($data);
@@ -92,7 +97,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
         $message = 'tr_install_setup_message_ko';
         $errors = [];
 
-        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post'));
+        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post', $this->getRequest()->getPost()));
 
 
         $form = $this->getForm();
@@ -320,7 +325,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     private function getForm()
     {
         $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $form = $coreConfig->getItem('MelisCore/setup/download/form/melis_core_setup_user_form');
+        $form = $coreConfig->getItem($this->formConfigPath);
 
         $factory = new \Zend\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
@@ -339,7 +344,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     private function formatErrorMessage($errors = [])
     {
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-        $appConfigForm = $melisMelisCoreConfig->getItem('MelisCore/setup/download/form/melis_core_setup_user_form');
+        $appConfigForm = $melisMelisCoreConfig->getItem($this->formConfigPath);
         $appConfigForm = $appConfigForm['elements'];
 
         foreach ($errors as $keyError => $valueError) {

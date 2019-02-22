@@ -670,7 +670,7 @@ return [
     'tr_melis_core_gdpr_notif_extract_user' => 'Extraction des utilisateurs RGPD',
     'tr_melis_core_gdpr_notif_delete_user' => 'RGPD Suppression d\'utilisateur',
 
-    'tr_melis_core_gdpr_notif_delete_selected_confirm' => 'Supprimer la séléction',
+    'tr_melis_core_gdpr_notif_delete_selected_confirm' => 'Supprimer la sélection',
     'tr_melis_core_gdpr_notif_delete_selected_confirm_message' => 'Êtes-vous sûr de vouloir supprimer les enregistrements sélectionnés?',
 
     'tr_melis_core_gdpr_search_user_error_message' => 'Impossible de rechercher des informations utilisateurs',
@@ -678,8 +678,8 @@ return [
 
     'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Format d\'email invalide',
     'tr_melis_core_gdpr_tool_form_no_inputs' => 'Veuillez saisir les détails de l\'utilisateur. Le nom ou le champ email est requis',
-    'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'Aucun utilisateur séléctionné',
-    'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'Aucun utilisateur séléctionnée',
+    'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'Aucun utilisateur sélectionné',
+    'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'Aucun utilisateur sélectionné',
     'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Erreur lors de la suppression des données',
     'tr_melis_core_gdpr_notif_no_user_data_found' => 'Aucun utilisateur trouvé',
 
