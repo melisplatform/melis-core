@@ -120,7 +120,7 @@ class MelisCoreDashboardPluginsRightsService implements MelisCoreRightsServiceIn
                     $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
                     $tools[$appCtr] = [
                         'key' => $appKey,
-                        'title' => $appSection['conf']['name'] ?? $appKey,
+                        'title' => $appSection['datas']['name'] ?? $appKey,
                         'lazy' => false,
                         'children' => [],
                         'selected' => $selectedTools,
