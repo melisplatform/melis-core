@@ -34351,7 +34351,6 @@ var melisDashBoardDragnDrop = {
             // specific for latest comments plugin / select option
             if ( $select.length > 0 ) {
                 $select.css("width", "100%");
-                console.log('$select: ', $select);
             }
     },
 
@@ -34402,9 +34401,7 @@ var melisDashBoardDragnDrop = {
 
             // checks if there is a plugin available to delete
             if( $items.length !== 0 ) {
-
                 var dataString = new Array;
-
                     // create dashboard array
                     dataString.push({
                         name: 'dashboard_id',

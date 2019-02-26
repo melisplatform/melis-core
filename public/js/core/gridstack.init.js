@@ -421,9 +421,7 @@ var melisDashBoardDragnDrop = {
 
             // checks if there is a plugin available to delete
             if( $items.length !== 0 ) {
-
                 var dataString = new Array;
-
                     // create dashboard array
                     dataString.push({
                         name: 'dashboard_id',
