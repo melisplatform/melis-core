@@ -347,7 +347,7 @@ var melisDashBoardDragnDrop = {
                     $sCont    = $cFilters.find(".select2-container");
 
                     if ( $cFilters.length > 0 ) {
-                        if ( elemWidth >= 5 ) { // check if it belows data-gs-width 5 and it will be in full width
+                        if (elemWidth >= 5) { // check if it belows data-gs-width 5 and it will be in full width
                             $cFilters.removeAttr("style");
                             $sCont.removeAttr("style");
                         } else {
@@ -421,7 +421,9 @@ var melisDashBoardDragnDrop = {
 
             // checks if there is a plugin available to delete
             if( $items.length !== 0 ) {
+
                 var dataString = new Array;
+
                     // create dashboard array
                     dataString.push({
                         name: 'dashboard_id',
@@ -499,64 +501,64 @@ var melisDashBoardDragnDrop = {
         var self = this;
 
         var dataString = new Array;
-            // create dashboard array
-            dataString.push({
-                name: 'dashboard_id',
-                value: activeTabId
-            });
+        // create dashboard array
+        dataString.push({
+            name: 'dashboard_id',
+            value: activeTabId
+        });
 
         var dashboardItem = $(el).closest('.grid-stack-item');
         var dataTxt = $(dashboardItem).find('.dashboard-plugin-json-config').text();
         var dashboardData =  dashboardItem.data('_gridstack_node');
 
-            // check dataTxt
-            if(dataTxt) {
-                var pluginConfig = JSON.parse(dataTxt);
-                    $.each(pluginConfig, function(index, value){
-                        // here modify x y w h of the plugin
-                        if(index === "x-axis") { value = dashboardData.x }
-                        if(index === "y-axis") { value = dashboardData.y }
-                        if(index === "width") { value = dashboardData.width }
-                        if(index === "height") { value = dashboardData.height }
+        // check dataTxt
+        if(dataTxt) {
+            var pluginConfig = JSON.parse(dataTxt);
+            $.each(pluginConfig, function(index, value){
+                // here modify x y w h of the plugin
+                if(index === "x-axis") { value = dashboardData.x }
+                if(index === "y-axis") { value = dashboardData.y }
+                if(index === "width") { value = dashboardData.width }
+                if(index === "height") { value = dashboardData.height }
 
-                        // push to dashboard array
-                        dataString.push({
-                            name: index,
-                            value: value
-                        });
+                // push to dashboard array
+                dataString.push({
+                    name: index,
+                    value: value
+                });
+            });
+
+            var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+
+            // loading effect
+            dashboardItem.append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
+
+            request.done(function(data){
+
+                // get dashboard gridstack data
+                var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
+
+                // remove loader
+                $(dashboardItem).find('.overlay-loader').remove();
+
+                grid.removeWidget($(dashboardItem));
+
+                var html = $(data.html);
+
+                // add widget to dashboard default size 6 x 6
+                var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
+
+                // assigning current plugin
+                self.setCurrentPlugin(widget);
+
+                // executing plugin JsCallback
+                if(data.jsCallbacks.length) {
+                    $.each(data.jsCallbacks, function(index, value) {
+                        eval(value);
                     });
-
-                var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
-
-                    // loading effect
-                    dashboardItem.append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
-
-                    request.done(function(data){
-
-                        // get dashboard gridstack data
-                        var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
-
-                            // remove loader
-                            $(dashboardItem).find('.overlay-loader').remove();
-
-                            grid.removeWidget($(dashboardItem));
-
-                        var html = $(data.html);
-
-                        // add widget to dashboard default size 6 x 6
-                        var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
-
-                            // assigning current plugin
-                            self.setCurrentPlugin(widget);
-
-                            // executing plugin JsCallback
-                            if(data.jsCallbacks.length) {
-                                $.each(data.jsCallbacks, function(index, value) {
-                                    eval(value);
-                                });
-                            }
-                    });
-            }
+                }
+            });
+        }
     },
 
     setCurrentPlugin: function(widget) {

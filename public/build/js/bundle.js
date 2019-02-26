@@ -34082,8 +34082,13 @@ var melisDashBoardDragnDrop = {
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = dWidth + $box.width();
 
+<<<<<<< Updated upstream
             // .select2-container width 100% specific for latest comments plugin on document ready
             self.latestCommentsPluginUIRes();
+=======
+            // check for data-gs-width responsive below 5
+            self.latestCommentsPluginUI();
+>>>>>>> Stashed changes
 
             // remove class shown on plugin box when clicking on the left sideMenu
             this.$body.on("click", "ul.sideMenu li a[data-toggle='collapse']", function() {
@@ -34257,8 +34262,13 @@ var melisDashBoardDragnDrop = {
         // save widgets to db
         self.saveDBWidgets(dataString);
 
+<<<<<<< Updated upstream
         // .select2-container width 100% specific for latest comments plugin
         self.latestCommentsPluginUIRes();
+=======
+        // check for data-gs-width responsive below 5
+        self.latestCommentsPluginUI();
+>>>>>>> Stashed changes
     },
 
     saveDBWidgets: function(dataString) {
@@ -34314,13 +34324,18 @@ var melisDashBoardDragnDrop = {
                     elemWidth   = $elem.attr('data-gs-width'),
                     widthLimit  = 3;
 
+<<<<<<< Updated upstream
                     // grid-stack-item limits its smallest width to data-gs-width 3
+=======
+                    // grid-stack-item always on data-gs-width equal to 3
+>>>>>>> Stashed changes
                     if ( elemWidth <= widthLimit ) {
                         $node.width = parseInt(widthLimit);
                         $elem.attr('data-gs-width', widthLimit);
                     } else {
                         $node.width = parseInt(elemWidth);
                     }
+<<<<<<< Updated upstream
 
                 // specific for Melis Cms Comments / Latest comments
                 var $cFilters = $elem.find(".melis-cms-comments-dashboard-latest-comments .mccom-filters-tab .row .mccom-filter"),
@@ -34334,6 +34349,30 @@ var melisDashBoardDragnDrop = {
                             $cFilters.css("width", "100%");
                             $sCont.css("width", "100%");
                         }
+=======
+
+                // specific for Melis Cms Comments / Latest comments
+                var gsWidth   = $elem.data("gsWidth"),
+                    $cFilters = $elem.find(".melis-cms-comments-dashboard-latest-comments .mccom-filters-tab .row .mccom-filter"),
+                    $sCont    = $cFilters.find(".select2-container");
+
+                    /*if ( parseInt(gsWidth) < 5 ) {
+                        $cFilters.css("width", "100%");
+                        $sCont.css("width", "100%");
+                        console.log("less than 5");
+                    } else if ( parseInt(gsWidth) >= 5 ) {
+                        $cFilters.removeAttr("style");
+                        $sCont.removeAttr("style");
+                        console.log("greater than equal to 5");
+                    }*/
+
+                    if ( gsWidth >= 5 ) {
+                        $cFilters.removeAttr("style");
+                        $sCont.removeAttr("style");
+                    } else {
+                        $cFilters.css("width", "100%");
+                        $sCont.css("width", "100%");
+>>>>>>> Stashed changes
                     }
 
                     // update size of widgets passes array of .grid-stack-items
@@ -34343,7 +34382,11 @@ var melisDashBoardDragnDrop = {
     },
 
     // check for data-gs-width responsive below 5, Melis Cms Comments / Latest Comments
+<<<<<<< Updated upstream
     latestCommentsPluginUIRes: function() {
+=======
+    latestCommentsPluginUI: function() {
+>>>>>>> Stashed changes
         var $com    = $('#'+activeTabId+' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments"),
             $filter = $com.find(".mccom-filters-tab .row .mccom-filter"),
             $select = $filter.find(".form-group .select2-container");
@@ -34401,6 +34444,7 @@ var melisDashBoardDragnDrop = {
 
             // checks if there is a plugin available to delete
             if( $items.length !== 0 ) {
+<<<<<<< Updated upstream
                 var dataString = new Array;
                     // create dashboard array
                     dataString.push({
@@ -34465,6 +34509,74 @@ var melisDashBoardDragnDrop = {
                 $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
                     var $this = $(this);
 
+=======
+
+                var dataString = new Array;
+
+                    // create dashboard array
+                    dataString.push({
+                        name: 'dashboard_id',
+                        value: activeTabId
+                    });
+
+                    melisCoreTool.confirm(
+                        translations.tr_meliscore_common_yes,
+                        translations.tr_meliscore_common_no,
+                        translations.tr_meliscore_remove_all_plugins,
+                        translations.tr_meliscore_remove_dashboard_all_plugin_msg,
+                        function() {
+
+                            // remove all nodes on grid
+                            grid.removeAll();
+
+                            // save widgets position / size on db
+                            self.saveDBWidgets(dataString);
+                        }
+                    );
+
+                    // hide plugin menu
+                    this.$pluginBox.removeClass("shown");
+
+                    // droppable / .gridstack to original width
+                    $gs.animate({
+                        width: nWidth
+                    }, 3);
+
+                    // plugins delete callback
+                    $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
+                        var $this = $(this);
+
+                            if (typeof $this.data('callback') !== "undefined") {
+                                var callback = eval($this.data("callback"));
+                                if (typeof callback === "function") {
+                                    callback($this.closest('.grid-stack-item'));
+                                }
+                            }
+                    });
+
+            } else {
+
+                // 'Ok', 'Close', 'Remove all plugins', 'No plugins to delete.'
+                melisCoreTool.confirm(
+                    translations.tr_meliscore_common_yes,
+                    translations.tr_meliscore_common_no,
+                    translations.tr_meliscore_remove_all_plugins,
+                    translations.tr_meliscore_remove_dashboard_no_plugin_msg
+                );
+
+                // hide plugin menu
+                this.$pluginBox.removeClass("shown");
+
+                // droppable / .gridstack to original width
+                $gs.animate({
+                    width: nWidth
+                }, 3);
+
+                // plugins delete callback
+                $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
+                    var $this = $(this);
+
+>>>>>>> Stashed changes
                         if (typeof $this.data('callback') !== "undefined") {
                             var callback = eval($this.data("callback"));
                             if (typeof callback === "function") {
