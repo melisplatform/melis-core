@@ -105,8 +105,8 @@ var melisDashBoardDragnDrop = {
             // .select2-container width 100% specific for latest comments plugin on document ready
             self.latestCommentsPluginUIRes();
 
-            // remove class shown on plugin box when clicking on the left sideMenu
-            this.$body.on("click", "ul.sideMenu li a[data-toggle='collapse']", function() {
+            // remove class shown on plugin box when clicking on the left sideMenu / $body.on("click", ".melis-dashboard-plugins-menu", function(){}); on melisCore.js @ 527
+            /*this.$body.on("click", "ul.sideMenu li a[data-toggle='collapse']", function() {
                 if ($box.hasClass("shown")) {
                     $box.removeClass("shown");
 
@@ -114,7 +114,10 @@ var melisDashBoardDragnDrop = {
                         width: nWidth
                     }, 3);
                 }
-            });
+            });*/
+
+            // remove class shown on plugin box when clicking on the left sideMenu
+            this.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
 
             // animate to full width size of #grid1
             this.$body.on("click", "#dashboard-plugin-delete-all", function() {
@@ -284,6 +287,22 @@ var melisDashBoardDragnDrop = {
     saveDBWidgets: function(dataString) {
         // save the lists of widgets on the dashboard to db
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+    },
+
+    closeDBPlugSidebar: function() {
+        var $btn    = this.$body.find("#melisDashBoardPluginBtn"),
+            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs     = this.$body.find("#"+activeTabId+" .grid-stack"),
+            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth  = dWidth + $box.width();
+
+            if ($box.hasClass("shown")) {
+                $box.removeClass("shown");
+
+                $gs.animate({
+                    width: nWidth
+                }, 3);
+            }
     },
 
     disablePlugSidebar: function() {

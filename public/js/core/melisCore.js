@@ -184,7 +184,9 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard(){
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"}, '', function() {
+            melisDashBoardDragnDrop.closeDBPlugSidebar();
+        });
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
@@ -517,6 +519,8 @@ var melisCore = (function(window){
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
 
     	data = $(this).data();
+    	//var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
+
     	melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
 
     });
@@ -572,6 +576,19 @@ var melisCore = (function(window){
             $(this).addClass("active");
             $(".melis-core-dashboard-category-btn.active").siblings(".melis-core-dashboard-category-plugins-box").slideDown();
         }
+    }
+
+    // for appending custom checkbox element, on modal container
+    function loadCustomCheckboxElement() {
+        var $checkbox       = $body.find(".melis-check-box");
+
+            $.each($checkbox, function() {
+                var $this   = $(this),
+                    $id     = $this.attr("id");
+
+                    $this.parent("div").addClass("cls-checkbox");
+                    $this.parent("div").append("<label for=" + $id + " class='cls-checkbox-label'></label>");
+            });
     }
 
 
@@ -703,6 +720,7 @@ var melisCore = (function(window){
         escapeHtml										: 			escapeHtml,
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
+        loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
 
     };
 
