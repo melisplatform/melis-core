@@ -175,6 +175,8 @@ return [
     'tr_meliscore_common_warning' => 'Attention',
     'tr_meliscore_common_yes' => 'Oui',
     'tr_meliscore_common_no' => 'Annuler',
+    'tr_meliscore_common_nope' => 'Non',
+    'tr_meliscore_common_status' => 'Statut',
     'tr_meliscore_common_copy' => 'Copier',
     'tr_meliscore_common_export_to_csv' => 'Exporter',
     'tr_meliscore_common_edit' => 'Editer',

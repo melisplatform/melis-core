@@ -173,6 +173,8 @@ return [
     'tr_meliscore_common_warning' => 'Warning',
     'tr_meliscore_common_yes' => 'Yes',
     'tr_meliscore_common_no' => 'No',
+    'tr_meliscore_common_nope' => 'No',
+    'tr_meliscore_common_status' => 'Status',
     'tr_meliscore_common_copy' => 'Copy',
     'tr_meliscore_common_export_to_csv' => 'Export',
     'tr_meliscore_common_edit' => 'Edit',

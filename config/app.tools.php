@@ -1335,9 +1335,9 @@ return [
                                             'label' => 'tr_meliscore_tool_platform_update_marketplace',
                                             'tooltip' => 'tr_meliscore_tool_platform_update_marketplace tooltip',
                                             'switchOptions' => [
-                                                'label' => 'tr_meliscore_common_allow',
+                                                'label' => 'tr_meliscore_common_status',
                                                 'label-on' => 'tr_meliscore_common_yes',
-                                                'label-off' => 'tr_meliscore_common_no',
+                                                'label-off' => 'tr_meliscore_common_nope',
                                                 'icon' => "glyphicon glyphicon-resize-horizontal",
                                             ],
                                             'value_options' => [
