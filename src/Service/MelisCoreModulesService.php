@@ -41,6 +41,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
         $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
         $composer = (array) \Zend\Json\Json::decode(file_get_contents($composerFile));
+       
 
         foreach ($composer as $package) {
             $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
@@ -671,5 +672,37 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param $module
+     *
+     * @return bool
+     */
+    public function isSiteModule($module)
+    {
+        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
+
+        $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
+        $composer = (array) \Zend\Json\Json::decode(file_get_contents($composerFile));
+
+        $repo = null;
+
+        foreach ($composer as $package) {
+            $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
+
+            if (isset($packageModuleName['module-name']) && $packageModuleName['module-name'] == $module) {
+                $repo = (array) $package->extra;
+                break;
+            }
+        }
+
+        if ($repo) {
+            if(isset($repo['melis-site'])) {
+                return (bool)$repo['melis-site'] ?? false;
+            }
+        }
+
+        return false;
     }
 }

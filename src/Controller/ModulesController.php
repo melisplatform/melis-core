@@ -96,11 +96,16 @@ class ModulesController extends AbstractActionController
         $zoneConfig = $this->params()->fromRoute('zoneconfig', array());
 
         $modulesInfo = $this->getModuleSvc()->getModulesAndVersions();
+        $modules = $this->getModules();
+        //exclude MelisDemoCms cause it is SiteModule
+        // it will complicate some default layout/layout of the melis-core
+        unset($modules['MelisDemoCms']);
+        unset($modulesInfo['MelisDemoCms']);
 
         $view = new ViewModel();
 
         $view->melisKey    = $melisKey;
-        $view->modules     = $this->getModules();
+        $view->modules     = $modules;
         $view->modulesInfo = $modulesInfo;
 
         return $view;

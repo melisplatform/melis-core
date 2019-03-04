@@ -704,7 +704,7 @@ var melisHelper = (function(){
     $body.on("click", ".close-tab", tabClose );
 
     // close the KO notification
-    $("body").on("click", ".melis-modal-cont.KOnotif span.btn, .overlay-hideonclick, .delete-page-modal .cancel, .melis-prompt, melis-prompt .cancel", function(){
+    $body.on("click", ".melis-modal-cont.KOnotif span.btn, .overlay-hideonclick, .delete-page-modal .cancel, .melis-prompt, melis-prompt .cancel", function(){
         $(".melis-modaloverlay, .melis-modal-cont").remove();
     });
 
