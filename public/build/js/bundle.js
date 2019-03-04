@@ -30588,7 +30588,14 @@ $(document).ready(function() {
 									// this will just trigger an animate switch
                                     switchButtonWithoutEvent(v, "off");
                                 });
-                            }
+                            },
+							/**
+							 * User selects cancel: Revert the switch to its saved state, in this case "ON",
+							 * to prevent user from saving the cancelled switch change
+							 */
+							function () {
+								switchButtonWithoutEvent(moduleName, 'on');
+							}
                         );
                     }
                     $('div[data-module-name]').bootstrapSwitch('setActive', true);
@@ -34100,19 +34107,12 @@ var melisDashBoardDragnDrop = {
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = dWidth + $box.width();
 
+        var $cPlugin = $gs.find(".melis-cms-comments-dashboard-latest-comments").closest(".grid-stack-item").data("gs-width");
+
             // .select2-container width 100% specific for latest comments plugin on document ready
-            self.latestCommentsPluginUIRes();
-
-            // remove class shown on plugin box when clicking on the left sideMenu / $body.on("click", ".melis-dashboard-plugins-menu", function(){}); on melisCore.js @ 527
-            /*this.$body.on("click", "ul.sideMenu li a[data-toggle='collapse']", function() {
-                if ($box.hasClass("shown")) {
-                    $box.removeClass("shown");
-
-                    $gs.animate({
-                        width: nWidth
-                    }, 3);
-                }
-            });*/
+            if ( $cPlugin < 5 ) {
+                self.latestCommentsPluginUIRes();
+            }
 
             // remove class shown on plugin box when clicking on the left sideMenu
             this.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
@@ -34376,18 +34376,33 @@ var melisDashBoardDragnDrop = {
                     // update size of widgets passes array of .grid-stack-items
                     // $node._grid.container[0].children
                     self.serializeWidgetMap( $items );
+
+                    // .select2-container width 100% specific for latest comments plugin
+                    //self.latestCommentsPluginUIRes();
             });
     },
 
     // check for data-gs-width responsive below 5, Melis Cms Comments / Latest Comments
     latestCommentsPluginUIRes: function() {
-        var $com    = $('#'+activeTabId+' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments"),
-            $filter = $com.find(".mccom-filters-tab .row .mccom-filter"),
-            $select = $filter.find(".form-group .select2-container");
+        var $com        = $('#'+activeTabId+' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments"),
+            $gsiWidth   = $com.closest(".grid-stack-item").data("gs-width"),
+            $filter     = $com.find(".mccom-filters-tab .row .mccom-filter"),
+            $select     = $filter.find(".form-group .select2-container");
 
-            // specific for latest comments plugin / select option
-            if ( $select.length > 0 ) {
-                $select.css("width", "100%");
+            // check on filter if found
+            if ( $filter.length > 0 && $select.length > 0 ) {
+                if ( $gsiWidth >= 5 ) {
+                    $filter.removeAttr("style");
+                    $select.removeAttr("style");
+                } else {
+                    $filter.css("width", "100%");
+                    $select.css("width", "100%");
+                }
+
+                // specific for latest comments plugin / select option
+                /*if ( $select.length > 0 ) {
+                    $select.css("width", "100%");
+                }*/
             }
     },
 
@@ -34518,63 +34533,67 @@ var melisDashBoardDragnDrop = {
         var self = this;
 
         var dataString = new Array;
-        // create dashboard array
-        dataString.push({
-            name: 'dashboard_id',
-            value: activeTabId
-        });
+
+            // create dashboard array
+            dataString.push({
+                name: 'dashboard_id',
+                value: activeTabId
+            });
 
         var dashboardItem = $(el).closest('.grid-stack-item');
         var dataTxt = $(dashboardItem).find('.dashboard-plugin-json-config').text();
         var dashboardData =  dashboardItem.data('_gridstack_node');
 
-        // check dataTxt
-        if(dataTxt) {
-            var pluginConfig = JSON.parse(dataTxt);
-            $.each(pluginConfig, function(index, value){
-                // here modify x y w h of the plugin
-                if(index === "x-axis") { value = dashboardData.x }
-                if(index === "y-axis") { value = dashboardData.y }
-                if(index === "width") { value = dashboardData.width }
-                if(index === "height") { value = dashboardData.height }
+            // check dataTxt
+            if(dataTxt) {
+                var pluginConfig = JSON.parse(dataTxt);
+                $.each(pluginConfig, function(index, value){
+                    // here modify x y w h of the plugin
+                    if(index === "x-axis") { value = dashboardData.x }
+                    if(index === "y-axis") { value = dashboardData.y }
+                    if(index === "width") { value = dashboardData.width }
+                    if(index === "height") { value = dashboardData.height }
 
-                // push to dashboard array
-                dataString.push({
-                    name: index,
-                    value: value
-                });
-            });
-
-            var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
-
-            // loading effect
-            dashboardItem.append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
-
-            request.done(function(data){
-
-                // get dashboard gridstack data
-                var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
-
-                // remove loader
-                $(dashboardItem).find('.overlay-loader').remove();
-
-                grid.removeWidget($(dashboardItem));
-
-                var html = $(data.html);
-
-                // add widget to dashboard default size 6 x 6
-                var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
-
-                // assigning current plugin
-                self.setCurrentPlugin(widget);
-
-                // executing plugin JsCallback
-                if(data.jsCallbacks.length) {
-                    $.each(data.jsCallbacks, function(index, value) {
-                        eval(value);
+                    // push to dashboard array
+                    dataString.push({
+                        name: index,
+                        value: value
                     });
-                }
-            });
+                });
+
+                var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+
+                    // loading effect
+                    dashboardItem.append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
+
+                    request.done(function(data){
+
+                        // get dashboard gridstack data
+                        var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
+
+                            // remove loader
+                            $(dashboardItem).find('.overlay-loader').remove();
+
+                            grid.removeWidget($(dashboardItem));
+
+                        var html = $(data.html);
+
+                        // add widget to dashboard default size 6 x 6
+                        var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
+
+                            // assigning current plugin
+                            self.setCurrentPlugin(widget);
+
+                            // .select2-container width 100% specific for latest comments plugin
+                            self.latestCommentsPluginUIRes();
+
+                            // executing plugin JsCallback
+                            if(data.jsCallbacks.length) {
+                                $.each(data.jsCallbacks, function(index, value) {
+                                    eval(value);
+                                });
+                            }
+                    });
         }
     },
 
