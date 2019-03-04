@@ -4,6 +4,7 @@
 		'relative_urls' => false,
 		'selector' => 'tool-editable-selector',
 		'language' => 'en',
+		'branding' => false,
 		'inline' => false,
 		'menubar' => false,
 		'forced_root_block' => '',

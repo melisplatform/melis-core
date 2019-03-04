@@ -29874,11 +29874,7 @@ var melisCoreTool = (function (window) {
     }
 
     // FOR MODALS
-<<<<<<< HEAD
-    function confirm(textOk, textNo, title, msg, callBackOnYes) {
-=======
     function confirm(textOk, textNo, title, msg, callBackOnYes, callBackOnNo) {
->>>>>>> develop
         BootstrapDialog.show({
             title: title,
             message: msg,
@@ -29888,27 +29884,20 @@ var melisCoreTool = (function (window) {
                 label: textNo, //translations.tr_meliscore_common_no
                 cssClass: 'btn-danger pull-left',
                 action: function (dialog) {
-<<<<<<< HEAD
-=======
                     //callBackOnNo();
                     if (callBackOnNo !== null && typeof (callBackOnNo) === 'function') {
                         callBackOnNo();
                     }
->>>>>>> develop
                     dialog.close();
                 }
             }, {
                 label: textOk, //translations.tr_meliscore_common_yes
                 cssClass: 'btn-success',
                 action: function (dialog) {
-<<<<<<< HEAD
-                    callBackOnYes();
-=======
                     //callBackOnYes();
                     if (callBackOnYes !== null && typeof (callBackOnYes) === 'function') {
                         callBackOnYes();
                     }
->>>>>>> develop
                     dialog.close();
                 }
             }]
@@ -29969,10 +29958,6 @@ var melisCoreTool = (function (window) {
 
     function processing() {
         var overlay = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
-<<<<<<< HEAD
-        ;
-=======
->>>>>>> develop
         $(overlay).appendTo('body');
     }
 
