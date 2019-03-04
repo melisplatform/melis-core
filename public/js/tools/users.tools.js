@@ -350,9 +350,14 @@ var toolUserManagement = {
                 toolUserManagement.refreshTable();
 
                 //check if data that has been updated is equal to the current user info to replicate the user profile data
-                if (_tmpUserId == $('#id_meliscore_user_profile_left').attr('data-user-id')) {
+                if (_tmpUserId == $("#user-name-link").attr("data-user-id")) {
                     melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
                     melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
+
+                    //reload the dashboard plugins menu to update the plugin rights
+                    melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
+                        melisDashBoardDragnDrop.dragWidget();
+                    });
                 }
             }
             else {

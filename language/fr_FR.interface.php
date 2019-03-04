@@ -694,7 +694,7 @@ return [
         'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Le nom ne doit pas être composé de chiffres',
 
         'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
-        'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.',
+        'tr_melisdashboardplugin_plugin_no_rights' => 'Vous n\'avez pas les droits requis pour accéder à ce plugin.',
     	'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => 'Les droits de votre compte ne vous autorisent pas à utiliser les plugins du dashboard. Merci de contacter un admin si besoin.',
     	'tr_meliscore_remove_all_plugins' => 'Suppression de tous les plugins du dashboard',
 	];

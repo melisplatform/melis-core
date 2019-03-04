@@ -3844,3 +3844,7 @@ div#modal-user-management div.widget {
     color: #fff;
     padding: 5px;
 }
+
+.no-rights-container{
+    padding: 10px;
+}
