@@ -1,31 +1,30 @@
 var melisTinyMCE = (function(){
-	
-	
 	// This method will initialize an editor after requesting the TinyMCE configuration
-	function createTinyMCE(type, selector, options){
-        if(!type) type='';
-        if(!selector) selector='';
-        if(!options) options=null;
+	function createTinyMCE(type, selector, options) {
+		console.log("melis_tinymce: createTinyMCE");
+
+        if(!type) type = '';
+        if(!selector) selector = '';
+        if(!options) options = null;
 		// DataString with the values need get the TinyMCE configuration
 		var dataString = {
 			type 		: type,
 			selector 	: selector,
 			options 	: options
-		}
+		};
 		
 		$.ajax({
 			type        : 'POST', 
     	    url         : '/melis/MelisCore/MelisTinyMce/getTinyMceConfig',
     	    data        : dataString,
     	    encode		: true
-    	}).success(function(data){
-    		if(data.success){
-    			
-    			if(typeof(tinyMCE) != 'undefined') {
-    				if(selector.length){
-    					try{
+    	}).success(function(data) {
+    		if( data.success ) {
+    			if( typeof(tinyMCE) != 'undefined' ) {
+    				if( selector.length ) {
+    					try {
     						tinymce.remove(selector);
-    					}catch (e) {}
+    					} catch (e) {}
     				}
      			}
     			// Initializing TinyMCE with the request Configurations
@@ -38,7 +37,7 @@ var melisTinyMCE = (function(){
 	
 	// TinyMCE  action event
 	function tinyMceActionEvent(editor) {
-		
+		console.log("melis_tinymce: tinyMceActionEvent");
 		/**
 		var targetId = editor.id;
 		*/
@@ -70,11 +69,12 @@ var melisTinyMCE = (function(){
     }
 
     function modalPopUp() {
-        // OPENING THE POPUP
-        $("body").on("click", ".mce-btn", function(){
-            var mcePopUp = $("#mce-modal-block").length;
-            if(mcePopUp){
+    	console.log("melis_tinymce: modalPopUp");
 
+        // OPENING THE POPUP
+        $("body").on("click", ".mce-btn", function() {
+            var mcePopUp = $("#mce-modal-block").length;
+            if ( mcePopUp ) {
                 // iframe height
                 var iframeHeight = $(window).height();
                     
@@ -96,10 +96,9 @@ var melisTinyMCE = (function(){
                 }, 300);
                 
             }
-            else{
+            else {
                 /* console.log("no popup"); */
             }
-            
         });
     }
 
@@ -113,14 +112,13 @@ var melisTinyMCE = (function(){
     }
 	
 	// Function that accessible using melisTinyMCE
-	return{
+	return {
 		
 		createTinyMCE		:	createTinyMCE,
 		tinyMceActionEvent	:	tinyMceActionEvent,
         modalPopUp          :   modalPopUp,
-        addMelisCss         :   addMelisCss,
+        addMelisCss         :   addMelisCss
 	};
-	
 })();
 
 (function() {
