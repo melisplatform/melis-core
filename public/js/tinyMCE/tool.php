@@ -19,5 +19,5 @@
 		    'insertdatetime media table paste'
 	    ),
 	    'toolbar' => 'undo redo | styleselect | bold italic | link image |  alignleft aligncenter alignright alignjustify',
-	    'init_instance_callback' => 'tinyMceCleaner',
-	); 
+	    'init_instance_callback' => 'tinyMceCleaner'
+	);
