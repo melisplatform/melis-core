@@ -35,17 +35,76 @@ var melisTinyMCE = (function() {
 
 	// TinyMCE  action event
 	function tinyMceActionEvent(editor) {
-		//var targetId = editor.id;
+        var $t = tinymce.dom.DomQuery;
 
-        editor.on("change", function () {
-        	// Any changes will sync to the selector (Ex. textarea)
-			// tinymce.triggerSave();
-            editor.save();
-        });
+            editor.on("change", function () {
+            	// Any changes will sync to the selector (Ex. textarea)
+    			// tinymce.triggerSave();
+                editor.save();
+            });
+
+            editor.on("click", function() {
+                var $ttox       = $t(".tox-tinymce"),
+                    $aux        = $t(".tox-tinymce-aux"),
+                    $editLink   = $t(".tox-toolbar .tox-toolbar__group").last().prev().find("button:first-child").addClass("insert-edit-link");
+
+                    $editLink.on("click", function() {
+                        if ( $aux.length ) {
+                            setTimeout(function() {
+                                melisLinkTree.checkBtn();
+                            }, 50);
+                        }
+                    });
+
+                    console.log("editor clicked");
+
+                    $(window).on("keydown", function() {
+                        console.log("editor keydown");
+                    });
+            });
+
+            editor.on("contextmenu", function() {
+                var $aux = $t(".tox-tinymce-aux");
+
+                    if ( $aux.length ) {
+                        setTimeout(function() {
+                            var $menuItem = $aux.find(".tox-collection__item--active");
+                                $menuItem.on("click", function() {
+                                    setTimeout(function() {
+                                        melisLinkTree.checkBtn();
+                                    }, 50);
+                                });
+                        }, 50);
+                    }
+            });
+
+            /*editor.on("focus", function(e) {
+                console.log("editor focused");
+                var code = e.keyCode || e.which;
+                var $this = $(this);
+
+                
+
+                console.log("e: " , e);
+
+                if ( e.keyCode === 75 && e.ctrlKey ) {
+
+                    console.log("ctrl + key");
+
+                    melisLinkTree.checkBtn();
+                }
+            });*/
 	}
 
-	//button[aria-label='Insert/edit link']
-	function tinyMceInsertMelisTreeBtn(editor) {
+    /*$(window).keypress(function(e) {
+        console.log("keypress ctr + k");
+        var code = e.keyCode || e.which;
+            if ( code == 75 ) {
+                melisLinkTree.checkBtn();
+            }
+    });*/
+
+	/*function tinyMceInsertMelisTreeBtn(editor) {
 		//editor.on("init", melisLinkTree.checkBtn);
 		editor.on("click", function() {
             var $tmce 		= tinymce.dom.DomQuery,
@@ -55,7 +114,7 @@ var melisTinyMCE = (function() {
 					setTimeout( melisLinkTree.checkBtn, 500 );
 				});
 		});
-	}
+	}*/
 
 	// Stating zone to loading
     function loadingZone(targetElem){
@@ -118,7 +177,7 @@ var melisTinyMCE = (function() {
 	return {
 		createTinyMCE					:	createTinyMCE,
 		tinyMceActionEvent				:	tinyMceActionEvent,
-        tinyMceInsertMelisTreeBtn 		: 	tinyMceInsertMelisTreeBtn,
+        //tinyMceInsertMelisTreeBtn 		: 	tinyMceInsertMelisTreeBtn,
         modalPopUp          			:   modalPopUp,
         addMelisCss         			:   addMelisCss
 	};
