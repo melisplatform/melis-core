@@ -145,6 +145,33 @@ class MelisCoreGdprController extends AbstractActionController
     }
 
     /**
+     * @return ViewModel
+     */
+    public function gdprTabsAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function searchUserDataAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
+
+
+    /**
      * Content of the Gdpr page
      * which will call all the interfaces
      * under it. which are search form

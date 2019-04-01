@@ -646,6 +646,7 @@ return [
     'tr_melis_core_gdpr_header_title' => 'GDPR (General Data Protection Regulation)',
     'tr_melis_core_gdpr_header_description' => 'Melis Platform provides a system to look for your user\'s datas. </br> All modules compliant to the Melis system will be able to interact with this interface and offer you possibilities to comply with the regulation.',
 
+    'tr_melis_core_gdpr_search_user_data_tabname' => 'Data',
     'tr_melis_core_gdpr_form_name' => 'Name',
     'tr_melis_core_gdpr_form_email' => 'Email',
     'tr_melis_core_gdpr_form_site' => 'Site',
