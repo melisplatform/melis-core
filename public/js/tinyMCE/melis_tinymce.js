@@ -55,11 +55,11 @@ var melisTinyMCE = (function() {
                 tinyMceInsertMelisTreeBtn();
             });
 
-            editor.on("focus", function() {
+            /*editor.on("focus", function() {
                 console.log("editor focus");
 
                 tinyMceInsertMelisTreeBtn();
-            });
+            });*/
 
             editor.on("contextmenu", function() {
                 var $body   = window.parent.$("body"),
@@ -122,27 +122,28 @@ var melisTinyMCE = (function() {
         var transTitle      = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
 
             $btoxToolGroup.each(function(i) {
-                console.log("each $btoxToolGroup");
+                //console.log("each $btoxToolGroup");
 
                 var $bBtn = $(this).find("button");
                     $bBtn.each(function(i) {
                         var $attrTitle  = $(this)[i].attributes[1].value;
 
-                            console.log("$bBtn: ", $(this));
+                            //console.log("$bBtn: ", $(this));
 
                             if ( transTitle !== "" && $attrTitle === transTitle ) {
-                                console.log("transTitle === $attrTitle");
+                                //console.log("transTitle === $attrTitle");
 
                                 $(this).addClass("insert-edit-link");
 
-                                $body.on("click", ".insert-edit-link", function() {
-                                    console.log("comments insert-edit-link clicked");
-                                    
+                                $(this).on("click", function() {                                  
                                     if ( $baux.length ) {
                                         setTimeout(function() {
                                             melisLinkTree.checkBtn();
                                         }, 50);
                                     }
+                                    console.log("comments insert-edit-link clicked");
+                                    
+                                    return false;
                                 });
 
                                 return false;
