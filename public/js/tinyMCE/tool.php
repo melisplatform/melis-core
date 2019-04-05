@@ -10,7 +10,6 @@
 		'forced_root_block' => '',
 		'cleanup' => false,
 		'verify_html' => false,
-	    'setup' => 'melisTinyMCE.tinyMceActionEvent',
 	    'paste_auto_cleanup_on_paste' => true,
 		'plugins' => array(
 			//[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
@@ -19,5 +18,6 @@
 		    'insertdatetime media table paste'
 	    ),
 	    'toolbar' => 'undo redo | styleselect | bold italic | link image |  alignleft aligncenter alignright alignjustify',
+	    'setup' => 'melisTinyMCE.tinyMceActionEvent',
 	    'init_instance_callback' => 'tinyMceCleaner'
 	);

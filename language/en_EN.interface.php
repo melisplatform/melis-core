@@ -555,7 +555,7 @@ return [
 
     // tinymce
     'tr_meliscore_tinymce_file_manager' => 'File Manager',
-    'tr_meliscore_tinymce_insert_edit_link_dialog_title' => 'Insert/Edit Link',
+    'tr_meliscore_tinymce_insert_edit_link_dialog_title' => 'Insert/edit link',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',

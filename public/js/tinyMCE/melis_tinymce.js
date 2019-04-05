@@ -43,78 +43,144 @@ var melisTinyMCE = (function() {
                 editor.save();
             });
 
+            editor.on("init", function() {
+                console.log("editor init");
+
+                tinyMceInsertMelisTreeBtn();
+            });
+
             editor.on("click", function() {
-                var $ttox       = $t(".tox-tinymce"),
-                    $aux        = $t(".tox-tinymce-aux"),
-                    $editLink   = $t(".tox-toolbar .tox-toolbar__group").last().prev().find("button:first-child").addClass("insert-edit-link");
+                console.log("editor click");
 
-                    $editLink.on("click", function() {
-                        if ( $aux.length ) {
-                            setTimeout(function() {
-                                melisLinkTree.checkBtn();
-                            }, 50);
-                        }
-                    });
+                tinyMceInsertMelisTreeBtn();
+            });
 
-                    console.log("editor clicked");
+            editor.on("focus", function() {
+                console.log("editor focus");
 
-                    $(window).on("keydown", function() {
-                        console.log("editor keydown");
-                    });
+                tinyMceInsertMelisTreeBtn();
             });
 
             editor.on("contextmenu", function() {
-                var $aux = $t(".tox-tinymce-aux");
+                var $body   = window.parent.$("body"),
+                    $iaux   = $t(".tox-tinymce-aux"),
+                    $baux   = $body.find(".tox-tinymce-aux");
 
-                    if ( $aux.length ) {
-                        setTimeout(function() {
-                            var $menuItem = $aux.find(".tox-collection__item--active");
-                                $menuItem.on("click", function() {
+                    setTimeout(function() {
+                        var $imenuItem = $iaux.find(".tox-selected-menu .tox-collection__group .tox-menu-nav__js"),
+                            $bmenuItem = $baux.find(".tox-selected-menu .tox-collection__group .tox-menu-nav__js");
+
+                            if ( $imenuItem.length > 0 ) {
+                                $imenuItem.on("click", function() {
+                                    console.log("$imenuItem");
                                     setTimeout(function() {
                                         melisLinkTree.checkBtn();
-                                    }, 50);
+                                    }, 100);
                                 });
+                            }
+
+                            if ( $bmenuItem.length > 0 ) {
+                                $bmenuItem.on("click", function() {
+                                    console.log("$bmenuItem");
+                                    setTimeout(function() {
+                                        melisLinkTree.checkBtn();
+                                    }, 100);
+                                });
+                            }
+                    }, 50);
+            });
+
+            editor.on("keydown", function(e) {
+                var code = e.keyCode || e.which;
+
+                    if ( code === 75 && e.ctrlKey ) {
+                        setTimeout(function() {
+                            melisLinkTree.checkBtn();
                         }, 50);
                     }
             });
-
-            /*editor.on("focus", function(e) {
-                console.log("editor focused");
-                var code = e.keyCode || e.which;
-                var $this = $(this);
-
-                
-
-                console.log("e: " , e);
-
-                if ( e.keyCode === 75 && e.ctrlKey ) {
-
-                    console.log("ctrl + key");
-
-                    melisLinkTree.checkBtn();
-                }
-            });*/
 	}
 
-    /*$(window).keypress(function(e) {
-        console.log("keypress ctr + k");
-        var code = e.keyCode || e.which;
-            if ( code == 75 ) {
-                melisLinkTree.checkBtn();
-            }
-    });*/
+    function tinyMceInsertMelisTreeBtn() {
+        var //$body           = $("body"),
+            $body           = window.parent.$("body"),
+            $t              = tinymce.dom.DomQuery,
 
-	/*function tinyMceInsertMelisTreeBtn(editor) {
-		//editor.on("init", melisLinkTree.checkBtn);
-		editor.on("click", function() {
-            var $tmce 		= tinymce.dom.DomQuery,
-            	$editLink 	= $tmce(".tox-toolbar .tox-toolbar__group").last().prev().find("button:first-child").addClass("insert-edit-link");
+            $itiny          = $t(".tox-tinymce");
+            $btiny          = $body.find(".tox-tinymce"),
 
-				$editLink.on("click", function() {
-					setTimeout( melisLinkTree.checkBtn, 500 );
-				});
-		});
-	}*/
+            $iaux           = $t(".tox-tinymce-aux"),
+            $baux           = $body.find(".tox-tinymce-aux"),
+
+            $itoxToolGroup  = $itiny.find(".tox-toolbar .tox-toolbar__group"),
+            $btoxToolGroup  = $btiny.find(".tox-toolbar .tox-toolbar__group");
+
+            //bBtn            = $btoxToolGroup.last().prev().find("button").first();
+
+            //$bBtn           = $btoxToolGroup.find("button");
+
+        var transTitle      = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
+
+            $btoxToolGroup.each(function(i) {
+                console.log("each $btoxToolGroup");
+
+                var $bBtn = $(this).find("button");
+                    $bBtn.each(function(i) {
+                        var $attrTitle  = $(this)[i].attributes[1].value;
+
+                            console.log("$bBtn: ", $(this));
+
+                            if ( transTitle !== "" && $attrTitle === transTitle ) {
+                                console.log("transTitle === $attrTitle");
+
+                                $(this).addClass("insert-edit-link");
+
+                                $body.on("click", ".insert-edit-link", function() {
+                                    console.log("comments insert-edit-link clicked");
+                                    
+                                    if ( $baux.length ) {
+                                        setTimeout(function() {
+                                            melisLinkTree.checkBtn();
+                                        }, 50);
+                                    }
+                                });
+
+                                return false;
+                            }
+
+                            return false;
+                    });
+            });
+
+            /*console.log("transTitle: ", transTitle);
+            console.log("$bBtn title: ", $bBtn.attr("title") );
+
+            if ( transTitle !== "" && $bBtn.attr("title") === transTitle ) {
+                $bBtn.addClass("insert-edit-link");
+
+                console.log("if $bBtn: ", $bBtn.attr("title") );
+            }*/
+
+            /*if ( translations.tr_meliscore_tinymce_insert_edit_link_dialog_title !== "" ) {
+                $editLink1.on("click", function() {
+                    console.log("$editLink1");
+                    if ( $iaux.length ) {
+                        setTimeout(function() {
+                            melisLinkTree.checkBtn();
+                        }, 50);
+                    }
+                });
+
+                $editLink2.on("click", function() {
+                    console.log("$editLink2");
+                    if ( $baux.length ) {
+                        setTimeout(function() {
+                            melisLinkTree.checkBtn();
+                        }, 50);
+                    }
+                });
+            }*/
+    }
 
 	// Stating zone to loading
     function loadingZone(targetElem){
@@ -181,6 +247,7 @@ var melisTinyMCE = (function() {
         modalPopUp          			:   modalPopUp,
         addMelisCss         			:   addMelisCss
 	};
+
 })();
 
 (function() {
