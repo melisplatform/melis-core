@@ -102,12 +102,8 @@ var melisDashBoardDragnDrop = {
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = dWidth + $box.width();
 
-        var $cPlugin = $gs.find(".melis-cms-comments-dashboard-latest-comments").closest(".grid-stack-item").data("gs-width");
-
             // .select2-container width 100% specific for latest comments plugin on document ready
-            if ( $cPlugin < 5 ) {
-                self.latestCommentsPluginUIRes();
-            }
+            self.latestCommentsPluginUIRes();
 
             // remove class shown on plugin box when clicking on the left sideMenu
             this.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
@@ -272,9 +268,6 @@ var melisDashBoardDragnDrop = {
 
         // save widgets to db
         self.saveDBWidgets(dataString);
-
-        // .select2-container width 100% specific for latest comments plugin
-        self.latestCommentsPluginUIRes();
     },
 
     saveDBWidgets: function(dataString) {
@@ -356,49 +349,46 @@ var melisDashBoardDragnDrop = {
 
                 // specific for Melis Cms Comments / Latest comments
                 var $cFilters = $elem.find(".melis-cms-comments-dashboard-latest-comments .mccom-filters-tab .row .mccom-filter"),
-                    $sCont    = $cFilters.find(".select2-container");
+                    $sCont    = $cFilters.find(".form-group .select2-container");
 
                     if ( $cFilters.length > 0 ) {
-                        if (elemWidth >= 5) { // check if it belows data-gs-width 5 and it will be in full width
-                            $cFilters.removeAttr("style");
-                            $sCont.removeAttr("style");
-                        } else {
+                        if ( elemWidth < 5 ) { // check if it belows data-gs-width 5 and it will be in full width
                             $cFilters.css("width", "100%");
                             $sCont.css("width", "100%");
+                        } 
+                        else {
+                            $cFilters.removeAttr("style");
+                            $sCont.removeAttr("style");
                         }
                     }
 
                     // update size of widgets passes array of .grid-stack-items
-                    // $node._grid.container[0].children
                     self.serializeWidgetMap( $items );
-
-                    // .select2-container width 100% specific for latest comments plugin
-                    //self.latestCommentsPluginUIRes();
             });
     },
 
     // check for data-gs-width responsive below 5, Melis Cms Comments / Latest Comments
     latestCommentsPluginUIRes: function() {
-        var $com        = $('#'+activeTabId+' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments"),
-            $gsiWidth   = $com.closest(".grid-stack-item").data("gs-width"),
-            $filter     = $com.find(".mccom-filters-tab .row .mccom-filter"),
-            $select     = $filter.find(".form-group .select2-container");
+        var $com = $('#'+activeTabId+' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments");
 
-            // check on filter if found
-            if ( $filter.length > 0 && $select.length > 0 ) {
-                if ( $gsiWidth >= 5 ) {
-                    $filter.removeAttr("style");
-                    $select.removeAttr("style");
-                } else {
-                    $filter.css("width", "100%");
-                    $select.css("width", "100%");
-                }
+            $.each($com, function(i, v) {
+                var $this   = $(this),
+                    gsWidth = $this.closest(".grid-stack-item").data("gs-width"),
+                    $filter = $this.find(".mccom-filters-tab .row .mccom-filter"),
+                    $select = $filter.find(".form-group .select2-container");
 
-                // specific for latest comments plugin / select option
-                /*if ( $select.length > 0 ) {
-                    $select.css("width", "100%");
-                }*/
-            }
+                    if ( gsWidth < 5 ) {
+                        $filter.removeAttr("width");
+                        $filter.attr("style", "width: 100%");
+
+                        $select.removeAttr("width");
+                        $select.attr("style", "width: 100%");
+                    }
+                    else {
+                        $filter.removeAttr("style");
+                        $select.removeAttr("style");
+                    }
+            });
     },
 
     deleteWidget: function(el) {
