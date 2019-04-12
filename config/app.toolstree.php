@@ -111,7 +111,7 @@ return [
                                                 'module' => 'MelisCore',
                                                 'controller' => 'Modules',
                                                 'action' => 'render-tool-modules',
-                                                'jscallback' => '',
+                                                'jscallback' => 'iframeMarketplaceCallback()',
                                                 'jsdatas' => array()
                                             ),
                                             'interface' => array(
@@ -699,7 +699,7 @@ return [
                                                 'module' => 'MelisCore',
                                                 'controller' => 'ToolUser',
                                                 'action' => 'render-tool-user',
-                                                'jscallback' => '',
+                                                'jscallback' => 'iframeMarketplaceCallback()',
                                                 'jsdatas' => array()
                                             ),
                                             'interface' => array(
