@@ -57,6 +57,9 @@ class Module
 
         });
 
+        /** @var \MelisCore\Service\MelisCoreModulesService $moduleSvc */
+        $moduleSvc = $e->getApplication()->getServiceManager()->get('ModulesService');
+        $moduleSvc->unloadModule('MelisInstaller');
 
         if (!$this->isInInstallMode($e)) {
             $eventManager->attach(new MelisCoreGetRightsTreeViewListener());

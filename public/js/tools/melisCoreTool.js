@@ -29,7 +29,7 @@ var melisCoreTool = (function (window) {
                 cssClass: 'btn-danger pull-left',
                 action: function (dialog) {
                     //callBackOnNo();
-                    if (callBackOnNo != null && typeof (callBackOnNo) === 'function') {
+                    if (callBackOnNo !== null && typeof (callBackOnNo) === 'function') {
                         callBackOnNo();
                     }
                     dialog.close();
@@ -39,7 +39,7 @@ var melisCoreTool = (function (window) {
                 cssClass: 'btn-success',
                 action: function (dialog) {
                     //callBackOnYes();
-                    if (callBackOnYes != null && typeof (callBackOnYes) === 'function') {
+                    if (callBackOnYes !== null && typeof (callBackOnYes) === 'function') {
                         callBackOnYes();
                     }
                     dialog.close();

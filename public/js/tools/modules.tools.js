@@ -54,7 +54,14 @@ $(document).ready(function() {
 									// this will just trigger an animate switch
                                     switchButtonWithoutEvent(v, "off");
                                 });
-                            }
+                            },
+							/**
+							 * User selects cancel: Revert the switch to its saved state, in this case "ON",
+							 * to prevent user from saving the cancelled switch change
+							 */
+							function () {
+								switchButtonWithoutEvent(moduleName, 'on');
+							}
                         );
                     }
                     $('div[data-module-name]').bootstrapSwitch('setActive', true);
