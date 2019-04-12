@@ -663,7 +663,7 @@ return [
                                                                 'id' => 'id_meliscoregdpr_search_user_data',
                                                                 'name' => 'tr_melis_core_gdpr_search_user_data_tabname',
                                                                 'melisKey' => 'meliscoregdpr_search_user_data',
-                                                                'icon' => 'qrcode',
+                                                                'icon' => 'address_book',
                                                             ],
                                                             'forward' => [
                                                                 'module' => 'MelisCore',
