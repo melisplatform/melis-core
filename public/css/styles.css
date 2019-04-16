@@ -3519,8 +3519,7 @@ div#modal-user-management div.widget {
 }
 
 /* dashboard button active / open */
-.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active,
-.melis-core-dashboard-category-btn.active {
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active {
     background: #e61c23;
     border-color: #e61c23;
 }
@@ -3822,7 +3821,80 @@ div#modal-user-management div.widget {
     border-color: #555555 transparent transparent transparent;
     border-width: 6px 3px 0 3px;
 }
+.melis-core-category-plugins-box {
+    display: none;
+    border-bottom: 1px solid rgb(179, 58, 53);
+}
 
+.melis-core-ps-box .melis-core-filter-btn,
+.melis-core-category-btn , .melis-core-filter-btn-sub-category{
+    display: block;
+    position: relative;
+    padding: 7px 15px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    border-bottom: 1px solid #2c2c2c;
+    background: #373737;
+    transition: background 0.4s;
+    -webkit-transition: background 0.4s, border 0.4s;
+    -moz-transition: background 0.4s, border 0.4s;
+    -ms-transition: background 0.4s, border 0.4s;
+    cursor: pointer;
+}
+
+.melis-core-ps-box .melis-core-filter-btn:hover,
+.melis-core-category-btn:hover ,
+.melis-core-filter-btn-sub-category:hover{
+    background: #2c2c2c;
+    border-color: #2c2c2c;
+}
+
+.melis-core-ps-box .melis-core-filter-btn.active,
+.melis-core-category-btn.active {
+    background: #e61c23;
+    border-color: #e61c23;
+}
+
+.melis-core-ps-box .melis-core-filter-btn.active .fa,
+.melis-core-category-btn.active .fa {
+    transform: rotateZ(-90deg);
+    -webkit-transform: rotateZ(-90deg);
+    -moz-transform: rotateZ(-90deg);
+    -ms-transform: rotateZ(-90deg);
+}
+
+.melis-core-ps-box .melis-core-filter-btn .fa,
+.melis-core-category-btn .fa {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    font-size: 20px;
+    transition: transform 0.4s;
+}
+.melis-core-category-btn .fa {
+    font-size: 14px;
+    top: 9px;
+}
+.melis-core-dashboard-category-btn i {
+    font-size:13px !important;
+}
+.melis-core-dashboard-category-btn.active {
+    background: #c71920;
+    border-color: #c71920;
+}
+
+.melis-core-dashboard-filter-btn {
+    position:relative;
+    padding-left:47px !important;
+}
+.melis-core-dashboard-filter-btn .melis-logo {
+    position:absolute;
+    left:10px;
+}
 /* changes the width on smaller widths */
 @media (min-width: 320px) and (max-width: 640px) {
     .melis-core-dashboard-dnd-box {

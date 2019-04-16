@@ -18,7 +18,7 @@
                         'jscallback' => '',
                         'max_lines' => 8,
                         'height' => 4,
-                        
+                        'section' => 'MelisCore',
                         'interface' => array(
                             'meliscore_dashboard_recent_activity_users' => array(
                                 'forward' => array(

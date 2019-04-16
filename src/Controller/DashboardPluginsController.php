@@ -58,12 +58,18 @@ class DashboardPluginsController extends AbstractActionController
                             'icon'           => !empty($plugin['icon'])          ? $plugin['icon'] : '',
                             'thumbnail'      => !empty($plugin['thumbnail'])     ? $plugin['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
                             'is_new_plugin'  => true,
+                            'section'       => !empty($plugin['section'])       ? $plugin['section'] : null,
                         );
                     }
                 }
             }
         }
-        
+
+        // categorized plugins by putting a section in every plugins
+        $plugins = $this->putSectionOnPlugins($plugins);
+        $plugins = $this->organizedPluginsBySection($plugins);
+
+
         $view = new ViewModel();
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
@@ -208,5 +214,81 @@ class DashboardPluginsController extends AbstractActionController
         }
         
         return new JsonModel($result);
+    }
+    private  function putSectionOnPlugins($plugins)
+    {
+        $pluginList = [];
+        if (! empty($plugins)) {
+            foreach ($plugins as $moduleName => $dashboardPlugin) {
+               if (is_array($dashboardPlugin)) {
+                   foreach ($dashboardPlugin as $pluginName => $conf) {
+                       if ( (isset($conf['section']) || ! isset($conf['section'])) && empty($conf['section'])) {
+                           // if there is no ['section']key on  config
+                           // or there is a ['section'] key but empty
+                           // we put it in the OTHER section directly
+                           $conf['section'] = "Others";
+                       }
+//                       if (isset($conf['section']) && ! empty($conf['section'])) {
+//                          echo $moduleName;
+//                       }
+
+                       $pluginList[$moduleName][$pluginName] = $conf;
+                   }
+               }
+            }
+        }
+
+
+        return $pluginList;
+    }
+    private function organizedPluginsBySection($plugins)
+    {
+        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $configSvc = $this->getServiceLocator()->get('MelisCoreConfig');
+        $marketPlaceModuleSection = $moduleSvc->getPackagistCategories();
+        /*
+         * In case there is no internet or cant connect to the markeplace domain
+         * we put a predefined section just not destroy the plugins menu
+         */
+        if (empty($marketPlaceModuleSection)) {
+            $fallbackSection = $configSvc->getItem('/meliscore/datas/fallBacksection');
+            $marketPlaceModuleSection= $fallbackSection;
+        }
+        //custom section
+        $customSection = [
+            'Others',
+            'CustomProjects'
+        ];
+        // merge all sections
+        $melisSection = array_merge($marketPlaceModuleSection, $customSection);
+        $newPluginList = [];
+        // put the section in order
+        if (! empty($melisSection)) {
+            foreach ($melisSection as $idx => $val) {
+                $newPluginList[$val] = [];
+            }
+        }
+        if (! empty($plugins)) {
+            // organized plugins by section
+           foreach ($plugins  as $moduleName => $dashboardPlugins) {
+               if (! empty($dashboardPlugins) && is_array($dashboardPlugins)) {
+                   foreach ($dashboardPlugins as $pluginName => $config) {
+                       $pluginSection = $config['section'];
+                       if (in_array($pluginSection,$melisSection)) {
+                           // set a plugin in a section
+                           $newPluginList[$pluginSection][$moduleName][$pluginName] = $config;
+                       } else {
+                           /*
+                            * if the section does not belong to the group it will go to the
+                            * others section direclty
+                            */
+                           $newPluginList['Others'][$moduleName][$pluginName] = $config;
+                       }
+                   }
+               }
+           }
+        }
+
+        return $newPluginList;
     }
 }

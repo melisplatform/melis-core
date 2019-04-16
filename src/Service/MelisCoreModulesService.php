@@ -725,4 +725,26 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
         return false;
     }
+
+    /**
+     * This will get the modules categories from marketplace domain http://marketplace.melisplatform.com/melis-packagist/get-package-group
+     * if no internet connection it returns null
+     * @return array|mixed
+     */
+    public function getPackagistCategories()
+    {
+        $url = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-group", true);
+        $data = [];
+        if (! empty($url)) {
+            $data = json_decode($url);
+        }
+        // simplified data
+        if (! empty($data)) {
+            foreach ($data as $idx => $val) {
+                $data[$idx] = $val->mp_group_name;
+            }
+        }
+
+        return $data;
+    }
 }
