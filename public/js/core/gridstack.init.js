@@ -23,7 +23,9 @@ var melisDashBoardDragnDrop = {
     currentPlugin: null,
 
     melisWidgetHandle: '.melis-core-dashboard-plugin-snippets',
-    
+
+    melisDashboardMsg: '#melis-core-dashboard-msg',
+
     init: function() {
         this.cacheDom();
         this.gsSetOptions();
@@ -81,11 +83,29 @@ var melisDashBoardDragnDrop = {
             revert: 'invalid',
             appendTo: 'body',
             drag: function(event, ui) {
-                var grid        = $('#'+activeTabId+' .tab-pane .grid-stack');
-                var gridPH      = $('#'+activeTabId+' .tab-pane .grid-stack .grid-stack-placeholder');
-
+                let gridPH = melisDashBoardDragnDrop.$body.find('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
                 gridPH.attr('data-gs-width', 6);
                 gridPH.attr('data-gs-height', 3);
+
+                /**
+                 * During plugin drag:
+                 *  - INSIDE grid-stack drag area: HIDE dashboard msg
+                 *  - OUTSIDE grid-stack drag area: SHOW dashboard msg
+                 *  Note: Only happens when dashboard is empty
+                 */
+                let pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
+                let dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                let dragArea = melisDashBoardDragnDrop.$body.find(event.currentTarget);
+
+                if (dragArea.hasClass("melis-core-dashboard-plugin-snippets")) {
+                    // Hide empty-dashboard message
+                    if (dashboardMsg.length > 0) {
+                        dashboardMsg.hide();
+                    }
+                } else if (pluginCount === 0) {
+                    // Show empty-dashboard message
+                    dashboardMsg.show();
+                }
             }
         });
     },
@@ -391,6 +411,15 @@ var melisDashBoardDragnDrop = {
                             callback($del.closest('.grid-stack-item'));
                         }
                     }
+
+                    let pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
+                    if (pluginCount === 0) {
+                        // Show empty-dashboard message
+                        let dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                        if (dashboardMsg.length > 0) {
+                            dashboardMsg.show();
+                        }
+                    }
                 }
             );
     },
@@ -422,15 +451,40 @@ var melisDashBoardDragnDrop = {
                 translations.tr_meliscore_common_no,
                 translations.tr_meliscore_remove_all_plugins,
                 translations.tr_meliscore_remove_dashboard_all_plugin_msg,
-                function() {
-
+                function () {
                     // remove all nodes on grid
                     grid.removeAll();
 
                     // save widgets position / size on db
                     self.saveDBWidgets(dataString);
+
+                    // Show empty-dashboard message
+                    let dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                    if (dashboardMsg.length > 0) {
+                        dashboardMsg.show();
+                    }
                 }
             );
+
+            // hide plugin menu
+            this.$pluginBox.removeClass("shown");
+
+            // droppable / .gridstack to original width
+            $gs.animate({
+                width: nWidth
+            }, 3);
+
+            // plugins delete callback
+            $('#' + activeTabId + ' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function (i, v) {
+                var $this = $(this);
+
+                if (typeof $this.data('callback') !== "undefined") {
+                    var callback = eval($this.data("callback"));
+                    if (typeof callback === "function") {
+                        callback($this.closest('.grid-stack-item'));
+                    }
+                }
+            });
 
             // hide plugin menu
             this.$pluginBox.removeClass("shown");

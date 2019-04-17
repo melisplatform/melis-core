@@ -1,15 +1,47 @@
-<div id="<?= $this->dashboardId ?>" data-melisKey="<?= $this->melisKey ?>" class="tab-pane container-level-a tab-panel-dashboard">
-	<div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2 melis-dashboard-plugins">
-    	<?php
-//	    	if ($this->isAccessible){
-	    	    $plugins = $this->MelisDashboardDragDropZone($this->dashboardId);
-	    	    if(empty($plugins))
-	    	        echo '<div class="alert alert-default">Dashboard is empty, try to add a plugin(s) from Dashboard plugin sidebar by dragging a plugin to the dashboard zone. </div>';
-	    	    else 
-	    	        echo $plugins;
-//	    	}else {
-//	    	    echo $this->translate('tr_meliscore_rights_Not allowed dashboard');
-//	    	}
-    	?>
+<div id="<?= $this->dashboardId ?>" data-melisKey="<?= $this->melisKey ?>"
+     class="tab-pane container-level-a tab-panel-dashboard">
+    <div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2 melis-dashboard-plugins">
+        <?php
+        $plugins = $this->MelisDashboardDragDropZone($this->dashboardId);
+        /** Counting the number of plugins */
+        $pluginCount = substr_count($plugins, "data-gs-id");
+        if ($this->isAccessible && $pluginCount === 0): ?>
+            <div id="melis-core-dashboard-msg">
+                <pre><?= $this->translate('tr_meliscore_melis_dashboard_no_plugins_to_load'); ?></pre>
+                <script type="text/javascript">
+                    (function () {
+                        // Waits for jQuery to be available before executing the function
+                        waitForJquery(showDashboardPluginMenu);
+
+                        function waitForJquery(method) {
+                            if (window.jQuery) {
+                                method();
+                            } else {
+                                setTimeout(function () {
+                                    waitForJquery(method)
+                                }, 50);
+                            }
+                        }
+
+                        /**
+                         * Automatically open plugin menu when dashboard is empty &
+                         * there is an available plugin
+                         */
+                        function showDashboardPluginMenu() {
+                            let pluginMenu = melisDashBoardDragnDrop.$body.find("#id_meliscore_center_dashboard_menu");
+                            let availablePlugins = melisDashBoardDragnDrop.$body.find(".melis-core-dashboard-plugin-snippets").length;
+                            if (pluginMenu.length > 0 && availablePlugins > 0) {
+                                pluginMenu.addClass("shown");
+                            }
+                        }
+                    }());
+                </script>
+            </div>
+        <?php else: ?>
+            <pre><?= $this->translate('tr_meliscore_melis_dashboard_no_access'); ?></pre>
+            <?php
+        endif;
+        echo $plugins;
+        ?>
     </div>
 </div>
