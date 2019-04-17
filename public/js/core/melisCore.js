@@ -324,11 +324,18 @@ var melisCore = (function(window){
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
-        var zIndex = 1040 + (10 * $('.modal:visible').length);
-        $(this).css('z-index', zIndex);
-        setTimeout(function() {
-            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-        }, 0);
+        var $toxAux = $body.find(".tox-tinymce-aux"),
+            zIndex = 1040 + (10 * $('.modal:visible').length);
+
+            if ( $toxAux.length ) {
+                zIndex = zIndex + 350;
+            }
+
+            $(this).css('z-index', zIndex);
+
+            setTimeout(function() {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            }, 0);
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals

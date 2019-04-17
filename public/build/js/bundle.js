@@ -24984,7 +24984,6 @@ tinymce.addI18n('fr_FR',{
 "Format": "Format"
 });
 var melisTinyMCE = (function(){
-    
     // This method will initialize an editor after requesting the TinyMCE configuration
     function createTinyMCE(type, selector, options){
         if(!type) type='';
@@ -25022,98 +25021,29 @@ var melisTinyMCE = (function(){
     
     // TinyMCE  action event
     function tinyMceActionEvent(editor) {
-        var $t = tinymce.dom.DomQuery;
-        //var $iframe = $(".melis-iframe");
+        /**
+        var targetId = editor.id;
+        */
+        editor.on("change", function () {
+            // Any changes will sync to the selector (Ex. textarea)
+            // tinymce.triggerSave();
+            editor.save();
+        });
+        
+        editor.on("init",function() {
+            // adding of add tree view button from dialog initialization
+            tinyMceDialogInitAddTreeViewBtn(editor);
 
-            editor.on("change", function () {
-                // Any changes will sync to the selector (Ex. textarea)
-                // tinymce.triggerSave();
-                editor.save();
-            });
-
-            editor.on("init", function() {
-                console.log("editor init");
-
-                // tinymce outside iframe container
-                tinyMceOnEditorInitToolbarBtn();
-            });
-
-            editor.on("click", function() {
-                console.log("editor click");
-
-                // tinymce on iframe container
-                tinyMceOnEditorClickToolbarBtn();
-            });
-
-            editor.on("contextmenu", function() {
-                console.log("editor contextmenu");
-
-                var $body       = window.parent.$("body"),
-
-                    $iaux       = $t(".tox-tinymce-aux");
-                    //$iaux       = $iframe.contents().find(".tox-tinymce-aux"),
-                    $baux       = $body.find(".tox-tinymce-aux");
-
-                    setTimeout(function() {
-                        var $imenuItem  = $iaux.find(".tox-selected-menu .tox-collection__group .tox-menu-nav__js"),
-                            $bmenuItem  = $baux.find(".tox-selected-menu .tox-collection__group .tox-menu-nav__js"),
-                            $cmenuItem  = $(".tox-collection__item--active", parent.document);
-
-                            if ( $imenuItem.length ) {
-                                $imenuItem.on("click", function() {
-                                    console.log("click $imenuItem");
-                                    //setTimeout(function() {
-                                        //melisLinkTree.checkBtn();
-                                        tinyMceAddTreeViewBtn();
-                                    //}, 50);
-                                });
-                            } 
-                            /*if ( $cmenuItem.length ) {
-                                $cmenuItem.on("click", function() {
-                                    console.log("click $cmenuItem");
-                                    setTimeout(function() {
-                                        console.log("$cmenuItem inside setTimeout");
-                                        //melisLinkTree.checkBtn();
-                                        tinyMceAddTreeViewBtn();
-                                    }, 50);
-                                });
-                            }*/
-                            else if ( $bmenuItem.length ) {
-                                $bmenuItem.on("click", function() {
-                                    console.log("click $bmenuItem");
-
-                                    //setTimeout(function() {
-                                        //melisLinkTree.checkBtn();
-                                        tinyMceAddTreeViewBtn();
-                                    //}, 50);
-                                });
-                            }
-                    }, 50);
-            });
-
-            editor.on("keydown", function(e) {
-                console.log("editor keydown");
-
-                var code = e.keyCode || e.which;
-
-                    if ( code === 75 && e.ctrlKey ) {
-                        setTimeout(function() {
-                            //melisLinkTree.checkBtn();
-                            tinyMceAddTreeViewBtn();
-                        }, 50);
-                    }
-            });
+            // tinymce outside iframe container
+            //tinyMceOnEditorInitToolbarBtn();
+        });
     }
 
-    // on editor init check for the insert edit link btn for outside iframe
+    // adding of specific class on tinymce outside iframe
     function tinyMceOnEditorInitToolbarBtn() {
-        console.log("tinyMceOnEditorInitToolbarBtn");
         var $body           = window.parent.$("body"),
-
             $btiny          = $body.find(".tox-tinymce"),
-
             $baux           = $body.find(".tox-tinymce-aux"),
-
             $btoxToolGroup  = $btiny.find(".tox-toolbar .tox-toolbar__group");
 
         var transTitle      = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
@@ -25122,114 +25052,60 @@ var melisTinyMCE = (function(){
                 var $bBtn = $(this).find("button");
                     $bBtn.each(function(i) {
                         var $attrTitle  = $(this)[i].attributes[1].value;
-
                             if ( transTitle !== "" && $attrTitle === transTitle ) {
                                 $(this).addClass("insert-edit-link");
 
                                 $(this).on("click", function() {
-                                    //setTimeout(function() {
-                                        console.log("tinyMceOnEditorInitToolbarBtn inside setTimeout insert-edit-link btn.");
-                                        //if ( $baux.length ) {                                       
-                                            //melisLinkTree.checkBtn();
-                                            tinyMceAddTreeViewBtn();
-                                        //}   
-                                    //}, 50);                             
+                                    tinyMceAddTreeViewBtn();
                                 });
-                                //return false;
                             }
                             return false;
                     });
             });
     }
 
-    // on editor click check for the insert edit link btn for page edition inside iframe container
-    function tinyMceOnEditorClickToolbarBtn() {
-        console.log("tinyMceOnEditorClickToolbarBtn");
-        var $t              = tinymce.dom.DomQuery,
+    // adding of add tree view button from dialog initialization
+    function tinyMceDialogInitAddTreeViewBtn(editor) {
+        var $body       = $("body"),
+            transTitle  = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
 
-            $itiny          = $t(".tox-tinymce"),
+            editor.windowManager.oldOpen = editor.windowManager.open;  // save for later
+            editor.windowManager.open = function (t, r) {    // replace with our own function
+                var modal = this.oldOpen.apply(this, [t, r]);  // call original
 
-            $iaux           = $t(".tox-tinymce-aux"),
+                    if ( t.title === transTitle ) {
+                        $(".tox-form__controls-h-stack").append(
+                            '<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
+                        );
 
-            $itoxToolGroup  = $itiny.find(".tox-toolbar .tox-toolbar__group");
+                        $body.on("click", "#mce-link-tree", function() {                           
+                            melisLinkTree.createTreeModal();
+                        });
+                    }
 
-        var transTitle      = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
-
-            $itoxToolGroup.each(function(i) {
-                var $iBtn = $(this).find("button");
-                    $iBtn.each(function(i) {
-                        var $attrTitle  = $(this)[i].attributes[1].value;
-
-                            if ( transTitle !== "" && $attrTitle === transTitle ) {
-                                $(this).addClass("insert-edit-link");
-
-                                $(this).on("click", function() {
-                                    //setTimeout(function() {
-                                        console.log("tinyMceOnEditorClickToolbarBtn inside setTimeout insert-edit-link btn.")
-                                        //if ( $iaux.length ) {                                       
-                                            //melisLinkTree.checkBtn();
-                                            tinyMceAddTreeViewBtn();
-                                        //}   
-                                    //}, 50);                             
-                                });
-                                //return false;
-                            }
-                            return false;
-                    });
-            });
+                    return modal; // Template plugin is dependent on this return value
+            };
     }
 
-    // adding of tree view button
+    // adding of tree view button from outside iframe
     function tinyMceAddTreeViewBtn() {
-
         setTimeout(function() {
-            console.log("tinyMceAddTreeViewBtn");
-            var $t              = tinymce.dom.DomQuery,
-                //$iframe         = $(".melis-iframe"),
-                $body           = window.parent.$("body"),
-                //$body           = $("body"),
-
-                $iaux           = $t(".tox-tinymce-aux"),
-                //$iaux           = $iframe.contents().find(".tox-tinymce-aux"),
+            var $body           = window.parent.$("body"),
                 $baux           = $body.find(".tox-tinymce-aux"),
-
-                $idialog        = $iaux.find(".tox-dialog"),
                 $bdialog        = $baux.find(".tox-dialog"),
-
-                $iconHStacks    = $idialog.find(".tox-form__controls-h-stack"),
                 $bconHStacks    = $bdialog.find(".tox-form__controls-h-stack"),
-
-                $iurlBtn        = $iconHStacks.find("#mce-link-tree"),
                 $burlBtn        = $bconHStacks.find("#mce-link-tree");
 
             var melisTreeBtn    = '<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>';
-
-                console.log("$iaux length: ", $iaux.length);
-                console.log("$baux length: ", $baux.length);
-
-                console.log("$idialog length: ", $idialog.length);
-                console.log("$bdialog length: ", $bdialog.length);
-
-                if ( $iaux.length ) {
-                    if ( $iurlBtn.length === 0 && $iconHStacks.length > 0 ) {
-                        console.log("i series");
-                        $iconHStacks.append( melisTreeBtn );    
-                    }
-                }
-                else if ( $baux.length ) {
-                    console.log("$baux found");
-                    console.log("$burlBtn length: ", $burlBtn.length);
-                    console.log("$bconHStacks length: ", $bconHStacks.length);
-
+                
+                if ( $baux.length ) {
                     if ( $burlBtn.length === 0 && $bconHStacks.length > 0 ) {
-                        console.log("b series");
                         $bconHStacks.append( melisTreeBtn );    
                     }
                 }
         }, 50);
-
     }
-
+    
     // Stating zone to loading
     function loadingZone(targetElem){
         if(targetElem.length){
@@ -25246,38 +25122,51 @@ var melisTinyMCE = (function(){
         }
     }
 
-    // tinymce modal pop up
     function modalPopUp() {
-        $("body").on("click", ".mce-btn", function(){
-            var mcePopUp = $("#mce-modal-block").length;
-            if(mcePopUp){
+        setTimeout(function() {
+            var $body   = window.parent.$("body"),
+                $btn    = $body.find(".tox-tbtn");
+                // OPENING THE POPUP
+                /*$body.on("click", ".mce-btn", function(){
+                    var mcePopUp = $("#mce-modal-block").length;
+                    if(mcePopUp){
 
-                // iframe height
-                var iframeHeight = $(window).height();
-                    
-                // dialog box height
-                var dialogHeight = $(".mce-window").outerHeight();
-                
-                parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
-                
-                // CLOSING THE POPUP
-                var timeOut = setInterval(function(){ 
-                
-                    // console.log( "return =" + parent.scrollOffsetTinyMCE() );
-                    if( !$(".mce-window").is(":visible") ){
-                    // window.parent.scrollTo( 0,parent.scrollOffsetTinyMCE())
-                        window.parent.$("body").animate({scrollTop: parent.scrollOffsetTinyMCE() }, 200);
+                        // iframe height
+                        var iframeHeight = $(window).height();
+                            
+                        // dialog box height
+                        var dialogHeight = $(".mce-window").outerHeight();
                         
-                        clearTimeout(timeOut);
+                        parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
+                        
+                        // CLOSING THE POPUP
+                        var timeOut = setInterval(function(){ 
+                        
+                            // console.log( "return =" + parent.scrollOffsetTinyMCE() );
+                            if( !$(".mce-window").is(":visible") ){
+                            // window.parent.scrollTo( 0,parent.scrollOffsetTinyMCE())
+                                window.parent.$("body").animate({scrollTop: parent.scrollOffsetTinyMCE() }, 200);
+                                
+                                clearTimeout(timeOut);
+                            }
+                        }, 300);
+                        
                     }
-                }, 300);
-                
-            }
-            else{
-                /* console.log("no popup"); */
-            }
-            
-        });
+                    else {
+                        console.log("no popup");
+                    }
+                });*/
+
+                console.log("$btn length: ", $btn.length);
+
+                /*
+                 * [.mce-btn] @ .tox-tbtn
+                 * [#mce-modal-block] @ .tox-tinymce-aux
+                 */
+                $body.on("click", ".tox-tbtn", function() {
+                    console.log(".tox-tbtn");
+                });
+        }, 500);
     }
 
     function addMelisCss() {
@@ -28873,11 +28762,18 @@ var melisCore = (function(window){
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
-        var zIndex = 1040 + (10 * $('.modal:visible').length);
-        $(this).css('z-index', zIndex);
-        setTimeout(function() {
-            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-        }, 0);
+        var $toxAux = $body.find(".tox-tinymce-aux"),
+            zIndex = 1040 + (10 * $('.modal:visible').length);
+
+            if ( $toxAux.length ) {
+                zIndex = zIndex + 350;
+            }
+
+            $(this).css('z-index', zIndex);
+
+            setTimeout(function() {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            }, 0);
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals
@@ -34527,10 +34423,6 @@ var melisDashBoardDragnDrop = {
 
                     // update size of widgets .grid-stack-items
                     self.serializeWidgetMap( items );
-            });
-
-            this.$gs.on('dragstart', function() {
-                console.log("drag started");
             });
     },
 

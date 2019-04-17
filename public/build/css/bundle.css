@@ -36209,6 +36209,16 @@ div#modal-user-management div.widget {
     }
 }
 
+.tox .tox-tbtn:hover,
+.mce-btn.mce-open:hover {
+    background-color: #dee0e2;
+    box-shadow: none;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    color: #222f3e;
+    cursor: pointer;
+}
 .module-lists{
 	background-color:#2c2c2c;
 }
