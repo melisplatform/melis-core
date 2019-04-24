@@ -113,18 +113,11 @@ var melisTinyMCE = (function(){
             $iframe         = window.parent.$(".melis-iframe"),
             $iframeOffset   = $iframe.position().top;
 
-            /*console.log("$iframe: ", $iframe);
-            console.log("$iframeOffset: ", $iframeOffset);*/
-
             if ( mcePopUp ) {
                 // iframe height
                 var iframeHeight = $(window).height(),
                     // dialog box height .mce-window [.dialog]
                     dialogHeight = $dialog.outerHeight() - ( $iframeOffset * 10 );
-
-                    /*console.log("dialogHeight: ", dialogHeight);
-                    console.log("$dialog outerHeight(): ", $dialog.outerHeight());
-                    console.log("$iframeOffset: ", $iframeOffset * 10);*/
 
                     parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
                 
