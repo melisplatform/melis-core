@@ -54,14 +54,14 @@ var melisTinyMCE = (function(){
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {
         var $body       = $("body"),
-            transTitle  = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title,
+            //transTitle  = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title,
             $dialog     = $body.find(".tox-dialog");
 
             editor.windowManager.oldOpen = editor.windowManager.open;  // save for later
             editor.windowManager.open = function (t, r) {    // replace with our own function
                 var modal = this.oldOpen.apply(this, [t, r]);  // call original
 
-                    if ( t.title === transTitle ) {
+                    if ( t.title === 'Insert/Edit Link' ) {
                         $(".tox-form__controls-h-stack").append(
                             '<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
                         );
