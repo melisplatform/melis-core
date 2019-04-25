@@ -662,6 +662,10 @@ return [
     'tr_melis_core_gdpr' => 'RGPD',
     'tr_melis_core_gdpr_header_title' => 'RGPD (Règlement Général sur la Protection des Données)',
     'tr_melis_core_gdpr_header_description' => 'Melis Platform fournit un système pour chercher les données de vos utilisateurs. </br> Tous les modules qui implémentent le système de Melis pourront intéragir avec cette interface et vous offir la possibilité de respecter le règlement.',
+    'tr_melis_core_gdpr_header' => 'En-tête',
+    'tr_melis_core_gdpr_content' => 'Contenu',
+    'tr_melis_core_gdpr_search_form' => 'formulaire de recherche',
+    'tr_melis_core_gdpr_content_tab' => 'Onglet contenu',
 
     'tr_melis_core_gdpr_form_name' => 'Nom',
     'tr_melis_core_gdpr_form_email' => 'Email',
