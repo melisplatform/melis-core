@@ -25096,7 +25096,7 @@ var melisTinyMCE = (function(){
             mcePopUp        = $body.find(".tox-tinymce-aux").length, // #mce-modal-block [.tox-tinymce-aux]
             $dialog         = $body.find(".tox-dialog"),
             $iframe         = window.parent.$(".melis-iframe"),
-            $iframeOffset   = $iframe.position().top;
+            $iframeOffset   = $iframe.position().top ? $iframe.position().top : 0;
 
             if ( mcePopUp ) {
                 // iframe height
