@@ -3839,3 +3839,10 @@ div#modal-user-management div.widget {
         font-size: 12px;
     }
 }
+
+/** Language flag image style */
+.imgDisplay {
+    border: none;
+    max-width: 24px;
+    max-height: 24px;
+}
