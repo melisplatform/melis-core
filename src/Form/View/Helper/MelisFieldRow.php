@@ -222,7 +222,7 @@ class MelisFieldRow extends FormRow
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
     	                       <label for="">'.$label.'</label>
-    	                        <div class="form-group input-group" id="'.$element->getOption('button-id').'">
+    	                        <div class="form-group input-group '.$element->getOption('button-class').'" id="'.$element->getOption('button-id').'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon input-button-hover-pointer">
                                         <span class="'.$element->getOption('button').'"></span>
