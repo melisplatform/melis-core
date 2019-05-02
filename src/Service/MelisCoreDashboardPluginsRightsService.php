@@ -24,6 +24,30 @@ class MelisCoreDashboardPluginsRightsService implements MelisCoreRightsServiceIn
         return $this->serviceLocator;
     }
 
+    public function hasPlugins(): bool
+    {
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $xmlRights = $melisCoreAuth->getAuthRights();
+        $rightsObj = simplexml_load_string(trim($xmlRights));
+        if (empty($rightsObj)) {
+            return false;
+        }
+
+        $key = self::MELISCORE_DASHBOARDPLUGIN_PREFIX;
+        /** Find & remove root */
+        $plugins = empty($rightsObj->$key->id) ? [] : (array)$rightsObj->$key->id;
+        $root = array_search("melis_dashboardplugin_root", $plugins);
+        if (is_int($root)) {
+            unset($plugins[$root]);
+        }
+
+        if (empty($plugins)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function canAccess($key): bool
     {
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');

@@ -5,7 +5,7 @@
         $plugins = $this->MelisDashboardDragDropZone($this->dashboardId);
         /** Counting the number of plugins */
         $pluginCount = substr_count($plugins, "data-gs-id");
-        if ($this->isAccessible && $pluginCount === 0): ?>
+        if ($this->menuIsAccessible && $pluginCount === 0): ?>
             <div id="melis-core-dashboard-msg">
                 <pre><?= $this->translate('tr_meliscore_melis_dashboard_no_plugins_to_load'); ?></pre>
                 <script type="text/javascript">
