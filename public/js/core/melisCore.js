@@ -178,11 +178,8 @@ var melisCore = (function(window){
 
     // OPEN TOOLS - opens the tools from the sidebar
     function openTools(){
-        var $this   = $(this),
-            data    = $this.data();
-
-            melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolParentMenu);
-            $this.addClass('tab-opened');
+        var data = $(this).data();
+        melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolParentMenu);
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
@@ -469,8 +466,6 @@ var melisCore = (function(window){
         $("#melis-id-nav-bar-tabs").slideToggle(300);
         $("#res-page-cont i").toggleClass("move-arrow");
     });
-
-    //$body.on("click", "")
 
     // toggle sidebar menu
     $body.on("click", "#sidebar-menu", sidebarMenuClick);

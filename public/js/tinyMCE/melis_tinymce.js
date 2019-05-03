@@ -108,18 +108,28 @@ var melisTinyMCE = (function(){
     function modalPopUp() {
         // OPENING THE POPUP
         var $body           = $("body"),
-            mcePopUp        = $body.find(".tox-tinymce-aux").length, // #mce-modal-block [.tox-tinymce-aux]
+            $mcePopUp       = $body.find(".tox-tinymce-aux"), // #mce-modal-block [.tox-tinymce-aux]
             $dialog         = $body.find(".tox-dialog"),
-            $iframe         = window.parent.$(".melis-iframe"),
-            $iframeOffset   = $iframe.position().top ? $iframe.position().top : 0;
+            $iframe         = window.parent.$(".melis-iframe");
 
-            if ( mcePopUp ) {
-                // iframe height
-                var iframeHeight = $(window).height(),
-                    // dialog box height .mce-window [.dialog]
-                    dialogHeight = $dialog.outerHeight() - ( $iframeOffset * 10 );
+            if ( $mcePopUp.length ) {
 
-                    parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
+                if ( $iframe.length ) {
+                    // iframe height
+                    var iframeHeight    = $(window).height(),
+                        // iframe offset
+                        $iframeOffset   = $iframe.position().top,
+                        // dialog box height .mce-window [.dialog]
+                        dialogHeight    = $dialog.outerHeight() - ( $iframeOffset * 10 );
+
+                        parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
+                }
+                else {
+                    var bodyHeight      = window.parent.$("body").height(),
+                        dialogHeight    = $dialog.outerHeight();
+
+                        parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
+                }
                 
                 // CLOSING THE POPUP
                 var timeOut = setInterval(function() { 
