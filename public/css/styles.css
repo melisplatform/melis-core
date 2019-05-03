@@ -3894,3 +3894,40 @@ div#modal-user-management div.widget {
     top: -0.25em;
     left: 0.2em;
 }
+
+.melis-radio-box{
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-family: sans-serif;
+    user-select: none;
+    padding-left: 24px;
+    margin-bottom: 7px;
+}
+
+.melis-radio-box input{
+    display: none;
+}
+
+.melis-radio-box .melis-radio-box-circle{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    border: 2px solid #e61c23;
+}
+
+.melis-radio-box input:checked + .melis-radio-box-circle:after{
+    content: "";
+    height: 8px;
+    width: 8px;
+    background-color: #e61c23;
+    position: absolute;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-55%, -55%);
+}
