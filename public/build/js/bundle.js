@@ -30645,19 +30645,21 @@ $(document).ready(function() {
 		$.each(moduleSwitches , function(idx, val) {
 			var moduleName = $(val).data("module-name");
 			var status = $(".module-switch[data-module-name='"+ moduleName +"']").find("div").attr("class");
-		    status = status.split(" ");
-		    $.each(status, function(i, v) {
-		        if(v == on) {
-					moduleStatus = 1;
-				}
-				else if(v == off) {
-					moduleStatus = 0;
-				}
-		    });
-			modules.push({
-				name: moduleName,
-				value: moduleStatus
-			});
+			if(status !== undefined){
+                status = status.split(" ");
+                $.each(status, function(i, v) {
+                    if(v == on) {
+                        moduleStatus = 1;
+                    }
+                    else if(v == off) {
+                        moduleStatus = 0;
+                    }
+                });
+                modules.push({
+                    name: moduleName,
+                    value: moduleStatus
+                });
+			}
 		});
 		
 		modules = $.param(modules);
