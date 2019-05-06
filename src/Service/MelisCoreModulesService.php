@@ -419,6 +419,28 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         return $path;
     }
 
+    /**
+     * Get site path
+     *
+     * @param $siteName
+     * @param bool $returnFullPath
+     * @return string
+     */
+    public function getUserSitePath($siteName, $returnFullPath = true){
+        $path = '';
+        $melisSitesPath = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
+
+        if ($this->checkDir($melisSitesPath .DIRECTORY_SEPARATOR. $siteName)) {
+            if (!$returnFullPath) {
+                $path = '/MelisSites/'.$siteName;
+            } else {
+                $path = $melisSitesPath.'/'.$siteName;
+            }
+        }
+
+        return $path;
+    }
+
     public function getComposerModulePath($moduleName, $returnFullPath = true)
     {
         $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
