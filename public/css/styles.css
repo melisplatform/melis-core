@@ -304,6 +304,13 @@ body{
     margin-bottom: 8px;
 }
 
+/*
+ * fix issue: http://mantis.melistechnology.fr/view.php?id=3589
+ */
+.sidebar .sideMenu {
+    overflow: hidden;
+}
+
 /* input character counter */
 /* SEO text counter */
 .text-counter-indicator{
