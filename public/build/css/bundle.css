@@ -32672,7 +32672,10 @@ body{
 .sidebar > .sidebarMenuWrapper > .sideMenu li:last-child > .collapse.in > li:last-child.hasSubmenu {
     margin-bottom: 8px;
 }
-.sidebar > .sideMenu {
+/*
+ * fix issue: http://mantis.melistechnology.fr/view.php?id=3589
+ */
+.sidebar .sideMenu {
     overflow: hidden;
 }
 
