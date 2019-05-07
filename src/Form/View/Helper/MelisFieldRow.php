@@ -80,7 +80,7 @@ class MelisFieldRow extends FormRow
 
             $tinyceId = 'tinyce-textarea-'.uniqid();
             $attrib = $element->getAttributes();
-	        $element->setAttribute('id', 'tinyce-textarea-'.$attrib['id']);
+	        $element->setAttribute('id', $tinyceId);
 	        $element->setAttribute('data-tinymce-id', $tinyceId);
             $formElement = '<div class="form-group">
     	                       '.parent::render($element).'
@@ -96,6 +96,7 @@ class MelisFieldRow extends FormRow
             $element->setAttribute('data-buttonText', $element->getAttribute('id'));
             $element->setAttribute('class', 'form-control');
             $element->setAttribute('id', $unqSlctor);
+            $element->setAttribute('data-value', $element->getValue());
 
             $options = $element->getValue() ? ['placeholder' => $element->getValue()] : [];
 
