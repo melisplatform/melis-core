@@ -420,7 +420,7 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Titre de la mise en page',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip' => 'Options supplémentaires si vous souhaitez utiliser les e-mails par défaut',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo' => 'Logo de mise en page',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo Tooltip' => 'Options supplémentaires si vous souhaitez utiliser les e-mails par défaut',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo tooltip' => 'Logo affiché dans l\'email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo_select_image' => 'Sélectionner une image',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info' => 'Informations de mise en page',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info tooltip' => 'Options supplémentaires si vous souhaitez utiliser les e-mails par défaut',

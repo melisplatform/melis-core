@@ -403,7 +403,7 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Layout title',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip' => 'Additional options if you wish to use the default emails',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo' => 'Layout logo',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo Tooltip' => 'Additional options if you wish to use the default emails',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo tooltip' => 'Logo displayed in the email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo_select_image' => 'Select image',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info' => 'Layout information',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info tooltip' => 'Additional options if you wish to use the default emails',
