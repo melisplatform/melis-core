@@ -3938,3 +3938,7 @@ div#modal-user-management div.widget {
     top: 50%;
     transform: translate(-55%, -55%);
 }
+
+.tab-pane .nav-tabs span img{
+    width: 24px;
+}
