@@ -158,7 +158,7 @@ return [
 
     // Create account
     'tr_meliscore_email_create_account_Subject' => 'Demande de création de compte',
-    'tr_meliscore_email_create_account_html_Content' => '<p>Bonjour [NAME],</p><p>You have now Account on Melis Technology Platform Version 2.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Password : [PASSWORD]</p>',
+    'tr_meliscore_email_create_account_html_Content' => '<p>Bonjour [NAME],</p><p>Un compte a été créé pour vous sur la platerforme de Melis Technology version 3.</p><p>Détails&nbsp;du&nbsp;compte:</p><p>Adresse email : [EMAIL]</p><p>Login : [LOGIN]</p><p>Mot de passe : [PASSWORD]</p>',
 
     // error
     'tr_meliscore_error_An error occurred' => 'Une erreur est survenue',
