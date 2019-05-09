@@ -89,6 +89,30 @@ class MelisFieldRow extends FormRow
             $formElement .= 'melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\''.$tinyceId.'\']", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});';
             $formElement .= '</script>';
 
+        }elseif (!empty($element->getOption('switch_options'))){
+
+            $switchId = $element->getAttribute('id').uniqid();
+            $switchOptions = $element->getOption('switch_options');
+            if (empty($switchOptions['label']) && $switchOptions['icon'])
+                $switchLabel = 'data-label-icon="glyphicon glyphicon-resize-horizontal"';
+            else
+                $switchLabel = !empty($switchOptions['label']) ? 'data-label="'.$switchOptions['label'].'"' : 'data-label-icon="'. $switchOptions['icon'] .'"';
+
+            $lable = $element->getLabel();
+            $element->setLabel("");
+
+            $switch  = '<div class="form-group">';
+            $switch .= '<label for="'.$element->getName().'">'. $lable .'</label>';
+            $switch .= '   <div id="'. $switchId .'" class="make-switch" data-on-label="'. $switchOptions['label-on'] .'" data-off-label="'. $switchOptions['label-off'] .'" '.$switchLabel.'>';
+            $switch .= parent::render($element);
+            $switch .= '    </div>';
+            $switch .= '</div>';
+            $switch .= '<script type="text/javascript">';
+            $switch .= ' $("#'. $switchId .'").bootstrapSwitch();';
+            $switch .= '</script>';
+
+            $formElement = $switch;
+
         }elseif (!empty($element->getOption('filestyle_options'))){
 
             $unqSlctor = $element->getAttribute('id').uniqid();
