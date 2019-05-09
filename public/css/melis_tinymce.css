@@ -5,3 +5,7 @@
 .melis-editable:hover{
     border-color: red;
 }
+/** Brings TinyMCE drop-down menus & dialog boxes in front of other contents */
+.tox-tinymce-aux {
+    z-index: 1600 !important;
+}
