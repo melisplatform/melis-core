@@ -57,6 +57,12 @@ class MelisModuleManager
                         file_exists($siteModuleLoad = $composer->getComposerModulePath($melisSite).'/config/module.load.php')
                     ) {
                         $modules = array_merge($modulesMelisBackOffice, include $siteModuleLoad);
+                    }else{
+                        /**
+                         * load the default modules if $melisSite
+                         * is not found
+                         */
+                        $modules = $modulesMelisBackOffice;
                     }
 
                 }
