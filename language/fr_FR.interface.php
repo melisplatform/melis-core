@@ -105,6 +105,7 @@ return [
     'tr_meliscore_tool_user_view_date_connection' => 'Dates de connexion',
     'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
     'tr_meliscore_tool_usrcd_last_connection_time' => 'Temps de connexion',
+    'tr_meliscore_tool_user_col_remove_picture' => "Retirer photo",
 
     //USER PROFILE MANAGEMENT
     'tr_meliscore_user_profile' => 'Gestion du profil utilisateur',

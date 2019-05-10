@@ -103,6 +103,7 @@ return [
     'tr_meliscore_tool_user_view_date_connection' => 'Date connections',
     'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
     'tr_meliscore_tool_usrcd_last_connection_time' => 'Connection time',
+    'tr_meliscore_tool_user_col_remove_picture' => "Remove Photo",
 
     //USER PROFILE MANAGEMENT
     'tr_meliscore_user_profile' => 'User Profile Management',

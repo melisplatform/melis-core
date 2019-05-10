@@ -876,6 +876,17 @@ return [
                                         ],
                                     ],
                                 ],
+                                [
+                                    'spec' => array(
+                                        'name' => 'usr_image_remove',
+                                        'type' => 'hidden',
+                                        'options' => array(),
+                                        'attributes' => array(
+                                            'id' => 'usr_image_remove',
+                                            'value' => false,
+                                        ),
+                                    ),
+                                ],
 
                             ], // end edit elements
                             'input_filter' => [
