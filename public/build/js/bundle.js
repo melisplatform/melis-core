@@ -25002,10 +25002,11 @@ var melisTinyMCE = (function(){
             data        : dataString,
             encode      : true
         }).success(function(data){
-            if(data.success){
-                
+            if(data.success) {
+                //console.log("createTinyMCE tinyMCE: ", tinyMCE);
+
                 if(typeof(tinyMCE) != 'undefined') {
-                    if(selector.length){
+                    if(selector.length) {
                         try{
                             tinymce.remove(selector);
                         }catch (e) {}
@@ -25038,6 +25039,8 @@ var melisTinyMCE = (function(){
 
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {
+        //console.log("tinyMceDialogInitAddTreeViewBtn tinyMCE: ", tinyMCE);
+
         var $body       = $("body"),
             //transTitle  = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title,
             $dialog     = $body.find(".tox-dialog");
@@ -25046,7 +25049,7 @@ var melisTinyMCE = (function(){
             editor.windowManager.open = function (t, r) {    // replace with our own function
                 var modal = this.oldOpen.apply(this, [t, r]);  // call original
 
-                    if ( t.title === 'Insert/Edit Link' ) {
+                    if ( t.title === 'Insert/Edit Link' && typeof( tinyMCE ) != 'undefined') {
                         $(".tox-form__controls-h-stack").append(
                             '<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
                         );
