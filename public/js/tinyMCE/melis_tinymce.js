@@ -64,7 +64,7 @@ var melisTinyMCE = (function(){
             editor.windowManager.open = function (t, r) {    // replace with our own function
                 var modal = this.oldOpen.apply(this, [t, r]);  // call original
 
-                    if ( t.title === 'Insert/Edit Link' && typeof( tinyMCE ) != 'undefined') {
+                    if ( t.title === 'Insert/Edit Link' ) {
                         $(".tox-form__controls-h-stack").append(
                             '<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
                         );
