@@ -3535,14 +3535,13 @@ div#modal-user-management div.widget {
 }
 
 /* dashboard button active / open icon */
-.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active .fa,
-.melis-core-dashboard-category-btn.active .fa {
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active .arrow-indicator,
+.melis-core-dashboard-category-btn.active .arrow-indicator{
     -webkit-transform: rotateZ(-90deg);
     -moz-transform: rotateZ(-90deg);
     -ms-transform: rotateZ(-90deg);
     transform: rotateZ(-90deg);
 }
-
 /* plugin title */
 .melis-core-dashboard-plugin-title {
     display: block;
@@ -3895,6 +3894,26 @@ div#modal-user-management div.widget {
     position:absolute;
     left:10px;
 }
+.melis-plugins-icon-new-parent{
+    position: absolute;
+    top: 4px;
+    right: 40px;
+    padding: 2px;
+    color: #afff76;
+    z-index: 50;
+    font-size:16px;
+}
+.melis-plugins-icon-new {
+    left: -12px;
+    top: 5px !important;
+}
+.border-new-plugin {
+    border:4px solid #afff76;
+}
+.melis-core-dashboard-ps-box {
+    position:relative;
+}
+
 /* changes the width on smaller widths */
 @media (min-width: 320px) and (max-width: 640px) {
     .melis-core-dashboard-dnd-box {

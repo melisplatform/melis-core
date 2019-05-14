@@ -1,6 +1,8 @@
 <?php
 	$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
 	$melisKey = 'data-melisKey="'.$this->zoneconfig['conf']['melisKey'].'"';
+    $ctrNewPlugins = 0;
+    $sectionHasNewPlugins =[];
 ?>
 
 <div class="melis-core-dashboard-dnd-box" <?= $melisKey.' '.$id; ?>>
@@ -10,10 +12,23 @@
             <?php foreach ($this->plugins as $moduleSection => $modules){ ?>
                 <?php
                     $sectionChildrenCtr = count($modules);
+                     foreach ($modules as $moduleName => $plugins){
+                         foreach ($plugins as $name => $conf) {
+                             if (isset($modules[$moduleName][$name]['isNew']) && $modules[$moduleName][$name]['isNew']) {
+                                 $ctrNewPlugins++;
+                                 $sectionHasNewPlugins[] =  $moduleSection;
+                             }
+                         }
+                     }
                 ?>
                 <?php if ($sectionChildrenCtr > 0) { // the section will only visible if there is a module under?>
                     <div class="melis-core-dashboard-ps-box">
                           <span class="melis-core-dashboard-filter-btn">
+                                <?php  if ($ctrNewPlugins > 0 && in_array($moduleSection,$sectionHasNewPlugins)) { ?>
+                                    <div class="melis-plugins-icon-new-parent">
+                                        <span class="fa fa-certificate melis-plugins-icon-new"></span>
+                                    </div>
+                                <?php }?>
                                  <div class="pull-left melis-logo" data-dash-icon="fa-tachometer" data-dash-name="MelisCore" data-dash-id="id_meliscore_toolstree_section_dashboard" style="margin-top: -2px;margin-right:9px;">
                                     <svg class="melis-icon" style="width:30px;height:30px;" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
                                     <?php  if ($moduleSection == 'MelisCore') {?>
@@ -68,7 +83,7 @@
                                 </svg>
                             </div>
                           <?= $moduleSection ?>
-                          <i class="fa fa-angle-down"></i>
+                          <i class="fa fa-angle-down arrow-indicator"></i>
                         </span>
                         <div class="melis-core-dashboard-plugin-snippets-box">
                             <?php foreach ($modules as $moduleName => $plugins){ ?>
@@ -77,11 +92,17 @@
                                     // if there's only one subsection then
                                     // dont rewrite the module name and just list plugins
                                     if ($sectionChildrenCtr > 1) { ?>
-                                        <div class="melis-core-category-box">
-                                            <span class="melis-core-dashboard-category-btn"><?= $this->translate('tr_PluginSection_' .$moduleName); ?> <i class="fa fa-angle-down"></i></span>
+                                        <div class="melis-core-category-box" >
+                                            <span class="melis-core-dashboard-category-btn"><?= $this->translate('tr_PluginSection_' .$moduleName); ?> <i class="fa fa-angle-down arrow-indicator"></i></span>
                                             <div class="melis-core-dashboard-category-plugins-box">
                                                 <?php foreach ($plugins as $pluginName => $conf) { ?>
-                                                    <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
+                                                    <?php
+                                                        $borderClass = "";
+                                                        if (isset($conf['isNew']) && $conf['isNew']) {
+                                                            $borderClass = "border-new-plugin";
+                                                        }
+                                                    ?>
+                                                    <div class="melis-core-dashboard-plugin-snippets <?= $borderClass ?>" title="<?php echo $this->translate($conf['description'])?>">
                                                         <div class="hidden plugin-json-config"><?php echo json_encode($conf) ?></div>
                                                         <img src="<?php echo $conf['thumbnail']?>" alt="">
                                                         <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($conf['name'])?></span>
@@ -91,7 +112,13 @@
                                         </div>
                                 <?php } else {?>
                                         <?php foreach ($plugins as $pluginName => $conf) { ?>
-                                            <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
+                                            <?php
+                                                $borderClass = "";
+                                                if (isset($conf['isNew']) && $conf['isNew']) {
+                                                    $borderClass = "border-new-plugin";
+                                                }
+                                            ?>
+                                            <div class="melis-core-dashboard-plugin-snippets <?= $borderClass ?>" title="<?php echo $this->translate($conf['description'])?>">
                                                 <div class="hidden plugin-json-config"><?php echo json_encode($conf) ?></div>
                                                 <img src="<?php echo $conf['thumbnail']?>" alt="">
                                                 <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($conf['name'])?></span>

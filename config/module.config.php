@@ -287,6 +287,7 @@ return array(
             'MelisUserConnectionDate' => 'MelisCore\Model\Tables\MelisUserConnectionDate' ,
             'MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\MelisCorePlatformSchemeTable',
             'MelisCoreDashboardsTable' => 'MelisCore\Model\Tables\MelisDashboardsTable',
+            'MelisPluginsTable' => 'MelisCore\Model\Tables\MelisPluginsTable',
         ),
         'factories' => array(
             'MelisCoreConfig' => 'MelisCore\Service\Factory\MelisCoreConfigServiceFactory',
@@ -311,6 +312,7 @@ return array(
             'MelisCoreGeneralService' => 'MelisCore\Service\Factory\MelisCoreGeneralServiceFactory',
             'MelisCoreDashboardService' => 'MelisCore\Service\Factory\MelisCoreDashboardServiceFactory',
             'MelisCoreGdprService' => 'MelisCore\Service\Factory\MelisCoreGdprServiceFactory',
+            'MelisCorePluginsService' => 'MelisCore\Service\Factory\MelisCorePluginsServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',
@@ -326,6 +328,7 @@ return array(
             'MelisCore\Model\Tables\MelisMicroServiceAuthTable' => 'MelisCore\Model\Tables\Factory\MelisMicroServiceAuthTableFactory',
             'MelisCore\Model\Tables\MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\Factory\MelisCorePlatformSchemeTableFactory',
             'MelisCore\Model\Tables\MelisDashboardsTable' => 'MelisCore\Model\Tables\Factory\MelisDashboardsTableFactory',
+            'MelisCore\Model\Tables\MelisPluginsTable' => 'MelisCore\Model\Tables\Factory\MelisCorePluginsTableFactory',
         ),
     ),
     'controllers' => array(

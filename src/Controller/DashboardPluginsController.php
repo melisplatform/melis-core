@@ -245,14 +245,16 @@ class DashboardPluginsController extends AbstractActionController
     {
         $moduleSvc = $this->getServiceLocator()->get('ModulesService');
         $configSvc = $this->getServiceLocator()->get('MelisCoreConfig');
-        $marketPlaceModuleSection = $moduleSvc->getPackagistCategories();
+        $melisPuginsSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
+        $marketPlaceModuleSection = $melisPuginsSvc->getPackagistCategories();
         /*
          * In case there is no internet or cant connect to the markeplace domain
          * we put a predefined section just not destroy the plugins menu
+         * file location : melis-core/config/app.interface [meliscore][datas][fallBacksection]
          */
         if (empty($marketPlaceModuleSection)) {
             $fallbackSection = $configSvc->getItem('/meliscore/datas/fallBacksection');
-            $marketPlaceModuleSection= $fallbackSection;
+            $marketPlaceModuleSection = $fallbackSection;
         }
         //custom section
         $customSection = [
@@ -277,6 +279,8 @@ class DashboardPluginsController extends AbstractActionController
                        if (in_array($pluginSection,$melisSection)) {
                            // set a plugin in a section
                            $newPluginList[$pluginSection][$moduleName][$pluginName] = $config;
+                           // indication that the plugin is newly installed
+                           $newPluginList[$pluginSection][$moduleName][$pluginName]['isNew'] = $melisPuginsSvc->pluginIsNew($pluginName);
                        } else {
                            /*
                             * if the section does not belong to the group it will go to the
@@ -288,6 +292,7 @@ class DashboardPluginsController extends AbstractActionController
                }
            }
         }
+
 
         return $newPluginList;
     }

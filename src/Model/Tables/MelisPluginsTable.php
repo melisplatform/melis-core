@@ -1,0 +1,22 @@
+<?php 
+
+/**
+ * Melis Technology (http://www.melistechnology.com)
+ *
+ * @copyright Copyright (c) 2019 Melis Technology (http://www.melistechnology.com)
+ *
+ */
+
+namespace MelisCore\Model\Tables;
+
+use Zend\Db\TableGateway\TableGateway;
+
+class MelisPluginsTable extends MelisGenericTable
+{
+	public function __construct(TableGateway $tableGateway)
+	{
+		parent::__construct($tableGateway);
+		$this->idField = 'plugin_id';
+	}
+
+}

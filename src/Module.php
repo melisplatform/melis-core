@@ -18,6 +18,9 @@ use MelisCore\Listener\MelisCoreInstallCreateNewUserListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 use MelisCore\Listener\MelisCoreNewPlatformListener;
 use MelisCore\Listener\MelisCorePhpWarningListener;
+use MelisCore\Listener\MelisCorePluginsAdditionalListener;
+use MelisCore\Listener\MelisCorePluginsListener;
+use MelisCore\Listener\MelisCorePluginsRemovalListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreToolUserAddNewUserListener;
 use MelisCore\Listener\MelisCoreToolUserUpdateUserListener;
@@ -75,6 +78,10 @@ class Module
 
             $eventManager->attach(new MelisCoreAuthSuccessListener());
             $eventManager->attach(new MelisCorePhpWarningListener());
+            // plugins listener
+            $eventManager->attach(new MelisCorePluginsListener());
+            $eventManager->attach(new MelisCorePluginsRemovalListener());
+            $eventManager->attach(new MelisCorePluginsAdditionalListener());
         }
     }
 

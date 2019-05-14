@@ -10,6 +10,12 @@ return array(
                 'rights_checkbox_disable' => true,
             ),
             'datas' => array(
+                'fallBacksection' => [
+                    'MelisCore',
+                    'MelisCms',
+                    'MelisMarketing',
+                    'MelisSites'
+                ],
                 'zf2' => array(
                     'maxNestedForwards' => 100
                 ),
