@@ -64,8 +64,10 @@ class DashboardPluginsController extends AbstractActionController
                 }
             }
         }
-        // check for new plugins or manually installed
+        // check for new plugins or manually installed and insert in db
         $pluginSvc->checkDashboardPlugins();
+        // get the latest plugin installed
+        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
         // categorized plugins by putting a section in every plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         $plugins = $this->organizedPluginsBySection($plugins);
@@ -74,6 +76,8 @@ class DashboardPluginsController extends AbstractActionController
         $view = new ViewModel();
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
+        $view->latestPluginInstalled = $latesPlugin;
+
         return $view;
     }
     
