@@ -24,10 +24,9 @@ class MelisCorePluginsAdditionalListener extends MelisCoreGeneralListener implem
         $callBackHandler = $sharedEvents->attach(
             'MelisMarketPlace',
             array(
-                'melis_marketplace_product_do_finish'
+                'melis_marketplace_product_do_start'
             ),
             function($e){
-
                 $sm = $e->getTarget()->getServiceLocator();
                 $corePluginSvc = $sm->get('MelisCorePluginsService');
                 $pluginsTbl    = $corePluginSvc->pluginsTbl;
@@ -35,17 +34,22 @@ class MelisCorePluginsAdditionalListener extends MelisCoreGeneralListener implem
                 $action        = $params['action'];
                 $module        = strtolower($params['module']);
                 // get dashboard plugins
-                if ($action == 'requrie') {
+                if ($action == \MelisComposerDeploy\Service\MelisComposerService::DOWNLOAD || $action == \MelisComposerDeploy\Service\MelisComposerService::UPDATE) {
                     $pluginsTbl->deleteByField('plugin_module',$module);
                     $modulePlugins = $corePluginSvc->getModulePlugins($module);
                     if (! empty($modulePlugins)) {
                         foreach ($modulePlugins as $pluginType => $pluginName) {
-                            $tmpData = [
-                                'plugin_name' => $pluginName,
-                                'plugin_module' => $module,
-                                'plugin_date_installed' => date('Y-m-d h:i:s'),
-                                'plugin_type' => $pluginType
-                            ];
+                            // check if plugin is already added
+                            $tmpPluginData = $corePluginSvc->pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
+                            // if plugin is not existing then add
+                            if (empty($tmpPluginData)) {
+                                $tmpData = [
+                                    'plugin_name' => $pluginName,
+                                    'plugin_module' => $module,
+                                    'plugin_date_installed' => date('Y-m-d h:i:s'),
+                                    'plugin_type' => $pluginType
+                                ];
+                            }
                         }
                     }
                 }

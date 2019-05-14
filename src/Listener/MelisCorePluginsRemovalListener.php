@@ -35,55 +35,9 @@ class MelisCorePluginsRemovalListener extends MelisCoreGeneralListener implement
                 $action        = $params['action'];
                 $module        = strtolower($params['module']);
         		// get dashboard plugins
-                if ($action == 'remove') {
+                if ($action == \MelisComposerDeploy\Service\MelisComposerService::REMOVE) {
                     $pluginsTbl->deleteByField('plugin_module',$module);
                 }
-
-//                // save dashboard plugins
-//                if (! empty($dashboardPlugins)) {
-//                    foreach ($dashboardPlugins as $moduleName => $plugins) {
-//                        if (is_array($plugins) && ! empty($plugins)) {
-//                            foreach ($plugins as $idx => $pluginName) {
-//                                // check if plugin is already exists
-//                                // we only save for those plugins that are not on db
-//                                $pluginData = $pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
-//                                if (empty($pluginData) || !$pluginData) {
-//                                    $tmpData = [
-//                                        'plugin_name' => $pluginName,
-//                                        'plugin_module' => $moduleName,
-//                                        'plugin_date_installed' => date('Y-m-d h:i:s'),
-//                                        'plugin_type' => 'dashboard'
-//                                    ];
-//                                    $pluginsTbl->save($tmpData);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                // get templating plugins
-//                $templatingPlugins = $corePluginSvc->getTemplatingPlugins();
-//                // save dashboard plugins
-//                if (! empty($templatingPlugins)) {
-//                    foreach ($templatingPlugins as $moduleName => $plugins) {
-//                        if (is_array($plugins) && ! empty($plugins)) {
-//                            foreach ($plugins as $idx => $pluginName) {
-//                                // check if plugin is already exists
-//                                // we only save for those plugins that are not on db
-//                                $pluginData = $pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
-//                                if (empty($pluginData) || !$pluginData) {
-//                                    $tmpData = [
-//                                        'plugin_name' => $pluginName,
-//                                        'plugin_module' => $moduleName,
-//                                        'plugin_date_installed' => date('Y-m-d h:i:s'),
-//                                        'plugin_type' => 'templating'
-//                                    ];
-//                                    $pluginsTbl->save($tmpData);
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                }
         	},
         100);
         
