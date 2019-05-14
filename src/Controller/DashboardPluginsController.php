@@ -31,7 +31,7 @@ class DashboardPluginsController extends AbstractActionController
         
         $plugins = array();
         $config = $this->getServiceLocator()->get('config');
-        
+        $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
         foreach ($config['plugins'] As $key => $val)
         {
             if (!empty($val['dashboard_plugins']))
@@ -64,7 +64,8 @@ class DashboardPluginsController extends AbstractActionController
                 }
             }
         }
-
+        // check for new plugins or manually installed
+        $pluginSvc->checkDashboardPlugins();
         // categorized plugins by putting a section in every plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         $plugins = $this->organizedPluginsBySection($plugins);

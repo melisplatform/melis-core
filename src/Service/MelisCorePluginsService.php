@@ -7,6 +7,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MelisCorePluginsService extends MelisCoreGeneralService
 {
+    const DASHBOARD_PLUGIN_TYPE = "dashboard";
+    const TEMPLATING_PLUGIN_TYPE = "templating";
     /**
      * @var servicelocator
      */
@@ -57,7 +59,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
     /**
      * @return mixed
      */
-    public function getDashboardPlugins()
+    public function getDashboardPlugins($pluginNameOnly = false)
     {
         // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
@@ -76,7 +78,14 @@ class MelisCorePluginsService extends MelisCoreGeneralService
                     // dashboard plugins
                     foreach ($val['dashboard_plugins'] as $pluginName => $pluginConfig) {
                         if ($pluginName != "MelisCoreDashboardDragDropZonePlugin") {
-                            array_push($dashboardPlugins[$moduleName],$pluginName);
+                            // if pluginNameOnly is true then return only pluginNames
+                            if ($pluginNameOnly) {
+                                unset($dashboardPlugins[$moduleName]);
+                                $dashboardPlugins[] = $pluginName;
+                            } else {
+                                array_push($dashboardPlugins[$moduleName],$pluginName);
+                            }
+
                         }
                     }
                 }
@@ -115,9 +124,9 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // get date installed
         if (! empty($pluginData)) {
             $dateInstalled = $pluginData->plugin_date_installed;
-            $dateElapse    = strtotime("+10 day",strtotime($dateInstalled));
-            $dateElapse    = date('Y-m-d', $dateElapse);
-            $dateToday     = date('Y-m-d h:i:s');
+            $dateElapse    = strtotime("+10 minutes",strtotime($dateInstalled));
+            $dateElapse    = date('Y-m-d h:i', $dateElapse);
+            $dateToday     = date('Y-m-d h:i');
             if ($dateToday < $dateElapse) {
                 $status = true;
             }
@@ -206,5 +215,89 @@ class MelisCorePluginsService extends MelisCoreGeneralService
 
 
         return $data;
+    }
+    public function checkDashboardPlugins()
+    {
+        $newPlugins = [];
+        // get dashboard plugins
+        $dashboardPlugins  = $this->getDashboardPlugins();
+        // save dashboard plugins
+        if (! empty($dashboardPlugins)) {
+            foreach ($dashboardPlugins as $moduleName => $plugins) {
+                if (is_array($plugins) && ! empty($plugins)) {
+                    foreach ($plugins as $idx => $pluginName) {
+                        // check if plugin is already exists
+                        // we only save for those plugins that are not on db
+                        $pluginData = $this->pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
+                        if (empty($pluginData) || !$pluginData) {
+                            $tmpData = [
+                                'plugin_name' => $pluginName,
+                                'plugin_module' => $moduleName,
+                                'plugin_date_installed' => date('Y-m-d h:i:s'),
+                                'plugin_type' => self::DASHBOARD_PLUGIN_TYPE
+                            ];
+                            if($this->pluginsTbl->save($tmpData)) {
+                                if (isset($newPlugins['dashboard']) && is_array($newPlugins['dashboard'])) {
+                                    array_push($newPlugins['dashboard'], $pluginName);
+                                } else {
+                                    $newPlugins[] = $pluginName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return  $newPlugins;
+    }
+    public function checkTemplatingPlugins()
+    {
+        $newPlugins = [];
+        // get templating plugins
+        $templatingPlugins = $this->getTemplatingPlugins();
+        // save templating plugins
+        if (! empty($templatingPlugins)) {
+            foreach ($templatingPlugins as $moduleName => $plugins) {
+                if (is_array($plugins) && ! empty($plugins)) {
+                    foreach ($plugins as $idx => $pluginName) {
+                        // check if plugin is already exists
+                        // we only save for those plugins that are not on db
+                        $pluginData = $this->pluginsTbl->getEntryByField('plugin_name',$pluginName)->current();
+                        if (empty($pluginData) || !$pluginData) {
+                            $tmpData = [
+                                'plugin_name' => $pluginName,
+                                'plugin_module' => $moduleName,
+                                'plugin_date_installed' => date('Y-m-d h:i:s'),
+                                'plugin_type' => self::TEMPLATING_PLUGIN_TYPE
+                            ];
+                            if ($this->pluginsTbl->save($tmpData)) {
+                                if (isset($newPlugins['templating']) && is_array($newPlugins['templating'])) {
+                                    array_push($newPlugins['templating'], $pluginName);
+                                } else {
+                                    $newPlugins['templating'] = $pluginName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return  $newPlugins;
+    }
+    public function checkNewDashboardPluginsInstalled()
+    {
+        $dashboardPlugins = $this->getDashboardPlugins(true);
+        $newPluginCtr = 0;
+        if (! empty($dashboardPlugins)) {
+            foreach ($dashboardPlugins as $idx => $pluginName) {
+                if ($this->pluginIsNew($pluginName)) {
+                    $newPluginCtr++;
+                }
+            }
+        }
+
+        return $newPluginCtr;
     }
 }

@@ -79,7 +79,6 @@ class Module
             $eventManager->attach(new MelisCoreAuthSuccessListener());
             $eventManager->attach(new MelisCorePhpWarningListener());
             // plugins listener
-            $eventManager->attach(new MelisCorePluginsListener());
             $eventManager->attach(new MelisCorePluginsRemovalListener());
             $eventManager->attach(new MelisCorePluginsAdditionalListener());
         }
