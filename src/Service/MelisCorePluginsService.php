@@ -125,7 +125,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         if (! empty($pluginData)) {
             $dateInstalled = $pluginData->plugin_date_installed;
             // add 10 days
-            $dateElapse    = strtotime("+60 minutes",strtotime($dateInstalled));
+            $dateElapse    = strtotime("+10 day",strtotime($dateInstalled));
             $dateElapse    = date('Y-m-d h:i:s', $dateElapse);
             $dateToday     = date('Y-m-d h:i:s');
             // compare two date time
