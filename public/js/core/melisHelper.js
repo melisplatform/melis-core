@@ -458,7 +458,7 @@ var melisHelper = (function(){
 
             //focus the newly opened tab if tabExpander() is enabled
             if( tabExpander.checkStatus() === 'enabled' ){
-                if(typeof navTabsGroup == "undefined") {
+                if(typeof navTabsGroup == "undefined" || typeof navTabsGroup == null) {
                     $(".melis-tabnext").trigger("click");
                 }
             }
