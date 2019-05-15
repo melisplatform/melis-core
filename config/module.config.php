@@ -403,6 +403,7 @@ return array(
         'factories' => array(
             'MelisCoreHeadPlugin' => 'MelisCore\View\Helper\Factory\MelisCoreHeadPluginHelperFactory',
             'MelisDashboardDragDropZone' => 'MelisCore\View\Helper\Factory\MelisDashboardDragDropZonePluginFactory',
+            'getMelisSectionIcons' => 'MelisCore\View\Helper\Factory\MelisCoreSectionIconsHelperFactory',
         ),
     ),
     'view_manager' => array(

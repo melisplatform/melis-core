@@ -277,7 +277,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
                                 if (isset($newPlugins['templating']) && is_array($newPlugins['templating'])) {
                                     array_push($newPlugins['templating'], $pluginName);
                                 } else {
-                                    $newPlugins['templating'] = $pluginName;
+                                    $newPlugins[] = $pluginName;
                                 }
                             }
                         }
