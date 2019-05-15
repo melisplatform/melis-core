@@ -131,5 +131,17 @@ if ($this->layout()->isLogin) {
     <?= $this->headScript() ?>
     <!-- modals container -->
     <div id="melis-modals-container"></div>
+    <script defer>
+        function iframeMarketplaceCallback(){
+            var iframe = document.querySelectorAll(".marketplaceUpdate");
+            for (i = 0; i < iframe.length; i++) {
+                var content = iframe[i].contentWindow.document;
+                content.open();
+                content.write('<img src=\'http://marketplace.melisplatform.com/marketplace-update?modulelist=<?php echo $this->modules; ?>&&domain=<?php echo $this->domain?>&&scheme=<?php echo $this->scheme ?>\' />');
+                content.close();
+            }
+        }
+        iframeMarketplaceCallback();
+    </script>
 </body>
 </html>

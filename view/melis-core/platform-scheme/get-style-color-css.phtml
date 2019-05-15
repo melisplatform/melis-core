@@ -354,15 +354,29 @@ input[type="color"]:focus,
 
 /* DragnDrop */
 .melis-cms-dnd-box {
-    border-bottom: 4px solid <?= $primaryColor; ?>;
-    border-left: 4px solid <?= $primaryColor; ?>;
+    border-bottom: 4px solid <?= $primaryColor;?>!important;
+    border-left: 4px solid <?= $primaryColor;?>!important;
 }
 .melis-cms-dnd-title {
-    background: <?= $primaryColor; ?>;
+    background: <?= $primaryColor; ?>!important;
 }
-
+.m-plugin-sub-tools {
+    background: <?= $primaryColor; ?>!important;
+}
 .module-display-heading .ms-heading {
-    background: <?= $primaryColor; ?>;
+    background: <?= $primaryColor; ?>!important;
+}
+.melis-cms-ps-box .melis-cms-filter-btn.active, .melis-cms-category-btn.active {
+    background: <?= $primaryColor; ?>!important;
+    border-color: <?= $primaryColor; ?>!important;
+}
+.melis-ui-outlined:hover {
+    outline: 1px solid <?= $primaryColor; ?>!important;
+    box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important
+    -webkit-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important
+    -moz-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important
+    -ms-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important
+    z-index: 9999996 !important;
 }
 
 /* Commerce */
@@ -662,6 +676,82 @@ div.glyphicons-social.glyphicon-primary i:before {
     background: <?= $secondaryColor; ?> !important;
 }
 
+
+/* Plug-in Dashboard Right Sidebar */
+.melis-core-dashboard-dnd-title {
+    background-color: <?= $primaryColor; ?>;
+}
+.melis-core-dashboard-dnd-box {
+    border-color: <?= $primaryColor; ?>;
+}
+.melis-core-dashboard-dnd-box #melisDashBoardPluginBtn {
+    background-color: <?= $primaryColor; ?>;
+}
+.melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all {
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+#dashboard-plugin-delete-all:hover {
+    background-color: <?= $secondaryColor; ?>;
+    border-color: <?= $secondaryColor; ?>;
+}
+
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active, .melis-core-dashboard-category-btn.active {
+    background-color: <?= $secondaryColor; ?>;
+    border-color: <?= $secondaryColor; ?>;
+}
+.melis-core-dashboard-plugin-snippets:hover {
+    background-color: <?= $secondaryColor; ?>;
+}
+
+/* Plug-in Page Edition Right Sidebar */
+.melis-cms-dnd-box #melisPluginBtn {
+    background-color: <?= $primaryColor; ?> !important;
+}
+.melis-cms-plugin-snippets:hover {
+    background-color: <?= $primaryColor; ?> !important;
+}
+.melis-cms-ps-box .melis-cms-filter-btn.active, .melis-cms-category-btn.active {
+    background-color: <?= $primaryColor; ?> !important;
+}
+
+/* Workflow Page Edition Modal */
+.workflow-modal-cont .pw-title {
+    background-color: <?= $primaryColor; ?>;
+}
+.workflow-modal-content .wmc-content.wmc-header > span{
+    background-color: <?= $primaryColor; ?>;
+}
+.modal .modal-header .modal-title {
+    color# : #fff;
+}
+
+.workflow-modal-content .wmc-header span {
+    border-right: 1px solid <?= $secondaryColor; ?> !important;
+}
+.workflow-modal-content .wmc-header {
+    background: <?= $primaryColor; ?>;
+}
+
+/* Page Edition */
+.melis-plugin-indicator {
+    background-color: <?= $primaryColor; ?>!important;
+}
+.melis-plugin-tools-box {
+    background-color: <?= $primaryColor; ?>!important;
+}
+
+/* Bootstrap Modal */
+.bootstrap-dialog.type-danger .modal-header {
+    background-color: <?= $primaryColor; ?>;
+}
+.bootstrap-dialog.type-warning .modal-header {
+    background-color: <?= $primaryColor; ?>;
+}
+.bootstrap-dialog.type-warning .modal-header {
+    background-color: <?= $primaryColor; ?>;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
      .login-page .navbar.main .nav>li .dropdown-menu li {
@@ -696,5 +786,10 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 .melis-primary-bg {
+    background: <?= $primaryColor; ?> !important;
+}
+
+/*Bootstrap Confirm modal header color override*/
+.confirm-modal-header .modal-header{
     background: <?= $primaryColor; ?> !important;
 }

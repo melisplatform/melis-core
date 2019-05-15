@@ -111,7 +111,7 @@ return [
                                                 'module' => 'MelisCore',
                                                 'controller' => 'Modules',
                                                 'action' => 'render-tool-modules',
-                                                'jscallback' => '',
+                                                'jscallback' => 'iframeMarketplaceCallback()',
                                                 'jsdatas' => array()
                                             ),
                                             'interface' => array(
@@ -636,6 +636,7 @@ return [
                                                     'conf' => array(
                                                         'id' => 'id_melis_core_gdpr_gdpr_header',
                                                         'melisKey' => 'melis_core_gdpr_gdpr_header',
+                                                        'name' => 'tr_melis_core_gdpr_header',
                                                     ),
                                                     'forward' => array(
                                                         'module' => 'MelisCore',
@@ -718,7 +719,7 @@ return [
                                                 'module' => 'MelisCore',
                                                 'controller' => 'ToolUser',
                                                 'action' => 'render-tool-user',
-                                                'jscallback' => '',
+                                                'jscallback' => 'iframeMarketplaceCallback()',
                                                 'jsdatas' => array()
                                             ),
                                             'interface' => array(

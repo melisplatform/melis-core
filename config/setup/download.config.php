@@ -9,6 +9,9 @@ use MelisMarketPlace\Support\MelisMarketPlaceSiteInstall as Site;
 return [
     'plugins' => [
         __NAMESPACE__ => [
+            'conf' => [
+                'rightsDisplay' => 'none',
+            ],
             MarketPlace::DOWNLOAD => [
                 MarketPlace::FORM => [
                     'melis_core_setup_user_form' => [

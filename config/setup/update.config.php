@@ -9,6 +9,9 @@ use MelisMarketPlace\Support\MelisMarketPlaceSiteInstall as Site;
 return [
     'plugins' => [
         __NAMESPACE__ => [
+            'conf' => [
+                'rightsDisplay' => 'none',
+            ],
             MarketPlace::UPDATE => [
 
             ]
