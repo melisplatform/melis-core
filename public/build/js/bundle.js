@@ -25049,7 +25049,7 @@ var melisTinyMCE = (function(){
             editor.windowManager.open = function (t, r) {    // replace with our own function
                 var modal = this.oldOpen.apply(this, [t, r]);  // call original
 
-                    if ( t.title === 'Insert/Edit Link' ) {
+                    if ( t.title === 'Insert/Edit Link' && typeof melisLinkTree != "undefined" ) {
                         $(".tox-form__controls-h-stack").append(
                             '<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
                         );
@@ -25069,12 +25069,9 @@ var melisTinyMCE = (function(){
                         modalPopUp();
                     }
 
-
                     return modal; // Template plugin is dependent on this return value
             };
     }
-
-    
     
     // Stating zone to loading
     function loadingZone(targetElem) {
@@ -28720,7 +28717,6 @@ var melisCore = (function(window){
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
         var $toxAux = $body.find(".tox-tinymce-aux"),
-            $toxDia = $toxAux.find(".tox-dialog"),
             zIndex  = 1040 + (10 * $('.modal:visible').length);
 
             if ( ! $toxAux.length ) {
@@ -28729,9 +28725,7 @@ var melisCore = (function(window){
                     $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
                 }, 0);
             }
-
-            console.log("zIndex: ", zIndex);
-            console.log("$toxAux length: ", $toxAux.length);
+            
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals

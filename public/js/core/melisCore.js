@@ -330,6 +330,7 @@ var melisCore = (function(window){
                     $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
                 }, 0);
             }
+            
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals
