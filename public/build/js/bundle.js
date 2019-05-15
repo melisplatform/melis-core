@@ -28720,22 +28720,23 @@ var melisCore = (function(window){
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
         var $toxAux = $body.find(".tox-tinymce-aux"),
-            zIndex = 1040 + (10 * $('.modal:visible').length);
+            $toxDia = $toxAux.find(".tox-dialog"),
+            zIndex  = 1040 + (10 * $('.modal:visible').length);
 
-            if ( $toxAux.length ) {
-                zIndex = zIndex + 350;
+            if ( ! $toxAux.length ) {
+                $(this).css('z-index', zIndex);
+                setTimeout(function() {
+                    $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+                }, 0);
             }
 
-            $(this).css('z-index', zIndex);
-
-            setTimeout(function() {
-                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-            }, 0);
+            console.log("zIndex: ", zIndex);
+            console.log("$toxAux length: ", $toxAux.length);
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals
     $(document).on('hidden.bs.modal', '.modal', function (event) {
-        var check = $body.find(".modal-backdrop").length;
+        var check = $body.find(".modal-backdrop").length; // .modal-backdrop
         if(check){
             $body.addClass("modal-open");
         }
