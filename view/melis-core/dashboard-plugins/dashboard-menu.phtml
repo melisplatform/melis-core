@@ -2,7 +2,8 @@
 	$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
 	$melisKey = 'data-melisKey="'.$this->zoneconfig['conf']['melisKey'].'"';
     $ctrNewPlugins = 0;
-    $sectionHasNewPlugins =[];
+    $sectionHasNewPlugins = [];
+    $moduleHasNewPlugins  = [];
 ?>
 
 <div class="melis-core-dashboard-dnd-box" <?= $melisKey.' '.$id; ?>>
@@ -17,6 +18,7 @@
                              if (isset($modules[$moduleName][$name]['isNew']) && $modules[$moduleName][$name]['isNew']) {
                                  $ctrNewPlugins++;
                                  $sectionHasNewPlugins[] =  $moduleSection;
+                                 $moduleHasNewPlugins[] =  $moduleName;
                              }
                          }
                      }
@@ -33,7 +35,9 @@
                                     // get melis module section icons
                                     echo $this->getMelisSectionIcons($moduleSection);
                                 ?>
-                          <?= $moduleSection ?>
+                              <span class="module-name">
+                                    <?= $moduleSection ?>
+                              </span>
                           <i class="fa fa-angle-down arrow-indicator"></i>
                         </span>
                         <div class="melis-core-dashboard-plugin-snippets-box">
@@ -44,7 +48,17 @@
                                     // dont rewrite the module name and just list plugins
                                     if ($sectionChildrenCtr > 1) { ?>
                                         <div class="melis-core-category-box" >
-                                            <span class="melis-core-dashboard-category-btn"><?= $this->translate('tr_PluginSection_' .$moduleName); ?> <i class="fa fa-angle-down arrow-indicator"></i></span>
+                                            <span class="melis-core-dashboard-category-btn">
+                                                <span class="module-name">
+                                                    <?= $this->translate('tr_PluginSection_' .$moduleName); ?>
+                                                </span>
+                                                <?php  if (in_array($moduleName,$moduleHasNewPlugins)) { ?>
+                                                    <div class="melis-plugins-icon-new-child">
+                                                        <span class="fa fa-certificate melis-plugins-icon-new"></span>
+                                                    </div>
+                                                <?php }?>
+                                                <i class="fa fa-angle-down arrow-indicator"></i>
+                                            </span>
                                             <div class="melis-core-dashboard-category-plugins-box">
                                                 <?php foreach ($plugins as $pluginName => $conf) { ?>
                                                     <?php
@@ -96,7 +110,10 @@
                 $dateToday      = date('Y-m-d h:i:s');
             ?>
             <?php if ($dateToday < $dateTimeElapse) {?>
-                <span class="melis-dashboard-new-plugin">New</span>
+                <span class="melis-dashboard-new-plugin">
+                    <i class="fa fa-certificate new-plugin-indicator"></i>
+                </span>
+                <span class="text-new-plugin-indicator">New</span>
             <?php }?>
         <?php }?>
         <i class="fa fa-plug fa-lg"></i>

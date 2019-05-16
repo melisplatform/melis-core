@@ -535,8 +535,8 @@ var melisCore = (function(window){
         var $btn    = $("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $gs     = $body.find("#"+activeTabId+" .grid-stack"),
-            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth  = $gs.width() + $box.width();
+            dWidth  = $gs.width() - ($box.width() + 20), // grid-stack width - plugin box width
+            nWidth  = ($gs.width() + $box.width()); // for new icon
 
             $box.toggleClass("shown");
 
@@ -553,17 +553,21 @@ var melisCore = (function(window){
     
     function showPlugLists() {
         if($(this).hasClass("active")) {
+            $(this).find('.melis-plugins-icon-new-parent').removeClass('reverse-color');
             $(this).removeClass("active")
                 .siblings(".melis-core-dashboard-plugin-snippets-box")
                 .slideUp();
+            $(this).siblings(".melis-core-dashboard-plugin-snippets-box").find(".melis-core-dashboard-category-btn.active").find('.melis-plugins-icon-new-child').removeClass('reverse-color');
             $(this).siblings(".melis-core-dashboard-plugin-snippets-box")
                 .find(".melis-core-dashboard-category-btn.active")
                 .removeClass("active")
                 .siblings(".melis-core-dashboard-category-plugins-box")
-                .slideUp();
+                .slideUp().find('.melis-plugins-icon-new-child').removeClass('reverse-color');
         } else {
+            $(".melis-core-dashboard-filter-btn.active").find('.melis-plugins-icon-new-parent').removeClass('reverse-color');
             $(".melis-core-dashboard-filter-btn.active").removeClass("active").siblings(".melis-core-dashboard-plugin-snippets-box").slideUp();
             $(this).addClass("active");
+            $(this).find('.melis-plugins-icon-new-parent').addClass('reverse-color');
             $(".melis-core-dashboard-filter-btn.active").siblings(".melis-core-dashboard-plugin-snippets-box").slideDown();
         }
     }
@@ -572,8 +576,10 @@ var melisCore = (function(window){
         if($(this).hasClass("active")) {
             $(this).removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
         } else {
+            $(".melis-core-dashboard-category-btn.active").find('.melis-plugins-icon-new-child').removeClass('reverse-color');
             $(".melis-core-dashboard-category-btn.active").removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
             $(this).addClass("active");
+            $(this).find('.melis-plugins-icon-new-child').addClass('reverse-color');
             $(".melis-core-dashboard-category-btn.active").siblings(".melis-core-dashboard-category-plugins-box").slideDown();
         }
     }
