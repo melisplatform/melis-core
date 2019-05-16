@@ -303,7 +303,10 @@ var melisDashBoardDragnDrop = {
         this.$dashPluginBtn.prop("disabled", true);
         this.$dashPluginBtn.removeClass("active");
         // remove highlight of new icon if present
+        this.$pluginBox.find('.active').removeClass('active');
         this.$pluginBox.find('.reverse-color').removeClass('reverse-color');
+        this.$pluginBox.find('.melis-core-dashboard-category-plugins-box').hide();
+        
         this.$dashSnipsBox.hide();
     },
 
