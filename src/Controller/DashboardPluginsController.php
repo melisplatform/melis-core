@@ -264,7 +264,8 @@ class DashboardPluginsController extends AbstractActionController
         //custom section
         $customSection = [
             'Others',
-            'CustomProjects'
+            'CustomProjects',
+            'MelisCommerce' // special section
         ];
         // merge all sections
         $melisSection = array_merge($marketPlaceModuleSection, $customSection);
