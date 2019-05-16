@@ -535,7 +535,7 @@ var melisCore = (function(window){
         var $btn    = $("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $gs     = $body.find("#"+activeTabId+" .grid-stack"),
-            dWidth  = $gs.width() - ($box.width() + 20), // grid-stack width - plugin box width
+            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = ($gs.width() + $box.width()); // for new icon
 
             $box.toggleClass("shown");

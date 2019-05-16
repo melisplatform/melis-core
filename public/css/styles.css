@@ -3969,7 +3969,7 @@ div#modal-user-management div.widget {
 .melis-dashboard-new-plugin i {
     font-size: 35px !important;
     color: #f52929;
-    text-shadow: 0 0 3px #000000;
+    text-shadow: 0 0 3px #fff;
 }
 .melis-core-dashboard-filter-btn .module-name,
 .melis-core-dashboard-category-btn .module-name
