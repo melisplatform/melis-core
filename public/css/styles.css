@@ -3908,14 +3908,14 @@ div#modal-user-management div.widget {
     font-size: 12px !important;
 }
 .border-new-plugin {
-    border:4px solid #f52929;
+    border:4px solid #72af46;
 }
 .melis-core-dashboard-ps-box {
     position:relative;
 }
 .melis-plugins-icon-new-parent {
     position: absolute;
-    color: #f52929;
+    color: #72af46;
     z-index: 100;
     right: 35px;
     top: 4px;
@@ -3923,14 +3923,14 @@ div#modal-user-management div.widget {
 }
 .melis-plugins-icon-new-child {
     position: absolute;
-    color: #f52929;
+    color: #72af46;
     z-index: 100;
     right: 39px;
     top: 1px;
 }
 .melis-plugins-icon-new-sub-child {
     position: absolute;
-    color: #f52929;
+    color: #72af46;
     z-index: 100;
     right: 37px;
     top: 2px;
