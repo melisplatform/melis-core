@@ -3961,8 +3961,8 @@ div#modal-user-management div.widget {
 .text-new-plugin-indicator {
     position: absolute;
     font-size: 14px;
-    top: -5px;
-    left: 0px;
+    top: -7px;
+    left: -1px;
     font-weight: 700;
     color: #ffffff;
 }
