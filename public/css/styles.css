@@ -3904,7 +3904,8 @@ div#modal-user-management div.widget {
 }
 .melis-plugins-icon-new {
     left: -12px;
-    top: 5px !important;
+    top: 8px !important;
+    font-size: 12px !important;
 }
 .border-new-plugin {
     border:4px solid #f52929;
@@ -3924,9 +3925,8 @@ div#modal-user-management div.widget {
     position: absolute;
     color: #f52929;
     z-index: 100;
-    right: 37px;
-    top: 4px;
-    font-size: 15px !important;
+    right: 39px;
+    top: 1px;
 }
 .melis-plugins-icon-new-sub-child {
     position: absolute;
@@ -3937,7 +3937,7 @@ div#modal-user-management div.widget {
     font-size: 13px;
 }
 .melis-plugins-icon-new-child .melis-plugins-icon-new {
-    font-size:15px !important;
+    font-size:12px !important;
 }
 .melis-section-icons {
     position: absolute;
@@ -3956,7 +3956,7 @@ div#modal-user-management div.widget {
     font-size: 11px;
 }
 .reverse-color {
-    text-shadow: -1px 0 3px #ffffff, 0 1px 3px #ffffff, 1px 0 3px #ffffff, 0 -1px 3px #ffffff;
+    text-shadow: -1px 0 0 #ffffff, 0 1px 0 #ffffff, 1px 0 0 #ffffff, 0 -1px 0 #ffffff;
 }
 .text-new-plugin-indicator {
     position: absolute;
@@ -3968,8 +3968,7 @@ div#modal-user-management div.widget {
 }
 .melis-dashboard-new-plugin i {
     font-size: 29px !important;
-    color: #e61c23;
-    text-shadow: 0 0 3px #ffffff;
+    color: #72af46;
 }
 .melis-core-dashboard-filter-btn .module-name,
 .melis-core-dashboard-category-btn .module-name

@@ -57,6 +57,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
     }
 
     /**
+     * Return all dashboard plugins
      * @return mixed
      */
     public function getDashboardPlugins($pluginNameOnly = false)
@@ -117,6 +118,12 @@ class MelisCorePluginsService extends MelisCoreGeneralService
 
         return $status;
     }
+
+    /**
+     * to check if the plugin is new or not
+     * @param $pluginName
+     * @return bool
+     */
     public function pluginIsNew($pluginName) : bool
     {
         $status = false;
@@ -218,6 +225,11 @@ class MelisCorePluginsService extends MelisCoreGeneralService
 
         return $data;
     }
+
+    /**
+     * Will check of all dashboard plugins and will insert a new record if it is new
+     * @return array
+     */
     public function checkDashboardPlugins()
     {
         $newPlugins = [];
@@ -253,6 +265,11 @@ class MelisCorePluginsService extends MelisCoreGeneralService
 
         return  $newPlugins;
     }
+
+    /**
+     * Will check of all templating plugins and will insert a new record if it is new
+     * @return array
+     */
     public function checkTemplatingPlugins()
     {
         $newPlugins = [];
@@ -287,20 +304,6 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         }
 
         return  $newPlugins;
-    }
-    public function checkNewDashboardPluginsInstalled()
-    {
-        $dashboardPlugins = $this->getDashboardPlugins(true);
-        $newPluginCtr = 0;
-        if (! empty($dashboardPlugins)) {
-            foreach ($dashboardPlugins as $idx => $pluginName) {
-                if ($this->pluginIsNew($pluginName)) {
-                    $newPluginCtr++;
-                }
-            }
-        }
-
-        return $newPluginCtr;
     }
     public function getLatestPlugin($pluginType)
     {
