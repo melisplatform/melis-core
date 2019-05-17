@@ -25003,8 +25003,6 @@ var melisTinyMCE = (function(){
             encode      : true
         }).success(function(data){
             if(data.success) {
-                //console.log("createTinyMCE tinyMCE: ", tinyMCE);
-
                 if(typeof(tinyMCE) != 'undefined') {
                     if(selector.length) {
                         try{
@@ -25014,6 +25012,12 @@ var melisTinyMCE = (function(){
                 }
                 // Initializing TinyMCE with the request Configurations
                 tinymce.init(data.config);
+
+                $(document).on("focusin", function(e) {
+                    if ( $(e.target).closest(".tox-dialog").length ) {
+                        e.stopImmediatePropagation();
+                    }
+                });
             }
         }).error(function(xhr, textStatus, errorThrown){
             alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
@@ -25032,15 +25036,17 @@ var melisTinyMCE = (function(){
         });
         
         editor.on("init",function() {
-            // adding of add tree view button from dialog initialization
-            tinyMceDialogInitAddTreeViewBtn(editor);
+            var $body = $("body");
+
+                $body.find(".tox-silver-sink").css('z-index', 10001);
+                
+                // adding of add tree view button from dialog initialization
+                tinyMceDialogInitAddTreeViewBtn(editor);
         });
     }
 
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {
-        //console.log("tinyMceDialogInitAddTreeViewBtn tinyMCE: ", tinyMCE);
-
         var $body       = $("body"),
             //transTitle  = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title,
             $dialog     = $body.find(".tox-dialog");
@@ -25069,7 +25075,7 @@ var melisTinyMCE = (function(){
                         modalPopUp();
                     }
 
-                    return modal; // Template plugin is dependent on this return value
+                return modal; // Template plugin is dependent on this return value
             };
     }
     
@@ -28716,16 +28722,37 @@ var melisCore = (function(window){
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
-        var $toxAux = $body.find(".tox-tinymce-aux"),
-            zIndex  = 1040 + (10 * $('.modal:visible').length);
+        var $modal  = $(this),
+            $mCont  = $body.find("#melis-modals-container"),
+            $modal  = $mCont.find("div .modal"),
+            $toxAux = $body.find(".tox-silver-sink"),
+            zIndex  = 10000 + (10 * $('.modal:visible').length); // 1040
 
-            if ( ! $toxAux.length ) {
-                $(this).css('z-index', zIndex);
+            console.log("$modal count: ", $modal.length);
+
+            $modal.each(function(i, v) {
+                var $_modal = $(this);
+                console.log("$_modal: ", $_modal);
+                console.log("$_modal i: ", i);
+                console.log("$_modal v: ", v);
+
+                if ( $toxAux.length ) {
+                    $toxAux.each(function() {
+                        var $this = $(this);
+
+                        $this.css('z-index', zIndex + 1);
+                    });
+                }
+
+                $($_modal[i]).css('z-index', zIndex);
+
                 setTimeout(function() {
                     $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
                 }, 0);
-            }
-            
+            });
+
+            console.log("$toxAux zIndex: ", zIndex + 1);
+            console.log("modal ["+$modal.attr("id")+"]: ", zIndex);
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals

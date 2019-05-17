@@ -18,8 +18,6 @@ var melisTinyMCE = (function(){
             encode      : true
         }).success(function(data){
             if(data.success) {
-                //console.log("createTinyMCE tinyMCE: ", tinyMCE);
-
                 if(typeof(tinyMCE) != 'undefined') {
                     if(selector.length) {
                         try{
@@ -29,6 +27,12 @@ var melisTinyMCE = (function(){
                 }
                 // Initializing TinyMCE with the request Configurations
                 tinymce.init(data.config);
+
+                $(document).on("focusin", function(e) {
+                    if ( $(e.target).closest(".tox-dialog").length ) {
+                        e.stopImmediatePropagation();
+                    }
+                });
             }
         }).error(function(xhr, textStatus, errorThrown){
             alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
@@ -47,15 +51,17 @@ var melisTinyMCE = (function(){
         });
         
         editor.on("init",function() {
-            // adding of add tree view button from dialog initialization
-            tinyMceDialogInitAddTreeViewBtn(editor);
+            var $body = $("body");
+
+                $body.find(".tox-silver-sink").css('z-index', 10001);
+                
+                // adding of add tree view button from dialog initialization
+                tinyMceDialogInitAddTreeViewBtn(editor);
         });
     }
 
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {
-        //console.log("tinyMceDialogInitAddTreeViewBtn tinyMCE: ", tinyMCE);
-
         var $body       = $("body"),
             //transTitle  = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title,
             $dialog     = $body.find(".tox-dialog");
@@ -84,7 +90,7 @@ var melisTinyMCE = (function(){
                         modalPopUp();
                     }
 
-                    return modal; // Template plugin is dependent on this return value
+                return modal; // Template plugin is dependent on this return value
             };
     }
     
