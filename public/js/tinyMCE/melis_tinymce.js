@@ -51,9 +51,9 @@ var melisTinyMCE = (function(){
         });
         
         editor.on("init",function() {
-            var $body = $("body");
+            //var $body = $("body");
 
-                $body.find(".tox-silver-sink").css('z-index', 10001);
+                //$body.find(".tox-silver-sink").css('z-index', 10001);
                 
                 // adding of add tree view button from dialog initialization
                 tinyMceDialogInitAddTreeViewBtn(editor);

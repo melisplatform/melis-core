@@ -25036,9 +25036,9 @@ var melisTinyMCE = (function(){
         });
         
         editor.on("init",function() {
-            var $body = $("body");
+            //var $body = $("body");
 
-                $body.find(".tox-silver-sink").css('z-index', 10001);
+                //$body.find(".tox-silver-sink").css('z-index', 10001);
                 
                 // adding of add tree view button from dialog initialization
                 tinyMceDialogInitAddTreeViewBtn(editor);
@@ -28722,37 +28722,22 @@ var melisCore = (function(window){
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
-        var $modal  = $(this),
-            $mCont  = $body.find("#melis-modals-container"),
-            $modal  = $mCont.find("div .modal"),
-            $toxAux = $body.find(".tox-silver-sink"),
-            zIndex  = 10000 + (10 * $('.modal:visible').length); // 1040
-
-            console.log("$modal count: ", $modal.length);
-
-            $modal.each(function(i, v) {
-                var $_modal = $(this);
-                console.log("$_modal: ", $_modal);
-                console.log("$_modal i: ", i);
-                console.log("$_modal v: ", v);
-
-                if ( $toxAux.length ) {
-                    $toxAux.each(function() {
-                        var $this = $(this);
-
-                        $this.css('z-index', zIndex + 1);
-                    });
-                }
-
-                $($_modal[i]).css('z-index', zIndex);
-
-                setTimeout(function() {
-                    $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-                }, 0);
-            });
-
-            console.log("$toxAux zIndex: ", zIndex + 1);
-            console.log("modal ["+$modal.attr("id")+"]: ", zIndex);
+        // id_meliscms_find_page_tree_container 1051
+        // modal-backdrop 1050
+        if ( $(".meliscms_center_tabs[data-meliskey='melissb_page_comments']").find(".active") && $(this)[0].id === "id_meliscms_find_page_tree_container" ) {
+            $("id_meliscms_find_page_tree_container").css('z-index', 1051);
+            //$(".modal-backdrop").css('z-index', 1050);
+            setTimeout(function() {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', 1050).addClass('modal-stack');
+            }, 0);
+        } else {
+            var zIndex = 1040 + (10 * $('.modal:visible').length);
+            $(this).css('z-index', zIndex);
+            setTimeout(function() {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            }, 0);
+        }
+        //console.log("$(this) .modal: ", $(this));
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals
