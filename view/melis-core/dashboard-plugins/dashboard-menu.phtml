@@ -36,7 +36,13 @@
                                     echo $this->getMelisSectionIcons($moduleSection);
                                 ?>
                               <span class="module-name">
-                                    <?= $moduleSection ?>
+                                  <?php
+                                  $sectionName = $section;
+                                  if ($section == 'CustomProjects') {
+                                      $sectionName = "Custom / Projects";
+                                  }
+                                  ?>
+                                  <?= $sectionName; ?>
                               </span>
                           <i class="fa fa-angle-down arrow-indicator"></i>
                         </span>
