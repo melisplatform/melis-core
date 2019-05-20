@@ -131,8 +131,17 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // get date installed
         if (! empty($pluginData)) {
             $dateInstalled = $pluginData->plugin_date_installed;
+            $dateElapse = null;
             // add 10 days
-            $dateElapse    = strtotime("+10 day",strtotime($dateInstalled));
+            // for templating plugins
+            if ($pluginData->plugin_type == self::TEMPLATING_PLUGIN_TYPE) {
+                $dateElapse    = strtotime("+10 day",strtotime($dateInstalled));
+            }
+            // for dashboard plugins
+            if ($pluginData->plugin_type == self::DASHBOARD_PLUGIN_TYPE) {
+                $dateElapse    = strtotime("+10 day",strtotime($dateInstalled));
+            }
+
             $dateElapse    = date('Y-m-d h:i:s', $dateElapse);
             $dateToday     = date('Y-m-d h:i:s');
             // compare two date time
