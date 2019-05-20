@@ -667,6 +667,7 @@ return [
     'tr_melis_core_gdpr_content' => 'Contenu',
     'tr_melis_core_gdpr_search_form' => 'formulaire de recherche',
     'tr_melis_core_gdpr_content_tab' => 'Onglet contenu',
+    'tr_melis_core_gdpr_search_form_checkbox_specific' => 'Recherche de nom exact (prénom + nom)',
 
     'tr_melis_core_gdpr_search_user_data_tabname' => 'Données',
     'tr_melis_core_gdpr_form_name' => 'Nom',
@@ -690,6 +691,7 @@ return [
     'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'Aucun utilisateur sélectionné',
     'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Erreur lors de la suppression des données',
     'tr_melis_core_gdpr_notif_no_user_data_found' => 'Aucun utilisateur trouvé',
+    'tr_melis_core_gdpr_notif_error_3ormore_inputs' => 'La recherche doit être basée sur au moins 3 caractères',
 
     'tr_melis_core_gdpr_view_search_button' => 'Rechercher',
     'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extraire la sélection',

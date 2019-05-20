@@ -16,12 +16,36 @@
                 $form = clone $this->form;
                 $form->prepare();
                 echo $this->form()->openTag($form);
+                ?>
+
+                <div class="row">
+                <div class="col-md-12">
+                    <div class="checkbox melis-core-gdpr-check-box1">
+                        <div class="checkbox cb-cont" style="position:relative;">
+                            <label class="remember-me-cont">
+                                <span class="cbmask-outer clearfix">
+                                    <span class="cbmask-inner cb-modules-mask"></span>
+                                </span>
+                                <input type="checkbox" class="" id="" name="specific-search" data-active="" value="true">
+                            </label>
+                            <span class="custom-melis-core-gdpr-checkbox-span"><?= $this->translate('tr_melis_core_gdpr_search_form_checkbox_specific') ?></span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                <?php
                 echo $this->melisFieldCollection($form);
             ?>
             <button type="submit" id="melis-core-gdpr-search-form-submit" class="btn btn-primary" style="margin-left: 16.5%;"><i class="fa fa-search"></i> <?= $this->translate('tr_melis_core_gdpr_view_search_button') ?></button>
             <?php
                 echo $this->form()->closeTag();
             ?>
+            <script type="text/javascript">
+                (function () {
+                    melisCore.loadCustomCheckboxElement();
+                })();
+            </script>
         </div>
     </div>
 </div>

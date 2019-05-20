@@ -3949,3 +3949,22 @@ div#modal-user-management div.widget {
     max-width: 24px;
     max-height: 24px;
 }
+
+/** GDPR search form checkbox */
+.melis-core-gdpr-check-box1 {
+    margin-left: 105px !important;
+}
+
+.custom-gdpr-tab-table-checkbox {
+    margin-top: -13px;
+}
+
+.custom-melis-core-gdpr-checkbox-span {
+    margin-top: -7px;
+    position: fixed;
+}
+
+.widget.widget-tabs-double.widget-regular>.widget-head ul li.active a i:before {
+    color: #e61c23;
+}
+
