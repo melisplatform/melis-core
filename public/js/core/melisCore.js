@@ -321,13 +321,14 @@ var melisCore = (function(window){
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
-        // id_meliscms_find_page_tree_container 1051
-        // modal-backdrop 1050
-        if ( $(".meliscms_center_tabs[data-meliskey='melissb_page_comments']").find(".active") && $(this)[0].id === "id_meliscms_find_page_tree_container" ) {
-            $("id_meliscms_find_page_tree_container").css('z-index', 1051);
+        // id_meliscms_find_page_tree_container 1600
+        // modal-backdrop 1599
+        // fix for z-index issue on blog/news comments add comment, $(".meliscms_center_tabs[data-meliskey='melissb_page_comments']").find(".active")
+        if ( $(this)[0].id === "id_meliscms_find_page_tree_container" ) {
             setTimeout(function() {
-                $('.modal-backdrop').not('.modal-stack').css('z-index', 1050).addClass('modal-stack');
-            }, 0);
+                $(this).css('z-index', 10001);
+                $('.modal-backdrop').not('.modal-stack').css('z-index', 10000).addClass('modal-stack');
+            }, 100);
         } else {
             var zIndex = 1040 + (10 * $('.modal:visible').length);
             $(this).css('z-index', zIndex);
