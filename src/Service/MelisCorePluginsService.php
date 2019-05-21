@@ -34,6 +34,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         $dashboardPlugins = [];
         // put plugins into a variable
         if (! empty($plugins)) {
+        	$templatingPluygins = [];
             foreach ($plugins as $moduleName => $val) {
                 // get templating plugins.
                 if (isset($val['plugins']) && ! empty($val['plugins'])) {
