@@ -3959,3 +3959,13 @@ div#modal-user-management div.widget {
 .tab-pane .nav-tabs span img{
     width: 24px;
 }
+
+@media (max-width: 767px) {
+    #id_meliscore_header {
+        z-index: 99999;
+    }
+    #melis-id-nav-bar-tabs li a.close-tab,
+    #melis-id-nav-bar-tabs li a.dropdown-toggle {
+        display: inline-block;
+    }
+}
