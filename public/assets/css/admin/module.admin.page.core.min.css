@@ -8382,7 +8382,7 @@ body {
 
 @media (max-width:768px) {
     .sidebar {
-        z-index: 9999
+        z-index: 99999
     }
 }
 
