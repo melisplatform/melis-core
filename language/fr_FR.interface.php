@@ -105,6 +105,7 @@ return [
     'tr_meliscore_tool_user_view_date_connection' => 'Dates de connexion',
     'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
     'tr_meliscore_tool_usrcd_last_connection_time' => 'Temps de connexion',
+    'tr_meliscore_tool_user_col_remove_picture' => "Retirer photo",
 
     //USER PROFILE MANAGEMENT
     'tr_meliscore_user_profile' => 'Gestion du profil utilisateur',
@@ -158,7 +159,7 @@ return [
 
     // Create account
     'tr_meliscore_email_create_account_Subject' => 'Demande de création de compte',
-    'tr_meliscore_email_create_account_html_Content' => '<p>Bonjour [NAME],</p><p>You have now Account on Melis Technology Platform Version 2.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Password : [PASSWORD]</p>',
+    'tr_meliscore_email_create_account_html_Content' => '<p>Bonjour [NAME],</p><p>Un compte a été créé pour vous sur la platerforme de Melis Technology version 3.</p><p>Détails&nbsp;du&nbsp;compte:</p><p>Adresse email : [EMAIL]</p><p>Login : [LOGIN]</p><p>Mot de passe : [PASSWORD]</p>',
 
     // error
     'tr_meliscore_error_An error occurred' => 'Une erreur est survenue',
@@ -420,7 +421,7 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Titre de la mise en page',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip' => 'Options supplémentaires si vous souhaitez utiliser les e-mails par défaut',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo' => 'Logo de mise en page',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo Tooltip' => 'Options supplémentaires si vous souhaitez utiliser les e-mails par défaut',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo tooltip' => 'Logo affiché dans l\'email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo_select_image' => 'Sélectionner une image',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info' => 'Informations de mise en page',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info tooltip' => 'Options supplémentaires si vous souhaitez utiliser les e-mails par défaut',
@@ -541,7 +542,7 @@ return [
     'tr_meliscore_logs_tool_log_type' => 'Type',
     'tr_meliscore_logs_tool_log_item_id' => 'ID élément',
     'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
-    'tr_meliscore_logs_tool_log_date_added' => 'Date ajoutée',
+    'tr_meliscore_logs_tool_log_date_added' => 'Date',
 
     // Log type details
     'tr_meliscore_logs_tool_log_type_name' => 'Nom',
@@ -590,7 +591,7 @@ return [
     'tr_meliscore_microservice_request_ok' => 'Request has been executed',
     'tr_meliscore_microservice_api_key_inactive' => 'API Key is inactive',
 
-    'tr_meliscore_microservice_generate_api_key' => 'Generate API Key',
+    'tr_meliscore_microservice_generate_api_key' => 'Générer la clef API',
     'tr_meliscore_microservice_generate_api_key_ok' => 'Vous pouvez accéder aux microservices à cette URL :',
     'tr_meliscore_microservice_generateD_api_key' => 'API Key',
 
@@ -665,6 +666,10 @@ return [
     'tr_melis_core_gdpr' => 'RGPD',
     'tr_melis_core_gdpr_header_title' => 'RGPD (Règlement Général sur la Protection des Données)',
     'tr_melis_core_gdpr_header_description' => 'Melis Platform fournit un système pour chercher les données de vos utilisateurs. </br> Tous les modules qui implémentent le système de Melis pourront intéragir avec cette interface et vous offir la possibilité de respecter le règlement.',
+    'tr_melis_core_gdpr_header' => 'En-tête',
+    'tr_melis_core_gdpr_content' => 'Contenu',
+    'tr_melis_core_gdpr_search_form' => 'formulaire de recherche',
+    'tr_melis_core_gdpr_content_tab' => 'Onglet contenu',
 
     'tr_melis_core_gdpr_form_name' => 'Nom',
     'tr_melis_core_gdpr_form_email' => 'Email',

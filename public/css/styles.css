@@ -304,6 +304,13 @@ body{
     margin-bottom: 8px;
 }
 
+/*
+ * fix issue: http://mantis.melistechnology.fr/view.php?id=3589
+ */
+.sidebar .sideMenu {
+    overflow: hidden;
+}
+
 /* input character counter */
 /* SEO text counter */
 .text-counter-indicator{
@@ -3418,7 +3425,7 @@ div#modal-user-management div.widget {
     position: fixed;
     top: 47px;
     right: 0px;
-    width: 224px;
+    width: 180px;
     height: calc(100% - 47px);
     font-family: 'Lato', sans-serif;
     font-weight: normal;
@@ -3427,10 +3434,10 @@ div#modal-user-management div.widget {
     border-bottom: 4px solid #e61c23;
     border-left: 4px solid #e61c23;
     background: #373737;
-    transform: translate3d(224px, 0, 0);
-    -webkit-transform: translate3d(224px, 0, 0);
-    -moz-transform: translate3d(224px, 0, 0);
-    -ms-transform: translate3d(224px, 0, 0);
+    transform: translate3d(180px, 0, 0);
+    -webkit-transform: translate3d(180px, 0, 0);
+    -moz-transform: translate3d(180px, 0, 0);
+    -ms-transform: translate3d(180px, 0, 0);
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
@@ -3825,20 +3832,70 @@ div#modal-user-management div.widget {
 
 /* changes the width on smaller widths */
 @media (min-width: 320px) and (max-width: 640px) {
-    .melis-core-dashboard-dnd-box {
+    /*.melis-core-dashboard-dnd-box {
         width: 140px;
         
         transform: translate3d(140px, 0, 0);
         -webkit-transform: translate3d(140px, 0, 0);
         -moz-transform: translate3d(140px, 0, 0);
         -ms-transform: translate3d(140px, 0, 0);
-    }
+    }*/
     .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn .fa,
     .melis-core-dashboard-category-btn .fa {
         right: 6px;
         font-size: 12px;
     }
+    .melis-core-dashboard-plugin-delete-all {
+        height: 32px;
+    }
+    .melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all {
+        font-size: 13px;
+    }
 }
+
+/*
+ * Added by: Junry @ 02/28/2019
+ * Custom checkbox on duplicate tree, contextmenu modal container
+ */
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.form-group .melis-check-box {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}
+
+.form-group .cls-checkbox-label {
+    position: relative;
+    cursor: pointer;
+}
+
+.form-group .cls-checkbox-label::before {
+    content: '';
+    border: 0.1em solid red;
+    padding: 0.65em;
+    display: inline-block;
+    position: absolute;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 5px;
+    top: -0.5em;
+}
+
 
 .tox .tox-tbtn:hover,
 .mce-btn.mce-open:hover {
@@ -3849,4 +3906,56 @@ div#modal-user-management div.widget {
     border-radius: 2px;
     color: #222f3e;
     cursor: pointer;
+}
+.form-group .melis-check-box:checked + .cls-checkbox-label::after {
+    content: '';
+    background: red;
+    border: 0.1em solid red;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    position: absolute;
+    top: -0.25em;
+    left: 0.2em;
+}
+
+.melis-radio-box{
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-family: sans-serif;
+    user-select: none;
+    padding-left: 24px;
+    margin-bottom: 7px;
+}
+
+.melis-radio-box input{
+    display: none;
+}
+
+.melis-radio-box .melis-radio-box-circle{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    border: 2px solid #e61c23;
+}
+
+.melis-radio-box input:checked + .melis-radio-box-circle:after{
+    content: "";
+    height: 8px;
+    width: 8px;
+    background-color: #e61c23;
+    position: absolute;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-55%, -55%);
+}
+
+.tab-pane .nav-tabs span img{
+    width: 24px;
 }

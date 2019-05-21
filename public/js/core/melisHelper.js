@@ -187,7 +187,7 @@ var melisHelper = (function(){
                     attribTooltip = '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' + $(this).data("tooltip") +'"></i>';
                 }
                 var switchBtn = '<label for="'+$(this).attr("name")+'">'+$(this).data("label") + attribRequired + attribTooltip+'</label>'
-                    +'<div class="make-switch user-admin-switch" data-label-icon="glyphicon glyphicon-resize-horizontal" data-on-label="'+translations.tr_meliscore_common_yes+'" data-off-label="'+translations.tr_meliscore_common_no+'" style="display: block;">'
+                    +'<div class="make-switch user-admin-switch" data-label-icon="glyphicon glyphicon-resize-horizontal" data-on-label="'+translations.tr_meliscore_common_yes+'" data-off-label="'+translations.tr_meliscore_common_nope+'" style="display: block;">'
                     +'<input type="checkbox" name="'+$(this).attr("name")+'" id="'+$(this).attr("id")+'">'
                     +'</div>';
                 parentDiv.html(switchBtn);
@@ -457,7 +457,7 @@ var melisHelper = (function(){
 
             //focus the newly opened tab if tabExpander() is enabled
             if( tabExpander.checkStatus() === 'enabled' ){
-                if(typeof navTabsGroup == "undefined") {
+                if(typeof navTabsGroup == "undefined" || typeof navTabsGroup == null) {
                     $(".melis-tabnext").trigger("click");
                 }
             }

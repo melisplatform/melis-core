@@ -19,6 +19,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class MelisCoreModulesService implements ServiceLocatorAwareInterface
 {
+    private const MELIS_SITES_FOLDER = 'MelisSites';
+
     /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
     public $serviceLocator;
 
@@ -141,6 +143,24 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         $modules = [];
         if ($this->checkDir($userModules)) {
             $modules = $this->getDir($userModules);
+        }
+
+        /**
+         * Check if the folder(module) is valid. Current check(s) applied:
+         *  - has "Module.php" file?
+         */
+        foreach ($modules as $moduleIndex => $module) {
+            $modulePath = $userModules . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
+
+            if ($module === self::MELIS_SITES_FOLDER) {
+                /** skip check */
+                continue;
+            }
+
+            if (!is_file( $modulePath . "Module.php")) {
+                /** Module.php file was not found - remove module from the list */
+                unset($modules[$moduleIndex]);
+            }
         }
 
         return $modules;
@@ -393,6 +413,28 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 } else {
                     $path = $userModules . 'module/' . $moduleName;
                 }
+            }
+        }
+
+        return $path;
+    }
+
+    /**
+     * Get site path
+     *
+     * @param $siteName
+     * @param bool $returnFullPath
+     * @return string
+     */
+    public function getUserSitePath($siteName, $returnFullPath = true){
+        $path = '';
+        $melisSitesPath = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
+
+        if ($this->checkDir($melisSitesPath .DIRECTORY_SEPARATOR. $siteName)) {
+            if (!$returnFullPath) {
+                $path = '/MelisSites/'.$siteName;
+            } else {
+                $path = $melisSitesPath.'/'.$siteName;
             }
         }
 
