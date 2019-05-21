@@ -132,15 +132,16 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // get date installed
         if (! empty($pluginData)) {
             $dateInstalled = $pluginData->plugin_date_installed;
+            $newPluginNotificationDuration = $this->getNewPluginNotifMenuDuration();
             $dateElapse = null;
             // add 10 days
             // for templating plugins
             if ($pluginData->plugin_type == self::TEMPLATING_PLUGIN_TYPE) {
-                $dateElapse    = strtotime("+10 day",strtotime($dateInstalled));
+                $dateElapse    = strtotime("+$newPluginNotificationDuration day",strtotime($dateInstalled));
             }
             // for dashboard plugins
             if ($pluginData->plugin_type == self::DASHBOARD_PLUGIN_TYPE) {
-                $dateElapse    = strtotime("+10 day",strtotime($dateInstalled));
+                $dateElapse    = strtotime("+$newPluginNotificationDuration day",strtotime($dateInstalled));
             }
 
             $dateElapse    = date('Y-m-d h:i:s', $dateElapse);
@@ -195,45 +196,25 @@ class MelisCorePluginsService extends MelisCoreGeneralService
      */
     public function getPackagistCategories()
     {
-        $docRoot = $_SERVER['DOCUMENT_ROOT'] . "/marketplace-categories/";
-        $data = [];
-        if (file_exists($docRoot)) {
-            // get the content of the file
-            $data = unserialize(file_get_contents($docRoot. 'marketplace-categories.config.php' ));
-        } else {
-            if (!is_writable($_SERVER['DOCUMENT_ROOT'])) {
-                // make the root directory writable
-                chmod($_SERVER['DOCUMENT_ROOT'], 0777);
-            }
-            // create the directory
-            mkdir($docRoot, 0777);
-            // get the marketplace sections for the modules
-            $marketPlaceModuleCategories = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-group", true);
-            // decode to make it an array
-            $marketPlaceModuleCategories = json_decode($marketPlaceModuleCategories);
-            $simplifiedModuleCategories = [];
-            if (! empty($marketPlaceModuleCategories)) {
-                // simplified data into one array
-                foreach ($marketPlaceModuleCategories as $idx => $val) {
-                    // check category if it is empty
-                    $checkModuleSection = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-packages/page/1/search//item_per_page/0/order/asc/order_by//status/2/group/$val->mp_group_id");
-                    $checkModuleSection = json_decode($checkModuleSection);
-                    // we will not include section(s) does'nt have any modules under
-                    if (! empty($checkModuleSection->packages)) {
-                        $simplifiedModuleCategories[$idx] = $val->mp_group_name;
-                    }
+        // get the marketplace sections for the modules
+        $marketPlaceModuleCategories = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-group", true);
+        // decode to make it an array
+        $marketPlaceModuleCategories = json_decode($marketPlaceModuleCategories);
+        $simplifiedModuleCategories = [];
+        if (! empty($marketPlaceModuleCategories)) {
+            // simplified data into one array
+            foreach ($marketPlaceModuleCategories as $idx => $val) {
+                // check category if it is empty
+                $checkModuleSection = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-packages/page/1/search//item_per_page/0/order/asc/order_by//status/2/group/$val->mp_group_id");
+                $checkModuleSection = json_decode($checkModuleSection);
+                // we will not include section(s) does'nt have any modules under
+                if (! empty($checkModuleSection->packages)) {
+                    $simplifiedModuleCategories[$idx] = $val->mp_group_name;
                 }
-                // file name of the config
-                $fileName = "marketplace-categories.config.php";
-                // we will store a temporary file so that request must done only once from the server
-                file_put_contents($docRoot . $fileName, serialize($simplifiedModuleCategories));
             }
-            // run again the function
-            $this->getPackagistCategories();
         }
 
-
-        return $data;
+        return $simplifiedModuleCategories;
     }
 
     /**
@@ -318,6 +299,51 @@ class MelisCorePluginsService extends MelisCoreGeneralService
     public function getLatestPlugin($pluginType)
     {
         return (array) $this->pluginsTbl->getLatestPlugin($pluginType)->current();
+    }
+    /**
+     * getting the configuration key for new plugin menu handler notification duration [new_plugin_notification][menu_handler]
+     * file location : /melis-core/config/app.interface.php
+     * @return mixed
+     */
+    public function getNewPluginMenuHandlerNotifDuration()
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_menu_handler_notif_duration_start', $arrayParameters);
+        // Implementation start
+        $melisConfig = $this->serviceLocator->get('config');
+        // get plugin config
+        $pluginMenuHandlerDuration = $melisConfig['plugins']['meliscore']['datas']['new_plugin_notification']['menu_handler'] ?? "10";
+
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] =  $pluginMenuHandlerDuration;
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_menu_handler_notif_duration_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+    /**
+     * getting the configuration key for new plugin notification duration [new_plugin_notification][inside_menu]
+     * file location : /melis-core/config/app.interface.php
+     * @return mixed
+     */
+    public function getNewPluginNotifMenuDuration()
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_notif_menu_duration_start', $arrayParameters);
+        // Implementation start
+        $melisConfig = $this->serviceLocator->get('config');
+        // get plugin config
+        $newPluginNotifInsideMenu = $melisConfig['plugins']['meliscore']['datas']['new_plugin_notification']['inside_menu'] ?? "10";
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] =  $newPluginNotifInsideMenu;
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_notif_menu_duration_end', $arrayParameters);
+
+        return $arrayParameters['results'];
     }
 
 }

@@ -10,16 +10,9 @@ return array(
                 'rights_checkbox_disable' => true,
             ),
             'datas' => array(
-                'fallBacksection' => [
-                    'MelisCore',
-                    'MelisCms',
-                    'MelisMarketing',
-                    'MelisSites'
-                ],
                 'zf2' => array(
                     'maxNestedForwards' => 100
                 ),
-
                 // Override these datas in MelisModuleConfig !
                 'default' => array(
                     'host' => 'https://www.melistechnology.com',
@@ -111,6 +104,25 @@ return array(
                         ),
                     ),
                 ),
+                /*
+                 * fallback melis marketplace module section
+                 *  this section if the platform is not connected to the internet
+                 */
+                'fallBacksection' => [
+                    'MelisCore',
+                    'MelisCms',
+                    'MelisMarketing',
+                    'MelisCommerce',
+                    'MelisSites'
+                ],
+                /*
+                 * duration of new plugins (dashboard and templating(pages)) notifications
+                 * in ( number of days )
+                 */
+                'new_plugin_notification' => [
+                    'menu_handler' => "10", // equivalent to 10 days
+                    "inside_menu"  => "10" // equivalent to 10 days
+                ],
             ),
             'ressources' => array(
                 'css' => array(
@@ -241,6 +253,7 @@ return array(
                 'build' => [
                     // set to "true" if you want to use the build assets
                     'use_build_assets' =>  true,
+                   // 'disable_bundle' => true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 

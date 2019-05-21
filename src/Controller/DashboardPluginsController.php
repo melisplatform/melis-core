@@ -71,12 +71,15 @@ class DashboardPluginsController extends AbstractActionController
         // categorized plugins by putting a section in every plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         $plugins = $this->organizedPluginsBySection($plugins);
-
-
+        // for new plugin notifications
+        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
+        // view model
         $view = new ViewModel();
+        // set variables
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
         $view->latestPluginInstalled = $latesPlugin;
+        $view->newPluginNotification = $pluginMenuHandler;
 
         return $view;
     }

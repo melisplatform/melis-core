@@ -4,6 +4,7 @@
     $ctrNewPlugins = 0;
     $sectionHasNewPlugins = [];
     $moduleHasNewPlugins  = [];
+    $newPluginNotif = $this->newPluginNotification;
 ?>
 
 <div class="melis-core-dashboard-dnd-box" <?= $melisKey.' '.$id; ?>>
@@ -112,7 +113,8 @@
                 // latesplugin installed
                 $latestPlugin = $this->latestPluginInstalled;
                 $latestPluginDatetime = $latestPlugin['latest_plugin_datetime'];
-                $dateTimeElapse = date('Y-m-d h:i:s',strtotime("+5 day",strtotime($latestPluginDatetime)));
+                // duration of new icon on menu handler
+                $dateTimeElapse = date('Y-m-d h:i:s',strtotime("+$newPluginNotif day",strtotime($latestPluginDatetime)));
                 $dateToday      = date('Y-m-d h:i:s');
             ?>
             <?php if ($dateToday < $dateTimeElapse) {?>
