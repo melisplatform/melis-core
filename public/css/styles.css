@@ -3910,9 +3910,6 @@ div#modal-user-management div.widget {
 .border-new-plugin {
     border:4px solid #72af46;
 }
-.melis-core-dashboard-ps-box {
-    position:relative;
-}
 .melis-plugins-icon-new-parent {
     position: absolute;
     color: #72af46;
