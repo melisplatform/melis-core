@@ -673,7 +673,8 @@ return [
     'tr_melis_core_gdpr_form_name' => 'Nom',
     'tr_melis_core_gdpr_form_email' => 'Email',
     'tr_melis_core_gdpr_form_site' => 'Site',
-    'tr_melis_core_gdpr_search_user_title' => 'Rechercher un utilisateur',
+    'tr_melis_core_gdpr_search_user_title' => 'Rechercher un utilisateur ',
+    'tr_melis_core_gdpr_form_site_select_default' => 'Tous les sites',
 
     'tr_melis_core_gdpr_notif_gdpr_search' => 'Formulaire de Recherche RGPD',
     'tr_melis_core_gdpr_notif_extract_user' => 'Extraction des utilisateurs RGPD',
@@ -686,7 +687,7 @@ return [
     'tr_melis_core_gdpr_tool_form_input_too_long' => 'Input is too long',
 
     'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Format d\'email invalide',
-    'tr_melis_core_gdpr_tool_form_no_inputs' => 'Veuillez saisir les détails de l\'utilisateur. Le nom ou le champ email est requis',
+    'tr_melis_core_gdpr_tool_form_no_inputs' => 'Veuillez saisir au moins un nom ou une adresse email',
     'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'Aucun utilisateur sélectionné',
     'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'Aucun utilisateur sélectionné',
     'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Erreur lors de la suppression des données',

@@ -3961,7 +3961,7 @@ div#modal-user-management div.widget {
 
 .custom-melis-core-gdpr-checkbox-span {
     margin-top: -7px;
-    position: fixed;
+    position: absolute;
 }
 
 .widget.widget-tabs-double.widget-regular>.widget-head ul li.active a i:before {
