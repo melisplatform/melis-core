@@ -46,6 +46,7 @@ $(document).ready(function() {
         //only send request if there are any inputs
         if (hasName == true || hasEmail == true) {
             if (hasName == true) {
+                console.log(formInputs);
                 if (formInputs[0].value.length <= 2 && formInputs[0].name === 'user_name') {
                     $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
 
