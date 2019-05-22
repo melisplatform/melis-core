@@ -35810,8 +35810,8 @@ div#modal-user-management div.widget {
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
-    /* z-index: 90; */
-    z-index: 90999; /* added by: Junry @ 09/25/2018 */
+    z-index: 90; /* back to 90 to fix issue on mobile stacking of elements with content menu / tabs */
+    /* z-index: 90999; This is a fix to a particular issue but will affect the z-indexing of other elements specially on mobile view added by: Junry @ 09/25/2018 */
 }
 
 /* dashboard plugin show */
@@ -36047,6 +36047,14 @@ div#modal-user-management div.widget {
     border-color: #6f1518;
 }
 
+/*
+ * Added by: Junry @ 10/10/2018
+ * Gridstack
+ */
+.grid-stack-item-content .flotchart-holder {
+    margin-top: 60px;
+}
+
 /* placeholder */
 .grid .grid-widget-placeholder > .placeholder-content {
     background-color: #981a1f;
@@ -36062,17 +36070,16 @@ div#modal-user-management div.widget {
     text-align: center;
 }
 
+@media (max-width: 767px) {
+    .grid-stack .grid-stack-item:first-child .grid-stack-item-content .btn-group {
+        margin-right: 1.5em;
+    }
+}
+
 /*
  *
  * Dashboard Plugin Tooltip
  */
-
-/*
- * Added by: Junry @ 10/10/2018
- */
-.grid-stack-item-content .flotchart-holder {
-    margin-top: 60px;
-}
 
 .tooltip.top {
     margin-left: 10px;
@@ -36330,12 +36337,15 @@ div#modal-user-management div.widget {
 }
 
 @media (max-width: 767px) {
-    #id_meliscore_header {
+    /*#id_meliscore_header {
         z-index: 99999;
     }
     #melis-id-nav-bar-tabs li a.close-tab,
     #melis-id-nav-bar-tabs li a.dropdown-toggle {
         display: inline-block;
+    }*/
+    #melis-id-nav-bar-tabs li a.dropdown-toggle {
+        width: calc(100% - 48px);
     }
 }
 .module-lists{
