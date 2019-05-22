@@ -46,7 +46,6 @@ $(document).ready(function() {
         //only send request if there are any inputs
         if (hasName == true || hasEmail == true) {
             if (hasName == true) {
-                console.log(formInputs);
                 if (formInputs[0].value.length <= 2 && formInputs[0].name === 'user_name') {
                     $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
 
@@ -253,6 +252,7 @@ $(document).ready(function() {
                     //this will be used on deleting a row
                     gdprFormData = formData;
                     //show the tabs so that the loading view will be shown to the user
+                    console.log(gdprFormData);
                     $('#id_melis_core_gdpr_content_tabs').show();
                     melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
                         show: true,
