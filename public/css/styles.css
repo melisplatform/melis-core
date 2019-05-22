@@ -3818,6 +3818,7 @@ div#modal-user-management div.widget {
     height: 100%;
 }
 
+.select2-container--default .select2-selection--single .select2-selection__arrow strong,
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
     border-color: #555555 transparent transparent transparent;
     border-width: 6px 3px 0 3px;
@@ -3840,11 +3841,15 @@ div#modal-user-management div.widget {
     }
 }
 
-.no-plugin-on-menu{
-    color: #fff;
-    padding: 5px;
+/*
+ * Dashboard User Messages Notifications / Warnings
+ */
+.no-plugin-on-menu {
+    padding: 15px;
 }
-
-.no-rights-container{
+.no-plugin-on-menu p {
+    color: #fff;
+}
+.no-rights-container {
     padding: 10px;
 }

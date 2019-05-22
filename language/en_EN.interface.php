@@ -18,7 +18,7 @@ return [
     'tr_meliscore_melis_dashboard' => 'Melis Dashboard',
     'tr_meliscore_center_dashboard_menu' => 'Dashboard plugins',
     'tr_meliscore_melis_dashboard_no_plugins_to_load' => "Your dashboard is currently empty. <br>Please, use the menu on the right to drag'n'drop the plugins you would like to use and customize your dashboard.",
-    'tr_meliscore_melis_dashboard_no_access' => "Your rights currently don't allow you to use dashboard plugins. <br>Please contact you administrator if you want to use the dashboard.",
+    'tr_meliscore_melis_dashboard_no_access' => "Your <strong>rights currently don't allow you to use dashboard plugins</strong>. <br>Please contact your administrator if you want to use the dashboard.",
     'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
 
     'tr_meliscore_meliscore' => 'MelisCore',

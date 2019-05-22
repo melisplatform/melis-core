@@ -18,7 +18,7 @@ return [
     'tr_meliscore_melis_dashboard' => 'Melis Dashboard',
     'tr_meliscore_center_dashboard_menu' => 'Dashboard plugins',
     'tr_meliscore_melis_dashboard_no_plugins_to_load' => "Votre dashboard est vide. <br>Merci d'utiliser le menu de droite pour ajouter les plugins que vous voulez utiliser et personnaliser votre dashboard",
-    'tr_meliscore_melis_dashboard_no_access' => "Vos droits ne vous permettent pas d'utiliser les plugins de dashboard. <br>Merci de contacter votre administrateur afin de pouvoir les utiliser.",
+    'tr_meliscore_melis_dashboard_no_access' => "Vos <strong>droits ne vous permettent pas d'utiliser les plugins de dashboard</strong>. <br>Merci de contacter votre administrateur afin de pouvoir les utiliser.",
     'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
 
     // Rights

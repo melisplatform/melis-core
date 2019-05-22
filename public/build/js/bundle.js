@@ -34611,6 +34611,12 @@ var melisDashBoardDragnDrop = {
     getCurrentPlugin: function() {
         // get current plugin
         return this.currentPlugin;
+    },
+
+    countNumberPlugins: function() {
+        var countItem = this.$gs.find(".grid-stack-item").length;
+
+        return countItem;
     }
 };
 

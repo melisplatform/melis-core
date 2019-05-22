@@ -221,14 +221,12 @@
 	font-family: inherit;
 }
 
-#melisDashBoardPluginBtn .fa-stack{
+#melisDashBoardPluginBtn .fa-stack {
     position: absolute;
     top: -10px;
     left: -12px;
 }
 
-#melisDashBoardPluginBtn .fa-stack .fa-circle{
+#melisDashBoardPluginBtn .fa-stack .fa-circle {
     color: #932e2a;
 }
-
-
