@@ -128,7 +128,7 @@
                                                 if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
                                                     $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
                                                 } else {
-                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "overlay");
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
                                                 }
 
                                                 $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
