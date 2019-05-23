@@ -219,7 +219,7 @@ class MelisFieldRow extends FormRow
 	        $element->setLabel('');
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
-    	                       <label for="">'.$label.'</label>
+    	                       <label for="'.$element->getName().'">'.$label.'</label>
     	                        <div class="input-group date '.$attrib['dateId'].'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon">
@@ -236,7 +236,7 @@ class MelisFieldRow extends FormRow
             $icon = (!empty($element->getOption('icon'))) ? $element->getOption('icon') : 'glyphicon glyphicon-calendar';
             $element->setAttributes(['autocomplete' => 'off']);
             $formElement = '<div class="form-group">
-    	                       <label for="">'.$label.'</label>
+    	                       <label for="'.$element->getName().'">'.$label.'</label>
     	                        <div class="input-group date" id="'.$datePickerId.'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon">
@@ -258,7 +258,7 @@ class MelisFieldRow extends FormRow
 
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
-                                <label for="">'.$element->getLabel().'</label>
+                                <label for="'.$element->getName().'">'.$element->getLabel().'</label>
                                 <div class="input-group colorpicker-component '.$attrib['name'].'">
                                      <input type="text" name="'.$attrib['name'].'" value="" class="form-control" />
                                     <span class="input-group-addon"><i></i></span>
@@ -271,7 +271,7 @@ class MelisFieldRow extends FormRow
 	        $element->setLabel('');
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
-    	                       <label for="">'.$label.'</label>
+    	                       <label for="'.$element->getName().'">'.$label.'</label>
     	                        <div class="form-group input-group '.$element->getOption('button-class').'" id="'.$element->getOption('button-id').'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon input-button-hover-pointer">
