@@ -28,7 +28,7 @@ class DashboardPluginsController extends AbstractActionController
     public function dashboardMenuAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        
+
         $plugins = array();
         $config = $this->getServiceLocator()->get('config');
         $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
@@ -37,9 +37,9 @@ class DashboardPluginsController extends AbstractActionController
             if (!empty($val['dashboard_plugins']))
             {
                 $plugins[$key] = array();
-                
+
                 $modulePlugins = $val['dashboard_plugins'];
-                
+
                 foreach ($modulePlugins As $keyPlugin => $plugin)
                 {
                     // Skipping DragDropZone plugin
@@ -282,9 +282,22 @@ class DashboardPluginsController extends AbstractActionController
         if (! empty($plugins)) {
             // organized plugins by section
            foreach ($plugins  as $moduleName => $dashboardPlugins) {
+               /*
+                * check first if the module is public or not
+                *  if public we will based the section on what is set from marketplace
+                *  if private this will return null
+                */
+               $moduleSection = $melisPuginsSvc->getMelisPublicModuleSection($moduleName, true);
+
                if (! empty($dashboardPlugins) && is_array($dashboardPlugins)) {
                    foreach ($dashboardPlugins as $pluginName => $config) {
-                       $pluginSection = $config['section'];
+                       // put section for public module
+                       if (! empty($moduleSection)) {
+                           $pluginSection = $moduleSection;
+                       } else {
+                           // if it goes here means module is either private or there is no internet connection
+                           $pluginSection = $config['section'];
+                       }
                        if (in_array($pluginSection,$melisSection)) {
                            // set a plugin in a section
                            $newPluginList[$pluginSection][$moduleName][$pluginName] = $config;
