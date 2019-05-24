@@ -36,7 +36,7 @@ class MelisCorePluginsListener extends MelisCoreGeneralListener implements Liste
                 $corePluginSvc->checkTemplatingPlugins();
                 
         	},
-        100);
+        -1000);
         
         $this->listeners[] = $callBackHandler;
     }

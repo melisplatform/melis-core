@@ -54,7 +54,7 @@ class MelisCorePluginsAdditionalListener extends MelisCoreGeneralListener implem
                     }
                 }
             },
-            100);
+            -1000);
 
         $this->listeners[] = $callBackHandler;
     }

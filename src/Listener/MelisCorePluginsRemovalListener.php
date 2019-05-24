@@ -39,7 +39,7 @@ class MelisCorePluginsRemovalListener extends MelisCoreGeneralListener implement
                     $pluginsTbl->deleteByField('plugin_module',$module);
                 }
         	},
-        100);
+        -1000);
         
         $this->listeners[] = $callBackHandler;
     }
