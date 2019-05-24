@@ -106,7 +106,7 @@ return array(
                 ),
                 /*
                  * fallback melis marketplace module section
-                 *  this section if the platform is not connected to the internet
+                 *  - if the platform is not connected to the internet
                  */
                 'fallBacksection' => [
                     'MelisCore',
@@ -120,7 +120,7 @@ return array(
                  * in ( number of days )
                  */
                 'new_plugin_notification' => [
-                    'menu_handler' => "10", // equivalent to 10 days
+                    'menu_handler' => "5", // equivalent to 5 days
                     "inside_menu"  => "10" // equivalent to 10 days
                 ],
             ),
@@ -252,8 +252,8 @@ return array(
                  */
                 'build' => [
                     // set to "true" if you want to use the build assets
+                    //'disable_bundle' => true,
                     'use_build_assets' =>  true,
-                   // 'disable_bundle' => true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
