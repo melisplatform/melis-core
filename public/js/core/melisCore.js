@@ -183,7 +183,7 @@ var melisCore = (function(window){
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
-    function openDashboard(){
+    function openDashboard() {
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
     }
 

@@ -228,6 +228,8 @@ return array(
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
+
+                    '/MelisCore/js/core/melisDashboardRightsNotifications.js'
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
