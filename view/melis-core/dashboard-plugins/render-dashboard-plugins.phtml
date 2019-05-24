@@ -3,7 +3,7 @@
     <div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2 melis-dashboard-plugins">
         <?php
         $plugins = $this->MelisDashboardDragDropZone($this->dashboardId);
-        if ($this->menuIsAccessible):
+        if ($this->hasPlugins):
             /** Number of plugins loaded inside the dashboard's last saved state */
             $pluginCount = substr_count($plugins, "data-gs-id");
 
@@ -34,8 +34,7 @@
                              */
                             function showDashboardPluginMenu() {
                                 let pluginMenu = melisDashBoardDragnDrop.$body.find("#id_meliscore_center_dashboard_menu");
-                                let availablePlugins = <?= $this->hasPlugins? 1 : 0; ?>;
-                                if (pluginMenu.length > 0 && availablePlugins) {
+                                if (pluginMenu.length > 0) {
                                     pluginMenu.addClass("shown");
                                 }
                             }
