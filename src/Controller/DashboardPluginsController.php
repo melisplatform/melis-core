@@ -281,14 +281,17 @@ class DashboardPluginsController extends AbstractActionController
         }
         if (! empty($plugins)) {
             // organized plugins by section
+            $publicModules = $melisPuginsSvc->getMelisPublicModules(true);
            foreach ($plugins  as $moduleName => $dashboardPlugins) {
                /*
                 * check first if the module is public or not
                 *  if public we will based the section on what is set from marketplace
                 *  if private this will return null
                 */
-               $moduleSection = $melisPuginsSvc->getMelisPublicModuleSection($moduleName, true);
-
+               $moduleSection = "";
+               if (array_key_exists($moduleName,$publicModules)) {
+                   $moduleSection = $publicModules[$moduleName]['section'];
+               }
                if (! empty($dashboardPlugins) && is_array($dashboardPlugins)) {
                    foreach ($dashboardPlugins as $pluginName => $config) {
                        // put section for public module
@@ -314,7 +317,6 @@ class DashboardPluginsController extends AbstractActionController
                }
            }
         }
-
 
         return $newPluginList;
     }

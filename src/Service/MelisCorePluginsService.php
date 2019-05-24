@@ -416,4 +416,32 @@ class MelisCorePluginsService extends MelisCoreGeneralService
 
         return $moduleSection;
     }
+    /**
+     * @param $pluginModuleName if set to true then we will be base like (meliscms,meliscore,meliscmsslider) if not  then like(melis-cms,melis-core,melis-cms-slider)
+     */
+    public function getMelisPublicModules($pluginModuleName = false)
+    {
+        $melisPublicModulesWithSection = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-list", true);
+        $publicModules = [];
+        if (! empty($melisPublicModulesWithSection)) {
+            // json_decode to make it an arrays
+            $melisPublicModulesWithSection = json_decode($melisPublicModulesWithSection);
+            foreach ($melisPublicModulesWithSection as $idx => $moduleInfo) {
+                // remove 'melisplatform/' word
+                $packageName = str_replace('melisplatform/',null,$moduleInfo->packageName);
+                /*
+                 * special case for plugin config of module name
+                 */
+                if ($pluginModuleName) {
+                    // remove dashes
+                    $packageName = str_replace('-',null,$packageName);
+                }
+                $publicModules[$packageName] = [
+                    'section' => $moduleInfo->packageSection
+                ];
+            }
+        }
+        return $publicModules;
+    }
+
 }
