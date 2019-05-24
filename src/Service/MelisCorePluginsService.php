@@ -242,11 +242,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
                                 'plugin_type' => self::DASHBOARD_PLUGIN_TYPE
                             ];
                             if($this->pluginsTbl->save($tmpData)) {
-                                if (isset($newPlugins['dashboard']) && is_array($newPlugins['dashboard'])) {
-                                    array_push($newPlugins['dashboard'], $pluginName);
-                                } else {
-                                    $newPlugins[] = $pluginName;
-                                }
+                                $newPlugins[] = $pluginName;
                             }
                         }
                     }
@@ -282,11 +278,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
                                 'plugin_type' => self::TEMPLATING_PLUGIN_TYPE
                             ];
                             if ($this->pluginsTbl->save($tmpData)) {
-                                if (isset($newPlugins['templating']) && is_array($newPlugins['templating'])) {
-                                    array_push($newPlugins['templating'], $pluginName);
-                                } else {
-                                    $newPlugins[] = $pluginName;
-                                }
+                                $newPlugins[] = $pluginName;
                             }
                         }
                     }
@@ -417,7 +409,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         return $moduleSection;
     }
     /**
-     * @param $pluginModuleName if set to true then we will be base like (meliscms,meliscore,meliscmsslider) if not  then like(melis-cms,melis-core,melis-cms-slider)
+     * @param $pluginModuleName if set to true then it will base like (meliscms,meliscore,meliscmsslider) if not  then like(melis-cms,melis-core,melis-cms-slider)
      */
     public function getMelisPublicModules($pluginModuleName = false)
     {
