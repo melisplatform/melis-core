@@ -73,6 +73,19 @@ class DashboardPluginsController extends AbstractActionController
 
             }
         }
+        // put section of dashboard plugins
+        $plugins = $this->putSectionOnPlugins($plugins);
+        // organized plugins or put them into their respective sections
+        $plugins = $this->organizedPluginsBySection($plugins);
+        // melis plugin service
+        $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
+        // check for new plugins or manually installed and insert in db
+       // $pluginSvc->checkTemplatingPlugins();
+        // get the latest plugin installed
+        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
+        // for new plugin notifications
+        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
+
         $view = new ViewModel();
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
