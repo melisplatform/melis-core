@@ -502,12 +502,14 @@ var melisCore = (function(window){
 
     // drag and drop fix menu on dashboard
     function checkScrollBar() {
-        var $dndMenu    = $(".melis-core-dashboard-dnd-fix-menu"),
-            $delAllCont = $(".melis-core-dashboard-plugin-delete-all");
+        var $dndMenu    = $body.find(".melis-core-dashboard-dnd-fix-menu"),
+            $delAllCont = $body.find(".melis-core-dashboard-plugin-delete-all");
 
         setTimeout(function() {
             if ( $dndMenu.hasScrollBar() ) {
                 $delAllCont.css("width", "164px");
+            } else {
+                $delAllCont.css("width", "100%");
             }
         }, 500);
     }
