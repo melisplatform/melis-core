@@ -1,4 +1,5 @@
 <?php
+
 return [
 // meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree/interface
     'plugins' => [
@@ -111,7 +112,7 @@ return [
                                                 'module' => 'MelisCore',
                                                 'controller' => 'Modules',
                                                 'action' => 'render-tool-modules',
-                                                'jscallback' => '',
+                                                'jscallback' => 'iframeMarketplaceCallback()',
                                                 'jsdatas' => array()
                                             ),
                                             'interface' => array(
@@ -636,6 +637,7 @@ return [
                                                     'conf' => array(
                                                         'id' => 'id_melis_core_gdpr_gdpr_header',
                                                         'melisKey' => 'melis_core_gdpr_gdpr_header',
+                                                        'name' => 'tr_melis_core_gdpr_header',
                                                     ),
                                                     'forward' => array(
                                                         'module' => 'MelisCore',
@@ -647,7 +649,8 @@ return [
                                                 'melis_core_gdpr_content' => array(
                                                     'conf' => array(
                                                         'id' => 'id_melis_core_gdpr_content',
-                                                        'melisKey' => 'melis_core_gdpr_content'
+                                                        'melisKey' => 'melis_core_gdpr_content',
+                                                        'name' => 'tr_melis_core_gdpr_content',
                                                     ),
                                                     'forward' => array(
                                                         'module' => 'MelisCore',
@@ -660,6 +663,7 @@ return [
                                                             'conf' => array(
                                                                 'id' => 'id_melis_core_gdpr_gdpr_search_form',
                                                                 'melisKey' => 'melis_core_gdpr_gdpr_search_form',
+                                                                'name' => 'tr_melis_core_gdpr_search_form',
                                                             ),
                                                             'forward' => array(
                                                                 'module' => 'MelisCore',
@@ -672,6 +676,7 @@ return [
                                                             'conf' => array(
                                                                 'id' => 'id_melis_core_gdpr_content_tabs',
                                                                 'melisKey' => 'melis_core_gdpr_content_tabs',
+                                                                'name' => 'tr_melis_core_gdpr_content_tab',
                                                             ),
                                                             'forward' => array(
                                                                 'module' => 'MelisCore',
@@ -699,7 +704,7 @@ return [
                                                 'module' => 'MelisCore',
                                                 'controller' => 'ToolUser',
                                                 'action' => 'render-tool-user',
-                                                'jscallback' => '',
+                                                'jscallback' => 'iframeMarketplaceCallback()',
                                                 'jsdatas' => array()
                                             ),
                                             'interface' => array(
@@ -989,12 +994,16 @@ return [
                             ),
                             'interface' => []
                         ],
+                    ]
+                ],
+                'melis_dashboardplugin' => [
+                    'interface' => [
                         'melisdashboardplugin_section' => [
                             'conf' => [
                                 'id' => 'melisdashboardplugin_section',
                                 'melisKey' => 'melisdashboardplugin_section',
                                 'name' => 'tr_melisdashboardplugin_section',
-                                'icon' => 'fa fa-shopping-cart',
+                                'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
                             'interface' => []

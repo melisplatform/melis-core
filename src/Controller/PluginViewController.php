@@ -14,6 +14,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\ViewModel;
+use MelisCore\Support\MelisCore;
 
 /**
  * This class renders Melis CMS appConfig views recursively
@@ -147,15 +148,16 @@ class PluginViewController extends AbstractActionController
          * If ajax, return json
          * else, return the normal view
          */
+
         if ($isXmlHttpRequest) {
             $htmlZoneView = $this->renderViewRec($zoneView);
-
             $jsonModel = new JsonModel();
             $jsonModel->setVariables([
                 'html' => $htmlZoneView,
                 'jsCallbacks' => $jsCallBacks,
                 'jsDatas' => $datasCallback,
             ]);
+
 
             return $jsonModel;
         } else {
@@ -220,17 +222,35 @@ class PluginViewController extends AbstractActionController
     public function generateRec($key, $fullKey, $recDatas = [])
     {
 
+        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+
+        /**
+         * This will whether config is came from the dashboard plugin
+         */
+//        if ($melisAppConfig->isParentOf($key, MelisCore::DASHBOARD_PLUGINS)) {
+//            return null;
+//        }
+
         $isXmlHttpRequest = false;
         if ($this->getRequest()->isXmlHttpRequest()) {
             $isXmlHttpRequest = true;
         }
 
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
 
         /**
          * Get the corresponding appConfig part
          */
         $itemConfig = $melisAppConfig->getItem($fullKey);
+
+        /**
+         * check whether the zone should visible or not
+         */
+        $shouldDisplay = isset($itemConfig['conf'][MelisCore::DISPLAY]) &&
+            $itemConfig['conf'][MelisCore::DISPLAY] == MelisCore::DISPLAY_NONE ? false : true;
+
+        if (!$shouldDisplay) {
+            return null;
+        }
 
         if (!empty($itemConfig['datas'])) {
             $recDatas = array_merge_recursive($recDatas, $itemConfig['datas']);
@@ -248,7 +268,7 @@ class PluginViewController extends AbstractActionController
                 $recDatas = array_merge_recursive($recDatas, $itemConfig['datas']);
             }
 
-            if ($itemConfig) {
+            if ($itemConfig && isset($itemConfig['conf'])) {
                 $itemConfig['conf'] = array_merge($itemConfig['conf'], $itemConfigOld['conf']);
             }
 
@@ -302,7 +322,7 @@ class PluginViewController extends AbstractActionController
                 $itemConfig['forward']['module'] = 'MelisCore';
                 $itemConfig['forward']['controller'] = 'DashboardPlugins';
                 $itemConfig['forward']['action'] = 'generateDahsboardPlugin';
-                
+
                 // Adding dashboard plugin controller to generate plugin interface
                 $recDatas['plugin'] = $itemConfig['forward']['plugin'];
                 $recDatas['function'] = $itemConfig['forward']['function'];

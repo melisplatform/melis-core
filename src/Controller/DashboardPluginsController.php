@@ -9,10 +9,10 @@
 
 namespace MelisCore\Controller;
 
+use MelisCore\Service\MelisCoreDashboardPluginsRightsService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
-use MelisCore\Service\MelisCoreRightsService;
 
 /**
  * This class handles the request from AJAX call in 
@@ -28,59 +28,54 @@ class DashboardPluginsController extends AbstractActionController
     public function dashboardMenuAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
+        
+        $plugins = [];
+        /** @var \MelisCore\Service\MelisCoreConfigService $config */
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
 
-        $plugins = array();
-        $config = $this->getServiceLocator()->get('config');
-        $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
-        foreach ($config['plugins'] As $key => $val)
-        {
-            if (!empty($val['dashboard_plugins']))
-            {
-                $plugins[$key] = array();
+        /** @var \MelisCore\Service\MelisCoreDashboardPluginsRightsService $dashboardPluginsService */
+        $dashboardPluginsService = $this->getServiceLocator()->get('MelisCoreDashboardPluginsService');
 
-                $modulePlugins = $val['dashboard_plugins'];
+        $dashboardPlugins = $config->getItem('/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section');
+        if (isset($dashboardPlugins['interface']) && count($dashboardPlugins['interface'])) {
+            foreach ($dashboardPlugins['interface'] as $pluginName => $pluginConf) {
+                $plugin = $pluginConf;
 
-                foreach ($modulePlugins As $keyPlugin => $plugin)
-                {
-                    // Skipping DragDropZone plugin
-                    if ($keyPlugin != 'MelisCoreDashboardDragDropZonePlugin')
-                    {
-                        $plugins[$key][$keyPlugin] = array(
-                            'module'         => $key,
-                            'plugin'         => $keyPlugin,
-                            'name'           => !empty($plugin['name'])          ? $plugin['name'] : $keyPlugin,
-                            'plugin_id'      => !empty($plugin['plugin_id'])     ? $plugin['plugin_id']  : '',
-                            'x-axis'         => !empty($plugin['x-axis'])         ? $plugin['x-axis']  : '',
-                            'y-axis'         => !empty($plugin['y-axis'])        ? $plugin['y-axis']  : '',
-                            'width'          => !empty($plugin['width'])         ? $plugin['width']  : '',
-                            'height'         => !empty($plugin['height'])        ? $plugin['height']  : '',
-                            'description'    => !empty($plugin['description'])   ? $plugin['description']  : '',
-                            'icon'           => !empty($plugin['icon'])          ? $plugin['icon'] : '',
-                            'thumbnail'      => !empty($plugin['thumbnail'])     ? $plugin['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
-                            'is_new_plugin'  => true,
-                            'section'       => !empty($plugin['section'])       ? $plugin['section'] : null,
-                        );
+                $path = $pluginConf['conf']['type'] ?? null;
+
+                if ($path) {
+                    $plugin = $config->getItem($path);
+                }
+
+                if (is_array($plugin) && count($plugin) && $dashboardPluginsService->canAccess($pluginName)) {
+                    if(!isset($plugin['datas']['skip_plugin_container'])) {
+                        $module = $plugin['forward']['module'];
+                        $isNewPlugin = $plugin['datas']['is_new_plugin'] = true;
+                        $name = $plugin['datas']['name'];
+                        $pluginRaw = json_encode($plugin);
+                        $plugins[$module][$name] = [
+                            'module' => $module,
+                            'plugin' => $pluginName,
+                            'name' => !empty($plugin['datas']['name']) ? $plugin['datas']['name'] : $pluginName,
+                            'plugin_id' => !empty($plugin['datas']['plugin_id']) ? $plugin['datas']['plugin_id'] : '',
+                            'x-axis' => !empty($plugin['datas']['x-axis']) ? $plugin['datas']['x-axis'] : '',
+                            'y-axis' => !empty($plugin['datas']['y-axis']) ? $plugin['datas']['y-axis'] : '',
+                            'width' => !empty($plugin['datas']['width']) ? $plugin['datas']['width'] : '',
+                            'height' => !empty($plugin['datas']['height']) ? $plugin['datas']['height'] : '',
+                            'description' => !empty($plugin['datas']['description']) ? $plugin['datas']['description'] : '',
+                            'icon' => !empty($plugin['datas']['icon']) ? $plugin['datas']['icon'] : '',
+                            'thumbnail' => !empty($plugin['datas']['thumbnail']) ? $plugin['datas']['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
+                            'is_new_plugin' => $isNewPlugin,
+                            'pluginRaw' => $pluginRaw,
+                        ];
                     }
                 }
+
             }
         }
-        // check for new plugins or manually installed and insert in db
-        $pluginSvc->checkDashboardPlugins();
-        // get the latest plugin installed
-        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
-        // categorized plugins by putting a section in every plugins
-        $plugins = $this->putSectionOnPlugins($plugins);
-        $plugins = $this->organizedPluginsBySection($plugins);
-        // for new plugin notifications
-        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
-        // view model
         $view = new ViewModel();
-        // set variables
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
-        $view->latestPluginInstalled = $latesPlugin;
-        $view->newPluginNotification = $pluginMenuHandler;
-
         return $view;
     }
     
@@ -95,24 +90,9 @@ class DashboardPluginsController extends AbstractActionController
         
         // Dashboard ID
         $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_toolstree_section_dashboard');
-        
-        $isAccessible = null;
-        
-        // Check if dashboard is available
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-        
-        if($melisCoreAuth->hasIdentity())
-        {
-            $xmlRights = $melisCoreAuth->getAuthRights();
-            $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, '/meliscore_dashboard');
-        }
-        
         $view = new ViewModel();
         $view->melisKey = $melisKey;
-        $view->isAccessible = $isAccessible;
         $view->dashboardId = $dashboardId;
-        
         return $view;
     }
     
@@ -120,7 +100,7 @@ class DashboardPluginsController extends AbstractActionController
      * This method used to generate Dashboard plugin 
      * requested from a forward() request
      * 
-     * @return Zend\View\Model\ViewModel;
+     * @return \Zend\View\Model\ViewModel;
      */
     public function generateDahsboardPluginAction()
     {
@@ -149,43 +129,52 @@ class DashboardPluginsController extends AbstractActionController
         // return plugin view
         $request = $this->getRequest();
         $pluginConfigPost = get_object_vars($request->getPost());
-        
+
+        /**
+         * decode the string
+         */
+        foreach($pluginConfigPost as $key => $value){
+            if(!is_array($value)) {
+                $tempValue = json_decode($value, true);
+                if (is_array($tempValue)) {
+                    $pluginConfigPost[$key] = $tempValue;
+                }
+            }
+        }
+
         $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
         $viewRender = $this->getServiceLocator()->get('ViewRenderer');
-        
-        $module = $pluginConfigPost['module'] ?? null;
-        $pluginName = $pluginConfigPost['plugin'] ?? null;
-        
-        $newPlugin = (isset($pluginConfigPost['is_new_plugin'])) ? true : false;
-        
+
+        $module = $pluginConfigPost['module'] ?? (!empty($pluginConfigPost['forward']['module'])) ? $pluginConfigPost['forward']['module'] : null;
+        $pluginName = $pluginConfigPost['plugin'] ?? (!empty($pluginConfigPost['forward']['plugin'])) ? $pluginConfigPost['forward']['plugin'] : null;
+        $newPlugin = (isset($pluginConfigPost['datas']['is_new_plugin'])) ? true : false;
         $plugin = $pluginManager->get($pluginName);
         $pluginModel = $plugin->render($pluginConfigPost, $newPlugin);
-       
+
         $html = $viewRender->render($pluginModel);
-        
+
         $jsCallBacks = array();
         $datasCallback = array();
-        
-        $config = $this->getServiceLocator()->get('config');
-        
-        $pluginConfig = $config['plugins'][$module]['dashboard_plugins'][$pluginName];
-        
-        if (!empty($pluginConfig['interface']) && is_array($pluginConfig['interface']))
+
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+
+        $pluginConfig = $config->getItem("/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section/interface/$pluginName");
+
+        if (!empty($pluginConfig['forward']) && is_array($pluginConfig['forward']))
         {
-            $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-            list($jsCallBacks, $datasCallback) = $melisAppConfig->getJsCallbacksDatas($pluginConfig);
+            list($jsCallBacks, $datasCallback) = $config->getJsCallbacksDatas($pluginConfig);
         }
-        
-        if (!empty($pluginConfig['jscallback']))
+
+        if (!empty($pluginConfig['datas']['jscallback']))
         {
-            array_push($jsCallBacks, $pluginConfig['jscallback']);
+            array_push($jsCallBacks, $pluginConfig['datas']['jscallback']);
         }
-        
+
         $data = array(
             'html' => $html,
             'jsCallbacks' => $jsCallBacks,
             'jsDatas' => $datasCallback,
-        );    
+        );
         
         return new JsonModel($data);
     }
@@ -201,7 +190,6 @@ class DashboardPluginsController extends AbstractActionController
         $request = $this->getRequest();
         $post = $request->getPost();
         $result = array();
-        
         try{
             /**
              * Calling MelisCoreDashboardDragDropZonePlugin to save Dashboard plugins
@@ -214,7 +202,7 @@ class DashboardPluginsController extends AbstractActionController
                 'success' => $success
             );
             
-        }catch (\Exception $e){ 
+        }catch (\Exception $e){
             $result = array(
                 'success' => $success,
                 'message' => $e->getMessage()

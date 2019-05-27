@@ -9,6 +9,7 @@
 
 namespace MelisCore;
 
+use MelisCore\Listener\MelisCoreDashboardPluginRightsTreeViewListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreDashboardMenuListener;
@@ -24,6 +25,7 @@ use MelisCore\Listener\MelisCorePluginsRemovalListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreToolUserAddNewUserListener;
 use MelisCore\Listener\MelisCoreToolUserUpdateUserListener;
+use MelisCore\Listener\MelisCoreUrlAccessCheckerListenner;
 use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\ModuleRouteListener;
@@ -71,9 +73,11 @@ class Module
             $eventManager->attach(new MelisCoreFlashMessengerListener());
             $eventManager->attach(new MelisCoreNewPlatformListener());
             $eventManager->attach(new MelisCoreUserRecentLogsListener());
+
             $eventManager->attach(new MelisCoreCheckUserRightsListener());
             $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
             $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
+
             $eventManager->attach(new MelisCoreAuthSuccessListener());
             $eventManager->attach(new MelisCorePhpWarningListener());
             // plugins listener ( dashboard and templating)
@@ -82,6 +86,9 @@ class Module
             $eventManager->attach(new MelisCorePluginsRemovalListener());
             // adding of plugin when adding the module in the marketplace
             $eventManager->attach(new MelisCorePluginsAdditionalListener());
+
+            $eventManager->attach(new MelisCoreDashboardPluginRightsTreeViewListener());
+            $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
         }
     }
 

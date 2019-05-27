@@ -1,5 +1,6 @@
 <?php
 
+use MelisCore\Support\MelisCore;
 
 return array(
     'plugins' => array(
@@ -13,9 +14,11 @@ return array(
                 'zf2' => array(
                     'maxNestedForwards' => 100
                 ),
-                // Override these datas in MelisModuleConfig !
+
+                // Override these datas iMelisFront404CatcherListener.phpConfig !
                 'default' => array(
-                    'host' => 'https://www.melistechnology.com',
+                    'host' => $_SERVER['HTTP_HOST'],
+                    'scheme' => $_SERVER['REQUEST_SCHEME'],
                     'logo' => '/img/MelisTech.png',
                     'errors' => array(
                         'error_reporting' => E_ALL & ~E_USER_DEPRECATED,
@@ -93,7 +96,7 @@ return array(
                     ),
                     'langauges' => array(
                         'default_trans_files' => array(
-                            'defaultTransInterface' =>  'en_EN.interface',
+                            'defaultTransInterface' => 'en_EN.interface',
                             'defaultTransForms' => 'en_EN.forms',
                         ),
                         'default_trans_dir' => array(
@@ -203,7 +206,7 @@ return array(
                     '/MelisCore/js/pluginConcat/melis-core-concat-fancytree.js',
 
                     // tinyMCE
-                    '/MelisCore/js/library/tinymce/tinymce.min.js?v='. time(),
+                    '/MelisCore/js/library/tinymce/tinymce.min.js?v=' . time(),
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
@@ -252,7 +255,6 @@ return array(
                  */
                 'build' => [
                     // set to "true" if you want to use the build assets
-                    //'disable_bundle' => true,
                     'use_build_assets' =>  true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
@@ -514,8 +516,14 @@ return array(
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
-                )
-            )
+                ),
+                'melis_dashboardplugin' => array(
+                    'conf' => array(
+                        MelisCore::DISPLAY => MelisCore::DISPLAY_NONE
+                    ),
+                    'interface' => array()
+                ),
+            ),
         ),
         'meliscore_login' => array(
             'ressources' => array(

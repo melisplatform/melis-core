@@ -1,6 +1,7 @@
 <?php
 	return array(
 	    'mode' => 'textareas',
+        'branding' => false,
 		'relative_urls' => false,
 		'selector' => 'tool-editable-selector',
 		'language' => 'en',

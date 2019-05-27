@@ -17,7 +17,6 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     const MELISOTHERS_PREFIX_TOOLS = 'melisothers_toolstree_section';
     const MELISCUSTOM_PREFIX_TOOLS = 'meliscustom_toolstree_section';
     const MELISMARKETPLACE_PREFIX_TOOLS = 'melismarketplace_toolstree_section';
-    const MELISDASHBOARDPLUGIN_PREFIX_TOOLS = 'melisdashboardplugin_section';
     const MELIS_DASHBOARD = '/meliscore_dashboard';
     const MELIS_CMS_SITE_TOOLS = 'meliscms_site_tools';
 
@@ -190,6 +189,8 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
                 // If it reaches here, it means tools are not directly checked, but maybe some sections are
                 $tooldIds = [];
+
+                $appconfigpath = $melisKeys[$toolSection];
                 $appconfigpath = $melisKeys[$toolSection] ?? null;
                 $appsConfig = $melisAppConfig->getItem($appconfigpath);
                 $tmpToolIds = $toolIds;
@@ -352,6 +353,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
         $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $configInterface = $melisAppConfig->getItem($keyInterface);
+        $recDatas = [];
 
         if (!empty($configInterface['conf']) && !empty($configInterface['conf']['type'])) {
             $fullKey = $configInterface['conf']['type'];
@@ -425,9 +427,14 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
         if (!empty($configInterface['interface'])) {
             foreach ($configInterface['interface'] as $keyChildConfig => $valueChildConfig) {
-                $child = $this->getInterfaceKeysRecursive($keyInterface . '/interface/' . $keyChildConfig, $userXml);
-                if ($child) {
-                    $item['children'][] = $child;
+                /**
+                 * don't include melis dashboard plugins
+                 */
+                if($keyChildConfig != 'melis_dashboardplugin' && $keyChildConfig != 'meliscore_dashboard_menu') {
+                    $child = $this->getInterfaceKeysRecursive($keyInterface . '/interface/' . $keyChildConfig, $userXml);
+                    if ($child) {
+                        $item['children'][] = $child;
+                    }
                 }
             }
         }
@@ -492,28 +499,26 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
                         $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $toolKey);
                         $icon = $toolName['conf']['icon'] ?? null;
 
-                        if ($icon) {
-                            $tools[$idx]['children'][$appCtr]['children'][$appToolCtr] = [
-                                'key' => $toolKey,
-                                'title' => $toolName['conf']['name'] ?? $toolKey,
-                                'children' => [],
-                                'lazy' => false,
-                                'selected' => $selectedTools,
-                                'iconTab' => '',
-                                'melisData' => [
-                                    'colorSelected' => '#99C975',
-                                ],
-                            ];
-                        }
+                        $tools[$idx]['children'][$appCtr]['children'][$appToolCtr] = [
+                            'key' => $toolKey,
+                            'title' => $toolName['conf']['name'] ?? $toolKey,
+                            'children' => [],
+                            'lazy' => false,
+                            'selected' => $selectedTools,
+                            'iconTab' => '',
+                            'melisData' => [
+                                'colorSelected' => '#99C975',
+                            ],
+                        ];
+
                         $appToolCtr++;
                     }
-                    $appCtr++;
                 }
 
+                $appCtr++;
             }
 
         }
-
         // Reordering sections
         $sections = $tools;
         $toolsOrdered = [];
@@ -672,7 +677,6 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
             self::MELISMARKETPLACE_PREFIX_TOOLS,
-            self::MELISDASHBOARDPLUGIN_PREFIX_TOOLS
         ];
     }
 
@@ -689,7 +693,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
             self::MELISMARKETPLACE_PREFIX_TOOLS,
-            self::MELISDASHBOARDPLUGIN_PREFIX_TOOLS
+
         ];
     }
 
