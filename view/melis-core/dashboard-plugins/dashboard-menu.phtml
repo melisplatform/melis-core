@@ -10,7 +10,7 @@
             <?php if(!empty($this->plugins)) { ?>
                 <?php foreach ($this->plugins As $module => $plugins){ ?>
                     <div class="melis-core-dashboard-ps-box">
-                        <span class="melis-core-dashboard-filter-btn"><?php echo $this->translate($module) ?><i class="fa fa-angle-down"></i></span>
+                        <span class="melis-core-dashboard-filter-btn"><?php echo $this->translate('tr_PluginSection_'.strtolower($module)) ?><i class="fa fa-angle-down"></i></span>
                         <div class="melis-core-dashboard-plugin-snippets-box">
                             <?php foreach ($plugins As $plugin => $pluginDetails){ ?>
                                 <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($pluginDetails['description'])?>">
