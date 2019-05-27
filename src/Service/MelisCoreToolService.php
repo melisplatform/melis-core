@@ -1114,7 +1114,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                 $input = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
             }
             $badVals = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
-            $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u>';
+            $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u><em>';
             $input = str_replace($badVals, '', $input);
             $input = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
             $input = strip_tags(trim($input), $allowedTags);

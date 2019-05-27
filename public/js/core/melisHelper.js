@@ -198,7 +198,6 @@ var melisHelper = (function(){
         }else{
             console.log("Selector not found");
         }
-
     }
 
     // SWITCH ACTIVE TABS =============================================================================================================

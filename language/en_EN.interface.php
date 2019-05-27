@@ -554,7 +554,10 @@ return [
     'tr_meliscore_date_start' => 'Start',
     'tr_meliscore_date_end' => 'End',
 
-    'tr_melisore_tinymce_file_manager' => 'File Manager',
+    // tinymce
+    'tr_meliscore_tinymce_file_manager' => 'File Manager',
+    'tr_meliscore_tinymce_insert_edit_link_toolbar_button_title' => 'Insert/edit link',
+    'tr_meliscore_tinymce_insert_edit_link_dialog_title' => 'Insert/Edit Link',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',
