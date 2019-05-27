@@ -31,7 +31,7 @@ if (!empty($this->zoneconfig['conf']['id']))
 		
 		?>
         <?php if($this->netStatus){?>
-         <img src='http://marketplace.melisplatform.com/marketplace-update?modulelist=<?= $this->modules; ?>&&domain=<?= $this->domain?>&&scheme=<?= $this->scheme ?>' />
+            <iframe class="marketplaceUpdate" src="about:blank" width="1px" height="1px" style="border-color: transparent; background: transparent;"></iframe>
         <?php }?>
 
 		<script type="text/javascript">

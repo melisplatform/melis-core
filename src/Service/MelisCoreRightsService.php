@@ -40,6 +40,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     {
         $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
         $xmlRights = $melisCoreAuth->getAuthRights();
+
         $isAccessible = $this->isAccessible($xmlRights, self::MELIS_PLATFORM_TOOLS_PREFIX, $key);
 
         $isInterfaceAccessible = $this->isAccessible($xmlRights, self::MELISCORE_PREFIX_INTERFACE, $key);
@@ -94,17 +95,28 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
         // Interface case is opposite, we list items where the user is not allowed
         if ($sectionId == self::MELISCORE_PREFIX_INTERFACE) {
-            foreach ($rightsObj->$sectionId->id as $interfaceId) {
-                $interfaceId = (string) $interfaceId;
-                $nonPath = ltrim($interfaceId, '/');
+                foreach ($rightsObj->$sectionId->id as $interfaceId) {
+                    $interfaceId = (string) $interfaceId;
+                    $nonPath = rtrim($interfaceId, '/');
 
-                if ($interfaceId == $itemId ||
-                    $nonPath == $itemId ||
-                    $interfaceId == self::MELISCORE_PREFIX_INTERFACE . '_root'
-                ) {
-                    return false;
+                    if ($interfaceId == $itemId ||
+                        $nonPath == $itemId ||
+                        $interfaceId == self::MELISCORE_PREFIX_INTERFACE . '_root'
+                    ) {
+                        return false;
+                    }
+
+                    // explode to search for the exact key
+                    $segments = explode('/',$interfaceId);
+                    if (! empty($segments)) {
+                        // get the total size minus -1 to get it's last value
+                        $tmpId = count($segments) -1;
+                        // compare , if equal the the key is excluded
+                        if ($segments[$tmpId] == $itemId) {
+                            return false;
+                        }
+                    }
                 }
-            }
             return true;
         }
 

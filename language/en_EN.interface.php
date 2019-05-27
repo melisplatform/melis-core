@@ -103,6 +103,7 @@ return [
     'tr_meliscore_tool_user_view_date_connection' => 'Date connections',
     'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
     'tr_meliscore_tool_usrcd_last_connection_time' => 'Connection time',
+    'tr_meliscore_tool_user_col_remove_picture' => "Remove Photo",
 
     //USER PROFILE MANAGEMENT
     'tr_meliscore_user_profile' => 'User Profile Management',
@@ -157,7 +158,7 @@ return [
 
     // Create Account Email
     'tr_meliscore_email_create_account_Subject' => 'Account Creation',
-    'tr_meliscore_email_create_account_html_Content' => '<p>Hi [NAME],</p><p>You have now Account on Melis Technology Platform Version 2.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Password : [PASSWORD]</p>',
+    'tr_meliscore_email_create_account_html_Content' => '<p>Hi [NAME],</p><p>An account has been created for you on Melis Technology Platform version 3.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Password : [PASSWORD]</p>',
 
     // error
     'tr_meliscore_error_An error occurred' => 'Une erreur est survenue',
@@ -174,6 +175,8 @@ return [
     'tr_meliscore_common_warning' => 'Warning',
     'tr_meliscore_common_yes' => 'Yes',
     'tr_meliscore_common_no' => 'No',
+    'tr_meliscore_common_nope' => 'No',
+    'tr_meliscore_common_status' => 'Status',
     'tr_meliscore_common_copy' => 'Copy',
     'tr_meliscore_common_export_to_csv' => 'Export',
     'tr_meliscore_common_edit' => 'Edit',
@@ -242,7 +245,7 @@ return [
     'tr_meliscore_module_management_modules_save' => 'Save',
     'tr_meliscore_module_management_header' => 'Header content',
     'tr_meliscore_module_management_content' => 'Content',
-    'tr_meliscore_module_management_prompt_confirm' => 'Are you sure you want to apply this settings?',
+    'tr_meliscore_ _management_prompt_confirm' => 'Are you sure you want to apply this settings?',
     'tr_meliscore_module_management_prompt_success' => 'Module settings has been updated',
     'tr_meliscore_module_management_prompt_failed' => 'Unable to update module settings',
     'tr_meliscore_module_management_notification_tip' => 'Drag and drop the modules to re-arrange',
@@ -401,7 +404,7 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Layout title',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip' => 'Additional options if you wish to use the default emails',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo' => 'Layout logo',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo Tooltip' => 'Additional options if you wish to use the default emails',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo tooltip' => 'Logo displayed in the email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo_select_image' => 'Select image',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info' => 'Layout information',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info tooltip' => 'Additional options if you wish to use the default emails',
@@ -522,7 +525,7 @@ return [
     'tr_meliscore_logs_tool_log_type' => 'Type',
     'tr_meliscore_logs_tool_log_item_id' => 'Item ID',
     'tr_meliscore_logs_tool_log_user' => 'User',
-    'tr_meliscore_logs_tool_log_date_added' => 'Date Added',
+    'tr_meliscore_logs_tool_log_date_added' => 'Date',
 
     // Log Type Details
     'tr_meliscore_logs_tool_log_type_name' => 'Name',
@@ -649,6 +652,10 @@ return [
     'tr_melis_core_gdpr' => 'GDPR',
     'tr_melis_core_gdpr_header_title' => 'GDPR (General Data Protection Regulation)',
     'tr_melis_core_gdpr_header_description' => 'Melis Platform provides a system to look for your user\'s datas. </br> All modules compliant to the Melis system will be able to interact with this interface and offer you possibilities to comply with the regulation.',
+    'tr_melis_core_gdpr_header' => 'Header',
+    'tr_melis_core_gdpr_content' => 'Content',
+    'tr_melis_core_gdpr_search_form' => 'Search form',
+    'tr_melis_core_gdpr_content_tab' => 'Content tab',
 
     'tr_melis_core_gdpr_form_name' => 'Name',
     'tr_melis_core_gdpr_form_email' => 'Email',

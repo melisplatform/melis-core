@@ -10,6 +10,8 @@
 
 namespace MelisCore;
 
+use MelisComposerDeploy\MelisComposer;
+
 /**
  * ModuleManager
  *
@@ -23,6 +25,8 @@ class MelisModuleManager
      */
     public static function getModules()
     {
+        $composer = new MelisComposer();
+
         // This needs to be set when using MelisPlatform
         error_reporting(E_ALL & ~E_USER_DEPRECATED);
         if (empty(date_default_timezone_get()))
@@ -49,8 +53,18 @@ class MelisModuleManager
                 // This won't be loaded except if asked from MelisFront
                 if (!empty($melisSite))
                 {
-                    if (is_file($rootMelisSites . '/' . $melisSite . '/config/module.load.php'))
-                        $modules = array_merge($modulesMelisBackOffice, include $rootMelisSites . '/' . $_GET['melisSite'] . '/config/module.load.php');
+                    if (file_exists($siteModuleLoad = $rootMelisSites . '/' . $melisSite . '/config/module.load.php') ||
+                        file_exists($siteModuleLoad = $composer->getComposerModulePath($melisSite).'/config/module.load.php')
+                    ) {
+                        $modules = array_merge($modulesMelisBackOffice, include $siteModuleLoad);
+                    }else{
+                        /**
+                         * load the default modules if $melisSite
+                         * is not found
+                         */
+                        $modules = $modulesMelisBackOffice;
+                    }
+
                 }
                 else
                     $modules = $modulesMelisBackOffice;
@@ -64,14 +78,17 @@ class MelisModuleManager
                 $platformFile    = $docRoot . '/../config/autoload/platforms/'.$env.'.php';
                 if($melisModuleName) {
                     $siteModuleLoad = $modulePath . '/config/module.load.php';
-                    if(file_exists($siteModuleLoad) && file_exists($platformFile)) {
+
+                    if (file_exists($siteModuleLoad) ||
+                        file_exists($siteModuleLoad = $composer->getComposerModulePath($melisModuleName).'/config/module.load.php') &&
+                        file_exists($platformFile)
+                    ) {
                         $modules = include $siteModuleLoad;
                     }
                     else {
                         $modules = $modulesMelisBackOffice;
                     }
                 }
-
             }
 
         } else {

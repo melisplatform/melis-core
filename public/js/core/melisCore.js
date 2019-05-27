@@ -184,7 +184,9 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard(){
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"}, '', function() {
+            melisDashBoardDragnDrop.closeDBPlugSidebar();
+        });
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
@@ -483,6 +485,20 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
+    $body.on("click", '.melis-core-dashboard-ps-box', checkScrollBar);
+
+    // drag and drop fix menu on dashboard
+    function checkScrollBar() {
+        var $dndMenu    = $(".melis-core-dashboard-dnd-fix-menu"),
+            $delAllCont = $(".melis-core-dashboard-plugin-delete-all");
+
+        setTimeout(function() {
+            if ( $dndMenu.hasScrollBar() ) {
+                $delAllCont.css("width", "164px");
+            }
+        }, 500);
+    }
+
     /*
      * Added by: Junry @ 10/10/208
      * For responsive placement
@@ -517,6 +533,8 @@ var melisCore = (function(window){
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
 
     	data = $(this).data();
+    	//var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
+
     	melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
 
     });
@@ -527,7 +545,6 @@ var melisCore = (function(window){
      * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
      * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
      */
-
     $body.on("click", "#melisDashBoardPluginBtn", function() {
         var $btn    = $("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
@@ -573,6 +590,19 @@ var melisCore = (function(window){
             $(this).addClass("active");
             $(".melis-core-dashboard-category-btn.active").siblings(".melis-core-dashboard-category-plugins-box").slideDown();
         }
+    }
+
+    // for appending custom checkbox element, on modal container
+    function loadCustomCheckboxElement() {
+        var $checkbox       = $body.find(".melis-check-box");
+
+            $.each($checkbox, function() {
+                var $this   = $(this),
+                    $id     = $this.attr("id");
+
+                    $this.parent("div").addClass("cls-checkbox");
+                    $this.parent("div").append("<label for=" + $id + " class='cls-checkbox-label'></label>");
+            });
     }
 
 
@@ -704,8 +734,15 @@ var melisCore = (function(window){
         escapeHtml										: 			escapeHtml,
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
+        loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
 
     };
 
 
 })(window);
+
+(function($) {
+    $.fn.hasScrollBar = function() {
+        return this.get(0).scrollHeight > this.get(0).clientHeight;
+    }
+})(jQuery);

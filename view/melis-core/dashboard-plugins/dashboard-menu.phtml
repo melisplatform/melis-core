@@ -15,7 +15,7 @@
                             <?php foreach ($plugins As $plugin => $pluginDetails){ ?>
                                 <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($pluginDetails['description'])?>">
                                     <div class="hidden plugin-json-config"><?php echo $pluginDetails['pluginRaw'] ?></div>
-                                    <img src="<?php echo $pluginDetails['thumbnail']?>" alt="">
+                                    <img src="<?php echo $pluginDetails['thumbnail']?>" alt="" width="100%">
                                     <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($pluginDetails['name'])?></span>
                                 </div>
                             <?php }?>

@@ -30,6 +30,44 @@ window.setUserDateConnection = function (d) {
 // action buttons
 $(document).ready(function () {
 
+    //image preveiew
+    $("body").on('change','#id_n_usr_image',function()
+    {
+        var input = this;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#new-profile-image').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    });
+
+    $("body").on('change','#id_usr_image',function()
+    {
+        var input = $("#usr_image_remove");
+        input.val("no");
+    });
+
+    //image remove
+    $("body").on('click','#btnDelImg',function()
+    {
+        if($("#id_n_usr_image").length > 0) {
+            var input = $("input#id_n_usr_image");
+            input.val('');
+            $('#new-profile-image').attr('src', "/MelisCore/images/profile/default_picture.jpg");
+            $("label[for=id_n_usr_image] .badge").remove();
+        }
+
+        if($("#id_usr_image").length > 0){
+            var input = $("input#usr_image_remove");
+            input.val("yes");
+            $('#profile-image').attr('src', "/MelisCore/images/profile/default_picture.jpg");
+            $("label[for=id_usr_image] .badge").remove();
+        }
+    });
+
     $("body").on("switch-change", "#switch-user-api-status", function (e) {
 
         var id = $(this).attr("data-userid");

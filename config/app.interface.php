@@ -15,9 +15,10 @@ return array(
                     'maxNestedForwards' => 100
                 ),
 
-                // Override these datas in MelisModuleConfig !
+                // Override these datas iMelisFront404CatcherListener.phpConfig !
                 'default' => array(
-                    'host' => 'https://www.melistechnology.com',
+                    'host' => $_SERVER['HTTP_HOST'],
+                    'scheme' => $_SERVER['REQUEST_SCHEME'],
                     'logo' => '/img/MelisTech.png',
                     'errors' => array(
                         'error_reporting' => E_ALL & ~E_USER_DEPRECATED,
