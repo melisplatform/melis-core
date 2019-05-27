@@ -3662,6 +3662,7 @@ div#modal-user-management div.widget {
     position: absolute;
     height: 34px;
     width: 100%;
+   /*  width: 164px; fix for issue: http://mantis.melistechnology.fr/view.php?id=3805 */
 }
 
 .melis-core-dashboard-plugin-delete-all #dashboard-plugin-delete-all {

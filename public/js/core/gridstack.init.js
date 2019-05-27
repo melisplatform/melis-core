@@ -114,6 +114,8 @@ var melisDashBoardDragnDrop = {
                     width: nWidth
                 }, 3);
             });
+
+            
     },
 
     dropWidget: function( widget ) {

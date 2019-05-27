@@ -28848,6 +28848,20 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
+    $body.on("click", '.melis-core-dashboard-ps-box', checkScrollBar);
+
+    // drag and drop fix menu on dashboard
+    function checkScrollBar() {
+        var $dndMenu    = $(".melis-core-dashboard-dnd-fix-menu"),
+            $delAllCont = $(".melis-core-dashboard-plugin-delete-all");
+
+        setTimeout(function() {
+            if ( $dndMenu.hasScrollBar() ) {
+                $delAllCont.css("width", "164px");
+            }
+        }, 500);
+    }
+
     /*
      * Added by: Junry @ 10/10/208
      * For responsive placement
@@ -29089,6 +29103,12 @@ var melisCore = (function(window){
 
 
 })(window);
+
+(function($) {
+    $.fn.hasScrollBar = function() {
+        return this.get(0).scrollHeight > this.get(0).clientHeight;
+    }
+})(jQuery);
 
 var melisHelper = (function(){
 
@@ -34160,6 +34180,8 @@ var melisDashBoardDragnDrop = {
                     width: nWidth
                 }, 3);
             });
+
+            
     },
 
     dropWidget: function( widget ) {
