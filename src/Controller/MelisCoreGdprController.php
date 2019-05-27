@@ -99,9 +99,25 @@ class MelisCoreGdprController extends AbstractActionController
             $finalData = $melisCoreGdprService->deleteSelected($idsToBeDeleted);
             $success = 1;
 
-            foreach ($finalData as $key => $value) {
+            foreach ($finalData['results'] as $key => $value) {
                 if (!$value) {
                     $success = 0;
+                }
+            }
+
+            if (!empty($finalData['log']) && isset($finalData['log'])) {
+                foreach ($finalData['log'] as $module => $ids) {
+                    foreach ($ids as $id => $value) {
+                        $params = $value;
+                        $event = $params['event'];
+                        unset($params['event']);
+
+                        $this->getEventManager()->trigger(
+                            $event,
+                            $this,
+                            $params
+                        );
+                    }
                 }
             }
         }

@@ -702,6 +702,7 @@ return [
     'tr_melis_core_gdpr_column_is_not_admin' => 'Non',
     'tr_melis_core_gdpr_notif_name_or_email_required' => 'Le nom ou l\'email sont requis',
     'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Le nom ne doit pas être composé de chiffres',
+    'tr_melis_core_gdpr_tool_notif_delete_selection_success' => 'Sélection supprimée avec succès',
 
     'tr_melisdashboardplugin_section' => 'Melis Dashboard Plugins',
 ];

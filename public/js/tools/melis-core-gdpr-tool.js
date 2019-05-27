@@ -290,6 +290,12 @@ $(document).ready(function() {
                                 show: true,
                                 formData: gdprFormData,
                             });
+
+                            melisHelper.melisOkNotification(
+                                translations.tr_melis_core_gdpr,
+                                translations.tr_melis_core_gdpr_tool_notif_delete_selection_success,
+                            );
+                            melisCore.flashMessenger();
                         } else {
                             melisHelper.melisKoNotification(
                                 translations.tr_melis_core_gdpr_notif_delete_user,

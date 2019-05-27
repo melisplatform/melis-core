@@ -677,13 +677,14 @@ return [
     'tr_melis_core_gdpr_notif_error_3ormore_inputs' => 'The search must be based on at least 3 characters',
 
     'tr_melis_core_gdpr_view_search_button' => 'Search',
-    'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',
-    'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected',
+    'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract selection',
+    'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete selection',
     'tr_melis_core_gdpr_tabs_header_title' => 'Search a user :',
     'tr_melis_core_gdpr_column_is_admin' => 'Yes',
     'tr_melis_core_gdpr_column_is_not_admin' => 'No',
     'tr_melis_core_gdpr_notif_name_or_email_required' => 'Name or Email field is required',
     'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Name should not consist of numbers',
+    'tr_melis_core_gdpr_tool_notif_delete_selection_success' => 'Selection deleted successfully',
 
     'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
 ];
