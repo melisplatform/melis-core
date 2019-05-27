@@ -6,7 +6,6 @@ var melisDashboardRightsNotifications = (function() {
 		$pluginBtnBox	= $body.find("#melisDashBoardPluginBtn").closest(".melis-core-dashboard-dnd-box"),
 		$dboard 		= $body.find("#"+activeTabId+" [data-tool-meliskey='meliscore_dashboard']"),
 		$dbPlugins 		= $body.find("#"+activeTabId+" .melis-dashboard-plugins"),
-		//$pluginMenu 	= $body.find(".melis-core-dashboard-dnd-box"),
 		$availPlugins 	= $pluginBtnBox.find(".melis-core-dashboard-dnd-fix-menu .melis-core-dashboard-plugin-filter-box"),
 		$arrow 			= $dbPlugins.find(".location-arrow");
 

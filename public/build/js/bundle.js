@@ -28891,7 +28891,9 @@ var melisCore = (function(window){
      * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
      */
 
-    $body.on("click", "#melisDashBoardPluginBtn", function() {
+    $body.on("click", "#melisDashBoardPluginBtn", showToggleDashboardPluginMenu);
+
+    function showToggleDashboardPluginMenu() {
         var $btn    = $("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $gs     = $body.find("#"+activeTabId+" .grid-stack"),
@@ -28909,7 +28911,7 @@ var melisCore = (function(window){
                     width: nWidth
                 }, 3);
             }
-    });
+    }
     
     function showPlugLists() {
         if($(this).hasClass("active")) {
@@ -28948,7 +28950,7 @@ var melisCore = (function(window){
 
 
     // WINDOW RESIZE FUNCTIONALITIES ========================================================================================================
-    $(window).resize(function(){
+    $(window).resize(function() {
 
         screenSize = jQuery(window).width();
 
@@ -28997,12 +28999,10 @@ var melisCore = (function(window){
 
          
         }
-
     });
 
     // WINDOW SCROLL FUNCTIONALITIES ========================================================================================================
-    if(screenSize <= 767){
-
+    if(screenSize <= 767) {
         jQuery(window).scroll(function(){
             // show or hide menu when scrolling
             if (jQuery(window).scrollTop() > 100 && screenSize <= 767){
@@ -29067,6 +29067,7 @@ var melisCore = (function(window){
         escapeHtml										: 			escapeHtml,
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
+        showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu,
 
     };
 
@@ -31921,7 +31922,6 @@ var melisDashboardRightsNotifications = (function() {
 		$pluginBtnBox	= $body.find("#melisDashBoardPluginBtn").closest(".melis-core-dashboard-dnd-box"),
 		$dboard 		= $body.find("#"+activeTabId+" [data-tool-meliskey='meliscore_dashboard']"),
 		$dbPlugins 		= $body.find("#"+activeTabId+" .melis-dashboard-plugins"),
-		//$pluginMenu 	= $body.find(".melis-core-dashboard-dnd-box"),
 		$availPlugins 	= $pluginBtnBox.find(".melis-core-dashboard-dnd-fix-menu .melis-core-dashboard-plugin-filter-box"),
 		$arrow 			= $dbPlugins.find(".location-arrow");
 
@@ -31933,7 +31933,7 @@ var melisDashboardRightsNotifications = (function() {
 
 			setTimeout(function() {
 				if ( $pluginBtnBox.length && $arrow.length ) {
-					console.log("both are found");
+					//console.log("both are found");
 
 					var styleProps = $pluginBtnBox.css([
 							'position',
@@ -31958,21 +31958,21 @@ var melisDashboardRightsNotifications = (function() {
 		}
 
 		function showDBPluginMenu() {
-			console.log("2 showDBPluginMenu");
+			//console.log("2 showDBPluginMenu");
 
 			if ( typeof ( melisDashBoardDragnDrop ) !== "undefined" ) {
-				console.log("melisDashBoardDragnDrop");
+				//console.log("melisDashBoardDragnDrop");
 
 				if ( $pluginBtnBox.length && $availPlugins.length ) {
 					$pluginBtnBox.addClass("shown");
 
-					console.log("$pluginMenu: shown");
+					//console.log("$pluginMenu: shown");
 				}
 			}
 
-			console.log("$pluginBtnBox length: ", $pluginBtnBox.length);
+			/*console.log("$pluginBtnBox length: ", $pluginBtnBox.length);
 			console.log("$availPlugins length: ", $availPlugins.length);
-			console.log("$pluginBtnBox: ", $pluginBtnBox);
+			console.log("$pluginBtnBox: ", $pluginBtnBox);*/
 		}
 
 		// bind events .melis-dashboard-plugins-menu
