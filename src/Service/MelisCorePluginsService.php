@@ -82,10 +82,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
                 if(!isset($plugin['datas']['skip_plugin_container'])) {
                     $name = $plugin['datas']['name'];
                     $module = $plugin['forward']['module'];
-                    $plugins[$module] = [];
-                    if ($name != "dragdropzone") {
-                        array_push($plugins[$module],$name);
-                    }
+                    $plugins[$module][] = $name;
                 }
             }
             $results = $plugins;

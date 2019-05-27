@@ -90,6 +90,9 @@ class DashboardPluginsController extends AbstractActionController
         $view = new ViewModel();
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
+        $view->latestPluginInstalled = $latesPlugin;
+        $view->newPluginNotification = $pluginMenuHandler;
+        
         return $view;
     }
     
