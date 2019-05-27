@@ -69,31 +69,28 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_dashboard_plugins_start', $arrayParameters);
         // Implementation start
-        $melisConfig = $this->serviceLocator->get('config');
-        $plugins = $melisConfig['plugins'];
-        $dashboardPlugins = [];
-        if (! empty($plugins)) {
-            foreach ($plugins as $moduleName => $val) {
-                // get dashboard plugins
-                if (isset($val['dashboard_plugins']) && ! empty($val['dashboard_plugins'])) {
-                    $dashboardPlugins[$moduleName] = [];
-                    // dashboard plugins
-                    foreach ($val['dashboard_plugins'] as $pluginName => $pluginConfig) {
-                        if ($pluginName != "MelisCoreDashboardDragDropZonePlugin") {
-                            // if pluginNameOnly is true then return only pluginNames
-                            if ($pluginNameOnly) {
-                                unset($dashboardPlugins[$moduleName]);
-                                $dashboardPlugins[] = $pluginName;
-                            } else {
-                                array_push($dashboardPlugins[$moduleName],$pluginName);
-                            }
-
-                        }
+        $melisConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $dashboardPlugins = $melisConfig->getItem('/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section');
+        $plugins = [];
+        if (isset($dashboardPlugins['interface']) && count($dashboardPlugins['interface'])) {
+            foreach ($dashboardPlugins['interface'] as $pluginName => $pluginConf) {
+                $plugin = $pluginConf;
+                $path = $pluginConf['conf']['type'] ?? null;
+                if ($path) {
+                    $plugin = $melisConfig->getItem($path);
+                }
+                if(!isset($plugin['datas']['skip_plugin_container'])) {
+                    $name = $plugin['datas']['name'];
+                    $module = $plugin['forward']['module'];
+                    $plugins[$module] = [];
+                    if ($name != "dragdropzone") {
+                        array_push($plugins[$module],$name);
                     }
                 }
             }
-            $results = $dashboardPlugins;
+            $results = $plugins;
         }
+
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] =  $results;
         // Sending service end event
@@ -411,7 +408,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
     /**
      * @param $pluginModuleName if set to true then it will base like (meliscms,meliscore,meliscmsslider) if not  then like(melis-cms,melis-core,melis-cms-slider)
      */
-    public function getMelisPublicModules($pluginModuleName = false)
+    public function getMelisPublicModules($pluginModuleName = false,$dashboardPlugin = false)
     {
         $melisPublicModulesWithSection = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-list", true);
         $publicModules = [];
@@ -428,6 +425,10 @@ class MelisCorePluginsService extends MelisCoreGeneralService
                     // remove dashes
                     $packageName = str_replace('-',null,$packageName);
                 }
+                if ($dashboardPlugin) {
+                    $packageName = str_replace('-',null,implode('-', array_map('ucfirst', explode('-', $packageName))));
+                }
+
                 $publicModules[$packageName] = [
                     'section' => $moduleInfo->packageSection
                 ];

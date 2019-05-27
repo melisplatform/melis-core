@@ -67,20 +67,21 @@ class DashboardPluginsController extends AbstractActionController
                             'thumbnail' => !empty($plugin['datas']['thumbnail']) ? $plugin['datas']['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
                             'is_new_plugin' => $isNewPlugin,
                             'pluginRaw' => $pluginRaw,
+                            'section' => !empty($plugin['datas']['section']) ? $plugin['datas']['section'] : "",
                         ];
                     }
                 }
 
             }
         }
+        // melis plugin service
+        $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
+        // check for new plugins or manually installed and insert in db
+        $pluginSvc->checkDashboardPlugins();
         // put section of dashboard plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         // organized plugins or put them into their respective sections
         $plugins = $this->organizedPluginsBySection($plugins);
-        // melis plugin service
-        $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
-        // check for new plugins or manually installed and insert in db
-       // $pluginSvc->checkTemplatingPlugins();
         // get the latest plugin installed
         $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
         // for new plugin notifications
@@ -231,15 +232,12 @@ class DashboardPluginsController extends AbstractActionController
             foreach ($plugins as $moduleName => $dashboardPlugin) {
                if (is_array($dashboardPlugin)) {
                    foreach ($dashboardPlugin as $pluginName => $conf) {
-                       if ( (isset($conf['section']) || ! isset($conf['section'])) && empty($conf['section'])) {
+                       if (! isset($conf['section']) && empty($conf['section'])) {
                            // if there is no ['section']key on  config
                            // or there is a ['section'] key but empty
                            // we put it in the OTHER section directly
                            $conf['section'] = "Others";
                        }
-//                       if (isset($conf['section']) && ! empty($conf['section'])) {
-//                          echo $moduleName;
-//                       }
 
                        $pluginList[$moduleName][$pluginName] = $conf;
                    }
@@ -282,13 +280,14 @@ class DashboardPluginsController extends AbstractActionController
         }
         if (! empty($plugins)) {
             // organized plugins by section
-            $publicModules = $melisPuginsSvc->getMelisPublicModules(true);
+            $publicModules = $melisPuginsSvc->getMelisPublicModules(null,true);
            foreach ($plugins  as $moduleName => $dashboardPlugins) {
                /*
                 * check first if the module is public or not
                 *  if public we will based the section on what is set from marketplace
                 *  if private this will return null
                 */
+
                $moduleSection = "";
                if (array_key_exists($moduleName,$publicModules)) {
                    $moduleSection = $publicModules[$moduleName]['section'];

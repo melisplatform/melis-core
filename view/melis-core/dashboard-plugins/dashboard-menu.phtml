@@ -5,6 +5,7 @@
     $sectionHasNewPlugins = [];
     $moduleHasNewPlugins  = [];
     $newPluginNotif = $this->newPluginNotification;
+
 ?>
 
 <div class="melis-core-dashboard-dnd-box" <?= $melisKey.' '.$id; ?>>
@@ -87,6 +88,20 @@
                                                 <?php }?>
                                             </div>
                                         </div>
+                                    <?php } else {?>
+                                        <?php foreach ($plugins as $pluginName => $conf) { ?>
+                                            <?php
+                                            $borderClass = "";
+                                            if (isset($conf['isNew']) && $conf['isNew']) {
+                                                $borderClass = "border-new-plugin";
+                                            }
+                                            ?>
+                                            <div class="melis-core-dashboard-plugin-snippets <?= $borderClass ?>" title="<?php echo $this->translate($conf['description'])?>">
+                                                <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
+                                                <img src="<?php echo $conf['thumbnail']?>" alt="">
+                                                <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($conf['name'])?></span>
+                                            </div>
+                                        <?php }?>
                                     <?php }?>
                                 <?php }?>
                             </div>
