@@ -3979,7 +3979,7 @@ div#modal-user-management div.widget {
 .melis-core-dashboard-category-btn .module-name
 {
     display: block;
-    max-width: 87%;
+    max-width: 78%;
 }
 /* changes the width on smaller widths */
 @media (min-width: 320px) and (max-width: 640px) {
