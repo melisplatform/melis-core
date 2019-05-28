@@ -99,9 +99,25 @@ class MelisCoreGdprController extends AbstractActionController
             $finalData = $melisCoreGdprService->deleteSelected($idsToBeDeleted);
             $success = 1;
 
-            foreach ($finalData as $key => $value) {
+            foreach ($finalData['results'] as $key => $value) {
                 if (!$value) {
                     $success = 0;
+                }
+            }
+
+            if (!empty($finalData['log']) && isset($finalData['log'])) {
+                foreach ($finalData['log'] as $module => $ids) {
+                    foreach ($ids as $id => $value) {
+                        $params = $value;
+                        $event = $params['event'];
+                        unset($params['event']);
+
+                        $this->getEventManager()->trigger(
+                            $event,
+                            $this,
+                            $params
+                        );
+                    }
                 }
             }
         }
@@ -143,6 +159,33 @@ class MelisCoreGdprController extends AbstractActionController
 
         return $view;
     }
+
+    /**
+     * @return ViewModel
+     */
+    public function gdprTabsAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function searchUserDataAction()
+    {
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+
+        return $view;
+    }
+
 
     /**
      * Content of the Gdpr page
