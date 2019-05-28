@@ -36115,7 +36115,7 @@ div#modal-user-management div.widget {
     position: fixed;
     top: 47px;
     right: 0px;
-    width: 180px;
+    width: 214px;
     height: calc(100% - 47px);
     font-family: 'Lato', sans-serif;
     font-weight: normal;
@@ -36124,10 +36124,10 @@ div#modal-user-management div.widget {
     border-bottom: 4px solid #e61c23;
     border-left: 4px solid #e61c23;
     background: #373737;
-    transform: translate3d(180px, 0, 0);
-    -webkit-transform: translate3d(180px, 0, 0);
-    -moz-transform: translate3d(180px, 0, 0);
-    -ms-transform: translate3d(180px, 0, 0);
+    transform: translate3d(214px, 0, 0);
+    -webkit-transform: translate3d(214px, 0, 0);
+    -moz-transform: translate3d(214px, 0, 0);
+    -ms-transform: translate3d(214px, 0, 0);
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
@@ -36147,6 +36147,7 @@ div#modal-user-management div.widget {
 .melis-core-dashboard-dnd-fix-menu {
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     /* overflow: visible; */
 }
 
@@ -36534,14 +36535,14 @@ div#modal-user-management div.widget {
 
 /* changes the width on smaller widths */
 @media (min-width: 320px) and (max-width: 640px) {
-    /*.melis-core-dashboard-dnd-box {
-        width: 140px;
+    .melis-core-dashboard-dnd-box {
+        width: 180px;
         
-        transform: translate3d(140px, 0, 0);
-        -webkit-transform: translate3d(140px, 0, 0);
-        -moz-transform: translate3d(140px, 0, 0);
-        -ms-transform: translate3d(140px, 0, 0);
-    }*/
+        transform: translate3d(180px, 0, 0);
+        -webkit-transform: translate3d(180px, 0, 0);
+        -moz-transform: translate3d(180px, 0, 0);
+        -ms-transform: translate3d(180px, 0, 0);
+    }
     .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn .fa,
     .melis-core-dashboard-category-btn .fa {
         right: 6px;

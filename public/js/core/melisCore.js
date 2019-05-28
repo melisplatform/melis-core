@@ -507,7 +507,7 @@ var melisCore = (function(window){
 
         setTimeout(function() {
             if ( $dndMenu.hasScrollBar() ) {
-                $delAllCont.css("width", "164px");
+                $delAllCont.css("width", "198px");
             } else {
                 $delAllCont.css("width", "100%");
             }
