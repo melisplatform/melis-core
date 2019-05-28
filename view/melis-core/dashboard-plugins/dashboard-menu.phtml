@@ -35,7 +35,7 @@
                             <span class="melis-core-dashboard-filter-btn">
                                     <?php  if ($ctrNewPlugins > 0 && in_array($moduleSection,$sectionHasNewPlugins)) { ?>
                                         <div class="melis-plugins-icon-new-parent">
-                                            <span class="fa fa-certificate melis-plugins-icon-new"></span>
+                                            <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
                                         </div>
                                     <?php }?>
                                   <?php
@@ -67,7 +67,7 @@
                                                 </span>
                                                 <?php  if (in_array($moduleName,$moduleHasNewPlugins)) { ?>
                                                     <div class="melis-plugins-icon-new-child">
-                                                        <span class="fa fa-certificate melis-plugins-icon-new"></span>
+                                                        <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
                                                     </div>
                                                 <?php }?>
                                                 <i class="fa fa-angle-down arrow-indicator"></i>
@@ -131,10 +131,7 @@
             ?>
             <?php if ($dateToday < $dateTimeElapse) {?>
                 <span class="melis-dashboard-new-plugin">
-                    <i class="fa fa-circle new-plugin-indicator"></i>
-                </span>
-                <span class="text-new-plugin-indicator">
-                    <i class="fa fa-bell-o"></i>
+                    <span class="new-plugin-indicator">NEW!</span>
                 </span>
             <?php }?>
         <?php }?>
