@@ -485,16 +485,22 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    $body.on("click", '.melis-core-dashboard-ps-box', checkScrollBar);
+    $body.on("click", '.melis-core-dashboard-ps-box', checkHasScrollBar);
 
     // drag and drop fix menu on dashboard
-    function checkScrollBar() {
-        var $dndMenu    = $(".melis-core-dashboard-dnd-fix-menu"),
-            $delAllCont = $(".melis-core-dashboard-plugin-delete-all");
+    function checkHasScrollBar() {
+        var $dndMenu    = $body.find(".melis-core-dashboard-dnd-fix-menu"),
+            $delAllCont = $body.find(".melis-core-dashboard-plugin-delete-all");
 
         setTimeout(function() {
             if ( $dndMenu.hasScrollBar() ) {
-                $delAllCont.css("width", "164px");
+                if ( screenSize > 640 ) {
+                    $delAllCont.css("width", "198px");
+                } else {
+                    $delAllCont.css("width", "164px");
+                }
+            } else {
+                $delAllCont.css("width", "100%");
             }
         }, 500);
     }
