@@ -28848,33 +28848,6 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    // $body.on("click", '.melis-core-dashboard-ps-box', checkHasScrollBar);
-
-    // drag and drop fix menu on dashboard
-    /* function checkHasScrollBar() {
-        var $html       = $("html"),
-            $dndMenu    = $body.find(".melis-core-dashboard-dnd-fix-menu"),
-            $delAllCont = $body.find(".melis-core-dashboard-plugin-delete-all");
-
-        setTimeout(function() {
-            if ( $dndMenu.hasScrollBar() ) {
-                if ( screenSize > 640 ) {
-                    if ( $html.hasClass("firefox") ) {
-                        $delAllCont.css("width", "193px");
-                    } else if ( $html.hasClass("ie_edge") ) {
-                        $delAllCont.css("width", "194px");
-                    } else {
-                        $delAllCont.css("width", "198px");
-                    }
-                } else {
-                    $delAllCont.css("width", "164px");
-                }
-            } else {
-                $delAllCont.css("width", "100%");
-            }
-        }, 500);
-    } */
-
     /*
      * Added by: Junry @ 10/10/208
      * For responsive placement
@@ -29136,13 +29109,6 @@ var melisCore = (function(window){
 
 
 })(window);
-
-/* (function($) {
-    $.fn.hasScrollBar = function() {
-        return this.get(0).scrollHeight > this.get(0).clientHeight;
-    }
-})(jQuery); */
-
 var melisHelper = (function(){
 
     var version = "2.0.0";
