@@ -3957,9 +3957,7 @@ div#modal-user-management div.widget {
     top: 7px;
     left: -21px
 }
-.reverse-color {
-    text-shadow: -1px 0 0 #ffffff, 0 1px 0 #ffffff, 1px 0 0 #ffffff, 0 -1px 0 #ffffff;
-}
+
 .text-new-plugin-indicator {
     position: absolute;
     font-size: 14px;
