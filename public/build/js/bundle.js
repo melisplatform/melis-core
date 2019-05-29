@@ -28848,10 +28848,10 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    $body.on("click", '.melis-core-dashboard-ps-box', checkHasScrollBar);
+    // $body.on("click", '.melis-core-dashboard-ps-box', checkHasScrollBar);
 
     // drag and drop fix menu on dashboard
-    function checkHasScrollBar() {
+    /* function checkHasScrollBar() {
         var $html       = $("html"),
             $dndMenu    = $body.find(".melis-core-dashboard-dnd-fix-menu"),
             $delAllCont = $body.find(".melis-core-dashboard-plugin-delete-all");
@@ -28873,7 +28873,7 @@ var melisCore = (function(window){
                 $delAllCont.css("width", "100%");
             }
         }, 500);
-    }
+    } */
 
     /*
      * Added by: Junry @ 10/10/208
@@ -28943,11 +28943,9 @@ var melisCore = (function(window){
 
     function showPlugLists() {
         if($(this).hasClass("active")) {
-            $(this).find('.melis-plugins-icon-new-parent').removeClass('reverse-color');
             $(this).removeClass("active")
                 .siblings(".melis-core-dashboard-plugin-snippets-box")
                 .slideUp();
-            $(this).siblings(".melis-core-dashboard-plugin-snippets-box").find(".melis-core-dashboard-category-btn.active").find('.melis-plugins-icon-new-child').removeClass('reverse-color');
             $(this).siblings(".melis-core-dashboard-plugin-snippets-box")
                 .find(".melis-core-dashboard-category-btn.active")
                 .removeClass("active")
@@ -28955,9 +28953,7 @@ var melisCore = (function(window){
                 .slideUp();
 
         } else {
-            $(".melis-core-dashboard-filter-btn.active").find('.melis-plugins-icon-new-parent').removeClass('reverse-color');
             $(".melis-core-dashboard-filter-btn.active").removeClass("active").siblings(".melis-core-dashboard-plugin-snippets-box").slideUp();
-            $(this).find('.melis-plugins-icon-new-parent').addClass('reverse-color');
             $(this).addClass("active");
             $(".melis-core-dashboard-filter-btn.active").siblings(".melis-core-dashboard-plugin-snippets-box").slideDown();
         }
@@ -28965,13 +28961,10 @@ var melisCore = (function(window){
 
     function showCatPlugLists() {
         if($(this).hasClass("active")) {
-            $(this).find('.melis-plugins-icon-new-child').removeClass('reverse-color');
             $(this).removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
         } else {
-            $(".melis-core-dashboard-category-btn.active").find('.melis-plugins-icon-new-child').removeClass('reverse-color');
             $(".melis-core-dashboard-category-btn.active").removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
             $(this).addClass("active");
-            $(this).find('.melis-plugins-icon-new-child').addClass('reverse-color');
             $(".melis-core-dashboard-category-btn.active").siblings(".melis-core-dashboard-category-plugins-box").slideDown();
         }
     }
@@ -29144,11 +29137,11 @@ var melisCore = (function(window){
 
 })(window);
 
-(function($) {
+/* (function($) {
     $.fn.hasScrollBar = function() {
         return this.get(0).scrollHeight > this.get(0).clientHeight;
     }
-})(jQuery);
+})(jQuery); */
 
 var melisHelper = (function(){
 

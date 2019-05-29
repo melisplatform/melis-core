@@ -36131,7 +36131,7 @@ div#modal-user-management div.widget {
 }
 
 .melis-plugins-icon-new-parent > .new-plugin-indicator {
-    color: #ed6623;
+    color: #72af46;
     left: -17px;
     letter-spacing: 0;
 }
@@ -36317,7 +36317,7 @@ div#modal-user-management div.widget {
 .melis-plugins-icon-new-child .melis-plugins-icon-new {
     font-size: 7px;
     left: -10px;
-    color: #ed6623;
+    color: #72af46;
     letter-spacing: 0;
 }
 .melis-section-icons {
@@ -36326,9 +36326,7 @@ div#modal-user-management div.widget {
     top: 7px;
     left: -21px
 }
-.reverse-color {
-    text-shadow: -1px 0 0 #ffffff, 0 1px 0 #ffffff, 1px 0 0 #ffffff, 0 -1px 0 #ffffff;
-}
+
 .text-new-plugin-indicator {
     position: absolute;
     font-size: 14px;
