@@ -23,9 +23,9 @@
                                     // plugin counter
                                     $ctrNewPlugins++;
                                     // section that has new plugins under
-                                    $sectionHasNewPlugins[] =  $moduleSection;
+                                    $sectionHasNewPlugins[] =  "" ;//$moduleSection;
                                     // module that has new plugins under
-                                    $moduleHasNewPlugins[] =  $moduleName;
+                                    $moduleHasNewPlugins[] =  "";//$moduleName;
                                 }
                             }
                         }
@@ -120,7 +120,8 @@
         </div>
     </div>
     <div id="melisDashBoardPluginBtn" title="Dashboard Plugins">
-        <?php if ($ctrNewPlugins > 0 ) {?>
+        <?php $ctrNewPlugins = -1;
+            if ($ctrNewPlugins > 0 ) {?>
             <?php
                 // latesplugin installed
                 $latestPlugin = $this->latestPluginInstalled;

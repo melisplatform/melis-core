@@ -80,12 +80,6 @@ class Module
 
             $eventManager->attach(new MelisCoreAuthSuccessListener());
             $eventManager->attach(new MelisCorePhpWarningListener());
-            // plugins listener ( dashboard and templating)
-            $eventManager->attach(new MelisCorePluginsListener());
-            // removing of plugin when removing the module in the marketplace
-            $eventManager->attach(new MelisCorePluginsRemovalListener());
-            // adding of plugin when adding the module in the marketplace
-            $eventManager->attach(new MelisCorePluginsAdditionalListener());
 
             $eventManager->attach(new MelisCoreDashboardPluginRightsTreeViewListener());
             $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
