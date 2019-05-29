@@ -245,7 +245,7 @@ return [
     'tr_meliscore_module_management_modules_save' => 'Save',
     'tr_meliscore_module_management_header' => 'Header content',
     'tr_meliscore_module_management_content' => 'Content',
-    'tr_meliscore_ _management_prompt_confirm' => 'Are you sure you want to apply this settings?',
+    'tr_meliscore_module_management_prompt_confirm' => 'Are you sure you want to apply this settings?',
     'tr_meliscore_module_management_prompt_success' => 'Module settings has been updated',
     'tr_meliscore_module_management_prompt_failed' => 'Unable to update module settings',
     'tr_meliscore_module_management_notification_tip' => 'Drag and drop the modules to re-arrange',
