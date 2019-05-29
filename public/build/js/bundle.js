@@ -28848,16 +28848,29 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    $body.on("click", '.melis-core-dashboard-ps-box', checkScrollBar);
+    $body.on("click", '.melis-core-dashboard-ps-box', checkHasScrollBar);
 
     // drag and drop fix menu on dashboard
-    function checkScrollBar() {
-        var $dndMenu    = $(".melis-core-dashboard-dnd-fix-menu"),
-            $delAllCont = $(".melis-core-dashboard-plugin-delete-all");
+    function checkHasScrollBar() {
+        var $html       = $("html"),
+            $dndMenu    = $body.find(".melis-core-dashboard-dnd-fix-menu"),
+            $delAllCont = $body.find(".melis-core-dashboard-plugin-delete-all");
 
         setTimeout(function() {
             if ( $dndMenu.hasScrollBar() ) {
-                $delAllCont.css("width", "164px");
+                if ( screenSize > 640 ) {
+                    if ( $html.hasClass("firefox") ) {
+                        $delAllCont.css("width", "193px");
+                    } else if ( $html.hasClass("ie_edge") ) {
+                        $delAllCont.css("width", "194px");
+                    } else {
+                        $delAllCont.css("width", "198px");
+                    }
+                } else {
+                    $delAllCont.css("width", "164px");
+                }
+            } else {
+                $delAllCont.css("width", "100%");
             }
         }, 500);
     }
@@ -28976,6 +28989,23 @@ var melisCore = (function(window){
             });
     }
 
+    // simple browser detect, common browser only
+    function browserDetect() {
+        var $html   = $("html"),
+            ua      = navigator.userAgent;
+        
+            /* MSIE used to detect old browsers and Trident used to newer ones, Edge for Microsoft Edge */
+            if ( ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1 || ua.indexOf("Edge/") > -1 ) {
+                $html.addClass("ie_edge");
+            } else if ( ua.indexOf("Chrome/") > -1 ) {
+                $html.addClass("chrome");
+            } else if ( ua.indexOf("Safari/") > -1 ) {
+                $html.addClass("safari");
+            } else if ( ua.indexOf("Firefox/") > -1 ) {
+                $html.addClass("firefox");
+            }
+    }
+
 
 
 
@@ -29062,6 +29092,9 @@ var melisCore = (function(window){
 
     // INITIALIZE ===================================================================================================================
 
+    // browser detect
+    browserDetect();
+
     // set active tabs etc, flash messenger etc
     firstRender();
 
@@ -29106,7 +29139,6 @@ var melisCore = (function(window){
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
-
     };
 
 
