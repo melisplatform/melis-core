@@ -302,7 +302,7 @@ class DashboardPluginsController extends AbstractActionController
                            // set a plugin in a section
                            $newPluginList[$pluginSection][$moduleName][$pluginName] = $config;
                            // indication that the plugin is newly installed
-                           $newPluginList[$pluginSection][$moduleName][$pluginName]['isNew'] = $melisPuginsSvc->pluginIsNew($pluginName);
+                           $newPluginList[$pluginSection][$moduleName][$pluginName]['isNew'] = false;//;$melisPuginsSvc->pluginIsNew($pluginName);
                        } else {
                            /*
                             * if the section does not belong to the group it will go to the
