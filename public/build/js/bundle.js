@@ -31914,81 +31914,6 @@ $(document).ready(function() {
     };
 });
 
-var melisDashboardRightsNotifications = (function() {
-
-	// cache DOM
-	var $body 			= $("body"),
-		$pluginBtn 		= $body.find("#melisDashBoardPluginBtn"),
-		$pluginBtnBox	= $body.find("#melisDashBoardPluginBtn").closest(".melis-core-dashboard-dnd-box"),
-		$dboard 		= $body.find("#"+activeTabId+" [data-tool-meliskey='meliscore_dashboard']"),
-		$dbPlugins 		= $body.find("#"+activeTabId+" .melis-dashboard-plugins"),
-		$availPlugins 	= $pluginBtnBox.find(".melis-core-dashboard-dnd-fix-menu .melis-core-dashboard-plugin-filter-box"),
-		$arrow 			= $dbPlugins.find(".location-arrow");
-
-		renderArrow();
-		showDBPluginMenu();
-
-		function renderArrow() {
-			$arrow.css("display", "none");
-
-			setTimeout(function() {
-				if ( $pluginBtnBox.length && $arrow.length ) {
-					//console.log("both are found");
-
-					var styleProps = $pluginBtnBox.css([
-							'position',
-							'top',
-							'right',
-							'z-index'
-						]);
-
-						$.each(styleProps, function(prop, value) {				
-							if ( prop === 'top' ) {
-								value = parseInt(value) + 98 + 'px';
-							}
-							else if ( prop === 'right' ) {
-								value = parseInt(value) + 64 + 'px';
-							}
-
-							$arrow.css(prop, value);
-						});
-				}
-				$arrow.css("display", "block");
-			}, 500);
-		}
-
-		function showDBPluginMenu() {
-			//console.log("2 showDBPluginMenu");
-
-			if ( typeof ( melisDashBoardDragnDrop ) !== "undefined" ) {
-				//console.log("melisDashBoardDragnDrop");
-
-				if ( $pluginBtnBox.length && $availPlugins.length ) {
-					$pluginBtnBox.addClass("shown");
-
-					//console.log("$pluginMenu: shown");
-				}
-			}
-
-			/*console.log("$pluginBtnBox length: ", $pluginBtnBox.length);
-			console.log("$availPlugins length: ", $availPlugins.length);
-			console.log("$pluginBtnBox: ", $pluginBtnBox);*/
-		}
-
-		// bind events .melis-dashboard-plugins-menu
-		$body.on("click", '.melis-opendashboard', function() {
-			renderArrow();
-		});
-
-		$body.on("click", $pluginBtn, function() {
-			$arrow.fadeOut("slow");
-		});
-
-		return {
-			renderArrow : renderArrow
-		};
-		
-})();
 /**
  * @license
  * Lodash lodash.com/license | Underscore.js 1.8.3 underscorejs.org/LICENSE
@@ -34687,12 +34612,6 @@ var melisDashBoardDragnDrop = {
     getCurrentPlugin: function() {
         // get current plugin
         return this.currentPlugin;
-    },
-
-    countNumberPlugins: function() {
-        var countItem = this.$gs.find(".grid-stack-item").length;
-
-        return countItem;
     }
 };
 
@@ -34700,3 +34619,42 @@ $(function(){
     // init
     melisDashBoardDragnDrop.init();
 });
+
+var melisDashboardRightsNotifications = (function(window) {
+
+	// cache DOM
+	var $body 			= $("body"),
+		$pluginBtn 		= $body.find("#melisDashBoardPluginBtn"),
+		$pluginBtnBox	= $body.find("#melisDashBoardPluginBtn").closest(".melis-core-dashboard-dnd-box"),
+		$dboard 		= $body.find("#"+activeTabId+" [data-tool-meliskey='meliscore_dashboard']"),
+		$gsItem 		= $dboard.find(".grid-stack .grid-stack-item"),
+		$dbPlugins 		= $body.find("#"+activeTabId+" .melis-dashboard-plugins"),
+		$noDbAccess 	= $dbPlugins.find(".no-dashboard-access"),
+		$noPlugins 		= $dbPlugins.find(".no-plugins"),
+		$availPlugins 	= $pluginBtnBox.find(".melis-core-dashboard-dnd-fix-menu .melis-core-dashboard-plugin-filter-box"),
+		$arrow 			= "<div id='plugin-menu-arrow-wrapper'><i class='fa fa-location-arrow plugin-menu-arrow' aria-hidden='true'></i><div class='plugin-menu-arrow-overlay'></div></div>";
+
+		function renderArrow() {
+			if ( $noPlugins.length ) {
+				if ( $pluginBtnBox.length && !$pluginBtnBox.hasClass("shown") && $gsItem.length === 0 ) {
+					$body.append( $arrow );
+				}
+			}
+		}
+
+		// bind events .melis-dashboard-plugins-menu
+		$body.on("click", '.melis-opendashboard', function() {
+			renderArrow();
+		});
+
+		/* $body.on("click", $pluginBtn, function() {
+			$arrow.fadeOut("slow");
+		}); */
+
+		renderArrow();
+
+		return {
+			renderArrow : renderArrow
+		};
+		
+})(window);

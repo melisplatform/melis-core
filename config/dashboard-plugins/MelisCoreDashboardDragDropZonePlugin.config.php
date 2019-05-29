@@ -15,6 +15,8 @@ return array(
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
 
                     '/MelisCore/js/core/gridstack.init.js',
+
+                    '/MelisCore/js/core/melisDashboardRightsNotifications.js'
                 )
             ),
             'interface' => [
