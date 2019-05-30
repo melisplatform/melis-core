@@ -321,16 +321,29 @@ var melisCore = (function(window){
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
     $(document).on('show.bs.modal', '.modal', function (event) {
-        var zIndex = 1040 + (10 * $('.modal:visible').length);
-        $(this).css('z-index', zIndex);
-        setTimeout(function() {
-            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-        }, 0);
+        // id_meliscms_find_page_tree_container 10001
+        // modal-backdrop 10000
+        // fix for z-index issue on blog/news comments add comment, $(".meliscms_center_tabs[data-meliskey='melissb_page_comments']").find(".active")
+        var id = $(this)[0].id;
+
+            if ( id === "id_meliscms_find_page_tree_container" ) {
+                setTimeout(function() {
+                    $(this).css('z-index', 10001);
+                    $('.modal-backdrop').not('.modal-stack').css('z-index', 10000).addClass('modal-stack');
+                }, 100);
+            } 
+            else {
+                var zIndex = 1040 + (10 * $('.modal:visible').length);
+                $(this).css('z-index', zIndex);
+                setTimeout(function() {
+                    $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+                }, 0);
+            }
     });
 
     // ---=[ MODAL BUGFIX ]=--- for showing 2 level modals
     $(document).on('hidden.bs.modal', '.modal', function (event) {
-        var check = $body.find(".modal-backdrop").length;
+        var check = $body.find(".modal-backdrop").length; // .modal-backdrop
         if(check){
             $body.addClass("modal-open");
         }

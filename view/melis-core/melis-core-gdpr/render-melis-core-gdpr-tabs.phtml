@@ -101,7 +101,7 @@
                                                     <td class="not-included" style="width:1%;padding-left: 15px !important;padding-right: 15px !important;">
                                                         <div class="checkbox checkbox-single margin-none">
                                                             <label class="checkbox-custom">
-                                                                <i class="fa fa-fw fa-square-o"></i>
+                                                                <i class="fa fa-fw fa-square-o custom-gdpr-tab-table-checkbox"></i>
                                                                 <input type="checkbox" class="checkRow" value="<?= $dataArrayKey ?>">
                                                             </label>
                                                         </div>
@@ -128,7 +128,7 @@
                                                 if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
                                                     $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
                                                 } else {
-                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "overlay");
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
                                                 }
 
                                                 $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
@@ -142,6 +142,7 @@
                                                     paging: false,
                                                     searching: false,
                                                     ordering: true,
+                                                    order: [[0, 'desc']],
                                                     language: {
                                                         "info": translations.tr_meliscore_dt_sInfo,
                                                     },
@@ -153,7 +154,7 @@
                                                         if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
                                                             $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
                                                         } else {
-                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "overlay");
+                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
                                                         }
 
                                                         $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");

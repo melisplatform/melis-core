@@ -2435,8 +2435,7 @@ return [
                                 'id' => 'id_melis_core_gdpr_search_form',
                                 'method' => 'POST',
                                 'action' => '',
-                                'class' => 'form-horizontal',
-                                'role' => 'form',
+                                'class' => 'form-horizontal'
                             ],
                             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
                             'elements' => [

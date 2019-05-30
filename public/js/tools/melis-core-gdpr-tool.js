@@ -1,5 +1,6 @@
 $(document).ready(function() {
     var $body = $('body');
+    var gdprFormData = [];
 
     $body.on('input', '#melis_core_gdpr_search_form_name input', function(){
         $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#686868");
@@ -11,6 +12,16 @@ $(document).ready(function() {
         $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#686868");
     });
 
+    // Toggle single checkbox
+    $body.on("click", ".cb-cont input[type=checkbox]", function () {
+        if ($(this).is(':checked')) {
+            $(this).prop("checked", true);
+            $(this).prev("span").find(".cbmask-inner").addClass('cb-active');
+        } else {
+            $(this).not(".requried-module").prop("checked", false);
+            $(this).not(".requried-module").prev("span").find(".cbmask-inner").removeClass('cb-active');
+        }
+    });
 
     /**
      * Submiting search form
@@ -32,12 +43,26 @@ $(document).ready(function() {
                 }
             }
         });
-
         //only send request if there are any inputs
         if (hasName == true || hasEmail == true) {
-            melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
-            GdprTool.getUserInfo(formInputs);
-            melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+            if (hasName == true) {
+                if (formInputs[0].value.length <= 2 && formInputs[0].name === 'user_name') {
+                    $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+
+                    melisHelper.melisKoNotification(
+                        translations.tr_melis_core_gdpr_notif_gdpr_search,
+                        translations.tr_melis_core_gdpr_notif_error_3ormore_inputs
+                    );
+                } else {
+                    melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
+                    GdprTool.getUserInfo(formInputs);
+                    melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+                }
+            } else {
+                melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
+                GdprTool.getUserInfo(formInputs);
+                melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+            }
         } else {
             if (hasName == false && hasEmail == false && hasSite == true) {
                 $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
@@ -224,6 +249,8 @@ $(document).ready(function() {
                 data     : $.param(formData)
             }).success(function (data) {
                 if (data.success) {
+                    //this will be used on deleting a row
+                    gdprFormData = formData;
                     //show the tabs so that the loading view will be shown to the user
                     $('#id_melis_core_gdpr_content_tabs').show();
                     melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
@@ -258,26 +285,17 @@ $(document).ready(function() {
                         encode: true,
                     }).success(function (data) {
                         if (data.success) {
-                            $.each(modules, function (key, value) {
-                                var moduleName = key;
-
-                                //remove selected rows in data table
-                                $('#' + moduleName).DataTable().rows('.checked').remove().draw();
+                            //Reload the zone after deleting a row.
+                            melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
+                                show: true,
+                                formData: gdprFormData,
                             });
 
-                            var countOfRows = 0;
-                            var moduleName;
-
-                            $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function () {
-                                countOfRows = $(this).find('tbody tr').length;
-                                moduleName = $(this).find('tbody').closest('table').attr('id');
-
-                                var pTag = $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p');
-                                var charIndex = pTag.html().indexOf(" (");
-                                var lengthToDelete = charIndex - pTag.html().length;
-
-                                pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (0/" + countOfRows + ")");
-                            });
+                            melisHelper.melisOkNotification(
+                                translations.tr_melis_core_gdpr,
+                                translations.tr_melis_core_gdpr_tool_notif_delete_selection_success,
+                            );
+                            melisCore.flashMessenger();
                         } else {
                             melisHelper.melisKoNotification(
                                 translations.tr_melis_core_gdpr_notif_delete_user,
@@ -296,7 +314,6 @@ $(document).ready(function() {
                 url:'/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected',
                 data: {'id' : modules},
                 success: function (data, textStatus, request) {
-                    // if data is not empty
                     if (data) {
                         var fileName = request.getResponseHeader("fileName");
                         var mime = request.getResponseHeader("Content-Type");
