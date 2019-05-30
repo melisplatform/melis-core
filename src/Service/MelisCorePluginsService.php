@@ -199,10 +199,8 @@ class MelisCorePluginsService extends MelisCoreGeneralService
             // simplified data into one array
             foreach ($marketPlaceModuleCategories as $idx => $val) {
                 // check category if it is empty
-                $checkModuleSection = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-packages/page/1/search//item_per_page/0/order/asc/order_by//status/2/group/$val->mp_group_id");
-                $checkModuleSection = json_decode($checkModuleSection);
                 // we will not include section(s) does'nt have any modules under
-                if (! empty($checkModuleSection->packages)) {
+                if ($val->module_count > 0) {
                     $simplifiedModuleCategories[$idx] = $val->mp_group_name;
                 }
             }
