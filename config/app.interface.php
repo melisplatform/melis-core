@@ -107,6 +107,25 @@ return array(
                         ),
                     ),
                 ),
+                /*
+                 * fallback melis marketplace module section
+                 *  - if the platform is not connected to the internet
+                 */
+                'fallBacksection' => [
+                    'MelisCore',
+                    'MelisCms',
+                    'MelisMarketing',
+                    'MelisCommerce',
+                    'MelisSites'
+                ],
+                /*
+                 * duration of new plugins (dashboard and templating(pages)) notifications
+                 * in ( number of days )
+                 */
+                'new_plugin_notification' => [
+                    'menu_handler' => "5", // equivalent to 5 days
+                    "inside_menu"  => "10" // equivalent to 10 days
+                ],
             ),
             'ressources' => array(
                 'css' => array(
@@ -236,7 +255,7 @@ return array(
                  */
                 'build' => [
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => true,
+                    'use_build_assets' =>  true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
@@ -339,7 +358,7 @@ return array(
                         'jsdatas' => array()
                     ),
                     'interface' => array(
-                        'meliscore_leftmenu_identity' => array(
+                        'meliscore_leftmenu_identity' =>  array(
                             'conf' => array(
                                 'id' => 'id_meliscore_leftmenu_identity',
                                 'melisKey' => 'meliscore_leftmenu_identity',
@@ -407,7 +426,7 @@ return array(
                                                         'jscallback' => '',
                                                         'jsdatas' => array()
                                                     ),
-                                                    'interface' => array(
+                                                    'interface' =>  array(
                                                         'meliscore_user_profile_form' => array(
                                                             'conf' => array(
                                                                 'id' => 'id_meliscore_user_profile_form',
@@ -431,7 +450,7 @@ return array(
                                 ),
                             )
                         ),
-                        'meliscore_leftmenu_dashboard' => array(
+                        'meliscore_leftmenu_dashboard' =>  array(
                             'conf' => array(
                                 'id' => 'id_meliscore_leftmenu_dashboard',
                                 'melisKey' => 'meliscore_leftmenu_dashboard',
@@ -471,7 +490,6 @@ return array(
                         'action' => 'center',
                         'jscallback' => '',
                         'jsdatas' => array()
-
                     ),
                     'interface' => array(
                         'meliscore_dashboard' => array(
