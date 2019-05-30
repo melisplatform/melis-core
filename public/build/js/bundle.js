@@ -28848,20 +28848,6 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    $body.on("click", '.melis-core-dashboard-ps-box', checkScrollBar);
-
-    // drag and drop fix menu on dashboard
-    function checkScrollBar() {
-        var $dndMenu    = $(".melis-core-dashboard-dnd-fix-menu"),
-            $delAllCont = $(".melis-core-dashboard-plugin-delete-all");
-
-        setTimeout(function() {
-            if ( $dndMenu.hasScrollBar() ) {
-                $delAllCont.css("width", "164px");
-            }
-        }, 500);
-    }
-
     /*
      * Added by: Junry @ 10/10/208
      * For responsive placement
@@ -28930,11 +28916,9 @@ var melisCore = (function(window){
 
     function showPlugLists() {
         if($(this).hasClass("active")) {
-            $(this).find('.melis-plugins-icon-new-parent').removeClass('reverse-color');
             $(this).removeClass("active")
                 .siblings(".melis-core-dashboard-plugin-snippets-box")
                 .slideUp();
-            $(this).siblings(".melis-core-dashboard-plugin-snippets-box").find(".melis-core-dashboard-category-btn.active").find('.melis-plugins-icon-new-child').removeClass('reverse-color');
             $(this).siblings(".melis-core-dashboard-plugin-snippets-box")
                 .find(".melis-core-dashboard-category-btn.active")
                 .removeClass("active")
@@ -28942,9 +28926,7 @@ var melisCore = (function(window){
                 .slideUp();
 
         } else {
-            $(".melis-core-dashboard-filter-btn.active").find('.melis-plugins-icon-new-parent').removeClass('reverse-color');
             $(".melis-core-dashboard-filter-btn.active").removeClass("active").siblings(".melis-core-dashboard-plugin-snippets-box").slideUp();
-            $(this).find('.melis-plugins-icon-new-parent').addClass('reverse-color');
             $(this).addClass("active");
             $(".melis-core-dashboard-filter-btn.active").siblings(".melis-core-dashboard-plugin-snippets-box").slideDown();
         }
@@ -28952,13 +28934,10 @@ var melisCore = (function(window){
 
     function showCatPlugLists() {
         if($(this).hasClass("active")) {
-            $(this).find('.melis-plugins-icon-new-child').removeClass('reverse-color');
             $(this).removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
         } else {
-            $(".melis-core-dashboard-category-btn.active").find('.melis-plugins-icon-new-child').removeClass('reverse-color');
             $(".melis-core-dashboard-category-btn.active").removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
             $(this).addClass("active");
-            $(this).find('.melis-plugins-icon-new-child').addClass('reverse-color');
             $(".melis-core-dashboard-category-btn.active").siblings(".melis-core-dashboard-category-plugins-box").slideDown();
         }
     }
@@ -28974,6 +28953,23 @@ var melisCore = (function(window){
                     $this.parent("div").addClass("cls-checkbox");
                     $this.parent("div").append("<label for=" + $id + " class='cls-checkbox-label'></label>");
             });
+    }
+
+    // simple browser detect, common browser only
+    function browserDetect() {
+        var $html   = $("html"),
+            ua      = navigator.userAgent;
+        
+            /* MSIE used to detect old browsers and Trident used to newer ones, Edge for Microsoft Edge */
+            if ( ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1 || ua.indexOf("Edge/") > -1 ) {
+                $html.addClass("ie_edge");
+            } else if ( ua.indexOf("Chrome/") > -1 ) {
+                $html.addClass("chrome");
+            } else if ( ua.indexOf("Safari/") > -1 ) {
+                $html.addClass("safari");
+            } else if ( ua.indexOf("Firefox/") > -1 ) {
+                $html.addClass("firefox");
+            }
     }
 
 
@@ -29062,6 +29058,9 @@ var melisCore = (function(window){
 
     // INITIALIZE ===================================================================================================================
 
+    // browser detect
+    browserDetect();
+
     // set active tabs etc, flash messenger etc
     firstRender();
 
@@ -29106,18 +29105,10 @@ var melisCore = (function(window){
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
-
     };
 
 
 })(window);
-
-(function($) {
-    $.fn.hasScrollBar = function() {
-        return this.get(0).scrollHeight > this.get(0).clientHeight;
-    }
-})(jQuery);
-
 var melisHelper = (function(){
 
     var version = "2.0.0";

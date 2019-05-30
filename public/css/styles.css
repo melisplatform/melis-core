@@ -3986,6 +3986,12 @@ div#modal-user-management div.widget {
         -moz-transform: translate3d(180px, 0, 0);
         -ms-transform: translate3d(180px, 0, 0);
     }
+    .melis-core-dashboard-dnd-box.shown {
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+    }
     .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn .fa,
     .melis-core-dashboard-category-btn .fa {
         right: 6px;

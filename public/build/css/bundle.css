@@ -35794,7 +35794,7 @@ div#modal-user-management div.widget {
     position: fixed;
     top: 47px;
     right: 0px;
-    width: 215px;
+    width: 214px;
     height: calc(100% - 47px);
     font-family: 'Lato', sans-serif;
     font-weight: normal;
@@ -35803,15 +35803,14 @@ div#modal-user-management div.widget {
     border-bottom: 4px solid #e61c23;
     border-left: 4px solid #e61c23;
     background: #373737;
-    transform: translate3d(210px, 0, 0);
-    -webkit-transform: translate3d(210px, 0, 0);
-    -moz-transform: translate3d(210px, 0, 0);
-    -ms-transform: translate3d(210px, 0, 0);
+    transform: translate3d(214px, 0, 0);
+    -webkit-transform: translate3d(214px, 0, 0);
+    -moz-transform: translate3d(214px, 0, 0);
+    -ms-transform: translate3d(214px, 0, 0);
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
-    /* z-index: 90; */
-    z-index: 90999; /* added by: Junry @ 09/25/2018 */
+    z-index: 90;
 }
 
 /* dashboard plugin show */
@@ -36132,7 +36131,7 @@ div#modal-user-management div.widget {
 }
 
 .melis-plugins-icon-new-parent > .new-plugin-indicator {
-    color: #ed6623;
+    color: #72af46;
     left: -17px;
     letter-spacing: 0;
 }
@@ -36318,7 +36317,7 @@ div#modal-user-management div.widget {
 .melis-plugins-icon-new-child .melis-plugins-icon-new {
     font-size: 7px;
     left: -10px;
-    color: #ed6623;
+    color: #72af46;
     letter-spacing: 0;
 }
 .melis-section-icons {
@@ -36327,9 +36326,7 @@ div#modal-user-management div.widget {
     top: 7px;
     left: -21px
 }
-.reverse-color {
-    text-shadow: -1px 0 0 #ffffff, 0 1px 0 #ffffff, 1px 0 0 #ffffff, 0 -1px 0 #ffffff;
-}
+
 .text-new-plugin-indicator {
     position: absolute;
     font-size: 14px;
@@ -36346,18 +36343,24 @@ div#modal-user-management div.widget {
 .melis-core-dashboard-category-btn .module-name
 {
     display: block;
-    max-width: 87%;
+    max-width: 78%;
 }
 /* changes the width on smaller widths */
 @media (min-width: 320px) and (max-width: 640px) {
-    /*.melis-core-dashboard-dnd-box {
-        width: 140px;
-
-        transform: translate3d(140px, 0, 0);
-        -webkit-transform: translate3d(140px, 0, 0);
-        -moz-transform: translate3d(140px, 0, 0);
-        -ms-transform: translate3d(140px, 0, 0);
-    }*/
+    .melis-core-dashboard-dnd-box {
+        width: 180px;
+        
+        transform: translate3d(180px, 0, 0);
+        -webkit-transform: translate3d(180px, 0, 0);
+        -moz-transform: translate3d(180px, 0, 0);
+        -ms-transform: translate3d(180px, 0, 0);
+    }
+    .melis-core-dashboard-dnd-box.shown {
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+    }
     .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn .fa,
     .melis-core-dashboard-category-btn .fa {
         right: 6px;
@@ -36590,7 +36593,7 @@ div#modal-user-management div.widget {
 
 .grid-stack {
   position: relative;
-  min-height: 870px;
+  min-height: 840px;
 }
 
 .grid-stack.grid-stack-rtl {
