@@ -79,8 +79,9 @@ class DashboardPluginsController extends AbstractActionController
         // put section of dashboard plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         // organized plugins or put them into their respective sections
-        $plugins = $this->organizedPluginsBySection($plugins);
+        $plugins = array_filter($this->organizedPluginsBySection($plugins));
 
+     
         $view = new ViewModel();
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
