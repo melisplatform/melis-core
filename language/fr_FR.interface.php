@@ -198,6 +198,7 @@ return [
     
     // empty flash messenger text
     'tr_meliscore_no_notificaions' => 'Vous n\'avez pas de notification pour le moment',
+    'tr_meliscore_clear_notifications' => 'Effacer les notifications',
     
     // DataTables Translations http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json
     'tr_meliscore_dt_sEmptyTable' => 'Aucune donn&eacute;e disponible dans le tableau',

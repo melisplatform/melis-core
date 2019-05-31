@@ -28688,7 +28688,7 @@ var melisCore = (function(window){
                 var ctr = 0;
                 $body.find("#flash-messenger").empty();
                 var tempData = '';
-                var clearData = "<li style='border-left: 0 solid #ce5459;'><button id='clearNotifBtn' class='btn btn-primary' style='width:100%; border-width:0'>Clear Notification</button></li>";
+                var clearData = "<li style='border-left: 0 solid #ce5459;'><button id='clearNotifBtn' class='btn btn-primary' style='width:100%; border-width:0'>"+translations.tr_meliscore_clear_notifications+"</button></li>";
                 $.each(data, function(index, element) {
                     $.each(element, function(index, fm){
                         tempData += "" +
@@ -28718,7 +28718,6 @@ var melisCore = (function(window){
         $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
     });
     $body.on("click", "#clearNotifBtn", function(){
-        console.log("works");
         clearFlashMessages();
     });
 

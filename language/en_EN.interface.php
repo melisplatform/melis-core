@@ -196,6 +196,7 @@ return [
 
     // empty flash messenger text
     'tr_meliscore_no_notificaions' => 'You don\'t have any notification at the moment.',
+    'tr_meliscore_clear_notifications' => 'Clear Notifications',
 
 
     // DataTables Translations
