@@ -30,7 +30,7 @@ ________________________________________________________________________________
 
 #content > .innerAll.px2 {
     /* padding: 25px; */
-
+}
 
 .fa.fa-color-green:before {
     color: #72af46;
@@ -4192,4 +4192,21 @@ div#modal-user-management div.widget {
 
 .widget.widget-tabs-double.widget-regular > .widget-head ul li.active a i:before {
     color: #e61c23;
+}
+
+/* Dashboard plugins new icon */
+.melis-core-dashboard-plugin-snippets .melis-plugins-icon-new-child {
+    position: relative;
+    right: auto;
+    top: auto;
+    bottom: auto;
+}
+.melis-core-dashboard-plugin-snippets .melis-plugins-icon-new-child .melis-plugins-icon-new {
+    position: relative;
+    left: auto;
+    right: auto;
+    line-height: 0;
+}
+.melis-core-dashboard-plugin-title.has-new-plugins {
+    margin-top: 0;
 }

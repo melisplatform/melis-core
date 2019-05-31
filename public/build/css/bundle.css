@@ -32123,7 +32123,7 @@ body {
 
 @media (max-width:768px) {
     .sidebar {
-        z-index: 9999
+        z-index: 99999
     }
 }
 
@@ -32381,20 +32381,23 @@ ________________________________________________________________________________
 .melis-ui-outlined .container {
     width: inherit;
 }
+
 #content #meliscommerce_categories_list_search_input #loader.overlay-loader,
 #content #idAddProductText #loader.overlay-loader {
     height: 100%;
 }
+
 #idAddProductText.tab-pane.active {
     position: relative;
     overflow: hidden;
 }
+
 #idAddProductText.tab-pane.active .row .col-md-12 .row {
     margin: 0;
 }
 /* End add */
 
-#content > .innerAll.px2{
+#content > .innerAll.px2 {
     /* padding: 25px; */
 }
 
@@ -32659,7 +32662,7 @@ body{
     width: 10px;
     height: auto;
     margin-right: 10px;
-}
+ }
 
 .sidebar>.sidebarMenuWrapper{
     overflow: auto;
@@ -32864,7 +32867,7 @@ newplugin-cont span,
     width: auto;
 }
 
-#flash-messenger > li{
+#flash-messenger > li {
     cursor: default;
     position: relative;
 }
@@ -32892,7 +32895,7 @@ newplugin-cont span,
     left: 12px;
 }
 
-#flash-messenger > li a{
+#flash-messenger > li a {
     cursor: default;
     text-decoration: none;
 }
@@ -33430,19 +33433,38 @@ newplugin-cont span,
     animation: spinning-cog 1.3s infinite ease;
 }
 @-webkit-keyframes spinning-cog {
-    0% { -webkit-transform: rotate(0deg) }
-    20% { -webkit-transform: rotate(-45deg) }
-    100% { -webkit-transform: rotate(360deg) }
+    0% {
+        -webkit-transform: rotate(0deg)
+    }
+    20% {
+        -webkit-transform: rotate(-45deg)
+    }
+    100% {
+        -webkit-transform: rotate(360deg)
+    }
 }
 @-moz-keyframes spinning-cog {
-    0% { -moz-transform: rotate(0deg) }
-    20% { -moz-transform: rotate(-45deg) }
-    100% { -moz-transform: rotate(360deg) }
+    0% {
+        -moz-transform: rotate(0deg)
+    }
+    20% {
+        -moz-transform: rotate(-45deg)
+    }
+    100% {
+        -moz-transform: rotate(360deg)
+    }
 }
+
 @-o-keyframes spinning-cog {
-    0% { -o-transform: rotate(0deg) }
-    20% { -o-transform: rotate(-45deg) }
-    100% { -o-transform: rotate(360deg) }
+    0% {
+        -o-transform: rotate(0deg)
+    }
+    20% {
+        -o-transform: rotate(-45deg)
+    }
+    100% {
+        -o-transform: rotate(360deg)
+    }
 }
 @keyframes spinning-cog {
     0% { transform: rotate(0deg) }
@@ -33776,7 +33798,8 @@ table.dataTable thead>tr>td.sorting_desc:after {
 table.dataTable thead>tr>th.sorting_asc:after {
     top: 14px;
 }
-.datepicker thead th.dow{
+
+.datepicker thead th.dow {
     background: #e61c23 !important;
     color: #fff;
     -webkit-border-radius: 0 0 0 0;
@@ -34625,15 +34648,17 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
     display: block;
     min-height: 18px;
 }
-.form-group label i.fa-info-circle{
+
+.form-group label i.fa-info-circle {
     float: right;
 }
 .form-group i.fa-info-circle + .tooltip .tooltip-inner {
     padding: 6px 10px;
-    border-radius: 2px;
+	border-radius: 2px;
     background-color: #cb4040;
 }
-p.modal-text-info{
+
+p.modal-text-info {
     text-align: justify;
     text-justify: inter-word;
 }
@@ -34643,7 +34668,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     display: inline-block;
 }
 
-.input-button-hover-pointer{
+.input-button-hover-pointer {
     cursor: pointer;
 }
 
@@ -34756,7 +34781,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
     /* preloader */
     #content .tab-content .tab-pane > #loader.overlay-loader {
-        /* #content > #loader.overlay-loader { */
+    /* #content > #loader.overlay-loader { */
         height: calc(100vh - 47px);
     }
     #content form > #loader.overlay-loader {
@@ -35421,7 +35446,7 @@ div#modal-user-management div.widget {
     transition: all 0.4s ease-in-out;
 }
 .profile-photo .image-tool-tip {
-    position: absolute;
+	position: absolute;
     right: 15px;
     color: #fff;
     background: #e61c23;
@@ -35440,7 +35465,7 @@ div#modal-user-management div.widget {
 }
 .profile-photo #user-profile-pic {
     width: 100%;
-    height : 100%;
+    height: 100%;
 }
 .profile-photo .profile-photo-edit {
     cursor: pointer;
@@ -35463,7 +35488,7 @@ div#modal-user-management div.widget {
     transition: all 0.4s ease-in-out;
 }
 
-.profile-photo .profile-photo-edit small{
+.profile-photo .profile-photo-edit small {
     color: #fff;
 }
 .profile-photo .profile-photo-edit .fa {
@@ -35515,13 +35540,13 @@ div#modal-user-management div.widget {
     text-align: center;
 }
 
-.user-profile-tab-content{
+.user-profile-tab-content {
     padding: 15px;
 }
 
 .user-profile-btn-save {
     text-align: right;
-    margin: -20px auto 20px;
+	margin: -20px auto 20px;
 }
 
 .widget-user .widget-head.nav {
@@ -35568,14 +35593,14 @@ div#modal-user-management div.widget {
 
 /* Mobile Layout */
 @media only screen and (max-width: 1080px) {
-    .profile-photo{
+    .profile-photo {
         width: 150px;
         height: 150px;
     }
 
-    .profile-photo .profile-photo-edit {
-        top: 60px;
-    }
+	.profile-photo .profile-photo-edit {
+		top: 60px;
+	}
 }
 @media only screen and (max-width: 767px) {
     .tabsbar .nav-group-dropdown,
@@ -35643,8 +35668,8 @@ div#modal-user-management div.widget {
         content: '\f0d7';
     }
 
-    .profile-photo{
-        margin-top:50px !important;
+    .profile-photo {
+        margin-top: 50px !important;
     }
 }
 
@@ -35687,8 +35712,8 @@ div#modal-user-management div.widget {
 }
 
 .meliscore-platform-scheme-login-background {
-    /*    -webkit-clip-path: inset(30px 10px 30px 10px);
-        clip-path: inset(30px 10px 30px 10px);*/
+/*    -webkit-clip-path: inset(30px 10px 30px 10px);
+    clip-path: inset(30px 10px 30px 10px);*/
 }
 
 .meliscore-platform-scheme-sidebar-container {
@@ -35794,7 +35819,7 @@ div#modal-user-management div.widget {
     position: fixed;
     top: 47px;
     right: 0px;
-    width: 214px;
+    width: 180px;
     height: calc(100% - 47px);
     font-family: 'Lato', sans-serif;
     font-weight: normal;
@@ -35803,14 +35828,15 @@ div#modal-user-management div.widget {
     border-bottom: 4px solid #e61c23;
     border-left: 4px solid #e61c23;
     background: #373737;
-    transform: translate3d(214px, 0, 0);
-    -webkit-transform: translate3d(214px, 0, 0);
-    -moz-transform: translate3d(214px, 0, 0);
-    -ms-transform: translate3d(214px, 0, 0);
+    transform: translate3d(180px, 0, 0);
+    -webkit-transform: translate3d(180px, 0, 0);
+    -moz-transform: translate3d(180px, 0, 0);
+    -ms-transform: translate3d(180px, 0, 0);
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
-    z-index: 90;
+    z-index: 90; /* back to 90 to fix issue on mobile stacking of elements with content menu / tabs */
+    /* z-index: 90999; This is a fix to a particular issue but will affect the z-indexing of other elements specially on mobile view added by: Junry @ 09/25/2018 */
 }
 
 /* dashboard plugin show */
@@ -35894,7 +35920,8 @@ div#modal-user-management div.widget {
 }
 
 /* dashboard button active / open */
-.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active {
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active,
+.melis-core-dashboard-category-btn.active {
     background: #e61c23;
     border-color: #e61c23;
 }
@@ -35910,13 +35937,14 @@ div#modal-user-management div.widget {
 }
 
 /* dashboard button active / open icon */
-.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active .arrow-indicator,
-.melis-core-dashboard-category-btn.active .arrow-indicator{
+.melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active .fa,
+.melis-core-dashboard-category-btn.active .fa {
     -webkit-transform: rotateZ(-90deg);
     -moz-transform: rotateZ(-90deg);
     -ms-transform: rotateZ(-90deg);
     transform: rotateZ(-90deg);
 }
+
 /* plugin title */
 .melis-core-dashboard-plugin-title {
     display: block;
@@ -36045,6 +36073,14 @@ div#modal-user-management div.widget {
     border-color: #6f1518;
 }
 
+/*
+ * Added by: Junry @ 10/10/2018
+ * Gridstack
+ */
+.grid-stack-item-content .flotchart-holder {
+    margin-top: 60px;
+}
+
 /* placeholder */
 .grid .grid-widget-placeholder > .placeholder-content {
     background-color: #981a1f;
@@ -36060,17 +36096,16 @@ div#modal-user-management div.widget {
     text-align: center;
 }
 
+@media (max-width: 767px) {
+    .grid-stack .grid-stack-item:first-child .grid-stack-item-content .btn-group {
+        margin-right: 1.5em;
+    }
+}
+
 /*
  *
  * Dashboard Plugin Tooltip
  */
-
-/*
- * Added by: Junry @ 10/10/2018
- */
-.grid-stack-item-content .flotchart-holder {
-    margin-top: 60px;
-}
 
 .tooltip.top {
     margin-left: 10px;
@@ -36082,7 +36117,7 @@ div#modal-user-management div.widget {
     opacity: 0.9;
 }
 
-.cms-page-indicators-plugin .innerAll.bg-primary .lead {
+.cms-page-indicators-plugin .innerAll.bg-primary .lead { 
     font-size: 1.9em;
 }
 /* End /added */
@@ -36101,7 +36136,7 @@ div#modal-user-management div.widget {
     letter-spacing: 0.4px;
     line-height: 1.3;
     font-weight: normal;
-    box-shadow: 0px 0px 2px rgba(0,0,0,0.6);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.6);
     font-family: inherit;
 }
 
@@ -36426,6 +36461,17 @@ div#modal-user-management div.widget {
     top: -0.5em;
 }
 
+.tox .tox-tbtn:hover,
+.mce-btn.mce-open:hover {
+    background-color: #dee0e2;
+    box-shadow: none;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    color: #222f3e;
+    cursor: pointer;
+}
+
 .form-group .melis-check-box:checked + .cls-checkbox-label::after {
     content: '';
     background: red;
@@ -36477,6 +36523,61 @@ div#modal-user-management div.widget {
 
 .tab-pane .nav-tabs span img{
     width: 24px;
+}
+
+@media (max-width: 767px) {
+    /*#id_meliscore_header {
+        z-index: 99999;
+    }
+    #melis-id-nav-bar-tabs li a.close-tab,
+    #melis-id-nav-bar-tabs li a.dropdown-toggle {
+        display: inline-block;
+    }*/
+    #melis-id-nav-bar-tabs li a.dropdown-toggle {
+        width: calc(100% - 48px);
+    }
+}
+
+/** Language flag image style */
+.imgDisplay {
+    border: none;
+    max-width: 24px;
+    max-height: 24px;
+}
+
+/** GDPR search form checkbox */
+.melis-core-gdpr-check-box1 {
+    margin-left: 105px !important;
+}
+
+.custom-gdpr-tab-table-checkbox {
+    margin-top: -13px;
+}
+
+.custom-melis-core-gdpr-checkbox-span {
+    margin-top: -7px;
+    position: absolute;
+}
+
+.widget.widget-tabs-double.widget-regular > .widget-head ul li.active a i:before {
+    color: #e61c23;
+}
+
+/* Dashboard plugins new icon */
+.melis-core-dashboard-plugin-snippets .melis-plugins-icon-new-child {
+    position: relative;
+    right: auto;
+    top: auto;
+    bottom: auto;
+}
+.melis-core-dashboard-plugin-snippets .melis-plugins-icon-new-child .melis-plugins-icon-new {
+    position: relative;
+    left: auto;
+    right: auto;
+    line-height: 0;
+}
+.melis-core-dashboard-plugin-title.has-new-plugins {
+    margin-top: 0;
 }
 .module-lists{
 	background-color:#2c2c2c;
