@@ -117,6 +117,7 @@ var melisCore = (function(window){
                 var ctr = 0;
                 $body.find("#flash-messenger").empty();
                 var tempData = '';
+                var clearData = "<li style='border-left: 0 solid #ce5459;'><button id='clearNotifBtn' class='btn btn-primary' style='width:100%; border-width:0'>Clear Notification</button></li>";
                 $.each(data, function(index, element) {
                     $.each(element, function(index, fm){
                         tempData += "" +
@@ -132,6 +133,7 @@ var melisCore = (function(window){
                         ctr++;
                     });
                 });
+                $body.find("#flash-messenger").append(clearData);
                 $body.find("#flash-messenger").append(tempData);
                 $body.find("#id_meliscore_header_flash_messenger.dropdown.notification a span.badge").text(ctr);
             }
@@ -140,7 +142,12 @@ var melisCore = (function(window){
         });
     }
 
-    $body.find("#flash-messenger").mouseleave(function () {
+    $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
+        if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
+        $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
+    });
+    $body.on("click", "#clearNotifBtn", function(){
+        console.log("works");
         clearFlashMessages();
     });
 
