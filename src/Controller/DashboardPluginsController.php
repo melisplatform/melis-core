@@ -76,16 +76,22 @@ class DashboardPluginsController extends AbstractActionController
         }
         // melis plugin service
         $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
+        // check for new  or manually installed plugins and saved in db
+        $pluginSvc->checkDashboardPlugins();
         // put section of dashboard plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         // organized plugins or put them into their respective sections
         $plugins = $this->organizedPluginsBySection($plugins);
+        // get the latest plugin installed
+        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
+        // for new plugin notifications
+        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
 
         $view = new ViewModel();
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
-        $view->latestPluginInstalled = "";
-        $view->newPluginNotification = "";
+        $view->latestPluginInstalled = $latesPlugin;
+        $view->newPluginNotification = $pluginMenuHandler;
         
         return $view;
     }
@@ -302,7 +308,7 @@ class DashboardPluginsController extends AbstractActionController
                            // set a plugin in a section
                            $newPluginList[$pluginSection][$moduleName][$pluginName] = $config;
                            // indication that the plugin is newly installed
-                           $newPluginList[$pluginSection][$moduleName][$pluginName]['isNew'] = false;//;$melisPuginsSvc->pluginIsNew($pluginName);
+                           $newPluginList[$pluginSection][$moduleName][$pluginName]['isNew'] = $melisPuginsSvc->pluginIsNew($pluginName);
                        } else {
                            /*
                             * if the section does not belong to the group it will go to the
