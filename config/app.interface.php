@@ -175,6 +175,9 @@ return array(
                     '/melis/get-translations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
 
+                    // jquery session
+                    '/MelisCore/js/core/jquery.session.js',
+
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
                     '/MelisCore/assets/components/core/js/core.init.js',
@@ -227,9 +230,7 @@ return array(
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
-                    '/MelisCore/js/tools/melis-core-gdpr-tool.js',
-
-                    '/MelisCore/js/core/melisDashboardRightsNotifications.js'
+                    '/MelisCore/js/tools/melis-core-gdpr-tool.js'
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make

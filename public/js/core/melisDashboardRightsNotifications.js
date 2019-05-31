@@ -1,4 +1,4 @@
-var melisDashboardRightsNotifications = (function(window) {
+var melisDashboardRightsNotifications = (function() {
 
 	// cache DOM
 	var $body 			= $("body"),
@@ -36,4 +36,4 @@ var melisDashboardRightsNotifications = (function(window) {
 			renderArrow : renderArrow
 		};
 		
-})(window);
+})();

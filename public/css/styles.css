@@ -3434,8 +3434,8 @@ div#modal-user-management div.widget {
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
-    /* z-index: 90; */
-    z-index: 90999; /* added by: Junry @ 09/25/2018 */
+    z-index: 90;
+    /* z-index: 90999; added by: Junry @ 09/25/2018 this is a fixed for responsive issue */
 }
 
 /* dashboard plugin show */
@@ -3916,7 +3916,7 @@ div#modal-user-management div.widget {
 
 /* Custom Animate.css */
 
-.animated.hinge {
+/* .animated.hinge {
     -webkit-animation-duration: 2s;
             animation-duration: 2s;
 }
@@ -3956,4 +3956,4 @@ div#modal-user-management div.widget {
 .zoomIn {
     -webkit-animation-name: zoomIn;
             animation-name: zoomIn;
-}
+} */

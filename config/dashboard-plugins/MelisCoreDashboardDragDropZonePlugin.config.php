@@ -6,6 +6,9 @@ return array(
                 'css' => array(
                     // Gridstack
                     '/MelisCore/assets/components/plugins/gridstack/css/gridstack.css',
+
+                    // display notify / page walkthrough
+                    '/MelisCore/assets/components/plugins/enjoyhint/css/enjoyhint.css'
                 ),
                 'js' => array(
                     // Gridstack
@@ -14,9 +17,13 @@ return array(
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.js',
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
 
+                    // display notify / page walkthrough
+                    '/MelisCore/assets/components/plugins/enjoyhint/js/enjoyhint.js',
+
                     '/MelisCore/js/core/gridstack.init.js',
 
-                    '/MelisCore/js/core/melisDashboardRightsNotifications.js'
+                    // page walkthrough
+                    '/MelisCore/js/core/dashboard-notify.js'
                 )
             ),
             'interface' => [
