@@ -235,6 +235,7 @@ class DashboardPluginsController extends AbstractActionController
             foreach ($plugins as $moduleName => $dashboardPlugin) {
                if (is_array($dashboardPlugin)) {
                    foreach ($dashboardPlugin as $pluginName => $conf) {
+                       $pluginId = $conf['plugin_id'] ?? $conf['plugin'];
                        if (! isset($conf['section']) && empty($conf['section'])) {
                            // if there is no ['section']key on  config
                            // or there is a ['section'] key but empty
@@ -242,7 +243,7 @@ class DashboardPluginsController extends AbstractActionController
                            $conf['section'] = "Others";
                        }
 
-                       $pluginList[$moduleName][$pluginName] = $conf;
+                       $pluginList[$moduleName][$pluginId] = $conf;
                    }
                }
             }
@@ -297,6 +298,7 @@ class DashboardPluginsController extends AbstractActionController
                }
                if (! empty($dashboardPlugins) && is_array($dashboardPlugins)) {
                    foreach ($dashboardPlugins as $pluginName => $config) {
+                       $pluginId = $config['plugin_id'] ?? $config['plugin'];
                        // put section for public module
                        if (! empty($moduleSection)) {
                            $pluginSection = $moduleSection;
@@ -306,15 +308,15 @@ class DashboardPluginsController extends AbstractActionController
                        }
                        if (in_array($pluginSection,$melisSection)) {
                            // set a plugin in a section
-                           $newPluginList[$pluginSection][$moduleName][$pluginName] = $config;
+                           $newPluginList[$pluginSection][$moduleName][$pluginId] = $config;
                            // indication that the plugin is newly installed
-                           $newPluginList[$pluginSection][$moduleName][$pluginName]['isNew'] = $melisPuginsSvc->pluginIsNew($pluginName);
+                           $newPluginList[$pluginSection][$moduleName][$pluginId]['isNew'] = $melisPuginsSvc->pluginIsNew($pluginId);
                        } else {
                            /*
                             * if the section does not belong to the group it will go to the
                             * others section direclty
                             */
-                           $newPluginList['Others'][$moduleName][$pluginName] = $config;
+                           $newPluginList['Others'][$moduleName][$pluginId] = $config;
                        }
                    }
                }

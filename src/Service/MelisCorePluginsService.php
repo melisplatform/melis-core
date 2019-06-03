@@ -80,7 +80,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
                     $plugin = $melisConfig->getItem($path);
                 }
                 if(!isset($plugin['datas']['skip_plugin_container'])) {
-                    $name = $plugin['datas']['name'];
+                    $name = $plugin['datas']['plugin_id'] ?? $plugin['datas']['plugin'];
                     $module = $plugin['forward']['module'];
                     $plugins[$module][] = $name;
                 }

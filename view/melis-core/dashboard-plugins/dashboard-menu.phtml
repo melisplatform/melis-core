@@ -21,7 +21,8 @@
                         $sectionChildrenCtr = count($modules);
                         foreach ($modules as $moduleName => $plugins){
                             foreach ($plugins as $name => $conf) {
-                                if (isset($modules[$moduleName][$name]['isNew']) && $modules[$moduleName][$name]['isNew']) {
+                                $pluginId = $conf['plugin_id'] ?? $conf['plugin'];
+                                if (isset($modules[$moduleName][$pluginId]['isNew']) && $modules[$moduleName][$pluginId]['isNew']) {
                                     // plugin counter
                                     $ctrNewPlugins++;
                                     // section that has new plugins under

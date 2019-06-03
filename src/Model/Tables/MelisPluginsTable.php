@@ -28,10 +28,11 @@ class MelisPluginsTable extends MelisGenericTable
 	public function getLatestPlugin($pluginType)
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(['plugin_id','plugin_name','plugin_module','latest_plugin_datetime' => new Expression('max(`plugin_date_installed`)')]);
+        $select->columns(['latest_plugin_datetime' => new Expression('max(`plugin_date_installed`)')]);
         $select->where->equalTo('plugin_type',$pluginType);
-        $select->group('plugin_name');
-        $select->limit(1);
+//        $select->group('plugin_name');
+//        $select->limit(1);
+//
         $resultSet = $this->tableGateway->selectWith($select);
 
         return $resultSet;
