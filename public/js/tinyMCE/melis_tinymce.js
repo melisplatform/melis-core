@@ -51,19 +51,13 @@ var melisTinyMCE = (function(){
         });
         
         editor.on("init",function() {
-            //var $body = $("body");
-
-                //$body.find(".tox-silver-sink").css('z-index', 10001);
-                
-                // adding of add tree view button from dialog initialization
-                tinyMceDialogInitAddTreeViewBtn(editor);
+            tinyMceDialogInitAddTreeViewBtn(editor);
         });
     }
 
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {
         var $body       = $("body"),
-            //transTitle  = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title,
             $dialog     = $body.find(".tox-dialog");
 
             editor.windowManager.oldOpen = editor.windowManager.open;  // save for later
@@ -83,10 +77,7 @@ var melisTinyMCE = (function(){
                 var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
 
                     if ( $dialog.length ) {
-
-                        // modal pop up
                         // window.parent.melisCms.modalPopUp(); // in melisCms.js but not used
-
                         modalPopUp();
                     }
 
