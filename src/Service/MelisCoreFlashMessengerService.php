@@ -108,6 +108,8 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
         {
             $flashMessages = array_reverse($flashMessages);
         }
+
+
         
         return Json::encode($flashMessages);
     }
@@ -119,6 +121,8 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
     {
         $this->fmContainer = new Container('fms');
         $this->fmContainer->getManager()->getStorage()->clear('fms');
+        $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
+        $melisCoreTableLog->update(array("log_status"=>0),"log_status",1);
     }
     
     public function dateMod($date, $locale)
