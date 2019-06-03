@@ -298,7 +298,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // Implementation start
         $melisConfig = $this->serviceLocator->get('config');
         // get plugin config
-        $pluginMenuHandlerDuration = $melisConfig['plugins']['meliscore']['datas']['new_plugin_notification']['menu_handler'] ?? "10";
+        $pluginMenuHandlerDuration = $melisConfig['plugins']['meliscore']['datas']['new_plugin_notification']['menu_handler'] ?? "5";
 
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] =  $pluginMenuHandlerDuration;
