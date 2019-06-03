@@ -452,7 +452,7 @@ class MelisAuthController extends AbstractActionController
         $container->getManager()->getStorage()->clear('meliscms');
 
         $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
-        $flashMessenger->clearFlashMessage();
+        $flashMessenger->clearFlashMessageSession();
 
         $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
 

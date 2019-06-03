@@ -115,7 +115,7 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
     }
     
     /**
-     * Clears all the flash messages
+     * Clears all the flash messages and session
      */
     public function clearFlashMessage()
     {
@@ -123,6 +123,14 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
         $this->fmContainer->getManager()->getStorage()->clear('fms');
         $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
         $melisCoreTableLog->update(array("log_status"=>0),"log_status",1);
+    }
+    /**
+     * Clears all the flash messages in session only
+     */
+    public function clearFlashMessageSession()
+    {
+        $this->fmContainer = new Container('fms');
+        $this->fmContainer->getManager()->getStorage()->clear('fms');
     }
     
     public function dateMod($date, $locale)
