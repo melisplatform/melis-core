@@ -81,7 +81,7 @@ class DashboardPluginsController extends AbstractActionController
         // put section of dashboard plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         // organized plugins or put them into their respective sections
-        $plugins = $this->organizedPluginsBySection($plugins);
+        $plugins = array_filter($this->organizedPluginsBySection($plugins));
         // get the latest plugin installed
         $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
         // for new plugin notifications
