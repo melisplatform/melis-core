@@ -36546,10 +36546,6 @@ div#modal-user-management div.widget {
 }
 
 /** GDPR search form checkbox */
-.custom-gdpr-tab-table-checkbox {
-    margin-top: -13px;
-}
-
 .custom-melis-core-gdpr-checkbox-span {
     margin-top: -7px;
     position: absolute;
