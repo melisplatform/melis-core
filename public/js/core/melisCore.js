@@ -504,26 +504,6 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    $body.on("click", '.melis-core-dashboard-ps-box', checkHasScrollBar);
-
-    // drag and drop fix menu on dashboard
-    function checkHasScrollBar() {
-        var $dndMenu    = $body.find(".melis-core-dashboard-dnd-fix-menu"),
-            $delAllCont = $body.find(".melis-core-dashboard-plugin-delete-all");
-
-        setTimeout(function() {
-            if ( $dndMenu.hasScrollBar() ) {
-                if ( screenSize > 640 ) {
-                    $delAllCont.css("width", "198px");
-                } else {
-                    $delAllCont.css("width", "164px");
-                }
-            } else {
-                $delAllCont.css("width", "100%");
-            }
-        }, 500);
-    }
-
     /*
      * Added by: Junry @ 10/10/208
      * For responsive placement
@@ -575,7 +555,7 @@ var melisCore = (function(window){
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $gs     = $body.find("#"+activeTabId+" .grid-stack"),
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth  = $gs.width() + $box.width();
+            nWidth  = ($gs.width() + $box.width()); // for new icon
 
             $box.toggleClass("shown");
 
@@ -589,7 +569,7 @@ var melisCore = (function(window){
                 }, 3);
             }
     });
-    
+
     function showPlugLists() {
         if($(this).hasClass("active")) {
             $(this).removeClass("active")
@@ -600,6 +580,7 @@ var melisCore = (function(window){
                 .removeClass("active")
                 .siblings(".melis-core-dashboard-category-plugins-box")
                 .slideUp();
+
         } else {
             $(".melis-core-dashboard-filter-btn.active").removeClass("active").siblings(".melis-core-dashboard-plugin-snippets-box").slideUp();
             $(this).addClass("active");
@@ -628,6 +609,23 @@ var melisCore = (function(window){
                     $this.parent("div").addClass("cls-checkbox");
                     $this.parent("div").append("<label for=" + $id + " class='cls-checkbox-label'></label>");
             });
+    }
+
+    // simple browser detect, common browser only
+    function browserDetect() {
+        var $html   = $("html"),
+            ua      = navigator.userAgent;
+        
+            /* MSIE used to detect old browsers and Trident used to newer ones, Edge for Microsoft Edge */
+            if ( ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1 || ua.indexOf("Edge/") > -1 ) {
+                $html.addClass("ie_edge");
+            } else if ( ua.indexOf("Chrome/") > -1 ) {
+                $html.addClass("chrome");
+            } else if ( ua.indexOf("Safari/") > -1 ) {
+                $html.addClass("safari");
+            } else if ( ua.indexOf("Firefox/") > -1 ) {
+                $html.addClass("firefox");
+            }
     }
 
 
@@ -716,6 +714,9 @@ var melisCore = (function(window){
 
     // INITIALIZE ===================================================================================================================
 
+    // browser detect
+    browserDetect();
+
     // set active tabs etc, flash messenger etc
     firstRender();
 
@@ -760,14 +761,7 @@ var melisCore = (function(window){
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
-
     };
 
 
 })(window);
-
-(function($) {
-    $.fn.hasScrollBar = function() {
-        return this.get(0).scrollHeight > this.get(0).clientHeight;
-    }
-})(jQuery);
