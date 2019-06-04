@@ -36557,6 +36557,8 @@ div#modal-user-management div.widget {
 
 .gdpr-table-checkbox-custom {
     padding-left: 0px !important;
+    display: block;
+    width: 23px;
 }
 
 @media (min-width: 320px) and (max-width: 374px) {
