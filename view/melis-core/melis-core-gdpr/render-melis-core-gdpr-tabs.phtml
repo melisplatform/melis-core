@@ -125,7 +125,6 @@
                                         $(document).ready(function() {
                                             //redraw table when tab is shown where the table is located so that the headers will have the right size
                                             $(document).on('shown.bs.tab', 'a[href="<?php echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
-                                                console.log('showing');
                                                 if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
                                                     $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
                                                 } else {
