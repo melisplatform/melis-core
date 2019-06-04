@@ -48,7 +48,7 @@
                         <?php foreach($modules as $module) { ?>
                             <?php if(isset($module['moduleName']) && isset($module['icon']) && isset($module['values']['columns']) && isset($module['values']['datas'])) {?>
                                 <div class="tab-pane" id="<?= $module['moduleName']; ?>-tab">
-                                    <table id="<?= $module['moduleName']; ?>" class="table table-striped table-primary dt-responsive stripe" style="width: 100%;">
+                                    <table id="<?= $module['moduleName']; ?>" class="table table-striped table-primary dt-responsive stripe" style="">
                                         <thead>
                                         <tr role="row">
                                             <th style="padding-right: 10px !important;">ID</th>
@@ -125,6 +125,7 @@
                                         $(document).ready(function() {
                                             //redraw table when tab is shown where the table is located so that the headers will have the right size
                                             $(document).on('shown.bs.tab', 'a[href="<?php echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
+                                                console.log('showing');
                                                 if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
                                                     $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
                                                 } else {
@@ -132,6 +133,8 @@
                                                 }
 
                                                 $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                $("<?php echo '#' . $module['moduleName']; ?>").DataTable().draw();
+                                                $("<?php echo '#' . $module['moduleName']; ?>").DataTable().columns.adjust().responsive.recalc();
                                                 $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                                             });
 
@@ -143,6 +146,7 @@
                                                     searching: false,
                                                     ordering: true,
                                                     order: [[0, 'desc']],
+                                                    responsive: true,
                                                     language: {
                                                         "info": translations.tr_meliscore_dt_sInfo,
                                                     },
