@@ -36583,6 +36583,11 @@ div#modal-user-management div.widget {
 .melis-core-dashboard-plugin-title.has-new-plugins {
     margin-top: 0;
 }
+
+/* Users Rights */
+#btnResetRights {
+    margin-right: 20px;
+}
 .module-lists{
 	background-color:#2c2c2c;
 }

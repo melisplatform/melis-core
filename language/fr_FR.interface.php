@@ -135,6 +135,8 @@ return [
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
     'tr_meliscore_tool_user_update' => 'Sauvegarder',
+    'tr_meliscore_tool_user_reset_rights' => 'Réinitialiser les droits',
+    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Êtes-vous sur de vouloir réinitialiser les droits de cet utilisateur ? <br>Cela empechera l\'accès à la plupart des fonctionnalités de la plateforme et vous devrez recréer des droits manuellement.',
 
     'tr_meliscore_forgot_password' => 'Mot de passe oublié',
     // Emails

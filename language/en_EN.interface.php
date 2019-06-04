@@ -133,6 +133,8 @@ return [
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
     'tr_meliscore_tool_user_update' => 'Save',
+    'tr_meliscore_tool_user_reset_rights' => 'Reset rights',
+    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Are you sure to reset the rights of this user? <br>This will close access to most functionalities of the platform and you will have to set the new rights manually.',
 
     'tr_meliscore_forgot_password' => 'Forgot password',
     // Emails
