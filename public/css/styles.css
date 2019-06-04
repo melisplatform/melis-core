@@ -4336,6 +4336,10 @@ div#modal-user-management div.widget {
     position: absolute;
 }
 
+#id_melis_core_gdpr_tabs .widget-tabs .nav-tabs > li > a.glyphicons {
+    border-bottom: none;
+}
+
 .widget.widget-tabs-double.widget-regular > .widget-head ul li.active a i:before {
     color: #e61c23;
 }
