@@ -19,12 +19,20 @@ class MelisPluginsTable extends MelisGenericTable
 		parent::__construct($tableGateway);
 		$this->idField = 'plugin_id';
 	}
+
+    /**
+     * Get the latest plugin installed
+     * @param $pluginType   ( dashboard || templating )
+     * @return \Zend\Db\ResultSet\ResultSetInterface
+     */
 	public function getLatestPlugin($pluginType)
     {
         $select = $this->tableGateway->getSql()->select();
-        $select->columns(['*','latest_plugin_datetime' => new Expression('max(`plugin_date_installed`)')]);
+        $select->columns(['latest_plugin_datetime' => new Expression('max(`plugin_date_installed`)')]);
         $select->where->equalTo('plugin_type',$pluginType);
-
+//        $select->group('plugin_name');
+//        $select->limit(1);
+//
         $resultSet = $this->tableGateway->selectWith($select);
 
         return $resultSet;

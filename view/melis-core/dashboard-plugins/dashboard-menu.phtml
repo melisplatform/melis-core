@@ -15,17 +15,20 @@
             <?php if(!empty($this->plugins)) { ?>
                 <?php foreach ($this->plugins as $moduleSection => $modules){ ?>
                     <?php
+                        $maxWidthClassFirst = "";
+
                         // checking of plugins
                         $sectionChildrenCtr = count($modules);
                         foreach ($modules as $moduleName => $plugins){
                             foreach ($plugins as $name => $conf) {
-                                if (isset($modules[$moduleName][$name]['isNew']) && $modules[$moduleName][$name]['isNew']) {
+                                $pluginId = $conf['plugin_id'] ?? $conf['plugin'];
+                                if (isset($modules[$moduleName][$pluginId]['isNew']) && $modules[$moduleName][$pluginId]['isNew']) {
                                     // plugin counter
                                     $ctrNewPlugins++;
                                     // section that has new plugins under
-                                    $sectionHasNewPlugins[] =  "" ;//$moduleSection;
+                                    $sectionHasNewPlugins[] =  $moduleSection;
                                     // module that has new plugins under
-                                    $moduleHasNewPlugins[] =  "";//$moduleName;
+                                    $moduleHasNewPlugins[] =  $moduleName;
                                 }
                             }
                         }
@@ -37,12 +40,12 @@
                                         <div class="melis-plugins-icon-new-parent">
                                             <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
                                         </div>
-                                    <?php }?>
+                                    <?php $maxWidthClassFirst = "module-name";}?>
                                   <?php
                                   // get melis module section icons
                                   echo $this->getMelisSectionIcons($moduleSection);
                                   ?>
-                                  <span>
+                                  <span class="<?=$maxWidthClassFirst ?>">
                                       <?php
                                       $sectionName = $moduleSection;
                                       if ($moduleSection == 'CustomProjects') {
@@ -56,50 +59,57 @@
                             <div class="melis-core-dashboard-plugin-snippets-box">
                                 <?php foreach ($modules as $moduleName => $plugins){ ?>
                                     <?php
+                                    $maxWidthClass2nd = "";
                                     // one special rule
                                     // if there's only one subsection then
                                     // dont rewrite the module name and just list plugins
                                     if ($sectionChildrenCtr > 1) { ?>
                                         <div class="melis-core-category-box" >
                                             <span class="melis-core-dashboard-category-btn">
-                                                <span>
-                                                    <?= $this->translate('tr_PluginSection_'.strtolower($moduleName)); ?>
-                                                </span>
                                                 <?php  if (in_array($moduleName,$moduleHasNewPlugins)) { ?>
                                                     <div class="melis-plugins-icon-new-child">
                                                         <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
                                                     </div>
-                                                <?php }?>
+                                                <?php $maxWidthClass2nd = "module-name";} ?>
+                                                <span class="<?= $maxWidthClass2nd ?>">
+                                                    <?= $this->translate('tr_PluginSection_'.strtolower($moduleName)); ?>
+                                                </span>
                                                 <i class="fa fa-angle-down arrow-indicator"></i>
                                             </span>
                                             <div class="melis-core-dashboard-category-plugins-box">
                                                 <?php foreach ($plugins as $pluginName => $conf) { ?>
-                                                    <?php
-                                                    $borderClass = "";
-                                                    if (isset($conf['isNew']) && $conf['isNew']) {
-                                                        $borderClass = "border-new-plugin";
-                                                    }
-                                                    ?>
-                                                    <div class="melis-core-dashboard-plugin-snippets <?= $borderClass ?>" title="<?php echo $this->translate($conf['description'])?>">
+                                                    <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
                                                         <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
-                                                        <img src="<?php echo $conf['thumbnail']?>" alt="">
-                                                        <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($conf['name'])?></span>
+                                                        <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="img-responsive">
+                                                        <?php 
+                                                            $hasNewPlugins = "";
+                                                            if (in_array($moduleName,$moduleHasNewPlugins)) {
+                                                                $hasNewPlugins = "has-new-plugins";
+                                                        ?>
+                                                            <div class="melis-plugins-icon-new-child">
+                                                                <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
+                                                            </div>
+                                                        <?php $maxWidthClass2nd = "module-name";} ?>
+                                                        <span class="melis-core-dashboard-plugin-title <?php echo $hasNewPlugins; ?>"><?php echo $this->translate($conf['name'])?></span>
                                                     </div>
                                                 <?php }?>
                                             </div>
                                         </div>
                                     <?php } else {?>
                                         <?php foreach ($plugins as $pluginName => $conf) { ?>
-                                            <?php
-                                            $borderClass = "";
-                                            if (isset($conf['isNew']) && $conf['isNew']) {
-                                                $borderClass = "border-new-plugin";
-                                            }
-                                            ?>
-                                            <div class="melis-core-dashboard-plugin-snippets <?= $borderClass ?>" title="<?php echo $this->translate($conf['description'])?>">
+                                            <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
                                                 <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
-                                                <img src="<?php echo $conf['thumbnail']?>" alt="">
-                                                <span class="melis-core-dashboard-plugin-title"><?php echo $this->translate($conf['name'])?></span>
+                                                <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="img-responsive">
+                                                <?php 
+                                                    $hasNewPlugins = "";
+                                                    if (in_array($moduleName,$moduleHasNewPlugins)) {
+                                                        $hasNewPlugins = "has-new-plugins";
+                                                ?>
+                                                    <div class="melis-plugins-icon-new-child">
+                                                        <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
+                                                    </div>
+                                                <?php $maxWidthClass2nd = "module-name";} ?>
+                                                <span class="melis-core-dashboard-plugin-title <?php echo $hasNewPlugins; ?>"><?php echo $this->translate($conf['name'])?></span>
                                             </div>
                                         <?php }?>
                                     <?php }?>
@@ -120,8 +130,7 @@
         </div>
     </div>
     <div id="melisDashBoardPluginBtn" title="Dashboard Plugins">
-        <?php $ctrNewPlugins = -1;
-            if ($ctrNewPlugins > 0 ) {?>
+        <?php if ($ctrNewPlugins > 0 ) {?>
             <?php
                 // latesplugin installed
                 $latestPlugin = $this->latestPluginInstalled;
