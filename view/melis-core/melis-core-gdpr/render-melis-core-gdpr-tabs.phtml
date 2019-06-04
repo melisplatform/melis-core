@@ -8,13 +8,13 @@
         <!-- TOP BUTTONS HOLDER -->
         <div class="row pull-right" style="margin-top: -40px;margin-right: 1px;">
             <!-- CONDITION -->
-                <button type="button" class="btn btn-success extract-selected"><i class="fa fa-check" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_extract_selected_button'); ?></button>
-                <button type="button" class="btn btn-danger delete-selected"><i class="fa fa-times" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_delete_selected_button'); ?></button>
+                <button type="button" class="btn btn-success extract-selected gdpr-table-action-button"><i class="fa fa-check" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_extract_selected_button'); ?></button>
+                <button type="button" class="btn btn-danger delete-selected gdpr-table-action-button"><i class="fa fa-times" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_delete_selected_button'); ?></button>
             <!-- END OF CONDITION -->
         </div>
         <!-- END OF TOP BUTTONS HOLDER -->
         <!-- INTERFACE / ZONES -->
-        <div class="widget widget-tabs widget-tabs-double widget-regular widget-tabs-vertical row row-merge">
+        <div class="widget widget-tabs widget-tabs-double widget-regular widget-tabs-vertical row row-merge gdpr-tab-table-container">
             <!-- Left Side Tab -->
             <!-- Tabs Heading -->
             <div class="widget-head col-md-3">
@@ -26,8 +26,8 @@
                         <?php foreach ($modules as $module) { ?>
 
                             <?php if(isset($module['moduleName']) && isset($module['icon'])) { ?>
-                                <li class="<?php echo $firstItem ? 'active' : ''; ?>" style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="<?= $module['moduleName'] ?>-left-tab" data-toggle="tab" class="">
-                                        <p style="margin-bottom: 0px;margin-top: 5px;"><i class="<?= $module['icon'] ?>" style="margin-left: 20px;margin-right: 12px; width: 22.86px;"></i><?= $module['moduleName'] ?></p></a>
+                                <li class="<?php echo $firstItem ? 'active' : ''; ?> gdpr-tab-menu-li" style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="<?= $module['moduleName'] ?>-left-tab" data-toggle="tab" class="">
+                                    <p style="margin-bottom: 0px;margin-top: 5px;white-space: nowrap;text-overflow: ellipsis;width: 100%;overflow: hidden;"><i class="<?= $module['icon'] ?>" style="margin-left: 20px;margin-right: 12px; width: 22.86px;"></i><?= $module['moduleName'] ?></p></a>
                                 </li>
                             <?php } ?>
                             <?php $firstItem = false; ?>
@@ -53,7 +53,7 @@
                                         <tr role="row">
                                             <th style="padding-right: 10px !important;">ID</th>
                                             <th class="sorting_disabled sort-all" style="padding-left: 15px !important;padding-right: 15px !important;">
-                                                <div class="checkbox checkbox-single margin-none">
+                                                <div class="checkbox checkbox-single margin-none gdpr-table-checkbox">
                                                     <label class="checkbox-custom">
                                                         <i class="fa fa-fw fa-square-o" style="color:white;"></i>
                                                         <input type="checkbox" class="check-all">
@@ -99,7 +99,7 @@
                                                 <tr role="row" class="">
                                                     <td style="width:1%;"><?= $dataArrayKey ?></td>
                                                     <td class="not-included" style="width:1%;padding-left: 15px !important;padding-right: 15px !important;">
-                                                        <div class="checkbox checkbox-single margin-none">
+                                                        <div class="checkbox checkbox-single margin-none gdpr-table-checkbox">
                                                             <label class="checkbox-custom">
                                                                 <i class="fa fa-fw fa-square-o custom-gdpr-tab-table-checkbox"></i>
                                                                 <input type="checkbox" class="checkRow" value="<?= $dataArrayKey ?>">
@@ -173,10 +173,10 @@
             </div>
         </div>
         <!-- END OF INTERFACE / ZONES -->
-        <div class="row pull-right" style="margin-top: 5px;margin-right: 1px;">
+        <div class="row pull-right" style="margin-top: 10px;margin-right: 1px;">
             <!-- CONDITION -->
-            <button type="button" class="btn btn-success extract-selected"><i class="fa fa-check" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_extract_selected_button'); ?></button>
-            <button type="button" class="btn btn-danger delete-selected"><i class="fa fa-times" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_delete_selected_button'); ?></button>
+            <button type="button" class="btn btn-success extract-selected gdpr-table-action-button"><i class="fa fa-check" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_extract_selected_button'); ?></button>
+            <button type="button" class="btn btn-danger delete-selected gdpr-table-action-button"><i class="fa fa-times" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_delete_selected_button'); ?></button>
             <!-- END OF CONDITION -->
         </div>
     <?php } ?>
