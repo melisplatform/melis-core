@@ -331,76 +331,6 @@ class MelisCorePluginsService extends MelisCoreGeneralService
     }
 
     /**
-     * @param $moduleName should be package name like (melis-cms, melis-core , melis-cms-slider)
-     */
-    public function isModulePublic($moduleName ,$pluginModuleChecking = false)
-    {
-        // get all melis public modules from packagist.org
-        $melisPublicModules = @file_get_contents("https://packagist.org/packages/list.json?type=melisplatform-module", true);
-        $publicModuleNames = [];
-        if (! empty($melisPublicModules)) {
-            // json_decode to make it an arrays
-            $melisPublicModules = json_decode($melisPublicModules);
-            $melisPublicModules = $melisPublicModules->packageNames;
-            foreach ($melisPublicModules as $idx => $packageName) {
-                // removed word 'melisplatform/' were dealing only package name or module name in package format
-                $publicModuleNames[] = str_replace('melisplatform/',null,$packageName);
-            }
-        }
-        $isModulePublic = false;
-        // check if the given module name is in the public module names of melisplatform
-        if (in_array($moduleName,$publicModuleNames)) {
-            $isModulePublic = true;
-        }
-        // this is special case for plugin config which has different style of text but the same module like (meliscms,meliscommerce,meliscore)
-        // convert all string to lower to be sure of exact match case
-        if ($pluginModuleChecking) {
-            $pluginConfigModuleName = strtolower($moduleName);
-            // remove all '-' on the package name
-            foreach ($publicModuleNames as $idx => $packageName) {
-                $publicModuleNames[$idx] = str_replace('-',null,$packageName);
-            }
-            // check if the module is in public packages
-            if (in_array($pluginConfigModuleName,$publicModuleNames)) {
-                $isModulePublic = true;
-            }
-        }
-
-        return $isModulePublic;
-    }
-    /**
-     * @param $publicModuleName should be package name like (melis-cms, melis-core , melis-cms-slider)
-     */
-    public function getMelisPublicModuleSection($publicModuleName , $pluginModuleName = false)
-    {
-        $melisPublicModulesWithSection = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-list", true);
-        $moduleSection = "";
-        if (! empty($melisPublicModulesWithSection)) {
-            // json_decode to make it an arrays
-            $melisPublicModulesWithSection = json_decode($melisPublicModulesWithSection);
-            foreach ($melisPublicModulesWithSection as $idx => $moduleInfo) {
-                // remove 'melisplatform/' word
-                $packageName = str_replace('melisplatform/',null,$moduleInfo->packageName);
-                /*
-                 * special case for plugin config of module name
-                 */
-                if ($pluginModuleName) {
-                    // remove dashes
-                    $packageName = str_replace('-',null,$packageName);
-                }
-                // convert string to lower
-                $publicModuleName = strtolower($publicModuleName);
-                if ($packageName == $publicModuleName) {
-                    // set the module section
-                    $moduleSection = $moduleInfo->packageSection;
-                }
-            }
-
-        }
-
-        return $moduleSection;
-    }
-    /**
      * @param $pluginModuleName if set to true then it will base like (meliscms,meliscore,meliscmsslider) if not  then like(melis-cms,melis-core,melis-cms-slider)
      */
     public function getMelisPublicModules($pluginModuleName = false,$dashboardPlugin = false)
@@ -431,5 +361,4 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         }
         return $publicModules;
     }
-
 }
