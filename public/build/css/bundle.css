@@ -36555,6 +36555,10 @@ div#modal-user-management div.widget {
     padding: 0 !important;
 }
 
+.gdpr-table-checkbox-custom {
+    padding-left: 0px !important;
+}
+
 @media (min-width: 320px) and (max-width: 374px) {
     .melis-core-gdpr-check-box1 {
         margin-left: -3.5% !important;
