@@ -33018,10 +33018,10 @@ newplugin-cont span,
 #melis-navtabs-container-outer{
     float: none;
 }
-.reponsive-menu-tabs{
-    height: 47px;
+.reponsive-menu-tabs {
+    height: 40px;
     display: block;
-    padding: 10px;
+    padding: 8px 10px;
     color: #fff;
     cursor: pointer;
 
@@ -33039,7 +33039,8 @@ newplugin-cont span,
     font-weight: bold;
     text-transform: uppercase;
 }
-.reponsive-menu-tabs .fa{
+.tab-arrow-top,
+.reponsive-menu-tabs .fa {
     float: right;
     margin-top: 2px;
     font-size: 24px;
@@ -35819,7 +35820,7 @@ div#modal-user-management div.widget {
     position: fixed;
     top: 47px;
     right: 0px;
-    width: 214px;
+    width: 224px;
     height: calc(100% - 47px);
     font-family: 'Lato', sans-serif;
     font-weight: normal;
@@ -35828,10 +35829,10 @@ div#modal-user-management div.widget {
     border-bottom: 4px solid #e61c23;
     border-left: 4px solid #e61c23;
     background: #373737;
-    transform: translate3d(214px, 0, 0);
-    -webkit-transform: translate3d(214px, 0, 0);
-    -moz-transform: translate3d(214px, 0, 0);
-    -ms-transform: translate3d(214px, 0, 0);
+    transform: translate3d(224px, 0, 0);
+    -webkit-transform: translate3d(224px, 0, 0);
+    -moz-transform: translate3d(224px, 0, 0);
+    -ms-transform: translate3d(224px, 0, 0);
     transition: transform 0.4s, height 0.4s;
     -webkit-transition: transform 0.4s, height 0.4s;
     -moz-transition: transform 0.4s, height 0.4s;
@@ -36524,17 +36525,37 @@ div#modal-user-management div.widget {
 .tab-pane .nav-tabs span img{
     width: 24px;
 }
+.tab-arrow-top {
+    display: none;
+}
+.tab-arrow-top.hide-arrow {
+    margin-top: -34px;
+}
 
 @media (max-width: 767px) {
-    /*#id_meliscore_header {
-        z-index: 99999;
-    }
-    #melis-id-nav-bar-tabs li a.close-tab,
-    #melis-id-nav-bar-tabs li a.dropdown-toggle {
-        display: inline-block;
-    }*/
     #melis-id-nav-bar-tabs li a.dropdown-toggle {
         width: calc(100% - 48px);
+    }
+
+    .tab-arrow-top {
+        background: #e61c23;
+        padding: 0 6px;
+        margin-top: -1px;
+        color: #fff !important;
+        height: 24px;
+
+        position: absolute;
+        right: 10px;
+        top: 47px;
+        z-index: 100;
+    }
+
+    .tab-arrow-top .fa {
+        position: relative;
+    }
+    .tab-arrow-top .fa:before {
+        position: relative;
+        top: -6px;
     }
 }
 
