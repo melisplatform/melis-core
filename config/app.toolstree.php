@@ -565,11 +565,55 @@ return [
                                                                         'controller' => 'Log',
                                                                         'action' => 'render-logs-tool-table-log-type-form',
                                                                     ),
-                                                                )
+                                                                ),
+                                                                'meliscore_logs_tool_edit_modal_content' => array(
+                                                                    'conf' => array(
+                                                                        'id' => 'id_meliscore_logs_tool_edit_modal_content',
+                                                                        'name' => 'tr_meliscore_logs_tool_edit_modal_content',
+                                                                        'melisKey' => 'meliscore_logs_tool_edit_modal_content',
+                                                                    ),
+                                                                    'forward' => array(
+                                                                        'module' => 'MelisCore',
+                                                                        'controller' => 'Log',
+                                                                        'action' => 'render-logs-tool-edit-modal-content',
+                                                                        'jscallback' => '',
+                                                                        'jsdatas' => array()
+                                                                    )
+                                                                ),
                                                             )
                                                         ),
                                                     )
                                                 ),
+//                                                'meliscore_logs_tool_modal_container' => array( // modals
+//                                                    'conf' => array(
+//                                                        'id' => 'id_meliscore_logs_tool_modal_container',
+//                                                        'name' => 'tr_meliscore_logs_tool_modal_container',
+//                                                        'melisKey' => 'meliscore_logs_tool_modal_container',
+//                                                    ),
+//                                                    'forward' => array(
+//                                                        'module' => 'MelisCore',
+//                                                        'controller' => 'Log',
+//                                                        'action' => 'render-logs-tool-modal-container',
+//                                                        'jscallback' => '',
+//                                                        'jsdatas' => array()
+//                                                    ),
+//                                                    'interface' => array( // handles the display and the rights of the modal
+//                                                        'meliscore_logs_tool_edit_modal_content' => array(
+//                                                            'conf' => array(
+//                                                                'id' => 'id_meliscore_logs_tool_edit_modal_content',
+//                                                                'name' => 'tr_meliscore_logs_tool_edit_modal_content',
+//                                                                'melisKey' => 'meliscore_logs_tool_edit_modal_content',
+//                                                            ),
+//                                                            'forward' => array(
+//                                                                'module' => 'MelisCore',
+//                                                                'controller' => 'Log',
+//                                                                'action' => 'render-logs-tool-edit-modal-content',
+//                                                                'jscallback' => '',
+//                                                                'jsdatas' => array()
+//                                                            )
+//                                                        ),
+//                                                    ),
+//                                                ),
                                             ),
                                         ),
                                         // END LOGS TOOL

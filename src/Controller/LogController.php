@@ -99,6 +99,49 @@ class LogController extends AbstractActionController
     }
 
     /**
+     * Render Log Tool Export
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function renderLogsToolExportAction()
+    {
+        $view = new ViewModel();
+        return $view;
+    }
+
+    /**
+     * Render Log Modal Container
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function renderLogsToolModalContainerAction()
+    {
+        $id = $this->params()->fromQuery('id');
+        $melisKey = $this->params()->fromQuery('melisKey');
+
+        $view = new ViewModel();
+        $view->setTerminal(true);
+        $view->id = $id;
+        $view->melisKey = $melisKey;
+        return $view;
+    }
+
+    /**
+     * Render Log Modal Edit Content
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function renderLogsToolEditModalContentAction()
+    {
+        $melisKey = $this->params()->fromQuery('melisKey');
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+        $view->title = "tr_meliscore_logs_tool_edit_modal_title";
+        return $view;
+    }
+
+    /**
      * Render Log Tool Table limit
      *
      * @return \Zend\View\Model\ViewModel
@@ -454,17 +497,7 @@ class LogController extends AbstractActionController
         return $view;
     }
 
-    public function renderLogsToolModalContainerAction()
-    {
-        $id = $this->params()->fromQuery('id');
-        $melisKey = $this->params()->fromQuery('melisKey');
 
-        $view = new ViewModel();
-        $view->setTerminal(true);
-        $view->id = $id;
-        $view->melisKey = $melisKey;
-        return $view;
-    }
 
     public function saveLogTypeTransAction()
     {

@@ -13,7 +13,20 @@ $(function(){
 		// requesitng to create modal and display after
     	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
 	});
-	
+
+	$body.on("click", ".btnMelisLogExport", function(){
+		var btn  = $(this);
+		var logId = btn.parents("tr").attr("id");
+
+		var logTypeId = btn.data("typeid");
+
+		var zoneId = 'id_meliscore_logs_tool_edit_modal_content';
+		var melisKey = 'meliscore_logs_tool_edit_modal_content';
+		var modalUrl = '/melis/MelisCore/Log/renderLogsToolModalContainer';
+		// requesitng to create modal and display after
+    	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
+	});
+
 	
 	$body.on("click", ".saveLogTypeDetails", function(){
 		

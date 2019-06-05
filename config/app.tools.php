@@ -2220,6 +2220,11 @@ return [
                                     'controller' => 'Log',
                                     'action' => 'render-logs-tool-table-type-filter',
                                 ],
+                                'meliscore_logs_tool_export' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Log',
+                                    'action' => 'render-logs-tool-export'
+                                ),
                                 'meliscore_logs_tool_table_refresh' => [
                                     'module' => 'MelisCore',
                                     'controller' => 'Log',
