@@ -3548,7 +3548,8 @@ div#modal-user-management div.widget {
 
 /* dashboard button */
 .melis-core-dashboard-category-btn {
-    padding: 4px 15px 4px 30px;
+    padding: 4px 15px 4px 11px;
+    font-size: 11px;
 }
 
 /* dashboard button active / open */
@@ -4010,7 +4011,10 @@ div#modal-user-management div.widget {
 .melis-core-dashboard-category-btn .module-name
 {
     display: block;
-    max-width: 78%;
+    max-width: 87%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 /* changes the width on smaller widths */
 @media (min-width: 320px) and (max-width: 640px) {
