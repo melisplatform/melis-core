@@ -670,7 +670,7 @@ newplugin-cont span,
     font-weight: bold;
     text-transform: uppercase;
 }
-.tab-arrow-top,
+#tab-arrow-top,
 .reponsive-menu-tabs .fa {
     float: right;
     margin-top: 2px;
@@ -996,11 +996,15 @@ newplugin-cont span,
 .grid-stack-item-content .tab-content > .active {
     margin-top: 0;
 }
-@media (min-width: 320px) and (max-width: 767px) {
-    .tab-content > .tab-panel-dashboard.active {
-        margin-top: 47px;
+/*
+ * Affected as per http://mantis.melistechnology.fr/view.php?id=3849
+ * 
+    @media (min-width: 320px) and (max-width: 767px) {
+        .tab-content > .tab-panel-dashboard.active {
+            margin-top: 47px;
+        }
     }
-}
+*/
 
 #content > .innerAll.px2 {
     padding: 0;
@@ -4157,22 +4161,24 @@ div#modal-user-management div.widget {
     transform: translate(-55%, -55%);
 }
 
-.tab-pane .nav-tabs span img{
+.tab-pane .nav-tabs span img {
     width: 24px;
-}
-.tab-arrow-top {
-    display: none;
-}
-.tab-arrow-top.hide-arrow {
-    margin-top: -34px;
 }
 
 @media (max-width: 767px) {
+    #melis-navtabs-container-inner {
+        display: none;
+    }
+
     #melis-id-nav-bar-tabs li a.dropdown-toggle {
         width: calc(100% - 48px);
     }
 
-    .tab-arrow-top {
+    #tab-arrow-top.hide-arrow {
+        margin-top: -24px;
+    }
+
+    #tab-arrow-top {
         background: #e61c23;
         padding: 0 6px;
         margin-top: -1px;
@@ -4185,10 +4191,10 @@ div#modal-user-management div.widget {
         z-index: 100;
     }
 
-    .tab-arrow-top .fa {
+    #tab-arrow-top .fa {
         position: relative;
     }
-    .tab-arrow-top .fa:before {
+    #tab-arrow-top .fa:before {
         position: relative;
         top: -6px;
     }

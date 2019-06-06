@@ -13,13 +13,15 @@ var melisCore = (function(window){
         $navTabs        = $("#melis-id-nav-bar-tabs"),
         $flashMessenger = $("#flash-messenger"),
         $centerContent  = $("#melis-id-body-content-load"),
-        screenSize      = jQuery(window).width();
+        screenSize      = jQuery(window).width(),
 
     // responsive menu 767px, tablet and phone
-    var $header         = $("#id_meliscore_header"),
+        $header         = $("#id_meliscore_header"),
+        $res            = $("#res-page-cont"),
         $resArrow       = $("#res-page-cont i"),
         $tabConOuter    = $("#melis-navtabs-container-outer"),
-        $tabArrowTop    = $header.find(".tab-arrow-top");
+        $tabConInner    = $("#melis-navtabs-container-inner"),
+        $tabArrowTop    = $("#tab-arrow-top");
 
     // MAIN FUNCTIONS =================================================================================================================
 
@@ -480,12 +482,6 @@ var melisCore = (function(window){
         $body.removeClass('sidebar-mini');
     });
 
-    // responsive menu functionalities
-    $body.on("click", "#res-page-cont", function(){
-        $("#melis-id-nav-bar-tabs").slideToggle(300);
-        $("#res-page-cont i").toggleClass("move-arrow");
-    });
-
     // toggle sidebar menu
     $body.on("click", "#sidebar-menu", sidebarMenuClick);
 
@@ -577,15 +573,31 @@ var melisCore = (function(window){
             }
     });
 
+    // responsive menu functionalities
+    $body.on("click", "#res-page-cont", function() {
+        $("#melis-id-nav-bar-tabs").slideToggle(300);
+        $tabConOuter.addClass("hide-res-menus");
+        $resArrow.toggleClass("move-arrow");
+    });
+
+    // new responsive menu behavior as per http://mantis.melistechnology.fr/view.php?id=3849
+    $body.on("click", "#res-page-cont i", function() {
+        $tabArrowTop.removeClass("hide-arrow");
+        $tabConOuter.addClass("hide-res-menus");
+        $resArrow.toggleClass("move-arrow");
+    });
+
     // responsive menu arrow button 767px and below for showing/hiding content main tabs
-    $body.on("click", ".tab-arrow-top", showMainTabs);
+    $body.on("click", "#tab-arrow-top", function() {
+        var $this = $(this);
 
-    function showMainTabs() {
-        var $_this = $(this);
+            $tabConInner.show();
+            $this.addClass("hide-arrow");
 
-        $_this.addClass("hide-arrow");
-        $tabConOuter.toggleClass("hide-res-menus");
-    }
+            $res.trigger("click");
+
+            $tabConOuter.removeClass("hide-res-menus");
+    });
 
     function showPlugLists() {
         if($(this).hasClass("active")) {
@@ -646,13 +658,13 @@ var melisCore = (function(window){
     }
 
     // setTimeout for reposponsive menu arrow 767px and below
-    function setTimeoutResMenuArrow() {
+    /*function setTimeoutResMenuArrow() {
         setTimeout(function() {
             $tabConOuter.addClass("hide-res-menus");
             $tabArrowTop.removeClass("hide-arrow");
             $tabArrowTop.css("display", "block");
         }, 2000);
-    }
+    }*/
 
 
 
@@ -674,7 +686,10 @@ var melisCore = (function(window){
         if( screenSize <= 767 ){
             tabDraggable("#melis-id-nav-bar-tabs", true);
 
-            setTimeoutResMenuArrow();
+            //setTimeoutResMenuArrow();
+            /* $tabConOuter.addClass("hide-res-menus");
+            $tabArrowTop.removeClass("hide-arrow");
+            $tabArrowTop.css("display", "block"); */
         } else {
             tabDraggable("#melis-id-nav-bar-tabs", false);
         }
@@ -719,6 +734,8 @@ var melisCore = (function(window){
 
     // WINDOW SCROLL FUNCTIONALITIES ========================================================================================================
     if( screenSize <= 767 ) {
+        /*
+        // affected by the new responsive menu behavior as per http://mantis.melistechnology.fr/view.php?id=3849
         $(window).scroll(function() {
             var scrollTop = $(window).scrollTop();
             
@@ -727,12 +744,12 @@ var melisCore = (function(window){
                 $navTabs.slideUp();
                 $resArrow.removeClass("move-arrow");
                 $tabConOuter.addClass("hide-res-menus");
-                $tabArrowTop.addClass("hide-arrow");
-            } else if ( scrollTop === 0 ) {
+                //$tabArrowTop.addClass("hide-arrow");
+            }  else if ( scrollTop === 0 ) {
                 setTimeoutResMenuArrow();
             } else if ( scrollTop < 100 && scrollTop > 0 ) {
                 $tabConOuter.removeClass("hide-res-menus");
-                $tabArrowTop.addClass("hide-arrow");
+                //$tabArrowTop.addClass("hide-arrow");
             }
 
             // check if scrolling stopped
@@ -740,7 +757,7 @@ var melisCore = (function(window){
             $.data(this, 'scrollTimer', setTimeout(function() {
                 setTimeoutResMenuArrow();
             }, 250));
-        });
+        });*/
 
         // move plugins to another <div>
         $("#id_meliscore_header .navbar-right > li").each(function(key, value){
