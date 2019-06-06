@@ -36537,7 +36537,11 @@ div#modal-user-management div.widget {
 .tab-pane .nav-tabs span img {
     width: 24px;
 }
-
+@media (min-width: 768px) {
+    #tab-arrow-top {
+        display: none;
+    }
+}
 @media (max-width: 767px) {
     .login-page #tab-arrow-top {
         display: none;
