@@ -560,7 +560,7 @@ var melisHelper = (function(){
                         	    eval(value);
                         	}
                         	catch(err) {
-                        	    console.log(err);
+                        	    // console.log(err);
                         	}
                         });
                     });
