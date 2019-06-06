@@ -4316,3 +4316,7 @@ div#modal-user-management div.widget {
 .melis-core-dashboard-plugin-title.has-new-plugins {
     margin-top: 0;
 }
+.dashboard-img-responsive {
+    max-width:100%;
+    height:auto;
+}

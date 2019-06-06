@@ -80,7 +80,7 @@
                                                 <?php foreach ($plugins as $pluginName => $conf) { ?>
                                                     <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
                                                         <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
-                                                        <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="img-responsive">
+                                                        <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="dashboard-img-responsive">
                                                         <?php 
                                                             $hasNewPlugins = "";
                                                             if (in_array($moduleName,$moduleHasNewPlugins)) {
@@ -99,7 +99,7 @@
                                         <?php foreach ($plugins as $pluginName => $conf) { ?>
                                             <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
                                                 <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
-                                                <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="img-responsive">
+                                                <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="dashboard-img-responsive">
                                                 <?php 
                                                     $hasNewPlugins = "";
                                                     if (in_array($moduleName,$moduleHasNewPlugins)) {
