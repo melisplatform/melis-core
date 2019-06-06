@@ -282,7 +282,7 @@ $(document).ready(function() {
                         url: '/melis/MelisCore/MelisCoreGdpr/melisCoreGdprDeleteSelected',
                         data: $.param(modules),
                         dataType: 'json',
-                        encode: true,
+                        encode: true
                     }).success(function (data) {
                         if (data.success) {
                             //Reload the zone after deleting a row.
@@ -293,7 +293,7 @@ $(document).ready(function() {
 
                             melisHelper.melisOkNotification(
                                 translations.tr_melis_core_gdpr,
-                                translations.tr_melis_core_gdpr_tool_notif_delete_selection_success,
+                                translations.tr_melis_core_gdpr_tool_notif_delete_selection_success
                             );
                             melisCore.flashMessenger();
                         } else {
