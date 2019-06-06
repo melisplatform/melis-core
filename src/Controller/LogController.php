@@ -120,7 +120,7 @@ class LogController extends AbstractActionController
         $melisKey = $this->params()->fromQuery('melisKey');
 
         $view = new ViewModel();
-        $view->setTerminal(true);
+        $view->setTerminal(false);
         $view->id = $id;
         $view->melisKey = $melisKey;
         return $view;
