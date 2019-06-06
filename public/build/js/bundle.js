@@ -28571,11 +28571,17 @@ var melisCore = (function(window){
     var version = "2.0.0";
 
     //CACHE SELECTORS =================================================================================================================
-    var $body = $("body");
-    var $navTabs = $("#melis-id-nav-bar-tabs");
-    var $flashMessenger = $("#flash-messenger");
-    var $centerContent = $("#melis-id-body-content-load");
-    var screenSize = jQuery(window).width();
+    var $body           = $("body"),
+        $navTabs        = $("#melis-id-nav-bar-tabs"),
+        $flashMessenger = $("#flash-messenger"),
+        $centerContent  = $("#melis-id-body-content-load"),
+        screenSize      = jQuery(window).width();
+
+    // responsive menu 767px, tablet and phone
+    var $header         = $("#id_meliscore_header"),
+        $resArrow       = $("#res-page-cont i"),
+        $tabConOuter    = $("#melis-navtabs-container-outer"),
+        $tabArrowTop    = $header.find(".tab-arrow-top");
 
     // MAIN FUNCTIONS =================================================================================================================
 
@@ -28708,11 +28714,12 @@ var melisCore = (function(window){
         if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
         $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
     });
+
     $body.on("click", "#clearNotifBtn", function(){
         clearFlashMessages();
     });
 
-    function  clearFlashMessages() {
+    function clearFlashMessages() {
         $.ajax({
             type: 'GET',
             url: '/melis/MelisCore/MelisFlashMessenger/clearFlashMessage',
@@ -29062,7 +29069,7 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', '#close-all-tab', closedOpenTabs);
 
-    //$body.on("click", '.melis-core-dashboard-filter-btn', disableShowPlugLists);
+    // $body.on("click", '.melis-core-dashboard-filter-btn', disableShowPlugLists);
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
@@ -29072,7 +29079,6 @@ var melisCore = (function(window){
      */
 
     var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
-
     var dashboardTooltip = {
         placement: pos,
         delay: {
@@ -29088,13 +29094,9 @@ var melisCore = (function(window){
      * For blinking issue on hover
      */
     $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
-
         $(this).children(".melis-plugin-tooltip").stop().fadeIn();
-
     }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
-
         $(this).children(".melis-plugin-tooltip").stop().fadeOut();
-
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
@@ -29118,8 +29120,13 @@ var melisCore = (function(window){
             $gs     = $body.find("#"+activeTabId+" .grid-stack"),
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = ($gs.width() + $box.width()); // for new icon
-
+            
             $box.toggleClass("shown");
+
+            // responsive main tab menu button
+            if ( $tabArrowTop.length && screenSize <= 767 ) {
+                $tabArrowTop.toggleClass("hide-arrow");
+            }
 
             if ( $box.hasClass("shown") ) {
                 $gs.animate({
@@ -29131,6 +29138,16 @@ var melisCore = (function(window){
                 }, 3);
             }
     });
+
+    // responsive menu arrow button 767px and below for showing/hiding content main tabs
+    $body.on("click", ".tab-arrow-top", showMainTabs);
+
+    function showMainTabs() {
+        var $_this = $(this);
+
+        $_this.addClass("hide-arrow");
+        $tabConOuter.toggleClass("hide-res-menus");
+    }
 
     function showPlugLists() {
         if($(this).hasClass("active")) {
@@ -29190,6 +29207,15 @@ var melisCore = (function(window){
             }
     }
 
+    // setTimeout for reposponsive menu arrow 767px and below
+    function setTimeoutResMenuArrow() {
+        setTimeout(function() {
+            $tabConOuter.addClass("hide-res-menus");
+            $tabArrowTop.removeClass("hide-arrow");
+            $tabArrowTop.css("display", "block");
+        }, 2000);
+    }
+
 
 
 
@@ -29209,6 +29235,8 @@ var melisCore = (function(window){
 
         if( screenSize <= 767 ){
             tabDraggable("#melis-id-nav-bar-tabs", true);
+
+            setTimeoutResMenuArrow();
         } else {
             tabDraggable("#melis-id-nav-bar-tabs", false);
         }
@@ -29231,7 +29259,7 @@ var melisCore = (function(window){
             $("#res-page-cont i").removeClass("move-arrow");
 
         }
-        else{
+        else {
 
             $body.removeClass("sidebar-mini");
 
@@ -29249,22 +29277,31 @@ var melisCore = (function(window){
 
          
         }
-
     });
 
     // WINDOW SCROLL FUNCTIONALITIES ========================================================================================================
-    if(screenSize <= 767){
-
-        jQuery(window).scroll(function(){
+    if( screenSize <= 767 ) {
+        $(window).scroll(function() {
+            var scrollTop = $(window).scrollTop();
+            
             // show or hide menu when scrolling
-            if (jQuery(window).scrollTop() > 100 && screenSize <= 767){
+            if ( scrollTop > 100 ) {
                 $navTabs.slideUp();
-                $("#res-page-cont i").removeClass("move-arrow");
-                $("#melis-navtabs-container-outer").addClass("hide-res-menus");
+                $resArrow.removeClass("move-arrow");
+                $tabConOuter.addClass("hide-res-menus");
+                $tabArrowTop.addClass("hide-arrow");
+            } else if ( scrollTop === 0 ) {
+                setTimeoutResMenuArrow();
+            } else if ( scrollTop < 100 && scrollTop > 0 ) {
+                $tabConOuter.removeClass("hide-res-menus");
+                $tabArrowTop.addClass("hide-arrow");
             }
-            else{
-                $("#melis-navtabs-container-outer").removeClass("hide-res-menus");
-            }
+
+            // check if scrolling stopped
+            clearTimeout($.data(this, 'scrollTimer'));
+            $.data(this, 'scrollTimer', setTimeout(function() {
+                setTimeoutResMenuArrow();
+            }, 250));
         });
 
         // move plugins to another <div>
@@ -29327,6 +29364,7 @@ var melisCore = (function(window){
 
 
 })(window);
+
 var melisHelper = (function(){
 
     var version = "2.0.0";
@@ -32200,7 +32238,7 @@ $(document).ready(function() {
                         url: '/melis/MelisCore/MelisCoreGdpr/melisCoreGdprDeleteSelected',
                         data: $.param(modules),
                         dataType: 'json',
-                        encode: true,
+                        encode: true
                     }).success(function (data) {
                         if (data.success) {
                             //Reload the zone after deleting a row.
@@ -32211,7 +32249,7 @@ $(document).ready(function() {
 
                             melisHelper.melisOkNotification(
                                 translations.tr_melis_core_gdpr,
-                                translations.tr_melis_core_gdpr_tool_notif_delete_selection_success,
+                                translations.tr_melis_core_gdpr_tool_notif_delete_selection_success
                             );
                             melisCore.flashMessenger();
                         } else {
