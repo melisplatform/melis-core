@@ -670,6 +670,9 @@ newplugin-cont span,
     font-weight: bold;
     text-transform: uppercase;
 }
+.reponsive-menu-tabs .fa {
+    margin-right: 10px;
+}
 #tab-arrow-top,
 .reponsive-menu-tabs .fa {
     float: right;
