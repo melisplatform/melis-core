@@ -28852,6 +28852,10 @@ var melisCore = (function(window){
             $("#res-page-cont").trigger('click');
             $("#res-page-cont i").removeClass("move-arrow");
 
+            if ( $tabArrowTop.length ) {
+                $tabArrowTop.removeClass("hide-arrow");
+            }
+
             $('html, body').animate({scrollTop:0},500);
         }
 

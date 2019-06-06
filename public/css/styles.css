@@ -4169,6 +4169,10 @@ div#modal-user-management div.widget {
 }
 
 @media (max-width: 767px) {
+    .login-page #tab-arrow-top {
+        display: none;
+    }
+
     #melis-navtabs-container-inner {
         display: none;
     }

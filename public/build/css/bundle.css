@@ -33039,6 +33039,9 @@ newplugin-cont span,
     font-weight: bold;
     text-transform: uppercase;
 }
+.reponsive-menu-tabs .fa {
+    margin-right: 10px;
+}
 #tab-arrow-top,
 .reponsive-menu-tabs .fa {
     float: right;
@@ -36535,6 +36538,10 @@ div#modal-user-management div.widget {
 }
 
 @media (max-width: 767px) {
+    .login-page #tab-arrow-top {
+        display: none;
+    }
+
     #melis-navtabs-container-inner {
         display: none;
     }
