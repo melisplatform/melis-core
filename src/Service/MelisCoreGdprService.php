@@ -205,35 +205,4 @@ class MelisCoreGdprService extends MelisCoreGeneralService {
 
         return $arrayParameters;
     }
-
-    public function checkForDeleteListeners($arrayParameters = [])
-    {
-        $arrayParameters = $this->sendEvent('melis_core_gdpr_user_delete_event', $arrayParameters);
-
-        if (isset($arrayParameters['enable_delete_functionality'])) {
-            foreach ($arrayParameters['enable_delete_functionality'] as $key => $value) {
-                if ($value == 1) {
-                    $arrayParameters['results'][$key]['enable_delete_functionality'] = $value;
-                }
-            }
-            unset($arrayParameters['enable_delete_functionality']);
-        }
-
-        return $arrayParameters;
-    }
-
-    public function checkForExtractListeners($arrayParameters = [])
-    {
-        $arrayParameters = $this->sendEvent('melis_core_gdpr_user_extract_event', $arrayParameters);
-        if (isset($arrayParameters['enable_extract_functionality'])) {
-            foreach ($arrayParameters['enable_extract_functionality'] as $key => $value) {
-                if ($value == 1) {
-                    $arrayParameters['results'][$key]['enable_extract_functionality'] = $value;
-                }
-            }
-            unset($arrayParameters['enable_extract_functionality']);
-        }
-
-        return $arrayParameters;
-    }
 }

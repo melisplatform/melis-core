@@ -235,6 +235,7 @@ return [
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_tool_user_col_username',
                                             'required' => 'required',
+                                            'autocomplete' => 'off',
                                         ],
                                     ],
                                 ],
@@ -292,6 +293,7 @@ return [
                                             'placeholder' => 'tr_meliscore_tool_user_col_password',
                                             'class' => 'form-control',
                                             'required' => 'required',
+                                            'autocomplete' => 'new-password',
                                         ],
                                     ],
                                 ],
@@ -312,6 +314,7 @@ return [
                                             'placeholder' => 'tr_meliscore_tool_user_col_confirm_password',
                                             'class' => 'form-control',
                                             'required' => 'required',
+                                            'autocomplete' => 'new-password',
                                         ],
                                     ],
                                 ],
@@ -875,6 +878,17 @@ return [
                                             'data-buttonText' => 'Select Image',
                                         ],
                                     ],
+                                ],
+                                [
+                                    'spec' => array(
+                                        'name' => 'usr_image_remove',
+                                        'type' => 'hidden',
+                                        'options' => array(),
+                                        'attributes' => array(
+                                            'id' => 'usr_image_remove',
+                                            'value' => false,
+                                        ),
+                                    ),
                                 ],
 
                             ], // end edit elements
@@ -2421,8 +2435,7 @@ return [
                                 'id' => 'id_melis_core_gdpr_search_form',
                                 'method' => 'POST',
                                 'action' => '',
-                                'class' => 'form-horizontal',
-                                'role' => 'form',
+                                'class' => 'form-horizontal'
                             ],
                             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
                             'elements' => [

@@ -967,6 +967,7 @@ class ToolUserController extends AbstractActionController
             $password = empty($postValues['usr_password']) ? '' : $postValues['usr_password'];
             $confirmPass = empty($postValues['usr_confirm_password']) ? '' : $postValues['usr_confirm_password'];
             $roleId = empty($postValues['usr_role_id']) ? 0 : (int)$postValues['usr_role_id'];
+            $removeImg = $this->getRequest()->getPost('usr_image_remove');
 
             if ($userUpdateForm->isValid()) {
                 $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
@@ -1030,7 +1031,13 @@ class ToolUserController extends AbstractActionController
                         }
                     }
                 }
-                $data['usr_image'] = $imageContent;
+
+                if($removeImg == "yes"){
+                    $data['usr_image'] = "";
+
+                }else{
+                    $data['usr_image'] = $imageContent;
+                }
 
                 $newPass = '';
                 // check if the user exists
@@ -1100,6 +1107,9 @@ class ToolUserController extends AbstractActionController
                     } // password and confirm password not empty
 
                     if ($success && empty($errors)) {
+
+                        unset($data["usr_image_remove"]);
+
                         $savedPassword = !empty($newPass) ? $newPass : $userInfo['usr_password'];
                         // remove confirm pass when updating
                         unset($data['usr_confirm_password']);

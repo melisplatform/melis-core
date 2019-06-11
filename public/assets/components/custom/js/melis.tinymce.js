@@ -85,9 +85,10 @@ var MelisTinymce = (function (window) {
             html: {
                 inline: true,
                 plugins: [
+                    //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
                     "advlist autolink lists link image charmap print preview anchor",
                     "searchreplace visualblocks code fullscreen",
-                    "insertdatetime media table contextmenu paste"
+                    "insertdatetime media table paste"
                 ],
                 toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
                 menu: {
@@ -109,9 +110,10 @@ var MelisTinymce = (function (window) {
             media: {
                 inline: true,
                 plugins: [
+                    //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
                     "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
                     "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
-                    "save table contextmenu directionality emoticons template paste textcolor code moxiemanager paste"
+                    "save table directionality emoticons template paste code moxiemanager paste"
                 ],
                 menu: {
                     edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
@@ -186,7 +188,6 @@ var MelisTinymce = (function (window) {
 
             $.extend(config.xhr, options);
 
-
             var request = $.ajax({
                 method: "POST",
                 url: config.xhr.templates
@@ -199,9 +200,8 @@ var MelisTinymce = (function (window) {
             request.fail(function (jqXHR, textStatus) {
                 console.error("MelisTinymce error in load templates : " + textStatus);
             });
-
-
         },
+        
         addTheme: function (themes) {
             $.each(themes, function (index, value) {
                 MelisTinymce.config.theme[index] = value;

@@ -20,7 +20,7 @@ class MelisLogTable extends MelisGenericTable
 	}
 	
 	public function getLogList($typeId = null, $itemId = null, $userId = null, $dateCreationMin = null, $dateCreationMax = null, 
-                                    $start = 0, $limit = null, $order = null, $search = null)
+                                    $start = 0, $limit = null, $order = null, $search = null, $status = null)
 	{
 	    $select = $this->tableGateway->getSql()->select();
 	    
@@ -38,6 +38,11 @@ class MelisLogTable extends MelisGenericTable
 	    if (!is_null($itemId))
 	    {
 	        $select->where('melis_core_log.log_item_id ='.$itemId);
+	    }
+
+	    if (!is_null($status))
+	    {
+	        $select->where('melis_core_log.log_status ='.$status);
 	    }
 	    
 	    if (!is_null($userId) && is_numeric($userId) && $userId != -1)

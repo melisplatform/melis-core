@@ -27,15 +27,17 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
     {
         $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
         $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
         
         $melisKeys = $melisAppConfig->getMelisKeys();
         $fullKeyToolUser = $melisKeys['meliscore_tool_user'];
 
-        // Checks wether the user has access to this tools or not
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
-        $isAccessible = $melisCoreRights->canAccess('meliscore_tool_user');
+        /** @var \MelisCore\Service\MelisCoreDashboardPluginsRightsService $dashboardPluginsService */
+        $dashboardPluginsService = $this->getServiceLocator()->get('MelisCoreDashboardPluginsService');
+        //get the class name to make it as a key to the plugin
+        $path = explode('\\', __CLASS__);
+        $className = array_pop($path);
+
+        $isAccessible = $dashboardPluginsService->canAccess($className);
 
         $toolName = '';
         $toolId = '';

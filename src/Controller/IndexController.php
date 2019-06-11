@@ -136,6 +136,12 @@ class IndexController extends AbstractActionController
         $scheme        = $uri->getScheme();
         $netConnection = $coreTool->isConnected();
 
+        $this->layout()->setVariable("modules",serialize($modules));
+        $this->layout()->setVariable("scheme",$scheme);
+        $this->layout()->setVariable("domain",$domain);
+        $this->layout()->setVariable("netConn",$netConnection);
+        $this->layout()->setVariable("platformVersion",$platformVersion['version']);
+
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->platformVersion = $platformVersion['version'];

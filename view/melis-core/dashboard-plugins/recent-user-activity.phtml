@@ -1,6 +1,6 @@
-<?php 
+<?php
     $tagsOpening = '';
-    if ($this->toolIsAccessible)
+    if ($this->toolIsAccessible) {
         $tagsOpening = 'class="melis-opentools" data-tool-icon="'.$this->toolIcon.'" data-tool-name="' . $this->toolName . '" data-tool-id="' . $this->toolId . '" data-tool-meliskey="' . $this->toolMelisKey . '"';
 ?>
 <div class="widget-activity">
@@ -20,3 +20,8 @@
         ?>
     </ul>
 </div>
+<?php } else { ?>
+        <div class="no-rights-container">
+            <span><?= $this->translate('tr_melisdashboardplugin_plugin_no_rights'); ?></span>
+        </div>
+<?php } ?>

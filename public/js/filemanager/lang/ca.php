@@ -2,6 +2,8 @@
 
 return array(
 	'Select' => 'Seleccionar',
+	'Deselect_All' => 'Deselect All',
+	'Select_All' => 'Select All',
 	'Erase' => 'Eliminar',
 	'Open' => 'Obrir',
 	'Confirm_del' => 'Segur que desitges eliminar aquest arxiu?',
@@ -23,9 +25,9 @@ return array(
 	'Preview' => 'Vista prèvia',
 	'Download' => 'Descarregar',
 	'Insert_Folder_Name' => 'Nom de la carpeta:',
-	'Root' => 'arrel',
+	'Root' => 'Arrel',
 	'Rename' => 'Renombrar',
-	'Back' => 'enrere',
+	'Back' => 'Tornar',
 	'View' => 'Vista',
 	'View_list' => 'Vista de llista',
 	'View_columns_list' => 'Vista de columnes',
@@ -58,45 +60,45 @@ return array(
 	'File_info' => 'Informació',
 	'Edit_image' => 'Editar imatge',
 	'Duplicate' => 'Duplicar',
-	'Folders' => 'Folders',
-	'Copy' => 'Copy',
-	'Cut' => 'Cut',
-	'Paste' => 'Paste',
+	'Folders' => 'Carpetes',
+	'Copy' => 'Copiar',
+	'Cut' => 'Tallar',
+	'Paste' => 'Enganxar',
 	'CB' => 'CB', // clipboard
-	'Paste_Here' => 'Paste to this directory',
-	'Paste_Confirm' => 'Are you sure you want to paste to this directory? This will overwrite existing files/folders if encountered any.',
-	'Paste_Failed' => 'Failed to paste file(s)',
-	'Clear_Clipboard' => 'Clear clipboard',
-	'Clear_Clipboard_Confirm' => 'Are you sure you want to clear the clipboard?',
-	'Files_ON_Clipboard' => 'There are files on the clipboard.',
-	'Copy_Cut_Size_Limit' => 'The selected files/folders are too big to %s. Limit: %d MB/operation', // %s = cut or copy
-	'Copy_Cut_Count_Limit' => 'You selected too many files/folders to %s. Limit: %d files/operation', // %s = cut or copy
-	'Copy_Cut_Not_Allowed' => 'You are not allowed to %s files.', // %s(1) = cut or copy, %s(2) = files or folders
-	'Aviary_No_Save' => 'Could not save image',
-	'Zip_No_Extract' => 'Could not extract. File might be corrupt.',
-	'Zip_Invalid' => 'This extension is not supported. Valid: zip, gz, tar.',
-	'Dir_No_Write' => 'The directory you selected is not writable.',
-	'Function_Disabled' => 'The %s function has been disabled by the server.', // %s = cut or copy
-	'File_Permission' => 'File permission',
-	'File_Permission_Not_Allowed' => 'Changing %s permissions are not allowed.', // %s = files or folders
-	'File_Permission_Recursive' => 'Apply recursively?',
-	'File_Permission_Wrong_Mode' => "The supplied permission mode is incorrect.",
-	'User' => 'User',
-	'Group' => 'Group',
-	'Yes' => 'Yes',
+	'Paste_Here' => 'Enganxar en aquest directori',
+	'Paste_Confirm' => 'Esteu segur que voleu enganxar en aquest directori? Això sobreescriurà arxius/carpetes existents si es troba cap igual.',
+	'Paste_Failed' => 'No s’ha pogut enganxar els fitxers.',
+	'Clear_Clipboard' => 'Netejar portapapers',
+	'Clear_Clipboard_Confirm' => 'Esteu segur que voleu esborrar el portapapers?',
+	'Files_ON_Clipboard' => 'Hi ha arxius al Portapapers.',
+	'Copy_Cut_Size_Limit' => 'Els arxius/carpetes seleccionades són massa grans per %s. Limit: %d MB/operació', // %s = cut or copy
+	'Copy_Cut_Count_Limit' => 'Heu seleccionat massa fitxers/carpetes a %s. Limit: %d arxiu/operació', // %s = cut or copy
+	'Copy_Cut_Not_Allowed' => 'No te permisos per %s els arxius.', // %s(1) = cut or copy, %s(2) = files or folders
+	'Aviary_No_Save' => 'No s’ha pogut desar la imatge.',
+	'Zip_No_Extract' => 'No es pot extreure. L’Arxiu podria estar corrupte.',
+	'Zip_Invalid' => 'Aquesta extensió no és suportada. Vàlid: zip, gz, tar.',
+	'Dir_No_Write' => 'El directori seleccionat no te permisos d’escriptura.',
+	'Function_Disabled' => 'La funció de %s no esta disponible al servidor.', // %s = cut or copy
+	'File_Permission' => 'Permisos d’arxiu',
+	'File_Permission_Not_Allowed' => 'La modificació dels permisos de %s no es permès.', // %s = files or folders
+	'File_Permission_Recursive' => 'Aplicar recursivament?',
+	'File_Permission_Wrong_Mode' => "El mode de permís subministrat és incorrecte..",
+	'User' => 'Usuari',
+	'Group' => 'Grup',
+	'Yes' => 'Si',
 	'No' => 'No',
-	'Lang_Not_Found' => 'Could not find language.',
-	'Lang_Change' => 'Change the language',
-	'File_Not_Found' => 'Could not find the file.',
-	'File_Open_Edit_Not_Allowed' => 'You are not allowed to %s this file.', // %s = open or edit
-	'Edit' => 'Edit',
-	'Edit_File' => "Edit file's content",
-	'File_Save_OK' => "File successfully saved.",
-	'File_Save_Error' => "There was an error while saving the file.",
-	'New_File' => 'New File',
-	'No_Extension' => 'You have to add a file extension.',
-	'Valid_Extensions' => 'Valid extensions: %s', // %s = txt,log etc.
-	'Upload_message' => "Drop file here to upload",
+	'Lang_Not_Found' => 'No es pot trobar l\'idioma.',
+	'Lang_Change' => 'Modificar idioma',
+	'File_Not_Found' => 'No s\'ha pogut trobar l\'arxiu.',
+	'File_Open_Edit_Not_Allowed' => 'No tens permisos per obrir %s l\'arxiu.', // %s = open or edit
+	'Edit' => 'Modificar',
+	'Edit_File' => "Editar el contingut de l\'arxiu.",
+	'File_Save_OK' => "Arxiu desat correctament.",
+	'File_Save_Error' => "Hi ha hagut un error mentre es desava l\'arxiu.",
+	'New_File' => 'Nou arxiu',
+	'No_Extension' => 'Ha d\'afegir una extensió d\'arxiu.',
+	'Valid_Extensions' => 'Extensions valides: %s', // %s = txt,log etc.
+	'Upload_message' => "Arrossega arxiu aquí per carregar.",
 
 	'SERVER ERROR' => "SERVER ERROR",
 	'forbiden' => "Forbiden",

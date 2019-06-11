@@ -10,64 +10,60 @@
 namespace MelisCore\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use MelisCore\Service\MelisCoreRightsService;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
+use Zend\View\Model\JsonModel;
 
 class MelisTinyMceController extends AbstractActionController
 {
+    const MINI_TEMPLATES_FOLDER = 'miniTemplatesTinyMce';
+
     public function getTinyMceConfigAction()
     {
-		$success       = 0;
-		$tinyMCEconfig = '';
-		$request       = $this->getRequest();
+        $success = 0;
+        $tinyMCEconfig = '';
+        $request = $this->getRequest();
 
-		if ($request->isPost())
-		{
+        if ($request->isPost()) {
             $modulesSvc = $this->getServiceLocator()->get('ModulesService');
-		    // Getting the Posted Values
-    		$postValues = get_object_vars($request->getPost());
+            // Getting the Posted Values
+            $postValues = get_object_vars($request->getPost());
 
-    		$type = $postValues['type'];
-    		$selector = $postValues['selector'];
-    		$options = !empty($postValues['options']) ? $postValues['options'] : array();
-    		
-    		// Get the list of TinyMce configuration files declared
-    		$config = $this->serviceLocator->get('config');
-    		$configTinyMce = $config['tinyMCE'];
-    		
-    		// Checking if the type requested is exist on configuration
-    		if (isset($configTinyMce[$type]))
-    		{
-    		    $configDir = $configTinyMce[$type];
-    		    // Getting the module name
-    		    $nameModuleTab = explode('/', $configDir);
-    		    $nameModule = $nameModuleTab[0];
-    		    // Getting the path of the Module
-    		    $path = $modulesSvc->getModulePath($nameModule);
-    		    // Generating the directory of the requested TinyMCE configuration
-    		    $tinyMCEconfig = $path . str_replace($nameModule, '', $configDir);
-    		}
-    		
-    		if (!is_null($tinyMCEconfig))
-    		{
-    		    // Getting the tinyMCE configuration from php file
-    		    $tinyMCEconfig = include($tinyMCEconfig);
-    		    // Assigning selector of the tinyMCE
-    		    $tinyMCEconfig['selector'] = (!empty($selector)) ? $selector : '';
-    		    // Set Language of the TinyMCE
-    		    $container = new Container('meliscore');
-    		    $locale = $container['melis-lang-locale'];
-    		    $tinyMCEconfig['language'] = ($locale != 'en_EN') ? $locale : 'en';
-    		    
-    		    if (!empty($options))
-    		    {
-    		        // Merging Default TinyMCE configuration with Options from request
-    		        $tinyMCEconfig = array_merge($tinyMCEconfig, $options);
-    		    }
-    		    $success = 1;
-    		}
+            $type = $postValues['type'];
+            $selector = $postValues['selector'];
+            $options = !empty($postValues['options']) ? $postValues['options'] : array();
+
+            // Get the list of TinyMce configuration files declared
+            $config = $this->serviceLocator->get('config');
+            $configTinyMce = $config['tinyMCE'];
+
+            // Checking if the type requested is exist on configuration
+            if (isset($configTinyMce[$type])) {
+                $configDir = $configTinyMce[$type];
+                // Getting the module name
+                $nameModuleTab = explode('/', $configDir);
+                $nameModule = $nameModuleTab[0];
+                // Getting the path of the Module
+                $path = $modulesSvc->getModulePath($nameModule);
+                // Generating the directory of the requested TinyMCE configuration
+                $tinyMCEconfig = $path . str_replace($nameModule, '', $configDir);
+            }
+
+            if (!is_null($tinyMCEconfig)) {
+                // Getting the tinyMCE configuration from php file
+                $tinyMCEconfig = include($tinyMCEconfig);
+                // Assigning selector of the tinyMCE
+                $tinyMCEconfig['selector'] = (!empty($selector)) ? $selector : '';
+                // Set Language of the TinyMCE
+                $container = new Container('meliscore');
+                $locale = $container['melis-lang-locale'];
+                $tinyMCEconfig['language'] = ($locale != 'en_EN') ? $locale : 'en';
+
+                if (!empty($options)) {
+                    // Merging Default TinyMCE configuration with Options from request
+                    $tinyMCEconfig = array_merge($tinyMCEconfig, $options);
+                }
+                $success = 1;
+            }
 
             /**
              * This listener is for users or developers who wants to extend the functionality of tinyMCE, especially when adding new extensions.
@@ -77,49 +73,47 @@ class MelisTinyMceController extends AbstractActionController
             $tmpCfg = array();
 
             // reconstruct data
-            foreach($config as $configKey => $cfg) {
+            foreach ($config as $configKey => $cfg) {
 
-                if($cfg) {
-                    foreach($cfg['configuration'] as $configKey => $configVal) {
+                if ($cfg) {
+                    foreach ($cfg['configuration'] as $configKey => $configVal) {
                         $tmpCfg[$configKey] = $configVal;
                     }
                 }
 
-                if(isset($cfg['exclude']) && !empty($cfg['exclude'])) {
+                if (isset($cfg['exclude']) && !empty($cfg['exclude'])) {
                     // remove the excluded configuration(s)
-                    foreach($cfg['exclude'] as $exclude) {
-                        if(isset($tmpCfg[$exclude])) {
+                    foreach ($cfg['exclude'] as $exclude) {
+                        if (isset($tmpCfg[$exclude])) {
                             unset($tmpCfg[$exclude]);
                         }
                     }
                 }
-
-
             }
 
-
             // merge reconstructed data to tinyMCE configuration
-            foreach($tmpCfg as $idx => $cfg) {
-                if($cfg) {
+            foreach ($tmpCfg as $idx => $cfg) {
+                if ($cfg) {
                     // get the merged and additional tinyMCE configurations
                     $tinyMCEconfig = \Zend\Stdlib\ArrayUtils::merge($tinyMCEconfig, $cfg);
                 }
             }
 
-		}
-		
-		$response = array(
-		    'success' => $success,
-		    'config'  => $tinyMCEconfig
-		);
-		
-		return new JsonModel($response);
+        }
+
+        $response = array(
+            'success' => $success,
+            'config' => $tinyMCEconfig
+        );
+
+        return new JsonModel($response);
     }
+
     public function reconfigureTinyMce()
     {
-        $success       = 0;
+        $success = 0;
         $tinyMCEconfig = '';
-        $request       = $this->getRequest();
+        $request = $this->getRequest();
 
         $modulesSvc = $this->getServiceLocator()->get('ModulesService');
         // Getting the Posted Values
@@ -136,7 +130,59 @@ class MelisTinyMceController extends AbstractActionController
         return $configTinyMce;
     }
 
+    /**
+     * This method sends back the list of mini-templates for TinyMCE
+     * It takes the site ID as a parameter, determines the website folder
+     * in order to list only the mini-templates of the website and not
+     * all of them
+     *
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function getTinyTemplatesAction()
+    {
+        $siteId = $this->params()->fromRoute('siteId', $this->params()->fromQuery('siteId', ''));
+        $tinyTemplates = [];
 
+        if (!empty($siteId)) {
+            /** @var \MelisEngine\Model\Tables\MelisTemplateTable $tplTable */
+            $tplTable = $this->serviceLocator->get('MelisEngineTableTemplate');
+            $siteData = $tplTable->getData(null, $siteId, null, null, null, null, 1);
+            if (!empty($siteData)) {
+                $siteData = $siteData->toArray();
+                $siteData = reset($siteData);
+                $moduleName = $siteData['tpl_zf2_website_folder'];
+                $publicPath = '/public/' . self::MINI_TEMPLATES_FOLDER;
 
+                // Checking if the module path is vendor
+                $composerSrv = $this->getServiceLocator()->get('ModulesService');
+                $path = $composerSrv->getComposerModulePath($moduleName);
+                if (!empty($path)) {
+                    $folderSite = $path . $publicPath;
+                } else {
+                    $folderSite = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites/' . $moduleName . $publicPath;
+                }
+
+                // List the mini-templates from the folder
+                if (is_dir($folderSite)) {
+                    if ($handle = opendir($folderSite)) {
+                        while (false !== ($entry = readdir($handle))) {
+                            if (is_dir($folderSite . '/' . $entry) || $entry == '.' || $entry == '..')
+                                continue;
+                            array_push($tinyTemplates,
+                                array(
+                                    'title' => $entry,
+                                    'url' => "/" . $moduleName . '/' . self::MINI_TEMPLATES_FOLDER . '/' . $entry
+                                )
+                            );
+                        }
+
+                        closedir($handle);
+                    }
+                }
+            }
+        }
+
+        return new JsonModel($tinyTemplates);
+    }
 }
 

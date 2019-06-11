@@ -23,20 +23,20 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	 * @return Array
 	 */
 	public function getLogList($typeId = null, $itemId = null, $userId = null, $dateCreationMin = null, $dateCreationMax = null, 
-                                    $start = 0, $limit = null, $order = null, $search = null)
+                                    $start = 0, $limit = null, $order = null, $search = null, $status = null)
 	{
 	    // Event parameters prepare
 	    $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
 	    $results = array();
-	    
+
 	    // Sending service start event
 	    $arrayParameters = $this->sendEvent('meliscore_log_list_start', $arrayParameters);
 	    // Service implementation end
-	     
+
 	    // Retrieving the list of logs
 	    $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
 	    $logList = $melisCoreTableLog->getLogList($arrayParameters['typeId'], $arrayParameters['itemId'], $arrayParameters['userId'], $arrayParameters['dateCreationMin'],
-	                                                $arrayParameters['dateCreationMax'], $arrayParameters['start'], $arrayParameters['limit'], $arrayParameters['order'], $arrayParameters['search']);
+	                                                $arrayParameters['dateCreationMax'], $arrayParameters['start'], $arrayParameters['limit'], $arrayParameters['order'], $arrayParameters['search'], $arrayParameters['status']);
 	    $logs = array();
 	    foreach ($logList As $key => $val)
 	    {

@@ -105,6 +105,7 @@ return [
     'tr_meliscore_tool_user_view_date_connection' => 'Dates de connexion',
     'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
     'tr_meliscore_tool_usrcd_last_connection_time' => 'Temps de connexion',
+    'tr_meliscore_tool_user_col_remove_picture' => "Retirer photo",
 
     //USER PROFILE MANAGEMENT
     'tr_meliscore_user_profile' => 'Gestion du profil utilisateur',
@@ -143,23 +144,23 @@ return [
     'tr_meliscore_email_lost_password_html_Content' => '<p>Bonjour [USER_LOGIN],</p><p>Veuillez cliquer sur ce <a href="[URL]">lien</a> pour changer votre mot de passe.</p>',
     'tr_meliscore_email_lost_password_text_Content' => 'Bonjour [USER_LOGIN], Veuillez cliquer sur ce [URL] pour changer votre mot de passe.',
     'tr_meliscore_email_lost_password_request_success' => 'Un email vous a été envoyé pour réinitialiser votre mot de passe.',
-    'tr_meliscore_email_lost_password_request_failed' => 'Unable to send an email, invalid email or login',
+    'tr_meliscore_email_lost_password_request_failed'  => 'Unable to send an email, invalid email or login',
     'tr_meliscore_email_lost_password_request_form_empty' => 'Please complete the form',
     'tr_meliscore_email_failed' => 'Login ou email invalide',
     // Password Modification
     'tr_meliscore_email_password_modification_Subject' => 'Password modification',
     'tr_meliscore_email_password_modification_html_Content' => '<p>Bonjour [NAME],</p><p>Votre mot de passe sur Melis Platform a été modifié.<br/>Votre nouveau mot de passe est : [PASSWORD]</p><p>Bonne journée.</p>',
-
+    
     // Reset Password
     'tr_meliscore_reset_password_header' => 'Réinitialiser mot de passe',
     'tr_meliscore_reset_password_success' => 'Le mot de passe a bien été réinitialisé',
     'tr_meliscore_reset_password_failed' => 'Impossible de réinitialiser le mot de passe',
     'tr_meliscore_reset_password_not_match' => 'Les mots de passe saisis ne correspondent pas',
-
+    
     // Create account
     'tr_meliscore_email_create_account_Subject' => 'Demande de création de compte',
     'tr_meliscore_email_create_account_html_Content' => '<p>Bonjour [NAME],</p><p>You have now Account on Melis Technology Platform Version 2.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Password : [PASSWORD]</p>',
-
+        
     // error
     'tr_meliscore_error_An error occurred' => 'Une erreur est survenue',
     'tr_meliscore_error_Additional information' => 'Informations complémentaires',
@@ -168,7 +169,7 @@ return [
     'tr_meliscore_error_Stack trace' => 'Pile d\'exécution',
     'tr_meliscore_error_Previous exceptions' => 'Exceptions précédentes',
     'tr_meliscore_error_No Exception available' => 'Aucune exception disponible',
-
+    
     'tr_meliscore_global_action' => 'Action',
     'tr_meliscore_common_active' => 'Actif',
     'tr_meliscore_common_inactive' => 'Inactif',
@@ -192,12 +193,13 @@ return [
 
     'tr_meliscore_login_remember_me' => 'Se rappeler de moi',
     'tr_meliscore_login_header' => 'Connexion à votre compte',
-
+    
     'tr_meliscore_common_choose' => 'Choisissez',
-
+    
     // empty flash messenger text
     'tr_meliscore_no_notificaions' => 'Vous n\'avez pas de notification pour le moment',
-
+    'tr_meliscore_clear_notifications' => 'Effacer les notifications',
+    
     // DataTables Translations http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json
     'tr_meliscore_dt_sEmptyTable' => 'Aucune donn&eacute;e disponible dans le tableau',
     'tr_meliscore_dt_sInfo' => 'Affichage de l\'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments',
@@ -216,11 +218,11 @@ return [
     'tr_meliscore_dt_sPrevious' => 'Pr&eacute;c&eacute;dent',
     'tr_meliscore_dt_sSortAscending' => 'activer pour trier la colonne par ordre croissant',
     'tr_meliscore_dt_sSortDescending' => ' activer pour trier la colonne par ordre d&eacute;croissant',
-
+    
     'tr_meliscore_common_online' => 'Connecté',
 
     'tr_meliscore_dashboard_Calendar' => 'Calendrier',
-
+    
     // Date Picker
     'tr_meliscore_datepicker_select_date' => 'Date: ',
     'tr_meliscore_datepicker_today' => 'Aujourd\'hui',
@@ -232,11 +234,11 @@ return [
     'tr_meliscore_datepicker_apply' => 'Appliquer',
     'tr_meliscore_datepicker_cancel' => 'Annuler',
     'tr_meliscore_datepicker_custom_range' => 'Période personnalisée',
-
+      
     // AJAX Errors
     'tr_meliscore_error_message' => 'Une erreur est survenue, veuillez réessayer ou contactez l\'administrateur si le problème persiste.',
     'tr_meliscore_error_language' => 'Une erreur est survenue lors du changement de langage, veuillez réessayer.',
-
+    
     // Module Management Translations
     'tr_meliscore_system_configuration' => 'Configuration système',
     'tr_meliscore_module_management' => 'Module management',
@@ -256,7 +258,7 @@ return [
     'tr_meliscore_module_management_select_deselect_all_module_noti' => 'Sélectionner / désélectionner tous les modules',
     'tr_meliscore_general_proceed' => 'Proceed',
     'tr_meliscore_general_confirm' => 'Confirm',
-
+    
     // Common File Attachment and Images Deletion labels and messages
     // File
     'tr_meliscore_delete_file_title' => 'Supprimer le fichier',
@@ -274,8 +276,8 @@ return [
     'tr_meliscore_delete_image_unable' => 'Impossible de supprimer l\'image, veuillez réessayer plus tard',
     'tr_meliscore_delete_image_rights_issue' => 'Impossible de supprimer l\'image, veuillez vérifier vos droits',
     'tr_meliscore_delete_image_not_exists' => 'Impossible de supprimer, l\'image n\'existe pas',
-
-
+    
+    
     // Delete Message Confimation
     'tr_meliscommerce_documents_delete_file_title' => 'Supprimer le fichier',
     'tr_meliscommerce_documents_delete_file_msg_confirm' => 'Êtes-vous sûr de vouloir supprimer ce fichier ?',
@@ -289,7 +291,7 @@ return [
     'tr_meliscommerce_documents_delete_image_rights_issue' => 'Impossible de supprimer l\'image, veuillez vérifier vos droits',
     'tr_meliscommerce_documents_delete_file_not_exists' => 'Impossible de supprimer, le fichier n\'existe pas',
     'tr_meliscommerce_documents_delete_image_not_exists' => 'Impossible de supprimer, l\'image n\'existe pas',
-
+    
     // Platform Tool Translations
     'tr_meliscore_tool_platform_title' => 'Plateformes',
     'tr_meliscore_tool_platform_title info' => 'Melis Platform permet de déclarer des environnements différents (ex : local, pre-production, production) afin de sauvegarder des configurations spécifiques pour chacun d\'entre eux (domaine). Le nom de la plateforme doit correspondre à la variable d\'environnement définie dans le vhost (MELIS_PLATFORM).<br>Il est impossible de supprimer la plateforme courante.',
@@ -357,9 +359,9 @@ return [
 
     // Deleted User
     'tr_meliscore_user_deleted' => 'Utilisateur Supprimé',
-
+    
     'tr_meliscms_tool_language_edit' => 'Edit Langage',
-
+    
     // Email Management
     'tr_meliscore_tool_emails_mngt_generic_from' => 'Email Creation and Edition Form',
     'tr_meliscore_tool_emails_mngt' => 'Gestion des emails',
@@ -388,8 +390,8 @@ return [
     'tr_emails_management_email' => 'Email',
     'tr_emails_management_creation' => 'Création d\'un email',
     'tr_emails_management_edition' => 'Edition de l\'email',
-    'tr_emails_management_add_email' => 'Ajouter un email',
-    'tr_emails_management_title_creation' => 'Création',
+    'tr_emails_management_add_email' =>  'Ajouter un email',
+    'tr_emails_management_title_creation' =>  'Création',
     'tr_meliscore_tool_emails_mngt_generic_from_header' => 'Header',
     'tr_meliscore_tool_emails_mngt_generic_from_content' => 'Contenu',
     'tr_meliscore_tool_emails_mngt_generic_from_header_cancel' => 'Annuler',
@@ -397,12 +399,12 @@ return [
     'tr_meliscore_tool_emails_mngt_generic_from_content_tab_nav' => 'Form Tab Navigators',
     'tr_meliscore_tool_emails_mngt_generic_from_content_tab_content' => 'Form Tab Content',
     // Flash Massges
-    'tr_emails_management_title_creation' => 'Création d\'un email',
-    'tr_emails_management_title_edition' => 'Edition email',
-    'tr_emails_management_title_deletion' => 'Suppression email',
-    'tr_emails_management_created' => 'créé',
-    'tr_emails_management_edited' => 'edité',
-    'tr_emails_management_deleted' => 'supprimé',
+    'tr_emails_management_title_creation' =>  'Création d\'un email',
+    'tr_emails_management_title_edition' =>  'Edition email',
+    'tr_emails_management_title_deletion' =>  'Suppression email',
+    'tr_emails_management_created' =>  'créé',
+    'tr_emails_management_edited' =>  'edité',
+    'tr_emails_management_deleted' =>  'supprimé',
     // General Properties Form
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_name' => 'Nom de l\'email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_name tooltip' => 'Informations utilisées uniquement côté Back Office (liste outil...)',
@@ -470,8 +472,8 @@ return [
     'tr_melis_diagnostic_test_important_folders_exists_false' => '"%s" does not exists',
     'tr_melis_diagnostic_test_important_folders_failed' => 'Unable to run test, you don\'t have enough rights to execute this action',
     'tr_melis_diagnostic_test_empty' => 'Nothing to test, no folder(s) provided to test, please check diagnostic.config.php.',
-
-
+    
+    
     // Module Diagnostic Tool
     'tr_melis_module_diagnostics_title' => 'Module diagnostics',
     'tr_melis_module_diagnostics_run_test' => '<i class="fa fa-play"></i> Run',
@@ -481,33 +483,33 @@ return [
     'tr_melis_module_diagnostics_tool_content' => 'Content',
     'tr_melis_module_diagnostics_tool_header_run_all' => '<i class="glyphicon glyphicon-flash"></i> Run all',
     'tr_melis_module_diagnostics_tool_header_hide_all' => '<i class="fa fa-minus"></i> Hide all',
-
+     
     'tr_melis_module_rights_dir' => 'Module basic folder test',
     'tr_melis_module_basic_action_test' => 'Basic action test',
     'tr_melis_module_file_creation_test' => 'File creation test',
     'tr_melis_module_db_test' => 'Test module database table(s)',
-
-
+     
+     
     'tr_melis_module_diag_check_rights' => 'Checking rights for <strong>"%s"</strong>',
-
+     
     'tr_melis_module_diag_folder_read_write' => 'Directory <strong>"%s"</strong> is readable and writable',
     'tr_melis_module_diag_folder_not_exists' => 'Directory <strong>"%s"</strong> does not exist',
     'tr_melis_module_diag_folder_check' => 'Checking file <strong>"%s"</strong>',
-
+     
     'tr_melis_module_rights_ok' => 'folder <strong>"%s"</strong> is readable and writable',
     'tr_melis_module_check_rights' => 'Please check the rights for this folder <strong>"%s"</strong>',
-
+     
     'tr_melis_module_controller_check_route' => 'Checking <strong><strong>"%s"</strong></strong> route configuration',
     'tr_melis_module_controller_testing_route' => 'Testing route status: <strong>"%s"</strong>',
     'tr_melis_module_controller_testing_route_not_found' => 'Unable to test route, cannot find <strong>"%s"</strong> in your route configuration, please check %s/config/module.config.php',
     'tr_melis_module_controller_route_test_results' => 'Route results: <strong>%s</strong>',
-
+     
     'tr_melis_module_ending_test' => 'Finishing testing for <strong>%s</strong>...',
     'tr_melis_module_no_more_results' => 'Request doesn\'t have anymore response. Response payload might be too big for the diagnostic tool to handle',
     'tr_melis_module_aborted' => 'Done',
-
+     
     'tr_melis_test_config_not_found' => '%s not found, please create one',
-
+     
     'tr_melis_test_writable_false' => '/public folder of module "%s" is not writable',
     'tr_melis_test_write_not_found' => 'Cannot find %s in %s',
     'tr_melis_test_create_file_false' => 'Cannot create file "%s" in %s/public, you have no rights on creating a file on this folder',
@@ -515,25 +517,25 @@ return [
     'tr_melis_test_path_exists_false' => '%s path does not exists',
     'tr_melis_test_path_write_success' => '%s file has been created successfully',
     'tr_melis_test_path_delete_success' => '%s file has been deleted',
-
+     
     'tr_melis_test_db_config_exists_false' => 'Unable to test module tables, %s not found',
     'tr_melis_test_db_table_exists_false' => 'Table "%s" does not exists. ',
     'tr_melis_test_db_table_test_success' => 'Testing table "%s" successful',
     'tr_melis_test_db_table_test_failed' => 'Testing table "%s" failed, table does not exists',
-
+     
     'tr_melis_module_controller_action_warn' => 'Please add diagnostic.config.php in your %s module',
-
+    
     'tr_melis_diag_test_module_config_title' => 'Testing module config folder and melis.module.load file',
-
+     
     // Tooltip messages
     'tr_meliscore_tool_tooltip_password' => 'Le mot de passe doit être d`au moins 8 caractères et doit contenir au moins une lettre ET un chiffre.',
     'tr_meliscore_tool_tooltip_password_2' => 'Confirmer le mot de passe',
-
+    
     // Logs Tool
     'tr_meliscore_logs_tool' => 'Logs',
     'tr_meliscore_logs_tool_description' => 'Cet outil sauvegarde les actions effectuées par tous les utilisateurs de la plateforme. Les logs sont ensuite triables en fonction de leur provenance, de l&#39;utilisateur et de leur type.',
     'tr_meliscore_logs_type' => 'Type de logs',
-
+     
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',
     'tr_meliscore_logs_tool_log_title' => 'Titre',
@@ -542,19 +544,19 @@ return [
     'tr_meliscore_logs_tool_log_item_id' => 'ID élément',
     'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
     'tr_meliscore_logs_tool_log_date_added' => 'Date ajoutée',
-
+     
     // Log type details
     'tr_meliscore_logs_tool_log_type_name' => 'Nom',
     'tr_meliscore_logs_tool_log_type_description' => 'Description',
     'tr_meliscore_logs_tool_log_type_code' => 'Code type de log',
-
+     
     'tr_meliscore_logs_tool_log_save_success' => 'Le type de log a été sauvegardé avec succès',
     'tr_meliscore_logs_tool_log_save_unable' => 'Impossible de sauvegarder le type de log, veuillez réessayer',
     'tr_meliscore_logs_tool_log_input_to_long_255' => 'Valeur trop longue, elle doit être de moins de 255 caractères',
     'tr_meliscore_logs_tool_log_tyne_name_must_atleast_one_entry' => 'Le nom du type de log doit avoir au moins un caractère',
 
     'tr_meliscore_invalid_id' => 'Invalid ID',
-
+    
     'tr_meliscore_date_today' => 'Aujourd\'hui',
     'tr_meliscore_date_yesterday' => 'Hier',
     'tr_meliscore_date_year' => 'Année',
@@ -570,7 +572,10 @@ return [
     'tr_meliscore_date_start' => 'Début',
     'tr_meliscore_date_end' => 'Fin',
 
-    'tr_melisore_tinymce_file_manager' => 'File Manager',
+    // tinymce
+    'tr_meliscore_tinymce_file_manager' => 'File Manager',
+    'tr_meliscore_tinymce_insert_edit_link_toolbar_button_title' => 'Insérer/modifier un lien',
+    'tr_meliscore_tinymce_insert_edit_link_dialog_title' => 'Insérer/modifier un lien',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',
@@ -602,8 +607,8 @@ return [
     'tr_meliscore_platform_scheme_images' => 'Titre &amp; Images',
     'tr_meliscore_platform_color_primary' => 'Couleur primaire',
     'tr_meliscore_platform_color_secondary' => 'Couleur secondaire',
-    'tr_meliscore_platform_color_tooltip' => 'Hexadecimal color code',
-    'tr_meliscore_platform_color_invalid_hex' => 'Invalid HEX color, please choose a valid HEX color',
+    'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
+    'tr_meliscore_platform_color_invalid_hex'   => 'Invalid HEX color, please choose a valid HEX color',
 
     'tr_meliscore_platform_scheme_form_login_logo' => 'Logo login',
     'tr_meliscore_platform_scheme_form_login_background' => 'Arrière plan login',
@@ -613,8 +618,8 @@ return [
 
     'tr_meliscore_platform_scheme_image_is_invalid' => 'Invalid file image, make sure that the file being uploaded is a type of an image',
 
-    'tr_meliscore_platform_scheme_save_ok' => 'Thème de la plateforme sauvegardé avec succès',
-    'tr_meliscore_platform_scheme_save_ko' => 'Unable to save platform scheme',
+    'tr_meliscore_platform_scheme_save_ok'   => 'Thème de la plateforme sauvegardé avec succès',
+    'tr_meliscore_platform_scheme_save_ko'   => 'Unable to save platform scheme',
 
     'tr_meliscore_platform_scheme_folder_not_exists' => 'Platform scheme folder does not exists (/media/platform-scheme)',
     'tr_meliscore_platform_scheme_folder_no_permission' => 'You don\'t have permission to upload on this folder <strong>/media/platform-scheme<strong>',
@@ -640,7 +645,7 @@ return [
 
     //Language Back Office
     'tr_melis_core_common_apply_language' => 'Changer le langage courrant vers ',
-
+    
     // Dashboard plugins
     'tr_melisore_Plugins' => 'Plugins',
     'tr_melisore_remove_all_plugins' => 'Supprimer tous les plugins',
@@ -649,50 +654,62 @@ return [
     'tr_meliscore_remove_dashboard_plugin' => 'Supprimer le plugin du tableau de bord',
     'tr_meliscore_remove_dashboard_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer ce plugin?',
     'tr_meliscore_remove_dashboard_all_plugin_msg' => 'Êtes-vous sûr de vouloir supprimer tous les plugins?',
-    'tr_meliscore_remove_dashboard_no_plugin_msg' => 'Aucun plugin à supprimer',
+    'tr_meliscore_remove_dashboard_no_plugin_msg' => 'Le dashboard est vide et il n\'y a aucun plugin à supprimer',
 
     'tr_PluginSection_meliscore' => 'Melis Core',
-
-    'tr_meliscore_dashboard_Recent Activity' => 'Activité récente',
-    'tr_meliscore_dashboard_Recent Activity description' => 'Ce plugin affiche la liste des activités récentes de l\'utilisateur.',
+    
+    'tr_meliscore_dashboard_Recent Activity' => 'Activité récente des utilisateurs',
+    'tr_meliscore_dashboard_Recent Activity description' => 'Activité récente des utilisateurs',
     'tr_meliscore_dashboard_recent_activity_Users' => 'Utilisateurs',
     'tr_meliscore_dashboard_recent_activity_Logged in' => 's\'est connecté',
 
     // Melis Core GDPR
     'tr_melis_core_gdpr' => 'RGPD',
     'tr_melis_core_gdpr_header_title' => 'RGPD (Règlement Général sur la Protection des Données)',
-    'tr_melis_core_gdpr_header_description' => 'Melis Platform fournit un système pour chercher les données de vos utilisateurs. </br> Tous les modules qui implémentent le système de Melis pourront intéragir avec cette interface et vous offir la possibilité de respecter le règlement.',
+    'tr_melis_core_gdpr_header_description' => 'Melis Platform fourni un system pour chercher les données de vos utilisateurs. </br> Tous les modules qui implémentent le système de Melis pourront intéragir avec cette interface et vous offir la possibilité de respecter le règlement.',
+    'tr_melis_core_gdpr_header' => 'En-tête',
+    'tr_melis_core_gdpr_content' => 'Contenu',
+    'tr_melis_core_gdpr_search_form' => 'formulaire de recherche',
+    'tr_melis_core_gdpr_content_tab' => 'Onglet contenu',
+    'tr_melis_core_gdpr_search_form_checkbox_specific' => 'Recherche de nom exact (prénom + nom)',
 
+    'tr_melis_core_gdpr_search_user_data_tabname' => 'Données',
     'tr_melis_core_gdpr_form_name' => 'Nom',
     'tr_melis_core_gdpr_form_email' => 'Email',
     'tr_melis_core_gdpr_form_site' => 'Site',
     'tr_melis_core_gdpr_search_user_title' => 'Rechercher un utilisateur',
+    'tr_melis_core_gdpr_form_site_select_default' => 'Tous les sites',
 
     'tr_melis_core_gdpr_notif_gdpr_search' => 'Formulaire de Recherche RGPD',
     'tr_melis_core_gdpr_notif_extract_user' => 'Extraction des utilisateurs RGPD',
     'tr_melis_core_gdpr_notif_delete_user' => 'RGPD Suppression d\'utilisateur',
 
-    'tr_melis_core_gdpr_notif_delete_selected_confirm' => 'Supprimer la sélection',
+    'tr_melis_core_gdpr_notif_delete_selected_confirm' => 'Supprimer la séléction',
     'tr_melis_core_gdpr_notif_delete_selected_confirm_message' => 'Êtes-vous sûr de vouloir supprimer les enregistrements sélectionnés?',
 
     'tr_melis_core_gdpr_search_user_error_message' => 'Impossible de rechercher des informations utilisateurs',
     'tr_melis_core_gdpr_tool_form_input_too_long' => 'Input is too long',
 
     'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Format d\'email invalide',
-    'tr_melis_core_gdpr_tool_form_no_inputs' => 'Veuillez saisir les détails de l\'utilisateur. Le nom ou le champ email est requis',
+    'tr_melis_core_gdpr_tool_form_no_inputs' => 'Veuillez saisir au moins un nom ou une adresse email',
     'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'Aucun utilisateur sélectionné',
     'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'Aucun utilisateur sélectionné',
     'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Erreur lors de la suppression des données',
     'tr_melis_core_gdpr_notif_no_user_data_found' => 'Aucun utilisateur trouvé',
+    'tr_melis_core_gdpr_notif_error_3ormore_inputs' => 'La recherche doit être basée sur au moins 3 caractères',
 
     'tr_melis_core_gdpr_view_search_button' => 'Rechercher',
     'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extraire la sélection',
     'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Supprimer la sélection',
-    'tr_melis_core_gdpr_tabs_header_title' => 'Rechercher un utilisateur:',
+    'tr_melis_core_gdpr_tabs_header_title' => 'Rechercher un utilisateur :',
     'tr_melis_core_gdpr_column_is_admin' => 'Oui',
     'tr_melis_core_gdpr_column_is_not_admin' => 'Non',
     'tr_melis_core_gdpr_notif_name_or_email_required' => 'Le nom ou l\'email sont requis',
     'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Le nom ne doit pas être composé de chiffres',
+    'tr_melis_core_gdpr_tool_notif_delete_selection_success' => 'Sélection supprimée avec succès',
 
-    'tr_melisdashboardplugin_section' => 'Melis Dashboard Plugins',
+    'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
+    'tr_melisdashboardplugin_plugin_no_rights' => 'Vous n\'avez pas les droits requis pour accéder à ce plugin.',
+    'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => 'Les droits de votre compte ne vous autorisent pas à utiliser les plugins du dashboard. Merci de contacter un admin si besoin.',
+    'tr_meliscore_remove_all_plugins' => 'Suppression de tous les plugins du dashboard',
 ];

@@ -1,5 +1,6 @@
 <?php
 
+use MelisCore\Support\MelisCore;
 
 return array(
     'plugins' => array(
@@ -14,9 +15,10 @@ return array(
                     'maxNestedForwards' => 100
                 ),
 
-                // Override these datas in MelisModuleConfig !
+                // Override these datas iMelisFront404CatcherListener.phpConfig !
                 'default' => array(
-                    'host' => 'https://www.melistechnology.com',
+                    'host' => $_SERVER['HTTP_HOST'],
+                    'scheme' => $_SERVER['REQUEST_SCHEME'],
                     'logo' => '/img/MelisTech.png',
                     'errors' => array(
                         'error_reporting' => E_ALL & ~E_USER_DEPRECATED,
@@ -94,7 +96,7 @@ return array(
                     ),
                     'langauges' => array(
                         'default_trans_files' => array(
-                            'defaultTransInterface' =>  'en_EN.interface',
+                            'defaultTransInterface' => 'en_EN.interface',
                             'defaultTransForms' => 'en_EN.forms',
                         ),
                         'default_trans_dir' => array(
@@ -105,6 +107,25 @@ return array(
                         ),
                     ),
                 ),
+                /*
+                 * fallback melis marketplace module section
+                 *  - if the platform is not connected to the internet
+                 */
+                'fallBacksection' => [
+                    'MelisCore',
+                    'MelisCms',
+                    'MelisMarketing',
+                    'MelisCommerce',
+                    'MelisSites'
+                ],
+                /*
+                 * duration of new plugins (dashboard and templating(pages)) notifications
+                 * in ( number of days )
+                 */
+                'new_plugin_notification' => [
+                    'menu_handler' => "5", // equivalent to 5 days
+                    "inside_menu"  => "10" // equivalent to 10 days
+                ],
             ),
             'ressources' => array(
                 'css' => array(
@@ -185,7 +206,7 @@ return array(
                     '/MelisCore/js/pluginConcat/melis-core-concat-fancytree.js',
 
                     // tinyMCE
-                    '/MelisCore/js/library/tinymce/tinymce.min.js?v='. time(),
+                    '/MelisCore/js/library/tinymce/tinymce.min.js?v=' . time(),
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
@@ -495,8 +516,14 @@ return array(
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
-                )
-            )
+                ),
+                'melis_dashboardplugin' => array(
+                    'conf' => array(
+                        MelisCore::DISPLAY => MelisCore::DISPLAY_NONE
+                    ),
+                    'interface' => array()
+                ),
+            ),
         ),
         'meliscore_login' => array(
             'ressources' => array(
