@@ -160,6 +160,9 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                                         	</meliscustom_toolstree_section>
                                         	<id>meliscore_leftmenu_root</id>
                                         </meliscore_leftmenu>
+                                        <melis_dashboardplugin>
+                                            <id>melis_dashboardplugin_root</id>
+                                        </melis_dashboardplugin>
                                         </document>',
                     ]);
 
