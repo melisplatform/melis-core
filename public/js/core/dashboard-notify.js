@@ -13,10 +13,14 @@ var dashboardNotify = (function() {
         onStart:function() {
             $pluginBtn.prop("disabled", true);
             $pluginFilterBtn.prop("disabled", true);
+            $pluginBtn.css("cursor", "auto");
+            $pluginFilterBtn.css("cursor", "auto");
         },
         onEnd: function() {
             $pluginBtn.prop("disabled", false);
             $pluginFilterBtn.prop("disabled", false);
+            $pluginBtn.css("cursor", "pointer");
+            $pluginFilterBtn.css("cursor", "pointer");
         }
     });
 

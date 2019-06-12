@@ -36546,6 +36546,10 @@ div#modal-user-management div.widget {
     #tab-arrow-top {
         display: none;
     }
+    /* #melis-core-dashboard-msg {
+        position: fixed;
+        width: calc(100% - 324px);
+    } */
 }
 @media (max-width: 767px) {
     .login-page #tab-arrow-top {
@@ -37446,7 +37450,7 @@ div#modal-user-management div.widget {
     transition:opacity .4s cubic-bezier(.42,0,.58,1);
     display:inline-block;
     min-width:200px;
-    text-align:center;
+    /* text-align:center; */
     max-width:80%
 }
 div.kineticjs-content{
