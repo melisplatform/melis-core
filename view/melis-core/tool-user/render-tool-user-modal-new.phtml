@@ -5,14 +5,20 @@
     echo $this->form()->openTag($form);
     echo $this->melisFieldCollection($form);
 ?>
+<br/>
+<br/>
 <div class="center-block userimage">
     <span class="thumbnail">
       <img id="new-profile-image" width="64" height="64" src="/MelisCore/images/profile/default_picture.jpg" alt="<?= $this->translate('tr_meliscore_tool_user_usr_profile_image'); ?>">
     </span>
 </div>
-<script type="text/javascript">
-	$('.userimage').detach().insertAfter('fieldset#idnewusermanagement div:last');
-</script>
+<div class="col-sm-12">
+    <a href="#" class="small"  id="btnDelImg">
+        <i class="fa fa-times"></i> <?= $this->translate('tr_meliscore_tool_user_col_remove_picture'); ?>
+    </a>
+</div>
+<br/>
+<br/>
 <button type="submit" class="btn btn-success pull-right" id="btnAdd"><i class="fa fa-plus"></i>
     <span class="long-text hidden-xs hidden-sm"><?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></span>
     <span class="short-text visible-xs visible-sm"><?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></span>

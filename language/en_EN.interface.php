@@ -109,6 +109,7 @@ return [
     'tr_meliscore_tool_user_view_date_connection' => 'Date connections',
     'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
     'tr_meliscore_tool_usrcd_last_connection_time' => 'Connection time',
+    'tr_meliscore_tool_user_col_remove_picture' => "Remove Photo",
 
     //USER PROFILE MANAGEMENT
     'tr_meliscore_user_profile' => 'User Profile Management',
@@ -163,7 +164,7 @@ return [
 
     // Create Account Email
     'tr_meliscore_email_create_account_Subject' => 'Account Creation',
-    'tr_meliscore_email_create_account_html_Content' => '<p>Hi [NAME],</p><p>You have now Account on Melis Technology Platform Version 2.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Password : [PASSWORD]</p>',
+    'tr_meliscore_email_create_account_html_Content' => '<p>Hi [NAME],</p><p>An account has been created for you on Melis Technology Platform version 3.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Password : [PASSWORD]</p>',
 
     // error
     'tr_meliscore_error_An error occurred' => 'Une erreur est survenue',
@@ -180,6 +181,8 @@ return [
     'tr_meliscore_common_warning' => 'Warning',
     'tr_meliscore_common_yes' => 'Yes',
     'tr_meliscore_common_no' => 'No',
+    'tr_meliscore_common_nope' => 'No',
+    'tr_meliscore_common_status' => 'Status',
     'tr_meliscore_common_copy' => 'Copy',
     'tr_meliscore_common_export_to_csv' => 'Export',
     'tr_meliscore_common_edit' => 'Edit',
@@ -199,6 +202,7 @@ return [
 
     // empty flash messenger text
     'tr_meliscore_no_notificaions' => 'You don\'t have any notification at the moment.',
+    'tr_meliscore_clear_notifications' => 'Clear Notifications',
 
 
     // DataTables Translations
@@ -407,7 +411,7 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Layout title',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip' => 'Additional options if you wish to use the default emails',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo' => 'Layout logo',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo Tooltip' => 'Additional options if you wish to use the default emails',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo tooltip' => 'Logo displayed in the email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo_select_image' => 'Select image',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info' => 'Layout information',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info tooltip' => 'Additional options if you wish to use the default emails',
@@ -528,7 +532,7 @@ return [
     'tr_meliscore_logs_tool_log_type' => 'Type',
     'tr_meliscore_logs_tool_log_item_id' => 'Item ID',
     'tr_meliscore_logs_tool_log_user' => 'User',
-    'tr_meliscore_logs_tool_log_date_added' => 'Date Added',
+    'tr_meliscore_logs_tool_log_date_added' => 'Date',
 
     // Log Type Details
     'tr_meliscore_logs_tool_log_type_name' => 'Name',
@@ -557,7 +561,10 @@ return [
     'tr_meliscore_date_start' => 'Start',
     'tr_meliscore_date_end' => 'End',
 
-    'tr_melisore_tinymce_file_manager' => 'File Manager',
+    // tinymce
+    'tr_meliscore_tinymce_file_manager' => 'File Manager',
+    'tr_meliscore_tinymce_insert_edit_link_toolbar_button_title' => 'Insert/edit link',
+    'tr_meliscore_tinymce_insert_edit_link_dialog_title' => 'Insert/Edit Link',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',
@@ -655,11 +662,18 @@ return [
     'tr_melis_core_gdpr' => 'GDPR',
     'tr_melis_core_gdpr_header_title' => 'GDPR (General Data Protection Regulation)',
     'tr_melis_core_gdpr_header_description' => 'Melis Platform provides a system to look for your user\'s datas. </br> All modules compliant to the Melis system will be able to interact with this interface and offer you possibilities to comply with the regulation.',
+    'tr_melis_core_gdpr_header' => 'Header',
+    'tr_melis_core_gdpr_content' => 'Content',
+    'tr_melis_core_gdpr_search_form' => 'Search form',
+    'tr_melis_core_gdpr_content_tab' => 'Content tab',
+    'tr_melis_core_gdpr_search_form_checkbox_specific' => 'Exact name search (first name + last name)',
 
+    'tr_melis_core_gdpr_search_user_data_tabname' => 'Data',
     'tr_melis_core_gdpr_form_name' => 'Name',
     'tr_melis_core_gdpr_form_email' => 'Email',
     'tr_melis_core_gdpr_form_site' => 'Site',
     'tr_melis_core_gdpr_search_user_title' => 'Search User',
+    'tr_melis_core_gdpr_form_site_select_default' => 'All sites',
 
     'tr_melis_core_gdpr_notif_gdpr_search' => 'GDPR Search Form',
     'tr_melis_core_gdpr_notif_extract_user' => 'GDPR Extract User',
@@ -671,21 +685,22 @@ return [
     'tr_melis_core_gdpr_search_user_error_message' => 'Unable to search for user info',
     'tr_melis_core_gdpr_tool_form_input_too_long' => 'Input is too long',
     'tr_melis_core_gdpr_tool_form_email_invalid_format' => 'Invalid email format',
-    'tr_melis_core_gdpr_tool_form_no_inputs' => 'Please input the user details. Either the Name or Email field is required',
+    'tr_melis_core_gdpr_tool_form_no_inputs' => 'Please enter at least a name or an email address',
     'tr_melis_core_gdpr_notif_no_selected_extract_user' => 'No user selected to extract',
     'tr_melis_core_gdpr_notif_no_selected_delete_user' => 'No user selected to delete',
     'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',
     'tr_melis_core_gdpr_notif_error_on_deleting_data' => 'Error on deleting data',
-    'tr_melis_core_gdpr_notif_no_user_data_found' => 'No user data found',
+    'tr_melis_core_gdpr_notif_error_3ormore_inputs' => 'The search must be based on at least 3 characters',
 
     'tr_melis_core_gdpr_view_search_button' => 'Search',
-    'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract Selected',
-    'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete Selected',
-    'tr_melis_core_gdpr_tabs_header_title' => 'Search a user:',
+    'tr_melis_core_gdpr_tabs_extract_selected_button' => 'Extract selection',
+    'tr_melis_core_gdpr_tabs_delete_selected_button' => 'Delete selection',
+    'tr_melis_core_gdpr_tabs_header_title' => 'Search a user :',
     'tr_melis_core_gdpr_column_is_admin' => 'Yes',
     'tr_melis_core_gdpr_column_is_not_admin' => 'No',
     'tr_melis_core_gdpr_notif_name_or_email_required' => 'Name or Email field is required',
     'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error' => 'Name should not consist of numbers',
+    'tr_melis_core_gdpr_tool_notif_delete_selection_success' => 'Selection deleted successfully',
 
     'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
     'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.',

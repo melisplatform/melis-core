@@ -19,9 +19,13 @@ use MelisCore\Listener\MelisCoreInstallCreateNewUserListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 use MelisCore\Listener\MelisCoreNewPlatformListener;
 use MelisCore\Listener\MelisCorePhpWarningListener;
+use MelisCore\Listener\MelisCorePluginsAdditionalListener;
+use MelisCore\Listener\MelisCorePluginsListener;
+use MelisCore\Listener\MelisCorePluginsRemovalListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreToolUserAddNewUserListener;
 use MelisCore\Listener\MelisCoreToolUserUpdateUserListener;
+use MelisCore\Listener\MelisCoreUrlAccessCheckerListenner;
 use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\ModuleRouteListener;
@@ -58,6 +62,9 @@ class Module
 
         });
 
+        /** @var \MelisCore\Service\MelisCoreModulesService $moduleSvc */
+        $moduleSvc = $e->getApplication()->getServiceManager()->get('ModulesService');
+        $moduleSvc->unloadModule('MelisInstaller');
 
         if (!$this->isInInstallMode($e)) {
             $eventManager->attach(new MelisCoreGetRightsTreeViewListener());
@@ -75,6 +82,7 @@ class Module
             $eventManager->attach(new MelisCorePhpWarningListener());
 
             $eventManager->attach(new MelisCoreDashboardPluginRightsTreeViewListener());
+            $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
         }
     }
 

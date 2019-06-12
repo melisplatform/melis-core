@@ -1,27 +1,27 @@
 <?php
-$loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
-$schemes = $this->layout()->schemes;
-$loginBackground = $this->login_background;
-$favicon = '/favicon.ico';
+    $loginClas = (int) $this->isLogin == 1 ? 'login-page' : '';
+    $schemes = $this->layout()->schemes;
+    $loginBackground = $this->login_background;
+    $favicon = '/favicon.ico';
 
-if ($schemes) {
-    if (!empty($schemes->getLoginBackground())) {
-        $loginBackground = $schemes->getLoginBackground();
+    if ($schemes) {
+        if (!empty($schemes->getLoginBackground())) {
+            $loginBackground = $schemes->getLoginBackground();
+        }
+
+        if (!empty($schemes->getFavicon())) {
+            $favicon = $schemes->getFavicon();
+        }
     }
 
-    if (!empty($schemes->getFavicon())) {
-        $favicon = $schemes->getFavicon();
+    $bundle = $this->layout()->bundle;
+
+    if ($this->layout()->isLogin) {
+        $bundle = $this->MelisCoreHeadPlugin('/meliscore_login');
     }
-}
 
-$bundle = $this->layout()->bundle;
-
-if ($this->layout()->isLogin) {
-    $bundle = $this->MelisCoreHeadPlugin('/meliscore_login');
-}
-
+    echo $this->doctype();
 ?>
-<?php echo $this->doctype(); ?>
 <!--[if lt IE 7]>
 <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>
@@ -41,7 +41,7 @@ if ($this->layout()->isLogin) {
         ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
     ?>
     <link rel="icon" href="<?= $favicon; ?>" type="image/x-icon"/>
-    <!--        <link rel="shortcut icon" href="--><? //= $favicon; ?><!--" type="image/x-icon" />-->
+    <!-- <link rel="shortcut icon" href="$favicon;" type="image/x-icon" />-->
     <script type="text/javascript">
         var ua = window.navigator.userAgent;
         var msie = ua.indexOf("MSIE ");
@@ -131,5 +131,17 @@ if ($this->layout()->isLogin) {
     <?= $this->headScript() ?>
     <!-- modals container -->
     <div id="melis-modals-container"></div>
+    <script defer>
+        function iframeMarketplaceCallback(){
+            var iframe = document.querySelectorAll(".marketplaceUpdate");
+            for (i = 0; i < iframe.length; i++) {
+                var content = iframe[i].contentWindow.document;
+                content.open();
+                content.write('<img src=\'http://marketplace.melisplatform.com/marketplace-update?modulelist=<?php echo $this->modules; ?>&&domain=<?php echo $this->domain?>&&scheme=<?php echo $this->scheme ?>\' />');
+                content.close();
+            }
+        }
+        iframeMarketplaceCallback();
+    </script>
 </body>
 </html>

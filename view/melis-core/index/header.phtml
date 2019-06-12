@@ -18,7 +18,6 @@ if($schemes) {
     }
 }
 
-
 $headerTitle = '<span>'.$this->escapeHtml($sidebarHeaderText).'</span>';
 $headerTitleLen = str_replace(' ', '', trim($sidebarHeaderText));
 $headerTitleLen = strlen($headerTitleLen);
@@ -32,114 +31,95 @@ $headerExclusions = array(
 );
 
 ?>
-<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar  navbar-primary main" role="navigation">
-
-	
+<div <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar  navbar-primary main" role="navigation">
+    <a id="tab-arrow-top">
+        <i class="fa fa-angle-down" title="Show main tabs"></i>
+    </a>
     <!-- left menu -->
     <div class="left-menu"> 
-            <div class="navbar-brand">
-            
-              <div class="pull-left">
-                <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
-                    <i class="fa fa-bars"></i>
-                </a>
-              </div>
-              <a href="/melis" class="appbrand innerL">
-              
-              		<img alt="melis platform" src="<?= $sidebarHeaderLogo; ?>">
-                    <?= $headerTitle ?>
-              
-              </a>
-              
-              <div class="pull-right">
-                <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
-                    <i class="fa fa-cog"></i>
-                </a>
-              </div>
-            
+        <div class="navbar-brand">
+            <div class="pull-left">
+            <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
+                <i class="fa fa-bars"></i>
+            </a>
             </div>
+            <a href="/melis" class="appbrand innerL">
+                <img alt="melis platform" src="<?= $sidebarHeaderLogo; ?>">
+                <?= $headerTitle ?>
+            </a>              
+            <div class="pull-right">
+            <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
+                <i class="fa fa-cog"></i>
+            </a>
+            </div>
+        </div>
     </div>
-        
     <div class="res-action-container">
-    
-            <!-- main nav tabs --> 
-            <div id="melis-navtabs-container-outer">
-              <span class="melis-tabprev">
-                <i class="fa fa-angle-left"></i>
-              </span>
-              <div id="melis-navtabs-container-inner">
-                  
-                  <!-- responsive tab menu -->
-                  <div id="res-page-cont" class="reponsive-menu-tabs">
-                        <span> 
-                        	<?php echo $this->translate('tr_meliscore_tool_gen_content') ?> 
-                            <i class="fa fa-angle-down"></i>
-                        </span>
-                  </div>
-                  
-                  <ul class="nav nav-tabs navbar-nav tabsbar" id="melis-id-nav-bar-tabs">
-                        <?php 
-                            if (!empty($this->appsConfigCenter['interface']))
-                            {
-                                foreach ($this->appsConfigCenter['interface'] as $keyConfig => $menuConfig)
-                                {
-                                    if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['name']))
-                                        $tabname = $menuConfig['conf']['name'];
-                                    else 
-                                        $tabname = 'Tab';
-                                    $icon = '';
-                                    $zoneId = '';
-                                    $melisKey = '';
-                                    if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['icon']))
-                                        $icon = $menuConfig['conf']['icon'];
-                                    if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['id']))
-                                        $zoneId = $menuConfig['conf']['id'];
-                                    if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['melisKey']))
-                                        $melisKey = $menuConfig['conf']['melisKey'];
-
-                                    echo '<li class="" data-tool-name="'.$tabname.'" data-tool-icon="'.$icon.'" data-tool-id="'.$zoneId.'" data-tool-meliskey="'.$melisKey.'"><a  data-toggle="tab" class="dropdown-toggle menu-icon tab-element" href="#'. $menuConfig['conf']['id'] .'" data-id="'. $menuConfig['conf']['id'] .'"><i class="fa ' . $icon . ' fa-2x"></i><span class="navtab-pagename">' . $tabname . '</span></a><a class="close close-tab"  data-id="'. $menuConfig['conf']['id'] .'">Close</a></li>';
-                                }
-                            } 
-                        ?>
-                        
-                  </ul>
-              </div>    
-               <span class="melis-tabnext">
-                <i class="fa fa-angle-right"></i>
-               </span>  
-            </div>
-          
-
-            <ul class="nav navbar-nav navbar-right">
-                <!-- add flash messenger here -->
-                
-                <?php 
-                    if (!empty($this->zoneconfig['interface']))
-                    {
-                        echo $this->meliscore_header_close_all_tabs;
-                        foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+        <!-- main nav tabs --> 
+        <div id="melis-navtabs-container-outer">
+            <span class="melis-tabprev">
+            <i class="fa fa-angle-left"></i>
+            </span>
+            <div id="melis-navtabs-container-inner">
+                <!-- responsive tab menu -->
+                <div id="res-page-cont" class="reponsive-menu-tabs">
+                    <span> 
+                        <?php echo $this->translate('tr_meliscore_tool_gen_content') ?> 
+                        <i class="fa fa-angle-down"></i>
+                    </span>
+                </div>
+                <ul class="nav nav-tabs navbar-nav tabsbar" id="melis-id-nav-bar-tabs">
+                    <?php 
+                        if (!empty($this->appsConfigCenter['interface']))
                         {
-                            if(!in_array($keyConfig, $headerExclusions))
-                                echo $this->$keyConfig;
-                        }
+                            foreach ($this->appsConfigCenter['interface'] as $keyConfig => $menuConfig)
+                            {
+                                if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['name']))
+                                    $tabname = $menuConfig['conf']['name'];
+                                else 
+                                    $tabname = 'Tab';
+                                $icon = '';
+                                $zoneId = '';
+                                $melisKey = '';
+                                if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['icon']))
+                                    $icon = $menuConfig['conf']['icon'];
+                                if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['id']))
+                                    $zoneId = $menuConfig['conf']['id'];
+                                if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['melisKey']))
+                                    $melisKey = $menuConfig['conf']['melisKey'];
 
-                        echo $this->market_place_header_icon;
-                        echo $this->meliscore_header_logout;
+                                echo '<li class="" data-tool-name="'.$tabname.'" data-tool-icon="'.$icon.'" data-tool-id="'.$zoneId.'" data-tool-meliskey="'.$melisKey.'"><a  data-toggle="tab" class="dropdown-toggle menu-icon tab-element" href="#'. $menuConfig['conf']['id'] .'" data-id="'. $menuConfig['conf']['id'] .'"><i class="fa ' . $icon . ' fa-2x"></i><span class="navtab-pagename">' . $tabname . '</span></a><a class="close close-tab"  data-id="'. $menuConfig['conf']['id'] .'">Close</a></li>';
+                            }
+                        } 
+                    ?>
+                    
+                </ul>
+            </div>    
+            <span class="melis-tabnext">
+            <i class="fa fa-angle-right"></i>
+            </span>  
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <!-- add flash messenger here -->
+            
+            <?php 
+                if (!empty($this->zoneconfig['interface']))
+                {
+                    echo $this->meliscore_header_close_all_tabs;
+                    foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig)
+                    {
+                        if(!in_array($keyConfig, $headerExclusions))
+                            echo $this->$keyConfig;
                     }
-                ?>
-            </ul>
-        
-    
-    </div>
-    
-</div>
 
+                    echo $this->market_place_header_icon;
+                    echo $this->meliscore_header_logout;
+                }
+            ?>
+        </ul>
+    </div>
+</div>
 <div id="newplugin-cont">
-	
-     
-      <ul class="nav ul-cont">
-        
-      </ul>
-    
-  
+    <ul class="nav ul-cont">
+    </ul>
 </div>

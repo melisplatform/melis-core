@@ -336,7 +336,7 @@ class LogController extends AbstractActionController
             $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
 
             // Retreiving the list of logs using Log Service with filters as parameters
-            $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, $sortOrder);
+            $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, $sortOrder,null,null);
 
             $logTypeBtn = '<button class="btn btn-default btn-sm logTypeButon" data-typeid="%s">%s</button>';
 

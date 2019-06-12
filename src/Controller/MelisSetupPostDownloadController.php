@@ -66,7 +66,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
         $message = 'tr_install_setup_message_ko';
         $errors = [];
 
-        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post'));
+        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post', $this->getRequest()->getPost()));
 
         $form = $this->getForm();
         $form->setData($data);
@@ -97,7 +97,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
         $message = 'tr_install_setup_message_ko';
         $errors = [];
 
-        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post'));
+        $data = $this->getTool()->sanitizeRecursive($this->params()->fromRoute('post', $this->getRequest()->getPost()));
 
 
         $form = $this->getForm();
@@ -160,6 +160,9 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                                         	</meliscustom_toolstree_section>
                                         	<id>meliscore_leftmenu_root</id>
                                         </meliscore_leftmenu>
+                                        <melis_dashboardplugin>
+                                            <id>melis_dashboardplugin_root</id>
+                                        </melis_dashboardplugin>
                                         </document>',
                     ]);
 

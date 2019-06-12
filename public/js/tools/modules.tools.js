@@ -54,7 +54,14 @@ $(document).ready(function() {
 									// this will just trigger an animate switch
                                     switchButtonWithoutEvent(v, "off");
                                 });
-                            }
+                            },
+							/**
+							 * User selects cancel: Revert the switch to its saved state, in this case "ON",
+							 * to prevent user from saving the cancelled switch change
+							 */
+							function () {
+								switchButtonWithoutEvent(moduleName, 'on');
+							}
                         );
                     }
                     $('div[data-module-name]').bootstrapSwitch('setActive', true);
@@ -103,19 +110,21 @@ $(document).ready(function() {
 		$.each(moduleSwitches , function(idx, val) {
 			var moduleName = $(val).data("module-name");
 			var status = $(".module-switch[data-module-name='"+ moduleName +"']").find("div").attr("class");
-		    status = status.split(" ");
-		    $.each(status, function(i, v) {
-		        if(v == on) {
-					moduleStatus = 1;
-				}
-				else if(v == off) {
-					moduleStatus = 0;
-				}
-		    });
-			modules.push({
-				name: moduleName,
-				value: moduleStatus
-			});
+			if(status !== undefined){
+                status = status.split(" ");
+                $.each(status, function(i, v) {
+                    if(v == on) {
+                        moduleStatus = 1;
+                    }
+                    else if(v == off) {
+                        moduleStatus = 0;
+                    }
+                });
+                modules.push({
+                    name: moduleName,
+                    value: moduleStatus
+                });
+			}
 		});
 		
 		modules = $.param(modules);

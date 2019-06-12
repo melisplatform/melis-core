@@ -67,15 +67,32 @@ class DashboardPluginsController extends AbstractActionController
                             'thumbnail' => !empty($plugin['datas']['thumbnail']) ? $plugin['datas']['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
                             'is_new_plugin' => $isNewPlugin,
                             'pluginRaw' => $pluginRaw,
+                            'section' => !empty($plugin['datas']['section']) ? $plugin['datas']['section'] : "",
                         ];
                     }
                 }
 
             }
         }
+        // melis plugin service
+        $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
+        // check for new  or manually installed plugins and saved in db
+        $pluginSvc->checkDashboardPlugins();
+        // put section of dashboard plugins
+        $plugins = $this->putSectionOnPlugins($plugins);
+        // organized plugins or put them into their respective sections
+        $plugins = array_filter($this->organizedPluginsBySection($plugins));
+        // get the latest plugin installed
+        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
+        // for new plugin notifications
+        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
+
         $view = new ViewModel();
         $view->setVariable('plugins', $plugins);
         $view->melisKey = $melisKey;
+        $view->latestPluginInstalled = $latesPlugin;
+        $view->newPluginNotification = $pluginMenuHandler;
+        
         return $view;
     }
     
@@ -217,5 +234,102 @@ class DashboardPluginsController extends AbstractActionController
         }
         
         return new JsonModel($result);
+    }
+    private  function putSectionOnPlugins($plugins)
+    {
+        $pluginList = [];
+        if (! empty($plugins)) {
+            foreach ($plugins as $moduleName => $dashboardPlugin) {
+               if (is_array($dashboardPlugin)) {
+                   foreach ($dashboardPlugin as $pluginName => $conf) {
+                       $pluginId = $conf['plugin_id'] ?? $conf['plugin'];
+                       if (! isset($conf['section']) && empty($conf['section'])) {
+                           // if there is no ['section']key on  config
+                           // or there is a ['section'] key but empty
+                           // we put it in the OTHER section directly
+                           $conf['section'] = "Others";
+                       }
+
+                       $pluginList[$moduleName][$pluginId] = $conf;
+                   }
+               }
+            }
+        }
+
+
+        return $pluginList;
+    }
+    private function organizedPluginsBySection($plugins)
+    {
+        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $configSvc = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisPuginsSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
+        $marketPlaceModuleSection = $melisPuginsSvc->getPackagistCategories();
+        /*
+         * In case there is no internet or cant connect to the markeplace domain
+         * we put a predefined section just not destroy the plugins menu
+         * file location : melis-core/config/app.interface [meliscore][datas][fallBacksection]
+         */
+        if (empty($marketPlaceModuleSection)) {
+            $fallbackSection = $configSvc->getItem('/meliscore/datas/fallBacksection');
+            $marketPlaceModuleSection = $fallbackSection;
+        }
+        //custom section
+        $customSection = [
+            'MelisCommerce', // special section
+            'Others',
+            'CustomProjects',
+        ];
+        // merge all sections
+        $melisSection = array_merge($marketPlaceModuleSection, $customSection);
+        $newPluginList = [];
+        // put the section in order
+        if (! empty($melisSection)) {
+            foreach ($melisSection as $idx => $val) {
+                $newPluginList[$val] = [];
+            }
+        }
+        if (! empty($plugins)) {
+            // organized plugins by section
+            $publicModules = $melisPuginsSvc->getMelisPublicModules(null,true);
+           foreach ($plugins  as $moduleName => $dashboardPlugins) {
+               /*
+                * check first if the module is public or not
+                *  if public we will based the section on what is set from marketplace
+                *  if private this will return null
+                */
+
+               $moduleSection = "";
+               if (array_key_exists($moduleName,$publicModules)) {
+                   $moduleSection = $publicModules[$moduleName]['section'];
+               }
+               if (! empty($dashboardPlugins) && is_array($dashboardPlugins)) {
+                   foreach ($dashboardPlugins as $pluginName => $config) {
+                       $pluginId = $config['plugin_id'] ?? $config['plugin'];
+                       // put section for public module
+                       if (! empty($moduleSection)) {
+                           $pluginSection = $moduleSection;
+                       } else {
+                           // if it goes here means module is either private or there is no internet connection
+                           $pluginSection = $config['section'];
+                       }
+                       if (in_array($pluginSection,$melisSection)) {
+                           // set a plugin in a section
+                           $newPluginList[$pluginSection][$moduleName][$pluginId] = $config;
+                           // indication that the plugin is newly installed
+                           $newPluginList[$pluginSection][$moduleName][$pluginId]['isNew'] = $melisPuginsSvc->pluginIsNew($pluginId);
+                       } else {
+                           /*
+                            * if the section does not belong to the group it will go to the
+                            * others section direclty
+                            */
+                           $newPluginList['Others'][$moduleName][$pluginId] = $config;
+                       }
+                   }
+               }
+           }
+        }
+
+        return $newPluginList;
     }
 }
