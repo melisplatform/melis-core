@@ -4177,6 +4177,10 @@ div#modal-user-management div.widget {
     #tab-arrow-top {
         display: none;
     }
+    /* #melis-core-dashboard-msg {
+        position: fixed;
+        width: calc(100% - 324px);
+    } */
 }
 @media (max-width: 767px) {
     .login-page #tab-arrow-top {

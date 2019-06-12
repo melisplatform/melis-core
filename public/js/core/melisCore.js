@@ -552,7 +552,10 @@ var melisCore = (function(window){
      * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
      * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
      */
-    $body.on("click", "#melisDashBoardPluginBtn", function() {
+    $body.on("click", "#melisDashBoardPluginBtn", showToggleDashboardPluginMenu);
+
+    // this function is called from render-dashboard-plugins.phtml and it is an update on this js file
+    function showToggleDashboardPluginMenu() {
         var $btn    = $("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $gs     = $body.find("#"+activeTabId+" .grid-stack"),
@@ -575,7 +578,7 @@ var melisCore = (function(window){
                     width: nWidth
                 }, 3);
             }
-    });
+    }
 
     // responsive menu functionalities
     $body.on("click", "#res-page-cont", function() {
@@ -661,15 +664,6 @@ var melisCore = (function(window){
             }
     }
 
-    // setTimeout for reposponsive menu arrow 767px and below
-    /*function setTimeoutResMenuArrow() {
-        setTimeout(function() {
-            $tabConOuter.addClass("hide-res-menus");
-            $tabArrowTop.removeClass("hide-arrow");
-            $tabArrowTop.css("display", "block");
-        }, 2000);
-    }*/
-
 
 
 
@@ -689,11 +683,6 @@ var melisCore = (function(window){
 
         if( screenSize <= 767 ){
             tabDraggable("#melis-id-nav-bar-tabs", true);
-
-            //setTimeoutResMenuArrow();
-            /* $tabConOuter.addClass("hide-res-menus");
-            $tabArrowTop.removeClass("hide-arrow");
-            $tabArrowTop.css("display", "block"); */
         } else {
             tabDraggable("#melis-id-nav-bar-tabs", false);
         }
@@ -738,31 +727,6 @@ var melisCore = (function(window){
 
     // WINDOW SCROLL FUNCTIONALITIES ========================================================================================================
     if( screenSize <= 767 ) {
-        /*
-        // affected by the new responsive menu behavior as per http://mantis.melistechnology.fr/view.php?id=3849
-        $(window).scroll(function() {
-            var scrollTop = $(window).scrollTop();
-            
-            // show or hide menu when scrolling
-            if ( scrollTop > 100 ) {
-                $navTabs.slideUp();
-                $resArrow.removeClass("move-arrow");
-                $tabConOuter.addClass("hide-res-menus");
-                //$tabArrowTop.addClass("hide-arrow");
-            }  else if ( scrollTop === 0 ) {
-                setTimeoutResMenuArrow();
-            } else if ( scrollTop < 100 && scrollTop > 0 ) {
-                $tabConOuter.removeClass("hide-res-menus");
-                //$tabArrowTop.addClass("hide-arrow");
-            }
-
-            // check if scrolling stopped
-            clearTimeout($.data(this, 'scrollTimer'));
-            $.data(this, 'scrollTimer', setTimeout(function() {
-                setTimeoutResMenuArrow();
-            }, 250));
-        });*/
-
         // move plugins to another <div>
         $("#id_meliscore_header .navbar-right > li").each(function(key, value){
             $(this).children("a").append("<span class='title'>"+ $(this).data("title") +"</span>");
@@ -819,7 +783,6 @@ var melisCore = (function(window){
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
+        showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu // update on this js file, since dashboard notification
     };
-
-
 })(window);

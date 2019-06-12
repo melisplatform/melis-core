@@ -224,7 +224,7 @@
     transition:opacity .4s cubic-bezier(.42,0,.58,1);
     display:inline-block;
     min-width:200px;
-    text-align:center;
+    /* text-align:center; */
     max-width:80%
 }
 div.kineticjs-content{

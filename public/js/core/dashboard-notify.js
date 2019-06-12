@@ -1,31 +1,28 @@
 var dashboardNotify = (function() {
-
     // cache DOM
     var $body 			    = $("body"),
         $gs                 = $body.find("#"+activeTabId+" .grid-stack"),
         $gsItem             = $gs.find(".grid-stack-item"),
-        $mdbPlugins         = $body.find("#"+activeTabId+" .melis-dashboard-plugins"),
-        $noPlugins          = $mdbPlugins.find(".no-plugins"),
         $pluginBtn 		    = $body.find("#melisDashBoardPluginBtn"),
         $pluginBtnBox	    = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-        $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn");
+        $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn"),
+        $noAvailPlugins     = $pluginBtnBox.find(".melis-core-dashboard-ps-box");
 
     // instantiate
-    if ( $noPlugins.length && $gsItem.length === 0 ) {
-        var eh = new EnjoyHint({
-            onStart:function() {
-                $pluginBtn.prop("disabled", true);
-                $pluginFilterBtn.prop("disabled", true);
-            },
-            onEnd: function() {
-                $pluginBtn.prop("disabled", false);
-                $pluginFilterBtn.prop("disabled", false);
-            }
-        });
-    }
+    var eh = new EnjoyHint({
+        onStart:function() {
+            $pluginBtn.prop("disabled", true);
+            $pluginFilterBtn.prop("disabled", true);
+        },
+        onEnd: function() {
+            $pluginBtn.prop("disabled", false);
+            $pluginFilterBtn.prop("disabled", false);
+        }
+    });
 
     // first render function call
-    firstRender();
+    //render();
+    
 
     // set scripts config
     function setConfig() {
@@ -59,20 +56,31 @@ var dashboardNotify = (function() {
         eh.run();
     }
 
-    // first render function
-    function firstRender() {
-        // check if .no-plugins class name is found and no grid stack item is available
-        if ( $noPlugins.length && $gsItem.length === 0 ) {
-            // check if session is set
-            if ( getSession() === undefined ) {
-                setConfig();
+    // check for some element use case
+    function checkElementsBeforeRun() {
+        // check if no plugins found and no grid stack item is available
+        if ( $gsItem.length === 0 ) {
+            if ( $noAvailPlugins.length === 0 ) {
                 runNotify();
-                setSession("false");
             } else {
-                if ( getSession() === "true" ) {
-                    setConfig();
+                if ( $pluginBtnBox.hasClass("shown") ) {
                     runNotify();
                 }
+            }
+        }
+    }
+
+    // render function
+    function render() {
+        // check if session is set
+        if ( getSession() === undefined ) {
+            setConfig();
+            checkElementsBeforeRun();
+            setSession("false");
+        } else {
+            if ( getSession() === "true" ) {
+                setConfig();
+                checkElementsBeforeRun();
             }
         }
     }
@@ -88,7 +96,20 @@ var dashboardNotify = (function() {
     }
 
     return {
-        runNotify       : runNotify
+        runNotify   :   runNotify,
+        render      :   render
     };
 
 })();
+
+$(function(){
+    setTimeout(function() {
+        var $body           = $("body"),
+            $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box"),
+            shown           = $pluginBtnBox.hasClass("shown");
+
+            if ( shown ) {
+                dashboardNotify.render();
+            }
+    }, 1000);
+});
