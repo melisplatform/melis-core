@@ -11,22 +11,36 @@ var dashboardNotify = (function() {
     // instantiate
     var eh = new EnjoyHint({
         onStart:function() {
-            $pluginBtn.prop("disabled", true);
-            $pluginFilterBtn.prop("disabled", true);
-            $pluginBtn.css("cursor", "auto");
-            $pluginFilterBtn.css("cursor", "auto");
+            disablePluginsMenuButton();
         },
         onEnd: function() {
-            $pluginBtn.prop("disabled", false);
-            $pluginFilterBtn.prop("disabled", false);
-            $pluginBtn.css("cursor", "pointer");
-            $pluginFilterBtn.css("cursor", "pointer");
+            enablePluginsMenuButton();
         }
     });
 
     // first render function call
     //render();
+
+    // clicking on close button will enable back the plugins menu buttons
+    $body.on("click", ".enjoyhint_close_btn", function() {
+        enablePluginsMenuButton();
+    });
     
+    // disable plugins menu buttons
+    function disablePluginsMenuButton() {
+        $pluginBtn.prop("disabled", true);
+        $pluginFilterBtn.prop("disabled", true);
+        $pluginBtn.css("cursor", "auto");
+        $pluginFilterBtn.css("cursor", "auto");
+    }
+
+    // enable plugins menu buttons
+    function enablePluginsMenuButton() {
+        $pluginBtn.prop("disabled", false);
+        $pluginFilterBtn.prop("disabled", false);
+        $pluginBtn.css("cursor", "pointer");
+        $pluginFilterBtn.css("cursor", "pointer");
+    }
 
     // set scripts config
     function setConfig() {
