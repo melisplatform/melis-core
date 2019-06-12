@@ -16,7 +16,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Session\Container;
 class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-    const INTERVAL_TO_UPDATE = 2;
+    const INTERVAL_TO_UPDATE = 5;
 
     public function attach(EventManagerInterface $events)
     {
