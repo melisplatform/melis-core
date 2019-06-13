@@ -36241,6 +36241,7 @@ var melisDashBoardDragnDrop = {
         this.$document          = $(document);
         this.$window            = $(window);
         this.$gs                = this.$body.find("#"+activeTabId+" .grid-stack");
+        this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
         this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
         this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
         this.$box               = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
@@ -36297,10 +36298,18 @@ var melisDashBoardDragnDrop = {
                     // Hide empty-dashboard message
                     if (dashboardMsg.length > 0) {
                         dashboardMsg.hide();
+                        $(this.$gs).css({
+                            "height" : "840px",
+                            "min-height" : "840px"
+                        });
                     }
                 } else if (pluginCount === 0) {
                     // Show empty-dashboard message
                     dashboardMsg.show();
+                    $(this.$gs).css({
+                        "height" : "745px",
+                        "min-height" : "745px"
+                    });
                 }
             }
         });
@@ -36314,26 +36323,38 @@ var melisDashBoardDragnDrop = {
     docuReady: function() {
         var self = this;
 
-        var $btn    = this.$body.find("#melisDashBoardPluginBtn"),
+        var $btn    = self.$body.find("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs     = this.$body.find("#"+activeTabId+" .grid-stack"),
+            $gs     = self.$body.find("#"+activeTabId+" .grid-stack"),
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth  = dWidth + $box.width();
+            nWidth  = dWidth + $box.width(),
+            $dbMsg  = self.$melisDBPlugins.find("#melis-core-dashboard-msg");
 
             // .select2-container width 100% specific for latest comments plugin on document ready
             self.latestCommentsPluginUIRes();
 
             // remove class shown on plugin box when clicking on the left sideMenu
-            this.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
+            self.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
 
             // animate to full width size of #grid1
-            this.$body.on("click", "#dashboard-plugin-delete-all", function() {
+            self.$body.on("click", "#dashboard-plugin-delete-all", function() {
                 $gs.animate({
                     width: nWidth
                 }, 3);
             });
 
-            
+            // adjust grid-stack height when dashboard msg element is found
+            if ( $dbMsg.length ) {
+                $(self.$gs).css({
+                    "height" : "745px",
+                    "min-height" : "745px"
+                });
+            } else {
+                $(self.$gs).css({
+                    "height" : "840px",
+                    "min-height" : "840px"
+                });
+            }
     },
 
     dropWidget: function( widget ) {
