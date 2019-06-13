@@ -1,4 +1,13 @@
 var dashboardNotify = (function() {
+    /**
+     * To make a "persistent cookie" (a cookie that "never expires"),
+     * we need to set a date/time in a distant future (one that possibly exceeds the user's
+     * machine life).
+     *
+     * src: https://stackoverflow.com/a/22479460/7870472
+     */
+    var MAX_COOKIE_AGE = 2147483647000;
+
     // cache DOM
     var $body 			    = $("body"),
         $gs                 = $body.find("#"+activeTabId+" .grid-stack"),
@@ -25,7 +34,7 @@ var dashboardNotify = (function() {
     $body.on("click", ".enjoyhint_close_btn", function() {
         enablePluginsMenuButton();
     });
-    
+
     // disable plugins menu buttons
     function disablePluginsMenuButton() {
         $pluginBtn.prop("disabled", true);
@@ -91,26 +100,35 @@ var dashboardNotify = (function() {
     // render function
     function render() {
         // check if session is set
-        if ( getSession() === undefined ) {
+        if ( getCookie() === undefined ) {
             setConfig();
             checkElementsBeforeRun();
-            setSession("false");
+            setCookie("false");
         } else {
-            if ( getSession() === "true" ) {
+            if ( getCookie() === "true" ) {
                 setConfig();
                 checkElementsBeforeRun();
             }
         }
     }
 
-    // set session
-    function setSession( value ) {
-        $.session.set("dashboard_notify", value);
+    function setCookie(value) {
+        var defaultOptions = {
+            path: '/',
+            expires: new Date(MAX_COOKIE_AGE).toUTCString()
+        };
+        var updatedCookie = encodeURIComponent("dashboard_notify") + "=" + encodeURIComponent(value);
+        updatedCookie += "; " + "path" + "=" + defaultOptions.path;
+        updatedCookie += "; " + "expires" + "=" + defaultOptions.expires;
+        document.cookie = updatedCookie;
     }
 
-    // get session
-    function getSession() {
-        return $.session.get("dashboard_notify");
+    function getCookie() {
+        var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + "dashboard_notify".replace("/([\.$?*|{}\(\)\[\]\\\/\+^])/g", '\\$1') + "=([^;]*)"
+        ));
+
+        return matches ? decodeURIComponent(matches[1]) : undefined;
     }
 
     return {

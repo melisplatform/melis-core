@@ -6,15 +6,15 @@
 var $body = $("body");
 
 // Binding elements
-$body.on("click", "#dashboard-plugin-delete-all", function() {
+$body.on("click", "#dashboard-plugin-delete-all", function () {
     melisDashBoardDragnDrop.deleteAllWidget($(this));
 });
 
-$body.on("click", ".dashboard-plugin-delete", function() {
+$body.on("click", ".dashboard-plugin-delete", function () {
     melisDashBoardDragnDrop.deleteWidget($(this));
 });
 
-$body.on("click", ".dashboard-plugin-refresh", function() {
+$body.on("click", ".dashboard-plugin-refresh", function () {
     melisDashBoardDragnDrop.refreshWidget($(this));
 });
 
@@ -26,41 +26,41 @@ var melisDashBoardDragnDrop = {
 
     melisDashboardMsg: '#melis-core-dashboard-msg',
 
-    init: function() {
+    init: function () {
         this.cacheDom();
         this.gsSetOptions();
         this.bindEvents();
-        
+
         this.dragWidget();
         this.docuReady();
 
-        this.dropWidget( this.melisWidgetHandle );
+        this.dropWidget(this.melisWidgetHandle);
         this.dragStopWidget();
         this.resizeStopWidget();
     },
 
-    cacheDom: function() {
+    cacheDom: function () {
         // jQuery DOM element
-        this.$body              = $("body");
-        this.$document          = $(document);
-        this.$window            = $(window);
-        this.$gs                = this.$body.find("#"+activeTabId+" .grid-stack");
-        this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
-        this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
-        this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
-        this.$box               = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
-        this.$deleteAllWidget   = this.$body.find("#dashboard-plugin-delete-all");
+        this.$body = $("body");
+        this.$document = $(document);
+        this.$window = $(window);
+        this.$gs = this.$body.find("#" + activeTabId + " .grid-stack");
+        this.$melisDBPlugins = this.$body.find(".melis-dashboard-plugins");
+        this.$pluginBox = this.$body.find(".melis-core-dashboard-dnd-box");
+        this.$pluginBtn = this.$body.find("#melisDashBoardPluginBtn");
+        this.$box = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
+        this.$deleteAllWidget = this.$body.find("#dashboard-plugin-delete-all");
 
         // plugin sidebar
-        this.$dashPsBox         = $(".melis-core-dashboard-ps-box");
-        this.$dashPluginBtn     = this.$dashPsBox.find(".melis-core-dashboard-filter-btn");
-        this.$dashSnipsBox      = this.$dashPsBox.find(".melis-core-dashboard-plugin-snippets-box");
+        this.$dashPsBox = $(".melis-core-dashboard-ps-box");
+        this.$dashPluginBtn = this.$dashPsBox.find(".melis-core-dashboard-filter-btn");
+        this.$dashSnipsBox = this.$dashPsBox.find(".melis-core-dashboard-plugin-snippets-box");
 
         // strings
-        this.gsOptHandle        = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
+        this.gsOptHandle = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
     },
 
-    gsSetOptions: function() {
+    gsSetOptions: function () {
         var options = {
             cellHeight: 80,
             verticalMargin: 20,
@@ -77,14 +77,14 @@ var melisDashBoardDragnDrop = {
         this.$gs.gridstack(options);
     },
 
-    dragWidget: function() {
+    dragWidget: function () {
         // set up draggable element / this.melisWidgetHandle / .grid-stack-item
         $(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").draggable({
             helper: 'clone',
             revert: 'invalid',
             appendTo: 'body',
-            drag: function(event, ui) {
-                let gridPH = melisDashBoardDragnDrop.$body.find('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
+            drag: function (event, ui) {
+                var gridPH = melisDashBoardDragnDrop.$body.find('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
                 gridPH.attr('data-gs-width', 6);
                 gridPH.attr('data-gs-height', 3);
 
@@ -94,109 +94,113 @@ var melisDashBoardDragnDrop = {
                  *  - OUTSIDE grid-stack drag area: SHOW dashboard msg
                  *  Note: Only happens when dashboard is empty
                  */
-                let pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
-                let dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
-                let dragArea = melisDashBoardDragnDrop.$body.find(event.currentTarget);
+                var pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
+                var dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                var dragArea = melisDashBoardDragnDrop.$body.find(event.currentTarget);
 
                 if (dragArea.hasClass("melis-core-dashboard-plugin-snippets")) {
                     // Hide empty-dashboard message
                     if (dashboardMsg.length > 0) {
                         dashboardMsg.hide();
                         $(this.$gs).css({
-                            "height" : "840px",
-                            "min-height" : "840px"
+                            "height": "840px",
+                            "min-height": "840px"
                         });
                     }
                 } else if (pluginCount === 0) {
                     // Show empty-dashboard message
                     dashboardMsg.show();
                     $(this.$gs).css({
-                        "height" : "745px",
-                        "min-height" : "745px"
+                        "height": "745px",
+                        "min-height": "745px"
                     });
                 }
             }
         });
     },
 
-    bindEvents: function() {
+    bindEvents: function () {
         // document ready
         this.$document.ready(this.docuReady.bind(this));
     },
 
-    docuReady: function() {
+    docuReady: function () {
         var self = this;
 
-        var $btn    = self.$body.find("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs     = self.$body.find("#"+activeTabId+" .grid-stack"),
-            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth  = dWidth + $box.width(),
-            $dbMsg  = self.$melisDBPlugins.find("#melis-core-dashboard-msg");
+        var $btn = self.$body.find("#melisDashBoardPluginBtn"),
+            $box = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs = self.$body.find("#" + activeTabId + " .grid-stack"),
+            dWidth = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth = dWidth + $box.width(),
+            $dbMsg = self.$melisDBPlugins.find("#melis-core-dashboard-msg");
 
-            // .select2-container width 100% specific for latest comments plugin on document ready
-            self.latestCommentsPluginUIRes();
+        // .select2-container width 100% specific for latest comments plugin on document ready
+        self.latestCommentsPluginUIRes();
 
-            // remove class shown on plugin box when clicking on the left sideMenu
-            self.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
+        // remove class shown on plugin box when clicking on the left sideMenu
+        self.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
 
-            // animate to full width size of #grid1
-            self.$body.on("click", "#dashboard-plugin-delete-all", function() {
-                $gs.animate({
-                    width: nWidth
-                }, 3);
+        // animate to full width size of #grid1
+        self.$body.on("click", "#dashboard-plugin-delete-all", function () {
+            $gs.animate({
+                width: nWidth
+            }, 3);
+        });
+
+        // adjust grid-stack height when dashboard msg element is found
+        if ($dbMsg.length) {
+            $(self.$gs).css({
+                "height": "745px",
+                "min-height": "745px"
             });
-
-            // adjust grid-stack height when dashboard msg element is found
-            if ( $dbMsg.length ) {
-                $(self.$gs).css({
-                    "height" : "745px",
-                    "min-height" : "745px"
-                });
-            } else {
-                $(self.$gs).css({
-                    "height" : "840px",
-                    "min-height" : "840px"
-                });
-            }
+        } else {
+            $(self.$gs).css({
+                "height": "840px",
+                "min-height": "840px"
+            });
+        }
     },
 
-    dropWidget: function( widget ) {
-        var self        = this,
-            gridstack   = $("#"+activeTabId+" .tab-pane .grid-stack").data("gridstack");
+    dropWidget: function (widget) {
+        var self = this,
+            gridstack = $("#" + activeTabId + " .tab-pane .grid-stack").data("gridstack");
 
         var gridDrop = gridstack.container.droppable({
             accept: widget,
             tolerance: 'pointer',
-            drop: function(event, ui) {
+            drop: function (event, ui) {
 
-                var dataString  = new Array;
-                    // create dashboard array
-                    dataString.push({
-                        name: 'dashboard_id',
-                        value: activeTabId
-                    });
+                var dataString = new Array;
+                // create dashboard array
+                dataString.push({
+                    name: 'dashboard_id',
+                    value: activeTabId
+                });
 
                 // get plugin menu data
                 var pluginMenu = $(ui.helper[0]).find(".plugin-json-config").text();
 
-                    // check plugin menu
-                    if(pluginMenu) {
+                // check plugin menu
+                if (pluginMenu) {
 
                     // parse to JSON
                     var pluginConfig = JSON.parse(pluginMenu);
-                    $.each(pluginConfig, function(index, value){
+                    $.each(pluginConfig, function (index, value) {
                         // push to dashboard array
-                        if($.isArray(value) || typeof value == "object"){
+                        if ($.isArray(value) || typeof value == "object") {
                             $.each(value, function (i, v) {
-                                if(i == "width" && v == "") { v = 6; }
-                                if(i == "height" && v == "") { v = 6; }
+                                if (i == "width" && v == "") {
+                                    v = 6;
+                                }
+                                if (i == "height" && v == "") {
+                                    v = 6;
+                                }
                             });
                             dataString.push({
                                 name: index,
                                 value: JSON.stringify(value)
                             });
-                        }else {
+                        } else {
                             dataString.push({
                                 name: key,
                                 value: value
@@ -211,120 +215,128 @@ var melisDashBoardDragnDrop = {
     },
 
     // adding of plugins / disable droppable .gridstack while processing the plugin data
-    addWidget: function(dataString) {
-        var self        = this;
+    addWidget: function (dataString) {
+        var self = this;
 
-        var $mcDashPlugSnippets = $("#"+activeTabId+" .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
-            $mcDashPlugSnippets.attr('data-gs-width', 6);
-            $mcDashPlugSnippets.attr('data-gs-height', 3);
+        var $mcDashPlugSnippets = $("#" + activeTabId + " .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets");
+        $mcDashPlugSnippets.attr('data-gs-width', 6);
+        $mcDashPlugSnippets.attr('data-gs-height', 3);
 
         var mcLoader = "<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>";
 
-            // loading effect
-            $mcDashPlugSnippets.html(mcLoader);
+        // loading effect
+        $mcDashPlugSnippets.html(mcLoader);
 
-        var gridstack = $("#"+activeTabId+" .tab-pane .grid-stack");
+        var gridstack = $("#" + activeTabId + " .tab-pane .grid-stack");
 
-            // disable grid / droppable
-            gridstack.droppable("disable");
+        // disable grid / droppable
+        gridstack.droppable("disable");
+
+        // disable sidebar plugins
+        self.disablePlugSidebar();
+
+        var request = $.post("/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+
+        request.done(function (data) {
+
+            // get dashboard gridstack data
+            var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
+
+            // get placeholder data
+            var gridData = $("#" + activeTabId + ' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets').data();
+
+            var html = $(data.html);
+
+            // add widget to dashboard default size 6 x 6
+            var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, html.data("gsWidth"), html.data("gsHeight"));
+
+            // remove clone widgets
+            grid.removeWidget($(widget).prev());
+
+            // enable grid / droppable
+            gridstack.droppable("enable");
 
             // disable sidebar plugins
-            self.disablePlugSidebar();
+            self.enablePlugSidebar();
 
-        var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+            // serialize widget and save to db
+            self.serializeWidgetMap(grid.container[0].children);
 
-            request.done(function(data){
+            // Assigning current plugin
+            self.setCurrentPlugin(widget);
 
-                // get dashboard gridstack data
-                var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
-
-                // get placeholder data
-                var gridData = $("#"+activeTabId+' .tab-pane .grid-stack .melis-core-dashboard-plugin-snippets').data();
-
-                var html = $(data.html);
-
-                // add widget to dashboard default size 6 x 6
-                var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, html.data("gsWidth"), html.data("gsHeight"));
-
-                    // remove clone widgets
-                    grid.removeWidget( $(widget).prev() );
-
-                    // enable grid / droppable
-                    gridstack.droppable("enable");
-
-                    // disable sidebar plugins
-                    self.enablePlugSidebar();
-
-                    // serialize widget and save to db
-                    self.serializeWidgetMap( grid.container[0].children );
-
-                    // Assigning current plugin
-                    self.setCurrentPlugin(widget);
-
-                    // Executing plugin JsCallback
-                    if(data.jsCallbacks.length) {
-                        $.each(data.jsCallbacks, function(index, value) {
-                            eval(value);
-                        });
-                    }
-            });
+            // Executing plugin JsCallback
+            if (data.jsCallbacks.length) {
+                $.each(data.jsCallbacks, function (index, value) {
+                    eval(value);
+                });
+            }
+        });
     },
 
     // serializing plugins / re-enable dropppable .gridstack after serializing
-    serializeWidgetMap: function(items) {
+    serializeWidgetMap: function (items) {
         var self = this;
 
         var dataString = new Array;
 
-            // create dashboard array
-            dataString.push({
-                name: 'dashboard_id',
-                value: activeTabId
-            });
+        // create dashboard array
+        dataString.push({
+            name: 'dashboard_id',
+            value: activeTabId
+        });
 
-        $.each(items, function(key, value) {
+        $.each(items, function (key, value) {
             var dataTxt = $(value).find('.dashboard-plugin-json-config').text();
 
-                // check dashboard data
-                if(dataTxt) {
+            // check dashboard data
+            if (dataTxt) {
 
-                    // get dynamic dashboard value
-                    var itemData = $(value).data();
+                // get dynamic dashboard value
+                var itemData = $(value).data();
 
-                    var dashboardX = itemData._gridstack_node.x;
-                    var dashboardY = itemData._gridstack_node.y;
-                    var dashboardWidth = itemData._gridstack_node.width;
-                    var dashboardHeight = itemData._gridstack_node.height;
+                var dashboardX = itemData._gridstack_node.x;
+                var dashboardY = itemData._gridstack_node.y;
+                var dashboardWidth = itemData._gridstack_node.width;
+                var dashboardHeight = itemData._gridstack_node.height;
 
-                    // JSON parse dashboard txt
-                    var pluginConfig = JSON.parse(dataTxt);
-                    $.each(pluginConfig, function(index, value){
-                        var pluginName = pluginConfig["conf"]["name"];
-    
-                        // push to dashboard array
-                        if($.isArray(value) || typeof value == "object"){
-                            if(index == "datas") {
-                                $.each(value, function (i, v) {
-                                    // here modify x y w h of the plugin
-                                    if(i == "x-axis") { v = dashboardX; }
-                                    if(i == "y-axis") { v = dashboardY; }
-                                    if(i == "width") { v = dashboardWidth; }
-                                    if(i == "height") { v = dashboardHeight; }
-    
-                                    dataString.push({
-                                        name: 'plugins[' + pluginName + '][' + pluginConfig["plugin_id"] + '][' + i + ']',
-                                        value: v
-                                    });
+                // JSON parse dashboard txt
+                var pluginConfig = JSON.parse(dataTxt);
+                $.each(pluginConfig, function (index, value) {
+                    var pluginName = pluginConfig["conf"]["name"];
+
+                    // push to dashboard array
+                    if ($.isArray(value) || typeof value == "object") {
+                        if (index == "datas") {
+                            $.each(value, function (i, v) {
+                                // here modify x y w h of the plugin
+                                if (i == "x-axis") {
+                                    v = dashboardX;
+                                }
+                                if (i == "y-axis") {
+                                    v = dashboardY;
+                                }
+                                if (i == "width") {
+                                    v = dashboardWidth;
+                                }
+                                if (i == "height") {
+                                    v = dashboardHeight;
+                                }
+
+                                dataString.push({
+                                    name: 'plugins[' + pluginName + '][' + pluginConfig["plugin_id"] + '][' + i + ']',
+                                    value: v
                                 });
-                            }
-                        }else {
-                            dataString.push({
-                                name: 'plugins[' + pluginName + '][' + pluginConfig["plugin_id"] + '][' + index + ']',
-                                value: value
                             });
                         }
-                    });
-                }
+                    } else {
+                        dataString.push({
+                            name: 'plugins[' + pluginName + '][' + pluginConfig["plugin_id"] + '][' + index + ']',
+                            value: value
+                        });
+                    }
+                });
+            }
 
         });
 
@@ -332,28 +344,28 @@ var melisDashBoardDragnDrop = {
         self.saveDBWidgets(dataString);
     },
 
-    saveDBWidgets: function(dataString) {
+    saveDBWidgets: function (dataString) {
         // save the lists of widgets on the dashboard to db
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
     },
 
-    closeDBPlugSidebar: function() {
-        var $btn    = this.$body.find("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs     = this.$body.find("#"+activeTabId+" .grid-stack"),
-            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth  = dWidth + $box.width();
+    closeDBPlugSidebar: function () {
+        var $btn = this.$body.find("#melisDashBoardPluginBtn"),
+            $box = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gs = this.$body.find("#" + activeTabId + " .grid-stack"),
+            dWidth = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth = dWidth + $box.width();
 
-            if ($box.hasClass("shown")) {
-                $box.removeClass("shown");
+        if ($box.hasClass("shown")) {
+            $box.removeClass("shown");
 
-                $gs.animate({
-                    width: nWidth
-                }, 3);
-            }
+            $gs.animate({
+                width: nWidth
+            }, 3);
+        }
     },
 
-    disablePlugSidebar: function() {
+    disablePlugSidebar: function () {
         // disables the plugins sidebar
         this.$dashPluginBtn.prop("disabled", true);
         this.$dashPluginBtn.removeClass("active");
@@ -361,206 +373,206 @@ var melisDashBoardDragnDrop = {
         this.$pluginBox.find('.active').removeClass('active');
         this.$pluginBox.find('.reverse-color').removeClass('reverse-color');
         this.$pluginBox.find('.melis-core-dashboard-category-plugins-box').hide();
-        
+
         this.$dashSnipsBox.hide();
     },
 
-    enablePlugSidebar: function() {
+    enablePlugSidebar: function () {
         // enables the plugins sidebar
         this.$dashPluginBtn.prop("disabled", false);
     },
 
-    saveCurrentDashboard: function(el) {
-        var self    = this,
-            $grid   = $('#'+activeTabId+' .grid-stack').data('gridstack'),
-            $item   = el.closest('.grid-stack-item').data('_gridstack_node'),
-            $items  = $item._grid.container[0].children;
+    saveCurrentDashboard: function (el) {
+        var self = this,
+            $grid = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
+            $item = el.closest('.grid-stack-item').data('_gridstack_node'),
+            $items = $item._grid.container[0].children;
 
-            // serialize & save to db the current gridstack items
-            self.serializeWidgetMap( $items );
+        // serialize & save to db the current gridstack items
+        self.serializeWidgetMap($items);
     },
 
-    dragStopWidget: function() {
+    dragStopWidget: function () {
         var self = this;
 
-            // grid stack widget drag and stop position
-            this.$gs.on('dragstop', function(event, ui) {
-                var $grid   = $(this),
-                    $el     = $(event.target),
-                    node    = $el.data('_gridstack_node'),
-                    items   = node._grid.container[0].children;
+        // grid stack widget drag and stop position
+        this.$gs.on('dragstop', function (event, ui) {
+            var $grid = $(this),
+                $el = $(event.target),
+                node = $el.data('_gridstack_node'),
+                items = node._grid.container[0].children;
 
-                    // update size of widgets .grid-stack-items
-                    self.serializeWidgetMap( items );
-            });
+            // update size of widgets .grid-stack-items
+            self.serializeWidgetMap(items);
+        });
     },
 
-    resizeStopWidget: function() {
+    resizeStopWidget: function () {
         var self = this;
 
-            // grid stack stop widget resize
-            this.$gs.on('gsresizestop', function(event, elem) {
-                var $elem       = $(elem),
-                    $node       = $elem.data('_gridstack_node'),
-                    $items      = $node._grid.container[0].children,
-                    elemWidth   = $elem.attr('data-gs-width'),
-                    widthLimit  = 3;
+        // grid stack stop widget resize
+        this.$gs.on('gsresizestop', function (event, elem) {
+            var $elem = $(elem),
+                $node = $elem.data('_gridstack_node'),
+                $items = $node._grid.container[0].children,
+                elemWidth = $elem.attr('data-gs-width'),
+                widthLimit = 3;
 
-                    // grid-stack-item limits its smallest width to data-gs-width 3
-                    if ( elemWidth <= widthLimit ) {
-                        $node.width = parseInt(widthLimit);
-                        $elem.attr('data-gs-width', widthLimit);
-                    } else {
-                        $node.width = parseInt(elemWidth);
-                    }
+            // grid-stack-item limits its smallest width to data-gs-width 3
+            if (elemWidth <= widthLimit) {
+                $node.width = parseInt(widthLimit);
+                $elem.attr('data-gs-width', widthLimit);
+            } else {
+                $node.width = parseInt(elemWidth);
+            }
 
-                // specific for Melis Cms Comments / Latest comments
-                var $cFilters = $elem.find(".melis-cms-comments-dashboard-latest-comments .mccom-filters-tab .row .mccom-filter"),
-                    $sCont    = $cFilters.find(".form-group .select2-container");
+            // specific for Melis Cms Comments / Latest comments
+            var $cFilters = $elem.find(".melis-cms-comments-dashboard-latest-comments .mccom-filters-tab .row .mccom-filter"),
+                $sCont = $cFilters.find(".form-group .select2-container");
 
-                    if ( $cFilters.length > 0 ) {
-                        if ( elemWidth < 5 ) { // check if it belows data-gs-width 5 and it will be in full width
-                            $cFilters.css("width", "100%");
-                            $sCont.css("width", "100%");
-                        } 
-                        else {
-                            $cFilters.removeAttr("style");
-                            $sCont.removeAttr("style");
-                        }
-                    }
+            if ($cFilters.length > 0) {
+                if (elemWidth < 5) { // check if it belows data-gs-width 5 and it will be in full width
+                    $cFilters.css("width", "100%");
+                    $sCont.css("width", "100%");
+                }
+                else {
+                    $cFilters.removeAttr("style");
+                    $sCont.removeAttr("style");
+                }
+            }
 
-                    // update size of widgets passes array of .grid-stack-items
-                    self.serializeWidgetMap( $items );
-            });
+            // update size of widgets passes array of .grid-stack-items
+            self.serializeWidgetMap($items);
+        });
     },
 
     // check for data-gs-width responsive below 5, Melis Cms Comments / Latest Comments
-    latestCommentsPluginUIRes: function() {
-        var $com = $('#'+activeTabId+' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments");
+    latestCommentsPluginUIRes: function () {
+        var $com = $('#' + activeTabId + ' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments");
 
-            $.each($com, function(i, v) {
-                var $this   = $(this),
-                    gsWidth = $this.closest(".grid-stack-item").data("gs-width"),
-                    $filter = $this.find(".mccom-filters-tab .row .mccom-filter"),
-                    $select = $filter.find(".form-group .select2-container");
+        $.each($com, function (i, v) {
+            var $this = $(this),
+                gsWidth = $this.closest(".grid-stack-item").data("gs-width"),
+                $filter = $this.find(".mccom-filters-tab .row .mccom-filter"),
+                $select = $filter.find(".form-group .select2-container");
 
-                    if ( gsWidth < 5 ) {
-                        $filter.removeAttr("width");
-                        $filter.attr("style", "width: 100%");
+            if (gsWidth < 5) {
+                $filter.removeAttr("width");
+                $filter.attr("style", "width: 100%");
 
-                        $select.removeAttr("width");
-                        $select.attr("style", "width: 100%");
-                    }
-                    else {
-                        $filter.removeAttr("style");
-                        $select.removeAttr("style");
-                    }
-            });
+                $select.removeAttr("width");
+                $select.attr("style", "width: 100%");
+            }
+            else {
+                $filter.removeAttr("style");
+                $select.removeAttr("style");
+            }
+        });
     },
 
-    deleteWidget: function(el) {
-        var self    = this;
+    deleteWidget: function (el) {
+        var self = this;
 
-        var grid    = $('#'+activeTabId+' .grid-stack').data('gridstack'),
-            $del    = el,
-            $item   = $del.closest('.grid-stack-item').data('_gridstack_node');
+        var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
+            $del = el,
+            $item = $del.closest('.grid-stack-item').data('_gridstack_node');
+
+        melisCoreTool.confirm(
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
+            translations.tr_meliscore_remove_dashboard_plugin,
+            translations.tr_meliscore_remove_dashboard_plugin_msg,
+            function () {
+
+                // remove the item from the dashboard
+                grid.removeWidget($item.el[0]);
+
+                // check gridstack nodes positions and sizes
+                $items = $item._grid.container[0].children;
+
+                // serialize & save db remaining gridstack items
+                self.serializeWidgetMap($items);
+
+                // plugin delete callback
+                if (typeof $del.data('callback') !== "undefined") {
+                    var callback = eval($del.data("callback"));
+                    if (typeof callback === "function") {
+                        callback($del.closest('.grid-stack-item'));
+                    }
+                }
+
+                var pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
+                if (pluginCount === 0) {
+                    // Show empty-dashboard message
+                    var dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                    if (dashboardMsg.length > 0) {
+                        dashboardMsg.show();
+                        $(self.$gs).css({
+                            "height": "745px",
+                            "min-height": "745px"
+                        });
+                    }
+                }
+            }
+        );
+    },
+
+    deleteAllWidget: function (el) {
+        var self = this;
+
+        var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
+            $gs = $('#' + activeTabId).find('.grid-stack'),
+            $items = $gs.find('.grid-stack-item'),
+            $btn = $("#melisDashBoardPluginBtn"),
+            $box = $btn.closest(".melis-core-dashboard-dnd-box"),
+            dWidth = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth = $gs.width() + $box.width();
+
+        // checks if there is a plugin available to delete
+        if ($items.length !== 0) {
+
+            var dataString = new Array;
+
+            // create dashboard array
+            dataString.push({
+                name: 'dashboard_id',
+                value: activeTabId
+            });
 
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
                 translations.tr_meliscore_common_no,
-                translations.tr_meliscore_remove_dashboard_plugin,
-                translations.tr_meliscore_remove_dashboard_plugin_msg,
-                function() {
+                translations.tr_meliscore_remove_all_plugins,
+                translations.tr_meliscore_remove_dashboard_all_plugin_msg,
+                function () {
 
-                    // remove the item from the dashboard
-                    grid.removeWidget( $item.el[0] );
+                    // remove all nodes on grid
+                    grid.removeAll();
 
-                    // check gridstack nodes positions and sizes
-                    $items = $item._grid.container[0].children;
-                    
-                    // serialize & save db remaining gridstack items
-                    self.serializeWidgetMap( $items );
-
-                    // plugin delete callback
-                    if (typeof $del.data('callback') !== "undefined") {
-                        var callback = eval($del.data("callback"));
-                        if (typeof callback === "function") {
-                            callback($del.closest('.grid-stack-item'));
-                        }
-                    }
-
-                    let pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
-                    if (pluginCount === 0) {
-                        // Show empty-dashboard message
-                        let dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
-                        if (dashboardMsg.length > 0) {
-                            dashboardMsg.show();
-                            $(self.$gs).css({
-                                "height" : "745px",
-                                "min-height" : "745px"
-                            });
-                        }
-                    }
+                    // save widgets position / size on db
+                    self.saveDBWidgets(dataString);
                 }
             );
-    },
 
-    deleteAllWidget: function(el) {
-        var self        = this;
+            // hide plugin menu
+            this.$pluginBox.removeClass("shown");
 
-        var grid        = $('#'+activeTabId+' .grid-stack').data('gridstack'),
-            $gs         = $('#' + activeTabId ).find('.grid-stack'),
-            $items      = $gs.find('.grid-stack-item'),
-            $btn        = $("#melisDashBoardPluginBtn"),
-            $box        = $btn.closest(".melis-core-dashboard-dnd-box"),
-            dWidth      = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth      = $gs.width() + $box.width();
+            // droppable / .gridstack to original width
+            $gs.animate({
+                width: nWidth
+            }, 3);
 
-            // checks if there is a plugin available to delete
-            if( $items.length !== 0 ) {
+            // plugins delete callback
+            $('#' + activeTabId + ' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function (i, v) {
+                var $this = $(this);
 
-                var dataString = new Array;
-
-                    // create dashboard array
-                    dataString.push({
-                        name: 'dashboard_id',
-                        value: activeTabId
-                    });
-
-                    melisCoreTool.confirm(
-                        translations.tr_meliscore_common_yes,
-                        translations.tr_meliscore_common_no,
-                        translations.tr_meliscore_remove_all_plugins,
-                        translations.tr_meliscore_remove_dashboard_all_plugin_msg,
-                        function() {
-
-                            // remove all nodes on grid
-                            grid.removeAll();
-
-                            // save widgets position / size on db
-                            self.saveDBWidgets(dataString);
-                        }
-                    );
-
-                    // hide plugin menu
-                    this.$pluginBox.removeClass("shown");
-
-                    // droppable / .gridstack to original width
-                    $gs.animate({
-                        width: nWidth
-                    }, 3);
-
-                    // plugins delete callback
-                    $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
-                        var $this = $(this);
-
-                            if (typeof $this.data('callback') !== "undefined") {
-                                var callback = eval($this.data("callback"));
-                                if (typeof callback === "function") {
-                                    callback($this.closest('.grid-stack-item'));
-                                }
-                            }
-                    });
+                if (typeof $this.data('callback') !== "undefined") {
+                    var callback = eval($this.data("callback"));
+                    if (typeof callback === "function") {
+                        callback($this.closest('.grid-stack-item'));
+                    }
+                }
+            });
 
         } else {
             melisCoreTool.closeDialog(
@@ -577,7 +589,7 @@ var melisDashBoardDragnDrop = {
             }, 3);
 
             // plugins delete callback
-            $('#'+activeTabId+' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function(i, v){
+            $('#' + activeTabId + ' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function (i, v) {
                 var $this = $(this);
 
                 if (typeof $this.data('callback') !== "undefined") {
@@ -590,7 +602,7 @@ var melisDashBoardDragnDrop = {
         }
     },
 
-    refreshWidget: function(el) {
+    refreshWidget: function (el) {
         var self = this;
 
         var dataString = new Array;
@@ -601,18 +613,18 @@ var melisDashBoardDragnDrop = {
         });
         var dashboardItem = $(el).closest('.grid-stack-item');
         var dataTxt = $(dashboardItem).find('.dashboard-plugin-json-config').text();
-        var dashboardData =  dashboardItem.data('_gridstack_node');
+        var dashboardData = dashboardItem.data('_gridstack_node');
 
         // check dataTxt
-        if(dataTxt) {
+        if (dataTxt) {
             var pluginConfig = JSON.parse(dataTxt);
-            $.each(pluginConfig, function(index, value){
-                if($.isArray(value) || typeof value == "object"){
+            $.each(pluginConfig, function (index, value) {
+                if ($.isArray(value) || typeof value == "object") {
                     dataString.push({
                         name: index,
                         value: JSON.stringify(value)
                     });
-                }else{
+                } else {
                     dataString.push({
                         name: index,
                         value: value
@@ -620,15 +632,15 @@ var melisDashBoardDragnDrop = {
                 }
             });
 
-            var request = $.post( "/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+            var request = $.post("/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
             // loading effect
             dashboardItem.append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
 
-            request.done(function(data){
-                
+            request.done(function (data) {
+
                 // get dashboard gridstack data
-                var grid = $('#'+activeTabId+' .grid-stack').data('gridstack');
+                var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
 
                 // remove loader
                 $(dashboardItem).find('.overlay-loader').remove();
@@ -639,13 +651,13 @@ var melisDashBoardDragnDrop = {
 
                 // add widget to dashboard default size 6 x 6
                 var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
-                
+
                 // assigning current plugin
                 self.setCurrentPlugin(widget);
-                
+
                 // executing plugin JsCallback
-                if(data.jsCallbacks.length) {
-                    $.each(data.jsCallbacks, function(index, value) {
+                if (data.jsCallbacks.length) {
+                    $.each(data.jsCallbacks, function (index, value) {
                         eval(value);
                     });
                 }
@@ -653,18 +665,18 @@ var melisDashBoardDragnDrop = {
         }
     },
 
-    setCurrentPlugin: function(widget) {
+    setCurrentPlugin: function (widget) {
         // set current plugin
         this.currentPlugin = widget;
     },
-    
-    getCurrentPlugin: function() {
+
+    getCurrentPlugin: function () {
         // get current plugin
         return this.currentPlugin;
     }
 };
 
-$(function(){
+$(function () {
     // init
     melisDashBoardDragnDrop.init();
 });

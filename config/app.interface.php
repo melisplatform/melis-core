@@ -195,9 +195,6 @@ return array(
                     '/melis/get-translations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
 
-                    // jquery session
-                    '/MelisCore/js/core/jquery.session.js',
-
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
                     '/MelisCore/assets/components/core/js/core.init.js',
@@ -215,7 +212,6 @@ return array(
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
-
 
                     // flot charts
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
