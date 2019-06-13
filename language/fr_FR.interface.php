@@ -20,11 +20,11 @@ return [
     'tr_meliscore_melis_dashboard_no_plugins_to_load' => "<strong>Votre dashboard est vide</strong>. <br>Merci d'utiliser le menu de droite pour ajouter les plugins que vous voulez utiliser et personnaliser votre dashboard",
     'tr_meliscore_melis_dashboard_no_access' => "Vos <strong>droits ne vous permettent pas d'utiliser les plugins de dashboard</strong>. <br>Merci de contacter votre administrateur afin de pouvoir les utiliser.",
 	'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
-	'tr_meliscore_dashboard_notify_step_1_msg' => "Cliquez sur le bouton de menu du plugin pour <br>basculer la liste des plugins disponibles.",
-    'tr_meliscore_dashboard_notify_step_2_msg' => "Cliquez pour basculer la liste des plugins disponibles <br>par catégorie pouvant être glissés dans le tableau de bord.",
+	'tr_meliscore_dashboard_notify_step_1_msg' => "Cliquez sur le bouton pour voir la liste des <br>plugins disponibles pour votre tableau de bord.",
+    'tr_meliscore_dashboard_notify_step_2_msg' => "Cliquez sur une section pour voir les plugins disponibles dans cette catégorie, <br>puis faites glisser vers votre tableau de bord afin de le personnaliser.",
     'tr_meliscore_dashboard_notify_steps_general_next_text' => "Suivant",
-    'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Sauter",
-    'tr_meliscore_dashboard_notify_step_2_next_text' => "D'accord",
+    'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Fermer l'aide",
+    'tr_meliscore_dashboard_notify_step_2_next_text' => "J'ai compris, fermer",
 
     // Rights
     'tr_meliscore_meliscore' => 'MelisCore',

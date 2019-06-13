@@ -20,14 +20,16 @@
 }
 .enjoyhint_next_btn,.enjoyhint_skip_btn{
     -webkit-box-sizing:content-box;
-    width:100px;
+    /* width:125px; */
+    width: auto;
     height:40px;
     /* font:normal normal normal 17px/40px "Advent Pro",Helvetica,sans-serif; */
     font:normal normal normal 1.063em/2.500em "Advent Pro",Helvetica,sans-serif;
     cursor:pointer;
     margin:0 auto;
     letter-spacing:1px;
-    text-align:center
+    text-align:center;
+    padding: 0 30px;
 }
 .enjoyhint_close_btn,.enjoyhint_next_btn,.enjoyhint_skip_btn{
     z-index:1012;
@@ -36,26 +38,39 @@
     text-overflow:clip;
     -moz-box-sizing:content-box
 }
+/* .enjoyhint_next_btn.enjoyhint_long_text {
+    width: auto;
+    padding: 0 15px;
+} */
 .enjoyhint_next_btn{
     position:absolute;
     box-sizing:content-box;
-    border:2px solid #1ecd97;
+    /* border:2px solid #1ecd97; */
+    border: 2px solid #ee6521;
     -webkit-border-radius:40px;
     border-radius:40px;
-    color:#1ecd97;
+    /* color:#1ecd97; */
+    color: #fff;
     background:rgba(0,0,0,0);
-    -webkit-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),width .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
+    /* -webkit-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),width .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
     -moz-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),width .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
     -o-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),width .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
-    transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),width .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0)
+    transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),width .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0) */
+    -webkit-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
+    -moz-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
+    -o-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
+    transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0)
 }
 .enjoyhint_next_btn:hover{
     color:rgba(255,255,255,1);
-    background:#1ecd97
+    /* background:#1ecd97 */
+    background-color: #ee6521;
 }
 .enjoyhint_next_btn:active{
-    border:2px solid rgba(33,224,163,1);
-    background:rgba(33,224,163,1);
+    /* border:2px solid rgba(33,224,163,1);
+    background:rgba(33,224,163,1); */
+    border: 2px solid #ee6521;
+    background-color: #ee6521;
     -webkit-transition:none;
     -moz-transition:none;
     -o-transition:none;
@@ -63,10 +78,12 @@
 }
 .enjoyhint_skip_btn{
     box-sizing:content-box;
-    border:2px solid #1ecd97;
+    /* border:2px solid #1ecd97; */
+    border: 2px solid #ee6521;
     -webkit-border-radius:40px;
     border-radius:40px;
-    color:#1ecd97;
+    /* color:#1ecd97; */
+    color: #fff;
     background:rgba(0,0,0,0);
     -webkit-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),width .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
     -moz-transition:background-color .3s cubic-bezier(0,0,0,0),color .3s cubic-bezier(0,0,0,0),width .3s cubic-bezier(0,0,0,0),border-width .3s cubic-bezier(0,0,0,0),border-color .3s cubic-bezier(0,0,0,0);
@@ -75,11 +92,14 @@
 }
 .enjoyhint_skip_btn:hover{
     color:rgba(255,255,255,1);
-    background:#1ecd97
+    /* background:#1ecd97 */
+    background-color: #ee6521;
 }
 .enjoyhint_skip_btn:active{
-    border:2px solid rgba(33,224,163,1);
-    background:rgba(33,224,163,1);
+    /* border:2px solid rgba(33,224,163,1);
+    background:rgba(33,224,163,1); */
+    border: 2px solid #ee6521;
+    background-color: #ee6521;
     -webkit-transition:none;
     -moz-transition:none;
     -o-transition:none;
@@ -99,7 +119,8 @@
     font:400 7em/normal Arial,Helvetica,sans-serif;
     color:rgba(0,0,0,1);
     background:rgba(0,0,0,0);
-    border:2px solid rgba(33,224,163,1)
+    /* border:2px solid rgba(33,224,163,1) */
+    border: 2px solid #ee6521;
 }
 .enjoyhint_close_btn::after,.enjoyhint_close_btn::before{
     -webkit-box-sizing:content-box;
@@ -134,12 +155,15 @@
 }
 .enjoyhint_close_btn:hover{
     color:rgba(255,255,255,1);
-    background:#1ecd97;
+    /* background:#1ecd97; */
+    background-color: #ee6521;
     cursor:pointer
 }
 .enjoyhint_close_btn:active{
-    border:2px solid rgba(33,224,163,1);
-    background:rgba(33,224,163,1);
+    /* border:2px solid rgba(33,224,163,1);
+    background:rgba(33,224,163,1); */
+    border: 2px solid #ee6521;
+    background-color: #ee6521;
     -webkit-transition:none;
     -moz-transition:none;
     -o-transition:none;
@@ -153,11 +177,13 @@
     height:40px;
     cursor:pointer;
     margin:0 auto;
-    border:2px solid #1ecd97;
+    /* border:2px solid #1ecd97; */
+    border: 2px solid #ee6521;
     -webkit-border-radius:40px;
     border-radius:40px;
     font:normal normal normal 17px/40px "Advent Pro",Helvetica,sans-serif;
-    color:#1ecd97;
+    /* color:#1ecd97; */
+    color: #fff;
     text-align:center;
     -o-text-overflow:clip;
     text-overflow:clip;
@@ -175,11 +201,14 @@
 }
 .enjoyhint_btn:hover{
     color:rgba(255,255,255,1);
-    background:#1ecd97
+    /* background:#1ecd97 */
+    background-color: #ee6521;
 }
 .enjoyhint_btn:active{
-    border:2px solid rgba(33,224,163,1);
-    background:rgba(33,224,163,1);
+    /* border:2px solid rgba(33,224,163,1);
+    background:rgba(33,224,163,1); */
+    border: 2px solid #ee6521;
+    background-color: #ee6521;
     -webkit-transition:none;
     -moz-transition:none;
     -o-transition:none;
@@ -231,5 +260,6 @@ div.kineticjs-content{
     position:absolute!important
 }
 .enjoyhint_skip_btn{
-    position:fixed
+    position:fixed;
+    margin-left: 5em;
 }
