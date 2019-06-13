@@ -592,7 +592,7 @@ return [
     'tr_meliscore_microservice_request_ok' => 'Request has been executed',
     'tr_meliscore_microservice_api_key_inactive' => 'API Key is inactive',
 
-    'tr_meliscore_microservice_generate_api_key' => 'Generate API Key',
+    'tr_meliscore_microservice_generate_api_key' => 'Générer la clef API',
     'tr_meliscore_microservice_generate_api_key_ok' => 'Vous pouvez accéder aux microservices à cette URL :',
     'tr_meliscore_microservice_generateD_api_key' => 'API Key',
 

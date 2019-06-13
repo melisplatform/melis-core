@@ -58,7 +58,21 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                                 $e->getTarget()->plugin('redirect')->toUrl('/melis/login');
                             } else {
                                 // or, reload the rights
-                                $user->usr_rights = $userData->usr_rights;
+
+                                // Update the rights of the user if it's not a custom role
+                                if ($user->usr_role_id != 1) {
+                                    // Get rights from Role table
+                                    $tableUserRole = $sm->get('MelisCoreTableUserRole');
+                                    $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
+                                    if ($datasRole) {
+                                        $datasRole = $datasRole->current();
+                                        if (!empty($datasRole)) {
+                                            $user->usr_rights = $datasRole->urole_rights;
+                                        }
+                                    }
+                                }else{
+                                    $user->usr_rights = $userData->usr_rights;
+                                }
                             }
                         }
                     }
