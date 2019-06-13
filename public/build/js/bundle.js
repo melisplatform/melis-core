@@ -36691,6 +36691,10 @@ var melisDashBoardDragnDrop = {
                         let dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
                         if (dashboardMsg.length > 0) {
                             dashboardMsg.show();
+                            $(self.$gs).css({
+                                "height" : "745px",
+                                "min-height" : "745px"
+                            });
                         }
                     }
                 }
