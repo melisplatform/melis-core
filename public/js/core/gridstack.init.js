@@ -501,18 +501,19 @@ var melisDashBoardDragnDrop = {
                     }
                 }
 
+                // display empty dashboard message
                 var pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
-                if (pluginCount === 0) {
-                    // Show empty-dashboard message
-                    var dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
-                    if (dashboardMsg.length > 0) {
-                        dashboardMsg.show();
-                        $(self.$gs).css({
-                            "height": "745px",
-                            "min-height": "745px"
-                        });
+                    if (pluginCount === 0) {
+                        // Show empty-dashboard message
+                        var dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                        if (dashboardMsg.length > 0) {
+                            dashboardMsg.show();
+                            $(self.$gs).css({
+                                "height": "745px",
+                                "min-height": "745px"
+                            });
+                        }
                     }
-                }
             }
         );
     },
@@ -551,6 +552,20 @@ var melisDashBoardDragnDrop = {
 
                     // save widgets position / size on db
                     self.saveDBWidgets(dataString);
+
+                    // display empty dashboard message
+                    var pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
+                        if (pluginCount === 0) {
+                            // Show empty-dashboard message
+                            var dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                                if (dashboardMsg.length > 0) {
+                                    dashboardMsg.show();
+                                    $(self.$gs).css({
+                                        "height": "745px",
+                                        "min-height": "745px"
+                                    });
+                                }
+                        }
                 }
             );
 
