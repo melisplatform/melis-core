@@ -535,7 +535,8 @@ return [
     'tr_meliscore_logs_tool' => 'Logs',
     'tr_meliscore_logs_tool_description' => 'Cet outil sauvegarde les actions effectuées par tous les utilisateurs de la plateforme. Les logs sont ensuite triables en fonction de leur provenance, de l&#39;utilisateur et de leur type.',
     'tr_meliscore_logs_type' => 'Type de logs',
-     
+    'tr_meliscore_logs_tool_edit_modal_title' => 'Export Logs',
+
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',
     'tr_meliscore_logs_tool_log_title' => 'Titre',

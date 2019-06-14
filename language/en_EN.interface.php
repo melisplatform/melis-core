@@ -518,6 +518,7 @@ return [
     'tr_meliscore_logs_tool' => 'Logs',
     'tr_meliscore_logs_tool_description' => 'This tool saves the actions made by all users of the platform. the logs are then sortable according to their origin, to the user and to their type.',
     'tr_meliscore_logs_type' => 'Log type',
+    'tr_meliscore_logs_tool_edit_modal_title' => 'Export Logs',
 
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',
