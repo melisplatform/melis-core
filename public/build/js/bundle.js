@@ -36199,31 +36199,36 @@ var melisDashBoardDragnDrop = {
             nWidth  = dWidth + $box.width(),
             $dbMsg  = self.$melisDBPlugins.find("#melis-core-dashboard-msg");
 
-        // .select2-container width 100% specific for latest comments plugin on document ready
-        self.latestCommentsPluginUIRes();
+            // .select2-container width 100% specific for latest comments plugin on document ready
+            self.latestCommentsPluginUIRes();
 
-        // remove class shown on plugin box when clicking on the left sideMenu
-        self.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
+            // remove class shown on plugin box when clicking on the left sideMenu
+            self.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
 
-        // animate to full width size of #grid1
-        self.$body.on("click", "#dashboard-plugin-delete-all", function () {
-            $gs.animate({
-                width: nWidth
-            }, 3);
-        });
-
-        // adjust grid-stack height when dashboard msg element is found
-        if ($dbMsg.length) {
-            $(self.$gs).css({
-                "height": "745px",
-                "min-height": "745px"
+            // animate to full width size of #grid1
+            self.$body.on("click", "#dashboard-plugin-delete-all", function () {
+                $gs.animate({
+                    width: nWidth
+                }, 3);
             });
-        } else {
-            $(self.$gs).css({
-                "height": "840px",
-                "min-height": "840px"
-            });
-        }
+
+            // adjust grid-stack height when dashboard msg element is found
+            if ($dbMsg.length) {
+                $(self.$gs).css({
+                    "height": "745px",
+                    "min-height": "745px"
+                });
+            } else {
+                $(self.$gs).css({
+                    "height": "840px",
+                    "min-height": "840px"
+                });
+            }
+
+            // check if enjoyhint element is found and its cookie is false then remove it and body tag overflow auto
+            if ( typeof dashboardNotify !== "undefined" && dashboardNotify.getCookie() === "false" ) {
+                dashboardNotify.removeEnjoyHintHtml();
+            }
     },
 
     dropWidget: function (widget) {
@@ -36425,7 +36430,7 @@ var melisDashBoardDragnDrop = {
                     width: nWidth
                 }, 3);
             } else {
-                self.$box.addClass("shown");
+                //self.$box.addClass("shown");
 
                 self.$gs.animate({
                     width: dWidth
@@ -36790,7 +36795,8 @@ var dashboardNotify = (function() {
         $pluginBtn 		    = $body.find("#melisDashBoardPluginBtn"),
         $pluginBtnBox	    = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn"),
-        $noAvailPlugins     = $pluginBtnBox.find(".melis-core-dashboard-ps-box");
+        $noAvailPlugins     = $pluginBtnBox.find(".melis-core-dashboard-ps-box"),
+        $dashMsg            = $body.find("#melis-core-dashboard-msg");
 
     // instantiate
     var eh = new EnjoyHint({
@@ -36806,12 +36812,22 @@ var dashboardNotify = (function() {
     });
 
     // first render function call
-    //render();
+    // render();
 
     // clicking on close button will enable back the plugins menu buttons
     $body.on("click", ".enjoyhint_close_btn", function() {
         enablePluginsMenuButton();
     });
+
+    // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
+    function removeEnjoyHintHtml() {
+        $body.find(".enjoyhint").remove();
+
+        setTimeout(function() {
+            //$body.removeAttr("style");
+            $body.css("overflow", "auto");
+        }, 500);
+    }
 
     // disable plugins menu buttons
     function disablePluginsMenuButton() {
@@ -36864,30 +36880,26 @@ var dashboardNotify = (function() {
     // check for some element use case
     function checkElementsBeforeRun() {
         // check if no plugins found and no grid stack item is available
-        //if ( $gsItem.length === 0 ) {
-            if ( $noAvailPlugins.length === 0 ) {
+        if ( $noAvailPlugins.length === 0 ) {
+            runNotify();
+        } else {
+            if ( $pluginBtnBox.hasClass("shown") ) {
                 runNotify();
-            } else {
-                if ( $pluginBtnBox.hasClass("shown") ) {
-                    runNotify();
-                }
             }
-        //}
+        }
     }
 
     // render function
     function render() {
         // check if session is set
-        if ( $gsItem.length === 0 ) {
-            if ( getCookie() === undefined ) {
+        if ( getCookie() === undefined ) {
+            setConfig();
+            checkElementsBeforeRun();
+            setCookie("false");
+        } else {
+            if ( getCookie() === "true" ) {
                 setConfig();
                 checkElementsBeforeRun();
-                setCookie("false");
-            } else {
-                if ( getCookie() === "true" ) {
-                    setConfig();
-                    checkElementsBeforeRun();
-                }
             }
         }
     }
@@ -36912,8 +36924,10 @@ var dashboardNotify = (function() {
     }
 
     return {
-        runNotify   :   runNotify,
-        render      :   render
+        runNotify                   :       runNotify,
+        render                      :       render,
+        getCookie                   :       getCookie,
+        removeEnjoyHintHtml         :       removeEnjoyHintHtml
     };
 
 })();
@@ -36924,11 +36938,13 @@ $(function() {
             $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box"),
             shown           = $pluginBtnBox.hasClass("shown"),
             $gs             = $body.find("#"+activeTabId+" .grid-stack"),
-            $gsItem         = $gs.find(".grid-stack-item");
+            $gsItem         = $gs.find(".grid-stack-item"),
+            $dashMsg        = $body.find("#melis-core-dashboard-msg");
 
-            if ( $gsItem.length === 0 && shown === true ) {
+            if ( $gsItem.length === 0 && shown === true && $dashMsg.is(":visible") === true ) {
                 dashboardNotify.render();
+            } else {
+                dashboardNotify.removeEnjoyHintHtml();
             }
-
     }, 1000);
 });

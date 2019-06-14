@@ -134,31 +134,36 @@ var melisDashBoardDragnDrop = {
             nWidth  = dWidth + $box.width(),
             $dbMsg  = self.$melisDBPlugins.find("#melis-core-dashboard-msg");
 
-        // .select2-container width 100% specific for latest comments plugin on document ready
-        self.latestCommentsPluginUIRes();
+            // .select2-container width 100% specific for latest comments plugin on document ready
+            self.latestCommentsPluginUIRes();
 
-        // remove class shown on plugin box when clicking on the left sideMenu
-        self.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
+            // remove class shown on plugin box when clicking on the left sideMenu
+            self.$body.on("click", ".melis-dashboard-plugins-menu", self.closeDBPlugSidebar.bind(this));
 
-        // animate to full width size of #grid1
-        self.$body.on("click", "#dashboard-plugin-delete-all", function () {
-            $gs.animate({
-                width: nWidth
-            }, 3);
-        });
-
-        // adjust grid-stack height when dashboard msg element is found
-        if ($dbMsg.length) {
-            $(self.$gs).css({
-                "height": "745px",
-                "min-height": "745px"
+            // animate to full width size of #grid1
+            self.$body.on("click", "#dashboard-plugin-delete-all", function () {
+                $gs.animate({
+                    width: nWidth
+                }, 3);
             });
-        } else {
-            $(self.$gs).css({
-                "height": "840px",
-                "min-height": "840px"
-            });
-        }
+
+            // adjust grid-stack height when dashboard msg element is found
+            if ($dbMsg.length) {
+                $(self.$gs).css({
+                    "height": "745px",
+                    "min-height": "745px"
+                });
+            } else {
+                $(self.$gs).css({
+                    "height": "840px",
+                    "min-height": "840px"
+                });
+            }
+
+            // check if enjoyhint element is found and its cookie is false then remove it and body tag overflow auto
+            if ( typeof dashboardNotify !== "undefined" && dashboardNotify.getCookie() === "false" ) {
+                dashboardNotify.removeEnjoyHintHtml();
+            }
     },
 
     dropWidget: function (widget) {
@@ -360,7 +365,7 @@ var melisDashBoardDragnDrop = {
                     width: nWidth
                 }, 3);
             } else {
-                self.$box.addClass("shown");
+                //self.$box.addClass("shown");
 
                 self.$gs.animate({
                     width: dWidth

@@ -15,7 +15,8 @@ var dashboardNotify = (function() {
         $pluginBtn 		    = $body.find("#melisDashBoardPluginBtn"),
         $pluginBtnBox	    = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn"),
-        $noAvailPlugins     = $pluginBtnBox.find(".melis-core-dashboard-ps-box");
+        $noAvailPlugins     = $pluginBtnBox.find(".melis-core-dashboard-ps-box"),
+        $dashMsg            = $body.find("#melis-core-dashboard-msg");
 
     // instantiate
     var eh = new EnjoyHint({
@@ -31,12 +32,22 @@ var dashboardNotify = (function() {
     });
 
     // first render function call
-    //render();
+    // render();
 
     // clicking on close button will enable back the plugins menu buttons
     $body.on("click", ".enjoyhint_close_btn", function() {
         enablePluginsMenuButton();
     });
+
+    // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
+    function removeEnjoyHintHtml() {
+        $body.find(".enjoyhint").remove();
+
+        setTimeout(function() {
+            //$body.removeAttr("style");
+            $body.css("overflow", "auto");
+        }, 500);
+    }
 
     // disable plugins menu buttons
     function disablePluginsMenuButton() {
@@ -89,30 +100,26 @@ var dashboardNotify = (function() {
     // check for some element use case
     function checkElementsBeforeRun() {
         // check if no plugins found and no grid stack item is available
-        //if ( $gsItem.length === 0 ) {
-            if ( $noAvailPlugins.length === 0 ) {
+        if ( $noAvailPlugins.length === 0 ) {
+            runNotify();
+        } else {
+            if ( $pluginBtnBox.hasClass("shown") ) {
                 runNotify();
-            } else {
-                if ( $pluginBtnBox.hasClass("shown") ) {
-                    runNotify();
-                }
             }
-        //}
+        }
     }
 
     // render function
     function render() {
         // check if session is set
-        if ( $gsItem.length === 0 ) {
-            if ( getCookie() === undefined ) {
+        if ( getCookie() === undefined ) {
+            setConfig();
+            checkElementsBeforeRun();
+            setCookie("false");
+        } else {
+            if ( getCookie() === "true" ) {
                 setConfig();
                 checkElementsBeforeRun();
-                setCookie("false");
-            } else {
-                if ( getCookie() === "true" ) {
-                    setConfig();
-                    checkElementsBeforeRun();
-                }
             }
         }
     }
@@ -137,8 +144,10 @@ var dashboardNotify = (function() {
     }
 
     return {
-        runNotify   :   runNotify,
-        render      :   render
+        runNotify                   :       runNotify,
+        render                      :       render,
+        getCookie                   :       getCookie,
+        removeEnjoyHintHtml         :       removeEnjoyHintHtml
     };
 
 })();
@@ -149,11 +158,13 @@ $(function() {
             $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box"),
             shown           = $pluginBtnBox.hasClass("shown"),
             $gs             = $body.find("#"+activeTabId+" .grid-stack"),
-            $gsItem         = $gs.find(".grid-stack-item");
+            $gsItem         = $gs.find(".grid-stack-item"),
+            $dashMsg        = $body.find("#melis-core-dashboard-msg");
 
-            if ( $gsItem.length === 0 && shown === true ) {
+            if ( $gsItem.length === 0 && shown === true && $dashMsg.is(":visible") === true ) {
                 dashboardNotify.render();
+            } else {
+                dashboardNotify.removeEnjoyHintHtml();
             }
-
     }, 1000);
 });
