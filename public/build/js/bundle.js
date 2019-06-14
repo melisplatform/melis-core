@@ -36822,11 +36822,8 @@ var dashboardNotify = (function() {
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
     function removeEnjoyHintHtml() {
         $body.find(".enjoyhint").remove();
-
-        setTimeout(function() {
-            //$body.removeAttr("style");
-            $body.css("overflow", "auto");
-        }, 500);
+        $body.removeAttr("style");
+        //$body.css("overflow", "auto");
     }
 
     // disable plugins menu buttons
