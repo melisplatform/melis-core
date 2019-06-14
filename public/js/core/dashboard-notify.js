@@ -19,8 +19,11 @@ var dashboardNotify = (function() {
 
     // instantiate
     var eh = new EnjoyHint({
-        onStart:function() {
+        onStart: function() {
             disablePluginsMenuButton();
+        },
+        onSkip: function() {
+            enablePluginsMenuButton();
         },
         onEnd: function() {
             enablePluginsMenuButton();
@@ -86,7 +89,7 @@ var dashboardNotify = (function() {
     // check for some element use case
     function checkElementsBeforeRun() {
         // check if no plugins found and no grid stack item is available
-        if ( $gsItem.length === 0 ) {
+        //if ( $gsItem.length === 0 ) {
             if ( $noAvailPlugins.length === 0 ) {
                 runNotify();
             } else {
@@ -94,20 +97,22 @@ var dashboardNotify = (function() {
                     runNotify();
                 }
             }
-        }
+        //}
     }
 
     // render function
     function render() {
         // check if session is set
-        if ( getCookie() === undefined ) {
-            setConfig();
-            checkElementsBeforeRun();
-            setCookie("false");
-        } else {
-            if ( getCookie() === "true" ) {
+        if ( $gsItem.length === 0 ) {
+            if ( getCookie() === undefined ) {
                 setConfig();
                 checkElementsBeforeRun();
+                setCookie("false");
+            } else {
+                if ( getCookie() === "true" ) {
+                    setConfig();
+                    checkElementsBeforeRun();
+                }
             }
         }
     }
@@ -138,14 +143,17 @@ var dashboardNotify = (function() {
 
 })();
 
-$(function(){
+$(function() {
     setTimeout(function() {
         var $body           = $("body"),
             $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box"),
-            shown           = $pluginBtnBox.hasClass("shown");
+            shown           = $pluginBtnBox.hasClass("shown"),
+            $gs             = $body.find("#"+activeTabId+" .grid-stack"),
+            $gsItem         = $gs.find(".grid-stack-item");
 
-            if ( shown ) {
+            if ( $gsItem.length === 0 && shown === true ) {
                 dashboardNotify.render();
             }
+
     }, 1000);
 });
