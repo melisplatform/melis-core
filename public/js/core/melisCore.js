@@ -162,6 +162,26 @@ var melisCore = (function(window){
 
         melisCoreTool.done("#btnResetRights");
     });
+    $body.on("click", "#btnResetRightsNew", function(){
+
+        melisCoreTool.pending("#btnResetRightsNew");
+
+        melisCoreTool.confirm(
+            translations.tr_meliscmsnews_common_label_yes,
+            translations.tr_meliscmsnews_common_label_no,
+            translations.tr_meliscore_tool_user_reset_rights,
+            translations.tr_meliscmsnews_common_label_reset_rights_msg,
+            function () {
+                var tree = $("#new-rights-fancytree").fancytree("getTree");
+                tree.findAll(function(node){
+                    if(node.isSelected() === true){
+                        node.setSelected(false);
+                    }
+                });
+            });
+
+        melisCoreTool.done("#btnResetRightsNew");
+    });
 
     $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
         if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
