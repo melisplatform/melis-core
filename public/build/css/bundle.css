@@ -36585,8 +36585,11 @@ div#modal-user-management div.widget {
 }
 
 /* Users Rights */
-#btnResetRights {
+#btnResetRights, #btnResetRights:hover, #btnResetRights:active {
     margin-right: 20px;
+    background-color: transparent;
+    border-color: #2e6da4;
+    color: #2e6da4;
 }
 .module-lists{
 	background-color:#2c2c2c;

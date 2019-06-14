@@ -28706,7 +28706,7 @@ var melisCore = (function(window){
 
     $body.on("click", "#btnResetRights", function(){
 
-        melisCoreTool.pending("#btnEditRights");
+        melisCoreTool.pending("#btnResetRights");
 
         melisCoreTool.confirm(
             translations.tr_meliscmsnews_common_label_yes,
@@ -28722,7 +28722,7 @@ var melisCore = (function(window){
                 });
             });
 
-        melisCoreTool.done("#btnEditRights");
+        melisCoreTool.done("#btnResetRights");
     });
 
     $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
@@ -30440,6 +30440,7 @@ function getRightsTree(userId) {
         if (tree.count() > 1) {
             $("#btnEdit").removeClass("disabled").css("pointer-events", "auto");
             $("#btnEditRights").removeClass("disabled").css("pointer-events", "auto");
+            $("#btnResetRights").removeClass("disabled").css("pointer-events", "auto");
             clearInterval(checker);
         }
     }, 500);
@@ -30693,6 +30694,7 @@ var toolUserManagement = {
     retrieveUser: function (id) {
         $("#btnEdit").addClass("disabled").css("pointer-events", "none");
         $("#btnEditRights").addClass("disabled").css("pointer-events", "none");
+        $("#btnResetRights").addClass("disabled").css("pointer-events", "none");
         $.ajax({
             type: 'POST',
             url: '/melis/MelisCore/ToolUser/getUserById',

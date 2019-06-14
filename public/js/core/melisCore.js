@@ -144,7 +144,7 @@ var melisCore = (function(window){
 
     $body.on("click", "#btnResetRights", function(){
 
-        melisCoreTool.pending("#btnEditRights");
+        melisCoreTool.pending("#btnResetRights");
 
         melisCoreTool.confirm(
             translations.tr_meliscmsnews_common_label_yes,
@@ -160,7 +160,7 @@ var melisCore = (function(window){
                 });
             });
 
-        melisCoreTool.done("#btnEditRights");
+        melisCoreTool.done("#btnResetRights");
     });
 
     $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
