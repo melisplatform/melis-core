@@ -213,7 +213,6 @@ return array(
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
 
-
                     // flot charts
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v1.2.3',
@@ -247,7 +246,7 @@ return array(
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
-                    '/MelisCore/js/tools/melis-core-gdpr-tool.js',
+                    '/MelisCore/js/tools/melis-core-gdpr-tool.js'
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
