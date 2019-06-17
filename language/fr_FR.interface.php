@@ -140,7 +140,7 @@ return [
     'tr_meliscore_tool_user_new_rights' => 'Droits d\'accès',
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
-    'tr_meliscore_tool_user_update' => 'Sauvegarder',
+    'tr_meliscore_tool_user_update' => 'Enregistrer',
 
     'tr_meliscore_forgot_password' => 'Mot de passe oublié',
     // Emails
