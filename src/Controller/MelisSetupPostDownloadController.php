@@ -184,7 +184,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                     }
 
                     // Dashboard
-                    $this->generateDashboardPlugins($userId);
+//                    $this->generateDashboardPlugins($userId);
 
 
                     $success = true;
