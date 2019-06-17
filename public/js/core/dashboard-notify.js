@@ -60,6 +60,7 @@ var dashboardNotify = (function() {
         $pluginFilterBtn.prop("disabled", false);
         $pluginBtn.css("cursor", "pointer");
         $pluginFilterBtn.css("cursor", "pointer");
+        removeEnjoyHintHtml();
     }
 
     // set scripts config
