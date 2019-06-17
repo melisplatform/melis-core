@@ -7,11 +7,12 @@
 echo $this->melisModalInvoker()->render(
     array(
         'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
-        'class' => 'btn btn-danger pull-left'
+        'class' => 'btn btn-danger pull-left rightsBtn'
     ), 'dismiss');
 ?>
 <div class="pull-right">
-    <button type="button" class="btn btn-success hidden-sm pull-right" id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
+    <button type="button" class="btn btn-success rightsBtn hidden-xs pull-right " id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
+    <button type="button" class="btn btn-success rightsBtn show-xs pull-right " id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></button>
     <button type="button" class="btn btn-success rightsBtn pull-right hidden-xs" id="btnResetRights"><i class="fa fa-fw icon-refresh-2"></i>  <?= $this->translate('tr_meliscore_tool_user_reset_rights'); ?></button>
     <button type="button" class="btn btn-success rightsBtn pull-right show-xs" id="btnResetRights"><i class="fa fa-fw icon-refresh-2"></i>  <?= $this->translate('tr_meliscore_tool_user_reset_rights_xs'); ?></button>
 </div>

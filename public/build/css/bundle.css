@@ -36594,8 +36594,8 @@ div#modal-user-management div.widget {
 @media only screen and (max-width: 450px) {
     .rightsBtn {
         padding: 5px;
-        max-width: 120px;
-        font-size: 12px;
+        max-width: 110px;
+        font-size: 13px;
     }
 }
 @media only screen and (max-width: 376px) {
@@ -36605,11 +36605,11 @@ div#modal-user-management div.widget {
         font-size: 11px;
     }
 }
-@media only screen and (max-width: 320px) {
+@media only screen and (max-width: 321px) {
     .rightsBtn {
-        padding: 5px;
-        max-width: 91px;
-        font-size: 11px;
+        padding: 3px;
+        max-width: 90px;
+        font-size: 9px;
     }
 }
 .module-lists{
