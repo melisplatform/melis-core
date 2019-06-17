@@ -344,7 +344,6 @@ var EnjoyHint = function (_options) {
         if ($event_element[0]) {
             $body.enjoyhint('redo_events_near_rect', $event_element[0].getBoundingClientRect());
         }
-        console.log($event_element);
     });
 
     that.stop = function() {

@@ -356,17 +356,13 @@ var melisDashBoardDragnDrop = {
 
     closeDBPlugSidebar: function () {
         var self    = this,
+            $btn    = $("#melisDashBoardPluginBtn"),
+            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $gsItem = self.$gs.find(".grid-stack-item"),
             dWidth  = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
             nWidth  = self.$gs.width() + self.$box.width();
 
-            if ( $gsItem.length > 0 ) {             
-                self.$gs.animate({
-                    width: nWidth
-                }, 3);
-            } else {
-                //self.$box.addClass("shown");
-
+            if ( $box.hasClass("shown") ) {
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
@@ -488,7 +484,7 @@ var melisDashBoardDragnDrop = {
 
         var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
             $del = el,
-            $item = $del.closest('.grid-stack-item').data('_gridstack_node');
+            gsNode = $del.closest('.grid-stack-item').data('_gridstack_node');
 
         melisCoreTool.confirm(
             translations.tr_meliscore_common_yes,
@@ -498,10 +494,10 @@ var melisDashBoardDragnDrop = {
             function () {
 
                 // remove the item from the dashboard
-                grid.removeWidget($item.el[0]);
+                grid.removeWidget(gsNode.el[0]);
 
                 // check gridstack nodes positions and sizes
-                $items = $item._grid.container[0].children;
+                $items = gsNode._grid.container[0].children;
 
                 // serialize & save db remaining gridstack items
                 self.serializeWidgetMap($items);
@@ -538,13 +534,15 @@ var melisDashBoardDragnDrop = {
     deleteAllWidget: function (el) {
         var self = this;
 
-        var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
-            $gs = $('#' + activeTabId).find('.grid-stack'),
-            $items = $gs.find('.grid-stack-item'),
-            $btn = $("#melisDashBoardPluginBtn"),
-            $box = $btn.closest(".melis-core-dashboard-dnd-box"),
-            dWidth = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth = $gs.width() + $box.width();
+        var $grid       = $('#' + activeTabId + ' .grid-stack'),
+            gridData    = $grid.data('gridstack'),
+            gsNode      = $grid.find('.grid-stack-item').data('_gridstack_node'),
+            $gs         = $('#' + activeTabId).find('.grid-stack'),
+            $items      = $gs.find('.grid-stack-item'),
+            $btn        = $("#melisDashBoardPluginBtn"),
+            $box        = $btn.closest(".melis-core-dashboard-dnd-box"),
+            dWidth      = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth      = $gs.width() + $box.width();
 
         // checks if there is a plugin available to delete
         if ($items.length !== 0) {
@@ -564,8 +562,8 @@ var melisDashBoardDragnDrop = {
                 translations.tr_meliscore_remove_dashboard_all_plugin_msg,
                 function () {
 
-                    // remove all nodes on grid
-                    grid.removeAll();
+                    // remove all nodes on grid, grid.removeAll(gsNode.el[0]);
+                    gridData.removeAll();
 
                     // save widgets position / size on db
                     self.saveDBWidgets(dataString);

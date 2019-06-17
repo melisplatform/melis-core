@@ -255,6 +255,8 @@ var melisHelper = (function(){
 
         var navBox = currentParent.closest(".scroll");
         var hasdropdown = $(navBox).find(".nav-group-dropdown");
+        var $tabArrowTop = $("tab-arrow-top");
+
         if(currentParent.hasClass("active-parent")) {
             var tabMenuGroup = currentParent.find(".nav-group-dropdown");
             tabMenuGroup.find("li a.tab-element").each(function() {
@@ -339,9 +341,14 @@ var melisHelper = (function(){
 
             // check if there are no contents open
             if( $navTabs.children("li").length === 0){
-                var empty = '<b>(' + translations.tr_meliscore_empty +')</b>';
+                var empty = '<strong>(' + translations.tr_meliscore_empty +')</strong>';
                 $("#res-page-cont span").append(empty);
             }
+
+            // new responsive set up on tab menus
+            /* if ( $tabArrowTop.hasClass("hide-arrow") ) {
+                $tabArrowTop.removeClass("hide-arrow");
+            } */
         }
 
         // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
