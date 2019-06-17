@@ -4222,14 +4222,20 @@ div#modal-user-management div.widget {
     border-color: #2e6da4;
     color: #2e6da4;
 }
-@media only screen and (max-width: 420px) {
+@media only screen and (max-width: 450px) {
     .rightsBtn {
         padding: 5px;
         max-width: 120px;
-        font-size: 15px;
+        font-size: 12px;
     }
 }
-
+@media only screen and (max-width: 376px) {
+    .rightsBtn {
+        padding: 5px;
+        max-width: 120px;
+        font-size: 11px;
+    }
+}
 @media only screen and (max-width: 320px) {
     .rightsBtn {
         padding: 5px;
