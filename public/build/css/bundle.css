@@ -36591,6 +36591,21 @@ div#modal-user-management div.widget {
     border-color: #2e6da4;
     color: #2e6da4;
 }
+@media only screen and (max-width: 420px) {
+    .rightsBtn {
+        padding: 5px;
+        max-width: 120px;
+        font-size: 15px;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .rightsBtn {
+        padding: 5px;
+        max-width: 91px;
+        font-size: 11px;
+    }
+}
 .module-lists{
 	background-color:#2c2c2c;
 }

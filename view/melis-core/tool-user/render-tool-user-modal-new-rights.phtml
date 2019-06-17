@@ -10,6 +10,7 @@ echo $this->melisModalInvoker()->render(
         'class' => 'btn btn-danger pull-left'
     ), 'dismiss');
 ?>
-
-<button type="button" class="btn btn-success pull-right hidden-xs hidden-sm" id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
-<button type="button" class="btn btn-success pull-right" id="btnResetRightsNew"><i class="fa fa-fw icon-refresh-2"></i>  <?= $this->translate('tr_meliscore_tool_user_reset_rights'); ?></button>
+<div class="pull-right">
+    <button type="button" class="btn btn-success" id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
+    <button type="button" class="btn btn-success" id="btnResetRightsNew"><i class="fa fa-fw icon-refresh-2"></i>  <?= $this->translate('tr_meliscore_tool_user_reset_rights'); ?></button>
+</div>
