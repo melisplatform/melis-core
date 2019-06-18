@@ -118,6 +118,8 @@ var dashboardNotify = (function() {
             if ( getCookie() === "true" ) {
                 setConfig();
                 checkElementsBeforeRun();
+            } else {
+                removeEnjoyHintHtml();
             }
         }
     }

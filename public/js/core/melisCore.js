@@ -600,7 +600,6 @@ var melisCore = (function(window){
         var $this = $(this);
 
             $tabConInner.show();
-            $this.addClass("hide-arrow");
 
             $res.trigger("click");
 
