@@ -431,11 +431,11 @@ var EnjoyHint = function (_options) {
         that.resumeScript();
     };
 
-    //var $meliscore_dashboard = $body.find("#" + activeTabId + "[data-meliskey='meliscore_dashboard']");
+    var $meliscore_dashboard = $body.find("#" + activeTabId + "[data-meliskey='meliscore_dashboard']");
 
-        //if ( melisDashBoardDragnDrop.countGsItems() === 0 && $meliscore_dashboard.length > 0 ) {
+        if ( melisDashBoardDragnDrop.countGsItems() === 0 && $meliscore_dashboard.length > 0 ) {
             init();
-        //}
+        }
 };
 ;CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 
