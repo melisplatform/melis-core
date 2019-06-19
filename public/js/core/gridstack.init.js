@@ -41,23 +41,24 @@ var melisDashBoardDragnDrop = {
 
     cacheDom: function () {
         // jQuery DOM element
-        this.$body = $("body");
-        this.$document = $(document);
-        this.$window = $(window);
-        this.$gs = this.$body.find("#" + activeTabId + " .grid-stack");
-        this.$melisDBPlugins = this.$body.find(".melis-dashboard-plugins");
-        this.$pluginBox = this.$body.find(".melis-core-dashboard-dnd-box");
-        this.$pluginBtn = this.$body.find("#melisDashBoardPluginBtn");
-        this.$box = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
-        this.$deleteAllWidget = this.$body.find("#dashboard-plugin-delete-all");
+        this.$body              = $("body");
+        this.$document          = $(document);
+        this.$window            = $(window);
+        this.$gs                = this.$body.find("#" + activeTabId + " .grid-stack");
+        this.$gsItem            = this.$gs.find(".grid-stack-item").length;
+        this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
+        this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
+        this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
+        this.$box               = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
+        this.$deleteAllWidget   = this.$body.find("#dashboard-plugin-delete-all");
 
         // plugin sidebar
-        this.$dashPsBox = $(".melis-core-dashboard-ps-box");
-        this.$dashPluginBtn = this.$dashPsBox.find(".melis-core-dashboard-filter-btn");
-        this.$dashSnipsBox = this.$dashPsBox.find(".melis-core-dashboard-plugin-snippets-box");
+        this.$dashPsBox         = $(".melis-core-dashboard-ps-box");
+        this.$dashPluginBtn     = this.$dashPsBox.find(".melis-core-dashboard-filter-btn");
+        this.$dashSnipsBox      = this.$dashPsBox.find(".melis-core-dashboard-plugin-snippets-box");
 
         // strings
-        this.gsOptHandle = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
+        this.gsOptHandle        = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
     },
 
     gsSetOptions: function () {
@@ -703,6 +704,12 @@ var melisDashBoardDragnDrop = {
     getCurrentPlugin: function () {
         // get current plugin
         return this.currentPlugin;
+    },
+
+    countGsItems: function() {
+        var self = this;
+
+            return self.$gsItem;
     }
 };
 

@@ -92,11 +92,13 @@ var dashboardNotify = (function() {
 
     // run enjoy hint script
     function runNotify() {
-        eh.run();
+        if ( $pluginBtnBox.hasClass("shown") ) {
+            eh.run();
+        }
     }
 
     // check for some element use case
-    function checkElementsBeforeRun() {
+    /* function checkElementsBeforeRun() {
         // check if no plugins found and no grid stack item is available
         if ( $noAvailPlugins.length === 0 ) {
             runNotify();
@@ -105,19 +107,21 @@ var dashboardNotify = (function() {
                 runNotify();
             }
         }
-    }
+    } */
 
     // render function
     function render() {
         // check if session is set
         if ( getCookie() === undefined ) {
             setConfig();
-            checkElementsBeforeRun();
+            runNotify();
+            //checkElementsBeforeRun();
             setCookie("false");
         } else {
             if ( getCookie() === "true" ) {
                 setConfig();
-                checkElementsBeforeRun();
+                runNotify();
+                //checkElementsBeforeRun();
             } else {
                 removeEnjoyHintHtml();
             }

@@ -37,7 +37,7 @@ var EnjoyHint = function (_options) {
 
     var init = function () {
 
-        if ($('.enjoyhint')) {
+        if ( $('.enjoyhint').length ) {
 
             $('.enjoyhint').remove();
         }
@@ -341,7 +341,7 @@ var EnjoyHint = function (_options) {
     /********************* PUBLIC METHODS ***************************************/
 
     $(window).on('resize.enjoy_hint_permanent', function() {
-        if ( typeof $event_element[0] !== 'undefined' ) {
+        if ( $event_element ) {
             $body.enjoyhint('redo_events_near_rect', $event_element[0].getBoundingClientRect());
         }
     });
@@ -431,7 +431,11 @@ var EnjoyHint = function (_options) {
         that.resumeScript();
     };
 
-    init();
+    //var $meliscore_dashboard = $body.find("#" + activeTabId + "[data-meliskey='meliscore_dashboard']");
+
+        //if ( melisDashBoardDragnDrop.countGsItems() === 0 && $meliscore_dashboard.length > 0 ) {
+            init();
+        //}
 };
 ;CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 
