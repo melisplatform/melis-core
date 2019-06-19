@@ -482,7 +482,7 @@ var melisDashBoardDragnDrop = {
     deleteWidget: function (el) {
         var self = this;
 
-        var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
+        var gridData = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
             $del = el,
             gsNode = $del.closest('.grid-stack-item').data('_gridstack_node');
 
@@ -494,7 +494,7 @@ var melisDashBoardDragnDrop = {
             function () {
 
                 // remove the item from the dashboard
-                grid.removeWidget(gsNode.el[0]);
+                gridData.removeWidget(gsNode.el[0]);
 
                 // check gridstack nodes positions and sizes
                 $items = gsNode._grid.container[0].children;
