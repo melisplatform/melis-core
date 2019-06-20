@@ -160,11 +160,6 @@ var melisDashBoardDragnDrop = {
                     "min-height": "840px"
                 });
             }
-
-            // check if enjoyhint element is found and its cookie is false then remove it and body tag overflow auto
-            if ( typeof dashboardNotify !== "undefined" && dashboardNotify.getCookie() === "false" ) {
-                dashboardNotify.removeEnjoyHintHtml();
-            }
     },
 
     dropWidget: function (widget) {

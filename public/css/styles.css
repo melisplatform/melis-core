@@ -816,7 +816,8 @@ body #newplugin-cont.show-menu{
     -ms-transition: .4s ease-in-out;
 }
 .navbar.main .left-menu{
-    z-index: 100;
+    /* z-index: 100; */
+    z-index: 102; /* fixes on desktop makes the melis platform clickable */
 }
 .navbar.main #melis-navtabs-container-outer.hide-res-menus{
     margin-top: -47px;

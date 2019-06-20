@@ -9,7 +9,8 @@
     overflow:hidden
 }
 .enjoyhint_hide{
-    display:none
+    display:none;
+
 }
 .enjoyhint_disable_events{
     position:absolute;
