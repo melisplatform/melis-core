@@ -29,10 +29,11 @@ class MelisFieldRow extends FormRow
 	    }
 	    
 	    if(!empty($element->getOption('tooltip'))){
-
-	        $element->setLabelOptions(['disable_html_escape' => true]);
-	        $label = $element->getLabel().'<i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$element->getOption('tooltip').'"></i>';
-	        $element->setLabel($label);
+            if (strpos($element->getOption('tooltip'), 'tr_') === false) {
+                $element->setLabelOptions(['disable_html_escape' => true]);
+                $label = $element->getLabel().'<i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$element->getOption('tooltip').'"></i>';
+                $element->setLabel($label);
+            }
 	    }
 	    
 	    if (!empty($element->getOption('open_tool'))){

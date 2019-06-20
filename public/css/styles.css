@@ -4345,3 +4345,8 @@ div#modal-user-management div.widget {
     max-width:100%;
     height:auto;
 }
+
+#melis-modals-container .modal-content .nav-tabs>li>a {
+    border: 0;
+    border-radius: 0;
+}
