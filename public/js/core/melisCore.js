@@ -9,11 +9,19 @@ var melisCore = (function(window){
     var version = "2.0.0";
 
     //CACHE SELECTORS =================================================================================================================
-    var $body = $("body");
-    var $navTabs = $("#melis-id-nav-bar-tabs");
-    var $flashMessenger = $("#flash-messenger");
-    var $centerContent = $("#melis-id-body-content-load");
-    var screenSize = jQuery(window).width();
+    var $body           = $("body"),
+        $navTabs        = $("#melis-id-nav-bar-tabs"),
+        $flashMessenger = $("#flash-messenger"),
+        $centerContent  = $("#melis-id-body-content-load"),
+        screenSize      = jQuery(window).width(),
+
+    // responsive menu 767px, tablet and phone
+        $header         = $("#id_meliscore_header"),
+        $res            = $("#res-page-cont"),
+        $resArrow       = $("#res-page-cont i"),
+        $tabConOuter    = $("#melis-navtabs-container-outer"),
+        $tabConInner    = $("#melis-navtabs-container-inner"),
+        $tabArrowTop    = $("#tab-arrow-top");
 
     // MAIN FUNCTIONS =================================================================================================================
 
@@ -187,11 +195,12 @@ var melisCore = (function(window){
         if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
         $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
     });
+
     $body.on("click", "#clearNotifBtn", function(){
         clearFlashMessages();
     });
 
-    function  clearFlashMessages() {
+    function clearFlashMessages() {
         $.ajax({
             type: 'GET',
             url: '/melis/MelisCore/MelisFlashMessenger/clearFlashMessage',
@@ -231,7 +240,8 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard(){
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"}, '', function() {
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
+            // fixes grid stack issue [Cannot set property '_grid' of undefined + grid stack]
             melisDashBoardDragnDrop.closeDBPlugSidebar();
         });
     }
@@ -321,6 +331,10 @@ var melisCore = (function(window){
         if(screenSize <= 768){
             $("#res-page-cont").trigger('click');
             $("#res-page-cont i").removeClass("move-arrow");
+
+            if ( $tabArrowTop.length ) {
+                $tabArrowTop.removeClass("hide-arrow");
+            }
 
             $('html, body').animate({scrollTop:0},500);
         }
@@ -514,12 +528,6 @@ var melisCore = (function(window){
         $body.removeClass('sidebar-mini');
     });
 
-    // responsive menu functionalities
-    $body.on("click", "#res-page-cont", function(){
-        $("#melis-id-nav-bar-tabs").slideToggle(300);
-        $("#res-page-cont i").toggleClass("move-arrow");
-    });
-
     // toggle sidebar menu
     $body.on("click", "#sidebar-menu", sidebarMenuClick);
 
@@ -541,7 +549,7 @@ var melisCore = (function(window){
     // close all open tab
     $body.on('click', '#close-all-tab', closedOpenTabs);
 
-    //$body.on("click", '.melis-core-dashboard-filter-btn', disableShowPlugLists);
+    // $body.on("click", '.melis-core-dashboard-filter-btn', disableShowPlugLists);
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
@@ -551,7 +559,6 @@ var melisCore = (function(window){
      */
 
     var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
-
     var dashboardTooltip = {
         placement: pos,
         delay: {
@@ -567,13 +574,9 @@ var melisCore = (function(window){
      * For blinking issue on hover
      */
     $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
-
         $(this).children(".melis-plugin-tooltip").stop().fadeIn();
-
     }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
-
         $(this).children(".melis-plugin-tooltip").stop().fadeOut();
-
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
@@ -591,14 +594,22 @@ var melisCore = (function(window){
      * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
      * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
      */
-    $body.on("click", "#melisDashBoardPluginBtn", function() {
+    $body.on("click", "#melisDashBoardPluginBtn", showToggleDashboardPluginMenu);
+
+    // this function is called from render-dashboard-plugins.phtml and it is an update on this js file
+    function showToggleDashboardPluginMenu() {
         var $btn    = $("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $gs     = $body.find("#"+activeTabId+" .grid-stack"),
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = ($gs.width() + $box.width()); // for new icon
-
+            
             $box.toggleClass("shown");
+
+            // responsive main tab menu button
+            if ( $tabArrowTop.length && screenSize <= 767 ) {
+                $tabArrowTop.toggleClass("hide-arrow");
+            }
 
             if ( $box.hasClass("shown") ) {
                 $gs.animate({
@@ -609,6 +620,31 @@ var melisCore = (function(window){
                     width: nWidth
                 }, 3);
             }
+    }
+
+    // responsive menu functionalities
+    $body.on("click", "#res-page-cont", function() {
+        $("#melis-id-nav-bar-tabs").slideToggle(300);
+        $tabConOuter.addClass("hide-res-menus");
+        $resArrow.toggleClass("move-arrow");
+    });
+
+    // new responsive menu behavior as per http://mantis.melistechnology.fr/view.php?id=3849
+    $body.on("click", "#res-page-cont i", function() {
+        $tabArrowTop.removeClass("hide-arrow");
+        $tabConOuter.addClass("hide-res-menus");
+        $resArrow.toggleClass("move-arrow");
+    });
+
+    // responsive menu arrow button 767px and below for showing/hiding content main tabs
+    $body.on("click", "#tab-arrow-top", function() {
+        var $this = $(this);
+
+            $tabConInner.show();
+
+            $res.trigger("click");
+
+            $tabConOuter.removeClass("hide-res-menus");
     });
 
     function showPlugLists() {
@@ -679,7 +715,7 @@ var melisCore = (function(window){
 
 
     // WINDOW RESIZE FUNCTIONALITIES ========================================================================================================
-    $(window).resize(function(){
+    $(window).resize(function() {
 
         screenSize = jQuery(window).width();
 
@@ -710,7 +746,7 @@ var melisCore = (function(window){
             $("#res-page-cont i").removeClass("move-arrow");
 
         }
-        else{
+        else {
 
             $body.removeClass("sidebar-mini");
 
@@ -728,24 +764,10 @@ var melisCore = (function(window){
 
          
         }
-
     });
 
     // WINDOW SCROLL FUNCTIONALITIES ========================================================================================================
-    if(screenSize <= 767){
-
-        jQuery(window).scroll(function(){
-            // show or hide menu when scrolling
-            if (jQuery(window).scrollTop() > 100 && screenSize <= 767){
-                $navTabs.slideUp();
-                $("#res-page-cont i").removeClass("move-arrow");
-                $("#melis-navtabs-container-outer").addClass("hide-res-menus");
-            }
-            else{
-                $("#melis-navtabs-container-outer").removeClass("hide-res-menus");
-            }
-        });
-
+    if( screenSize <= 767 ) {
         // move plugins to another <div>
         $("#id_meliscore_header .navbar-right > li").each(function(key, value){
             $(this).children("a").append("<span class='title'>"+ $(this).data("title") +"</span>");
@@ -802,7 +824,6 @@ var melisCore = (function(window){
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
+        showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu // update on this js file, since dashboard notification
     };
-
-
 })(window);

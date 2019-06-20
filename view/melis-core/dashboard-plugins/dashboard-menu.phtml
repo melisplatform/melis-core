@@ -71,7 +71,7 @@
                                                         <span class="melis-plugins-icon-new new-plugin-indicator">NEW!</span>
                                                     </div>
                                                 <?php $maxWidthClass2nd = "module-name";} ?>
-                                                <span class="<?= $maxWidthClass2nd ?>">
+                                                <span class="<?= $maxWidthClass2nd ?>" title="<?= $this->translate('tr_PluginSection_'.strtolower($moduleName)); ?>">
                                                     <?= $this->translate('tr_PluginSection_'.strtolower($moduleName)); ?>
                                                 </span>
                                                 <i class="fa fa-angle-down arrow-indicator"></i>
@@ -80,7 +80,7 @@
                                                 <?php foreach ($plugins as $pluginName => $conf) { ?>
                                                     <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
                                                         <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
-                                                        <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="img-responsive">
+                                                        <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="dashboard-img-responsive">
                                                         <?php 
                                                             $hasNewPlugins = "";
                                                             if (in_array($moduleName,$moduleHasNewPlugins)) {
@@ -99,7 +99,7 @@
                                         <?php foreach ($plugins as $pluginName => $conf) { ?>
                                             <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
                                                 <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
-                                                <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="img-responsive">
+                                                <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="dashboard-img-responsive">
                                                 <?php 
                                                     $hasNewPlugins = "";
                                                     if (in_array($moduleName,$moduleHasNewPlugins)) {
@@ -121,7 +121,7 @@
                 <?php }?>
             <?php } else { ?>
                 <div class="no-plugin-on-menu">
-                    <span><?= $this->translate('tr_melisdashboardplugin_plugin_no_plugin_on_menu'); ?></span>
+                    <p><?= $this->translate('tr_meliscore_melis_dashboard_no_access'); ?></p>
                 </div>
             <?php } ?>
         </div>

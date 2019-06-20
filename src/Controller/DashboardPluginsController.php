@@ -81,7 +81,7 @@ class DashboardPluginsController extends AbstractActionController
         // put section of dashboard plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         // organized plugins or put them into their respective sections
-        $plugins = $this->organizedPluginsBySection($plugins);
+        $plugins = array_filter($this->organizedPluginsBySection($plugins));
         // get the latest plugin installed
         $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
         // for new plugin notifications
@@ -104,12 +104,19 @@ class DashboardPluginsController extends AbstractActionController
     public function renderDashboardPluginsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        
+
+        /** @var \MelisCore\Service\MelisCoreDashboardPluginsRightsService $dashboardPluginsService */
+        $dashboardPluginsService = $this->getServiceLocator()->get('MelisCoreDashboardPluginsService');
+        $hasPlugins = $dashboardPluginsService->hasPlugins();
+
         // Dashboard ID
         $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_toolstree_section_dashboard');
+
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->dashboardId = $dashboardId;
+        $view->hasPlugins = $hasPlugins;
+
         return $view;
     }
     
