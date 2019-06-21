@@ -28860,12 +28860,7 @@ var melisCore = (function(window){
             translations.tr_meliscore_tool_user_reset_rights,
             translations.tr_meliscmsnews_common_label_reset_rights_msg,
             function () {
-                var tree = $("#rights-fancytree").fancytree("getTree");
-                tree.findAll(function(node){
-                    if(node.isSelected() === true){
-                        node.setSelected(false);
-                    }
-                });
+                resetUserRights();
             });
 
         melisCoreTool.done("#btnResetRights");
@@ -28890,6 +28885,38 @@ var melisCore = (function(window){
 
         melisCoreTool.done("#btnResetRightsNew");
     });
+
+    function resetUserRights () {
+        var tree = $("#rights-fancytree").fancytree("getTree");
+        tree.findAll(function(node){
+            if(node.isSelected() === true){
+                node.setSelected(false);
+            }
+        });
+        var formData= new FormData();
+        formData.append("usr_id", $("#edituserid").html());
+        var ctr = 0;
+        $.each(userRightsData, function (i, e) {
+            $.each(e, function (a, b) {
+                formData.append(a, JSON.stringify(userRightsData[ctr]));
+            });
+            ctr++;
+        });
+        $.ajax({
+            type: 'POST',
+            url: '/melis/MelisCore/ToolUser/resetUserRights',
+            data: formData,
+            processData: false,
+            cache: false,
+            contentType: false,
+            dataType: 'json',
+        }).done(function (data) {
+            if(data.success)
+                melisHelper.zoneReload("id_meliscore_leftmenu","meliscore_leftmenu");
+        }).fail(function () {
+
+        });
+    }
 
     $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
         if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
