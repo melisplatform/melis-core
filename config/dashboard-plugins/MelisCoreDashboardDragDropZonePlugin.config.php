@@ -18,10 +18,10 @@ return array(
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
 
                     // display notify / page walkthrough
-                    //'/MelisCore/assets/components/plugins/enjoyhint/js/enjoyhint.js',
-                    //'/MelisCore/assets/components/plugins/enjoyhint/js/jquery.enjoyhint.js',
-                    //'/MelisCore/assets/components/plugins/enjoyhint/js/kinetic.min.js',
-                    '/MelisCore/assets/components/plugins/enjoyhint/js/all.js',
+                    '/MelisCore/assets/components/plugins/enjoyhint/js/enjoyhint.js',
+                    '/MelisCore/assets/components/plugins/enjoyhint/js/jquery.enjoyhint.js',
+                    '/MelisCore/assets/components/plugins/enjoyhint/js/kinetic.min.js',
+                    //'/MelisCore/assets/components/plugins/enjoyhint/js/all.js',
 
                     '/MelisCore/js/core/gridstack.init.js',
 

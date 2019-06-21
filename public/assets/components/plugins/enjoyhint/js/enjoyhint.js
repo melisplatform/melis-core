@@ -135,7 +135,7 @@ var EnjoyHint = function (_options) {
                 that.clear();
             }, 250);
 
-            $body.scrollTo(step_data.selector, step_data.scrollAnimationSpeed || 250, {offset: -100});
+            //$body.scrollTo(step_data.selector, step_data.scrollAnimationSpeed || 250, {offset: -100});
 
             setTimeout(function () {
 
@@ -341,7 +341,7 @@ var EnjoyHint = function (_options) {
     /********************* PUBLIC METHODS ***************************************/
 
     $(window).on('resize.enjoy_hint_permanent', function() {
-        if ($event_element[0]) {
+        if ($event_element) {
             $body.enjoyhint('redo_events_near_rect', $event_element[0].getBoundingClientRect());
         }
     });

@@ -158,20 +158,4 @@ var dashboardNotify = (function() {
 $(function() {
     // init
     dashboardNotify.init();
-    
-    // setTimeout to run enjoyhint
-    /* setTimeout(function() {
-        // local variables upon document ready
-        var $body           = $("body"),
-            $gs             = $body.find("#"+activeTabId+" .grid-stack"),
-            $gsItem         = $gs.find(".grid-stack-item"),
-            $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box");
-            shown           = $pluginBtnBox.hasClass("shown");
-
-            if ( $gsItem.length === 0 && shown === true ) {
-                dashboardNotify.render();
-            } else {
-                dashboardNotify.removeEnjoyHintHtml();
-            }
-    }, 1000); */
 });
