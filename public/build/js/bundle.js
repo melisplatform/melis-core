@@ -36779,9 +36779,10 @@ var dashboardNotify = (function($) {
         removeEnjoyHintHtml         :       removeEnjoyHintHtml
     };
 
-})($_); // $_ for var $_ = jQuery.noConflict(true) on public/assets/components/plugins/enjoyhint/js/all.js which uses jQuery v3.3.1 for enjoyhint
+})($_);
 
-$(function() {
+(function($) {
     // init
     dashboardNotify.init();
-});
+})($_);
+// $_ for var $_ = jQuery.noConflict(true) on public/assets/components/plugins/enjoyhint/js/all.js which uses jQuery v3.3.1 for enjoyhint
