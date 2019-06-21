@@ -219,7 +219,7 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
                 that.kinetic_stage.add(that.layer);
 
                 $(window).on('resize.enjoy_hint', function() {
-                    if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
+                    if ( !( $(that.stepData.enjoyHintElementSelector).is(":visible") ) ) {
 
                         that.stopFunction();
                         $(window).off('resize.enjoy_hint');

@@ -1,4 +1,4 @@
-var dashboardNotify = (function() {
+var dashboardNotify = (function($) {
     /**
      * To make a "persistent cookie" (a cookie that "never expires"),
      * we need to set a date/time in a distant future (one that possibly exceeds the user's
@@ -153,7 +153,7 @@ var dashboardNotify = (function() {
         removeEnjoyHintHtml         :       removeEnjoyHintHtml
     };
 
-})();
+})($_); // $_ for var $_ = jQuery.noConflict(true) on public/assets/components/plugins/enjoyhint/js/all.js which uses jQuery v3.3.1 for enjoyhint
 
 $(function() {
     // init
