@@ -17,13 +17,13 @@ return array(
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.js',
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
 
+                    '/MelisCore/js/core/gridstack.init.js',
+
                     // display notify / page walkthrough
                     '/MelisCore/assets/components/plugins/enjoyhint/js/enjoyhint.js',
                     '/MelisCore/assets/components/plugins/enjoyhint/js/jquery.enjoyhint.js',
                     '/MelisCore/assets/components/plugins/enjoyhint/js/kinetic.min.js',
                     //'/MelisCore/assets/components/plugins/enjoyhint/js/all.js',
-
-                    '/MelisCore/js/core/gridstack.init.js',
 
                     // page walkthrough
                     '/MelisCore/js/core/dashboard-notify.js'
