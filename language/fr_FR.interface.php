@@ -124,6 +124,8 @@ return [
 
     'tr_meliscore_tool_user_update_success_info' => 'Infos utilisateur mises à jour avec succès.',
     'tr_meliscore_tool_user_update_fail_info' => 'Echec de mise à jour des infos utilisateur',
+    'tr_meliscore_tool_user_reset_rights_success_info' => 'Droits d\'utilisateur réinitialisés avec succès\'',
+    'tr_meliscore_tool_user_reset_rights_fail_info' => 'Impossible de réinitialiser les droits d\'utilisateur',
 
     'tr_meliscore_tool_user_delete' => 'Suppression utilisateur',
     'tr_meliscore_tool_user_delete_msg' => 'Etes-vous sur de vouloir supprimer cet utilisateur?',

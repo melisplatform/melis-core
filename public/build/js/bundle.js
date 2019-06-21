@@ -28911,8 +28911,13 @@ var melisCore = (function(window){
             contentType: false,
             dataType: 'json',
         }).done(function (data) {
-            if(data.success)
+            if(data.success){
                 melisHelper.zoneReload("id_meliscore_leftmenu","meliscore_leftmenu");
+                // call melisOkNotification
+                melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46' );
+                // update flash messenger values
+                melisCore.flashMessenger();
+            }
         }).fail(function () {
 
         });

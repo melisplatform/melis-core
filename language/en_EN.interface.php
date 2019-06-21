@@ -121,6 +121,8 @@ return [
 
     'tr_meliscore_tool_user_update_success_info' => 'User\'s info updated successfully',
     'tr_meliscore_tool_user_update_fail_info' => 'Unable to update User\'s information',
+    'tr_meliscore_tool_user_reset_rights_success_info' => 'User\'s rights reset successfully',
+    'tr_meliscore_tool_user_reset_rights_fail_info' => 'Unable to reset User\'s rights',
 
     'tr_meliscore_tool_user_delete' => 'Remove User',
     'tr_meliscore_tool_user_delete_msg' => 'Are you sure you want to remove this user?',
