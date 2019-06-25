@@ -239,7 +239,21 @@ var melisHelper = (function(){
     }
 
     // CLOSE TAB AND REMOVE ===========================================================================================================
-    function tabClose(ID){
+    function tabClose(ID, fromGroup){
+
+        fromGroup = (typeof fromGroup != 'undefined') ? fromGroup : false;
+
+        /**
+         * if there is no second parameter pass,
+         * try to check manually if it is a
+         * sub tab
+         */
+        if(!fromGroup){
+            if($(this).closest('ul').hasClass('nav-group-dropdown')){
+                fromGroup = true;
+            }
+        }
+
         var tabContentID =  (typeof ID === 'string') ? ID :  $(this).data("id");
         var currentParent = $(".tabsbar a[data-id='"+tabContentID+"']").parent("li");
         var nextActiveTab = currentParent.next("li").children().data("id");
@@ -321,9 +335,12 @@ var melisHelper = (function(){
 
             if( leftOffset === -1 ) {}
             else if( leftOffset !== 0 ) {
-                $("#melis-id-nav-bar-tabs").animate({
-                    left: (leftOffset + removedWidth)
-                }, 0);
+                //check if removed tab is not from group(sub tab) to avoid moving the other tabs
+                if(!fromGroup) {
+                    $("#melis-id-nav-bar-tabs").animate({
+                        left: (leftOffset + removedWidth)
+                    }, 0);
+                }
             }
             /*else if ( leftOffset === 0 ) {
                 $("#melis-id-nav-bar-tabs").animate({
