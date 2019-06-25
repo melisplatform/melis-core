@@ -17,8 +17,14 @@ return [
     'tr_meliscore_dashboard' => 'Dashboard',
     'tr_meliscore_melis_dashboard' => 'Melis Dashboard',
     'tr_meliscore_center_dashboard_menu' => 'Dashboard plugins',
-
+    'tr_meliscore_melis_dashboard_no_plugins_to_load' => "<strong>Your dashboard is currently empty</strong>. <br>Please, use the menu on the right to drag'n'drop the plugins you would like to use and customize your dashboard.",
+    'tr_meliscore_melis_dashboard_no_access' => "Your <strong>rights currently don't allow you to use dashboard plugins</strong>. <br>Please contact your administrator if you want to use the dashboard.",
     'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
+    'tr_meliscore_dashboard_notify_step_1_msg' => "Click the button to see the list <br>of available plugins for your dashboard.",
+    'tr_meliscore_dashboard_notify_step_2_msg' => "Click on a section to see the available plugins in this category, <br>then drag'n'drop to your dashboard to customize it.",
+    'tr_meliscore_dashboard_notify_steps_general_next_text' => "Next",
+    'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Skip help",
+    'tr_meliscore_dashboard_notify_step_2_next_text' => "I understood, close",
 
     'tr_meliscore_meliscore' => 'MelisCore',
     'tr_meliscore_header' => 'Header',
@@ -698,7 +704,9 @@ return [
 
     'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
     'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.',
-    'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => 'Your account\'s rights do not allow you to use the dashboard plugins. Please contact your admin if needed.',
     'tr_meliscore_remove_all_plugins' => 'Removal of all dashboard plugins',
+
+    'tr_meliscore_tool_creatrion_designs' => 'Tool creation & Design',
+    'tr_meliscore_tool_tools' => 'Tools',
     ];
 ?>

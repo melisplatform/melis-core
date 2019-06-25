@@ -104,12 +104,19 @@ class DashboardPluginsController extends AbstractActionController
     public function renderDashboardPluginsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        
+
+        /** @var \MelisCore\Service\MelisCoreDashboardPluginsRightsService $dashboardPluginsService */
+        $dashboardPluginsService = $this->getServiceLocator()->get('MelisCoreDashboardPluginsService');
+        $hasPlugins = $dashboardPluginsService->hasPlugins();
+
         // Dashboard ID
         $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_toolstree_section_dashboard');
+
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->dashboardId = $dashboardId;
+        $view->hasPlugins = $hasPlugins;
+
         return $view;
     }
     

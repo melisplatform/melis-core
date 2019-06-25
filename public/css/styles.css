@@ -768,7 +768,8 @@ body #newplugin-cont.show-menu{
     overflow-y: auto;
     max-height: 250px;
     position: relative;
-    width: 100%;
+    width: 100%;;
+    z-index: 101;
 }
 #res-page-cont{
     border-bottom: 1px solid #9e2b2b;
@@ -815,7 +816,8 @@ body #newplugin-cont.show-menu{
     -ms-transition: .4s ease-in-out;
 }
 .navbar.main .left-menu{
-    z-index: 100;
+    /* z-index: 100; */
+    z-index: 102; /* fixes on desktop makes the melis platform clickable */
 }
 .navbar.main #melis-navtabs-container-outer.hide-res-menus{
     margin-top: -47px;
@@ -3877,6 +3879,7 @@ div#modal-user-management div.widget {
     height: 100%;
 }
 
+.select2-container--default .select2-selection--single .select2-selection__arrow strong,
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
     border-color: #555555 transparent transparent transparent;
     border-width: 6px 3px 0 3px;
@@ -4084,12 +4087,16 @@ div#modal-user-management div.widget {
     cursor: pointer;
 }
 
-.no-plugin-on-menu{
-    color: #fff;
-    padding: 5px;
+/*
+ * Dashboard User Messages Notifications / Warnings
+ */
+.no-plugin-on-menu {
+    padding: 15px;
 }
-
-.no-rights-container{
+.no-plugin-on-menu p {
+    color: #fff;
+}
+.no-rights-container {
     padding: 10px;
 }
 
@@ -4186,14 +4193,14 @@ div#modal-user-management div.widget {
         width: calc(100% - 48px);
     }
 
-    #tab-arrow-top.hide-arrow {
+    .hide-arrow {
         margin-top: -24px;
     }
 
     #tab-arrow-top {
         background: #e61c23;
         padding: 0 6px;
-        margin-top: -1px;
+        margin-top: 0;
         color: #fff !important;
         height: 24px;
 
@@ -4206,6 +4213,7 @@ div#modal-user-management div.widget {
     #tab-arrow-top .fa {
         position: relative;
     }
+    
     #tab-arrow-top .fa:before {
         position: relative;
         top: -6px;
@@ -4337,4 +4345,9 @@ div#modal-user-management div.widget {
 .dashboard-img-responsive {
     max-width:100%;
     height:auto;
+}
+
+#melis-modals-container .modal-content .nav-tabs>li>a {
+    border: 0;
+    border-radius: 0;
 }
