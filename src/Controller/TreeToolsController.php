@@ -47,6 +47,8 @@ class TreeToolsController extends AbstractActionController
 
         $appsConfig = $melisAppConfig->getItem($appconfigpath);
 
+//        var_dump($appsConfig);
+
 
         $orderInterface = $melisAppConfig->getOrderInterfaceConfig($melisKey);
         $tools = [];
@@ -71,28 +73,23 @@ class TreeToolsController extends AbstractActionController
 
                 if ($melisCoreRights->canAccess($key)) {
 
-                    $tools[$key] = [
-                        'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
-                        'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
-                        'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
-                        'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
-                        'toolsection_forward' => $toolSectionName['forward'] ?? [],
-                        'toolsection_children' => [],
-                        'toolsection_is_tool' => isset($toolSectionName['forward']) && !empty($toolSectionName['forward']) ? true : false,
-                    ];
+//                    var_dump($key);
+//
+//
+//                    if (!empty($toolSectionName['conf']['melisKey']))
+//                        if ($toolSectionName['conf']['melisKey'] == 'meliscommerce_toolstree_section')
+//                            print_r($toolSectionName);
 
+                    $secondLvlTools = [];
                     // Second level, tools
                     if (isset($toolSectionName['interface'])) {
                         foreach ($toolSectionName['interface'] as $keyTool => $toolName) {
                             $isToolNavChild = false;
 
-                            $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-cube';
-
-                            if ($icon) {
-                                $isNavChild = true;
-                            }
-
                             if ($melisCoreRights->canAccess($keyTool)) {
+
+                                $icon = (!empty($toolName['conf']['icon'])) ? $toolName['conf']['icon'] : 'fa-cube';
+
                                 $tools[$key]['toolsection_children'][$keyTool] = [
                                     'tool_id' => $toolName['conf']['id'] ?? $keyTool,
                                     'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
@@ -101,6 +98,8 @@ class TreeToolsController extends AbstractActionController
                                     'tool_melisKey' => $toolName['conf']['melisKey'] ?? $keyTool,
                                     'toolsection_is_tool' => isset($toolName['forward']) && !empty($toolName['forward']) ? true : false
                                 ];
+
+                                $isNavChild = true;
                             }
 
                             // add third level for tool others
@@ -130,15 +129,31 @@ class TreeToolsController extends AbstractActionController
                                                 ];
                                             }
                                         }
-
                                     }
-
                                 }
-
                             // }
+
                             $tools[$key]['toolsection_children'][$keyTool]['toolsection_has_nav_child'] = $isToolNavChild;
                         }
                     }
+
+                    if ($isNavChild || !empty($toolSectionName['conf']['icon'])){
+
+                        $toolConfig = [
+                            'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
+                            'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
+                            'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
+                            'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',
+                            'toolsection_forward' => $toolSectionName['forward'] ?? [],
+                            'toolsection_is_tool' => isset($toolSectionName['forward']) && !empty($toolSectionName['forward']) ? true : false,
+                        ];
+
+                        if (!empty($tools[$key]))
+                            $tools[$key] = array_merge($toolConfig, $tools[$key]);
+                        else
+                            $tools[$key] = $toolConfig;
+                    }
+
                 }
 
 
