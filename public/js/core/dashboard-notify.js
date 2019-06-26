@@ -1,4 +1,5 @@
 var dashboardNotify = (function() {
+    var eh = null;
     /**
      * To make a "persistent cookie" (a cookie that "never expires"),
      * we need to set a date/time in a distant future (one that possibly exceeds the user's
@@ -16,7 +17,7 @@ var dashboardNotify = (function() {
         $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']");
 
     // instantiate
-    var eh = new EnjoyHint({
+    eh = new EnjoyHint({
         onStart: function() {
             disablePluginsMenuButton();
         },
@@ -102,7 +103,7 @@ var dashboardNotify = (function() {
 
     // run enjoy hint script
     function runNotify() {
-        if ( $melisDashboard.length ) {
+        if ( $melisDashboard.hasClass("active") ) {
             eh.runScript();
         }
     }
