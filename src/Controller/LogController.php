@@ -131,13 +131,19 @@ class LogController extends AbstractActionController
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function renderLogsToolEditModalContentAction()
+    public function renderLogsToolExportModalContentAction()
     {
+        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $appConfigForm = $melisMelisCoreConfig->getItem("meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_export_form");
+        $factory = new \Zend\Form\Factory();
+        $form = $factory->createForm($appConfigForm);
+
         $melisKey = $this->params()->fromQuery('melisKey');
 
         $view = new ViewModel();
+        $view->form = $form;
         $view->melisKey = $melisKey;
-        $view->title = "tr_meliscore_logs_tool_edit_modal_title";
+        $view->title = "tr_meliscore_logs_tool_export_modal_title";
         return $view;
     }
 

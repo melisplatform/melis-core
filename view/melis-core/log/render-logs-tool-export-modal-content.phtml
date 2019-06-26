@@ -1,0 +1,76 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = $this->zoneconfig['conf']['id'];
+    $data_melisKey = $this->melisKey;
+
+    ?>
+
+<div class="modal-content">
+	<div class="modal-body padding-none">
+		<div class="wizard">
+			<div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
+                <div class="widget-head">
+                	<ul class="nav nav-tabs">
+                		<li class="active"><a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="glyphicons notes" data-toggle="tab" aria-expanded="true"><i></i><?php echo $this->translate($this->title); ?>
+                		</a></li>
+            		</ul>
+        		</div>
+        		<div class="widget-body innerAll inner-2x">
+        			<div class="tab-content">
+        				<div class="tab-pane active" id="<?= $id ?>">
+                            <div class="row">
+                                <?php
+                                echo $this->form()->openTag($this->form);
+                                echo $this->melisFieldCollection($this->form);
+                                echo $this->form()->closeTag();
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("body").find("#log_user").select2({
+            ajax: {
+                type: 'POST',
+                url: "/melis/MelisCore/ToolUser/getUsers",
+                dataType: 'json',
+                delay: 500,
+                data: function (params) {
+                    return {
+                        'search': params.term, // search term
+                        'page': params.page || 1, // pagination,
+                        'length': 5 // results shown per page,
+                    };
+                },
+                cache: true
+            },
+            width: '100%',
+            disabled: false,
+            language : {
+                noResults:function() {
+                    return translations.tr_melis_cms_user_selection_empty;
+                },
+                searching: function () {
+                    return translations.tr_melis_cms_user_searching;
+                }
+            },
+            allowClear : true,
+            placeholder: translations.tr_meliscms_form_common_Choose,
+        }).
+        // These following events were added to prevent select2 from opening when clearing
+        on('select2:unselecting', function() {
+            $(this).data('unselecting', true);
+        }).on('select2:opening', function(e) {
+            if ($(this).data('unselecting')) {
+                $(this).removeData('unselecting');
+                e.preventDefault();
+            }
+        });
+    });
+</script>

@@ -20,8 +20,8 @@ $(function(){
 
 		var logTypeId = btn.data("typeid");
 
-		var zoneId = 'id_meliscore_logs_tool_edit_modal_content';
-		var melisKey = 'meliscore_logs_tool_edit_modal_content';
+		var zoneId = 'id_meliscore_logs_tool_export_modal_content';
+		var melisKey = 'meliscore_logs_tool_export_modal_content';
 		var modalUrl = '/melis/MelisCore/Log/renderLogsToolModalContainer';
 		// requesitng to create modal and display after
     	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);

@@ -2372,6 +2372,43 @@ return [
                                 ],
                             ],
                         ],
+                        'meliscore_logs_tool_log_export_form' => [
+                            'attributes' => [
+                                'name' => 'logExportForm',
+                                'id' => 'logExportForm',
+                                'method' => '',
+                                'action' => '',
+                                'class' => 'logExportForm',
+                            ],
+                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => [
+                                array(
+                                    'spec' => array(
+                                        'name' => 'log_user',
+                                        'type' => 'Select',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_user',
+                                            'tooltip' => 'tr_meliscore_log_export_user tooltip',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_user',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_user',
+                                        ),
+                                    ),
+                                ),
+
+                            ],
+                            'input_filter' => [
+                                'log_user' => array(
+                                    'name' => 'log_user',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                ),
+                            ],
+                        ],
                     ],
                 ],
                 // end Language tool

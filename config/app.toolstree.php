@@ -587,14 +587,13 @@ return [
                                                         ),
                                                         'meliscore_logs_tool_edit_modal_content' => array(
                                                             'conf' => array(
-                                                                'id' => 'id_meliscore_logs_tool_edit_modal_content',
-                                                                'name' => 'tr_meliscore_logs_tool_edit_modal_content',
-                                                                'melisKey' => 'meliscore_logs_tool_edit_modal_content',
+                                                                'id' => 'id_meliscore_logs_tool_export_modal_content',
+                                                                'melisKey' => 'meliscore_logs_tool_export_modal_content',
                                                             ),
                                                             'forward' => array(
                                                                 'module' => 'MelisCore',
                                                                 'controller' => 'Log',
-                                                                'action' => 'render-logs-tool-edit-modal-content',
+                                                                'action' => 'render-logs-tool-export-modal-content',
                                                                 'jscallback' => '',
                                                                 'jsdatas' => array()
                                                             )
