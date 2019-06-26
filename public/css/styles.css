@@ -4193,10 +4193,6 @@ div#modal-user-management div.widget {
         width: calc(100% - 48px);
     }
 
-    .hide-arrow {
-        margin-top: -24px;
-    }
-
     #tab-arrow-top {
         background: #e61c23;
         padding: 0 6px;
@@ -4208,6 +4204,10 @@ div#modal-user-management div.widget {
         right: 10px;
         top: 47px;
         z-index: 100;
+    }
+
+    #tab-arrow-top.hide-arrow {
+        margin-top: -24px;
     }
 
     #tab-arrow-top .fa {
