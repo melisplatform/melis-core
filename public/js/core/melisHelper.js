@@ -353,7 +353,7 @@ var melisHelper = (function(){
 
         // [ Mobile ] when closing a page
         if( melisCore.screenSize <= 767 ){
-            var $tabArrowTop = $("tab-arrow-top");
+            var $tabArrowTop = $("#tab-arrow-top");
 
                 $("#res-page-cont").trigger("click");
 
@@ -361,6 +361,10 @@ var melisHelper = (function(){
                 if( $navTabs.children("li").length === 0){
                     var empty = '<strong>(' + translations.tr_meliscore_empty +')</strong>';
                     $("#res-page-cont span").append(empty);
+                }
+
+                if ( $tabArrowTop.length ) {
+                    $tabArrowTop.removeClass("hide-arrow");
                 }
         }
 
@@ -438,7 +442,7 @@ var melisHelper = (function(){
 
             // [ Mobile ] when opening a page
             if( melisCore.screenSize <= 767 ){
-                var $tabArrowTop = $("tab-arrow-top");
+                var $tabArrowTop = $("#tab-arrow-top");
 
                     // check if there are no contents open
                     if( $navTabs.children("li").length > 0){
@@ -454,6 +458,10 @@ var melisHelper = (function(){
                     // slide up the dropdown menu
                     $("#melis-id-nav-bar-tabs").slideUp(300);
                     $("#res-page-cont i").removeClass("move-arrow");
+
+                    if ( $tabArrowTop.length ) {
+                        $tabArrowTop.removeClass("hide-arrow");
+                    }
             }
 
             var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";
