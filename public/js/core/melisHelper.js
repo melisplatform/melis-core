@@ -255,6 +255,7 @@ var melisHelper = (function(){
 
         var navBox = currentParent.closest(".scroll");
         var hasdropdown = $(navBox).find(".nav-group-dropdown");
+
         if(currentParent.hasClass("active-parent")) {
             var tabMenuGroup = currentParent.find(".nav-group-dropdown");
             tabMenuGroup.find("li a.tab-element").each(function() {
@@ -335,13 +336,15 @@ var melisHelper = (function(){
 
         // [ Mobile ] when closing a page
         if( melisCore.screenSize <= 767 ){
-            $("#res-page-cont").trigger("click");
+            var $tabArrowTop = $("tab-arrow-top");
 
-            // check if there are no contents open
-            if( $navTabs.children("li").length === 0){
-                var empty = '<b>(' + translations.tr_meliscore_empty +')</b>';
-                $("#res-page-cont span").append(empty);
-            }
+                $("#res-page-cont").trigger("click");
+
+                // check if there are no contents open
+                if( $navTabs.children("li").length === 0){
+                    var empty = '<strong>(' + translations.tr_meliscore_empty +')</strong>';
+                    $("#res-page-cont span").append(empty);
+                }
         }
 
         // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
@@ -350,7 +353,6 @@ var melisHelper = (function(){
 
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
-
         //Show the close(X) button on header
         if(melisKey != 'meliscore_dashboard'){
             $("#close-all-tab").show();
@@ -419,20 +421,22 @@ var melisHelper = (function(){
 
             // [ Mobile ] when opening a page
             if( melisCore.screenSize <= 767 ){
-                // check if there are no contents open
-                if( $navTabs.children("li").length > 0){
-                    $("#res-page-cont span b").remove();
-                }
+                var $tabArrowTop = $("tab-arrow-top");
 
-                // close sidebar after opening a page from it
-                $body.removeClass('sidebar-mini');
-                // hide sidebar footer when opening tab
-                $("#id_meliscore_footer").addClass('slide-left');
-                $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
+                    // check if there are no contents open
+                    if( $navTabs.children("li").length > 0){
+                        $("#res-page-cont span b").remove();
+                    }
 
-                // slide up the dropdown menu
-                $("#melis-id-nav-bar-tabs").slideUp(300);
-                $("#res-page-cont i").removeClass("move-arrow");
+                    // close sidebar after opening a page from it
+                    $body.removeClass('sidebar-mini');
+                    // hide sidebar footer when opening tab
+                    $("#id_meliscore_footer").addClass('slide-left');
+                    $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
+
+                    // slide up the dropdown menu
+                    $("#melis-id-nav-bar-tabs").slideUp(300);
+                    $("#res-page-cont i").removeClass("move-arrow");
             }
 
             var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";
@@ -560,7 +564,7 @@ var melisHelper = (function(){
                         	    eval(value);
                         	}
                         	catch(err) {
-                        	    console.log(err);
+                        	    // console.log(err);
                         	}
                         });
                     });

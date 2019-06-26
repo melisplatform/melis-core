@@ -44,30 +44,18 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	    if (!empty($dashboardId) && !is_null($userId))
 	    {
 	        $plugins = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->current();
-	        
+
 	        if (!empty($plugins))
 	        {
 	            $configs = $this->getServiceLocator()->get('config');
-	            
 	            $plugins = simplexml_load_string($plugins->d_content);
 	            
 	            if (!empty($plugins->plugin))
 	            {
-	                foreach ($configs['plugins'] As $module => $config)
-	                {
-	                    foreach ($plugins->plugin As $xKey => $xVal)
-	                    {
-	                        if (!empty($config['dashboard_plugins'][(string)$xVal->attributes()->plugin]))
-	                        {
-	                            $pluginConfig = $config['dashboard_plugins'][(string)$xVal->attributes()->plugin];
-	                            
-	                            if (!empty($pluginConfig['jscallback']))
-	                            {
-	                                array_push($jsCallBacks, $pluginConfig['jscallback']);
-	                            }
-	                        }
-	                    }
-	                }
+	                if(!empty($configs['plugins']['meliscore']['interface']['melis_dashboardplugin']['interface']['melisdashboardplugin_section']['interface'])) {
+	                    $pluginLists = $configs['plugins']['meliscore']['interface']['melis_dashboardplugin']['interface']['melisdashboardplugin_section']['interface'];
+                        $this->getPluginCallbacks($plugins, $pluginLists, $configs,$jsCallBacks);
+                    }
 	            }
 	        }
 	    }
@@ -100,4 +88,34 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	    
 	    return $plugins;
 	}
+
+    /**
+     * @param $plugins
+     * @param $pluginLists
+     * @param $configs
+     * @param $jsCallBacks
+     */
+    private function getPluginCallbacks($plugins, $pluginLists, $configs, &$jsCallBacks)
+    {
+        foreach ($pluginLists As $plugin => $config) {
+            foreach ($plugins->plugin As $xKey => $xVal) {
+                if ($plugin == (string)$xVal->attributes()->plugin) {
+                    $pluginConfig = $config;
+                    if(!empty($pluginConfig['datas'])) {
+                        if (!empty($pluginConfig['datas']['jscallback'])) {
+                            array_push($jsCallBacks, $pluginConfig['datas']['jscallback']);
+                        }
+                    }else{
+                        if (!empty($pluginConfig['conf']['type'])) {
+                            $pluginType = explode('/', $pluginConfig['conf']['type']);
+                            if(!empty($configs['plugins'][$pluginType[1]]['interface'])){
+                                $typePLugins = $configs['plugins'][$pluginType[1]]['interface'];
+                                $this->getPluginCallbacks($plugins, $typePLugins, $configs,$jsCallBacks);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -10,6 +10,7 @@ class MelisCoreDashboardPluginsRightsService implements MelisCoreRightsServiceIn
 {
     public $serviceLocator;
 
+    const DASHBOARD_PLUGIN_ROOT = 'melis_dashboardplugin_root';
     const MELISCORE_DASHBOARDPLUGIN_PREFIX = 'melis_dashboardplugin';
     const MELISDASHBOARDPLUGIN_PREFIX_TOOLS = 'melisdashboardplugin_section';
 
@@ -22,6 +23,31 @@ class MelisCoreDashboardPluginsRightsService implements MelisCoreRightsServiceIn
     public function getServiceLocator()
     {
         return $this->serviceLocator;
+    }
+
+    public function hasPlugins(): bool
+    {
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $xmlRights = $melisCoreAuth->getAuthRights();
+        $rightsObj = simplexml_load_string(trim($xmlRights));
+        if (empty($rightsObj)) {
+            return false;
+        }
+
+        /** Find dashboard root */
+        $key = self::MELISCORE_DASHBOARDPLUGIN_PREFIX;
+        $plugins = empty($rightsObj->$key->id) ? [] : (array)$rightsObj->$key->id;
+        $root = array_search(self::DASHBOARD_PLUGIN_ROOT, $plugins);
+
+        if (is_int($root)) {
+            return true;
+        }
+
+        if (empty($plugins)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public function canAccess($key): bool
@@ -152,7 +178,7 @@ class MelisCoreDashboardPluginsRightsService implements MelisCoreRightsServiceIn
     {
         $xmlRights = '';
 
-        $dashboardPlugins = json_decode($datas['melis_dashboardplugin_root'], true);
+        $dashboardPlugins = json_decode($datas[self::DASHBOARD_PLUGIN_ROOT], true);
 
         // parent node
         $xmlRights .= '<' . self::MELISCORE_DASHBOARDPLUGIN_PREFIX . '>' . PHP_EOL;

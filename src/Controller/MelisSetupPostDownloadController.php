@@ -160,6 +160,9 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                                         	</meliscustom_toolstree_section>
                                         	<id>meliscore_leftmenu_root</id>
                                         </meliscore_leftmenu>
+                                        <melis_dashboardplugin>
+                                            <id>melis_dashboardplugin_root</id>
+                                        </melis_dashboardplugin>
                                         </document>',
                     ]);
 
@@ -181,7 +184,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
                     }
 
                     // Dashboard
-                    $this->generateDashboardPlugins($userId);
+//                    $this->generateDashboardPlugins($userId);
 
 
                     $success = true;
@@ -208,84 +211,86 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
 
     /**
      * This method generate the dashboard plugins
-     * after the setup, this will take all the available dashboard plugins
-     * in every module and save to the newly user created
+     * after the setup, this will display the
+     * RecentUserActivityPlugin as default plugin
      */
     private function generateDashboardPlugins($userId = 1)
     {
-        $melisModules = $_SERVER['DOCUMENT_ROOT'].'/../vendor/melisplatform/';
-
-        $modulePlugins = array();
-
-        foreach (scandir($melisModules) As $val){
-            if (!in_array($val, array('.', '..'))){
-                if (is_dir($melisModules.$val.'/config/dashboard-plugins')){
-
-                    $modulePluginConfigs = $melisModules.$val.'/config/dashboard-plugins';
-                    if (is_dir($modulePluginConfigs)){
-                        foreach (scandir($modulePluginConfigs) As $conf){
-                            if (!in_array($conf, array('.', '..'))){
-
-                                $pluginConfig = require($modulePluginConfigs.'/'.$conf);
-                                if (is_array($pluginConfig['plugins'])){
-                                    /**
-                                     * Retrieving all available dashboard plugins in every module
-                                     * activated to the platform
-                                     */
-                                    foreach ($pluginConfig['plugins'] As $cKey => $cConf){
-                                        if(!empty($cConf['dashboard_plugins'])){
-                                            foreach ($cConf['dashboard_plugins'] As $pluginKey => $pluginConf){
-                                                // Skipping DragDrapZone plugin
-                                                if (!in_array($pluginKey, array('MelisCoreDashboardDragDropZonePlugin'))){
-                                                    $modulePlugins[$pluginKey] = $pluginConf;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        $melisModules = $_SERVER['DOCUMENT_ROOT'].'/../vendor/melisplatform/';
+//
+//        $modulePlugins = array();
+//
+//        foreach (scandir($melisModules) As $val){
+//            if (!in_array($val, array('.', '..'))){
+//                if (is_dir($melisModules.$val.'/config/dashboard-plugins')){
+//
+//                    $modulePluginConfigs = $melisModules.$val.'/config/dashboard-plugins';
+//                    if (is_dir($modulePluginConfigs)){
+//                        foreach (scandir($modulePluginConfigs) As $conf){
+//                            if (!in_array($conf, array('.', '..'))){
+//
+//                                $pluginConfig = require($modulePluginConfigs.'/'.$conf);
+//                                if (is_array($pluginConfig['plugins'])){
+//                                    /**
+//                                     * Retrieving all available dashboard plugins in every module
+//                                     * activated to the platform
+//                                     */
+//                                    foreach ($pluginConfig['plugins'] As $cKey => $cConf){
+//                                        if(!empty($cConf['dashboard_plugins'])){
+//                                            foreach ($cConf['dashboard_plugins'] As $pluginKey => $pluginConf){
+//                                                // Skipping DragDrapZone plugin
+//                                                if (!in_array($pluginKey, array('MelisCoreDashboardDragDropZonePlugin'))){
+//                                                    $modulePlugins[$pluginKey] = $pluginConf;
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         /**
          * Generating Dashboard Xml
+         * Making the RecentUserActivityPlugin
+         * the default loaded plugin
          */
         $pluginXml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<Plugins>%s'."\n".'</Plugins>';
         $pluginXmlData = '';
 
-        if (!empty($modulePlugins)){
+//        if (!empty($modulePlugins)){
             $pluginIdTime = time();
             $xAxis = 0;
             $yAxis = 0;
-            $ctr = 1;
-            foreach ($modulePlugins As $plugin => $conf){
-                $height = !empty($conf['height']) ? $conf['height'] : 6;
-                $width = !empty($conf['width']) ? $conf['width'] : 6;
+//            $ctr = 1;
+//            foreach ($modulePlugins As $plugin => $conf){
+//                $height = !empty($conf['height']) ? $conf['height'] : 6;
+//                $width = !empty($conf['width']) ? $conf['width'] : 6;
 
                 // Xml data of each plugin
-                $pluginXmlData .= "\n\t".'<plugin plugin="'.$plugin.'" plugin_id="'.$conf['plugin_id'].'_'.$pluginIdTime.'">'."\n";
+                $pluginXmlData .= "\n\t".'<plugin plugin="MelisCoreDashboardRecentUserActivityPlugin" plugin_id="RecentUserActivity_'.$pluginIdTime.'">'."\n";
                 $pluginXmlData .= "\t\t".'<x-axis><![CDATA['.$xAxis.']]></x-axis>'."\n";
                 $pluginXmlData .= "\t\t".'<y-axis><![CDATA['.$yAxis.']]></y-axis>'."\n";
-                $pluginXmlData .= "\t\t".'<height><![CDATA['.$height.']]></height>'."\n";
-                $pluginXmlData .= "\t\t".'<width><![CDATA['.$width.']]></width>'."\n";
+                $pluginXmlData .= "\t\t".'<height><![CDATA[4]]></height>'."\n";
+                $pluginXmlData .= "\t\t".'<width><![CDATA[6]]></width>'."\n";
                 $pluginXmlData .= "\t".'</plugin>';
 
                 // Column number of the plugin
-                if ($xAxis == 0)
-                    $xAxis = 6;
-                elseif ($xAxis == 6)
-                    $xAxis = 0;
+//                if ($xAxis == 0)
+//                    $xAxis = 6;
+//                elseif ($xAxis == 6)
+//                    $xAxis = 0;
+//
+//                // Row number of the plugin
+//                if ($ctr % 2 == 0)
+//                    $yAxis += 6;
 
-                // Row number of the plugin
-                if ($ctr % 2 == 0)
-                    $yAxis += 6;
-
-                $ctr++;
-            }
-        }
+//                $ctr++;
+//            }
+//        }
 
         // Creating the final xml of the dashboard plugins
         $pluginXml = sprintf($pluginXml, $pluginXmlData);

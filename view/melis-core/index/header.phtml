@@ -32,9 +32,6 @@ $headerExclusions = array(
 
 ?>
 <div <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar  navbar-primary main" role="navigation">
-    <a class="tab-arrow-top">
-        <i class="fa fa-angle-down" title="Show main tabs"></i>
-    </a>
     <!-- left menu -->
     <div class="left-menu"> 
         <div class="navbar-brand">
@@ -118,6 +115,9 @@ $headerExclusions = array(
             ?>
         </ul>
     </div>
+    <a id="tab-arrow-top">
+        <i class="fa fa-angle-down" title="Show main tabs"></i>
+    </a>
 </div>
 <div id="newplugin-cont">
     <ul class="nav ul-cont">

@@ -415,7 +415,7 @@ body{
     padding-bottom: 0;
 }
 .transition3ms{
-    webkit-transition: .3s ease-in-out,margin .3s ease-in-out;
+    -webkit-transition: .3s ease-in-out,margin .3s ease-in-out;
     -moz-transition: .3s ease-in-out,margin .3s ease-in-out;
     -o-transition: .3s ease-in-out,margin .3s ease-in-out;
     transition: .3s ease-in-out,margin .3s ease-in-out;
@@ -441,7 +441,7 @@ body #newplugin-cont.show-menu{
     right: 0;
 }
 #newplugin-cont a,
-newplugin-cont span,
+#newplugin-cont span,
 #newplugin-cont i{
     color: #fff;
 }
@@ -670,7 +670,10 @@ newplugin-cont span,
     font-weight: bold;
     text-transform: uppercase;
 }
-.tab-arrow-top,
+.reponsive-menu-tabs .fa {
+    margin-right: 10px;
+}
+#tab-arrow-top,
 .reponsive-menu-tabs .fa {
     float: right;
     margin-top: 2px;
@@ -765,7 +768,8 @@ newplugin-cont span,
     overflow-y: auto;
     max-height: 250px;
     position: relative;
-    width: 100%;
+    width: 100%;;
+    z-index: 101;
 }
 #res-page-cont{
     border-bottom: 1px solid #9e2b2b;
@@ -812,7 +816,8 @@ newplugin-cont span,
     -ms-transition: .4s ease-in-out;
 }
 .navbar.main .left-menu{
-    z-index: 100;
+    /* z-index: 100; */
+    z-index: 102; /* fixes on desktop makes the melis platform clickable */
 }
 .navbar.main #melis-navtabs-container-outer.hide-res-menus{
     margin-top: -47px;
@@ -996,11 +1001,15 @@ newplugin-cont span,
 .grid-stack-item-content .tab-content > .active {
     margin-top: 0;
 }
-@media (min-width: 320px) and (max-width: 767px) {
-    .tab-content > .tab-panel-dashboard.active {
-        margin-top: 47px;
+/*
+ * Affected as per http://mantis.melistechnology.fr/view.php?id=3849
+ * 
+    @media (min-width: 320px) and (max-width: 767px) {
+        .tab-content > .tab-panel-dashboard.active {
+            margin-top: 47px;
+        }
     }
-}
+*/
 
 #content > .innerAll.px2 {
     padding: 0;
@@ -1046,9 +1055,9 @@ newplugin-cont span,
     width: 100%;
     background: #e61c23;
 }
-#content .overlay-loader{
-    /* top: -47px; */
-}
+/* #content .overlay-loader{
+    top: -47px;
+}*/
 .overlay-loader .loader-icon {
     position: absolute;
     top: 50%;
@@ -1147,7 +1156,6 @@ newplugin-cont span,
 }
 .container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li{
     display: inline-block;
-    float: left;
     border-bottom: none;
     border-right: 1px solid #e5e5e5;
     /* border-left: 1px solid #e5e5e5; */
@@ -1159,10 +1167,10 @@ newplugin-cont span,
     border: none;
     margin-right: 0;
 }
-.widget-tabs .nav-tabs > li > a.glyphicons:hover{
-    /* background: 932E2A; */
-    /* border:none */
-}
+/* .widget-tabs .nav-tabs > li > a.glyphicons:hover{
+    background: 932E2A;
+    border:none;
+} */
 .widget.widget-tabs-icons-only-2>.widget-head ul li a.glyphicons:hover i:before{
     color: #e61c23;
 }
@@ -2020,9 +2028,9 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 .modal .modal-footer{
     padding: 15px;
 }
-.modal .modal-footer button:first-child{
+/* .modal .modal-footer button:first-child{
 
-}
+} */
 .modal-content{
     border: none;
 }
@@ -2481,7 +2489,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
     .navbar #melis-id-nav-bar-tabs > li{
         float: left;
-        display: inline-block;
+        /* display: inline-block; */
         width: 170px;
         height: 47px;
         border-right: 1px solid #AD6565;
@@ -2583,7 +2591,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     /* plugins container hover */
     .navbar.main .nav.navbar-right li:hover ul,
     #newplugin-cont .ul-cont li:hover ul{
-        display: inline-block;
+        /* display: inline-block; */
         position: absolute;
         width: auto;
         border: 1px solid rgba(0,0,0,.15);
@@ -2713,8 +2721,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 /* TinyMCE responsive */
 @media only screen and (max-device-width: 549px) {
 
-    #mce-modal-block {
-    }
+    /* #mce-modal-block {
+    } */
 
     .mce-window {
         width: auto !important;
@@ -2733,15 +2741,15 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         background: #fff !important;
     }
 
-    .mce-foot {
-    }
+    /* .mce-foot {
+    } */
 
     .mce-foot > .mce-container-body {
         padding: 10px !important;
     }
 
-    .mce-foot button {
-    }
+    /* .mce-foot button {
+    } */
 
     .mce-panel {
         max-width: 100% !important;
@@ -2765,15 +2773,15 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         max-width: 100% !important;
     }
 
-    .mce-tabs .mce-tab, .mce-tabs .mce-tab.mce-active {
-    }
+    /* .mce-tabs .mce-tab, .mce-tabs .mce-tab.mce-active {
+    } */
 
     .mce-formitem {
         margin: 10px 0 !important;
     }
 
-    .mce-btn > button {
-    }
+    /* .mce-btn > button {
+    } */
 
     .mce-abs-layout-item {
         position: static !important;
@@ -3250,6 +3258,8 @@ div#modal-user-management div.widget {
         -moz-box-shadow: 0 0 0;
         -ms-box-shadow: 0 0 0;
         box-shadow: 0 0 0;
+
+        transform: translate3d(0, 0, 0);
         -webkit-transform: translate3d(0, 0, 0);
         -moz-transform: translate3d(0, 0, 0);
         -ms-transform: translate3d(0, 0, 0);
@@ -3343,10 +3353,10 @@ div#modal-user-management div.widget {
     border-radius: 41%;
 }
 
-.meliscore-platform-scheme-login-background {
-/*    -webkit-clip-path: inset(30px 10px 30px 10px);
-    clip-path: inset(30px 10px 30px 10px);*/
-}
+/*.meliscore-platform-scheme-login-background {
+    -webkit-clip-path: inset(30px 10px 30px 10px);
+    clip-path: inset(30px 10px 30px 10px);
+}*/
 
 .meliscore-platform-scheme-sidebar-container {
     position: relative;
@@ -3548,7 +3558,8 @@ div#modal-user-management div.widget {
 
 /* dashboard button */
 .melis-core-dashboard-category-btn {
-    padding: 4px 15px 4px 30px;
+    padding: 4px 15px 4px 11px;
+    font-size: 11px;
 }
 
 /* dashboard button active / open */
@@ -3868,6 +3879,7 @@ div#modal-user-management div.widget {
     height: 100%;
 }
 
+.select2-container--default .select2-selection--single .select2-selection__arrow strong,
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
     border-color: #555555 transparent transparent transparent;
     border-width: 6px 3px 0 3px;
@@ -4010,7 +4022,10 @@ div#modal-user-management div.widget {
 .melis-core-dashboard-category-btn .module-name
 {
     display: block;
-    max-width: 78%;
+    max-width: 87%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 /* changes the width on smaller widths */
 @media (min-width: 320px) and (max-width: 640px) {
@@ -4072,12 +4087,16 @@ div#modal-user-management div.widget {
     cursor: pointer;
 }
 
-.no-plugin-on-menu{
-    color: #fff;
-    padding: 5px;
+/*
+ * Dashboard User Messages Notifications / Warnings
+ */
+.no-plugin-on-menu {
+    padding: 15px;
 }
-
-.no-rights-container{
+.no-plugin-on-menu p {
+    color: #fff;
+}
+.no-rights-container {
     padding: 10px;
 }
 
@@ -4153,25 +4172,35 @@ div#modal-user-management div.widget {
     transform: translate(-55%, -55%);
 }
 
-.tab-pane .nav-tabs span img{
+.tab-pane .nav-tabs span img {
     width: 24px;
 }
-.tab-arrow-top {
-    display: none;
+@media (min-width: 768px) {
+    #tab-arrow-top {
+        display: none;
+    }
 }
-.tab-arrow-top.hide-arrow {
-    margin-top: -34px;
-}
-
 @media (max-width: 767px) {
+    .login-page #tab-arrow-top {
+        display: none;
+    }
+
+    #melis-navtabs-container-inner {
+        display: none;
+    }
+
     #melis-id-nav-bar-tabs li a.dropdown-toggle {
         width: calc(100% - 48px);
     }
 
-    .tab-arrow-top {
+    .hide-arrow {
+        margin-top: -24px;
+    }
+
+    #tab-arrow-top {
         background: #e61c23;
         padding: 0 6px;
-        margin-top: -1px;
+        margin-top: 0;
         color: #fff !important;
         height: 24px;
 
@@ -4181,10 +4210,11 @@ div#modal-user-management div.widget {
         z-index: 100;
     }
 
-    .tab-arrow-top .fa {
+    #tab-arrow-top .fa {
         position: relative;
     }
-    .tab-arrow-top .fa:before {
+    
+    #tab-arrow-top .fa:before {
         position: relative;
         top: -6px;
     }
@@ -4311,4 +4341,13 @@ div#modal-user-management div.widget {
 }
 .melis-core-dashboard-plugin-title.has-new-plugins {
     margin-top: 0;
+}
+.dashboard-img-responsive {
+    max-width:100%;
+    height:auto;
+}
+
+#melis-modals-container .modal-content .nav-tabs>li>a {
+    border: 0;
+    border-radius: 0;
 }
