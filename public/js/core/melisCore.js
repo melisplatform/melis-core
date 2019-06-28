@@ -200,7 +200,7 @@ var melisCore = (function(window){
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard(){
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
-            // fixes grid stack issue [Cannot set property '_grid' of undefined + grid stack]
+            // check if dashboard plugin menu is open
             melisDashBoardDragnDrop.closeDBPlugSidebar();
         });
     }
