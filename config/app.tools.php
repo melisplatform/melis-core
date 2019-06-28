@@ -2397,6 +2397,66 @@ return [
                                             'placeholder' => 'tr_meliscore_log_export_user',
                                         ),
                                     ),
+                                ),array(
+                                    'spec' => array(
+                                        'name' => 'log_type',
+                                        'type' => 'MelisCoreLogTypeSelect',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_type',
+                                            'tooltip' => 'tr_meliscore_log_export_type tooltip',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_type',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_type',
+                                        ),
+                                    ),
+                                ),array(
+                                    'spec' => array(
+                                        'name' => 'log_date_range',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_log_date_range',
+                                            'tooltip' => 'tr_meliscore_log_export_log_date_range tooltip',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_date_range',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_log_date_range',
+                                        ),
+                                    ),
+                                ),array(
+                                    'spec' => array(
+                                        'name' => 'log_delimiter',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_delimiter',
+                                            'tooltip' => 'tr_meliscore_log_export_delimiter tooltip',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_delimiter',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_delimiter',
+                                        ),
+                                    ),
+                                ),array(
+                                    'spec' => array(
+                                        'name' => 'log_enclosure',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_enclosure',
+                                            'tooltip' => 'tr_meliscore_log_export_enclosure tooltip',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_enclosure',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_enclosure',
+                                        ),
+                                    ),
                                 ),
 
                             ],

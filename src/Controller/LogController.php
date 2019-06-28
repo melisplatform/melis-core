@@ -133,10 +133,8 @@ class LogController extends AbstractActionController
      */
     public function renderLogsToolExportModalContentAction()
     {
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-        $appConfigForm = $melisMelisCoreConfig->getItem("meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_export_form");
-        $factory = new \Zend\Form\Factory();
-        $form = $factory->createForm($appConfigForm);
+        $appConfigForm = $this->getFormConfig('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_export_form', 'meliscore_logs_tool_log_export_form');
+        $form = $this->getForm($appConfigForm);
 
         $melisKey = $this->params()->fromQuery('melisKey');
 
@@ -641,6 +639,33 @@ class LogController extends AbstractActionController
         $this->getEventManager()->trigger('meliscore_save_log_type_trans', $this, array_merge($response, array('typeCode' => 'CORE_LOG_TYPE_UPDATE', 'itemId' => $logTypeId)));
 
         return new JsonModel($response);
+    }
+    /**
+     * This will get the form config
+     * @param $formPath
+     * @param $form
+     * @return mixed
+     */
+    private function getFormConfig($formPath, $form)
+    {
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered($formPath, $form);
+
+        return $appConfigForm;
+    }
+    /**
+     * Gets the form
+     * @param formConfig
+     * @return \Zend\Form\ElementInterface
+     */
+    private function getForm($formConfig)
+    {
+        $factory = new \Zend\Form\Factory();
+        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory->setFormElementManager($formElements);
+        $form = $factory->createForm($formConfig);
+
+        return $form;
     }
 
 

@@ -107,6 +107,13 @@ window.initLogDataTable = function(data){
 window.initDatePicker = function(){
 	melisHelper.initDateRangePicker("#logsTableDaterange", dateRangePickerApplyEvent);
 }
+window.initExportLogDateRangePicker = function(){
+    melisHelper.initDateRangePicker("#log_date_range");
+    $("#log_date_range").daterangepicker({
+        startDate: moment().subtract(8, 'days'),
+        endDate: moment().subtract(1, 'days')
+	});
+}
 
 window.dateRangePickerApplyEvent = function(ev, picker) {
     $tableMelisLogs.draw();

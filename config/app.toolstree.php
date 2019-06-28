@@ -585,7 +585,7 @@ return [
                                                                 'action' => 'render-logs-tool-table-log-type-form',
                                                             ),
                                                         ),
-                                                        'meliscore_logs_tool_edit_modal_content' => array(
+                                                        'meliscore_logs_tool_export_modal_content' => array(
                                                             'conf' => array(
                                                                 'id' => 'id_meliscore_logs_tool_export_modal_content',
                                                                 'melisKey' => 'meliscore_logs_tool_export_modal_content',
@@ -594,7 +594,7 @@ return [
                                                                 'module' => 'MelisCore',
                                                                 'controller' => 'Log',
                                                                 'action' => 'render-logs-tool-export-modal-content',
-                                                                'jscallback' => '',
+                                                                'jscallback' => 'initExportLogDateRangePicker();',
                                                                 'jsdatas' => array()
                                                             )
                                                         ),
