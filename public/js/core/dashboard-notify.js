@@ -1,4 +1,5 @@
-var dashboardNotify = (function($) {
+var dashboardNotify = (function() {
+    var eh = null;
     /**
      * To make a "persistent cookie" (a cookie that "never expires"),
      * we need to set a date/time in a distant future (one that possibly exceeds the user's
@@ -16,7 +17,7 @@ var dashboardNotify = (function($) {
         $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']");
 
     // instantiate
-    var eh = new EnjoyHint({
+    eh = new EnjoyHint({
         onStart: function() {
             disablePluginsMenuButton();
         },
@@ -35,21 +36,18 @@ var dashboardNotify = (function($) {
 
     // init
     function init() {
-        // setTimeout to run enjoyhint
-        setTimeout(function() {
-            // local variables upon document ready
-            var $body           = $("body"),
-                $gs             = $body.find("#"+activeTabId+" .grid-stack"),
-                $gsItem         = $gs.find(".grid-stack-item"),
-                $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box");
-                shown           = $pluginBtnBox.hasClass("shown");
+        // local variables upon document ready
+        var $pluginBox  = $body.find(".melis-core-dashboard-dnd-box"),
+            shown       = $pluginBox.hasClass("shown"),
+            $gs         = $body.find("#"+activeTabId+" .grid-stack"),
+            $gsItem     = $gs.find(".grid-stack-item"),
+            $dashMsg    = $body.find("#melis-core-dashboard-msg");
 
-                if ( $gsItem.length === 0 && shown === true ) {
-                    dashboardNotify.render();
-                } else {
-                    dashboardNotify.removeEnjoyHintHtml();
-                }
-        }, 1000);
+            if ( $gsItem.length === 0 && shown === true ) {
+                render();
+            } else {
+                removeEnjoyHintHtml();
+            }
     }
 
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
@@ -105,7 +103,7 @@ var dashboardNotify = (function($) {
 
     // run enjoy hint script
     function runNotify() {
-        if ( $melisDashboard.length ) {
+        if ( $melisDashboard.hasClass("active") ) {
             eh.runScript();
         }
     }
@@ -147,16 +145,27 @@ var dashboardNotify = (function($) {
     }
 
     return {
-        init                        :       init,
+        //init                        :       init,
         render                      :       render,
         getCookie                   :       getCookie,
         removeEnjoyHintHtml         :       removeEnjoyHintHtml
     };
 
-})($_);
+})();
 
-(function($) {
-    // init
-    dashboardNotify.init();
-})($_);
-// $_ for var $_ = jQuery.noConflict(true) on public/assets/components/plugins/enjoyhint/js/all.js which uses jQuery v3.3.1 for enjoyhint
+$(function() {
+    setTimeout(function() {
+        var $body           = $("body"),
+            $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box"),
+            shown           = $pluginBtnBox.hasClass("shown"),
+            $gs             = $body.find("#"+activeTabId+" .grid-stack"),
+            $gsItem         = $gs.find(".grid-stack-item"),
+            $dashMsg        = $body.find("#melis-core-dashboard-msg");
+
+            if ( $gsItem.length === 0 && shown === true && $dashMsg.is(":visible") === true ) {
+                dashboardNotify.render();
+            } else {
+                dashboardNotify.removeEnjoyHintHtml();
+            }
+    }, 1000);
+});
