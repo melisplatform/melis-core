@@ -29267,9 +29267,14 @@ var melisCore = (function(window){
 
             // responsive main tab menu button
             if ( $tabArrowTop.length && screenSize <= 767 ) {
-                $tabArrowTop.toggleClass("hide-arrow");
+                if ( $box.hasClass("shown") ) {
+                    $tabArrowTop.addClass("hide-arrow");
+                } else {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
             }
 
+            // desktop
             if ( $box.hasClass("shown") ) {
                 $gs.animate({
                     width: dWidth
@@ -29298,11 +29303,8 @@ var melisCore = (function(window){
     // responsive menu arrow button 767px and below for showing/hiding content main tabs
     $body.on("click", "#tab-arrow-top", function() {
         var $this = $(this);
-
             $tabConInner.show();
-
             $res.trigger("click");
-
             $tabConOuter.removeClass("hide-res-menus");
     });
 
@@ -29684,8 +29686,6 @@ var melisHelper = (function(){
 
             $('.user-admin-switch').bootstrapSwitch('destroy', true);
             $('.user-admin-switch').bootstrapSwitch();
-        }else{
-            console.log("Selector not found");
         }
     }
 
@@ -34784,17 +34784,21 @@ var melisDashBoardDragnDrop = {
     },
 
     closeDBPlugSidebar: function () {
-        var self    = this,
-            $btn    = $("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gsItem = self.$gs.find(".grid-stack-item"),
-            dWidth  = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
-            nWidth  = self.$gs.width() + self.$box.width();
+        var self            = this,
+            $btn            = $("#melisDashBoardPluginBtn"),
+            $box            = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gsItem         = self.$gs.find(".grid-stack-item"),
+            dWidth          = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
+            $tabArrowTop    = $("#tab-arrow-top"),
+            nWidth          = self.$gs.width() + self.$box.width();
 
             if ( $box.hasClass("shown") ) {
+                $tabArrowTop.addClass("hide-arrow");
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
+            } else {
+                $tabArrowTop.removeClass("hide-arrow");
             }
     },
 
@@ -35489,7 +35493,7 @@ var EnjoyHint = function (_options) {
     /********************* PUBLIC METHODS ***************************************/
 
     $(window).on('resize.enjoy_hint_permanent', function() {
-        if ( typeof $event_element[0] !== 'undefined' ) {
+        if ( $event_element[0] !== undefined ) {
             $body.enjoyhint('redo_events_near_rect', $event_element[0].getBoundingClientRect());
         }
     });

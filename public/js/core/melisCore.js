@@ -567,9 +567,14 @@ var melisCore = (function(window){
 
             // responsive main tab menu button
             if ( $tabArrowTop.length && screenSize <= 767 ) {
-                $tabArrowTop.toggleClass("hide-arrow");
+                if ( $box.hasClass("shown") ) {
+                    $tabArrowTop.addClass("hide-arrow");
+                } else {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
             }
 
+            // desktop
             if ( $box.hasClass("shown") ) {
                 $gs.animate({
                     width: dWidth
@@ -598,11 +603,8 @@ var melisCore = (function(window){
     // responsive menu arrow button 767px and below for showing/hiding content main tabs
     $body.on("click", "#tab-arrow-top", function() {
         var $this = $(this);
-
             $tabConInner.show();
-
             $res.trigger("click");
-
             $tabConOuter.removeClass("hide-res-menus");
     });
 

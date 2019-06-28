@@ -351,17 +351,21 @@ var melisDashBoardDragnDrop = {
     },
 
     closeDBPlugSidebar: function () {
-        var self    = this,
-            $btn    = $("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gsItem = self.$gs.find(".grid-stack-item"),
-            dWidth  = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
-            nWidth  = self.$gs.width() + self.$box.width();
+        var self            = this,
+            $btn            = $("#melisDashBoardPluginBtn"),
+            $box            = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gsItem         = self.$gs.find(".grid-stack-item"),
+            dWidth          = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
+            $tabArrowTop    = $("#tab-arrow-top"),
+            nWidth          = self.$gs.width() + self.$box.width();
 
             if ( $box.hasClass("shown") ) {
+                $tabArrowTop.addClass("hide-arrow");
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
+            } else {
+                $tabArrowTop.removeClass("hide-arrow");
             }
     },
 
