@@ -14,7 +14,9 @@ var dashboardNotify = (function() {
         $pluginBtn 		    = $body.find("#melisDashBoardPluginBtn"),
         $pluginBtnBox	    = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn"),
-        $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']");
+        tpd                 = $body.find("#"+activeTabId+".tab-panel-dashboard").hasClass("active"),
+        $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']"),
+        $dashMsg            = $body.find("#melis-core-dashboard-msg");
 
     // instantiate
     eh = new EnjoyHint({
@@ -36,18 +38,21 @@ var dashboardNotify = (function() {
 
     // init
     function init() {
-        // local variables upon document ready
-        var $pluginBox  = $body.find(".melis-core-dashboard-dnd-box"),
-            shown       = $pluginBox.hasClass("shown"),
-            $gs         = $body.find("#"+activeTabId+" .grid-stack"),
-            $gsItem     = $gs.find(".grid-stack-item"),
-            $dashMsg    = $body.find("#melis-core-dashboard-msg");
-
-            if ( $gsItem.length === 0 && shown === true ) {
-                render();
-            } else {
-                removeEnjoyHintHtml();
-            }
+        setTimeout(function() {
+            var body        = $("body"),
+                $gs         = body.find("#"+activeTabId+" .grid-stack"),
+                $gsItem     = $gs.find(".grid-stack-item"),
+                $gsItemLen  = $gsItem.length,
+                $pluginBox  = body.find(".melis-core-dashboard-dnd-box"),
+                shown       = $pluginBox.hasClass("shown");
+              
+                // check if there is grid stack item and plugin menu is open
+                if ( $gsItem.length === 0 && shown === true ) {
+                    render();
+                } else {
+                    removeEnjoyHintHtml();
+                }
+        }, 500 );
     }
 
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
@@ -103,7 +108,8 @@ var dashboardNotify = (function() {
 
     // run enjoy hint script
     function runNotify() {
-        if ( $melisDashboard.hasClass("active") ) {
+        // checking for .tab-panel-dashboard has .active class
+        if ( tpd ) {
             eh.runScript();
         }
     }
@@ -145,7 +151,8 @@ var dashboardNotify = (function() {
     }
 
     return {
-        //init                        :       init,
+        init                        :       init,
+        runNotify                   :       runNotify,
         render                      :       render,
         getCookie                   :       getCookie,
         removeEnjoyHintHtml         :       removeEnjoyHintHtml
@@ -154,18 +161,16 @@ var dashboardNotify = (function() {
 })();
 
 $(function() {
-    setTimeout(function() {
-        var $body           = $("body"),
-            $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box"),
-            shown           = $pluginBtnBox.hasClass("shown"),
-            $gs             = $body.find("#"+activeTabId+" .grid-stack"),
-            $gsItem         = $gs.find(".grid-stack-item"),
-            $dashMsg        = $body.find("#melis-core-dashboard-msg");
+    var $body           = $("body"),
+        activeModule    = $body.find("#melis-core-dashboard-msg").data("activeMods").split("-");
 
-            if ( $gsItem.length === 0 && shown === true && $dashMsg.is(":visible") === true ) {
-                dashboardNotify.render();
-            } else {
-                dashboardNotify.removeEnjoyHintHtml();
-            }
-    }, 1000);
+        // check if melisUserTabs is currently an active module and it is defined
+        if ( $.inArray( "MelisUserTabs", activeModule ) !== -1 && typeof melisUserTabs !== "undefined" ) {
+            // melis-user-tabs.js init
+            melisUserTabs.init();
+        } 
+        else {
+            // own init
+            dashboardNotify.init();
+        }
 });

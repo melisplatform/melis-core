@@ -21,6 +21,16 @@ class MelisFieldRow extends FormRow
 	{
 	    $translator = $this->getTranslator();
 
+
+	    if (empty($element->getAttribute('id'))){
+            /**
+             *  Firefox warning issue if the label attribute "for" is empty
+             *  resulting "Empty string passed to getElementById()." on console
+             *  If the element has not value '' this will completely remove from element
+             */
+            $element->removeAttribute('id');
+        }
+
 	    if ($element->getAttribute('required') == self::MELIS_TEXT_REQUIRED){
 
 	        $element->setLabelOptions(['disable_html_escape' => true]);
