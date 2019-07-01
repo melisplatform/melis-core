@@ -195,8 +195,6 @@ var melisHelper = (function(){
 
             $('.user-admin-switch').bootstrapSwitch('destroy', true);
             $('.user-admin-switch').bootstrapSwitch();
-        }else{
-            console.log("Selector not found");
         }
     }
 
