@@ -2438,17 +2438,24 @@ return [
                                         ),
                                         'attributes' => array(
                                             'id' => 'log_delimiter',
-                                            'value' => '',
+                                            'value' => ';',
                                             'placeholder' => 'tr_meliscore_log_export_delimiter',
                                         ),
                                     ),
                                 ),array(
                                     'spec' => array(
                                         'name' => 'log_enclosure',
-                                        'type' => 'MelisText',
+                                        'type' => 'Checkbox',
                                         'options' => array(
                                             'label' => 'tr_meliscore_log_export_enclosure',
                                             'tooltip' => 'tr_meliscore_log_export_enclosure tooltip',
+                                            'checked_value' => 1,
+                                            'unchecked_value' => 0,
+                                            'switchOptions' => array(
+                                                'label-on' => 'tr_meliscommerce_categories_common_label_yes',
+                                                'label-off' => 'tr_meliscommerce_categories_common_label_no',
+                                                'label' => "<i class='glyphicon glyphicon-resize-horizontal'></i>",
+                                            ),
                                             'disable_inarray_validator' => true,
                                         ),
                                         'attributes' => array(

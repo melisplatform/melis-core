@@ -524,7 +524,13 @@ return [
     'tr_meliscore_logs_tool' => 'Logs',
     'tr_meliscore_logs_tool_description' => 'This tool saves the actions made by all users of the platform. the logs are then sortable according to their origin, to the user and to their type.',
     'tr_meliscore_logs_type' => 'Log type',
-    'tr_meliscore_logs_tool_export_modal_title' => 'Export Logs',
+    "tr_meliscore_logs_tool_export_modal_title" => "Export Logs",
+    "tr_meliscore_log_export_user" => "User",
+    "tr_meliscore_log_export_type" => "Log Type",
+    "tr_meliscore_log_export_log_date_range" => "Date Range",
+    "tr_meliscore_log_export_delimiter" => "Delimiter",
+    "tr_meliscore_log_export_enclosure" => "Enclose columns with \" \"",
+    "tr_meliscore_log_export_export_btn" => "Export",
 
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',

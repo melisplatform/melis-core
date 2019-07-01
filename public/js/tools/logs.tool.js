@@ -109,10 +109,10 @@ window.initDatePicker = function(){
 }
 window.initExportLogDateRangePicker = function(){
     melisHelper.initDateRangePicker("#log_date_range");
-    $("#log_date_range").daterangepicker({
-        startDate: moment().subtract(8, 'days'),
-        endDate: moment().subtract(1, 'days')
-	});
+    setTimeout(function(){
+        $("#log_date_range").data('daterangepicker').setStartDate(moment().subtract(8, 'days'));
+        $("#log_date_range").data('daterangepicker').setEndDate(moment().subtract(1, 'days'));
+	}, 1000);
 }
 
 window.dateRangePickerApplyEvent = function(ev, picker) {
