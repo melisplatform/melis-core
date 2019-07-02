@@ -41,23 +41,24 @@ var melisDashBoardDragnDrop = {
 
     cacheDom: function () {
         // jQuery DOM element
-        this.$body = $("body");
-        this.$document = $(document);
-        this.$window = $(window);
-        this.$gs = this.$body.find("#" + activeTabId + " .grid-stack");
-        this.$melisDBPlugins = this.$body.find(".melis-dashboard-plugins");
-        this.$pluginBox = this.$body.find(".melis-core-dashboard-dnd-box");
-        this.$pluginBtn = this.$body.find("#melisDashBoardPluginBtn");
-        this.$box = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
-        this.$deleteAllWidget = this.$body.find("#dashboard-plugin-delete-all");
+        this.$body              = $("body");
+        this.$document          = $(document);
+        this.$window            = $(window);
+        this.$gs                = this.$body.find("#" + activeTabId + " .grid-stack");
+        this.$gsItem            = this.$gs.find(".grid-stack-item").length;
+        this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
+        this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
+        this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
+        this.$box               = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
+        this.$deleteAllWidget   = this.$body.find("#dashboard-plugin-delete-all");
 
         // plugin sidebar
-        this.$dashPsBox = $(".melis-core-dashboard-ps-box");
-        this.$dashPluginBtn = this.$dashPsBox.find(".melis-core-dashboard-filter-btn");
-        this.$dashSnipsBox = this.$dashPsBox.find(".melis-core-dashboard-plugin-snippets-box");
+        this.$dashPsBox         = $(".melis-core-dashboard-ps-box");
+        this.$dashPluginBtn     = this.$dashPsBox.find(".melis-core-dashboard-filter-btn");
+        this.$dashSnipsBox      = this.$dashPsBox.find(".melis-core-dashboard-plugin-snippets-box");
 
         // strings
-        this.gsOptHandle = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
+        this.gsOptHandle        = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
     },
 
     gsSetOptions: function () {
@@ -158,11 +159,6 @@ var melisDashBoardDragnDrop = {
                     "height": "840px",
                     "min-height": "840px"
                 });
-            }
-
-            // check if enjoyhint element is found and its cookie is false then remove it and body tag overflow auto
-            if ( typeof dashboardNotify !== "undefined" && dashboardNotify.getCookie() === "false" ) {
-                dashboardNotify.removeEnjoyHintHtml();
             }
     },
 
@@ -355,17 +351,21 @@ var melisDashBoardDragnDrop = {
     },
 
     closeDBPlugSidebar: function () {
-        var self    = this,
-            $btn    = $("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gsItem = self.$gs.find(".grid-stack-item"),
-            dWidth  = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
-            nWidth  = self.$gs.width() + self.$box.width();
+        var self            = this,
+            $btn            = $("#melisDashBoardPluginBtn"),
+            $box            = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gsItem         = self.$gs.find(".grid-stack-item"),
+            dWidth          = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
+            $tabArrowTop    = $("#tab-arrow-top"),
+            nWidth          = self.$gs.width() + self.$box.width();
 
             if ( $box.hasClass("shown") ) {
+                $tabArrowTop.addClass("hide-arrow");
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
+            } else {
+                $tabArrowTop.removeClass("hide-arrow");
             }
     },
 
@@ -482,7 +482,7 @@ var melisDashBoardDragnDrop = {
     deleteWidget: function (el) {
         var self = this;
 
-        var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
+        var gridData = $('#' + activeTabId + ' .grid-stack').data('gridstack'),
             $del = el,
             gsNode = $del.closest('.grid-stack-item').data('_gridstack_node');
 
@@ -494,7 +494,7 @@ var melisDashBoardDragnDrop = {
             function () {
 
                 // remove the item from the dashboard
-                grid.removeWidget(gsNode.el[0]);
+                gridData.removeWidget(gsNode.el[0]);
 
                 // check gridstack nodes positions and sizes
                 $items = gsNode._grid.container[0].children;
@@ -703,6 +703,12 @@ var melisDashBoardDragnDrop = {
     getCurrentPlugin: function () {
         // get current plugin
         return this.currentPlugin;
+    },
+
+    countGsItems: function() {
+        var self = this;
+
+            return self.$gsItem;
     }
 };
 

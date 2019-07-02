@@ -718,4 +718,7 @@ return [
     'tr_melisdashboardplugin_plugin_no_rights' => 'Vous n\'avez pas les droits requis pour accéder à ce plugin.',
     'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => 'Les droits de votre compte ne vous autorisent pas à utiliser les plugins du dashboard. Merci de contacter un admin si besoin.',
     'tr_meliscore_remove_all_plugins' => 'Suppression de tous les plugins du dashboard',
+
+    'tr_meliscore_tool_creatrion_designs' => 'Création d\'outils & Design',
+    'tr_meliscore_tool_tools' => 'Outils',
 ];

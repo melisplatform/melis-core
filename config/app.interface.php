@@ -98,6 +98,8 @@ return array(
                         'default_trans_files' => array(
                             'defaultTransInterface' => 'en_EN.interface',
                             'defaultTransForms' => 'en_EN.forms',
+                            'defaultFrTransInterface' => 'fr_FR.interface',
+                            'defaultFrTransForms' => 'fr_FR.forms',
                         ),
                         'default_trans_dir' => array(
                             'path' => $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/languages/',

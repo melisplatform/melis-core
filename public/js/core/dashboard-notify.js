@@ -1,4 +1,5 @@
 var dashboardNotify = (function() {
+    var eh = null;
     /**
      * To make a "persistent cookie" (a cookie that "never expires"),
      * we need to set a date/time in a distant future (one that possibly exceeds the user's
@@ -10,16 +11,15 @@ var dashboardNotify = (function() {
 
     // cache DOM
     var $body 			    = $("body"),
-        $gs                 = $body.find("#"+activeTabId+" .grid-stack"),
-        $gsItem             = $gs.find(".grid-stack-item"),
         $pluginBtn 		    = $body.find("#melisDashBoardPluginBtn"),
         $pluginBtnBox	    = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn"),
-        $noAvailPlugins     = $pluginBtnBox.find(".melis-core-dashboard-ps-box"),
+        tpd                 = $body.find("#"+activeTabId+".tab-panel-dashboard").hasClass("active"),
+        $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']"),
         $dashMsg            = $body.find("#melis-core-dashboard-msg");
 
     // instantiate
-    var eh = new EnjoyHint({
+    eh = new EnjoyHint({
         onStart: function() {
             disablePluginsMenuButton();
         },
@@ -31,13 +31,29 @@ var dashboardNotify = (function() {
         }
     });
 
-    // first render function call
-    // render();
-
     // clicking on close button will enable back the plugins menu buttons
     $body.on("click", ".enjoyhint_close_btn", function() {
         enablePluginsMenuButton();
     });
+
+    // init
+    function init() {
+        setTimeout(function() {
+            var body        = $("body"),
+                $gs         = body.find("#"+activeTabId+" .grid-stack"),
+                $gsItem     = $gs.find(".grid-stack-item"),
+                $gsItemLen  = $gsItem.length,
+                $pluginBox  = body.find(".melis-core-dashboard-dnd-box"),
+                shown       = $pluginBox.hasClass("shown");
+              
+                // check if there is grid stack item and plugin menu is open
+                if ( $gsItem.length === 0 && shown === true ) {
+                    render();
+                } else {
+                    removeEnjoyHintHtml();
+                }
+        }, 500 );
+    }
 
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
     function removeEnjoyHintHtml() {
@@ -66,7 +82,7 @@ var dashboardNotify = (function() {
     // set scripts config
     function setConfig() {
         var steps = [
-            {
+            {   
                 "next #melisDashBoardPluginBtn" : translations.tr_meliscore_dashboard_notify_step_1_msg,
                 shape: 'rect',
                 showSkip: true,
@@ -77,7 +93,7 @@ var dashboardNotify = (function() {
                     text: translations.tr_meliscore_dashboard_notify_steps_general_skip_text
                 }
             },
-            {
+            {   
                 "next .melis-core-dashboard-ps-box" : translations.tr_meliscore_dashboard_notify_step_2_msg,
                 shape: 'rect',
                 showSkip: false,
@@ -87,37 +103,30 @@ var dashboardNotify = (function() {
             }
         ];
 
-        eh.set( steps );
+        eh.setScript( steps );
     }
 
     // run enjoy hint script
     function runNotify() {
-        eh.run();
-    }
-
-    // check for some element use case
-    function checkElementsBeforeRun() {
-        // check if no plugins found and no grid stack item is available
-        if ( $noAvailPlugins.length === 0 ) {
-            runNotify();
-        } else {
-            if ( $pluginBtnBox.hasClass("shown") ) {
-                runNotify();
-            }
+        // checking for .tab-panel-dashboard has .active class
+        if ( tpd ) {
+            eh.runScript();
         }
     }
 
     // render function
     function render() {
-        // check if session is set
+        // check if cookie is set
         if ( getCookie() === undefined ) {
             setConfig();
-            checkElementsBeforeRun();
+            runNotify();
             setCookie("false");
         } else {
             if ( getCookie() === "true" ) {
                 setConfig();
-                checkElementsBeforeRun();
+                runNotify();
+            } else {
+                removeEnjoyHintHtml();
             }
         }
     }
@@ -142,6 +151,7 @@ var dashboardNotify = (function() {
     }
 
     return {
+        init                        :       init,
         runNotify                   :       runNotify,
         render                      :       render,
         getCookie                   :       getCookie,
@@ -151,18 +161,16 @@ var dashboardNotify = (function() {
 })();
 
 $(function() {
-    setTimeout(function() {
-        var $body           = $("body"),
-            $pluginBtnBox   = $body.find(".melis-core-dashboard-dnd-box"),
-            shown           = $pluginBtnBox.hasClass("shown"),
-            $gs             = $body.find("#"+activeTabId+" .grid-stack"),
-            $gsItem         = $gs.find(".grid-stack-item"),
-            $dashMsg        = $body.find("#melis-core-dashboard-msg");
+    var $body           = $("body"),
+        activeModule    = $body.find("#melis-core-dashboard-msg").data("activeMods").split("-");
 
-            if ( $gsItem.length === 0 && shown === true && $dashMsg.is(":visible") === true ) {
-                dashboardNotify.render();
-            } else {
-                dashboardNotify.removeEnjoyHintHtml();
-            }
-    }, 1000);
+        // check if melisUserTabs is currently an active module and it is defined
+        if ( $.inArray( "MelisUserTabs", activeModule ) !== -1 && typeof melisUserTabs !== "undefined" ) {
+            // melis-user-tabs.js init
+            melisUserTabs.init();
+        } 
+        else {
+            // own init
+            dashboardNotify.init();
+        }
 });

@@ -195,8 +195,6 @@ var melisHelper = (function(){
 
             $('.user-admin-switch').bootstrapSwitch('destroy', true);
             $('.user-admin-switch').bootstrapSwitch();
-        }else{
-            console.log("Selector not found");
         }
     }
 
@@ -239,7 +237,21 @@ var melisHelper = (function(){
     }
 
     // CLOSE TAB AND REMOVE ===========================================================================================================
-    function tabClose(ID){
+    function tabClose(ID, fromGroup){
+
+        fromGroup = (typeof fromGroup != 'undefined') ? fromGroup : false;
+
+        /**
+         * if there is no second parameter pass,
+         * try to check manually if it is a
+         * sub tab
+         */
+        if(!fromGroup){
+            if($(this).closest('ul').hasClass('nav-group-dropdown')){
+                fromGroup = true;
+            }
+        }
+
         var tabContentID =  (typeof ID === 'string') ? ID :  $(this).data("id");
         var currentParent = $(".tabsbar a[data-id='"+tabContentID+"']").parent("li");
         var nextActiveTab = currentParent.next("li").children().data("id");
@@ -255,7 +267,6 @@ var melisHelper = (function(){
 
         var navBox = currentParent.closest(".scroll");
         var hasdropdown = $(navBox).find(".nav-group-dropdown");
-        var $tabArrowTop = $("tab-arrow-top");
 
         if(currentParent.hasClass("active-parent")) {
             var tabMenuGroup = currentParent.find(".nav-group-dropdown");
@@ -323,9 +334,12 @@ var melisHelper = (function(){
 
             if( leftOffset === -1 ) {}
             else if( leftOffset !== 0 ) {
-                $("#melis-id-nav-bar-tabs").animate({
-                    left: (leftOffset + removedWidth)
-                }, 0);
+                //check if removed tab is not from group(sub tab) to avoid moving the other tabs
+                if(!fromGroup) {
+                    $("#melis-id-nav-bar-tabs").animate({
+                        left: (leftOffset + removedWidth)
+                    }, 0);
+                }
             }
             /*else if ( leftOffset === 0 ) {
                 $("#melis-id-nav-bar-tabs").animate({
@@ -337,18 +351,19 @@ var melisHelper = (function(){
 
         // [ Mobile ] when closing a page
         if( melisCore.screenSize <= 767 ){
-            $("#res-page-cont").trigger("click");
+            var $tabArrowTop = $("#tab-arrow-top");
 
-            // check if there are no contents open
-            if( $navTabs.children("li").length === 0){
-                var empty = '<strong>(' + translations.tr_meliscore_empty +')</strong>';
-                $("#res-page-cont span").append(empty);
-            }
+                $("#res-page-cont").trigger("click");
 
-            // new responsive set up on tab menus
-            /* if ( $tabArrowTop.hasClass("hide-arrow") ) {
-                $tabArrowTop.removeClass("hide-arrow");
-            } */
+                // check if there are no contents open
+                if( $navTabs.children("li").length === 0){
+                    var empty = '<strong>(' + translations.tr_meliscore_empty +')</strong>';
+                    $("#res-page-cont span").append(empty);
+                }
+
+                if ( $tabArrowTop.length ) {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
         }
 
         // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
@@ -357,7 +372,6 @@ var melisHelper = (function(){
 
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
-
         //Show the close(X) button on header
         if(melisKey != 'meliscore_dashboard'){
             $("#close-all-tab").show();
@@ -426,20 +440,26 @@ var melisHelper = (function(){
 
             // [ Mobile ] when opening a page
             if( melisCore.screenSize <= 767 ){
-                // check if there are no contents open
-                if( $navTabs.children("li").length > 0){
-                    $("#res-page-cont span b").remove();
-                }
+                var $tabArrowTop = $("#tab-arrow-top");
 
-                // close sidebar after opening a page from it
-                $body.removeClass('sidebar-mini');
-                // hide sidebar footer when opening tab
-                $("#id_meliscore_footer").addClass('slide-left');
-                $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
+                    // check if there are no contents open
+                    if( $navTabs.children("li").length > 0){
+                        $("#res-page-cont span b").remove();
+                    }
 
-                // slide up the dropdown menu
-                $("#melis-id-nav-bar-tabs").slideUp(300);
-                $("#res-page-cont i").removeClass("move-arrow");
+                    // close sidebar after opening a page from it
+                    $body.removeClass('sidebar-mini');
+                    // hide sidebar footer when opening tab
+                    $("#id_meliscore_footer").addClass('slide-left');
+                    $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
+
+                    // slide up the dropdown menu
+                    $("#melis-id-nav-bar-tabs").slideUp(300);
+                    $("#res-page-cont i").removeClass("move-arrow");
+
+                    if ( $tabArrowTop.length ) {
+                        $tabArrowTop.removeClass("hide-arrow");
+                    }
             }
 
             var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";

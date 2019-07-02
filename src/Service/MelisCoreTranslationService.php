@@ -299,11 +299,21 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $directory = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_dir');
         $defaultTransInterface = $confLanguage['defaultTransInterface'];
         $defaultTransForms = $confLanguage['defaultTransForms'];
+        $defaultTransFrInterface = $confLanguage['defaultFrTransInterface'];
+        $defaultTransFrForms = $confLanguage['defaultFrTransForms'];
         $transInterface = $locale.'.interface';
         $transForms     = $locale.'.forms';
         $newDir = $directory['path'].$module;
         $this->checkLanguageDirectory($newDir, $path);
 
+        if($locale === "fr_FR"){
+            foreach ($cdir as $key => $val){
+                if (strpos($val, "en_EN") === true)
+                    unset($cdir[$key]);
+            }
+            $defaultTransInterface = $defaultTransFrInterface;
+            $defaultTransForms = $defaultTransFrForms;
+        }
         foreach ($cdir as $key => $value) {
 
             if (!in_array($value,array(".",".."))) {

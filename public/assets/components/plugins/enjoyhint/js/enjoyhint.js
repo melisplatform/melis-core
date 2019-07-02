@@ -341,7 +341,7 @@ var EnjoyHint = function (_options) {
     /********************* PUBLIC METHODS ***************************************/
 
     $(window).on('resize.enjoy_hint_permanent', function() {
-        if ($event_element[0]) {
+        if ( $event_element[0] !== undefined ) {
             $body.enjoyhint('redo_events_near_rect', $event_element[0].getBoundingClientRect());
         }
     });
@@ -654,12 +654,12 @@ var EnjoyHint = function (_options) {
                 that.kinetic_stage.add(that.layer);
 
                 $(window).on('resize.enjoy_hint', function() {
-                    if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
+                    /* if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
 
                         that.stopFunction();
                         $(window).off('resize.enjoy_hint');
                         return;
-                    }
+                    } */
 
                     var newWidth = window.innerWidth;
                     var newHeight = window.innerHeight;

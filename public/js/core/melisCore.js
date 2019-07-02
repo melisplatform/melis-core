@@ -200,7 +200,7 @@ var melisCore = (function(window){
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard(){
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
-            // fixes grid stack issue [Cannot set property '_grid' of undefined + grid stack]
+            // check if dashboard plugin menu is open
             melisDashBoardDragnDrop.closeDBPlugSidebar();
         });
     }
@@ -567,9 +567,14 @@ var melisCore = (function(window){
 
             // responsive main tab menu button
             if ( $tabArrowTop.length && screenSize <= 767 ) {
-                $tabArrowTop.toggleClass("hide-arrow");
+                if ( $box.hasClass("shown") ) {
+                    $tabArrowTop.addClass("hide-arrow");
+                } else {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
             }
 
+            // desktop
             if ( $box.hasClass("shown") ) {
                 $gs.animate({
                     width: dWidth
@@ -598,12 +603,8 @@ var melisCore = (function(window){
     // responsive menu arrow button 767px and below for showing/hiding content main tabs
     $body.on("click", "#tab-arrow-top", function() {
         var $this = $(this);
-
             $tabConInner.show();
-            $this.addClass("hide-arrow");
-
             $res.trigger("click");
-
             $tabConOuter.removeClass("hide-res-menus");
     });
 
