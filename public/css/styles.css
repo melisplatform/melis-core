@@ -13,6 +13,15 @@ ________________________________________________________________________________
     width: inherit;
 }
 
+/* 
+ * Login page
+ * fixed: http://mantis.melistechnology.fr/view.php?id=3909
+ */
+.height-plus-sixty,
+.login-page {
+    height: calc(100vh - 60px);
+}
+
 #content #meliscommerce_categories_list_search_input #loader.overlay-loader,
 #content #idAddProductText #loader.overlay-loader {
     height: 100%;
