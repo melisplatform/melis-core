@@ -2419,14 +2419,14 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         left: -274px;
     }
 
-    /* preloader */
-    #content .tab-content .tab-pane > #loader.overlay-loader {
-    /* #content > #loader.overlay-loader { */
+    /* preloader [for issue: http://mantis.melistechnology.fr/view.php?id=3878] */
+    /* #content .tab-content .tab-pane > #loader.overlay-loader {
+    #content > #loader.overlay-loader {
         height: calc(100vh - 47px);
     }
     #content form > #loader.overlay-loader {
         height: calc(100% - 47px);
-    }
+    } */
     /* end pre-loader */
 
     #content .overlay-loader {
@@ -2448,8 +2448,6 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         padding: 50px 50px 40px;
         width: 600px;
     }
-
-
 
     /* flash messenger */
     #flash-messenger{
