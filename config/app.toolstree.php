@@ -587,7 +587,12 @@ return [
                                                 'allowed_file_extension' => 'jpeg,jpg,png,gif,svg,ico',
                                                 'platform_scheme_dir' => '/media/platform-scheme/'
                                             ),
-                                            'interface' => array(
+                                            'forward' => array(
+                                                'module' => 'MelisCore',
+                                                'controller' => 'PlatformScheme',
+                                                'action' => 'tool-container',
+                                            )
+                                            /*'interface' => array(
                                                 'meliscore_tool_platform_scheme_tool_content' => array(
                                                     'conf' => array(
                                                         'id' => 'id_meliscore_tool_platform_scheme_tool_content',
@@ -596,13 +601,8 @@ return [
                                                         'icon' => 'fa fa-fw icon-paint-palette',
                                                         'rights_checkbox_disable' => false,
                                                     ),
-                                                    'forward' => array(
-                                                        'module' => 'MelisCore',
-                                                        'controller' => 'PlatformScheme',
-                                                        'action' => 'tool-container',
-                                                    )
                                                 )
-                                            )
+                                            )*/
                                         )
                                     ),
                                 ),
