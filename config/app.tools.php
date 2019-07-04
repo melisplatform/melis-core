@@ -2405,6 +2405,7 @@ return [
                                             'label' => 'tr_meliscore_log_export_type',
                                             'tooltip' => 'tr_meliscore_log_export_type tooltip',
                                             'disable_inarray_validator' => true,
+                                            'empty_option' => 'tr_meliscore_common_choose',
                                         ),
                                         'attributes' => array(
                                             'id' => 'log_type',
@@ -2474,6 +2475,30 @@ return [
                                     'validators' => array(),
                                     'filters' => array(),
                                 ),
+                                'log_type' => array(
+                                    'name' => 'log_type',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                ),
+                                'log_date_range' => array(
+                                    'name' => 'log_date_range',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                ),
+                                'log_delimiter' => array(
+                                    'name' => 'log_delimiter',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                ),
+                                'log_enclosure' => array(
+                                    'name' => 'log_enclosure',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                )
                             ],
                         ],
                     ],

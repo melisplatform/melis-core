@@ -531,6 +531,8 @@ return [
     "tr_meliscore_log_export_delimiter" => "Delimiter",
     "tr_meliscore_log_export_enclosure" => "Enclose columns with \" \"",
     "tr_meliscore_log_export_export_btn" => "Export",
+    "tr_meliscore_logs_tool_export_data_over_2000" => "The export you're asking for is %s and this is quite big. <br>Are you sure you want to export?",
+    "tr_meliscore_logs_tool_export_data_content_error" => "Unable to import logs.",
 
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',

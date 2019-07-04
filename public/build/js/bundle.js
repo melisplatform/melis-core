@@ -31761,7 +31761,75 @@ $(function(){
 		// requesitng to create modal and display after
     	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
 	});
-	
+
+	$body.on("click", ".btnMelisLogExport", function(){
+		var btn  = $(this);
+		var logId = btn.parents("tr").attr("id");
+
+		var logTypeId = btn.data("typeid");
+
+		var zoneId = 'id_meliscore_logs_tool_export_modal_content';
+		var melisKey = 'meliscore_logs_tool_export_modal_content';
+		var modalUrl = '/melis/MelisCore/Log/renderLogsToolModalContainer';
+		// requesitng to create modal and display after
+    	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
+	});
+
+    $body.on("submit", "#logExportForm", function(e) {
+        e.preventDefault();
+        var formData = new FormData(this)
+		var isDownloadFile = false;
+        var queryString = [];
+        melisCoreTool.confirm(
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
+            translations.tr_meliscore_logs_tool_export_modal_title,
+            translations.tr_meliscore_platform_scheme_reset_confirm,
+            function() {
+                melisCoreTool.pending(".button");
+                $.ajax({
+					type        :'POST',
+					url         : "/melis/MelisCore/Log/validateExportLogs",
+					data        :formData,
+					cache       :false,
+					contentType : false,
+					processData : false,
+					async       : false
+                }).success(function(data){
+                    if(data.success === 1) {
+                        melisCoreTool.pending(".button");
+                        queryString = $.param(data.postValues);
+                        isDownloadFile = true;
+                        melisCoreTool.done(".button");
+                        melisHelper.melisOkNotification(data.title, data.textMessage);
+                    }
+                    else if (data.success === 2) {
+                        melisCoreTool.confirm(
+                            translations.tr_meliscore_common_yes,
+                            translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
+                            translations.tr_meliscore_logs_tool_export_modal_title,
+                            data.textMessage,
+                            function() {
+                                melisCoreTool.pending(".button");
+                                queryString = $.param(data.postValues);
+                                isDownloadFile = true;
+								melisCoreTool.done(".button");
+                                melisHelper.melisOkNotification(data.title, data.textMessage);
+                            }
+                        );
+                    }else{
+                        melisHelper.melisKoNotification(data.title, data.textMessage, data.errors);
+                    }
+                    melisCoreTool.done(".button");
+                }).error(function(){
+                    melisCoreTool.done(".button");
+                });
+            }
+        );
+        if(isDownloadFile) exportData('/melis/MelisCore/Log/exportLogs?'+queryString);
+
+    });
+
 	
 	$body.on("click", ".saveLogTypeDetails", function(){
 		
@@ -31788,6 +31856,7 @@ $(function(){
 	        data		: dataString,
 	        dataType    : "json",
 	        encode		: true,
+			async		: false,
 		}).done(function(data) {
 			
 			btn.attr("disabled", false);
@@ -31843,11 +31912,34 @@ window.initDatePicker = function(){
 	melisHelper.initDateRangePicker("#logsTableDaterange", dateRangePickerApplyEvent);
 }
 
+
 window.dateRangePickerApplyEvent = function(ev, picker) {
     $tableMelisLogs.draw();
 }
 
+function initExportLogDateRangePicker(){
+    if($("#log_date_range").length > 0){
+        melisHelper.initDateRangePicker("#log_date_range");
+        setTimeout(function(){
+            $("#log_date_range").data('daterangepicker').setStartDate(moment().subtract(8, 'days'));
+            $("#log_date_range").data('daterangepicker').setEndDate(moment().subtract(1, 'days'));
+        }, 1000);
+    }
+}
 
+
+function exportData(url) {
+	console.log(url);
+	$("#exportNewTab").href(url);
+	$("#exportNewTab").click();
+    // var newWindow = window.open(url, "_blank");
+    // setTimeout(function(){
+    //     newWindow.onload = function () {
+    //         newWindow.close();
+    //     };
+
+    // }, 300);
+}
 $(function() {
 	
 	var body = $("body");

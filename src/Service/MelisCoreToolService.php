@@ -707,16 +707,18 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      * @param $data
      * @param null $fileName
      *
-     * @return string|\Zend\Http\PhpEnvironment\Response
+     * @param null $customSeparator
+     * @param null $customIsEnclosed
+     * @return string|HttpResponse
      */
-    public function exportDataToCsv($data, $fileName = null)
+    public function exportDataToCsv($data, $fileName = null, $customSeparator = null, $customIsEnclosed = null)
     {
         $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
 
         $csvConfig = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
         $csvFileName = '';
-        $separator = $csvConfig['separator'];
-        $enclosed = $csvConfig['enclosed'];
+        $separator = empty($customSeparator) ? $csvConfig['separator'] : $customSeparator;
+        $enclosed = empty($customIsEnclosed) ? $csvConfig['enclosed'] : $customIsEnclosed;
         $striptags = (int) $csvConfig['striptags'] == 1 ? true : false;
         $response = '';
         // check what file name to use when exporting
