@@ -64,7 +64,7 @@ $(function(){
                                 queryString = $.param(data.postValues);
                                 exportData('/melis/MelisCore/Log/exportLogs?'+queryString);
 								melisCoreTool.done(".button");
-                                melisHelper.melisOkNotification(data.title, data.textMessage);
+                                melisHelper.melisOkNotification(data.title, translations.tr_meliscore_logs_tool_export_ok);
                             }
                         );
                     }else{
