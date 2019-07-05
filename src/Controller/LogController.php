@@ -194,8 +194,10 @@ class LogController extends AbstractActionController
                 if($logCount >= 2000){
                     $success = 2;
                     $textMessage = sprintf($translator->translate('tr_meliscore_logs_tool_export_data_over_2000'),$logCount);
-                }else
+                }else {
                     $success = 1;
+                    $textMessage = sprintf($translator->translate('tr_meliscore_logs_tool_export_ok'),$logCount);
+                }
             }
             else {
                 $textMessage = $translator->translate('tr_meliscore_logs_tool_export_data_content_error');
@@ -217,8 +219,11 @@ class LogController extends AbstractActionController
     }
     public function  exportLogsAction(){
 
-        $logSrv = $this->getServiceLocator()->get('MelisCoreTableLog');
+        $userTbl = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $logTbl = $this->getServiceLocator()->get('MelisCoreTableLog');
+        $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
         $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceLocator()->get('translator');
 
         $request = $this->getRequest();
         $queryValues = get_object_vars($request->getQuery());
@@ -241,11 +246,17 @@ class LogController extends AbstractActionController
         $typeId = isset($queryValues['log_type']) ? $queryValues['log_type'] : null;
         $logDelimiter = isset($queryValues['log_delimiter']) ? $queryValues['log_delimiter'] : null;
         $isEnclosed = isset($queryValues['log_enclosure']) ? $queryValues['log_enclosure'] : null;
-
         // Retreiving the list of logs using Log Service with filters as parameters
-        $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, "DESC", null, null);
+        $logs = $logTbl->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, "DESC", null, null);
 
         $logs = $logs->toArray();
+        foreach($logs as $key => $log){
+                $logs[$key]['log_message'] = $translator->translate($log['log_message']);
+                $logs[$key]['log_title'] = $translator->translate($log['log_title']);
+                $logs[$key]['log_action_status'] = $log['log_action_status'] == '0' ? $translator->translate("tr_meliscore_logs_log_status_ko") : $translator->translate("tr_meliscore_logs_log_status_ok");
+                $logs[$key]['log_type_id'] =  $logSrv->getLogType($log['log_type_id'])->logt_code;
+                $logs[$key]['log_user_id'] =  $userTbl->getEntryById($log['log_user_id'])->current()->usr_login;
+        }
         if(empty($logs))
             $logs = array(array());
 

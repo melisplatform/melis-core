@@ -30,7 +30,6 @@ $(function(){
     $body.on("submit", "#logExportForm", function(e) {
         e.preventDefault();
         var formData = new FormData(this)
-		var isDownloadFile = false;
         var queryString = [];
         melisCoreTool.confirm(
             translations.tr_meliscore_common_yes,
@@ -46,12 +45,11 @@ $(function(){
 					cache       :false,
 					contentType : false,
 					processData : false,
-					async       : false
                 }).success(function(data){
                     if(data.success === 1) {
                         melisCoreTool.pending(".button");
                         queryString = $.param(data.postValues);
-                        isDownloadFile = true;
+                        exportData('/melis/MelisCore/Log/exportLogs?'+queryString);
                         melisCoreTool.done(".button");
                         melisHelper.melisOkNotification(data.title, data.textMessage);
                     }
@@ -64,7 +62,7 @@ $(function(){
                             function() {
                                 melisCoreTool.pending(".button");
                                 queryString = $.param(data.postValues);
-                                isDownloadFile = true;
+                                exportData('/melis/MelisCore/Log/exportLogs?'+queryString);
 								melisCoreTool.done(".button");
                                 melisHelper.melisOkNotification(data.title, data.textMessage);
                             }
@@ -78,7 +76,6 @@ $(function(){
                 });
             }
         );
-        if(isDownloadFile) exportData('/melis/MelisCore/Log/exportLogs?'+queryString);
 
     });
 
@@ -181,14 +178,10 @@ function initExportLogDateRangePicker(){
 
 
 function exportData(url) {
-	console.log(url);
-	$("#exportNewTab").href(url);
-	$("#exportNewTab").click();
-    // var newWindow = window.open(url, "_blank");
-    // setTimeout(function(){
-    //     newWindow.onload = function () {
-    //         newWindow.close();
-    //     };
-
-    // }, 300);
+    var downloadLink = document.createElement("a");
+    downloadLink.href = url;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    if($("#btn-export-logs-cancel").length >0 ) $("#btn-export-logs-cancel").click();
 }

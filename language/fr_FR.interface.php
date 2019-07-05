@@ -550,6 +550,10 @@ return [
     "tr_meliscore_log_export_export_btn" => "Exporter",
     "tr_meliscore_logs_tool_export_data_over_2000" => "L'export que vous demandez contient %s résultats et ceci est assez important. <br>Êtes-vous sur de vouloir continuer à exporter ?",
     "tr_meliscore_logs_tool_export_data_content_error" => "Unable to import logs.",
+    "tr_meliscore_logs_tool_export_ok" => "Logs successfully imported.",
+    "tr_meliscore_logs_log_status_ok" => "Success",
+    "tr_meliscore_logs_log_status_ko" => "Failed",
+    "tr_meliscore_logs_log_export_confirm_msg" => "By clicking on this button you will export all logs with the filters configured. Are you sure you wish to proceed ?",
 
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',

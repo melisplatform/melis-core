@@ -718,7 +718,12 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         $csvConfig = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
         $csvFileName = '';
         $separator = empty($customSeparator) ? $csvConfig['separator'] : $customSeparator;
-        $enclosed = empty($customIsEnclosed) ? $csvConfig['enclosed'] : $customIsEnclosed;
+
+        if($customIsEnclosed != null)
+            $enclosed = $customIsEnclosed == 0 ? '' : '"';
+        else
+            $enclosed = $csvConfig['enclosed'];
+
         $striptags = (int) $csvConfig['striptags'] == 1 ? true : false;
         $response = '';
         // check what file name to use when exporting
