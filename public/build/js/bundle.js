@@ -31783,7 +31783,7 @@ $(function(){
             translations.tr_meliscore_common_yes,
             translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
             translations.tr_meliscore_logs_tool_export_modal_title,
-            translations.tr_meliscore_platform_scheme_reset_confirm,
+            translations.tr_meliscore_logs_log_export_confirm_msg,
             function() {
                 melisCoreTool.pending(".button");
                 $.ajax({
