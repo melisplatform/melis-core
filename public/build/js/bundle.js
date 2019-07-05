@@ -31918,8 +31918,8 @@ function initExportLogDateRangePicker(){
     if($("#log_date_range").length > 0){
         melisHelper.initDateRangePicker("#log_date_range");
         setTimeout(function(){
-            $("#log_date_range").data('daterangepicker').setStartDate(moment().subtract(8, 'days'));
-            $("#log_date_range").data('daterangepicker').setEndDate(moment().subtract(1, 'days'));
+            $("#log_date_range").data('daterangepicker').setStartDate(moment().subtract(6, 'days'));
+            $("#log_date_range").data('daterangepicker').setEndDate(moment());
         }, 1000);
     }
 }

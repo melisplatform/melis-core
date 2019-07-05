@@ -260,7 +260,7 @@ class LogController extends AbstractActionController
         if(empty($logs))
             $logs = array(array());
 
-        return $melisTool->exportDataToCsv($logs,"MELIS_CORE_LOGS_EXPORT.csv",$logDelimiter,$isEnclosed);
+        return $melisTool->exportDataToCsv($logs,date("Y-m-d H:i:s")."_MelisPlatform_LogExport.csv",$logDelimiter,$isEnclosed);
     }
 
     /**
