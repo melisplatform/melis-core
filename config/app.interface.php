@@ -195,7 +195,8 @@ return array(
                 ),
                 'js' => array(
                     '/melis/get-translations',
-                    '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
+                    '/MelisCore/assets/components/library/jquery/jquery-3.3.1.min.js?v=v1.2.3',
+                    '/MelisCore/assets/components/library/popper/popper.min.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',

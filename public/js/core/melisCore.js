@@ -116,37 +116,39 @@ var melisCore = (function(window){
             type: 'GET',
             url: '/melis/MelisCore/MelisFlashMessenger/getflashMessage',
             dataType: 'json',
-        }).success(function(data, status, xhr){
-            // check if there is a flash message
-            if(data.flashMessage.length) {
-                $flashMessenger.removeClass("empty-notif");
-                $body.find("#flash-messenger").prev().find(".badge").removeClass("hidden");
+            success: function(data, status, xhr) {
+                // check if there is a flash message
+                if(data.flashMessage.length) {
+                    $flashMessenger.removeClass("empty-notif");
+                    $body.find("#flash-messenger").prev().find(".badge").removeClass("hidden");
 
-                var ctr = 0;
-                $body.find("#flash-messenger").empty();
-                var tempData = '';
-                var clearData = "<li style='border-left: 0 solid #ce5459;'><button id='clearNotifBtn' class='btn btn-primary' style='width:100%; border-width:0'>"+translations.tr_meliscore_clear_notifications+"</button></li>";
-                $.each(data, function(index, element) {
-                    $.each(element, function(index, fm){
-                        tempData += "" +
-                            "<li>" +
-                            "	<span class='img-circle media-object "+fm.image+"'></span>" +
-                            "   <div class='media'>" +
-                            "       <div class='media-body'>" +
-                            "           <a  class='strong text-primary'>"+(fm.title)+"</a><span class='time-email'>"+fm.date_trans+' '+fm.time+"</span>" +
-                            "<div class='clearfix'></div>"+(fm.message)+
-                            "</div>" +
-                            "</div>" +
-                            "</li>";
-                        ctr++;
+                    var ctr = 0;
+                    $body.find("#flash-messenger").empty();
+                    var tempData = '';
+                    var clearData = "<li style='border-left: 0 solid #ce5459;'><button id='clearNotifBtn' class='btn btn-primary' style='width:100%; border-width:0'>"+translations.tr_meliscore_clear_notifications+"</button></li>";
+                    $.each(data, function(index, element) {
+                        $.each(element, function(index, fm){
+                            tempData += "" +
+                                "<li>" +
+                                "	<span class='img-circle media-object "+fm.image+"'></span>" +
+                                "   <div class='media'>" +
+                                "       <div class='media-body'>" +
+                                "           <a  class='strong text-primary'>"+(fm.title)+"</a><span class='time-email'>"+fm.date_trans+' '+fm.time+"</span>" +
+                                "<div class='clearfix'></div>"+(fm.message)+
+                                "</div>" +
+                                "</div>" +
+                                "</li>";
+                            ctr++;
+                        });
                     });
-                });
-                $body.find("#flash-messenger").append(clearData);
-                $body.find("#flash-messenger").append(tempData);
-                $body.find("#id_meliscore_header_flash_messenger.dropdown.notification a span.badge").text(ctr);
+                    $body.find("#flash-messenger").append(clearData);
+                    $body.find("#flash-messenger").append(tempData);
+                    $body.find("#id_meliscore_header_flash_messenger.dropdown.notification a span.badge").text(ctr);
+                }
+            },
+            error: function() {
+                alert( translations.tr_meliscore_error_message );
             }
-        }).error(function(){
-            alert( translations.tr_meliscore_error_message );
         });
     }
 
@@ -164,24 +166,26 @@ var melisCore = (function(window){
             type: 'GET',
             url: '/melis/MelisCore/MelisFlashMessenger/clearFlashMessage',
             dataType: 'json',
-        }).success(function(data, status, xhr){
-            if(data.flashMessage) {
-                if($flashMessenger.hasClass("empty-notif")===false)
-                    $flashMessenger.addClass("empty-notif");
-                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
-                    $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
-
-                $body.find("#flash-messenger").empty();
-                tempData = "" +
-                    '<li class="empty-notif-li">' +
-                    '<div class="media">' +
-                    "<span>"+data.trans+"</span>" +
-                    '</div>' +
-                    '</li>';
-                $body.find("#flash-messenger").append(tempData);
+            success: function(data, status, xhr) {
+                if(data.flashMessage) {
+                    if($flashMessenger.hasClass("empty-notif")===false)
+                        $flashMessenger.addClass("empty-notif");
+                    if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
+                        $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
+    
+                    $body.find("#flash-messenger").empty();
+                    tempData = "" +
+                        '<li class="empty-notif-li">' +
+                        '<div class="media">' +
+                        "<span>"+data.trans+"</span>" +
+                        '</div>' +
+                        '</li>';
+                    $body.find("#flash-messenger").append(tempData);
+                }
+            },
+            error: function() {
+                alert( translations.tr_meliscore_error_message );
             }
-        }).error(function(){
-            alert( translations.tr_meliscore_error_message );
         });
     }
 
