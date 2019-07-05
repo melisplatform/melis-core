@@ -536,6 +536,7 @@ return [
     "tr_meliscore_logs_tool_export_ok" => "Logs successfully exported.",
     "tr_meliscore_logs_log_status_ok" => "Success",
     "tr_meliscore_logs_log_status_ko" => "Failed",
+    'tr_meliscore_logs_cancel' => 'Cancel',
     "tr_meliscore_logs_log_export_confirm_msg" => "By clicking on this button you will export all logs with the filters configured. Are you sure you wish to proceed ?",
 
     // Table columns

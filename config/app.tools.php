@@ -2453,8 +2453,8 @@ return [
                                             'checked_value' => 1,
                                             'unchecked_value' => 0,
                                             'switchOptions' => array(
-                                                'label-on' => 'tr_meliscommerce_categories_common_label_yes',
-                                                'label-off' => 'tr_meliscommerce_categories_common_label_no',
+                                                'label-on' => 'tr_meliscore_common_yes',
+                                                'label-off' => 'tr_meliscore_common_no',
                                                 'label' => "<i class='glyphicon glyphicon-resize-horizontal'></i>",
                                             ),
                                             'disable_inarray_validator' => true,
