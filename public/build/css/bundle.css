@@ -33541,14 +33541,9 @@ body #newplugin-cont.show-menu{
 .widget.widget-tabs.widget-tabs-responsive>.widget-head ul{
     border: none;
 }
-.widget-tabs .nav-tabs > li > a.glyphicons{
-    border: none;
+.widget-tabs .nav-tabs > li > a.glyphicons {
     margin-right: 0;
 }
-/* .widget-tabs .nav-tabs > li > a.glyphicons:hover{
-    background: 932E2A;
-    border:none;
-} */
 .widget.widget-tabs-icons-only-2>.widget-head ul li a.glyphicons:hover i:before{
     color: #e61c23;
 }
@@ -33596,6 +33591,25 @@ body #newplugin-cont.show-menu{
 }
 .widget-tabs .nav-tabs > li > a.glyphicons {
     border-bottom: 1px solid #e5e5e5;
+}
+
+.widget-tabs .nav-tabs > li.active > a.glyphicons:hover {
+    transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    -moz-transition: none;
+    -webkit-transition: none;
+}
+
+.widget-tabs .nav-tabs > li > a.glyphicons:focus,
+.widget-tabs .nav-tabs > li > a.glyphicons:hover {
+    border-bottom: 1px solid #e5e5e5;
+
+    transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    -moz-transition: none;
+    -webkit-transition: none;
 }
 /* HORIZONTAL TAB */
 .product-text-tab-content{
@@ -34798,13 +34812,13 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
 
     /* preloader [for issue: http://mantis.melistechnology.fr/view.php?id=3878] */
-    /* #content .tab-content .tab-pane > #loader.overlay-loader {
-    #content > #loader.overlay-loader {
+    #content .tab-content .tab-pane>#loader.overlay-loader {
+    /* #content > #loader.overlay-loader { */
         height: calc(100vh - 47px);
     }
     #content form > #loader.overlay-loader {
         height: calc(100% - 47px);
-    } */
+    }
     /* end pre-loader */
 
     #content .overlay-loader {

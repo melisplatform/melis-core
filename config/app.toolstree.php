@@ -678,6 +678,7 @@ return [
                                                                 'melis_core_gdpr_gdpr_search_form' => array(
                                                                     'conf' => array(
                                                                         'id' => 'id_melis_core_gdpr_gdpr_search_form',
+                                                                        'name' => 'tr_melis_core_gdpr_gdpr_search_form',
                                                                         'melisKey' => 'melis_core_gdpr_gdpr_search_form',
                                                                     ),
                                                                     'forward' => array(
@@ -690,6 +691,7 @@ return [
                                                                 'melis_core_gdpr_content_tabs' => array(
                                                                     'conf' => array(
                                                                         'id' => 'id_melis_core_gdpr_content_tabs',
+                                                                        'name' => 'tr_melis_core_gdpr_content_tabs',
                                                                         'melisKey' => 'melis_core_gdpr_content_tabs',
                                                                     ),
                                                                     'forward' => array(
