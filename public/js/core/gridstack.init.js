@@ -37,6 +37,7 @@ var melisDashBoardDragnDrop = {
         this.dropWidget(this.melisWidgetHandle);
         this.dragStopWidget();
         this.resizeStopWidget();
+        $("#disable-left-menu-overlay").hide();
     },
 
     cacheDom: function () {
