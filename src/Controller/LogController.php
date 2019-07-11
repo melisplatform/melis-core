@@ -231,6 +231,7 @@ class LogController extends AbstractActionController
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
         $dates = array();
+        $sortedLogs = array();
         $startDate = null;
         $endDate = null;
 
@@ -251,16 +252,20 @@ class LogController extends AbstractActionController
 
         $logs = $logs->toArray();
         foreach($logs as $key => $log){
-                $logs[$key]['log_message'] = $translator->translate($log['log_message']);
-                $logs[$key]['log_title'] = $translator->translate($log['log_title']);
-                $logs[$key]['log_action_status'] = $log['log_action_status'] == '0' ? $translator->translate("tr_meliscore_logs_log_status_ko") : $translator->translate("tr_meliscore_logs_log_status_ok");
-                $logs[$key]['log_type_id'] =  $logSrv->getLogType($log['log_type_id'])->logt_code;
-                $logs[$key]['log_user_id'] =  $userTbl->getEntryById($log['log_user_id'])->current()->usr_login;
+                array_push($sortedLogs, array(
+                    'log_id' => $log['log_id'],
+                    'log_date' => $log['log_date_added'],
+                    'log_type_name' => $translator->translate($log['log_title']),
+                    'log_user' => $userTbl->getEntryById($log['log_user_id'])->current()->usr_firstname . " " . $userTbl->getEntryById($log['log_user_id'])->current()->usr_lastname,
+                    'log_message' => $logSrv->getLogType($log['log_type_id'])->logt_code,
+                    'log_item_id' => $log['log_item_id'],
+                ));
         }
-        if(empty($logs))
-            $logs = array(array());
 
-        return $melisTool->exportDataToCsv($logs,date("Y-m-d_H:i:s")."_MelisPlatform_LogExport.csv",$logDelimiter,$isEnclosed);
+        if(empty($sortedLogs))
+            $sortedLogs = array(array());
+
+        return $melisTool->exportDataToCsv($sortedLogs,date("Y-m-d_H:i:s")."_MelisPlatform_LogExport.csv",$logDelimiter,$isEnclosed);
     }
 
     /**
