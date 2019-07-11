@@ -548,7 +548,7 @@ return [
     "tr_meliscore_log_export_delimiter" => "Délimiteur",
     "tr_meliscore_log_export_enclosure" => "Fermer les colonnes avec \" \"",
     "tr_meliscore_log_export_export_btn" => "Exporter",
-    "tr_meliscore_logs_tool_export_data_over_2000" => "L'export que vous demandez contient %s résultats et ceci est assez important. <br>Êtes-vous sur de vouloir continuer à exporter ?",
+    "tr_meliscore_logs_tool_export_data_over_2000" => "Cet export contient %s résultats ce qui est volumineux et peut prendre quelques minutes.<br>Etes-vous sûr de vouloir exporter ces données ?",
     "tr_meliscore_logs_tool_export_data_content_error" => "Impossible d'exporter les logs.",
     "tr_meliscore_logs_tool_export_ok" => "Logs exportés avec succès.",
     "tr_meliscore_logs_log_status_ok" => "Succès",
