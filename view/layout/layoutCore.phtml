@@ -31,7 +31,7 @@
 <!--[if gt IE 8]>
 <html> <![endif]-->
 <!--[if !IE]><!-->
-<html <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null; ?>>
+<html <?= $loginClas ? 'class="height-plus-sixty"' : null; ?>>
 <!-- <![endif]-->
 <head>
     <meta charset="utf-8">
@@ -126,7 +126,7 @@
     ?>
 
 </head>
-<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? 'style="height: calc(100vh + 60px);"' : null ?>>
+<body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? '' : null ?>>
     <?= $this->content; ?>
     <?= $this->headScript() ?>
     <!-- modals container -->
