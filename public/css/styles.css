@@ -4351,3 +4351,6 @@ div#modal-user-management div.widget {
     border: 0;
     border-radius: 0;
 }
+input#log_date_range{
+    background: #fff;
+}

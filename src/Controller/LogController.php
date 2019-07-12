@@ -178,12 +178,15 @@ class LogController extends AbstractActionController
             {
                 $origDateFormat = $locale === "fr_FR" ? "d/m/Y" : "m/d/Y";
 
-                if(isset($postValues['log_date_range'])){
+                if(!empty($postValues['log_date_range'])){
                     $dates = explode(" - ",$postValues["log_date_range"]);
                 }
 
-                $startDate = DateTime::createFromFormat($origDateFormat, $dates[0])->format('Y-m-d');
-                $endDate = DateTime::createFromFormat($origDateFormat, $dates[1])->format('Y-m-d');
+                if(!empty($dates)){
+                    $startDate = DateTime::createFromFormat($origDateFormat, $dates[0])->format('Y-m-d');
+                    $endDate = DateTime::createFromFormat($origDateFormat, $dates[1])->format('Y-m-d');
+                }
+
                 $userId = isset($postValues['log_user']) ? $postValues['log_user'] : null;
                 $typeId = isset($postValues['log_type']) ? $postValues['log_type'] : null;
                 $postValues['log_enclosure'] = isset($postValues['log_enclosure']) ? 1 : 0;
@@ -237,12 +240,15 @@ class LogController extends AbstractActionController
 
         $origDateFormat = $locale === "fr_FR" ? "d/m/Y" : "m/d/Y";
 
-        if(isset($queryValues['log_date_range'])){
+        if(!empty($queryValues['log_date_range'])){
             $dates = explode(" - ",$queryValues["log_date_range"]);
         }
 
-        $startDate = DateTime::createFromFormat($origDateFormat, $dates[0])->format('Y-m-d');
-        $endDate = DateTime::createFromFormat($origDateFormat, $dates[1])->format('Y-m-d');
+        if(!empty($dates)){
+            $startDate = DateTime::createFromFormat($origDateFormat, $dates[0])->format('Y-m-d');
+            $endDate = DateTime::createFromFormat($origDateFormat, $dates[1])->format('Y-m-d');
+        }
+
         $userId = isset($queryValues['log_user']) ? $queryValues['log_user'] : null;
         $typeId = isset($queryValues['log_type']) ? $queryValues['log_type'] : null;
         $logDelimiter = isset($queryValues['log_delimiter']) ? $queryValues['log_delimiter'] : null;
@@ -251,6 +257,7 @@ class LogController extends AbstractActionController
         $logs = $logTbl->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, "DESC", null, null);
 
         $logs = $logs->toArray();
+
         foreach($logs as $key => $log){
                 array_push($sortedLogs, array(
                     'log_id' => $log['log_id'],

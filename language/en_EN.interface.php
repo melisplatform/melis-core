@@ -534,7 +534,7 @@ return [
     "tr_meliscore_log_export_delimiter" => "Delimiter",
     "tr_meliscore_log_export_delimiter tooltip" => "Column separation character",
     "tr_meliscore_log_export_enclosure" => "Enclose columns with \" \"",
-    "tr_meliscore_log_export_enclosure tooltip" => "Select if you want the columns to be closed with \"\" or not",
+    "tr_meliscore_log_export_enclosure tooltip" => 'Select if you want the columns to be closed with &quot; &quot; or not',
     "tr_meliscore_log_export_export_btn" => "Export",
     "tr_meliscore_logs_tool_export_data_over_2000" => "This export contains %s results which is large and can take several minutes.<br>Are you sure you want to export these data ?",
     "tr_meliscore_logs_tool_export_data_content_error" => "Unable to export logs.",

@@ -2424,6 +2424,9 @@ return [
                                         ),
                                         'attributes' => array(
                                             'id' => 'log_date_range',
+                                            'class' => 'melis-input-group-button',
+                                            'data-button-icon' => 'fa fa-eraser',
+                                            'data-button-class' => 'meliscore-clear-input',
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_log_export_log_date_range',
                                         ),

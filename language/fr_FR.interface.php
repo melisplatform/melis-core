@@ -551,7 +551,7 @@ return [
     "tr_meliscore_log_export_delimiter" => "Délimiteur",
     "tr_meliscore_log_export_delimiter tooltip" => "Caractère de séparation des colonnes",
     "tr_meliscore_log_export_enclosure" => "Fermer les colonnes avec \" \"",
-    "tr_meliscore_log_export_enclosure tooltip" => "Sélectionnez si vous souhaitez ou non que les colonnes soient fermées avec \"\"",
+    "tr_meliscore_log_export_enclosure tooltip" => 'Sélectionnez si vous souhaitez ou non que les colonnes soient fermées avec &quot; &quot; ',
     "tr_meliscore_log_export_export_btn" => "Exporter",
     "tr_meliscore_logs_tool_export_data_over_2000" => "Cet export contient %s résultats ce qui est volumineux et peut prendre quelques minutes.<br>Etes-vous sûr de vouloir exporter ces données ?",
     "tr_meliscore_logs_tool_export_data_content_error" => "Impossible d'exporter les logs.",
