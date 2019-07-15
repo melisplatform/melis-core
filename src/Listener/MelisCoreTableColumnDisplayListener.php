@@ -47,5 +47,24 @@ class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener imple
                 $params['data'] = $str;
             }
         );
+
+        $this->listeners[] = $sharedEvents->attach(
+            '*',
+            'melis_tool_column_display_admin_name',
+            function($e){
+
+                $sm = $e->getTarget()->getServiceLocator();
+                $params = $e->getParams();
+
+                $tblUser  = $sm->get('MelisCoreTableUser');
+                $userData = $tblUser->getEntryById($params['data'])->current();
+
+                $str = $params['data'];
+                if (!empty($userData))
+                    $str = $userData->usr_firstname . ' ' . $userData->usr_lastname;
+
+                $params['data'] = $str;
+            }
+        );
     }
 }
