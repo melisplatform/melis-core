@@ -707,4 +707,3 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     return this;
   };
 })(window.jQuery);
-
