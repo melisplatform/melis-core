@@ -15,7 +15,7 @@ if($schemes) {
 
 
 
-<div id="content loginContent">
+<div id="content loginContent" class="content-login">
  	<h4 class="innerAll margin-none border-bottom text-center"><i class="fa fa-lock"></i> <?= $this->translate('tr_meliscore_login_header'); ?></h4>
     <div class="login spacing-x2">
      	<div class="placeholder main-login-page text-center">
@@ -27,9 +27,9 @@ if($schemes) {
      	</div>
      	<div class="container">
              <div class="row">
-                 <div class="col-sm-6 col-sm-offset-3">
-                      <div class="panel panel-default">
-                           <div class="panel-body innerAll">
+                 <div class="card-wrapper mx-auto">
+                      <div class="card">
+                           <div class="card-body innerAll">
 								<div id="loginprompt"></div>
                                 <?= $this->form()->openTag($form); ?>
                                     <?php 

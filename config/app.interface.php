@@ -187,6 +187,8 @@ return array(
 
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
+                    // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
+                    '/MelisCore/css/custom-style.css',
                     '/MelisCore/css/diagnostic.css',
 
 
@@ -564,6 +566,8 @@ return array(
 
                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
                     // MelisCore main CSS - should always be in bottom
+                    // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
+                    '/MelisCore/css/custom-style.css',
                     '/MelisCore/css/styles.css',
                 ),
                 'js' => array(

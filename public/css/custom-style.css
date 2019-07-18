@@ -1,10 +1,36 @@
-/*
+/* Added by: Junry @ 07/18/2019
  * Custom css for the update of jquery 3.3.1 and bootstrap 4.3.1
  */
 
 /* login page */
 .navbar.main.navbar-primary {
   padding: 0;
+}
+.navbar.main .nav.navbar-right > li:hover {
+  background-color: #fff;
+}
+.navbar.main .nav.navbar-right > li .dropdown-toggle::after {
+  display: none;
+}
+.navbar.main .nav.navbar-right > li > .dropdown-menu {
+  min-width: 12rem;
+}
+.navbar.main .nav.navbar-right > li:hover > .dropdown-menu {
+  left: -8.59rem;
+}
+.navbar.main .nav.navbar-right .dropdown-menu li.active a {
+  background-color: #e61c23;
+  display: block;
+  padding: 3px 20px;
+  color: #fff;
+  text-decoration: none;
+}
+.navbar.main .nav.navbar-right .dropdown-menu li.active:hover a {
+  background-color: #fff;
+  color: #e61c23;
+}
+.navbar.main .nav.navbar-right li.active {
+  border-color: #c52127;
 }
 .content-login .card-wrapper {
   width: 38.285rem;

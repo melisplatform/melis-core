@@ -1914,7 +1914,8 @@ span.fancytree-active span.fancytree-title{
     cursor: pointer;
 }
 .cb-cont label{
-    padding-left: 25px;
+    padding-left: 10px;
+    position: relative;
 }
 .cb-cont .cbmask-outer{
     height: 16px;
