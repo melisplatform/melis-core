@@ -1,0 +1,10 @@
+/*
+ * Custom override of defaults in bootstrap 4.3.1
+ * found in node_modules/bootstrap
+ * this file generates bootstrap.css and boostrap.min.css
+ * in melis-core/public/assets/library/bootstrap/css/
+ */
+
+$font-size-base: 0.875rem;
+
+@import "../../../../../node_modules/bootstrap/scss/bootstrap";

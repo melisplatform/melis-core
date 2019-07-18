@@ -1,0 +1,12 @@
+/*
+ * Custom css for the update of jquery 3.3.1 and bootstrap 4.3.1
+ */
+
+/* login page */
+.navbar.main.navbar-primary {
+  padding: 0;
+}
+.content-login .card-wrapper {
+  width: 38.285rem;
+  margin-bottom: 20px;
+}
