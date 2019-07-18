@@ -197,7 +197,7 @@ return array(
                 ),
                 'js' => array(
                     '/melis/get-translations',
-                    '/MelisCore/assets/components/library/jquery/jquery-3.3.1.min.js?v=v1.2.3',
+                    '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
                     //'/MelisCore/assets/components/library/popper/popper.min.js',
 
                     // Concat plugins
@@ -259,7 +259,7 @@ return array(
                  */
                 'build' => [
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' =>  false,
+                    'use_build_assets' =>  true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 

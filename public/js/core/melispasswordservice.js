@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 	// forget password form submit
     $('#idformmeliscoreforgot').submit(function(event) {
         var datastring = $("#idformmeliscoreforgot").serialize();
@@ -8,17 +8,19 @@ $(document).ready(function() {
             url         : '/melis/lost-password-request',
             data        : datastring,
             dataType    : 'json',
-            encode      : true
-        }).success(function(data){
-            if (data.success) {
-            	melisCoreTool.alertSuccess('#lostpassprompt', "", data.message);
-               $('#idformmeliscoreforgot')[0].reset();
+            encode      : true,
+            success: function(data) {
+                if (data.success) {
+                    melisCoreTool.alertSuccess('#lostpassprompt', "", data.message);
+                   $('#idformmeliscoreforgot')[0].reset();
+                }
+                else{
+                    melisCoreTool.alertDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
+                }
+            },
+            error: function() {
+                alert( translations.tr_meliscore_error_message );
             }
-            else{
-            	melisCoreTool.alertDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
-            }
-        }).error(function(){
-        	alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
     });
@@ -33,18 +35,20 @@ $(document).ready(function() {
             url         : '/melis/reset-old-password',
             data        : rhash,
             dataType    : 'json',
-            encode      : true
-        }).success(function(data){
-            if (data.success) {
-                melisCoreTool.alertSuccess('#resetpassprompt', "", data.message);
-                $this[0].reset();
-                window.location.replace("/melis/login/");
+            encode      : true,
+            success: function(data) {
+                if (data.success) {
+                    melisCoreTool.alertSuccess('#resetpassprompt', "", data.message);
+                    $this[0].reset();
+                    window.location.replace("/melis/login/");
+                }
+                else{
+                    melisCoreTool.alertDanger('#resetpassprompt', translations.tr_meliscore_common_error+"!", data.message);
+                }
+            },
+            error: function() {
+                alert( translations.tr_meliscore_error_message );
             }
-            else{
-                melisCoreTool.alertDanger('#resetpassprompt', translations.tr_meliscore_common_error+"!", data.message);
-            }
-        }).error(function() {
-            alert( translations.tr_meliscore_error_message );
         });
 
         event.preventDefault();

@@ -19,7 +19,7 @@
                         waitForJquery(showDashboardPluginMenu);
 
                         function waitForJquery(method) {
-                            if (window.jQuery && typeof melisDashBoardDragnDrop.$body !== "undefined") {
+                            if (window.jQuery && typeof melisDashBoardDragnDrop !== "undefined") {
                                 method();
                             } else {
                                 setTimeout(function () {
@@ -34,7 +34,7 @@
                          */
                         function showDashboardPluginMenu() {
                             $("#melis-core-dashboard-msg").show();
-                            var pluginMenu = melisDashBoardDragnDrop.$body.find("#id_meliscore_center_dashboard_menu");
+                            var pluginMenu = $("body").find("#id_meliscore_center_dashboard_menu");
                             if (pluginMenu.length > 0) {
                                 if ( ! pluginMenu.hasClass("shown") ) {
                                     //pluginMenu.addClass("shown");

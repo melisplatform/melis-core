@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 	
 	// LOGIN 
     $('form#idformmeliscorelogin').submit(function(event) {
@@ -9,34 +9,35 @@ $(document).ready(function() {
             url         : '/melis/authenticate',
             data        : datastring,
             dataType    : 'json',
-            encode      : true
-        }).success(function(data){
-            if (data.success)   {
-                window.location.replace("/melis");
-            }
-            else{
-
-                var errorTxt = "";
-                $.each(data.errors, function(i,v) {
-                    errorTxt = v;
-                });
-
-                if(data.require_reset_password) {
-                    melisCoreTool.alertWarning('#loginprompt', '<i class="fa fa-exclamation-triangle"></i> ' + translations.tr_meliscore_common_warning+"!", errorTxt);
+            encode      : true,
+            success: function(data) {
+                if (data.success)   {
+                    window.location.replace("/melis");
                 }
-                else {
-                    melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
+                else{
+    
+                    var errorTxt = "";
+                    $.each(data.errors, function(i,v) {
+                        errorTxt = v;
+                    });
+    
+                    if(data.require_reset_password) {
+                        melisCoreTool.alertWarning('#loginprompt', '<i class="fa fa-exclamation-triangle"></i> ' + translations.tr_meliscore_common_warning+"!", errorTxt);
+                    }
+                    else {
+                        melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
+                    }
+                    $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
+    
                 }
+            },
+            error: function() {
                 $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
-
+        	    alert( translations.tr_meliscore_error_message );
             }
-        }).error(function(){
-            $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
-        	alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
     });
-    
     
     // CHANGE LANGUAGE
     window.melisChangeLanguage = function(langId){
@@ -46,19 +47,20 @@ $(document).ready(function() {
             url         : '/melis/change-language',
             data        : datastring,
             dataType    : 'json',
-            encode      : true
-        }).success(function(data){
-            if (data.success){
-            	location.reload();
+            encode      : true,
+            success: function(data) {
+                if (data.success){
+                    location.reload();
+                }
+                else{
+                    alert( translations.tr_meliscore_error_language );
+                }
+            },
+            error: function() {
+                alert( translations.tr_meliscore_error_message );
             }
-            else{
-            	alert( translations.tr_meliscore_error_language );
-            }
-        }).error(function(){
-        	alert( translations.tr_meliscore_error_message );
         });
     }
-    
     
     // login checkbox (remember me) mask
     $('body').on("click", ".cb-cont input[type=checkbox]", function(){
@@ -70,6 +72,4 @@ $(document).ready(function() {
     if(rememberME){
     	$(".remember-me-cont .cbmask-inner").addClass("cb-active");
     }
-    
-    
 });
