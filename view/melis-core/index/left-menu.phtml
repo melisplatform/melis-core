@@ -16,9 +16,8 @@
         ?>
 
         <div class="sidebarMenuWrapper hasNiceScroll">
-        
             <ul class="list-unstyled sideMenu">
-
+                <div id="disable-left-menu-overlay"></div>
                 <?php
                 if (!empty($this->zoneconfig['interface'])) {
                     foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
