@@ -91,10 +91,15 @@
   padding-right: 0;
 }
 #main #menu .sidebar {
-  width: inherit;
+  width: 19.9rem;
 }
 #main #content {
-  margin-left: 0;
+  margin-left: 19.9rem;
+}
+#main #mewnu.no-gutters,
+#main #content.no-gutters {
+  padding-left: 0;
+  padding-right: 0;
 }
 /* Responsive */
 @media (min-width: 768px) {
