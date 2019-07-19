@@ -95,6 +95,8 @@
 }
 #main #content {
   margin-left: 19.9rem;
+  padding-left: 0;
+  padding-right: 0;
 }
 #main #mewnu.no-gutters,
 #main #content.no-gutters {
