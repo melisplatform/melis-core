@@ -191,7 +191,6 @@ return array(
                     '/MelisCore/css/custom-style.css',
                     '/MelisCore/css/diagnostic.css',
 
-
                     // Custom font-awesome checkbox
                     '/MelisCore/css/custom-fontawesome.css'
                 ),

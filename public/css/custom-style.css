@@ -36,3 +36,95 @@
   width: 38.285rem;
   margin-bottom: 20px;
 }
+/* 
+ * BO #nav-header [role="navigation"] 
+ */
+#nav-header {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+#nav-header.no-gutters {
+  padding-left: 0;
+  padding-right: 0;
+}
+#nav-header .row {
+  width: inherit;
+  margin: 0;
+}
+#tab-menu,
+#brand-logo,
+#nav-header {
+  position: relative;
+}
+#nav-header .no-gutters {
+  padding-left: 0;
+  padding-right: 0;
+}
+.navbar.main .toggle-button {
+  padding-left: 15px;
+}
+#nav-header .navbar-brand {
+  font-size: 1.324rem;
+  padding-right: 2.5rem;
+}
+#nav-header .nav-tabs > li.active > a, 
+#nav-header .nav-tabs > li.active > a:focus {
+  display: block;
+  cursor: default;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+.res-action-container {
+  display: block;
+}
+/* #main */
+#main > .row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+#main > .no-gutters {
+  padding-left: 0;
+  padding-right: 0;
+}
+#main #menu .sidebar {
+  width: inherit;
+}
+#main #content {
+  margin-left: 0;
+}
+/* Responsive */
+@media (min-width: 768px) {
+  /* #nav-header */
+  #nav-header .navbar-brand {
+    width: inherit;
+  }
+  .navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
+      color: #e61c23;
+  }
+  #nav-header .nav-tabs > li.active > a.close {
+    display: none;
+  }
+  #nav-header .nav-tabs > li.active:hover > a.close {
+    display: block;
+    border: none;
+  }
+  .navbar.main .nav.navbar-right {
+    float: right;
+  }
+  .navbar.main .nav.navbar-right li:first-child {
+    display: none;
+  }
+  .navbar.main .nav.navbar-right > li {
+    float: left;
+  }
+  .navbar.main .nav.navbar-right > li > a {
+    display: block;
+  }
+  #id_meliscore_header_flash_messenger {
+    border-left: 1px solid #c52127;
+  }
+}
