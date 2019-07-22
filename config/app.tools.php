@@ -2405,7 +2405,7 @@ return [
                                             'label' => 'tr_meliscore_log_export_type',
                                             'tooltip' => 'tr_meliscore_log_export_type tooltip',
                                             'disable_inarray_validator' => true,
-                                            'empty_option' => 'tr_meliscore_common_choose',
+                                            'empty_option' => 'tr_meliscore_common_all',
                                         ),
                                         'attributes' => array(
                                             'id' => 'log_type',
