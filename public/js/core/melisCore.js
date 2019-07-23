@@ -33,16 +33,18 @@ var melisCore = (function(window){
             url         : '/melis/change-language',
             data        : datastring,
             dataType    : 'json',
-            encode      : true
-        }).success(function(data){
-            if (data.success){
-                location.reload();
+            encode      : true,
+            success: function(data) {
+                if (data.success){
+                    location.reload();
+                }
+                else{
+                    alert( translations.tr_meliscore_error_language );
+                }
+            },
+            error: function() {
+                alert( translations.tr_meliscore_error_message );
             }
-            else{
-                alert( translations.tr_meliscore_error_language );
-            }
-        }).error(function(){
-            alert( translations.tr_meliscore_error_message );
         });
     }
 
@@ -55,17 +57,19 @@ var melisCore = (function(window){
             url         : '/melis/lost-password-request',
             data        : datastring,
             dataType    : 'json',
-            encode      : true
-        }).success(function(data){
-            if (data.success) {
-                melisTool.alerts.showSuccess('#lostpassprompt', "", data.message);
-                $('#idformmeliscoreforgot')[0].reset();
+            encode      : true,
+            success: function(data) {
+                if (data.success) {
+                    melisTool.alerts.showSuccess('#lostpassprompt', "", data.message);
+                    $('#idformmeliscoreforgot')[0].reset();
+                }
+                else{
+                    melisTool.alerts.showDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
+                }
+            },
+            error: function() {
+                alert( translations.tr_meliscore_error_message );
             }
-            else{
-                melisTool.alerts.showDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
-            }
-        }).error(function(){
-            alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
     });
@@ -86,9 +90,10 @@ var melisCore = (function(window){
             type: 'GET',
             url: '/melis/islogin',
             dataType: 'json',
-        }).success(function(data){
-            if(!data.login) {
-                window.location.reload(true);
+            success: function(data) {
+                if(!data.login) {
+                    window.location.reload(true);
+                }
             }
         });
     }

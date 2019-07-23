@@ -1,5 +1,5 @@
 var dashboardNotify = (function() {
-    var eh = null;
+    //var eh = null;
     /**
      * To make a "persistent cookie" (a cookie that "never expires"),
      * we need to set a date/time in a distant future (one that possibly exceeds the user's
@@ -19,15 +19,17 @@ var dashboardNotify = (function() {
         $dashMsg            = $body.find("#melis-core-dashboard-msg");
 
     // instantiate
-    eh = new EnjoyHint({
+    var eh = new EnjoyHint({
         onStart: function() {
             disablePluginsMenuButton();
         },
         onSkip: function() {
             enablePluginsMenuButton();
+            console.log("onSkip");
         },
         onEnd: function() {
             enablePluginsMenuButton();
+            console.log("onEnd");
         }
     });
 
@@ -58,8 +60,8 @@ var dashboardNotify = (function() {
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
     function removeEnjoyHintHtml() {
         $body.find(".enjoyhint").remove();
-        $body.removeAttr("style");
-        //$body.css("overflow", "auto");
+        $body.removeAttribute("style");
+        console.log("removeEnjoyHintHtml removeAttribute");
     }
 
     // disable plugins menu buttons
