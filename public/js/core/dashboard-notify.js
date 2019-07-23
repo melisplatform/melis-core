@@ -25,11 +25,9 @@ var dashboardNotify = (function() {
         },
         onSkip: function() {
             enablePluginsMenuButton();
-            console.log("onSkip");
         },
         onEnd: function() {
             enablePluginsMenuButton();
-            console.log("onEnd");
         }
     });
 
@@ -60,8 +58,7 @@ var dashboardNotify = (function() {
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
     function removeEnjoyHintHtml() {
         $body.find(".enjoyhint").remove();
-        $body.removeAttribute("style");
-        console.log("removeEnjoyHintHtml removeAttribute");
+        $body.removeAttr("style");
     }
 
     // disable plugins menu buttons
