@@ -44,11 +44,14 @@ var dashboardNotify = (function() {
                 $gsItem     = $gs.find(".grid-stack-item"),
                 $gsItemLen  = $gsItem.length,
                 $pluginBox  = body.find(".melis-core-dashboard-dnd-box"),
+                $tabDashB   = $body.find("#"+activeTabId+".tab-panel-dashboard"),
                 shown       = $pluginBox.hasClass("shown");
               
                 // check if there is grid stack item and plugin menu is open
-                if ( $gsItem.length === 0 && shown === true ) {
-                    render();
+                if ( $tabDashB.length > 0 ) {
+                    if ( $gsItem.length === 0 && shown === true ) {
+                        render();
+                    }
                 } else {
                     removeEnjoyHintHtml();
                 }

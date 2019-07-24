@@ -69,7 +69,7 @@ $(document).ready(function(){
 	 	$( "#id_meliscore_leftmenu" ).resizable({
 	    	handles: 'e',
 	    	animate: false,
-	    	minWidth: 274,
+	    	minWidth: 320,
 	    	maxWidth: 400,
 	    	start: function( event, ui){
 	    		
@@ -82,7 +82,7 @@ $(document).ready(function(){
 	    		
 	    		$("#content").css("margin-left", sidebarWidth );
 	    		$("#id_meliscore_footer").css("width", sidebarWidth );
-	    		
+				
 	    		if( $("#"+ activeTabId + " .page-head-container > .innerAll").hasClass("sticky-pageactions") ){
 	    			$("#"+ activeTabId + " .page-head-container > .innerAll").css({"width": $body.width() - sidebarWidth,"left": sidebarWidth});
 	    		}

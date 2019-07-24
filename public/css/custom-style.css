@@ -16,7 +16,7 @@
   min-width: 12rem;
 }
 .navbar.main .nav.navbar-right > li:hover > .dropdown-menu {
-  left: -8.59rem;
+  left: -8.7rem;
 }
 .navbar.main .nav.navbar-right .dropdown-menu li.active a {
   background-color: #e61c23;
@@ -90,21 +90,24 @@
   padding-left: 0;
   padding-right: 0;
 }
-#main #menu .sidebar {
-  width: 20rem;
-}
-#main #content {
-  margin-left: 20rem;
-  padding-left: 0;
-  padding-right: 0;
-}
 #main #mewnu.no-gutters,
 #main #content.no-gutters {
   padding-left: 0;
   padding-right: 0;
 }
+/* #melis-navtabs / contents */
+.dataTables_wrapper .bottom {
+  width: 100%;
+}
 /* Responsive */
 @media (min-width: 768px) {
+  /* .login-page */
+  .login-page .navbar.main .nav.navbar-right li:first-child {
+    display: block;
+  }
+  .login-page #nav-header.container-fluid {
+    display: block;
+  }
   /* #nav-header */
   #nav-header .navbar-brand {
     width: inherit;
@@ -133,5 +136,31 @@
   }
   #id_meliscore_header_flash_messenger {
     border-left: 1px solid #c52127;
+  }
+  /* #menu sidebar */
+  #main #menu .sidebar.sidebar-inverse {
+    border-right: 0;
+  }
+  /* #main content */
+  #main #menu .sidebar {
+    width: 20rem;
+  }
+  #main #content {
+    margin-left: 20rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  #img-user-link {
+    margin-right: 1rem;
+  }
+  .no-plugins p {
+    margin-bottom: 0;
+  }
+  .melis-svg-icon .melis-icon {
+    vertical-align: baseline;
+  }
+  /* #melis-navtabs */
+  #melis-navtabs-container-outer, #plugins-container {
+    float: none;
   }
 }

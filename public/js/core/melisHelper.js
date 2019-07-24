@@ -541,79 +541,78 @@ var melisHelper = (function(){
             url         : '/melis/zoneview',
             data        : datastring,
             encode		: true,
-            dataType	: "json"
-        }).success(function(data, status, xhr){
+            dataType	: "json",
+            success: function(data, status, xhr) {
+                // hide the loader
+                $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
-            // hide the loader
-            $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+                setTimeout(function() {
+                    if( data !== null ){
+                        $("#"+zoneId).html(data.html).children().unwrap();
 
-            setTimeout(function() {
-                if( data !== null ){
-                    $("#"+zoneId).html(data.html).children().unwrap();
+                        // set the current active tab based from 'activeTabId' value
+                        tabSwitch(activeTabId);
 
-                    // set the current active tab based from 'activeTabId' value
-                    tabSwitch(activeTabId);
+                        // set active the the 'Edition' tab and its 'Tab Content'
+                        $("#" + zoneId + " .nav-tabs li:first-child").addClass("active");
+                        $("#" + zoneId + " .tab-content > div:first-child").addClass("active");
 
-                    // set active the the 'Edition' tab and its 'Tab Content'
-                    $("#" + zoneId + " .nav-tabs li:first-child").addClass("active");
-                    $("#" + zoneId + " .tab-content > div:first-child").addClass("active");
+                        // --------------------------------------------------------------
+                        // Run callback scripts here | from app.interface
+                        // --------------------------------------------------------------
+                        var jsCallbacks = data.jsCallbacks;
 
-                    // --------------------------------------------------------------
-                    // Run callback scripts here | from app.interface
-                    // --------------------------------------------------------------
-                    var jsCallbacks = data.jsCallbacks;
+                        $.each( jsCallbacks, function( key, value ) {
 
-                    $.each( jsCallbacks, function( key, value ) {
+                            // check if there is more than 1 function in a single jsCallback from app.interface
+                            // example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
+                            var splitFunctions = value.split(" ");
 
-                        // check if there is more than 1 function in a single jsCallback from app.interface
-                        // example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
-                        var splitFunctions = value.split(" ");
-
-                        /*if( splitFunctions.length > 1){
-                            // run all the function extracted from a single jsCallback
-                            $.each( splitFunctions, function( key, value ) {
+                            /*if( splitFunctions.length > 1){
+                                // run all the function extracted from a single jsCallback
+                                $.each( splitFunctions, function( key, value ) {
+                                    value = value.slice(0, -3);
+                                    executeCallbackFunction(value, window);
+                                });
+                            }
+                            else{
                                 value = value.slice(0, -3);
                                 executeCallbackFunction(value, window);
+                            }*/
+                            
+                            $.each( splitFunctions, function( key, value ) {
+                                
+                                try {
+                                    eval(value);
+                                }
+                                catch(err) {
+                                    // console.log(err);
+                                }
                             });
-                        }
-                        else{
-                            value = value.slice(0, -3);
-                            executeCallbackFunction(value, window);
-                        }*/
-                        
-                        $.each( splitFunctions, function( key, value ) {
-                        	
-                        	try {
-                        	    eval(value);
-                        	}
-                        	catch(err) {
-                        	    // console.log(err);
-                        	}
                         });
-                    });
-                }
-                else{
-                    $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
-                    $('#'+zoneId).remove();
-
-                    melisHelper.melisKoNotification( "Error Fetching data", "No result was retrieved while doing this operation.", "no error datas returned", '#000' );
-                }
-                if ( callback !== undefined || callback !== null) {
-                    if (callback) {
-                        callback();
                     }
-                }
-            }, 300);
-        }).error(function(xhr, textStatus, errorThrown){
+                    else{
+                        $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
+                        $('#'+zoneId).remove();
 
-            // alert( translations.tr_meliscore_error_message );
-            alert(xhr.responseText);
+                        melisHelper.melisKoNotification( "Error Fetching data", "No result was retrieved while doing this operation.", "no error datas returned", '#000' );
+                    }
+                    if ( callback !== undefined || callback !== null) {
+                        if (callback) {
+                            callback();
+                        }
+                    }
+                }, 300);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                // alert( translations.tr_meliscore_error_message );
+                alert(xhr.responseText);
 
-            //hide the loader
-            $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
-            $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
-            $('#'+zoneId).remove();
-
+                //hide the loader
+                $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+                $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
+                $('#'+zoneId).remove();
+            }
         });
     }
 
@@ -646,29 +645,30 @@ var melisHelper = (function(){
             $.ajax({
                 url         : modalUrl,
                 data        : datastring,
-                encode		: true
-            }).success(function(data){
-                // Requesting flag set to false so this function will set state to ready
-                createModalRequestingFlag = false;
+                encode		: true,
+                success: function(data) {
+                    // Requesting flag set to false so this function will set state to ready
+                    createModalRequestingFlag = false;
 
-                $("#melis-modals-container").append(data);
-                var modalID = $(data).find(".modal").attr("id");
-                melisHelper.zoneReload(zoneId, melisKey, parameters);
+                    $("#melis-modals-container").append(data);
+                    var modalID = $(data).find(".modal").attr("id");
+                    melisHelper.zoneReload(zoneId, melisKey, parameters);
 
-                $("#" + modalID).modal({
-                    show: true,
-                    keyboard : false,
-                    backdrop : modalBackDrop
-                });
+                    $("#" + modalID).modal({
+                        show: true,
+                        keyboard : false,
+                        backdrop : modalBackDrop
+                    });
 
-                if(typeof callback !== "undefined" && typeof callback === "function") {
-                    callback();
+                    if(typeof callback !== "undefined" && typeof callback === "function") {
+                        callback();
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
+                    // Requesting flag set to false so this function will set state to ready
+                    createModalRequestingFlag = true;
                 }
-
-            }).error(function(xhr, textStatus, errorThrown){
-                alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
-                // Requesting flag set to false so this function will set state to ready
-                createModalRequestingFlag = true;
             });
         }
     }
