@@ -2500,7 +2500,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     #melis-id-nav-bar-tabs{
         position: relative;
         left: 0;
-        display: block !important;
+        display: block;
         height: 47px;
         transition: .5s ease-in-out;
         -webkit-transition: .5s ease-in-out;

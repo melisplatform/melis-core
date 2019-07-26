@@ -262,7 +262,8 @@ var melisHelper = (function(){
 
         //This is for not showing the close all tab button
         if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab){
-            $("#close-all-tab").hide();
+            //$("#close-all-tab").hide();
+            $("#close-all-tab").prev().hide();
         }
 
         var navBox = currentParent.closest(".scroll");

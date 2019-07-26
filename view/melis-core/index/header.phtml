@@ -34,8 +34,8 @@ $headerExclusions = array(
 <div <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar navbar-primary main" role="navigation">
     <!-- left menu -->
     <div id="nav-header" class="container-fluid no-gutters">
-        <div class="row">
-            <div id="brand-logo" class="no-gutters">
+        <div class="row d-flex flex-row justify-content-between">
+            <div id="brand-logo" class="no-gutters col-sm-2">
                 <div class="left-menu"> 
                     <div class="navbar-brand">
                         <div class="pull-left">
@@ -55,10 +55,10 @@ $headerExclusions = array(
                     </div>
                 </div>
             </div>
-            <div id="tab-menu" class="no-gutters">
-                    <div class="res-action-container justify-content-between">
+            <div id="tab-menu" class="no-gutters col-sm-10">
+                    <div class="res-action-container container-fluid no-gutters">
                         <!-- main nav tabs -->
-                        <div id="melis-navtabs-container-outer">
+                        <div id="melis-navtabs-container-outer" class="no-gutters"> <!-- col-sm-10 -->
                             <span class="melis-tabprev">
                                 <i class="fa fa-angle-left"></i>
                             </span>
@@ -70,7 +70,7 @@ $headerExclusions = array(
                                         <i class="fa fa-angle-down"></i>
                                     </span>
                                 </div>
-                                <ul class="nav nav-tabs navbar-nav tabsbar" id="melis-id-nav-bar-tabs">
+                                <ul class="nav nav-tabs navbar-nav tabsbar d-flex flex-row justify-content-start" id="melis-id-nav-bar-tabs">
                                     <?php 
                                         if (!empty($this->appsConfigCenter['interface']))
                                         {
@@ -101,7 +101,7 @@ $headerExclusions = array(
                                 <i class="fa fa-angle-right"></i>
                             </span>  
                         </div>
-                        <ul class="nav navbar-nav navbar-right">
+                        <ul class="nav navbar-nav navbar-right d-flex flex-row justify-content-end"> <!-- col-sm-2 -->
                             <!-- add flash messenger here -->
                             
                             <?php 

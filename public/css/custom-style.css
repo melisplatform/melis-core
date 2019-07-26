@@ -65,7 +65,7 @@
 }
 #nav-header .navbar-brand {
   font-size: 1.324rem;
-  padding-right: 2.5rem;
+  padding-right: 2.64rem;
 }
 #nav-header .nav-tabs > li.active > a, 
 #nav-header .nav-tabs > li.active > a:focus {
@@ -74,6 +74,12 @@
   background-color: #fff;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
+}
+.navbar.main .nav > li a.menu-icon {
+  display: block;
+}
+.navbar #melis-id-nav-bar-tabs > li {
+  position: relative;
 }
 .dropdown-toggle::after {
   display: none;
@@ -95,6 +101,9 @@
   padding-left: 0;
   padding-right: 0;
 }
+#main #content {
+  width: 100%;
+}
 /* #melis-navtabs / contents */
 .dataTables_wrapper .bottom {
   width: 100%;
@@ -108,6 +117,7 @@
   .login-page #nav-header.container-fluid {
     display: block;
   }
+
   /* #nav-header */
   #nav-header .navbar-brand {
     width: inherit;
@@ -125,9 +135,6 @@
   .navbar.main .nav.navbar-right {
     float: right;
   }
-  .navbar.main .nav.navbar-right li:first-child {
-    display: none;
-  }
   .navbar.main .nav.navbar-right > li {
     float: left;
   }
@@ -137,10 +144,12 @@
   #id_meliscore_header_flash_messenger {
     border-left: 1px solid #c52127;
   }
+
   /* #menu sidebar */
   #main #menu .sidebar.sidebar-inverse {
     border-right: 0;
   }
+
   /* #main content */
   #main #menu .sidebar {
     width: 20rem;
@@ -159,8 +168,10 @@
   .melis-svg-icon .melis-icon {
     vertical-align: baseline;
   }
+
   /* #melis-navtabs */
-  #melis-navtabs-container-outer, #plugins-container {
-    float: none;
+  .melis-tabprev,
+  .melis-tabnext {
+    padding: 8px 10px;
   }
 }

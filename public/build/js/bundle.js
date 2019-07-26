@@ -28326,6 +28326,8 @@ var tabExpander = (function($, window){
                 $(this).css("overflow", "hidden");
             }
         );
+
+        console.log({tabExpander}, {innerUlWidthPercent}, {navUlContainer});
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
@@ -28344,8 +28346,9 @@ var tabExpander = (function($, window){
         var totalHeaderWidthPx = $("#id_meliscore_header").width();
         
         // left
-        var leftMenuWidthPx = $(".navbar-header").width();
-        var leftMenuWidthPercent = (100 * 274) / totalHeaderWidthPx;
+        //var leftMenuWidthPx = $(".navbar-header").width();
+        var leftMenuWidthPx = $("#brand-logo").width();
+        var leftMenuWidthPercent = (100 * 320) / totalHeaderWidthPx;
         
         // right
         var rightMenuWidthPx = 0;
@@ -28368,18 +28371,27 @@ var tabExpander = (function($, window){
 		// determines if TE should be activated or not
         if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
         	Enable();
-        	status = 'enabled';
+            status = 'enabled';
+            console.log('tabExpander Enable');
+            console.log({navUlContainer}, {tabContainerWidthPx});
         } else if( navUlContainer < tabContainerWidthPx){
-			Disable();
+            Disable();
+            console.log('tabExpander Disable');
+            console.log({navUlContainer}, {tabContainerWidthPx});
         } else if(status == 'disabled'){
-			Disable();
+            Disable();
+            console.log('tabExpander Disable');
 		} else {
         	if(status === 'enabled'){
+                console.log('tabExpander Enable');
 				Enable();
         		/* Disable(); */
         	}
         	status = 'disabled';
         }
+        //console.log({leftMenuWidthPx});
+        //console.log({navUlContainer}, {tabContainerWidthPx});
+        //console.log({tabExpander}, {tabContainerWidthPx}, {navUlContainer}, {totalHeaderWidthPx});
 	}
 	
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------
@@ -29045,7 +29057,8 @@ var melisCore = (function(window){
         if( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
-        $("#close-all-tab").hide();
+        //$("#close-all-tab").hide();
+        $("#close-all-tab").prev().hide();
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
@@ -29762,7 +29775,8 @@ var melisHelper = (function(){
 
         //This is for not showing the close all tab button
         if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab){
-            $("#close-all-tab").hide();
+            //$("#close-all-tab").hide();
+            $("#close-all-tab").prev().hide();
         }
 
         var navBox = currentParent.closest(".scroll");
