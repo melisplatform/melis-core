@@ -265,6 +265,7 @@ var melisHelper = (function(){
         if(prevActiveTab == 'id_meliscore_toolstree_section_dashboard' && !nextActiveTab){
             $("#close-all-tab").hide();
             $("#close-all-tab").closest("li").hide(); // fix for double border left
+            $("#close-all-tab").closest("li").css("border-left", "0");
         }
 
         var navBox = currentParent.closest(".scroll");
@@ -376,8 +377,9 @@ var melisHelper = (function(){
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
         //Show the close(X) button on header
         if(melisKey !== 'meliscore_dashboard'){
-            $("#close-all-tab").closest("li").show();
             $("#close-all-tab").show();
+            $("#close-all-tab").closest("li").show();
+            $("#close-all-tab").closest("li").next("li").removeAttr("style");
         }
         //check if the tab is already open and added to the main nav
         var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='"+ zoneId +"']");
