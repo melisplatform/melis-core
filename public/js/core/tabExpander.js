@@ -47,14 +47,12 @@ var tabExpander = (function($, window){
                 $(this).css("overflow", "hidden");
             }
         );
-
-        console.log({tabExpander}, {innerUlWidthPercent}, {navUlContainer});
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
 	function Disable(){
 		$(".melis-tabprev, .melis-tabnext").hide();
-        $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style")
+        $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style");
 	}
     
     
@@ -81,7 +79,8 @@ var tabExpander = (function($, window){
         //center
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
         /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-		tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        /* tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
+        tabContainerWidthPercent = 113.9 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
         navUlContainer = 1;
@@ -90,29 +89,20 @@ var tabExpander = (function($, window){
         });
 		
 		// determines if TE should be activated or not
-        if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
+        if( navUlContainer > tabContainerWidthPx && screenSize  >= 768 ){
         	Enable();
             status = 'enabled';
-            console.log('tabExpander Enable');
-            console.log({navUlContainer}, {tabContainerWidthPx});
         } else if( navUlContainer < tabContainerWidthPx){
             Disable();
-            console.log('tabExpander Disable');
-            console.log({navUlContainer}, {tabContainerWidthPx});
         } else if(status == 'disabled'){
             Disable();
-            console.log('tabExpander Disable');
 		} else {
         	if(status === 'enabled'){
-                console.log('tabExpander Enable');
 				Enable();
         		/* Disable(); */
         	}
         	status = 'disabled';
         }
-        //console.log({leftMenuWidthPx});
-        //console.log({navUlContainer}, {tabContainerWidthPx});
-        //console.log({tabExpander}, {tabContainerWidthPx}, {navUlContainer}, {totalHeaderWidthPx});
 	}
 	
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------

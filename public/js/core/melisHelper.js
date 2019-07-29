@@ -260,10 +260,11 @@ var melisHelper = (function(){
         var removedWidth = currentParent.width();
         var currentGrandParent = currentParent.parent().parent("li").find(".tab-element").data("id");
 
-        //This is for not showing the close all tab button
-        if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab){
-            //$("#close-all-tab").hide();
-            $("#close-all-tab").prev().hide();
+        //This is for not showing the close all tab button, data-id on .close-tab has changed to the current id_meliscore_toolstree_section_dashboard
+        //if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab) { 
+        if(prevActiveTab == 'id_meliscore_toolstree_section_dashboard' && !nextActiveTab){
+            $("#close-all-tab").hide();
+            $("#close-all-tab").closest("li").hide(); // fix for double border left
         }
 
         var navBox = currentParent.closest(".scroll");
@@ -374,7 +375,8 @@ var melisHelper = (function(){
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
         //Show the close(X) button on header
-        if(melisKey != 'meliscore_dashboard'){
+        if(melisKey !== 'meliscore_dashboard'){
+            $("#close-all-tab").closest("li").show();
             $("#close-all-tab").show();
         }
         //check if the tab is already open and added to the main nav

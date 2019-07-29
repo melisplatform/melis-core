@@ -198,6 +198,15 @@ var melisCore = (function(window){
     function firstRender(){
         $(".nav-tabs li:first-child").addClass("active")
         $(".tab-content > div:first-child").addClass("active");
+
+        // fix for double border left
+        var tabLength = $("#melis-id-nav-bar-tabs").find("li").length;
+
+            if ( tabLength === 1 ) {
+                $("#close-all-tab").closest("li").hide();
+            } else {
+                $("#close-all-tab").closest("li").show();
+            }
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -348,8 +357,8 @@ var melisCore = (function(window){
         if( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
-        //$("#close-all-tab").hide();
-        $("#close-all-tab").prev().hide();
+        $("#close-all-tab").hide();
+        $("#close-all-tab").closest("li").hide(); // fix for double border left
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--

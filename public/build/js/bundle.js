@@ -28326,14 +28326,12 @@ var tabExpander = (function($, window){
                 $(this).css("overflow", "hidden");
             }
         );
-
-        console.log({tabExpander}, {innerUlWidthPercent}, {navUlContainer});
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
 	function Disable(){
 		$(".melis-tabprev, .melis-tabnext").hide();
-        $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style")
+        $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style");
 	}
     
     
@@ -28360,7 +28358,8 @@ var tabExpander = (function($, window){
         //center
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
         /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-		tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        /* tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
+        tabContainerWidthPercent = 113.9 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
         navUlContainer = 1;
@@ -28369,29 +28368,20 @@ var tabExpander = (function($, window){
         });
 		
 		// determines if TE should be activated or not
-        if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
+        if( navUlContainer > tabContainerWidthPx && screenSize  >= 768 ){
         	Enable();
             status = 'enabled';
-            console.log('tabExpander Enable');
-            console.log({navUlContainer}, {tabContainerWidthPx});
         } else if( navUlContainer < tabContainerWidthPx){
             Disable();
-            console.log('tabExpander Disable');
-            console.log({navUlContainer}, {tabContainerWidthPx});
         } else if(status == 'disabled'){
             Disable();
-            console.log('tabExpander Disable');
 		} else {
         	if(status === 'enabled'){
-                console.log('tabExpander Enable');
 				Enable();
         		/* Disable(); */
         	}
         	status = 'disabled';
         }
-        //console.log({leftMenuWidthPx});
-        //console.log({navUlContainer}, {tabContainerWidthPx});
-        //console.log({tabExpander}, {tabContainerWidthPx}, {navUlContainer}, {totalHeaderWidthPx});
 	}
 	
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------
@@ -28907,6 +28897,15 @@ var melisCore = (function(window){
     function firstRender(){
         $(".nav-tabs li:first-child").addClass("active")
         $(".tab-content > div:first-child").addClass("active");
+
+        // fix for double border left
+        var tabLength = $("#melis-id-nav-bar-tabs").find("li").length;
+
+            if ( tabLength === 1 ) {
+                $("#close-all-tab").closest("li").hide();
+            } else {
+                $("#close-all-tab").closest("li").show();
+            }
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -29057,8 +29056,8 @@ var melisCore = (function(window){
         if( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
-        //$("#close-all-tab").hide();
-        $("#close-all-tab").prev().hide();
+        $("#close-all-tab").hide();
+        $("#close-all-tab").closest("li").hide(); // fix for double border left
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
@@ -29773,10 +29772,11 @@ var melisHelper = (function(){
         var removedWidth = currentParent.width();
         var currentGrandParent = currentParent.parent().parent("li").find(".tab-element").data("id");
 
-        //This is for not showing the close all tab button
-        if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab){
-            //$("#close-all-tab").hide();
-            $("#close-all-tab").prev().hide();
+        //This is for not showing the close all tab button, data-id on .close-tab has changed to the current id_meliscore_toolstree_section_dashboard
+        //if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab) { 
+        if(prevActiveTab == 'id_meliscore_toolstree_section_dashboard' && !nextActiveTab){
+            $("#close-all-tab").hide();
+            $("#close-all-tab").closest("li").hide(); // fix for double border left
         }
 
         var navBox = currentParent.closest(".scroll");
@@ -29887,7 +29887,8 @@ var melisHelper = (function(){
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
         //Show the close(X) button on header
-        if(melisKey != 'meliscore_dashboard'){
+        if(melisKey !== 'meliscore_dashboard'){
+            $("#close-all-tab").closest("li").show();
             $("#close-all-tab").show();
         }
         //check if the tab is already open and added to the main nav

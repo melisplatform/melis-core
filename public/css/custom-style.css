@@ -108,6 +108,9 @@
 .dataTables_wrapper .bottom {
   width: 100%;
 }
+#id_meliscore_header_flash_messenger {
+  border-left: 1px solid #c52127;
+}
 /* Responsive */
 @media (min-width: 768px) {
   /* .login-page */
@@ -141,10 +144,7 @@
   .navbar.main .nav.navbar-right > li > a {
     display: block;
   }
-  #id_meliscore_header_flash_messenger {
-    border-left: 1px solid #c52127;
-  }
-
+ 
   /* #menu sidebar */
   #main #menu .sidebar.sidebar-inverse {
     border-right: 0;

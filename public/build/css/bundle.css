@@ -35011,11 +35011,11 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         transition: .2s ease;
         position: relative;
         z-index: 100;
+        line-height: 31px;
     }
     .melis-tabnext{
         float: right;
         right: -10px;
-        line-height: 29px;
     }
     .melis-tabprev:hover,
     .melis-tabnext:hover{
@@ -36865,6 +36865,9 @@ div#modal-user-management div.widget {
 .dataTables_wrapper .bottom {
   width: 100%;
 }
+#id_meliscore_header_flash_messenger {
+  border-left: 1px solid #c52127;
+}
 /* Responsive */
 @media (min-width: 768px) {
   /* .login-page */
@@ -36898,10 +36901,7 @@ div#modal-user-management div.widget {
   .navbar.main .nav.navbar-right > li > a {
     display: block;
   }
-  #id_meliscore_header_flash_messenger {
-    border-left: 1px solid #c52127;
-  }
-
+ 
   /* #menu sidebar */
   #main #menu .sidebar.sidebar-inverse {
     border-right: 0;
