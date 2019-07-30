@@ -1835,7 +1835,7 @@ span.fancytree-active span.fancytree-title{
     margin:0;
 }
 .login-page #sidebar-menu,
-.login-page #plugin-menu{
+.login-page #plugin-menu {
     display: none;
 }
 .login-page .navbar.main.navbar-primary .appbrand{

@@ -35,30 +35,30 @@ $headerExclusions = array(
     <!-- left menu -->
     <div id="nav-header" class="container-fluid no-gutters">
         <div class="row d-flex flex-row justify-content-between">
-            <div id="brand-logo" class="no-gutters col-sm-2">
+            <div id="brand-logo" class="no-gutters col-md-2 col-sm-12">
                 <div class="left-menu"> 
-                    <div class="navbar-brand">
-                        <div class="pull-left">
-                        <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
-                            <i class="fa fa-bars"></i>
-                        </a>
+                    <div class="navbar-brand d-flex justify-content-center">
+                        <div class="toggle-sidebar-menu">
+                            <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
+                                <i class="fa fa-bars"></i>
+                            </a>
                         </div>
                         <a href="/melis" class="appbrand innerL">
                             <img alt="melis platform" src="<?= $sidebarHeaderLogo; ?>">
                             <?= $headerTitle ?>
-                        </a>              
-                        <div class="pull-right">
-                        <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
-                            <i class="fa fa-cog"></i>
                         </a>
+                        <div class="toggle-plugin-menu">
+                            <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
+                                <i class="fa fa-cog"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="tab-menu" class="no-gutters col-sm-10">
+            <div id="tab-menu" class="no-gutters col-md-10">
                     <div class="res-action-container container-fluid no-gutters">
                         <!-- main nav tabs -->
-                        <div id="melis-navtabs-container-outer" class="no-gutters"> <!-- col-sm-10 -->
+                        <div id="melis-navtabs-container-outer" class="no-gutters">
                             <span class="melis-tabprev">
                                 <i class="fa fa-angle-left"></i>
                             </span>
@@ -101,7 +101,7 @@ $headerExclusions = array(
                                 <i class="fa fa-angle-right"></i>
                             </span>  
                         </div>
-                        <ul class="nav navbar-nav navbar-right d-flex flex-row"> <!-- col-sm-2 -->
+                        <ul class="nav navbar-nav navbar-right d-flex flex-row">
                             <!-- add flash messenger here -->
                             
                             <?php 

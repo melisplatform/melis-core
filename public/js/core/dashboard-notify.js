@@ -48,10 +48,8 @@ var dashboardNotify = (function() {
                 shown       = $pluginBox.hasClass("shown");
               
                 // check if there is grid stack item and plugin menu is open
-                if ( $tabDashB.length > 0 ) {
-                    if ( $gsItem.length === 0 && shown === true ) {
-                        render();
-                    }
+                if ( $gsItem.length === 0 && shown === true ) {
+                    render();
                 } else {
                     removeEnjoyHintHtml();
                 }

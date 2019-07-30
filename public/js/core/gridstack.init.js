@@ -86,7 +86,7 @@ var melisDashBoardDragnDrop = {
             revert: 'invalid',
             appendTo: 'body',
             drag: function (event, ui) {
-                var gridPH = melisDashBoardDragnDrop.$body.find('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
+                var gridPH = this.$body.find('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
                     gridPH.attr('data-gs-width', 6);
                     gridPH.attr('data-gs-height', 3);
 
@@ -96,9 +96,9 @@ var melisDashBoardDragnDrop = {
                  *  - OUTSIDE grid-stack drag area: SHOW dashboard msg
                  *  Note: Only happens when dashboard is empty
                  */
-                var pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
-                var dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
-                var dragArea = melisDashBoardDragnDrop.$body.find(event.currentTarget);
+                var pluginCount = this.$gs.find("div[data-gs-id]").length;
+                var dashboardMsg = this.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                var dragArea = this.$body.find(event.currentTarget);
 
                     if (dragArea.hasClass("melis-core-dashboard-plugin-snippets")) {
                         // Hide empty-dashboard message

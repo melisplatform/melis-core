@@ -8,7 +8,8 @@ return array(
                     '/MelisCore/assets/components/plugins/gridstack/css/gridstack.css',
 
                     // display notify / page walkthrough
-                    '/MelisCore/assets/components/plugins/enjoyhint/css/enjoyhint.css'
+                    //'/MelisCore/assets/components/plugins/enjoyhint/css/enjoyhint.css'
+                    '/MelisCore/assets/components/plugins/enjoyhint/css/jquery.enjoyhint.css'
                 ),
                 'js' => array(
                     // Gridstack

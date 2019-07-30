@@ -29777,6 +29777,7 @@ var melisHelper = (function(){
         if(prevActiveTab == 'id_meliscore_toolstree_section_dashboard' && !nextActiveTab){
             $("#close-all-tab").hide();
             $("#close-all-tab").closest("li").hide(); // fix for double border left
+            $("#close-all-tab").closest("li").css("border-left", "0");
         }
 
         var navBox = currentParent.closest(".scroll");
@@ -29888,8 +29889,9 @@ var melisHelper = (function(){
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
         //Show the close(X) button on header
         if(melisKey !== 'meliscore_dashboard'){
-            $("#close-all-tab").closest("li").show();
             $("#close-all-tab").show();
+            $("#close-all-tab").closest("li").show();
+            $("#close-all-tab").closest("li").next("li").removeAttr("style");
         }
         //check if the tab is already open and added to the main nav
         var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='"+ zoneId +"']");
@@ -34543,7 +34545,7 @@ var melisDashBoardDragnDrop = {
             revert: 'invalid',
             appendTo: 'body',
             drag: function (event, ui) {
-                var gridPH = melisDashBoardDragnDrop.$body.find('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
+                var gridPH = this.$body.find('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
                     gridPH.attr('data-gs-width', 6);
                     gridPH.attr('data-gs-height', 3);
 
@@ -34553,9 +34555,9 @@ var melisDashBoardDragnDrop = {
                  *  - OUTSIDE grid-stack drag area: SHOW dashboard msg
                  *  Note: Only happens when dashboard is empty
                  */
-                var pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
-                var dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
-                var dragArea = melisDashBoardDragnDrop.$body.find(event.currentTarget);
+                var pluginCount = this.$gs.find("div[data-gs-id]").length;
+                var dashboardMsg = this.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                var dragArea = this.$body.find(event.currentTarget);
 
                     if (dragArea.hasClass("melis-core-dashboard-plugin-snippets")) {
                         // Hide empty-dashboard message
@@ -36262,10 +36264,8 @@ var dashboardNotify = (function() {
                 shown       = $pluginBox.hasClass("shown");
               
                 // check if there is grid stack item and plugin menu is open
-                if ( $tabDashB.length > 0 ) {
-                    if ( $gsItem.length === 0 && shown === true ) {
-                        render();
-                    }
+                if ( $gsItem.length === 0 && shown === true ) {
+                    render();
                 } else {
                     removeEnjoyHintHtml();
                 }
