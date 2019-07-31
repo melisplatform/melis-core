@@ -608,10 +608,20 @@ var melisCore = (function(window){
             }
     }
 
+    /* 
+        $header         = $("#id_meliscore_header"),
+        $res            = $("#res-page-cont"),
+        $resArrow       = $("#res-page-cont i"),
+        $tabConOuter    = $("#melis-navtabs-container-outer"),
+        $tabConInner    = $("#melis-navtabs-container-inner"),
+        $tabArrowTop    = $("#tab-arrow-top");
+     */
+
     // responsive menu functionalities
     $body.on("click", "#res-page-cont", function() {
         $("#melis-id-nav-bar-tabs").slideToggle(300);
-        $tabConOuter.addClass("hide-res-menus");
+        //$tabConOuter.addClass("hide-res-menus");
+        $tabConOuter.removeClass("hide-res-menus");
         $resArrow.toggleClass("move-arrow");
     });
 
@@ -625,7 +635,7 @@ var melisCore = (function(window){
     // responsive menu arrow button 767px and below for showing/hiding content main tabs
     $body.on("click", "#tab-arrow-top", function() {
         var $this = $(this);
-            $tabConInner.show();
+            //$tabConInner.show();
             $res.trigger("click");
             $tabConOuter.removeClass("hide-res-menus");
     });
