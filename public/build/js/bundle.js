@@ -28956,6 +28956,7 @@ var melisCore = (function(window){
         }).done(function (data) {
             if(data.success){
                 melisHelper.zoneReload("id_meliscore_leftmenu","meliscore_leftmenu");
+                getRightsTree($("#edituserid").html());
                 // call melisOkNotification
                 melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46' );
                 // update flash messenger values
