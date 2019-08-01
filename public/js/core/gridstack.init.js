@@ -37,6 +37,7 @@ var melisDashBoardDragnDrop = {
         this.dropWidget(this.melisWidgetHandle);
         this.dragStopWidget();
         this.resizeStopWidget();
+        $("#disable-left-menu-overlay").hide();
     },
 
     cacheDom: function () {
@@ -159,11 +160,6 @@ var melisDashBoardDragnDrop = {
                     "height": "840px",
                     "min-height": "840px"
                 });
-            }
-
-            // check if enjoyhint element is found and its cookie is false then remove it and body tag overflow auto
-            if ( typeof dashboardNotify !== "undefined" && dashboardNotify.getCookie() === "false" ) {
-                dashboardNotify.removeEnjoyHintHtml();
             }
     },
 
@@ -356,17 +352,21 @@ var melisDashBoardDragnDrop = {
     },
 
     closeDBPlugSidebar: function () {
-        var self    = this,
-            $btn    = $("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gsItem = self.$gs.find(".grid-stack-item"),
-            dWidth  = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
-            nWidth  = self.$gs.width() + self.$box.width();
+        var self            = this,
+            $btn            = $("#melisDashBoardPluginBtn"),
+            $box            = $btn.closest(".melis-core-dashboard-dnd-box"),
+            $gsItem         = self.$gs.find(".grid-stack-item"),
+            dWidth          = self.$gs.width() - self.$box.width(), // grid-stack width - plugin box width
+            $tabArrowTop    = $("#tab-arrow-top"),
+            nWidth          = self.$gs.width() + self.$box.width();
 
             if ( $box.hasClass("shown") ) {
+                $tabArrowTop.addClass("hide-arrow");
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
+            } else {
+                $tabArrowTop.removeClass("hide-arrow");
             }
     },
 

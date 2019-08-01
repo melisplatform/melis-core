@@ -112,10 +112,14 @@ class DashboardPluginsController extends AbstractActionController
         // Dashboard ID
         $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_toolstree_section_dashboard');
 
+        $moduleSvc = $this->getServiceLocator()->get('MelisAssetManagerModulesService');
+        $activeMods = implode("-", $moduleSvc->getActiveModules());
+
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->dashboardId = $dashboardId;
         $view->hasPlugins = $hasPlugins;
+        $view->activeMods = $activeMods;
 
         return $view;
     }

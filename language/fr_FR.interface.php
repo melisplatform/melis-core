@@ -724,4 +724,12 @@ return [
     'tr_melisdashboardplugin_plugin_no_rights' => 'Vous n\'avez pas les droits requis pour accéder à ce plugin.',
     'tr_melisdashboardplugin_plugin_no_plugin_on_menu' => 'Les droits de votre compte ne vous autorisent pas à utiliser les plugins du dashboard. Merci de contacter un admin si besoin.',
     'tr_meliscore_remove_all_plugins' => 'Suppression de tous les plugins du dashboard',
+
+    'tr_meliscore_tool_creatrion_designs' => 'Création d\'outils & Design',
+    'tr_meliscore_tool_tools' => 'Outils',
+    'tr_melis_core_gdpr_tabs' => 'Onglets',
+    'tr_melis_core_gdpr_gdpr_search_form' => 'Formulaire Recherche',
+    'tr_melis_core_gdpr_content_tabs' => 'Contenu onglets',
+    'tr_melis_cms_gdpr_banner_header' => 'Bannière En-tête',
+    'tr_melis_cms_gdpr_banner_details' => 'Bannière détails',
 ];

@@ -710,5 +710,14 @@ return [
     'tr_melisdashboardplugin_section' => 'Melis Dashbarod Plugins',
     'tr_melisdashboardplugin_plugin_no_rights' => 'You don\'t have rights to access this plugin.',
     'tr_meliscore_remove_all_plugins' => 'Removal of all dashboard plugins',
+
+    'tr_meliscore_tool_creatrion_designs' => 'Tool creation & Design',
+    'tr_meliscore_tool_tools' => 'Tools',
+    'tr_melis_core_gdpr_tabs' => 'Tabs',
+    'tr_melis_core_gdpr_gdpr_search_form' => 'Search form',
+    'tr_melis_core_gdpr_content_tabs' => 'Content tabs',
+    'tr_melis_cms_gdpr_banner_header' => 'Banner header',
+    'tr_melis_cms_gdpr_banner_details' => 'Banner details',
+
     ];
 ?>

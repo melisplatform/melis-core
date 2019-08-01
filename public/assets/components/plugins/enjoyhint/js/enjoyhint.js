@@ -37,7 +37,7 @@ var EnjoyHint = function (_options) {
 
     var init = function () {
 
-        if ( $('.enjoyhint').length ) {
+        if ($('.enjoyhint')) {
 
             $('.enjoyhint').remove();
         }
@@ -341,7 +341,7 @@ var EnjoyHint = function (_options) {
     /********************* PUBLIC METHODS ***************************************/
 
     $(window).on('resize.enjoy_hint_permanent', function() {
-        if ( $event_element ) {
+        if ( $event_element[0] !== undefined ) {
             $body.enjoyhint('redo_events_near_rect', $event_element[0].getBoundingClientRect());
         }
     });
@@ -431,11 +431,7 @@ var EnjoyHint = function (_options) {
         that.resumeScript();
     };
 
-    //var $meliscore_dashboard = $body.find("#" + activeTabId + "[data-meliskey='meliscore_dashboard']");
-
-        //if ( melisDashBoardDragnDrop.countGsItems() === 0 && $meliscore_dashboard.length > 0 ) {
-            init();
-        //}
+    init();
 };
 ;CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 
@@ -658,12 +654,12 @@ var EnjoyHint = function (_options) {
                 that.kinetic_stage.add(that.layer);
 
                 $(window).on('resize.enjoy_hint', function() {
-                    if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
+                    /* if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
 
                         that.stopFunction();
                         $(window).off('resize.enjoy_hint');
                         return;
-                    }
+                    } */
 
                     var newWidth = window.innerWidth;
                     var newHeight = window.innerHeight;
