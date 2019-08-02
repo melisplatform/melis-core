@@ -27,7 +27,8 @@ _canLog = MELIS.plugins.tree.debug;
       tinymce.init({
         selector: "div.editable",
         inline: true,
-        plugins: ["advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table contextmenu paste"],
+        //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
+        plugins: ["advlist autolink lists link image charmap print preview anchor", "searchreplace visualblocks code fullscreen", "insertdatetime media table paste"],
         toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
       });
     };

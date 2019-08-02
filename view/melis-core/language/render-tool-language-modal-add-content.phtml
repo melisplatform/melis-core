@@ -6,13 +6,15 @@ $form = $this->meliscore_tool_language_generic_form;
 echo $this->form()->openTag($form);
 echo $this->melisFieldCollection($form);
 echo $this->form()->closeTag();
-
-echo $this->melisModalInvoker()->render(
-    array(
-        'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
-        'class' => 'btn btn-danger pull-left'
-    ), 'dismiss');
 ?>
-
-<a class="btn btn-success pull-right" id="btnLangAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_common_add'); ?></a>
+<div class="footer-modal d-flex flex-row justify-content-between">
+    <?php
+    echo $this->melisModalInvoker()->render(
+        array(
+            'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+            'class' => 'btn btn-danger'
+        ), 'dismiss');
+    ?>
+    <a class="btn btn-success" id="btnLangAdd"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_common_add'); ?></a>
+</div>
 </div> 

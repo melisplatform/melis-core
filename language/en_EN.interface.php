@@ -405,7 +405,8 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email' => 'Sender email (From)',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to' => 'Reply To',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to tooltip' => 'Email to which the user will reply to (reply To)',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])"></i>',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted',
+    'tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip' => 'Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout' => 'Layout',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout tooltip' => 'Path to the physical file of the template of the email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Layout title',
@@ -470,7 +471,7 @@ return [
     'tr_melis_module_diagnostics_collapse' => '<i class="fa fa-minus"></i> Hide',
     'tr_melis_module_diagnostics_tool_header' => 'Header',
     'tr_melis_module_diagnostics_tool_content' => 'Content',
-    'tr_melis_module_diagnostics_tool_header_run_all' => '<i class="glyphicon glyphicon-flash"></i> Run all',
+    'tr_melis_module_diagnostics_tool_header_run_all' => '<i class="fa fa-bolt"></i> Run all', //glyphicon glyphicon-flash
     'tr_melis_module_diagnostics_tool_header_hide_all' => '<i class="fa fa-minus"></i> Hide all',
 
     'tr_melis_module_rights_dir' => 'Module basic folder test',

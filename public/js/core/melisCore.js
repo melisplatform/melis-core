@@ -200,13 +200,12 @@ var melisCore = (function(window){
         $(".tab-content > div:first-child").addClass("active");
 
         // fix for double border left
-        var tabLength = $("#melis-id-nav-bar-tabs").find("li").length;
+        /* var tabLength = $("#melis-id-nav-bar-tabs").find("li").length;
 
             if ( tabLength === 1 ) {
-                $("#close-all-tab").closest("li").hide();
-            } else {
-                $("#close-all-tab").closest("li").show();
-            }
+                $("#close-all-tab").closest("li").css("border-left", "0");
+                $("#close-all-tab").closest("li").next("li").css("border-left", "0");
+            } */
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -469,6 +468,21 @@ var melisCore = (function(window){
             commaHandler = false;
         }
     });
+
+    // email management - account creation
+    // https://stackoverflow.com/questions/5057191/toggleclass-and-remove-class-from-all-other-elements
+    $body.on("clic", ".nav-tabs.product-text-tab li a", function(e) {
+        console.log({EmailManagement});
+        var $this = $(this);
+
+            $this.hasClass("active clearfix").removeClass("active clearfix");
+            if ( $this.closest("li").hasClass("active") ) {
+                $this.closest("li").addClass("active");
+            }
+
+            e.preventDefault();
+    });
+
     // ---=[ END ]=--- MULTI VALUE INPUT FILED JS --------------------------------------------------
 
     // detect IE8 and above, and edge
@@ -635,7 +649,7 @@ var melisCore = (function(window){
     // responsive menu arrow button 767px and below for showing/hiding content main tabs
     $body.on("click", "#tab-arrow-top", function() {
         var $this = $(this);
-            //$tabConInner.show();
+            $tabConInner.show();
             $res.trigger("click");
             $tabConOuter.removeClass("hide-res-menus");
     });

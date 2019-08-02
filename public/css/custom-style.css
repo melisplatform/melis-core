@@ -137,6 +137,123 @@
 .melis-svg-icon .melis-icon {
   vertical-align: baseline;
 }
+/* bootstrap buttons */
+a:not([href]).btn-info {
+  background: none;
+  color: #466baf;
+}
+a:not([href]).btn-info:hover {
+  background-color: #466baf;
+  color: #fff;
+}
+a:not([href]).btn-success {
+  background: none;
+  color: #72af46;
+}
+a:not([href]).btn-success:hover {
+  background-color: #72af46;
+  color: #fff;
+}
+a:not([href]).btn-danger {
+  background: none;
+  color: #bd362f;
+}
+a:not([href]).btn-danger:hover {
+  background-color: #bd362f;
+  color: #fff;
+}
+/* modules */
+#btnModulesSave.btn-success {
+  color: #72af46;
+}
+#btnModulesSave.btn-success:hover {
+  color: #fff;
+}
+#select-deselect-all-module {
+  margin-bottom: 21px;
+}
+.switch-all-container {
+  position: relative;
+}
+.switch-all-noti {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+/* tooltip */
+.bs-tooltip-auto[x-placement^=left] .arrow::before, 
+.bs-tooltip-left .arrow::before {
+  border-left-color: #c52127;
+}
+#id_meliscore_tool_user_module_management_content .ms-cont {
+  min-width: 280px;
+}
+/* platforms pagination */
+.pagination > .page-item.active > .page-link, 
+.pagination > .page-item.active > .page-link:focus, 
+.pagination > .page-item.active > .page-link:hover {
+  background: #e61c23;
+  border-color: #e61c23;
+}
+/* modal */
+#id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
+  padding: 9px 15px 0;
+}
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a {
+  padding: 9px 15px 0 38px;
+}
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a .fa {
+  padding-right: 10px;
+}
+.widget.widget-tabs>.widget-head ul li.active a,
+.widget.widget-tabs-double>.widget-head ul li a .fa:before,
+.widget.widget-tabs>.widget-head ul li.active a .fa:before {
+  color: #e61c23;
+}
+.widget.widget-tabs-double>.widget-head ul li a .fa:before,
+.widget.widget-tabs-double>.widget-head ul li.active a .fa:before {
+  left: 9px;
+  top: 9px;
+  font-size: 20px;
+}
+.nav-tabs>li.active>a, 
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+  color: #555;
+  cursor: default;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+}
+.widget.widget-tabs-double .modal-text-info {
+  text-align: left;
+}
+.form-group label .label-text,
+.form-group label,
+.widget.widget-tabs-double label {
+  font-weight: bold;
+}
+/* form elements */
+.form-group label i.fa-info-circle {
+  float: none;
+  margin-top: 4px;
+}
+/* panel - processing... */
+.panel-default {
+  border-color: #ddd;
+}
+.panel {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+/* email management account creation */
+.nav-tabs.product-text-tab li a:hover {
+  border: 0;
+}
 /* Responsive */
 @media (min-width: 768px) {
   /* .login-page */
@@ -192,6 +309,11 @@
   .melis-tabprev,
   .melis-tabnext {
     padding: 8px 10px;
+  }
+  /* modal */
+  .modal-dialog {
+    width: 620px;
+    max-width: 620px;
   }
 }
 @media (max-width: 767px) {

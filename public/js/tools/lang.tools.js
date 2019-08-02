@@ -9,24 +9,26 @@ $(document).ready(function() {
 	        url         : '/melis/MelisCore/Language/addLanguage',
 	        data		: dataString,
 	        dataType    : 'json',
-	        encode		: true,
-	     }).success(function(data){
-			if(data.success) {
-				$('#modal-language').modal('hide');
-				 melisHelper.zoneReload("id_meliscore_tool_language", "meliscore_tool_language");
-				 melisHelper.zoneReload("id_meliscore_header_language", "meliscore_header_language");
-				 melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-			}else{
-				melisCoreTool.alertDanger("#languagealert", '', data.textMessage);
-				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-				melisCoreTool.highlightErrors(data.success, data.errors, "idformlang");
-			}
-			melisCoreTool.done("#btnLangAdd");
-    		melisCore.flashMessenger();
-    		melisCoreTool.processDone();
-	     }).fail(function(){
+			encode		: true,
+			success: function(data) {
+				if(data.success) {
+					$('#modal-language').modal('hide');
+					 melisHelper.zoneReload("id_meliscore_tool_language", "meliscore_tool_language");
+					 melisHelper.zoneReload("id_meliscore_header_language", "meliscore_header_language");
+					 melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+				}else{
+					melisCoreTool.alertDanger("#languagealert", '', data.textMessage);
+					melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+					melisCoreTool.highlightErrors(data.success, data.errors, "idformlang");
+				}
+				melisCoreTool.done("#btnLangAdd");
+				melisCore.flashMessenger();
+				melisCoreTool.processDone();
+			},
+			error: function() {
 				alert( translations.tr_meliscore_error_message );
-		});
+			}
+	    });
 	});
 	
 	addEvent(".btnLangApply", function() {
@@ -47,19 +49,21 @@ $(document).ready(function() {
 	        url         : '/melis/MelisCore/Language/updateLanguage',
 	        data		: dataString,
 	        dataType    : 'json',
-	        encode		: true,
-	     }).success(function(data){
-			if(data.success) {				
-				 melisHelper.melisOkNotification(data.textTitle, data.textMessage);				 
-			}else{				
-				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);				
-			}
-			melisCoreTool.done(".btnLangUpdate");
-    		melisCore.flashMessenger();
-    		melisCoreTool.processDone();
-	     }).fail(function(){
+			encode		: true,
+			success: function(data) {
+				if(data.success) {				
+					melisHelper.melisOkNotification(data.textTitle, data.textMessage);				 
+			   }else{				
+				   melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);				
+			   }
+			   melisCoreTool.done(".btnLangUpdate");
+			   melisCore.flashMessenger();
+			   melisCoreTool.processDone();
+			},
+			error: function() {
 				alert( translations.tr_meliscore_error_message );
-		});
+			}
+	     });
 	});
 	
 	addEvent(".btnLangDelete", function() {
@@ -78,9 +82,9 @@ $(document).ready(function() {
     	        url         : '/melis/MelisCore/Language/deleteLanguage',
     	        data		: [{name: 'id', value : getId}],
     	        dataType    : 'json',
-    	        encode		: true,
-    	     }).success(function(data){
-    	    	 	melisCoreTool.pending(".btn-danger");
+				encode		: true,
+				success: function(data) {
+					melisCoreTool.pending(".btn-danger");
 	    	    	if(data.success) {
 	    	    		melisHelper.zoneReload("id_meliscore_tool_language_content", "meliscore_tool_language_content");
 	    	    		melisHelper.zoneReload("id_meliscore_header_language", "meliscore_header_language");
@@ -91,8 +95,10 @@ $(document).ready(function() {
 	    	    	}
 	    	    	melisCore.flashMessenger();
 	    	    	melisCoreTool.done(".btn-danger");
-    	     }).error(function(){
-    	    	 alert( translations.tr_meliscore_error_message );
+				},
+				error: function() {
+					alert( translations.tr_meliscore_error_message );
+				}
     	     });
 		});
 	});
@@ -115,5 +121,13 @@ window.initLangBOJs = function () {
     var currentLangApplyBtn = $('#tableLanguages td:nth-child(3):contains("' + melisLangId + '")').siblings(':last').find('.btnLangApply');
     if (currentLangApplyBtn.length) {
         currentLangApplyBtn.remove();
-    }
+	}
+	
+	var $paginate   = $(".dataTables_paginate"),
+        $page_item  = $paginate.find(".pagination li"),
+		$page_link  = $page_item.find("a");
+		
+		// additional class on pagination for bootstrap 4.3.1
+		$page_item.addClass("page-item");
+		$page_link.addClass("page-link");
 }

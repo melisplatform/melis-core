@@ -95,7 +95,9 @@ $(function() {
                 setTimeout(function() {
                     melisCoreTool.done(dom);
                 }, 1000);
-
+            },
+            error: function() {
+                alert(translations.tr_meliscore_error_message);
             }
         });
     }

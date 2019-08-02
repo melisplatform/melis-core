@@ -405,7 +405,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $actionContainer = $table['actionButtons'];
 
             $jsSdomContentInit = '';
-            $tableTop = '<"filter-bar"<"row"';
+            $tableTop = '<"filter-bar container-fluid"<"row"';
 
             $left = $filters['left'];
             $center = $filters['center'];

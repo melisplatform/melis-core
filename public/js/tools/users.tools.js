@@ -82,7 +82,7 @@ $(document).ready(function () {
             url: '/melis/MelisCore/MelisCoreMicroService/updateStatus',
             data: {id: id, status: status},
             dataType: 'json',
-            encode: true,
+            encode: true
         });
     });
 
@@ -253,16 +253,18 @@ var toolUserManagement = {
                     data: {id: id},
                     dataType: 'json',
                     encode: true,
-                }).success(function (data) {
-                    melisCoreTool.pending(".btn-danger");
-                    if (data.success) {
-                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                        toolUserManagement.refreshTable();
-                        melisCore.flashMessenger();
+                    success: function(data) {
+                        melisCoreTool.pending(".btn-danger");
+                        if (data.success) {
+                            melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                            toolUserManagement.refreshTable();
+                            melisCore.flashMessenger();
+                        }
+                        melisCoreTool.done(".btn-danger");
+                    },
+                    error: function() {
+                        alert(translations.tr_meliscore_error_message);
                     }
-                    melisCoreTool.done(".btn-danger");
-                }).error(function () {
-                    alert(translations.tr_meliscore_error_message);
                 });
             });
     },
@@ -276,35 +278,37 @@ var toolUserManagement = {
             data: {id: id},
             dataType: 'json',
             encode: true,
-        }).success(function (data) {
-            if (data.success) {
-                $("#lastlogindate").html(data.user.usr_last_login_date);
-                $("#userlogin").html(data.user.usr_login);
-                toolUserManagement.setImage("#profile-image", data.user.usr_image);
-                $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
-                    var name = $(this).attr('name');
-                    $("#" + $(this).attr('id')).val(data.user[name]);
-                    $("#tool_user_management_id_tmp").val(data.user['usr_id']);
-                    $("#edituserid").html(data.user['usr_id']);
-                });
-
-                // Switching the Admin switch plugin
-                var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
-                if (data.user.usr_admin == 1) {
-                    userEditSwitchForm.bootstrapSwitch('setState', true);
-                } else {
-                    userEditSwitchForm.bootstrapSwitch('setState', false);
+            success: function(data) {
+                if (data.success) {
+                    $("#lastlogindate").html(data.user.usr_last_login_date);
+                    $("#userlogin").html(data.user.usr_login);
+                    toolUserManagement.setImage("#profile-image", data.user.usr_image);
+                    $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
+                        var name = $(this).attr('name');
+                        $("#" + $(this).attr('id')).val(data.user[name]);
+                        $("#tool_user_management_id_tmp").val(data.user['usr_id']);
+                        $("#edituserid").html(data.user['usr_id']);
+                    });
+    
+                    // Switching the Admin switch plugin
+                    var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
+                    if (data.user.usr_admin == 1) {
+                        userEditSwitchForm.bootstrapSwitch('setState', true);
+                    } else {
+                        userEditSwitchForm.bootstrapSwitch('setState', false);
+                    }
+    
+                    // make sure that password fields are empty when retrieving
+                    $("form#idusermanagement #id_usr_password").val("");
+                    $("form#idusermanagement #id_usr_confirm_password").val("");
+    
+                    // re-initialize the tree with current selected userID
+                    getRightsTree(id);
                 }
-
-                // make sure that password fields are empty when retrieving
-                $("form#idusermanagement #id_usr_password").val("");
-                $("form#idusermanagement #id_usr_confirm_password").val("");
-
-                // re-initialize the tree with current selected userID
-                getRightsTree(id);
+            },
+            error: function() {
+                alert(translations.tr_meliscore_error_message);
             }
-        }).error(function () {
-            alert(translations.tr_meliscore_error_message);
         });
     },
 

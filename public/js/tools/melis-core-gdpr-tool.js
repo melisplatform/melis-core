@@ -282,28 +282,30 @@ $(document).ready(function() {
                         url: '/melis/MelisCore/MelisCoreGdpr/melisCoreGdprDeleteSelected',
                         data: $.param(modules),
                         dataType: 'json',
-                        encode: true
-                    }).success(function (data) {
-                        if (data.success) {
-                            //Reload the zone after deleting a row.
-                            melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
-                                show: true,
-                                formData: gdprFormData,
-                            });
-
-                            melisHelper.melisOkNotification(
-                                translations.tr_melis_core_gdpr,
-                                translations.tr_melis_core_gdpr_tool_notif_delete_selection_success
-                            );
-                            melisCore.flashMessenger();
-                        } else {
-                            melisHelper.melisKoNotification(
-                                translations.tr_melis_core_gdpr_notif_delete_user,
-                                translations.tr_melis_core_gdpr_notif_error_on_deleting_data
-                            );
+                        encode: true,
+                        success: function(data) {
+                            if (data.success) {
+                                //Reload the zone after deleting a row.
+                                melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
+                                    show: true,
+                                    formData: gdprFormData,
+                                });
+    
+                                melisHelper.melisOkNotification(
+                                    translations.tr_melis_core_gdpr,
+                                    translations.tr_melis_core_gdpr_tool_notif_delete_selection_success
+                                );
+                                melisCore.flashMessenger();
+                            } else {
+                                melisHelper.melisKoNotification(
+                                    translations.tr_melis_core_gdpr_notif_delete_user,
+                                    translations.tr_melis_core_gdpr_notif_error_on_deleting_data
+                                );
+                            }
+                        },
+                        error: function() {
+                            alert(translations.tr_meliscore_error_message);
                         }
-                    }).error(function () {
-
                     });
                 }
             );
@@ -320,6 +322,9 @@ $(document).ready(function() {
                         var blob = new Blob([request.responseText], {type: mime});
                         saveAs(blob, fileName);
                     }
+                },
+                error: function() {
+                    alert(translations.tr_meliscore_error_message);
                 }
             });
         }

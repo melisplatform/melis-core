@@ -1546,7 +1546,7 @@ return [
                                             'id' => 'id_lang_id',
                                             'value' => '',
                                             'disabled' => 'disabled',
-                                            'class' => 'hidden'
+                                            'class' => 'd-none'
                                         ],
                                     ],
                                 ],
@@ -1839,6 +1839,9 @@ return [
                                     'spec' => [
                                         'name' => 'boe_tag_accepted_list',
                                         'type' => 'MelisCoreMultiValInput',
+                                        'options' => [
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip',
+                                        ],
                                         'attributes' => [
                                             'id' => 'boe_tag_accepted_list',
                                             'data-label-text' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list',
@@ -2124,7 +2127,7 @@ return [
                                         'type' => 'MelisText',
                                         'attributes' => [
                                             'id' => 'boed_id',
-                                            'class' => 'hidden',
+                                            'class' => 'd-none',
                                         ],
                                     ],
                                 ],

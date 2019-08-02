@@ -37,23 +37,24 @@ $(document).ready(function () {
             url: '/melis/MelisCore/Platforms/savePlatform',
             data: dataString,
             dataType: 'json',
-            encode: true
-        }).done(function (data) {
-            if (data.success) {
-                $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
-                melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
-                // Show Pop-up Notification
-                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-            } else {
-                melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
-                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                melisCoreTool.highlightErrors(data.success, data.errors, "corePlatform");
+            encode: true,
+            done: function(data) {
+                if (data.success) {
+                    $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
+                    melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
+                    // Show Pop-up Notification
+                    melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                } else {
+                    melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
+                    melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                    melisCoreTool.highlightErrors(data.success, data.errors, "corePlatform");
+                }
+    
+                melisCoreTool.processDone();
+            },
+            fail: function() {
+                alert(translations.tr_meliscore_error_message);
             }
-
-            melisCoreTool.processDone();
-
-        }).fail(function () {
-            alert(translations.tr_meliscore_error_message);
         });
     });
 
@@ -72,18 +73,20 @@ $(document).ready(function () {
                     data: {id: getId},
                     dataType: 'json',
                     encode: true,
-                }).success(function (data) {
-                    melisCoreTool.pending(".btn-danger");
-                    if (data.success) {
-                        melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
-                        melisCore.flashMessenger();
+                    success: function(data) {
+                        melisCoreTool.pending(".btn-danger");
+                        if (data.success) {
+                            melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
+                            melisCore.flashMessenger();
 
-                        // Show Pop-up Notification
-                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                            // Show Pop-up Notification
+                            melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                        }
+                        melisCoreTool.done(".btn-danger");
+                    },
+                    error: function() {
+                        alert(translations.tr_meliscore_error_message);    
                     }
-                    melisCoreTool.done(".btn-danger");
-                }).error(function () {
-                    alert(translations.tr_meliscore_error_message);
                 });
             });
     });
@@ -94,11 +97,18 @@ $(document).ready(function () {
 });
 
 window.initCorePlatformListTable = function () {
-    var parent = "#tablePlatforms";
+    var parent      = "#tablePlatforms",
+        $paginate   = $(".dataTables_paginate"),
+        $page_item  = $paginate.find(".pagination li"),
+        $page_link  = $page_item.find("a");
 
     // Core platform list init to remove delete buttons
     $(parent).find('.noPlatformDeleteBtn').each(function () {
         var rowId = '#' + $(this).attr('id');
         $(parent).find(rowId).find('.btnPlatformDelete').remove();
     });
+
+    // additional class on pagination for bootstrap 4.3.1
+    $page_item.addClass("page-item");
+    $page_link.addClass("page-link");
 };

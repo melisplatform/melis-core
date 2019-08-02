@@ -9,7 +9,11 @@
 			<div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
                 <div class="widget-head">
                 	<ul class="nav nav-tabs">
-                		<li class="active"><a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="glyphicons <?php echo ($this->platformId) ? 'pencil' : 'plus' ?>" data-toggle="tab" aria-expanded="true"><i></i> <?php echo $this->translate('Platform') ?></a></li>
+                		<li class="active">
+							<a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" data-toggle="tab" aria-expanded="true">
+								<i class="fa <?php echo ($this->platformId) ? 'fa-pencil' : 'fa-plus' ?>"></i><?php echo $this->translate('Platform') ?>
+							</a>
+						</li>
             		</ul>
         		</div>
         		<div class="widget-body innerAll inner-2x">
@@ -18,7 +22,7 @@
                             <div class="row">
                             	<div class="col-md-12">
                             		<div id="platformeditalert"></div>
-    								<span id="platformupdateid" class="hidden"></span>
+    								<span id="platformupdateid" class="d-none"></span>
     								
     								<div id="formplatformedit">
     									<p class="modal-text-info"> <?= $this->translate('tr_meliscore_tool_platform_forms_info'); ?></p>
@@ -30,9 +34,9 @@
                                         	echo $this->form()->closeTag(); 
                                         ?>
                                     </div>
-                                 	<div align="right">
-                                 		<a data-dismiss="modal" class="btn btn-danger pull-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></a>
-                                 		<a class="btn btn-success pull-right" id="btnPlatformSave"><i class="fa fa-save"></i>  <?= $this->translate('tr_meliscore_tool_gen_save'); ?></a>
+                                 	<div class="footer d-flex flex-row justify-content-between">
+                                 		<a data-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></a>
+                                 		<a class="btn btn-success" id="btnPlatformSave"><i class="fa fa-save"></i>  <?= $this->translate('tr_meliscore_tool_gen_save'); ?></a>
                                  	</div>
                             	</div>
                             </div>

@@ -42,7 +42,12 @@ class MelisFieldRow extends FormRow
 	    if(!empty($element->getOption('tooltip'))){
             if (strpos($element->getOption('tooltip'), 'tr_') === false) {
                 $element->setLabelOptions(['disable_html_escape' => true]);
-                $label = $element->getLabel().'<i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$element->getOption('tooltip').'"></i>';
+                $element->setLabelAttributes([
+                    'class' => 'd-flex flex-row justify-content-between'
+                ]);
+                $label = '<div class="label-text">' . $element->getLabel() . '</div>';
+                $label = $label . '<i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i>';
+                
                 $element->setLabel($label);
             }
 	    }
@@ -153,7 +158,7 @@ class MelisFieldRow extends FormRow
             $switchOptions = $element->getOption('switchOptions');
             $switchLabel = $switchOptions['label'] ?? $translator->translate('tr_meliscore_tool_user_col_status');
             $switch  = '<div class="form-group">';
-            $switch .= '<label for="'.$element->getName().'">'. $element->getLabel() . '</label>';
+            $switch .= '<label for="'.$element->getName().'" class="d-flex flex-row justify-content-between">'. $element->getLabel() . '</label>';
             $switch .= '    <div id="'. $switchId .'" class="make-switch" data-on-label="'. $switchOptions['label-on'] .'" data-off-label="'. $switchOptions['label-off'] .'" data-text-label="'. $switchLabel .'">';
             $switch .= '       <input type="checkbox" name="'.$element->getName().'" id="'.$element->getName().'" '.$isChecked.' value="1">';
             $switch .= '    </div>';
@@ -192,9 +197,11 @@ class MelisFieldRow extends FormRow
 	        // Get Value
 	        $dataTags = $element->getValue();
 	        // Set Input to Null value as default
-	        $element->setAttribute('value', null);
-	            
-            $label = '<label for="tags">' . $element->getAttribute('data-label-text') . '</label>';
+            $element->setAttribute('value', null);
+            
+            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' .$element->getOption('tooltip') . '"></i>';
+            
+            $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $element->getAttribute('data-label-text') . '</div>' . $multiValTooltip . '</label>';
             $getTags = explode(',', $dataTags);
             $ulStart = '<ul class="multi-value-input clearfix">';
             $ulEnd   = '</ul>';

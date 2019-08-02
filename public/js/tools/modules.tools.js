@@ -30,42 +30,46 @@ $(document).ready(function() {
                     data		: {module : moduleName},
                     dataType    : 'json',
                     encode		: true,
-                }).success(function(data){
-                    var modules    = "<br/><br/><div class='container'><div class='row'><div class='col-lg-12'><ul>%s</ul></div></div></div>";
-                    var moduleList = '';
+                    success: function(data) {
+                        var modules    = "<br/><br/><div class='container'><div class='row'><div class='col-lg-12'><ul>%s</ul></div></div></div>";
+                        var moduleList = '';
 
-                    $.each(data.modules, function(i, v) {
-                        moduleList += "<li>"+v+"</li>";
+                        $.each(data.modules, function(i, v) {
+                            moduleList += "<li>"+v+"</li>";
 
-                    });
+                        });
 
-                    modules = modules.replace("%s", moduleList);
+                        modules = modules.replace("%s", moduleList);
 
-                    if(data.success) {
-                        melisCoreTool.confirm(
-                            translations.tr_meliscore_common_yes,
-                            translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
-                            translations.tr_meliscore_general_proceed,
-                            data.message+modules,
-                            function() {
-                                $.each(data.modules, function(i, v) {
-                                	// this will trigger a switch-change event
-                                    // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
-									// this will just trigger an animate switch
-                                    switchButtonWithoutEvent(v, "off");
-                                });
-                            },
-							/**
-							 * User selects cancel: Revert the switch to its saved state, in this case "ON",
-							 * to prevent user from saving the cancelled switch change
-							 */
-							function () {
-								switchButtonWithoutEvent(moduleName, 'on');
-							}
-                        );
+                        if(data.success) {
+                            melisCoreTool.confirm(
+                                translations.tr_meliscore_common_yes,
+                                translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
+                                translations.tr_meliscore_general_proceed,
+                                data.message+modules,
+                                function() {
+                                    $.each(data.modules, function(i, v) {
+                                        // this will trigger a switch-change event
+                                        // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
+                                        // this will just trigger an animate switch
+                                        switchButtonWithoutEvent(v, "off");
+                                    });
+                                },
+                                /**
+                                 * User selects cancel: Revert the switch to its saved state, in this case "ON",
+                                 * to prevent user from saving the cancelled switch change
+                                 */
+                                function () {
+                                    switchButtonWithoutEvent(moduleName, 'on');
+                                }
+                            );
+                        }
+                        $('div[data-module-name]').bootstrapSwitch('setActive', true);
+                        $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
+                    },
+                    error: function() {
+                        alert(translations.tr_meliscore_error_message);
                     }
-                    $('div[data-module-name]').bootstrapSwitch('setActive', true);
-                    $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
                 });
 
 		}
@@ -81,23 +85,24 @@ $(document).ready(function() {
                 data		: {module : moduleName},
                 dataType    : 'json',
                 encode		: true,
-            }).success(function(data){
-                if(data.success) {
-					$.each(data.modules, function(i, v) {
-						// this will trigger a switch-change event
-						// $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
-						// this will just trigger an animate switch
-						switchButtonWithoutEvent(v, "on");
-					});
-
+                success: function(data) {
+                    if(data.success) {
+                        $.each(data.modules, function(i, v) {
+                            // this will trigger a switch-change event
+                            // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
+                            // this will just trigger an animate switch
+                            switchButtonWithoutEvent(v, "on");
+                        });
+    
+                    }
+                    $('div[data-module-name]').bootstrapSwitch('setActive', true);
+                    $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
+                },
+                error: function() {
+                    alert(translations.tr_meliscore_error_message);
                 }
-                $('div[data-module-name]').bootstrapSwitch('setActive', true);
-                $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
             });
 		}
-
-
-
     });
 
 
@@ -139,15 +144,18 @@ $(document).ready(function() {
 			        url         : '/melis/MelisCore/Modules/saveModuleChanges',
 			        data		: modules,
 			        dataType    : 'json',
-			        encode		: true,
-			     }).success(function(data){
-		    	 	if (data.success == 1) {
-		    	 		melisCoreTool.processing();
-		    	 		setTimeout(function() {window.location.reload(true) }, 3000);
-		    	 	} else {
-		    	 		melisHelper.melisKoNotification(data.textTitle, data.textMessage);
-		    	 	}
-
+                    encode		: true,
+                    success: function(data) {
+                        if (data.success == 1) {
+                            melisCoreTool.processing();
+                            setTimeout(function() {window.location.reload(true) }, 3000);
+                        } else {
+                            melisHelper.melisKoNotification(data.textTitle, data.textMessage);
+                        }
+                    },
+                    error: function() {
+                        alert(translations.tr_meliscore_error_message);
+                    }
 			     });
 			}
 		);

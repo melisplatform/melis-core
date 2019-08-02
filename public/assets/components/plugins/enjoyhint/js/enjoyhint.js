@@ -631,9 +631,9 @@ var EnjoyHint = function (_options) {
                 that.kinetic_stage.add(that.layer);
 
                 $(window).on('resize', function() {
-
-                    if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
-
+                    
+                    //if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
+                    if (!( $(that.stepData.enjoyHintElementSelector).length > 0 )) {
                         that.stopFunction();
                         $(window).off('resize');
                         return;
