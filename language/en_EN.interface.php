@@ -530,7 +530,7 @@ return [
     "tr_meliscore_log_export_type" => "Log Type",
     "tr_meliscore_log_export_type tooltip" => "Specific type of log",
     "tr_meliscore_log_export_log_date_range" => "Date Range",
-    "tr_meliscore_log_export_log_date_range tooltip" => "Dates of logs",
+    "tr_meliscore_log_export_log_date_range tooltip" => "Logs dates",
     "tr_meliscore_log_export_delimiter" => "Delimiter",
     "tr_meliscore_log_export_delimiter tooltip" => "Column separation character",
     "tr_meliscore_log_export_enclosure" => "Enclose columns with \" \"",
@@ -542,6 +542,7 @@ return [
     "tr_meliscore_logs_log_status_ok" => "Success",
     "tr_meliscore_logs_log_status_ko" => "Failed",
     'tr_meliscore_logs_cancel' => 'Cancel',
+    'tr_meliscore_common_all' => 'All',
     "tr_meliscore_logs_log_export_confirm_msg" => "By clicking on this button you will export all logs with the filters configured. Are you sure you wish to proceed ?",
 
     // Table columns
