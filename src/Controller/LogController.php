@@ -10,6 +10,7 @@
 namespace MelisCore\Controller;
 
 use DateTime;
+use MelisCore\Service\MelisCoreToolService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Validator\File\Count;
 use Zend\View\Model\ViewModel;
@@ -194,7 +195,7 @@ class LogController extends AbstractActionController
                 // Retreiving the list of logs using Log Service with filters as parameters
                 $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, "DESC", null, null);
                 $logCount = \count($logs);
-                if($logCount >= 1){
+                if($logCount >= 2000){
                     $success = 2;
                     $textMessage = sprintf($translator->translate('tr_meliscore_logs_tool_export_data_over_2000'),$logCount);
                 }else {

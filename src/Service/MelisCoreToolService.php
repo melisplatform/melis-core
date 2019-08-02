@@ -760,7 +760,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                         }
                     }
                     // convert UTF-8 to UTF-16LE encoding for excel encoding rendering
-                    $value = mb_convert_encoding($value, 'UTF-16LE', 'UTF-8');
+//                    $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
                     $content .= $enclosed . $this->replaceAccents($value) . $enclosed . $separator;
 
                 }
