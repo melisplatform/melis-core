@@ -259,6 +259,9 @@ var melisCore = (function(window){
         }, 1000);
     }
 
+    if(typeof melisDashBoardDragnDrop === 'undefined')
+        $("#disable-left-menu-overlay").show();
+
     // MAIN TAB MENU CLICK - run codes when a tab in the main tab menu is clicked
     function tabMenuClick(){
         activeTabId = $(this).data("id");

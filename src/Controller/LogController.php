@@ -194,7 +194,7 @@ class LogController extends AbstractActionController
                 // Retreiving the list of logs using Log Service with filters as parameters
                 $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, "DESC", null, null);
                 $logCount = \count($logs);
-                if($logCount >= 2000){
+                if($logCount >= 1){
                     $success = 2;
                     $textMessage = sprintf($translator->translate('tr_meliscore_logs_tool_export_data_over_2000'),$logCount);
                 }else {

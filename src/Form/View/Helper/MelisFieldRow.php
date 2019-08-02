@@ -26,9 +26,10 @@ class MelisFieldRow extends FormRow
             /**
              *  Firefox warning issue if the label attribute "for" is empty
              *  resulting "Empty string passed to getElementById()." on console
-             *  If the element has not value '' this will completely remove from element
+             *  If the element has not value '' this will generate id using uniqid() concatinated by name of the element
+             *  And this way it will avoid label tag wrapping input/select... element
              */
-            $element->removeAttribute('id');
+            $element->setAttribute('id', $element->getName() .'_'.substr(uniqid(), 5));
         }
 
 	    if ($element->getAttribute('required') == self::MELIS_TEXT_REQUIRED){

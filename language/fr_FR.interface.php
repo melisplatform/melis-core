@@ -740,4 +740,9 @@ return [
 
     'tr_meliscore_tool_creatrion_designs' => 'Création d\'outils & Design',
     'tr_meliscore_tool_tools' => 'Outils',
+    'tr_melis_core_gdpr_tabs' => 'Onglets',
+    'tr_melis_core_gdpr_gdpr_search_form' => 'Formulaire Recherche',
+    'tr_melis_core_gdpr_content_tabs' => 'Contenu onglets',
+    'tr_melis_cms_gdpr_banner_header' => 'Bannière En-tête',
+    'tr_melis_cms_gdpr_banner_details' => 'Bannière détails',
 ];
