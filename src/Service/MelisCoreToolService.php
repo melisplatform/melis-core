@@ -744,7 +744,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             foreach ($csvColumn as $key => $colText) {
                 $content .= $key . $separator;
             }
-            $content .= PHP_EOL;
+            $content .= "\r\n";
 
             // for contents
             foreach ($data as $dataKey => $dataValue) {
@@ -764,7 +764,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                     $content .= $enclosed . $this->replaceAccents($value) . $enclosed . $separator;
 
                 }
-                $content .= PHP_EOL;
+                $content .= "\r\n";
             }
 
             if (!is_null($fileName) || !empty($fileName)) {
