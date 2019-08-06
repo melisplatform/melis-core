@@ -469,20 +469,6 @@ var melisCore = (function(window){
         }
     });
 
-    // email management - account creation
-    // https://stackoverflow.com/questions/5057191/toggleclass-and-remove-class-from-all-other-elements
-    $body.on("clic", ".nav-tabs.product-text-tab li a", function(e) {
-        console.log({EmailManagement});
-        var $this = $(this);
-
-            $this.hasClass("active clearfix").removeClass("active clearfix");
-            if ( $this.closest("li").hasClass("active") ) {
-                $this.closest("li").addClass("active");
-            }
-
-            e.preventDefault();
-    });
-
     // ---=[ END ]=--- MULTI VALUE INPUT FILED JS --------------------------------------------------
 
     // detect IE8 and above, and edge

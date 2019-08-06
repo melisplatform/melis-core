@@ -123,11 +123,10 @@ window.initLangBOJs = function () {
         currentLangApplyBtn.remove();
 	}
 	
-	var $paginate   = $(".dataTables_paginate"),
-        $page_item  = $paginate.find(".pagination li"),
-		$page_link  = $page_item.find("a");
-		
-		// additional class on pagination for bootstrap 4.3.1
+	var $paginate = $(".dataTables_paginate"),
+		$page_item = $paginate.find(".pagination li"),
+		$page_link = $page_item.find("a");
+
 		$page_item.addClass("page-item");
 		$page_link.addClass("page-link");
 }

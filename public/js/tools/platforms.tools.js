@@ -97,10 +97,7 @@ $(document).ready(function () {
 });
 
 window.initCorePlatformListTable = function () {
-    var parent      = "#tablePlatforms",
-        $paginate   = $(".dataTables_paginate"),
-        $page_item  = $paginate.find(".pagination li"),
-        $page_link  = $page_item.find("a");
+    var parent      = "#tablePlatforms";
 
     // Core platform list init to remove delete buttons
     $(parent).find('.noPlatformDeleteBtn').each(function () {
@@ -108,7 +105,10 @@ window.initCorePlatformListTable = function () {
         $(parent).find(rowId).find('.btnPlatformDelete').remove();
     });
 
-    // additional class on pagination for bootstrap 4.3.1
-    $page_item.addClass("page-item");
-    $page_link.addClass("page-link");
+    var $paginate = $(".dataTables_paginate"),
+		$page_item = $paginate.find(".pagination li"),
+		$page_link = $page_item.find("a");
+
+		$page_item.addClass("page-item");
+		$page_link.addClass("page-link");
 };

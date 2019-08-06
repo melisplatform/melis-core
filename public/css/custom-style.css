@@ -254,6 +254,13 @@ a:not([href]).btn-danger:hover {
 .nav-tabs.product-text-tab li a:hover {
   border: 0;
 }
+.tag-creator .tip-info {
+  display: none;
+}
+/* tables */
+.table-striped > tbody > tr {
+  border-bottom: 1px solid #efefef;
+}
 /* Responsive */
 @media (min-width: 768px) {
   /* .login-page */

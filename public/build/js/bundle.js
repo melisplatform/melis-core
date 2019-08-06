@@ -29170,20 +29170,6 @@ var melisCore = (function(window){
         }
     });
 
-    // email management - account creation
-    // https://stackoverflow.com/questions/5057191/toggleclass-and-remove-class-from-all-other-elements
-    $body.on("clic", ".nav-tabs.product-text-tab li a", function(e) {
-        console.log({EmailManagement});
-        var $this = $(this);
-
-            $this.hasClass("active clearfix").removeClass("active clearfix");
-            if ( $this.closest("li").hasClass("active") ) {
-                $this.closest("li").addClass("active");
-            }
-
-            e.preventDefault();
-    });
-
     // ---=[ END ]=--- MULTI VALUE INPUT FILED JS --------------------------------------------------
 
     // detect IE8 and above, and edge
@@ -30265,6 +30251,24 @@ var melisHelper = (function(){
         });
     }
 
+    // addPagination classes for bootstrap 4.3.1
+    function addPaginationClasses() {
+        var $paginate   = $("#"+activeTabId).find(".dataTables_paginate");
+            console.log({$paginate});
+            //$page_item  = $paginate.find(".pagination li"),
+            //$page_link  = $page_item.find("a");
+            
+            // additional class on pagination for bootstrap 4.3.1
+            $.each( $paginate, function() {
+                var $this = $(this),
+                    $page_item = $this.find(".pagination li"),
+                    $page_link = $page_item.find("a");
+
+                    $page_item.addClass("page-item");
+                    $page_link.addClass("page-link");
+            });
+    }
+
 
     // BIND AND DELEGATE EVENTS =====================================================================================================
 
@@ -30326,6 +30330,9 @@ var melisHelper = (function(){
         enableTab								        :			enableTab,
         disableAllTabs								    :			disableAllTabs,
         enableAllTabs								    :			enableAllTabs,
+
+        // pagination classes for bootstrap 4.3.1
+        addPaginationClasses                            :           addPaginationClasses,
 
     };
 
@@ -31356,10 +31363,7 @@ $(document).ready(function () {
 });
 
 window.initCorePlatformListTable = function () {
-    var parent      = "#tablePlatforms",
-        $paginate   = $(".dataTables_paginate"),
-        $page_item  = $paginate.find(".pagination li"),
-        $page_link  = $page_item.find("a");
+    var parent      = "#tablePlatforms";
 
     // Core platform list init to remove delete buttons
     $(parent).find('.noPlatformDeleteBtn').each(function () {
@@ -31367,9 +31371,8 @@ window.initCorePlatformListTable = function () {
         $(parent).find(rowId).find('.btnPlatformDelete').remove();
     });
 
-    // additional class on pagination for bootstrap 4.3.1
-    $page_item.addClass("page-item");
-    $page_link.addClass("page-link");
+    // bootstrap 4.3.1 pagination classes
+	melisHelper.addPaginationClasses();
 };
 $(document).ready(function() {
 	
@@ -31496,20 +31499,17 @@ window.initLangBOJs = function () {
         currentLangApplyBtn.remove();
 	}
 	
-	var $paginate   = $(".dataTables_paginate"),
-        $page_item  = $paginate.find(".pagination li"),
-		$page_link  = $page_item.find("a");
-		
-		// additional class on pagination for bootstrap 4.3.1
-		$page_item.addClass("page-item");
-		$page_link.addClass("page-link");
+	// bootstrap 4.3.1 pagination classes
+	melisHelper.addPaginationClasses();
 }
-$(function(){
-	$("body").on("click", '.btnMelisCoreEmailMngtCreation', function() {
+$(function() {
+	var $body = $("body");
+
+	$body.on("click", '.btnMelisCoreEmailMngtCreation', function() {
 		melisHelper.tabOpen(translations.tr_emails_management_creation, 'fa-envelope-o', 'NEW_id_meliscore_tool_emails_mngt_generic_from', 'meliscore_tool_emails_mngt_generic_from', {codename:'NEW'});
 	});
 	
-	$("body").on("click", ".btnMelisCoreEmailMngtEdittion", function(){
+	$body.on("click", ".btnMelisCoreEmailMngtEdittion", function(){
 		var codename = $(this).parents("tr").attr("id");
 		
 		var dataString = new Array;
@@ -31532,7 +31532,7 @@ $(function(){
 		});
 	});
 	
-	$("body").on("click", ".btnMelisCoreEmailMngtSave", function(){
+	$body.on("click", ".btnMelisCoreEmailMngtSave", function(){
 		melisCoreTool.pending(".btnMelisCoreEmailMngtSave");
 		var codename = $(this).data("codename");
 		var formId = '#'+codename+'_generalPropertiesform';
@@ -31604,7 +31604,7 @@ $(function(){
         form.submit();
     }
 	
-	$("body").on("click", ".btnMelisCoreEmailMngtDelete", function(){
+	$body.on("click", ".btnMelisCoreEmailMngtDelete", function(){
 		var codename = $(this).parents("tr").attr("id");
 		var hasMergeData = $(this).parents("tr").hasClass("boEmailsMergeData");
 		var dataString = new Array;
@@ -31640,6 +31640,16 @@ $(function(){
 				});
 		});
 	});
+
+	// email management - account creation
+    $body.on("click", ".nav-tabs.product-text-tab li a", function(e) {
+        var $this = $(this);
+
+            $this.toggleClass("active").siblings().removeClass("active");
+            $this.closest("li").toggleClass("active").siblings().removeClass("active");
+
+            e.preventDefault();
+    });
 	
 	window.initEmailsEditors = function(){
 		$('.boed_lang_id').each(function(){
@@ -31925,6 +31935,9 @@ window.initLogDataTable = function(data){
 			data.endDate = $('#logsTableDaterange').data('daterangepicker').endDate.format("YYYY-MM-DD");
 		}
 	}
+
+	// bootstrap 4.3.1 pagination classes
+	melisHelper.addPaginationClasses();
 }
 
 window.initDatePicker = function(){
@@ -32430,26 +32443,28 @@ $(document).ready(function() {
             $.ajax({
                 type     : 'POST',
                 url      : '/melis/MelisCore/MelisCoreGdpr/checkForm',
-                data     : $.param(formData)
-            }).success(function (data) {
-                if (data.success) {
-                    //this will be used on deleting a row
-                    gdprFormData = formData;
-                    //show the tabs so that the loading view will be shown to the user
-                    $('#id_melis_core_gdpr_content_tabs').show();
-                    melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
-                        show: true,
-                        formData: formData,
-                    });
-                } else {
-                    melisHelper.melisKoNotification(
-                        translations.tr_melis_core_gdpr_search_user_title,
-                        translations.tr_melis_core_gdpr_search_user_error_message,
-                        data.errors
-                    );
+                data     : $.param(formData),
+                success: function(data) {
+                    if (data.success) {
+                        //this will be used on deleting a row
+                        gdprFormData = formData;
+                        //show the tabs so that the loading view will be shown to the user
+                        $('#id_melis_core_gdpr_content_tabs').show();
+                        melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
+                            show: true,
+                            formData: formData,
+                        });
+                    } else {
+                        melisHelper.melisKoNotification(
+                            translations.tr_melis_core_gdpr_search_user_title,
+                            translations.tr_melis_core_gdpr_search_user_error_message,
+                            data.errors
+                        );
+                    }
+                },
+                error: function() {
+                    alert(translations.tr_meliscore_error_message);
                 }
-            }).error(function () {
-
             });
             melisCoreTool.done("#melis-core-gdpr-search-form-submit");
         },

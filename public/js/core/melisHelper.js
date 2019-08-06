@@ -788,7 +788,6 @@ var melisHelper = (function(){
         enableTab								        :			enableTab,
         disableAllTabs								    :			disableAllTabs,
         enableAllTabs								    :			enableAllTabs,
-
     };
 
 })();

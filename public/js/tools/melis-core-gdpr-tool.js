@@ -246,26 +246,28 @@ $(document).ready(function() {
             $.ajax({
                 type     : 'POST',
                 url      : '/melis/MelisCore/MelisCoreGdpr/checkForm',
-                data     : $.param(formData)
-            }).success(function (data) {
-                if (data.success) {
-                    //this will be used on deleting a row
-                    gdprFormData = formData;
-                    //show the tabs so that the loading view will be shown to the user
-                    $('#id_melis_core_gdpr_content_tabs').show();
-                    melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
-                        show: true,
-                        formData: formData,
-                    });
-                } else {
-                    melisHelper.melisKoNotification(
-                        translations.tr_melis_core_gdpr_search_user_title,
-                        translations.tr_melis_core_gdpr_search_user_error_message,
-                        data.errors
-                    );
+                data     : $.param(formData),
+                success: function(data) {
+                    if (data.success) {
+                        //this will be used on deleting a row
+                        gdprFormData = formData;
+                        //show the tabs so that the loading view will be shown to the user
+                        $('#id_melis_core_gdpr_content_tabs').show();
+                        melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
+                            show: true,
+                            formData: formData,
+                        });
+                    } else {
+                        melisHelper.melisKoNotification(
+                            translations.tr_melis_core_gdpr_search_user_title,
+                            translations.tr_melis_core_gdpr_search_user_error_message,
+                            data.errors
+                        );
+                    }
+                },
+                error: function() {
+                    alert(translations.tr_meliscore_error_message);
                 }
-            }).error(function () {
-
             });
             melisCoreTool.done("#melis-core-gdpr-search-form-submit");
         },
