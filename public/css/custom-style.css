@@ -195,6 +195,10 @@ a:not([href]).btn-danger:hover {
   background: #e61c23;
   border-color: #e61c23;
 }
+.pagination > li.next > a, 
+.pagination > li.previous a {
+  color: #fff;
+}
 /* modal */
 #id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
   padding: 9px 15px 0;

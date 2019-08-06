@@ -14,7 +14,6 @@ $(function(){
     	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
 	});
 	
-	
 	$body.on("click", ".saveLogTypeDetails", function(){
 		
 		var btn = $(this);
@@ -69,6 +68,15 @@ $(function(){
 	});
 });
 
+window.initLogs = function() {
+	var $paginate = $(".dataTables_paginate"),
+		$page_item = $paginate.find(".pagination li"),
+		$page_link = $page_item.find("a");
+
+		$page_item.addClass("page-item");
+		$page_link.addClass("page-link");
+}
+
 window.initLogDataTable = function(data){
 	
 	data.userId = -1;
@@ -89,13 +97,6 @@ window.initLogDataTable = function(data){
 			data.endDate = $('#logsTableDaterange').data('daterangepicker').endDate.format("YYYY-MM-DD");
 		}
 	}
-
-	var $paginate = $(".dataTables_paginate"),
-		$page_item = $paginate.find(".pagination li"),
-		$page_link = $page_item.find("a");
-
-		$page_item.addClass("page-item");
-		$page_link.addClass("page-link");
 }
 
 window.initDatePicker = function(){
@@ -105,4 +106,3 @@ window.initDatePicker = function(){
 window.dateRangePickerApplyEvent = function(ev, picker) {
     $tableMelisLogs.draw();
 }
-

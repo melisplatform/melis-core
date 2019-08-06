@@ -30251,24 +30251,6 @@ var melisHelper = (function(){
         });
     }
 
-    // addPagination classes for bootstrap 4.3.1
-    function addPaginationClasses() {
-        var $paginate   = $("#"+activeTabId).find(".dataTables_paginate");
-            console.log({$paginate});
-            //$page_item  = $paginate.find(".pagination li"),
-            //$page_link  = $page_item.find("a");
-            
-            // additional class on pagination for bootstrap 4.3.1
-            $.each( $paginate, function() {
-                var $this = $(this),
-                    $page_item = $this.find(".pagination li"),
-                    $page_link = $page_item.find("a");
-
-                    $page_item.addClass("page-item");
-                    $page_link.addClass("page-link");
-            });
-    }
-
 
     // BIND AND DELEGATE EVENTS =====================================================================================================
 
@@ -30330,10 +30312,6 @@ var melisHelper = (function(){
         enableTab								        :			enableTab,
         disableAllTabs								    :			disableAllTabs,
         enableAllTabs								    :			enableAllTabs,
-
-        // pagination classes for bootstrap 4.3.1
-        addPaginationClasses                            :           addPaginationClasses,
-
     };
 
 })();
@@ -30885,6 +30863,13 @@ var toolUserManagement = {
 
     initTool: function () {
         melisCoreTool.initTable("#tableToolUserManagement");
+        
+        var $paginate = $(".dataTables_paginate"),
+            $page_item = $paginate.find(".pagination li"),
+            $page_link = $page_item.find("a");
+
+            $page_item.addClass("page-item");
+            $page_link.addClass("page-link");
     },
 
     deleteUser: function (id) {
@@ -31371,8 +31356,12 @@ window.initCorePlatformListTable = function () {
         $(parent).find(rowId).find('.btnPlatformDelete').remove();
     });
 
-    // bootstrap 4.3.1 pagination classes
-	melisHelper.addPaginationClasses();
+    var $paginate = $(".dataTables_paginate"),
+		$page_item = $paginate.find(".pagination li"),
+		$page_link = $page_item.find("a");
+
+		$page_item.addClass("page-item");
+		$page_link.addClass("page-link");
 };
 $(document).ready(function() {
 	
@@ -31499,8 +31488,12 @@ window.initLangBOJs = function () {
         currentLangApplyBtn.remove();
 	}
 	
-	// bootstrap 4.3.1 pagination classes
-	melisHelper.addPaginationClasses();
+	var $paginate = $(".dataTables_paginate"),
+		$page_item = $paginate.find(".pagination li"),
+		$page_link = $page_item.find("a");
+
+		$page_item.addClass("page-item");
+		$page_link.addClass("page-link");
 }
 $(function() {
 	var $body = $("body");
@@ -31697,6 +31690,13 @@ $(function() {
 		$('.noDeleteBtn').each(function(){
 			$('#'+$(this).attr('id')+' .btnMelisCoreEmailMngtDelete').remove();
 		});
+
+		var $paginate = $(".dataTables_paginate"),
+			$page_item = $paginate.find(".pagination li"),
+			$page_link = $page_item.find("a");
+
+			$page_item.addClass("page-item");
+			$page_link.addClass("page-link");
 	}
 });
 $(function() {
@@ -31860,7 +31860,6 @@ $(function(){
     	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
 	});
 	
-	
 	$body.on("click", ".saveLogTypeDetails", function(){
 		
 		var btn = $(this);
@@ -31915,6 +31914,15 @@ $(function(){
 	});
 });
 
+window.initLogs = function() {
+	var $paginate = $(".dataTables_paginate"),
+		$page_item = $paginate.find(".pagination li"),
+		$page_link = $page_item.find("a");
+
+		$page_item.addClass("page-item");
+		$page_link.addClass("page-link");
+}
+
 window.initLogDataTable = function(data){
 	
 	data.userId = -1;
@@ -31935,9 +31943,6 @@ window.initLogDataTable = function(data){
 			data.endDate = $('#logsTableDaterange').data('daterangepicker').endDate.format("YYYY-MM-DD");
 		}
 	}
-
-	// bootstrap 4.3.1 pagination classes
-	melisHelper.addPaginationClasses();
 }
 
 window.initDatePicker = function(){
@@ -31947,8 +31952,6 @@ window.initDatePicker = function(){
 window.dateRangePickerApplyEvent = function(ev, picker) {
     $tableMelisLogs.draw();
 }
-
-
 $(function() {
 	
 	var body = $("body");
