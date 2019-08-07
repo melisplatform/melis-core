@@ -11,16 +11,18 @@ $(function() {
         '=': '&#x3D;'
     };
 
+    var $body = $("body");
+
     function escapeHtml (string) {
         return String(string).replace(/[&<>"'`=\/]/g, function (s) {
             return entityMap[s];
         });
     }
-    $("body").on("click", "#savePlatformScheme", function() {
+    $body.on("click", "#savePlatformScheme", function() {
         $("form#melis_core_platform_scheme_images").submit();
     });
 
-    $("body").on("click", "#resetPlatformScheme", function() {
+    $body.on("click", "#resetPlatformScheme", function() {
         melisCoreTool.confirm(
             translations.tr_meliscore_common_yes,
             translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
@@ -36,17 +38,19 @@ $(function() {
                     cache       : false,
                     contentType : false,
                     dataType    : 'json',
-                }).success(function(data){
-                    if(data.success) {
-                        melisCoreTool.processing();
-                        location.reload(true);
+                    success: function(data) {
+                        if(data.success) {
+                            melisCoreTool.processing();
+                            location.reload(true);
+                        }
+                        else {
+                            melisHelper.melisKoNotification(data.title, data.message, data.errors);
+                        }
+                        melisCoreTool.done(".button");
+                    },
+                    error: function() {
+                        melisCoreTool.done(".button");
                     }
-                    else {
-                        melisHelper.melisKoNotification(data.title, data.message, data.errors);
-                    }
-                    melisCoreTool.done(".button");
-                }).error(function(){
-                    melisCoreTool.done(".button");
                 });
             }
         );
@@ -54,7 +58,7 @@ $(function() {
 
     });
 
-    $("body").on("submit", "form#melis_core_platform_scheme_images", function(e) {
+    $body.on("submit", "form#melis_core_platform_scheme_images", function(e) {
         var formData = new FormData(this);
 
         var colorFormData = $("form#melis_core_platform_scheme_form").serializeArray();
@@ -94,7 +98,7 @@ $(function() {
         e.preventDefault();
     });
 
-    $("body").on("keyup", "input#sidebar_header_text", function() {
+    $body.on("keyup", "input#sidebar_header_text", function() {
         var text = escapeHtml($(this).val());
         var textLength = text.replace(/\s/g, "").length;
         if(!text) {

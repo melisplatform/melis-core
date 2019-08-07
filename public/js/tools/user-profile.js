@@ -1,6 +1,6 @@
 $(function() {
 	
-	var body = $("body");
+	var $body = $("body");
 	
 	//check if whether to open the user profile tab on page finish load
 	$(window).on('load', function(){
@@ -10,7 +10,7 @@ $(function() {
 	/**
 	 * Open up user profile
 	 */
-	body.on("click", "#img-user-link, #user-name-link", function(event) {
+	$body.on("click", "#img-user-link, #user-name-link", function(event) {
     	openUserProfileTab();
         event.preventDefault();
     });
@@ -18,21 +18,21 @@ $(function() {
     /**
      * Update user profile on save button click
      */
-	body.on('click', '.btnUpdateUser', function(e){
+	$body.on('click', '.btnUpdateUser', function(e){
     	updateUserInfo($(this));
     	e.preventDefault();
     })
     /**
      * Open up File Input window to select an image
      */
-    body.on('click', '.profile-photo-edit', function(e){
+    $body.on('click', '.profile-photo-edit', function(e){
     	$('#id_usr_profile_image').trigger('click');
     	e.preventDefault();
     });
     /**
      * Preview selected image on file input change
      */
-	body.on('change', '#id_usr_profile_image', function(){
+	$body.on('change', '#id_usr_profile_image', function(){
     	previewImage(this);
     });
     

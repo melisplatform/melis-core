@@ -70,15 +70,17 @@ $(function(){ // document.ready function equivalent in jQuery
 			$.ajax({
 		        url         : '/melis/zoneview',
 		        data        : zonesToLoad,
-		        encode		: true
-		    }).success(function(data){
-		    	//hide the loader
-		    	$('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
-		    	setTimeout(function() {
-		    		$("#id_"+zonesToLoad.cpath).html(data.html);
-		    	}, 300);
-		    }).error(function(){
-		    	alert("ERROR REFRESHING THE HEADER !!");
+				encode		: true,
+				success: function(data) {
+					//hide the loader
+					$('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+					setTimeout(function() {
+						$("#id_"+zonesToLoad.cpath).html(data.html);
+					}, 300);
+				},
+				error: function() {
+					alert("ERROR REFRESHING THE HEADER !!");
+				}
 		    });
 		}, 1000);
 	}

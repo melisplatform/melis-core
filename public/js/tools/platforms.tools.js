@@ -37,24 +37,22 @@ $(document).ready(function () {
             url: '/melis/MelisCore/Platforms/savePlatform',
             data: dataString,
             dataType: 'json',
-            encode: true,
-            done: function(data) {
-                if (data.success) {
-                    $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
-                    melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
-                    // Show Pop-up Notification
-                    melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                } else {
-                    melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
-                    melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                    melisCoreTool.highlightErrors(data.success, data.errors, "corePlatform");
-                }
-    
-                melisCoreTool.processDone();
-            },
-            fail: function() {
-                alert(translations.tr_meliscore_error_message);
+            encode: true
+        }).done(function(data) {
+            if (data.success) {
+                $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
+                melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
+                // Show Pop-up Notification
+                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+            } else {
+                melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
+                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                melisCoreTool.highlightErrors(data.success, data.errors, "corePlatform");
             }
+
+            melisCoreTool.processDone();
+        }).fail(function() {
+            alert(translations.tr_meliscore_error_message);
         });
     });
 
@@ -85,7 +83,7 @@ $(document).ready(function () {
                         melisCoreTool.done(".btn-danger");
                     },
                     error: function() {
-                        alert(translations.tr_meliscore_error_message);    
+                        alert(translations.tr_meliscore_error_message);
                     }
                 });
             });

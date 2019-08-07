@@ -90,38 +90,39 @@ $(document).ready(function(){
 		    url         : '/melis/MelisCmsProspects/Dashboard/getDashboardStats',
 		    data		: {chartFor : chartFor},
 		    dataType 	: 'json',
-		    encode		: true
-		}).success(function(data){
-			// plot the bar chart
-			var opts = charts.chart_simple_bars.options;
-			// Set Bar With Depend on Type of Chart
-			switch (chartFor) {
-	            case 'daily':
-	            	opts.xaxis.timeformat = '%b %d';
-	            	opts.series.bars.barWidth = 12*24*60*60*60;
-	                break;
-	            case 'monthly':
-	            	opts.xaxis.timeformat = '%b';
-	            	opts.series.bars.barWidth = 12*24*60*60*60*25;
-	                break;
-	            case 'yearly':
-	            	opts.xaxis.timeformat = '%Y';
-	            	opts.series.bars.barWidth = 12*24*60*60*60*280;
-	                break;
-	            default:
-	                break;
+			encode		: true,
+			success: function(data) {
+				// plot the bar chart
+				var opts = charts.chart_simple_bars.options;
+				// Set Bar With Depend on Type of Chart
+				switch (chartFor) {
+					case 'daily':
+						opts.xaxis.timeformat = '%b %d';
+						opts.series.bars.barWidth = 12*24*60*60*60;
+						break;
+					case 'monthly':
+						opts.xaxis.timeformat = '%b';
+						opts.series.bars.barWidth = 12*24*60*60*60*25;
+						break;
+					case 'yearly':
+						opts.xaxis.timeformat = '%Y';
+						opts.series.bars.barWidth = 12*24*60*60*60*280;
+						break;
+					default:
+						break;
+				}
+				
+				charts.chart_simple_bars.plot = $.plot(
+					$(charts.chart_simple_bars.placeholder),
+					[{
+						label: "Prospects", 
+						data: data.values,
+						color: successColor,
+					}], charts.chart_simple_bars.options);
+			},
+			error: function(xhr, textStatus, errorThrown) {
+				alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
 			}
-			
-			charts.chart_simple_bars.plot = $.plot(
-				$(charts.chart_simple_bars.placeholder),
-	           	[{
-	    			label: "Prospects", 
-	    			data: data.values,
-	    			color: successColor,
-	    		}], charts.chart_simple_bars.options);
-			
-		}).error(function(xhr, textStatus, errorThrown){
-			alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
 		});
 	}
 	

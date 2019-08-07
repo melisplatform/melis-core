@@ -1,5 +1,5 @@
 $(function() {
-    var body = $("body");
+    var $body = $("body");
     var runIcon     = '<i class="fa fa-play"></i> Run';
     var spinnerIcon = '<i class="fa fa-spinner fa-pulse fa-fw"></i> Testing...';
     var hide        = '<i class="fa fa-minus"></i> Hide';
@@ -13,7 +13,7 @@ $(function() {
     var hideVal = translations.tr_melis_module_diagnostics_tool_header_hide_all;
 
 
-    $("body").on("click", "#btnDiagPhpunitRunAll", function() {
+    $body.on("click", "#btnDiagPhpunitRunAll", function() {
         totalExec = 0;
         totalAvailableTest = parseInt($(".btn-run-pu-module-test").size()) * execPerMod
         runAllMode = true;
@@ -41,6 +41,7 @@ $(function() {
 
         }, 500);
     }
+    
     function resetStartButton(m) {
         var btn = ".btn-run-pu-module-test";
         if(m != "") {

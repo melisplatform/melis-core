@@ -545,7 +545,7 @@ var melisHelper = (function(){
             data        : datastring,
             encode		: true,
             dataType	: "json",
-            success: function(data, status, xhr) {
+            success: function(data) {
                 // hide the loader
                 $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 

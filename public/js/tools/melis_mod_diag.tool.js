@@ -1,4 +1,5 @@
 (function($) {
+	var $body = $("body");
 	var module = null;
 	var runAllMode = false;
 	var totalExec = 0;
@@ -7,7 +8,7 @@
 	var execChecker = null;	
 	var hideVal = translations.tr_melis_module_diagnostics_tool_header_hide_all;
 	
-	$("body").on("click", "#btnDiagRunAll", function() {
+	$body.on("click", "#btnDiagRunAll", function() {
 		totalExec = 0;
 		totalAvailableTest = parseInt($(".btn-run-module-test").size()) * execPerMod
 		runAllMode = true;
@@ -32,7 +33,7 @@
 
 	});
 	
-	$("body").on("click", ".btn-run-module-test", function(){
+	$body.on("click", ".btn-run-module-test", function(){
 		module = $(this).data("modules");
 		moduleElement = ".btn-run-module-test[data-modules='"+module+"']";
 		
@@ -61,7 +62,6 @@
 
 	});
 
-	
 	function startTestButton(m) {
 		var btn = ".btn-run-module-test";
 		if(m != "") {
@@ -88,7 +88,6 @@
 		}, 1000);
 		
 	}
-	
 
 	function incProgBar(pb, value) {
 		var progCurrentVal = parseInt($(pb).attr("aria-valuenow"));
@@ -213,9 +212,4 @@
 //		$(".collapse").collapse("hide");
 //	}
 	
-
-
-
-
-
 })(jQuery);

@@ -1,6 +1,7 @@
 $(document).ready(function() {
+    var $body = $("body");
 
-    $("body").on("switch-change", "#select-deselect-all-module", function(e, data){
+    $body.on("switch-change", "#select-deselect-all-module", function(e, data){
         var val = "";
         if(data.value === false){
             val = "off";
@@ -10,7 +11,7 @@ $(document).ready(function() {
         $('.module-switch').find("div.switch-animate").removeClass("switch-on switch-off").addClass("switch-"+val);
     });
 
-    $("body").on('switch-change', 'div[data-module-name]', function (e, data) {
+    $body.on('switch-change', 'div[data-module-name]', function (e, data) {
 
 		var moduleName = $(this).data("module-name");
 		var value 	   = data.value;
@@ -105,8 +106,7 @@ $(document).ready(function() {
 		}
     });
 
-
-	$("body").on("click", "#btnModulesSave", function() {
+	$body.on("click", "#btnModulesSave", function() {
 		var modules = [];
 		var moduleSwitches = $(".module-switch");
 		var on = "switch-on";

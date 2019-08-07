@@ -240,7 +240,6 @@ $(document).ready(function() {
         }
     });
 
-
     var GdprTool = {
         getUserInfo: function(formData) {
             $.ajax({
