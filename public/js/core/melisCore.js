@@ -212,7 +212,10 @@ var melisCore = (function(window){
             dataType: 'json',
         }).done(function (data) {
             if(data.success){
-                melisHelper.zoneReload("id_meliscore_leftmenu","meliscore_leftmenu");
+                var currUserId = $("#user-name-link").attr("data-user-id");
+                console.log(currUserId);
+                if(currUserId === $("#edituserid").html())
+                    melisHelper.zoneReload("id_meliscore_leftmenu","meliscore_leftmenu");
                 getRightsTree($("#edituserid").html());
                 // call melisOkNotification
                 melisHelper.melisOkNotification(data.textTitle, data.textMessage, '#72af46' );
