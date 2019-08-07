@@ -1244,6 +1244,7 @@ class ToolUserController extends AbstractActionController
             foreach ($container['action-tool-user-setrights-tmp'] as $xmlrights)
                 $newXmlRights .= $xmlrights;
 
+            $newXmlRights = preg_replace("/<id(.*)<\/id>/iUs", "", $newXmlRights);
             $newXmlRights .= '</document>';
         }
 
@@ -1254,9 +1255,11 @@ class ToolUserController extends AbstractActionController
         }
 
         $userSession = $melisCoreAuth->getStorage()->read();
+
         if ($data['usr_login'] == $userSession->usr_login) {
             $userSession->usr_rights = $newXmlRights;
         }
+
 
         $success = $userTable->save(array('usr_rights'=>$newXmlRights), $userId);
         if ($success < 1) {
