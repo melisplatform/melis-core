@@ -30,9 +30,9 @@ $(document).ready(function() {
                     url         : '/melis/MelisCore/Modules/getDependents',
                     data		: {module : moduleName},
                     dataType    : 'json',
-                    encode		: true,
-                    success: function(data) {
-                        var modules    = "<br/><br/><div class='container'><div class='row'><div class='col-lg-12'><ul>%s</ul></div></div></div>";
+                    encode		: true
+                }).done(function(data) {
+                    var modules    = "<br/><br/><div class='container'><div class='row'><div class='col-lg-12'><ul>%s</ul></div></div></div>";
                         var moduleList = '';
 
                         $.each(data.modules, function(i, v) {
@@ -67,10 +67,8 @@ $(document).ready(function() {
                         }
                         $('div[data-module-name]').bootstrapSwitch('setActive', true);
                         $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
-                    },
-                    error: function() {
-                        alert(translations.tr_meliscore_error_message);
-                    }
+                }).fail(function() {
+                    alert(translations.tr_meliscore_error_message);
                 });
 
 		}
@@ -85,23 +83,20 @@ $(document).ready(function() {
                 url         : '/melis/MelisCore/Modules/getRequiredDependencies',
                 data		: {module : moduleName},
                 dataType    : 'json',
-                encode		: true,
-                success: function(data) {
-                    if(data.success) {
-                        $.each(data.modules, function(i, v) {
-                            // this will trigger a switch-change event
-                            // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
-                            // this will just trigger an animate switch
-                            switchButtonWithoutEvent(v, "on");
-                        });
-    
-                    }
-                    $('div[data-module-name]').bootstrapSwitch('setActive', true);
-                    $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
-                },
-                error: function() {
-                    alert(translations.tr_meliscore_error_message);
+                encode		: true
+            }).done(function(data) {
+                if(data.success) {
+                    $.each(data.modules, function(i, v) {
+                        // this will trigger a switch-change event
+                        // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
+                        // this will just trigger an animate switch
+                        switchButtonWithoutEvent(v, "on");
+                    });
                 }
+                $('div[data-module-name]').bootstrapSwitch('setActive', true);
+                $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
+            }).fail(function() {
+                alert(translations.tr_meliscore_error_message);
             });
 		}
     });
@@ -144,19 +139,17 @@ $(document).ready(function() {
 			        url         : '/melis/MelisCore/Modules/saveModuleChanges',
 			        data		: modules,
 			        dataType    : 'json',
-                    encode		: true,
-                    success: function(data) {
-                        if (data.success == 1) {
-                            melisCoreTool.processing();
-                            setTimeout(function() {window.location.reload(true) }, 3000);
-                        } else {
-                            melisHelper.melisKoNotification(data.textTitle, data.textMessage);
-                        }
-                    },
-                    error: function() {
-                        alert(translations.tr_meliscore_error_message);
+                    encode		: true
+			    }).done(function(data) {
+                    if (data.success == 1) {
+                        melisCoreTool.processing();
+                        setTimeout(function() {window.location.reload(true) }, 3000);
+                    } else {
+                        melisHelper.melisKoNotification(data.textTitle, data.textMessage);
                     }
-			     });
+                }).fail(function() {
+                    alert(translations.tr_meliscore_error_message);
+                });
 			}
 		);
 

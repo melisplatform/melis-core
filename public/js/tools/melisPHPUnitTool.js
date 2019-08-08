@@ -87,19 +87,17 @@ $(function() {
             dataType: 'json',
             data: {module : module},
             type: 'POST',
-            cache: false,
-            success: function(data) {
-                $("div#wellPU"+module).html(data.response);
-                buttonStatus(dom, "hide");
-                buttonIconStateEvent(dom + " span#icon"+module, "hide");
-                $("#collapsePU"+ module).collapse('toggle');
-                setTimeout(function() {
-                    melisCoreTool.done(dom);
-                }, 1000);
-            },
-            error: function() {
-                alert(translations.tr_meliscore_error_message);
-            }
+            cache: false
+        }).done(function(data) {
+            $("div#wellPU"+module).html(data.response);
+            buttonStatus(dom, "hide");
+            buttonIconStateEvent(dom + " span#icon"+module, "hide");
+            $("#collapsePU"+ module).collapse('toggle');
+            setTimeout(function() {
+                melisCoreTool.done(dom);
+            }, 1000);
+        }).fail(function() {
+            alert(translations.tr_meliscore_error_message);
         });
     }
 

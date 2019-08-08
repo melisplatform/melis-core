@@ -312,6 +312,31 @@ a:not([href]).btn-danger:hover {
   display: table;
   border-collapse: separate;
 }
+/* gdpr */
+/* #id_meliscoregdpr_search_user_data .widget {
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+} */
+.page-content-container .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons {
+  min-width: 90px;
+}
+.page-content-container .widget.widget-tabs-double-2 .widget-body,
+.page-content-container .widget.widget-tabs-double-2 .widget-body-regular,
+.page-content-container .widget {
+  border: 0;
+}
+#id_melis_core_gdpr_tabs.page-content-container .nav-tabs > li.active > a, 
+.page-content-container .nav-tabs > li.active:focus > a, 
+.page-content-container .nav-tabs > li.active:active > a {
+  border: 0;
+}
+.custom-melis-core-gdpr-checkbox-span {
+  margin-top: 0;
+}
+#id_melis_core_gdpr_search_form .form-group .control-label {
+  line-height: 2rem;
+}
 /* Responsive */
 @media (min-width: 768px) {
   /* .login-page */

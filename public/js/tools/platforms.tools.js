@@ -70,21 +70,19 @@ $(document).ready(function () {
                     url: '/melis/MelisCore/Platforms/deletePlatform',
                     data: {id: getId},
                     dataType: 'json',
-                    encode: true,
-                    success: function(data) {
-                        melisCoreTool.pending(".btn-danger");
-                        if (data.success) {
-                            melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
-                            melisCore.flashMessenger();
+                    encode: true
+                }).done(function(data) {
+                    melisCoreTool.pending(".btn-danger");
+                    if (data.success) {
+                        melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
+                        melisCore.flashMessenger();
 
-                            // Show Pop-up Notification
-                            melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                        }
-                        melisCoreTool.done(".btn-danger");
-                    },
-                    error: function() {
-                        alert(translations.tr_meliscore_error_message);
+                        // Show Pop-up Notification
+                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
                     }
+                    melisCoreTool.done(".btn-danger");
+                }).fail(function() {
+                    alert(translations.tr_meliscore_error_message);
                 });
             });
     });

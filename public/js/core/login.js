@@ -9,32 +9,31 @@ $(function() {
             url         : '/melis/authenticate',
             data        : datastring,
             dataType    : 'json',
-            encode      : true,
-            success: function(data) {
-                if (data.success)   {
-                    window.location.replace("/melis");
-                }
-                else{
-    
-                    var errorTxt = "";
-                    $.each(data.errors, function(i,v) {
-                        errorTxt = v;
-                    });
-    
-                    if(data.require_reset_password) {
-                        melisCoreTool.alertWarning('#loginprompt', '<i class="fa fa-exclamation-triangle"></i> ' + translations.tr_meliscore_common_warning+"!", errorTxt);
-                    }
-                    else {
-                        melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
-                    }
-                    $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
-    
-                }
-            },
-            error: function() {
-                $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
-        	    alert( translations.tr_meliscore_error_message );
+            encode      : true
+        }).done(function(data) {
+            if (data.success)   {
+                window.location.replace("/melis");
             }
+            else{
+
+                var errorTxt = "";
+                $.each(data.errors, function(i,v) {
+                    errorTxt = v;
+                });
+
+                if(data.require_reset_password) {
+                    melisCoreTool.alertWarning('#loginprompt', '<i class="fa fa-exclamation-triangle"></i> ' + translations.tr_meliscore_common_warning+"!", errorTxt);
+                }
+                else {
+                    melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
+                }
+                $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
+
+            }
+        }).fail(function() {
+            $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
+            
+            alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
     });
@@ -47,18 +46,16 @@ $(function() {
             url         : '/melis/change-language',
             data        : datastring,
             dataType    : 'json',
-            encode      : true,
-            success: function(data) {
-                if (data.success){
-                    location.reload();
-                }
-                else{
-                    alert( translations.tr_meliscore_error_language );
-                }
-            },
-            error: function() {
-                alert( translations.tr_meliscore_error_message );
+            encode      : true
+        }).done(function(data) {
+            if (data.success){
+                location.reload();
             }
+            else{
+                alert( translations.tr_meliscore_error_language );
+            }
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
         });
     }
     

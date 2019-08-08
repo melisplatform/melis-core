@@ -15,29 +15,27 @@ var melisTinyMCE = (function(){
             type        : 'POST', 
             url         : '/melis/MelisCore/MelisTinyMce/getTinyMceConfig',
             data        : dataString,
-            encode      : true,
-            success: function(data) {
-                if(data.success) {
-                    if(typeof(tinyMCE) != 'undefined') {
-                        if(selector.length) {
-                            try{
-                                tinymce.remove(selector);
-                            }catch (e) {}
-                        }
+            encode      : true
+        }).done(function(data) {
+            if(data.success) {
+                if(typeof(tinyMCE) != 'undefined') {
+                    if(selector.length) {
+                        try{
+                            tinymce.remove(selector);
+                        }catch (e) {}
                     }
-                    // Initializing TinyMCE with the request Configurations
-                    tinymce.init(data.config);
-    
-                    $(document).on("focusin", function(e) {
-                        if ( $(e.target).closest(".tox-dialog").length ) {
-                            e.stopImmediatePropagation();
-                        }
-                    });
                 }
-            },
-            error: function() {
-                alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
+                // Initializing TinyMCE with the request Configurations
+                tinymce.init(data.config);
+
+                $(document).on("focusin", function(e) {
+                    if ( $(e.target).closest(".tox-dialog").length ) {
+                        e.stopImmediatePropagation();
+                    }
+                });
             }
+        }).fail(function(xhr, textStatus, errorThrown) {
+            alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
         });
     }
     

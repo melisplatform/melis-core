@@ -35,64 +35,60 @@ if (!empty($this->zoneconfig['conf']['id']))
         <?php }?>
 
 		<script type="text/javascript">
-		// render table to DataTable plugin
-		$(document).ready(function() {
+			// render table to DataTable plugin
+			$(document).ready(function() {
 
-			<?= $this->getToolDataTableConfig; ?>
-			<?= $this->getToolDataTableConfigForDateConnection; ?>
+				<?= $this->getToolDataTableConfig; ?>
+				<?= $this->getToolDataTableConfigForDateConnection; ?>
 
-			// Initialize the rights treeviews --------------------------------------->
-			initRightsTree("#rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
-			initRightsTree("#new-rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
+				// Initialize the rights treeviews --------------------------------------->
+				initRightsTree("#rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
+				initRightsTree("#new-rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
 
-		    $("#idusermanagement").on('submit', (function(e) {
-		    	toolUserManagement.updateUser(this);
-		    	e.preventDefault();
-		    }));
-		    
-		    $("#idnewusermanagement ").on('submit', (function(e) {
-		    	toolUserManagement.addNewUser(this);
-				e.preventDefault();
-		    }));
+				$("#idusermanagement").on('submit', (function(e) {
+					toolUserManagement.updateUser(this);
+					e.preventDefault();
+				}));
+				
+				$("#idnewusermanagement ").on('submit', (function(e) {
+					toolUserManagement.addNewUser(this);
+					e.preventDefault();
+				}));
 
-		    $("#btnEditRights").on('click', function() {
-		    	$("#idusermanagement").submit();
-		    	return false;
-		    });
+				$("#btnEditRights").on('click', function() {
+					$("#idusermanagement").submit();
+					return false;
+				});
 
-		    $("#btnAddRights").on('click', function() {
-		    	$("#idnewusermanagement").submit();
-		    	return false;
-		    });
-			//melisTool.buttons.refresh("#idToolUserContentRefresh .btnRefresh", toolUserManagement.refreshTable());
-		    $("#idusermanagement input:file, #idnewusermanagement input:file").filestyle({buttonBefore: true, input: false, buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
+				$("#btnAddRights").on('click', function() {
+					$("#idnewusermanagement").submit();
+					return false;
+				});
+				//melisTool.buttons.refresh("#idToolUserContentRefresh .btnRefresh", toolUserManagement.refreshTable());
+				$("#idusermanagement input:file, #idnewusermanagement input:file").filestyle({buttonBefore: true, input: false, buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
 
-			// if initRetrieveUser fails, then re-execute this one
-			$.ajax({
-		        type        : 'GET', 
-		        url         : '/melis/MelisCore/MelisAuth/getCurrentLoggedInUser',
-		        dataType    : 'json',
-		        encode		: true,
-		     }).success(function(s){
-		    	 var btnDelete = $('#tableToolUserManagement td:nth-child(4):contains("'+ s.login +'")').siblings(':last').find(".btnUserDelete");
-		    	 btnDelete.hide();
-		     });
-            $($.fn.dataTable.tables(true)).DataTable().responsive.recalc();
-            $("body").on("click", "a[href='#id_meliscore_tool_user_view_date_connection_modal']", function() {
-                $("body").find("#id_meliscore_tool_user_view_date_connection_modal").css("opacity", "0");
-                setTimeout(function() {
-                    $($.fn.dataTable.tables(true)).DataTable().responsive.recalc();
-                    $("body").find("#id_meliscore_tool_user_view_date_connection_modal").animate({
-                        opacity: 1,
-                    }, 350)
-                }, 100);
-                $($.fn.dataTable.tables(true)).DataTable().responsive.recalc();
-            });
-		});
+				// if initRetrieveUser fails, then re-execute this one
+				$.ajax({
+					type        : 'GET', 
+					url         : '/melis/MelisCore/MelisAuth/getCurrentLoggedInUser',
+					dataType    : 'json',
+					encode		: true,
+				}).done(function(s){
+					var btnDelete = $('#tableToolUserManagement td:nth-child(4):contains("'+ s.login +'")').siblings(':last').find(".btnUserDelete");
+					btnDelete.hide();
+				});
+				$($.fn.dataTable.tables(true)).DataTable().responsive.recalc();
+				$("body").on("click", "a[href='#id_meliscore_tool_user_view_date_connection_modal']", function() {
+					$("body").find("#id_meliscore_tool_user_view_date_connection_modal").css("opacity", "0");
+					setTimeout(function() {
+						$($.fn.dataTable.tables(true)).DataTable().responsive.recalc();
+						$("body").find("#id_meliscore_tool_user_view_date_connection_modal").animate({
+							opacity: 1,
+						}, 350)
+					}, 100);
+					$($.fn.dataTable.tables(true)).DataTable().responsive.recalc();
+				});
+			});
 		</script>
-
-		
-		
-		
 	</div>
 </div>

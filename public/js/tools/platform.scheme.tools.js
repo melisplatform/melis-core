@@ -37,20 +37,18 @@ $(function() {
                     processData : false,
                     cache       : false,
                     contentType : false,
-                    dataType    : 'json',
-                    success: function(data) {
-                        if(data.success) {
-                            melisCoreTool.processing();
-                            location.reload(true);
-                        }
-                        else {
-                            melisHelper.melisKoNotification(data.title, data.message, data.errors);
-                        }
-                        melisCoreTool.done(".button");
-                    },
-                    error: function() {
-                        melisCoreTool.done(".button");
+                    dataType    : 'json'
+                }).done(function(data) {
+                    if(data.success) {
+                        melisCoreTool.processing();
+                        location.reload(true);
                     }
+                    else {
+                        melisHelper.melisKoNotification(data.title, data.message, data.errors);
+                    }
+                    melisCoreTool.done(".button");
+                }).fail(function() {
+                    melisCoreTool.done(".button");
                 });
             }
         );
@@ -79,20 +77,18 @@ $(function() {
             processData : false,
             cache       : false,
             contentType : false,
-            dataType    : 'json',
-            success: function(data) {
-                if(data.success) {
-                    melisCoreTool.processing();
-                    location.reload(true);
-                }
-                else {
-                    melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                }
-                melisCoreTool.done(".button");
-            },
-            error: function() {
-                melisCoreTool.done(".button");
+            dataType    : 'json'
+        }).done(function(data) {
+            if(data.success) {
+                melisCoreTool.processing();
+                location.reload(true);
             }
+            else {
+                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+            }
+            melisCoreTool.done(".button");
+        }).fail(function() {
+            melisCoreTool.done(".button");
         });
 
         e.preventDefault();

@@ -33,18 +33,16 @@ var melisCore = (function(window){
             url         : '/melis/change-language',
             data        : datastring,
             dataType    : 'json',
-            encode      : true,
-            success: function(data) {
-                if (data.success){
-                    location.reload();
-                }
-                else{
-                    alert( translations.tr_meliscore_error_language );
-                }
-            },
-            error: function() {
-                alert( translations.tr_meliscore_error_message );
+            encode      : true
+        }).done(function(data) {
+            if (data.success){
+                location.reload();
             }
+            else{
+                alert( translations.tr_meliscore_error_language );
+            }
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
         });
     }
 
@@ -57,19 +55,17 @@ var melisCore = (function(window){
             url         : '/melis/lost-password-request',
             data        : datastring,
             dataType    : 'json',
-            encode      : true,
-            success: function(data) {
-                if (data.success) {
-                    melisTool.alerts.showSuccess('#lostpassprompt', "", data.message);
-                    $('#idformmeliscoreforgot')[0].reset();
-                }
-                else{
-                    melisTool.alerts.showDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
-                }
-            },
-            error: function() {
-                alert( translations.tr_meliscore_error_message );
+            encode      : true
+        }).done(function(data) {
+            if (data.success) {
+                melisTool.alerts.showSuccess('#lostpassprompt', "", data.message);
+                $('#idformmeliscoreforgot')[0].reset();
             }
+            else{
+                melisTool.alerts.showDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
+            }
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
     });
@@ -89,12 +85,13 @@ var melisCore = (function(window){
     	$.ajax({
             type: 'GET',
             url: '/melis/islogin',
-            dataType: 'json',
-            success: function(data) {
-                if(!data.login) {
-                    window.location.reload(true);
-                }
+            dataType: 'json'
+        }).done(function(data) {
+            if(!data.login) {
+                window.location.reload(true);
             }
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
         });
     }
 
@@ -120,40 +117,38 @@ var melisCore = (function(window){
         $.ajax({
             type: 'GET',
             url: '/melis/MelisCore/MelisFlashMessenger/getflashMessage',
-            dataType: 'json',
-            success: function(data, status, xhr) {
-                // check if there is a flash message
-                if(data.flashMessage.length) {
-                    $flashMessenger.removeClass("empty-notif");
-                    $body.find("#flash-messenger").prev().find(".badge").removeClass("hidden");
+            dataType: 'json'
+        }).done(function(data) {
+            // check if there is a flash message
+            if(data.flashMessage.length) {
+                $flashMessenger.removeClass("empty-notif");
+                $body.find("#flash-messenger").prev().find(".badge").removeClass("hidden");
 
-                    var ctr = 0;
-                    $body.find("#flash-messenger").empty();
-                    var tempData = '';
-                    var clearData = "<li style='border-left: 0 solid #ce5459;'><button id='clearNotifBtn' class='btn btn-primary' style='width:100%; border-width:0'>"+translations.tr_meliscore_clear_notifications+"</button></li>";
-                    $.each(data, function(index, element) {
-                        $.each(element, function(index, fm){
-                            tempData += "" +
-                                "<li>" +
-                                "	<span class='img-circle media-object "+fm.image+"'></span>" +
-                                "   <div class='media'>" +
-                                "       <div class='media-body'>" +
-                                "           <a  class='strong text-primary'>"+(fm.title)+"</a><span class='time-email'>"+fm.date_trans+' '+fm.time+"</span>" +
-                                "<div class='clearfix'></div>"+(fm.message)+
-                                "</div>" +
-                                "</div>" +
-                                "</li>";
-                            ctr++;
-                        });
+                var ctr = 0;
+                $body.find("#flash-messenger").empty();
+                var tempData = '';
+                var clearData = "<li style='border-left: 0 solid #ce5459;'><button id='clearNotifBtn' class='btn btn-primary' style='width:100%; border-width:0'>"+translations.tr_meliscore_clear_notifications+"</button></li>";
+                $.each(data, function(index, element) {
+                    $.each(element, function(index, fm){
+                        tempData += "" +
+                            "<li>" +
+                            "	<span class='img-circle media-object "+fm.image+"'></span>" +
+                            "   <div class='media'>" +
+                            "       <div class='media-body'>" +
+                            "           <a  class='strong text-primary'>"+(fm.title)+"</a><span class='time-email'>"+fm.date_trans+' '+fm.time+"</span>" +
+                            "<div class='clearfix'></div>"+(fm.message)+
+                            "</div>" +
+                            "</div>" +
+                            "</li>";
+                        ctr++;
                     });
-                    $body.find("#flash-messenger").append(clearData);
-                    $body.find("#flash-messenger").append(tempData);
-                    $body.find("#id_meliscore_header_flash_messenger.dropdown.notification a span.badge").text(ctr);
-                }
-            },
-            error: function() {
-                alert( translations.tr_meliscore_error_message );
+                });
+                $body.find("#flash-messenger").append(clearData);
+                $body.find("#flash-messenger").append(tempData);
+                $body.find("#id_meliscore_header_flash_messenger.dropdown.notification a span.badge").text(ctr);
             }
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
         });
     }
 
@@ -170,27 +165,25 @@ var melisCore = (function(window){
         $.ajax({
             type: 'GET',
             url: '/melis/MelisCore/MelisFlashMessenger/clearFlashMessage',
-            dataType: 'json',
-            success: function(data, status, xhr) {
-                if(data.flashMessage) {
-                    if($flashMessenger.hasClass("empty-notif")===false)
-                        $flashMessenger.addClass("empty-notif");
-                    if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
-                        $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
-    
-                    $body.find("#flash-messenger").empty();
-                    tempData = "" +
-                        '<li class="empty-notif-li">' +
-                        '<div class="media">' +
-                        "<span>"+data.trans+"</span>" +
-                        '</div>' +
-                        '</li>';
-                    $body.find("#flash-messenger").append(tempData);
-                }
-            },
-            error: function() {
-                alert( translations.tr_meliscore_error_message );
+            dataType: 'json'
+        }).done(function(data) {
+            if(data.flashMessage) {
+                if($flashMessenger.hasClass("empty-notif")===false)
+                    $flashMessenger.addClass("empty-notif");
+                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
+                    $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
+
+                $body.find("#flash-messenger").empty();
+                tempData = "" +
+                    '<li class="empty-notif-li">' +
+                    '<div class="media">' +
+                    "<span>"+data.trans+"</span>" +
+                    '</div>' +
+                    '</li>';
+                $body.find("#flash-messenger").append(tempData);
             }
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
         });
     }
 

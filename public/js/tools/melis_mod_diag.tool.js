@@ -140,55 +140,50 @@
 			dataType: 'json',
 			data: {module : mod},
 			type: 'POST',
-			cache: false,
-			success: function(data) {
+			cache: false
+		}).done(function(data) {
+			if(data) {
 
-				if(data) {
-	
-					$.each(data.messages, function(status, checking) {
+				$.each(data.messages, function(status, checking) {
 
-						switch(checking.success) {
-							case 1:
-								addSuccessLog(log, checking.message);
-							break;
-							case 2:
-								addWarningLog(log, checking.message);
-							break;
-							case 0:
-								addErrorLog(log, checking.message);
-							break;
-						}
-
-					});
-
-					if(data.next) {
-						checkModule(data.next, mod);
+					switch(checking.success) {
+						case 1:
+							addSuccessLog(log, checking.message);
+						break;
+						case 2:
+							addWarningLog(log, checking.message);
+						break;
+						case 0:
+							addErrorLog(log, checking.message);
+						break;
 					}
-					
-					if(data.progressBarValue != null) {
-						var inc = parseInt(data.progressBarValue);
-						incProgBar(pb, inc);
-					}
-	
-					if(data.stopProcess){
-						addSuccessLog(log, translations.tr_melis_module_aborted);
-						resetStartButton(mod);
-					}
-				}
-				else {
-					addWarningLog(log, translations.tr_melis_module_no_more_results);
-					addErrorLog(log, translations.tr_melis_module_aborted);
-					resetStartButton(mod);
+
+				});
+
+				if(data.next) {
+					checkModule(data.next, mod);
 				}
 				
+				if(data.progressBarValue != null) {
+					var inc = parseInt(data.progressBarValue);
+					incProgBar(pb, inc);
+				}
 
-			},
-			error: function(xhr, textStatus, errorThrown) {
+				if(data.stopProcess){
+					addSuccessLog(log, translations.tr_melis_module_aborted);
+					resetStartButton(mod);
+				}
+			}
+			else {
 				addWarningLog(log, translations.tr_melis_module_no_more_results);
-				addErrorLog(log, mod + " " + errorThrown);
 				addErrorLog(log, translations.tr_melis_module_aborted);
 				resetStartButton(mod);
 			}
+		}).fail(function(xhr, textStatus, errorThrown) {
+			addWarningLog(log, translations.tr_melis_module_no_more_results);
+			addErrorLog(log, mod + " " + errorThrown);
+			addErrorLog(log, translations.tr_melis_module_aborted);
+			resetStartButton(mod);
 		});
 	}
 	

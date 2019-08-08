@@ -66,7 +66,7 @@ $(function() {
                 data        :formData,
                 cache       :false,
                 contentType : false,
-                processData : false,
+                processData : false
             }).done(function(data){
                 if(data.success) {
                     melisHelper.melisOkNotification(data.textTitle, data.textMessage);

@@ -245,32 +245,29 @@ $(document).ready(function() {
             $.ajax({
                 type     : 'POST',
                 url      : '/melis/MelisCore/MelisCoreGdpr/checkForm',
-                data     : $.param(formData),
-                success: function(data) {
-                    if (data.success) {
-                        //this will be used on deleting a row
-                        gdprFormData = formData;
-                        //show the tabs so that the loading view will be shown to the user
-                        $('#id_melis_core_gdpr_content_tabs').show();
-                        melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
-                            show: true,
-                            formData: formData,
-                        });
-                    } else {
-                        melisHelper.melisKoNotification(
-                            translations.tr_melis_core_gdpr_search_user_title,
-                            translations.tr_melis_core_gdpr_search_user_error_message,
-                            data.errors
-                        );
-                    }
-                },
-                error: function() {
-                    alert(translations.tr_meliscore_error_message);
+                data     : $.param(formData)
+            }).done(function(data) {
+                if (data.success) {
+                    //this will be used on deleting a row
+                    gdprFormData = formData;
+                    //show the tabs so that the loading view will be shown to the user
+                    $('#id_melis_core_gdpr_content_tabs').show();
+                    melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
+                        show: true,
+                        formData: formData,
+                    });
+                } else {
+                    melisHelper.melisKoNotification(
+                        translations.tr_melis_core_gdpr_search_user_title,
+                        translations.tr_melis_core_gdpr_search_user_error_message,
+                        data.errors
+                    );
                 }
+            }).fail(function() {
+                alert(translations.tr_meliscore_error_message);
             });
             melisCoreTool.done("#melis-core-gdpr-search-form-submit");
         },
-
         deleteSelected: function(modules) {
             melisCoreTool.confirm (
                 translations.tr_meliscore_common_yes,
@@ -283,30 +280,28 @@ $(document).ready(function() {
                         url: '/melis/MelisCore/MelisCoreGdpr/melisCoreGdprDeleteSelected',
                         data: $.param(modules),
                         dataType: 'json',
-                        encode: true,
-                        success: function(data) {
-                            if (data.success) {
-                                //Reload the zone after deleting a row.
-                                melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
-                                    show: true,
-                                    formData: gdprFormData,
-                                });
-    
-                                melisHelper.melisOkNotification(
-                                    translations.tr_melis_core_gdpr,
-                                    translations.tr_melis_core_gdpr_tool_notif_delete_selection_success
-                                );
-                                melisCore.flashMessenger();
-                            } else {
-                                melisHelper.melisKoNotification(
-                                    translations.tr_melis_core_gdpr_notif_delete_user,
-                                    translations.tr_melis_core_gdpr_notif_error_on_deleting_data
-                                );
-                            }
-                        },
-                        error: function() {
-                            alert(translations.tr_meliscore_error_message);
+                        encode: true
+                    }).done(function(data) {
+                        if (data.success) {
+                            //Reload the zone after deleting a row.
+                            melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
+                                show: true,
+                                formData: gdprFormData,
+                            });
+
+                            melisHelper.melisOkNotification(
+                                translations.tr_melis_core_gdpr,
+                                translations.tr_melis_core_gdpr_tool_notif_delete_selection_success
+                            );
+                            melisCore.flashMessenger();
+                        } else {
+                            melisHelper.melisKoNotification(
+                                translations.tr_melis_core_gdpr_notif_delete_user,
+                                translations.tr_melis_core_gdpr_notif_error_on_deleting_data
+                            );
                         }
+                    }).fail(function() {
+                        alert(translations.tr_meliscore_error_message);
                     });
                 }
             );
@@ -315,18 +310,16 @@ $(document).ready(function() {
             $.ajax({
                 type: 'POST',
                 url:'/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected',
-                data: {'id' : modules},
-                success: function (data, textStatus, request) {
-                    if (data) {
-                        var fileName = request.getResponseHeader("fileName");
-                        var mime = request.getResponseHeader("Content-Type");
-                        var blob = new Blob([request.responseText], {type: mime});
-                        saveAs(blob, fileName);
-                    }
-                },
-                error: function() {
-                    alert(translations.tr_meliscore_error_message);
+                data: {'id' : modules}
+            }).done(function(data) {
+                if (data) {
+                    var fileName = request.getResponseHeader("fileName");
+                    var mime = request.getResponseHeader("Content-Type");
+                    var blob = new Blob([request.responseText], {type: mime});
+                    saveAs(blob, fileName);
                 }
+            }).fail(function() {
+                alert(translations.tr_meliscore_error_message);
             });
         }
     };
