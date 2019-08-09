@@ -2451,7 +2451,7 @@ return [
                                             'form_type' => 'form-horizontal',
                                         ],
                                         'attributes' => [
-                                            'id' => 'melis_core_gdpr_search_form_name',
+                                            'id' => 'melis_core_gdpr_search_form_name'
                                         ]
                                     ],
                                 ],
@@ -2464,7 +2464,7 @@ return [
                                             'form_type' => 'form-horizontal',
                                         ],
                                         'attributes' => [
-                                            'id' => 'melis_core_gdpr_search_form_email',
+                                            'id' => 'melis_core_gdpr_search_form_email'
                                         ]
                                     ],
                                 ],

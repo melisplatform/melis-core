@@ -137,15 +137,15 @@ $(function() {
 		});
 	});
 
-	// email management - account creation
-    $body.on("click", ".nav-tabs.product-text-tab li a", function(e) {
-        var $this = $(this);
+	/**
+	 * Clicking on tabs
+	 */
+	$body.on("click", ".product-text-tab li a", function() {
+		var $this = $(this);
 
-            $this.toggleClass("active").siblings().removeClass("active");
-            $this.closest("li").toggleClass("active").siblings().removeClass("active");
-
-            e.preventDefault();
-    });
+			$this.toggleClass("active").siblings().removeClass("active");
+			$this.closest("li").toggleClass("active").siblings().removeClass("active");
+	});
 	
 	window.initEmailsEditors = function(){
 		$('.boed_lang_id').each(function(){

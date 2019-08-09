@@ -191,14 +191,6 @@ var melisCore = (function(window){
     function firstRender(){
         $(".nav-tabs li:first-child").addClass("active")
         $(".tab-content > div:first-child").addClass("active");
-
-        // fix for double border left
-        /* var tabLength = $("#melis-id-nav-bar-tabs").find("li").length;
-
-            if ( tabLength === 1 ) {
-                $("#close-all-tab").closest("li").css("border-left", "0");
-                $("#close-all-tab").closest("li").next("li").css("border-left", "0");
-            } */
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -782,7 +774,7 @@ var melisCore = (function(window){
 
     // melis cms tools tree
     if ( $("#meliscms_toolstree_section").length > 0 ) {
-        $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('hidden').show();
+        $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('d-none').show(); // class hidden to d-none bootstrap 4.3.1
     }
 
 

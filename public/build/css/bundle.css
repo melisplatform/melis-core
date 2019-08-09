@@ -37070,11 +37070,6 @@ a:not([href]).btn-danger:hover {
   border-collapse: separate;
 }
 /* gdpr */
-/* #id_meliscoregdpr_search_user_data .widget {
-  border-left: 0;
-  border-right: 0;
-  border-bottom: 0;
-} */
 .page-content-container .widget.widget-tabs-double-2>.widget-head ul li a.glyphicons {
   min-width: 90px;
 }
@@ -37090,6 +37085,35 @@ a:not([href]).btn-danger:hover {
 }
 .custom-melis-core-gdpr-checkbox-span {
   margin-top: 0;
+}
+#id_melis_core_gdpr_search_form .form-group .control-label {
+  line-height: 2rem;
+}
+.widget.widget-tabs-double-2>.widget-head {
+  border-bottom: 1px solid #e5e5e5;
+  height: 70px;
+}
+#id_melis_core_gdpr_tabs .widget-tabs .nav-tabs > li > a.glyphicons {
+  display: block;
+}
+/* form */
+.form-horizontal .control-label {
+  text-align: right;
+}
+#id_melis_core_gdpr_search_form .form-group {
+  margin-top: 1rem;
+}
+#melis-core-gdpr-search-form-submit {
+  margin-left: 17.8% !important;
+}
+.melis-core-gdpr-check-box1 {
+  margin-left: 17.5% !important;
+}
+#cms_gdpr_banner_site_filter_form .form-group span.select2-container {
+  width: 100%;
+}
+.widget .widget-body {
+  width: 100%;
 }
 /* Responsive */
 @media (min-width: 768px) {
