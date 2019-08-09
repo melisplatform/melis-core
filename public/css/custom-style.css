@@ -358,6 +358,9 @@ a:not([href]).btn-danger:hover {
 .widget .widget-body {
   width: 100%;
 }
+.btn {
+  cursor: pointer;
+}
 /* Responsive */
 @media (min-width: 768px) {
   /* .login-page */
