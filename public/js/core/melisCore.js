@@ -18,7 +18,7 @@ var melisCore = (function(window){
     // responsive menu 767px, tablet and phone
         $header         = $("#id_meliscore_header"),
         $res            = $("#res-page-cont"),
-        $resArrow       = $("#res-page-cont i"),
+        $resArrow       = $("#res-page-cont span i"),
         $tabConOuter    = $("#melis-navtabs-container-outer"),
         $tabConInner    = $("#melis-navtabs-container-inner"),
         $tabArrowTop    = $("#tab-arrow-top");
@@ -245,7 +245,8 @@ var melisCore = (function(window){
         // HOOK - scroll the page by 1px to trigger the scroll event that resizes the pageActions container
         // check if activeTabId has a number. if it has then we assume its a page
         var matches = activeTabId.match(/\d+/g);
-        if (matches != null) {
+        console.log({matches});
+        if (matches != null && matches !== 'undefined') {
             $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
         }
 
@@ -342,7 +343,7 @@ var melisCore = (function(window){
             $("#newplugin-cont").toggleClass("show-menu");
         }
         $("#close-all-tab").hide();
-        $("#close-all-tab").closest("li").hide(); // fix for double border left
+        //$("#close-all-tab").closest("li").hide(); // fix for double border left
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
@@ -602,26 +603,30 @@ var melisCore = (function(window){
         $tabArrowTop    = $("#tab-arrow-top");
      */
 
-    // responsive menu functionalities
+    // responsive menu functionalities, #res-page-cont
     $body.on("click", "#res-page-cont", function() {
-        $("#melis-id-nav-bar-tabs").slideToggle(300);
-        //$tabConOuter.addClass("hide-res-menus");
-        $tabConOuter.removeClass("hide-res-menus");
+        $navTabs.slideToggle(300);
+        $tabConOuter.addClass("hide-res-menus");
         $resArrow.toggleClass("move-arrow");
     });
 
     // new responsive menu behavior as per http://mantis.melistechnology.fr/view.php?id=3849
-    $body.on("click", "#res-page-cont i", function() {
+    $body.on("click", "#res-page-cont span i", function() {
         $tabArrowTop.removeClass("hide-arrow");
         $tabConOuter.addClass("hide-res-menus");
         $resArrow.toggleClass("move-arrow");
+        //$tabConInner.fadeOut(300);
     });
 
     // responsive menu arrow button 767px and below for showing/hiding content main tabs
     $body.on("click", "#tab-arrow-top", function() {
         var $this = $(this);
-            $tabConInner.show();
+
+            $tabConInner.fadeIn();
+            $this.addClass("hide-arrow");
+
             $res.trigger("click");
+
             $tabConOuter.removeClass("hide-res-menus");
     });
 

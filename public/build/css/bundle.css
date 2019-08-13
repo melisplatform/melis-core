@@ -37181,6 +37181,15 @@ a:not([href]).btn-danger:hover {
   }
 }
 @media (max-width: 767px) {
+  body {
+    padding-top: 47px;
+  }
+  .spacing-x2.innerAll, 
+  .spacing-x2 .innerAll, 
+  .spacing-x2 .widget.widget-tabs-vertical .widget-body .tab-content, 
+  .spacing-x2 .box-generic {
+    padding: 15px;
+  }
   /* .login-page */
   .login-page #brand-logo {
     z-index: 0;
@@ -37230,6 +37239,17 @@ a:not([href]).btn-danger:hover {
   /* responsive tab menu */
   #tab-arrow-top {
     top: 0;
+  }
+  .navbar #melis-id-nav-bar-tabs > li {
+    width: 100%;
+  }
+  .navbar.main.navbar-primary .nav > li a.close {
+    width: 47px;
+    height: 47px;
+  }
+  #nav-header .nav-tabs > li.active > a.close-tab, 
+  #nav-header .nav-tabs > li.active > a.close-tab:focus {
+    border: 0;
   }
 }
 .module-lists{
