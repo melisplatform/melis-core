@@ -45,10 +45,10 @@
 /* 
  * BO #nav-header [role="navigation"] 
  */
-#nav-header {
+/* #nav-header {
   align-items: flex-start;
   justify-content: flex-start;
-}
+} */
 #nav-header.no-gutters {
   padding-left: 0;
   padding-right: 0;
@@ -329,9 +329,6 @@ a:not([href]).btn-danger:hover {
 .custom-melis-core-gdpr-checkbox-span {
   margin-top: 0;
 }
-#id_melis_core_gdpr_search_form .form-group .control-label {
-  line-height: 2rem;
-}
 .widget.widget-tabs-double-2>.widget-head {
   border-bottom: 1px solid #e5e5e5;
   height: 70px;
@@ -339,18 +336,31 @@ a:not([href]).btn-danger:hover {
 #id_melis_core_gdpr_tabs .widget-tabs .nav-tabs > li > a.glyphicons {
   display: block;
 }
-/* form */
-.form-horizontal .control-label {
-  text-align: right;
+/* 
+ * form 
+ * gdpr
+ */
+#id_melis_core_gdpr_search_form .form-group .control-label {
+  line-height: 2rem;
+}
+#id_melis_core_gdpr_search_form .form-group .col-sm-10,
+#id_melis_core_gdpr_search_form .form-group .control-label {
+  padding: 0;
+  max-width: 100%;
+
+  flex: 100%;
+  -ms-flex: 100%;
+  -webkit-box-flex: 0;
+}
+.melis-core-gdpr-check-box1 {
+  margin-left: 0.5rem !important;
+  width: 100%;
+}
+#melis-core-gdpr-search-form-submit {
+  margin-left: 0 !important;
 }
 #id_melis_core_gdpr_search_form .form-group {
   margin-top: 1rem;
-}
-#melis-core-gdpr-search-form-submit {
-  margin-left: 17.8% !important;
-}
-.melis-core-gdpr-check-box1 {
-  margin-left: 17.5% !important;
 }
 #cms_gdpr_banner_site_filter_form .form-group span.select2-container {
   width: 100%;
@@ -422,6 +432,14 @@ a:not([href]).btn-danger:hover {
     width: 620px;
     max-width: 620px;
   }
+  /* side bar menu footer */
+  #id_meliscore_footer{
+    width: 20rem;
+    left: 0;
+  }
+  #id_meliscore_footer.slide-left {
+    left: -20rem;
+  }
 }
 @media (max-width: 767px) {
   body {
@@ -452,7 +470,6 @@ a:not([href]).btn-danger:hover {
   .login-page #tab-menu .res-action-container {
     display: block;
   }
-
   /* BO */
   #brand-logo .appbrand {
     margin: 0 auto !important;
@@ -493,5 +510,27 @@ a:not([href]).btn-danger:hover {
   #nav-header .nav-tabs > li.active > a.close-tab, 
   #nav-header .nav-tabs > li.active > a.close-tab:focus {
     border: 0;
+  }
+  /* pagination */
+  .dataTables_paginate .pagination {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
+  /* tabs */
+  .widget-head .nav-tabs {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 100%;
+  }
+  /* gdpr */
+  #id_melis_core_gdpr_gdpr_search_form h1 {
+    margin-right: 0 !important;
+  }
+}
+@media (max-width: 767px) and (min-width: 500px) {
+  #melis-core-gdpr-search-form-submit {
+    width: 100%;
   }
 }

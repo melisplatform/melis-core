@@ -4,14 +4,9 @@
         $id = ' id="'. $this->zoneconfig['conf']['id'] . '"';
 ?>
 <div <?= $id; ?> data-melisKey='<?= $this->melisKey; ?>'>
+    <h1><?= $this->translate('tr_melis_core_gdpr_tabs_header_title') ?></h1>
     <div class="row">
-        <div class="col-md-5">
-        <h1 style="margin-left: 6.5%;"><?= $this->translate('tr_melis_core_gdpr_tabs_header_title') ?></h1>
-        </div>
-    </div>
-    <br/>
-    <div class="row">
-        <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
             <?php
                 $form = clone $this->form;
                 $form->prepare();
@@ -19,7 +14,6 @@
                 ?>
 
                 <div class="row">
-                <div class="col-md-12 col-lg-12 col-sm-12">
                     <div class="checkbox melis-core-gdpr-check-box1">
                         <div class="checkbox cb-cont" style="position:relative;">
                             <label class="remember-me-cont">
@@ -31,7 +25,6 @@
                             <span class="custom-melis-core-gdpr-checkbox-span"><?= $this->translate('tr_melis_core_gdpr_search_form_checkbox_specific') ?></span>
                         </div>
                     </div>
-                </div>
                 </div>
 
                 <?php
@@ -45,16 +38,16 @@
                 (function () {
                     melisCore.loadCustomCheckboxElement();
 
-                    var $body           = $("body"),
+                    /* var $body           = $("body"),
                         $gdprSearcForm  = $body.find("#id_melis_core_gdpr_search_form"),
                         $formGroup      = $gdprSearcForm.find(".form-group");
 
                         if ( $gdprSearcForm.length > 0 ) {
                             $formGroup.each(function() {
                                 var $this = $(this);
-                                    $this.addClass("d-flex");
+                                    $this.addClass("d-md-flex");
                             });
-                        }
+                        } */
                 })();
             </script>
         </div>

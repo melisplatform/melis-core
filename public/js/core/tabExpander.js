@@ -53,7 +53,7 @@ var tabExpander = (function($, window){
 	function Disable(){
 		$(".melis-tabprev, .melis-tabnext").hide();
         $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style");
-        console.log("Disable tabExpander");
+        //console.log("Disable tabExpander");
 	}
     
     

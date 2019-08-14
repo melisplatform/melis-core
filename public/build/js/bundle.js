@@ -28332,7 +28332,7 @@ var tabExpander = (function($, window){
 	function Disable(){
 		$(".melis-tabprev, .melis-tabnext").hide();
         $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style");
-        console.log("Disable tabExpander");
+        //console.log("Disable tabExpander");
 	}
     
     
@@ -28935,7 +28935,7 @@ var melisCore = (function(window){
             $("#id_meliscore_footer").addClass('slide-left');
         }
         else{
-            $( "#id_meliscore_leftmenu" ).css("left", '0' );
+            $("#id_meliscore_leftmenu").css("left", '0' );
             $body.removeClass('sidebar-mini');
             $("#id_meliscore_footer").removeClass('slide-left');
         }
@@ -28945,7 +28945,7 @@ var melisCore = (function(window){
         // HOOK - scroll the page by 1px to trigger the scroll event that resizes the pageActions container
         // check if activeTabId has a number. if it has then we assume its a page
         var matches = activeTabId.match(/\d+/g);
-        console.log({matches});
+        //console.log({matches});
         if (matches != null && matches !== 'undefined') {
             $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
         }
