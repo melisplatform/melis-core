@@ -384,6 +384,7 @@ return array(
             'MelisToggleButton' => 'MelisCore\Form\Factory\MelisToggleButtonFactory',
             'MelisText' => 'MelisCore\Form\Factory\MelisTextFactory',
             'MelisUserRoleSelect' => 'MelisCore\Form\Factory\MelisUserRoleSelectFactory',
+            'MelisCoreLogTypeSelect' => 'MelisCore\Form\Factory\MelisCoreLogTypeSelectFactory',
             'MelisCoreMultiValInput' => 'MelisCore\Form\Factory\MelisCoreMultiValueInputFactory',
             'DateField' => 'MelisCore\Form\Factory\DateFieldFactory',
             'DatePicker' => 'MelisCore\Form\Factory\DatePickerFactory',

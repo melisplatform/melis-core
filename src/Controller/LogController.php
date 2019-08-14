@@ -9,7 +9,10 @@
 
 namespace MelisCore\Controller;
 
+use DateTime;
+use MelisCore\Service\MelisCoreToolService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Validator\File\Count;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Session\Container;
@@ -96,6 +99,181 @@ class LogController extends AbstractActionController
     {
         $view = new ViewModel();
         return $view;
+    }
+
+    /**
+     * Render Log Modal Container
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function renderLogsToolModalContainerAction()
+    {
+        $id = $this->params()->fromQuery('id');
+        $melisKey = $this->params()->fromQuery('melisKey');
+
+        $view = new ViewModel();
+        $view->setTerminal(false);
+        $view->id = $id;
+        $view->melisKey = $melisKey;
+        return $view;
+    }
+
+    /**
+     * Render Log Tool Export
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function renderLogsToolExportAction()
+    {
+        $view = new ViewModel();
+        return $view;
+    }
+
+
+    /**
+     * Render Log Modal Edit Content
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function renderLogsToolExportModalContentAction()
+    {
+        $appConfigForm = $this->getFormConfig('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_export_form', 'meliscore_logs_tool_log_export_form');
+        $form = $this->getForm($appConfigForm);
+
+        $melisKey = $this->params()->fromQuery('melisKey');
+
+        $view = new ViewModel();
+        $view->form = $form;
+        $view->melisKey = $melisKey;
+        $view->title = "tr_meliscore_logs_tool_export_modal_title";
+        return $view;
+    }
+
+    public function  validateExportLogsAction(){
+
+
+        $textTitle = 'tr_meliscore_logs_tool_export_modal_title';
+        $request = $this->getRequest();
+        $textMessage = '';
+        $postValues = null;
+        $success = 0;
+        $errors = array();
+
+        if ($request->isPost()) {
+
+
+            $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+            $translator = $this->getServiceLocator()->get('translator');
+            $postValues = get_object_vars($request->getPost());
+            $container = new Container('meliscore');
+            $locale = $container['melis-lang-locale'];
+            $dates = array();
+            $startDate = null;
+            $endDate = null;
+
+            $appConfigForm = $this->getFormConfig('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_export_form', 'meliscore_logs_tool_log_export_form');
+            $form = $this->getForm($appConfigForm);
+            $form->setData($postValues);
+
+            if($form->isValid())
+            {
+                $origDateFormat = $locale === "fr_FR" ? "d/m/Y" : "m/d/Y";
+
+                if(!empty($postValues['log_date_range'])){
+                    $dates = explode(" - ",$postValues["log_date_range"]);
+                }
+
+                if(!empty($dates)){
+                    $startDate = DateTime::createFromFormat($origDateFormat, $dates[0])->format('Y-m-d');
+                    $endDate = DateTime::createFromFormat($origDateFormat, $dates[1])->format('Y-m-d');
+                }
+
+                $userId = isset($postValues['log_user']) ? $postValues['log_user'] : null;
+                $typeId = isset($postValues['log_type']) ? $postValues['log_type'] : null;
+                $postValues['log_enclosure'] = isset($postValues['log_enclosure']) ? 1 : 0;
+
+                // Retreiving the list of logs using Log Service with filters as parameters
+                $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, "DESC", null, null);
+                $logCount = \count($logs);
+                if($logCount >= 2000){
+                    $success = 2;
+                    $textMessage = sprintf($translator->translate('tr_meliscore_logs_tool_export_data_over_2000'),$logCount);
+                }else {
+                    $success = 1;
+                    $textMessage = sprintf($translator->translate('tr_meliscore_logs_tool_export_ok'),$logCount);
+                }
+            }
+            else {
+                $textMessage = $translator->translate('tr_meliscore_logs_tool_export_data_content_error');
+                $errors = $form->getMessages();
+            }
+
+        }
+
+        $response = array(
+            'success' => $success,
+            'textTitle' => $translator->translate($textTitle),
+            'textMessage' => $textMessage,
+            'errors' => $errors,
+            'postValues' => $postValues
+        );
+
+        return new JsonModel($response);
+
+    }
+    public function  exportLogsAction(){
+
+        $userTbl = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $logTbl = $this->getServiceLocator()->get('MelisCoreTableLog');
+        $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceLocator()->get('translator');
+
+        $request = $this->getRequest();
+        $queryValues = get_object_vars($request->getQuery());
+
+        $container = new Container('meliscore');
+        $locale = $container['melis-lang-locale'];
+        $dates = array();
+        $sortedLogs = array();
+        $startDate = null;
+        $endDate = null;
+
+        $origDateFormat = $locale === "fr_FR" ? "d/m/Y" : "m/d/Y";
+
+        if(!empty($queryValues['log_date_range'])){
+            $dates = explode(" - ",$queryValues["log_date_range"]);
+        }
+
+        if(!empty($dates)){
+            $startDate = DateTime::createFromFormat($origDateFormat, $dates[0])->format('Y-m-d');
+            $endDate = DateTime::createFromFormat($origDateFormat, $dates[1])->format('Y-m-d');
+        }
+
+        $userId = isset($queryValues['log_user']) ? $queryValues['log_user'] : null;
+        $typeId = isset($queryValues['log_type']) ? $queryValues['log_type'] : null;
+        $logDelimiter = isset($queryValues['log_delimiter']) ? $queryValues['log_delimiter'] : null;
+        $isEnclosed = isset($queryValues['log_enclosure']) ? $queryValues['log_enclosure'] : null;
+        // Retreiving the list of logs using Log Service with filters as parameters
+        $logs = $logTbl->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, "DESC", null, null);
+
+        $logs = $logs->toArray();
+
+        foreach($logs as $key => $log){
+                array_push($sortedLogs, array(
+                    'log_id' => $log['log_id'],
+                    'log_date' => $log['log_date_added'],
+                    'log_type_name' => $translator->translate($log['log_title']),
+                    'log_user' => $userTbl->getEntryById($log['log_user_id'])->current()->usr_firstname . " " . $userTbl->getEntryById($log['log_user_id'])->current()->usr_lastname,
+                    'log_message' => $logSrv->getLogType($log['log_type_id'])->logt_code,
+                    'log_item_id' => $log['log_item_id'],
+                ));
+        }
+
+        if(empty($sortedLogs))
+            $sortedLogs = array(array());
+
+        return $melisTool->exportDataToCsv($sortedLogs,date("Y-m-d_H:i:s")."_MelisPlatform_LogExport.csv",$logDelimiter,$isEnclosed);
     }
 
     /**
@@ -454,17 +632,7 @@ class LogController extends AbstractActionController
         return $view;
     }
 
-    public function renderLogsToolModalContainerAction()
-    {
-        $id = $this->params()->fromQuery('id');
-        $melisKey = $this->params()->fromQuery('melisKey');
 
-        $view = new ViewModel();
-        $view->setTerminal(true);
-        $view->id = $id;
-        $view->melisKey = $melisKey;
-        return $view;
-    }
 
     public function saveLogTypeTransAction()
     {
@@ -602,6 +770,33 @@ class LogController extends AbstractActionController
         $this->getEventManager()->trigger('meliscore_save_log_type_trans', $this, array_merge($response, array('typeCode' => 'CORE_LOG_TYPE_UPDATE', 'itemId' => $logTypeId)));
 
         return new JsonModel($response);
+    }
+    /**
+     * This will get the form config
+     * @param $formPath
+     * @param $form
+     * @return mixed
+     */
+    private function getFormConfig($formPath, $form)
+    {
+        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered($formPath, $form);
+
+        return $appConfigForm;
+    }
+    /**
+     * Gets the form
+     * @param formConfig
+     * @return \Zend\Form\ElementInterface
+     */
+    private function getForm($formConfig)
+    {
+        $factory = new \Zend\Form\Factory();
+        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory->setFormElementManager($formElements);
+        $form = $factory->createForm($formConfig);
+
+        return $form;
     }
 
 

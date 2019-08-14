@@ -707,16 +707,23 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      * @param $data
      * @param null $fileName
      *
-     * @return string|\Zend\Http\PhpEnvironment\Response
+     * @param null $customSeparator
+     * @param null $customIsEnclosed
+     * @return string|HttpResponse
      */
-    public function exportDataToCsv($data, $fileName = null)
+    public function exportDataToCsv($data, $fileName = null, $customSeparator = null, $customIsEnclosed = null)
     {
         $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
 
         $csvConfig = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
         $csvFileName = '';
-        $separator = $csvConfig['separator'];
-        $enclosed = $csvConfig['enclosed'];
+        $separator = empty($customSeparator) ? $csvConfig['separator'] : $customSeparator;
+
+        if($customIsEnclosed != null)
+            $enclosed = $customIsEnclosed == 0 ? '' : '"';
+        else
+            $enclosed = $csvConfig['enclosed'];
+
         $striptags = (int) $csvConfig['striptags'] == 1 ? true : false;
         $response = '';
         // check what file name to use when exporting
@@ -737,7 +744,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             foreach ($csvColumn as $key => $colText) {
                 $content .= $key . $separator;
             }
-            $content .= PHP_EOL;
+            $content .= "\r\n";
 
             // for contents
             foreach ($data as $dataKey => $dataValue) {
@@ -753,11 +760,11 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
                         }
                     }
                     // convert UTF-8 to UTF-16LE encoding for excel encoding rendering
-                    $value = mb_convert_encoding($value, 'UTF-16LE', 'UTF-8');
+//                    $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
                     $content .= $enclosed . $this->replaceAccents($value) . $enclosed . $separator;
 
                 }
-                $content .= PHP_EOL;
+                $content .= "\r\n";
             }
 
             if (!is_null($fileName) || !empty($fileName)) {

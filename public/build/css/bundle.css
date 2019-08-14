@@ -36754,6 +36754,9 @@ div#modal-user-management div.widget {
     z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
     cursor: progress; /* Add a pointer on hover */
 }
+input#log_date_range{
+    background: #fff;
+}
 
 /* Users Rights */
 #btnResetRights, #btnResetRightsNew, #btnResetRights:hover, #btnResetRightsNew:hover, #btnResetRights:active #btnResetRightsNew:active {
