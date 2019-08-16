@@ -48,7 +48,7 @@ if($headerTitleLen > 13) {
     if($this->hasAccess)
     { ?>
         <div class="me-heading bg-white border-bottom">
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row row">
                 <div class="me-hl col-12 col-md-6">
                     <h1 class="content-heading"><?= $this->translate('tr_meliscore_platform_scheme') ?></h1>
                     <p><?= $this->translate('tr_meliscore_platform_scheme_subtitle') ?></p>
@@ -61,26 +61,24 @@ if($headerTitleLen > 13) {
         </div>
         <div class="spacing-x2 innerAll container-fluid">
             <h3><?= $this->translate('tr_meliscore_platform_color_scheme') ?></h3>
-            
-                <?php
-                    echo $this->form()->openTag($form);
-                    foreach($form->getElements() as $elementKey => $element) {
-                        $el = $element->getValue();
-                ?>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label for="" class="d-flex flex-row justify-content-between"><div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($tooltips[$element->getName()]); ?>"></i></label>
-                            <div class="input-group colorpicker-component osta_color_code colorpicker-element">
-                                <?= $this->formRow($element->setLabel("")); ?>
-                                <span class="input-group-addon"><i style="background-color: <?=  $element->getValue(); ?>;"></i></span>
-                            </div>
+            <?php
+                echo $this->form()->openTag($form);
+                foreach($form->getElements() as $elementKey => $element) {
+                    $el = $element->getValue();
+            ?>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="" class="d-flex flex-row justify-content-between"><div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($tooltips[$element->getName()]); ?>"></i></label>
+                        <div class="input-group colorpicker-component osta_color_code colorpicker-element">
+                            <?= $this->formRow($element->setLabel("")); ?>
+                            <span class="input-group-addon"><i style="background-color: <?=  $element->getValue(); ?>;"></i></span>
                         </div>
-                    </div>    
-                <?php
-                    }
-                    echo $this->form()->closeTag();
-                ?>
-            
+                    </div>
+                </div>    
+            <?php
+                }
+                echo $this->form()->closeTag();
+            ?>
             <h3><?= $this->translate('tr_meliscore_platform_scheme_images'); ?></h3>
             <form method="POST" name="melis_core_platform_scheme_images" id="melis_core_platform_scheme_images" enctype="multipart/form-data">
                 <!-- FAVICON -->
@@ -97,7 +95,7 @@ if($headerTitleLen > 13) {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6">
+                        <div class="col-12 col-md-6">
                             <div class="meliscore-platform-scheme-favicon">
                                 <img src="<?= $favicon ?>" class="img-fluid" width="64" height="64" id="platform-scheme-favicon">
                             </div>
@@ -108,7 +106,7 @@ if($headerTitleLen > 13) {
                 <!-- LOGIN LOGO -->
                 <div class="melis-ptb20">
                     <div class="row">
-                        <div class="col-xs-12 col-md-7 col-lg-4">
+                        <div class="col-12 col-md-7 col-lg-4">
                             <div class="form-group">
                                 <label for="login-logo" class="d-flex flex-row justify-content-between">
                                     <div class="label-text"><?= $this->translate('tr_meliscore_platform_scheme_form_login_logo') ?></div>
@@ -119,7 +117,7 @@ if($headerTitleLen > 13) {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6">
+                        <div class="col-12 col-md-6">
                             <div class="meliscore-platform-scheme-login-logo">
                                 <img class="melis-login-logo"  src="<?= $loginLogo ?>" id="platform-scheme-login-logo" class="img-fluid">
                             </div>
@@ -130,7 +128,7 @@ if($headerTitleLen > 13) {
                 <!-- LOGIN BACKGROUND -->
                 <div class="melis-ptb20">
                     <div class="row">
-                        <div class="col-xs-12 col-md-7 col-lg-4">
+                        <div class="col-12 col-md-7 col-lg-4">
                             <div class="form-group">
                                 <label for="login-background" class="d-flex flex-row justify-content-between">
                                     <div class="label-text"><?= $this->translate('tr_meliscore_platform_scheme_form_login_background') ?></div>
@@ -141,7 +139,7 @@ if($headerTitleLen > 13) {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6">
+                        <div class="col-12 col-md-6">
                             <div class="meliscore-platform-scheme-login-background">
                                 <img src="<?= $loginBackground ?>" class="img-fluid" id="platform-scheme-login-background">
                             </div>
@@ -153,7 +151,7 @@ if($headerTitleLen > 13) {
                 <!-- SIDEBAR ICON AND TITLE -->
                 <div class="melis-ptb20">
                     <div class="row">
-                        <div class="col-xs-12 col-md-7 col-lg-4">
+                        <div class="col-12 col-md-7 col-lg-4">
                             <div class="form-group">
                                 <label for="sidebar-header-logo" class="d-flex flex-row justify-content-between">
                                     <div class="label-text"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_logo') ?></div>
@@ -175,7 +173,7 @@ if($headerTitleLen > 13) {
                             </div>
                         </div>
 
-                        <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="col-12 col-md-12 col-lg-6">
                             <div class="melis-core-platform-container">
                                 <div class="meliscore-platform-scheme-sidebar-container melis-primary-bg">
                                     <img alt="melis platform" src="<?= $sidebarHeaderLogo ?>" id="platform-scheme-sidebar-header-logo" class="img-fluid">

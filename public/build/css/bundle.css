@@ -36798,10 +36798,6 @@ div#modal-user-management div.widget {
 /* 
  * BO #nav-header [role="navigation"] 
  */
-/* #nav-header {
-  align-items: flex-start;
-  justify-content: flex-start;
-} */
 #nav-header.no-gutters {
   padding-left: 0;
   padding-right: 0;
@@ -37124,7 +37120,32 @@ a:not([href]).btn-danger:hover {
 .btn {
   cursor: pointer;
 }
-/* Responsive */
+/* bootstrap specific overrides module.admin css [col-xs-] = [col-]*/
+div[class*="col-sm-"], 
+div[class*="col-md-"], 
+div[class*="col-lg-"], 
+li[class*="col-sm-"], 
+li[class*="col-md-"], 
+li[class*="col-lg-"] {
+  padding: 0 15px;
+}
+div.row, ul.row {
+  margin: 0 -15px;
+}
+/* diagnostic */
+#id_meliscore_tool_phpunit_content .module-display-heading .ms-heading h4 {
+  padding-left: 0;
+  padding-right: 0;
+}
+#id_meliscore_tool_phpunit_content .diagnostic-module-version-display {
+  left: auto;
+  text-align: right;
+}
+#accordion .card-header {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+/* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
   .login-page .navbar.main .nav.navbar-right li:first-child {
@@ -37195,6 +37216,7 @@ a:not([href]).btn-danger:hover {
   }
 }
 @media (max-width: 767px) {
+  /* body commmon */
   body {
     padding-top: 47px;
   }
@@ -37224,6 +37246,7 @@ a:not([href]).btn-danger:hover {
     display: block;
   }
   /* BO */
+  /* header */
   #brand-logo .appbrand {
     margin: 0 auto !important;
   }
@@ -37238,6 +37261,9 @@ a:not([href]).btn-danger:hover {
   .navbar.main .nav.navbar-right {
     visibility: hidden;
   }
+  /* .navbar.main.navbar-primary {
+    width: 51.5%;
+  } */
   /* nav-right */
   #newplugin-cont ul li {
     width: 100%;
@@ -37281,11 +37307,18 @@ a:not([href]).btn-danger:hover {
   #id_melis_core_gdpr_gdpr_search_form h1 {
     margin-right: 0 !important;
   }
+  /* tools filters */
+  .filter-bar label {
+    justify-content: left;
+  }
 }
-@media (max-width: 767px) and (min-width: 500px) {
+@media (max-width: 767px) and (min-width: 576px) {
   #melis-core-gdpr-search-form-submit {
     width: 100%;
   }
+}
+@media (max-width: 576px) {
+  
 }
 .module-lists{
 	background-color:#2c2c2c;

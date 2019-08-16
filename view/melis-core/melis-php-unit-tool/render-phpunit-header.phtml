@@ -13,13 +13,12 @@ $data_melisKey = $this->melisKey;
             <p><?= $this->translate('tr_melis_module_diagnostics_description'); ?></p>
         </div>
         <div class="me-hr col-12 col-md-3">
-
             <?php
-            if(!empty($this->zoneconfig['interface'])) {
-                foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
-                    echo $this->$keyConfig;
+                if(!empty($this->zoneconfig['interface'])) {
+                    foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                        echo $this->$keyConfig;
+                    }
                 }
-            }
             ?>
         </div>
     </div>

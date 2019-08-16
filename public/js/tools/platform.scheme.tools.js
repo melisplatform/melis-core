@@ -1,5 +1,4 @@
 $(function() {
-
     var entityMap = {
         '&': '&amp;',
         '<': '&lt;',
@@ -66,8 +65,7 @@ $(function() {
             colors[v['name']] = v['value'];
         });
 
-       formData.append('colors', JSON.stringify(colors));
-
+        formData.append('colors', JSON.stringify(colors));
 
         melisCoreTool.pending(".button");
         $.ajax({
@@ -108,5 +106,3 @@ $(function() {
         $("span#platform-scheme-sidebar-header-title").html(text);
     })
 });
-
-

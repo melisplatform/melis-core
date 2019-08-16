@@ -125,6 +125,7 @@ var tabExpander = (function($, window){
     
     //NEXT 
     $(".melis-tabnext").on("click", function() {
+        console.log(".melis-tabnext clicked!");
         calcOffset();
         if( xright > ulContainer - 170 ) {
             var liIndex = $navTabs.find("li").index();
@@ -138,7 +139,7 @@ var tabExpander = (function($, window){
                 },0);
             }
         }
-        else{
+        else {
             $navTabs.animate({
                 left: '-=' + xright
             },0);
@@ -146,14 +147,15 @@ var tabExpander = (function($, window){
     });
     
     //PREV
-    $(".melis-tabprev").on("click", function(){
+    $(".melis-tabprev").on("click", function() {
+        console.log(".melis-tabprev clicked!");
         calcOffset();
         if( xleft > ulContainer - 170) {
             $navTabs.animate({
                 left: '+='+ 170
             },0);
         }
-        else{
+        else {
             $navTabs.animate({
                 left: '+=' + xleft
             },0);
