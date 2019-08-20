@@ -3,6 +3,12 @@
  */
 
 /* login page */
+.login-page #nav-header .navbar-brand {
+  font-size: 1.124rem;
+}
+.login-page .forgot-password {
+  font-size: 0.8rem;
+}
 .navbar.main.navbar-primary {
   padding: 0;
 }
@@ -36,12 +42,6 @@
   width: 38.285rem;
   margin-bottom: 20px;
 }
-.login-page #nav-header .navbar-brand {
-  font-size: 1.124rem;
-}
-.login-page .forgot-password {
-  font-size: 0.8rem;
-}
 /* 
  * BO #nav-header [role="navigation"] 
  */
@@ -49,10 +49,10 @@
   padding-left: 0;
   padding-right: 0;
 }
-#nav-header .row {
+/* #nav-header > .row {
   width: inherit;
   margin: 0;
-}
+} */
 #tab-menu,
 #brand-logo,
 #nav-header {
@@ -63,11 +63,11 @@
   padding-right: 0;
 }
 .navbar.main .toggle-button {
-  padding-left: 15px;
+  padding-left: 0;
 }
 #nav-header .navbar-brand {
   font-size: 1.324rem;
-  padding-right: 2.64rem;
+  padding-right: 2.64rem; /* 2.64rem */
 }
 #nav-header .nav-tabs > li.active > a, 
 #nav-header .nav-tabs > li.active > a:focus {
@@ -88,6 +88,7 @@
 }
 .res-action-container {
   display: block;
+  width: 100%;
 }
 .navbar.main .nav.navbar-right li:first-child {
   border-left: 1px solid #c52127;
@@ -403,8 +404,11 @@ div.row, ul.row {
   }
 
   /* #nav-header */
+  .navbar.main.navbar-primary .appbrand {
+    float: none;
+  }
   #nav-header .navbar-brand {
-    width: inherit;
+    width: 100%;
   }
   .navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
       color: #e61c23;
@@ -424,6 +428,9 @@ div.row, ul.row {
   }
   .navbar.main .nav.navbar-right > li > a {
     display: block;
+  }
+  #melis-navtabs-container-outer {
+    float: none;
   }
 
   /* #menu sidebar */
@@ -447,6 +454,7 @@ div.row, ul.row {
   .melis-tabprev,
   .melis-tabnext {
     padding: 8px 10px;
+    float: none;
   }
   /* modal */
   .modal-dialog {

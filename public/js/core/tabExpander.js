@@ -53,13 +53,12 @@ var tabExpander = (function($, window){
 	function Disable(){
 		$(".melis-tabprev, .melis-tabnext").hide();
         $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style");
-        //console.log("Disable tabExpander");
 	}
     
     
 	// CHECK TO ACTIVATE tabExpander(); ---------------------------------------------------------------------------------------------
 	function checkTE(){
-
+        console.log("checkTE tabExpander");
 		// CALCULATE ALL POSSIBLE WIDTH FOR THE LEFT, CENTER AND RIGHT MENUS
 	    
 		//total width of the header
@@ -80,8 +79,7 @@ var tabExpander = (function($, window){
         //center
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
         /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-        /* tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-        tabContainerWidthPercent = 113.9 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+		tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
         navUlContainer = 1;
@@ -92,11 +90,11 @@ var tabExpander = (function($, window){
 		// determines if TE should be activated or not
         if( navUlContainer > tabContainerWidthPx && screenSize  >= 768 ){
         	Enable();
-            status = 'enabled';
+        	status = 'enabled';
         } else if( navUlContainer < tabContainerWidthPx){
-            Disable();
+			Disable();
         } else if(status == 'disabled'){
-            Disable();
+			Disable();
 		} else {
         	if(status === 'enabled'){
 				Enable();
