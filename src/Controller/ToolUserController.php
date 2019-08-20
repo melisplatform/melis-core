@@ -1320,6 +1320,73 @@ class ToolUserController extends AbstractActionController
         return $melisTool->exportDataToCsv($userData);
     }
 
+    public function resetUserRightsAction(){
+
+        $response = [];
+        $this->getEventManager()->trigger('meliscore_tooluser_save_start', $this, $response);
+
+        $errors = [];
+        $datas = [];
+        $userId = null;
+        $success = 0;
+        $newXmlRights = "";
+        $container = new Container('meliscore');
+
+        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+
+        $request = $this->getRequest();
+        $postData = $request->getPost()->toArray();
+
+        $textTitle = 'tr_meliscore_tool_user';
+
+        if (!empty($postData['usr_id'])) {
+            $userId = $postData['usr_id'];
+        }
+
+        if (!empty($container['action-tool-user-setrights-tmp'])) {
+            $newXmlRights = '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0">';
+            foreach ($container['action-tool-user-setrights-tmp'] as $xmlrights)
+                $newXmlRights .= $xmlrights;
+
+            $newXmlRights = preg_replace("/<id(.*)<\/id>/iUs", "", $newXmlRights);
+            $newXmlRights .= '</document>';
+        }
+
+        foreach ($userTable->getEntryById($userId) as $user) {
+            $data = [
+                'usr_login' => $user->usr_login
+            ];
+        }
+
+        $userSession = $melisCoreAuth->getStorage()->read();
+
+        if ($data['usr_login'] == $userSession->usr_login) {
+            $userSession->usr_rights = $newXmlRights;
+        }
+
+
+        $success = $userTable->save(array('usr_rights'=>$newXmlRights), $userId);
+        if ($success < 1) {
+            $textMessage = 'tr_meliscore_tool_user_update_fail_info';
+        } else {
+            $textMessage = 'tr_meliscore_tool_user_update_success_info';
+        }
+
+        $response = [
+            'success' => $success,
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage,
+            'errors' => $errors,
+            'datas' => array('usr_rights'=>$newXmlRights)
+        ];
+
+        $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, array_merge($response, ['typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId]));
+
+        return new JsonModel($response);
+
+    }
+
     /**
      * Saves user account details
      * @return JsonModel

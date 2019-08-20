@@ -25,6 +25,7 @@ return [
     'tr_meliscore_dashboard_notify_steps_general_next_text' => "Suivant",
     'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Fermer l'aide",
     'tr_meliscore_dashboard_notify_step_2_next_text' => "J'ai compris, fermer",
+    'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
 
     // Rights
     'tr_meliscore_meliscore' => 'MelisCore',
@@ -123,6 +124,8 @@ return [
 
     'tr_meliscore_tool_user_update_success_info' => 'Infos utilisateur mises à jour avec succès.',
     'tr_meliscore_tool_user_update_fail_info' => 'Echec de mise à jour des infos utilisateur',
+    'tr_meliscore_tool_user_reset_rights_success_info' => 'Droits d\'utilisateur réinitialisés avec succès\'',
+    'tr_meliscore_tool_user_reset_rights_fail_info' => 'Impossible de réinitialiser les droits d\'utilisateur',
 
     'tr_meliscore_tool_user_delete' => 'Suppression utilisateur',
     'tr_meliscore_tool_user_delete_msg' => 'Etes-vous sur de vouloir supprimer cet utilisateur?',
@@ -141,6 +144,9 @@ return [
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
     'tr_meliscore_tool_user_update' => 'Enregistrer',
+    'tr_meliscore_tool_user_reset_rights' => 'Réinitialiser les droits',
+    'tr_meliscore_tool_user_reset_rights_xs' => 'Réinitialiser',
+    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Êtes-vous sur de vouloir réinitialiser les droits de cet utilisateur ? <br>Cela empechera l\'accès à la plupart des fonctionnalités de la plateforme et vous devrez recréer des droits manuellement.',
 
     'tr_meliscore_forgot_password' => 'Mot de passe oublié',
     // Emails

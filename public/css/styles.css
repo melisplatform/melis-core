@@ -4388,3 +4388,32 @@ div#modal-user-management div.widget {
 input#log_date_range{
     background: #fff;
 }
+
+/* Users Rights */
+#btnResetRights, #btnResetRightsNew, #btnResetRights:hover, #btnResetRightsNew:hover, #btnResetRights:active #btnResetRightsNew:active {
+    margin-right: 20px;
+    background-color: transparent;
+    border-color: #2e6da4;
+    color: #2e6da4;
+}
+@media only screen and (max-width: 450px) {
+    .rightsBtn {
+        padding: 5px;
+        max-width: 110px;
+        font-size: 13px;
+    }
+}
+@media only screen and (max-width: 376px) {
+    .rightsBtn {
+        padding: 5px;
+        max-width: 120px;
+        font-size: 11px;
+    }
+}
+@media only screen and (max-width: 321px) {
+    .rightsBtn {
+        padding: 3px;
+        max-width: 90px;
+        font-size: 9px;
+    }
+}

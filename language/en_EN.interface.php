@@ -121,6 +121,8 @@ return [
 
     'tr_meliscore_tool_user_update_success_info' => 'User\'s info updated successfully',
     'tr_meliscore_tool_user_update_fail_info' => 'Unable to update User\'s information',
+    'tr_meliscore_tool_user_reset_rights_success_info' => 'User\'s rights reset successfully',
+    'tr_meliscore_tool_user_reset_rights_fail_info' => 'Unable to reset User\'s rights',
 
     'tr_meliscore_tool_user_delete' => 'Remove User',
     'tr_meliscore_tool_user_delete_msg' => 'Are you sure you want to remove this user?',
@@ -139,6 +141,9 @@ return [
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
     'tr_meliscore_tool_user_update' => 'Save',
+    'tr_meliscore_tool_user_reset_rights' => 'Reset rights',
+    'tr_meliscore_tool_user_reset_rights_xs' => 'Reset',
+    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Are you sure to reset the rights of this user? <br>This will close access to most functionalities of the platform and you will have to set the new rights manually.',
 
     'tr_meliscore_forgot_password' => 'Forgot password',
     // Emails
