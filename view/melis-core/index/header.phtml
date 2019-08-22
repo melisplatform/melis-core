@@ -34,28 +34,30 @@ $headerExclusions = array(
 <div <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="navbar navbar-primary main" role="navigation">
     <!-- left menu -->
     <div id="nav-header" class="container-fluid">
-        <div class="row d-flex flex-row justify-content-between">
-            <div id="brand-logo" class="col col-md-5 col-lg-4 col-xl-2">
-                <div class="left-menu"> 
-                    <div class="navbar-brand d-flex justify-content-center">
-                        <div class="toggle-sidebar-menu">
-                            <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
-                                <i class="fa fa-bars"></i>
+        <div class="row">
+            <div id="brand-logo" class="col col-md-5 col-lg-2">
+                <div class="row">
+                    <div class="left-menu">
+                        <div class="navbar-brand d-flex">
+                            <div class="toggle-sidebar-menu">
+                                <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
+                                    <i class="fa fa-bars"></i>
+                                </a>
+                            </div>
+                            <a href="/melis" class="appbrand innerL">
+                                <img alt="melis platform" src="<?= $sidebarHeaderLogo; ?>">
+                                <?= $headerTitle ?>
                             </a>
-                        </div>
-                        <a href="/melis" class="appbrand innerL">
-                            <img alt="melis platform" src="<?= $sidebarHeaderLogo; ?>">
-                            <?= $headerTitle ?>
-                        </a>
-                        <div class="toggle-plugin-menu">
-                            <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
-                                <i class="fa fa-cog"></i>
-                            </a>
+                            <div class="toggle-plugin-menu">
+                                <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="tab-menu" class="col-md-7 col-lg-8 col-xl-10">
+            <div id="tab-menu" class="col-md-7 col-lg-10">
                 <div class="row">
                     <div class="res-action-container container-fluid">
                         <div class="row">
@@ -106,8 +108,8 @@ $headerExclusions = array(
                                 </div>
                             </div>
                             <div class="col-md-3 col-lg-4 col-xl-2">
-                                <div class="row">
-                                    <ul class="nav navbar-nav navbar-right d-flex flex-row">
+                                <div class="row navbar-nav-right">
+                                    <ul class="nav navbar-nav navbar-right">
                                         <!-- add flash messenger here -->
                                         <?php 
                                             if (!empty($this->zoneconfig['interface']))
