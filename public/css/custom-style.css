@@ -12,6 +12,9 @@
 .login-page .navbar-nav-right {
   justify-content: flex-end;
 }
+.navbar-nav-right {
+  justify-content: flex-end;
+}
 .navbar.main.navbar-primary {
   padding: 0;
 }
@@ -91,7 +94,7 @@
   padding-left: 0;
   padding-right: 0;
 }
-#main #mewnu.no-gutters,
+#main #menu.no-gutters,
 #main #content.no-gutters {
   padding-left: 0;
   padding-right: 0;
@@ -178,11 +181,21 @@ a:not([href]).btn-danger:hover {
   min-width: 280px;
 }
 /* platforms pagination */
+.pagination-cont {
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+  position: relative;
+}
 .pagination > .page-item.active > .page-link, 
 .pagination > .page-item.active > .page-link:focus, 
 .pagination > .page-item.active > .page-link:hover {
   background: #e61c23;
   border-color: #e61c23;
+}
+.dataTables_wrapper .pagination-cont .dataTables_paginate,
+.dataTables_wrapper .pagination-cont .dataTables_info {
+  float: none;
 }
 /* modal */
 #id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
@@ -421,6 +434,8 @@ div.row, ul.row {
     display: block;
   }
   #melis-navtabs-container-outer {
+    display: flex;
+    justify-content: space-between;
     float: none;
   }
   .res-action-container {
@@ -428,6 +443,17 @@ div.row, ul.row {
   }
   #nav-header.container-fluid {
     display: block;
+  }
+  .navbar.main.navbar-primary .nav > li .menu-icon .fa {
+    padding-right: 0;
+  }
+  #melis-navtabs-container-inner {
+    float: none;
+    text-align: center;
+  }
+  .navbar-nav.tabsbar {
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
   }
 
   /* #menu sidebar */

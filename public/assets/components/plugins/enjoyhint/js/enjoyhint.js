@@ -632,12 +632,14 @@ var EnjoyHint = function (_options) {
 
                 $(window).on('resize', function() {
                     
-                    //if (!($(that.stepData.enjoyHintElementSelector).is(":visible"))) {
-                    if (!( $(that.stepData.enjoyHintElementSelector).length > 0 )) {
+                    if (!($(that.stepData.enjoyHintElementSelector).is(":visible")) || typeof $(that.stepData.enjoyHintElementSelector) !== "undefined" ) {
+                    //if (!( $(that.stepData.enjoyHintElementSelector).length > 0 )) {
                         that.stopFunction();
                         $(window).off('resize');
                         return;
                     }
+                    var selector = $(that.stepData.enjoyHintElementSelector);
+                    console.log({selector})
 
                     prevWindowWidth = window.innerWidth;
                     prevWindowHeight = window.innerHeight;

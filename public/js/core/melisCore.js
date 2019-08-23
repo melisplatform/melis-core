@@ -225,19 +225,28 @@ var melisCore = (function(window){
     function sidebarMenuClick(){
 
         // for the sidebar functionalities
-        var sidebarOffsetLeft = $( "#id_meliscore_leftmenu" ).position().left;
-        var sidebarWidth =  $( "#id_meliscore_leftmenu" ).outerWidth();
+        var $melisLeftMenu      = $("#id_meliscore_leftmenu"),
+            $melisContent       = $("#content"),
+            $melisFooter        = $("#id_meliscore_footer"),
+            sidebarOffsetLeft   = $melisLeftMenu.position().left,
+            sidebarWidth        = $melisLeftMenu.outerWidth(),
+            contentOffsetLeft   = $melisContent.position().left,
+            contentWidth        = $melisContent.outerWidth();
 
-        if( sidebarOffsetLeft == 0){
-            $( "#id_meliscore_leftmenu" ).css("left", -sidebarWidth );
+            console.log({contentOffsetLeft}, {contentWidth});
+
+        if (sidebarOffsetLeft == 0) {
+            $melisLeftMenu.css("left", -sidebarWidth );
             $body.addClass('sidebar-mini');
 
-            $("#id_meliscore_footer").addClass('slide-left');
+            $melisFooter.addClass('slide-left');
+            $melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
         }
-        else{
-            $("#id_meliscore_leftmenu").css("left", '0' );
+        else {
+            $melisLeftMenu.css("left", "0");
             $body.removeClass('sidebar-mini');
-            $("#id_meliscore_footer").removeClass('slide-left');
+            $melisFooter.removeClass('slide-left');
+            $melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
         }
 
         $("#newplugin-cont").removeClass("show-menu");
@@ -794,7 +803,7 @@ var melisCore = (function(window){
      * sample syntax in calling it outside - melisCore.firstRender;
      */
 
-    return{
+    return {
         // key - access name outside                                 // value - name of function above
         flashMessenger                                  :           flashMessenger,
         firstRender                                     :           firstRender,

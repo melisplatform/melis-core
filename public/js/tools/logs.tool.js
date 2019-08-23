@@ -97,3 +97,12 @@ window.initDatePicker = function(){
 window.dateRangePickerApplyEvent = function(ev, picker) {
     $tableMelisLogs.draw();
 }
+
+window.initPaginate = function() {
+	var $paginate = $(".dataTables_paginate"),
+		$page_item = $paginate.find(".pagination li"),
+		$page_link = $page_item.find("a");
+
+		$page_item.addClass("page-item");
+		$page_link.addClass("page-link");
+}

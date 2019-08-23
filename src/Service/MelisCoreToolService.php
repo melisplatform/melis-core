@@ -477,7 +477,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 
 
             $tableTop .= $leftDom . '>' . $centerDom . '>' . $rightDom . '>>>';
-            $tableBottom = '<"bottom" t<"pagination-cont clearfix"rip>>';
+            $tableBottom = '<"bottom" t<"pagination-cont"rip>>';
 
             // check if the filter array configuration is empty
             if (empty($left) && empty($center) && empty($right)) {

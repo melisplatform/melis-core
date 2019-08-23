@@ -2190,7 +2190,7 @@ return [
                         'target' => '#tableMelisLogs',
                         'ajaxUrl' => '/melis/MelisCore/Log/getLogs',
                         'dataFunction' => 'initLogDataTable',
-                        'ajaxCallback' => '',
+                        'ajaxCallback' => 'initPaginate()',
                         'initComplete' => 'initDatePicker()',
                         'filters' => [
                             'left' => [
