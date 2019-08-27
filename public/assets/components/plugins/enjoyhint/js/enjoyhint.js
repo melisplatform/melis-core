@@ -631,15 +631,13 @@ var EnjoyHint = function (_options) {
                 that.kinetic_stage.add(that.layer);
 
                 $(window).on('resize', function() {
-                    
-                    if (!($(that.stepData.enjoyHintElementSelector).is(":visible")) || typeof $(that.stepData.enjoyHintElementSelector) !== "undefined" ) {
+                    if ( typeof $(that.stepData.enjoyHintElementSelector)[0] !== "undefined" ) {
+                    //if ( !($(that.stepData.enjoyHintElementSelector).is(":visible")) ) {
                     //if (!( $(that.stepData.enjoyHintElementSelector).length > 0 )) {
                         that.stopFunction();
                         $(window).off('resize');
                         return;
                     }
-                    var selector = $(that.stepData.enjoyHintElementSelector);
-                    console.log({selector})
 
                     prevWindowWidth = window.innerWidth;
                     prevWindowHeight = window.innerHeight;

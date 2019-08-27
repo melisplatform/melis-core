@@ -58,7 +58,6 @@ var tabExpander = (function($, window){
     
 	// CHECK TO ACTIVATE tabExpander(); ---------------------------------------------------------------------------------------------
 	function checkTE(){
-        console.log("checkTE tabExpander");
 		// CALCULATE ALL POSSIBLE WIDTH FOR THE LEFT, CENTER AND RIGHT MENUS
 	    
 		//total width of the header
@@ -124,7 +123,6 @@ var tabExpander = (function($, window){
     
     //NEXT 
     $(".melis-tabnext").on("click", function() {
-        console.log(".melis-tabnext clicked!");
         calcOffset();
         if( xright > ulContainer - 170 ) {
             var liIndex = $navTabs.find("li").index();
@@ -147,7 +145,6 @@ var tabExpander = (function($, window){
     
     //PREV
     $(".melis-tabprev").on("click", function() {
-        console.log(".melis-tabprev clicked!");
         calcOffset();
         if( xleft > ulContainer - 170) {
             $navTabs.animate({

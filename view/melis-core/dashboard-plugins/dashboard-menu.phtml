@@ -79,7 +79,7 @@
                                             <div class="melis-core-dashboard-category-plugins-box">
                                                 <?php foreach ($plugins as $pluginName => $conf) { ?>
                                                     <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
-                                                        <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
+                                                        <div class="d-none plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
                                                         <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="dashboard-img-responsive">
                                                         <?php 
                                                             $hasNewPlugins = "";
@@ -98,7 +98,7 @@
                                     <?php } else {?>
                                         <?php foreach ($plugins as $pluginName => $conf) { ?>
                                             <div class="melis-core-dashboard-plugin-snippets" title="<?php echo $this->translate($conf['description'])?>">
-                                                <div class="hidden plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
+                                                <div class="d-none plugin-json-config"><?php echo $conf['pluginRaw'] ?></div>
                                                 <img src="<?php echo $conf['thumbnail']?>" alt="" width="194px" class="dashboard-img-responsive">
                                                 <?php 
                                                     $hasNewPlugins = "";

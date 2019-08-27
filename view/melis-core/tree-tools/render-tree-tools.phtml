@@ -66,7 +66,7 @@ if ($isParentTool && !empty($this->tools)):
 <?php
 elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
     ?>
-    <li id="<?= $id; ?>" class="hasSubmenu <?= empty($this->tools) ? 'hidden' : null ?>" data-melisKey='<?= $melisKey; ?>'>
+    <li id="<?= $id; ?>" class="hasSubmenu <?= empty($this->tools) ? 'd-none' : null ?>" data-melisKey='<?= $melisKey; ?>'>
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
             <a data-target="#<?= $id ?>_tools" data-toggle="collapse" class="collapsed">
@@ -197,7 +197,7 @@ endif;
     <script>
         if (typeof(jQuery) !== 'undefined') {
             if ($("#meliscms_toolstree_section").length > 0) {
-                $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('hidden').show();
+                $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('d-none').show();
             }
         }
         ;

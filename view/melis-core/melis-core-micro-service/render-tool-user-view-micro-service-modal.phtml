@@ -2,7 +2,7 @@
 $moduleStatus = 1;
 ?>
 
-<div id="melis-core-user-auth-api-ok" class="hidden">
+<div id="melis-core-user-auth-api-ok" class="d-none">
     <p><?= $this->translate('tr_meliscore_microservice_generateD_api_key'); ?>:</p>
     <div id="melis-core-user-auth-api-key" class="alert alert-success" role="alert"></div>
     <div id="melis-core-microservices-url-cont">
@@ -26,6 +26,6 @@ $moduleStatus = 1;
         ), 'dismiss');
     ?>
 </div>
-<div id="melis-core-user-auth-api-ko" class="hidden">
+<div id="melis-core-user-auth-api-ko" class="d-none">
     <button id="btn-melis-core-user-gen-api" class="btn btn-success"><?= $this->translate('tr_meliscore_microservice_generate_api_key'); ?></button>
 </div>
