@@ -14,7 +14,7 @@ var dashboardNotify = (function() {
         $pluginBtn 		    = $body.find("#melisDashBoardPluginBtn"),
         $pluginBtnBox	    = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn"),
-        tpd                 = $body.find("#"+activeTabId+".tab-panel-dashboard").hasClass("active"),
+        tpd                 = $body.find("#"+activeTabId+".tab-panel-dashboard"),
         $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']"),
         $dashMsg            = $body.find("#melis-core-dashboard-msg");
 
@@ -46,7 +46,10 @@ var dashboardNotify = (function() {
                 $pluginBox  = body.find(".melis-core-dashboard-dnd-box"),
                 $tabDashB   = $body.find("#"+activeTabId+".tab-panel-dashboard"),
                 shown       = $pluginBox.hasClass("shown");
-              
+
+                console.log("$gsItem: ", $gsItem.length);
+                console.log("shown: ", shown);
+                
                 // check if there is grid stack item and plugin menu is open
                 if ( $gsItem.length === 0 && shown === true ) {
                     render();
@@ -137,9 +140,9 @@ var dashboardNotify = (function() {
             expires: new Date(MAX_COOKIE_AGE).toUTCString()
         };
         var updatedCookie = encodeURIComponent("dashboard_notify") + "=" + encodeURIComponent(value);
-        updatedCookie += "; " + "path" + "=" + defaultOptions.path;
-        updatedCookie += "; " + "expires" + "=" + defaultOptions.expires;
-        document.cookie = updatedCookie;
+            updatedCookie += "; " + "path" + "=" + defaultOptions.path;
+            updatedCookie += "; " + "expires" + "=" + defaultOptions.expires;
+            document.cookie = updatedCookie;
     }
 
     function getCookie() {
@@ -168,9 +171,11 @@ $(function() {
         if ( $.inArray( "MelisUserTabs", activeModule ) !== -1 && typeof melisUserTabs !== "undefined" ) {
             // melis-user-tabs.js init
             melisUserTabs.init();
+            console.log("melisUserTabs.init in dashboard-notify");
         } 
         else {
             // own init
             dashboardNotify.init();
+            console.log("dashboardNotify.init in dashboard-notify");
         }
 });
