@@ -33,7 +33,7 @@ var EnjoyHint = function (_options) {
 
     var init = function () {
 
-        if ($('.enjoyhint')) {
+        if ( $('.enjoyhint').length > 0 ) {
 
             $('.enjoyhint').remove();
         }

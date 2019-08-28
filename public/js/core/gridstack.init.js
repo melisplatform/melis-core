@@ -86,9 +86,9 @@ var melisDashBoardDragnDrop = {
             revert: 'invalid',
             appendTo: 'body',
             drag: function (event, ui) {
-                var gridPH = this.$body.find('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
-                    gridPH.attr('data-gs-width', 6);
-                    gridPH.attr('data-gs-height', 3);
+                var $gridPH = $('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
+                    $gridPH.attr('data-gs-width', 6);
+                    $gridPH.attr('data-gs-height', 3);
 
                 /**
                  * During plugin drag:

@@ -14,7 +14,7 @@ var dashboardNotify = (function() {
         $pluginBtn 		    = $body.find("#melisDashBoardPluginBtn"),
         $pluginBtnBox	    = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn"),
-        tpd                 = $body.find("#"+activeTabId+".tab-panel-dashboard"),
+        $tpd                = $("#"+activeTabId+".tab-panel-dashboard").find(".active"),
         $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']"),
         $dashMsg            = $body.find("#melis-core-dashboard-msg");
 
@@ -39,16 +39,13 @@ var dashboardNotify = (function() {
     // init
     function init() {
         setTimeout(function() {
-            var body        = $("body"),
-                $gs         = body.find("#"+activeTabId+" .grid-stack"),
+            var $body        = $("body"),
+                $gs         = $("#"+activeTabId+" .grid-stack"),
                 $gsItem     = $gs.find(".grid-stack-item"),
                 $gsItemLen  = $gsItem.length,
-                $pluginBox  = body.find(".melis-core-dashboard-dnd-box"),
-                $tabDashB   = $body.find("#"+activeTabId+".tab-panel-dashboard"),
+                $pluginBox  = $body.find(".melis-core-dashboard-dnd-box"),
+                $tabDashB   = $("#"+activeTabId+".tab-panel-dashboard").find(".active"),
                 shown       = $pluginBox.hasClass("shown");
-
-                console.log("$gsItem: ", $gsItem.length);
-                console.log("shown: ", shown);
                 
                 // check if there is grid stack item and plugin menu is open
                 if ( $gsItem.length === 0 && shown === true ) {
@@ -112,7 +109,7 @@ var dashboardNotify = (function() {
     // run enjoy hint script
     function runNotify() {
         // checking for .tab-panel-dashboard has .active class
-        if ( tpd ) {
+        if ( $tpd.length > 0 ) {
             eh.runScript();
         }
     }
@@ -165,17 +162,15 @@ var dashboardNotify = (function() {
 
 $(function() {
     var $body           = $("body"),
-        activeModule    = $body.find("#melis-core-dashboard-msg").data("activeMods").split("-");
+        activeModule    = $("#melis-core-dashboard-msg").data("activeMods").split("-");
 
         // check if melisUserTabs is currently an active module and it is defined
         if ( $.inArray( "MelisUserTabs", activeModule ) !== -1 && typeof melisUserTabs !== "undefined" ) {
             // melis-user-tabs.js init
             melisUserTabs.init();
-            console.log("melisUserTabs.init in dashboard-notify");
         } 
         else {
             // own init
             dashboardNotify.init();
-            console.log("dashboardNotify.init in dashboard-notify");
         }
 });
