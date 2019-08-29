@@ -96,14 +96,14 @@ var melisDashBoardDragnDrop = {
                  *  - OUTSIDE grid-stack drag area: SHOW dashboard msg
                  *  Note: Only happens when dashboard is empty
                  */
-                var pluginCount = this.$gs.find("div[data-gs-id]").length;
-                var dashboardMsg = this.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
-                var dragArea = this.$body.find(event.currentTarget);
+                var pluginCount = melisDashBoardDragnDrop.$gs.find("div[data-gs-id]").length;
+                var dashboardMsg = melisDashBoardDragnDrop.$body.find(melisDashBoardDragnDrop.melisDashboardMsg);
+                var dragArea = melisDashBoardDragnDrop.$body.find(event.currentTarget);
 
                     if (dragArea.hasClass("melis-core-dashboard-plugin-snippets")) {
                         // Hide empty-dashboard message
                         if (dashboardMsg.length > 0) {
-                            dashboardMsg.hide();
+                            $(dashboardMsg).hide();
                             $(this.$gs).css({
                                 "height": "840px",
                                 "min-height": "840px"
@@ -111,7 +111,7 @@ var melisDashBoardDragnDrop = {
                         }
                     } else if (pluginCount === 0) {
                         // Show empty-dashboard message
-                        dashboardMsg.show();
+                        $(dashboardMsg).show();
                         $(this.$gs).css({
                             "height": "745px",
                             "min-height": "745px"
@@ -127,14 +127,20 @@ var melisDashBoardDragnDrop = {
     },
 
     docuReady: function () {
-        var self = this;
-
-        var $btn    = self.$body.find("#melisDashBoardPluginBtn"),
+        var self    = this,
+            gsItems = self.countGsItems(),
+            $btn    = self.$body.find("#melisDashBoardPluginBtn"),
             $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
             $gs     = self.$body.find("#" + activeTabId + " .grid-stack"),
             dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
             nWidth  = dWidth + $box.width(),
             $dbMsg  = self.$melisDBPlugins.find("#melis-core-dashboard-msg");
+
+            if ( gsItems > 0 ) {
+                $($dbMsg).hide();
+            } else {
+                $($dbMsg).show();
+            }
 
             // .select2-container width 100% specific for latest comments plugin on document ready
             self.latestCommentsPluginUIRes();
@@ -150,7 +156,7 @@ var melisDashBoardDragnDrop = {
             });
 
             // adjust grid-stack height when dashboard msg element is found
-            if ($dbMsg.length) {
+            if ( $dbMsg.length ) {
                 $(self.$gs).css({
                     "height": "745px",
                     "min-height": "745px"

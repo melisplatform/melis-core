@@ -395,6 +395,12 @@ div.row, ul.row {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+/* dashboard gridstack delete and refresh buttons on plugins */
+.dashboard-plugin-refresh,
+.dashboard-plugin-delete {
+  padding: 1px 5px;
+  font-size: 12px;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */

@@ -18,7 +18,6 @@ var dashboardNotify = (function() {
         $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']"),
         $dashMsg            = $body.find("#melis-core-dashboard-msg");
 
-    // instantiate
     var eh = new EnjoyHint({
         onStart: function() {
             disablePluginsMenuButton();

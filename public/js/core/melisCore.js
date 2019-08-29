@@ -233,8 +233,6 @@ var melisCore = (function(window){
             contentOffsetLeft   = $melisContent.position().left,
             contentWidth        = $melisContent.outerWidth();
 
-            console.log({contentOffsetLeft}, {contentWidth});
-
         if (sidebarOffsetLeft == 0) {
             $melisLeftMenu.css("left", -sidebarWidth );
             $body.addClass('sidebar-mini');
@@ -254,7 +252,7 @@ var melisCore = (function(window){
         // HOOK - scroll the page by 1px to trigger the scroll event that resizes the pageActions container
         // check if activeTabId has a number. if it has then we assume its a page
         var matches = activeTabId.match(/\d+/g);
-        //console.log({matches});
+        
         if (matches != null && matches !== 'undefined') {
             $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
         }
