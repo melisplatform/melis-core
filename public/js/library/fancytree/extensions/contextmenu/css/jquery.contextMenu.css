@@ -111,6 +111,8 @@
 .context-menu-item.icon-delete { background-image: url(../images/page_white_delete.png); }
 .context-menu-item.icon-add { background-image: url(../images/page_white_add.png); }
 .context-menu-item.icon-quit { background-image: url(../images/door.png); }
+.context-menu-item.icon-export { background-image: url(../images/export.png); }
+.context-menu-item.icon-import { background-image: url(../images/import.png); }
 
 
 .context-menu-item.icon-paste,
