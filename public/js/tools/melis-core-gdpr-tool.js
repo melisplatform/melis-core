@@ -243,12 +243,12 @@ $(document).ready(function() {
         /**
          * Clicking on tabs
          */
-        $body.on("click", ".tabs-label li a", function() {
+        /* $body.on("click", ".tabs-label li a", function() {
             var $this = $(this);
 
                 $this.toggleClass("active").siblings().removeClass("active");
                 $this.closest("li").toggleClass("active").siblings().removeClass("active");
-        });
+        }); */
 
         var GdprTool = {
             getUserInfo: function(formData) {

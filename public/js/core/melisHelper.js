@@ -217,7 +217,7 @@ var melisHelper = (function(){
             $(subMenu).parents("li").addClass("active-parent on");
         }
 
-        //add active class to the parent of the cliked <a> ( to the <li> )
+        //add active class to the parent of the clicked <a> ( to the <li> )
         $("#melis-id-nav-bar-tabs a.tab-element[data-id='"+ tabID +"']").closest("li").addClass("active");
         $("#melis-id-nav-bar-tabs a.tab-element[data-id='"+ tabID +"']").parent("li").parents("li").addClass("active-parent on");
 
@@ -401,11 +401,9 @@ var melisHelper = (function(){
                     // find nav-group-dropdown that has the id of navTabsGroup
                     var hasdropdown = $(navBox).find(".nav-group-dropdown");
 
-
-
-                    if($(hasdropdown).length) {
+                    if( $(hasdropdown).length ) {
                         // check if menu are too many
-                        if($(hasdropdown).first().height() > 350) {
+                        if( $(hasdropdown).first().height() > 350 ) {
                             $(hasdropdown).first().addClass("scroll");
                         }
 

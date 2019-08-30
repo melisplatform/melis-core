@@ -273,62 +273,69 @@ var melisCore = (function(window){
 
     // MAIN TAB MENU CLICK - run codes when a tab in the main tab menu is clicked
     function tabMenuClick(){
-        activeTabId = $(this).data("id");
+        var $this = $(this),
+            tabContentID = $this.data("id");
+            
+            // assign active tab id
+            activeTabId = tabContentID;
 
-        // remove all active and active-parent class
-        $("#melis-id-nav-bar-tabs li").each(function() {
-            $(this).removeClass("active");
-            $(this).removeClass("active-parent on");
-        });
+            // remove all active and active-parent class
+            $("#melis-id-nav-bar-tabs li").each(function() {
+                $(this).removeClass("active");
+                $(this).removeClass("active-parent on");
+            });
 
-        // highlight all parents li of selected element
-        $(this).closest("li").addClass("active").parents("li").addClass("active-parent on");
+            // highlight all parents li of selected element
+            $(this).closest("li").addClass("active").parents("li").addClass("active-parent on");
 
-        // iframe height issue in pages
-        if ($.browser) {
-            // Firefox bug issue temp fix
-            var iHeight;
-            setTimeout(function(){
-                iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
-                $("#"+activeTabId+" .melis-iframe").height(iHeight);
-            }, 1);
-        }
-        else{
-            var iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
-            $("#"+activeTabId+" .melis-iframe").height( iHeight+20 );
-        }
-
-        // if in mobile hide 'PAGES' menu when clicking / opening a page
-        if(screenSize <= 768){
-            $("#res-page-cont").trigger('click');
-            $("#res-page-cont i").removeClass("move-arrow");
-
-            if ( $tabArrowTop.length ) {
-                $tabArrowTop.removeClass("hide-arrow");
+            // iframe height issue in pages
+            if ($.browser) {
+                // Firefox bug issue temp fix
+                var iHeight;
+                setTimeout(function(){
+                    iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
+                    $("#"+activeTabId+" .melis-iframe").height(iHeight);
+                }, 1);
+            }
+            else{
+                var iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
+                $("#"+activeTabId+" .melis-iframe").height( iHeight+20 );
             }
 
-            $('html, body').animate({scrollTop:0},500);
-        }
+            // if in mobile hide 'PAGES' menu when clicking / opening a page
+            if(screenSize <= 768){
+                $("#res-page-cont").trigger('click');
+                $("#res-page-cont i").removeClass("move-arrow");
 
-        // scroll top every time we click a tab to RESET the scrollbars and return page actions to original position
-        $("#"+ activeTabId + " .page-head-container").removeAttr("style");
-        $("#"+ activeTabId + " .page-head-container > .innerAll").removeClass('sticky-pageactions');
-        $("#"+ activeTabId + " .page-head-container > .innerAll").removeAttr("style");
-        $('html, body').animate({scrollTop:0},0);
+                if ( $tabArrowTop.length ) {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
 
-        // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-        $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+                $('html, body').animate({scrollTop:0},500);
+            }
 
-        // detect dashboard tab panel
-        if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
-            // show dashboard plugin menu
-            $("body .melis-core-dashboard-dnd-box").fadeIn();
-            $("body .melis-core-dashboard-dnd-box.show").fadeIn();
-        } else {
-            // hide dashboard plugin menu
-            $("body .melis-core-dashboard-dnd-box").fadeOut();
-            $("body .melis-core-dashboard-dnd-box.show").fadeOut();
-        }
+            // scroll top every time we click a tab to RESET the scrollbars and return page actions to original position
+            $("#"+ activeTabId + " .page-head-container").removeAttr("style");
+            $("#"+ activeTabId + " .page-head-container > .innerAll").removeClass('sticky-pageactions');
+            $("#"+ activeTabId + " .page-head-container > .innerAll").removeAttr("style");
+            $('html, body').animate({scrollTop:0},0);
+
+            // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
+            $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+
+            // detect dashboard tab panel
+            if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
+                // show dashboard plugin menu
+                $("body .melis-core-dashboard-dnd-box").fadeIn();
+                $("body .melis-core-dashboard-dnd-box.show").fadeIn();
+            } else {
+                // hide dashboard plugin menu
+                $("body .melis-core-dashboard-dnd-box").fadeOut();
+                $("body .melis-core-dashboard-dnd-box.show").fadeOut();
+            }
+            
+            // switch to the clicked tab and also the tab container
+            //melisHelper.tabSwitch( activeTabId );
     }
 
     /*
@@ -489,6 +496,12 @@ var melisCore = (function(window){
 
     tabDraggable("#melis-id-nav-bar-tabs", false);
 
+    // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
+    /* function navTabsSwitch() {
+        var $this = $(this);
+
+    } */
+
     // BIND & DELEGATE EVENTS =================================================================================================================
 
     // toggle plugin menu in mobile
@@ -505,7 +518,10 @@ var melisCore = (function(window){
     $body.on("click", "#sidebar-menu", sidebarMenuClick);
 
     // main tab menu clicks (using bootstrap 'shown.bs.tab' event)
-    $body.on("shown.bs.tab", '#melis-id-nav-bar-tabs li a.tab-element', tabMenuClick);
+    $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a.tab-element", tabMenuClick);
+
+    // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
+    //$body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch);
 
     // open tool treeview
     $body.on("click", '.melis-opentools', openTools);

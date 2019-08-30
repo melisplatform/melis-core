@@ -20,7 +20,7 @@ return array(
                     '/MelisCore/js/core/gridstack.init.js',
 
                     // display notify / page walkthrough
-                    '/MelisCore/assets/components/plugins/enjoyhint/js/lodash.min.js',
+                    //'/MelisCore/assets/components/plugins/enjoyhint/js/lodash.min.js',
                     '/MelisCore/assets/components/plugins/enjoyhint/js/enjoyhint.js',
                     //'/MelisCore/assets/components/plugins/enjoyhint/js/jquery.enjoyhint.js',
                     //'/MelisCore/assets/components/plugins/enjoyhint/js/kinetic.min.js',

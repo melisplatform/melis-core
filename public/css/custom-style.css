@@ -461,6 +461,13 @@ div.row, ul.row {
     flex-direction: row;
     -webkit-box-orient: horizontal;
   }
+  #melis-id-nav-bar-tabs {
+    display: flex;
+    flex-direction: row;
+  }
+  #melis-id-nav-bar-tabs li {
+    float: none;
+  }
 
   /* #menu sidebar */
   #main #menu .sidebar.sidebar-inverse {
