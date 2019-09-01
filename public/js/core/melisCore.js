@@ -41,7 +41,7 @@ var melisCore = (function(window){
             else{
                 alert( translations.tr_meliscore_error_language );
             }
-        }).fail(function() {
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
     }
@@ -64,7 +64,7 @@ var melisCore = (function(window){
             else{
                 melisTool.alerts.showDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
             }
-        }).fail(function() {
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
@@ -90,7 +90,7 @@ var melisCore = (function(window){
             if(!data.login) {
                 window.location.reload(true);
             }
-        }).fail(function() {
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
     }
@@ -147,7 +147,7 @@ var melisCore = (function(window){
                 $body.find("#flash-messenger").append(tempData);
                 $body.find("#id_meliscore_header_flash_messenger.dropdown.notification a span.badge").text(ctr);
             }
-        }).fail(function() {
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
     }
@@ -182,7 +182,7 @@ var melisCore = (function(window){
                     '</li>';
                 $body.find("#flash-messenger").append(tempData);
             }
-        }).fail(function() {
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
     }
