@@ -32,149 +32,167 @@ $(document).ready(function () {
     var $body = $("body");
 
         //image preveiew
-        $body.on('change','#id_n_usr_image',function()
-        {
+        $body.on('change','#id_n_usr_image', function() {
             var input = this;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                if ( input.files && input.files[0] ) {
+                    var reader = new FileReader(),
+                        $newProfileImg = $('#new-profile-image');
 
-                reader.onload = function (e) {
-                    $('#new-profile-image').attr('src', e.target.result);
+                        reader.onload = function (e) {
+                            $newProfileImg.attr('src', e.target.result);
+                        }
+                        reader.readAsDataURL(input.files[0]);
                 }
-                reader.readAsDataURL(input.files[0]);
-            }
         });
 
-        $body.on('change','#id_usr_image',function()
-        {
-            var input = $("#usr_image_remove");
-            input.val("no");
+        $body.on('change','#id_usr_image',function() {
+            var $userImgRemove = $("#usr_image_remove");
+                $userImgRemove.val("no");
         });
 
         //image remove
-        $body.on('click','#btnDelImg',function()
-        {
-            if($("#id_n_usr_image").length > 0) {
-                var input = $("input#id_n_usr_image");
-                input.val('');
-                $('#new-profile-image').attr('src', "/MelisCore/images/profile/default_picture.jpg");
-                $("label[for=id_n_usr_image] .badge").remove();
-            }
+        $body.on('click','#btnDelImg',function() {
+            var $userNImg       = $("#id_n_usr_image"),
+                $newProfileImg  = $('#new-profile-image'),
+                $nBadge         = $("label[for=id_n_usr_image] .badge"),
+                $userImg        = $("#id_usr_image"),
+                $userImgRemove  = $("input#usr_image_remove"),
+                $profileImg     = $("#profile-image"),
+                $badge          = $("label[for=id_usr_image] .badge");
 
-            if($("#id_usr_image").length > 0){
-                var input = $("input#usr_image_remove");
-                input.val("yes");
-                $('#profile-image').attr('src', "/MelisCore/images/profile/default_picture.jpg");
-                $("label[for=id_usr_image] .badge").remove();
-            }
+                if( $userNImg.length > 0 ) {
+                    $userNImg.val('');
+                    $newProfileImg.attr('src', "/MelisCore/images/profile/default_picture.jpg");
+                    $nBadge.remove();
+                }
+
+                if( $userImg.length > 0 ) {
+                    $userImgRemove.val("yes");
+                    $profileImg.attr('src', "/MelisCore/images/profile/default_picture.jpg");
+                    $badge.remove();
+                }
         });
 
         $body.on("switch-change", "#switch-user-api-status", function (e) {
+            var $this   = $(this),
+                id      = $this.attr("data-userid"),
+                status  = 0;
 
-            var id = $(this).attr("data-userid");
+                if ( $this.find("div").hasClass("switch-on") ) {
+                    status = 1;
+                }
 
-            var status = 0;
-            if ($(this).find("div").hasClass("switch-on")) {
-                status = 1;
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: '/melis/MelisCore/MelisCoreMicroService/updateStatus',
-                data: {id: id, status: status},
-                dataType: 'json',
-                encode: true
-            });
+                $.ajax({
+                    type: 'POST',
+                    url: '/melis/MelisCore/MelisCoreMicroService/updateStatus',
+                    data: {id: id, status: status},
+                    dataType: 'json',
+                    encode: true
+                });
         });
 
         $body.on('click', '.melis-opentooltreeview', function () {
-            var toolName = $(this).data('tool-name');
-            var toolId = $(this).data('tool-id');
-            var melisKey = $(this).data('tool-meliskey');
-            var userId = $(this).data('userid');
-            melisHelper.tabOpen(toolName, 'fa-user', toolId, melisKey, {}, null, function () {
-                var checker = setInterval(function () {
-                    var button = $('body').find('tr[id=' + userId + '] td .btnUserEdit');
-                    if (button.length === 1) {
-                        button.trigger('click');
-                        clearInterval(checker);
-                    }
-                }, 500);
-            });
+            var $this       = $(this),
+                toolName    = $this.data('tool-name'),
+                toolId      = $this.data('tool-id'),
+                melisKey    = $this.data('tool-meliskey'),
+                userId      = $this.data('userid');
+                melisHelper.tabOpen(toolName, 'fa-user', toolId, melisKey, {}, null, function () {
+                    var checker = setInterval(function () {
+                        var button = $('body').find('tr[id=' + userId + '] td .btnUserEdit');
+                            if (button.length === 1) {
+                                button.trigger('click');
+                                clearInterval(checker);
+                            }
+                    }, 500);
+                });
         })
 
         $body.on("click", '.btnUserEdit', function () {
-            var id = $(this).parents("tr").attr("id");
-            melisCoreTool.hideAlert("#editformalert");
-            melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal', '#id_meliscore_tool_user_edit_modal');
-            melisCoreTool.resetLabels("#idusermanagement");
-            toolUserManagement.retrieveUser(id);
-            // Micro service status
-            $("#switch-user-api-status").attr("data-userid", id);
+            var id      = $(this).parents("tr").attr("id"),
+                $suas   = $("#switch-user-api-status"),
+                $tuvdc  = $("#tableUserViewDateConnection");
 
-            _tmpUserId = id;
-            $("#tableUserViewDateConnection").DataTable().destroy();
-            fntableUserViewDateConnectioninit();
+                melisCoreTool.hideAlert("#editformalert");
+                melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal', '#id_meliscore_tool_user_edit_modal');
+                melisCoreTool.resetLabels("#idusermanagement");
+                toolUserManagement.retrieveUser(id);
+                // Micro service status
+                $suas.attr("data-userid", id);
 
-            $.ajax({
-                type: 'POST',
-                url: '/melis/MelisCore/MelisCoreMicroService/getUserAuthData',
-                data: {id: id},
-                dataType: 'json',
-                encode: true
-            }).done(function (data) {
-                $("#melis-core-user-auth-api-key").html("");
-                $("#melis-core-user-auth-api-ok").addClass("hidden");
-                if (data.success) {
-                    $("#melis-core-user-auth-api-key").html(data.response.api_key);
-                    $("#melis-core-microservices-url").html('<a href="' + data.response.url + '" target="_blank">' + data.response.url + '</a>');
-                    $("#melis-core-user-auth-api-ok").removeClass("hidden");
+                _tmpUserId = id;
+                $tuvdc.DataTable().destroy();
+                fntableUserViewDateConnectioninit();
 
-                    if (data.response.status == 1) {
-                        $("#switch-user-api-status .switch-animate").removeClass("switch-off");
-                        $("#switch-user-api-status .switch-animate").addClass("switch-on");
-                    } else {
-                        $("#switch-user-api-status .switch-animate").removeClass("switch-on");
-                        $("#switch-user-api-status .switch-animate").addClass("switch-off");
-                    }
-                }
-                else {
-                    $("#melis-core-user-auth-api-ko").removeClass("hidden");
-                }
-            }).fail(function() {
-                alert(translations.tr_meliscore_error_message);
-            });
+                $.ajax({
+                    type: 'POST',
+                    url: '/melis/MelisCore/MelisCoreMicroService/getUserAuthData',
+                    data: {id: id},
+                    dataType: 'json',
+                    encode: true
+                }).done(function (data) {
+                    var $apikey     = $("#melis-core-user-auth-api-key"),
+                        $apiok      = $("#melis-core-user-auth-api-ok"),
+                        $apiurl     = $("#melis-core-microservices-url"),
+                        $suas_sa    = $("#switch-user-api-status .switch-animate");
 
+                        $apikey.html("");
+                        $apiok.addClass("hidden");
+                        if (data.success) {
+                            $apikey.html(data.response.api_key);
+                            $apiurl.html('<a href="' + data.response.url + '" target="_blank">' + data.response.url + '</a>');
+                            $apiok.removeClass("hidden");
+
+                            if (data.response.status == 1) {
+                                $suas_sa.removeClass("switch-off");
+                                $suas_sa.addClass("switch-on");
+                            } else {
+                                $suas_sa.removeClass("switch-on");
+                                $suas_sa.addClass("switch-off");
+                            }
+                        }
+                        else {
+                            $apiko.removeClass("hidden");
+                        }
+                }).fail(function() {
+                    alert(translations.tr_meliscore_error_message);
+                });
         });
 
         $body.on("click", "#btn-melis-core-user-gen-api", function () {
             var id = _tmpUserId;
-            $.ajax({
-                type: 'POST',
-                url: 'melis/MelisCore/MelisCoreMicroService/generateApiKey',
-                data: {id: id},
-                dataType: 'json',
-                encode: true,
-            }).done(function (data) {
-                $("#melis-core-user-auth-api-key").html("");
-                $("#melis-core-user-auth-api-ok").addClass("hidden");
-                $("#melis-core-user-auth-api-ko").addClass("hidden");
-                if (data.success) {
-                    $("#melis-core-user-auth-api-key").html(data.response.api_key);
-                    $("#melis-core-microservices-url").html('<a href="' + data.response.url + '" target="_blank">' + data.response.url + '</a>');
-                    $("#melis-core-user-auth-api-ok").removeClass("hidden");
+                $.ajax({
+                    type: 'POST',
+                    url: 'melis/MelisCore/MelisCoreMicroService/generateApiKey',
+                    data: {id: id},
+                    dataType: 'json',
+                    encode: true,
+                }).done(function (data) {
+                    var $apikey = $("#melis-core-user-auth-api-key"),
+                        $apiok  = $("#melis-core-user-auth-api-ok"),
+                        $apiko  = $("#melis-core-user-auth-api-ko"),
+                        $apiurl = $("#melis-core-microservices-url"),
+                        $suas   = $("#switch-user-api-status");
 
-                    if (!$("#switch-user-api-status").find("div").hasClass("switch-on")) {
-                        $("#switch-user-api-status").find("div").removeClass("switch-off");
-                        $("#switch-user-api-status").find("div").addClass("switch-on");
-                    }
-                }
-                else {
-                    $("#melis-core-user-auth-api-ko").removeClass("hidden");
-                }
-            }).fail(function() {
-                alert(translations.tr_meliscore_error_message);
-            });
+                        $apikey.html("");
+                        $apiok.addClass("hidden");
+                        $apiko.addClass("hidden");
+                        if ( data.success ) {
+                            $apikey.html(data.response.api_key);
+                            $apiurl.html('<a href="' + data.response.url + '" target="_blank">' + data.response.url + '</a>');
+                            $apiok.removeClass("hidden");
+
+                            if (!$suas.find("div").hasClass("switch-on")) {
+                                $suas.find("div").removeClass("switch-off");
+                                $suas.find("div").addClass("switch-on");
+                            }
+                        }
+                        else {
+                            $apiko.removeClass("hidden");
+                        }
+                }).fail(function() {
+                    alert(translations.tr_meliscore_error_message);
+                });
         });
 
         $body.on("click", "#id_meliscore_tool_user_action_new_user", function () {
@@ -185,42 +203,41 @@ $(document).ready(function () {
         //open up user profile when user icon click in identity menu
         $body.on("click", "#btnUserInfoEdit", function () {
             var userName = $("#user-name-link").html().trim();
-            melisHelper.tabOpen(userName, 'fa-user', 'id_meliscore_user_profile', 'meliscore_user_profile');
+                melisHelper.tabOpen(userName, 'fa-user', 'id_meliscore_user_profile', 'meliscore_user_profile');
         });
 
         $body.on("click", '.btnUserDelete', function () {
             var id = $(this).parents("tr").attr("id");
-            toolUserManagement.deleteUser(id);
+                toolUserManagement.deleteUser(id);
         });
 
         $body.on("click", "#id_meliscore_tool_user_action_new_user", function () {
-            melisCoreTool.hideAlert("#newformalert");
-            melisCoreTool.resetLabels("#idnewusermanagement");
-            $("form#idnewusermanagement #id_n_usr_password").val("");
+            var $numup = $("form#idnewusermanagement #id_n_usr_password");
+                melisCoreTool.hideAlert("#newformalert");
+                melisCoreTool.resetLabels("#idnewusermanagement");
+                $numup.val("");
         });
 
         $body.on("click", ".btnMelisCoreUserExport", function () {
             var searched = $("input[type='search'][aria-controls='tableToolUserManagement']").val();
-            if (!melisCoreTool.isTableEmpty("tableToolUserManagement")) {
-                melisCoreTool.exportData('/melis/MelisCore/ToolUser/exportToCsv?filter=' + searched);
-            }
-
+                if ( ! melisCoreTool.isTableEmpty( "tableToolUserManagement") ) {
+                    melisCoreTool.exportData( '/melis/MelisCore/ToolUser/exportToCsv?filter=' + searched );
+                }
         });
 });
 
 // call the empty rights data and put it inside the new user treeview
 function melisNewUserRights() {
-
     var tree = $("#new-rights-fancytree").fancytree("getTree");
-    tree.reload({
-        url: '/melis/MelisCore/ToolUser/getRightsTreeView'
-    });
+        tree.reload({
+            url: '/melis/MelisCore/ToolUser/getRightsTreeView'
+        });
 }
 
 // get the index then make it right
 window.initRetrieveUser = function () {
     var btnDelete = $('#tableToolUserManagement tr.clsCurrent td').find(".btnUserDelete");
-    btnDelete.remove();
+        btnDelete.remove();
 
     var $paginate = $(".dataTables_paginate"),
         $page_item = $paginate.find(".pagination li"),
@@ -278,97 +295,121 @@ var toolUserManagement = {
     },
 
     retrieveUser: function (id) {
-        $("#btnEdit").addClass("disabled").css("pointer-events", "none");
-        $("#btnEditRights").addClass("disabled").css("pointer-events", "none");
-        $.ajax({
-            type: 'POST',
-            url: '/melis/MelisCore/ToolUser/getUserById',
-            data: {id: id},
-            dataType: 'json',
-            encode: true
-        }).done(function(data) {
-            if (data.success) {
-                $("#lastlogindate").html(data.user.usr_last_login_date);
-                $("#userlogin").html(data.user.usr_login);
-                toolUserManagement.setImage("#profile-image", data.user.usr_image);
-                $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
-                    var name = $(this).attr('name');
-                    $("#" + $(this).attr('id')).val(data.user[name]);
-                    $("#tool_user_management_id_tmp").val(data.user['usr_id']);
-                    $("#edituserid").html(data.user['usr_id']);
-                });
+        var $be     = $("#btnEdit"),
+            $ber    = $("#btnEditRights");
 
-                // Switching the Admin switch plugin
-                var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
-                if (data.user.usr_admin == 1) {
-                    userEditSwitchForm.bootstrapSwitch('setState', true);
-                } else {
-                    userEditSwitchForm.bootstrapSwitch('setState', false);
+            $be.addClass("disabled").css("pointer-events", "none");
+            $ber.addClass("disabled").css("pointer-events", "none");
+
+            $.ajax({
+                type: 'POST',
+                url: '/melis/MelisCore/ToolUser/getUserById',
+                data: {id: id},
+                dataType: 'json',
+                encode: true
+            }).done(function(data) {
+                if (data.success) {
+                    var $lld = $("#lastlogindate"),
+                        $ul  = $("#userlogin"),
+                        $ump = $("#idusermanagement #id_usr_password"),
+                        $umcp = $("#idusermanagement #id_usr_confirm_password");
+
+                    $lld.html(data.user.usr_last_login_date);
+                    $ul.html(data.user.usr_login);
+                    toolUserManagement.setImage("#profile-image", data.user.usr_image);
+
+                    $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
+                        var $this   = $(this),
+                            name    = $this.attr('name'),
+                            $tum    = $("#tool_user_management_id_tmp"),
+                            $eui    = $("#edituserid");
+
+                            $("#" + $this.attr('id')).val(data.user[name]);
+                            $tum.val(data.user['usr_id']);
+                            $eui.html(data.user['usr_id']);
+                    });
+
+                    // Switching the Admin switch plugin
+                    var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
+                        if (data.user.usr_admin == 1) {
+                            userEditSwitchForm.bootstrapSwitch('setState', true);
+                        } else {
+                            userEditSwitchForm.bootstrapSwitch('setState', false);
+                        }
+
+                        // make sure that password fields are empty when retrieving
+                        $ump.val("");
+                        $umcp.val("");
+
+                        // re-initialize the tree with current selected userID
+                        getRightsTree(id);
                 }
-
-                // make sure that password fields are empty when retrieving
-                $("form#idusermanagement #id_usr_password").val("");
-                $("form#idusermanagement #id_usr_confirm_password").val("");
-
-                // re-initialize the tree with current selected userID
-                getRightsTree(id);
-            }
-        }).fail(function() {
-            alert(translations.tr_meliscore_error_message);
-        });
+            }).fail(function() {
+                alert(translations.tr_meliscore_error_message);
+            });
     },
 
     addNewUser: function (form) {
-        var formData = new FormData(form);
-        var ctr = 0;
-        $.each(userRightsData, function (i, e) {
-            $.each(e, function (a, b) {
-                formData.append(a, JSON.stringify(userRightsData[ctr]));
+        var formData    = new FormData(form),
+            ctr         = 0;
+
+            $.each(userRightsData, function (i, e) {
+                $.each(e, function (a, b) {
+                    formData.append(a, JSON.stringify(userRightsData[ctr]));
+                });
+                ctr++;
             });
-            ctr++;
-        });
-        melisCoreTool.pending("#btnAdd");
-        melisCoreTool.processing();
-        $.ajax({
-            type: 'POST',
-            url: '/melis/MelisCore/ToolUser/addNewUser',
-            data: formData,
-            processData: false,
-            cache: false,
-            contentType: false,
-            dataType: 'json'
-        }).done(function (data) {
-            if (data.success) {
-                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                $('#modal-user-management').modal('hide');
-                toolUserManagement.refreshTable();
-            }
-            else {
-                melisCoreTool.alertDanger("#newformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
-                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                melisCoreTool.highlightErrors(data.success, data.errors, "idnewusermanagement");
-            }
-            melisCoreTool.done("#btnAdd");
-            melisCore.flashMessenger();
-            melisCoreTool.processDone();
-        }).fail(function() {
-            alert(translations.tr_meliscore_error_message);
-        });
+
+            melisCoreTool.pending("#btnAdd");
+            melisCoreTool.processing();
+
+            $.ajax({
+                type: 'POST',
+                url: '/melis/MelisCore/ToolUser/addNewUser',
+                data: formData,
+                processData: false,
+                cache: false,
+                contentType: false,
+                dataType: 'json'
+            }).done(function (data) {
+                var $mum = $("#modal-user-management");
+                    if ( data.success ) {
+                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                        $mum.modal('hide');
+                        toolUserManagement.refreshTable();
+                    }
+                    else {
+                        melisCoreTool.alertDanger("#newformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
+                        melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                        melisCoreTool.highlightErrors(data.success, data.errors, "idnewusermanagement");
+                    }
+                    melisCoreTool.done("#btnAdd");
+                    melisCore.flashMessenger();
+                    melisCoreTool.processDone();
+            }).fail(function() {
+                alert(translations.tr_meliscore_error_message);
+            });
     },
 
     updateUser: function (form) {
-        var formData = new FormData(form);
-        var ctr = 0;
+        var formData    = new FormData(form),
+            ctr         = 0,
+            $bue        = $(".btnUserEdit");
+
         formData.append("usr_id", $("#edituserid").html());
+
         $.each(userRightsData, function (i, e) {
             $.each(e, function (a, b) {
                 formData.append(a, JSON.stringify(userRightsData[ctr]));
             });
             ctr++;
         });
+
         melisCoreTool.pending("#btnEdit");
         melisCoreTool.processing();
-        $(".btnUserEdit").removeAttr("data-toggle");
+
+        $bue.removeAttr("data-toggle");
+
         $.ajax({
             type: 'POST',
             url: '/melis/MelisCore/ToolUser/updateUser',
@@ -376,37 +417,42 @@ var toolUserManagement = {
             processData: false,
             cache: false,
             contentType: false,
-            dataType: 'json',
+            dataType: 'json'
         }).done(function (data) {
-            if (data.success) {
-                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                $('#modal-user-management').modal('hide');
-                if (data.datas.isMyInfo == 1) {
-                    $("#meliscore_left_menu_profile_pic").attr("src", "");
-                    $.when(melisHelper.zoneReload("id_meliscore_leftmenu", "meliscore_leftmenu")).then(function () {
-                        var isFirefox = navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
-                        if (isFirefox) {
-                            $("#meliscore_left_menu_profile_pic").fadeOut();
-                            setTimeout(function () {
+            if ( data.success ) {
+                var $mum = $("#modal-user-management"),
+                    $unl = $("#user-name-link");
 
-                                $("#meliscore_left_menu_profile_pic").attr("src", data.datas.loadProfile);
-                                $("#meliscore_left_menu_profile_pic").fadeIn();
-                            }, 3000);
-                        }
-                    });
-                }
-                toolUserManagement.refreshTable();
+                    melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                    $mum.modal('hide');
 
-                //check if data that has been updated is equal to the current user info to replicate the user profile data
-                if (_tmpUserId == $("#user-name-link").attr("data-user-id")) {
-                    melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
-                    melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
+                    if ( data.datas.isMyInfo == 1 ) {
+                        var $mlmpp = $("#meliscore_left_menu_profile_pic");
+                            $mlmpp.attr("src", "");
 
-                    //reload the dashboard plugins menu to update the plugin rights
-                    melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
-                        melisDashBoardDragnDrop.dragWidget();
-                    });
-                }
+                            $.when(melisHelper.zoneReload("id_meliscore_leftmenu", "meliscore_leftmenu")).then(function () {
+                                var isFirefox = navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
+                                    if (isFirefox) {
+                                        $mlmpp.fadeOut();
+                                        setTimeout(function () {
+                                            $mlmpp.attr("src", data.datas.loadProfile);
+                                            $mlmpp.fadeIn();
+                                        }, 3000);
+                                    }
+                            });
+                    }
+                    toolUserManagement.refreshTable();
+
+                    //check if data that has been updated is equal to the current user info to replicate the user profile data
+                    if ( _tmpUserId == $unl.attr("data-user-id") ) {
+                        melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
+                        melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
+
+                        //reload the dashboard plugins menu to update the plugin rights
+                        melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
+                            melisDashBoardDragnDrop.dragWidget();
+                        });
+                    }
             }
             else {
                 melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);

@@ -497,10 +497,15 @@ var melisCore = (function(window){
     tabDraggable("#melis-id-nav-bar-tabs", false);
 
     // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
-    /* function navTabsSwitch() {
-        var $this = $(this);
+    function navTabsSwitch() {
+        var $this = $(this),
+            href = $this.attr("href"),
+            id = href.replace("#", "");
 
-    } */
+            $("[id="+id+"]").show();
+
+            console.log("navTabsSwitch: ", id);
+    }
 
     // BIND & DELEGATE EVENTS =================================================================================================================
 
@@ -521,7 +526,7 @@ var melisCore = (function(window){
     $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a.tab-element", tabMenuClick);
 
     // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
-    //$body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch);
+    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch);
 
     // open tool treeview
     $body.on("click", '.melis-opentools', openTools);

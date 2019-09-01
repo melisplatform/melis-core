@@ -36762,6 +36762,12 @@ div#modal-user-management div.widget {
 .login-page .forgot-password {
   font-size: 0.8rem;
 }
+.login-page .navbar-nav-right {
+  justify-content: flex-end;
+}
+.navbar-nav-right {
+  justify-content: flex-end;
+}
 .navbar.main.navbar-primary {
   padding: 0;
 }
@@ -36798,14 +36804,6 @@ div#modal-user-management div.widget {
 /* 
  * BO #nav-header [role="navigation"] 
  */
-#nav-header.no-gutters {
-  padding-left: 0;
-  padding-right: 0;
-}
-/* #nav-header > .row {
-  width: inherit;
-  margin: 0;
-} */
 #tab-menu,
 #brand-logo,
 #nav-header {
@@ -36815,12 +36813,10 @@ div#modal-user-management div.widget {
   padding-left: 0;
   padding-right: 0;
 }
-.navbar.main .toggle-button {
-  padding-left: 0;
-}
 #nav-header .navbar-brand {
-  font-size: 1.324rem;
-  padding-right: 2.64rem; /* 2.64rem */
+  font-size: 1.25rem;
+  padding-right: 0;
+  width: 100%;
 }
 #nav-header .nav-tabs > li.active > a, 
 #nav-header .nav-tabs > li.active > a:focus {
@@ -36839,10 +36835,6 @@ div#modal-user-management div.widget {
 .dropdown-toggle::after {
   display: none;
 }
-.res-action-container {
-  display: block;
-  width: 100%;
-}
 .navbar.main .nav.navbar-right li:first-child {
   border-left: 1px solid #c52127;
 }
@@ -36855,7 +36847,7 @@ div#modal-user-management div.widget {
   padding-left: 0;
   padding-right: 0;
 }
-#main #mewnu.no-gutters,
+#main #menu.no-gutters,
 #main #content.no-gutters {
   padding-left: 0;
   padding-right: 0;
@@ -36942,11 +36934,21 @@ a:not([href]).btn-danger:hover {
   min-width: 280px;
 }
 /* platforms pagination */
+.pagination-cont {
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+  position: relative;
+}
 .pagination > .page-item.active > .page-link, 
 .pagination > .page-item.active > .page-link:focus, 
 .pagination > .page-item.active > .page-link:hover {
   background: #e61c23;
   border-color: #e61c23;
+}
+.dataTables_wrapper .pagination-cont .dataTables_paginate,
+.dataTables_wrapper .pagination-cont .dataTables_info {
+  float: none;
 }
 /* modal */
 #id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
@@ -37146,25 +37148,42 @@ div.row, ul.row {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+/* dashboard gridstack delete and refresh buttons on plugins */
+.dashboard-plugin-refresh,
+.dashboard-plugin-delete {
+  padding: 1px 5px;
+  font-size: 12px;
+}
+/* bootstrap dialog */
+.bootstrap-dialog-footer {
+  width: 100%;
+}
+.bootstrap-dialog-footer-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
   .login-page .navbar.main .nav.navbar-right li:first-child {
     display: block;
   }
-  .login-page #nav-header.container-fluid {
-    display: block;
+  .login-page .navbar.main .navbar-brand {
+    width: 320px;
   }
-
-  /* #nav-header */
-  .navbar.main.navbar-primary .appbrand {
+  .navbar.main .left-menu {
     float: none;
+    width: 100% !important;
   }
-  #nav-header .navbar-brand {
-    width: 100%;
+  .navbar.main.navbar-primary .appbrand {
+    float: none !important;
   }
   .navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
-      color: #e61c23;
+    color: #e61c23;
+  }
+  .toggle-plugin-menu {
+    padding-left: 1.8rem; /* 3.2rem */
   }
   #nav-header .nav-tabs > li.active > a.close {
     display: none;
@@ -37174,7 +37193,7 @@ div.row, ul.row {
     border: none;
   }
   .navbar.main .nav.navbar-right {
-    float: right;
+    float: none;
   }
   .navbar.main .nav.navbar-right > li {
     float: left;
@@ -37183,6 +37202,32 @@ div.row, ul.row {
     display: block;
   }
   #melis-navtabs-container-outer {
+    display: flex;
+    justify-content: space-between;
+    float: none;
+  }
+  .res-action-container {
+    width: 100% !important;
+  }
+  #nav-header.container-fluid {
+    display: block;
+  }
+  .navbar.main.navbar-primary .nav > li .menu-icon .fa {
+    padding-right: 0;
+  }
+  #melis-navtabs-container-inner {
+    float: none;
+    text-align: center;
+  }
+  .navbar-nav.tabsbar {
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
+  }
+  #melis-id-nav-bar-tabs {
+    display: flex;
+    flex-direction: row;
+  }
+  #melis-id-nav-bar-tabs li {
     float: none;
   }
 
@@ -37193,10 +37238,10 @@ div.row, ul.row {
 
   /* #main content */
   #main #menu .sidebar {
-    width: 20rem;
+    width: 320px; /* 20rem */
   }
   #main #content {
-    margin-left: 20rem;
+    margin-left: 0; /* 20rem */
     padding-left: 0;
     padding-right: 0;
   }
@@ -37260,6 +37305,7 @@ div.row, ul.row {
   }
   #nav-header .navbar-brand {
     padding-right: 0;
+    width: 100%;
   }
   .navbar-brand {
     -webkit-box-pack: justify!important;
@@ -37269,9 +37315,12 @@ div.row, ul.row {
   .navbar.main .nav.navbar-right {
     visibility: hidden;
   }
-  /* .navbar.main.navbar-primary {
-    width: 51.5%;
-  } */
+  .navbar.main.navbar-primary .appbrand {
+    padding-left: 0;
+  }
+  .toggle-plugin-menu {
+    padding-left: 0;
+  }
   /* nav-right */
   #newplugin-cont ul li {
     width: 100%;
@@ -37324,9 +37373,6 @@ div.row, ul.row {
   #melis-core-gdpr-search-form-submit {
     width: 100%;
   }
-}
-@media (max-width: 576px) {
-  
 }
 .module-lists{
 	background-color:#2c2c2c;

@@ -401,6 +401,15 @@ div.row, ul.row {
   padding: 1px 5px;
   font-size: 12px;
 }
+/* bootstrap dialog */
+.bootstrap-dialog-footer {
+  width: 100%;
+}
+.bootstrap-dialog-footer-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
@@ -611,7 +620,4 @@ div.row, ul.row {
   #melis-core-gdpr-search-form-submit {
     width: 100%;
   }
-}
-@media (max-width: 576px) {
-  
 }
