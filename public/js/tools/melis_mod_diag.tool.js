@@ -28,9 +28,6 @@
 			runAllMode = false;
 			
 		}
-		
-
-
 	});
 	
 	$body.on("click", ".btn-run-module-test", function(){

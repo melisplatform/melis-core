@@ -633,7 +633,8 @@ var EnjoyHint = function (_options) {
                 $(window).on('resize', function() {
                     //if ( typeof $(that.stepData.enjoyHintElementSelector)[0] !== "undefined" ) {
                     //if (!( $(that.stepData.enjoyHintElementSelector).length > 0 )) {
-                    if ( !($(that.stepData.enjoyHintElementSelector).is(":visible")) ) {
+                    if ( ! $(that.stepData.enjoyHintElementSelector).is(":visible") !== undefined ){
+                    //if ( !($(that.stepData.enjoyHintElementSelector).is(":visible")) ) {
                         that.stopFunction();
                         $(window).off('resize');
                         return;

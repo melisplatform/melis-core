@@ -199,45 +199,52 @@ var melisHelper = (function(){
     }
 
     // SWITCH ACTIVE TABS =============================================================================================================
-    function tabSwitch(tabID){
-        // update new activeTabId
-        activeTabId = tabID;
+    function tabSwitch( tabID ) {
+        var $tabElement         = $("#melis-id-nav-bar-tabs a.tab-element[data-id='"+ tabID +"']"),
+            subMenu             = $tabElement.closest(".nav-group-dropdown"),
+            $navBarTabsLi       = $("body #melis-id-nav-bar-tabs li"),
+            $navBarTabsLiCont   = $("body #melis-id-nav-bar-tabs li, .container-level-a"),
+            $dndBox             = $("body .melis-core-dashboard-dnd-box");
 
-        // run and check all the <li> to remove the 'active class'
-        $("body #melis-id-nav-bar-tabs li, .container-level-a").each(function(){
-            $(this).removeClass('active');
-        });
+            // update new activeTabId
+            activeTabId = tabID;
 
-        $("body #melis-id-nav-bar-tabs li").each(function(){
-            $(this).removeClass('active-parent on');
-        });
+            // run and check all the <li> to remove the 'active class'
+            $navBarTabsLiCont.each(function() {
+                var $this = $(this);
+                    $this.removeClass('active');
+            });
 
-        var subMenu = $("#melis-id-nav-bar-tabs a.tab-element[data-id='"+ tabID +"']").closest(".nav-group-dropdown");
-        if(subMenu.length) {
-            $(subMenu).parents("li").addClass("active-parent on");
-        }
+            $navBarTabsLi.each(function() {
+                var $this = $(this);
+                    $this.removeClass('active-parent on');
+            });
 
-        //add active class to the parent of the clicked <a> ( to the <li> )
-        $("#melis-id-nav-bar-tabs a.tab-element[data-id='"+ tabID +"']").closest("li").addClass("active");
-        $("#melis-id-nav-bar-tabs a.tab-element[data-id='"+ tabID +"']").parent("li").parents("li").addClass("active-parent on");
+            if ( $(subMenu).length ) {
+                $(subMenu).parents("li").addClass("active-parent on");
+            }
 
-        //show current selected container
-        $("#" + tabID).addClass("active");
+            //add active class to the parent of the clicked <a> ( to the <li> )
+            $tabElement.closest("li").addClass("active");
+            $tabElement.parent("li").parents("li").addClass("active-parent on");
 
-        // detect dashboard tab panel
-        if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
-            // show dashboard plugin menu
-            $("body .melis-core-dashboard-dnd-box").fadeIn();
-            $("body .melis-core-dashboard-dnd-box.show").fadeIn();
-        } else {
-            // hide dashboard plugin menu
-            $("body .melis-core-dashboard-dnd-box").fadeOut();
-            $("body .melis-core-dashboard-dnd-box.show").fadeOut();
-        }
+            //show current selected container
+            $("#" + tabID).addClass("active");
+
+            // detect dashboard tab panel
+            if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
+                // show dashboard plugin menu
+                $dndBox.fadeIn();
+                $dndBox.find(".show").fadeIn();
+            } else {
+                // hide dashboard plugin menu
+                $dndBox.fadeOut();
+                $dndBox.find(".show").fadeOut();
+            }
     }
 
     // CLOSE TAB AND REMOVE ===========================================================================================================
-    function tabClose(ID, fromGroup){
+    function tabClose(ID, fromGroup) {
 
         fromGroup = (typeof fromGroup != 'undefined') ? fromGroup : false;
 
@@ -373,7 +380,7 @@ var melisHelper = (function(){
     }
 
     // TAB OPEN =====================================================================================================================
-    function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback){
+    function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback) {
         //Show the close(X) button on header
         if(melisKey !== 'meliscore_dashboard'){
             $("#close-all-tab").show();
@@ -523,7 +530,7 @@ var melisHelper = (function(){
     }*/
 
     // ZONE RELOADING =================================================================================================================
-    function zoneReload(zoneId, melisKey, parameters, callback){
+    function zoneReload(zoneId, melisKey, parameters, callback) {
 
         var datastring = { cpath: melisKey };
 
@@ -604,9 +611,9 @@ var melisHelper = (function(){
                     }
                 }
             }, 300);
-        }).fail(function() {
-            // alert( translations.tr_meliscore_error_message );
-            alert(xhr.responseText);
+        }).fail(function(xhr, textStatus, errorThrown) {
+            alert( translations.tr_meliscore_error_message );
+            console.log(xhr.responseText);
 
             //hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
@@ -618,7 +625,7 @@ var melisHelper = (function(){
     // Requesting flag set to false so this function will set state to ready
     var createModalRequestingFlag = false;
     // CREATE MODAL =================================================================================================================
-    function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl, callback, modalBackDrop){
+    function createModal(zoneId, melisKey, hasCloseBtn, parameters, modalUrl, callback, modalBackDrop) {
         // declaring parameters variable for old / cross browser compatability
         if (typeof(modalUrl)==='undefined') modalUrl = null;
         if (typeof(callback)==='undefined') callback = null;
@@ -671,7 +678,7 @@ var melisHelper = (function(){
     }
 
     // Stating zone to loading
-    function loadingZone(targetElem){
+    function loadingZone(targetElem) {
         if(targetElem.length){
             var tempLoader = '<div id="loadingZone" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
             targetElem.attr("style", "position: relative");
@@ -680,7 +687,7 @@ var melisHelper = (function(){
     }
 
     // Removing loading state on zone
-    function removeLoadingZone(targetElem){
+    function removeLoadingZone(targetElem) {
         if(targetElem.length){
             targetElem.find("#loadingZone").remove();
         }
@@ -728,7 +735,7 @@ var melisHelper = (function(){
     $body.on("click", ".close-tab", tabClose );
 
     // close the KO notification
-    $body.on("click", ".melis-modal-cont.KOnotif span.btn, .overlay-hideonclick, .delete-page-modal .cancel, .melis-prompt, melis-prompt .cancel", function(){
+    $body.on("click", ".melis-modal-cont.KOnotif span.btn, .overlay-hideonclick, .delete-page-modal .cancel, .melis-prompt, melis-prompt .cancel", function() {
         $(".melis-modaloverlay, .melis-modal-cont").remove();
     });
 
@@ -744,7 +751,7 @@ var melisHelper = (function(){
 	 * sample syntax in calling it outside - melisHelper.zoneReload(parameters);
 	 */
 
-    return{
+    return {
         //key - access name outside									// value - name of function above
 
         // javascript translator function

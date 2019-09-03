@@ -194,11 +194,7 @@ $(function() {
 			$('#'+$(this).attr('id')+' .btnMelisCoreEmailMngtDelete').remove();
 		});
 
-		var $paginate = $(".dataTables_paginate"),
-			$page_item = $paginate.find(".pagination li"),
-			$page_link = $page_item.find("a");
-
-			$page_item.addClass("page-item");
-			$page_link.addClass("page-link");
+		// pagination of dataTables
+		melisCore.paginateDataTables();
 	}
 });

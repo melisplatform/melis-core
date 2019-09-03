@@ -153,8 +153,8 @@ var melisCore = (function(window){
     }
 
     $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
-        if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
-        $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
+        if( $body.find("#flash-messenger").prev().find(".badge").hasClass("d-none") === false )
+            $body.find("#flash-messenger").prev().find(".badge").addClass("d-none");
     });
 
     $body.on("click", "#clearNotifBtn", function(){
@@ -168,10 +168,10 @@ var melisCore = (function(window){
             dataType: 'json'
         }).done(function(data) {
             if(data.flashMessage) {
-                if($flashMessenger.hasClass("empty-notif")===false)
+                if( $flashMessenger.hasClass("empty-notif") === false )
                     $flashMessenger.addClass("empty-notif");
-                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
-                    $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
+                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("d-none") === false )
+                    $body.find("#flash-messenger").prev().find(".badge").addClass("d-none");
 
                 $body.find("#flash-messenger").empty();
                 tempData = "" +
@@ -200,30 +200,32 @@ var melisCore = (function(window){
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
-    function openDashboard(){
+    function openDashboard() {
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
+
             // check if dashboard plugin menu is open
-            melisDashBoardDragnDrop.closeDBPlugSidebar();
+            if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
+                melisDashBoardDragnDrop.closeDBPlugSidebar();
+            }
         });
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
-    function refreshZone(){
+    function refreshZone() {
         var melisKey = $(this).closest("div.widget-parent").data("meliskey");
         var zoneId = $(this).closest("div.widget-parent").attr("id");
         melisHelper.zoneReload(zoneId, melisKey);
     }
 
     // REFRESH TABLE ITEMS
-    function refreshTable(){
+    function refreshTable() {
         var melisKey = $(this).parents(".container-level-a").data("meliskey");
         var zoneId = $(this).parents(".container-level-a").attr("id");
         melisHelper.zoneReload(zoneId, melisKey);
     }
 
     // SIDEBAR MENU CLICK (toggle)
-    function sidebarMenuClick(){
-
+    function sidebarMenuClick() {
         // for the sidebar functionalities
         var $melisLeftMenu      = $("#id_meliscore_leftmenu"),
             $melisContent       = $("#content"),
@@ -233,7 +235,7 @@ var melisCore = (function(window){
             contentOffsetLeft   = $melisContent.position().left,
             contentWidth        = $melisContent.outerWidth();
 
-        if (sidebarOffsetLeft == 0) {
+        if ( sidebarOffsetLeft == 0 ) {
             $melisLeftMenu.css("left", -sidebarWidth );
             $body.addClass('sidebar-mini');
 
@@ -268,11 +270,11 @@ var melisCore = (function(window){
         }, 1000);
     }
 
-    if(typeof melisDashBoardDragnDrop === 'undefined')
+    if ( typeof melisDashBoardDragnDrop === 'undefined' )
         $("#disable-left-menu-overlay").show();
 
     // MAIN TAB MENU CLICK - run codes when a tab in the main tab menu is clicked
-    function tabMenuClick(){
+    function tabMenuClick() {
         var $this = $(this),
             tabContentID = $this.data("id");
             
@@ -281,12 +283,12 @@ var melisCore = (function(window){
 
             // remove all active and active-parent class
             $("#melis-id-nav-bar-tabs li").each(function() {
-                $(this).removeClass("active");
-                $(this).removeClass("active-parent on");
+                $this.removeClass("active");
+                $this.removeClass("active-parent on");
             });
 
             // highlight all parents li of selected element
-            $(this).closest("li").addClass("active").parents("li").addClass("active-parent on");
+            $this.closest("li").addClass("active").parents("li").addClass("active-parent on");
 
             // iframe height issue in pages
             if ($.browser) {
@@ -335,7 +337,7 @@ var melisCore = (function(window){
             }
             
             // switch to the clicked tab and also the tab container
-            //melisHelper.tabSwitch( activeTabId );
+            melisHelper.tabSwitch( activeTabId );
     }
 
     /*
@@ -496,22 +498,54 @@ var melisCore = (function(window){
 
     tabDraggable("#melis-id-nav-bar-tabs", false);
 
-    // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
+    // switch widget nav-tabs even if href begins with a digit e.g. #1_id_cmspage
     function navTabsSwitch() {
-        var $this = $(this),
-            href = $this.attr("href"),
-            id = href.replace("#", "");
+        var $this               = $(this),
+            href                = $this.attr("href"),
+            id                  = href.replace("#", ""),
+            $navLi              = $("#"+activeTabId+" .nav-tabs li"),
+            $tabContent         = $("#"+activeTabId+" .tab-pane"),
+            $currentTabContent  = $("#"+activeTabId+" [id="+id+"]");
 
-            $("[id="+id+"]").show();
+            // loop through .nav-tabs li and remove .active class
+            $navLi.each(function() {
+                var $this       = $(this);
+                    $tabLink    = $this.find("a");
 
-            console.log("navTabsSwitch: ", id);
+                    $this.removeClass("active");
+                    $tabLink.removeClass("active");
+            });
+
+            // loop through tab content and remove .active class
+            $tabContent.each(function() {
+                var $this = $(this);
+                    $this.removeClass("active");
+            });
+
+            // add .active class to the current clicked a tag
+            $this.closest("li").addClass("active");
+
+            // show current clicked tab content
+            $currentTabContent.addClass("active");
+    }
+
+    // pagination of dataTables data
+    function paginateDataTables() {
+        var $paginate = $(".dataTables_paginate"),
+            $page_item = $paginate.find(".pagination li"),
+            $page_link = $page_item.find("a");
+
+            $page_item.addClass("page-item");
+            $page_link.addClass("page-link");
     }
 
     // BIND & DELEGATE EVENTS =================================================================================================================
 
+    // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
+    $body.on("shown.bs.tab", ".widget-head .nav-tabs li a", navTabsSwitch);
+
     // toggle plugin menu in mobile
     $body.on("click", "#plugin-menu", function(){
-
         $("#id_meliscore_leftmenu").removeAttr('style');
         $("#id_meliscore_footer").addClass('slide-left');
 
@@ -524,9 +558,6 @@ var melisCore = (function(window){
 
     // main tab menu clicks (using bootstrap 'shown.bs.tab' event)
     $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a.tab-element", tabMenuClick);
-
-    // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
-    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch);
 
     // open tool treeview
     $body.on("click", '.melis-opentools', openTools);
@@ -834,6 +865,7 @@ var melisCore = (function(window){
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
-        showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu // update on this js file, since dashboard notification
+        showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu, // update on this js file, since dashboard notification
+        paginateDataTables                              :           paginateDataTables
     };
 })(window);
