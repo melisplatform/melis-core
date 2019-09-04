@@ -218,6 +218,9 @@ a:not([href]).btn-danger:hover {
   top: 9px;
   font-size: 20px;
 }
+.confirm-modal-header.bootstrap-dialog.type-warning .modal-header {
+  background-color: #f99319 !important;
+}
 .nav-tabs>li.active>a, 
 .nav-tabs>li.active>a:focus,
 .nav-tabs>li.active>a:hover {

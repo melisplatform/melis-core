@@ -49,7 +49,7 @@ var melisCoreTool = (function (window) {
         });
     }
 
-    function closeDialog(title, msg, callBackOnNo){
+    function closeDialog(title, msg, callBackOnNo) {
         BootstrapDialog.show({
             title: title,
             message: msg,
@@ -70,11 +70,12 @@ var melisCoreTool = (function (window) {
 
     // ALERTS
     function showAlert(target, highlight, message, type) {
-        $(target).removeClass();
-        $(target).css("display", "none");
-        $(target).addClass("alert alert-" + type);
-        $(target).html("<strong>" + highlight + "</strong> " + translate(message));
-        $(target).fadeIn();
+        var $target = $(target);
+            $target.removeClass();
+            $target.css("display", "none");
+            $target.addClass("alert alert-" + type);
+            $target.html("<strong>" + highlight + "</strong> " + translate(message));
+            $target.fadeIn();
     }
 
     function alertDanger(target, highlight, message) {
@@ -122,7 +123,7 @@ var melisCoreTool = (function (window) {
 
     function processing() {
         var overlay = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
-        $(overlay).appendTo('body');
+            $(overlay).appendTo('body');
     }
 
     function processDone() {
@@ -134,18 +135,18 @@ var melisCoreTool = (function (window) {
         newWindow.onload = function () {
             newWindow.close();
         };
-
     }
 
     function isTableEmpty(table) {
-        var matches = null;
-        var findNum = $("div[class='dataTables_info'][id='" + table + "_info']").html();
-        var isEmpty = true;
-        matches = findNum.match(/\d+/g);
-        var count = parseInt(matches[0]) > 0 ? false : true;
-        isEmpty = count;
+        var matches = null,
+            findNum = $("div[class='dataTables_info'][id='" + table + "_info']").html(),
+            isEmpty = true,
+            count   = parseInt(matches[0]) > 0 ? false : true;
 
-        return isEmpty;
+            matches = findNum.match(/\d+/g);
+            isEmpty = count;
+
+            return isEmpty;
     }
 
     function switchTab(tabId) {
@@ -161,23 +162,23 @@ var melisCoreTool = (function (window) {
 
     function showTab(tabId) {
         var parent = $('.widget-tabs a[href="' + tabId + '"]').parent();
-        $(parent).show();
+            $(parent).show();
     }
 
     function showTabs(modalContainer, tabs) {
         //melisTool.tabs.hideAllTabs(modalContainer);
         var mTabs = tabs.split(",");
-        $.each(mTabs, function (e, tabId) {
-            showTab(tabId);
-        });
-        switchTab(mTabs[0]);
+            $.each(mTabs, function (e, tabId) {
+                showTab(tabId);
+            });
+            switchTab(mTabs[0]);
     }
 
     function hideTab(modalContainer, tabId, switchTo) {
         showAllTabs(modalContainer);
         var parent = $('.widget-tabs a[href="' + tabId + '"]').parent();
-        $(parent).hide();
-        switchTab(switchTo);
+            $(parent).hide();
+            switchTab(switchTo);
     }
 
     function hideAllTabs(modalContainer) {
@@ -187,24 +188,24 @@ var melisCoreTool = (function (window) {
     function hideTabs(modalContainer, tabs, switchTo) {
         showAllTabs(modalContainer);
         var mTabs = tabs.split(",");
-        $.each(mTabs, function (e, tabId) {
-            var parent = $('.widget-tabs a[href="' + tabId + '"]').parent();
-            $(parent).hide();
-        });
-        switchTab(switchTo);
+            $.each(mTabs, function (e, tabId) {
+                var parent = $('.widget-tabs a[href="' + tabId + '"]').parent();
+                $(parent).hide();
+            });
+            switchTab(switchTo);
     }
 
     function showAllTabs(modalContainer) {
         var li = $(modalContainer + " .widget-head ul li");
-        li.css('display', 'block');
+            li.css('display', 'block');
     }
 
     // ACTION
     function pending(targetButton) {
         // show an overlay and disable the button
         var div = "<div class='melis-modal-overlay'></div>";
-        $("body").append(div);
-        $(targetButton).attr('disabled', 'disabled');
+            $("body").append(div);
+            $(targetButton).attr('disabled', 'disabled');
     }
 
     function done(targetButton) {
@@ -215,38 +216,39 @@ var melisCoreTool = (function (window) {
 
     // date
     function init() {
-        var sToday = translations.tr_meliscore_datepicker_today;
-        var sYesterday = translations.tr_meliscore_datepicker_yesterday;
-        var sLast7Days = translations.tr_meliscore_datepicker_last_7_days;
-        var sLast30Days = translations.tr_meliscore_datepicker_last_30_days;
-        var sThisMonth = translations.tr_meliscore_datepicker_this_month;
-        var sLastMonth = translations.tr_meliscore_datepicker_last_month;
+        var sToday      = translations.tr_meliscore_datepicker_today,
+            sYesterday  = translations.tr_meliscore_datepicker_yesterday,
+            sLast7Days  = translations.tr_meliscore_datepicker_last_7_days,
+            sLast30Days = translations.tr_meliscore_datepicker_last_30_days,
+            sThisMonth  = translations.tr_meliscore_datepicker_this_month,
+            sLastMonth  = translations.tr_meliscore_datepicker_last_month;
 
-        function cb(start, end) {
-            dStartDate = start.format(melisDateFormat);
-            dEndDate = end.format(melisDateFormat);
-            // default display upon initialization of date picker
-            //var icon = '<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>';
-            //$('#dt_bsdatepicker .dt_dateInfo').html("Select Date: " + icon + dStartDate + ' - ' + dEndDate + ' <b class="caret"></b>');
-        }
+            function cb(start, end) {
+                dStartDate = start.format(melisDateFormat);
+                dEndDate = end.format(melisDateFormat);
+                // default display upon initialization of date picker
+                //var icon = '<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>';
+                //$('#dt_bsdatepicker .dt_dateInfo').html("Select Date: " + icon + dStartDate + ' - ' + dEndDate + ' <b class="caret"></b>');
+            }
 
         var rangeStringParam = {};
-        rangeStringParam[sToday] = [moment(), moment()];
-        rangeStringParam[sYesterday] = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
-        rangeStringParam[sLast7Days] = [moment().subtract(6, 'days'), moment()];
-        rangeStringParam[sLast30Days] = [moment().subtract(29, 'days'), moment()];
-        rangeStringParam[sThisMonth] = [moment().startOf('month'), moment().endOf('month')];
-        rangeStringParam[sLastMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
 
-        $("#dt_bsdatepicker").daterangepicker({
-            locale: {
-                format: melisDateFormat,
-                applyLabel: translations.tr_meliscore_datepicker_apply,
-                cancelLabel: translations.tr_meliscore_datepicker_cancel,
-                customRangeLabel: translations.tr_meliscore_datepicker_custom_range,
-            },
-            ranges: rangeStringParam,
-        }, cb);
+            rangeStringParam[sToday] = [moment(), moment()];
+            rangeStringParam[sYesterday] = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
+            rangeStringParam[sLast7Days] = [moment().subtract(6, 'days'), moment()];
+            rangeStringParam[sLast30Days] = [moment().subtract(29, 'days'), moment()];
+            rangeStringParam[sThisMonth] = [moment().startOf('month'), moment().endOf('month')];
+            rangeStringParam[sLastMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
+
+            $("#dt_bsdatepicker").daterangepicker({
+                locale: {
+                    format: melisDateFormat,
+                    applyLabel: translations.tr_meliscore_datepicker_apply,
+                    cancelLabel: translations.tr_meliscore_datepicker_cancel,
+                    customRangeLabel: translations.tr_meliscore_datepicker_custom_range,
+                },
+                ranges: rangeStringParam,
+            }, cb);
     }
 
     function changeImage(target, src) {
@@ -258,8 +260,7 @@ var melisCoreTool = (function (window) {
             reader.readAsDataURL(src.files[0]);
         }
     }
-
-
+    
     return {
         // modal
         confirm: confirm,
@@ -303,5 +304,4 @@ var melisCoreTool = (function (window) {
         // image changer
         changeImage: changeImage
     }
-
 })(window);
