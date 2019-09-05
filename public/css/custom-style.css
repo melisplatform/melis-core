@@ -198,9 +198,9 @@ a:not([href]).btn-danger:hover {
   float: none;
 }
 /* modal */
-#id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
+/* #id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
   padding: 9px 15px 0;
-}
+} */
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
   padding: 9px 15px 0 38px;
 }
@@ -265,6 +265,12 @@ a:not([href]).btn-danger:hover {
 /* tables */
 .table-striped > tbody > tr {
   border-bottom: 1px solid #efefef;
+}
+.filter-bar {
+  padding-bottom: 0;
+}
+.filter-bar label {
+  float: left;
 }
 /* input-group-addon */
 .input-group-addon {
@@ -454,6 +460,10 @@ div.row, ul.row {
 }
 .melis-radio-box .melis-radio-box-circle {
   width: 14px;
+}
+/* utility classes */
+.hidden {
+  display: none !important;
 }
 /* Responsive media queries */
 @media (min-width: 768px) {

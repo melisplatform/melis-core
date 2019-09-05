@@ -7,8 +7,9 @@
 		          debugLevel: 0,
 		          source: {
 		              url: url,
-		          },
-		          lazyLoad: function(event, data) {
+				  },
+				  //lazyLoad
+		          load: function(event, data) {
 				      var lazyURL = data.node.data.melisData.lazyURL;
 				      data.result = { 
 				    		  url: lazyURL,

@@ -36951,9 +36951,9 @@ a:not([href]).btn-danger:hover {
   float: none;
 }
 /* modal */
-#id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
+/* #id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
   padding: 9px 15px 0;
-}
+} */
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
   padding: 9px 15px 0 38px;
 }
@@ -36970,6 +36970,9 @@ a:not([href]).btn-danger:hover {
   left: 9px;
   top: 9px;
   font-size: 20px;
+}
+.confirm-modal-header.bootstrap-dialog.type-warning .modal-header {
+  background-color: #f99319 !important;
 }
 .nav-tabs>li.active>a, 
 .nav-tabs>li.active>a:focus,
@@ -37015,6 +37018,12 @@ a:not([href]).btn-danger:hover {
 /* tables */
 .table-striped > tbody > tr {
   border-bottom: 1px solid #efefef;
+}
+.filter-bar {
+  padding-bottom: 0;
+}
+.filter-bar label {
+  float: left;
 }
 /* input-group-addon */
 .input-group-addon {
@@ -37163,6 +37172,52 @@ div.row, ul.row {
   flex-direction: row;
   justify-content: space-between;
 }
+/* site tools */
+.module-loading .switch-all-noti {
+  position: relative;
+  top: auto !important;
+  right: auto !important;
+}
+.module-loading .module-loading-title {
+  text-align: left;
+}
+.module-settings .ms-heading .fa {
+  float: none;
+  font-size: 18px;
+  position: relative;
+  right: auto;
+  top: auto;
+  padding: 16px 14px;
+  color: #fff;
+  cursor: pointer;
+  display: block;
+}
+.module-settings .ms-cont {
+  min-width: 280px;
+}
+.module-settings .ms-cont .module-version-status {
+  width: auto;
+}
+.module-settings .ms-cont .module-version-status .icon-cont {
+  text-align: right;
+}
+.module-settings #header-version {
+  margin-right: 0;
+}
+/* site languages */
+.sites-language .cb-cont label {
+  padding-left: 15px;
+}
+.sites-language .cb-cont .cbmask-outer {
+  top: 0;
+}
+.melis-radio-box .melis-radio-box-circle {
+  width: 14px;
+}
+/* utility classes */
+.hidden {
+  display: none !important;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
@@ -37229,6 +37284,11 @@ div.row, ul.row {
   }
   #melis-id-nav-bar-tabs li {
     float: none;
+  }
+  .navbar #melis-id-nav-bar-tabs > li .navtab-pagename {
+    display: block;
+    float: none;
+    text-align: left;
   }
 
   /* #menu sidebar */
