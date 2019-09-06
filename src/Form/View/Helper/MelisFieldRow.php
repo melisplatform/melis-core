@@ -15,7 +15,7 @@ class MelisFieldRow extends FormRow
     const MELIS_INPUT_GROUP_BUTTON    = 'melis-input-group-button';
     const MELIS_TEXT_REQUIRED         = 'required';
     const MELIS_TEXT_WITH_BUTTON      = 'MelisTextButton';
-    const MELIS_MSGR_MSG_BOX         = 'melis-messenger-msg-box';
+    const MELIS_MSGR_MSG_BOX          = 'melis-messenger-msg-box';
  
 	public function render(ElementInterface $element, $labelPosition = null)
 	{
@@ -233,12 +233,12 @@ class MelisFieldRow extends FormRow
 	        }
 
 	    }elseif (strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE)){
-
+            
 	        $label = $element->getLabel();
 	        $element->setLabel('');
 	        $attrib = $element->getAttributes();
 	        $formElement = '<div class="form-group">
-    	                       <label for="'.$element->getName().'">'.$label.'</label>
+    	                       <label for="'.$element->getName().'" class="'.$element->getOption('class').'">'.$label.'</label>
     	                        <div class="input-group date '.$attrib['dateId'].'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon">
@@ -367,15 +367,15 @@ class MelisFieldRow extends FormRow
                             </div>';
 
         }elseif ($element->getAttribute('type') != 'hidden'){
-
+            
 	        $formElement = '<div class="form-group ' . $element->getOption('form_type') . '">'. parent::render($element, $labelPosition).'</div>';
 
 	    }else{
 
 	        $formElement = parent::render($element, $labelPosition);
 
-	    }
-	    
+        }
+        
 		return $formElement;
 	}
 	

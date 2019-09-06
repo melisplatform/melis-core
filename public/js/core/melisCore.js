@@ -542,7 +542,7 @@ var melisCore = (function(window){
     // BIND & DELEGATE EVENTS =================================================================================================================
 
     // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
-    $body.on("shown.bs.tab", ".widget-head .nav-tabs li a", navTabsSwitch);
+    //$body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch);
 
     // toggle plugin menu in mobile
     $body.on("click", "#plugin-menu", function(){
