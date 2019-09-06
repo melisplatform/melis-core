@@ -8,8 +8,8 @@ function getRightsTree(userId) {
     var tree = $("#rights-fancytree").fancytree("getTree");
     tree.reload({
         url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId,
-        //lazyLoad
-        load: function (event, data) {
+        //load
+        lazyLoad: function (event, data) {
             alert("expanded");
         },
     });

@@ -6998,3044 +6998,1260 @@
 	return $.ui.fancytree;
 }); // End of closure
 
-/* jquery.fancytree.dnd.js */
 /*!
  * jquery.fancytree.dnd.js
  *
- * Drag-and-drop support.
+ * Drag-and-drop support (jQuery UI draggable/droppable).
  * (Extension module for jquery.fancytree.js: https://github.com/mar10/fancytree/)
  *
- * Copyright (c) 2008-2016, Martin Wendt (http://wwWendt.de)
+ * Copyright (c) 2008-2019, Martin Wendt (https://wwWendt.de)
  *
  * Released under the MIT license
  * https://github.com/mar10/fancytree/wiki/LicenseInfo
  *
- * @version @VERSION
- * @date @DATE
+ * @version 2.31.0
+ * @date 2019-05-31T11:32:38Z
  */
 
-;(function($, window, document, undefined) {
+(function(factory) {
+	if (typeof define === "function" && define.amd) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"jquery-ui/ui/widgets/draggable",
+			"jquery-ui/ui/widgets/droppable",
+			"./jquery.fancytree",
+		], factory);
+	} else if (typeof module === "object" && module.exports) {
+		// Node/CommonJS
+		require("./jquery.fancytree");
+		module.exports = factory(require("jquery"));
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+})(function($) {
+	"use strict";
 
-    "use strict";
+	/******************************************************************************
+	 * Private functions and variables
+	 */
+	var didRegisterDnd = false,
+		classDropAccept = "fancytree-drop-accept",
+		classDropAfter = "fancytree-drop-after",
+		classDropBefore = "fancytree-drop-before",
+		classDropOver = "fancytree-drop-over",
+		classDropReject = "fancytree-drop-reject",
+		classDropTarget = "fancytree-drop-target";
 
-    /* *****************************************************************************
-     * Private functions and variables
-     */
-    var didRegisterDnd = false,
-        classDropAccept = "fancytree-drop-accept",
-        classDropAfter = "fancytree-drop-after",
-        classDropBefore = "fancytree-drop-before",
-        classDropOver = "fancytree-drop-over",
-        classDropReject = "fancytree-drop-reject",
-        classDropTarget = "fancytree-drop-target";
+	/* Convert number to string and prepend +/-; return empty string for 0.*/
+	function offsetString(n) {
+		// eslint-disable-next-line no-nested-ternary
+		return n === 0 ? "" : n > 0 ? "+" + n : "" + n;
+	}
 
-    /* Convert number to string and prepend +/-; return empty string for 0.*/
-    function offsetString(n){
-        return n === 0 ? "" : (( n > 0 ) ? ("+" + n) : ("" + n));
-    }
+	//--- Extend ui.draggable event handling --------------------------------------
 
-//--- Extend ui.draggable event handling --------------------------------------
+	function _registerDnd() {
+		if (didRegisterDnd) {
+			return;
+		}
 
-    function _registerDnd() {
-        if(didRegisterDnd){
-            return;
-        }
+		// Register proxy-functions for draggable.start/drag/stop
 
-        // Register proxy-functions for draggable.start/drag/stop
+		$.ui.plugin.add("draggable", "connectToFancytree", {
+			start: function(event, ui) {
+				// 'draggable' was renamed to 'ui-draggable' since jQueryUI 1.10
+				var draggable =
+						$(this).data("ui-draggable") ||
+						$(this).data("draggable"),
+					sourceNode = ui.helper.data("ftSourceNode") || null;
 
-        $.ui.plugin.add("draggable", "connectToFancytree", {
-            start: function(event, ui) {
-                // 'draggable' was renamed to 'ui-draggable' since jQueryUI 1.10
-                var draggable = $(this).data("ui-draggable") || $(this).data("draggable"),
-                    sourceNode = ui.helper.data("ftSourceNode") || null;
+				if (sourceNode) {
+					// Adjust helper offset, so cursor is slightly outside top/left corner
+					draggable.offset.click.top = -2;
+					draggable.offset.click.left = +16;
+					// Trigger dragStart event
+					// TODO: when called as connectTo..., the return value is ignored(?)
+					return sourceNode.tree.ext.dnd._onDragEvent(
+						"start",
+						sourceNode,
+						null,
+						event,
+						ui,
+						draggable
+					);
+				}
+			},
+			drag: function(event, ui) {
+				var ctx,
+					isHelper,
+					logObject,
+					// 'draggable' was renamed to 'ui-draggable' since jQueryUI 1.10
+					draggable =
+						$(this).data("ui-draggable") ||
+						$(this).data("draggable"),
+					sourceNode = ui.helper.data("ftSourceNode") || null,
+					prevTargetNode = ui.helper.data("ftTargetNode") || null,
+					targetNode = $.ui.fancytree.getNode(event.target),
+					dndOpts = sourceNode && sourceNode.tree.options.dnd;
 
-                if(sourceNode) {
-                    // Adjust helper offset, so cursor is slightly outside top/left corner
-                    draggable.offset.click.top = -2;
-                    draggable.offset.click.left = + 16;
-                    // Trigger dragStart event
-                    // TODO: when called as connectTo..., the return value is ignored(?)
-                    return sourceNode.tree.ext.dnd._onDragEvent("start", sourceNode, null, event, ui, draggable);
-                }
-            },
-            drag: function(event, ui) {
-                var ctx, isHelper, logObject,
-                    // 'draggable' was renamed to 'ui-draggable' since jQueryUI 1.10
-                    draggable = $(this).data("ui-draggable") || $(this).data("draggable"),
-                    sourceNode = ui.helper.data("ftSourceNode") || null,
-                    prevTargetNode = ui.helper.data("ftTargetNode") || null,
-                    targetNode = $.ui.fancytree.getNode(event.target),
-                    dndOpts = sourceNode && sourceNode.tree.options.dnd;
+				// logObject = sourceNode || prevTargetNode || $.ui.fancytree;
+				// logObject.debug("Drag event:", event, event.shiftKey);
+				if (event.target && !targetNode) {
+					// We got a drag event, but the targetNode could not be found
+					// at the event location. This may happen,
+					// 1. if the mouse jumped over the drag helper,
+					// 2. or if a non-fancytree element is dragged
+					// We ignore it:
+					isHelper =
+						$(event.target).closest(
+							"div.fancytree-drag-helper,#fancytree-drop-marker"
+						).length > 0;
+					if (isHelper) {
+						logObject =
+							sourceNode || prevTargetNode || $.ui.fancytree;
+						logObject.debug("Drag event over helper: ignored.");
+						return;
+					}
+				}
+				ui.helper.data("ftTargetNode", targetNode);
 
-                // logObject = sourceNode || prevTargetNode || $.ui.fancytree;
-                // logObject.debug("Drag event:", event, event.shiftKey);
-                if(event.target && !targetNode){
-                    // We got a drag event, but the targetNode could not be found
-                    // at the event location. This may happen,
-                    // 1. if the mouse jumped over the drag helper,
-                    // 2. or if a non-fancytree element is dragged
-                    // We ignore it:
-                    isHelper = $(event.target).closest("div.fancytree-drag-helper,#fancytree-drop-marker").length > 0;
-                    if(isHelper){
-                        logObject = sourceNode || prevTargetNode || $.ui.fancytree;
-                        logObject.debug("Drag event over helper: ignored.");
-                        return;
-                    }
-                }
-                ui.helper.data("ftTargetNode", targetNode);
+				if (dndOpts && dndOpts.updateHelper) {
+					ctx = sourceNode.tree._makeHookContext(sourceNode, event, {
+						otherNode: targetNode,
+						ui: ui,
+						draggable: draggable,
+						dropMarker: $("#fancytree-drop-marker"),
+					});
+					dndOpts.updateHelper.call(sourceNode.tree, sourceNode, ctx);
+				}
 
-                if( dndOpts && dndOpts.updateHelper ) {
-                    ctx = sourceNode.tree._makeHookContext(sourceNode, event, {
-                        otherNode: targetNode,
-                        ui: ui,
-                        draggable: draggable,
-                        dropMarker: $("#fancytree-drop-marker")
-                    });
-                    dndOpts.updateHelper.call(sourceNode.tree, sourceNode, ctx);
-                }
+				// Leaving a tree node
+				if (prevTargetNode && prevTargetNode !== targetNode) {
+					prevTargetNode.tree.ext.dnd._onDragEvent(
+						"leave",
+						prevTargetNode,
+						sourceNode,
+						event,
+						ui,
+						draggable
+					);
+				}
+				if (targetNode) {
+					if (!targetNode.tree.options.dnd.dragDrop) {
+						// not enabled as drop target
+					} else if (targetNode === prevTargetNode) {
+						// Moving over same node
+						targetNode.tree.ext.dnd._onDragEvent(
+							"over",
+							targetNode,
+							sourceNode,
+							event,
+							ui,
+							draggable
+						);
+					} else {
+						// Entering this node first time
+						targetNode.tree.ext.dnd._onDragEvent(
+							"enter",
+							targetNode,
+							sourceNode,
+							event,
+							ui,
+							draggable
+						);
+						targetNode.tree.ext.dnd._onDragEvent(
+							"over",
+							targetNode,
+							sourceNode,
+							event,
+							ui,
+							draggable
+						);
+					}
+				}
+				// else go ahead with standard event handling
+			},
+			stop: function(event, ui) {
+				var logObject,
+					// 'draggable' was renamed to 'ui-draggable' since jQueryUI 1.10:
+					draggable =
+						$(this).data("ui-draggable") ||
+						$(this).data("draggable"),
+					sourceNode = ui.helper.data("ftSourceNode") || null,
+					targetNode = ui.helper.data("ftTargetNode") || null,
+					dropped = event.type === "mouseup" && event.which === 1;
 
-                // Leaving a tree node
-                if(prevTargetNode && prevTargetNode !== targetNode ) {
-                    prevTargetNode.tree.ext.dnd._onDragEvent("leave", prevTargetNode, sourceNode, event, ui, draggable);
-                }
-                if(targetNode){
-                    if(!targetNode.tree.options.dnd.dragDrop) {
-                        // not enabled as drop target
-                    } else if(targetNode === prevTargetNode) {
-                        // Moving over same node
-                        targetNode.tree.ext.dnd._onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
-                    }else{
-                        // Entering this node first time
-                        targetNode.tree.ext.dnd._onDragEvent("enter", targetNode, sourceNode, event, ui, draggable);
-                        targetNode.tree.ext.dnd._onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
-                    }
-                }
-                // else go ahead with standard event handling
-            },
-            stop: function(event, ui) {
-                var logObject,
-                    // 'draggable' was renamed to 'ui-draggable' since jQueryUI 1.10:
-                    draggable = $(this).data("ui-draggable") || $(this).data("draggable"),
-                    sourceNode = ui.helper.data("ftSourceNode") || null,
-                    targetNode = ui.helper.data("ftTargetNode") || null,
-                    dropped = (event.type === "mouseup" && event.which === 1);
+				if (!dropped) {
+					logObject = sourceNode || targetNode || $.ui.fancytree;
+					logObject.debug("Drag was cancelled");
+				}
+				if (targetNode) {
+					if (dropped) {
+						targetNode.tree.ext.dnd._onDragEvent(
+							"drop",
+							targetNode,
+							sourceNode,
+							event,
+							ui,
+							draggable
+						);
+					}
+					targetNode.tree.ext.dnd._onDragEvent(
+						"leave",
+						targetNode,
+						sourceNode,
+						event,
+						ui,
+						draggable
+					);
+				}
+				if (sourceNode) {
+					sourceNode.tree.ext.dnd._onDragEvent(
+						"stop",
+						sourceNode,
+						null,
+						event,
+						ui,
+						draggable
+					);
+				}
+			},
+		});
 
-                if(!dropped){
-                    logObject = sourceNode || targetNode || $.ui.fancytree;
-                    logObject.debug("Drag was cancelled");
-                }
-                if(targetNode) {
-                    if(dropped){
-                        targetNode.tree.ext.dnd._onDragEvent("drop", targetNode, sourceNode, event, ui, draggable);
-                    }
-                    targetNode.tree.ext.dnd._onDragEvent("leave", targetNode, sourceNode, event, ui, draggable);
-                }
-                if(sourceNode){
-                    sourceNode.tree.ext.dnd._onDragEvent("stop", sourceNode, null, event, ui, draggable);
-                }
-            }
-        });
+		didRegisterDnd = true;
+	}
 
-        didRegisterDnd = true;
-    }
+	/******************************************************************************
+	 * Drag and drop support
+	 */
+	function _initDragAndDrop(tree) {
+		var dnd = tree.options.dnd || null,
+			glyph = tree.options.glyph || null;
 
+		// Register 'connectToFancytree' option with ui.draggable
+		if (dnd) {
+			_registerDnd();
+		}
+		// Attach ui.draggable to this Fancytree instance
+		if (dnd && dnd.dragStart) {
+			tree.widget.element.draggable(
+				$.extend(
+					{
+						addClasses: false,
+						// DT issue 244: helper should be child of scrollParent:
+						appendTo: tree.$container,
+						//			appendTo: "body",
+						containment: false,
+						//			containment: "parent",
+						delay: 0,
+						distance: 4,
+						revert: false,
+						scroll: true, // to disable, also set css 'position: inherit' on ul.fancytree-container
+						scrollSpeed: 7,
+						scrollSensitivity: 10,
+						// Delegate draggable.start, drag, and stop events to our handler
+						connectToFancytree: true,
+						// Let source tree create the helper element
+						helper: function(event) {
+							var $helper,
+								$nodeTag,
+								opts,
+								sourceNode = $.ui.fancytree.getNode(
+									event.target
+								);
 
-    /* *****************************************************************************
-     * Drag and drop support
-     */
-    function _initDragAndDrop(tree) {
-        var dnd = tree.options.dnd || null,
-            glyph = tree.options.glyph || null;
+							if (!sourceNode) {
+								// #405, DT issue 211: might happen, if dragging a table *header*
+								return "<div>ERROR?: helper requested but sourceNode not found</div>";
+							}
+							opts = sourceNode.tree.options.dnd;
+							$nodeTag = $(sourceNode.span);
+							// Only event and node argument is available
+							$helper = $(
+								"<div class='fancytree-drag-helper'><span class='fancytree-drag-helper-img' /></div>"
+							)
+								.css({ zIndex: 3, position: "relative" }) // so it appears above ext-wide selection bar
+								.append(
+									$nodeTag
+										.find("span.fancytree-title")
+										.clone()
+								);
 
-        // Register 'connectToFancytree' option with ui.draggable
-        if( dnd ) {
-            _registerDnd();
-        }
-        // Attach ui.draggable to this Fancytree instance
-        if(dnd && dnd.dragStart ) {
-            tree.widget.element.draggable($.extend({
-                addClasses: false,
-                // DT issue 244: helper should be child of scrollParent:
-                appendTo: tree.$container,
-//			appendTo: "body",
-                containment: false,
-//			containment: "parent",
-                delay: 0,
-                distance: 4,
-                revert: false,
-                scroll: true, // to disable, also set css 'position: inherit' on ul.fancytree-container
-                scrollSpeed: 7,
-                scrollSensitivity: 10,
-                // Delegate draggable.start, drag, and stop events to our handler
-                connectToFancytree: true,
-                // Let source tree create the helper element
-                helper: function(event) {
-                    var $helper, $nodeTag, opts,
-                        sourceNode = $.ui.fancytree.getNode(event.target);
+							// Attach node reference to helper object
+							$helper.data("ftSourceNode", sourceNode);
 
-                    if(!sourceNode){
-                        // #405, DT issue 211: might happen, if dragging a table *header*
-                        return "<div>ERROR?: helper requested but sourceNode not found</div>";
-                    }
-                    opts = sourceNode.tree.options.dnd;
-                    $nodeTag = $(sourceNode.span);
-                    // Only event and node argument is available
-                    $helper = $("<div class='fancytree-drag-helper'><span class='fancytree-drag-helper-img' /></div>")
-                        .css({zIndex: 3, position: "relative"}) // so it appears above ext-wide selection bar
-                        .append($nodeTag.find("span.fancytree-title").clone());
+							// Support glyph symbols instead of icons
+							if (glyph) {
+								$helper
+									.find(".fancytree-drag-helper-img")
+									.addClass(
+										glyph.map._addClass +
+											" " +
+											glyph.map.dragHelper
+									);
+							}
+							// Allow to modify the helper, e.g. to add multi-node-drag feedback
+							if (opts.initHelper) {
+								opts.initHelper.call(
+									sourceNode.tree,
+									sourceNode,
+									{
+										node: sourceNode,
+										tree: sourceNode.tree,
+										originalEvent: event,
+										ui: { helper: $helper },
+									}
+								);
+							}
+							// We return an unconnected element, so `draggable` will add this
+							// to the parent specified as `appendTo` option
+							return $helper;
+						},
+						start: function(event, ui) {
+							var sourceNode = ui.helper.data("ftSourceNode");
+							return !!sourceNode; // Abort dragging if no node could be found
+						},
+					},
+					tree.options.dnd.draggable
+				)
+			);
+		}
+		// Attach ui.droppable to this Fancytree instance
+		if (dnd && dnd.dragDrop) {
+			tree.widget.element.droppable(
+				$.extend(
+					{
+						addClasses: false,
+						tolerance: "intersect",
+						greedy: false,
+						/*
+			activate: function(event, ui) {
+				tree.debug("droppable - activate", event, ui, this);
+			},
+			create: function(event, ui) {
+				tree.debug("droppable - create", event, ui);
+			},
+			deactivate: function(event, ui) {
+				tree.debug("droppable - deactivate", event, ui);
+			},
+			drop: function(event, ui) {
+				tree.debug("droppable - drop", event, ui);
+			},
+			out: function(event, ui) {
+				tree.debug("droppable - out", event, ui);
+			},
+			over: function(event, ui) {
+				tree.debug("droppable - over", event, ui);
+			}
+*/
+					},
+					tree.options.dnd.droppable
+				)
+			);
+		}
+	}
 
-                    // Attach node reference to helper object
-                    $helper.data("ftSourceNode", sourceNode);
+	/******************************************************************************
+	 *
+	 */
 
-                    // Support glyph symbols instead of icons
-                    if( glyph ) {
-                        $helper.find(".fancytree-drag-helper-img")
-                            .addClass(glyph.map.dragHelper);
-                    }
-                    // Allow to modify the helper, e.g. to add multi-node-drag feedback
-                    if( opts.initHelper ) {
-                        opts.initHelper.call(sourceNode.tree, sourceNode, {
-                            node: sourceNode,
-                            tree: sourceNode.tree,
-                            originalEvent: event,
-                            ui: { helper: $helper }
-                        });
-                    }
-                    // We return an unconnected element, so `draggable` will add this
-                    // to the parent specified as `appendTo` option
-                    return $helper;
-                },
-                start: function(event, ui) {
-                    var sourceNode = ui.helper.data("ftSourceNode");
-                    return !!sourceNode; // Abort dragging if no node could be found
-                }
-            }, tree.options.dnd.draggable));
-        }
-        // Attach ui.droppable to this Fancytree instance
-        if(dnd && dnd.dragDrop) {
-            tree.widget.element.droppable($.extend({
-                addClasses: false,
-                tolerance: "intersect",
-                greedy: false
-                /*
-                 activate: function(event, ui) {
-                 tree.debug("droppable - activate", event, ui, this);
-                 },
-                 create: function(event, ui) {
-                 tree.debug("droppable - create", event, ui);
-                 },
-                 deactivate: function(event, ui) {
-                 tree.debug("droppable - deactivate", event, ui);
-                 },
-                 drop: function(event, ui) {
-                 tree.debug("droppable - drop", event, ui);
-                 },
-                 out: function(event, ui) {
-                 tree.debug("droppable - out", event, ui);
-                 },
-                 over: function(event, ui) {
-                 tree.debug("droppable - over", event, ui);
-                 }
-                 */
-            }, tree.options.dnd.droppable));
-        }
-    }
+	$.ui.fancytree.registerExtension({
+		name: "dnd",
+		version: "2.31.0",
+		// Default options for this extension.
+		options: {
+			// Make tree nodes accept draggables
+			autoExpandMS: 1000, // Expand nodes after n milliseconds of hovering.
+			draggable: null, // Additional options passed to jQuery draggable
+			droppable: null, // Additional options passed to jQuery droppable
+			focusOnClick: false, // Focus, although draggable cancels mousedown event (#270)
+			preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+			preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
+			smartRevert: true, // set draggable.revert = true if drop was rejected
+			dropMarkerOffsetX: -24, // absolute position offset for .fancytree-drop-marker relatively to ..fancytree-title (icon/img near a node accepting drop)
+			dropMarkerInsertOffsetX: -16, // additional offset for drop-marker with hitMode = "before"/"after"
+			// Events (drag support)
+			dragStart: null, // Callback(sourceNode, data), return true, to enable dnd
+			dragStop: null, // Callback(sourceNode, data)
+			initHelper: null, // Callback(sourceNode, data)
+			updateHelper: null, // Callback(sourceNode, data)
+			// Events (drop support)
+			dragEnter: null, // Callback(targetNode, data)
+			dragOver: null, // Callback(targetNode, data)
+			dragExpand: null, // Callback(targetNode, data), return false to prevent autoExpand
+			dragDrop: null, // Callback(targetNode, data)
+			dragLeave: null, // Callback(targetNode, data)
+		},
 
+		treeInit: function(ctx) {
+			var tree = ctx.tree;
+			this._superApply(arguments);
+			// issue #270: draggable eats mousedown events
+			if (tree.options.dnd.dragStart) {
+				tree.$container.on("mousedown", function(event) {
+					//				if( !tree.hasFocus() && ctx.options.dnd.focusOnClick ) {
+					if (ctx.options.dnd.focusOnClick) {
+						// #270
+						var node = $.ui.fancytree.getNode(event);
+						if (node) {
+							node.debug(
+								"Re-enable focus that was prevented by jQuery UI draggable."
+							);
+							// node.setFocus();
+							// $(node.span).closest(":tabbable").focus();
+							// $(event.target).trigger("focus");
+							// $(event.target).closest(":tabbable").trigger("focus");
+						}
+						setTimeout(function() {
+							// #300
+							$(event.target)
+								.closest(":tabbable")
+								.focus();
+						}, 10);
+					}
+				});
+			}
+			_initDragAndDrop(tree);
+		},
+		/* Display drop marker according to hitMode ('after', 'before', 'over'). */
+		_setDndStatus: function(
+			sourceNode,
+			targetNode,
+			helper,
+			hitMode,
+			accept
+		) {
+			var markerOffsetX,
+				pos,
+				markerAt = "center",
+				instData = this._local,
+				dndOpt = this.options.dnd,
+				glyphOpt = this.options.glyph,
+				$source = sourceNode ? $(sourceNode.span) : null,
+				$target = $(targetNode.span),
+				$targetTitle = $target.find("span.fancytree-title");
 
-    /* *****************************************************************************
-     *
-     */
+			if (!instData.$dropMarker) {
+				instData.$dropMarker = $(
+					"<div id='fancytree-drop-marker'></div>"
+				)
+					.hide()
+					.css({ "z-index": 1000 })
+					.prependTo($(this.$div).parent());
+				//                .prependTo("body");
 
-    $.ui.fancytree.registerExtension({
-        name: "dnd",
-        version: "0.3.0",
-        // Default options for this extension.
-        options: {
-            // Make tree nodes accept draggables
-            autoExpandMS: 1000,  // Expand nodes after n milliseconds of hovering.
-            draggable: null,     // Additional options passed to jQuery draggable
-            droppable: null,     // Additional options passed to jQuery droppable
-            focusOnClick: false, // Focus, although draggable cancels mousedown event (#270)
-            preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-            preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
-            smartRevert: true,   // set draggable.revert = true if drop was rejected
-            // Events (drag support)
-            dragStart: null,     // Callback(sourceNode, data), return true, to enable dnd
-            dragStop: null,      // Callback(sourceNode, data)
-            initHelper: null,    // Callback(sourceNode, data)
-            updateHelper: null,  // Callback(sourceNode, data)
-            // Events (drop support)
-            dragEnter: null,     // Callback(targetNode, data)
-            dragOver: null,      // Callback(targetNode, data)
-            dragExpand: null,    // Callback(targetNode, data), return false to prevent autoExpand
-            dragDrop: null,      // Callback(targetNode, data)
-            dragLeave: null      // Callback(targetNode, data)
-        },
+				if (glyphOpt) {
+					instData.$dropMarker.addClass(
+						glyphOpt.map._addClass + " " + glyphOpt.map.dropMarker
+					);
+				}
+			}
+			if (
+				hitMode === "after" ||
+				hitMode === "before" ||
+				hitMode === "over"
+			) {
+				markerOffsetX = dndOpt.dropMarkerOffsetX || 0;
+				switch (hitMode) {
+					case "before":
+						markerAt = "top";
+						markerOffsetX += dndOpt.dropMarkerInsertOffsetX || 0;
+						break;
+					case "after":
+						markerAt = "bottom";
+						markerOffsetX += dndOpt.dropMarkerInsertOffsetX || 0;
+						break;
+				}
 
-        treeInit: function(ctx){
-            var tree = ctx.tree;
-            this._superApply(arguments);
-            // issue #270: draggable eats mousedown events
-            if( tree.options.dnd.dragStart ){
-                tree.$container.on("mousedown", function(event){
-//				if( !tree.hasFocus() && ctx.options.dnd.focusOnClick ) {
-                    if( ctx.options.dnd.focusOnClick ) {  // #270
-                        var node = $.ui.fancytree.getNode(event);
-                        if (node){
-                            node.debug("Re-enable focus that was prevented by jQuery UI draggable.");
-                            // node.setFocus();
-                            // $(node.span).closest(":tabbable").focus();
-                            // $(event.target).trigger("focus");
-                            // $(event.target).closest(":tabbable").trigger("focus");
-                        }
-                        setTimeout(function() { // #300
-                            $(event.target).closest(":tabbable").focus();
-                        }, 10);
-                    }
-                });
-            }
-            _initDragAndDrop(tree);
-        },
-        /* Display drop marker according to hitMode ('after', 'before', 'over'). */
-        _setDndStatus: function(sourceNode, targetNode, helper, hitMode, accept) {
-            var markerOffsetX = 0,
-                markerAt = "center",
-                instData = this._local,
-                glyph = this.options.glyph || null,
-                $source = sourceNode ? $(sourceNode.span) : null,
-                $target = $(targetNode.span);
+				pos = {
+					my: "left" + offsetString(markerOffsetX) + " center",
+					at: "left " + markerAt,
+					of: $targetTitle,
+				};
+				if (this.options.rtl) {
+					pos.my = "right" + offsetString(-markerOffsetX) + " center";
+					pos.at = "right " + markerAt;
+				}
+				instData.$dropMarker
+					.toggleClass(classDropAfter, hitMode === "after")
+					.toggleClass(classDropOver, hitMode === "over")
+					.toggleClass(classDropBefore, hitMode === "before")
+					.toggleClass("fancytree-rtl", !!this.options.rtl)
+					.show()
+					.position($.ui.fancytree.fixPositionOptions(pos));
+			} else {
+				instData.$dropMarker.hide();
+			}
+			if ($source) {
+				$source
+					.toggleClass(classDropAccept, accept === true)
+					.toggleClass(classDropReject, accept === false);
+			}
+			$target
+				.toggleClass(
+					classDropTarget,
+					hitMode === "after" ||
+						hitMode === "before" ||
+						hitMode === "over"
+				)
+				.toggleClass(classDropAfter, hitMode === "after")
+				.toggleClass(classDropBefore, hitMode === "before")
+				.toggleClass(classDropAccept, accept === true)
+				.toggleClass(classDropReject, accept === false);
 
-            if( !instData.$dropMarker ) {
-                instData.$dropMarker = $("<div id='fancytree-drop-marker'></div>")
-                    .hide()
-                    .css({"z-index": 1000})
-                    .prependTo($(this.$div).parent());
-//                .prependTo("body");
+			helper
+				.toggleClass(classDropAccept, accept === true)
+				.toggleClass(classDropReject, accept === false);
+		},
 
-                if( glyph ) {
-                    // instData.$dropMarker.addClass(glyph.map.dragHelper);
-                    instData.$dropMarker
-                        .addClass(glyph.map.dropMarker);
-                }
-            }
-            if( hitMode === "after" || hitMode === "before" || hitMode === "over" ){
-                switch(hitMode){
-                    case "before":
-                        markerAt = "top";
-                        break;
-                    case "after":
-                        markerAt = "bottom";
-                        break;
-                    default:
-                        markerOffsetX = 8;
-                }
+		/*
+		 * Handles drag'n'drop functionality.
+		 *
+		 * A standard jQuery drag-and-drop process may generate these calls:
+		 *
+		 * start:
+		 *     _onDragEvent("start", sourceNode, null, event, ui, draggable);
+		 * drag:
+		 *     _onDragEvent("leave", prevTargetNode, sourceNode, event, ui, draggable);
+		 *     _onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
+		 *     _onDragEvent("enter", targetNode, sourceNode, event, ui, draggable);
+		 * stop:
+		 *     _onDragEvent("drop", targetNode, sourceNode, event, ui, draggable);
+		 *     _onDragEvent("leave", targetNode, sourceNode, event, ui, draggable);
+		 *     _onDragEvent("stop", sourceNode, null, event, ui, draggable);
+		 */
+		_onDragEvent: function(
+			eventName,
+			node,
+			otherNode,
+			event,
+			ui,
+			draggable
+		) {
+			// if(eventName !== "over"){
+			// 	this.debug("tree.ext.dnd._onDragEvent(%s, %o, %o) - %o", eventName, node, otherNode, this);
+			// }
+			var accept,
+				nodeOfs,
+				parentRect,
+				rect,
+				relPos,
+				relPos2,
+				enterResponse,
+				hitMode,
+				r,
+				opts = this.options,
+				dnd = opts.dnd,
+				ctx = this._makeHookContext(node, event, {
+					otherNode: otherNode,
+					ui: ui,
+					draggable: draggable,
+				}),
+				res = null,
+				self = this,
+				$nodeTag = $(node.span);
 
-                instData.$dropMarker
-                    .toggleClass(classDropAfter, hitMode === "after")
-                    .toggleClass(classDropOver, hitMode === "over")
-                    .toggleClass(classDropBefore, hitMode === "before")
-                    .show()
-                    .position($.ui.fancytree.fixPositionOptions({
-                        my: "left" + offsetString(markerOffsetX) + " center",
-                        at: "left " + markerAt,
-                        of: $target
-                    }));
-            } else {
-                instData.$dropMarker.hide();
-            }
-            if( $source ){
-                $source
-                    .toggleClass(classDropAccept, accept === true)
-                    .toggleClass(classDropReject, accept === false);
-            }
-            $target
-                .toggleClass(classDropTarget, hitMode === "after" || hitMode === "before" || hitMode === "over")
-                .toggleClass(classDropAfter, hitMode === "after")
-                .toggleClass(classDropBefore, hitMode === "before")
-                .toggleClass(classDropAccept, accept === true)
-                .toggleClass(classDropReject, accept === false);
+			if (dnd.smartRevert) {
+				draggable.options.revert = "invalid";
+			}
 
-            helper
-                .toggleClass(classDropAccept, accept === true)
-                .toggleClass(classDropReject, accept === false);
-        },
+			switch (eventName) {
+				case "start":
+					if (node.isStatusNode()) {
+						res = false;
+					} else if (dnd.dragStart) {
+						res = dnd.dragStart(node, ctx);
+					}
+					if (res === false) {
+						this.debug("tree.dragStart() cancelled");
+						//draggable._clear();
+						// NOTE: the return value seems to be ignored (drag is not cancelled, when false is returned)
+						// TODO: call this._cancelDrag()?
+						ui.helper.trigger("mouseup").hide();
+					} else {
+						if (dnd.smartRevert) {
+							// #567, #593: fix revert position
+							// rect = node.li.getBoundingClientRect();
+							rect = node[
+								ctx.tree.nodeContainerAttrName
+							].getBoundingClientRect();
+							parentRect = $(
+								draggable.options.appendTo
+							)[0].getBoundingClientRect();
+							draggable.originalPosition.left = Math.max(
+								0,
+								rect.left - parentRect.left
+							);
+							draggable.originalPosition.top = Math.max(
+								0,
+								rect.top - parentRect.top
+							);
+						}
+						$nodeTag.addClass("fancytree-drag-source");
+						// Register global handlers to allow cancel
+						$(document).on(
+							"keydown.fancytree-dnd,mousedown.fancytree-dnd",
+							function(event) {
+								// node.tree.debug("dnd global event", event.type, event.which);
+								if (
+									event.type === "keydown" &&
+									event.which === $.ui.keyCode.ESCAPE
+								) {
+									self.ext.dnd._cancelDrag();
+								} else if (event.type === "mousedown") {
+									self.ext.dnd._cancelDrag();
+								}
+							}
+						);
+					}
+					break;
 
-        /*
-         * Handles drag'n'drop functionality.
-         *
-         * A standard jQuery drag-and-drop process may generate these calls:
-         *
-         * start:
-         *     _onDragEvent("start", sourceNode, null, event, ui, draggable);
-         * drag:
-         *     _onDragEvent("leave", prevTargetNode, sourceNode, event, ui, draggable);
-         *     _onDragEvent("over", targetNode, sourceNode, event, ui, draggable);
-         *     _onDragEvent("enter", targetNode, sourceNode, event, ui, draggable);
-         * stop:
-         *     _onDragEvent("drop", targetNode, sourceNode, event, ui, draggable);
-         *     _onDragEvent("leave", targetNode, sourceNode, event, ui, draggable);
-         *     _onDragEvent("stop", sourceNode, null, event, ui, draggable);
-         */
-        _onDragEvent: function(eventName, node, otherNode, event, ui, draggable) {
-            if(eventName !== "over"){
-                this.debug("tree.ext.dnd._onDragEvent(%s, %o, %o) - %o", eventName, node, otherNode, this);
-            }
-            var accept, nodeOfs, parentRect, rect, relPos, relPos2,
-                enterResponse, hitMode, r,
-                opts = this.options,
-                dnd = opts.dnd,
-                ctx = this._makeHookContext(node, event, {otherNode: otherNode, ui: ui, draggable: draggable}),
-                res = null,
-                that = this,
-                $nodeTag = $(node.span);
+				case "enter":
+					if (
+						dnd.preventRecursiveMoves &&
+						node.isDescendantOf(otherNode)
+					) {
+						r = false;
+					} else {
+						r = dnd.dragEnter ? dnd.dragEnter(node, ctx) : null;
+					}
+					if (!r) {
+						// convert null, undefined, false to false
+						res = false;
+					} else if ($.isArray(r)) {
+						// TODO: also accept passing an object of this format directly
+						res = {
+							over: $.inArray("over", r) >= 0,
+							before: $.inArray("before", r) >= 0,
+							after: $.inArray("after", r) >= 0,
+						};
+					} else {
+						res = {
+							over: r === true || r === "over",
+							before: r === true || r === "before",
+							after: r === true || r === "after",
+						};
+					}
+					ui.helper.data("enterResponse", res);
+					// this.debug("helper.enterResponse: %o", res);
+					break;
 
-            if( dnd.smartRevert ) {
-                draggable.options.revert = "invalid";
-            }
+				case "over":
+					enterResponse = ui.helper.data("enterResponse");
+					hitMode = null;
+					if (enterResponse === false) {
+						// Don't call dragOver if onEnter returned false.
+						//                break;
+					} else if (typeof enterResponse === "string") {
+						// Use hitMode from onEnter if provided.
+						hitMode = enterResponse;
+					} else {
+						// Calculate hitMode from relative cursor position.
+						nodeOfs = $nodeTag.offset();
+						relPos = {
+							x: event.pageX - nodeOfs.left,
+							y: event.pageY - nodeOfs.top,
+						};
+						relPos2 = {
+							x: relPos.x / $nodeTag.width(),
+							y: relPos.y / $nodeTag.height(),
+						};
 
-            switch (eventName) {
+						if (enterResponse.after && relPos2.y > 0.75) {
+							hitMode = "after";
+						} else if (
+							!enterResponse.over &&
+							enterResponse.after &&
+							relPos2.y > 0.5
+						) {
+							hitMode = "after";
+						} else if (enterResponse.before && relPos2.y <= 0.25) {
+							hitMode = "before";
+						} else if (
+							!enterResponse.over &&
+							enterResponse.before &&
+							relPos2.y <= 0.5
+						) {
+							hitMode = "before";
+						} else if (enterResponse.over) {
+							hitMode = "over";
+						}
+						// Prevent no-ops like 'before source node'
+						// TODO: these are no-ops when moving nodes, but not in copy mode
+						if (dnd.preventVoidMoves) {
+							if (node === otherNode) {
+								this.debug(
+									"    drop over source node prevented"
+								);
+								hitMode = null;
+							} else if (
+								hitMode === "before" &&
+								otherNode &&
+								node === otherNode.getNextSibling()
+							) {
+								this.debug(
+									"    drop after source node prevented"
+								);
+								hitMode = null;
+							} else if (
+								hitMode === "after" &&
+								otherNode &&
+								node === otherNode.getPrevSibling()
+							) {
+								this.debug(
+									"    drop before source node prevented"
+								);
+								hitMode = null;
+							} else if (
+								hitMode === "over" &&
+								otherNode &&
+								otherNode.parent === node &&
+								otherNode.isLastSibling()
+							) {
+								this.debug(
+									"    drop last child over own parent prevented"
+								);
+								hitMode = null;
+							}
+						}
+						//                this.debug("hitMode: %s - %s - %s", hitMode, (node.parent === otherNode), node.isLastSibling());
+						ui.helper.data("hitMode", hitMode);
+					}
+					// Auto-expand node (only when 'over' the node, not 'before', or 'after')
+					if (
+						hitMode !== "before" &&
+						hitMode !== "after" &&
+						dnd.autoExpandMS &&
+						node.hasChildren() !== false &&
+						!node.expanded &&
+						(!dnd.dragExpand || dnd.dragExpand(node, ctx) !== false)
+					) {
+						node.scheduleAction("expand", dnd.autoExpandMS);
+					}
+					if (hitMode && dnd.dragOver) {
+						// TODO: http://code.google.com/p/dynatree/source/detail?r=625
+						ctx.hitMode = hitMode;
+						res = dnd.dragOver(node, ctx);
+					}
+					accept = res !== false && hitMode !== null;
+					if (dnd.smartRevert) {
+						draggable.options.revert = !accept;
+					}
+					this._local._setDndStatus(
+						otherNode,
+						node,
+						ui.helper,
+						hitMode,
+						accept
+					);
+					break;
 
-                case "start":
-                    if( node.isStatusNode() ) {
-                        res = false;
-                    } else if(dnd.dragStart) {
-                        res = dnd.dragStart(node, ctx);
-                    }
-                    if(res === false) {
-                        this.debug("tree.dragStart() cancelled");
-                        //draggable._clear();
-                        // NOTE: the return value seems to be ignored (drag is not canceled, when false is returned)
-                        // TODO: call this._cancelDrag()?
-                        ui.helper.trigger("mouseup")
-                            .hide();
-                    } else {
-                        if( dnd.smartRevert ) {
-                            // #567: fix revert position
-                            rect = node.li.getBoundingClientRect();
-                            parentRect = $(draggable.options.appendTo)[0].getBoundingClientRect();
-                            draggable.originalPosition.left = Math.max(0, rect.left - parentRect.left);
-                            draggable.originalPosition.top = Math.max(0, rect.top - parentRect.top);
-                        }
-                        $nodeTag.addClass("fancytree-drag-source");
-                        // Register global handlers to allow cancel
-                        $(document)
-                            .on("keydown.fancytree-dnd,mousedown.fancytree-dnd", function(event){
-                                // node.tree.debug("dnd global event", event.type, event.which);
-                                if( event.type === "keydown" && event.which === $.ui.keyCode.ESCAPE ) {
-                                    that.ext.dnd._cancelDrag();
-                                } else if( event.type === "mousedown" ) {
-                                    that.ext.dnd._cancelDrag();
-                                }
-                            });
-                    }
-                    break;
+				case "drop":
+					hitMode = ui.helper.data("hitMode");
+					if (hitMode && dnd.dragDrop) {
+						ctx.hitMode = hitMode;
+						dnd.dragDrop(node, ctx);
+					}
+					break;
 
-                case "enter":
-                    if(dnd.preventRecursiveMoves && node.isDescendantOf(otherNode)){
-                        r = false;
-                    }else{
-                        r = dnd.dragEnter ? dnd.dragEnter(node, ctx) : null;
-                    }
-                    if(!r){
-                        // convert null, undefined, false to false
-                        res = false;
-                    }else if ( $.isArray(r) ) {
-                        // TODO: also accept passing an object of this format directly
-                        res = {
-                            over: ($.inArray("over", r) >= 0),
-                            before: ($.inArray("before", r) >= 0),
-                            after: ($.inArray("after", r) >= 0)
-                        };
-                    }else{
-                        res = {
-                            over: ((r === true) || (r === "over")),
-                            before: ((r === true) || (r === "before")),
-                            after: ((r === true) || (r === "after"))
-                        };
-                    }
-                    ui.helper.data("enterResponse", res);
-                    this.debug("helper.enterResponse: %o", res);
-                    break;
+				case "leave":
+					// Cancel pending expand request
+					node.scheduleAction("cancel");
+					ui.helper.data("enterResponse", null);
+					ui.helper.data("hitMode", null);
+					this._local._setDndStatus(
+						otherNode,
+						node,
+						ui.helper,
+						"out",
+						undefined
+					);
+					if (dnd.dragLeave) {
+						dnd.dragLeave(node, ctx);
+					}
+					break;
 
-                case "over":
-                    enterResponse = ui.helper.data("enterResponse");
-                    hitMode = null;
-                    if(enterResponse === false){
-                        // Don't call dragOver if onEnter returned false.
-//                break;
-                    } else if(typeof enterResponse === "string") {
-                        // Use hitMode from onEnter if provided.
-                        hitMode = enterResponse;
-                    } else {
-                        // Calculate hitMode from relative cursor position.
-                        nodeOfs = $nodeTag.offset();
-                        relPos = { x: event.pageX - nodeOfs.left,
-                            y: event.pageY - nodeOfs.top };
-                        relPos2 = { x: relPos.x / $nodeTag.width(),
-                            y: relPos.y / $nodeTag.height() };
+				case "stop":
+					$nodeTag.removeClass("fancytree-drag-source");
+					$(document).off(".fancytree-dnd");
+					if (dnd.dragStop) {
+						dnd.dragStop(node, ctx);
+					}
+					break;
 
-                        if( enterResponse.after && relPos2.y > 0.75 ){
-                            hitMode = "after";
-                        } else if(!enterResponse.over && enterResponse.after && relPos2.y > 0.5 ){
-                            hitMode = "after";
-                        } else if(enterResponse.before && relPos2.y <= 0.25) {
-                            hitMode = "before";
-                        } else if(!enterResponse.over && enterResponse.before && relPos2.y <= 0.5) {
-                            hitMode = "before";
-                        } else if(enterResponse.over) {
-                            hitMode = "over";
-                        }
-                        // Prevent no-ops like 'before source node'
-                        // TODO: these are no-ops when moving nodes, but not in copy mode
-                        if( dnd.preventVoidMoves ){
-                            if(node === otherNode){
-                                this.debug("    drop over source node prevented");
-                                hitMode = null;
-                            }else if(hitMode === "before" && otherNode && node === otherNode.getNextSibling()){
-                                this.debug("    drop after source node prevented");
-                                hitMode = null;
-                            }else if(hitMode === "after" && otherNode && node === otherNode.getPrevSibling()){
-                                this.debug("    drop before source node prevented");
-                                hitMode = null;
-                            }else if(hitMode === "over" && otherNode && otherNode.parent === node && otherNode.isLastSibling() ){
-                                this.debug("    drop last child over own parent prevented");
-                                hitMode = null;
-                            }
-                        }
-//                this.debug("hitMode: %s - %s - %s", hitMode, (node.parent === otherNode), node.isLastSibling());
-                        ui.helper.data("hitMode", hitMode);
-                    }
-                    // Auto-expand node (only when 'over' the node, not 'before', or 'after')
-                    if(hitMode !== "before" && hitMode !== "after" && dnd.autoExpandMS &&
-                        node.hasChildren() !== false && !node.expanded &&
-                        (!dnd.dragExpand || dnd.dragExpand(node, ctx) !== false)
-                    ) {
-                        // TODO: maybe add a callback `dragExpand()` here to allow more control
-                        node.scheduleAction("expand", dnd.autoExpandMS);
-                    }
-                    if(hitMode && dnd.dragOver){
-                        // TODO: http://code.google.com/p/dynatree/source/detail?r=625
-                        ctx.hitMode = hitMode;
-                        res = dnd.dragOver(node, ctx);
-                    }
-                    accept = (res !== false && hitMode !== null);
-                    if( dnd.smartRevert ) {
-                        draggable.options.revert = !accept;
-                    }
-                    this._local._setDndStatus(otherNode, node, ui.helper, hitMode, accept);
-                    break;
+				default:
+					$.error("Unsupported drag event: " + eventName);
+			}
+			return res;
+		},
 
-                case "drop":
-                    hitMode = ui.helper.data("hitMode");
-                    if(hitMode && dnd.dragDrop){
-                        ctx.hitMode = hitMode;
-                        dnd.dragDrop(node, ctx);
-                    }
-                    break;
+		_cancelDrag: function() {
+			var dd = $.ui.ddmanager.current;
+			if (dd) {
+				dd.cancel();
+			}
+		},
+	});
+	// Value returned by `require('jquery.fancytree..')`
+	return $.ui.fancytree;
+}); // End of closure
 
-                case "leave":
-                    // Cancel pending expand request
-                    node.scheduleAction("cancel");
-                    ui.helper.data("enterResponse", null);
-                    ui.helper.data("hitMode", null);
-                    this._local._setDndStatus(otherNode, node, ui.helper, "out", undefined);
-                    if(dnd.dragLeave){
-                        dnd.dragLeave(node, ctx);
-                    }
-                    break;
-
-                case "stop":
-                    $nodeTag.removeClass("fancytree-drag-source");
-                    $(document).off(".fancytree-dnd");
-                    if(dnd.dragStop){
-                        dnd.dragStop(node, ctx);
-                    }
-                    break;
-
-                default:
-                    $.error("Unsupported drag event: " + eventName);
-            }
-            return res;
-        },
-
-        _cancelDrag: function() {
-            var dd = $.ui.ddmanager.current;
-            if(dd){
-                dd.cancel();
-            }
-        }
-    });
-}(jQuery, window, document));
-
-/* jquery.fancytree.filter.js */
 /*!
  * jquery.fancytree.filter.js
  *
  * Remove or highlight tree nodes, based on a filter.
  * (Extension module for jquery.fancytree.js: https://github.com/mar10/fancytree/)
  *
- * Copyright (c) 2008-2016, Martin Wendt (http://wwWendt.de)
+ * Copyright (c) 2008-2019, Martin Wendt (https://wwWendt.de)
  *
  * Released under the MIT license
  * https://github.com/mar10/fancytree/wiki/LicenseInfo
  *
- * @version @VERSION
- * @date @DATE
+ * @version 2.31.0
+ * @date 2019-05-31T11:32:38Z
  */
 
-;(function($, window, document, undefined) {
-
-    "use strict";
-
-
-    /*******************************************************************************
-     * Private functions and variables
-     */
-
-    function _escapeRegex(str){
-        /*jshint regexdash:true */
-        return (str + "").replace(/([.?*+\^\$\[\]\\(){}|-])/g, "\\$1");
-    }
-
-    $.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(filter, branchMode, opts){
-        var leavesOnly, match, re, re2,
-            count = 0,
-            filterOpts = this.options.filter,
-            hideMode = filterOpts.mode === "hide";
-
-        opts = opts || {};
-        leavesOnly = !!opts.leavesOnly && !branchMode;
-
-        // Default to 'match title substring (not case sensitive)'
-        if(typeof filter === "string"){
-            // console.log("rex", filter.split('').join('\\w*').replace(/\W/, ""))
-            if( filterOpts.fuzzy ) {
-                // See https://codereview.stackexchange.com/questions/23899/faster-javascript-fuzzy-string-matching-function/23905#23905
-                // and http://www.quora.com/How-is-the-fuzzy-search-algorithm-in-Sublime-Text-designed
-                // and http://www.dustindiaz.com/autocomplete-fuzzy-matching
-                match = filter.split("").reduce(function(a, b) {
-                    return a + "[^" + b + "]*" + b;
-                });
-            } else {
-                match = _escapeRegex(filter); // make sure a '.' is treated literally
-            }
-            re = new RegExp(".*" + match + ".*", "i");
-            re2 = new RegExp(filter, "gi");
-            filter = function(node){
-                var res = !!re.test(node.title);
-                // node.debug("filter res", res, filterOpts.highlight)
-                if( res && filterOpts.highlight ) {
-                    node.titleWithHighlight = node.title.replace(re2, function(s){
-                        return "<mark>" + s + "</mark>";
-                    });
-                    // } else {
-                    // 	delete node.titleWithHighlight;
-                }
-                return res;
-            };
-        }
-
-        this.enableFilter = true;
-        this.lastFilterArgs = arguments;
-
-        this.$div.addClass("fancytree-ext-filter");
-        if( hideMode ){
-            this.$div.addClass("fancytree-ext-filter-hide");
-        } else {
-            this.$div.addClass("fancytree-ext-filter-dimm");
-        }
-        // Reset current filter
-        this.visit(function(node){
-            delete node.match;
-            delete node.titleWithHighlight;
-            node.subMatchCount = 0;
-        });
-        // Adjust node.hide, .match, and .subMatchCount properties
-        this.visit(function(node){
-            if ((!leavesOnly || node.children == null) && filter(node)) {
-                count++;
-                node.match = true;
-                node.visitParents(function(p){
-                    p.subMatchCount += 1;
-                    if( opts.autoExpand && !p.expanded ) {
-                        p.setExpanded(true, {noAnimation: true, noEvents: true, scrollIntoView: false});
-                        p._filterAutoExpanded = true;
-                    }
-                });
-                if( branchMode ) {
-                    node.visit(function(p){
-                        p.match = true;
-                    });
-                    return "skip";
-                }
-            }
-        });
-        // Redraw whole tree
-        this.render();
-        return count;
-    };
-
-    /**
-     * [ext-filter] Dimm or hide nodes.
-     *
-     * @param {function | string} filter
-     * @param {boolean} [opts={autoExpand: false, leavesOnly: false}]
-     * @returns {integer} count
-     * @alias Fancytree#filterNodes
-     * @requires jquery.fancytree.filter.js
-     */
-    $.ui.fancytree._FancytreeClass.prototype.filterNodes = function(filter, opts) {
-        if( typeof opts === "boolean" ) {
-            opts = { leavesOnly: opts };
-            this.warn("Fancytree.filterNodes() leavesOnly option is deprecated since 2.9.0 / 2015-04-19.");
-        }
-        return this._applyFilterImpl(filter, false, opts);
-    };
-
-    /**
-     * @deprecated
-     */
-    $.ui.fancytree._FancytreeClass.prototype.applyFilter = function(filter){
-        this.warn("Fancytree.applyFilter() is deprecated since 2.1.0 / 2014-05-29. Use .filterNodes() instead.");
-        return this.filterNodes.apply(this, arguments);
-    };
-
-    /**
-     * [ext-filter] Dimm or hide whole branches.
-     *
-     * @param {function | string} filter
-     * @param {boolean} [opts={autoExpand: false}]
-     * @returns {integer} count
-     * @alias Fancytree#filterBranches
-     * @requires jquery.fancytree.filter.js
-     */
-    $.ui.fancytree._FancytreeClass.prototype.filterBranches = function(filter, opts){
-        return this._applyFilterImpl(filter, true, opts);
-    };
-
-
-    /**
-     * [ext-filter] Reset the filter.
-     *
-     * @alias Fancytree#clearFilter
-     * @requires jquery.fancytree.filter.js
-     */
-    $.ui.fancytree._FancytreeClass.prototype.clearFilter = function(){
-        this.visit(function(node){
-            if( node.match ) {  // #491
-                $(">span.fancytree-title", node.span).html(node.title);
-            }
-            delete node.match;
-            delete node.subMatchCount;
-            delete node.titleWithHighlight;
-            if ( node.$subMatchBadge ) {
-                node.$subMatchBadge.remove();
-                delete node.$subMatchBadge;
-            }
-            if( node._filterAutoExpanded && node.expanded ) {
-                node.setExpanded(false, {noAnimation: true, noEvents: true, scrollIntoView: false});
-            }
-            delete node._filterAutoExpanded;
-        });
-        this.enableFilter = false;
-        this.lastFilterArgs = null;
-        this.$div.removeClass("fancytree-ext-filter fancytree-ext-filter-dimm fancytree-ext-filter-hide");
-        this.render();
-    };
-
-
-    /**
-     * [ext-filter] Return true if a filter is currently applied.
-     *
-     * @returns {Boolean}
-     * @alias Fancytree#isFilterActive
-     * @requires jquery.fancytree.filter.js
-     * @since 2.13
-     */
-    $.ui.fancytree._FancytreeClass.prototype.isFilterActive = function(){
-        return !!this.enableFilter;
-    };
-
-
-    /**
-     * [ext-filter] Return true if this node is matched by current filter (or no filter is active).
-     *
-     * @returns {Boolean}
-     * @alias FancytreeNode#isMatched
-     * @requires jquery.fancytree.filter.js
-     * @since 2.13
-     */
-    $.ui.fancytree._FancytreeNodeClass.prototype.isMatched = function(){
-        return !(this.tree.enableFilter && !this.match);
-    };
-
-
-    /*******************************************************************************
-     * Extension code
-     */
-    $.ui.fancytree.registerExtension({
-        name: "filter",
-        version: "0.7.0",
-        // Default options for this extension.
-        options: {
-            autoApply: true,  // Re-apply last filter if lazy data is loaded
-            counter: true,  // Show a badge with number of matching child nodes near parent icons
-            fuzzy: false,  // Match single characters in order, e.g. 'fb' will match 'FooBar'
-            hideExpandedCounter: true,  // Hide counter badge, when parent is expanded
-            highlight: true,  // Highlight matches by wrapping inside <mark> tags
-            mode: "dimm"  // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-        },
-        // treeCreate: function(ctx){
-        // 	this._superApply(arguments);
-        // 	console.log("create")
-        // 	ctx.tree.options.renderTitle = function(event, data) {
-        // 		var node = data.node;
-        // 		console.log("create n", node.titleWithHighlight, data.tree.enableFilter)
-        // 		if( node.titleWithHighlight && node.tree.enableFilter ) {
-        // 			return node.titleWithHighlight;
-        // 		}
-        // 	}
-        // },
-        // treeInit: function(ctx){
-        // 	this._superApply(arguments);
-        // },
-        nodeLoadChildren: function(ctx, source) {
-            return this._superApply(arguments).done(function() {
-                if( ctx.tree.enableFilter && ctx.tree.lastFilterArgs && ctx.options.filter.autoApply ) {
-                    ctx.tree._applyFilterImpl.apply(ctx.tree, ctx.tree.lastFilterArgs);
-                }
-            });
-        },
-        nodeSetExpanded: function(ctx, flag, callOpts) {
-            delete ctx.node._filterAutoExpanded;
-            // Make sure counter badge is displayed again, when node is beeing collapsed
-            if( !flag && ctx.options.filter.hideExpandedCounter && ctx.node.$subMatchBadge ) {
-                ctx.node.$subMatchBadge.show();
-            }
-            return this._superApply(arguments);
-        },
-        nodeRenderStatus: function(ctx) {
-            // Set classes for current status
-            var res,
-                node = ctx.node,
-                tree = ctx.tree,
-                opts = ctx.options.filter,
-                $span = $(node[tree.statusClassPropName]);
-
-            res = this._superApply(arguments);
-            // nothing to do, if node was not yet rendered
-            if( !$span.length || !tree.enableFilter ) {
-                return res;
-            }
-            $span
-                .toggleClass("fancytree-match", !!node.match)
-                .toggleClass("fancytree-submatch", !!node.subMatchCount)
-                .toggleClass("fancytree-hide", !(node.match || node.subMatchCount));
-            // Add/update counter badge
-            if( opts.counter && node.subMatchCount && (!node.isExpanded() || !opts.hideExpandedCounter) ) {
-                if( !node.$subMatchBadge ) {
-                    node.$subMatchBadge = $("<span class='fancytree-childcounter'/>");
-                    $("span.fancytree-icon", node.span).append(node.$subMatchBadge);
-                }
-                node.$subMatchBadge.show().text(node.subMatchCount);
-            } else if ( node.$subMatchBadge ) {
-                node.$subMatchBadge.hide();
-            }
-            // node.debug("nodeRenderStatus", node.titleWithHighlight, node.title)
-            if( node.titleWithHighlight ) {
-                $("span.fancytree-title", node.span).html(node.titleWithHighlight);
-            } else {
-                $("span.fancytree-title", node.span).html(node.title);
-            }
-            return res;
-        }
-    });
-}(jQuery, window, document));
-
-/*!
- * jQuery UI Position v1.10.0
- * http://jqueryui.com
- *
- * Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- *
- * http://api.jqueryui.com/position/
- */
-(function( $, undefined ) {
-
-    $.ui = $.ui || {};
-    
-    var cachedScrollbarWidth,
-        max = Math.max,
-        abs = Math.abs,
-        round = Math.round,
-        rhorizontal = /left|center|right/,
-        rvertical = /top|center|bottom/,
-        roffset = /[\+\-]\d+%?/,
-        rposition = /^\w+/,
-        rpercent = /%$/,
-        _position = $.fn.position;
-    
-    function getOffsets( offsets, width, height ) {
-        return [
-            parseInt( offsets[ 0 ], 10 ) * ( rpercent.test( offsets[ 0 ] ) ? width / 100 : 1 ),
-            parseInt( offsets[ 1 ], 10 ) * ( rpercent.test( offsets[ 1 ] ) ? height / 100 : 1 )
-        ];
-    }
-    
-    function parseCss( element, property ) {
-        return parseInt( $.css( element, property ), 10 ) || 0;
-    }
-    
-    function getDimensions( elem ) {
-        var raw = elem[0];
-        if ( raw.nodeType === 9 ) {
-            return {
-                width: elem.width(),
-                height: elem.height(),
-                offset: { top: 0, left: 0 }
-            };
-        }
-        if ( $.isWindow( raw ) ) {
-            return {
-                width: elem.width(),
-                height: elem.height(),
-                offset: { top: elem.scrollTop(), left: elem.scrollLeft() }
-            };
-        }
-        if ( raw.preventDefault ) {
-            return {
-                width: 0,
-                height: 0,
-                offset: { top: raw.pageY, left: raw.pageX }
-            };
-        }
-        return {
-            width: elem.outerWidth(),
-            height: elem.outerHeight(),
-            offset: elem.offset()
-        };
-    }
-    
-    $.position = {
-        scrollbarWidth: function() {
-            if ( cachedScrollbarWidth !== undefined ) {
-                return cachedScrollbarWidth;
-            }
-            var w1, w2,
-                div = $( "<div style='display:block;width:50px;height:50px;overflow:hidden;'><div style='height:100px;width:auto;'></div></div>" ),
-                innerDiv = div.children()[0];
-    
-            $( "body" ).append( div );
-            w1 = innerDiv.offsetWidth;
-            div.css( "overflow", "scroll" );
-    
-            w2 = innerDiv.offsetWidth;
-    
-            if ( w1 === w2 ) {
-                w2 = div[0].clientWidth;
-            }
-    
-            div.remove();
-    
-            return (cachedScrollbarWidth = w1 - w2);
-        },
-        getScrollInfo: function( within ) {
-            var overflowX = within.isWindow ? "" : within.element.css( "overflow-x" ),
-                overflowY = within.isWindow ? "" : within.element.css( "overflow-y" ),
-                hasOverflowX = overflowX === "scroll" ||
-                    ( overflowX === "auto" && within.width < within.element[0].scrollWidth ),
-                hasOverflowY = overflowY === "scroll" ||
-                    ( overflowY === "auto" && within.height < within.element[0].scrollHeight );
-            return {
-                width: hasOverflowX ? $.position.scrollbarWidth() : 0,
-                height: hasOverflowY ? $.position.scrollbarWidth() : 0
-            };
-        },
-        getWithinInfo: function( element ) {
-            var withinElement = $( element || window ),
-                isWindow = $.isWindow( withinElement[0] );
-            return {
-                element: withinElement,
-                isWindow: isWindow,
-                offset: withinElement.offset() || { left: 0, top: 0 },
-                scrollLeft: withinElement.scrollLeft(),
-                scrollTop: withinElement.scrollTop(),
-                width: isWindow ? withinElement.width() : withinElement.outerWidth(),
-                height: isWindow ? withinElement.height() : withinElement.outerHeight()
-            };
-        }
-    };
-    
-    $.fn.position = function( options ) {
-        if ( !options || !options.of ) {
-            return _position.apply( this, arguments );
-        }
-    
-        // make a copy, we don't want to modify arguments
-        options = $.extend( {}, options );
-    
-        var atOffset, targetWidth, targetHeight, targetOffset, basePosition, dimensions,
-            target = $( options.of ),
-            within = $.position.getWithinInfo( options.within ),
-            scrollInfo = $.position.getScrollInfo( within ),
-            collision = ( options.collision || "flip" ).split( " " ),
-            offsets = {};
-    
-        dimensions = getDimensions( target );
-        if ( target[0].preventDefault ) {
-            // force left top to allow flipping
-            options.at = "left top";
-        }
-        targetWidth = dimensions.width;
-        targetHeight = dimensions.height;
-        targetOffset = dimensions.offset;
-        // clone to reuse original targetOffset later
-        basePosition = $.extend( {}, targetOffset );
-    
-        // force my and at to have valid horizontal and vertical positions
-        // if a value is missing or invalid, it will be converted to center
-        $.each( [ "my", "at" ], function() {
-            var pos = ( options[ this ] || "" ).split( " " ),
-                horizontalOffset,
-                verticalOffset;
-    
-            if ( pos.length === 1) {
-                pos = rhorizontal.test( pos[ 0 ] ) ?
-                    pos.concat( [ "center" ] ) :
-                    rvertical.test( pos[ 0 ] ) ?
-                        [ "center" ].concat( pos ) :
-                        [ "center", "center" ];
-            }
-            pos[ 0 ] = rhorizontal.test( pos[ 0 ] ) ? pos[ 0 ] : "center";
-            pos[ 1 ] = rvertical.test( pos[ 1 ] ) ? pos[ 1 ] : "center";
-    
-            // calculate offsets
-            horizontalOffset = roffset.exec( pos[ 0 ] );
-            verticalOffset = roffset.exec( pos[ 1 ] );
-            offsets[ this ] = [
-                horizontalOffset ? horizontalOffset[ 0 ] : 0,
-                verticalOffset ? verticalOffset[ 0 ] : 0
-            ];
-    
-            // reduce to just the positions without the offsets
-            options[ this ] = [
-                rposition.exec( pos[ 0 ] )[ 0 ],
-                rposition.exec( pos[ 1 ] )[ 0 ]
-            ];
-        });
-    
-        // normalize collision option
-        if ( collision.length === 1 ) {
-            collision[ 1 ] = collision[ 0 ];
-        }
-    
-        if ( options.at[ 0 ] === "right" ) {
-            basePosition.left += targetWidth;
-        } else if ( options.at[ 0 ] === "center" ) {
-            basePosition.left += targetWidth / 2;
-        }
-    
-        if ( options.at[ 1 ] === "bottom" ) {
-            basePosition.top += targetHeight;
-        } else if ( options.at[ 1 ] === "center" ) {
-            basePosition.top += targetHeight / 2;
-        }
-    
-        atOffset = getOffsets( offsets.at, targetWidth, targetHeight );
-        basePosition.left += atOffset[ 0 ];
-        basePosition.top += atOffset[ 1 ];
-    
-        return this.each(function() {
-            var collisionPosition, using,
-                elem = $( this ),
-                elemWidth = elem.outerWidth(),
-                elemHeight = elem.outerHeight(),
-                marginLeft = parseCss( this, "marginLeft" ),
-                marginTop = parseCss( this, "marginTop" ),
-                collisionWidth = elemWidth + marginLeft + parseCss( this, "marginRight" ) + scrollInfo.width,
-                collisionHeight = elemHeight + marginTop + parseCss( this, "marginBottom" ) + scrollInfo.height,
-                position = $.extend( {}, basePosition ),
-                myOffset = getOffsets( offsets.my, elem.outerWidth(), elem.outerHeight() );
-    
-            if ( options.my[ 0 ] === "right" ) {
-                position.left -= elemWidth;
-            } else if ( options.my[ 0 ] === "center" ) {
-                position.left -= elemWidth / 2;
-            }
-    
-            if ( options.my[ 1 ] === "bottom" ) {
-                position.top -= elemHeight;
-            } else if ( options.my[ 1 ] === "center" ) {
-                position.top -= elemHeight / 2;
-            }
-    
-            position.left += myOffset[ 0 ];
-            position.top += myOffset[ 1 ];
-    
-            // if the browser doesn't support fractions, then round for consistent results
-            if ( !$.support.offsetFractions ) {
-                position.left = round( position.left );
-                position.top = round( position.top );
-            }
-    
-            collisionPosition = {
-                marginLeft: marginLeft,
-                marginTop: marginTop
-            };
-    
-            $.each( [ "left", "top" ], function( i, dir ) {
-                if ( $.ui.position[ collision[ i ] ] ) {
-                    $.ui.position[ collision[ i ] ][ dir ]( position, {
-                        targetWidth: targetWidth,
-                        targetHeight: targetHeight,
-                        elemWidth: elemWidth,
-                        elemHeight: elemHeight,
-                        collisionPosition: collisionPosition,
-                        collisionWidth: collisionWidth,
-                        collisionHeight: collisionHeight,
-                        offset: [ atOffset[ 0 ] + myOffset[ 0 ], atOffset [ 1 ] + myOffset[ 1 ] ],
-                        my: options.my,
-                        at: options.at,
-                        within: within,
-                        elem : elem
-                    });
-                }
-            });
-    
-            if ( options.using ) {
-                // adds feedback as second argument to using callback, if present
-                using = function( props ) {
-                    var left = targetOffset.left - position.left,
-                        right = left + targetWidth - elemWidth,
-                        top = targetOffset.top - position.top,
-                        bottom = top + targetHeight - elemHeight,
-                        feedback = {
-                            target: {
-                                element: target,
-                                left: targetOffset.left,
-                                top: targetOffset.top,
-                                width: targetWidth,
-                                height: targetHeight
-                            },
-                            element: {
-                                element: elem,
-                                left: position.left,
-                                top: position.top,
-                                width: elemWidth,
-                                height: elemHeight
-                            },
-                            horizontal: right < 0 ? "left" : left > 0 ? "right" : "center",
-                            vertical: bottom < 0 ? "top" : top > 0 ? "bottom" : "middle"
-                        };
-                    if ( targetWidth < elemWidth && abs( left + right ) < targetWidth ) {
-                        feedback.horizontal = "center";
-                    }
-                    if ( targetHeight < elemHeight && abs( top + bottom ) < targetHeight ) {
-                        feedback.vertical = "middle";
-                    }
-                    if ( max( abs( left ), abs( right ) ) > max( abs( top ), abs( bottom ) ) ) {
-                        feedback.important = "horizontal";
-                    } else {
-                        feedback.important = "vertical";
-                    }
-                    options.using.call( this, props, feedback );
-                };
-            }
-    
-            elem.offset( $.extend( position, { using: using } ) );
-        });
-    };
-    
-    $.ui.position = {
-        fit: {
-            left: function( position, data ) {
-                var within = data.within,
-                    withinOffset = within.isWindow ? within.scrollLeft : within.offset.left,
-                    outerWidth = within.width,
-                    collisionPosLeft = position.left - data.collisionPosition.marginLeft,
-                    overLeft = withinOffset - collisionPosLeft,
-                    overRight = collisionPosLeft + data.collisionWidth - outerWidth - withinOffset,
-                    newOverRight;
-    
-                // element is wider than within
-                if ( data.collisionWidth > outerWidth ) {
-                    // element is initially over the left side of within
-                    if ( overLeft > 0 && overRight <= 0 ) {
-                        newOverRight = position.left + overLeft + data.collisionWidth - outerWidth - withinOffset;
-                        position.left += overLeft - newOverRight;
-                    // element is initially over right side of within
-                    } else if ( overRight > 0 && overLeft <= 0 ) {
-                        position.left = withinOffset;
-                    // element is initially over both left and right sides of within
-                    } else {
-                        if ( overLeft > overRight ) {
-                            position.left = withinOffset + outerWidth - data.collisionWidth;
-                        } else {
-                            position.left = withinOffset;
-                        }
-                    }
-                // too far left -> align with left edge
-                } else if ( overLeft > 0 ) {
-                    position.left += overLeft;
-                // too far right -> align with right edge
-                } else if ( overRight > 0 ) {
-                    position.left -= overRight;
-                // adjust based on position and margin
-                } else {
-                    position.left = max( position.left - collisionPosLeft, position.left );
-                }
-            },
-            top: function( position, data ) {
-                var within = data.within,
-                    withinOffset = within.isWindow ? within.scrollTop : within.offset.top,
-                    outerHeight = data.within.height,
-                    collisionPosTop = position.top - data.collisionPosition.marginTop,
-                    overTop = withinOffset - collisionPosTop,
-                    overBottom = collisionPosTop + data.collisionHeight - outerHeight - withinOffset,
-                    newOverBottom;
-    
-                // element is taller than within
-                if ( data.collisionHeight > outerHeight ) {
-                    // element is initially over the top of within
-                    if ( overTop > 0 && overBottom <= 0 ) {
-                        newOverBottom = position.top + overTop + data.collisionHeight - outerHeight - withinOffset;
-                        position.top += overTop - newOverBottom;
-                    // element is initially over bottom of within
-                    } else if ( overBottom > 0 && overTop <= 0 ) {
-                        position.top = withinOffset;
-                    // element is initially over both top and bottom of within
-                    } else {
-                        if ( overTop > overBottom ) {
-                            position.top = withinOffset + outerHeight - data.collisionHeight;
-                        } else {
-                            position.top = withinOffset;
-                        }
-                    }
-                // too far up -> align with top
-                } else if ( overTop > 0 ) {
-                    position.top += overTop;
-                // too far down -> align with bottom edge
-                } else if ( overBottom > 0 ) {
-                    position.top -= overBottom;
-                // adjust based on position and margin
-                } else {
-                    position.top = max( position.top - collisionPosTop, position.top );
-                }
-            }
-        },
-        flip: {
-            left: function( position, data ) {
-                var within = data.within,
-                    withinOffset = within.offset.left + within.scrollLeft,
-                    outerWidth = within.width,
-                    offsetLeft = within.isWindow ? within.scrollLeft : within.offset.left,
-                    collisionPosLeft = position.left - data.collisionPosition.marginLeft,
-                    overLeft = collisionPosLeft - offsetLeft,
-                    overRight = collisionPosLeft + data.collisionWidth - outerWidth - offsetLeft,
-                    myOffset = data.my[ 0 ] === "left" ?
-                        -data.elemWidth :
-                        data.my[ 0 ] === "right" ?
-                            data.elemWidth :
-                            0,
-                    atOffset = data.at[ 0 ] === "left" ?
-                        data.targetWidth :
-                        data.at[ 0 ] === "right" ?
-                            -data.targetWidth :
-                            0,
-                    offset = -2 * data.offset[ 0 ],
-                    newOverRight,
-                    newOverLeft;
-    
-                if ( overLeft < 0 ) {
-                    newOverRight = position.left + myOffset + atOffset + offset + data.collisionWidth - outerWidth - withinOffset;
-                    if ( newOverRight < 0 || newOverRight < abs( overLeft ) ) {
-                        position.left += myOffset + atOffset + offset;
-                    }
-                }
-                else if ( overRight > 0 ) {
-                    newOverLeft = position.left - data.collisionPosition.marginLeft + myOffset + atOffset + offset - offsetLeft;
-                    if ( newOverLeft > 0 || abs( newOverLeft ) < overRight ) {
-                        position.left += myOffset + atOffset + offset;
-                    }
-                }
-            },
-            top: function( position, data ) {
-                var within = data.within,
-                    withinOffset = within.offset.top + within.scrollTop,
-                    outerHeight = within.height,
-                    offsetTop = within.isWindow ? within.scrollTop : within.offset.top,
-                    collisionPosTop = position.top - data.collisionPosition.marginTop,
-                    overTop = collisionPosTop - offsetTop,
-                    overBottom = collisionPosTop + data.collisionHeight - outerHeight - offsetTop,
-                    top = data.my[ 1 ] === "top",
-                    myOffset = top ?
-                        -data.elemHeight :
-                        data.my[ 1 ] === "bottom" ?
-                            data.elemHeight :
-                            0,
-                    atOffset = data.at[ 1 ] === "top" ?
-                        data.targetHeight :
-                        data.at[ 1 ] === "bottom" ?
-                            -data.targetHeight :
-                            0,
-                    offset = -2 * data.offset[ 1 ],
-                    newOverTop,
-                    newOverBottom;
-                if ( overTop < 0 ) {
-                    newOverBottom = position.top + myOffset + atOffset + offset + data.collisionHeight - outerHeight - withinOffset;
-                    if ( ( position.top + myOffset + atOffset + offset) > overTop && ( newOverBottom < 0 || newOverBottom < abs( overTop ) ) ) {
-                        position.top += myOffset + atOffset + offset;
-                    }
-                }
-                else if ( overBottom > 0 ) {
-                    newOverTop = position.top -  data.collisionPosition.marginTop + myOffset + atOffset + offset - offsetTop;
-                    if ( ( position.top + myOffset + atOffset + offset) > overBottom && ( newOverTop > 0 || abs( newOverTop ) < overBottom ) ) {
-                        position.top += myOffset + atOffset + offset;
-                    }
-                }
-            }
-        },
-        flipfit: {
-            left: function() {
-                $.ui.position.flip.left.apply( this, arguments );
-                $.ui.position.fit.left.apply( this, arguments );
-            },
-            top: function() {
-                $.ui.position.flip.top.apply( this, arguments );
-                $.ui.position.fit.top.apply( this, arguments );
-            }
-        }
-    };
-    
-    // fraction support test
-    (function () {
-        var testElement, testElementParent, testElementStyle, offsetLeft, i,
-            body = document.getElementsByTagName( "body" )[ 0 ],
-            div = document.createElement( "div" );
-    
-        //Create a "fake body" for testing based on method used in jQuery.support
-        testElement = document.createElement( body ? "div" : "body" );
-        testElementStyle = {
-            visibility: "hidden",
-            width: 0,
-            height: 0,
-            border: 0,
-            margin: 0,
-            background: "none"
-        };
-        if ( body ) {
-            $.extend( testElementStyle, {
-                position: "absolute",
-                left: "-1000px",
-                top: "-1000px"
-            });
-        }
-        for ( i in testElementStyle ) {
-            testElement.style[ i ] = testElementStyle[ i ];
-        }
-        testElement.appendChild( div );
-        testElementParent = body || document.documentElement;
-        testElementParent.insertBefore( testElement, testElementParent.firstChild );
-    
-        div.style.cssText = "position: absolute; left: 10.7432222px;";
-    
-        offsetLeft = $( div ).offset().left;
-        $.support.offsetFractions = offsetLeft > 10 && offsetLeft < 11;
-    
-        testElement.innerHTML = "";
-        testElementParent.removeChild( testElement );
-    })();
-    
-    }( jQuery ) );
-
-/*!
- * jQuery contextMenu - Plugin for simple contextMenu handling
- *
- * Version: 1.6.6
- *
- * Authors: Rodney Rehm, Addy Osmani (patches for FF)
- * Web: http://medialize.github.com/jQuery-contextMenu/
- *
- * Licensed under
- *   MIT License http://www.opensource.org/licenses/mit-license
- *   GPL v3 http://opensource.org/licenses/GPL-3.0
- *
- */
-
-(function($, undefined){
-    
-    // TODO: -
-        // ARIA stuff: menuitem, menuitemcheckbox und menuitemradio
-        // create <menu> structure if $.support[htmlCommand || htmlMenuitem] and !opt.disableNative
-
-// determine html5 compatibility
-$.support.htmlMenuitem = ('HTMLMenuItemElement' in window);
-$.support.htmlCommand = ('HTMLCommandElement' in window);
-$.support.eventSelectstart = ("onselectstart" in document.documentElement);
-/* // should the need arise, test for css user-select
-$.support.cssUserSelect = (function(){
-    var t = false,
-        e = document.createElement('div');
-    
-    $.each('Moz|Webkit|Khtml|O|ms|Icab|'.split('|'), function(i, prefix) {
-        var propCC = prefix + (prefix ? 'U' : 'u') + 'serSelect',
-            prop = (prefix ? ('-' + prefix.toLowerCase() + '-') : '') + 'user-select';
-            
-        e.style.cssText = prop + ': text;';
-        if (e.style[propCC] == 'text') {
-            t = true;
-            return false;
-        }
-        
-        return true;
-    });
-    
-    return t;
-})();
-*/
-
-if (!$.ui || !$.ui.widget) {
-    // duck punch $.cleanData like jQueryUI does to get that remove event
-    // https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.widget.js#L16-24
-    var _cleanData = $.cleanData;
-    $.cleanData = function( elems ) {
-        for ( var i = 0, elem; (elem = elems[i]) != null; i++ ) {
-            try {
-                $( elem ).triggerHandler( "remove" );
-                // http://bugs.jquery.com/ticket/8235
-            } catch( e ) {}
-        }
-        _cleanData( elems );
-    };
-}
-
-var // currently active contextMenu trigger
-    $currentTrigger = null,
-    // is contextMenu initialized with at least one menu?
-    initialized = false,
-    // window handle
-    $win = $(window),
-    // number of registered menus
-    counter = 0,
-    // mapping selector to namespace
-    namespaces = {},
-    // mapping namespace to options
-    menus = {},
-    // custom command type handlers
-    types = {},
-    // default values
-    defaults = {
-        // selector of contextMenu trigger
-        selector: null,
-        // where to append the menu to
-        appendTo: null,
-        // method to trigger context menu ["right", "left", "hover"]
-        trigger: "right",
-        // hide menu when mouse leaves trigger / menu elements
-        autoHide: false,
-        // ms to wait before showing a hover-triggered context menu
-        delay: 200,
-        // flag denoting if a second trigger should simply move (true) or rebuild (false) an open menu
-        // as long as the trigger happened on one of the trigger-element's child nodes
-        reposition: true,
-        // determine position to show menu at
-        determinePosition: function($menu) {
-            // position to the lower middle of the trigger element
-            if ($.ui && $.ui.position) {
-                // .position() is provided as a jQuery UI utility
-                // (...and it won't work on hidden elements)
-                $menu.css('display', 'block').position({
-                    my: "center top",
-                    at: "center bottom",
-                    of: this,
-                    offset: "0 5",
-                    collision: "fit"
-                }).css('display', 'none');
-            } else {
-                // determine contextMenu position
-                var offset = this.offset();
-                offset.top += this.outerHeight();
-                offset.left += this.outerWidth() / 2 - $menu.outerWidth() / 2;
-                $menu.css(offset);
-            }
-        },
-        // position menu
-        position: function(opt, x, y) {
-            var $this = this,
-                offset;
-            // determine contextMenu position
-            if (!x && !y) {
-                opt.determinePosition.call(this, opt.$menu);
-                return;
-            } else if (x === "maintain" && y === "maintain") {
-                // x and y must not be changed (after re-show on command click)
-                offset = opt.$menu.position();
-            } else {
-                // x and y are given (by mouse event)
-                offset = {top: y, left: x};
-            }
-            
-            // correct offset if viewport demands it
-            var bottom = $win.scrollTop() + $win.height(),
-                right = $win.scrollLeft() + $win.width(),
-                height = opt.$menu.height(),
-                width = opt.$menu.width();
-            
-            if (offset.top + height > bottom) {
-                offset.top -= height;
-            }
-            
-            if (offset.left + width > right) {
-                offset.left -= width;
-            }
-            
-            opt.$menu.css(offset);
-        },
-        // position the sub-menu
-        positionSubmenu: function($menu) {
-            if ($.ui && $.ui.position) {
-                // .position() is provided as a jQuery UI utility
-                // (...and it won't work on hidden elements)
-                $menu.css('display', 'block').position({
-                    my: "left top",
-                    at: "right top",
-                    of: this,
-                    collision: "flipfit fit"
-                }).css('display', '');
-            } else {
-                // determine contextMenu position
-                var offset = {
-                    top: 0,
-                    left: this.outerWidth()
-                };
-                $menu.css(offset);
-            }
-        },
-        // offset to add to zIndex
-        zIndex: 1,
-        // show hide animation settings
-        animation: {
-            duration: 50,
-            show: 'slideDown',
-            hide: 'slideUp'
-        },
-        // events
-        events: {
-            show: $.noop,
-            hide: $.noop
-        },
-        // default callback
-        callback: null,
-        // list of contextMenu items
-        items: {}
-    },
-    // mouse position for hover activation
-    hoveract = {
-        timer: null,
-        pageX: null,
-        pageY: null
-    },
-    // determine zIndex
-    zindex = function($t) {
-        var zin = 0,
-            $tt = $t;
-
-        while (true) {
-            zin = Math.max(zin, parseInt($tt.css('z-index'), 10) || 0);
-            $tt = $tt.parent();
-            if (!$tt || !$tt.length || "html body".indexOf($tt.prop('nodeName').toLowerCase()) > -1 ) {
-                break;
-            }
-        }
-        
-        return zin;
-    },
-    // event handlers
-    handle = {
-        // abort anything
-        abortevent: function(e){
-            e.preventDefault();
-            e.stopImmediatePropagation();
-        },
-        
-        // contextmenu show dispatcher
-        contextmenu: function(e) {
-            var $this = $(this);
-            
-            // disable actual context-menu
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            
-            // abort native-triggered events unless we're triggering on right click
-            if (e.data.trigger != 'right' && e.originalEvent) {
-                return;
-            }
-            
-            // abort event if menu is visible for this trigger
-            if ($this.hasClass('context-menu-active')) {
-                return;
-            }
-            
-            if (!$this.hasClass('context-menu-disabled')) {
-                // theoretically need to fire a show event at <menu>
-                // http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#context-menus
-                // var evt = jQuery.Event("show", { data: data, pageX: e.pageX, pageY: e.pageY, relatedTarget: this });
-                // e.data.$menu.trigger(evt);
-                
-                $currentTrigger = $this;
-                if (e.data.build) {
-                    var built = e.data.build($currentTrigger, e);
-                    // abort if build() returned false
-                    if (built === false) {
-                        return;
-                    }
-                    
-                    // dynamically build menu on invocation
-                    e.data = $.extend(true, {}, defaults, e.data, built || {});
-
-                    // abort if there are no items to display
-                    if (!e.data.items || $.isEmptyObject(e.data.items)) {
-                        // Note: jQuery captures and ignores errors from event handlers
-                        if (window.console) {
-                            (console.error || console.log)("No items specified to show in contextMenu");
-                        }
-                        
-                        throw new Error('No Items specified');
-                    }
-                    
-                    // backreference for custom command type creation
-                    e.data.$trigger = $currentTrigger;
-                    
-                    op.create(e.data);
-                }
-                // show menu
-                op.show.call($this, e.data, e.pageX, e.pageY);
-            }
-        },
-        // contextMenu left-click trigger
-        click: function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            $(this).trigger($.Event("contextmenu", { data: e.data, pageX: e.pageX, pageY: e.pageY }));
-        },
-        // contextMenu right-click trigger
-        mousedown: function(e) {
-            // register mouse down
-            var $this = $(this);
-            
-            // hide any previous menus
-            if ($currentTrigger && $currentTrigger.length && !$currentTrigger.is($this)) {
-                $currentTrigger.data('contextMenu').$menu.trigger('contextmenu:hide');
-            }
-            
-            // activate on right click
-            if (e.button == 2) {
-                $currentTrigger = $this.data('contextMenuActive', true);
-            }
-        },
-        // contextMenu right-click trigger
-        mouseup: function(e) {
-            // show menu
-            var $this = $(this);
-            if ($this.data('contextMenuActive') && $currentTrigger && $currentTrigger.length && $currentTrigger.is($this) && !$this.hasClass('context-menu-disabled')) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                $currentTrigger = $this;
-                $this.trigger($.Event("contextmenu", { data: e.data, pageX: e.pageX, pageY: e.pageY }));
-            }
-            
-            $this.removeData('contextMenuActive');
-        },
-        // contextMenu hover trigger
-        mouseenter: function(e) {
-            var $this = $(this),
-                $related = $(e.relatedTarget),
-                $document = $(document);
-            
-            // abort if we're coming from a menu
-            if ($related.is('.context-menu-list') || $related.closest('.context-menu-list').length) {
-                return;
-            }
-            
-            // abort if a menu is shown
-            if ($currentTrigger && $currentTrigger.length) {
-                return;
-            }
-            
-            hoveract.pageX = e.pageX;
-            hoveract.pageY = e.pageY;
-            hoveract.data = e.data;
-            $document.on('mousemove.contextMenuShow', handle.mousemove);
-            hoveract.timer = setTimeout(function() {
-                hoveract.timer = null;
-                $document.off('mousemove.contextMenuShow');
-                $currentTrigger = $this;
-                $this.trigger($.Event("contextmenu", { data: hoveract.data, pageX: hoveract.pageX, pageY: hoveract.pageY }));
-            }, e.data.delay );
-        },
-        // contextMenu hover trigger
-        mousemove: function(e) {
-            hoveract.pageX = e.pageX;
-            hoveract.pageY = e.pageY;
-        },
-        // contextMenu hover trigger
-        mouseleave: function(e) {
-            // abort if we're leaving for a menu
-            var $related = $(e.relatedTarget);
-            if ($related.is('.context-menu-list') || $related.closest('.context-menu-list').length) {
-                return;
-            }
-            
-            try {
-                clearTimeout(hoveract.timer);
-            } catch(e) {}
-            
-            hoveract.timer = null;
-        },
-        
-        // click on layer to hide contextMenu
-        layerClick: function(e) {
-            var $this = $(this),
-                root = $this.data('contextMenuRoot'),
-                mouseup = false,
-                button = e.button,
-                x = e.pageX,
-                y = e.pageY,
-                target, 
-                offset,
-                selectors;
-                
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            
-            setTimeout(function() {
-                var $window, hideshow, possibleTarget;
-                var triggerAction = ((root.trigger == 'left' && button === 0) || (root.trigger == 'right' && button === 2));
-                
-                // find the element that would've been clicked, wasn't the layer in the way
-                if (document.elementFromPoint) {
-                    root.$layer.hide();
-                    target = document.elementFromPoint(x - $win.scrollLeft(), y - $win.scrollTop());
-                    root.$layer.show();
-                }
-                
-                if (root.reposition && triggerAction) {
-                    if (document.elementFromPoint) {
-                        if (root.$trigger.is(target) || root.$trigger.has(target).length) {
-                            root.position.call(root.$trigger, root, x, y);
-                            return;
-                        }
-                    } else {
-                        offset = root.$trigger.offset();
-                        $window = $(window);
-                        // while this looks kinda awful, it's the best way to avoid
-                        // unnecessarily calculating any positions
-                        offset.top += $window.scrollTop();
-                        if (offset.top <= e.pageY) {
-                            offset.left += $window.scrollLeft();
-                            if (offset.left <= e.pageX) {
-                                offset.bottom = offset.top + root.$trigger.outerHeight();
-                                if (offset.bottom >= e.pageY) {
-                                    offset.right = offset.left + root.$trigger.outerWidth();
-                                    if (offset.right >= e.pageX) {
-                                        // reposition
-                                        root.position.call(root.$trigger, root, x, y);
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                if (target && triggerAction) {
-                    root.$trigger.one('contextmenu:hidden', function() {
-                        $(target).contextMenu({x: x, y: y});
-                    });
-                }
-
-                root.$menu.trigger('contextmenu:hide');
-            }, 50);
-        },
-        // key handled :hover
-        keyStop: function(e, opt) {
-            if (!opt.isInput) {
-                e.preventDefault();
-            }
-            
-            e.stopPropagation();
-        },
-        key: function(e) {
-            var opt = $currentTrigger.data('contextMenu') || {};
-
-            switch (e.keyCode) {
-                case 9:
-                case 38: // up
-                    handle.keyStop(e, opt);
-                    // if keyCode is [38 (up)] or [9 (tab) with shift]
-                    if (opt.isInput) {
-                        if (e.keyCode == 9 && e.shiftKey) {
-                            e.preventDefault();
-                            opt.$selected && opt.$selected.find('input, textarea, select').blur();
-                            opt.$menu.trigger('prevcommand');
-                            return;
-                        } else if (e.keyCode == 38 && opt.$selected.find('input, textarea, select').prop('type') == 'checkbox') {
-                            // checkboxes don't capture this key
-                            e.preventDefault();
-                            return;
-                        }
-                    } else if (e.keyCode != 9 || e.shiftKey) {
-                        opt.$menu.trigger('prevcommand');
-                        return;
-                    }
-                    // omitting break;
-                    
-                // case 9: // tab - reached through omitted break;
-                case 40: // down
-                    handle.keyStop(e, opt);
-                    if (opt.isInput) {
-                        if (e.keyCode == 9) {
-                            e.preventDefault();
-                            opt.$selected && opt.$selected.find('input, textarea, select').blur();
-                            opt.$menu.trigger('nextcommand');
-                            return;
-                        } else if (e.keyCode == 40 && opt.$selected.find('input, textarea, select').prop('type') == 'checkbox') {
-                            // checkboxes don't capture this key
-                            e.preventDefault();
-                            return;
-                        }
-                    } else {
-                        opt.$menu.trigger('nextcommand');
-                        return;
-                    }
-                    break;
-                
-                case 37: // left
-                    handle.keyStop(e, opt);
-                    if (opt.isInput || !opt.$selected || !opt.$selected.length) {
-                        break;
-                    }
-                
-                    if (!opt.$selected.parent().hasClass('context-menu-root')) {
-                        var $parent = opt.$selected.parent().parent();
-                        opt.$selected.trigger('contextmenu:blur');
-                        opt.$selected = $parent;
-                        return;
-                    }
-                    break;
-                    
-                case 39: // right
-                    handle.keyStop(e, opt);
-                    if (opt.isInput || !opt.$selected || !opt.$selected.length) {
-                        break;
-                    }
-                    
-                    var itemdata = opt.$selected.data('contextMenu') || {};
-                    if (itemdata.$menu && opt.$selected.hasClass('context-menu-submenu')) {
-                        opt.$selected = null;
-                        itemdata.$selected = null;
-                        itemdata.$menu.trigger('nextcommand');
-                        return;
-                    }
-                    break;
-                
-                case 35: // end
-                case 36: // home
-                    if (opt.$selected && opt.$selected.find('input, textarea, select').length) {
-                        return;
-                    } else {
-                        (opt.$selected && opt.$selected.parent() || opt.$menu)
-                            .children(':not(.disabled, .not-selectable)')[e.keyCode == 36 ? 'first' : 'last']()
-                            .trigger('contextmenu:focus');
-                        e.preventDefault();
-                        return;
-                    }
-                    break;
-                    
-                case 13: // enter
-                    handle.keyStop(e, opt);
-                    if (opt.isInput) {
-                        if (opt.$selected && !opt.$selected.is('textarea, select')) {
-                            e.preventDefault();
-                            return;
-                        }
-                        break;
-                    }
-                    opt.$selected && opt.$selected.trigger('mouseup');
-                    return;
-                    
-                case 32: // space
-                case 33: // page up
-                case 34: // page down
-                    // prevent browser from scrolling down while menu is visible
-                    handle.keyStop(e, opt);
-                    return;
-                    
-                case 27: // esc
-                    handle.keyStop(e, opt);
-                    opt.$menu.trigger('contextmenu:hide');
-                    return;
-                    
-                default: // 0-9, a-z
-                    var k = (String.fromCharCode(e.keyCode)).toUpperCase();
-                    if (opt.accesskeys[k]) {
-                        // according to the specs accesskeys must be invoked immediately
-                        opt.accesskeys[k].$node.trigger(opt.accesskeys[k].$menu
-                            ? 'contextmenu:focus'
-                            : 'mouseup'
-                        );
-                        return;
-                    }
-                    break;
-            }
-            // pass event to selected item, 
-            // stop propagation to avoid endless recursion
-            e.stopPropagation();
-            opt.$selected && opt.$selected.trigger(e);
-        },
-
-        // select previous possible command in menu
-        prevItem: function(e) {
-            e.stopPropagation();
-            var opt = $(this).data('contextMenu') || {};
-
-            // obtain currently selected menu
-            if (opt.$selected) {
-                var $s = opt.$selected;
-                opt = opt.$selected.parent().data('contextMenu') || {};
-                opt.$selected = $s;
-            }
-            
-            var $children = opt.$menu.children(),
-                $prev = !opt.$selected || !opt.$selected.prev().length ? $children.last() : opt.$selected.prev(),
-                $round = $prev;
-            
-            // skip disabled
-            while ($prev.hasClass('disabled') || $prev.hasClass('not-selectable')) {
-                if ($prev.prev().length) {
-                    $prev = $prev.prev();
-                } else {
-                    $prev = $children.last();
-                }
-                if ($prev.is($round)) {
-                    // break endless loop
-                    return;
-                }
-            }
-            
-            // leave current
-            if (opt.$selected) {
-                handle.itemMouseleave.call(opt.$selected.get(0), e);
-            }
-            
-            // activate next
-            handle.itemMouseenter.call($prev.get(0), e);
-            
-            // focus input
-            var $input = $prev.find('input, textarea, select');
-            if ($input.length) {
-                $input.focus();
-            }
-        },
-        // select next possible command in menu
-        nextItem: function(e) {
-            e.stopPropagation();
-            var opt = $(this).data('contextMenu') || {};
-
-            // obtain currently selected menu
-            if (opt.$selected) {
-                var $s = opt.$selected;
-                opt = opt.$selected.parent().data('contextMenu') || {};
-                opt.$selected = $s;
-            }
-
-            var $children = opt.$menu.children(),
-                $next = !opt.$selected || !opt.$selected.next().length ? $children.first() : opt.$selected.next(),
-                $round = $next;
-
-            // skip disabled
-            while ($next.hasClass('disabled') || $next.hasClass('not-selectable')) {
-                if ($next.next().length) {
-                    $next = $next.next();
-                } else {
-                    $next = $children.first();
-                }
-                if ($next.is($round)) {
-                    // break endless loop
-                    return;
-                }
-            }
-            
-            // leave current
-            if (opt.$selected) {
-                handle.itemMouseleave.call(opt.$selected.get(0), e);
-            }
-            
-            // activate next
-            handle.itemMouseenter.call($next.get(0), e);
-            
-            // focus input
-            var $input = $next.find('input, textarea, select');
-            if ($input.length) {
-                $input.focus();
-            }
-        },
-        
-        // flag that we're inside an input so the key handler can act accordingly
-        focusInput: function(e) {
-            var $this = $(this).closest('.context-menu-item'),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-
-            root.$selected = opt.$selected = $this;
-            root.isInput = opt.isInput = true;
-        },
-        // flag that we're inside an input so the key handler can act accordingly
-        blurInput: function(e) {
-            var $this = $(this).closest('.context-menu-item'),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-
-            root.isInput = opt.isInput = false;
-        },
-        
-        // :hover on menu
-        menuMouseenter: function(e) {
-            var root = $(this).data().contextMenuRoot;
-            root.hovering = true;
-        },
-        // :hover on menu
-        menuMouseleave: function(e) {
-            var root = $(this).data().contextMenuRoot;
-            if (root.$layer && root.$layer.is(e.relatedTarget)) {
-                root.hovering = false;
-            }
-        },
-        
-        // :hover done manually so key handling is possible
-        itemMouseenter: function(e) {
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-            
-            root.hovering = true;
-
-            // abort if we're re-entering
-            if (e && root.$layer && root.$layer.is(e.relatedTarget)) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-            }
-
-            // make sure only one item is selected
-            (opt.$menu ? opt : root).$menu
-                .children('.hover').trigger('contextmenu:blur');
-
-            if ($this.hasClass('disabled') || $this.hasClass('not-selectable')) {
-                opt.$selected = null;
-                return;
-            }
-            
-            $this.trigger('contextmenu:focus');
-        },
-        // :hover done manually so key handling is possible
-        itemMouseleave: function(e) {
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-
-            if (root !== opt && root.$layer && root.$layer.is(e.relatedTarget)) {
-                root.$selected && root.$selected.trigger('contextmenu:blur');
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                root.$selected = opt.$selected = opt.$node;
-                return;
-            }
-            
-            $this.trigger('contextmenu:blur');
-        },
-        // contextMenu item click
-        itemClick: function(e) {
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot,
-                key = data.contextMenuKey,
-                callback;
-
-            // abort if the key is unknown or disabled or is a menu
-            if (!opt.items[key] || $this.is('.disabled, .context-menu-submenu, .context-menu-separator, .not-selectable')) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            if ($.isFunction(root.callbacks[key]) && Object.prototype.hasOwnProperty.call(root.callbacks, key)) {
-                // item-specific callback
-                callback = root.callbacks[key];
-            } else if ($.isFunction(root.callback)) {
-                // default callback
-                callback = root.callback;                
-            } else {
-                // no callback, no action
-                return;
-            }
-
-            // hide menu if callback doesn't stop that
-            if (callback.call(root.$trigger, key, root) !== false) {
-                root.$menu.trigger('contextmenu:hide');
-            } else if (root.$menu.parent().length) {
-                op.update.call(root.$trigger, root);
-            }
-        },
-        // ignore click events on input elements
-        inputClick: function(e) {
-            e.stopImmediatePropagation();
-        },
-        
-        // hide <menu>
-        hideMenu: function(e, data) {
-            var root = $(this).data('contextMenuRoot');
-            op.hide.call(root.$trigger, root, data && data.force);
-        },
-        // focus <command>
-        focusItem: function(e) {
-            e.stopPropagation();
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-
-            $this.addClass('hover')
-                .siblings('.hover').trigger('contextmenu:blur');
-            
-            // remember selected
-            opt.$selected = root.$selected = $this;
-            
-            // position sub-menu - do after show so dumb $.ui.position can keep up
-            if (opt.$node) {
-                root.positionSubmenu.call(opt.$node, opt.$menu);
-            }
-        },
-        // blur <command>
-        blurItem: function(e) {
-            e.stopPropagation();
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-            
-            $this.removeClass('hover');
-            opt.$selected = null;
-        }
-    },
-    // operations
-    op = {
-        show: function(opt, x, y) {
-            var $trigger = $(this),
-                offset,
-                css = {};
-
-            // hide any open menus
-            $('#context-menu-layer').trigger('mousedown');
-
-            // backreference for callbacks
-            opt.$trigger = $trigger;
-
-            // show event
-            if (opt.events.show.call($trigger, opt) === false) {
-                $currentTrigger = null;
-                return;
-            }
-
-            // create or update context menu
-            op.update.call($trigger, opt);
-            
-            // position menu
-            opt.position.call($trigger, opt, x, y);
-
-            // make sure we're in front
-            if (opt.zIndex) {
-                css.zIndex = zindex($trigger) + opt.zIndex;
-            }
-            
-            // add layer
-            op.layer.call(opt.$menu, opt, css.zIndex);
-            
-            // adjust sub-menu zIndexes
-            opt.$menu.find('ul').css('zIndex', css.zIndex + 1);
-            
-            // position and show context menu
-            opt.$menu.css( css )[opt.animation.show](opt.animation.duration, function() {
-                $trigger.trigger('contextmenu:visible');
-            });
-            // make options available and set state
-            $trigger
-                .data('contextMenu', opt)
-                .addClass("context-menu-active");
-            
-            // register key handler
-            $(document).off('keydown.contextMenu').on('keydown.contextMenu', handle.key);
-            // register autoHide handler
-            if (opt.autoHide) {
-                // mouse position handler
-                $(document).on('mousemove.contextMenuAutoHide', function(e) {
-                    // need to capture the offset on mousemove,
-                    // since the page might've been scrolled since activation
-                    var pos = $trigger.offset();
-                    pos.right = pos.left + $trigger.outerWidth();
-                    pos.bottom = pos.top + $trigger.outerHeight();
-                    
-                    if (opt.$layer && !opt.hovering && (!(e.pageX >= pos.left && e.pageX <= pos.right) || !(e.pageY >= pos.top && e.pageY <= pos.bottom))) {
-                        // if mouse in menu...
-                        opt.$menu.trigger('contextmenu:hide');
-                    }
-                });
-            }
-        },
-        hide: function(opt, force) {
-            var $trigger = $(this);
-            if (!opt) {
-                opt = $trigger.data('contextMenu') || {};
-            }
-            
-            // hide event
-            if (!force && opt.events && opt.events.hide.call($trigger, opt) === false) {
-                return;
-            }
-            
-            // remove options and revert state
-            $trigger
-                .removeData('contextMenu')
-                .removeClass("context-menu-active");
-            
-            if (opt.$layer) {
-                // keep layer for a bit so the contextmenu event can be aborted properly by opera
-                setTimeout((function($layer) {
-                    return function(){
-                        $layer.remove();
-                    };
-                })(opt.$layer), 10);
-                
-                try {
-                    delete opt.$layer;
-                } catch(e) {
-                    opt.$layer = null;
-                }
-            }
-            
-            // remove handle
-            $currentTrigger = null;
-            // remove selected
-            opt.$menu.find('.hover').trigger('contextmenu:blur');
-            opt.$selected = null;
-            // unregister key and mouse handlers
-            //$(document).off('.contextMenuAutoHide keydown.contextMenu'); // http://bugs.jquery.com/ticket/10705
-            $(document).off('.contextMenuAutoHide').off('keydown.contextMenu');
-            // hide menu
-            opt.$menu && opt.$menu[opt.animation.hide](opt.animation.duration, function (){
-                // tear down dynamically built menu after animation is completed.
-                if (opt.build) {
-                    opt.$menu.remove();
-                    $.each(opt, function(key, value) {
-                        switch (key) {
-                            case 'ns':
-                            case 'selector':
-                            case 'build':
-                            case 'trigger':
-                                return true;
-
-                            default:
-                                opt[key] = undefined;
-                                try {
-                                    delete opt[key];
-                                } catch (e) {}
-                                return true;
-                        }
-                    });
-                }
-                
-                setTimeout(function() {
-                    $trigger.trigger('contextmenu:hidden');
-                }, 10);
-            });
-        },
-        create: function(opt, root) {
-            if (root === undefined) {
-                root = opt;
-            }
-            // create contextMenu
-            opt.$menu = $('<ul class="context-menu-list"></ul>').addClass(opt.className || "").data({
-                'contextMenu': opt,
-                'contextMenuRoot': root
-            });
-            
-            $.each(['callbacks', 'commands', 'inputs'], function(i,k){
-                opt[k] = {};
-                if (!root[k]) {
-                    root[k] = {};
-                }
-            });
-            
-            root.accesskeys || (root.accesskeys = {});
-            
-            // create contextMenu items
-            $.each(opt.items, function(key, item){
-                var $t = $('<li class="context-menu-item"></li>').addClass(item.className || ""),
-                    $label = null,
-                    $input = null;
-                
-                // iOS needs to see a click-event bound to an element to actually
-                // have the TouchEvents infrastructure trigger the click event
-                $t.on('click', $.noop);
-                
-                item.$node = $t.data({
-                    'contextMenu': opt,
-                    'contextMenuRoot': root,
-                    'contextMenuKey': key
-                });
-                
-                // register accesskey
-                // NOTE: the accesskey attribute should be applicable to any element, but Safari5 and Chrome13 still can't do that
-                if (item.accesskey) {
-                    var aks = splitAccesskey(item.accesskey);
-                    for (var i=0, ak; ak = aks[i]; i++) {
-                        if (!root.accesskeys[ak]) {
-                            root.accesskeys[ak] = item;
-                            item._name = item.name.replace(new RegExp('(' + ak + ')', 'i'), '<span class="context-menu-accesskey">$1</span>');
-                            break;
-                        }
-                    }
-                }
-                
-                if (typeof item == "string") {
-                    $t.addClass('context-menu-separator not-selectable');
-                } else if (item.type && types[item.type]) {
-                    // run custom type handler
-                    types[item.type].call($t, item, opt, root);
-                    // register commands
-                    $.each([opt, root], function(i,k){
-                        k.commands[key] = item;
-                        if ($.isFunction(item.callback)) {
-                            k.callbacks[key] = item.callback;
-                        }
-                    });
-                } else {
-                    // add label for input
-                    if (item.type == 'html') {
-                        $t.addClass('context-menu-html not-selectable');
-                    } else if (item.type) {
-                        $label = $('<label></label>').appendTo($t);
-                        $('<span></span>').html(item._name || item.name).appendTo($label);
-                        $t.addClass('context-menu-input');
-                        opt.hasTypes = true;
-                        $.each([opt, root], function(i,k){
-                            k.commands[key] = item;
-                            k.inputs[key] = item;
-                        });
-                    } else if (item.items) {
-                        item.type = 'sub';
-                    }
-                
-                    switch (item.type) {
-                        case 'text':
-                            $input = $('<input type="text" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .appendTo($label);
-                            break;
-                    
-                        case 'textarea':
-                            $input = $('<textarea name=""></textarea>')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .appendTo($label);
-
-                            if (item.height) {
-                                $input.height(item.height);
-                            }
-                            break;
-
-                        case 'checkbox':
-                            $input = $('<input type="checkbox" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .prop("checked", !!item.selected)
-                                .prependTo($label);
-                            break;
-
-                        case 'radio':
-                            $input = $('<input type="radio" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + item.radio)
-                                .val(item.value || "")
-                                .prop("checked", !!item.selected)
-                                .prependTo($label);
-                            break;
-                    
-                        case 'select':
-                            $input = $('<select name="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .appendTo($label);
-                            if (item.options) {
-                                $.each(item.options, function(value, text) {
-                                    $('<option></option>').val(value).text(text).appendTo($input);
-                                });
-                                $input.val(item.selected);
-                            }
-                            break;
-                        
-                        case 'sub':
-                            // FIXME: shouldn't this .html() be a .text()?
-                            $('<span></span>').html(item._name || item.name).appendTo($t);
-                            item.appendTo = item.$node;
-                            op.create(item, root);
-                            $t.data('contextMenu', item).addClass('context-menu-submenu');
-                            item.callback = null;
-                            break;
-                        
-                        case 'html':
-                            $(item.html).appendTo($t);
-                            break;
-                        
-                        default:
-                            $.each([opt, root], function(i,k){
-                                k.commands[key] = item;
-                                if ($.isFunction(item.callback)) {
-                                    k.callbacks[key] = item.callback;
-                                }
-                            });
-                            // FIXME: shouldn't this .html() be a .text()?
-                            $('<span></span>').html(item._name || item.name || "").appendTo($t);
-                            break;
-                    }
-                    
-                    // disable key listener in <input>
-                    if (item.type && item.type != 'sub' && item.type != 'html') {
-                        $input
-                            .on('focus', handle.focusInput)
-                            .on('blur', handle.blurInput);
-                        
-                        if (item.events) {
-                            $input.on(item.events, opt);
-                        }
-                    }
-                
-                    // add icons
-                    if (item.icon) {
-                        $t.addClass("icon icon-" + item.icon);
-                    }
-                }
-                
-                // cache contained elements
-                item.$input = $input;
-                item.$label = $label;
-
-                // attach item to menu
-                $t.appendTo(opt.$menu);
-                
-                // Disable text selection
-                if (!opt.hasTypes && $.support.eventSelectstart) {
-                    // browsers support user-select: none, 
-                    // IE has a special event for text-selection
-                    // browsers supporting neither will not be preventing text-selection
-                    $t.on('selectstart.disableTextSelect', handle.abortevent);
-                }
-            });
-            // attach contextMenu to <body> (to bypass any possible overflow:hidden issues on parents of the trigger element)
-            if (!opt.$node) {
-                opt.$menu.css('display', 'none').addClass('context-menu-root');
-            }
-            opt.$menu.appendTo(opt.appendTo || document.body);
-        },
-        resize: function($menu, nested) {
-            // determine widths of submenus, as CSS won't grow them automatically
-            // position:absolute within position:absolute; min-width:100; max-width:200; results in width: 100;
-            // kinda sucks hard...
-
-            // determine width of absolutely positioned element
-            $menu.css({position: 'absolute', display: 'block'});
-            // don't apply yet, because that would break nested elements' widths
-            // add a pixel to circumvent word-break issue in IE9 - #80
-            $menu.data('width', Math.ceil($menu.width()) + 1);
-            // reset styles so they allow nested elements to grow/shrink naturally
-            $menu.css({
-                position: 'static',
-                minWidth: '0px',
-                maxWidth: '100000px'
-            });
-            // identify width of nested menus
-            $menu.find('> li > ul').each(function() {
-                op.resize($(this), true);
-            });
-            // reset and apply changes in the end because nested
-            // elements' widths wouldn't be calculatable otherwise
-            if (!nested) {
-                $menu.find('ul').addBack().css({
-                    position: '', 
-                    display: '',
-                    minWidth: '',
-                    maxWidth: ''
-                }).width(function() {
-                    return $(this).data('width');
-                });
-            }
-        },
-        update: function(opt, root) {
-            var $trigger = this;
-            if (root === undefined) {
-                root = opt;
-                op.resize(opt.$menu);
-            }
-            // re-check disabled for each item
-            opt.$menu.children().each(function(){
-                var $item = $(this),
-                    key = $item.data('contextMenuKey'),
-                    item = opt.items[key],
-                    disabled = ($.isFunction(item.disabled) && item.disabled.call($trigger, key, root)) || item.disabled === true;
-
-                // dis- / enable item
-                $item[disabled ? 'addClass' : 'removeClass']('disabled');
-                
-                if (item.type) {
-                    // dis- / enable input elements
-                    $item.find('input, select, textarea').prop('disabled', disabled);
-                    
-                    // update input states
-                    switch (item.type) {
-                        case 'text':
-                        case 'textarea':
-                            item.$input.val(item.value || "");
-                            break;
-                            
-                        case 'checkbox':
-                        case 'radio':
-                            item.$input.val(item.value || "").prop('checked', !!item.selected);
-                            break;
-                            
-                        case 'select':
-                            item.$input.val(item.selected || "");
-                            break;
-                    }
-                }
-                
-                if (item.$menu) {
-                    // update sub-menu
-                    op.update.call($trigger, item, root);
-                }
-            });
-        },
-        layer: function(opt, zIndex) {
-            // add transparent layer for click area
-            // filter and background for Internet Explorer, Issue #23
-            var $layer = opt.$layer = $('<div id="context-menu-layer" style="position:fixed; z-index:' + zIndex + '; top:0; left:0; opacity: 0; filter: alpha(opacity=0); background-color: #000;"></div>')
-                .css({height: $win.height(), width: $win.width(), display: 'block'})
-                .data('contextMenuRoot', opt)
-                .insertBefore(this)
-                .on('contextmenu', handle.abortevent)
-                .on('mousedown', handle.layerClick);
-            
-            // IE6 doesn't know position:fixed;
-            if (!$.support.fixedPosition) {
-                $layer.css({
-                    'position' : 'absolute',
-                    'height' : $(document).height()
-                });
-            }
-            
-            return $layer;
-        }
-    };
-
-// split accesskey according to http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#assigned-access-key
-function splitAccesskey(val) {
-    var t = val.split(/\s+/),
-        keys = [];
-        
-    for (var i=0, k; k = t[i]; i++) {
-        k = k[0].toUpperCase(); // first character only
-        // theoretically non-accessible characters should be ignored, but different systems, different keyboard layouts, ... screw it.
-        // a map to look up already used access keys would be nice
-        keys.push(k);
-    }
-    
-    return keys;
-}
-
-// handle contextMenu triggers
-$.fn.contextMenu = function(operation) {
-    if (operation === undefined) {
-        this.first().trigger('contextmenu');
-    } else if (operation.x && operation.y) {
-        this.first().trigger($.Event("contextmenu", {pageX: operation.x, pageY: operation.y}));
-    } else if (operation === "hide") {
-        var $menu = this.data('contextMenu').$menu;
-        $menu && $menu.trigger('contextmenu:hide');
-    } else if (operation === "destroy") {
-        $.contextMenu("destroy", {context: this});
-    } else if ($.isPlainObject(operation)) {
-        operation.context = this;
-        $.contextMenu("create", operation);
-    } else if (operation) {
-        this.removeClass('context-menu-disabled');
-    } else if (!operation) {
-        this.addClass('context-menu-disabled');
-    }
-    
-    return this;
-};
-
-// manage contextMenu instances
-$.contextMenu = function(operation, options) {
-    if (typeof operation != 'string') {
-        options = operation;
-        operation = 'create';
-    }
-    
-    if (typeof options == 'string') {
-        options = {selector: options};
-    } else if (options === undefined) {
-        options = {};
-    }
-    
-    // merge with default options
-    var o = $.extend(true, {}, defaults, options || {});
-    var $document = $(document);
-    var $context = $document;
-    var _hasContext = false;
-    
-    if (!o.context || !o.context.length) {
-        o.context = document;
-    } else {
-        // you never know what they throw at you...
-        $context = $(o.context).first();
-        o.context = $context.get(0);
-        _hasContext = o.context !== document;
-    }
-    
-    switch (operation) {
-        case 'create':
-            // no selector no joy
-            if (!o.selector) {
-                throw new Error('No selector specified');
-            }
-            // make sure internal classes are not bound to
-            if (o.selector.match(/.context-menu-(list|item|input)($|\s)/)) {
-                throw new Error('Cannot bind to selector "' + o.selector + '" as it contains a reserved className');
-            }
-            if (!o.build && (!o.items || $.isEmptyObject(o.items))) {
-                throw new Error('No Items specified');
-            }
-            counter ++;
-            o.ns = '.contextMenu' + counter;
-            if (!_hasContext) {
-                namespaces[o.selector] = o.ns;
-            }
-            menus[o.ns] = o;
-            
-            // default to right click
-            if (!o.trigger) {
-                o.trigger = 'right';
-            }
-            
-            if (!initialized) {
-                // make sure item click is registered first
-                $document
-                    .on({
-                        'contextmenu:hide.contextMenu': handle.hideMenu,
-                        'prevcommand.contextMenu': handle.prevItem,
-                        'nextcommand.contextMenu': handle.nextItem,
-                        'contextmenu.contextMenu': handle.abortevent,
-                        'mouseenter.contextMenu': handle.menuMouseenter,
-                        'mouseleave.contextMenu': handle.menuMouseleave
-                    }, '.context-menu-list')
-                    .on('mouseup.contextMenu', '.context-menu-input', handle.inputClick)
-                    .on({
-                        'mouseup.contextMenu': handle.itemClick,
-                        'contextmenu:focus.contextMenu': handle.focusItem,
-                        'contextmenu:blur.contextMenu': handle.blurItem,
-                        'contextmenu.contextMenu': handle.abortevent,
-                        'mouseenter.contextMenu': handle.itemMouseenter,
-                        'mouseleave.contextMenu': handle.itemMouseleave
-                    }, '.context-menu-item');
-
-                initialized = true;
-            }
-            
-            // engage native contextmenu event
-            $context
-                .on('contextmenu' + o.ns, o.selector, o, handle.contextmenu);
-            
-            if (_hasContext) {
-                // add remove hook, just in case
-                $context.on('remove' + o.ns, function() {
-                    $(this).contextMenu("destroy");
-                });
-            }
-            
-            switch (o.trigger) {
-                case 'hover':
-                        $context
-                            .on('mouseenter' + o.ns, o.selector, o, handle.mouseenter)
-                            .on('mouseleave' + o.ns, o.selector, o, handle.mouseleave);                    
-                    break;
-                    
-                case 'left':
-                        $context.on('click' + o.ns, o.selector, o, handle.click);
-                    break;
-                /*
-                default:
-                    // http://www.quirksmode.org/dom/events/contextmenu.html
-                    $document
-                        .on('mousedown' + o.ns, o.selector, o, handle.mousedown)
-                        .on('mouseup' + o.ns, o.selector, o, handle.mouseup);
-                    break;
-                */
-            }
-            
-            // create menu
-            if (!o.build) {
-                op.create(o);
-            }
-            break;
-        
-        case 'destroy':
-            var $visibleMenu;
-            if (_hasContext) {
-                // get proper options 
-                var context = o.context;
-                $.each(menus, function(ns, o) {
-                    if (o.context !== context) {
-                        return true;
-                    }
-                    
-                    $visibleMenu = $('.context-menu-list').filter(':visible');
-                    if ($visibleMenu.length && $visibleMenu.data().contextMenuRoot.$trigger.is($(o.context).find(o.selector))) {
-                        $visibleMenu.trigger('contextmenu:hide', {force: true});
-                    }
-
-                    try {
-                        if (menus[o.ns].$menu) {
-                            menus[o.ns].$menu.remove();
-                        }
-
-                        delete menus[o.ns];
-                    } catch(e) {
-                        menus[o.ns] = null;
-                    }
-
-                    $(o.context).off(o.ns);
-                    
-                    return true;
-                });
-            } else if (!o.selector) {
-                $document.off('.contextMenu .contextMenuAutoHide');
-                $.each(menus, function(ns, o) {
-                    $(o.context).off(o.ns);
-                });
-                
-                namespaces = {};
-                menus = {};
-                counter = 0;
-                initialized = false;
-                
-                $('#context-menu-layer, .context-menu-list').remove();
-            } else if (namespaces[o.selector]) {
-                $visibleMenu = $('.context-menu-list').filter(':visible');
-                if ($visibleMenu.length && $visibleMenu.data().contextMenuRoot.$trigger.is(o.selector)) {
-                    $visibleMenu.trigger('contextmenu:hide', {force: true});
-                }
-                
-                try {
-                    if (menus[namespaces[o.selector]].$menu) {
-                        menus[namespaces[o.selector]].$menu.remove();
-                    }
-                    
-                    delete menus[namespaces[o.selector]];
-                } catch(e) {
-                    menus[namespaces[o.selector]] = null;
-                }
-                
-                $document.off(namespaces[o.selector]);
-            }
-            break;
-        
-        case 'html5':
-            // if <command> or <menuitem> are not handled by the browser,
-            // or options was a bool true,
-            // initialize $.contextMenu for them
-            if ((!$.support.htmlCommand && !$.support.htmlMenuitem) || (typeof options == "boolean" && options)) {
-                $('menu[type="context"]').each(function() {
-                    if (this.id) {
-                        $.contextMenu({
-                            selector: '[contextmenu=' + this.id +']',
-                            items: $.contextMenu.fromMenu(this)
-                        });
-                    }
-                }).css('display', 'none');
-            }
-            break;
-        
-        default:
-            throw new Error('Unknown operation "' + operation + '"');
-    }
-    
-    return this;
-};
-
-// import values into <input> commands
-$.contextMenu.setInputValues = function(opt, data) {
-    if (data === undefined) {
-        data = {};
-    }
-    
-    $.each(opt.inputs, function(key, item) {
-        switch (item.type) {
-            case 'text':
-            case 'textarea':
-                item.value = data[key] || "";
-                break;
-
-            case 'checkbox':
-                item.selected = data[key] ? true : false;
-                break;
-                
-            case 'radio':
-                item.selected = (data[item.radio] || "") == item.value ? true : false;
-                break;
-            
-            case 'select':
-                item.selected = data[key] || "";
-                break;
-        }
-    });
-};
-
-// export values from <input> commands
-$.contextMenu.getInputValues = function(opt, data) {
-    if (data === undefined) {
-        data = {};
-    }
-    
-    $.each(opt.inputs, function(key, item) {
-        switch (item.type) {
-            case 'text':
-            case 'textarea':
-            case 'select':
-                data[key] = item.$input.val();
-                break;
-
-            case 'checkbox':
-                data[key] = item.$input.prop('checked');
-                break;
-                
-            case 'radio':
-                if (item.$input.prop('checked')) {
-                    data[item.radio] = item.value;
-                }
-                break;
-        }
-    });
-    
-    return data;
-};
-
-// find <label for="xyz">
-function inputLabel(node) {
-    return (node.id && $('label[for="'+ node.id +'"]').val()) || node.name;
-}
-
-// convert <menu> to items object
-function menuChildren(items, $children, counter) {
-    if (!counter) {
-        counter = 0;
-    }
-    
-    $children.each(function() {
-        var $node = $(this),
-            node = this,
-            nodeName = this.nodeName.toLowerCase(),
-            label,
-            item;
-        
-        // extract <label><input>
-        if (nodeName == 'label' && $node.find('input, textarea, select').length) {
-            label = $node.text();
-            $node = $node.children().first();
-            node = $node.get(0);
-            nodeName = node.nodeName.toLowerCase();
-        }
-        
-        /*
-         * <menu> accepts flow-content as children. that means <embed>, <canvas> and such are valid menu items.
-         * Not being the sadistic kind, $.contextMenu only accepts:
-         * <command>, <menuitem>, <hr>, <span>, <p> <input [text, radio, checkbox]>, <textarea>, <select> and of course <menu>.
-         * Everything else will be imported as an html node, which is not interfaced with contextMenu.
-         */
-        
-        // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#concept-command
-        switch (nodeName) {
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-menu-element
-            case 'menu':
-                item = {name: $node.attr('label'), items: {}};
-                counter = menuChildren(item.items, $node.children(), counter);
-                break;
-            
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#using-the-a-element-to-define-a-command
-            case 'a':
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#using-the-button-element-to-define-a-command
-            case 'button':
-                item = {
-                    name: $node.text(),
-                    disabled: !!$node.attr('disabled'),
-                    callback: (function(){ return function(){ $node.click(); }; })()
-                };
-                break;
-            
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#using-the-command-element-to-define-a-command
-
-            case 'menuitem':
-            case 'command':
-                switch ($node.attr('type')) {
-                    case undefined:
-                    case 'command':
-                    case 'menuitem':
-                        item = {
-                            name: $node.attr('label'),
-                            disabled: !!$node.attr('disabled'),
-                            callback: (function(){ return function(){ $node.click(); }; })()
-                        };
-                        break;
-                        
-                    case 'checkbox':
-                        item = {
-                            type: 'checkbox',
-                            disabled: !!$node.attr('disabled'),
-                            name: $node.attr('label'),
-                            selected: !!$node.attr('checked')
-                        };
-                        break;
-                        
-                    case 'radio':
-                        item = {
-                            type: 'radio',
-                            disabled: !!$node.attr('disabled'),
-                            name: $node.attr('label'),
-                            radio: $node.attr('radiogroup'),
-                            value: $node.attr('id'),
-                            selected: !!$node.attr('checked')
-                        };
-                        break;
-                        
-                    default:
-                        item = undefined;
-                }
-                break;
- 
-            case 'hr':
-                item = '-------';
-                break;
-                
-            case 'input':
-                switch ($node.attr('type')) {
-                    case 'text':
-                        item = {
-                            type: 'text',
-                            name: label || inputLabel(node),
-                            disabled: !!$node.attr('disabled'),
-                            value: $node.val()
-                        };
-                        break;
-                        
-                    case 'checkbox':
-                        item = {
-                            type: 'checkbox',
-                            name: label || inputLabel(node),
-                            disabled: !!$node.attr('disabled'),
-                            selected: !!$node.attr('checked')
-                        };
-                        break;
-                        
-                    case 'radio':
-                        item = {
-                            type: 'radio',
-                            name: label || inputLabel(node),
-                            disabled: !!$node.attr('disabled'),
-                            radio: !!$node.attr('name'),
-                            value: $node.val(),
-                            selected: !!$node.attr('checked')
-                        };
-                        break;
-                    
-                    default:
-                        item = undefined;
-                        break;
-                }
-                break;
-                
-            case 'select':
-                item = {
-                    type: 'select',
-                    name: label || inputLabel(node),
-                    disabled: !!$node.attr('disabled'),
-                    selected: $node.val(),
-                    options: {}
-                };
-                $node.children().each(function(){
-                    item.options[this.value] = $(this).text();
-                });
-                break;
-                
-            case 'textarea':
-                item = {
-                    type: 'textarea',
-                    name: label || inputLabel(node),
-                    disabled: !!$node.attr('disabled'),
-                    value: $node.val()
-                };
-                break;
-            
-            case 'label':
-                break;
-            
-            default:
-                item = {type: 'html', html: $node.clone(true)};
-                break;
-        }
-        
-        if (item) {
-            counter++;
-            items['key' + counter] = item;
-        }
-    });
-    
-    return counter;
-}
-
-// convert html5 menu
-$.contextMenu.fromMenu = function(element) {
-    var $this = $(element),
-        items = {};
-        
-    menuChildren(items, $this.children());
-    
-    return items;
-};
-
-// make defaults accessible
-$.contextMenu.defaults = defaults;
-$.contextMenu.types = types;
-// export internal functions - undocumented, for hacking only!
-$.contextMenu.handle = handle;
-$.contextMenu.op = op;
-$.contextMenu.menus = menus;
-
-})(jQuery);
+(function(factory) {
+	if (typeof define === "function" && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(["jquery", "./jquery.fancytree"], factory);
+	} else if (typeof module === "object" && module.exports) {
+		// Node/CommonJS
+		require("./jquery.fancytree");
+		module.exports = factory(require("jquery"));
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+})(function($) {
+	"use strict";
+
+	/*******************************************************************************
+	 * Private functions and variables
+	 */
+
+	var KeyNoData = "__not_found__",
+		escapeHtml = $.ui.fancytree.escapeHtml;
+
+	function _escapeRegex(str) {
+		return (str + "").replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+	}
+
+	function extractHtmlText(s) {
+		if (s.indexOf(">") >= 0) {
+			return $("<div/>")
+				.html(s)
+				.text();
+		}
+		return s;
+	}
+
+	$.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(
+		filter,
+		branchMode,
+		_opts
+	) {
+		var match,
+			statusNode,
+			re,
+			reHighlight,
+			temp,
+			prevEnableUpdate,
+			count = 0,
+			treeOpts = this.options,
+			escapeTitles = treeOpts.escapeTitles,
+			prevAutoCollapse = treeOpts.autoCollapse,
+			opts = $.extend({}, treeOpts.filter, _opts),
+			hideMode = opts.mode === "hide",
+			leavesOnly = !!opts.leavesOnly && !branchMode;
+
+		// Default to 'match title substring (not case sensitive)'
+		if (typeof filter === "string") {
+			if (filter === "") {
+				this.warn(
+					"Fancytree passing an empty string as a filter is handled as clearFilter()."
+				);
+				this.clearFilter();
+				return;
+			}
+			if (opts.fuzzy) {
+				// See https://codereview.stackexchange.com/questions/23899/faster-javascript-fuzzy-string-matching-function/23905#23905
+				// and http://www.quora.com/How-is-the-fuzzy-search-algorithm-in-Sublime-Text-designed
+				// and http://www.dustindiaz.com/autocomplete-fuzzy-matching
+				match = filter.split("").reduce(function(a, b) {
+					return a + "[^" + b + "]*" + b;
+				});
+			} else {
+				match = _escapeRegex(filter); // make sure a '.' is treated literally
+			}
+			re = new RegExp(".*" + match + ".*", "i");
+			reHighlight = new RegExp(_escapeRegex(filter), "gi");
+			filter = function(node) {
+				if (!node.title) {
+					return false;
+				}
+				var text = escapeTitles
+						? node.title
+						: extractHtmlText(node.title),
+					res = !!re.test(text);
+
+				if (res && opts.highlight) {
+					if (escapeTitles) {
+						// #740: we must not apply the marks to escaped entity names, e.g. `&quot;`
+						// Use some exotic characters to mark matches:
+						temp = text.replace(reHighlight, function(s) {
+							return "\uFFF7" + s + "\uFFF8";
+						});
+						// now we can escape the title...
+						node.titleWithHighlight = escapeHtml(temp)
+							// ... and finally insert the desired `<mark>` tags
+							.replace(/\uFFF7/g, "<mark>")
+							.replace(/\uFFF8/g, "</mark>");
+					} else {
+						node.titleWithHighlight = text.replace(
+							reHighlight,
+							function(s) {
+								return "<mark>" + s + "</mark>";
+							}
+						);
+					}
+					// node.debug("filter", escapeTitles, text, node.titleWithHighlight);
+				}
+				return res;
+			};
+		}
+
+		this.enableFilter = true;
+		this.lastFilterArgs = arguments;
+
+		prevEnableUpdate = this.enableUpdate(false);
+
+		this.$div.addClass("fancytree-ext-filter");
+		if (hideMode) {
+			this.$div.addClass("fancytree-ext-filter-hide");
+		} else {
+			this.$div.addClass("fancytree-ext-filter-dimm");
+		}
+		this.$div.toggleClass(
+			"fancytree-ext-filter-hide-expanders",
+			!!opts.hideExpanders
+		);
+		// Reset current filter
+		this.visit(function(node) {
+			delete node.match;
+			delete node.titleWithHighlight;
+			node.subMatchCount = 0;
+		});
+		statusNode = this.getRootNode()._findDirectChild(KeyNoData);
+		if (statusNode) {
+			statusNode.remove();
+		}
+
+		// Adjust node.hide, .match, and .subMatchCount properties
+		treeOpts.autoCollapse = false; // #528
+
+		this.visit(function(node) {
+			if (leavesOnly && node.children != null) {
+				return;
+			}
+			var res = filter(node),
+				matchedByBranch = false;
+
+			if (res === "skip") {
+				node.visit(function(c) {
+					c.match = false;
+				}, true);
+				return "skip";
+			}
+			if (!res && (branchMode || res === "branch") && node.parent.match) {
+				res = true;
+				matchedByBranch = true;
+			}
+			if (res) {
+				count++;
+				node.match = true;
+				node.visitParents(function(p) {
+					p.subMatchCount += 1;
+					// Expand match (unless this is no real match, but only a node in a matched branch)
+					if (opts.autoExpand && !matchedByBranch && !p.expanded) {
+						p.setExpanded(true, {
+							noAnimation: true,
+							noEvents: true,
+							scrollIntoView: false,
+						});
+						p._filterAutoExpanded = true;
+					}
+				});
+			}
+		});
+		treeOpts.autoCollapse = prevAutoCollapse;
+
+		if (count === 0 && opts.nodata && hideMode) {
+			statusNode = opts.nodata;
+			if ($.isFunction(statusNode)) {
+				statusNode = statusNode();
+			}
+			if (statusNode === true) {
+				statusNode = {};
+			} else if (typeof statusNode === "string") {
+				statusNode = { title: statusNode };
+			}
+			statusNode = $.extend(
+				{
+					statusNodeType: "nodata",
+					key: KeyNoData,
+					title: this.options.strings.noData,
+				},
+				statusNode
+			);
+
+			this.getRootNode().addNode(statusNode).match = true;
+		}
+		// Redraw whole tree
+		this._callHook("treeStructureChanged", this, "applyFilter");
+		// this.render();
+		this.enableUpdate(prevEnableUpdate);
+		return count;
+	};
+
+	/**
+	 * [ext-filter] Dimm or hide nodes.
+	 *
+	 * @param {function | string} filter
+	 * @param {boolean} [opts={autoExpand: false, leavesOnly: false}]
+	 * @returns {integer} count
+	 * @alias Fancytree#filterNodes
+	 * @requires jquery.fancytree.filter.js
+	 */
+	$.ui.fancytree._FancytreeClass.prototype.filterNodes = function(
+		filter,
+		opts
+	) {
+		if (typeof opts === "boolean") {
+			opts = { leavesOnly: opts };
+			this.warn(
+				"Fancytree.filterNodes() leavesOnly option is deprecated since 2.9.0 / 2015-04-19. Use opts.leavesOnly instead."
+			);
+		}
+		return this._applyFilterImpl(filter, false, opts);
+	};
+
+	/**
+	 * [ext-filter] Dimm or hide whole branches.
+	 *
+	 * @param {function | string} filter
+	 * @param {boolean} [opts={autoExpand: false}]
+	 * @returns {integer} count
+	 * @alias Fancytree#filterBranches
+	 * @requires jquery.fancytree.filter.js
+	 */
+	$.ui.fancytree._FancytreeClass.prototype.filterBranches = function(
+		filter,
+		opts
+	) {
+		return this._applyFilterImpl(filter, true, opts);
+	};
+
+	/**
+	 * [ext-filter] Reset the filter.
+	 *
+	 * @alias Fancytree#clearFilter
+	 * @requires jquery.fancytree.filter.js
+	 */
+	$.ui.fancytree._FancytreeClass.prototype.clearFilter = function() {
+		var $title,
+			statusNode = this.getRootNode()._findDirectChild(KeyNoData),
+			escapeTitles = this.options.escapeTitles,
+			enhanceTitle = this.options.enhanceTitle,
+			prevEnableUpdate = this.enableUpdate(false);
+
+		if (statusNode) {
+			statusNode.remove();
+		}
+		this.visit(function(node) {
+			if (node.match && node.span) {
+				// #491, #601
+				$title = $(node.span).find(">span.fancytree-title");
+				if (escapeTitles) {
+					$title.text(node.title);
+				} else {
+					$title.html(node.title);
+				}
+				if (enhanceTitle) {
+					enhanceTitle(
+						{ type: "enhanceTitle" },
+						{ node: node, $title: $title }
+					);
+				}
+			}
+			delete node.match;
+			delete node.subMatchCount;
+			delete node.titleWithHighlight;
+			if (node.$subMatchBadge) {
+				node.$subMatchBadge.remove();
+				delete node.$subMatchBadge;
+			}
+			if (node._filterAutoExpanded && node.expanded) {
+				node.setExpanded(false, {
+					noAnimation: true,
+					noEvents: true,
+					scrollIntoView: false,
+				});
+			}
+			delete node._filterAutoExpanded;
+		});
+		this.enableFilter = false;
+		this.lastFilterArgs = null;
+		this.$div.removeClass(
+			"fancytree-ext-filter fancytree-ext-filter-dimm fancytree-ext-filter-hide"
+		);
+		this._callHook("treeStructureChanged", this, "clearFilter");
+		// this.render();
+		this.enableUpdate(prevEnableUpdate);
+	};
+
+	/**
+	 * [ext-filter] Return true if a filter is currently applied.
+	 *
+	 * @returns {Boolean}
+	 * @alias Fancytree#isFilterActive
+	 * @requires jquery.fancytree.filter.js
+	 * @since 2.13
+	 */
+	$.ui.fancytree._FancytreeClass.prototype.isFilterActive = function() {
+		return !!this.enableFilter;
+	};
+
+	/**
+	 * [ext-filter] Return true if this node is matched by current filter (or no filter is active).
+	 *
+	 * @returns {Boolean}
+	 * @alias FancytreeNode#isMatched
+	 * @requires jquery.fancytree.filter.js
+	 * @since 2.13
+	 */
+	$.ui.fancytree._FancytreeNodeClass.prototype.isMatched = function() {
+		return !(this.tree.enableFilter && !this.match);
+	};
+
+	/*******************************************************************************
+	 * Extension code
+	 */
+	$.ui.fancytree.registerExtension({
+		name: "filter",
+		version: "2.31.0",
+		// Default options for this extension.
+		options: {
+			autoApply: true, // Re-apply last filter if lazy data is loaded
+			autoExpand: false, // Expand all branches that contain matches while filtered
+			counter: true, // Show a badge with number of matching child nodes near parent icons
+			fuzzy: false, // Match single characters in order, e.g. 'fb' will match 'FooBar'
+			hideExpandedCounter: true, // Hide counter badge if parent is expanded
+			hideExpanders: false, // Hide expanders if all child nodes are hidden by filter
+			highlight: true, // Highlight matches by wrapping inside <mark> tags
+			leavesOnly: false, // Match end nodes only
+			nodata: true, // Display a 'no data' status node if result is empty
+			mode: "dimm", // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+		},
+		nodeLoadChildren: function(ctx, source) {
+			var tree = ctx.tree;
+
+			return this._superApply(arguments).done(function() {
+				if (
+					tree.enableFilter &&
+					tree.lastFilterArgs &&
+					ctx.options.filter.autoApply
+				) {
+					tree._applyFilterImpl.apply(tree, tree.lastFilterArgs);
+				}
+			});
+		},
+		nodeSetExpanded: function(ctx, flag, callOpts) {
+			var node = ctx.node;
+
+			delete node._filterAutoExpanded;
+			// Make sure counter badge is displayed again, when node is beeing collapsed
+			if (
+				!flag &&
+				ctx.options.filter.hideExpandedCounter &&
+				node.$subMatchBadge
+			) {
+				node.$subMatchBadge.show();
+			}
+			return this._superApply(arguments);
+		},
+		nodeRenderStatus: function(ctx) {
+			// Set classes for current status
+			var res,
+				node = ctx.node,
+				tree = ctx.tree,
+				opts = ctx.options.filter,
+				$title = $(node.span).find("span.fancytree-title"),
+				$span = $(node[tree.statusClassPropName]),
+				enhanceTitle = ctx.options.enhanceTitle,
+				escapeTitles = ctx.options.escapeTitles;
+
+			res = this._super(ctx);
+			// nothing to do, if node was not yet rendered
+			if (!$span.length || !tree.enableFilter) {
+				return res;
+			}
+			$span
+				.toggleClass("fancytree-match", !!node.match)
+				.toggleClass("fancytree-submatch", !!node.subMatchCount)
+				.toggleClass(
+					"fancytree-hide",
+					!(node.match || node.subMatchCount)
+				);
+			// Add/update counter badge
+			if (
+				opts.counter &&
+				node.subMatchCount &&
+				(!node.isExpanded() || !opts.hideExpandedCounter)
+			) {
+				if (!node.$subMatchBadge) {
+					node.$subMatchBadge = $(
+						"<span class='fancytree-childcounter'/>"
+					);
+					$(
+						"span.fancytree-icon, span.fancytree-custom-icon",
+						node.span
+					).append(node.$subMatchBadge);
+				}
+				node.$subMatchBadge.show().text(node.subMatchCount);
+			} else if (node.$subMatchBadge) {
+				node.$subMatchBadge.hide();
+			}
+			// node.debug("nodeRenderStatus", node.titleWithHighlight, node.title)
+			// #601: also check for $title.length, because we don't need to render
+			// if node.span is null (i.e. not rendered)
+			if (node.span && (!node.isEditing || !node.isEditing.call(node))) {
+				if (node.titleWithHighlight) {
+					$title.html(node.titleWithHighlight);
+				} else if (escapeTitles) {
+					$title.text(node.title);
+				} else {
+					$title.html(node.title);
+				}
+				if (enhanceTitle) {
+					enhanceTitle(
+						{ type: "enhanceTitle" },
+						{ node: node, $title: $title }
+					);
+				}
+			}
+			return res;
+		},
+	});
+	// Value returned by `require('jquery.fancytree..')`
+	return $.ui.fancytree;
+}); // End of closure
+
+/* jquery contextmenu 2.8.0 */
+!function(e){"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof exports?e(require("jquery")):e(jQuery)}(function(m){"use strict";var a;m.support.htmlMenuitem="HTMLMenuItemElement"in window,m.support.htmlCommand="HTMLCommandElement"in window,m.support.eventSelectstart="onselectstart"in document.documentElement,m.ui&&m.widget||(m.cleanData=(a=m.cleanData,function(e){var t,n,o;for(o=0;null!=e[o];o++){n=e[o];try{(t=m._data(n,"events"))&&t.remove&&m(n).triggerHandler("remove")}catch(e){}}a(e)}));var c=null,d=!1,p=m(window),f=0,h={},x={},v={},g={selector:null,appendTo:null,trigger:"right",autoHide:!1,delay:200,reposition:!0,hideOnSecondTrigger:!1,selectableSubMenu:!1,classNames:{hover:"context-menu-hover",disabled:"context-menu-disabled",visible:"context-menu-visible",notSelectable:"context-menu-not-selectable",icon:"context-menu-icon",iconEdit:"context-menu-icon-edit",iconCut:"context-menu-icon-cut",iconCopy:"context-menu-icon-copy",iconPaste:"context-menu-icon-paste",iconDelete:"context-menu-icon-delete",iconAdd:"context-menu-icon-add",iconQuit:"context-menu-icon-quit",iconLoadingClass:"context-menu-icon-loading"},determinePosition:function(e){if(m.ui&&m.ui.position)e.css("display","block").position({my:"center top",at:"center bottom",of:this,offset:"0 5",collision:"fit"}).css("display","none");else{var t=this.offset();t.top+=this.outerHeight(),t.left+=this.outerWidth()/2-e.outerWidth()/2,e.css(t)}},position:function(e,t,n){var o;if(t||n){if("maintain"===t&&"maintain"===n)o=e.$menu.position();else{var a=e.$menu.offsetParent().offset();o={top:n-a.top,left:t-a.left}}var s=p.scrollTop()+p.height(),i=p.scrollLeft()+p.width(),c=e.$menu.outerHeight(),l=e.$menu.outerWidth();o.top+c>s&&(o.top-=c),o.top<0&&(o.top=0),o.left+l>i&&(o.left-=l),o.left<0&&(o.left=0),e.$menu.css(o)}else e.determinePosition.call(this,e.$menu)},positionSubmenu:function(e){if(void 0!==e)if(m.ui&&m.ui.position)e.css("display","block").position({my:"left top-5",at:"right top",of:this,collision:"flipfit fit"}).css("display","");else{var t={top:-9,left:this.outerWidth()-5};e.css(t)}},zIndex:1,animation:{duration:50,show:"slideDown",hide:"slideUp"},events:{preShow:m.noop,show:m.noop,hide:m.noop,activated:m.noop},callback:null,items:{}},s={timer:null,pageX:null,pageY:null},b={abortevent:function(e){e.preventDefault(),e.stopImmediatePropagation()},contextmenu:function(e){var t=m(this);if(!1!==e.data.events.preShow(t,e)&&("right"===e.data.trigger&&(e.preventDefault(),e.stopImmediatePropagation()),!("right"!==e.data.trigger&&"demand"!==e.data.trigger&&e.originalEvent||!(void 0===e.mouseButton||!e.data||"left"===e.data.trigger&&0===e.mouseButton||"right"===e.data.trigger&&2===e.mouseButton)||t.hasClass("context-menu-active")||t.hasClass("context-menu-disabled")))){if(c=t,e.data.build){var n=e.data.build(c,e);if(!1===n)return;if(e.data=m.extend(!0,{},g,e.data,n||{}),!e.data.items||m.isEmptyObject(e.data.items))throw window.console&&(console.error||console.log).call(console,"No items specified to show in contextMenu"),new Error("No Items specified");e.data.$trigger=c,$.create(e.data)}$.show.call(t,e.data,e.pageX,e.pageY)}},click:function(e){e.preventDefault(),e.stopImmediatePropagation(),m(this).trigger(m.Event("contextmenu",{data:e.data,pageX:e.pageX,pageY:e.pageY}))},mousedown:function(e){var t=m(this);c&&c.length&&!c.is(t)&&c.data("contextMenu").$menu.trigger("contextmenu:hide"),2===e.button&&(c=t.data("contextMenuActive",!0))},mouseup:function(e){var t=m(this);t.data("contextMenuActive")&&c&&c.length&&c.is(t)&&!t.hasClass("context-menu-disabled")&&(e.preventDefault(),e.stopImmediatePropagation(),(c=t).trigger(m.Event("contextmenu",{data:e.data,pageX:e.pageX,pageY:e.pageY}))),t.removeData("contextMenuActive")},mouseenter:function(e){var t=m(this),n=m(e.relatedTarget),o=m(document);n.is(".context-menu-list")||n.closest(".context-menu-list").length||c&&c.length||(s.pageX=e.pageX,s.pageY=e.pageY,s.data=e.data,o.on("mousemove.contextMenuShow",b.mousemove),s.timer=setTimeout(function(){s.timer=null,o.off("mousemove.contextMenuShow"),(c=t).trigger(m.Event("contextmenu",{data:s.data,pageX:s.pageX,pageY:s.pageY}))},e.data.delay))},mousemove:function(e){s.pageX=e.pageX,s.pageY=e.pageY},mouseleave:function(e){var t=m(e.relatedTarget);if(!t.is(".context-menu-list")&&!t.closest(".context-menu-list").length){try{clearTimeout(s.timer)}catch(e){}s.timer=null}},layerClick:function(a){var s,i,c=m(this).data("contextMenuRoot"),l=a.button,r=a.pageX,u=a.pageY,d=void 0===r;a.preventDefault(),setTimeout(function(){if(d)null!=c&&null!==c.$menu&&void 0!==c.$menu&&c.$menu.trigger("contextmenu:hide");else{var e,t="left"===c.trigger&&0===l||"right"===c.trigger&&2===l;if(document.elementFromPoint&&c.$layer){if(c.$layer.hide(),(s=document.elementFromPoint(r-p.scrollLeft(),u-p.scrollTop())).isContentEditable){var n=document.createRange(),o=window.getSelection();n.selectNode(s),n.collapse(!0),o.removeAllRanges(),o.addRange(n)}m(s).trigger(a),c.$layer.show()}if(c.hideOnSecondTrigger&&t&&null!==c.$menu&&void 0!==c.$menu)c.$menu.trigger("contextmenu:hide");else{if(c.reposition&&t)if(document.elementFromPoint){if(c.$trigger.is(s))return void c.position.call(c.$trigger,c,r,u)}else if(i=c.$trigger.offset(),e=m(window),i.top+=e.scrollTop(),i.top<=a.pageY&&(i.left+=e.scrollLeft(),i.left<=a.pageX&&(i.bottom=i.top+c.$trigger.outerHeight(),i.bottom>=a.pageY&&(i.right=i.left+c.$trigger.outerWidth(),i.right>=a.pageX))))return void c.position.call(c.$trigger,c,r,u);s&&t&&c.$trigger.one("contextmenu:hidden",function(){m(s).contextMenu({x:r,y:u,button:l})}),null!=c&&null!==c.$menu&&void 0!==c.$menu&&c.$menu.trigger("contextmenu:hide")}}},50)},keyStop:function(e,t){t.isInput||e.preventDefault(),e.stopPropagation()},key:function(e){var t={};c&&(t=c.data("contextMenu")||{}),void 0===t.zIndex&&(t.zIndex=0);var n=0,o=function(e){""!==e.style.zIndex?n=e.style.zIndex:null!==e.offsetParent&&void 0!==e.offsetParent?o(e.offsetParent):null!==e.parentElement&&void 0!==e.parentElement&&o(e.parentElement)};if(o(e.target),!(t.$menu&&parseInt(n,10)>parseInt(t.$menu.css("zIndex"),10))){switch(e.keyCode){case 9:case 38:if(b.keyStop(e,t),t.isInput){if(9===e.keyCode&&e.shiftKey)return e.preventDefault(),t.$selected&&t.$selected.find("input, textarea, select").blur(),void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("prevcommand"));if(38===e.keyCode&&"checkbox"===t.$selected.find("input, textarea, select").prop("type"))return void e.preventDefault()}else if(9!==e.keyCode||e.shiftKey)return void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("prevcommand"));break;case 40:if(b.keyStop(e,t),!t.isInput)return void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("nextcommand"));if(9===e.keyCode)return e.preventDefault(),t.$selected&&t.$selected.find("input, textarea, select").blur(),void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("nextcommand"));if(40===e.keyCode&&"checkbox"===t.$selected.find("input, textarea, select").prop("type"))return void e.preventDefault();break;case 37:if(b.keyStop(e,t),t.isInput||!t.$selected||!t.$selected.length)break;if(t.$selected.parent().hasClass("context-menu-root"))break;var a=t.$selected.parent().parent();return t.$selected.trigger("contextmenu:blur"),void(t.$selected=a);case 39:if(b.keyStop(e,t),t.isInput||!t.$selected||!t.$selected.length)break;var s=t.$selected.data("contextMenu")||{};if(s.$menu&&t.$selected.hasClass("context-menu-submenu"))return t.$selected=null,s.$selected=null,void s.$menu.trigger("nextcommand");break;case 35:case 36:return t.$selected&&t.$selected.find("input, textarea, select").length?void 0:((t.$selected&&t.$selected.parent()||t.$menu).children(":not(."+t.classNames.disabled+", ."+t.classNames.notSelectable+")")[36===e.keyCode?"first":"last"]().trigger("contextmenu:focus"),void e.preventDefault());case 13:if(b.keyStop(e,t),t.isInput){if(t.$selected&&!t.$selected.is("textarea, select"))return void e.preventDefault();break}return void(void 0!==t.$selected&&null!==t.$selected&&t.$selected.trigger("mouseup"));case 32:case 33:case 34:return void b.keyStop(e,t);case 27:return b.keyStop(e,t),void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("contextmenu:hide"));default:var i=String.fromCharCode(e.keyCode).toUpperCase();if(t.accesskeys&&t.accesskeys[i])return void t.accesskeys[i].$node.trigger(t.accesskeys[i].$menu?"contextmenu:focus":"mouseup")}e.stopPropagation(),void 0!==t.$selected&&null!==t.$selected&&t.$selected.trigger(e)}},prevItem:function(e){e.stopPropagation();var t=m(this).data("contextMenu")||{},n=m(this).data("contextMenuRoot")||{};if(t.$selected){var o=t.$selected;(t=t.$selected.parent().data("contextMenu")||{}).$selected=o}for(var a=t.$menu.children(),s=t.$selected&&t.$selected.prev().length?t.$selected.prev():a.last(),i=s;s.hasClass(n.classNames.disabled)||s.hasClass(n.classNames.notSelectable)||s.is(":hidden");)if((s=s.prev().length?s.prev():a.last()).is(i))return;t.$selected&&b.itemMouseleave.call(t.$selected.get(0),e),b.itemMouseenter.call(s.get(0),e);var c=s.find("input, textarea, select");c.length&&c.focus()},nextItem:function(e){e.stopPropagation();var t=m(this).data("contextMenu")||{},n=m(this).data("contextMenuRoot")||{};if(t.$selected){var o=t.$selected;(t=t.$selected.parent().data("contextMenu")||{}).$selected=o}for(var a=t.$menu.children(),s=t.$selected&&t.$selected.next().length?t.$selected.next():a.first(),i=s;s.hasClass(n.classNames.disabled)||s.hasClass(n.classNames.notSelectable)||s.is(":hidden");)if((s=s.next().length?s.next():a.first()).is(i))return;t.$selected&&b.itemMouseleave.call(t.$selected.get(0),e),b.itemMouseenter.call(s.get(0),e);var c=s.find("input, textarea, select");c.length&&c.focus()},focusInput:function(){var e=m(this).closest(".context-menu-item"),t=e.data(),n=t.contextMenu,o=t.contextMenuRoot;o.$selected=n.$selected=e,o.isInput=n.isInput=!0},blurInput:function(){var e=m(this).closest(".context-menu-item").data(),t=e.contextMenu;e.contextMenuRoot.isInput=t.isInput=!1},menuMouseenter:function(){m(this).data().contextMenuRoot.hovering=!0},menuMouseleave:function(e){var t=m(this).data().contextMenuRoot;t.$layer&&t.$layer.is(e.relatedTarget)&&(t.hovering=!1)},itemMouseenter:function(e){var t=m(this),n=t.data(),o=n.contextMenu,a=n.contextMenuRoot;a.hovering=!0,e&&a.$layer&&a.$layer.is(e.relatedTarget)&&(e.preventDefault(),e.stopImmediatePropagation()),(o.$menu?o:a).$menu.children("."+a.classNames.hover).trigger("contextmenu:blur").children(".hover").trigger("contextmenu:blur"),t.hasClass(a.classNames.disabled)||t.hasClass(a.classNames.notSelectable)?o.$selected=null:t.trigger("contextmenu:focus")},itemMouseleave:function(e){var t=m(this),n=t.data(),o=n.contextMenu,a=n.contextMenuRoot;if(a!==o&&a.$layer&&a.$layer.is(e.relatedTarget))return void 0!==a.$selected&&null!==a.$selected&&a.$selected.trigger("contextmenu:blur"),e.preventDefault(),e.stopImmediatePropagation(),void(a.$selected=o.$selected=o.$node);o&&o.$menu&&o.$menu.hasClass("context-menu-visible")||t.trigger("contextmenu:blur")},itemClick:function(e){var t,n=m(this),o=n.data(),a=o.contextMenu,s=o.contextMenuRoot,i=o.contextMenuKey;if(!(!a.items[i]||n.is("."+s.classNames.disabled+", .context-menu-separator, ."+s.classNames.notSelectable)||n.is(".context-menu-submenu")&&!1===s.selectableSubMenu)){if(e.preventDefault(),e.stopImmediatePropagation(),m.isFunction(a.callbacks[i])&&Object.prototype.hasOwnProperty.call(a.callbacks,i))t=a.callbacks[i];else{if(!m.isFunction(s.callback))return;t=s.callback}!1!==t.call(s.$trigger,i,s,e)?s.$menu.trigger("contextmenu:hide"):s.$menu.parent().length&&$.update.call(s.$trigger,s)}},inputClick:function(e){e.stopImmediatePropagation()},hideMenu:function(e,t){var n=m(this).data("contextMenuRoot");$.hide.call(n.$trigger,n,t&&t.force)},focusItem:function(e){e.stopPropagation();var t=m(this),n=t.data(),o=n.contextMenu,a=n.contextMenuRoot;t.hasClass(a.classNames.disabled)||t.hasClass(a.classNames.notSelectable)||(t.addClass([a.classNames.hover,a.classNames.visible].join(" ")).parent().find(".context-menu-item").not(t).removeClass(a.classNames.visible).filter("."+a.classNames.hover).trigger("contextmenu:blur"),o.$selected=a.$selected=t,o&&o.$node&&o.$node.hasClass("context-menu-submenu")&&o.$node.addClass(a.classNames.hover),o.$node&&a.positionSubmenu.call(o.$node,o.$menu))},blurItem:function(e){e.stopPropagation();var t=m(this),n=t.data(),o=n.contextMenu,a=n.contextMenuRoot;o.autoHide&&t.removeClass(a.classNames.visible),t.removeClass(a.classNames.hover),o.$selected=null}},$={show:function(n,e,t){var o=m(this),a={};if(m("#context-menu-layer").trigger("mousedown"),n.$trigger=o,!1!==n.events.show.call(o,n))if(!1!==$.update.call(o,n)){if(n.position.call(o,n,e,t),n.zIndex){var s=n.zIndex;"function"==typeof n.zIndex&&(s=n.zIndex.call(o,n)),a.zIndex=function(e){for(var t=0,n=e;t=Math.max(t,parseInt(n.css("z-index"),10)||0),(n=n.parent())&&n.length&&!(-1<"html body".indexOf(n.prop("nodeName").toLowerCase())););return t}(o)+s}$.layer.call(n.$menu,n,a.zIndex),n.$menu.find("ul").css("zIndex",a.zIndex+1),n.$menu.css(a)[n.animation.show](n.animation.duration,function(){o.trigger("contextmenu:visible"),$.activated(n),n.events.activated(n)}),o.data("contextMenu",n).addClass("context-menu-active"),m(document).off("keydown.contextMenu").on("keydown.contextMenu",b.key),n.autoHide&&m(document).on("mousemove.contextMenuAutoHide",function(e){var t=o.offset();t.right=t.left+o.outerWidth(),t.bottom=t.top+o.outerHeight(),!n.$layer||n.hovering||e.pageX>=t.left&&e.pageX<=t.right&&e.pageY>=t.top&&e.pageY<=t.bottom||setTimeout(function(){n.hovering||null===n.$menu||void 0===n.$menu||n.$menu.trigger("contextmenu:hide")},50)})}else c=null;else c=null},hide:function(t,e){var n=m(this);if(t||(t=n.data("contextMenu")||{}),e||!t.events||!1!==t.events.hide.call(n,t)){if(n.removeData("contextMenu").removeClass("context-menu-active"),t.$layer){setTimeout((o=t.$layer,function(){o.remove()}),10);try{delete t.$layer}catch(e){t.$layer=null}}var o;c=null,t.$menu.find("."+t.classNames.hover).trigger("contextmenu:blur"),t.$selected=null,t.$menu.find("."+t.classNames.visible).removeClass(t.classNames.visible),m(document).off(".contextMenuAutoHide").off("keydown.contextMenu"),t.$menu&&t.$menu[t.animation.hide](t.animation.duration,function(){t.build&&(t.$menu.remove(),m.each(t,function(e){switch(e){case"ns":case"selector":case"build":case"trigger":return!0;default:t[e]=void 0;try{delete t[e]}catch(e){}return!0}})),setTimeout(function(){n.trigger("contextmenu:hidden")},10)})}},create:function(r,u){function d(e){var t=m("<span></span>");if(e._accesskey)e._beforeAccesskey&&t.append(document.createTextNode(e._beforeAccesskey)),m("<span></span>").addClass("context-menu-accesskey").text(e._accesskey).appendTo(t),e._afterAccesskey&&t.append(document.createTextNode(e._afterAccesskey));else if(e.isHtmlName){if(void 0!==e.accesskey)throw new Error("accesskeys are not compatible with HTML names and cannot be used together in the same item");t.html(e.name)}else t.text(e.name);return t}void 0===u&&(u=r),r.$menu=m('<ul class="context-menu-list"></ul>').addClass(r.className||"").data({contextMenu:r,contextMenuRoot:u}),m.each(["callbacks","commands","inputs"],function(e,t){r[t]={},u[t]||(u[t]={})}),u.accesskeys||(u.accesskeys={}),m.each(r.items,function(n,o){var e=m('<li class="context-menu-item"></li>').addClass(o.className||""),t=null,a=null;if(e.on("click",m.noop),"string"!=typeof o&&"cm_separator"!==o.type||(o={type:"cm_seperator"}),o.$node=e.data({contextMenu:r,contextMenuRoot:u,contextMenuKey:n}),void 0!==o.accesskey)for(var s,i=function(e){for(var t,n=e.split(/\s+/),o=[],a=0;t=n[a];a++)t=t.charAt(0).toUpperCase(),o.push(t);return o}(o.accesskey),c=0;s=i[c];c++)if(!u.accesskeys[s]){var l=(u.accesskeys[s]=o).name.match(new RegExp("^(.*?)("+s+")(.*)$","i"));l&&(o._beforeAccesskey=l[1],o._accesskey=l[2],o._afterAccesskey=l[3]);break}if(o.type&&v[o.type])v[o.type].call(e,o,r,u),m.each([r,u],function(e,t){t.commands[n]=o,!m.isFunction(o.callback)||void 0!==t.callbacks[n]&&void 0!==r.type||(t.callbacks[n]=o.callback)});else{switch("cm_seperator"===o.type?e.addClass("context-menu-separator "+u.classNames.notSelectable):"html"===o.type?e.addClass("context-menu-html "+u.classNames.notSelectable):"sub"!==o.type&&o.type?(t=m("<label></label>").appendTo(e),d(o).appendTo(t),e.addClass("context-menu-input"),r.hasTypes=!0,m.each([r,u],function(e,t){t.commands[n]=o,t.inputs[n]=o})):o.items&&(o.type="sub"),o.type){case"cm_seperator":break;case"text":a=m('<input type="text" value="1" name="" />').attr("name","context-menu-input-"+n).val(o.value||"").appendTo(t);break;case"textarea":a=m('<textarea name=""></textarea>').attr("name","context-menu-input-"+n).val(o.value||"").appendTo(t),o.height&&a.height(o.height);break;case"checkbox":a=m('<input type="checkbox" value="1" name="" />').attr("name","context-menu-input-"+n).val(o.value||"").prop("checked",!!o.selected).prependTo(t);break;case"radio":a=m('<input type="radio" value="1" name="" />').attr("name","context-menu-input-"+o.radio).val(o.value||"").prop("checked",!!o.selected).prependTo(t);break;case"select":a=m('<select name=""></select>').attr("name","context-menu-input-"+n).appendTo(t),o.options&&(m.each(o.options,function(e,t){m("<option></option>").val(e).text(t).appendTo(a)}),a.val(o.selected));break;case"sub":d(o).appendTo(e),o.appendTo=o.$node,e.data("contextMenu",o).addClass("context-menu-submenu"),o.callback=null,"function"==typeof o.items.then?$.processPromises(o,u,o.items):$.create(o,u);break;case"html":m(o.html).appendTo(e);break;default:m.each([r,u],function(e,t){t.commands[n]=o,!m.isFunction(o.callback)||void 0!==t.callbacks[n]&&void 0!==r.type||(t.callbacks[n]=o.callback)}),d(o).appendTo(e)}o.type&&"sub"!==o.type&&"html"!==o.type&&"cm_seperator"!==o.type&&(a.on("focus",b.focusInput).on("blur",b.blurInput),o.events&&a.on(o.events,r)),o.icon&&(m.isFunction(o.icon)?o._icon=o.icon.call(this,this,e,n,o):"string"!=typeof o.icon||"fab "!==o.icon.substring(0,4)&&"fas "!==o.icon.substring(0,4)&&"far "!==o.icon.substring(0,4)&&"fal "!==o.icon.substring(0,4)?"string"==typeof o.icon&&"fa-"===o.icon.substring(0,3)?o._icon=u.classNames.icon+" "+u.classNames.icon+"--fa fa "+o.icon:o._icon=u.classNames.icon+" "+u.classNames.icon+"-"+o.icon:(e.addClass(u.classNames.icon+" "+u.classNames.icon+"--fa5"),o._icon=m('<i class="'+o.icon+'"></i>')),"string"==typeof o._icon?e.addClass(o._icon):e.prepend(o._icon))}o.$input=a,o.$label=t,e.appendTo(r.$menu),!r.hasTypes&&m.support.eventSelectstart&&e.on("selectstart.disableTextSelect",b.abortevent)}),r.$node||r.$menu.css("display","none").addClass("context-menu-root"),r.$menu.appendTo(r.appendTo||document.body)},resize:function(e,t){var n;e.css({position:"absolute",display:"block"}),e.data("width",(n=e.get(0)).getBoundingClientRect?Math.ceil(n.getBoundingClientRect().width):e.outerWidth()+1),e.css({position:"static",minWidth:"0px",maxWidth:"100000px"}),e.find("> li > ul").each(function(){$.resize(m(this),!0)}),t||e.find("ul").addBack().css({position:"",display:"",minWidth:"",maxWidth:""}).outerWidth(function(){return m(this).data("width")})},update:function(i,c){var l=this;void 0===c&&(c=i,$.resize(i.$menu));var r=!1;return i.$menu.children().each(function(){var e,t=m(this),n=t.data("contextMenuKey"),o=i.items[n],a=m.isFunction(o.disabled)&&o.disabled.call(l,n,c)||!0===o.disabled;if((e=m.isFunction(o.visible)?o.visible.call(l,n,c):void 0===o.visible||!0===o.visible)&&(r=!0),t[e?"show":"hide"](),t[a?"addClass":"removeClass"](c.classNames.disabled),m.isFunction(o.icon)){t.removeClass(o._icon);var s=o.icon.call(this,l,t,n,o);"string"==typeof s?t.addClass(s):t.prepend(s)}if(o.type)switch(t.find("input, select, textarea").prop("disabled",a),o.type){case"text":case"textarea":o.$input.val(o.value||"");break;case"checkbox":case"radio":o.$input.val(o.value||"").prop("checked",!!o.selected);break;case"select":o.$input.val((0===o.selected?"0":o.selected)||"")}o.$menu&&($.update.call(l,o,c)&&(r=!0))}),r},layer:function(e,t){var n=e.$layer=m('<div id="context-menu-layer"></div>').css({height:p.height(),width:p.width(),display:"block",position:"fixed","z-index":t,top:0,left:0,opacity:0,filter:"alpha(opacity=0)","background-color":"#000"}).data("contextMenuRoot",e).insertBefore(this).on("contextmenu",b.abortevent).on("mousedown",b.layerClick);return void 0===document.body.style.maxWidth&&n.css({position:"absolute",height:m(document).height()}),n},processPromises:function(e,t,n){function o(e,t,n){void 0===n?(n={error:{name:"No items and no error item",icon:"context-menu-icon context-menu-icon-quit"}},window.console&&(console.error||console.log).call(console,'When you reject a promise, provide an "items" object, equal to normal sub-menu items')):"string"==typeof n&&(n={error:{name:n}}),a(e,t,n)}function a(e,t,n){void 0!==t.$menu&&t.$menu.is(":visible")&&(e.$node.removeClass(t.classNames.iconLoadingClass),e.items=n,$.create(e,t,!0),$.update(e,t),t.positionSubmenu.call(e.$node,e.$menu))}e.$node.addClass(t.classNames.iconLoadingClass),n.then(function(e,t,n){void 0===n&&o(void 0),a(e,t,n)}.bind(this,e,t),o.bind(this,e,t))},activated:function(e){var t=e.$menu,n=t.offset(),o=m(window).height(),a=m(window).scrollTop(),s=t.height();o<s?t.css({height:o+"px","overflow-x":"hidden","overflow-y":"auto",top:a+"px"}):(n.top<a||n.top+s>a+o)&&t.css({top:a+"px"})}};function l(e){return e.id&&m('label[for="'+e.id+'"]').val()||e.name}m.fn.contextMenu=function(e){var t=this,n=e;if(0<this.length)if(void 0===e)this.first().trigger("contextmenu");else if(void 0!==e.x&&void 0!==e.y)this.first().trigger(m.Event("contextmenu",{pageX:e.x,pageY:e.y,mouseButton:e.button}));else if("hide"===e){var o=this.first().data("contextMenu")?this.first().data("contextMenu").$menu:null;o&&o.trigger("contextmenu:hide")}else"destroy"===e?m.contextMenu("destroy",{context:this}):m.isPlainObject(e)?(e.context=this,m.contextMenu("create",e)):e?this.removeClass("context-menu-disabled"):e||this.addClass("context-menu-disabled");else m.each(x,function(){this.selector===t.selector&&(n.data=this,m.extend(n.data,{trigger:"demand"}))}),b.contextmenu.call(n.target,n);return this},m.contextMenu=function(e,t){"string"!=typeof e&&(t=e,e="create"),"string"==typeof t?t={selector:t}:void 0===t&&(t={});var n=m.extend(!0,{},g,t||{}),o=m(document),a=o,s=!1;switch(n.context&&n.context.length?(a=m(n.context).first(),n.context=a.get(0),s=!m(n.context).is(document)):n.context=document,e){case"update":if(s)$.update(a);else for(var i in x)x.hasOwnProperty(i)&&$.update(x[i]);break;case"create":if(!n.selector)throw new Error("No selector specified");if(n.selector.match(/.context-menu-(list|item|input)($|\s)/))throw new Error('Cannot bind to selector "'+n.selector+'" as it contains a reserved className');if(!n.build&&(!n.items||m.isEmptyObject(n.items)))throw new Error("No Items specified");if(f++,n.ns=".contextMenu"+f,s||(h[n.selector]=n.ns),(x[n.ns]=n).trigger||(n.trigger="right"),!d){var c="click"===n.itemClickEvent?"click.contextMenu":"mouseup.contextMenu",l={"contextmenu:focus.contextMenu":b.focusItem,"contextmenu:blur.contextMenu":b.blurItem,"contextmenu.contextMenu":b.abortevent,"mouseenter.contextMenu":b.itemMouseenter,"mouseleave.contextMenu":b.itemMouseleave};l[c]=b.itemClick,o.on({"contextmenu:hide.contextMenu":b.hideMenu,"prevcommand.contextMenu":b.prevItem,"nextcommand.contextMenu":b.nextItem,"contextmenu.contextMenu":b.abortevent,"mouseenter.contextMenu":b.menuMouseenter,"mouseleave.contextMenu":b.menuMouseleave},".context-menu-list").on("mouseup.contextMenu",".context-menu-input",b.inputClick).on(l,".context-menu-item"),d=!0}switch(a.on("contextmenu"+n.ns,n.selector,n,b.contextmenu),s&&a.on("remove"+n.ns,function(){m(this).contextMenu("destroy")}),n.trigger){case"hover":a.on("mouseenter"+n.ns,n.selector,n,b.mouseenter).on("mouseleave"+n.ns,n.selector,n,b.mouseleave);break;case"left":a.on("click"+n.ns,n.selector,n,b.click);break;case"touchstart":a.on("touchstart"+n.ns,n.selector,n,b.click)}n.build||$.create(n);break;case"destroy":var r;if(s){var u=n.context;m.each(x,function(e,t){if(!t)return!0;if(!m(u).is(t.selector))return!0;(r=m(".context-menu-list").filter(":visible")).length&&r.data().contextMenuRoot.$trigger.is(m(t.context).find(t.selector))&&r.trigger("contextmenu:hide",{force:!0});try{x[t.ns].$menu&&x[t.ns].$menu.remove(),delete x[t.ns]}catch(e){x[t.ns]=null}return m(t.context).off(t.ns),!0})}else if(n.selector){if(h[n.selector]){(r=m(".context-menu-list").filter(":visible")).length&&r.data().contextMenuRoot.$trigger.is(n.selector)&&r.trigger("contextmenu:hide",{force:!0});try{x[h[n.selector]].$menu&&x[h[n.selector]].$menu.remove(),delete x[h[n.selector]]}catch(e){x[h[n.selector]]=null}o.off(h[n.selector])}}else o.off(".contextMenu .contextMenuAutoHide"),m.each(x,function(e,t){m(t.context).off(t.ns)}),h={},f=0,d=!(x={}),m("#context-menu-layer, .context-menu-list").remove();break;case"html5":(!m.support.htmlCommand&&!m.support.htmlMenuitem||"boolean"==typeof t&&t)&&m('menu[type="context"]').each(function(){this.id&&m.contextMenu({selector:"[contextmenu="+this.id+"]",items:m.contextMenu.fromMenu(this)})}).css("display","none");break;default:throw new Error('Unknown operation "'+e+'"')}return this},m.contextMenu.setInputValues=function(e,n){void 0===n&&(n={}),m.each(e.inputs,function(e,t){switch(t.type){case"text":case"textarea":t.value=n[e]||"";break;case"checkbox":t.selected=!!n[e];break;case"radio":t.selected=(n[t.radio]||"")===t.value;break;case"select":t.selected=n[e]||""}})},m.contextMenu.getInputValues=function(e,n){return void 0===n&&(n={}),m.each(e.inputs,function(e,t){switch(t.type){case"text":case"textarea":case"select":n[e]=t.$input.val();break;case"checkbox":n[e]=t.$input.prop("checked");break;case"radio":t.$input.prop("checked")&&(n[t.radio]=t.value)}}),n},m.contextMenu.fromMenu=function(e){var t={};return function s(i,e,c){return c||(c=0),e.each(function(){var e,t,n=m(this),o=this,a=this.nodeName.toLowerCase();switch("label"===a&&n.find("input, textarea, select").length&&(e=n.text(),a=(o=(n=n.children().first()).get(0)).nodeName.toLowerCase()),a){case"menu":t={name:n.attr("label"),items:{}},c=s(t.items,n.children(),c);break;case"a":case"button":t={name:n.text(),disabled:!!n.attr("disabled"),callback:function(){n.get(0).click()}};break;case"menuitem":case"command":switch(n.attr("type")){case void 0:case"command":case"menuitem":t={name:n.attr("label"),disabled:!!n.attr("disabled"),icon:n.attr("icon"),callback:function(){n.get(0).click()}};break;case"checkbox":t={type:"checkbox",disabled:!!n.attr("disabled"),name:n.attr("label"),selected:!!n.attr("checked")};break;case"radio":t={type:"radio",disabled:!!n.attr("disabled"),name:n.attr("label"),radio:n.attr("radiogroup"),value:n.attr("id"),selected:!!n.attr("checked")};break;default:t=void 0}break;case"hr":t="-------";break;case"input":switch(n.attr("type")){case"text":t={type:"text",name:e||l(o),disabled:!!n.attr("disabled"),value:n.val()};break;case"checkbox":t={type:"checkbox",name:e||l(o),disabled:!!n.attr("disabled"),selected:!!n.attr("checked")};break;case"radio":t={type:"radio",name:e||l(o),disabled:!!n.attr("disabled"),radio:!!n.attr("name"),value:n.val(),selected:!!n.attr("checked")};break;default:t=void 0}break;case"select":t={type:"select",name:e||l(o),disabled:!!n.attr("disabled"),selected:n.val(),options:{}},n.children().each(function(){t.options[this.value]=m(this).text()});break;case"textarea":t={type:"textarea",name:e||l(o),disabled:!!n.attr("disabled"),value:n.val()};break;case"label":break;default:t={type:"html",html:n.clone(!0)}}t&&(i["key"+ ++c]=t)}),c}(t,m(e).children()),t},m.contextMenu.defaults=g,m.contextMenu.types=v,m.contextMenu.handle=b,m.contextMenu.op=$,m.contextMenu.menus=x});
+//# sourceMappingURL=jquery.contextMenu.min.js.map
 
 /**!
  * jquery.fancytree.contextmenu.js

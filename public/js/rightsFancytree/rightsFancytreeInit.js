@@ -8,8 +8,8 @@
 		          source: {
 		              url: url,
 				  },
-				  //lazyLoad
-		          load: function(event, data) {
+				  //load
+		          lazyLoad: function(event, data) {
 				      var lazyURL = data.node.data.melisData.lazyURL;
 				      data.result = { 
 				    		  url: lazyURL,

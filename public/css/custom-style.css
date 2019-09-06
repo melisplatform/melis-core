@@ -465,6 +465,17 @@ div.row, ul.row {
 .hidden {
   display: none !important;
 }
+/* fancytree */
+.context-menu-list {
+  background-color: #9e9a9a;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+}
+.context-menu-item.context-menu-hover {
+  background-color: #cb4040;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
