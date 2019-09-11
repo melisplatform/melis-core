@@ -7,9 +7,9 @@
 echo $this->melisModalInvoker()->render(
     array(
         'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
-        'class' => 'btn btn-danger pull-left'
+        'class' => 'btn btn-danger float-left'
     ), 'dismiss');
 ?>
 
-<button type="button" class="btn btn-success pull-right hidden-xs hidden-sm" id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
-<button type="submit" class="btn btn-success pull-right visible-xs visible-sm" id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></button>
+<button type="button" class="btn btn-success float-right d-none d-sm-none" id="btnAddRights"><i class="fa fa-plus"></i> <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>
+<button type="submit" class="btn btn-success float-right d-inline d-sm-inline" id="btnAddRights"><i class="fa fa-plus"></i> <?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></button>

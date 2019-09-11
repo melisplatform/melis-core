@@ -186,7 +186,7 @@ var melisHelper = (function(){
                 if(typeof $(this).data("tooltip") != 'undefined'){
                     attribTooltip = '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' + $(this).data("tooltip") +'"></i>';
                 }
-                var switchBtn = '<label for="'+$(this).attr("name")+'">'+$(this).data("label") + attribRequired + attribTooltip+'</label>'
+                var switchBtn = '<label for="'+$(this).attr("name")+'" class="d-flex flex-row justify-content-between"><div class="label-text">'+$(this).data("label") + attribRequired + '</div>' + attribTooltip+'</label>'
                     +'<div class="make-switch user-admin-switch" data-label-icon="glyphicon glyphicon-resize-horizontal" data-on-label="'+translations.tr_meliscore_common_yes+'" data-off-label="'+translations.tr_meliscore_common_nope+'" style="display: block;">'
                     +'<input type="checkbox" name="'+$(this).attr("name")+'" id="'+$(this).attr("id")+'">'
                     +'</div>';

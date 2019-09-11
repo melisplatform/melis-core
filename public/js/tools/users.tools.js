@@ -110,19 +110,19 @@ $(document).ready(function () {
         })
 
         $body.on("click", '.btnUserEdit', function () {
-            var id      = $(this).parents("tr").attr("id"),
-                $suas   = $("#switch-user-api-status"),
-                $tuvdc  = $("#tableUserViewDateConnection");
+            var id              = $(this).parents("tr").attr("id"),
+                $switch_status  = $("#switch-user-api-status"),
+                $dateCon        = $("#tableUserViewDateConnection");
 
                 melisCoreTool.hideAlert("#editformalert");
                 melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal', '#id_meliscore_tool_user_edit_modal');
                 melisCoreTool.resetLabels("#idusermanagement");
                 toolUserManagement.retrieveUser(id);
                 // Micro service status
-                $suas.attr("data-userid", id);
+                $switch_status.attr("data-userid", id);
 
                 _tmpUserId = id;
-                $tuvdc.DataTable().destroy();
+                $dateCon.DataTable().destroy();
                 fntableUserViewDateConnectioninit();
 
                 $.ajax({
@@ -135,7 +135,7 @@ $(document).ready(function () {
                     var $apikey     = $("#melis-core-user-auth-api-key"),
                         $apiok      = $("#melis-core-user-auth-api-ok"),
                         $apiurl     = $("#melis-core-microservices-url"),
-                        $suas_sa    = $("#switch-user-api-status .switch-animate");
+                        $switch     = $("#switch-user-api-status .switch-animate");
 
                         $apikey.html("");
                         $apiok.addClass("hidden");
@@ -145,15 +145,15 @@ $(document).ready(function () {
                             $apiok.removeClass("hidden");
 
                             if (data.response.status == 1) {
-                                $suas_sa.removeClass("switch-off");
-                                $suas_sa.addClass("switch-on");
+                                $switch.removeClass("switch-off");
+                                $switch.addClass("switch-on");
                             } else {
-                                $suas_sa.removeClass("switch-on");
-                                $suas_sa.addClass("switch-off");
+                                $switch.removeClass("switch-on");
+                                $switch.addClass("switch-off");
                             }
                         }
                         else {
-                            $apiko.removeClass("hidden");
+                            $apiok.removeClass("hidden");
                         }
                 }).fail(function() {
                     alert(translations.tr_meliscore_error_message);
@@ -169,11 +169,11 @@ $(document).ready(function () {
                     dataType: 'json',
                     encode: true,
                 }).done(function (data) {
-                    var $apikey = $("#melis-core-user-auth-api-key"),
-                        $apiok  = $("#melis-core-user-auth-api-ok"),
-                        $apiko  = $("#melis-core-user-auth-api-ko"),
-                        $apiurl = $("#melis-core-microservices-url"),
-                        $suas   = $("#switch-user-api-status");
+                    var $apikey     = $("#melis-core-user-auth-api-key"),
+                        $apiok      = $("#melis-core-user-auth-api-ok"),
+                        $apiko      = $("#melis-core-user-auth-api-ko"),
+                        $apiurl     = $("#melis-core-microservices-url"),
+                        $switch_api = $("#switch-user-api-status");
 
                         $apikey.html("");
                         $apiok.addClass("hidden");
@@ -183,9 +183,9 @@ $(document).ready(function () {
                             $apiurl.html('<a href="' + data.response.url + '" target="_blank">' + data.response.url + '</a>');
                             $apiok.removeClass("hidden");
 
-                            if (!$suas.find("div").hasClass("switch-on")) {
-                                $suas.find("div").removeClass("switch-off");
-                                $suas.find("div").addClass("switch-on");
+                            if (!$switch_api.find("div").hasClass("switch-on")) {
+                                $switch_api.find("div").removeClass("switch-off");
+                                $switch_api.find("div").addClass("switch-on");
                             }
                         }
                         else {
@@ -239,10 +239,12 @@ function melisNewUserRights() {
 window.initRetrieveUser = function () {
     var btnDelete = $('#tableToolUserManagement tr.clsCurrent td').find(".btnUserDelete");
         btnDelete.remove();
+}
 
-    // pagination of dataTables
+// paginate dataTables data
+window.paginateDataTables = function() {
     melisCore.paginateDataTables();
-};
+}
 
 var toolUserManagement = {
 
@@ -292,11 +294,11 @@ var toolUserManagement = {
     },
 
     retrieveUser: function (id) {
-        var $be     = $("#btnEdit"),
-            $ber    = $("#btnEditRights");
+        var $btnEdit        = $("#btnEdit"),
+            $btnEditRights  = $("#btnEditRights");
 
-            $be.addClass("disabled").css("pointer-events", "none");
-            $ber.addClass("disabled").css("pointer-events", "none");
+            $btnEdit.addClass("disabled").css("pointer-events", "none");
+            $btnEditRights.addClass("disabled").css("pointer-events", "none");
 
             $.ajax({
                 type: 'POST',
@@ -306,40 +308,40 @@ var toolUserManagement = {
                 encode: true
             }).done(function(data) {
                 if (data.success) {
-                    var $lld = $("#lastlogindate"),
-                        $ul  = $("#userlogin"),
-                        $ump = $("#idusermanagement #id_usr_password"),
-                        $umcp = $("#idusermanagement #id_usr_confirm_password");
+                    var $lastLoginDate      = $("#lastlogindate"),
+                        $userLogin          = $("#userlogin"),
+                        $userMgntPass       = $("#idusermanagement #id_usr_password"),
+                        $userMgntConPass    = $("#idusermanagement #id_usr_confirm_password");
 
-                    $lld.html(data.user.usr_last_login_date);
-                    $ul.html(data.user.usr_login);
-                    toolUserManagement.setImage("#profile-image", data.user.usr_image);
+                        $lastLoginDate.html(data.user.usr_last_login_date);
+                        $userLogin.html(data.user.usr_login);
+                        toolUserManagement.setImage("#profile-image", data.user.usr_image);
 
-                    $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
-                        var $this   = $(this),
-                            name    = $this.attr('name'),
-                            $tum    = $("#tool_user_management_id_tmp"),
-                            $eui    = $("#edituserid");
+                        $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
+                            var $this               = $(this),
+                                name                = $this.attr('name'),
+                                $toolUserMgntTmp    = $("#tool_user_management_id_tmp"),
+                                $editUserId         = $("#edituserid");
 
-                            $("#" + $this.attr('id')).val(data.user[name]);
-                            $tum.val(data.user['usr_id']);
-                            $eui.html(data.user['usr_id']);
-                    });
+                                $("#" + $this.attr('id')).val(data.user[name]);
+                                $toolUserMgntTmp.val(data.user['usr_id']);
+                                $editUserId.html(data.user['usr_id']);
+                        });
 
-                    // Switching the Admin switch plugin
-                    var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
-                        if (data.user.usr_admin == 1) {
-                            userEditSwitchForm.bootstrapSwitch('setState', true);
-                        } else {
-                            userEditSwitchForm.bootstrapSwitch('setState', false);
-                        }
+                        // Switching the Admin switch plugin
+                        var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
+                            if (data.user.usr_admin == 1) {
+                                userEditSwitchForm.bootstrapSwitch('setState', true);
+                            } else {
+                                userEditSwitchForm.bootstrapSwitch('setState', false);
+                            }
 
-                        // make sure that password fields are empty when retrieving
-                        $ump.val("");
-                        $umcp.val("");
+                            // make sure that password fields are empty when retrieving
+                            $userMgntPass.val("");
+                            $userMgntConPass.val("");
 
-                        // re-initialize the tree with current selected userID
-                        getRightsTree(id);
+                            // re-initialize the tree with current selected userID
+                            getRightsTree(id);
                 }
             }).fail(function() {
                 alert(translations.tr_meliscore_error_message);
@@ -369,10 +371,10 @@ var toolUserManagement = {
                 contentType: false,
                 dataType: 'json'
             }).done(function (data) {
-                var $mum = $("#modal-user-management");
+                var $modalUserMgnt = $("#modal-user-management");
                     if ( data.success ) {
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                        $mum.modal('hide');
+                        $modalUserMgnt.modal('hide');
                         toolUserManagement.refreshTable();
                     }
                     else {
@@ -389,79 +391,79 @@ var toolUserManagement = {
     },
 
     updateUser: function (form) {
-        var formData    = new FormData(form),
-            ctr         = 0,
-            $bue        = $(".btnUserEdit");
+        var formData        = new FormData(form),
+            ctr             = 0,
+            $btnUserEdit    = $(".btnUserEdit");
 
-        formData.append("usr_id", $("#edituserid").html());
+            formData.append("usr_id", $("#edituserid").html());
 
-        $.each(userRightsData, function (i, e) {
-            $.each(e, function (a, b) {
-                formData.append(a, JSON.stringify(userRightsData[ctr]));
+            $.each(userRightsData, function (i, e) {
+                $.each(e, function (a, b) {
+                    formData.append(a, JSON.stringify(userRightsData[ctr]));
+                });
+                ctr++;
             });
-            ctr++;
-        });
 
-        melisCoreTool.pending("#btnEdit");
-        melisCoreTool.processing();
+            melisCoreTool.pending("#btnEdit");
+            melisCoreTool.processing();
 
-        $bue.removeAttr("data-toggle");
+            $btnUserEdit.removeAttr("data-toggle");
 
-        $.ajax({
-            type: 'POST',
-            url: '/melis/MelisCore/ToolUser/updateUser',
-            data: formData,
-            processData: false,
-            cache: false,
-            contentType: false,
-            dataType: 'json'
-        }).done(function (data) {
-            if ( data.success ) {
-                var $mum = $("#modal-user-management"),
-                    $unl = $("#user-name-link");
+            $.ajax({
+                type: 'POST',
+                url: '/melis/MelisCore/ToolUser/updateUser',
+                data: formData,
+                processData: false,
+                cache: false,
+                contentType: false,
+                dataType: 'json'
+            }).done(function (data) {
+                if ( data.success ) {
+                    var $modalUserMgnt  = $("#modal-user-management"),
+                        $userNameLink   = $("#user-name-link");
 
-                    melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                    $mum.modal('hide');
+                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                        $modalUserMgnt.modal('hide');
 
-                    if ( data.datas.isMyInfo == 1 ) {
-                        var $mlmpp = $("#meliscore_left_menu_profile_pic");
-                            $mlmpp.attr("src", "");
+                        if ( data.datas.isMyInfo == 1 ) {
+                            var $profPic = $("#meliscore_left_menu_profile_pic");
+                                $profPic.attr("src", "");
 
-                            $.when(melisHelper.zoneReload("id_meliscore_leftmenu", "meliscore_leftmenu")).then(function () {
-                                var isFirefox = navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
-                                    if (isFirefox) {
-                                        $mlmpp.fadeOut();
-                                        setTimeout(function () {
-                                            $mlmpp.attr("src", data.datas.loadProfile);
-                                            $mlmpp.fadeIn();
-                                        }, 3000);
-                                    }
+                                $.when(melisHelper.zoneReload("id_meliscore_leftmenu", "meliscore_leftmenu")).then(function () {
+                                    var isFirefox = navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
+                                        if (isFirefox) {
+                                            $profPic.fadeOut();
+                                            setTimeout(function () {
+                                                $profPic.attr("src", data.datas.loadProfile);
+                                                $profPic.fadeIn();
+                                            }, 3000);
+                                        }
+                                });
+                        }
+                        toolUserManagement.refreshTable();
+
+                        //check if data that has been updated is equal to the current user info to replicate the user profile data
+                        if ( _tmpUserId == $userNameLink.attr("data-user-id") ) {
+                            melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
+                            melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
+
+                            //reload the dashboard plugins menu to update the plugin rights
+                            melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
+                                melisDashBoardDragnDrop.dragWidget();
                             });
-                    }
-                    toolUserManagement.refreshTable();
-
-                    //check if data that has been updated is equal to the current user info to replicate the user profile data
-                    if ( _tmpUserId == $unl.attr("data-user-id") ) {
-                        melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
-                        melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
-
-                        //reload the dashboard plugins menu to update the plugin rights
-                        melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
-                            melisDashBoardDragnDrop.dragWidget();
-                        });
-                    }
-            }
-            else {
-                melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
-                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                melisCoreTool.highlightErrors(data.success, data.errors, "idusermanagement");
-            }
-            melisCoreTool.done("#btnEdit");
-            melisCore.flashMessenger();
-            melisCoreTool.processDone();
-        }).fail(function () {
-            alert(translations.tr_meliscore_error_message);
-        });
+                        }
+                }
+                else {
+                    melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
+                    melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                    melisCoreTool.highlightErrors(data.success, data.errors, "idusermanagement");
+                }
+                melisCoreTool.done("#btnEdit");
+                melisCore.flashMessenger();
+                melisCoreTool.processDone();
+            }).fail(function () {
+                alert(translations.tr_meliscore_error_message);
+            });
     },
 
     imagePreview: function (id, imgFileInput) {

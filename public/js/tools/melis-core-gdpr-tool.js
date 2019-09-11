@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     var $body = $('body'),
         gdprFormData = [];
 
@@ -14,12 +14,13 @@ $(document).ready(function() {
 
         // Toggle single checkbox
         $body.on("click", ".cb-cont input[type=checkbox]", function () {
-            if ($(this).is(':checked')) {
-                $(this).prop("checked", true);
-                $(this).prev("span").find(".cbmask-inner").addClass('cb-active');
+            var $this = $(this);
+            if ( $this.is(':checked') ) {
+                $this.prop("checked", true);
+                $this.prev("span").find(".cbmask-inner").addClass('cb-active');
             } else {
-                $(this).not(".requried-module").prop("checked", false);
-                $(this).not(".requried-module").prev("span").find(".cbmask-inner").removeClass('cb-active');
+                $this.not(".requried-module").prop("checked", false);
+                $this.not(".requried-module").prev("span").find(".cbmask-inner").removeClass('cb-active');
             }
         });
 
@@ -27,173 +28,187 @@ $(document).ready(function() {
          * Submiting search form
          */
         $body.on('submit', '#id_melis_core_gdpr_search_form', function(e) {
-            var formInputs = $(this).serializeArray();
-            var hasSite = false;
-            var hasName = false;
-            var hasEmail = false;
+            var formInputs  = $(this).serializeArray(),
+                hasSite     = false,
+                hasName     = false,
+                hasEmail    = false;
 
-            $.each (formInputs, function(i, field) {
-                if (field.value != '') {
-                    if (field.name == 'user_name') {
-                        hasName = true;
-                    } else if (field.name == 'user_email') {
-                        hasEmail = true
-                    } else if (field.name == 'site_id') {
-                        hasSite = true;
+                $.each (formInputs, function(i, field) {
+                    if (field.value != '') {
+                        if (field.name == 'user_name') {
+                            hasName = true;
+                        } else if (field.name == 'user_email') {
+                            hasEmail = true
+                        } else if (field.name == 'site_id') {
+                            hasSite = true;
+                        }
                     }
-                }
-            });
-            //only send request if there are any inputs
-            if (hasName == true || hasEmail == true) {
-                if (hasName == true) {
-                    if (formInputs[0].value.length <= 2 && formInputs[0].name === 'user_name') {
-                        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+                });
 
-                        melisHelper.melisKoNotification(
-                            translations.tr_melis_core_gdpr_notif_gdpr_search,
-                            translations.tr_melis_core_gdpr_notif_error_3ormore_inputs
-                        );
+                //only send request if there are any inputs
+                if (hasName == true || hasEmail == true) {
+                    if (hasName == true) {
+                        if (formInputs[0].value.length <= 2 && formInputs[0].name === 'user_name') {
+                            $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+
+                            melisHelper.melisKoNotification(
+                                translations.tr_melis_core_gdpr_notif_gdpr_search,
+                                translations.tr_melis_core_gdpr_notif_error_3ormore_inputs
+                            );
+                        } else {
+                            melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
+                            GdprTool.getUserInfo(formInputs);
+                            melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+                        }
                     } else {
                         melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
                         GdprTool.getUserInfo(formInputs);
                         melisCoreTool.done("#melis-core-gdpr-search-form-submit");
                     }
                 } else {
-                    melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
-                    GdprTool.getUserInfo(formInputs);
-                    melisCoreTool.done("#melis-core-gdpr-search-form-submit");
-                }
-            } else {
-                if (hasName == false && hasEmail == false && hasSite == true) {
-                    $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
-                    $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#e61c23");
+                    if (hasName == false && hasEmail == false && hasSite == true) {
+                        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+                        $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#e61c23");
 
-                    melisHelper.melisKoNotification(
-                        translations.tr_melis_core_gdpr_notif_gdpr_search,
-                        translations.tr_melis_core_gdpr_notif_name_or_email_required
-                    );
-                } else {
-                    $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
-                    $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#e61c23");
-                    
-                    melisHelper.melisKoNotification(
-                        translations.tr_melis_core_gdpr_notif_gdpr_search,
-                        translations.tr_melis_core_gdpr_tool_form_no_inputs
-                    );
+                        melisHelper.melisKoNotification(
+                            translations.tr_melis_core_gdpr_notif_gdpr_search,
+                            translations.tr_melis_core_gdpr_notif_name_or_email_required
+                        );
+                    } else {
+                        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+                        $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#e61c23");
+                        
+                        melisHelper.melisKoNotification(
+                            translations.tr_melis_core_gdpr_notif_gdpr_search,
+                            translations.tr_melis_core_gdpr_tool_form_no_inputs
+                        );
+                    }
                 }
-            }
 
-            e.preventDefault();
+                e.preventDefault();
         });
 
         /**
          * On checking all checkbox
          */
         $body.on('click', '#id_melis_core_gdpr_content_tabs .check-all', function() {
-            var status = this.checked;
-            var $iconPlaceholder = $(this).siblings('i');
+            var $this               = $(this),
+                status              = this.checked,
+                $iconPlaceholder    = $this.siblings('i');
 
-            $iconPlaceholder.toggleClass("checked");
-            $iconPlaceholder.closest('.dataTables_scrollHead').siblings('.dataTables_scrollBody').find('.checkRow').each(function() {
-                $i = $(this).siblings('i');
-                $row = $(this).parents('tr');
-                this.checked = status;
+                $iconPlaceholder.toggleClass("checked");
+                $iconPlaceholder.closest('.dataTables_scrollHead').siblings('.dataTables_scrollBody').find('.checkRow').each(function() {
+                    var $this   = $(this),
+                        $i      = $this.siblings('i'),
+                        $row    = $this.parents('tr');
 
-                if (status) {
-                    if (!$i.hasClass('checked')) {
-                        $i.addClass('checked');
-                        $row.addClass('checked');
-                    }
-                } else {
-                    if ($i.hasClass('checked')) {
-                        $i.removeClass('checked');
-                        $row.removeClass('checked');
-                    }
-                }
-            });
+                        this.checked = status;
 
-            var moduleName = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
+                        if (status) {
+                            if (!$i.hasClass('checked')) {
+                                $i.addClass('checked');
+                                $row.addClass('checked');
+                            }
+                        } else {
+                            if ($i.hasClass('checked')) {
+                                $i.removeClass('checked');
+                                $row.removeClass('checked');
+                            }
+                        }
+                });
 
-            $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
-                countOfRows = $(this).find('table tbody tr').length;
-                moduleName = $(this).find('table').attr('id');
-                var p = $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p');
+            var moduleName = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
 
-                var charIndex = p.text().indexOf(" (");
-                var lengthToDelete = charIndex - p.text().length;
+                $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
+                    var $this = $(this);
 
-                p.text().slice(charIndex, lengthToDelete);
-                p.append( "texting");
-            });
+                        countOfRows = $this.find('table tbody tr').length;
+                        moduleName = $this.find('table').attr('id');
 
-            var moduleName = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
-            var countOfRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tbody tr').length;
-            var pTag = $body.find('.widget-head ul #' + moduleName + '-left-tab p');
-            var charIndex = pTag.html().indexOf(" (");
-            var lengthToDelete = charIndex - pTag.html().length;
-            var countOfCheckedRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
+                    var p               = $this.closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p'),
+                        charIndex       = p.text().indexOf(" ("),
+                        lengthToDelete  = charIndex - p.text().length;
 
-            pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
+                        p.text().slice(charIndex, lengthToDelete);
+                        p.append( "texting");
+                });
+
+            var moduleName          = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id'),
+                countOfRows         = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table tbody tr').length,
+                pTag                = $body.find('.widget-head ul #' + moduleName + '-left-tab p'),
+                charIndex           = pTag.html().indexOf(" ("),
+                lengthToDelete      = charIndex - pTag.html().length,
+                countOfCheckedRows  = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
+
+                pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
         });
 
         /**
          * On checking a single checkbox
          */
         $body.on('click', '#id_melis_core_gdpr_content_tabs .checkRow', function() {
-            if (this.checked) {
-                if (!$(this).siblings('i').hasClass('checked')) {
-                    $(this).siblings('i').addClass('checked');
-                    $(this).parents('tr').addClass('checked');
-                }
-            } else {
-                if ($(this).siblings('i').hasClass('checked')) {
-                    $(this).siblings('i').removeClass('checked');
-                    $(this).parents('tr').removeClass('checked');
-                }
-            }
+            var $this = $(this);
 
-            var numberOfCheckedCheckBoxes = $(this).closest('table').find('.checkRow:checked').length;
-            var numberOfCheckboxes = $(this).closest('table').find('.checkRow').length;
-
-            if (numberOfCheckedCheckBoxes < numberOfCheckboxes) {
-                var checkAll = $(this).closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
-                if (checkAll.prop('checked')) {
-                    checkAll.prop('checked', false);
-                    $(checkAll).siblings('i').removeClass("checked");
+                if ( this.checked ) {
+                    if ( !$this.siblings('i').hasClass('checked') ) {
+                        $this.siblings('i').addClass('checked');
+                        $this.parents('tr').addClass('checked');
+                    }
+                } else {
+                    if ( $this.siblings('i').hasClass('checked') ) {
+                        $this.siblings('i').removeClass('checked');
+                        $this.parents('tr').removeClass('checked');
+                    }
                 }
-            } else if (numberOfCheckedCheckBoxes == numberOfCheckboxes && numberOfCheckboxes != 0) {
-                var checkAll = $(this).closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
-                if (checkAll.prop('checked') == false) {
-                    checkAll.prop('checked', true);
-                    $(checkAll).siblings('i').addClass("checked");
+
+            var numberOfCheckedCheckBoxes   = $this.closest('table').find('.checkRow:checked').length,
+                numberOfCheckboxes          = $this.closest('table').find('.checkRow').length;
+
+                if (numberOfCheckedCheckBoxes < numberOfCheckboxes) {
+                    var checkAll = $this.closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+
+                        if (checkAll.prop('checked')) {
+                            checkAll.prop('checked', false);
+                            $(checkAll).siblings('i').removeClass("checked");
+                        }
+                } else if (numberOfCheckedCheckBoxes == numberOfCheckboxes && numberOfCheckboxes != 0) {
+                    var checkAll = $this.closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+
+                        if (checkAll.prop('checked') == false) {
+                            checkAll.prop('checked', true);
+                            $(checkAll).siblings('i').addClass("checked");
+                        }
                 }
-            }
 
-            var moduleName = $(this).closest('table').attr('id');
-            var pTag = $body.find('.widget-head ul #' + moduleName + '-left-tab p');
-            var charIndex = pTag.html().indexOf(" (");
-            var lengthToDelete = charIndex - pTag.html().length;
+            var moduleName      = $this.closest('table').attr('id'),
+                pTag            = $body.find('.widget-head ul #' + moduleName + '-left-tab p'),
+                charIndex       = pTag.html().indexOf(" ("),
+                lengthToDelete  = charIndex - pTag.html().length;
 
-            pTag.html().slice(0, lengthToDelete);
-            pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + numberOfCheckedCheckBoxes + "/" + numberOfCheckboxes + ")");
+                pTag.html().slice(0, lengthToDelete);
+                pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + numberOfCheckedCheckBoxes + "/" + numberOfCheckboxes + ")");
         });
 
         /**
          * On clicking extract selected button
          */
         $body.on('click', '#id_melis_core_gdpr_content_tabs .extract-selected', function() {
-            var modules = {};
-            var tableId;
-            var ids;
-            var hasData = false;
+            var modules = {},
+                tableId,
+                ids,
+                hasData = false;
 
             $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
-                tableId = $(this).find('.dataTables_scrollBody .table').attr('id');
-                ids = [];
+                var $this = $(this);
 
-                $(this).find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
-                    ids.push($(this).val());
-                    hasData = true;
+                    tableId = $this.find('.dataTables_scrollBody .table').attr('id');
+                    ids = [];
+
+                $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                    var $this = $(this);
+
+                        ids.push( $this.val() );
+                        hasData = true;
                 });
                 modules[tableId] = ids;
             });
@@ -213,19 +228,23 @@ $(document).ready(function() {
          * On clicking delete selected button
          */
         $body.on('click', '#id_melis_core_gdpr_content_tabs .delete-selected', function() {
-            var modules = {};
-            var tableId;
-            var ids;
-            var hasData = false;
+            var modules = {},
+                tableId,
+                ids,
+                hasData = false;
 
             $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
-                tableId = $(this).find('.dataTables_scrollBody .table').attr('id');
+                var $this = $(this);
+
+                tableId = $this.find('.dataTables_scrollBody .table').attr('id');
                 ids = [];
 
                 //push all selected ids to array
-                $(this).find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
-                    ids.push($(this).val());
-                    hasData = true;
+                $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                    var $this = $(this);
+                        
+                        ids.push( $this.val() );
+                        hasData = true;
                 });
                 modules[tableId] = ids;
             });

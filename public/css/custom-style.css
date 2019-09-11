@@ -263,11 +263,17 @@ a:not([href]).btn-danger:hover {
 .table-striped > tbody > tr {
   border-bottom: 1px solid #efefef;
 }
-.filter-bar {
-  padding-bottom: 0;
-}
 .filter-bar label {
   float: left;
+}
+.fb-dt-left,
+.fb-dt-center,
+.fb-dt-right {
+  display: flex;
+  flex-direction: row;
+}
+.fb-dt-right {
+  justify-content: flex-end;
 }
 /* input-group-addon */
 .input-group-addon {
@@ -358,7 +364,7 @@ a:not([href]).btn-danger:hover {
   -webkit-box-flex: 0;
 }
 .melis-core-gdpr-check-box1 {
-  margin-left: 0.5rem !important;
+  margin-left: 0.7rem !important;
   width: 100%;
 }
 #melis-core-gdpr-search-form-submit {
@@ -453,10 +459,13 @@ div.row, ul.row {
   padding-left: 15px;
 }
 .sites-language .cb-cont .cbmask-outer {
-  top: 0;
+  top: 0 !important;
 }
-.melis-radio-box .melis-radio-box-circle {
-  width: 14px;
+.sites-language .checkbox {
+  padding-left: 6px;
+}
+.melis-radio-box input:checked + .melis-radio-box-circle:after {
+  left: 51%;
 }
 /* utility classes */
 .hidden {
@@ -483,6 +492,17 @@ div.row, ul.row {
 /* blog */
 [data-meliskey='meliscmsblog_tabs_preview_content_container'] .content-cont {
   padding: 15px;
+}
+/* news */
+.tab-pane .wizard {
+  width: 100%;
+}
+.tab-preview .content-cont {
+  padding: 15px;
+}
+/* user management */
+.userimage {
+  text-align: center;
 }
 /* Responsive media queries */
 @media (min-width: 768px) {

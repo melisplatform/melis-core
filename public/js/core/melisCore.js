@@ -498,35 +498,33 @@ var melisCore = (function(window){
 
     tabDraggable("#melis-id-nav-bar-tabs", false);
 
+    /* $body.on("click", ".tabs-label li a", function() {
+            var $this = $(this);
+
+                $this.toggleClass("active").siblings().removeClass("active");
+                $this.closest("li").toggleClass("active").siblings().removeClass("active");
+        }); */
+
     // switch widget nav-tabs even if href begins with a digit e.g. #1_id_cmspage
     function navTabsSwitch() {
         var $this               = $(this),
             href                = $this.attr("href"),
-            id                  = href.replace("#", ""),
-            $navLi              = $("#"+activeTabId+" .nav-tabs li"),
-            $tabContent         = $("#"+activeTabId+" .tab-pane"),
-            $currentTabContent  = $("#"+activeTabId+" [id="+id+"]");
+            id                  = href.replace("#", "");
 
-            // loop through .nav-tabs li and remove .active class
-            $navLi.each(function() {
-                var $this       = $(this);
-                    $tabLink    = $this.find("a");
-
-                    $this.removeClass("active");
-                    $tabLink.removeClass("active");
-            });
-
-            // loop through tab content and remove .active class
-            $tabContent.each(function() {
-                var $this = $(this);
-                    $this.removeClass("active");
-            });
-
-            // add .active class to the current clicked a tag
+            // .tab-pane [this a hrefs]
+            $this.addClass("active");
             $this.closest("li").addClass("active");
 
-            // show current clicked tab content
-            $currentTabContent.addClass("active");
+            // a hrefs siblings
+            $this.closest("li").siblings().removeClass("active");
+            $this.closest("li").siblings().find("a").removeClass("active");
+            
+
+            // .tab-content
+            $(href).siblings().removeClass("active");
+            $(href).addClass("active");
+            
+            return false;
     }
 
     // pagination of dataTables data
@@ -542,7 +540,7 @@ var melisCore = (function(window){
     // BIND & DELEGATE EVENTS =================================================================================================================
 
     // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
-    //$body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch);
+    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch).filter(":first").click();
 
     // toggle plugin menu in mobile
     $body.on("click", "#plugin-menu", function(){

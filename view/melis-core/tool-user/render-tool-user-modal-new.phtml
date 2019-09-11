@@ -7,7 +7,7 @@
 ?>
 <br/>
 <br/>
-<div class="center-block userimage">
+<div class="userimage">
     <span class="thumbnail">
       <img id="new-profile-image" width="64" height="64" src="/MelisCore/images/profile/default_picture.jpg" alt="<?= $this->translate('tr_meliscore_tool_user_usr_profile_image'); ?>">
     </span>
@@ -19,17 +19,15 @@
 </div>
 <br/>
 <br/>
-<button type="submit" class="btn btn-success pull-right" id="btnAdd"><i class="fa fa-plus"></i>
-    <span class="long-text hidden-xs hidden-sm"><?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></span>
-    <span class="short-text visible-xs visible-sm"><?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></span>
+<button type="submit" class="btn btn-success float-right" id="btnAdd"><i class="fa fa-plus"></i>
+    <span class="long-text d-none d-sm-none"><?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></span>
+    <span class="short-text d-inline d-sm-inline"><?= $this->translate('tr_meliscore_tool_user_new_btn_short'); ?></span>
 </button>
-
-
 <?php
     echo $this->melisModalInvoker()->render(
         array(
             'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
-            'class' => 'btn btn-danger pull-left'
+            'class' => 'btn btn-danger float-left'
         ), 'dismiss');
     echo $this->form()->closeTag();
 ?>
