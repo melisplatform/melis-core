@@ -4372,7 +4372,7 @@ div#modal-user-management div.widget {
 
 #disable-left-menu-overlay {
     position: fixed; /* Sit on top of the page content */
-    width: 274px; /* Full width (cover the whole page) */
+    width: 320px; /* Full width (cover the whole page) */
     height: 100%; /* Full height (cover the whole page) */
     display: none;
     top: 0;

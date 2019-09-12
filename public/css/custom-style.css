@@ -185,7 +185,6 @@ a:not([href]).btn-danger:hover {
   justify-content: space-between;
   display: flex;
   width: 100%;
-  position: relative;
 }
 .pagination > .page-item.active > .page-link, 
 .pagination > .page-item.active > .page-link:focus, 
@@ -266,11 +265,15 @@ a:not([href]).btn-danger:hover {
 .filter-bar label {
   float: left;
 }
+/* can be a fix for nav-tabs menu */
 .fb-dt-left,
 .fb-dt-center,
 .fb-dt-right {
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-flow: row wrap;
 }
 .fb-dt-right {
   justify-content: flex-end;
@@ -504,6 +507,20 @@ div.row, ul.row {
 .userimage {
   text-align: center;
 }
+/* messenger */
+.refresh-chat,
+.refresh-contacts {
+  background-color: #fafafa;
+  border-color: #cecece;
+  color: #797979 !important;
+  font-size: 12px;
+  padding: 1px 5px;
+}
+.refresh-chat:hover,
+.refresh-contacts:hover {
+  background-color: #e7e7e7;
+  border-color: #e7e7e7;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
@@ -583,14 +600,14 @@ div.row, ul.row {
   }
 
   /* #main content */
-  #main #menu .sidebar {
-    width: 320px; /* 20rem */
+  /* #main #menu .sidebar {
+    width: 320px;
   }
   #main #content {
-    margin-left: 0; /* 20rem */
+    margin-left: 0;
     padding-left: 0;
     padding-right: 0;
-  }
+  } */
   .no-plugins p {
     margin-bottom: 0;
   }

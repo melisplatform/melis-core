@@ -527,7 +527,7 @@ var melisCore = (function(window){
             return false;
     }
 
-    // pagination of dataTables data
+    // pagination of dataTables data, prior to bootstrap 4 changes on pagination classes
     function paginateDataTables() {
         var $paginate = $(".dataTables_paginate"),
             $page_item = $paginate.find(".pagination li"),
