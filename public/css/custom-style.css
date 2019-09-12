@@ -600,14 +600,14 @@ div.row, ul.row {
   }
 
   /* #main content */
-  /* #main #menu .sidebar {
+  #main #menu .sidebar {
     width: 320px;
   }
   #main #content {
     margin-left: 0;
     padding-left: 0;
     padding-right: 0;
-  } */
+  }
   .no-plugins p {
     margin-bottom: 0;
   }
