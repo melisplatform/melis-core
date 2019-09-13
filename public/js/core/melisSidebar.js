@@ -62,7 +62,7 @@
 	
 })(jQuery);
 
-/* $(document).ready(function(){
+$(document).ready(function(){
 	
 	// only make the sidebar resizable when its 1200px above
 	if( melisCore.screenSize >= 1200){
@@ -96,4 +96,4 @@
 		});
 	}
 
-}); */
+});

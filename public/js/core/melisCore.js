@@ -201,8 +201,11 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard() {
+        // responsive, on 767px and below
+        /* if ( activeTabId === "id_meliscore_toolstree_section_dashboard" ) {
+            $("#sidebar-menu").trigger("click");
+        } */
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
-
             // check if dashboard plugin menu is open
             if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
                 melisDashBoardDragnDrop.closeDBPlugSidebar();
@@ -224,7 +227,7 @@ var melisCore = (function(window){
         melisHelper.zoneReload(zoneId, melisKey);
     }
 
-    // SIDEBAR MENU CLICK (toggle)
+    // SIDEBAR MENU CLICK (toggle), .toggle-sidebar
     function sidebarMenuClick() {
         // for the sidebar functionalities
         var $melisLeftMenu      = $("#id_meliscore_leftmenu"),
@@ -240,13 +243,13 @@ var melisCore = (function(window){
             $body.addClass('sidebar-mini');
 
             $melisFooter.addClass('slide-left');
-            $melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
+            //$melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
         }
         else {
             $melisLeftMenu.css("left", "0");
             $body.removeClass('sidebar-mini');
             $melisFooter.removeClass('slide-left');
-            $melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
+            //$melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
         }
 
         $("#newplugin-cont").removeClass("show-menu");
@@ -262,6 +265,7 @@ var melisCore = (function(window){
         // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
         setTimeout(function(){
             var $f = $("#"+ activeTabId + " .melis-iframe");
+
             if( $($f).length ) {
                 $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
             }
@@ -270,8 +274,8 @@ var melisCore = (function(window){
         }, 1000);
     }
 
-    if ( typeof melisDashBoardDragnDrop === 'undefined' )
-        $("#disable-left-menu-overlay").show();
+    /* if ( typeof melisDashBoardDragnDrop === 'undefined' )
+        $("#disable-left-menu-overlay").show(); */
 
     // MAIN TAB MENU CLICK - run codes when a tab in the main tab menu is clicked
     function tabMenuClick() {
@@ -497,13 +501,6 @@ var melisCore = (function(window){
     }
 
     tabDraggable("#melis-id-nav-bar-tabs", false);
-
-    /* $body.on("click", ".tabs-label li a", function() {
-            var $this = $(this);
-
-                $this.toggleClass("active").siblings().removeClass("active");
-                $this.closest("li").toggleClass("active").siblings().removeClass("active");
-        }); */
 
     // switch widget nav-tabs even if href begins with a digit e.g. #1_id_cmspage
     function navTabsSwitch() {

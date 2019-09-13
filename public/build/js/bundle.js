@@ -8122,27 +8122,17 @@ if (window.location != window.parent.location)
         $(this).parent("li").toggleClass('active-menu');
     });
     
-//    // initialize nicescroll plugin in sidebar after zoneReload
-//    window.enableSidebarScroll = function(){
-//    	$("body .sidebar > .sidebarMenuWrapper.hasNiceScroll").niceScroll({
-//    		horizrailenabled: true, 
-//    		zindex: 2,
-//    		cursorborder: "none",
-//    		cursorborderradius: "0",
-//    		cursorcolor: primaryColor
-//    	});
-//    }
-//    enableSidebarScroll();
-    
-    
-    
-    
-    
-    
-    
-    
-     
-
+   // initialize nicescroll plugin in sidebar after zoneReload
+   /* window.enableSidebarScroll = function(){
+   	$("body .sidebar > .sidebarMenuWrapper.hasNiceScroll").niceScroll({
+   		horizrailenabled: true, 
+   		zindex: 2,
+   		cursorborder: "none",
+   		cursorborderradius: "0",
+   		cursorcolor: primaryColor
+   	});
+   }
+   enableSidebarScroll(); */
 })(jQuery, window);
 /**
  * Created by conta on 8/18/2017.
@@ -20686,2190 +20676,9 @@ i&&d.appendTo(e),a.oFeatures.bSort&&(d.addClass(f.sSortingClass),!1!==f.bSortabl
 	return $.ui.fancytree;
 }); // End of closure
 
-/*!
- * jQuery UI Position v1.10.0
- * http://jqueryui.com
- *
- * Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- *
- * http://api.jqueryui.com/position/
- */
-(function( $, undefined ) {
-
-    $.ui = $.ui || {};
-    
-    var cachedScrollbarWidth,
-        max = Math.max,
-        abs = Math.abs,
-        round = Math.round,
-        rhorizontal = /left|center|right/,
-        rvertical = /top|center|bottom/,
-        roffset = /[\+\-]\d+%?/,
-        rposition = /^\w+/,
-        rpercent = /%$/,
-        _position = $.fn.position;
-    
-    function getOffsets( offsets, width, height ) {
-        return [
-            parseInt( offsets[ 0 ], 10 ) * ( rpercent.test( offsets[ 0 ] ) ? width / 100 : 1 ),
-            parseInt( offsets[ 1 ], 10 ) * ( rpercent.test( offsets[ 1 ] ) ? height / 100 : 1 )
-        ];
-    }
-    
-    function parseCss( element, property ) {
-        return parseInt( $.css( element, property ), 10 ) || 0;
-    }
-    
-    function getDimensions( elem ) {
-        var raw = elem[0];
-        if ( raw.nodeType === 9 ) {
-            return {
-                width: elem.width(),
-                height: elem.height(),
-                offset: { top: 0, left: 0 }
-            };
-        }
-        if ( $.isWindow( raw ) ) {
-            return {
-                width: elem.width(),
-                height: elem.height(),
-                offset: { top: elem.scrollTop(), left: elem.scrollLeft() }
-            };
-        }
-        if ( raw.preventDefault ) {
-            return {
-                width: 0,
-                height: 0,
-                offset: { top: raw.pageY, left: raw.pageX }
-            };
-        }
-        return {
-            width: elem.outerWidth(),
-            height: elem.outerHeight(),
-            offset: elem.offset()
-        };
-    }
-    
-    $.position = {
-        scrollbarWidth: function() {
-            if ( cachedScrollbarWidth !== undefined ) {
-                return cachedScrollbarWidth;
-            }
-            var w1, w2,
-                div = $( "<div style='display:block;width:50px;height:50px;overflow:hidden;'><div style='height:100px;width:auto;'></div></div>" ),
-                innerDiv = div.children()[0];
-    
-            $( "body" ).append( div );
-            w1 = innerDiv.offsetWidth;
-            div.css( "overflow", "scroll" );
-    
-            w2 = innerDiv.offsetWidth;
-    
-            if ( w1 === w2 ) {
-                w2 = div[0].clientWidth;
-            }
-    
-            div.remove();
-    
-            return (cachedScrollbarWidth = w1 - w2);
-        },
-        getScrollInfo: function( within ) {
-            var overflowX = within.isWindow ? "" : within.element.css( "overflow-x" ),
-                overflowY = within.isWindow ? "" : within.element.css( "overflow-y" ),
-                hasOverflowX = overflowX === "scroll" ||
-                    ( overflowX === "auto" && within.width < within.element[0].scrollWidth ),
-                hasOverflowY = overflowY === "scroll" ||
-                    ( overflowY === "auto" && within.height < within.element[0].scrollHeight );
-            return {
-                width: hasOverflowX ? $.position.scrollbarWidth() : 0,
-                height: hasOverflowY ? $.position.scrollbarWidth() : 0
-            };
-        },
-        getWithinInfo: function( element ) {
-            var withinElement = $( element || window ),
-                isWindow = $.isWindow( withinElement[0] );
-            return {
-                element: withinElement,
-                isWindow: isWindow,
-                offset: withinElement.offset() || { left: 0, top: 0 },
-                scrollLeft: withinElement.scrollLeft(),
-                scrollTop: withinElement.scrollTop(),
-                width: isWindow ? withinElement.width() : withinElement.outerWidth(),
-                height: isWindow ? withinElement.height() : withinElement.outerHeight()
-            };
-        }
-    };
-    
-    $.fn.position = function( options ) {
-        if ( !options || !options.of ) {
-            return _position.apply( this, arguments );
-        }
-    
-        // make a copy, we don't want to modify arguments
-        options = $.extend( {}, options );
-    
-        var atOffset, targetWidth, targetHeight, targetOffset, basePosition, dimensions,
-            target = $( options.of ),
-            within = $.position.getWithinInfo( options.within ),
-            scrollInfo = $.position.getScrollInfo( within ),
-            collision = ( options.collision || "flip" ).split( " " ),
-            offsets = {};
-    
-        dimensions = getDimensions( target );
-        if ( target[0].preventDefault ) {
-            // force left top to allow flipping
-            options.at = "left top";
-        }
-        targetWidth = dimensions.width;
-        targetHeight = dimensions.height;
-        targetOffset = dimensions.offset;
-        // clone to reuse original targetOffset later
-        basePosition = $.extend( {}, targetOffset );
-    
-        // force my and at to have valid horizontal and vertical positions
-        // if a value is missing or invalid, it will be converted to center
-        $.each( [ "my", "at" ], function() {
-            var pos = ( options[ this ] || "" ).split( " " ),
-                horizontalOffset,
-                verticalOffset;
-    
-            if ( pos.length === 1) {
-                pos = rhorizontal.test( pos[ 0 ] ) ?
-                    pos.concat( [ "center" ] ) :
-                    rvertical.test( pos[ 0 ] ) ?
-                        [ "center" ].concat( pos ) :
-                        [ "center", "center" ];
-            }
-            pos[ 0 ] = rhorizontal.test( pos[ 0 ] ) ? pos[ 0 ] : "center";
-            pos[ 1 ] = rvertical.test( pos[ 1 ] ) ? pos[ 1 ] : "center";
-    
-            // calculate offsets
-            horizontalOffset = roffset.exec( pos[ 0 ] );
-            verticalOffset = roffset.exec( pos[ 1 ] );
-            offsets[ this ] = [
-                horizontalOffset ? horizontalOffset[ 0 ] : 0,
-                verticalOffset ? verticalOffset[ 0 ] : 0
-            ];
-    
-            // reduce to just the positions without the offsets
-            options[ this ] = [
-                rposition.exec( pos[ 0 ] )[ 0 ],
-                rposition.exec( pos[ 1 ] )[ 0 ]
-            ];
-        });
-    
-        // normalize collision option
-        if ( collision.length === 1 ) {
-            collision[ 1 ] = collision[ 0 ];
-        }
-    
-        if ( options.at[ 0 ] === "right" ) {
-            basePosition.left += targetWidth;
-        } else if ( options.at[ 0 ] === "center" ) {
-            basePosition.left += targetWidth / 2;
-        }
-    
-        if ( options.at[ 1 ] === "bottom" ) {
-            basePosition.top += targetHeight;
-        } else if ( options.at[ 1 ] === "center" ) {
-            basePosition.top += targetHeight / 2;
-        }
-    
-        atOffset = getOffsets( offsets.at, targetWidth, targetHeight );
-        basePosition.left += atOffset[ 0 ];
-        basePosition.top += atOffset[ 1 ];
-    
-        return this.each(function() {
-            var collisionPosition, using,
-                elem = $( this ),
-                elemWidth = elem.outerWidth(),
-                elemHeight = elem.outerHeight(),
-                marginLeft = parseCss( this, "marginLeft" ),
-                marginTop = parseCss( this, "marginTop" ),
-                collisionWidth = elemWidth + marginLeft + parseCss( this, "marginRight" ) + scrollInfo.width,
-                collisionHeight = elemHeight + marginTop + parseCss( this, "marginBottom" ) + scrollInfo.height,
-                position = $.extend( {}, basePosition ),
-                myOffset = getOffsets( offsets.my, elem.outerWidth(), elem.outerHeight() );
-    
-            if ( options.my[ 0 ] === "right" ) {
-                position.left -= elemWidth;
-            } else if ( options.my[ 0 ] === "center" ) {
-                position.left -= elemWidth / 2;
-            }
-    
-            if ( options.my[ 1 ] === "bottom" ) {
-                position.top -= elemHeight;
-            } else if ( options.my[ 1 ] === "center" ) {
-                position.top -= elemHeight / 2;
-            }
-    
-            position.left += myOffset[ 0 ];
-            position.top += myOffset[ 1 ];
-    
-            // if the browser doesn't support fractions, then round for consistent results
-            if ( !$.support.offsetFractions ) {
-                position.left = round( position.left );
-                position.top = round( position.top );
-            }
-    
-            collisionPosition = {
-                marginLeft: marginLeft,
-                marginTop: marginTop
-            };
-    
-            $.each( [ "left", "top" ], function( i, dir ) {
-                if ( $.ui.position[ collision[ i ] ] ) {
-                    $.ui.position[ collision[ i ] ][ dir ]( position, {
-                        targetWidth: targetWidth,
-                        targetHeight: targetHeight,
-                        elemWidth: elemWidth,
-                        elemHeight: elemHeight,
-                        collisionPosition: collisionPosition,
-                        collisionWidth: collisionWidth,
-                        collisionHeight: collisionHeight,
-                        offset: [ atOffset[ 0 ] + myOffset[ 0 ], atOffset [ 1 ] + myOffset[ 1 ] ],
-                        my: options.my,
-                        at: options.at,
-                        within: within,
-                        elem : elem
-                    });
-                }
-            });
-    
-            if ( options.using ) {
-                // adds feedback as second argument to using callback, if present
-                using = function( props ) {
-                    var left = targetOffset.left - position.left,
-                        right = left + targetWidth - elemWidth,
-                        top = targetOffset.top - position.top,
-                        bottom = top + targetHeight - elemHeight,
-                        feedback = {
-                            target: {
-                                element: target,
-                                left: targetOffset.left,
-                                top: targetOffset.top,
-                                width: targetWidth,
-                                height: targetHeight
-                            },
-                            element: {
-                                element: elem,
-                                left: position.left,
-                                top: position.top,
-                                width: elemWidth,
-                                height: elemHeight
-                            },
-                            horizontal: right < 0 ? "left" : left > 0 ? "right" : "center",
-                            vertical: bottom < 0 ? "top" : top > 0 ? "bottom" : "middle"
-                        };
-                    if ( targetWidth < elemWidth && abs( left + right ) < targetWidth ) {
-                        feedback.horizontal = "center";
-                    }
-                    if ( targetHeight < elemHeight && abs( top + bottom ) < targetHeight ) {
-                        feedback.vertical = "middle";
-                    }
-                    if ( max( abs( left ), abs( right ) ) > max( abs( top ), abs( bottom ) ) ) {
-                        feedback.important = "horizontal";
-                    } else {
-                        feedback.important = "vertical";
-                    }
-                    options.using.call( this, props, feedback );
-                };
-            }
-    
-            elem.offset( $.extend( position, { using: using } ) );
-        });
-    };
-    
-    $.ui.position = {
-        fit: {
-            left: function( position, data ) {
-                var within = data.within,
-                    withinOffset = within.isWindow ? within.scrollLeft : within.offset.left,
-                    outerWidth = within.width,
-                    collisionPosLeft = position.left - data.collisionPosition.marginLeft,
-                    overLeft = withinOffset - collisionPosLeft,
-                    overRight = collisionPosLeft + data.collisionWidth - outerWidth - withinOffset,
-                    newOverRight;
-    
-                // element is wider than within
-                if ( data.collisionWidth > outerWidth ) {
-                    // element is initially over the left side of within
-                    if ( overLeft > 0 && overRight <= 0 ) {
-                        newOverRight = position.left + overLeft + data.collisionWidth - outerWidth - withinOffset;
-                        position.left += overLeft - newOverRight;
-                    // element is initially over right side of within
-                    } else if ( overRight > 0 && overLeft <= 0 ) {
-                        position.left = withinOffset;
-                    // element is initially over both left and right sides of within
-                    } else {
-                        if ( overLeft > overRight ) {
-                            position.left = withinOffset + outerWidth - data.collisionWidth;
-                        } else {
-                            position.left = withinOffset;
-                        }
-                    }
-                // too far left -> align with left edge
-                } else if ( overLeft > 0 ) {
-                    position.left += overLeft;
-                // too far right -> align with right edge
-                } else if ( overRight > 0 ) {
-                    position.left -= overRight;
-                // adjust based on position and margin
-                } else {
-                    position.left = max( position.left - collisionPosLeft, position.left );
-                }
-            },
-            top: function( position, data ) {
-                var within = data.within,
-                    withinOffset = within.isWindow ? within.scrollTop : within.offset.top,
-                    outerHeight = data.within.height,
-                    collisionPosTop = position.top - data.collisionPosition.marginTop,
-                    overTop = withinOffset - collisionPosTop,
-                    overBottom = collisionPosTop + data.collisionHeight - outerHeight - withinOffset,
-                    newOverBottom;
-    
-                // element is taller than within
-                if ( data.collisionHeight > outerHeight ) {
-                    // element is initially over the top of within
-                    if ( overTop > 0 && overBottom <= 0 ) {
-                        newOverBottom = position.top + overTop + data.collisionHeight - outerHeight - withinOffset;
-                        position.top += overTop - newOverBottom;
-                    // element is initially over bottom of within
-                    } else if ( overBottom > 0 && overTop <= 0 ) {
-                        position.top = withinOffset;
-                    // element is initially over both top and bottom of within
-                    } else {
-                        if ( overTop > overBottom ) {
-                            position.top = withinOffset + outerHeight - data.collisionHeight;
-                        } else {
-                            position.top = withinOffset;
-                        }
-                    }
-                // too far up -> align with top
-                } else if ( overTop > 0 ) {
-                    position.top += overTop;
-                // too far down -> align with bottom edge
-                } else if ( overBottom > 0 ) {
-                    position.top -= overBottom;
-                // adjust based on position and margin
-                } else {
-                    position.top = max( position.top - collisionPosTop, position.top );
-                }
-            }
-        },
-        flip: {
-            left: function( position, data ) {
-                var within = data.within,
-                    withinOffset = within.offset.left + within.scrollLeft,
-                    outerWidth = within.width,
-                    offsetLeft = within.isWindow ? within.scrollLeft : within.offset.left,
-                    collisionPosLeft = position.left - data.collisionPosition.marginLeft,
-                    overLeft = collisionPosLeft - offsetLeft,
-                    overRight = collisionPosLeft + data.collisionWidth - outerWidth - offsetLeft,
-                    myOffset = data.my[ 0 ] === "left" ?
-                        -data.elemWidth :
-                        data.my[ 0 ] === "right" ?
-                            data.elemWidth :
-                            0,
-                    atOffset = data.at[ 0 ] === "left" ?
-                        data.targetWidth :
-                        data.at[ 0 ] === "right" ?
-                            -data.targetWidth :
-                            0,
-                    offset = -2 * data.offset[ 0 ],
-                    newOverRight,
-                    newOverLeft;
-    
-                if ( overLeft < 0 ) {
-                    newOverRight = position.left + myOffset + atOffset + offset + data.collisionWidth - outerWidth - withinOffset;
-                    if ( newOverRight < 0 || newOverRight < abs( overLeft ) ) {
-                        position.left += myOffset + atOffset + offset;
-                    }
-                }
-                else if ( overRight > 0 ) {
-                    newOverLeft = position.left - data.collisionPosition.marginLeft + myOffset + atOffset + offset - offsetLeft;
-                    if ( newOverLeft > 0 || abs( newOverLeft ) < overRight ) {
-                        position.left += myOffset + atOffset + offset;
-                    }
-                }
-            },
-            top: function( position, data ) {
-                var within = data.within,
-                    withinOffset = within.offset.top + within.scrollTop,
-                    outerHeight = within.height,
-                    offsetTop = within.isWindow ? within.scrollTop : within.offset.top,
-                    collisionPosTop = position.top - data.collisionPosition.marginTop,
-                    overTop = collisionPosTop - offsetTop,
-                    overBottom = collisionPosTop + data.collisionHeight - outerHeight - offsetTop,
-                    top = data.my[ 1 ] === "top",
-                    myOffset = top ?
-                        -data.elemHeight :
-                        data.my[ 1 ] === "bottom" ?
-                            data.elemHeight :
-                            0,
-                    atOffset = data.at[ 1 ] === "top" ?
-                        data.targetHeight :
-                        data.at[ 1 ] === "bottom" ?
-                            -data.targetHeight :
-                            0,
-                    offset = -2 * data.offset[ 1 ],
-                    newOverTop,
-                    newOverBottom;
-                if ( overTop < 0 ) {
-                    newOverBottom = position.top + myOffset + atOffset + offset + data.collisionHeight - outerHeight - withinOffset;
-                    if ( ( position.top + myOffset + atOffset + offset) > overTop && ( newOverBottom < 0 || newOverBottom < abs( overTop ) ) ) {
-                        position.top += myOffset + atOffset + offset;
-                    }
-                }
-                else if ( overBottom > 0 ) {
-                    newOverTop = position.top -  data.collisionPosition.marginTop + myOffset + atOffset + offset - offsetTop;
-                    if ( ( position.top + myOffset + atOffset + offset) > overBottom && ( newOverTop > 0 || abs( newOverTop ) < overBottom ) ) {
-                        position.top += myOffset + atOffset + offset;
-                    }
-                }
-            }
-        },
-        flipfit: {
-            left: function() {
-                $.ui.position.flip.left.apply( this, arguments );
-                $.ui.position.fit.left.apply( this, arguments );
-            },
-            top: function() {
-                $.ui.position.flip.top.apply( this, arguments );
-                $.ui.position.fit.top.apply( this, arguments );
-            }
-        }
-    };
-    
-    // fraction support test
-    (function () {
-        var testElement, testElementParent, testElementStyle, offsetLeft, i,
-            body = document.getElementsByTagName( "body" )[ 0 ],
-            div = document.createElement( "div" );
-    
-        //Create a "fake body" for testing based on method used in jQuery.support
-        testElement = document.createElement( body ? "div" : "body" );
-        testElementStyle = {
-            visibility: "hidden",
-            width: 0,
-            height: 0,
-            border: 0,
-            margin: 0,
-            background: "none"
-        };
-        if ( body ) {
-            $.extend( testElementStyle, {
-                position: "absolute",
-                left: "-1000px",
-                top: "-1000px"
-            });
-        }
-        for ( i in testElementStyle ) {
-            testElement.style[ i ] = testElementStyle[ i ];
-        }
-        testElement.appendChild( div );
-        testElementParent = body || document.documentElement;
-        testElementParent.insertBefore( testElement, testElementParent.firstChild );
-    
-        div.style.cssText = "position: absolute; left: 10.7432222px;";
-    
-        offsetLeft = $( div ).offset().left;
-        $.support.offsetFractions = offsetLeft > 10 && offsetLeft < 11;
-    
-        testElement.innerHTML = "";
-        testElementParent.removeChild( testElement );
-    })();
-    
-    }( jQuery ) );
-
-/*!
- * jQuery contextMenu - Plugin for simple contextMenu handling
- *
- * Version: 1.6.6
- *
- * Authors: Rodney Rehm, Addy Osmani (patches for FF)
- * Web: http://medialize.github.com/jQuery-contextMenu/
- *
- * Licensed under
- *   MIT License http://www.opensource.org/licenses/mit-license
- *   GPL v3 http://opensource.org/licenses/GPL-3.0
- *
- */
-
-(function($, undefined){
-    
-    // TODO: -
-        // ARIA stuff: menuitem, menuitemcheckbox und menuitemradio
-        // create <menu> structure if $.support[htmlCommand || htmlMenuitem] and !opt.disableNative
-
-// determine html5 compatibility
-$.support.htmlMenuitem = ('HTMLMenuItemElement' in window);
-$.support.htmlCommand = ('HTMLCommandElement' in window);
-$.support.eventSelectstart = ("onselectstart" in document.documentElement);
-/* // should the need arise, test for css user-select
-$.support.cssUserSelect = (function(){
-    var t = false,
-        e = document.createElement('div');
-    
-    $.each('Moz|Webkit|Khtml|O|ms|Icab|'.split('|'), function(i, prefix) {
-        var propCC = prefix + (prefix ? 'U' : 'u') + 'serSelect',
-            prop = (prefix ? ('-' + prefix.toLowerCase() + '-') : '') + 'user-select';
-            
-        e.style.cssText = prop + ': text;';
-        if (e.style[propCC] == 'text') {
-            t = true;
-            return false;
-        }
-        
-        return true;
-    });
-    
-    return t;
-})();
-*/
-
-if (!$.ui || !$.ui.widget) {
-    // duck punch $.cleanData like jQueryUI does to get that remove event
-    // https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.widget.js#L16-24
-    var _cleanData = $.cleanData;
-    $.cleanData = function( elems ) {
-        for ( var i = 0, elem; (elem = elems[i]) != null; i++ ) {
-            try {
-                $( elem ).triggerHandler( "remove" );
-                // http://bugs.jquery.com/ticket/8235
-            } catch( e ) {}
-        }
-        _cleanData( elems );
-    };
-}
-
-var // currently active contextMenu trigger
-    $currentTrigger = null,
-    // is contextMenu initialized with at least one menu?
-    initialized = false,
-    // window handle
-    $win = $(window),
-    // number of registered menus
-    counter = 0,
-    // mapping selector to namespace
-    namespaces = {},
-    // mapping namespace to options
-    menus = {},
-    // custom command type handlers
-    types = {},
-    // default values
-    defaults = {
-        // selector of contextMenu trigger
-        selector: null,
-        // where to append the menu to
-        appendTo: null,
-        // method to trigger context menu ["right", "left", "hover"]
-        trigger: "right",
-        // hide menu when mouse leaves trigger / menu elements
-        autoHide: false,
-        // ms to wait before showing a hover-triggered context menu
-        delay: 200,
-        // flag denoting if a second trigger should simply move (true) or rebuild (false) an open menu
-        // as long as the trigger happened on one of the trigger-element's child nodes
-        reposition: true,
-        // determine position to show menu at
-        determinePosition: function($menu) {
-            // position to the lower middle of the trigger element
-            if ($.ui && $.ui.position) {
-                // .position() is provided as a jQuery UI utility
-                // (...and it won't work on hidden elements)
-                $menu.css('display', 'block').position({
-                    my: "center top",
-                    at: "center bottom",
-                    of: this,
-                    offset: "0 5",
-                    collision: "fit"
-                }).css('display', 'none');
-            } else {
-                // determine contextMenu position
-                var offset = this.offset();
-                offset.top += this.outerHeight();
-                offset.left += this.outerWidth() / 2 - $menu.outerWidth() / 2;
-                $menu.css(offset);
-            }
-        },
-        // position menu
-        position: function(opt, x, y) {
-            var $this = this,
-                offset;
-            // determine contextMenu position
-            if (!x && !y) {
-                opt.determinePosition.call(this, opt.$menu);
-                return;
-            } else if (x === "maintain" && y === "maintain") {
-                // x and y must not be changed (after re-show on command click)
-                offset = opt.$menu.position();
-            } else {
-                // x and y are given (by mouse event)
-                offset = {top: y, left: x};
-            }
-            
-            // correct offset if viewport demands it
-            var bottom = $win.scrollTop() + $win.height(),
-                right = $win.scrollLeft() + $win.width(),
-                height = opt.$menu.height(),
-                width = opt.$menu.width();
-            
-            if (offset.top + height > bottom) {
-                offset.top -= height;
-            }
-            
-            if (offset.left + width > right) {
-                offset.left -= width;
-            }
-            
-            opt.$menu.css(offset);
-        },
-        // position the sub-menu
-        positionSubmenu: function($menu) {
-            if ($.ui && $.ui.position) {
-                // .position() is provided as a jQuery UI utility
-                // (...and it won't work on hidden elements)
-                $menu.css('display', 'block').position({
-                    my: "left top",
-                    at: "right top",
-                    of: this,
-                    collision: "flipfit fit"
-                }).css('display', '');
-            } else {
-                // determine contextMenu position
-                var offset = {
-                    top: 0,
-                    left: this.outerWidth()
-                };
-                $menu.css(offset);
-            }
-        },
-        // offset to add to zIndex
-        zIndex: 1,
-        // show hide animation settings
-        animation: {
-            duration: 50,
-            show: 'slideDown',
-            hide: 'slideUp'
-        },
-        // events
-        events: {
-            show: $.noop,
-            hide: $.noop
-        },
-        // default callback
-        callback: null,
-        // list of contextMenu items
-        items: {}
-    },
-    // mouse position for hover activation
-    hoveract = {
-        timer: null,
-        pageX: null,
-        pageY: null
-    },
-    // determine zIndex
-    zindex = function($t) {
-        var zin = 0,
-            $tt = $t;
-
-        while (true) {
-            zin = Math.max(zin, parseInt($tt.css('z-index'), 10) || 0);
-            $tt = $tt.parent();
-            if (!$tt || !$tt.length || "html body".indexOf($tt.prop('nodeName').toLowerCase()) > -1 ) {
-                break;
-            }
-        }
-        
-        return zin;
-    },
-    // event handlers
-    handle = {
-        // abort anything
-        abortevent: function(e){
-            e.preventDefault();
-            e.stopImmediatePropagation();
-        },
-        
-        // contextmenu show dispatcher
-        contextmenu: function(e) {
-            var $this = $(this);
-            
-            // disable actual context-menu
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            
-            // abort native-triggered events unless we're triggering on right click
-            if (e.data.trigger != 'right' && e.originalEvent) {
-                return;
-            }
-            
-            // abort event if menu is visible for this trigger
-            if ($this.hasClass('context-menu-active')) {
-                return;
-            }
-            
-            if (!$this.hasClass('context-menu-disabled')) {
-                // theoretically need to fire a show event at <menu>
-                // http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#context-menus
-                // var evt = jQuery.Event("show", { data: data, pageX: e.pageX, pageY: e.pageY, relatedTarget: this });
-                // e.data.$menu.trigger(evt);
-                
-                $currentTrigger = $this;
-                if (e.data.build) {
-                    var built = e.data.build($currentTrigger, e);
-                    // abort if build() returned false
-                    if (built === false) {
-                        return;
-                    }
-                    
-                    // dynamically build menu on invocation
-                    e.data = $.extend(true, {}, defaults, e.data, built || {});
-
-                    // abort if there are no items to display
-                    if (!e.data.items || $.isEmptyObject(e.data.items)) {
-                        // Note: jQuery captures and ignores errors from event handlers
-                        if (window.console) {
-                            (console.error || console.log)("No items specified to show in contextMenu");
-                        }
-                        
-                        throw new Error('No Items specified');
-                    }
-                    
-                    // backreference for custom command type creation
-                    e.data.$trigger = $currentTrigger;
-                    
-                    op.create(e.data);
-                }
-                // show menu
-                op.show.call($this, e.data, e.pageX, e.pageY);
-            }
-        },
-        // contextMenu left-click trigger
-        click: function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            $(this).trigger($.Event("contextmenu", { data: e.data, pageX: e.pageX, pageY: e.pageY }));
-        },
-        // contextMenu right-click trigger
-        mousedown: function(e) {
-            // register mouse down
-            var $this = $(this);
-            
-            // hide any previous menus
-            if ($currentTrigger && $currentTrigger.length && !$currentTrigger.is($this)) {
-                $currentTrigger.data('contextMenu').$menu.trigger('contextmenu:hide');
-            }
-            
-            // activate on right click
-            if (e.button == 2) {
-                $currentTrigger = $this.data('contextMenuActive', true);
-            }
-        },
-        // contextMenu right-click trigger
-        mouseup: function(e) {
-            // show menu
-            var $this = $(this);
-            if ($this.data('contextMenuActive') && $currentTrigger && $currentTrigger.length && $currentTrigger.is($this) && !$this.hasClass('context-menu-disabled')) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                $currentTrigger = $this;
-                $this.trigger($.Event("contextmenu", { data: e.data, pageX: e.pageX, pageY: e.pageY }));
-            }
-            
-            $this.removeData('contextMenuActive');
-        },
-        // contextMenu hover trigger
-        mouseenter: function(e) {
-            var $this = $(this),
-                $related = $(e.relatedTarget),
-                $document = $(document);
-            
-            // abort if we're coming from a menu
-            if ($related.is('.context-menu-list') || $related.closest('.context-menu-list').length) {
-                return;
-            }
-            
-            // abort if a menu is shown
-            if ($currentTrigger && $currentTrigger.length) {
-                return;
-            }
-            
-            hoveract.pageX = e.pageX;
-            hoveract.pageY = e.pageY;
-            hoveract.data = e.data;
-            $document.on('mousemove.contextMenuShow', handle.mousemove);
-            hoveract.timer = setTimeout(function() {
-                hoveract.timer = null;
-                $document.off('mousemove.contextMenuShow');
-                $currentTrigger = $this;
-                $this.trigger($.Event("contextmenu", { data: hoveract.data, pageX: hoveract.pageX, pageY: hoveract.pageY }));
-            }, e.data.delay );
-        },
-        // contextMenu hover trigger
-        mousemove: function(e) {
-            hoveract.pageX = e.pageX;
-            hoveract.pageY = e.pageY;
-        },
-        // contextMenu hover trigger
-        mouseleave: function(e) {
-            // abort if we're leaving for a menu
-            var $related = $(e.relatedTarget);
-            if ($related.is('.context-menu-list') || $related.closest('.context-menu-list').length) {
-                return;
-            }
-            
-            try {
-                clearTimeout(hoveract.timer);
-            } catch(e) {}
-            
-            hoveract.timer = null;
-        },
-        
-        // click on layer to hide contextMenu
-        layerClick: function(e) {
-            var $this = $(this),
-                root = $this.data('contextMenuRoot'),
-                mouseup = false,
-                button = e.button,
-                x = e.pageX,
-                y = e.pageY,
-                target, 
-                offset,
-                selectors;
-                
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            
-            setTimeout(function() {
-                var $window, hideshow, possibleTarget;
-                var triggerAction = ((root.trigger == 'left' && button === 0) || (root.trigger == 'right' && button === 2));
-                
-                // find the element that would've been clicked, wasn't the layer in the way
-                if (document.elementFromPoint) {
-                    root.$layer.hide();
-                    target = document.elementFromPoint(x - $win.scrollLeft(), y - $win.scrollTop());
-                    root.$layer.show();
-                }
-                
-                if (root.reposition && triggerAction) {
-                    if (document.elementFromPoint) {
-                        if (root.$trigger.is(target) || root.$trigger.has(target).length) {
-                            root.position.call(root.$trigger, root, x, y);
-                            return;
-                        }
-                    } else {
-                        offset = root.$trigger.offset();
-                        $window = $(window);
-                        // while this looks kinda awful, it's the best way to avoid
-                        // unnecessarily calculating any positions
-                        offset.top += $window.scrollTop();
-                        if (offset.top <= e.pageY) {
-                            offset.left += $window.scrollLeft();
-                            if (offset.left <= e.pageX) {
-                                offset.bottom = offset.top + root.$trigger.outerHeight();
-                                if (offset.bottom >= e.pageY) {
-                                    offset.right = offset.left + root.$trigger.outerWidth();
-                                    if (offset.right >= e.pageX) {
-                                        // reposition
-                                        root.position.call(root.$trigger, root, x, y);
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                if (target && triggerAction) {
-                    root.$trigger.one('contextmenu:hidden', function() {
-                        $(target).contextMenu({x: x, y: y});
-                    });
-                }
-
-                root.$menu.trigger('contextmenu:hide');
-            }, 50);
-        },
-        // key handled :hover
-        keyStop: function(e, opt) {
-            if (!opt.isInput) {
-                e.preventDefault();
-            }
-            
-            e.stopPropagation();
-        },
-        key: function(e) {
-            var opt = $currentTrigger.data('contextMenu') || {};
-
-            switch (e.keyCode) {
-                case 9:
-                case 38: // up
-                    handle.keyStop(e, opt);
-                    // if keyCode is [38 (up)] or [9 (tab) with shift]
-                    if (opt.isInput) {
-                        if (e.keyCode == 9 && e.shiftKey) {
-                            e.preventDefault();
-                            opt.$selected && opt.$selected.find('input, textarea, select').blur();
-                            opt.$menu.trigger('prevcommand');
-                            return;
-                        } else if (e.keyCode == 38 && opt.$selected.find('input, textarea, select').prop('type') == 'checkbox') {
-                            // checkboxes don't capture this key
-                            e.preventDefault();
-                            return;
-                        }
-                    } else if (e.keyCode != 9 || e.shiftKey) {
-                        opt.$menu.trigger('prevcommand');
-                        return;
-                    }
-                    // omitting break;
-                    
-                // case 9: // tab - reached through omitted break;
-                case 40: // down
-                    handle.keyStop(e, opt);
-                    if (opt.isInput) {
-                        if (e.keyCode == 9) {
-                            e.preventDefault();
-                            opt.$selected && opt.$selected.find('input, textarea, select').blur();
-                            opt.$menu.trigger('nextcommand');
-                            return;
-                        } else if (e.keyCode == 40 && opt.$selected.find('input, textarea, select').prop('type') == 'checkbox') {
-                            // checkboxes don't capture this key
-                            e.preventDefault();
-                            return;
-                        }
-                    } else {
-                        opt.$menu.trigger('nextcommand');
-                        return;
-                    }
-                    break;
-                
-                case 37: // left
-                    handle.keyStop(e, opt);
-                    if (opt.isInput || !opt.$selected || !opt.$selected.length) {
-                        break;
-                    }
-                
-                    if (!opt.$selected.parent().hasClass('context-menu-root')) {
-                        var $parent = opt.$selected.parent().parent();
-                        opt.$selected.trigger('contextmenu:blur');
-                        opt.$selected = $parent;
-                        return;
-                    }
-                    break;
-                    
-                case 39: // right
-                    handle.keyStop(e, opt);
-                    if (opt.isInput || !opt.$selected || !opt.$selected.length) {
-                        break;
-                    }
-                    
-                    var itemdata = opt.$selected.data('contextMenu') || {};
-                    if (itemdata.$menu && opt.$selected.hasClass('context-menu-submenu')) {
-                        opt.$selected = null;
-                        itemdata.$selected = null;
-                        itemdata.$menu.trigger('nextcommand');
-                        return;
-                    }
-                    break;
-                
-                case 35: // end
-                case 36: // home
-                    if (opt.$selected && opt.$selected.find('input, textarea, select').length) {
-                        return;
-                    } else {
-                        (opt.$selected && opt.$selected.parent() || opt.$menu)
-                            .children(':not(.disabled, .not-selectable)')[e.keyCode == 36 ? 'first' : 'last']()
-                            .trigger('contextmenu:focus');
-                        e.preventDefault();
-                        return;
-                    }
-                    break;
-                    
-                case 13: // enter
-                    handle.keyStop(e, opt);
-                    if (opt.isInput) {
-                        if (opt.$selected && !opt.$selected.is('textarea, select')) {
-                            e.preventDefault();
-                            return;
-                        }
-                        break;
-                    }
-                    opt.$selected && opt.$selected.trigger('mouseup');
-                    return;
-                    
-                case 32: // space
-                case 33: // page up
-                case 34: // page down
-                    // prevent browser from scrolling down while menu is visible
-                    handle.keyStop(e, opt);
-                    return;
-                    
-                case 27: // esc
-                    handle.keyStop(e, opt);
-                    opt.$menu.trigger('contextmenu:hide');
-                    return;
-                    
-                default: // 0-9, a-z
-                    var k = (String.fromCharCode(e.keyCode)).toUpperCase();
-                    if (opt.accesskeys[k]) {
-                        // according to the specs accesskeys must be invoked immediately
-                        opt.accesskeys[k].$node.trigger(opt.accesskeys[k].$menu
-                            ? 'contextmenu:focus'
-                            : 'mouseup'
-                        );
-                        return;
-                    }
-                    break;
-            }
-            // pass event to selected item, 
-            // stop propagation to avoid endless recursion
-            e.stopPropagation();
-            opt.$selected && opt.$selected.trigger(e);
-        },
-
-        // select previous possible command in menu
-        prevItem: function(e) {
-            e.stopPropagation();
-            var opt = $(this).data('contextMenu') || {};
-
-            // obtain currently selected menu
-            if (opt.$selected) {
-                var $s = opt.$selected;
-                opt = opt.$selected.parent().data('contextMenu') || {};
-                opt.$selected = $s;
-            }
-            
-            var $children = opt.$menu.children(),
-                $prev = !opt.$selected || !opt.$selected.prev().length ? $children.last() : opt.$selected.prev(),
-                $round = $prev;
-            
-            // skip disabled
-            while ($prev.hasClass('disabled') || $prev.hasClass('not-selectable')) {
-                if ($prev.prev().length) {
-                    $prev = $prev.prev();
-                } else {
-                    $prev = $children.last();
-                }
-                if ($prev.is($round)) {
-                    // break endless loop
-                    return;
-                }
-            }
-            
-            // leave current
-            if (opt.$selected) {
-                handle.itemMouseleave.call(opt.$selected.get(0), e);
-            }
-            
-            // activate next
-            handle.itemMouseenter.call($prev.get(0), e);
-            
-            // focus input
-            var $input = $prev.find('input, textarea, select');
-            if ($input.length) {
-                $input.focus();
-            }
-        },
-        // select next possible command in menu
-        nextItem: function(e) {
-            e.stopPropagation();
-            var opt = $(this).data('contextMenu') || {};
-
-            // obtain currently selected menu
-            if (opt.$selected) {
-                var $s = opt.$selected;
-                opt = opt.$selected.parent().data('contextMenu') || {};
-                opt.$selected = $s;
-            }
-
-            var $children = opt.$menu.children(),
-                $next = !opt.$selected || !opt.$selected.next().length ? $children.first() : opt.$selected.next(),
-                $round = $next;
-
-            // skip disabled
-            while ($next.hasClass('disabled') || $next.hasClass('not-selectable')) {
-                if ($next.next().length) {
-                    $next = $next.next();
-                } else {
-                    $next = $children.first();
-                }
-                if ($next.is($round)) {
-                    // break endless loop
-                    return;
-                }
-            }
-            
-            // leave current
-            if (opt.$selected) {
-                handle.itemMouseleave.call(opt.$selected.get(0), e);
-            }
-            
-            // activate next
-            handle.itemMouseenter.call($next.get(0), e);
-            
-            // focus input
-            var $input = $next.find('input, textarea, select');
-            if ($input.length) {
-                $input.focus();
-            }
-        },
-        
-        // flag that we're inside an input so the key handler can act accordingly
-        focusInput: function(e) {
-            var $this = $(this).closest('.context-menu-item'),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-
-            root.$selected = opt.$selected = $this;
-            root.isInput = opt.isInput = true;
-        },
-        // flag that we're inside an input so the key handler can act accordingly
-        blurInput: function(e) {
-            var $this = $(this).closest('.context-menu-item'),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-
-            root.isInput = opt.isInput = false;
-        },
-        
-        // :hover on menu
-        menuMouseenter: function(e) {
-            var root = $(this).data().contextMenuRoot;
-            root.hovering = true;
-        },
-        // :hover on menu
-        menuMouseleave: function(e) {
-            var root = $(this).data().contextMenuRoot;
-            if (root.$layer && root.$layer.is(e.relatedTarget)) {
-                root.hovering = false;
-            }
-        },
-        
-        // :hover done manually so key handling is possible
-        itemMouseenter: function(e) {
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-            
-            root.hovering = true;
-
-            // abort if we're re-entering
-            if (e && root.$layer && root.$layer.is(e.relatedTarget)) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-            }
-
-            // make sure only one item is selected
-            (opt.$menu ? opt : root).$menu
-                .children('.hover').trigger('contextmenu:blur');
-
-            if ($this.hasClass('disabled') || $this.hasClass('not-selectable')) {
-                opt.$selected = null;
-                return;
-            }
-            
-            $this.trigger('contextmenu:focus');
-        },
-        // :hover done manually so key handling is possible
-        itemMouseleave: function(e) {
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-
-            if (root !== opt && root.$layer && root.$layer.is(e.relatedTarget)) {
-                root.$selected && root.$selected.trigger('contextmenu:blur');
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                root.$selected = opt.$selected = opt.$node;
-                return;
-            }
-            
-            $this.trigger('contextmenu:blur');
-        },
-        // contextMenu item click
-        itemClick: function(e) {
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot,
-                key = data.contextMenuKey,
-                callback;
-
-            // abort if the key is unknown or disabled or is a menu
-            if (!opt.items[key] || $this.is('.disabled, .context-menu-submenu, .context-menu-separator, .not-selectable')) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            if ($.isFunction(root.callbacks[key]) && Object.prototype.hasOwnProperty.call(root.callbacks, key)) {
-                // item-specific callback
-                callback = root.callbacks[key];
-            } else if ($.isFunction(root.callback)) {
-                // default callback
-                callback = root.callback;                
-            } else {
-                // no callback, no action
-                return;
-            }
-
-            // hide menu if callback doesn't stop that
-            if (callback.call(root.$trigger, key, root) !== false) {
-                root.$menu.trigger('contextmenu:hide');
-            } else if (root.$menu.parent().length) {
-                op.update.call(root.$trigger, root);
-            }
-        },
-        // ignore click events on input elements
-        inputClick: function(e) {
-            e.stopImmediatePropagation();
-        },
-        
-        // hide <menu>
-        hideMenu: function(e, data) {
-            var root = $(this).data('contextMenuRoot');
-            op.hide.call(root.$trigger, root, data && data.force);
-        },
-        // focus <command>
-        focusItem: function(e) {
-            e.stopPropagation();
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-
-            $this.addClass('hover')
-                .siblings('.hover').trigger('contextmenu:blur');
-            
-            // remember selected
-            opt.$selected = root.$selected = $this;
-            
-            // position sub-menu - do after show so dumb $.ui.position can keep up
-            if (opt.$node) {
-                root.positionSubmenu.call(opt.$node, opt.$menu);
-            }
-        },
-        // blur <command>
-        blurItem: function(e) {
-            e.stopPropagation();
-            var $this = $(this),
-                data = $this.data(),
-                opt = data.contextMenu,
-                root = data.contextMenuRoot;
-            
-            $this.removeClass('hover');
-            opt.$selected = null;
-        }
-    },
-    // operations
-    op = {
-        show: function(opt, x, y) {
-            var $trigger = $(this),
-                offset,
-                css = {};
-
-            // hide any open menus
-            $('#context-menu-layer').trigger('mousedown');
-
-            // backreference for callbacks
-            opt.$trigger = $trigger;
-
-            // show event
-            if (opt.events.show.call($trigger, opt) === false) {
-                $currentTrigger = null;
-                return;
-            }
-
-            // create or update context menu
-            op.update.call($trigger, opt);
-            
-            // position menu
-            opt.position.call($trigger, opt, x, y);
-
-            // make sure we're in front
-            if (opt.zIndex) {
-                css.zIndex = zindex($trigger) + opt.zIndex;
-            }
-            
-            // add layer
-            op.layer.call(opt.$menu, opt, css.zIndex);
-            
-            // adjust sub-menu zIndexes
-            opt.$menu.find('ul').css('zIndex', css.zIndex + 1);
-            
-            // position and show context menu
-            opt.$menu.css( css )[opt.animation.show](opt.animation.duration, function() {
-                $trigger.trigger('contextmenu:visible');
-            });
-            // make options available and set state
-            $trigger
-                .data('contextMenu', opt)
-                .addClass("context-menu-active");
-            
-            // register key handler
-            $(document).off('keydown.contextMenu').on('keydown.contextMenu', handle.key);
-            // register autoHide handler
-            if (opt.autoHide) {
-                // mouse position handler
-                $(document).on('mousemove.contextMenuAutoHide', function(e) {
-                    // need to capture the offset on mousemove,
-                    // since the page might've been scrolled since activation
-                    var pos = $trigger.offset();
-                    pos.right = pos.left + $trigger.outerWidth();
-                    pos.bottom = pos.top + $trigger.outerHeight();
-                    
-                    if (opt.$layer && !opt.hovering && (!(e.pageX >= pos.left && e.pageX <= pos.right) || !(e.pageY >= pos.top && e.pageY <= pos.bottom))) {
-                        // if mouse in menu...
-                        opt.$menu.trigger('contextmenu:hide');
-                    }
-                });
-            }
-        },
-        hide: function(opt, force) {
-            var $trigger = $(this);
-            if (!opt) {
-                opt = $trigger.data('contextMenu') || {};
-            }
-            
-            // hide event
-            if (!force && opt.events && opt.events.hide.call($trigger, opt) === false) {
-                return;
-            }
-            
-            // remove options and revert state
-            $trigger
-                .removeData('contextMenu')
-                .removeClass("context-menu-active");
-            
-            if (opt.$layer) {
-                // keep layer for a bit so the contextmenu event can be aborted properly by opera
-                setTimeout((function($layer) {
-                    return function(){
-                        $layer.remove();
-                    };
-                })(opt.$layer), 10);
-                
-                try {
-                    delete opt.$layer;
-                } catch(e) {
-                    opt.$layer = null;
-                }
-            }
-            
-            // remove handle
-            $currentTrigger = null;
-            // remove selected
-            opt.$menu.find('.hover').trigger('contextmenu:blur');
-            opt.$selected = null;
-            // unregister key and mouse handlers
-            //$(document).off('.contextMenuAutoHide keydown.contextMenu'); // http://bugs.jquery.com/ticket/10705
-            $(document).off('.contextMenuAutoHide').off('keydown.contextMenu');
-            // hide menu
-            opt.$menu && opt.$menu[opt.animation.hide](opt.animation.duration, function (){
-                // tear down dynamically built menu after animation is completed.
-                if (opt.build) {
-                    opt.$menu.remove();
-                    $.each(opt, function(key, value) {
-                        switch (key) {
-                            case 'ns':
-                            case 'selector':
-                            case 'build':
-                            case 'trigger':
-                                return true;
-
-                            default:
-                                opt[key] = undefined;
-                                try {
-                                    delete opt[key];
-                                } catch (e) {}
-                                return true;
-                        }
-                    });
-                }
-                
-                setTimeout(function() {
-                    $trigger.trigger('contextmenu:hidden');
-                }, 10);
-            });
-        },
-        create: function(opt, root) {
-            if (root === undefined) {
-                root = opt;
-            }
-            // create contextMenu
-            opt.$menu = $('<ul class="context-menu-list"></ul>').addClass(opt.className || "").data({
-                'contextMenu': opt,
-                'contextMenuRoot': root
-            });
-            
-            $.each(['callbacks', 'commands', 'inputs'], function(i,k){
-                opt[k] = {};
-                if (!root[k]) {
-                    root[k] = {};
-                }
-            });
-            
-            root.accesskeys || (root.accesskeys = {});
-            
-            // create contextMenu items
-            $.each(opt.items, function(key, item){
-                var $t = $('<li class="context-menu-item"></li>').addClass(item.className || ""),
-                    $label = null,
-                    $input = null;
-                
-                // iOS needs to see a click-event bound to an element to actually
-                // have the TouchEvents infrastructure trigger the click event
-                $t.on('click', $.noop);
-                
-                item.$node = $t.data({
-                    'contextMenu': opt,
-                    'contextMenuRoot': root,
-                    'contextMenuKey': key
-                });
-                
-                // register accesskey
-                // NOTE: the accesskey attribute should be applicable to any element, but Safari5 and Chrome13 still can't do that
-                if (item.accesskey) {
-                    var aks = splitAccesskey(item.accesskey);
-                    for (var i=0, ak; ak = aks[i]; i++) {
-                        if (!root.accesskeys[ak]) {
-                            root.accesskeys[ak] = item;
-                            item._name = item.name.replace(new RegExp('(' + ak + ')', 'i'), '<span class="context-menu-accesskey">$1</span>');
-                            break;
-                        }
-                    }
-                }
-                
-                if (typeof item == "string") {
-                    $t.addClass('context-menu-separator not-selectable');
-                } else if (item.type && types[item.type]) {
-                    // run custom type handler
-                    types[item.type].call($t, item, opt, root);
-                    // register commands
-                    $.each([opt, root], function(i,k){
-                        k.commands[key] = item;
-                        if ($.isFunction(item.callback)) {
-                            k.callbacks[key] = item.callback;
-                        }
-                    });
-                } else {
-                    // add label for input
-                    if (item.type == 'html') {
-                        $t.addClass('context-menu-html not-selectable');
-                    } else if (item.type) {
-                        $label = $('<label></label>').appendTo($t);
-                        $('<span></span>').html(item._name || item.name).appendTo($label);
-                        $t.addClass('context-menu-input');
-                        opt.hasTypes = true;
-                        $.each([opt, root], function(i,k){
-                            k.commands[key] = item;
-                            k.inputs[key] = item;
-                        });
-                    } else if (item.items) {
-                        item.type = 'sub';
-                    }
-                
-                    switch (item.type) {
-                        case 'text':
-                            $input = $('<input type="text" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .appendTo($label);
-                            break;
-                    
-                        case 'textarea':
-                            $input = $('<textarea name=""></textarea>')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .appendTo($label);
-
-                            if (item.height) {
-                                $input.height(item.height);
-                            }
-                            break;
-
-                        case 'checkbox':
-                            $input = $('<input type="checkbox" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .prop("checked", !!item.selected)
-                                .prependTo($label);
-                            break;
-
-                        case 'radio':
-                            $input = $('<input type="radio" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + item.radio)
-                                .val(item.value || "")
-                                .prop("checked", !!item.selected)
-                                .prependTo($label);
-                            break;
-                    
-                        case 'select':
-                            $input = $('<select name="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .appendTo($label);
-                            if (item.options) {
-                                $.each(item.options, function(value, text) {
-                                    $('<option></option>').val(value).text(text).appendTo($input);
-                                });
-                                $input.val(item.selected);
-                            }
-                            break;
-                        
-                        case 'sub':
-                            // FIXME: shouldn't this .html() be a .text()?
-                            $('<span></span>').html(item._name || item.name).appendTo($t);
-                            item.appendTo = item.$node;
-                            op.create(item, root);
-                            $t.data('contextMenu', item).addClass('context-menu-submenu');
-                            item.callback = null;
-                            break;
-                        
-                        case 'html':
-                            $(item.html).appendTo($t);
-                            break;
-                        
-                        default:
-                            $.each([opt, root], function(i,k){
-                                k.commands[key] = item;
-                                if ($.isFunction(item.callback)) {
-                                    k.callbacks[key] = item.callback;
-                                }
-                            });
-                            // FIXME: shouldn't this .html() be a .text()?
-                            $('<span></span>').html(item._name || item.name || "").appendTo($t);
-                            break;
-                    }
-                    
-                    // disable key listener in <input>
-                    if (item.type && item.type != 'sub' && item.type != 'html') {
-                        $input
-                            .on('focus', handle.focusInput)
-                            .on('blur', handle.blurInput);
-                        
-                        if (item.events) {
-                            $input.on(item.events, opt);
-                        }
-                    }
-                
-                    // add icons
-                    if (item.icon) {
-                        $t.addClass("icon icon-" + item.icon);
-                    }
-                }
-                
-                // cache contained elements
-                item.$input = $input;
-                item.$label = $label;
-
-                // attach item to menu
-                $t.appendTo(opt.$menu);
-                
-                // Disable text selection
-                if (!opt.hasTypes && $.support.eventSelectstart) {
-                    // browsers support user-select: none, 
-                    // IE has a special event for text-selection
-                    // browsers supporting neither will not be preventing text-selection
-                    $t.on('selectstart.disableTextSelect', handle.abortevent);
-                }
-            });
-            // attach contextMenu to <body> (to bypass any possible overflow:hidden issues on parents of the trigger element)
-            if (!opt.$node) {
-                opt.$menu.css('display', 'none').addClass('context-menu-root');
-            }
-            opt.$menu.appendTo(opt.appendTo || document.body);
-        },
-        resize: function($menu, nested) {
-            // determine widths of submenus, as CSS won't grow them automatically
-            // position:absolute within position:absolute; min-width:100; max-width:200; results in width: 100;
-            // kinda sucks hard...
-
-            // determine width of absolutely positioned element
-            $menu.css({position: 'absolute', display: 'block'});
-            // don't apply yet, because that would break nested elements' widths
-            // add a pixel to circumvent word-break issue in IE9 - #80
-            $menu.data('width', Math.ceil($menu.width()) + 1);
-            // reset styles so they allow nested elements to grow/shrink naturally
-            $menu.css({
-                position: 'static',
-                minWidth: '0px',
-                maxWidth: '100000px'
-            });
-            // identify width of nested menus
-            $menu.find('> li > ul').each(function() {
-                op.resize($(this), true);
-            });
-            // reset and apply changes in the end because nested
-            // elements' widths wouldn't be calculatable otherwise
-            if (!nested) {
-                $menu.find('ul').addBack().css({
-                    position: '', 
-                    display: '',
-                    minWidth: '',
-                    maxWidth: ''
-                }).width(function() {
-                    return $(this).data('width');
-                });
-            }
-        },
-        update: function(opt, root) {
-            var $trigger = this;
-            if (root === undefined) {
-                root = opt;
-                op.resize(opt.$menu);
-            }
-            // re-check disabled for each item
-            opt.$menu.children().each(function(){
-                var $item = $(this),
-                    key = $item.data('contextMenuKey'),
-                    item = opt.items[key],
-                    disabled = ($.isFunction(item.disabled) && item.disabled.call($trigger, key, root)) || item.disabled === true;
-
-                // dis- / enable item
-                $item[disabled ? 'addClass' : 'removeClass']('disabled');
-                
-                if (item.type) {
-                    // dis- / enable input elements
-                    $item.find('input, select, textarea').prop('disabled', disabled);
-                    
-                    // update input states
-                    switch (item.type) {
-                        case 'text':
-                        case 'textarea':
-                            item.$input.val(item.value || "");
-                            break;
-                            
-                        case 'checkbox':
-                        case 'radio':
-                            item.$input.val(item.value || "").prop('checked', !!item.selected);
-                            break;
-                            
-                        case 'select':
-                            item.$input.val(item.selected || "");
-                            break;
-                    }
-                }
-                
-                if (item.$menu) {
-                    // update sub-menu
-                    op.update.call($trigger, item, root);
-                }
-            });
-        },
-        layer: function(opt, zIndex) {
-            // add transparent layer for click area
-            // filter and background for Internet Explorer, Issue #23
-            var $layer = opt.$layer = $('<div id="context-menu-layer" style="position:fixed; z-index:' + zIndex + '; top:0; left:0; opacity: 0; filter: alpha(opacity=0); background-color: #000;"></div>')
-                .css({height: $win.height(), width: $win.width(), display: 'block'})
-                .data('contextMenuRoot', opt)
-                .insertBefore(this)
-                .on('contextmenu', handle.abortevent)
-                .on('mousedown', handle.layerClick);
-            
-            // IE6 doesn't know position:fixed;
-            if (!$.support.fixedPosition) {
-                $layer.css({
-                    'position' : 'absolute',
-                    'height' : $(document).height()
-                });
-            }
-            
-            return $layer;
-        }
-    };
-
-// split accesskey according to http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#assigned-access-key
-function splitAccesskey(val) {
-    var t = val.split(/\s+/),
-        keys = [];
-        
-    for (var i=0, k; k = t[i]; i++) {
-        k = k[0].toUpperCase(); // first character only
-        // theoretically non-accessible characters should be ignored, but different systems, different keyboard layouts, ... screw it.
-        // a map to look up already used access keys would be nice
-        keys.push(k);
-    }
-    
-    return keys;
-}
-
-// handle contextMenu triggers
-$.fn.contextMenu = function(operation) {
-    if (operation === undefined) {
-        this.first().trigger('contextmenu');
-    } else if (operation.x && operation.y) {
-        this.first().trigger($.Event("contextmenu", {pageX: operation.x, pageY: operation.y}));
-    } else if (operation === "hide") {
-        var $menu = this.data('contextMenu').$menu;
-        $menu && $menu.trigger('contextmenu:hide');
-    } else if (operation === "destroy") {
-        $.contextMenu("destroy", {context: this});
-    } else if ($.isPlainObject(operation)) {
-        operation.context = this;
-        $.contextMenu("create", operation);
-    } else if (operation) {
-        this.removeClass('context-menu-disabled');
-    } else if (!operation) {
-        this.addClass('context-menu-disabled');
-    }
-    
-    return this;
-};
-
-// manage contextMenu instances
-$.contextMenu = function(operation, options) {
-    if (typeof operation != 'string') {
-        options = operation;
-        operation = 'create';
-    }
-    
-    if (typeof options == 'string') {
-        options = {selector: options};
-    } else if (options === undefined) {
-        options = {};
-    }
-    
-    // merge with default options
-    var o = $.extend(true, {}, defaults, options || {});
-    var $document = $(document);
-    var $context = $document;
-    var _hasContext = false;
-    
-    if (!o.context || !o.context.length) {
-        o.context = document;
-    } else {
-        // you never know what they throw at you...
-        $context = $(o.context).first();
-        o.context = $context.get(0);
-        _hasContext = o.context !== document;
-    }
-    
-    switch (operation) {
-        case 'create':
-            // no selector no joy
-            if (!o.selector) {
-                throw new Error('No selector specified');
-            }
-            // make sure internal classes are not bound to
-            if (o.selector.match(/.context-menu-(list|item|input)($|\s)/)) {
-                throw new Error('Cannot bind to selector "' + o.selector + '" as it contains a reserved className');
-            }
-            if (!o.build && (!o.items || $.isEmptyObject(o.items))) {
-                throw new Error('No Items specified');
-            }
-            counter ++;
-            o.ns = '.contextMenu' + counter;
-            if (!_hasContext) {
-                namespaces[o.selector] = o.ns;
-            }
-            menus[o.ns] = o;
-            
-            // default to right click
-            if (!o.trigger) {
-                o.trigger = 'right';
-            }
-            
-            if (!initialized) {
-                // make sure item click is registered first
-                $document
-                    .on({
-                        'contextmenu:hide.contextMenu': handle.hideMenu,
-                        'prevcommand.contextMenu': handle.prevItem,
-                        'nextcommand.contextMenu': handle.nextItem,
-                        'contextmenu.contextMenu': handle.abortevent,
-                        'mouseenter.contextMenu': handle.menuMouseenter,
-                        'mouseleave.contextMenu': handle.menuMouseleave
-                    }, '.context-menu-list')
-                    .on('mouseup.contextMenu', '.context-menu-input', handle.inputClick)
-                    .on({
-                        'mouseup.contextMenu': handle.itemClick,
-                        'contextmenu:focus.contextMenu': handle.focusItem,
-                        'contextmenu:blur.contextMenu': handle.blurItem,
-                        'contextmenu.contextMenu': handle.abortevent,
-                        'mouseenter.contextMenu': handle.itemMouseenter,
-                        'mouseleave.contextMenu': handle.itemMouseleave
-                    }, '.context-menu-item');
-
-                initialized = true;
-            }
-            
-            // engage native contextmenu event
-            $context
-                .on('contextmenu' + o.ns, o.selector, o, handle.contextmenu);
-            
-            if (_hasContext) {
-                // add remove hook, just in case
-                $context.on('remove' + o.ns, function() {
-                    $(this).contextMenu("destroy");
-                });
-            }
-            
-            switch (o.trigger) {
-                case 'hover':
-                        $context
-                            .on('mouseenter' + o.ns, o.selector, o, handle.mouseenter)
-                            .on('mouseleave' + o.ns, o.selector, o, handle.mouseleave);                    
-                    break;
-                    
-                case 'left':
-                        $context.on('click' + o.ns, o.selector, o, handle.click);
-                    break;
-                /*
-                default:
-                    // http://www.quirksmode.org/dom/events/contextmenu.html
-                    $document
-                        .on('mousedown' + o.ns, o.selector, o, handle.mousedown)
-                        .on('mouseup' + o.ns, o.selector, o, handle.mouseup);
-                    break;
-                */
-            }
-            
-            // create menu
-            if (!o.build) {
-                op.create(o);
-            }
-            break;
-        
-        case 'destroy':
-            var $visibleMenu;
-            if (_hasContext) {
-                // get proper options 
-                var context = o.context;
-                $.each(menus, function(ns, o) {
-                    if (o.context !== context) {
-                        return true;
-                    }
-                    
-                    $visibleMenu = $('.context-menu-list').filter(':visible');
-                    if ($visibleMenu.length && $visibleMenu.data().contextMenuRoot.$trigger.is($(o.context).find(o.selector))) {
-                        $visibleMenu.trigger('contextmenu:hide', {force: true});
-                    }
-
-                    try {
-                        if (menus[o.ns].$menu) {
-                            menus[o.ns].$menu.remove();
-                        }
-
-                        delete menus[o.ns];
-                    } catch(e) {
-                        menus[o.ns] = null;
-                    }
-
-                    $(o.context).off(o.ns);
-                    
-                    return true;
-                });
-            } else if (!o.selector) {
-                $document.off('.contextMenu .contextMenuAutoHide');
-                $.each(menus, function(ns, o) {
-                    $(o.context).off(o.ns);
-                });
-                
-                namespaces = {};
-                menus = {};
-                counter = 0;
-                initialized = false;
-                
-                $('#context-menu-layer, .context-menu-list').remove();
-            } else if (namespaces[o.selector]) {
-                $visibleMenu = $('.context-menu-list').filter(':visible');
-                if ($visibleMenu.length && $visibleMenu.data().contextMenuRoot.$trigger.is(o.selector)) {
-                    $visibleMenu.trigger('contextmenu:hide', {force: true});
-                }
-                
-                try {
-                    if (menus[namespaces[o.selector]].$menu) {
-                        menus[namespaces[o.selector]].$menu.remove();
-                    }
-                    
-                    delete menus[namespaces[o.selector]];
-                } catch(e) {
-                    menus[namespaces[o.selector]] = null;
-                }
-                
-                $document.off(namespaces[o.selector]);
-            }
-            break;
-        
-        case 'html5':
-            // if <command> or <menuitem> are not handled by the browser,
-            // or options was a bool true,
-            // initialize $.contextMenu for them
-            if ((!$.support.htmlCommand && !$.support.htmlMenuitem) || (typeof options == "boolean" && options)) {
-                $('menu[type="context"]').each(function() {
-                    if (this.id) {
-                        $.contextMenu({
-                            selector: '[contextmenu=' + this.id +']',
-                            items: $.contextMenu.fromMenu(this)
-                        });
-                    }
-                }).css('display', 'none');
-            }
-            break;
-        
-        default:
-            throw new Error('Unknown operation "' + operation + '"');
-    }
-    
-    return this;
-};
-
-// import values into <input> commands
-$.contextMenu.setInputValues = function(opt, data) {
-    if (data === undefined) {
-        data = {};
-    }
-    
-    $.each(opt.inputs, function(key, item) {
-        switch (item.type) {
-            case 'text':
-            case 'textarea':
-                item.value = data[key] || "";
-                break;
-
-            case 'checkbox':
-                item.selected = data[key] ? true : false;
-                break;
-                
-            case 'radio':
-                item.selected = (data[item.radio] || "") == item.value ? true : false;
-                break;
-            
-            case 'select':
-                item.selected = data[key] || "";
-                break;
-        }
-    });
-};
-
-// export values from <input> commands
-$.contextMenu.getInputValues = function(opt, data) {
-    if (data === undefined) {
-        data = {};
-    }
-    
-    $.each(opt.inputs, function(key, item) {
-        switch (item.type) {
-            case 'text':
-            case 'textarea':
-            case 'select':
-                data[key] = item.$input.val();
-                break;
-
-            case 'checkbox':
-                data[key] = item.$input.prop('checked');
-                break;
-                
-            case 'radio':
-                if (item.$input.prop('checked')) {
-                    data[item.radio] = item.value;
-                }
-                break;
-        }
-    });
-    
-    return data;
-};
-
-// find <label for="xyz">
-function inputLabel(node) {
-    return (node.id && $('label[for="'+ node.id +'"]').val()) || node.name;
-}
-
-// convert <menu> to items object
-function menuChildren(items, $children, counter) {
-    if (!counter) {
-        counter = 0;
-    }
-    
-    $children.each(function() {
-        var $node = $(this),
-            node = this,
-            nodeName = this.nodeName.toLowerCase(),
-            label,
-            item;
-        
-        // extract <label><input>
-        if (nodeName == 'label' && $node.find('input, textarea, select').length) {
-            label = $node.text();
-            $node = $node.children().first();
-            node = $node.get(0);
-            nodeName = node.nodeName.toLowerCase();
-        }
-        
-        /*
-         * <menu> accepts flow-content as children. that means <embed>, <canvas> and such are valid menu items.
-         * Not being the sadistic kind, $.contextMenu only accepts:
-         * <command>, <menuitem>, <hr>, <span>, <p> <input [text, radio, checkbox]>, <textarea>, <select> and of course <menu>.
-         * Everything else will be imported as an html node, which is not interfaced with contextMenu.
-         */
-        
-        // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#concept-command
-        switch (nodeName) {
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-menu-element
-            case 'menu':
-                item = {name: $node.attr('label'), items: {}};
-                counter = menuChildren(item.items, $node.children(), counter);
-                break;
-            
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#using-the-a-element-to-define-a-command
-            case 'a':
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#using-the-button-element-to-define-a-command
-            case 'button':
-                item = {
-                    name: $node.text(),
-                    disabled: !!$node.attr('disabled'),
-                    callback: (function(){ return function(){ $node.click(); }; })()
-                };
-                break;
-            
-            // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#using-the-command-element-to-define-a-command
-
-            case 'menuitem':
-            case 'command':
-                switch ($node.attr('type')) {
-                    case undefined:
-                    case 'command':
-                    case 'menuitem':
-                        item = {
-                            name: $node.attr('label'),
-                            disabled: !!$node.attr('disabled'),
-                            callback: (function(){ return function(){ $node.click(); }; })()
-                        };
-                        break;
-                        
-                    case 'checkbox':
-                        item = {
-                            type: 'checkbox',
-                            disabled: !!$node.attr('disabled'),
-                            name: $node.attr('label'),
-                            selected: !!$node.attr('checked')
-                        };
-                        break;
-                        
-                    case 'radio':
-                        item = {
-                            type: 'radio',
-                            disabled: !!$node.attr('disabled'),
-                            name: $node.attr('label'),
-                            radio: $node.attr('radiogroup'),
-                            value: $node.attr('id'),
-                            selected: !!$node.attr('checked')
-                        };
-                        break;
-                        
-                    default:
-                        item = undefined;
-                }
-                break;
- 
-            case 'hr':
-                item = '-------';
-                break;
-                
-            case 'input':
-                switch ($node.attr('type')) {
-                    case 'text':
-                        item = {
-                            type: 'text',
-                            name: label || inputLabel(node),
-                            disabled: !!$node.attr('disabled'),
-                            value: $node.val()
-                        };
-                        break;
-                        
-                    case 'checkbox':
-                        item = {
-                            type: 'checkbox',
-                            name: label || inputLabel(node),
-                            disabled: !!$node.attr('disabled'),
-                            selected: !!$node.attr('checked')
-                        };
-                        break;
-                        
-                    case 'radio':
-                        item = {
-                            type: 'radio',
-                            name: label || inputLabel(node),
-                            disabled: !!$node.attr('disabled'),
-                            radio: !!$node.attr('name'),
-                            value: $node.val(),
-                            selected: !!$node.attr('checked')
-                        };
-                        break;
-                    
-                    default:
-                        item = undefined;
-                        break;
-                }
-                break;
-                
-            case 'select':
-                item = {
-                    type: 'select',
-                    name: label || inputLabel(node),
-                    disabled: !!$node.attr('disabled'),
-                    selected: $node.val(),
-                    options: {}
-                };
-                $node.children().each(function(){
-                    item.options[this.value] = $(this).text();
-                });
-                break;
-                
-            case 'textarea':
-                item = {
-                    type: 'textarea',
-                    name: label || inputLabel(node),
-                    disabled: !!$node.attr('disabled'),
-                    value: $node.val()
-                };
-                break;
-            
-            case 'label':
-                break;
-            
-            default:
-                item = {type: 'html', html: $node.clone(true)};
-                break;
-        }
-        
-        if (item) {
-            counter++;
-            items['key' + counter] = item;
-        }
-    });
-    
-    return counter;
-}
-
-// convert html5 menu
-$.contextMenu.fromMenu = function(element) {
-    var $this = $(element),
-        items = {};
-        
-    menuChildren(items, $this.children());
-    
-    return items;
-};
-
-// make defaults accessible
-$.contextMenu.defaults = defaults;
-$.contextMenu.types = types;
-// export internal functions - undocumented, for hacking only!
-$.contextMenu.handle = handle;
-$.contextMenu.op = op;
-$.contextMenu.menus = menus;
-
-})(jQuery);
+/* jquery contextmenu 2.8.0 */
+!function(e){"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof exports?e(require("jquery")):e(jQuery)}(function(m){"use strict";var a;m.support.htmlMenuitem="HTMLMenuItemElement"in window,m.support.htmlCommand="HTMLCommandElement"in window,m.support.eventSelectstart="onselectstart"in document.documentElement,m.ui&&m.widget||(m.cleanData=(a=m.cleanData,function(e){var t,n,o;for(o=0;null!=e[o];o++){n=e[o];try{(t=m._data(n,"events"))&&t.remove&&m(n).triggerHandler("remove")}catch(e){}}a(e)}));var c=null,d=!1,p=m(window),f=0,h={},x={},v={},g={selector:null,appendTo:null,trigger:"right",autoHide:!1,delay:200,reposition:!0,hideOnSecondTrigger:!1,selectableSubMenu:!1,classNames:{hover:"context-menu-hover",disabled:"context-menu-disabled",visible:"context-menu-visible",notSelectable:"context-menu-not-selectable",icon:"context-menu-icon",iconEdit:"context-menu-icon-edit",iconCut:"context-menu-icon-cut",iconCopy:"context-menu-icon-copy",iconPaste:"context-menu-icon-paste",iconDelete:"context-menu-icon-delete",iconAdd:"context-menu-icon-add",iconQuit:"context-menu-icon-quit",iconLoadingClass:"context-menu-icon-loading"},determinePosition:function(e){if(m.ui&&m.ui.position)e.css("display","block").position({my:"center top",at:"center bottom",of:this,offset:"0 5",collision:"fit"}).css("display","none");else{var t=this.offset();t.top+=this.outerHeight(),t.left+=this.outerWidth()/2-e.outerWidth()/2,e.css(t)}},position:function(e,t,n){var o;if(t||n){if("maintain"===t&&"maintain"===n)o=e.$menu.position();else{var a=e.$menu.offsetParent().offset();o={top:n-a.top,left:t-a.left}}var s=p.scrollTop()+p.height(),i=p.scrollLeft()+p.width(),c=e.$menu.outerHeight(),l=e.$menu.outerWidth();o.top+c>s&&(o.top-=c),o.top<0&&(o.top=0),o.left+l>i&&(o.left-=l),o.left<0&&(o.left=0),e.$menu.css(o)}else e.determinePosition.call(this,e.$menu)},positionSubmenu:function(e){if(void 0!==e)if(m.ui&&m.ui.position)e.css("display","block").position({my:"left top-5",at:"right top",of:this,collision:"flipfit fit"}).css("display","");else{var t={top:-9,left:this.outerWidth()-5};e.css(t)}},zIndex:1,animation:{duration:50,show:"slideDown",hide:"slideUp"},events:{preShow:m.noop,show:m.noop,hide:m.noop,activated:m.noop},callback:null,items:{}},s={timer:null,pageX:null,pageY:null},b={abortevent:function(e){e.preventDefault(),e.stopImmediatePropagation()},contextmenu:function(e){var t=m(this);if(!1!==e.data.events.preShow(t,e)&&("right"===e.data.trigger&&(e.preventDefault(),e.stopImmediatePropagation()),!("right"!==e.data.trigger&&"demand"!==e.data.trigger&&e.originalEvent||!(void 0===e.mouseButton||!e.data||"left"===e.data.trigger&&0===e.mouseButton||"right"===e.data.trigger&&2===e.mouseButton)||t.hasClass("context-menu-active")||t.hasClass("context-menu-disabled")))){if(c=t,e.data.build){var n=e.data.build(c,e);if(!1===n)return;if(e.data=m.extend(!0,{},g,e.data,n||{}),!e.data.items||m.isEmptyObject(e.data.items))throw window.console&&(console.error||console.log).call(console,"No items specified to show in contextMenu"),new Error("No Items specified");e.data.$trigger=c,$.create(e.data)}$.show.call(t,e.data,e.pageX,e.pageY)}},click:function(e){e.preventDefault(),e.stopImmediatePropagation(),m(this).trigger(m.Event("contextmenu",{data:e.data,pageX:e.pageX,pageY:e.pageY}))},mousedown:function(e){var t=m(this);c&&c.length&&!c.is(t)&&c.data("contextMenu").$menu.trigger("contextmenu:hide"),2===e.button&&(c=t.data("contextMenuActive",!0))},mouseup:function(e){var t=m(this);t.data("contextMenuActive")&&c&&c.length&&c.is(t)&&!t.hasClass("context-menu-disabled")&&(e.preventDefault(),e.stopImmediatePropagation(),(c=t).trigger(m.Event("contextmenu",{data:e.data,pageX:e.pageX,pageY:e.pageY}))),t.removeData("contextMenuActive")},mouseenter:function(e){var t=m(this),n=m(e.relatedTarget),o=m(document);n.is(".context-menu-list")||n.closest(".context-menu-list").length||c&&c.length||(s.pageX=e.pageX,s.pageY=e.pageY,s.data=e.data,o.on("mousemove.contextMenuShow",b.mousemove),s.timer=setTimeout(function(){s.timer=null,o.off("mousemove.contextMenuShow"),(c=t).trigger(m.Event("contextmenu",{data:s.data,pageX:s.pageX,pageY:s.pageY}))},e.data.delay))},mousemove:function(e){s.pageX=e.pageX,s.pageY=e.pageY},mouseleave:function(e){var t=m(e.relatedTarget);if(!t.is(".context-menu-list")&&!t.closest(".context-menu-list").length){try{clearTimeout(s.timer)}catch(e){}s.timer=null}},layerClick:function(a){var s,i,c=m(this).data("contextMenuRoot"),l=a.button,r=a.pageX,u=a.pageY,d=void 0===r;a.preventDefault(),setTimeout(function(){if(d)null!=c&&null!==c.$menu&&void 0!==c.$menu&&c.$menu.trigger("contextmenu:hide");else{var e,t="left"===c.trigger&&0===l||"right"===c.trigger&&2===l;if(document.elementFromPoint&&c.$layer){if(c.$layer.hide(),(s=document.elementFromPoint(r-p.scrollLeft(),u-p.scrollTop())).isContentEditable){var n=document.createRange(),o=window.getSelection();n.selectNode(s),n.collapse(!0),o.removeAllRanges(),o.addRange(n)}m(s).trigger(a),c.$layer.show()}if(c.hideOnSecondTrigger&&t&&null!==c.$menu&&void 0!==c.$menu)c.$menu.trigger("contextmenu:hide");else{if(c.reposition&&t)if(document.elementFromPoint){if(c.$trigger.is(s))return void c.position.call(c.$trigger,c,r,u)}else if(i=c.$trigger.offset(),e=m(window),i.top+=e.scrollTop(),i.top<=a.pageY&&(i.left+=e.scrollLeft(),i.left<=a.pageX&&(i.bottom=i.top+c.$trigger.outerHeight(),i.bottom>=a.pageY&&(i.right=i.left+c.$trigger.outerWidth(),i.right>=a.pageX))))return void c.position.call(c.$trigger,c,r,u);s&&t&&c.$trigger.one("contextmenu:hidden",function(){m(s).contextMenu({x:r,y:u,button:l})}),null!=c&&null!==c.$menu&&void 0!==c.$menu&&c.$menu.trigger("contextmenu:hide")}}},50)},keyStop:function(e,t){t.isInput||e.preventDefault(),e.stopPropagation()},key:function(e){var t={};c&&(t=c.data("contextMenu")||{}),void 0===t.zIndex&&(t.zIndex=0);var n=0,o=function(e){""!==e.style.zIndex?n=e.style.zIndex:null!==e.offsetParent&&void 0!==e.offsetParent?o(e.offsetParent):null!==e.parentElement&&void 0!==e.parentElement&&o(e.parentElement)};if(o(e.target),!(t.$menu&&parseInt(n,10)>parseInt(t.$menu.css("zIndex"),10))){switch(e.keyCode){case 9:case 38:if(b.keyStop(e,t),t.isInput){if(9===e.keyCode&&e.shiftKey)return e.preventDefault(),t.$selected&&t.$selected.find("input, textarea, select").blur(),void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("prevcommand"));if(38===e.keyCode&&"checkbox"===t.$selected.find("input, textarea, select").prop("type"))return void e.preventDefault()}else if(9!==e.keyCode||e.shiftKey)return void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("prevcommand"));break;case 40:if(b.keyStop(e,t),!t.isInput)return void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("nextcommand"));if(9===e.keyCode)return e.preventDefault(),t.$selected&&t.$selected.find("input, textarea, select").blur(),void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("nextcommand"));if(40===e.keyCode&&"checkbox"===t.$selected.find("input, textarea, select").prop("type"))return void e.preventDefault();break;case 37:if(b.keyStop(e,t),t.isInput||!t.$selected||!t.$selected.length)break;if(t.$selected.parent().hasClass("context-menu-root"))break;var a=t.$selected.parent().parent();return t.$selected.trigger("contextmenu:blur"),void(t.$selected=a);case 39:if(b.keyStop(e,t),t.isInput||!t.$selected||!t.$selected.length)break;var s=t.$selected.data("contextMenu")||{};if(s.$menu&&t.$selected.hasClass("context-menu-submenu"))return t.$selected=null,s.$selected=null,void s.$menu.trigger("nextcommand");break;case 35:case 36:return t.$selected&&t.$selected.find("input, textarea, select").length?void 0:((t.$selected&&t.$selected.parent()||t.$menu).children(":not(."+t.classNames.disabled+", ."+t.classNames.notSelectable+")")[36===e.keyCode?"first":"last"]().trigger("contextmenu:focus"),void e.preventDefault());case 13:if(b.keyStop(e,t),t.isInput){if(t.$selected&&!t.$selected.is("textarea, select"))return void e.preventDefault();break}return void(void 0!==t.$selected&&null!==t.$selected&&t.$selected.trigger("mouseup"));case 32:case 33:case 34:return void b.keyStop(e,t);case 27:return b.keyStop(e,t),void(null!==t.$menu&&void 0!==t.$menu&&t.$menu.trigger("contextmenu:hide"));default:var i=String.fromCharCode(e.keyCode).toUpperCase();if(t.accesskeys&&t.accesskeys[i])return void t.accesskeys[i].$node.trigger(t.accesskeys[i].$menu?"contextmenu:focus":"mouseup")}e.stopPropagation(),void 0!==t.$selected&&null!==t.$selected&&t.$selected.trigger(e)}},prevItem:function(e){e.stopPropagation();var t=m(this).data("contextMenu")||{},n=m(this).data("contextMenuRoot")||{};if(t.$selected){var o=t.$selected;(t=t.$selected.parent().data("contextMenu")||{}).$selected=o}for(var a=t.$menu.children(),s=t.$selected&&t.$selected.prev().length?t.$selected.prev():a.last(),i=s;s.hasClass(n.classNames.disabled)||s.hasClass(n.classNames.notSelectable)||s.is(":hidden");)if((s=s.prev().length?s.prev():a.last()).is(i))return;t.$selected&&b.itemMouseleave.call(t.$selected.get(0),e),b.itemMouseenter.call(s.get(0),e);var c=s.find("input, textarea, select");c.length&&c.focus()},nextItem:function(e){e.stopPropagation();var t=m(this).data("contextMenu")||{},n=m(this).data("contextMenuRoot")||{};if(t.$selected){var o=t.$selected;(t=t.$selected.parent().data("contextMenu")||{}).$selected=o}for(var a=t.$menu.children(),s=t.$selected&&t.$selected.next().length?t.$selected.next():a.first(),i=s;s.hasClass(n.classNames.disabled)||s.hasClass(n.classNames.notSelectable)||s.is(":hidden");)if((s=s.next().length?s.next():a.first()).is(i))return;t.$selected&&b.itemMouseleave.call(t.$selected.get(0),e),b.itemMouseenter.call(s.get(0),e);var c=s.find("input, textarea, select");c.length&&c.focus()},focusInput:function(){var e=m(this).closest(".context-menu-item"),t=e.data(),n=t.contextMenu,o=t.contextMenuRoot;o.$selected=n.$selected=e,o.isInput=n.isInput=!0},blurInput:function(){var e=m(this).closest(".context-menu-item").data(),t=e.contextMenu;e.contextMenuRoot.isInput=t.isInput=!1},menuMouseenter:function(){m(this).data().contextMenuRoot.hovering=!0},menuMouseleave:function(e){var t=m(this).data().contextMenuRoot;t.$layer&&t.$layer.is(e.relatedTarget)&&(t.hovering=!1)},itemMouseenter:function(e){var t=m(this),n=t.data(),o=n.contextMenu,a=n.contextMenuRoot;a.hovering=!0,e&&a.$layer&&a.$layer.is(e.relatedTarget)&&(e.preventDefault(),e.stopImmediatePropagation()),(o.$menu?o:a).$menu.children("."+a.classNames.hover).trigger("contextmenu:blur").children(".hover").trigger("contextmenu:blur"),t.hasClass(a.classNames.disabled)||t.hasClass(a.classNames.notSelectable)?o.$selected=null:t.trigger("contextmenu:focus")},itemMouseleave:function(e){var t=m(this),n=t.data(),o=n.contextMenu,a=n.contextMenuRoot;if(a!==o&&a.$layer&&a.$layer.is(e.relatedTarget))return void 0!==a.$selected&&null!==a.$selected&&a.$selected.trigger("contextmenu:blur"),e.preventDefault(),e.stopImmediatePropagation(),void(a.$selected=o.$selected=o.$node);o&&o.$menu&&o.$menu.hasClass("context-menu-visible")||t.trigger("contextmenu:blur")},itemClick:function(e){var t,n=m(this),o=n.data(),a=o.contextMenu,s=o.contextMenuRoot,i=o.contextMenuKey;if(!(!a.items[i]||n.is("."+s.classNames.disabled+", .context-menu-separator, ."+s.classNames.notSelectable)||n.is(".context-menu-submenu")&&!1===s.selectableSubMenu)){if(e.preventDefault(),e.stopImmediatePropagation(),m.isFunction(a.callbacks[i])&&Object.prototype.hasOwnProperty.call(a.callbacks,i))t=a.callbacks[i];else{if(!m.isFunction(s.callback))return;t=s.callback}!1!==t.call(s.$trigger,i,s,e)?s.$menu.trigger("contextmenu:hide"):s.$menu.parent().length&&$.update.call(s.$trigger,s)}},inputClick:function(e){e.stopImmediatePropagation()},hideMenu:function(e,t){var n=m(this).data("contextMenuRoot");$.hide.call(n.$trigger,n,t&&t.force)},focusItem:function(e){e.stopPropagation();var t=m(this),n=t.data(),o=n.contextMenu,a=n.contextMenuRoot;t.hasClass(a.classNames.disabled)||t.hasClass(a.classNames.notSelectable)||(t.addClass([a.classNames.hover,a.classNames.visible].join(" ")).parent().find(".context-menu-item").not(t).removeClass(a.classNames.visible).filter("."+a.classNames.hover).trigger("contextmenu:blur"),o.$selected=a.$selected=t,o&&o.$node&&o.$node.hasClass("context-menu-submenu")&&o.$node.addClass(a.classNames.hover),o.$node&&a.positionSubmenu.call(o.$node,o.$menu))},blurItem:function(e){e.stopPropagation();var t=m(this),n=t.data(),o=n.contextMenu,a=n.contextMenuRoot;o.autoHide&&t.removeClass(a.classNames.visible),t.removeClass(a.classNames.hover),o.$selected=null}},$={show:function(n,e,t){var o=m(this),a={};if(m("#context-menu-layer").trigger("mousedown"),n.$trigger=o,!1!==n.events.show.call(o,n))if(!1!==$.update.call(o,n)){if(n.position.call(o,n,e,t),n.zIndex){var s=n.zIndex;"function"==typeof n.zIndex&&(s=n.zIndex.call(o,n)),a.zIndex=function(e){for(var t=0,n=e;t=Math.max(t,parseInt(n.css("z-index"),10)||0),(n=n.parent())&&n.length&&!(-1<"html body".indexOf(n.prop("nodeName").toLowerCase())););return t}(o)+s}$.layer.call(n.$menu,n,a.zIndex),n.$menu.find("ul").css("zIndex",a.zIndex+1),n.$menu.css(a)[n.animation.show](n.animation.duration,function(){o.trigger("contextmenu:visible"),$.activated(n),n.events.activated(n)}),o.data("contextMenu",n).addClass("context-menu-active"),m(document).off("keydown.contextMenu").on("keydown.contextMenu",b.key),n.autoHide&&m(document).on("mousemove.contextMenuAutoHide",function(e){var t=o.offset();t.right=t.left+o.outerWidth(),t.bottom=t.top+o.outerHeight(),!n.$layer||n.hovering||e.pageX>=t.left&&e.pageX<=t.right&&e.pageY>=t.top&&e.pageY<=t.bottom||setTimeout(function(){n.hovering||null===n.$menu||void 0===n.$menu||n.$menu.trigger("contextmenu:hide")},50)})}else c=null;else c=null},hide:function(t,e){var n=m(this);if(t||(t=n.data("contextMenu")||{}),e||!t.events||!1!==t.events.hide.call(n,t)){if(n.removeData("contextMenu").removeClass("context-menu-active"),t.$layer){setTimeout((o=t.$layer,function(){o.remove()}),10);try{delete t.$layer}catch(e){t.$layer=null}}var o;c=null,t.$menu.find("."+t.classNames.hover).trigger("contextmenu:blur"),t.$selected=null,t.$menu.find("."+t.classNames.visible).removeClass(t.classNames.visible),m(document).off(".contextMenuAutoHide").off("keydown.contextMenu"),t.$menu&&t.$menu[t.animation.hide](t.animation.duration,function(){t.build&&(t.$menu.remove(),m.each(t,function(e){switch(e){case"ns":case"selector":case"build":case"trigger":return!0;default:t[e]=void 0;try{delete t[e]}catch(e){}return!0}})),setTimeout(function(){n.trigger("contextmenu:hidden")},10)})}},create:function(r,u){function d(e){var t=m("<span></span>");if(e._accesskey)e._beforeAccesskey&&t.append(document.createTextNode(e._beforeAccesskey)),m("<span></span>").addClass("context-menu-accesskey").text(e._accesskey).appendTo(t),e._afterAccesskey&&t.append(document.createTextNode(e._afterAccesskey));else if(e.isHtmlName){if(void 0!==e.accesskey)throw new Error("accesskeys are not compatible with HTML names and cannot be used together in the same item");t.html(e.name)}else t.text(e.name);return t}void 0===u&&(u=r),r.$menu=m('<ul class="context-menu-list"></ul>').addClass(r.className||"").data({contextMenu:r,contextMenuRoot:u}),m.each(["callbacks","commands","inputs"],function(e,t){r[t]={},u[t]||(u[t]={})}),u.accesskeys||(u.accesskeys={}),m.each(r.items,function(n,o){var e=m('<li class="context-menu-item"></li>').addClass(o.className||""),t=null,a=null;if(e.on("click",m.noop),"string"!=typeof o&&"cm_separator"!==o.type||(o={type:"cm_seperator"}),o.$node=e.data({contextMenu:r,contextMenuRoot:u,contextMenuKey:n}),void 0!==o.accesskey)for(var s,i=function(e){for(var t,n=e.split(/\s+/),o=[],a=0;t=n[a];a++)t=t.charAt(0).toUpperCase(),o.push(t);return o}(o.accesskey),c=0;s=i[c];c++)if(!u.accesskeys[s]){var l=(u.accesskeys[s]=o).name.match(new RegExp("^(.*?)("+s+")(.*)$","i"));l&&(o._beforeAccesskey=l[1],o._accesskey=l[2],o._afterAccesskey=l[3]);break}if(o.type&&v[o.type])v[o.type].call(e,o,r,u),m.each([r,u],function(e,t){t.commands[n]=o,!m.isFunction(o.callback)||void 0!==t.callbacks[n]&&void 0!==r.type||(t.callbacks[n]=o.callback)});else{switch("cm_seperator"===o.type?e.addClass("context-menu-separator "+u.classNames.notSelectable):"html"===o.type?e.addClass("context-menu-html "+u.classNames.notSelectable):"sub"!==o.type&&o.type?(t=m("<label></label>").appendTo(e),d(o).appendTo(t),e.addClass("context-menu-input"),r.hasTypes=!0,m.each([r,u],function(e,t){t.commands[n]=o,t.inputs[n]=o})):o.items&&(o.type="sub"),o.type){case"cm_seperator":break;case"text":a=m('<input type="text" value="1" name="" />').attr("name","context-menu-input-"+n).val(o.value||"").appendTo(t);break;case"textarea":a=m('<textarea name=""></textarea>').attr("name","context-menu-input-"+n).val(o.value||"").appendTo(t),o.height&&a.height(o.height);break;case"checkbox":a=m('<input type="checkbox" value="1" name="" />').attr("name","context-menu-input-"+n).val(o.value||"").prop("checked",!!o.selected).prependTo(t);break;case"radio":a=m('<input type="radio" value="1" name="" />').attr("name","context-menu-input-"+o.radio).val(o.value||"").prop("checked",!!o.selected).prependTo(t);break;case"select":a=m('<select name=""></select>').attr("name","context-menu-input-"+n).appendTo(t),o.options&&(m.each(o.options,function(e,t){m("<option></option>").val(e).text(t).appendTo(a)}),a.val(o.selected));break;case"sub":d(o).appendTo(e),o.appendTo=o.$node,e.data("contextMenu",o).addClass("context-menu-submenu"),o.callback=null,"function"==typeof o.items.then?$.processPromises(o,u,o.items):$.create(o,u);break;case"html":m(o.html).appendTo(e);break;default:m.each([r,u],function(e,t){t.commands[n]=o,!m.isFunction(o.callback)||void 0!==t.callbacks[n]&&void 0!==r.type||(t.callbacks[n]=o.callback)}),d(o).appendTo(e)}o.type&&"sub"!==o.type&&"html"!==o.type&&"cm_seperator"!==o.type&&(a.on("focus",b.focusInput).on("blur",b.blurInput),o.events&&a.on(o.events,r)),o.icon&&(m.isFunction(o.icon)?o._icon=o.icon.call(this,this,e,n,o):"string"!=typeof o.icon||"fab "!==o.icon.substring(0,4)&&"fas "!==o.icon.substring(0,4)&&"far "!==o.icon.substring(0,4)&&"fal "!==o.icon.substring(0,4)?"string"==typeof o.icon&&"fa-"===o.icon.substring(0,3)?o._icon=u.classNames.icon+" "+u.classNames.icon+"--fa fa "+o.icon:o._icon=u.classNames.icon+" "+u.classNames.icon+"-"+o.icon:(e.addClass(u.classNames.icon+" "+u.classNames.icon+"--fa5"),o._icon=m('<i class="'+o.icon+'"></i>')),"string"==typeof o._icon?e.addClass(o._icon):e.prepend(o._icon))}o.$input=a,o.$label=t,e.appendTo(r.$menu),!r.hasTypes&&m.support.eventSelectstart&&e.on("selectstart.disableTextSelect",b.abortevent)}),r.$node||r.$menu.css("display","none").addClass("context-menu-root"),r.$menu.appendTo(r.appendTo||document.body)},resize:function(e,t){var n;e.css({position:"absolute",display:"block"}),e.data("width",(n=e.get(0)).getBoundingClientRect?Math.ceil(n.getBoundingClientRect().width):e.outerWidth()+1),e.css({position:"static",minWidth:"0px",maxWidth:"100000px"}),e.find("> li > ul").each(function(){$.resize(m(this),!0)}),t||e.find("ul").addBack().css({position:"",display:"",minWidth:"",maxWidth:""}).outerWidth(function(){return m(this).data("width")})},update:function(i,c){var l=this;void 0===c&&(c=i,$.resize(i.$menu));var r=!1;return i.$menu.children().each(function(){var e,t=m(this),n=t.data("contextMenuKey"),o=i.items[n],a=m.isFunction(o.disabled)&&o.disabled.call(l,n,c)||!0===o.disabled;if((e=m.isFunction(o.visible)?o.visible.call(l,n,c):void 0===o.visible||!0===o.visible)&&(r=!0),t[e?"show":"hide"](),t[a?"addClass":"removeClass"](c.classNames.disabled),m.isFunction(o.icon)){t.removeClass(o._icon);var s=o.icon.call(this,l,t,n,o);"string"==typeof s?t.addClass(s):t.prepend(s)}if(o.type)switch(t.find("input, select, textarea").prop("disabled",a),o.type){case"text":case"textarea":o.$input.val(o.value||"");break;case"checkbox":case"radio":o.$input.val(o.value||"").prop("checked",!!o.selected);break;case"select":o.$input.val((0===o.selected?"0":o.selected)||"")}o.$menu&&($.update.call(l,o,c)&&(r=!0))}),r},layer:function(e,t){var n=e.$layer=m('<div id="context-menu-layer"></div>').css({height:p.height(),width:p.width(),display:"block",position:"fixed","z-index":t,top:0,left:0,opacity:0,filter:"alpha(opacity=0)","background-color":"#000"}).data("contextMenuRoot",e).insertBefore(this).on("contextmenu",b.abortevent).on("mousedown",b.layerClick);return void 0===document.body.style.maxWidth&&n.css({position:"absolute",height:m(document).height()}),n},processPromises:function(e,t,n){function o(e,t,n){void 0===n?(n={error:{name:"No items and no error item",icon:"context-menu-icon context-menu-icon-quit"}},window.console&&(console.error||console.log).call(console,'When you reject a promise, provide an "items" object, equal to normal sub-menu items')):"string"==typeof n&&(n={error:{name:n}}),a(e,t,n)}function a(e,t,n){void 0!==t.$menu&&t.$menu.is(":visible")&&(e.$node.removeClass(t.classNames.iconLoadingClass),e.items=n,$.create(e,t,!0),$.update(e,t),t.positionSubmenu.call(e.$node,e.$menu))}e.$node.addClass(t.classNames.iconLoadingClass),n.then(function(e,t,n){void 0===n&&o(void 0),a(e,t,n)}.bind(this,e,t),o.bind(this,e,t))},activated:function(e){var t=e.$menu,n=t.offset(),o=m(window).height(),a=m(window).scrollTop(),s=t.height();o<s?t.css({height:o+"px","overflow-x":"hidden","overflow-y":"auto",top:a+"px"}):(n.top<a||n.top+s>a+o)&&t.css({top:a+"px"})}};function l(e){return e.id&&m('label[for="'+e.id+'"]').val()||e.name}m.fn.contextMenu=function(e){var t=this,n=e;if(0<this.length)if(void 0===e)this.first().trigger("contextmenu");else if(void 0!==e.x&&void 0!==e.y)this.first().trigger(m.Event("contextmenu",{pageX:e.x,pageY:e.y,mouseButton:e.button}));else if("hide"===e){var o=this.first().data("contextMenu")?this.first().data("contextMenu").$menu:null;o&&o.trigger("contextmenu:hide")}else"destroy"===e?m.contextMenu("destroy",{context:this}):m.isPlainObject(e)?(e.context=this,m.contextMenu("create",e)):e?this.removeClass("context-menu-disabled"):e||this.addClass("context-menu-disabled");else m.each(x,function(){this.selector===t.selector&&(n.data=this,m.extend(n.data,{trigger:"demand"}))}),b.contextmenu.call(n.target,n);return this},m.contextMenu=function(e,t){"string"!=typeof e&&(t=e,e="create"),"string"==typeof t?t={selector:t}:void 0===t&&(t={});var n=m.extend(!0,{},g,t||{}),o=m(document),a=o,s=!1;switch(n.context&&n.context.length?(a=m(n.context).first(),n.context=a.get(0),s=!m(n.context).is(document)):n.context=document,e){case"update":if(s)$.update(a);else for(var i in x)x.hasOwnProperty(i)&&$.update(x[i]);break;case"create":if(!n.selector)throw new Error("No selector specified");if(n.selector.match(/.context-menu-(list|item|input)($|\s)/))throw new Error('Cannot bind to selector "'+n.selector+'" as it contains a reserved className');if(!n.build&&(!n.items||m.isEmptyObject(n.items)))throw new Error("No Items specified");if(f++,n.ns=".contextMenu"+f,s||(h[n.selector]=n.ns),(x[n.ns]=n).trigger||(n.trigger="right"),!d){var c="click"===n.itemClickEvent?"click.contextMenu":"mouseup.contextMenu",l={"contextmenu:focus.contextMenu":b.focusItem,"contextmenu:blur.contextMenu":b.blurItem,"contextmenu.contextMenu":b.abortevent,"mouseenter.contextMenu":b.itemMouseenter,"mouseleave.contextMenu":b.itemMouseleave};l[c]=b.itemClick,o.on({"contextmenu:hide.contextMenu":b.hideMenu,"prevcommand.contextMenu":b.prevItem,"nextcommand.contextMenu":b.nextItem,"contextmenu.contextMenu":b.abortevent,"mouseenter.contextMenu":b.menuMouseenter,"mouseleave.contextMenu":b.menuMouseleave},".context-menu-list").on("mouseup.contextMenu",".context-menu-input",b.inputClick).on(l,".context-menu-item"),d=!0}switch(a.on("contextmenu"+n.ns,n.selector,n,b.contextmenu),s&&a.on("remove"+n.ns,function(){m(this).contextMenu("destroy")}),n.trigger){case"hover":a.on("mouseenter"+n.ns,n.selector,n,b.mouseenter).on("mouseleave"+n.ns,n.selector,n,b.mouseleave);break;case"left":a.on("click"+n.ns,n.selector,n,b.click);break;case"touchstart":a.on("touchstart"+n.ns,n.selector,n,b.click)}n.build||$.create(n);break;case"destroy":var r;if(s){var u=n.context;m.each(x,function(e,t){if(!t)return!0;if(!m(u).is(t.selector))return!0;(r=m(".context-menu-list").filter(":visible")).length&&r.data().contextMenuRoot.$trigger.is(m(t.context).find(t.selector))&&r.trigger("contextmenu:hide",{force:!0});try{x[t.ns].$menu&&x[t.ns].$menu.remove(),delete x[t.ns]}catch(e){x[t.ns]=null}return m(t.context).off(t.ns),!0})}else if(n.selector){if(h[n.selector]){(r=m(".context-menu-list").filter(":visible")).length&&r.data().contextMenuRoot.$trigger.is(n.selector)&&r.trigger("contextmenu:hide",{force:!0});try{x[h[n.selector]].$menu&&x[h[n.selector]].$menu.remove(),delete x[h[n.selector]]}catch(e){x[h[n.selector]]=null}o.off(h[n.selector])}}else o.off(".contextMenu .contextMenuAutoHide"),m.each(x,function(e,t){m(t.context).off(t.ns)}),h={},f=0,d=!(x={}),m("#context-menu-layer, .context-menu-list").remove();break;case"html5":(!m.support.htmlCommand&&!m.support.htmlMenuitem||"boolean"==typeof t&&t)&&m('menu[type="context"]').each(function(){this.id&&m.contextMenu({selector:"[contextmenu="+this.id+"]",items:m.contextMenu.fromMenu(this)})}).css("display","none");break;default:throw new Error('Unknown operation "'+e+'"')}return this},m.contextMenu.setInputValues=function(e,n){void 0===n&&(n={}),m.each(e.inputs,function(e,t){switch(t.type){case"text":case"textarea":t.value=n[e]||"";break;case"checkbox":t.selected=!!n[e];break;case"radio":t.selected=(n[t.radio]||"")===t.value;break;case"select":t.selected=n[e]||""}})},m.contextMenu.getInputValues=function(e,n){return void 0===n&&(n={}),m.each(e.inputs,function(e,t){switch(t.type){case"text":case"textarea":case"select":n[e]=t.$input.val();break;case"checkbox":n[e]=t.$input.prop("checked");break;case"radio":t.$input.prop("checked")&&(n[t.radio]=t.value)}}),n},m.contextMenu.fromMenu=function(e){var t={};return function s(i,e,c){return c||(c=0),e.each(function(){var e,t,n=m(this),o=this,a=this.nodeName.toLowerCase();switch("label"===a&&n.find("input, textarea, select").length&&(e=n.text(),a=(o=(n=n.children().first()).get(0)).nodeName.toLowerCase()),a){case"menu":t={name:n.attr("label"),items:{}},c=s(t.items,n.children(),c);break;case"a":case"button":t={name:n.text(),disabled:!!n.attr("disabled"),callback:function(){n.get(0).click()}};break;case"menuitem":case"command":switch(n.attr("type")){case void 0:case"command":case"menuitem":t={name:n.attr("label"),disabled:!!n.attr("disabled"),icon:n.attr("icon"),callback:function(){n.get(0).click()}};break;case"checkbox":t={type:"checkbox",disabled:!!n.attr("disabled"),name:n.attr("label"),selected:!!n.attr("checked")};break;case"radio":t={type:"radio",disabled:!!n.attr("disabled"),name:n.attr("label"),radio:n.attr("radiogroup"),value:n.attr("id"),selected:!!n.attr("checked")};break;default:t=void 0}break;case"hr":t="-------";break;case"input":switch(n.attr("type")){case"text":t={type:"text",name:e||l(o),disabled:!!n.attr("disabled"),value:n.val()};break;case"checkbox":t={type:"checkbox",name:e||l(o),disabled:!!n.attr("disabled"),selected:!!n.attr("checked")};break;case"radio":t={type:"radio",name:e||l(o),disabled:!!n.attr("disabled"),radio:!!n.attr("name"),value:n.val(),selected:!!n.attr("checked")};break;default:t=void 0}break;case"select":t={type:"select",name:e||l(o),disabled:!!n.attr("disabled"),selected:n.val(),options:{}},n.children().each(function(){t.options[this.value]=m(this).text()});break;case"textarea":t={type:"textarea",name:e||l(o),disabled:!!n.attr("disabled"),value:n.val()};break;case"label":break;default:t={type:"html",html:n.clone(!0)}}t&&(i["key"+ ++c]=t)}),c}(t,m(e).children()),t},m.contextMenu.defaults=g,m.contextMenu.types=v,m.contextMenu.handle=b,m.contextMenu.op=$,m.contextMenu.menus=x});
+//# sourceMappingURL=jquery.contextMenu.min.js.map
 
 /**!
  * jquery.fancytree.contextmenu.js
@@ -26748,7 +24557,7 @@ var tabExpander = (function($, window){
 	
 })(jQuery);
 
-/* $(document).ready(function(){
+$(document).ready(function(){
 	
 	// only make the sidebar resizable when its 1200px above
 	if( melisCore.screenSize >= 1200){
@@ -26782,7 +24591,7 @@ var tabExpander = (function($, window){
 		});
 	}
 
-}); */
+});
 (function($){
 	
 		window.initRightsTree = function(trees, url){
@@ -27145,13 +24954,13 @@ var melisCore = (function(window){
             $body.addClass('sidebar-mini');
 
             $melisFooter.addClass('slide-left');
-            $melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
+            //$melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
         }
         else {
             $melisLeftMenu.css("left", "0");
             $body.removeClass('sidebar-mini');
             $melisFooter.removeClass('slide-left');
-            $melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
+            //$melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
         }
 
         $("#newplugin-cont").removeClass("show-menu");
@@ -27167,6 +24976,7 @@ var melisCore = (function(window){
         // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
         setTimeout(function(){
             var $f = $("#"+ activeTabId + " .melis-iframe");
+
             if( $($f).length ) {
                 $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
             }
@@ -27175,8 +24985,8 @@ var melisCore = (function(window){
         }, 1000);
     }
 
-    if ( typeof melisDashBoardDragnDrop === 'undefined' )
-        $("#disable-left-menu-overlay").show();
+    /* if ( typeof melisDashBoardDragnDrop === 'undefined' )
+        $("#disable-left-menu-overlay").show(); */
 
     // MAIN TAB MENU CLICK - run codes when a tab in the main tab menu is clicked
     function tabMenuClick() {
@@ -27403,38 +25213,36 @@ var melisCore = (function(window){
 
     tabDraggable("#melis-id-nav-bar-tabs", false);
 
+    /* $body.on("click", ".tabs-label li a", function() {
+            var $this = $(this);
+
+                $this.toggleClass("active").siblings().removeClass("active");
+                $this.closest("li").toggleClass("active").siblings().removeClass("active");
+        }); */
+
     // switch widget nav-tabs even if href begins with a digit e.g. #1_id_cmspage
     function navTabsSwitch() {
         var $this               = $(this),
             href                = $this.attr("href"),
-            id                  = href.replace("#", ""),
-            $navLi              = $("#"+activeTabId+" .nav-tabs li"),
-            $tabContent         = $("#"+activeTabId+" .tab-pane"),
-            $currentTabContent  = $("#"+activeTabId+" [id="+id+"]");
+            id                  = href.replace("#", "");
 
-            // loop through .nav-tabs li and remove .active class
-            $navLi.each(function() {
-                var $this       = $(this);
-                    $tabLink    = $this.find("a");
-
-                    $this.removeClass("active");
-                    $tabLink.removeClass("active");
-            });
-
-            // loop through tab content and remove .active class
-            $tabContent.each(function() {
-                var $this = $(this);
-                    $this.removeClass("active");
-            });
-
-            // add .active class to the current clicked a tag
+            // .tab-pane [this a hrefs]
+            $this.addClass("active");
             $this.closest("li").addClass("active");
 
-            // show current clicked tab content
-            $currentTabContent.addClass("active");
+            // a hrefs siblings
+            $this.closest("li").siblings().removeClass("active");
+            $this.closest("li").siblings().find("a").removeClass("active");
+            
+
+            // .tab-content
+            $(href).siblings().removeClass("active");
+            $(href).addClass("active");
+            
+            return false;
     }
 
-    // pagination of dataTables data
+    // pagination of dataTables data, prior to bootstrap 4 changes on pagination classes
     function paginateDataTables() {
         var $paginate = $(".dataTables_paginate"),
             $page_item = $paginate.find(".pagination li"),
@@ -27447,7 +25255,7 @@ var melisCore = (function(window){
     // BIND & DELEGATE EVENTS =================================================================================================================
 
     // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
-    $body.on("shown.bs.tab", ".widget-head .nav-tabs li a", navTabsSwitch);
+    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch).filter(":first").click();
 
     // toggle plugin menu in mobile
     $body.on("click", "#plugin-menu", function(){
@@ -27963,7 +25771,7 @@ var melisHelper = (function(){
                 if(typeof $(this).data("tooltip") != 'undefined'){
                     attribTooltip = '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' + $(this).data("tooltip") +'"></i>';
                 }
-                var switchBtn = '<label for="'+$(this).attr("name")+'">'+$(this).data("label") + attribRequired + attribTooltip+'</label>'
+                var switchBtn = '<label for="'+$(this).attr("name")+'" class="d-flex flex-row justify-content-between"><div class="label-text">'+$(this).data("label") + attribRequired + '</div>' + attribTooltip+'</label>'
                     +'<div class="make-switch user-admin-switch" data-label-icon="glyphicon glyphicon-resize-horizontal" data-on-label="'+translations.tr_meliscore_common_yes+'" data-off-label="'+translations.tr_meliscore_common_nope+'" style="display: block;">'
                     +'<input type="checkbox" name="'+$(this).attr("name")+'" id="'+$(this).attr("id")+'">'
                     +'</div>';
@@ -28989,19 +26797,19 @@ $(document).ready(function () {
         })
 
         $body.on("click", '.btnUserEdit', function () {
-            var id      = $(this).parents("tr").attr("id"),
-                $suas   = $("#switch-user-api-status"),
-                $tuvdc  = $("#tableUserViewDateConnection");
+            var id              = $(this).parents("tr").attr("id"),
+                $switch_status  = $("#switch-user-api-status"),
+                $dateCon        = $("#tableUserViewDateConnection");
 
                 melisCoreTool.hideAlert("#editformalert");
                 melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal', '#id_meliscore_tool_user_edit_modal');
                 melisCoreTool.resetLabels("#idusermanagement");
                 toolUserManagement.retrieveUser(id);
                 // Micro service status
-                $suas.attr("data-userid", id);
+                $switch_status.attr("data-userid", id);
 
                 _tmpUserId = id;
-                $tuvdc.DataTable().destroy();
+                $dateCon.DataTable().destroy();
                 fntableUserViewDateConnectioninit();
 
                 $.ajax({
@@ -29014,7 +26822,7 @@ $(document).ready(function () {
                     var $apikey     = $("#melis-core-user-auth-api-key"),
                         $apiok      = $("#melis-core-user-auth-api-ok"),
                         $apiurl     = $("#melis-core-microservices-url"),
-                        $suas_sa    = $("#switch-user-api-status .switch-animate");
+                        $switch     = $("#switch-user-api-status .switch-animate");
 
                         $apikey.html("");
                         $apiok.addClass("hidden");
@@ -29024,15 +26832,15 @@ $(document).ready(function () {
                             $apiok.removeClass("hidden");
 
                             if (data.response.status == 1) {
-                                $suas_sa.removeClass("switch-off");
-                                $suas_sa.addClass("switch-on");
+                                $switch.removeClass("switch-off");
+                                $switch.addClass("switch-on");
                             } else {
-                                $suas_sa.removeClass("switch-on");
-                                $suas_sa.addClass("switch-off");
+                                $switch.removeClass("switch-on");
+                                $switch.addClass("switch-off");
                             }
                         }
                         else {
-                            $apiko.removeClass("hidden");
+                            $apiok.removeClass("hidden");
                         }
                 }).fail(function() {
                     alert(translations.tr_meliscore_error_message);
@@ -29048,11 +26856,11 @@ $(document).ready(function () {
                     dataType: 'json',
                     encode: true,
                 }).done(function (data) {
-                    var $apikey = $("#melis-core-user-auth-api-key"),
-                        $apiok  = $("#melis-core-user-auth-api-ok"),
-                        $apiko  = $("#melis-core-user-auth-api-ko"),
-                        $apiurl = $("#melis-core-microservices-url"),
-                        $suas   = $("#switch-user-api-status");
+                    var $apikey     = $("#melis-core-user-auth-api-key"),
+                        $apiok      = $("#melis-core-user-auth-api-ok"),
+                        $apiko      = $("#melis-core-user-auth-api-ko"),
+                        $apiurl     = $("#melis-core-microservices-url"),
+                        $switch_api = $("#switch-user-api-status");
 
                         $apikey.html("");
                         $apiok.addClass("hidden");
@@ -29062,9 +26870,9 @@ $(document).ready(function () {
                             $apiurl.html('<a href="' + data.response.url + '" target="_blank">' + data.response.url + '</a>');
                             $apiok.removeClass("hidden");
 
-                            if (!$suas.find("div").hasClass("switch-on")) {
-                                $suas.find("div").removeClass("switch-off");
-                                $suas.find("div").addClass("switch-on");
+                            if (!$switch_api.find("div").hasClass("switch-on")) {
+                                $switch_api.find("div").removeClass("switch-off");
+                                $switch_api.find("div").addClass("switch-on");
                             }
                         }
                         else {
@@ -29118,10 +26926,12 @@ function melisNewUserRights() {
 window.initRetrieveUser = function () {
     var btnDelete = $('#tableToolUserManagement tr.clsCurrent td').find(".btnUserDelete");
         btnDelete.remove();
+}
 
-    // pagination of dataTables
+// paginate dataTables data
+window.paginateDataTables = function() {
     melisCore.paginateDataTables();
-};
+}
 
 var toolUserManagement = {
 
@@ -29171,11 +26981,11 @@ var toolUserManagement = {
     },
 
     retrieveUser: function (id) {
-        var $be     = $("#btnEdit"),
-            $ber    = $("#btnEditRights");
+        var $btnEdit        = $("#btnEdit"),
+            $btnEditRights  = $("#btnEditRights");
 
-            $be.addClass("disabled").css("pointer-events", "none");
-            $ber.addClass("disabled").css("pointer-events", "none");
+            $btnEdit.addClass("disabled").css("pointer-events", "none");
+            $btnEditRights.addClass("disabled").css("pointer-events", "none");
 
             $.ajax({
                 type: 'POST',
@@ -29185,40 +26995,40 @@ var toolUserManagement = {
                 encode: true
             }).done(function(data) {
                 if (data.success) {
-                    var $lld = $("#lastlogindate"),
-                        $ul  = $("#userlogin"),
-                        $ump = $("#idusermanagement #id_usr_password"),
-                        $umcp = $("#idusermanagement #id_usr_confirm_password");
+                    var $lastLoginDate      = $("#lastlogindate"),
+                        $userLogin          = $("#userlogin"),
+                        $userMgntPass       = $("#idusermanagement #id_usr_password"),
+                        $userMgntConPass    = $("#idusermanagement #id_usr_confirm_password");
 
-                    $lld.html(data.user.usr_last_login_date);
-                    $ul.html(data.user.usr_login);
-                    toolUserManagement.setImage("#profile-image", data.user.usr_image);
+                        $lastLoginDate.html(data.user.usr_last_login_date);
+                        $userLogin.html(data.user.usr_login);
+                        toolUserManagement.setImage("#profile-image", data.user.usr_image);
 
-                    $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
-                        var $this   = $(this),
-                            name    = $this.attr('name'),
-                            $tum    = $("#tool_user_management_id_tmp"),
-                            $eui    = $("#edituserid");
+                        $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
+                            var $this               = $(this),
+                                name                = $this.attr('name'),
+                                $toolUserMgntTmp    = $("#tool_user_management_id_tmp"),
+                                $editUserId         = $("#edituserid");
 
-                            $("#" + $this.attr('id')).val(data.user[name]);
-                            $tum.val(data.user['usr_id']);
-                            $eui.html(data.user['usr_id']);
-                    });
+                                $("#" + $this.attr('id')).val(data.user[name]);
+                                $toolUserMgntTmp.val(data.user['usr_id']);
+                                $editUserId.html(data.user['usr_id']);
+                        });
 
-                    // Switching the Admin switch plugin
-                    var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
-                        if (data.user.usr_admin == 1) {
-                            userEditSwitchForm.bootstrapSwitch('setState', true);
-                        } else {
-                            userEditSwitchForm.bootstrapSwitch('setState', false);
-                        }
+                        // Switching the Admin switch plugin
+                        var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
+                            if (data.user.usr_admin == 1) {
+                                userEditSwitchForm.bootstrapSwitch('setState', true);
+                            } else {
+                                userEditSwitchForm.bootstrapSwitch('setState', false);
+                            }
 
-                        // make sure that password fields are empty when retrieving
-                        $ump.val("");
-                        $umcp.val("");
+                            // make sure that password fields are empty when retrieving
+                            $userMgntPass.val("");
+                            $userMgntConPass.val("");
 
-                        // re-initialize the tree with current selected userID
-                        getRightsTree(id);
+                            // re-initialize the tree with current selected userID
+                            getRightsTree(id);
                 }
             }).fail(function() {
                 alert(translations.tr_meliscore_error_message);
@@ -29248,10 +27058,10 @@ var toolUserManagement = {
                 contentType: false,
                 dataType: 'json'
             }).done(function (data) {
-                var $mum = $("#modal-user-management");
+                var $modalUserMgnt = $("#modal-user-management");
                     if ( data.success ) {
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                        $mum.modal('hide');
+                        $modalUserMgnt.modal('hide');
                         toolUserManagement.refreshTable();
                     }
                     else {
@@ -29268,79 +27078,79 @@ var toolUserManagement = {
     },
 
     updateUser: function (form) {
-        var formData    = new FormData(form),
-            ctr         = 0,
-            $bue        = $(".btnUserEdit");
+        var formData        = new FormData(form),
+            ctr             = 0,
+            $btnUserEdit    = $(".btnUserEdit");
 
-        formData.append("usr_id", $("#edituserid").html());
+            formData.append("usr_id", $("#edituserid").html());
 
-        $.each(userRightsData, function (i, e) {
-            $.each(e, function (a, b) {
-                formData.append(a, JSON.stringify(userRightsData[ctr]));
+            $.each(userRightsData, function (i, e) {
+                $.each(e, function (a, b) {
+                    formData.append(a, JSON.stringify(userRightsData[ctr]));
+                });
+                ctr++;
             });
-            ctr++;
-        });
 
-        melisCoreTool.pending("#btnEdit");
-        melisCoreTool.processing();
+            melisCoreTool.pending("#btnEdit");
+            melisCoreTool.processing();
 
-        $bue.removeAttr("data-toggle");
+            $btnUserEdit.removeAttr("data-toggle");
 
-        $.ajax({
-            type: 'POST',
-            url: '/melis/MelisCore/ToolUser/updateUser',
-            data: formData,
-            processData: false,
-            cache: false,
-            contentType: false,
-            dataType: 'json'
-        }).done(function (data) {
-            if ( data.success ) {
-                var $mum = $("#modal-user-management"),
-                    $unl = $("#user-name-link");
+            $.ajax({
+                type: 'POST',
+                url: '/melis/MelisCore/ToolUser/updateUser',
+                data: formData,
+                processData: false,
+                cache: false,
+                contentType: false,
+                dataType: 'json'
+            }).done(function (data) {
+                if ( data.success ) {
+                    var $modalUserMgnt  = $("#modal-user-management"),
+                        $userNameLink   = $("#user-name-link");
 
-                    melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                    $mum.modal('hide');
+                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                        $modalUserMgnt.modal('hide');
 
-                    if ( data.datas.isMyInfo == 1 ) {
-                        var $mlmpp = $("#meliscore_left_menu_profile_pic");
-                            $mlmpp.attr("src", "");
+                        if ( data.datas.isMyInfo == 1 ) {
+                            var $profPic = $("#meliscore_left_menu_profile_pic");
+                                $profPic.attr("src", "");
 
-                            $.when(melisHelper.zoneReload("id_meliscore_leftmenu", "meliscore_leftmenu")).then(function () {
-                                var isFirefox = navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
-                                    if (isFirefox) {
-                                        $mlmpp.fadeOut();
-                                        setTimeout(function () {
-                                            $mlmpp.attr("src", data.datas.loadProfile);
-                                            $mlmpp.fadeIn();
-                                        }, 3000);
-                                    }
+                                $.when(melisHelper.zoneReload("id_meliscore_leftmenu", "meliscore_leftmenu")).then(function () {
+                                    var isFirefox = navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
+                                        if (isFirefox) {
+                                            $profPic.fadeOut();
+                                            setTimeout(function () {
+                                                $profPic.attr("src", data.datas.loadProfile);
+                                                $profPic.fadeIn();
+                                            }, 3000);
+                                        }
+                                });
+                        }
+                        toolUserManagement.refreshTable();
+
+                        //check if data that has been updated is equal to the current user info to replicate the user profile data
+                        if ( _tmpUserId == $userNameLink.attr("data-user-id") ) {
+                            melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
+                            melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
+
+                            //reload the dashboard plugins menu to update the plugin rights
+                            melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
+                                melisDashBoardDragnDrop.dragWidget();
                             });
-                    }
-                    toolUserManagement.refreshTable();
-
-                    //check if data that has been updated is equal to the current user info to replicate the user profile data
-                    if ( _tmpUserId == $unl.attr("data-user-id") ) {
-                        melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
-                        melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
-
-                        //reload the dashboard plugins menu to update the plugin rights
-                        melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
-                            melisDashBoardDragnDrop.dragWidget();
-                        });
-                    }
-            }
-            else {
-                melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
-                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                melisCoreTool.highlightErrors(data.success, data.errors, "idusermanagement");
-            }
-            melisCoreTool.done("#btnEdit");
-            melisCore.flashMessenger();
-            melisCoreTool.processDone();
-        }).fail(function () {
-            alert(translations.tr_meliscore_error_message);
-        });
+                        }
+                }
+                else {
+                    melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
+                    melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                    melisCoreTool.highlightErrors(data.success, data.errors, "idusermanagement");
+                }
+                melisCoreTool.done("#btnEdit");
+                melisCore.flashMessenger();
+                melisCoreTool.processDone();
+            }).fail(function () {
+                alert(translations.tr_meliscore_error_message);
+            });
     },
 
     imagePreview: function (id, imgFileInput) {
@@ -29362,408 +27172,412 @@ var toolUserManagement = {
     }
 };
 
-$(document).ready(function() {
+$(function() {
     var $body = $("body");
 
-    $body.on("switch-change", "#select-deselect-all-module", function(e, data){
-        var val = "";
-        if(data.value === false){
-            val = "off";
-        }else{
-            val = "on";
-        }
-        $('.module-switch').find("div.switch-animate").removeClass("switch-on switch-off").addClass("switch-"+val);
-    });
+        $body.on("switch-change", "#select-deselect-all-module", function(e, data){
+            var val = "";
+            if ( data.value === false ) {
+                val = "off";
+            } else {
+                val = "on";
+            }
 
-    $body.on('switch-change', 'div[data-module-name]', function (e, data) {
+            $('.module-switch').find("div.switch-animate").removeClass("switch-on switch-off").addClass("switch-"+val);
+        });
 
-		var moduleName = $(this).data("module-name");
-		var value 	   = data.value;
-		var isInactive = false;
-		var isActive   = true;
+        $body.on('switch-change', 'div[data-module-name]', function (e, data) {
 
-		if(value === isInactive) {
+            var moduleName = $(this).data("module-name"),
+                value 	   = data.value,
+                isInactive = false,
+                isActive   = true;
+
+            if ( value === isInactive ) {
+                    $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_checking_dependencies);
+                    $('div[data-module-name]').bootstrapSwitch('setActive', false);
+                    $.ajax({
+                        type        : 'POST',
+                        url         : '/melis/MelisCore/Modules/getDependents',
+                        data		: {module : moduleName},
+                        dataType    : 'json',
+                        encode		: true
+                    }).done(function(data) {
+                        var modules    = "<br/><br/><div class='container'><div class='row'><div class='col-lg-12'><ul>%s</ul></div></div></div>",
+                            moduleList = '';
+
+                            $.each(data.modules, function(i, v) {
+                                moduleList += "<li>"+v+"</li>";
+
+                            });
+
+                            modules = modules.replace("%s", moduleList);
+
+                            if(data.success) {
+                                melisCoreTool.confirm(
+                                    translations.tr_meliscore_common_yes,
+                                    translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
+                                    translations.tr_meliscore_general_proceed,
+                                    data.message+modules,
+                                    function() {
+                                        $.each(data.modules, function(i, v) {
+                                            // this will trigger a switch-change event
+                                            // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
+                                            // this will just trigger an animate switch
+                                            switchButtonWithoutEvent(v, "off");
+                                        });
+                                    },
+                                    /**
+                                     * User selects cancel: Revert the switch to its saved state, in this case "ON",
+                                     * to prevent user from saving the cancelled switch change
+                                     */
+                                    function () {
+                                        switchButtonWithoutEvent(moduleName, 'on');
+                                    }
+                                );
+                            }
+                            $('div[data-module-name]').bootstrapSwitch('setActive', true);
+                            $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
+                    }).fail(function() {
+                        alert(translations.tr_meliscore_error_message);
+                    });
+
+            }
 
 
+            if(value === isActive) {
                 $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_checking_dependencies);
                 $('div[data-module-name]').bootstrapSwitch('setActive', false);
 
-
                 $.ajax({
                     type        : 'POST',
-                    url         : '/melis/MelisCore/Modules/getDependents',
+                    url         : '/melis/MelisCore/Modules/getRequiredDependencies',
                     data		: {module : moduleName},
                     dataType    : 'json',
                     encode		: true
                 }).done(function(data) {
-                    var modules    = "<br/><br/><div class='container'><div class='row'><div class='col-lg-12'><ul>%s</ul></div></div></div>";
-                        var moduleList = '';
-
+                    if(data.success) {
                         $.each(data.modules, function(i, v) {
-                            moduleList += "<li>"+v+"</li>";
-
+                            // this will trigger a switch-change event
+                            // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
+                            // this will just trigger an animate switch
+                            switchButtonWithoutEvent(v, "on");
                         });
+                    }
+                    $('div[data-module-name]').bootstrapSwitch('setActive', true);
+                    $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
+                }).fail(function() {
+                    alert(translations.tr_meliscore_error_message);
+                });
+            }
+        });
 
-                        modules = modules.replace("%s", moduleList);
+        $body.on("click", "#btnModulesSave", function() {
+            var modules         = [],
+                moduleSwitches  = $(".module-switch"),
+                on              = "switch-on",
+                off             = "switch-off",
+                moduleStatus    = "";
 
-                        if(data.success) {
-                            melisCoreTool.confirm(
-                                translations.tr_meliscore_common_yes,
-                                translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
-                                translations.tr_meliscore_general_proceed,
-                                data.message+modules,
-                                function() {
-                                    $.each(data.modules, function(i, v) {
-                                        // this will trigger a switch-change event
-                                        // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
-                                        // this will just trigger an animate switch
-                                        switchButtonWithoutEvent(v, "off");
-                                    });
-                                },
-                                /**
-                                 * User selects cancel: Revert the switch to its saved state, in this case "ON",
-                                 * to prevent user from saving the cancelled switch change
-                                 */
-                                function () {
-                                    switchButtonWithoutEvent(moduleName, 'on');
+                $.each(moduleSwitches , function(idx, val) {
+                    var moduleName  = $(val).data("module-name"),
+                        status      = $(".module-switch[data-module-name='"+ moduleName +"']").find("div").attr("class");
+
+                        if ( status !== undefined ) {
+                            status = status.split(" ");
+                            $.each(status, function(i, v) {
+                                if(v == on) {
+                                    moduleStatus = 1;
                                 }
-                            );
+                                else if(v == off) {
+                                    moduleStatus = 0;
+                                }
+                            });
+                            modules.push({
+                                name: moduleName,
+                                value: moduleStatus
+                            });
                         }
-                        $('div[data-module-name]').bootstrapSwitch('setActive', true);
-                        $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
-                }).fail(function() {
-                    alert(translations.tr_meliscore_error_message);
                 });
-
-		}
-
-
-		if(value === isActive) {
-            $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_checking_dependencies);
-            $('div[data-module-name]').bootstrapSwitch('setActive', false);
-
-            $.ajax({
-                type        : 'POST',
-                url         : '/melis/MelisCore/Modules/getRequiredDependencies',
-                data		: {module : moduleName},
-                dataType    : 'json',
-                encode		: true
-            }).done(function(data) {
-                if(data.success) {
-                    $.each(data.modules, function(i, v) {
-                        // this will trigger a switch-change event
-                        // $('div[data-module-name="'+v+'"]').bootstrapSwitch('setState', false, false);
-                        // this will just trigger an animate switch
-                        switchButtonWithoutEvent(v, "on");
-                    });
-                }
-                $('div[data-module-name]').bootstrapSwitch('setActive', true);
-                $("h4#meliscore-tool-module-content-title").html(translations.tr_meliscore_module_management_modules);
-            }).fail(function() {
-                alert(translations.tr_meliscore_error_message);
-            });
-		}
-    });
-
-	$body.on("click", "#btnModulesSave", function() {
-		var modules = [];
-		var moduleSwitches = $(".module-switch");
-		var on = "switch-on";
-		var off= "switch-off";
-		var moduleStatus = "";
-		$.each(moduleSwitches , function(idx, val) {
-			var moduleName = $(val).data("module-name");
-			var status = $(".module-switch[data-module-name='"+ moduleName +"']").find("div").attr("class");
-			if(status !== undefined){
-                status = status.split(" ");
-                $.each(status, function(i, v) {
-                    if(v == on) {
-                        moduleStatus = 1;
+                
+                modules = $.param(modules);
+                melisCoreTool.confirm(
+                    translations.tr_meliscore_common_yes, 
+                    translations.tr_meliscore_common_no, 
+                    translations.tr_meliscore_module_management_modules, 
+                    translations.tr_meliscore_module_management_prompt_confirm, 
+                    function() {
+                        $.ajax({
+                            type        : 'POST', 
+                            url         : '/melis/MelisCore/Modules/saveModuleChanges',
+                            data		: modules,
+                            dataType    : 'json',
+                            encode		: true
+                        }).done(function(data) {
+                            if (data.success == 1) {
+                                melisCoreTool.processing();
+                                setTimeout(function() {window.location.reload(true) }, 3000);
+                            } else {
+                                melisHelper.melisKoNotification(data.textTitle, data.textMessage);
+                            }
+                        }).fail(function() {
+                            alert(translations.tr_meliscore_error_message);
+                        });
                     }
-                    else if(v == off) {
-                        moduleStatus = 0;
-                    }
-                });
-                modules.push({
-                    name: moduleName,
-                    value: moduleStatus
-                });
-			}
-		});
-		
-		modules = $.param(modules);
-		melisCoreTool.confirm(
-			translations.tr_meliscore_common_yes, 
-			translations.tr_meliscore_common_no, 
-			translations.tr_meliscore_module_management_modules, 
-			translations.tr_meliscore_module_management_prompt_confirm, 
-			function() {
-				$.ajax({
-			        type        : 'POST', 
-			        url         : '/melis/MelisCore/Modules/saveModuleChanges',
-			        data		: modules,
-			        dataType    : 'json',
-                    encode		: true
-			    }).done(function(data) {
-                    if (data.success == 1) {
-                        melisCoreTool.processing();
-                        setTimeout(function() {window.location.reload(true) }, 3000);
-                    } else {
-                        melisHelper.melisKoNotification(data.textTitle, data.textMessage);
-                    }
-                }).fail(function() {
-                    alert(translations.tr_meliscore_error_message);
-                });
-			}
-		);
+                );
+        });
 
-		
-	});
-
-	function setModuleSwitchState(state)
-	{
-        $('div[data-module-name]').bootstrapSwitch('setState', state);
-	}
-
-	function getModuleState(moduleName)
-	{
-        var value = $('div[data-module-name="'+moduleName+'"]').bootstrapSwitch('isActive');
-
-        return value;
-	}
-
-	function switchButtonWithoutEvent(moduleName, status)
-	{
-        $('div[data-module-name="'+moduleName+'"]').find("div.switch-animate").removeClass("switch-on switch-off").addClass("switch-"+status);
-	}
-});
-$(document).ready(function () {
-    var formAdd = "#formplatformadd form#idformsite";
-    var formEdit = "#formplatformedit form#idformsite";
-
-    addEvent(".addCorePlatform", function () {
-        platformFormModal();
-    });
-
-    addEvent(".btnPlatformEdit", function () {
-        var platformId = $(this).parents("tr").attr("id");
-        platformFormModal(platformId);
-    });
-
-    function platformFormModal(platformId) {
-        var platformId = (typeof platformId !== "undefined") ? platformId : null;
-        // initialation of local variable
-        zoneId = 'id_meliscore_tool_platform_generic_form';
-        melisKey = 'meliscore_tool_platform_generic_form';
-        modalUrl = '/melis/MelisCore/MelisGenericModal/emptyGenericModal';
-        window.parent.melisHelper.createModal(zoneId, melisKey, false, {plf_id: platformId}, modalUrl);
-    }
-
-    addEvent("#btnPlatformSave", function () {
-        var dataString = $("#corePlatform").serializeArray();
-
-        platformId = $("#corePlatform").find("#plf_id").val();
-
-        if (platformId) {
-            dataString.push({
-                name: "plf_id",
-                value: platformId
-            });
+        function setModuleSwitchState(state)
+        {
+            $('div[data-module-name]').bootstrapSwitch('setState', state);
         }
 
-        $.ajax({
-            type: 'POST',
-            url: '/melis/MelisCore/Platforms/savePlatform',
-            data: dataString,
-            dataType: 'json',
-            encode: true
-        }).done(function(data) {
-            if (data.success) {
-                $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
-                melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
-                // Show Pop-up Notification
-                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-            } else {
-                melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
-                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-                melisCoreTool.highlightErrors(data.success, data.errors, "corePlatform");
-            }
+        function getModuleState(moduleName)
+        {
+            var value = $('div[data-module-name="'+moduleName+'"]').bootstrapSwitch('isActive');
 
-            melisCoreTool.processDone();
-        }).fail(function() {
-            alert(translations.tr_meliscore_error_message);
+            return value;
+        }
+
+        function switchButtonWithoutEvent(moduleName, status)
+        {
+            $('div[data-module-name="'+moduleName+'"]').find("div.switch-animate").removeClass("switch-on switch-off").addClass("switch-"+status);
+        }
+});
+$(document).ready(function () {
+    var formAdd     = "#formplatformadd form#idformsite",
+        formEdit    = "#formplatformedit form#idformsite";
+
+        addEvent(".addCorePlatform", function () {
+            platformFormModal();
         });
-    });
 
-    addEvent(".btnPlatformDelete", function () {
-        var getId = $(this).parents("tr").attr("id");
+        addEvent(".btnPlatformEdit", function () {
+            var platformId = $(this).parents("tr").attr("id");
 
-        melisCoreTool.confirm(
-            translations.tr_meliscore_common_yes,
-            translations.tr_meliscore_common_no,
-            translations.tr_meliscore_tool_platform_modal_del,
-            translations.tr_meliscore_tool_platform_prompts_confirm,
-            function () {
+                platformFormModal(platformId);
+        });
+
+        function platformFormModal(platformId) {
+            var platformId = (typeof platformId !== "undefined") ? platformId : null;
+
+                // initialation of local variable
+                zoneId = 'id_meliscore_tool_platform_generic_form';
+                melisKey = 'meliscore_tool_platform_generic_form';
+                modalUrl = '/melis/MelisCore/MelisGenericModal/emptyGenericModal';
+                window.parent.melisHelper.createModal(zoneId, melisKey, false, {plf_id: platformId}, modalUrl);
+        }
+
+        addEvent("#btnPlatformSave", function () {
+            var dataString = $("#corePlatform").serializeArray();
+
+                platformId = $("#corePlatform").find("#plf_id").val();
+
+                if (platformId) {
+                    dataString.push({
+                        name: "plf_id",
+                        value: platformId
+                    });
+                }
+
                 $.ajax({
                     type: 'POST',
-                    url: '/melis/MelisCore/Platforms/deletePlatform',
-                    data: {id: getId},
+                    url: '/melis/MelisCore/Platforms/savePlatform',
+                    data: dataString,
                     dataType: 'json',
                     encode: true
                 }).done(function(data) {
-                    melisCoreTool.pending(".btn-danger");
                     if (data.success) {
+                        $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
                         melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
-                        melisCore.flashMessenger();
-
                         // Show Pop-up Notification
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                    } else {
+                        melisCoreTool.alertDanger("#platformalert", '', data.textMessage);
+                        melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                        melisCoreTool.highlightErrors(data.success, data.errors, "corePlatform");
                     }
-                    melisCoreTool.done(".btn-danger");
+
+                    melisCoreTool.processDone();
                 }).fail(function() {
                     alert(translations.tr_meliscore_error_message);
                 });
-            });
-    });
+        });
 
-    function addEvent(target, fn) {
-        $("body").on("click", target, fn);
-    }
+        addEvent(".btnPlatformDelete", function () {
+            var getId = $(this).parents("tr").attr("id");
+
+                melisCoreTool.confirm(
+                    translations.tr_meliscore_common_yes,
+                    translations.tr_meliscore_common_no,
+                    translations.tr_meliscore_tool_platform_modal_del,
+                    translations.tr_meliscore_tool_platform_prompts_confirm,
+                    function () {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/melis/MelisCore/Platforms/deletePlatform',
+                            data: {id: getId},
+                            dataType: 'json',
+                            encode: true
+                        }).done(function(data) {
+                            melisCoreTool.pending(".btn-danger");
+                            if (data.success) {
+                                melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
+                                melisCore.flashMessenger();
+
+                                // Show Pop-up Notification
+                                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                            }
+                            melisCoreTool.done(".btn-danger");
+                        }).fail(function() {
+                            alert(translations.tr_meliscore_error_message);
+                        });
+                    });
+        });
+
+        function addEvent(target, fn) {
+            $("body").on("click", target, fn);
+        }
 });
 
 window.initCorePlatformListTable = function () {
     var parent      = "#tablePlatforms";
 
-    // Core platform list init to remove delete buttons
-    $(parent).find('.noPlatformDeleteBtn').each(function () {
-        var rowId = '#' + $(this).attr('id');
-        $(parent).find(rowId).find('.btnPlatformDelete').remove();
-    });
+        // Core platform list init to remove delete buttons
+        $(parent).find('.noPlatformDeleteBtn').each(function () {
+            var rowId = '#' + $(this).attr('id');
+                $(parent).find(rowId).find('.btnPlatformDelete').remove();
+        });
 
-    // pagination of dataTables
-    melisCore.paginateDataTables();
+        // pagination of dataTables
+        melisCore.paginateDataTables();
 };
-$(document).ready(function() {
-	
-	addEvent("#btnLangAdd", function() {
-		var dataString = $("#idformlang").serialize();
-		melisCoreTool.pending("#btnLangAdd");
-		melisCoreTool.processing();
-		$.ajax({
-	        type        : 'POST', 
-	        url         : '/melis/MelisCore/Language/addLanguage',
-	        data		: dataString,
-	        dataType    : 'json',
-			encode		: true
-	    }).done(function(data) {
-			if(data.success) {
-				$('#modal-language').modal('hide');
-				 melisHelper.zoneReload("id_meliscore_tool_language", "meliscore_tool_language");
-				 melisHelper.zoneReload("id_meliscore_header_language", "meliscore_header_language");
-				 melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-			}else{
-				melisCoreTool.alertDanger("#languagealert", '', data.textMessage);
-				melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-				melisCoreTool.highlightErrors(data.success, data.errors, "idformlang");
-			}
-			melisCoreTool.done("#btnLangAdd");
-			melisCore.flashMessenger();
-			melisCoreTool.processDone();
-		}).fail(function() {
-			alert( translations.tr_meliscore_error_message );
+$(function() {
+	var $body = $("body");
+
+		addEvent("#btnLangAdd", function() {
+			var dataString = $("#idformlang").serialize();
+
+				melisCoreTool.pending("#btnLangAdd");
+				melisCoreTool.processing();
+				$.ajax({
+					type        : 'POST', 
+					url         : '/melis/MelisCore/Language/addLanguage',
+					data		: dataString,
+					dataType    : 'json',
+					encode		: true
+				}).done(function(data) {
+					if(data.success) {
+						$('#modal-language').modal('hide');
+						melisHelper.zoneReload("id_meliscore_tool_language", "meliscore_tool_language");
+						melisHelper.zoneReload("id_meliscore_header_language", "meliscore_header_language");
+						melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+					}else{
+						melisCoreTool.alertDanger("#languagealert", '', data.textMessage);
+						melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+						melisCoreTool.highlightErrors(data.success, data.errors, "idformlang");
+					}
+					melisCoreTool.done("#btnLangAdd");
+					melisCore.flashMessenger();
+					melisCoreTool.processDone();
+				}).fail(function() {
+					alert( translations.tr_meliscore_error_message );
+				});
 		});
-	});
-	
-	addEvent(".btnLangApply", function() {
-		var getId = $(this).closest('tr').attr('id');
 		
-		melisChangeLanguage(getId);
-	});
-	
-	addEvent(".btnLangUpdate", function() {
-		var langId = $(this).closest('tr').attr('id');
-		var langLocale = $(this).closest('tr').data('locale');
-		var dataString = [{name : 'id', value : langId},{name : 'locale', value : langLocale}];
+		addEvent(".btnLangApply", function() {
+			var getId = $(this).closest('tr').attr('id');
+				melisChangeLanguage(getId);
+		});
 		
-		melisCoreTool.pending(".btnLangUpdate");
-		melisCoreTool.processing();
-		$.ajax({
-	        type        : 'POST', 
-	        url         : '/melis/MelisCore/Language/updateLanguage',
-	        data		: dataString,
-	        dataType    : 'json',
-			encode		: true
-	     }).done(function(data) {
-			if(data.success) {				
-				melisHelper.melisOkNotification(data.textTitle, data.textMessage);				 
-		    }else{				
-			   melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);				
-		    }
-		    melisCoreTool.done(".btnLangUpdate");
-		    melisCore.flashMessenger();
-		    melisCoreTool.processDone();
-		 }).fail(function() {
-			alert( translations.tr_meliscore_error_message );
-		 });
-	});
-	
-	addEvent(".btnLangDelete", function() {
-		var tdParent = $(this).parent();
-		var trParent = $(tdParent).parent();
-		var getId = $(this).closest('tr').attr('id');
+		addEvent(".btnLangUpdate", function() {
+			var $this 		= $(this),
+				langId 		= $this.closest('tr').attr('id'),
+				langLocale 	= $this.closest('tr').data('locale'),
+				dataString 	= [{name : 'id', value : langId},{name : 'locale', value : langLocale}];
+			
+				melisCoreTool.pending(".btnLangUpdate");
+				melisCoreTool.processing();
+
+				$.ajax({
+					type        : 'POST', 
+					url         : '/melis/MelisCore/Language/updateLanguage',
+					data		: dataString,
+					dataType    : 'json',
+					encode		: true
+				}).done(function(data) {
+					if(data.success) {				
+						melisHelper.melisOkNotification(data.textTitle, data.textMessage);				 
+					}else{				
+					melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);				
+					}
+					melisCoreTool.done(".btnLangUpdate");
+					melisCore.flashMessenger();
+					melisCoreTool.processDone();
+				}).fail(function() {
+					alert( translations.tr_meliscore_error_message );
+				});
+		});
 		
-		melisCoreTool.confirm(
-			translations.tr_meliscore_common_yes, 
-			translations.tr_meliscore_common_no, 
-			translations.tr_meliscore_tool_language, 
-			translations.tr_meliscore_tool_language_delete_confirm, 
-			function() {
-    		$.ajax({
-    	        type        : 'POST', 
-    	        url         : '/melis/MelisCore/Language/deleteLanguage',
-    	        data		: [{name: 'id', value : getId}],
-    	        dataType    : 'json',
-				encode		: true
-    	    }).done(function(data) {
-				melisCoreTool.pending(".btn-danger");
-				if(data.success) {
-					melisHelper.zoneReload("id_meliscore_tool_language_content", "meliscore_tool_language_content");
-					melisHelper.zoneReload("id_meliscore_header_language", "meliscore_header_language");
-					melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-				}
-				else {
-					melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-				}
-				melisCore.flashMessenger();
-				melisCoreTool.done(".btn-danger");
-			}).fail(function() {
-				alert( translations.tr_meliscore_error_message );
+		addEvent(".btnLangDelete", function() {
+			var $this 		= $(this),
+				tdParent 	= $this.parent(),
+				trParent 	= $(tdParent).parent(),
+				getId 		= $this.closest('tr').attr('id');
+			
+			melisCoreTool.confirm(
+				translations.tr_meliscore_common_yes, 
+				translations.tr_meliscore_common_no, 
+				translations.tr_meliscore_tool_language, 
+				translations.tr_meliscore_tool_language_delete_confirm, 
+				function() {
+					$.ajax({
+						type        : 'POST', 
+						url         : '/melis/MelisCore/Language/deleteLanguage',
+						data		: [{name: 'id', value : getId}],
+						dataType    : 'json',
+						encode		: true
+					}).done(function(data) {
+						melisCoreTool.pending(".btn-danger");
+						if(data.success) {
+							melisHelper.zoneReload("id_meliscore_tool_language_content", "meliscore_tool_language_content");
+							melisHelper.zoneReload("id_meliscore_header_language", "meliscore_header_language");
+							melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+						}
+						else {
+							melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+						}
+						melisCore.flashMessenger();
+						melisCoreTool.done(".btn-danger");
+					}).fail(function() {
+						alert( translations.tr_meliscore_error_message );
+					});
 			});
 		});
-	});
-	
-	function addEvent(target, func) {
-		$("body").on("click", target, func);
-	}
+		
+		function addEvent(target, func) {
+			$body.on("click", target, func);
+		}
 });
 
 window.initLangBOJs = function () {
     var btnApply = "<a class=\"btn btn-info btnLangApply\"  title='" + translations.tr_melis_core_common_apply_language + "'><i class=\"fa fa-check\" ></i></a> ";
-    $('#tableLanguages td:nth-child(3):contains("en_EN")').siblings(':last').html(btnApply);
-    if (melisLangId !== 'en_EN') {
-        $('#tableLanguages td:nth-child(3):contains("' + melisLangId + '")').siblings(':last').html('');
-    }
+		$('#tableLanguages td:nth-child(3):contains("en_EN")').siblings(':last').html(btnApply);
 
-    /**
-     * Removing Apply action for the current language
-     */
-    var currentLangApplyBtn = $('#tableLanguages td:nth-child(3):contains("' + melisLangId + '")').siblings(':last').find('.btnLangApply');
-    if (currentLangApplyBtn.length) {
-        currentLangApplyBtn.remove();
-	}
-	
-	// pagination of dataTables
-	melisCore.paginateDataTables();
+		if ( melisLangId !== 'en_EN' ) {
+			$('#tableLanguages td:nth-child(3):contains("' + melisLangId + '")').siblings(':last').html('');
+		}
+
+		/**
+		 * Removing Apply action for the current language
+		 */
+		var currentLangApplyBtn = $('#tableLanguages td:nth-child(3):contains("' + melisLangId + '")').siblings(':last').find('.btnLangApply');
+			if ( currentLangApplyBtn.length ) {
+				currentLangApplyBtn.remove();
+			}
+		
+		// pagination of dataTables
+		melisCore.paginateDataTables();
 }
 $(function() {
 	var $body = $("body");
@@ -29907,12 +27721,12 @@ $(function() {
 	/**
 	 * Clicking on tabs
 	 */
-	$body.on("click", ".product-text-tab li a", function() {
+	/* $body.on("click", ".product-text-tab li a", function() {
 		var $this = $(this);
 
 			$this.toggleClass("active").siblings().removeClass("active");
 			$this.closest("li").toggleClass("active").siblings().removeClass("active");
-	});
+	}); */
 	
 	window.initEmailsEditors = function(){
 		$('.boed_lang_id').each(function(){
@@ -29966,235 +27780,240 @@ $(function() {
 	}
 });
 $(function() {
-    var $body = $("body");
-    var runIcon     = '<i class="fa fa-play"></i> Run';
-    var spinnerIcon = '<i class="fa fa-spinner fa-pulse fa-fw"></i> Testing...';
-    var hide        = '<i class="fa fa-minus"></i> Hide';
-    var state       = 0;
-    var module = null;
-    var runAllMode = false;
-    var totalExec = 0;
-    var totalAvailableTest = 0;
-    var execPerMod = 4;
-    var execChecker = null;
-    var hideVal = translations.tr_melis_module_diagnostics_tool_header_hide_all;
+    var $body               = $("body"),
+        runIcon             = '<i class="fa fa-play"></i> Run',
+        spinnerIcon         = '<i class="fa fa-spinner fa-pulse fa-fw"></i> Testing...',
+        hide                = '<i class="fa fa-minus"></i> Hide',
+        state               = 0,
+        module              = null,
+        runAllMode          = false,
+        totalExec           = 0,
+        totalAvailableTest  = 0,
+        execPerMod          = 4,
+        execChecker         = null,
+        hideVal             = translations.tr_melis_module_diagnostics_tool_header_hide_all;
 
+        $body.on("click", "#btnDiagPhpunitRunAll", function() {
+            totalExec = 0;
+            totalAvailableTest = parseInt( $(".btn-run-pu-module-test").length ) * execPerMod;
+            runAllMode = true;
 
-    $body.on("click", "#btnDiagPhpunitRunAll", function() {
-        totalExec = 0;
-        totalAvailableTest = parseInt($(".btn-run-pu-module-test").size()) * execPerMod
-        runAllMode = true;
+            if ( $("#btnDiagPhpunitRunAll").html() == hideVal ) {
 
+                changeContent("#btnDiagPhpunitRunAll", translations.tr_melis_module_diagnostics_tool_header_run_al);
+                resetStartButton("");
+            }
 
-        if($("#btnDiagPhpunitRunAll").html() == hideVal) {
-
-            changeContent("#btnDiagPhpunitRunAll", translations.tr_melis_module_diagnostics_tool_header_run_al);
-            resetStartButton("");
-        }
-
-        if(runAllMode && $("#btnDiagPhpunitRunAll").html() != hideVal) {
-            $(".btn-run-pu-module-test").trigger("click");
-            changeContent("#btnDiagPhpunitRunAll", translations.tr_melis_module_diagnostics_tool_header_run_al);
-            runAllMode = false;
-
-        }
-
-    });
-
-    function changeContent(target, content) {
-        setTimeout(function() {
-
-            $(target).html(content);
-
-        }, 500);
-    }
-    
-    function resetStartButton(m) {
-        var btn = ".btn-run-pu-module-test";
-        if(m != "") {
-            btn = ".btn-run-pu-module-test[data-modules='"+m+"']";
-        }
-        changeContent(btn, translations.tr_melis_module_diagnostics_collapse);
-        $(btn).removeClass("btn-danger");
-        $(btn).addClass("btn-info");
-        setTimeout(function() {
-            $(".btn-run-pu-module-test").removeAttr("disabled");
-        }, 1000);
-
-    }
-
-    $(document).on("click", ".btn-run-pu-module-test", function() {
-        var module = $(this).data().modules;
-        var dom = 'button[data-modules="'+module+'"]';
-        var content = $(dom + " span#icon"+module).html();
-        switch(content) {
-            case runIcon:
-                buttonStatus(dom, "danger");
-                buttonIconStateEvent(dom + " span#icon"+module, "collapse");
-                melisCoreTool.pending(dom);
-                $(this).attr("data-state", "1");
-                state  = $(this).data().state;
-                startTest(module, dom);
-            break;
-            case hide:
-                $("#collapsePU"+ module).collapse('hide');
-                buttonStatus(dom, "hideandrun");
-                buttonIconStateEvent(dom + " span#icon"+module, "def");
-                $(this).attr("data-state", "0");
-                state  = $(this).data().state;
-            break;
-        }
-    });
-
-    // @private
-    function startTest(module, dom) {
-        $("div#wellPU"+module).html("");
-        $.ajax({
-            url: '/melis/MelisCore/MelisPhpUnitTool/runTest?v=' + new Date().getTime(),
-            dataType: 'json',
-            data: {module : module},
-            type: 'POST',
-            cache: false
-        }).done(function(data) {
-            $("div#wellPU"+module).html(data.response);
-            buttonStatus(dom, "hide");
-            buttonIconStateEvent(dom + " span#icon"+module, "hide");
-            $("#collapsePU"+ module).collapse('toggle');
-            setTimeout(function() {
-                melisCoreTool.done(dom);
-            }, 1000);
-        }).fail(function() {
-            alert(translations.tr_meliscore_error_message);
+            if ( runAllMode && $("#btnDiagPhpunitRunAll").html() != hideVal ) {
+                $(".btn-run-pu-module-test").trigger("click");
+                changeContent("#btnDiagPhpunitRunAll", translations.tr_melis_module_diagnostics_tool_header_run_al);
+                runAllMode = false;
+            }
         });
-    }
 
-    // @private
-    function buttonStatus(dom, status) {
-        var from = "success";
-        var to   = "danger";
-        if(status == "success") {
-            from = "danger";
-            to   = "success";
-            melisCoreTool.pending(dom);
+        function changeContent(target, content) {
+            setTimeout(function() {
+                $(target).html(content);
+            }, 500);
         }
-        else if(status == "hide") {
-            from = "danger";
-            to   = "info";
-            melisCoreTool.done(dom);
-        }
-        else if(status == "hideandrun") {
-            from = "info";
-            to   = "success";
-        }
-        else {
-            melisCoreTool.done(dom);
-        }
-        $(dom).removeClass("btn-"+from).addClass("btn-"+to);
-    }
+        
+        function resetStartButton(m) {
+            var btn = ".btn-run-pu-module-test";
 
-    // @private
-    function buttonIconStateEvent(dom, status) {
-        switch(status) {
-            case "collapse":
-                $(dom).html(spinnerIcon);
-            break;
-            case "def":
-                $(dom).html(runIcon);
-            break;
-            case "hide":
-                $(dom).html(hide);
-            break;
+                if ( m != "" ) {
+                    btn = ".btn-run-pu-module-test[data-modules='"+m+"']";
+                }
+
+                changeContent(btn, translations.tr_melis_module_diagnostics_collapse);
+
+                $(btn).removeClass("btn-danger");
+                $(btn).addClass("btn-info");
+
+                setTimeout(function() {
+                    $(".btn-run-pu-module-test").removeAttr("disabled");
+                }, 1000);
         }
-    }
+
+        $(document).on("click", ".btn-run-pu-module-test", function() {
+            var $this   = $(this),
+                module  = $this.data().modules,
+                dom     = 'button[data-modules="'+module+'"]',
+                content = $(dom + " span#icon"+module).html();
+
+            switch( content ) {
+                case runIcon:
+                    buttonStatus(dom, "danger");
+                    buttonIconStateEvent(dom + " span#icon"+module, "collapse");
+
+                    melisCoreTool.pending(dom);
+
+                    $this.attr("data-state", "1");
+                    state = $this.data().state;
+
+                    startTest(module, dom);
+                break;
+                case hide:
+                    $("#collapsePU"+ module).collapse('hide');
+
+                    buttonStatus(dom, "hideandrun");
+                    buttonIconStateEvent(dom + " span#icon"+module, "def");
+
+                    $this.attr("data-state", "0");
+                    state = $this.data().state;
+                break;
+            }
+        });
+
+        // @private
+        function startTest(module, dom) {
+            $("div#wellPU"+module).html("");
+            $.ajax({
+                url: '/melis/MelisCore/MelisPhpUnitTool/runTest?v=' + new Date().getTime(),
+                dataType: 'json',
+                data: {module : module},
+                type: 'POST',
+                cache: false
+            }).done(function(data) {
+                $("div#wellPU"+module).html(data.response);
+                buttonStatus(dom, "hide");
+                buttonIconStateEvent(dom + " span#icon"+module, "hide");
+                $("#collapsePU"+ module).collapse('toggle');
+                setTimeout(function() {
+                    melisCoreTool.done(dom);
+                }, 1000);
+            }).fail(function() {
+                alert(translations.tr_meliscore_error_message);
+            });
+        }
+
+        // @private
+        function buttonStatus(dom, status) {
+            var from = "success",
+                to   = "danger";
+
+                if ( status == "success" ) {
+                    from = "danger";
+                    to   = "success";
+                    melisCoreTool.pending(dom);
+                }
+                else if(status == "hide") {
+                    from = "danger";
+                    to   = "info";
+                    melisCoreTool.done(dom);
+                }
+                else if(status == "hideandrun") {
+                    from = "info";
+                    to   = "success";
+                }
+                else {
+                    melisCoreTool.done(dom);
+                }
+
+                $(dom).removeClass("btn-"+from).addClass("btn-"+to);
+        }
+
+        // @private
+        function buttonIconStateEvent(dom, status) {
+            switch(status) {
+                case "collapse":
+                    $(dom).html(spinnerIcon);
+                break;
+                case "def":
+                    $(dom).html(runIcon);
+                break;
+                case "hide":
+                    $(dom).html(hide);
+                break;
+            }
+        }
 });
 
 
 $(function(){
-	$body = $('body');
+	var $body = $('body');
 	
-	$body.on("click", ".logTypeButon", function(){
-		var btn  = $(this);
-		var logId = btn.parents("tr").attr("id");
+		$body.on("click", ".logTypeButon", function(){
+			var btn  		= $(this),
+				logId 		= btn.parents("tr").attr("id"),
+				logTypeId 	= btn.data("typeid"),
+				zoneId 		= 'id_meliscore_logs_tool_log_type_form',
+				melisKey 	= 'meliscore_logs_tool_log_type_form',
+				modalUrl 	= '/melis/MelisCore/Log/renderLogsToolModalContainer';
+
+				// requesitng to create modal and display after
+				melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
+		});
 		
-		var logTypeId = btn.data("typeid");
-		
-		var zoneId = 'id_meliscore_logs_tool_log_type_form';
-		var melisKey = 'meliscore_logs_tool_log_type_form';
-		var modalUrl = '/melis/MelisCore/Log/renderLogsToolModalContainer';
-		// requesitng to create modal and display after
-    	melisHelper.createModal(zoneId, melisKey, false, {logId: logId, logTypeId: logTypeId}, modalUrl);
-	});
-	
-	$body.on("click", ".saveLogTypeDetails", function(){
-		
-		var btn = $(this);
-		
-		var dataString = new Array;
-		
-		$('form.logTypeForm').each(function(key, value){
-			var form = $(this).serializeArray();
+		$body.on("click", ".saveLogTypeDetails", function(){
+			var btn 		= $(this),
+				dataString 	= new Array;
 			
-			$.each(form, function(fkey, fvalue){
-				dataString.push({
-					name : "logForm["+key+"]["+fvalue.name+"]",
-					value : fvalue.value
+				$('form.logTypeForm').each(function(key, value){
+					var form = $(this).serializeArray();
+					
+						$.each(form, function(fkey, fvalue){
+							dataString.push({
+								name : "logForm["+key+"]["+fvalue.name+"]",
+								value : fvalue.value
+							});
+						});
 				});
-			});
+				
+				btn.attr("disabled", true);
+			
+				$.ajax({
+					type        : "POST", 
+					url         : "/melis/MelisCore/Log/saveLogTypeTrans",
+					data		: dataString,
+					dataType    : "json",
+					encode		: true,
+				}).done(function(data) {
+					
+					btn.attr("disabled", false);
+					
+					if(data.success){
+						$("#id_meliscore_logs_tool_log_type_form_container").modal("hide");
+						melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+						melisHelper.zoneReload("id_meliscore_logs_tool", "meliscore_logs_tool");
+					}else{
+						melisHelper.melisMultiKoNotification(data.textTitle, data.textMessage, data.errors);
+					}
+					
+					melisHelper.highlightMultiErrors(data.success, data.errors, "#id_meliscore_logs_tool_log_type_form");
+					melisCore.flashMessenger();
+				}).fail(function(){
+					btn.attr("disabled", false);
+					alert( translations.tr_meliscore_error_message);
+				});
 		});
 		
-		btn.attr("disabled", true);
-		
-		$.ajax({
-	        type        : "POST", 
-	        url         : "/melis/MelisCore/Log/saveLogTypeTrans",
-	        data		: dataString,
-	        dataType    : "json",
-	        encode		: true,
-		}).done(function(data) {
-			
-			btn.attr("disabled", false);
-			
-			if(data.success){
-				$("#id_meliscore_logs_tool_log_type_form_container").modal("hide");
-				melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-				melisHelper.zoneReload("id_meliscore_logs_tool", "meliscore_logs_tool");
-			}else{
-				melisHelper.melisMultiKoNotification(data.textTitle, data.textMessage, data.errors);
-			}
-			
-			melisHelper.highlightMultiErrors(data.success, data.errors, "#id_meliscore_logs_tool_log_type_form");
-			melisCore.flashMessenger();
-		}).fail(function(){
-			btn.attr("disabled", false);
-			alert( translations.tr_meliscore_error_message);
+		$body.on("change", "#logUserfilter", function(){
+			$tableMelisLogs.draw();
 		});
-	});
-	
-	$body.on("change", "#logUserfilter", function(){
-		$tableMelisLogs.draw();
-	});
-	
-	$body.on("change", "#logTypefilter", function(){
-		$tableMelisLogs.draw();
-	});
+		
+		$body.on("change", "#logTypefilter", function(){
+			$tableMelisLogs.draw();
+		});
 });
 
 window.initLogDataTable = function(data){
-	
 	data.userId = -1;
-	if($("#logUserfilter").length !== 0){
+
+	if ( $("#logUserfilter").length !== 0 ) {
 		data.userId = $("#logUserfilter").val();
 	}
 	
 	data.typeId = -1;
-	if($("#logTypefilter").length !== 0){
+
+	if ( $("#logTypefilter").length !== 0 ) {
 		data.typeId = $("#logTypefilter").val();
 	}
 	
 	data.startDate = "";
 	data.endDate = "";
-	if($('#logsTableDaterange').data('daterangepicker') !== undefined){
-		if($("#logsTableDaterange span").text() !== ''){
+
+	if ( $('#logsTableDaterange').data('daterangepicker') !== undefined ) {
+		if ( $("#logsTableDaterange span").text() !== '' ) {
 			data.startDate = $('#logsTableDaterange').data('daterangepicker').startDate.format("YYYY-MM-DD");
 			data.endDate = $('#logsTableDaterange').data('daterangepicker').endDate.format("YYYY-MM-DD");
 		}
@@ -30217,132 +28036,133 @@ $(function() {
 	
 	var $body = $("body");
 	
-	//check if whether to open the user profile tab on page finish load
-	$(window).on('load', function(){
-		 checkUserProfileTabOnReload();
-    });
-	
-	/**
-	 * Open up user profile
-	 */
-	$body.on("click", "#img-user-link, #user-name-link", function(event) {
-    	openUserProfileTab();
-        event.preventDefault();
-    });
-    
-    /**
-     * Update user profile on save button click
-     */
-	$body.on('click', '.btnUpdateUser', function(e){
-    	updateUserInfo($(this));
-    	e.preventDefault();
-    })
-    /**
-     * Open up File Input window to select an image
-     */
-    $body.on('click', '.profile-photo-edit', function(e){
-    	$('#id_usr_profile_image').trigger('click');
-    	e.preventDefault();
-    });
-    /**
-     * Preview selected image on file input change
-     */
-	$body.on('change', '#id_usr_profile_image', function(){
-    	previewImage(this);
-    });
-    
-    /**
-     * Preview selected image
-     * @param input
-     */
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#user-profile-pic').attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    /**
-     * Function to save user profile
-     * @param Button - button that triggered the function
-     */
-    function updateUserInfo(_this){
-    	//prepare the data
-    	var form = $('#iduserprofilemanagement').get(0);
-    	var formData = new FormData(form);
-		formData.append('usr_image', $('#iduserprofilemanagement #id_usr_profile_image')[0].files[0]);
-		//send ajax request
-    	$.ajax({
-	        type        : 'POST', 
-	        url         : '/melis/MelisCore/UserProfile/updateUserInformation',
-	        data		: formData,
-	        processData : false,
-	        cache		: false,
-	        contentType	: false,
- 	       	dataType    : 'json',
- 	       	beforeSend	: function(){
- 	       		//make the button as loader before sending
- 	       		_this.html("<i class='fa fa-cog fa-spin'></i> "+ translations.tr_meliscore_tool_user_update);
- 	       	},
-		}).done(function(data) {
-			//process the returned data
-			if(data.success){//success
-				$("#meliscore_left_menu_profile_pic, #user-profile-pic").attr("src", data.data.profilePic);
-				$('#u-email-list').text(data.data.email);
-				melisHelper.melisOkNotification(translations.tr_meliscore_common_success, data.textMessage);
-				//remove highlighted label
-				melisCoreTool.highlightErrors(1, null, "iduserprofilemanagement");
-				//reload the page only if the user change the language
-				if(data.reLoad){
-					melisChangeLanguage(data.data.usrLang);
-				}else{
-					//reload notficiations
-					melisCore.flashMessenger();
-					$('#iduserprofilemanagement #id_usr_password, #iduserprofilemanagement #id_usr_confirm_password').val('');
-				}
-			}else{//failed
-				//show errors
-				melisHelper.melisKoNotification(data.textTitle, translations.tr_meliscore_user_profile_failed_info, data.errors);
-				//highlight errors
-				melisCoreTool.highlightErrors(0, data.errors, "iduserprofilemanagement");
-				//refresh notifications
-				melisCore.flashMessenger();
-			}
-			_this.html("<i class='fa fa-save'></i> "+ translations.tr_meliscore_tool_user_update);
-		}).fail(function(){//some error happened
-			_this.html("<i class='fa fa-save'></i> "+ translations.tr_meliscore_tool_user_update);
-			alert( translations.tr_meliscore_error_message );
+		//check if whether to open the user profile tab on page finish load
+		$(window).on('load', function(){
+			checkUserProfileTabOnReload();
 		});
-    }
-    
-    /**
-     * Function to check whether to load the user profile tab
-     */
-    function checkUserProfileTabOnReload(){
-    	$.get('/melis/MelisCore/UserProfile/checkUserSessionIfExist', function(data){
-    		if(data.showUserProfile){
-    			openUserProfileTab();
-    		}
-    	});
-    }
-    
-    /**
-     * Function to open user profile tab
-     */
-    function openUserProfileTab(){
-    	var userName = $("#user-name-link").html().trim();
-        melisHelper.tabOpen(userName, 'fa-user', 'id_meliscore_user_profile', 'meliscore_user_profile');
-    }
+		
+		/**
+		 * Open up user profile
+		 */
+		$body.on("click", "#img-user-link, #user-name-link", function(event) {
+			openUserProfileTab();
+			event.preventDefault();
+		});
+		
+		/**
+		 * Update user profile on save button click
+		 */
+		$body.on('click', '.btnUpdateUser', function(e){
+			updateUserInfo($(this));
+			e.preventDefault();
+		})
+		/**
+		 * Open up File Input window to select an image
+		 */
+		$body.on('click', '.profile-photo-edit', function(e){
+			$('#id_usr_profile_image').trigger('click');
+			e.preventDefault();
+		});
+		/**
+		 * Preview selected image on file input change
+		 */
+		$body.on('change', '#id_usr_profile_image', function(){
+			previewImage(this);
+		});
+		
+		/**
+		 * Preview selected image
+		 * @param input
+		 */
+		function previewImage(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+					reader.onload = function (e) {
+						$('#user-profile-pic').attr('src', e.target.result);
+					}
+					reader.readAsDataURL(input.files[0]);
+			}
+		}
+		/**
+		 * Function to save user profile
+		 * @param Button - button that triggered the function
+		 */
+		function updateUserInfo(_this){
+			//prepare the data
+			var form 		= $('#iduserprofilemanagement').get(0),
+				formData 	= new FormData(form);
+
+				formData.append('usr_image', $('#iduserprofilemanagement #id_usr_profile_image')[0].files[0]);
+				//send ajax request
+				$.ajax({
+					type        : 'POST', 
+					url         : '/melis/MelisCore/UserProfile/updateUserInformation',
+					data		: formData,
+					processData : false,
+					cache		: false,
+					contentType	: false,
+					dataType    : 'json',
+					beforeSend	: function(){
+						//make the button as loader before sending
+						_this.html("<i class='fa fa-cog fa-spin'></i> "+ translations.tr_meliscore_tool_user_update);
+					},
+				}).done(function(data) {
+					//process the returned data
+					if(data.success){//success
+						$("#meliscore_left_menu_profile_pic, #user-profile-pic").attr("src", data.data.profilePic);
+						$('#u-email-list').text(data.data.email);
+						melisHelper.melisOkNotification(translations.tr_meliscore_common_success, data.textMessage);
+						//remove highlighted label
+						melisCoreTool.highlightErrors(1, null, "iduserprofilemanagement");
+						//reload the page only if the user change the language
+						if(data.reLoad){
+							melisChangeLanguage(data.data.usrLang);
+						}else{
+							//reload notficiations
+							melisCore.flashMessenger();
+							$('#iduserprofilemanagement #id_usr_password, #iduserprofilemanagement #id_usr_confirm_password').val('');
+						}
+					}else{//failed
+						//show errors
+						melisHelper.melisKoNotification(data.textTitle, translations.tr_meliscore_user_profile_failed_info, data.errors);
+						//highlight errors
+						melisCoreTool.highlightErrors(0, data.errors, "iduserprofilemanagement");
+						//refresh notifications
+						melisCore.flashMessenger();
+					}
+					_this.html("<i class='fa fa-save'></i> "+ translations.tr_meliscore_tool_user_update);
+				}).fail(function(){//some error happened
+					_this.html("<i class='fa fa-save'></i> "+ translations.tr_meliscore_tool_user_update);
+					alert( translations.tr_meliscore_error_message );
+				});
+		}
+		
+		/**
+		 * Function to check whether to load the user profile tab
+		 */
+		function checkUserProfileTabOnReload(){
+			$.get('/melis/MelisCore/UserProfile/checkUserSessionIfExist', function(data){
+				if(data.showUserProfile){
+					openUserProfileTab();
+				}
+			});
+		}
+		
+		/**
+		 * Function to open user profile tab
+		 */
+		function openUserProfileTab(){
+			var userName = $("#user-name-link").html().trim();
+				melisHelper.tabOpen(userName, 'fa-user', 'id_meliscore_user_profile', 'meliscore_user_profile');
+		}
 });
 $(document).ready(function() {
 	
 	var $body = $("body");
 	
-	$body.on("click", ".m-dnd-tool-open", function(){
-		$('#id_meliscms_plugin_modal_container').modal('hide');
-	})
+		$body.on("click", ".m-dnd-tool-open", function(){
+			$('#id_meliscms_plugin_modal_container').modal('hide');
+		})
 	
 });
 
@@ -30360,27 +28180,65 @@ $(function() {
 
     var $body = $("body");
 
-    function escapeHtml (string) {
-        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-            return entityMap[s];
+        function escapeHtml (string) {
+            return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+                return entityMap[s];
+            });
+        }
+        $body.on("click", "#savePlatformScheme", function() {
+            $("form#melis_core_platform_scheme_images").submit();
         });
-    }
-    $body.on("click", "#savePlatformScheme", function() {
-        $("form#melis_core_platform_scheme_images").submit();
-    });
 
-    $body.on("click", "#resetPlatformScheme", function() {
-        melisCoreTool.confirm(
-            translations.tr_meliscore_common_yes,
-            translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
-            // translations.tr_meliscore_general_proceed,
-            translations.tr_meliscore_platform_scheme_reset_text,
-            translations.tr_meliscore_platform_scheme_reset_confirm,
-            function() {
+        $body.on("click", "#resetPlatformScheme", function() {
+            melisCoreTool.confirm(
+                translations.tr_meliscore_common_yes,
+                translations.tr_meliscore_tool_emails_mngt_generic_from_header_cancel,
+                // translations.tr_meliscore_general_proceed,
+                translations.tr_meliscore_platform_scheme_reset_text,
+                translations.tr_meliscore_platform_scheme_reset_confirm,
+                function() {
+                    melisCoreTool.pending(".button");
+                    $.ajax({
+                        type    : 'GET',
+                        url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
+                        processData : false,
+                        cache       : false,
+                        contentType : false,
+                        dataType    : 'json'
+                    }).done(function(data) {
+                        if(data.success) {
+                            melisCoreTool.processing();
+                            location.reload(true);
+                        }
+                        else {
+                            melisHelper.melisKoNotification(data.title, data.message, data.errors);
+                        }
+                        melisCoreTool.done(".button");
+                    }).fail(function() {
+                        melisCoreTool.done(".button");
+                    });
+                }
+            );
+
+
+        });
+
+        $body.on("submit", "form#melis_core_platform_scheme_images", function(e) {
+            var formData        = new FormData(this),
+                colorFormData   = $("form#melis_core_platform_scheme_form").serializeArray(),
+                colors          = {};
+
+                $.each(colorFormData, function(i, v) {
+                    colors[v['name']] = v['value'];
+                });
+
+                formData.append('colors', JSON.stringify(colors));
+
                 melisCoreTool.pending(".button");
                 $.ajax({
-                    type    : 'GET',
-                    url     : 'melis/MelisCore/PlatformScheme/resetToDefault',
+                    type    : 'POST',
+                    url     : 'melis/MelisCore/PlatformScheme/save',
+                    data    : formData,
                     processData : false,
                     cache       : false,
                     contentType : false,
@@ -30391,70 +28249,34 @@ $(function() {
                         location.reload(true);
                     }
                     else {
-                        melisHelper.melisKoNotification(data.title, data.message, data.errors);
+                        melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
                     }
                     melisCoreTool.done(".button");
                 }).fail(function() {
                     melisCoreTool.done(".button");
                 });
-            }
-        );
 
-
-    });
-
-    $body.on("submit", "form#melis_core_platform_scheme_images", function(e) {
-        var formData = new FormData(this);
-
-        var colorFormData = $("form#melis_core_platform_scheme_form").serializeArray();
-        var colors        = {};
-
-        $.each(colorFormData, function(i, v) {
-            colors[v['name']] = v['value'];
+                e.preventDefault();
         });
 
-        formData.append('colors', JSON.stringify(colors));
+        $body.on("keyup", "input#sidebar_header_text", function() {
+            var $this           = $(this),
+                text            = escapeHtml($this.val()),
+                textLength      = text.replace(/\s/g, "").length,
+                $headerTitle    = $("#platform-scheme-sidebar-header-title");
 
-        melisCoreTool.pending(".button");
-        $.ajax({
-            type    : 'POST',
-            url     : 'melis/MelisCore/PlatformScheme/save',
-            data    : formData,
-            processData : false,
-            cache       : false,
-            contentType : false,
-            dataType    : 'json'
-        }).done(function(data) {
-            if(data.success) {
-                melisCoreTool.processing();
-                location.reload(true);
-            }
-            else {
-                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
-            }
-            melisCoreTool.done(".button");
-        }).fail(function() {
-            melisCoreTool.done(".button");
-        });
-
-        e.preventDefault();
-    });
-
-    $body.on("keyup", "input#sidebar_header_text", function() {
-        var text = escapeHtml($(this).val());
-        var textLength = text.replace(/\s/g, "").length;
-        if(!text) {
-            text = translations['tr_meliscore_header Title'];
-        }
-        if(textLength > 13) {
-            $("#platform-scheme-sidebar-header-title").addClass("ml-header");
-        } else {
-            $("#platform-scheme-sidebar-header-title").removeClass("ml-header");
-        }
-        $("span#platform-scheme-sidebar-header-title").html(text);
-    })
+                if ( !text ) {
+                    text = translations['tr_meliscore_header Title'];
+                }
+                if ( textLength > 13 ) {
+                    $headerTitle.addClass("ml-header");
+                } else {
+                    $headerTitle.removeClass("ml-header");
+                }
+                $headerTitle.html(text);
+        })
 });
-$(document).ready(function() {
+$(function() {
     var $body = $('body'),
         gdprFormData = [];
 
@@ -30470,12 +28292,13 @@ $(document).ready(function() {
 
         // Toggle single checkbox
         $body.on("click", ".cb-cont input[type=checkbox]", function () {
-            if ($(this).is(':checked')) {
-                $(this).prop("checked", true);
-                $(this).prev("span").find(".cbmask-inner").addClass('cb-active');
+            var $this = $(this);
+            if ( $this.is(':checked') ) {
+                $this.prop("checked", true);
+                $this.prev("span").find(".cbmask-inner").addClass('cb-active');
             } else {
-                $(this).not(".requried-module").prop("checked", false);
-                $(this).not(".requried-module").prev("span").find(".cbmask-inner").removeClass('cb-active');
+                $this.not(".requried-module").prop("checked", false);
+                $this.not(".requried-module").prev("span").find(".cbmask-inner").removeClass('cb-active');
             }
         });
 
@@ -30483,173 +28306,187 @@ $(document).ready(function() {
          * Submiting search form
          */
         $body.on('submit', '#id_melis_core_gdpr_search_form', function(e) {
-            var formInputs = $(this).serializeArray();
-            var hasSite = false;
-            var hasName = false;
-            var hasEmail = false;
+            var formInputs  = $(this).serializeArray(),
+                hasSite     = false,
+                hasName     = false,
+                hasEmail    = false;
 
-            $.each (formInputs, function(i, field) {
-                if (field.value != '') {
-                    if (field.name == 'user_name') {
-                        hasName = true;
-                    } else if (field.name == 'user_email') {
-                        hasEmail = true
-                    } else if (field.name == 'site_id') {
-                        hasSite = true;
+                $.each (formInputs, function(i, field) {
+                    if (field.value != '') {
+                        if (field.name == 'user_name') {
+                            hasName = true;
+                        } else if (field.name == 'user_email') {
+                            hasEmail = true
+                        } else if (field.name == 'site_id') {
+                            hasSite = true;
+                        }
                     }
-                }
-            });
-            //only send request if there are any inputs
-            if (hasName == true || hasEmail == true) {
-                if (hasName == true) {
-                    if (formInputs[0].value.length <= 2 && formInputs[0].name === 'user_name') {
-                        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+                });
 
-                        melisHelper.melisKoNotification(
-                            translations.tr_melis_core_gdpr_notif_gdpr_search,
-                            translations.tr_melis_core_gdpr_notif_error_3ormore_inputs
-                        );
+                //only send request if there are any inputs
+                if (hasName == true || hasEmail == true) {
+                    if (hasName == true) {
+                        if (formInputs[0].value.length <= 2 && formInputs[0].name === 'user_name') {
+                            $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+
+                            melisHelper.melisKoNotification(
+                                translations.tr_melis_core_gdpr_notif_gdpr_search,
+                                translations.tr_melis_core_gdpr_notif_error_3ormore_inputs
+                            );
+                        } else {
+                            melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
+                            GdprTool.getUserInfo(formInputs);
+                            melisCoreTool.done("#melis-core-gdpr-search-form-submit");
+                        }
                     } else {
                         melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
                         GdprTool.getUserInfo(formInputs);
                         melisCoreTool.done("#melis-core-gdpr-search-form-submit");
                     }
                 } else {
-                    melisCoreTool.pending("#melis-core-gdpr-search-form-submit");
-                    GdprTool.getUserInfo(formInputs);
-                    melisCoreTool.done("#melis-core-gdpr-search-form-submit");
-                }
-            } else {
-                if (hasName == false && hasEmail == false && hasSite == true) {
-                    $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
-                    $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#e61c23");
+                    if (hasName == false && hasEmail == false && hasSite == true) {
+                        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+                        $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#e61c23");
 
-                    melisHelper.melisKoNotification(
-                        translations.tr_melis_core_gdpr_notif_gdpr_search,
-                        translations.tr_melis_core_gdpr_notif_name_or_email_required
-                    );
-                } else {
-                    $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
-                    $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#e61c23");
-                    
-                    melisHelper.melisKoNotification(
-                        translations.tr_melis_core_gdpr_notif_gdpr_search,
-                        translations.tr_melis_core_gdpr_tool_form_no_inputs
-                    );
+                        melisHelper.melisKoNotification(
+                            translations.tr_melis_core_gdpr_notif_gdpr_search,
+                            translations.tr_melis_core_gdpr_notif_name_or_email_required
+                        );
+                    } else {
+                        $body.find("#melis_core_gdpr_search_form_name").find('label').css("color", "#e61c23");
+                        $body.find("#melis_core_gdpr_search_form_email").find('label').css("color", "#e61c23");
+                        
+                        melisHelper.melisKoNotification(
+                            translations.tr_melis_core_gdpr_notif_gdpr_search,
+                            translations.tr_melis_core_gdpr_tool_form_no_inputs
+                        );
+                    }
                 }
-            }
 
-            e.preventDefault();
+                e.preventDefault();
         });
 
         /**
          * On checking all checkbox
          */
         $body.on('click', '#id_melis_core_gdpr_content_tabs .check-all', function() {
-            var status = this.checked;
-            var $iconPlaceholder = $(this).siblings('i');
+            var $this               = $(this),
+                status              = this.checked,
+                $iconPlaceholder    = $this.siblings('i');
 
-            $iconPlaceholder.toggleClass("checked");
-            $iconPlaceholder.closest('.dataTables_scrollHead').siblings('.dataTables_scrollBody').find('.checkRow').each(function() {
-                $i = $(this).siblings('i');
-                $row = $(this).parents('tr');
-                this.checked = status;
+                $iconPlaceholder.toggleClass("checked");
+                $iconPlaceholder.closest('.dataTables_scrollHead').siblings('.dataTables_scrollBody').find('.checkRow').each(function() {
+                    var $this   = $(this),
+                        $i      = $this.siblings('i'),
+                        $row    = $this.parents('tr');
 
-                if (status) {
-                    if (!$i.hasClass('checked')) {
-                        $i.addClass('checked');
-                        $row.addClass('checked');
-                    }
-                } else {
-                    if ($i.hasClass('checked')) {
-                        $i.removeClass('checked');
-                        $row.removeClass('checked');
-                    }
-                }
-            });
+                        this.checked = status;
 
-            var moduleName = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
+                        if (status) {
+                            if (!$i.hasClass('checked')) {
+                                $i.addClass('checked');
+                                $row.addClass('checked');
+                            }
+                        } else {
+                            if ($i.hasClass('checked')) {
+                                $i.removeClass('checked');
+                                $row.removeClass('checked');
+                            }
+                        }
+                });
 
-            $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
-                countOfRows = $(this).find('table tbody tr').length;
-                moduleName = $(this).find('table').attr('id');
-                var p = $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p');
+            var moduleName = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
 
-                var charIndex = p.text().indexOf(" (");
-                var lengthToDelete = charIndex - p.text().length;
+                $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
+                    var $this = $(this);
 
-                p.text().slice(charIndex, lengthToDelete);
-                p.append( "texting");
-            });
+                        countOfRows = $this.find('table tbody tr').length;
+                        moduleName = $this.find('table').attr('id');
 
-            var moduleName = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
-            var countOfRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tbody tr').length;
-            var pTag = $body.find('.widget-head ul #' + moduleName + '-left-tab p');
-            var charIndex = pTag.html().indexOf(" (");
-            var lengthToDelete = charIndex - pTag.html().length;
-            var countOfCheckedRows = $(this).closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
+                    var p               = $this.closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p'),
+                        charIndex       = p.text().indexOf(" ("),
+                        lengthToDelete  = charIndex - p.text().length;
 
-            pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
+                        p.text().slice(charIndex, lengthToDelete);
+                        p.append( "texting");
+                });
+
+            var moduleName          = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id'),
+                countOfRows         = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table tbody tr').length,
+                pTag                = $body.find('.widget-head ul #' + moduleName + '-left-tab p'),
+                charIndex           = pTag.html().indexOf(" ("),
+                lengthToDelete      = charIndex - pTag.html().length,
+                countOfCheckedRows  = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
+
+                pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
         });
 
         /**
          * On checking a single checkbox
          */
         $body.on('click', '#id_melis_core_gdpr_content_tabs .checkRow', function() {
-            if (this.checked) {
-                if (!$(this).siblings('i').hasClass('checked')) {
-                    $(this).siblings('i').addClass('checked');
-                    $(this).parents('tr').addClass('checked');
-                }
-            } else {
-                if ($(this).siblings('i').hasClass('checked')) {
-                    $(this).siblings('i').removeClass('checked');
-                    $(this).parents('tr').removeClass('checked');
-                }
-            }
+            var $this = $(this);
 
-            var numberOfCheckedCheckBoxes = $(this).closest('table').find('.checkRow:checked').length;
-            var numberOfCheckboxes = $(this).closest('table').find('.checkRow').length;
-
-            if (numberOfCheckedCheckBoxes < numberOfCheckboxes) {
-                var checkAll = $(this).closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
-                if (checkAll.prop('checked')) {
-                    checkAll.prop('checked', false);
-                    $(checkAll).siblings('i').removeClass("checked");
+                if ( this.checked ) {
+                    if ( !$this.siblings('i').hasClass('checked') ) {
+                        $this.siblings('i').addClass('checked');
+                        $this.parents('tr').addClass('checked');
+                    }
+                } else {
+                    if ( $this.siblings('i').hasClass('checked') ) {
+                        $this.siblings('i').removeClass('checked');
+                        $this.parents('tr').removeClass('checked');
+                    }
                 }
-            } else if (numberOfCheckedCheckBoxes == numberOfCheckboxes && numberOfCheckboxes != 0) {
-                var checkAll = $(this).closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
-                if (checkAll.prop('checked') == false) {
-                    checkAll.prop('checked', true);
-                    $(checkAll).siblings('i').addClass("checked");
+
+            var numberOfCheckedCheckBoxes   = $this.closest('table').find('.checkRow:checked').length,
+                numberOfCheckboxes          = $this.closest('table').find('.checkRow').length;
+
+                if (numberOfCheckedCheckBoxes < numberOfCheckboxes) {
+                    var checkAll = $this.closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+
+                        if (checkAll.prop('checked')) {
+                            checkAll.prop('checked', false);
+                            $(checkAll).siblings('i').removeClass("checked");
+                        }
+                } else if (numberOfCheckedCheckBoxes == numberOfCheckboxes && numberOfCheckboxes != 0) {
+                    var checkAll = $this.closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+
+                        if (checkAll.prop('checked') == false) {
+                            checkAll.prop('checked', true);
+                            $(checkAll).siblings('i').addClass("checked");
+                        }
                 }
-            }
 
-            var moduleName = $(this).closest('table').attr('id');
-            var pTag = $body.find('.widget-head ul #' + moduleName + '-left-tab p');
-            var charIndex = pTag.html().indexOf(" (");
-            var lengthToDelete = charIndex - pTag.html().length;
+            var moduleName      = $this.closest('table').attr('id'),
+                pTag            = $body.find('.widget-head ul #' + moduleName + '-left-tab p'),
+                charIndex       = pTag.html().indexOf(" ("),
+                lengthToDelete  = charIndex - pTag.html().length;
 
-            pTag.html().slice(0, lengthToDelete);
-            pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + numberOfCheckedCheckBoxes + "/" + numberOfCheckboxes + ")");
+                pTag.html().slice(0, lengthToDelete);
+                pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + numberOfCheckedCheckBoxes + "/" + numberOfCheckboxes + ")");
         });
 
         /**
          * On clicking extract selected button
          */
         $body.on('click', '#id_melis_core_gdpr_content_tabs .extract-selected', function() {
-            var modules = {};
-            var tableId;
-            var ids;
-            var hasData = false;
+            var modules = {},
+                tableId,
+                ids,
+                hasData = false;
 
             $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
-                tableId = $(this).find('.dataTables_scrollBody .table').attr('id');
-                ids = [];
+                var $this = $(this);
 
-                $(this).find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
-                    ids.push($(this).val());
-                    hasData = true;
+                    tableId = $this.find('.dataTables_scrollBody .table').attr('id');
+                    ids = [];
+
+                $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                    var $this = $(this);
+
+                        ids.push( $this.val() );
+                        hasData = true;
                 });
                 modules[tableId] = ids;
             });
@@ -30669,19 +28506,23 @@ $(document).ready(function() {
          * On clicking delete selected button
          */
         $body.on('click', '#id_melis_core_gdpr_content_tabs .delete-selected', function() {
-            var modules = {};
-            var tableId;
-            var ids;
-            var hasData = false;
+            var modules = {},
+                tableId,
+                ids,
+                hasData = false;
 
             $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
-                tableId = $(this).find('.dataTables_scrollBody .table').attr('id');
+                var $this = $(this);
+
+                tableId = $this.find('.dataTables_scrollBody .table').attr('id');
                 ids = [];
 
                 //push all selected ids to array
-                $(this).find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
-                    ids.push($(this).val());
-                    hasData = true;
+                $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                    var $this = $(this);
+                        
+                        ids.push( $this.val() );
+                        hasData = true;
                 });
                 modules[tableId] = ids;
             });
@@ -32840,7 +30681,7 @@ var melisDashBoardDragnDrop = {
         this.dropWidget(this.melisWidgetHandle);
         this.dragStopWidget();
         this.resizeStopWidget();
-        $("#disable-left-menu-overlay").hide();
+        //$("#disable-left-menu-overlay").hide();
     },
 
     cacheDom: function () {
@@ -32848,6 +30689,7 @@ var melisDashBoardDragnDrop = {
         this.$body              = $("body");
         this.$document          = $(document);
         this.$window            = $(window);
+        this.$menu              = $(".sideMenu li a");
         this.$gs                = this.$body.find("#" + activeTabId + " .grid-stack");
         this.$gsItem            = this.$gs.find(".grid-stack-item").length;
         this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
@@ -32863,6 +30705,10 @@ var melisDashBoardDragnDrop = {
 
         // strings
         this.gsOptHandle        = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
+    },
+
+    disableSideMenu: function() {
+
     },
 
     gsSetOptions: function () {
@@ -34159,11 +32005,13 @@ var EnjoyHint = function (_options) {
                 that.layer.add(that.shape);
                 that.kinetic_stage.add(that.layer);
 
-                $(window).on('resize', function() {
+                /* $(window).on('resize', function() {
                     //if ( typeof $(that.stepData.enjoyHintElementSelector)[0] !== "undefined" ) {
-                    //if (!( $(that.stepData.enjoyHintElementSelector).length > 0 )) {
-                    if ( ! $(that.stepData.enjoyHintElementSelector).is(":visible") !== undefined ){
+                    //if ( $(that.stepData.enjoyHintElementSelector).length > 0 ) {
+                    //if ( ! $(that.stepData.enjoyHintElementSelector).is(":visible") !== undefined ){
                     //if ( !($(that.stepData.enjoyHintElementSelector).is(":visible")) ) {
+                    //if ( typeof $(that.stepData.enjoyHintElementSelector) !== undefined ) {
+                    if ( $('.enjoyhint').length === 0 ) {
                         that.stopFunction();
                         $(window).off('resize');
                         return;
@@ -34193,7 +32041,7 @@ var EnjoyHint = function (_options) {
                         prevWindowHeight = window.innerHeight;
 
 
-                        /* Init */
+                        // Init
 
                         if (!originalCenterX) {
 
@@ -34231,12 +32079,12 @@ var EnjoyHint = function (_options) {
                         }
 
 
-                        /* Resizing label */
+                        // Resizing label
 
                         labelElement.css('left', window.innerWidth / 2 - labelElement.outerWidth() / 2);
 
 
-                        /* Resizing arrow */
+                        // Resizing arrow
 
                         var labelRect = labelElement[0].getBoundingClientRect();
 
@@ -34298,7 +32146,7 @@ var EnjoyHint = function (_options) {
                         }
 
 
-                        /* Resizing skip button */
+                        // Resizing skip button
 
                         var newSkipbuttonLeft = +originalSkipbuttonLeft + (that.shape.attrs.center_x - originalCenterX) / 2;
                         skipButton.css('left', newSkipbuttonLeft < 15 ? 15 : newSkipbuttonLeft);
@@ -34316,7 +32164,7 @@ var EnjoyHint = function (_options) {
                     that.layer.add(that.shape);
                     that.layer.draw();
                     that.kinetic_stage.draw();
-                });
+                }); */
 
                 var enjoyhint_elements = [
                     that.enjoyhint,

@@ -296,25 +296,15 @@ if (window.location != window.parent.location)
         $(this).parent("li").toggleClass('active-menu');
     });
     
-//    // initialize nicescroll plugin in sidebar after zoneReload
-//    window.enableSidebarScroll = function(){
-//    	$("body .sidebar > .sidebarMenuWrapper.hasNiceScroll").niceScroll({
-//    		horizrailenabled: true, 
-//    		zindex: 2,
-//    		cursorborder: "none",
-//    		cursorborderradius: "0",
-//    		cursorcolor: primaryColor
-//    	});
-//    }
-//    enableSidebarScroll();
-    
-    
-    
-    
-    
-    
-    
-    
-     
-
+   // initialize nicescroll plugin in sidebar after zoneReload
+   /* window.enableSidebarScroll = function(){
+   	$("body .sidebar > .sidebarMenuWrapper.hasNiceScroll").niceScroll({
+   		horizrailenabled: true, 
+   		zindex: 2,
+   		cursorborder: "none",
+   		cursorborderradius: "0",
+   		cursorcolor: primaryColor
+   	});
+   }
+   enableSidebarScroll(); */
 })(jQuery, window);

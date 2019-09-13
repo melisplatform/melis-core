@@ -37,7 +37,7 @@ var melisDashBoardDragnDrop = {
         this.dropWidget(this.melisWidgetHandle);
         this.dragStopWidget();
         this.resizeStopWidget();
-        $("#disable-left-menu-overlay").hide();
+        //$("#disable-left-menu-overlay").hide();
     },
 
     cacheDom: function () {
@@ -45,6 +45,7 @@ var melisDashBoardDragnDrop = {
         this.$body              = $("body");
         this.$document          = $(document);
         this.$window            = $(window);
+        //this.$menu              = $(".sideMenu li a");
         this.$gs                = this.$body.find("#" + activeTabId + " .grid-stack");
         this.$gsItem            = this.$gs.find(".grid-stack-item").length;
         this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
@@ -61,6 +62,10 @@ var melisDashBoardDragnDrop = {
         // strings
         this.gsOptHandle        = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
     },
+
+    /* disableSideMenu: function() {
+
+    }, */
 
     gsSetOptions: function () {
         var options = {

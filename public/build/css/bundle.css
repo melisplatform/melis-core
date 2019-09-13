@@ -4037,170 +4037,314 @@ table.fancytree-ext-columnview span.fancytree-node.fancytree-active {
   background-color: royalblue;
 }
 
+@charset "UTF-8";
 /*!
  * jQuery contextMenu - Plugin for simple contextMenu handling
  *
- * Version: 1.6.5
+ * Version: v2.8.0
  *
- * Authors: Rodney Rehm, Addy Osmani (patches for FF)
- * Web: http://medialize.github.com/jQuery-contextMenu/
+ * Authors: Björn Brala (SWIS.nl), Rodney Rehm, Addy Osmani (patches for FF)
+ * Web: http://swisnl.github.io/jQuery-contextMenu/
+ *
+ * Copyright (c) 2011-2019 SWIS BV and contributors
  *
  * Licensed under
  *   MIT License http://www.opensource.org/licenses/mit-license
- *   GPL v3 http://opensource.org/licenses/GPL-3.0
  *
+ * Date: 2019-01-16T15:45:48.418Z
  */
+@-webkit-keyframes cm-spin {
+  0% {
+    -webkit-transform: translateY(-50%) rotate(0deg);
+            transform: translateY(-50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translateY(-50%) rotate(359deg);
+            transform: translateY(-50%) rotate(359deg);
+  }
+}
+@-o-keyframes cm-spin {
+  0% {
+    -webkit-transform: translateY(-50%) rotate(0deg);
+         -o-transform: translateY(-50%) rotate(0deg);
+            transform: translateY(-50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translateY(-50%) rotate(359deg);
+         -o-transform: translateY(-50%) rotate(359deg);
+            transform: translateY(-50%) rotate(359deg);
+  }
+}
+@keyframes cm-spin {
+  0% {
+    -webkit-transform: translateY(-50%) rotate(0deg);
+         -o-transform: translateY(-50%) rotate(0deg);
+            transform: translateY(-50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translateY(-50%) rotate(359deg);
+         -o-transform: translateY(-50%) rotate(359deg);
+            transform: translateY(-50%) rotate(359deg);
+  }
+}
+
+@font-face {
+  font-family: "context-menu-icons";
+  font-style: normal; 
+  font-weight: normal;
+
+  src: url("font/context-menu-icons.eot?2lkho");
+  src: url("font/context-menu-icons.eot?2lkho#iefix") format("embedded-opentype"), url("font/context-menu-icons.woff2?2lkho") format("woff2"), url("font/context-menu-icons.woff?2lkho") format("woff"), url("font/context-menu-icons.ttf?2lkho") format("truetype");
+}
+
+.context-menu-icon-add:before {
+  content: "\EA01";
+}
+
+.context-menu-icon-copy:before {
+  content: "\EA02";
+}
+
+.context-menu-icon-cut:before {
+  content: "\EA03";
+}
+
+.context-menu-icon-delete:before {
+  content: "\EA04";
+}
+
+.context-menu-icon-edit:before {
+  content: "\EA05";
+}
+
+.context-menu-icon-loading:before {
+  content: "\EA06";
+}
+
+.context-menu-icon-paste:before {
+  content: "\EA07";
+}
+
+.context-menu-icon-quit:before {
+  content: "\EA08";
+}
+
+.context-menu-icon::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 2em; 
+  font-family: "context-menu-icons";
+  font-size: 1em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  color: #2980b9;
+  text-align: center;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+       -o-transform: translateY(-50%);
+          transform: translateY(-50%);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.context-menu-icon.context-menu-hover:before {
+  color: #fff;
+}
+
+.context-menu-icon.context-menu-disabled::before {
+  color: #bbb;
+}
+
+.context-menu-icon.context-menu-icon-loading:before {
+  -webkit-animation: cm-spin 2s infinite;
+       -o-animation: cm-spin 2s infinite;
+          animation: cm-spin 2s infinite;
+}
+
+.context-menu-icon.context-menu-icon--fa {
+  display: list-item;
+  font-family: inherit;
+  line-height: inherit;
+}
+.context-menu-icon.context-menu-icon--fa::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 2em; 
+  font-family: FontAwesome;
+  font-size: 1em;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  color: #2980b9;
+  text-align: center;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+       -o-transform: translateY(-50%);
+          transform: translateY(-50%);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.context-menu-icon.context-menu-icon--fa.context-menu-hover:before {
+  color: #fff;
+}
+.context-menu-icon.context-menu-icon--fa.context-menu-disabled::before {
+  color: #bbb;
+}
+
+.context-menu-icon.context-menu-icon--fa5 {
+  display: list-item;
+  font-family: inherit;
+  line-height: inherit;
+}
+.context-menu-icon.context-menu-icon--fa5 i, .context-menu-icon.context-menu-icon--fa5 svg {
+  position: absolute;
+  top: .3em; 
+  left: .5em;
+  color: #2980b9;
+}
+.context-menu-icon.context-menu-icon--fa5.context-menu-hover > i, .context-menu-icon.context-menu-icon--fa5.context-menu-hover > svg {
+  color: #fff;
+}
+.context-menu-icon.context-menu-icon--fa5.context-menu-disabled i, .context-menu-icon.context-menu-icon--fa5.context-menu-disabled svg {
+  color: #bbb;
+}
 
 .context-menu-list {
-
-	padding:0;
-
-	margin: 2px;
-	min-width: 120px;
-	max-width: 250px;
-	display: inline-block;
-	position: absolute;
-	list-style-type: none;
-
-
-	background: #EEE;
-
-	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-	   -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-		-ms-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-		 -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	
-	background: #9E9A9A;
+  position: absolute; 
+  display: inline-block;
+  min-width: 13em;
+  max-width: 26em;
+  padding: .25em 0;
+  margin: .3em;
+  font-family: inherit;
+  font-size: inherit;
+  list-style-type: none;
+  background: #fff;
+  border: 1px solid #bebebe;
+  border-radius: .2em;
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+          box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
 }
 
 .context-menu-item {
-	padding: 2px 2px 2px 24px;
-
-	position: relative;
-	-webkit-user-select: none;
-	   -moz-user-select: -moz-none;
-		-ms-user-select: none;
-			user-select: none;
-	
-	padding: 7px 2px 8px 25px;
+  position: relative;
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+  padding: .2em 2em;
+  color: #2f2f2f;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none; 
+  background-color: #fff;
 }
 
 .context-menu-separator {
-	padding-bottom:0;
-	border-bottom: 1px solid #DDD;
+  padding: 0; 
+  margin: .35em 0;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 .context-menu-item > label > input,
 .context-menu-item > label > textarea {
-	-webkit-user-select: text;
-	   -moz-user-select: text;
-		-ms-user-select: text;
-			user-select: text;
+  -webkit-user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
 }
 
-.context-menu-item.hover {
-	cursor: pointer;
-	background-color: #cb4040;
+.context-menu-item.context-menu-hover {
+  color: #fff;
+  cursor: pointer; 
+  background-color: #2980b9;
 }
 
-.context-menu-item.disabled {
-	color: #666;
-} 
+.context-menu-item.context-menu-disabled {
+  color: #bbb;
+  cursor: default; 
+  background-color: #fff;
+}
 
-.context-menu-input.hover,
-.context-menu-item.disabled.hover {
-	cursor: default;
-	background-color: #EEE;
+.context-menu-input.context-menu-hover {
+  color: #2f2f2f; 
+  cursor: default;
 }
 
 .context-menu-submenu:after {
-	content: ">";
-	color: #666;
-	position: absolute;
-	top: 0;
-	right: 3px;
-	z-index: 1;
+  position: absolute;
+  top: 50%;
+  right: .5em;
+  z-index: 1; 
+  width: 0;
+  height: 0;
+  content: '';
+  border-color: transparent transparent transparent #2f2f2f;
+  border-style: solid;
+  border-width: .25em 0 .25em .25em;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+       -o-transform: translateY(-50%);
+          transform: translateY(-50%);
 }
 
-/* icons
-	#protip:
-	In case you want to use sprites for icons (which I would suggest you do) have a look at
-	http://css-tricks.com/13224-pseudo-spriting/ to get an idea of how to implement
-	.context-menu-item.icon:before {}
+/**
+ * Inputs
  */
-.context-menu-item.icon { 
-	background-repeat: no-repeat; 
-	background-position: 4px 6px;
-
-    min-height: 25px;
-	color: #fff;
-    line-height: 16px;
+.context-menu-item.context-menu-input {
+  padding: .3em .6em;
 }
-
-
-
-.context-menu-item.icon-edit { background-image: url(../images/page_white_edit.png); }
-.context-menu-item.icon-cut { background-image: url(../images/cut.png); }
-.context-menu-item.icon-copy { background-image: url(../images/page_white_copy.png); }
-.context-menu-item.icon-paste { background-image: url(../images/page_white_paste.png); }
-.context-menu-item.icon-delete { background-image: url(../images/page_white_delete.png); }
-.context-menu-item.icon-add { background-image: url(../images/page_white_add.png); }
-.context-menu-item.icon-quit { background-image: url(../images/door.png); }
-
-
-.context-menu-item.icon-paste,
-.context-menu-item.icon-edit,
-.context-menu-item.icon-delete{
-	background-position-y: 6px;
-}
-
 
 /* vertically align inside labels */
-.context-menu-input > label > * { vertical-align: top; }
+.context-menu-input > label > * {
+  vertical-align: top;
+}
 
 /* position checkboxes and radios as icons */
 .context-menu-input > label > input[type="checkbox"],
 .context-menu-input > label > input[type="radio"] {
-	margin-left: -17px;
+  position: relative;
+  top: .12em; 
+  margin-right: .4em;
 }
-.context-menu-input > label > span {
-	margin-left: 5px;
+
+.context-menu-input > label {
+  margin: 0;
 }
 
 .context-menu-input > label,
 .context-menu-input > label > input[type="text"],
 .context-menu-input > label > textarea,
 .context-menu-input > label > select {
-	display: block;
-	width: 100%;
-
-	-webkit-box-sizing: border-box;
-	   -moz-box-sizing: border-box;
-		-ms-box-sizing: border-box;
-		 -o-box-sizing: border-box;
-			box-sizing: border-box;
+  display: block;
+  width: 100%; 
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .context-menu-input > label > textarea {
-	height: 100px;
-}
-.context-menu-item > .context-menu-list {
-	display: none;
-	/* re-positioned by js */
-	right: -5px;
-	top: 5px;
+  height: 7em;
 }
 
-.context-menu-item.hover > .context-menu-list {
-	display: block;
+.context-menu-item > .context-menu-list {
+  top: .3em; 
+  /* re-positioned by js */
+  right: -.3em;
+  display: none;
+}
+
+.context-menu-item.context-menu-visible > .context-menu-list {
+  display: block;
 }
 
 .context-menu-accesskey {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 /*!
@@ -7070,7 +7214,9 @@ li[class*="col-lg-"] {
 }
 
 #content {
-    margin-left: 274px;
+    /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+    /* margin-left: 274px; */
+    margin-left: 320px;
     background: #f5f5f5;
     padding-bottom: 40px
 }
@@ -19466,7 +19612,9 @@ li[class*="col-lg-"] {
 }
 
 #content {
-    margin-left: 274px;
+    /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+    /* margin-left: 274px; */
+    margin-left: 320px;
     background: #f5f5f5;
     padding-bottom: 40px
 }
@@ -24393,7 +24541,9 @@ li[class*="col-lg-"] {
 }
 
 #content {
-    margin-left: 274px;
+    /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+    /* margin-left: 274px; */
+    margin-left: 320px;
     background: #f5f5f5;
     padding-bottom: 40px
 }
@@ -34772,11 +34922,16 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     /* menu */
     .sidebar {
         left: 0;
-        width: 274px;
+        /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+        /* width: 274px; */
+        width: 320px;
     }
     .sidebar-mini .sidebar{
-        width: 274px;
-        left: -274px;
+        /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+        /* width: 274px;
+        left: -274px; */
+        width: 320px;
+        left: -320px;
     }
 
 
@@ -34805,7 +34960,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
     /* footer */
     #id_meliscore_footer.slide-left{
-        left: -274px;
+        /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+        /* left: -274px; */
+        left: -320px;
     }
 
     /* preloader [for issue: http://mantis.melistechnology.fr/view.php?id=3878] */
@@ -36739,18 +36896,25 @@ div#modal-user-management div.widget {
     border-radius: 0;
 }
 
+/*
+ * Sit on top of the page content
+ * Full height and width (cover the whole page)
+ * Specify a stack order in case you're using a different order for other elements
+ * Add a pointer on hover
+ * Deactivated for the meantime
+
 #disable-left-menu-overlay {
-    position: fixed; /* Sit on top of the page content */
-    width: 274px; /* Full width (cover the whole page) */
-    height: 100%; /* Full height (cover the whole page) */
+    position: fixed;
+    width: 320px;
+    height: 100%;
     display: none;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-    cursor: progress; /* Add a pointer on hover */
-}
+    z-index: 2;
+    cursor: progress;
+}*/
 /* Added by: Junry @ 07/18/2019
  * Custom css for the update of jquery 3.3.1 and bootstrap 4.3.1
  */
@@ -36804,6 +36968,11 @@ div#modal-user-management div.widget {
 /* 
  * BO #nav-header [role="navigation"] 
  */
+#nav-header {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
+}
 #tab-menu,
 #brand-logo,
 #nav-header {
@@ -36837,6 +37006,11 @@ div#modal-user-management div.widget {
 }
 .navbar.main .nav.navbar-right li:first-child {
   border-left: 1px solid #c52127;
+}
+.res-action-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 /* #main */
 #main > .row {
@@ -36938,7 +37112,6 @@ a:not([href]).btn-danger:hover {
   justify-content: space-between;
   display: flex;
   width: 100%;
-  position: relative;
 }
 .pagination > .page-item.active > .page-link, 
 .pagination > .page-item.active > .page-link:focus, 
@@ -36951,9 +37124,6 @@ a:not([href]).btn-danger:hover {
   float: none;
 }
 /* modal */
-/* #id_meliscore_tool_platform_generic_form_container .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
-  padding: 9px 15px 0;
-} */
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
   padding: 9px 15px 0 38px;
 }
@@ -37019,11 +37189,21 @@ a:not([href]).btn-danger:hover {
 .table-striped > tbody > tr {
   border-bottom: 1px solid #efefef;
 }
-.filter-bar {
-  padding-bottom: 0;
-}
 .filter-bar label {
   float: left;
+}
+/* can be a fix for nav-tabs menu */
+.fb-dt-left,
+.fb-dt-center,
+.fb-dt-right {
+  display: flex;
+  /* flex-direction: row; */
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-flow: row wrap;
+}
+.fb-dt-right {
+  justify-content: flex-end;
 }
 /* input-group-addon */
 .input-group-addon {
@@ -37114,7 +37294,7 @@ a:not([href]).btn-danger:hover {
   -webkit-box-flex: 0;
 }
 .melis-core-gdpr-check-box1 {
-  margin-left: 0.5rem !important;
+  margin-left: 0.7rem !important;
   width: 100%;
 }
 #melis-core-gdpr-search-form-submit {
@@ -37209,14 +37389,67 @@ div.row, ul.row {
   padding-left: 15px;
 }
 .sites-language .cb-cont .cbmask-outer {
-  top: 0;
+  top: 0 !important;
 }
-.melis-radio-box .melis-radio-box-circle {
-  width: 14px;
+.sites-language .checkbox {
+  padding-left: 6px;
+}
+.melis-radio-box input:checked + .melis-radio-box-circle:after {
+  left: 51%;
 }
 /* utility classes */
 .hidden {
   display: none !important;
+}
+/* fancytree */
+.context-menu-list {
+  background: #9e9a9a;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+}
+.context-menu-list.context-menu-item {
+  background-color: inherit;
+  color: #fff;
+}
+.context-menu-item.context-menu-hover {
+  background-color: #cb4040;
+}
+.context-menu-icon::before {
+  color: #cb4040;
+}
+/* blog */
+[data-meliskey='meliscmsblog_tabs_preview_content_container'] .content-cont {
+  padding: 15px;
+}
+/* news */
+.tab-pane .wizard {
+  width: 100%;
+}
+.tab-preview .content-cont {
+  padding: 15px;
+}
+/* user management */
+.userimage {
+  text-align: center;
+}
+/* messenger */
+.refresh-chat,
+.refresh-contacts {
+  background-color: #fafafa;
+  border-color: #cecece;
+  color: #797979 !important;
+  font-size: 12px;
+  padding: 1px 5px;
+}
+.refresh-chat:hover,
+.refresh-contacts:hover {
+  background-color: #e7e7e7;
+  border-color: #e7e7e7;
+}
+.profile-photo #user-profile-pic {
+  border-radius: 100%;
 }
 /* Responsive media queries */
 @media (min-width: 768px) {
@@ -37239,6 +37472,10 @@ div.row, ul.row {
   }
   .toggle-plugin-menu {
     padding-left: 1.8rem; /* 3.2rem */
+  }
+  #brand-logo,
+  #tab-menu {
+    padding: 0;
   }
   #nav-header .nav-tabs > li.active > a.close {
     display: none;
@@ -37298,10 +37535,10 @@ div.row, ul.row {
 
   /* #main content */
   #main #menu .sidebar {
-    width: 320px; /* 20rem */
+    width: 320px;
   }
   #main #content {
-    margin-left: 0; /* 20rem */
+    margin-left: 0;
     padding-left: 0;
     padding-right: 0;
   }
@@ -37320,13 +37557,13 @@ div.row, ul.row {
     max-width: 620px;
   }
   /* side bar menu footer */
-  #id_meliscore_footer{
+  /* #id_meliscore_footer{
     width: 20rem;
     left: 0;
   }
   #id_meliscore_footer.slide-left {
     left: -20rem;
-  }
+  } */
 }
 @media (max-width: 767px) {
   /* body commmon */
@@ -37360,12 +37597,22 @@ div.row, ul.row {
   }
   /* BO */
   /* header */
+  #brand-logo {
+    padding: 0;
+  }
   #brand-logo .appbrand {
     margin: 0 auto !important;
   }
   #nav-header .navbar-brand {
     padding-right: 0;
     width: 100%;
+  }
+  #nav-header.container-fluid {
+    padding: 0;
+  }
+  #nav-header.container-fluid .row {
+    width: 100%;
+    margin: 0;
   }
   .navbar-brand {
     -webkit-box-pack: justify!important;

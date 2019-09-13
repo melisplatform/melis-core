@@ -630,7 +630,7 @@ var EnjoyHint = function (_options) {
                 that.layer.add(that.shape);
                 that.kinetic_stage.add(that.layer);
 
-                $(window).on('resize', function() {
+                /* $(window).on('resize', function() {
                     //if ( typeof $(that.stepData.enjoyHintElementSelector)[0] !== "undefined" ) {
                     //if ( $(that.stepData.enjoyHintElementSelector).length > 0 ) {
                     //if ( ! $(that.stepData.enjoyHintElementSelector).is(":visible") !== undefined ){
@@ -666,7 +666,7 @@ var EnjoyHint = function (_options) {
                         prevWindowHeight = window.innerHeight;
 
 
-                        /* Init */
+                        // Init
 
                         if (!originalCenterX) {
 
@@ -704,12 +704,12 @@ var EnjoyHint = function (_options) {
                         }
 
 
-                        /* Resizing label */
+                        // Resizing label
 
                         labelElement.css('left', window.innerWidth / 2 - labelElement.outerWidth() / 2);
 
 
-                        /* Resizing arrow */
+                        // Resizing arrow
 
                         var labelRect = labelElement[0].getBoundingClientRect();
 
@@ -771,7 +771,7 @@ var EnjoyHint = function (_options) {
                         }
 
 
-                        /* Resizing skip button */
+                        // Resizing skip button
 
                         var newSkipbuttonLeft = +originalSkipbuttonLeft + (that.shape.attrs.center_x - originalCenterX) / 2;
                         skipButton.css('left', newSkipbuttonLeft < 15 ? 15 : newSkipbuttonLeft);
@@ -789,7 +789,7 @@ var EnjoyHint = function (_options) {
                     that.layer.add(that.shape);
                     that.layer.draw();
                     that.kinetic_stage.draw();
-                });
+                }); */
 
                 var enjoyhint_elements = [
                     that.enjoyhint,

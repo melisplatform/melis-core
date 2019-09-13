@@ -2403,11 +2403,16 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     /* menu */
     .sidebar {
         left: 0;
-        width: 274px;
+        /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+        /* width: 274px; */
+        width: 320px;
     }
     .sidebar-mini .sidebar{
-        width: 274px;
-        left: -274px;
+        /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+        /* width: 274px;
+        left: -274px; */
+        width: 320px;
+        left: -320px;
     }
 
 
@@ -2436,7 +2441,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
     /* footer */
     #id_meliscore_footer.slide-left{
-        left: -274px;
+        /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
+        /* left: -274px; */
+        left: -320px;
     }
 
     /* preloader [for issue: http://mantis.melistechnology.fr/view.php?id=3878] */
@@ -4370,15 +4377,22 @@ div#modal-user-management div.widget {
     border-radius: 0;
 }
 
+/*
+ * Sit on top of the page content
+ * Full height and width (cover the whole page)
+ * Specify a stack order in case you're using a different order for other elements
+ * Add a pointer on hover
+ * Deactivated for the meantime
+*/
 #disable-left-menu-overlay {
-    position: fixed; /* Sit on top of the page content */
-    width: 320px; /* Full width (cover the whole page) */
-    height: 100%; /* Full height (cover the whole page) */
+    position: fixed;
+    width: 320px;
+    height: 100%;
     display: none;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-    cursor: progress; /* Add a pointer on hover */
+    z-index: 2;
+    cursor: progress;
 }
