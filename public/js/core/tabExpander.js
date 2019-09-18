@@ -77,9 +77,10 @@ var tabExpander = (function($, window){
         
         //center
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
-        /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-        //tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        tabContainerWidthPercent = 140.9 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        // tabContainerWidthPercent = 140.9 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
         navUlContainer = 1;

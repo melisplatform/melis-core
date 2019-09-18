@@ -160,16 +160,19 @@ var dashboardNotify = (function() {
 })();
 
 $(function() {
-    var $body           = $("body"),
-        activeModule    = $("#melis-core-dashboard-msg").data("activeMods").split("-");
+    setTimeout(function() {
+        var $body           = $("body"),
+            activeModule    = $("#melis-core-dashboard-msg").data("activeMods").split("-");
 
-        // check if melisUserTabs is currently an active module and it is defined
-        if ( $.inArray( "MelisUserTabs", activeModule ) !== -1 && typeof melisUserTabs !== "undefined" ) {
-            // melis-user-tabs.js init
-            melisUserTabs.init();
-        } 
-        else {
-            // own init
-            dashboardNotify.init();
-        }
+            /* 
+             * Check if melisUserTabs is currently an active module.
+             * Negate to run the local dashboardNotify.init() function.
+             * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
+             * from with melisUserTabs ajax call.
+             */
+            
+            if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
+                dashboardNotify.init();
+            }
+    }, 500);
 });

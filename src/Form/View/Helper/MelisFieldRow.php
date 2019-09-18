@@ -57,7 +57,7 @@ class MelisFieldRow extends FormRow
 	        $toolConfig = $element->getOption('open_tool');
 	         
 	        $element->setLabelOptions(['disable_html_escape' => true]);
-	        $label = $element->getLabel().'<i class="fa fa-wrench fa-lg pull-right melis-opentools m-dnd-tool-open" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$toolConfig['tooltip'].'"
+	        $label = $element->getLabel().'<i class="fa fa-wrench fa-lg float-right melis-opentools m-dnd-tool-open" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$toolConfig['tooltip'].'"
 	            data-tool-icon="'.$toolConfig['tool_icon'].'"
                 data-tool-name="'.$toolConfig['tool_name'].'"
                 data-tool-id="'.$toolConfig['tool_id'].'"

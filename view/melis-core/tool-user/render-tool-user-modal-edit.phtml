@@ -28,13 +28,13 @@
     <span class="form-control-static" id="lastlogindate"></span>
 </div>
 
-<button type="submit" class="btn btn-success pull-right" id="btnEdit"><i class="fa fa-save"></i>  <?= $this->translate('tr_meliscore_tool_user_update'); ?></button>
+<button type="submit" class="btn btn-success float-right" id="btnEdit"><i class="fa fa-save"></i>  <?= $this->translate('tr_meliscore_tool_user_update'); ?></button>
 
 <?php 
     echo $this->melisModalInvoker()->render(
         array(
             'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
-            'class' => 'btn btn-danger pull-left'
+            'class' => 'btn btn-danger float-left'
         ), 'dismiss');
     echo $this->form()->closeTag();
 ?>
