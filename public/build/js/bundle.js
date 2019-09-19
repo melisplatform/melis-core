@@ -24351,15 +24351,15 @@ var tabExpander = (function($, window){
     
     
 	// CHECK TO ACTIVATE tabExpander(); ---------------------------------------------------------------------------------------------
-	function checkTE(){
+	function checkTE() {
 		// CALCULATE ALL POSSIBLE WIDTH FOR THE LEFT, CENTER AND RIGHT MENUS
 	    
 		//total width of the header
         var totalHeaderWidthPx = $("#id_meliscore_header").width();
         
         // left
-        //var leftMenuWidthPx = $(".navbar-header").width();
-        var leftMenuWidthPx = $("#brand-logo").width();
+        var leftMenuWidthPx = $(".navbar-header").width();
+        //var leftMenuWidthPx = $("#brand-logo").width();
         var leftMenuWidthPercent = (100 * 320) / totalHeaderWidthPx;
         
         // right
@@ -24372,8 +24372,8 @@ var tabExpander = (function($, window){
         //center
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
         // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        // tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         // tabContainerWidthPercent = 140.9 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
@@ -24383,15 +24383,15 @@ var tabExpander = (function($, window){
         });
 		
 		// determines if TE should be activated or not
-        if( navUlContainer > tabContainerWidthPx && screenSize  >= 768 ){
+        if ( navUlContainer > tabContainerWidthPx && screenSize  >= 768 ) {
         	Enable();
         	status = 'enabled';
-        } else if( navUlContainer < tabContainerWidthPx){
+        } else if ( navUlContainer < tabContainerWidthPx) {
 			Disable();
-        } else if(status == 'disabled'){
+        } else if (status == 'disabled') {
 			Disable();
 		} else {
-        	if(status === 'enabled'){
+        	if (status === 'enabled') {
 				Enable();
         		/* Disable(); */
         	}
@@ -24494,6 +24494,9 @@ var tabExpander = (function($, window){
 
 })(jQuery, window);
 
+$(function() {
+
+});
 // DETECT IF ELEMENT HAS A SCROLLBAR - --=[ PLUGIN SNIPPET ]=--
 (function($) {
     $.fn.hasScrollBar = function() {
@@ -33060,6 +33063,7 @@ var dashboardNotify = (function() {
     function runNotify() {
         // checking for .tab-panel-dashboard has .active class
         if ( $tpd.length > 0 ) {
+            //$("#sidebar-menu").trigger("click");
             eh.runScript();
         }
     }

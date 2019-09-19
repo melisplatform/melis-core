@@ -15,9 +15,6 @@
 .login-page .navbar.main .nav.navbar-right li {
   float: none;
 }
-/* .navbar-nav-right {
-  justify-content: flex-end;
-} */
 .navbar.main .nav.navbar-right {
   float: right;
 }
@@ -33,11 +30,17 @@
 .navbar.main .nav.navbar-right > li .dropdown-toggle::after {
   display: none;
 }
+.navbar-right .dropdown .dropdown-menu li.active {
+  display: block;
+  width: 100%;
+}
 .navbar.main .nav.navbar-right > li > .dropdown-menu {
   min-width: 12rem;
 }
 .navbar.main .nav.navbar-right > li:hover > .dropdown-menu {
   left: -8.7rem;
+  padding: 0;
+  margin: 0;
 }
 .navbar.main .nav.navbar-right .dropdown-menu li.active a {
   background-color: #e61c23;
@@ -555,7 +558,7 @@ div.row, ul.row {
   }
   .navbar.main .left-menu {
     float: none;
-    width: 100% !important;
+    /* width: 100% !important; */
   }
   .navbar.main.navbar-primary .appbrand {
     float: none !important;
@@ -724,6 +727,7 @@ div.row, ul.row {
   }
   .res-action-container {
     padding: 0;
+    overflow-y: initial;
   }
   /* nav-right */
   #newplugin-cont ul li {

@@ -109,6 +109,7 @@ var dashboardNotify = (function() {
     function runNotify() {
         // checking for .tab-panel-dashboard has .active class
         if ( $tpd.length > 0 ) {
+            //$("#sidebar-menu").trigger("click");
             eh.runScript();
         }
     }
