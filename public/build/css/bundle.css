@@ -37475,7 +37475,6 @@ div.row, ul.row {
   }
   .navbar.main .left-menu {
     float: none;
-    /* width: 100% !important; */
   }
   .navbar.main.navbar-primary .appbrand {
     float: none !important;
@@ -37483,8 +37482,12 @@ div.row, ul.row {
   .navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
     color: #e61c23;
   }
+  #plugin-menu {
+    visibility: hidden;
+  }
   .toggle-plugin-menu {
-    padding-left: 1.8rem; /* 3.2rem */
+    /* padding-left: 1.8rem; */
+    padding-left: 0;
   }
   #brand-logo,
   #tab-menu {
