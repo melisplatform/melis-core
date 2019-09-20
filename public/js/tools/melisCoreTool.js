@@ -140,10 +140,12 @@ var melisCoreTool = (function (window) {
     function isTableEmpty(table) {
         var matches = null,
             findNum = $("div[class='dataTables_info'][id='" + table + "_info']").html(),
-            isEmpty = true,
-            count   = parseInt(matches[0]) > 0 ? false : true;
-
+            isEmpty = true;
+            
             matches = findNum.match(/\d+/g);
+
+        var count   = parseInt(matches[0]) > 0 ? false : true;
+
             isEmpty = count;
 
             return isEmpty;
