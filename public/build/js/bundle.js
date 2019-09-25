@@ -27485,7 +27485,7 @@ var melisCore = (function(window){
                     $.each(element, function(index, fm){
                         tempData += "" +
                             "<li>" +
-                            "	<span class='img-circle media-object "+fm.image+"'></span>" +
+                            "	<span class='rounded-circle media-object "+fm.image+"'></span>" +
                             "   <div class='media'>" +
                             "       <div class='media-body'>" +
                             "           <a  class='strong text-primary'>"+(fm.title)+"</a><span class='time-email'>"+fm.date_trans+' '+fm.time+"</span>" +
@@ -27506,8 +27506,8 @@ var melisCore = (function(window){
     }
 
     $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
-        if( $body.find("#flash-messenger").prev().find(".badge").hasClass("d-none") === false )
-            $body.find("#flash-messenger").prev().find(".badge").addClass("d-none");
+        if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden") === false )
+            $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
     });
 
     $body.on("click", "#clearNotifBtn", function(){
@@ -27523,8 +27523,8 @@ var melisCore = (function(window){
             if(data.flashMessage) {
                 if( $flashMessenger.hasClass("empty-notif") === false )
                     $flashMessenger.addClass("empty-notif");
-                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("d-none") === false )
-                    $body.find("#flash-messenger").prev().find(".badge").addClass("d-none");
+                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden") === false )
+                    $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
 
                 $body.find("#flash-messenger").empty();
                 tempData = "" +
@@ -28185,7 +28185,7 @@ var melisCore = (function(window){
 
     // melis cms tools tree
     if ( $("#meliscms_toolstree_section").length > 0 ) {
-        $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('d-none').show(); // class hidden to d-none bootstrap 4.3.1
+        $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('hidden').show();
     }
 
 

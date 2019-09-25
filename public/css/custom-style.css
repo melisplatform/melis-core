@@ -102,12 +102,10 @@
 .navbar.main .nav.navbar-right li:first-child {
   border-left: 1px solid #c52127;
 }
-/* .res-action-container {
+/* notifications */
+#flash-messenger > li {
   width: 100%;
-  margin: 0 auto;
-  padding: 0 15px;
-  overflow-y: initial;
-} */
+}
 /* #main */
 #main > .row {
   margin-left: -15px;
@@ -131,6 +129,9 @@
 }
 #id_meliscore_header_flash_messenger {
   border-left: 1px solid #c52127;
+}
+.navbar-right li:hover .dropdown-toggle .fa-bell {
+  color: #e61c23;
 }
 /* system configuration / diagnostic */
 #accordion .card-title {
