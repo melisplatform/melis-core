@@ -202,15 +202,15 @@ $(function() {
                 var $this = $(this);
 
                     tableId = $this.find('.dataTables_scrollBody .table').attr('id');
-                    ids = [];
+                    ids     = [];
 
-                $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
-                    var $this = $(this);
+                    $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                        var $this = $(this);
 
-                        ids.push( $this.val() );
-                        hasData = true;
-                });
-                modules[tableId] = ids;
+                            ids.push( $this.val() );
+                            hasData = true;
+                    });
+                    modules[tableId] = ids;
             });
 
             //only send request if there are any ids
@@ -340,7 +340,7 @@ $(function() {
                     type: 'POST',
                     url:'/melis/MelisCore/MelisCoreGdpr/melisCoreGdprExtractSelected',
                     data: {'id' : modules}
-                }).done(function(data) {
+                }).done(function(data, textStatus, request) {
                     if (data) {
                         var fileName = request.getResponseHeader("fileName");
                         var mime = request.getResponseHeader("Content-Type");
