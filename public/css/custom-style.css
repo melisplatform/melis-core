@@ -131,7 +131,7 @@
   border-left: 1px solid #c52127;
 }
 .navbar-right li:hover .dropdown-toggle .fa-bell {
-  color: #e61c23;
+  color: #e61c23 !important;
 }
 /* system configuration / diagnostic */
 #accordion .card-title {
