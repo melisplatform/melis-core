@@ -4225,7 +4225,7 @@ div#modal-user-management div.widget {
         color: #fff !important;
         height: 24px;
 
-        position: absolute;
+        position: fixed;
         right: 10px;
         top: 47px;
         z-index: 100;

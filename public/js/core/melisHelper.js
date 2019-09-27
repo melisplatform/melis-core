@@ -360,7 +360,7 @@ var melisHelper = (function(){
 
         // [ Mobile ] when closing a page
         if( melisCore.screenSize <= 767 ){
-            var $tabArrowTop = $("#tab-arrow-top");
+            //var $tabArrowTop = $("#tab-arrow-top");
 
                 $("#res-page-cont").trigger("click");
 
@@ -370,9 +370,9 @@ var melisHelper = (function(){
                     $("#res-page-cont span").append(empty);
                 }
 
-                if ( $tabArrowTop.length ) {
+                /* if ( $tabArrowTop.length ) {
                     $tabArrowTop.removeClass("hide-arrow");
-                }
+                } */
         }
 
         // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
@@ -448,7 +448,7 @@ var melisHelper = (function(){
 
             // [ Mobile ] when opening a page
             if( melisCore.screenSize <= 767 ){
-                var $tabArrowTop = $("#tab-arrow-top");
+                //var $tabArrowTop = $("#tab-arrow-top");
 
                     // check if there are no contents open
                     if( $navTabs.children("li").length > 0){
@@ -465,9 +465,9 @@ var melisHelper = (function(){
                     $("#melis-id-nav-bar-tabs").slideUp(300);
                     $("#res-page-cont i").removeClass("move-arrow");
 
-                    if ( $tabArrowTop.length ) {
+                    /* if ( $tabArrowTop.length ) {
                         $tabArrowTop.removeClass("hide-arrow");
-                    }
+                    } */
             }
 
             var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";

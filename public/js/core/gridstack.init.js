@@ -371,14 +371,14 @@ var melisDashBoardDragnDrop = {
             $tabArrowTop    = $("#tab-arrow-top"),
             nWidth          = self.$gs.width() + self.$box.width();
 
-            if ( $box.hasClass("shown") ) {
+            /* if ( $box.hasClass("shown") ) {
                 $tabArrowTop.addClass("hide-arrow");
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
             } else {
                 $tabArrowTop.removeClass("hide-arrow");
-            }
+            } */
     },
 
     disablePlugSidebar: function () {

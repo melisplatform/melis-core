@@ -498,28 +498,6 @@ div.row, ul.row {
 .hidden {
   display: none !important;
 }
-/* fancytree */
-/* .context-menu-list {
-  background: #9e9a9a;
-  border: none;
-  border-radius: 0;
-  margin: 0;
-  padding: 0;
-}
-.context-menu-list.context-menu-item {
-  background-color: inherit;
-  color: #fff;
-}
-.context-menu-item.context-menu-hover {
-  background-color: #cb4040;
-}
-.context-menu-icon::before {
-  color: #cb4040;
-} */
-/* blog */
-[data-meliskey='meliscmsblog_tabs_preview_content_container'] .content-cont {
-  padding: 15px;
-}
 /* news */
 .tab-pane .wizard {
   width: 100%;
@@ -745,9 +723,9 @@ div.row, ul.row {
     border-radius: 100%;
   }
   /* responsive tab menu */
-  #tab-arrow-top {
+  /* #tab-arrow-top {
     top: 0;
-  }
+  } */
   .navbar #melis-id-nav-bar-tabs > li {
     width: 100%;
   }
