@@ -1402,6 +1402,16 @@ return [
                                             ],
                                         ],
                                         [
+                                            'name' => 'regex', false,
+                                            'options' => [
+                                                'pattern' => '/^[a-zA-Z0-9_.-]*$/',
+                                                'messages' => [
+                                                    \Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_platform_invalid_platform_name'
+                                                ],
+                                                'encoding' => 'UTF-8',
+                                            ],
+                                        ],
+                                        [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [

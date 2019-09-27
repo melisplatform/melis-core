@@ -330,7 +330,7 @@ return [
     'tr_meliscore_tool_platform_update_marketplace' => 'Autoriser les mises à jour du markeplace',
     'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Cocher pour autoriser les mises à jour du marketplace ou décocher pour les bloquer',
     'tr_meliscore_common_allow' => 'Autoriser',
-
+    'tr_meliscore_tool_platform_invalid_platform_name' => 'Le nom de la plateforme ne peut contenir que des lettres et numéros, aucun espace ou caractère spécial',
 
     // Language Tool Translations
     'tr_meliscore_tool_language' => 'Langages du back-office',
