@@ -499,7 +499,7 @@ div.row, ul.row {
   display: none !important;
 }
 /* fancytree */
-.context-menu-list {
+/* .context-menu-list {
   background: #9e9a9a;
   border: none;
   border-radius: 0;
@@ -515,7 +515,7 @@ div.row, ul.row {
 }
 .context-menu-icon::before {
   color: #cb4040;
-}
+} */
 /* blog */
 [data-meliskey='meliscmsblog_tabs_preview_content_container'] .content-cont {
   padding: 15px;
