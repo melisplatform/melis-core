@@ -739,5 +739,10 @@ return [
     'tr_melis_cms_gdpr_banner_header' => 'Banner header',
     'tr_melis_cms_gdpr_banner_details' => 'Banner details',
 
+    'tr_melis_core_composer_scrpts_Module scripts executed' => 'Module scripts executed',
+    'tr_melis_core_composer_scrpts_scripts executed' => '%s scripts executed',
+    'tr_melis_core_composer_scrpts_No scripts executed' => 'No scripts executed',
+    'tr_melis_core_composer_scrpts_executing' => 'Executing composer scripts',
+    'tr_melis_core_composer_scrpts_executed' => 'Composer scripts executed',
     ];
 ?>

@@ -752,4 +752,10 @@ return [
     'tr_melis_core_gdpr_content_tabs' => 'Contenu onglets',
     'tr_melis_cms_gdpr_banner_header' => 'Bannière En-tête',
     'tr_melis_cms_gdpr_banner_details' => 'Bannière détails',
+
+    'tr_melis_core_composer_scrpts_Module scripts executed' => 'Scripts du module executés',
+    'tr_melis_core_composer_scrpts_scripts executed' => 'Scripts de %s executés',
+    'tr_melis_core_composer_scrpts_No scripts executed' => 'Aucun script éxécuté',
+    'tr_melis_core_composer_scrpts_executing' => 'Exécution des scripts de composer',
+    'tr_melis_core_composer_scrpts_executed' => 'Scripts de composer éxécutés',
 ];

@@ -18,6 +18,21 @@ namespace MelisCore;
  */
 class ModuleComposerScript
 {
+    private static $serviceManager = null;
+
+    public static function setServiceManager($serviceManger)
+    {
+        self::$serviceManager = $serviceManger;
+    }
+
+    private static function translate($text)
+    {
+        if (!is_null(self::$serviceManager))
+            return self::$serviceManager->get('translator')->translate('tr_melis_core_composer_scrpts_'.$text);
+        else
+            return $text;
+    }
+
     /**
      * This method execute php scripts in the specified directory /install/scripts
      */
@@ -54,14 +69,14 @@ class ModuleComposerScript
 
         if (!empty($mScripts)){
 
-            print 'Module scripts executed' . PHP_EOL;
+            print self::translate('Module scripts executed') . PHP_EOL;
 
             foreach ($mScripts As $module => $scripts){
 
                 if (!$isCliReqs)
-                    print '* <span style="color: #02de02">'. $module . ' scripts executed </span>' . PHP_EOL;
+                    print '* <span style="color: #02de02">'. sprintf(self::translate('scripts executed'), $module) .'  </span>' . PHP_EOL;
                 else
-                    print '* '. $module . ' scripts executed' . PHP_EOL;
+                    print '* '. sprintf(self::translate('scripts executed'), $module) . PHP_EOL;
 
                 foreach ($scripts As $scrpts){
                     try{
@@ -72,7 +87,7 @@ class ModuleComposerScript
                 }
             }
         }else
-            print 'No scripts executed' . PHP_EOL;
+            print self::translate('No scripts executed') . PHP_EOL;
 
         print PHP_EOL;
     }
