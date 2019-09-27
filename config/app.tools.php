@@ -1404,7 +1404,7 @@ return [
                                         [
                                             'name' => 'regex', false,
                                             'options' => [
-                                                'pattern' => '/^[a-zA-Z0-9_.-]*$/',
+                                                'pattern' => '/^[a-zA-Z0-9]*$/',
                                                 'messages' => [
                                                     \Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_platform_invalid_platform_name'
                                                 ],
