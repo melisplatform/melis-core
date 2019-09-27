@@ -4219,7 +4219,7 @@ table.fancytree-ext-columnview span.fancytree-node.fancytree-active {
   display: inline-block;
   min-width: 13em;
   max-width: 26em;
-  padding: .25em 0;
+  padding: 0;
   margin: .3em;
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 11px;
@@ -4374,14 +4374,19 @@ table.fancytree-ext-columnview span.fancytree-node.fancytree-active {
   background-position: 4px 6px;
   min-height: 25px;
   color: #fff;
-  line-height: 16px;
+  line-height: 24px;
 }
 
 .context-menu-icon-edit:before,
-.context-menu-icon-delte:before,
+.context-menu-icon-delete:before,
 .context-menu-icon-copy:before,
 .context-menu-icon-paste:before {
   content: "";
+}
+
+.context-menu-item.context-menu-hover {
+	cursor: pointer;
+	background-color: #cb4040;
 }
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
