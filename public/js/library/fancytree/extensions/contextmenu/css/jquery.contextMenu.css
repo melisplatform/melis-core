@@ -182,17 +182,18 @@
   max-width: 26em;
   padding: .25em 0;
   margin: .3em;
-  font-family: inherit;
-  font-size: inherit;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
   list-style-type: none;
-  background: #fff;
-  border: 1px solid #bebebe;
-  border-radius: .2em;
+  background: #9e9a9a;;
+  border: none;
+  border-radius: 0;
   -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
           box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
 }
 
 .context-menu-item {
+  padding: 7px 2px 8px 25px;
   position: relative;
   -webkit-box-sizing: content-box;
      -moz-box-sizing: content-box;
@@ -203,7 +204,6 @@
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none; 
-  background-color: #fff;
 }
 
 .context-menu-separator {
@@ -306,4 +306,41 @@
 
 .context-menu-accesskey {
   text-decoration: underline;
+}
+
+.context-menu-icon-delete, 
+.context-menu-icon-edit,
+.context-menu-icon-paste {
+  background-position-y: 6px;
+}
+
+.context-menu-icon-paste {
+  background-image: url(../images/page_white_paste.png);
+}
+
+.context-menu-icon-edit {
+  background-image: url(../images/page_white_edit.png);
+}
+
+.context-menu-icon-delete {
+  background-image: url(../images/page_white_delete.png);
+}
+
+.context-menu-icon-copy {
+  background-image: url(../images/page_white_copy.png);
+}
+
+.context-menu-icon {
+  background-repeat: no-repeat;
+  background-position: 4px 6px;
+  min-height: 25px;
+  color: #fff;
+  line-height: 16px;
+}
+
+.context-menu-icon-edit:before,
+.context-menu-icon-delte:before,
+.context-menu-icon-copy:before,
+.context-menu-icon-paste:before {
+  content: "";
 }
