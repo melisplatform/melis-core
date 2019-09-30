@@ -362,7 +362,7 @@ var melisDashBoardDragnDrop = {
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
     },
 
-    closeDBPlugSidebar: function () {
+    /*closeDBPlugSidebar: function () {
         var self            = this,
             $btn            = $("#melisDashBoardPluginBtn"),
             $box            = $btn.closest(".melis-core-dashboard-dnd-box"),
@@ -371,15 +371,15 @@ var melisDashBoardDragnDrop = {
             $tabArrowTop    = $("#tab-arrow-top"),
             nWidth          = self.$gs.width() + self.$box.width();
 
-            /* if ( $box.hasClass("shown") ) {
+            if ( $box.hasClass("shown") ) {
                 $tabArrowTop.addClass("hide-arrow");
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
             } else {
                 $tabArrowTop.removeClass("hide-arrow");
-            } */
-    },
+            }
+    },*/
 
     disablePlugSidebar: function () {
         var self = this;

@@ -27608,9 +27608,9 @@ var melisCore = (function(window){
         } */
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
             // check if dashboard plugin menu is open
-            if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
+            /* if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
                 melisDashBoardDragnDrop.closeDBPlugSidebar();
-            }
+            } */
         });
     }
 
@@ -27714,9 +27714,9 @@ var melisCore = (function(window){
                 $("#res-page-cont").trigger('click');
                 $("#res-page-cont i").removeClass("move-arrow");
 
-                /* if ( $tabArrowTop.length ) {
+                if ( $tabArrowTop.length ) {
                     $tabArrowTop.removeClass("hide-arrow");
-                } */
+                }
 
                 $('html, body').animate({scrollTop:0},500);
             }
@@ -28028,13 +28028,13 @@ var melisCore = (function(window){
             $box.toggleClass("shown");
 
             // responsive main tab menu button
-            /* if ( $tabArrowTop.length && screenSize <= 767 ) {
+            if ( $tabArrowTop.length && screenSize <= 767 ) {
                 if ( $box.hasClass("shown") ) {
                     $tabArrowTop.addClass("hide-arrow");
                 } else {
                     $tabArrowTop.removeClass("hide-arrow");
                 }
-            } */
+            }
 
             // desktop
             if ( $box.hasClass("shown") ) {
@@ -28057,41 +28057,26 @@ var melisCore = (function(window){
         $tabArrowTop    = $("#tab-arrow-top");
      */
 
-    // responsive menu functionalities, #res-page-cont
-    /* $body.on("click", "#res-page-cont", function() {
-        $navTabs.slideToggle(300);
+    // responsive menu functionalities
+    $body.on("click", "#res-page-cont", function() {
+        $("#melis-id-nav-bar-tabs").slideToggle(300);
         $tabConOuter.addClass("hide-res-menus");
         $resArrow.toggleClass("move-arrow");
-    }); */
+    });
 
     // new responsive menu behavior as per http://mantis.melistechnology.fr/view.php?id=3849
-    $body.on("click", "#res-page-cont span i", function() {
-        console.log("#res-page-cont span i");
-        //$tabArrowTop.removeClass("hide-arrow");
-        $tabArrowTop.fadeIn();
-
+    $body.on("click", "#res-page-cont i", function() {
+        $tabArrowTop.removeClass("hide-arrow");
         $tabConOuter.addClass("hide-res-menus");
         $resArrow.toggleClass("move-arrow");
-        $tabConInner.fadeOut(300);
     });
 
     // responsive menu arrow button 767px and below for showing/hiding content main tabs
     $body.on("click", "#tab-arrow-top", function() {
-        console.log("#tab-arrow-top clicked");
         var $this = $(this);
-
-            $tabConInner.fadeIn();
-            //$this.addClass("hide-arrow");
-            $this.fadeOut();
-
-            // trigger click on #res-page-cont
-            //$res.trigger("click");
-            $navTabs.slideToggle(300);
-            //$tabConOuter.addClass("hide-res-menus");
-            $resArrow.toggleClass("move-arrow");
-            
-            // show #melis-navtabs-container-outer
-            /* $tabConOuter.removeClass("hide-res-menus"); */
+            $tabConInner.show();
+            $res.trigger("click");
+            $tabConOuter.removeClass("hide-res-menus");
     });
 
     function showPlugLists() {
@@ -33701,7 +33686,7 @@ var melisDashBoardDragnDrop = {
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
     },
 
-    closeDBPlugSidebar: function () {
+    /*closeDBPlugSidebar: function () {
         var self            = this,
             $btn            = $("#melisDashBoardPluginBtn"),
             $box            = $btn.closest(".melis-core-dashboard-dnd-box"),
@@ -33710,15 +33695,15 @@ var melisDashBoardDragnDrop = {
             $tabArrowTop    = $("#tab-arrow-top"),
             nWidth          = self.$gs.width() + self.$box.width();
 
-            /* if ( $box.hasClass("shown") ) {
+            if ( $box.hasClass("shown") ) {
                 $tabArrowTop.addClass("hide-arrow");
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
             } else {
                 $tabArrowTop.removeClass("hide-arrow");
-            } */
-    },
+            }
+    },*/
 
     disablePlugSidebar: function () {
         var self = this;
