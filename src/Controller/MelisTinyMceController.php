@@ -184,5 +184,49 @@ class MelisTinyMceController extends AbstractActionController
 
         return new JsonModel($tinyTemplates);
     }
+
+    public function uploadImageAction()
+    {
+        $appConfigForm = [
+            'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            'elements' => [
+                [
+                    'spec' => [
+                        'name' => 'file',
+                        'type' => 'file',
+                    ],
+                ],
+            ],
+        ];
+        // Factoring Mynews event and pass to view
+        $factory = new \Zend\Form\Factory();
+        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory->setFormElementManager($formElements);
+        $form = $factory->createForm($appConfigForm);
+        $form->setData($this->params()->fromFiles());
+        $target = $_SERVER['DOCUMENT_ROOT'].'/media/Uploads/';
+        if (!is_dir($target))
+            mkdir($target, 0777);
+        // File Input
+        $fileInput = new \Zend\InputFilter\FileInput('file');
+        $fileInput->setRequired(true);
+        $fileInput->getFilterChain()->attachByName(
+            'filerenameupload',
+            [
+                'target'    => $target.'/Uploads', // File name prefix
+                'randomize' => true,
+                'use_upload_extension' => true,
+            ]
+        );
+        $form->getInputFilter()->add($fileInput);
+        $file = null;
+        if ($form->isValid()){
+            $data = $form->getData();
+            $file = '/media/Uploads/' . basename($data['file']['tmp_name']);
+        }
+        return new JsonModel([
+            'location' => $file
+        ]);
+    }
 }
 
