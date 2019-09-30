@@ -33686,7 +33686,7 @@ var melisDashBoardDragnDrop = {
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
     },
 
-    /*closeDBPlugSidebar: function () {
+    closeDBPlugSidebar: function () {
         var self            = this,
             $btn            = $("#melisDashBoardPluginBtn"),
             $box            = $btn.closest(".melis-core-dashboard-dnd-box"),
@@ -33703,7 +33703,7 @@ var melisDashBoardDragnDrop = {
             } else {
                 $tabArrowTop.removeClass("hide-arrow");
             }
-    },*/
+    },
 
     disablePlugSidebar: function () {
         var self = this;
