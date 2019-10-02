@@ -4268,7 +4268,7 @@ div#modal-user-management div.widget {
     width: 23px;
 }
 
-@media (min-width: 320px) and (max-width: 374px) {
+/* @media (min-width: 320px) and (max-width: 374px) {
     .melis-core-gdpr-check-box1 {
         margin-left: -3.5% !important;
         font-size: 13px;
@@ -4341,7 +4341,7 @@ div#modal-user-management div.widget {
     #melis-core-gdpr-search-form-submit {
         margin-left: 16.4% !important;
     }
-}
+} */
 
 #id_melis_core_gdpr_tabs .widget-tabs .nav-tabs > li > a.glyphicons {
     border-bottom: none;

@@ -759,8 +759,14 @@ div.row, ul.row {
     justify-content: left;
   }
 }
-@media (max-width: 767px) and (min-width: 576px) {
+@media (max-width: 767px) {
   #melis-core-gdpr-search-form-submit {
+    width: 100%;
+  }
+  .gdpr-table-action-button:first-child {
+    margin-right: 1em;
+  }
+  #MelisCmsProspects-tab .row {
     width: 100%;
   }
 }
