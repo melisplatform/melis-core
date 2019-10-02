@@ -6,7 +6,7 @@
 <div class="relativeWrap" <?= $id; ?> data-melisKey='<?= $this->melisKey; ?>' style="<?php echo ($this->show) ? "" : "display:none;"; ?> padding-top:50px; padding-bottom: 50px;">
     <?php if(isset($modules)) { ?>
         <!-- TOP BUTTONS HOLDER -->
-        <div class="row float-right" style="margin-top: -40px;margin-right: 1px;">
+        <div class="float-right selection-button-above">
             <!-- CONDITION -->
                 <button type="button" class="btn btn-success extract-selected gdpr-table-action-button"><i class="fa fa-check" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_extract_selected_button'); ?></button>
                 <button type="button" class="btn btn-danger delete-selected gdpr-table-action-button"><i class="fa fa-times" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_delete_selected_button'); ?></button>
@@ -176,7 +176,7 @@
             </div>
         </div>
         <!-- END OF INTERFACE / ZONES -->
-        <div class="row float-right" style="margin-top: 10px;margin-right: 1px;">
+        <div class="float-right selection-button-below">
             <!-- CONDITION -->
             <button type="button" class="btn btn-success extract-selected gdpr-table-action-button"><i class="fa fa-check" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_extract_selected_button'); ?></button>
             <button type="button" class="btn btn-danger delete-selected gdpr-table-action-button"><i class="fa fa-times" style="padding-right: 5px;"></i><?= $this->translate('tr_melis_core_gdpr_tabs_delete_selected_button'); ?></button>

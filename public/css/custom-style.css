@@ -526,6 +526,14 @@ div.row, ul.row {
 .profile-photo #user-profile-pic {
   border-radius: 100%;
 }
+.selection-button-above {
+  margin-top: -40px;
+  margin-right: 1px;
+}
+.selection-button-below {
+  margin-top: 10px;
+  margin-right: 1px;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
@@ -758,8 +766,7 @@ div.row, ul.row {
   .filter-bar label {
     justify-content: left;
   }
-}
-@media (max-width: 767px) {
+  /* gdpr */
   #melis-core-gdpr-search-form-submit {
     width: 100%;
   }
@@ -768,5 +775,34 @@ div.row, ul.row {
   }
   #MelisCmsProspects-tab .row {
     width: 100%;
+  }
+  .gdpr-tab-table-container {
+    width: 100%;
+  }
+}
+@media (max-width: 400px) {
+  .gdpr-table-action-button:first-child {
+    margin-right: 0;
+  }
+  #MelisCmsProspects-tab .row {
+    width: auto;
+  }
+  .gdpr-table-action-button {
+    font-size: 13px;
+    margin-right: 0;
+  }
+  .selection-button-above,
+  .selection-button-below {
+    margin-right: 0;
+  }
+  #MelisCmsProspects_info {
+    margin-top: 6rem;
+    padding-top: 0;
+  }
+}
+@media (max-width: 320px) {
+  .gdpr-table-action-button {
+    font-size: 12px;
+    padding: 0.8em;
   }
 }
