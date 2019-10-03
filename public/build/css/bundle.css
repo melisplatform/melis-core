@@ -37504,6 +37504,9 @@ div.row, ul.row {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.widget.form-create {
+  margin-bottom: 1rem;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
