@@ -791,6 +791,22 @@ div.row, ul.row {
   .gdpr-tab-table-container {
     width: 100%;
   }
+  /* calendar */
+  #id_meliscalendar_tool .innerAll .no-gutters {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+@media (max-width: 576px) {
+  #calendar .fc-header-right,
+  #calendar .fc-header-space {
+    display: none;
+  }
+}
+@media (max-width: 358px) {
+  #calendar .fc-header td {
+    white-space: pre;
+  }
 }
 @media (max-width: 400px) {
   .gdpr-table-action-button:first-child {
