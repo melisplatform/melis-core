@@ -141,6 +141,7 @@ var melisCore = (function(window){
                             "</div>" +
                             "</li>";
                         ctr++;
+                        console.log({fm});
                     });
                 });
                 $body.find("#flash-messenger").append(clearData);
