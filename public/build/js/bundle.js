@@ -27041,8 +27041,8 @@ var tabExpander = (function($, window){
         var totalHeaderWidthPx = $("#id_meliscore_header").width();
         
         // left
-        var leftMenuWidthPx = $(".navbar-header").width();
-        //var leftMenuWidthPx = $("#brand-logo").width();
+        //var leftMenuWidthPx = $(".navbar-header").width();
+        var leftMenuWidthPx = $("#brand-logo").width();
         var leftMenuWidthPercent = (100 * 320) / totalHeaderWidthPx;
         
         // right
@@ -27055,8 +27055,8 @@ var tabExpander = (function($, window){
         //center
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
         // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        // tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        //tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         // tabContainerWidthPercent = 140.9 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
