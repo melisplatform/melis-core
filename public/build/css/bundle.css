@@ -37746,12 +37746,13 @@ div.row, ul.row {
   .gdpr-table-action-button:first-child {
     margin-right: 1em;
   }
+  #MelisCmsProspects-tab .dataTables_scrollHead,
+  #MelisCmsProspects-tab .dataTables_scrollHeadInner,
+  #MelisCmsProspects-tab table,
+  .gdpr-tab-table-container,
   #MelisCmsProspects-tab .row {
-    width: 100%;
-  }
-  .gdpr-tab-table-container {
-    width: 100%;
-  }
+    width: 100% !important;
+  } 
   /* calendar */
   #id_meliscalendar_tool .innerAll .no-gutters {
     padding-left: 0;
