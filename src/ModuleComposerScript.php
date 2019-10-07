@@ -21,7 +21,7 @@ class ModuleComposerScript
     private static $serviceManager = null;
     private static $noPrint = false;
 
-    public function setNoPrint()
+    public static function setNoPrint()
     {
         self::$noPrint = true;
     }
@@ -77,12 +77,12 @@ class ModuleComposerScript
 
         if (!empty($mScripts)){
 
-            if (self::$noPrint)
+            if (!self::$noPrint)
                 print self::translate('Module scripts executed') . PHP_EOL;
 
             foreach ($mScripts As $module => $scripts){
 
-                if (self::$noPrint)
+                if (!self::$noPrint)
                     if (!$isCliReqs)
                         print '* <span style="color: #02de02">'. sprintf(self::translate('scripts executed'), $module) .'  </span>' . PHP_EOL;
                     else
@@ -97,10 +97,10 @@ class ModuleComposerScript
                 }
             }
         }else
-            if (self::$noPrint)
+            if (!self::$noPrint)
                 print self::translate('No scripts executed') . PHP_EOL;
 
-        if (self::$noPrint)
+        if (!self::$noPrint)
             print PHP_EOL;
 
         return $result;
