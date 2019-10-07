@@ -19,6 +19,12 @@ namespace MelisCore;
 class ModuleComposerScript
 {
     private static $serviceManager = null;
+    private static $noPrint = false;
+
+    public function setNoPrint()
+    {
+        self::$noPrint = true;
+    }
 
     public static function setServiceManager($serviceManger)
     {
@@ -67,28 +73,38 @@ class ModuleComposerScript
             }
         }
 
+        $result = [];
+
         if (!empty($mScripts)){
 
-            print self::translate('Module scripts executed') . PHP_EOL;
+            if (self::$noPrint)
+                print self::translate('Module scripts executed') . PHP_EOL;
 
             foreach ($mScripts As $module => $scripts){
 
-                if (!$isCliReqs)
-                    print '* <span style="color: #02de02">'. sprintf(self::translate('scripts executed'), $module) .'  </span>' . PHP_EOL;
-                else
-                    print '* '. sprintf(self::translate('scripts executed'), $module) . PHP_EOL;
+                if (self::$noPrint)
+                    if (!$isCliReqs)
+                        print '* <span style="color: #02de02">'. sprintf(self::translate('scripts executed'), $module) .'  </span>' . PHP_EOL;
+                    else
+                        print '* '. sprintf(self::translate('scripts executed'), $module) . PHP_EOL;
 
                 foreach ($scripts As $scrpts){
                     try{
-                        require $scrpts;
+                        $result[$module][$scrpts] = require $scrpts;
                     }catch (\Exception $e){
                         print $e->getMessage();
                     }
                 }
             }
         }else
-            print self::translate('No scripts executed') . PHP_EOL;
+            if (self::$noPrint)
+                print self::translate('No scripts executed') . PHP_EOL;
 
-        print PHP_EOL;
+        if (self::$noPrint)
+            print PHP_EOL;
+
+        return $result;
     }
+
+
 }
