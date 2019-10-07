@@ -806,6 +806,9 @@ div.row, ul.row {
   #calendar .fc-header-space {
     display: none;
   }
+  .pagination-cont {
+    display: block;
+  }
 }
 @media (max-width: 358px) {
   #calendar .fc-header td {
