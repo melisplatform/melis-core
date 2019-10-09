@@ -802,12 +802,26 @@ div.row, ul.row {
   }
 }
 @media (max-width: 576px) {
+  /* calendar */
   #calendar .fc-header-right,
   #calendar .fc-header-space {
     display: none;
   }
+  /* pagination */
   .pagination-cont {
     display: block;
+  }
+  /* melis-site-translation */
+  #tableMelisSiteTranslation {
+    table-layout: fixed;
+  }
+  #tableMelisSiteTranslation td {
+    /* overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;   */
+    word-break: break-all;
+    white-space: normal;
+    /* word-wrap: break-word; */
   }
 }
 @media (max-width: 358px) {
