@@ -1,7 +1,7 @@
 <div id="<?= $this->dashboardId ?>" data-melisKey="<?= $this->melisKey ?>"
      class="tab-pane container-level-a tab-panel-dashboard">
     <div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2 melis-dashboard-plugins">
-        <div id="melis-core-dashboard-msg" data-active-mods="<?= $this->activeMods; ?>">
+        <div id="melis-core-dashboard-msg" style="display: none;" data-active-mods="<?= $this->activeMods; ?>">
             <div class="alert alert-info no-plugins" role="alert">
                 <p><?= $this->translate('tr_meliscore_melis_dashboard_no_plugins_to_load'); ?></p>
             </div>
