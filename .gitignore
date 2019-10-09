@@ -7,7 +7,7 @@
 /.cache
 /.zfproject.xml
 /vendor
-/sass
+/public/sass
 .DS_Store
 composer.phar
 composer.lock
