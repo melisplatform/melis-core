@@ -134,6 +134,7 @@ $(document).ready(function () {
                 }).done(function (data) {
                     var $apikey     = $("#melis-core-user-auth-api-key"),
                         $apiok      = $("#melis-core-user-auth-api-ok"),
+                        $apiko      = $("#melis-core-user-auth-api-ko"),
                         $apiurl     = $("#melis-core-microservices-url"),
                         $switch     = $("#switch-user-api-status .switch-animate");
 
@@ -153,7 +154,7 @@ $(document).ready(function () {
                             }
                         }
                         else {
-                            $apiok.removeClass("hidden");
+                            $apiko.removeClass("hidden");
                         }
                 }).fail(function() {
                     alert(translations.tr_meliscore_error_message);
