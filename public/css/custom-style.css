@@ -557,7 +557,7 @@ div.row, ul.row {
   margin-left: 2px;
   vertical-align: middle;
   border-top: 4px dashed;
-  border-top: 4px solid\9;
+  border-top: 4px solid;
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
@@ -844,11 +844,6 @@ div.row, ul.row {
     /* word-wrap: break-word; */
   }
 }
-@media (max-width: 358px) {
-  #calendar .fc-header td {
-    white-space: pre;
-  }
-}
 @media (max-width: 400px) {
   .gdpr-table-action-button:first-child {
     margin-right: 0;
@@ -867,6 +862,11 @@ div.row, ul.row {
   #MelisCmsProspects_info {
     margin-top: 6rem;
     padding-top: 0;
+  }
+}
+@media (max-width: 358px) {
+  #calendar .fc-header td {
+    white-space: pre;
   }
 }
 @media (max-width: 320px) {

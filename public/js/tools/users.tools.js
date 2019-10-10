@@ -160,7 +160,7 @@ $(document).ready(function () {
                 });
         });
 
-        $body.on("click", "#btn-melis-core-user-gen-api", function () {
+        $body.on("click", "#btn-melis-core-user-gen-api", function() {
             var id = _tmpUserId;
                 $.ajax({
                     type: 'POST',
