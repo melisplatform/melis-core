@@ -561,6 +561,14 @@ div.row, ul.row {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
+/* disabled button melis demo cms */
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  opacity: .65;
+}
 /* Responsive media queries */
 @media (min-width: 768px) {
   /* .login-page */
