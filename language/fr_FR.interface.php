@@ -455,8 +455,8 @@ return [
     'tr_emails_management_unable_to_update' => 'Impossible de mettre à jour l\'email',
     'tr_emails_management_unable_to_add' => 'Impossible d\'ajouter un nouvel email',
     'tr_emails_management_invalid_image_type' => 'Type d\'image incorrect',
-    'tr_emails_management_invalid_image_width' => 'La largeur de l\'image doit être 800 pixels ou moins',
-    'tr_emails_management_invalid_image_size' => 'La taille maximale autorisée pour le fichier est de 250 kilo-octets ou moins',
+    'tr_emails_management_invalid_image_width' => 'La largeur de l\'image doit être de 800 pixels ou moins',
+    'tr_emails_management_invalid_image_size' => 'La hauteur de l\'image doit être de 800 pixels ou moins',
 
     // Action Messages
     'tr_emails_management_emal_added_success' => 'Email ajouté avec succès',

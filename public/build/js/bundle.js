@@ -28397,22 +28397,24 @@ var melisHelper = (function(){
     function initDateRangePicker(selector, callBackFunction){
         setTimeout(function(){
             var target = $(selector);
-            target.addClass("dt-date-range-picker");
-            target.html(''+translations.tr_meliscore_datepicker_select_date+' <i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span></span> <b class="caret"></b>');
-            var sToday = translations.tr_meliscore_datepicker_today;
-            var sYesterday = translations.tr_meliscore_datepicker_yesterday;
-            var sLast7Days = translations.tr_meliscore_datepicker_last_7_days;
-            var sLast30Days = translations.tr_meliscore_datepicker_last_30_days;
-            var sThisMonth = translations.tr_meliscore_datepicker_this_month;
-            var sLastMonth = translations.tr_meliscore_datepicker_last_month;
+                target.addClass("dt-date-range-picker");
+                target.html(''+translations.tr_meliscore_datepicker_select_date+' <i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span></span> <span class="caret"></span>');
+
+            var sToday      = translations.tr_meliscore_datepicker_today,
+                sYesterday  = translations.tr_meliscore_datepicker_yesterday,
+                sLast7Days  = translations.tr_meliscore_datepicker_last_7_days,
+                sLast30Days = translations.tr_meliscore_datepicker_last_30_days,
+                sThisMonth  = translations.tr_meliscore_datepicker_this_month,
+                sLastMonth  = translations.tr_meliscore_datepicker_last_month;
 
             var rangeStringParam = {};
-            rangeStringParam[sToday] = [moment(), moment()];
-            rangeStringParam[sYesterday] = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
-            rangeStringParam[sLast7Days] = [moment().subtract(6, 'days'), moment()];
-            rangeStringParam[sLast30Days] = [moment().subtract(29, 'days'), moment()];
-            rangeStringParam[sThisMonth] = [moment().startOf('month'), moment().endOf('month')];
-            rangeStringParam[sLastMonth] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
+
+                rangeStringParam[sToday]        = [moment(), moment()];
+                rangeStringParam[sYesterday]    = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
+                rangeStringParam[sLast7Days]    = [moment().subtract(6, 'days'), moment()];
+                rangeStringParam[sLast30Days]   = [moment().subtract(29, 'days'), moment()];
+                rangeStringParam[sThisMonth]    = [moment().startOf('month'), moment().endOf('month')];
+                rangeStringParam[sLastMonth]    = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
 
             target.daterangepicker({
                 startDate: moment().subtract(10, 'years'),
