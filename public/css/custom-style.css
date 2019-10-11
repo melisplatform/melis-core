@@ -569,6 +569,22 @@ div.row, ul.row {
   box-shadow: none;
   opacity: .65;
 }
+/* user management / modal*/
+#tableUserViewDateConnection_wrapper .pagination-cont {
+  display: block;
+  justify-content: center;
+}
+#tableUserViewDateConnection_wrapper .pagination-cont .dataTables_info {
+  float: none;
+  text-align: center;
+}
+#tableUserViewDateConnection_wrapper .pagination-cont .dataTables_paginate {
+  float: none;
+}
+#tableUserViewDateConnection_wrapper .pagination-cont .dataTables_paginate .pagination {
+  display: inline-flex;
+  text-align: center;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
