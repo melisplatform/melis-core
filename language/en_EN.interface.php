@@ -121,6 +121,8 @@ return [
 
     'tr_meliscore_tool_user_update_success_info' => 'User\'s info updated successfully',
     'tr_meliscore_tool_user_update_fail_info' => 'Unable to update User\'s information',
+    'tr_meliscore_tool_user_reset_rights_success_info' => 'User\'s rights reset successfully',
+    'tr_meliscore_tool_user_reset_rights_fail_info' => 'Unable to reset User\'s rights',
 
     'tr_meliscore_tool_user_delete' => 'Remove User',
     'tr_meliscore_tool_user_delete_msg' => 'Are you sure you want to remove this user?',
@@ -139,6 +141,9 @@ return [
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
     'tr_meliscore_tool_user_update' => 'Save',
+    'tr_meliscore_tool_user_reset_rights' => 'Reset rights',
+    'tr_meliscore_tool_user_reset_rights_xs' => 'Reset',
+    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Are you sure to reset the rights of this user? <br>This will close access to most functionalities of the platform and you will have to set the new rights manually.',
 
     'tr_meliscore_forgot_password' => 'Forgot password',
     // Emails
@@ -524,6 +529,26 @@ return [
     'tr_meliscore_logs_tool' => 'Logs',
     'tr_meliscore_logs_tool_description' => 'This tool saves the actions made by all users of the platform. the logs are then sortable according to their origin, to the user and to their type.',
     'tr_meliscore_logs_type' => 'Log type',
+    "tr_meliscore_logs_tool_export_modal_title" => "Export Logs",
+    "tr_meliscore_log_export_user" => "User",
+    "tr_meliscore_log_export_user tooltip" => " User who performed the action",
+    "tr_meliscore_log_export_type" => "Log Type",
+    "tr_meliscore_log_export_type tooltip" => "Specific type of log",
+    "tr_meliscore_log_export_log_date_range" => "Date Range",
+    "tr_meliscore_log_export_log_date_range tooltip" => "Logs dates",
+    "tr_meliscore_log_export_delimiter" => "Delimiter",
+    "tr_meliscore_log_export_delimiter tooltip" => "Column separation character",
+    "tr_meliscore_log_export_enclosure" => "Enclose columns with \" \"",
+    "tr_meliscore_log_export_enclosure tooltip" => 'Select if you want the columns to be closed with &quot; &quot; or not',
+    "tr_meliscore_log_export_export_btn" => "Export",
+    "tr_meliscore_logs_tool_export_data_over_2000" => "This export contains %s results which is large and can take several minutes.<br>Are you sure you want to export these data ?",
+    "tr_meliscore_logs_tool_export_data_content_error" => "Unable to export logs.",
+    "tr_meliscore_logs_tool_export_ok" => "Logs successfully exported.",
+    "tr_meliscore_logs_log_status_ok" => "Success",
+    "tr_meliscore_logs_log_status_ko" => "Failed",
+    'tr_meliscore_logs_cancel' => 'Cancel',
+    'tr_meliscore_common_all' => 'All',
+    "tr_meliscore_logs_log_export_confirm_msg" => "By clicking on this button you will export all logs with the filters configured. Are you sure you wish to proceed ?",
 
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',
@@ -714,5 +739,10 @@ return [
     'tr_melis_cms_gdpr_banner_header' => 'Banner header',
     'tr_melis_cms_gdpr_banner_details' => 'Banner details',
 
+    'tr_melis_core_composer_scrpts_Module scripts executed' => 'Module scripts executed',
+    'tr_melis_core_composer_scrpts_scripts executed' => '%s scripts executed',
+    'tr_melis_core_composer_scrpts_No scripts executed' => 'No scripts executed',
+    'tr_melis_core_composer_scrpts_executing' => 'Executing composer scripts',
+    'tr_melis_core_composer_scrpts_executed' => 'Composer scripts executed',
     ];
 ?>

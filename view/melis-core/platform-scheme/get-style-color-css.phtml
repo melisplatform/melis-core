@@ -372,10 +372,10 @@ input[type="color"]:focus,
 }
 .melis-ui-outlined:hover {
     outline: 1px solid <?= $primaryColor; ?>!important;
-    box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important
-    -webkit-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important
-    -moz-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important
-    -ms-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important
+    box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
+    -webkit-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
+    -moz-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
+    -ms-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
     z-index: 9999996 !important;
 }
 
@@ -697,11 +697,11 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active, .melis-core-dashboard-category-btn.active {
-    background-color: <?= $secondaryColor; ?>;
+    background-color: <?= $primaryColor; ?>;
     border-color: <?= $secondaryColor; ?>;
 }
 .melis-core-dashboard-plugin-snippets:hover {
-    background-color: <?= $secondaryColor; ?>;
+    background-color: <?= $primaryColor; ?>;
 }
 
 /* Plug-in Page Edition Right Sidebar */
@@ -745,9 +745,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .bootstrap-dialog.type-danger .modal-header {
     background-color: <?= $primaryColor; ?>;
 }
-.bootstrap-dialog.type-warning .modal-header {
-    background-color: <?= $primaryColor; ?> !important;
-}
 
 /* Media Queries */
 @media (max-width: 768px) {
@@ -783,10 +780,5 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 .melis-primary-bg {
-    background: <?= $primaryColor; ?> !important;
-}
-
-/*Bootstrap Confirm modal header color override*/
-.confirm-modal-header .modal-header{
     background: <?= $primaryColor; ?> !important;
 }
