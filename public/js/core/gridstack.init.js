@@ -26,7 +26,7 @@ var melisDashBoardDragnDrop = {
 
     melisDashboardMsg: '#melis-core-dashboard-msg',
 
-    init: function () {
+    init: function() {
         this.cacheDom();
         this.gsSetOptions();
         this.bindEvents();
@@ -40,7 +40,7 @@ var melisDashBoardDragnDrop = {
         //$("#disable-left-menu-overlay").hide();
     },
 
-    cacheDom: function () {
+    cacheDom: function() {
         // jQuery DOM element
         this.$body              = $("body");
         this.$document          = $(document);
@@ -67,7 +67,7 @@ var melisDashBoardDragnDrop = {
 
     }, */
 
-    gsSetOptions: function () {
+    gsSetOptions: function() {
         var options = {
             cellHeight: 80,
             verticalMargin: 20,
@@ -84,17 +84,21 @@ var melisDashBoardDragnDrop = {
         this.$gs.gridstack(options);
     },
 
-    dragWidget: function () {
+    dragWidget: function() {
         // set up draggable element / this.melisWidgetHandle / .grid-stack-item
         $(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").draggable({
             helper: 'clone',
             revert: 'invalid',
             appendTo: 'body',
             drag: function (event, ui) {
+                // turn off tooltip plugin snippet on gridstack
+                // $(melisDashBoardDragnDrop.melisWidgetHandle+'.grid-stack-item').tooltip('dispose');
+                // $(melisDashBoardDragnDrop.melisWidgetHandle+'.grid-stack-item').tooltip('hide');
+
                 var $gridPH = $('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
                     $gridPH.attr('data-gs-width', 6);
                     $gridPH.attr('data-gs-height', 3);
-
+                
                 /**
                  * During plugin drag:
                  *  - INSIDE grid-stack drag area: HIDE dashboard msg
@@ -372,12 +376,16 @@ var melisDashBoardDragnDrop = {
             nWidth          = self.$gs.width() + self.$box.width();
 
             if ( $box.hasClass("shown") ) {
-                $tabArrowTop.addClass("hide-arrow");
+                if ( melisCore.screenSize < 768 ) {
+                    $tabArrowTop.addClass("hide-arrow");
+                }
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
             } else {
-                $tabArrowTop.removeClass("hide-arrow");
+                if ( melisCore.screenSize < 768 ) {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
             }
     },
 

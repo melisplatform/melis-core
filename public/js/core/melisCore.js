@@ -207,9 +207,9 @@ var melisCore = (function(window){
         } */
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
             // check if dashboard plugin menu is open
-            /* if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
+            if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
                 melisDashBoardDragnDrop.closeDBPlugSidebar();
-            } */
+            }
         });
     }
 
@@ -578,26 +578,69 @@ var melisCore = (function(window){
      * For responsive placement
      */
 
-    var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
+    /* var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
     var dashboardTooltip = {
-        placement: pos,
+        placement: 'left',
         delay: {
             show: 800
         },
         template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
     };
 
-    $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip );
+    $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip ); */
 
     /*
      * Added by: Junry @ 10/10/2018
      * For blinking issue on hover
      */
-    $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
+    /* $body.on("hover", ".melis-core-dashboard-plugin-snippets", function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
+    }); */
+    /* $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
         $(this).children(".melis-plugin-tooltip").stop().fadeIn();
     }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
         $(this).children(".melis-plugin-tooltip").stop().fadeOut();
+    }); */
+
+    // Tooltip
+    /* $(".melis-core-dashboard-plugin-snippets").tooltip({
+        position: {
+            my: "left bottom",
+            at: "left bottom",
+            using: function( position, feedback ) {
+                console.log({position});
+                var $this = $(this);
+                    $this.css( position );
+                    $this
+                        .addClass( "melis-dashboard-plugin-tooltip" )
+                        .addClass( feedback.vertical )
+                        .addClass( feedback.horizontal )
+                        .appendTo( this );
+            }
+        },
     });
+
+    $(".melis-core-dashboard-plugin-snippets").hover(function() {
+        var $this = $(this);
+            $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
+    }) */
+
+    // bootstrap tooltip https://getbootstrap.com/docs/4.3/components/tooltips/
+    /* $('.melis-core-dashboard-plugin-filter-box > .melis-core-dashboard-plugin-snippets').tooltip({
+        animation: true,
+        container: 'body',
+        delay: 200,
+        html: true,
+        placement: 'right',
+        trigger: 'manual',
+        template: '<div class="tooltip melis-dashboard-plugin-tooltip melis-plugin-tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+    });
+
+    $body.on('mouseover', '.melis-core-dashboard-plugin-snippets', function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
+    }).on('mouseout', '.melis-core-dashboard-plugin-snippets', function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeOut();
+    }); */
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
 

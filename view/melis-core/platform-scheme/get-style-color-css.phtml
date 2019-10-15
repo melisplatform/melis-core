@@ -149,6 +149,18 @@ body .navbar.main.navbar-primary {
     background: <?= $primaryColor; ?>;
 }
 
+.pagination > .page-item.active > .page-link, 
+.pagination > .page-item.active > .page-link:focus, 
+.pagination > .page-item.active > .page-link:hover {
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+
+.bs-tooltip-auto[x-placement^=left] .arrow::before, 
+.bs-tooltip-left .arrow::before {
+    border-left-color: <?= $secondaryColor; ?>;
+}
+
 /* Buttons */
 .btn-primary {
     background: <?= $primaryColor; ?>;
@@ -366,6 +378,7 @@ input[type="color"]:focus,
 .module-display-heading .ms-heading {
     background: <?= $primaryColor; ?>!important;
 }
+.melis-cms-filter-btn-sub-category.active,
 .melis-cms-ps-box .melis-cms-filter-btn.active, .melis-cms-category-btn.active {
     background: <?= $primaryColor; ?>!important;
     border-color: <?= $primaryColor; ?>!important;
@@ -609,6 +622,9 @@ div.glyphicons-social.glyphicon-primary i:before {
     background-color: <?= $secondaryColor; ?>;
 }
 
+.tooltip.bs-tooltip-left .arrow {
+    border-left-color: <?= $secondaryColor; ?>;
+}
 .tooltip.left .tooltip-arrow {
     border-left-color: <?= $secondaryColor; ?>;
 }
@@ -697,11 +713,11 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active, .melis-core-dashboard-category-btn.active {
-    background-color: <?= $secondaryColor; ?>;
-    border-color: <?= $secondaryColor; ?>;
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
 }
 .melis-core-dashboard-plugin-snippets:hover {
-    background-color: <?= $secondaryColor; ?>;
+    background-color: <?= $primaryColor; ?>;
 }
 
 /* Plug-in Page Edition Right Sidebar */

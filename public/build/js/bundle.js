@@ -7928,17 +7928,17 @@ if (window.location != window.parent.location)
     });
 
     /* added div.collapse below */
-//    $('body ul.collapse, body div.collapse')
-//    .on('show.bs.collapse', function(e)
-//    {
-//        e.stopPropagation();
-//        $(this).closest('li').addClass('active');
-//    })
-//    .on('hidden.bs.collapse', function(e)
-//    {
-//        e.stopPropagation();
-//        $(this).closest('li').removeClass('active');
-//    });
+/*    $('body ul.collapse, body div.collapse')
+   .on('show.bs.collapse', function(e)
+   {
+       e.stopPropagation();
+       $(this).closest('li').addClass('active');
+   })
+   .on('hidden.bs.collapse', function(e)
+   {
+       e.stopPropagation();
+       $(this).closest('li').removeClass('active');
+   }); */
     
 
     $('[data-toggle="navbar-color"]').on('click', function(e){
@@ -27608,9 +27608,9 @@ var melisCore = (function(window){
         } */
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
             // check if dashboard plugin menu is open
-            /* if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
+            if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
                 melisDashBoardDragnDrop.closeDBPlugSidebar();
-            } */
+            }
         });
     }
 
@@ -27979,26 +27979,69 @@ var melisCore = (function(window){
      * For responsive placement
      */
 
-    var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
+    /* var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
     var dashboardTooltip = {
-        placement: pos,
+        placement: 'left',
         delay: {
             show: 800
         },
         template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
     };
 
-    $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip );
+    $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip ); */
 
     /*
      * Added by: Junry @ 10/10/2018
      * For blinking issue on hover
      */
-    $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
+    /* $body.on("hover", ".melis-core-dashboard-plugin-snippets", function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
+    }); */
+    /* $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
         $(this).children(".melis-plugin-tooltip").stop().fadeIn();
     }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
         $(this).children(".melis-plugin-tooltip").stop().fadeOut();
+    }); */
+
+    // Tooltip
+    /* $(".melis-core-dashboard-plugin-snippets").tooltip({
+        position: {
+            my: "left bottom",
+            at: "left bottom",
+            using: function( position, feedback ) {
+                console.log({position});
+                var $this = $(this);
+                    $this.css( position );
+                    $this
+                        .addClass( "melis-dashboard-plugin-tooltip" )
+                        .addClass( feedback.vertical )
+                        .addClass( feedback.horizontal )
+                        .appendTo( this );
+            }
+        },
     });
+
+    $(".melis-core-dashboard-plugin-snippets").hover(function() {
+        var $this = $(this);
+            $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
+    }) */
+
+    // bootstrap tooltip https://getbootstrap.com/docs/4.3/components/tooltips/
+    /* $('.melis-core-dashboard-plugin-filter-box > .melis-core-dashboard-plugin-snippets').tooltip({
+        animation: true,
+        container: 'body',
+        delay: 200,
+        html: true,
+        placement: 'right',
+        trigger: 'manual',
+        template: '<div class="tooltip melis-dashboard-plugin-tooltip melis-plugin-tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+    });
+
+    $body.on('mouseover', '.melis-core-dashboard-plugin-snippets', function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
+    }).on('mouseout', '.melis-core-dashboard-plugin-snippets', function() {
+        $(this).children(".melis-plugin-tooltip").stop().fadeOut();
+    }); */
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
 
@@ -33353,7 +33396,7 @@ var melisDashBoardDragnDrop = {
 
     melisDashboardMsg: '#melis-core-dashboard-msg',
 
-    init: function () {
+    init: function() {
         this.cacheDom();
         this.gsSetOptions();
         this.bindEvents();
@@ -33367,7 +33410,7 @@ var melisDashBoardDragnDrop = {
         //$("#disable-left-menu-overlay").hide();
     },
 
-    cacheDom: function () {
+    cacheDom: function() {
         // jQuery DOM element
         this.$body              = $("body");
         this.$document          = $(document);
@@ -33394,7 +33437,7 @@ var melisDashBoardDragnDrop = {
 
     }, */
 
-    gsSetOptions: function () {
+    gsSetOptions: function() {
         var options = {
             cellHeight: 80,
             verticalMargin: 20,
@@ -33411,17 +33454,21 @@ var melisDashBoardDragnDrop = {
         this.$gs.gridstack(options);
     },
 
-    dragWidget: function () {
+    dragWidget: function() {
         // set up draggable element / this.melisWidgetHandle / .grid-stack-item
         $(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").draggable({
             helper: 'clone',
             revert: 'invalid',
             appendTo: 'body',
             drag: function (event, ui) {
+                // turn off tooltip plugin snippet on gridstack
+                // $(melisDashBoardDragnDrop.melisWidgetHandle+'.grid-stack-item').tooltip('dispose');
+                // $(melisDashBoardDragnDrop.melisWidgetHandle+'.grid-stack-item').tooltip('hide');
+
                 var $gridPH = $('#' + activeTabId + ' .tab-pane .grid-stack .grid-stack-placeholder');
                     $gridPH.attr('data-gs-width', 6);
                     $gridPH.attr('data-gs-height', 3);
-
+                
                 /**
                  * During plugin drag:
                  *  - INSIDE grid-stack drag area: HIDE dashboard msg
@@ -33699,12 +33746,16 @@ var melisDashBoardDragnDrop = {
             nWidth          = self.$gs.width() + self.$box.width();
 
             if ( $box.hasClass("shown") ) {
-                $tabArrowTop.addClass("hide-arrow");
+                if ( melisCore.screenSize < 768 ) {
+                    $tabArrowTop.addClass("hide-arrow");
+                }
                 self.$gs.animate({
                     width: dWidth
                 }, 3);
             } else {
-                $tabArrowTop.removeClass("hide-arrow");
+                if ( melisCore.screenSize < 768 ) {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
             }
     },
 

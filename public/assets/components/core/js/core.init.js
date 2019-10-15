@@ -102,17 +102,17 @@ if (window.location != window.parent.location)
     });
 
     /* added div.collapse below */
-//    $('body ul.collapse, body div.collapse')
-//    .on('show.bs.collapse', function(e)
-//    {
-//        e.stopPropagation();
-//        $(this).closest('li').addClass('active');
-//    })
-//    .on('hidden.bs.collapse', function(e)
-//    {
-//        e.stopPropagation();
-//        $(this).closest('li').removeClass('active');
-//    });
+/*    $('body ul.collapse, body div.collapse')
+   .on('show.bs.collapse', function(e)
+   {
+       e.stopPropagation();
+       $(this).closest('li').addClass('active');
+   })
+   .on('hidden.bs.collapse', function(e)
+   {
+       e.stopPropagation();
+       $(this).closest('li').removeClass('active');
+   }); */
     
 
     $('[data-toggle="navbar-color"]').on('click', function(e){

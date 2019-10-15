@@ -585,6 +585,14 @@ div.row, ul.row {
   display: inline-flex;
   text-align: center;
 }
+/* dashboard tooltip */
+.tooltip .tooltip-inner {
+  background-color: #212121;
+}
+.tooltip .arrow::before {
+  border-left-color: #212121;
+}
+
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
@@ -716,6 +724,12 @@ div.row, ul.row {
   }
   #id_meliscore_footer.slide-left {
     left: -20rem;
+  }
+  .tooltip.bs-tooltip-left {
+    left: -12% !important;
+  }
+  .tooltip.bs-tooltip-left .tool-inner {
+    min-width: 200px;
   }
 }
 @media (max-width: 767px) {

@@ -894,13 +894,17 @@ class EmailsManagementController extends AbstractActionController
                     $errors['boe_content_layout_logo']['fileMimeTypeFalse'] = $translator->translate('tr_emails_management_invalid_image_type');
 
                 if (!empty($fileInputErr['fileImageSizeWidthTooBig']))
-                    $errors['boe_content_layout_logo']['fileImageSizeWidthTooBig'] = $translator->translate('Image width should be 800 pexils or less');
+                    $errors['boe_content_layout_logo']['fileImageSizeWidthTooBig'] = $translator->translate('tr_emails_management_invalid_image_width');
 
                 if (!empty($fileInputErr['fileSizeTooBig']))
                     $errors['boe_content_layout_logo']['fileSizeTooBig'] = $translator->translate('tr_emails_management_invalid_image_size');
+
+                //if (!empty($fileInputErr['fileImageSizeHeightTooBig']))
+                    //die(var_dump($translator->translate('tr_emails_management_invalid_image_type')));
+                    //$errors['boe_content_layout_logo']['fileImageSizeHeightTooBig'] = $translator->translate('tr_emails_management_invalid_image_height');
             }
         }
-         
+        //die(var_dump($errors));
         $response = array(
             'success' => $status,
             'textTitle' => $textTitle,
