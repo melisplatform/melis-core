@@ -37547,8 +37547,9 @@ div.row, ul.row {
 .tooltip .tooltip-inner {
   background-color: #212121;
 }
-.tooltip .arrow::before {
-  border-left-color: #212121;
+.bs-tooltip-auto[x-placement^=left] .arrow::before, 
+.bs-tooltip-left .arrow::before {
+  border-left-color: #212121 !important;
 }
 
 /* Responsive media queries */
@@ -37686,7 +37687,7 @@ div.row, ul.row {
   .tooltip.bs-tooltip-left {
     left: -12% !important;
   }
-  .tooltip.bs-tooltip-left .tool-inner {
+  .tooltip.bs-tooltip-left .tooltip-inner {
     min-width: 200px;
   }
 }

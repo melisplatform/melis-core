@@ -16,7 +16,7 @@ var dashboardNotify = (function() {
         $pluginFilterBtn    = $pluginBtnBox.find(".melis-core-dashboard-filter-btn"),
         $tpd                = $("#"+activeTabId+".tab-panel-dashboard").find(".active"),
         $melisDashboard     = $body.find("#"+activeTabId+"[data-meliskey='meliscore_dashboard']"),
-        $dashMsg            = $body.find("#melis-core-dashboard-msg");
+        $dashMsg            = $body.find(".melis-core-dashboard-msg");
 
     var eh = new EnjoyHint({
         onStart: function() {
@@ -163,7 +163,7 @@ var dashboardNotify = (function() {
 $(function() {
     setTimeout(function() {
         var $body           = $("body"),
-            activeModule    = $("#melis-core-dashboard-msg").data("activeMods").split("-");
+            activeModule    = $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-");
 
             /* 
              * Check if melisUserTabs is currently an active module.
