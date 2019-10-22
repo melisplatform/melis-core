@@ -28145,6 +28145,8 @@ var melisCore = (function(window){
                 $html.addClass("safari");
             } else if ( ua.indexOf("Firefox/") > -1 ) {
                 $html.addClass("firefox");
+            } else if ( ua.indexOf("Opera/") > -1 ) {
+                $html.addClass("opera");
             }
     }
 
