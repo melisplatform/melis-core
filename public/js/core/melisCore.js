@@ -21,17 +21,7 @@ var melisCore = (function(window){
         $resArrow       = $("#res-page-cont span i"),
         $tabConOuter    = $("#melis-navtabs-container-outer"),
         $tabConInner    = $("#melis-navtabs-container-inner"),
-        $tabArrowTop    = $("#tab-arrow-top"),
-
-    // grid-stack dashboards
-        $pluginBtn      = $("#melisDashBoardPluginBtn"),
-        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-        $gs             = $body.find("#" + activeTabId + " .grid-stack"),
-        gsi             = $gs.find(".grid-stack-item").length,
-        boxWidth        = parseInt( $pluginBox.outerWidth() ),
-        gsWidth         = parseInt( $gs.outerWidth() ),
-        dWidth          = gsWidth - boxWidth,
-        nWidth          = gsWidth + boxWidth;    
+        $tabArrowTop    = $("#tab-arrow-top");    
 
     // MAIN FUNCTIONS =================================================================================================================
 
@@ -215,7 +205,7 @@ var melisCore = (function(window){
         /* if ( activeTabId === "id_meliscore_toolstree_section_dashboard" ) {
             $("#sidebar-menu").trigger("click");
         } */
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '');
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
@@ -289,7 +279,8 @@ var melisCore = (function(window){
             $tabLi          = $this.closest("li"),
             meliskey        = $tabLi.data("tool-meliskey"),
             $pluginBtn      = $("#melisDashBoardPluginBtn"),
-            $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box")
+            $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+            $tabContent     = $("#"+tabContentID+".tab-panel-dashboard");
             
             // assign active tab id
             activeTabId = tabContentID;
@@ -356,6 +347,14 @@ var melisCore = (function(window){
             
             // switch to the clicked tab and also the tab container
             melisHelper.tabSwitch( activeTabId );
+            
+            /*
+             * Check current dashboard and make necessary adjustments
+             * like .grid-stack width in connection with plugin menu box
+             */
+            if ( $tabContent.hasClass("active") && typeof melisDashBoardDragnDrop !== "undefined" ) {
+                melisDashBoardDragnDrop.checkDashboard();
+            }
     }
 
     /*
@@ -612,42 +611,17 @@ var melisCore = (function(window){
     }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
         $(this).children(".melis-plugin-tooltip").stop().fadeOut();
     });
-
-    // bootstrap tooltip https://getbootstrap.com/docs/4.3/components/tooltips/
-    /* $('#id_meliscore_center_dashboard_menu .melis-core-dashboard-plugin-snippets').tooltip({
-        animation: true,
-        container: 'body',
-        delay: 200,
-        html: true,
-        placement: 'right',
-        trigger: 'manual',
-        template: '<div class="tooltip melis-dashboard-plugin-tooltip melis-plugin-tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-    });
-
-    $body.on('mouseover', '#id_meliscore_center_dashboard_menu .melis-core-dashboard-plugin-snippets', function() {
-        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
-    }).on('mouseout', '#id_meliscore_center_dashboard_menu .melis-core-dashboard-plugin-snippets', function() {
-        $(this).children(".melis-plugin-tooltip").stop().fadeOut();
-    }); */
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
-    	data = $(this).data();
-    	//var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
+        data = $(this).data();
+        //var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
 
-        melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
-        
-        // check if plugins menu is open, adjust .grid-stack width accordingly
-        if ( $pluginBox.hasClass("shown") ) {
-            if ( gsi === 0 ) {
-                $gs.animate({
-                    width: gsWidth
-                }, 3);
-            } else {
-                $gs.animate({
-                    width: nWidth
-                }, 3);
+        melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId}, '', function() {
+            // check dashboard
+            if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
+                melisDashBoardDragnDrop.checkDashboard();
             }
-        }
+        });
     });
 
     /* 
@@ -660,28 +634,37 @@ var melisCore = (function(window){
 
     // this function is called from render-dashboard-plugins.phtml
     function showToggleDashboardPluginMenu() {
-        $pluginBox.toggleClass("shown");
+        var $pluginBtn      = $("#melisDashBoardPluginBtn"),
+            $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+            $gs             = $body.find("#" + activeTabId + " .grid-stack"),
+            gsi             = $gs.find(".grid-stack-item").length
+            minWidth        = $gs.data("min-width"),
+            maxWidth        = $gs.data("max-width");
 
-        // responsive main tab menu button
-        if ( $tabArrowTop.length && screenSize <= 767 ) {
-            if ( $pluginBox.hasClass("shown") ) {
-                $tabArrowTop.addClass("hide-arrow");
-            } else {
-                $tabArrowTop.removeClass("hide-arrow");
+            $pluginBox.toggleClass("shown");
+
+            // responsive main tab menu button
+            if ( $tabArrowTop.length && screenSize <= 767 ) {
+                if ( $pluginBox.hasClass("shown") ) {
+                    $tabArrowTop.addClass("hide-arrow");
+                } else {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
             }
-        }
 
-        // check if plugins menu is open, adjust .grid-stack width accordingly
-        if ( $pluginBox.hasClass("shown") ) {
-            $gs.animate({
-                width: dWidth
-            }, 3);
-        } 
-        else {
-            $gs.animate({
-                width: nWidth
-            }, 3);
-        }
+            // check if plugins menu is open, adjust .grid-stack width accordingly
+            if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                if ( $pluginBox.hasClass("shown") ) {
+                    $gs.animate({
+                        width: minWidth
+                    }, 3);
+                } 
+                else {
+                    $gs.animate({
+                        width: maxWidth
+                    }, 3);
+                }
+            }
     }
 
     // responsive menu functionalities

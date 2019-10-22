@@ -487,6 +487,7 @@ var melisHelper = (function(){
             if ( callback !== undefined || callback !== null) {
                 fnCallback = callback;
             }
+            
             zoneReload(zoneId, melisKey, parameters, fnCallback);
 
             // check if tabExpander(); needs to be activated or not
