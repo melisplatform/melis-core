@@ -37,7 +37,7 @@
 				<?php if (!file_exists($imgPath)):?>
 					<span style="padding: 0px 3px; border: 1px solid #ccc5c5; box-shadow: 0px 1px 1px #444444;"><?php echo mb_strtoupper($lang[0])?></span> <?= $name; ?>
 				<?php else:?>
-					<img src="/MelisCore/assets/images/lang/<?= $lang[0]; ?>.png"> <?= $name; ?>
+					<img src="/MelisCore/assets/images/lang/<?= $lang[0]; ?>.png"><strong><?= $name; ?></strong>
 				<?php endif;?>
 			</a>
 			
