@@ -27416,13 +27416,17 @@ var melisCore = (function(window){
         $centerContent  = $("#melis-id-body-content-load"),
         screenSize      = jQuery(window).width(),
 
-    // responsive menu 767px, tablet and phone
+        // responsive menu 767px, tablet and phone
         $header         = $("#id_meliscore_header"),
         $res            = $("#res-page-cont"),
         $resArrow       = $("#res-page-cont span i"),
         $tabConOuter    = $("#melis-navtabs-container-outer"),
         $tabConInner    = $("#melis-navtabs-container-inner"),
-        $tabArrowTop    = $("#tab-arrow-top");    
+        $tabArrowTop    = $("#tab-arrow-top"),
+        // fixes conlict between jquery ui and bootstrap same function name .tooltip()
+        jqeBsTooltip    = $.fn.tooltip.noConflict();
+
+    $.fn.tlp = jqeBsTooltip;
 
     // MAIN FUNCTIONS =================================================================================================================
 
@@ -27990,9 +27994,10 @@ var melisCore = (function(window){
     /*
      * Added by: Junry @ 10/10/208
      * For responsive placement
+     * bootstrap tooltip style, uses custom .tlp() function to solve
+     * conflict with jQuery ui same function name .tooltip()
      */
-
-    var pos = ( $(window).width() < 460 ) ? 'auto' : 'right';
+    /* var pos = ( $(window).width() < 460 ) ? 'auto' : 'right';
     var dashboardTooltip = {
         placement: pos,
         delay: {
@@ -28001,16 +28006,39 @@ var melisCore = (function(window){
         template: '<div class="tooltip melis-plugin-tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
     };
 
-    $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip );
+    $body.find(".melis-core-dashboard-plugin-snippets").tlp( dashboardTooltip ); */
 
     /*
      * Added by: Junry @ 10/10/2018
      * For blinking issue on hover
      */
-    $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
+    /* $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
         $(this).children(".melis-plugin-tooltip").stop().fadeIn();
     }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
         $(this).children(".melis-plugin-tooltip").stop().fadeOut();
+    }); */
+
+     
+    // jQuery ui tooltip style
+    $(".melis-core-dashboard-plugin-snippets").tooltip({
+        position: {
+            my: "left center",
+            at: "left+110% center",
+            using: function( position, feedback ) {
+                var $this = $(this);
+                    $this.css( position );
+                    $this
+                        .addClass( "melis-dashboard-plugin-tooltip" )
+                        .addClass( feedback.vertical )
+                        .addClass( feedback.horizontal )
+                        .appendTo( this );
+            }
+        },
+    });
+
+    $(".melis-core-dashboard-plugin-snippets").hover(function() {
+        var $this = $(this);
+            $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
