@@ -2252,6 +2252,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child, table.dataTa
 /* bootstrap switch */
 .has-switch{
     width: 150px;
+    font-weight: bold;
 }
 .has-switch label{
     width: 28%;

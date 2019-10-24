@@ -34,6 +34,9 @@
   display: block;
   width: 100%;
 }
+.navbar-right .dropdown .dropdown-menu li a img {
+  margin-right: 0.5rem;
+}
 .navbar.main .nav.navbar-right > li > .dropdown-menu {
   min-width: 12rem;
 }
@@ -51,7 +54,6 @@
 }
 .navbar.main .nav.navbar-right .dropdown-menu li.active:hover a {
   background-color: #fff;
-  color: #e61c23;
 }
 .content-login .card-wrapper {
   width: 38.285rem;
