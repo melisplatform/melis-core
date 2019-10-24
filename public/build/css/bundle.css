@@ -37573,6 +37573,10 @@ div.row, ul.row {
   border-width: 10px;
   margin-top: -10px;
 }
+/* flot chart */
+.flotchart-holder {
+  width: 100%;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
