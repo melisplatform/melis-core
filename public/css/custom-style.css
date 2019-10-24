@@ -931,6 +931,9 @@ div.row, ul.row {
     white-space: normal;
     /* word-wrap: break-word; */
   }
+  .pagination .page-link {
+    padding: 0.5rem;
+  }
 }
 @media (max-width: 400px) {
   .gdpr-table-action-button:first-child {
