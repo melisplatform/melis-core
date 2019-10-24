@@ -121,6 +121,8 @@ return [
 
     'tr_meliscore_tool_user_update_success_info' => 'User\'s info updated successfully',
     'tr_meliscore_tool_user_update_fail_info' => 'Unable to update User\'s information',
+    'tr_meliscore_tool_user_reset_rights_success_info' => 'User\'s rights reset successfully',
+    'tr_meliscore_tool_user_reset_rights_fail_info' => 'Unable to reset User\'s rights',
 
     'tr_meliscore_tool_user_delete' => 'Remove User',
     'tr_meliscore_tool_user_delete_msg' => 'Are you sure you want to remove this user?',
@@ -139,6 +141,9 @@ return [
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
     'tr_meliscore_tool_user_update' => 'Save',
+    'tr_meliscore_tool_user_reset_rights' => 'Reset rights',
+    'tr_meliscore_tool_user_reset_rights_xs' => 'Reset',
+    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Are you sure to reset the rights of this user? <br>This will close access to most functionalities of the platform and you will have to set the new rights manually.',
 
     'tr_meliscore_forgot_password' => 'Forgot password',
     // Emails
@@ -314,8 +319,7 @@ return [
     'tr_meliscore_tool_platform_update_marketplace' => 'Allow updates from the marketplace',
     'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
     'tr_meliscore_common_allow' => 'Allow',
-    'tr_meliscore_tool_platform_invalid_platform_name' => 'The name of the platform can contain only letters and numbers, no space or any special character',
-    
+
     // Language Tool Translations
     'tr_meliscore_tool_language' => 'Back-Office languages',
     'tr_meliscore_tool_language_description' => 'Define here the different languages that can be used in the Back Office.',
@@ -406,8 +410,7 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email' => 'Sender email (From)',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to' => 'Reply To',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to tooltip' => 'Email to which the user will reply to (reply To)',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted',
-    'tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip' => 'Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])"></i>',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout' => 'Layout',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout tooltip' => 'Path to the physical file of the template of the email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Layout title',
@@ -439,10 +442,9 @@ return [
     'tr_emails_management_unable_to_update' => 'Unable to update email',
     'tr_emails_management_unable_to_add' => 'Unable to add new email',
     'tr_emails_management_invalid_image_type' => 'Invalid image type',
-    'tr_emails_management_invalid_image_width' => 'Image width should be 800 pixels or less',
+    'tr_emails_management_invalid_image_width' => 'Image width should be 800 pexils or less',
     'tr_emails_management_invalid_image_height' => 'Image height should be 800 pixels or less',
-    'tr_emails_management_invalid_image_size' => 'The maximum size allowed for the file is 250 kilobytes or less',
-    'tr_email_kayata' => 'sure ba',
+    'tr_emails_management_invalid_image_size' => 'Maximum allowed size for file is 250 kilobytes or less',
 
     // Action Messages
     'tr_emails_management_emal_added_success' => 'Email added successfully',
@@ -474,7 +476,7 @@ return [
     'tr_melis_module_diagnostics_collapse' => '<i class="fa fa-minus"></i> Hide',
     'tr_melis_module_diagnostics_tool_header' => 'Header',
     'tr_melis_module_diagnostics_tool_content' => 'Content',
-    'tr_melis_module_diagnostics_tool_header_run_all' => '<i class="fa fa-bolt"></i> Run all', //glyphicon glyphicon-flash
+    'tr_melis_module_diagnostics_tool_header_run_all' => '<i class="glyphicon glyphicon-flash"></i> Run all',
     'tr_melis_module_diagnostics_tool_header_hide_all' => '<i class="fa fa-minus"></i> Hide all',
 
     'tr_melis_module_rights_dir' => 'Module basic folder test',
@@ -528,6 +530,26 @@ return [
     'tr_meliscore_logs_tool' => 'Logs',
     'tr_meliscore_logs_tool_description' => 'This tool saves the actions made by all users of the platform. the logs are then sortable according to their origin, to the user and to their type.',
     'tr_meliscore_logs_type' => 'Log type',
+    "tr_meliscore_logs_tool_export_modal_title" => "Export Logs",
+    "tr_meliscore_log_export_user" => "User",
+    "tr_meliscore_log_export_user tooltip" => " User who performed the action",
+    "tr_meliscore_log_export_type" => "Log Type",
+    "tr_meliscore_log_export_type tooltip" => "Specific type of log",
+    "tr_meliscore_log_export_log_date_range" => "Date Range",
+    "tr_meliscore_log_export_log_date_range tooltip" => "Logs dates",
+    "tr_meliscore_log_export_delimiter" => "Delimiter",
+    "tr_meliscore_log_export_delimiter tooltip" => "Column separation character",
+    "tr_meliscore_log_export_enclosure" => "Enclose columns with \" \"",
+    "tr_meliscore_log_export_enclosure tooltip" => 'Select if you want the columns to be closed with &quot; &quot; or not',
+    "tr_meliscore_log_export_export_btn" => "Export",
+    "tr_meliscore_logs_tool_export_data_over_2000" => "This export contains %s results which is large and can take several minutes.<br>Are you sure you want to export these data ?",
+    "tr_meliscore_logs_tool_export_data_content_error" => "Unable to export logs.",
+    "tr_meliscore_logs_tool_export_ok" => "Logs successfully exported.",
+    "tr_meliscore_logs_log_status_ok" => "Success",
+    "tr_meliscore_logs_log_status_ko" => "Failed",
+    'tr_meliscore_logs_cancel' => 'Cancel',
+    'tr_meliscore_common_all' => 'All',
+    "tr_meliscore_logs_log_export_confirm_msg" => "By clicking on this button you will export all logs with the filters configured. Are you sure you wish to proceed ?",
 
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',
@@ -718,5 +740,10 @@ return [
     'tr_melis_cms_gdpr_banner_header' => 'Banner header',
     'tr_melis_cms_gdpr_banner_details' => 'Banner details',
 
+    'tr_melis_core_composer_scrpts_Module scripts executed' => 'Module scripts executed',
+    'tr_melis_core_composer_scrpts_scripts executed' => '%s scripts executed',
+    'tr_melis_core_composer_scrpts_No scripts executed' => 'No scripts executed',
+    'tr_melis_core_composer_scrpts_executing' => 'Executing composer scripts',
+    'tr_melis_core_composer_scrpts_executed' => 'Composer scripts executed',
     ];
 ?>
