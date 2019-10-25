@@ -442,7 +442,7 @@ return [
     'tr_emails_management_unable_to_update' => 'Unable to update email',
     'tr_emails_management_unable_to_add' => 'Unable to add new email',
     'tr_emails_management_invalid_image_type' => 'Invalid image type',
-    'tr_emails_management_invalid_image_width' => 'Image width should be 800 pexils or less',
+    'tr_emails_management_invalid_image_width' => 'Image width should be 800 pixels or less',
     'tr_emails_management_invalid_image_height' => 'Image height should be 800 pixels or less',
     'tr_emails_management_invalid_image_size' => 'Maximum allowed size for file is 250 kilobytes or less',
 

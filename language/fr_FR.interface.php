@@ -25,7 +25,6 @@ return [
     'tr_meliscore_dashboard_notify_steps_general_next_text' => "Suivant",
     'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Fermer l'aide",
     'tr_meliscore_dashboard_notify_step_2_next_text' => "J'ai compris, fermer",
-    'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
 
     // Rights
     'tr_meliscore_meliscore' => 'MelisCore',
@@ -124,8 +123,6 @@ return [
 
     'tr_meliscore_tool_user_update_success_info' => 'Infos utilisateur mises à jour avec succès.',
     'tr_meliscore_tool_user_update_fail_info' => 'Echec de mise à jour des infos utilisateur',
-    'tr_meliscore_tool_user_reset_rights_success_info' => 'Droits d\'utilisateur réinitialisés avec succès\'',
-    'tr_meliscore_tool_user_reset_rights_fail_info' => 'Impossible de réinitialiser les droits d\'utilisateur',
 
     'tr_meliscore_tool_user_delete' => 'Suppression utilisateur',
     'tr_meliscore_tool_user_delete_msg' => 'Etes-vous sur de vouloir supprimer cet utilisateur?',
@@ -144,9 +141,6 @@ return [
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
     'tr_meliscore_tool_user_update' => 'Enregistrer',
-    'tr_meliscore_tool_user_reset_rights' => 'Réinitialiser les droits',
-    'tr_meliscore_tool_user_reset_rights_xs' => 'Réinitialiser',
-    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Êtes-vous sur de vouloir réinitialiser les droits de cet utilisateur ? <br>Cela empechera l\'accès à la plupart des fonctionnalités de la plateforme et vous devrez recréer des droits manuellement.',
 
     'tr_meliscore_forgot_password' => 'Mot de passe oublié',
     // Emails
@@ -336,7 +330,7 @@ return [
     'tr_meliscore_tool_platform_update_marketplace' => 'Autoriser les mises à jour du markeplace',
     'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Cocher pour autoriser les mises à jour du marketplace ou décocher pour les bloquer',
     'tr_meliscore_common_allow' => 'Autoriser',
-
+    'tr_meliscore_tool_platform_invalid_platform_name' => 'Le nom de la plateforme ne peut contenir que des lettres et numéros, aucun espace ou caractère spécial',
 
     // Language Tool Translations
     'tr_meliscore_tool_language' => 'Langages du back-office',
@@ -428,7 +422,8 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email' => 'Email de l&#39;expéditeur (From)',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to' => 'Répondre à',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to tooltip' => 'Email auquel l&#39;utilisateur répondra (reply To)',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Tags de remplacement acceptés<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="Chaque email permet de remplacer des mots (Tags) par une valeur. La liste des tags acceptés dépend et change en fonction de chaque email. Ces tags peuvent ensuite être placés dans le contenu de l&#39;email en écrivant leur nom entre crochets (ex: [NAME])"></i>',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Tags de remplacement acceptés',
+    'tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip' => 'Chaque email permet de remplacer des mots (Tags) par une valeur. La liste des tags acceptés dépend et change en fonction de chaque email. Ces tags peuvent ensuite être placés dans le contenu de l&#39;email en écrivant leur nom entre crochets (ex: [NAME])',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout' => 'Layout',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout tooltip' => 'Chemin vers le fichier physique de template de l&#39;email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Titre de la mise en page',
@@ -462,6 +457,7 @@ return [
     'tr_emails_management_invalid_image_type' => 'Type d\'image incorrect',
     'tr_emails_management_invalid_image_width' => 'La largeur de l\'image doit être de 800 pixels ou moins',
     'tr_emails_management_invalid_image_height' => 'La hauteur de l\'image doit être de 800 pixels ou moins',
+    'tr_email_kayata' => 'sure ba',
     'tr_emails_management_invalid_image_size' => 'La taille maximale autorisée pour le fichier est de 250 kilo-octets ou moins',
 
     // Action Messages
@@ -548,27 +544,7 @@ return [
     'tr_meliscore_logs_tool' => 'Logs',
     'tr_meliscore_logs_tool_description' => 'Cet outil sauvegarde les actions effectuées par tous les utilisateurs de la plateforme. Les logs sont ensuite triables en fonction de leur provenance, de l&#39;utilisateur et de leur type.',
     'tr_meliscore_logs_type' => 'Type de logs',
-    "tr_meliscore_logs_tool_export_modal_title" => "Exporter les logs",
-    "tr_meliscore_log_export_user" => "Utilisateur",
-    "tr_meliscore_log_export_user tooltip" => "Utilisateur ayant fait l'action",
-    "tr_meliscore_log_export_type" => "Type de log",
-    "tr_meliscore_log_export_type tooltip" => "Type de log spécifique",
-    "tr_meliscore_log_export_log_date_range" => "Période",
-    "tr_meliscore_log_export_log_date_range tooltip" => "Dates des logs",
-    "tr_meliscore_log_export_delimiter" => "Délimiteur",
-    "tr_meliscore_log_export_delimiter tooltip" => "Caractère de séparation des colonnes",
-    "tr_meliscore_log_export_enclosure" => "Fermer les colonnes avec \" \"",
-    "tr_meliscore_log_export_enclosure tooltip" => 'Sélectionnez si vous souhaitez ou non que les colonnes soient fermées avec &quot; &quot; ',
-    "tr_meliscore_log_export_export_btn" => "Exporter",
-    "tr_meliscore_logs_tool_export_data_over_2000" => "Cet export contient %s résultats ce qui est volumineux et peut prendre quelques minutes.<br>Etes-vous sûr de vouloir exporter ces données ?",
-    "tr_meliscore_logs_tool_export_data_content_error" => "Impossible d'exporter les logs.",
-    "tr_meliscore_logs_tool_export_ok" => "Logs exportés avec succès.",
-    "tr_meliscore_logs_log_status_ok" => "Succès",
-    "tr_meliscore_logs_log_status_ko" => "Echec",
-    'tr_meliscore_logs_cancel' => 'Annuler',
-    'tr_meliscore_common_all' => 'Tous',
-    "tr_meliscore_logs_log_export_confirm_msg" => "En cliquant sur ce bouton vous exporterez les logs avec les filtres configurés. Etes-vous sûr de vouloir procéder ?",
-
+     
     // Table columns
     'tr_meliscore_logs_tool_log_id' => 'ID',
     'tr_meliscore_logs_tool_log_title' => 'Titre',
@@ -753,10 +729,4 @@ return [
     'tr_melis_core_gdpr_content_tabs' => 'Contenu onglets',
     'tr_melis_cms_gdpr_banner_header' => 'Bannière En-tête',
     'tr_melis_cms_gdpr_banner_details' => 'Bannière détails',
-
-    'tr_melis_core_composer_scrpts_Module scripts executed' => 'Scripts du module executés',
-    'tr_melis_core_composer_scrpts_scripts executed' => 'Scripts de %s executés',
-    'tr_melis_core_composer_scrpts_No scripts executed' => 'Aucun script éxécuté',
-    'tr_melis_core_composer_scrpts_executing' => 'Exécution des scripts de composer',
-    'tr_melis_core_composer_scrpts_executed' => 'Scripts de composer éxécutés',
 ];
