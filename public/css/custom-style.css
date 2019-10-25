@@ -621,6 +621,10 @@ div.row, ul.row {
 .flotchart-holder {
   width: 100%;
 }
+/* pagination */
+.page-link:focus {
+  box-shadow: none;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
