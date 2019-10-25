@@ -457,7 +457,6 @@ return [
     'tr_emails_management_invalid_image_type' => 'Type d\'image incorrect',
     'tr_emails_management_invalid_image_width' => 'La largeur de l\'image doit être de 800 pixels ou moins',
     'tr_emails_management_invalid_image_height' => 'La hauteur de l\'image doit être de 800 pixels ou moins',
-    'tr_email_kayata' => 'sure ba',
     'tr_emails_management_invalid_image_size' => 'La taille maximale autorisée pour le fichier est de 250 kilo-octets ou moins',
 
     // Action Messages
