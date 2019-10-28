@@ -37584,6 +37584,30 @@ div.row, ul.row {
 .page-link:focus {
   box-shadow: none;
 }
+/* templates */
+.btnMelisTemplatesExport:active,
+.btnMelisTemplatesExport.active {
+  background-color: #fff;
+}
+.btnMelisTemplatesExport:hover {
+  background: #e7e7e7;
+  border-color: #e7e7e7;
+}
+/* search filter state focus */
+.ui-widget-content {
+  background-color: #adadad;
+}
+.ui-state-hover, 
+.ui-widget-content .ui-state-hover, 
+.ui-widget-header .ui-state-hover, 
+.ui-state-focus, 
+.ui-widget-content .ui-state-focus, 
+.ui-widget-header .ui-state-focus {
+  background-color: #fff;
+  border-color: #dedede;
+  color: #333;
+  font-weight: normal;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
