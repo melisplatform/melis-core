@@ -349,14 +349,14 @@ var melisDashBoardDragnDrop = {
             maxWidth        = $gs.data("max-width");
 
             // tab arrow top on mobile view
-            if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
+            /* if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
                 if ( $pluginBox.hasClass("shown") ) {
                     $tabArrowTop.addClass("hide-arrow");
                 }
                 else {
                     $tabArrowTop.removeClass("hide-arrow");                    
                 }
-            }
+            } */
 
             // count .grid-stack-item if found
             if ( gsItems > 0 ) {
@@ -364,6 +364,16 @@ var melisDashBoardDragnDrop = {
             }
             else {
                 $pluginBox.addClass("shown");
+
+                // tab arrow top on mobile view, 767px and below
+                if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
+                    if ( $pluginBox.hasClass("shown") ) {
+                        $tabArrowTop.addClass("hide-arrow");
+                    }
+                    else {
+                        $tabArrowTop.removeClass("hide-arrow");                    
+                    }
+                }
             }
             
             // check plugin menu box

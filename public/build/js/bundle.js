@@ -27421,6 +27421,8 @@ var melisCore = (function(window){
         $tabConOuter    = $("#melis-navtabs-container-outer"),
         $tabConInner    = $("#melis-navtabs-container-inner"),
         $tabArrowTop    = $("#tab-arrow-top"),
+        $pluginBtn      = $("#melisDashBoardPluginBtn"),
+        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         // fixes conlict between jquery ui and bootstrap same function name .tooltip()
         jqeBsTooltip    = $.fn.tooltip.noConflict();
 
@@ -27594,6 +27596,10 @@ var melisCore = (function(window){
     function firstRender(){
         $(".nav-tabs li:first-child").addClass("active")
         $(".tab-content > div:first-child").addClass("active");
+
+        if ( screenSize <= 767 && $tabArrowTop.length > 0 && $pluginBox.hasClass("shown") ) {
+            $tabArrowTop.addClass("hide-arrow");
+        }
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -27681,8 +27687,6 @@ var melisCore = (function(window){
             tabContentID    = $this.data("id"),
             $tabLi          = $this.closest("li"),
             meliskey        = $tabLi.data("tool-meliskey"),
-            $pluginBtn      = $("#melisDashBoardPluginBtn"),
-            $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
             $tabContent     = $("#"+tabContentID+".tab-panel-dashboard");
             
             // assign active tab id
@@ -27712,7 +27716,7 @@ var melisCore = (function(window){
             }
 
             // if in mobile hide 'PAGES' menu when clicking / opening a page
-            if(screenSize <= 768){
+            if(screenSize <= 767){ //if(screenSize <= 768)
                 $("#res-page-cont").trigger('click');
                 $("#res-page-cont i").removeClass("move-arrow");
 
@@ -28061,9 +28065,7 @@ var melisCore = (function(window){
 
     // this function is called from render-dashboard-plugins.phtml
     function showToggleDashboardPluginMenu() {
-        var $pluginBtn      = $("#melisDashBoardPluginBtn"),
-            $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-            $gs             = $body.find("#" + activeTabId + " .grid-stack"),
+        var $gs             = $body.find("#" + activeTabId + " .grid-stack"),
             gsi             = $gs.find(".grid-stack-item").length
             minWidth        = $gs.data("min-width"),
             maxWidth        = $gs.data("max-width");
@@ -33720,14 +33722,14 @@ var melisDashBoardDragnDrop = {
             maxWidth        = $gs.data("max-width");
 
             // tab arrow top on mobile view
-            if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
+            /* if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
                 if ( $pluginBox.hasClass("shown") ) {
                     $tabArrowTop.addClass("hide-arrow");
                 }
                 else {
                     $tabArrowTop.removeClass("hide-arrow");                    
                 }
-            }
+            } */
 
             // count .grid-stack-item if found
             if ( gsItems > 0 ) {
@@ -33735,6 +33737,16 @@ var melisDashBoardDragnDrop = {
             }
             else {
                 $pluginBox.addClass("shown");
+
+                // tab arrow top on mobile view, 767px and below
+                if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
+                    if ( $pluginBox.hasClass("shown") ) {
+                        $tabArrowTop.addClass("hide-arrow");
+                    }
+                    else {
+                        $tabArrowTop.removeClass("hide-arrow");                    
+                    }
+                }
             }
             
             // check plugin menu box

@@ -36,13 +36,9 @@
                             $("#"+activeTabId).find(".melis-core-dashboard-msg").show();
 
                             var pluginMenu = $("body").find("#id_meliscore_center_dashboard_menu");
-                                if (pluginMenu.length > 0) {
-                                    if ( ! pluginMenu.hasClass("shown") ) {
-                                        //$("#melisDashBoardPluginBtn").trigger("click");
-                                        if ( typeof melisDashBoardDragnDrop !== "undefined" ) {
-                                            melisDashBoardDragnDrop.checkDashboard();
-                                        }
-                                    }
+
+                                if ( pluginMenu.length > 0 && typeof melisDashBoardDragnDrop !== "undefined" ) {
+                                    melisDashBoardDragnDrop.checkDashboard();
                                 }
                         }
                     }());

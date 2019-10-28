@@ -37740,12 +37740,6 @@ div.row, ul.row {
   #id_meliscore_footer.slide-left {
     left: -20rem;
   }
-  /* .tooltip.bs-tooltip-left {
-    left: -12% !important;
-  }
-  .tooltip.bs-tooltip-left .tooltip-inner {
-    min-width: 200px;
-  } */
 }
 @media (max-width: 767px) {
   /* body commmon */
@@ -37954,6 +37948,9 @@ div.row, ul.row {
   .gdpr-table-action-button {
     font-size: 12px;
     padding: 0.8em;
+  }
+  #tab-menu {
+    padding: 0;
   }
 }
 .module-lists{
