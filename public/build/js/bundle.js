@@ -27033,8 +27033,9 @@ var tabExpander = (function($, window){
     
 	// CHECK TO ACTIVATE tabExpander(); ---------------------------------------------------------------------------------------------
 	function checkTE() {
-		// CALCULATE ALL POSSIBLE WIDTH FOR THE LEFT, CENTER AND RIGHT MENUS
-	    
+        // CALCULATE ALL POSSIBLE WIDTH FOR THE LEFT, CENTER AND RIGHT MENUS
+        var firefox = navigator.userAgent.toLowerCase().indexOf('firefox') != -1;
+        
 		//total width of the header
         var totalHeaderWidthPx = $("#id_meliscore_header").width();
         
@@ -27045,39 +27046,47 @@ var tabExpander = (function($, window){
         
         // right
         var rightMenuWidthPx = 0;
-        $('#id_meliscore_header .navbar-right > li').each(function() {
-            rightMenuWidthPx += $(this).outerWidth();
-        });
-        rightMenuWidthPercent = (( 100 * rightMenuWidthPx ) / totalHeaderWidthPx ) + 1;
+
+            $('#id_meliscore_header .navbar-right > li').each(function() {
+                rightMenuWidthPx += $(this).outerWidth();
+            });
+
+            rightMenuWidthPercent = (( 100 * rightMenuWidthPx ) / totalHeaderWidthPx ) + 1;
         
         //center
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
-        // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        //tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        // tabContainerWidthPercent = 140.9 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        
-        // <ul>
-        navUlContainer = 1;
-        $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
-            navUlContainer += $(this).outerWidth();
-        });
-		
-		// determines if TE should be activated or not
-        if ( navUlContainer > tabContainerWidthPx && screenSize  >= 768 ) {
-        	Enable();
-        	status = 'enabled';
-        } else if ( navUlContainer < tabContainerWidthPx) {
-			Disable();
-        } else if (status == 'disabled') {
-			Disable();
-		} else {
-        	if (status === 'enabled') {
-				Enable();
-        		/* Disable(); */
-        	}
-        	status = 'disabled';
-        }
+            // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+            // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+            // tabContainerWidthPercent = 114.4 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+
+           /*  if ( firefox ) {
+                tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+            }
+            else { */
+                tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+            //}
+            
+            // <ul>
+            navUlContainer = 1;
+            $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
+                navUlContainer += $(this).outerWidth();
+            });
+            
+            // determines if TE should be activated or not
+            if ( navUlContainer > tabContainerWidthPx && screenSize  >= 768 ) {
+                Enable();
+                status = 'enabled';
+            } else if ( navUlContainer < tabContainerWidthPx) {
+                Disable();
+            } else if (status == 'disabled') {
+                Disable();
+            } else {
+                if (status === 'enabled') {
+                    Enable();
+                    /* Disable(); */
+                }
+                status = 'disabled';
+            }
 	}
 	
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------

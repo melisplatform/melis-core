@@ -36984,7 +36984,7 @@ div#modal-user-management div.widget {
   padding: 0;
 }
 .navbar.main .nav.navbar-right > li:hover {
-  background-color: #fff;
+  background: #fff;
 }
 .navbar.main .nav.navbar-right > li .dropdown-toggle::after {
   display: none;
@@ -37676,6 +37676,9 @@ div.row, ul.row {
   /* .res-action-container {
     width: 100% !important;
   } */
+  #melis-navtabs-container-outer {
+    overflow: hidden;
+  }
   #nav-header.container-fluid {
     display: block;
   }
