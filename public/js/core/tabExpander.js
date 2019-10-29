@@ -84,12 +84,12 @@ var tabExpander = (function($, window){
             // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
             // tabContainerWidthPercent = 114.4 - ( leftMenuWidthPercent + rightMenuWidthPercent);
 
-           /*  if ( firefox ) {
+           if ( firefox ) {
+                tabContainerWidthPercent = 114.0 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+            }
+            else {
                 tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
             }
-            else { */
-                tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-            //}
             
             // <ul>
             navUlContainer = 1;
