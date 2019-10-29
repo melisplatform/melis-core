@@ -24,6 +24,7 @@
 .navbar.main.navbar-primary {
   padding: 0;
 }
+
 .navbar.main .nav.navbar-right > li:hover {
   background: #fff;
 }
@@ -58,6 +59,9 @@
 .content-login .card-wrapper {
   width: 38.285rem;
   margin-bottom: 20px;
+}
+.navbar.main.navbar-primary .nav > li > a:hover {
+  background-color: #fff;
 }
 /* 
  * BO #nav-header [role="navigation"] 
@@ -626,11 +630,11 @@ div.row, ul.row {
   box-shadow: none;
 }
 /* templates */
-.btnMelisTemplatesExport:active,
-.btnMelisTemplatesExport.active {
+.btn-default:active,
+.btn-default.active {
   background-color: #fff;
 }
-.btnMelisTemplatesExport:hover {
+.btn-default:hover {
   background: #e7e7e7;
   border-color: #e7e7e7;
 }
