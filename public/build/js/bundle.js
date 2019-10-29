@@ -28471,7 +28471,7 @@ var melisHelper = (function(){
                 rangeStringParam[sLastMonth]    = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
 
             target.daterangepicker({
-                startDate: moment().subtract(10, 'years'),
+                startDate: moment().subtract(1, 'month'), //moment().subtract(10, 'years')
                 endDate: moment(),
                 locale : {
                     format: melisDateFormat,
