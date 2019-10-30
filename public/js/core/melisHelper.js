@@ -850,7 +850,7 @@ var melisHelper = (function(){
                     });
                     var actionButtons = "";
                     $.each(requiredSettings.actionButtons, function(idx, item) {
-                        actionButtons = actionButtons + item;
+                        actionButtons = actionButtons + item + " ";
                     });
                     settings.columnDefs.push({
                         "targets" : -1,
