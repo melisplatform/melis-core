@@ -27027,66 +27027,70 @@ var tabExpander = (function($, window){
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
 	function Disable(){
 		$(".melis-tabprev, .melis-tabnext").hide();
-        $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style");
+        $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style")
 	}
     
     
 	// CHECK TO ACTIVATE tabExpander(); ---------------------------------------------------------------------------------------------
-	function checkTE() {
-        // CALCULATE ALL POSSIBLE WIDTH FOR THE LEFT, CENTER AND RIGHT MENUS
-        var firefox = navigator.userAgent.toLowerCase().indexOf('firefox') != -1;
-        
+	function checkTE(){
+
+		// CALCULATE ALL POSSIBLE WIDTH FOR THE LEFT, CENTER AND RIGHT MENUS
+	    
 		//total width of the header
         var totalHeaderWidthPx = $("#id_meliscore_header").width();
         
         // left
         //var leftMenuWidthPx = $(".navbar-header").width();
         var leftMenuWidthPx = $("#brand-logo").width();
-        var leftMenuWidthPercent = (100 * 320) / totalHeaderWidthPx;
+        var leftMenuWidthPercent = (100 * leftMenuWidthPx) / totalHeaderWidthPx;
         
         // right
         var rightMenuWidthPx = 0;
-
-            $('#id_meliscore_header .navbar-right > li').each(function() {
-                rightMenuWidthPx += $(this).outerWidth();
-            });
-
-            rightMenuWidthPercent = (( 100 * rightMenuWidthPx ) / totalHeaderWidthPx ) + 1;
+        $('#id_meliscore_header .navbar-right > li').each(function() {
+            rightMenuWidthPx += $(this).outerWidth();
+        });
+        rightMenuWidthPercent = (( 100 * rightMenuWidthPx ) / totalHeaderWidthPx ) + 1;
         
         //center
-        var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
-            // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-            // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-            // tabContainerWidthPercent = 114.4 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx );
+        // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        tabContainerWidthPercent = 113.8 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        
+        // <ul>
+        navUlContainer = 1;
+        $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
+            navUlContainer += $(this).outerWidth();
+        });
 
-           if ( firefox ) {
-                tabContainerWidthPercent = 113.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-            }
-            else {
-                tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-            }
-            
-            // <ul>
-            navUlContainer = 1;
-            $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
-                navUlContainer += $(this).outerWidth();
-            });
-            
-            // determines if TE should be activated or not
-            if ( navUlContainer > tabContainerWidthPx && screenSize  >= 768 ) {
-                Enable();
-                status = 'enabled';
-            } else if ( navUlContainer < tabContainerWidthPx) {
-                Disable();
-            } else if (status == 'disabled') {
-                Disable();
-            } else {
-                if (status === 'enabled') {
-                    Enable();
-                    /* Disable(); */
-                }
-                status = 'disabled';
-            }
+        console.log("rightMenuWidthPx: ", rightMenuWidthPx);
+
+        if ( $('#id_meliscore_header #melis-id-nav-bar-tabs > li').length > 7 ) {
+            console.log("navUlContainer: ", navUlContainer);
+            console.log("tabContainerWidthPx: ", tabContainerWidthPx);
+            console.log("leftMenuWidthPx: ", leftMenuWidthPx);
+            console.log("rightMenuWidthPx: ", rightMenuWidthPx);
+            console.log("=====================================================");
+            console.log("leftMenuWidthPercent: ", leftMenuWidthPercent);
+            console.log("rightMenuWidthPercent: ", rightMenuWidthPercent);
+            console.log("tabContainerWidthPercent: ", tabContainerWidthPercent);
+        }
+		
+		// determines if TE should be activated or not
+        if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
+        	Enable();
+        	status = 'enabled';
+        } else if( navUlContainer < tabContainerWidthPx){
+			Disable();
+        } else if(status == 'disabled'){
+			Disable();
+		} else {
+        	if(status === 'enabled'){
+				Enable();
+        		/* Disable(); */
+        	}
+        	status = 'disabled';
+        }
 	}
 	
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------
@@ -27097,13 +27101,17 @@ var tabExpander = (function($, window){
         //var liIndex = $navTabs.find("li").index();
 
         var ulWidth = 1; 
-        $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
-            ulWidth += $(this).outerWidth();
-        });
+            $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
+                ulWidth += $(this).outerWidth();
+            });
 
         var rightOffset = ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset;
-        xleft = Math.abs( $navTabs.position().left );
-        xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
+            xleft = Math.abs( $navTabs.position().left );
+            xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
+
+            console.log("++++++++++++++++++++++++++");
+            console.log("ulContainer: ", ulContainer);
+            console.log("leftOffset: ", leftOffset);
     }
     
     //NEXT 
@@ -27121,22 +27129,24 @@ var tabExpander = (function($, window){
                 },0);
             }
         }
-        else {
+        else{
             $navTabs.animate({
                 left: '-=' + xright
             },0);
         }
+        console.log("xright: ", xright);
+        console.log("ulContainer: ", ulContainer);
     });
     
     //PREV
-    $(".melis-tabprev").on("click", function() {
+    $(".melis-tabprev").on("click", function(){
         calcOffset();
         if( xleft > ulContainer - 170) {
             $navTabs.animate({
                 left: '+='+ 170
             },0);
         }
-        else {
+        else{
             $navTabs.animate({
                 left: '+=' + xleft
             },0);
@@ -27184,9 +27194,6 @@ var tabExpander = (function($, window){
 
 })(jQuery, window);
 
-$(function() {
-
-});
 // DETECT IF ELEMENT HAS A SCROLLBAR - --=[ PLUGIN SNIPPET ]=--
 (function($) {
     $.fn.hasScrollBar = function() {
