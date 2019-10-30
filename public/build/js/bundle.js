@@ -27062,19 +27062,6 @@ var tabExpander = (function($, window){
         $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
             navUlContainer += $(this).outerWidth();
         });
-
-        console.log("rightMenuWidthPx: ", rightMenuWidthPx);
-
-        if ( $('#id_meliscore_header #melis-id-nav-bar-tabs > li').length > 7 ) {
-            console.log("navUlContainer: ", navUlContainer);
-            console.log("tabContainerWidthPx: ", tabContainerWidthPx);
-            console.log("leftMenuWidthPx: ", leftMenuWidthPx);
-            console.log("rightMenuWidthPx: ", rightMenuWidthPx);
-            console.log("=====================================================");
-            console.log("leftMenuWidthPercent: ", leftMenuWidthPercent);
-            console.log("rightMenuWidthPercent: ", rightMenuWidthPercent);
-            console.log("tabContainerWidthPercent: ", tabContainerWidthPercent);
-        }
 		
 		// determines if TE should be activated or not
         if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
@@ -27108,10 +27095,6 @@ var tabExpander = (function($, window){
         var rightOffset = ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset;
             xleft = Math.abs( $navTabs.position().left );
             xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
-
-            console.log("++++++++++++++++++++++++++");
-            console.log("ulContainer: ", ulContainer);
-            console.log("leftOffset: ", leftOffset);
     }
     
     //NEXT 
@@ -27134,8 +27117,6 @@ var tabExpander = (function($, window){
                 left: '-=' + xright
             },0);
         }
-        console.log("xright: ", xright);
-        console.log("ulContainer: ", ulContainer);
     });
     
     //PREV
