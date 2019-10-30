@@ -80,7 +80,7 @@ var tabExpander = (function($, window){
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx );
         // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        tabContainerWidthPercent = 113.8 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        tabContainerWidthPercent = 113.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
         navUlContainer = 1;
