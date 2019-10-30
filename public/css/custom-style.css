@@ -653,6 +653,11 @@ div.row, ul.row {
   color: #333;
   font-weight: normal;
 }
+/* daterange picker */
+.dt-date-range-picker .caret {
+  font-size: 0;
+  text-indent: -99999px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
