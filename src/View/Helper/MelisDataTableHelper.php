@@ -4,10 +4,19 @@ namespace MelisCore\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 
-class MelisDataTable extends AbstractHelper
+class MelisDataTableHelper extends AbstractHelper
 {
+
+    private $serviceManager;
+
+    public function __construct($sm)
+    {
+        $this->serviceManager = $sm;
+    }
+
     public function createTable($tableConfig)
     {
+        $translator = $this->serviceManager->get('translator');
         /**
          * Prepare the table settings
          */
@@ -27,7 +36,7 @@ class MelisDataTable extends AbstractHelper
             $columnName .= '<th>' . $colAttr['text'] . '</th>';
         }
         //add the action column
-        $columnName .= '<th>Action</th>';
+        $columnName .= '<th>'.$translator->translate('tr_meliscore_global_action').'</th>';
         //add column to header
         $thead .= $columnName;
         $thead .= "</tr></thead>";
