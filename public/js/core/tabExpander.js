@@ -18,13 +18,12 @@ var tabExpander = (function($, window){
     var screenSize = jQuery(window).width();
     
     // CHECK IF ENABLED
-    function checkStatus(){
+    function checkStatus() {
     	return status;
     }
 
 	// ENABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
-	function Enable(){
-			
+	function Enable() {		
 	    //set the parent container width and right icons container
         $("#melis-navtabs-container-outer").css({"width": (tabContainerWidthPercent)+"%" });
         $("#plugins-container").css({"width": (rightMenuWidthPercent)+"%"});
@@ -50,7 +49,7 @@ var tabExpander = (function($, window){
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
-	function Disable(){
+	function Disable() {
 		$(".melis-tabprev, .melis-tabnext").hide();
         $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style")
 	}
@@ -77,7 +76,7 @@ var tabExpander = (function($, window){
         rightMenuWidthPercent = (( 100 * rightMenuWidthPx ) / totalHeaderWidthPx ) + 1;
         
         //center
-        var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx );
+        var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ); // - 320
         // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         tabContainerWidthPercent = 113.7 - ( leftMenuWidthPercent + rightMenuWidthPercent);
@@ -107,7 +106,9 @@ var tabExpander = (function($, window){
 	
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------
     var xleft, xright, ulContainer;
-    function calcOffset(){
+    function calcOffset() {
+        //console.log("calcOffset called.");
+
         ulContainer = $("#melis-navtabs-container-inner").outerWidth();
         var leftOffset = $navTabs.position().left;
         //var liIndex = $navTabs.find("li").index();
@@ -120,45 +121,84 @@ var tabExpander = (function($, window){
         var rightOffset = ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset;
             xleft = Math.abs( $navTabs.position().left );
             xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
+
+            /* console.log("==============calcOffset==============");
+            console.log("before - 170 ulContainer: ", ulContainer);
+            console.log("leftOffset: ", leftOffset);
+            console.log("ulWidth: ", ulWidth);
+            console.log("calcOffset xleft: ", xleft);
+            console.log("calcOffset xright: ", xright); */
     }
     
     //NEXT 
-    $(".melis-tabnext").on("click", function() {
+    $body.on("click", ".melis-tabnext", function() {
         calcOffset();
-        if( xright > ulContainer - 170 ) {
-            var liIndex = $navTabs.find("li").index();
 
-            if ( liIndex === 0 ) {
-                $navTabs.css("left", "0");
-            }
-            else {
-                $navTabs.animate({
-                    left: '-='+ 170
-                },0);
-            }
+        /* console.log("=============.melis-tabnext=============");
+        console.log("ulContainer: ", ulContainer); */
+
+        var currentUlContainer = ulContainer - 170;
+
+        /* console.log("currentUlContainer: ", currentUlContainer);
+        console.log("click next xright: ", xright); */
+
+        if( xright > currentUlContainer ) {
+
+            //console.log("true: xright > currentUlContainer ");
+
+            //var liIndex = $navTabs.find("li").index();
+
+                //console.log("liIndex: ", liIndex );
+
+                if ( $navTabs.width() > ulContainer ) {
+                    $navTabs.animate({
+                        left: '-='+ 170
+                    },0);
+                }
+                else {
+                    $navTabs.css("left", "0");
+
+                    //console.log("true next $navTabs width: ", $navTabs.width() );
+                }
         }
-        else{
+        else {
             $navTabs.animate({
                 left: '-=' + xright
             },0);
+
         }
+
+        /* console.log("melis-tabnext clicked");
+        console.log("$navTabs width: ", $navTabs.width() ); */
     });
     
     //PREV
-    $(".melis-tabprev").on("click", function(){
+    $body.on("click", ".melis-tabprev", function(){
         calcOffset();
-        if( xleft > ulContainer - 170) {
+
+        var currentUlContainer = ulContainer - 170;
+
+        /* console.log("ulContainer: ", ulContainer);
+        console.log("currentUlContainer: ", currentUlContainer); */
+
+        if( xleft > currentUlContainer ) {
             $navTabs.animate({
                 left: '+='+ 170
             },0);
+
+            //console.log("true next $navTabs width: ", $navTabs.width() );
         }
         else{
             $navTabs.animate({
                 left: '+=' + xleft
             },0);
+
+            //console.log("false next $navTabs width: ", $navTabs.width() );
         }
-    }); 
-    
+        /* console.log("melis-tabprev clicked");
+        console.log("$navTabs width: ", $navTabs.width() ); */
+    });
+   
 	// FOCUS TAB ON CLICK (new functionality)
     function focusTab(){
     	
