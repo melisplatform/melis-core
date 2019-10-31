@@ -866,9 +866,10 @@ var melisHelper = (function(){
 
             }
             // // initialized datatable
-            var melisDataTable = $(requiredSettings.target).DataTable(settings).columns.adjust().responsive.recalc();
+            var target = $("#"+requiredSettings.attributes.id);
+            var melisDataTable = target.DataTable(settings).columns.adjust().responsive.recalc();
             //run callback function for addtional filters
-            $(requiredSettings.target).on('init.dt',function(){
+            target.on('init.dt',function(){
                 // get all filter function
                 if (jsSdomContentInit.length > 0) {
                     $.each(jsSdomContentInit,function(index,fn){
@@ -877,7 +878,7 @@ var melisHelper = (function(){
                     });
                 }
                 // get datatable search field
-                var searchField = $(requiredSettings.target).parent().siblings('.filter-bar').find('.search input[type="search"]');
+                var searchField = target.parent().siblings('.filter-bar').find('.search input[type="search"]');
                 // unbind
                 searchField.unbind();
                 // for better logic trigger search when there are 2 or more characters

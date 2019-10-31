@@ -401,6 +401,7 @@ return array(
             'MelisModal' => 'MelisCore\View\Helper\MelisModal',
             'MelisModalInvoker' => 'MelisCore\View\Helper\MelisModalInvoker',
             'MelisTextHelper' => 'MelisCore\View\Helper\MelisTextHelper',
+            'MelisDataTable' => 'MelisCore\View\Helper\MelisDataTable',
         ),
         'factories' => array(
             'MelisCoreHeadPlugin' => 'MelisCore\View\Helper\Factory\MelisCoreHeadPluginHelperFactory',

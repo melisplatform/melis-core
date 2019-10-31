@@ -1,0 +1,52 @@
+<?php
+
+namespace MelisCore\View\Helper;
+
+use Zend\View\Helper\AbstractHelper;
+
+class MelisDataTable extends AbstractHelper
+{
+    public function createTable($tableConfig)
+    {
+        /**
+         * Prepare the table settings
+         */
+        $table = "<table";
+        $thead = "<thead><tr>";
+        $tbody = "<tbody></tbody>";
+        foreach ($tableConfig['attributes'] as $configAttrib => $configValues) {
+            $table .= ' ' . $configAttrib . ' = "' . $configValues . '"';
+        }
+        $table .= ">";
+
+        /**
+         * Construct the columns
+         */
+        $columnName = '';
+        foreach ($tableConfig['columns'] as $colName => $colAttr) {
+            $columnName .= '<th>' . $colAttr['text'] . '</th>';
+        }
+        //add the action column
+        $columnName .= '<th>Action</th>';
+        //add column to header
+        $thead .= $columnName;
+        $thead .= "</tr></thead>";
+
+        /**
+         * Construct the table
+         */
+        $table .= $thead;
+        $table .= $tbody;
+        $table .= "</table>";
+
+        //call the js that will initialize the datatable
+        $jsInit =
+            '<script type="text/javascript">'.
+                '$(document).ready(function() {'.
+                    'melisHelper.melisInitDataTable('.json_encode($tableConfig).');'.
+                '});'.
+            '</script>';
+
+        return $table.'<br/>'.$jsInit;
+    }
+}
