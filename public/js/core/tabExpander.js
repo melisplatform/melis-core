@@ -107,8 +107,6 @@ var tabExpander = (function($, window){
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------
     var xleft, xright, ulContainer;
     function calcOffset() {
-        //console.log("calcOffset called.");
-
         ulContainer = $("#melis-navtabs-container-inner").outerWidth();
         var leftOffset = $navTabs.position().left;
         //var liIndex = $navTabs.find("li").index();
@@ -121,82 +119,49 @@ var tabExpander = (function($, window){
         var rightOffset = ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset;
             xleft = Math.abs( $navTabs.position().left );
             xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
-
-            /* console.log("==============calcOffset==============");
-            console.log("before - 170 ulContainer: ", ulContainer);
-            console.log("leftOffset: ", leftOffset);
-            console.log("ulWidth: ", ulWidth);
-            console.log("calcOffset xleft: ", xleft);
-            console.log("calcOffset xright: ", xright); */
     }
     
     //NEXT 
     $body.on("click", ".melis-tabnext", function() {
-        calcOffset();
-
-        /* console.log("=============.melis-tabnext=============");
-        console.log("ulContainer: ", ulContainer); */
-
         var currentUlContainer = ulContainer - 170;
+            
+            calcOffset();
 
-        /* console.log("currentUlContainer: ", currentUlContainer);
-        console.log("click next xright: ", xright); */
+            if( xright > currentUlContainer ) {
+                //var liIndex = $navTabs.find("li").index();
+                    if ( $navTabs.width() > ulContainer ) {
+                        $navTabs.animate({
+                            left: '-='+ 170
+                        },0);
+                    }
+                    else {
+                        $navTabs.css("left", "0");
+                    }
+            }
+            else {
+                $navTabs.animate({
+                    left: '-=' + xright
+                },0);
 
-        if( xright > currentUlContainer ) {
-
-            //console.log("true: xright > currentUlContainer ");
-
-            //var liIndex = $navTabs.find("li").index();
-
-                //console.log("liIndex: ", liIndex );
-
-                if ( $navTabs.width() > ulContainer ) {
-                    $navTabs.animate({
-                        left: '-='+ 170
-                    },0);
-                }
-                else {
-                    $navTabs.css("left", "0");
-
-                    //console.log("true next $navTabs width: ", $navTabs.width() );
-                }
-        }
-        else {
-            $navTabs.animate({
-                left: '-=' + xright
-            },0);
-
-        }
-
-        /* console.log("melis-tabnext clicked");
-        console.log("$navTabs width: ", $navTabs.width() ); */
+            }
     });
     
     //PREV
     $body.on("click", ".melis-tabprev", function(){
-        calcOffset();
-
         var currentUlContainer = ulContainer - 170;
+            
+            calcOffset();
 
-        /* console.log("ulContainer: ", ulContainer);
-        console.log("currentUlContainer: ", currentUlContainer); */
-
-        if( xleft > currentUlContainer ) {
-            $navTabs.animate({
-                left: '+='+ 170
-            },0);
-
-            //console.log("true next $navTabs width: ", $navTabs.width() );
-        }
-        else{
-            $navTabs.animate({
-                left: '+=' + xleft
-            },0);
-
-            //console.log("false next $navTabs width: ", $navTabs.width() );
-        }
-        /* console.log("melis-tabprev clicked");
-        console.log("$navTabs width: ", $navTabs.width() ); */
+            if( xleft > currentUlContainer ) {
+                $navTabs.animate({
+                    left: '+='+ 170
+                },0);
+            }
+            else{
+                $navTabs.animate({
+                    left: '+=' + xleft
+                },0);
+            }
     });
    
 	// FOCUS TAB ON CLICK (new functionality)

@@ -27082,8 +27082,6 @@ var tabExpander = (function($, window){
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------
     var xleft, xright, ulContainer;
     function calcOffset() {
-        //console.log("calcOffset called.");
-
         ulContainer = $("#melis-navtabs-container-inner").outerWidth();
         var leftOffset = $navTabs.position().left;
         //var liIndex = $navTabs.find("li").index();
@@ -27096,82 +27094,49 @@ var tabExpander = (function($, window){
         var rightOffset = ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset;
             xleft = Math.abs( $navTabs.position().left );
             xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
-
-            /* console.log("==============calcOffset==============");
-            console.log("before - 170 ulContainer: ", ulContainer);
-            console.log("leftOffset: ", leftOffset);
-            console.log("ulWidth: ", ulWidth);
-            console.log("calcOffset xleft: ", xleft);
-            console.log("calcOffset xright: ", xright); */
     }
     
     //NEXT 
     $body.on("click", ".melis-tabnext", function() {
-        calcOffset();
-
-        /* console.log("=============.melis-tabnext=============");
-        console.log("ulContainer: ", ulContainer); */
-
         var currentUlContainer = ulContainer - 170;
+            
+            calcOffset();
 
-        /* console.log("currentUlContainer: ", currentUlContainer);
-        console.log("click next xright: ", xright); */
+            if( xright > currentUlContainer ) {
+                //var liIndex = $navTabs.find("li").index();
+                    if ( $navTabs.width() > ulContainer ) {
+                        $navTabs.animate({
+                            left: '-='+ 170
+                        },0);
+                    }
+                    else {
+                        $navTabs.css("left", "0");
+                    }
+            }
+            else {
+                $navTabs.animate({
+                    left: '-=' + xright
+                },0);
 
-        if( xright > currentUlContainer ) {
-
-            //console.log("true: xright > currentUlContainer ");
-
-            //var liIndex = $navTabs.find("li").index();
-
-                //console.log("liIndex: ", liIndex );
-
-                if ( $navTabs.width() > ulContainer ) {
-                    $navTabs.animate({
-                        left: '-='+ 170
-                    },0);
-                }
-                else {
-                    $navTabs.css("left", "0");
-
-                    //console.log("true next $navTabs width: ", $navTabs.width() );
-                }
-        }
-        else {
-            $navTabs.animate({
-                left: '-=' + xright
-            },0);
-
-        }
-
-        /* console.log("melis-tabnext clicked");
-        console.log("$navTabs width: ", $navTabs.width() ); */
+            }
     });
     
     //PREV
     $body.on("click", ".melis-tabprev", function(){
-        calcOffset();
-
         var currentUlContainer = ulContainer - 170;
+            
+            calcOffset();
 
-        /* console.log("ulContainer: ", ulContainer);
-        console.log("currentUlContainer: ", currentUlContainer); */
-
-        if( xleft > currentUlContainer ) {
-            $navTabs.animate({
-                left: '+='+ 170
-            },0);
-
-            //console.log("true next $navTabs width: ", $navTabs.width() );
-        }
-        else{
-            $navTabs.animate({
-                left: '+=' + xleft
-            },0);
-
-            //console.log("false next $navTabs width: ", $navTabs.width() );
-        }
-        /* console.log("melis-tabprev clicked");
-        console.log("$navTabs width: ", $navTabs.width() ); */
+            if( xleft > currentUlContainer ) {
+                $navTabs.animate({
+                    left: '+='+ 170
+                },0);
+            }
+            else{
+                $navTabs.animate({
+                    left: '+=' + xleft
+                },0);
+            }
     });
    
 	// FOCUS TAB ON CLICK (new functionality)
@@ -28085,7 +28050,7 @@ var melisCore = (function(window){
         //var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
 
         melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId}, '', function() {
-            // check dashboard
+            // check dashboard if melisDashBoardDragnDrop is defined
             if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
                 melisDashBoardDragnDrop.checkDashboard();
             }
@@ -35775,8 +35740,12 @@ a.children=[];for(var b=this.getChildren(),c=b.length,d=0;c>d;d++){var e=b[d];a.
  * @version 2.1.2
  */
 ;(function(f){"use strict";"function"===typeof define&&define.amd?define(["jquery"],f):"undefined"!==typeof module&&module.exports?module.exports=f(require("jquery")):f(jQuery)})(function($){"use strict";function n(a){return!a.nodeName||-1!==$.inArray(a.nodeName.toLowerCase(),["iframe","#document","html","body"])}function h(a){return $.isFunction(a)||$.isPlainObject(a)?a:{top:a,left:a}}var p=$.scrollTo=function(a,d,b){return $(window).scrollTo(a,d,b)};p.defaults={axis:"xy",duration:0,limit:!0};$.fn.scrollTo=function(a,d,b){"object"=== typeof d&&(b=d,d=0);"function"===typeof b&&(b={onAfter:b});"max"===a&&(a=9E9);b=$.extend({},p.defaults,b);d=d||b.duration;var u=b.queue&&1<b.axis.length;u&&(d/=2);b.offset=h(b.offset);b.over=h(b.over);return this.each(function(){function k(a){var k=$.extend({},b,{queue:!0,duration:d,complete:a&&function(){a.call(q,e,b)}});r.animate(f,k)}if(null!==a){var l=n(this),q=l?this.contentWindow||window:this,r=$(q),e=a,f={},t;switch(typeof e){case "number":case "string":if(/^([+-]=?)?\d+(\.\d+)?(px|%)?$/.test(e)){e= h(e);break}e=l?$(e):$(e,q);case "object":if(e.length===0)return;if(e.is||e.style)t=(e=$(e)).offset()}var v=$.isFunction(b.offset)&&b.offset(q,e)||b.offset;$.each(b.axis.split(""),function(a,c){var d="x"===c?"Left":"Top",m=d.toLowerCase(),g="scroll"+d,h=r[g](),n=p.max(q,c);t?(f[g]=t[m]+(l?0:h-r.offset()[m]),b.margin&&(f[g]-=parseInt(e.css("margin"+d),10)||0,f[g]-=parseInt(e.css("border"+d+"Width"),10)||0),f[g]+=v[m]||0,b.over[m]&&(f[g]+=e["x"===c?"width":"height"]()*b.over[m])):(d=e[m],f[g]=d.slice&& "%"===d.slice(-1)?parseFloat(d)/100*n:d);b.limit&&/^\d+$/.test(f[g])&&(f[g]=0>=f[g]?0:Math.min(f[g],n));!a&&1<b.axis.length&&(h===f[g]?f={}:u&&(k(b.onAfterFirst),f={}))});k(b.onAfter)}})};p.max=function(a,d){var b="x"===d?"Width":"Height",h="scroll"+b;if(!n(a))return a[h]-$(a)[b.toLowerCase()]();var b="client"+b,k=a.ownerDocument||a.document,l=k.documentElement,k=k.body;return Math.max(l[h],k[h])-Math.min(l[b],k[b])};$.Tween.propHooks.scrollLeft=$.Tween.propHooks.scrollTop={get:function(a){return $(a.elem)[a.prop]()}, set:function(a){var d=this.get(a);if(a.options.interrupt&&a._last&&a._last!==d)return $(a.elem).stop();var b=Math.round(a.now);d!==b&&($(a.elem)[a.prop](b),a._last=this.get(a))}};return p});
+/*
+ * Renders guide tours / feature tutorial
+ * using EnjoyHint specifically on dashboard
+ * public/assets/components/plugins/enjoyhint
+ */
 var dashboardNotify = (function() {
-    //var eh = null;
     /**
      * To make a "persistent cookie" (a cookie that "never expires"),
      * we need to set a date/time in a distant future (one that possibly exceeds the user's
@@ -35814,22 +35783,22 @@ var dashboardNotify = (function() {
 
     // init
     function init() {
-        setTimeout(function() {
-            var $body        = $("body"),
-                $gs         = $("#"+activeTabId+" .grid-stack"),
-                $gsItem     = $gs.find(".grid-stack-item"),
-                $gsItemLen  = $gsItem.length,
-                $pluginBox  = $body.find(".melis-core-dashboard-dnd-box"),
-                $tabDashB   = $("#"+activeTabId+".tab-panel-dashboard").find(".active"),
-                shown       = $pluginBox.hasClass("shown");
-                
-                // check if there is grid stack item and plugin menu is open
-                if ( $gsItem.length === 0 && shown === true ) {
-                    render();
-                } else {
-                    removeEnjoyHintHtml();
-                }
-        }, 500 );
+        var $gs         = $("#"+activeTabId+" .grid-stack"),
+            $gsItem     = $gs.find(".grid-stack-item"),
+            $pluginBox  = $("#id_meliscore_center_dashboard_menu"),
+            melisKey    = $("#"+activeTabId).attr("data-meliskey");
+
+            // check if there is grid stack item and plugin menu is open, && $pluginBox.hasClass("shown")
+            if ( melisKey === "meliscore_dashboard" && $gsItem.length === 0 ) {
+                var interval = setInterval(function() {
+                    if ( $pluginBox.length > 0 && $pluginBox.hasClass("shown") ) {
+                        render();
+                        clearInterval( interval );
+                    }
+                }, 2000);
+            } else {
+                removeEnjoyHintHtml();
+            }
     }
 
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
@@ -35884,11 +35853,7 @@ var dashboardNotify = (function() {
 
     // run enjoy hint script
     function runNotify() {
-        // checking for .tab-panel-dashboard has .active class
-        if ( $tpd.length > 0 ) {
-            //$("#sidebar-menu").trigger("click");
-            eh.runScript();
-        }
+        eh.runScript();
     }
 
     // render function
@@ -35938,19 +35903,18 @@ var dashboardNotify = (function() {
 })();
 
 $(function() {
-    setTimeout(function() {
-        var $body           = $("body"),
-            activeModule    = $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-");
-
-            /* 
-             * Check if melisUserTabs is currently an active module.
-             * Negate to run the local dashboardNotify.init() function.
-             * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
-             * from with melisUserTabs ajax call.
-             */
-            
-            if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
-                dashboardNotify.init();
-            }
-    }, 500);
+    var activeModule    = $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-");
+        /* 
+         * Check if melisUserTabs is currently an active module.
+         * Negate to run the local dashboardNotify.init() function.
+         * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
+         * from with melisUserTabs ajax call.
+         */
+        
+        if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
+            dashboardNotify.init();
+        }
+        else {
+            melisUserTabs.getUserSavedOpenTabs();
+        }
 });

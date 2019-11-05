@@ -649,7 +649,7 @@ var melisCore = (function(window){
         //var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
 
         melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId}, '', function() {
-            // check dashboard
+            // check dashboard if melisDashBoardDragnDrop is defined
             if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
                 melisDashBoardDragnDrop.checkDashboard();
             }

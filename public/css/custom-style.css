@@ -591,8 +591,7 @@ div.row, ul.row {
 /* dashboard tooltip */
 .melis-dashboard-plugin-tooltip {
   position: absolute;
-  /* right: calc(100% + 20px); */
-  background: #212121;
+  background: #212121 !important;
   border: none;
   color: #fff;
   padding: 20px;

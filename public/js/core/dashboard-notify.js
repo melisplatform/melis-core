@@ -1,5 +1,9 @@
+/*
+ * Renders guide tours / feature tutorial
+ * using EnjoyHint specifically on dashboard
+ * public/assets/components/plugins/enjoyhint
+ */
 var dashboardNotify = (function() {
-    //var eh = null;
     /**
      * To make a "persistent cookie" (a cookie that "never expires"),
      * we need to set a date/time in a distant future (one that possibly exceeds the user's
@@ -37,22 +41,22 @@ var dashboardNotify = (function() {
 
     // init
     function init() {
-        setTimeout(function() {
-            var $body        = $("body"),
-                $gs         = $("#"+activeTabId+" .grid-stack"),
-                $gsItem     = $gs.find(".grid-stack-item"),
-                $gsItemLen  = $gsItem.length,
-                $pluginBox  = $body.find(".melis-core-dashboard-dnd-box"),
-                $tabDashB   = $("#"+activeTabId+".tab-panel-dashboard").find(".active"),
-                shown       = $pluginBox.hasClass("shown");
-                
-                // check if there is grid stack item and plugin menu is open
-                if ( $gsItem.length === 0 && shown === true ) {
-                    render();
-                } else {
-                    removeEnjoyHintHtml();
-                }
-        }, 500 );
+        var $gs         = $("#"+activeTabId+" .grid-stack"),
+            $gsItem     = $gs.find(".grid-stack-item"),
+            $pluginBox  = $("#id_meliscore_center_dashboard_menu"),
+            melisKey    = $("#"+activeTabId).attr("data-meliskey");
+
+            // check if there is grid stack item and plugin menu is open, && $pluginBox.hasClass("shown")
+            if ( melisKey === "meliscore_dashboard" && $gsItem.length === 0 ) {
+                var interval = setInterval(function() {
+                    if ( $pluginBox.length > 0 && $pluginBox.hasClass("shown") ) {
+                        render();
+                        clearInterval( interval );
+                    }
+                }, 2000);
+            } else {
+                removeEnjoyHintHtml();
+            }
     }
 
     // remove enjoyhint html elements / remove style overflow hidden caused by enjoyhint while it is hidden
@@ -107,11 +111,7 @@ var dashboardNotify = (function() {
 
     // run enjoy hint script
     function runNotify() {
-        // checking for .tab-panel-dashboard has .active class
-        if ( $tpd.length > 0 ) {
-            //$("#sidebar-menu").trigger("click");
-            eh.runScript();
-        }
+        eh.runScript();
     }
 
     // render function
@@ -161,19 +161,18 @@ var dashboardNotify = (function() {
 })();
 
 $(function() {
-    setTimeout(function() {
-        var $body           = $("body"),
-            activeModule    = $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-");
-
-            /* 
-             * Check if melisUserTabs is currently an active module.
-             * Negate to run the local dashboardNotify.init() function.
-             * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
-             * from with melisUserTabs ajax call.
-             */
-            
-            if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
-                dashboardNotify.init();
-            }
-    }, 500);
+    var activeModule    = $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-");
+        /* 
+         * Check if melisUserTabs is currently an active module.
+         * Negate to run the local dashboardNotify.init() function.
+         * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
+         * from with melisUserTabs ajax call.
+         */
+        
+        if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
+            dashboardNotify.init();
+        }
+        else {
+            melisUserTabs.getUserSavedOpenTabs();
+        }
 });
