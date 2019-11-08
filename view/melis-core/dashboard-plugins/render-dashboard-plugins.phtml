@@ -19,7 +19,7 @@
                         waitForJquery(showDashboardPluginMenu);
 
                         function waitForJquery(method) {
-                            if (window.jQuery && typeof melisDashBoardDragnDrop.$body !== "undefined") {
+                            if (window.jQuery && typeof melisDashBoardDragnDrop !== "undefined" && typeof melisDashBoardDragnDrop.$body !== "undefined") {
                                 method();
                             } else {
                                 setTimeout(function () {
