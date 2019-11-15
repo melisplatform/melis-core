@@ -547,12 +547,19 @@ var melisCore = (function(window){
 
     // pagination of dataTables data, prior to bootstrap 4 changes on pagination classes
     function paginateDataTables() {
-        var $paginate = $(".dataTables_paginate"),
-            $page_item = $paginate.find(".pagination li"),
-            $page_link = $page_item.find("a");
+        var paginate = setInterval(function() {
+            var $paginate = $(".dataTables_paginate"),
+                $page_item = $paginate.find(".pagination li"),
+                $page_link = $page_item.find("a");
 
-            $page_item.addClass("page-item");
-            $page_link.addClass("page-link");
+                if ( $paginate.length ) {
+                    $page_item.addClass("page-item");
+                    $page_link.addClass("page-link");
+
+                    clearInterval( paginate );
+                }
+        }, 500);
+        
     }
 
     // BIND & DELEGATE EVENTS =================================================================================================================
