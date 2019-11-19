@@ -33537,7 +33537,10 @@ var melisDashBoardDragnDrop = {
         var self = this,
             gridstack = $("#" + activeTabId + " .tab-pane .grid-stack").data("gridstack");
 
-        var gridDrop = gridstack.container.droppable({
+            /* console.log("gridstack: ", gridstack);
+            console.log("$(gridstack.container[0]): ", $(gridstack.container[0]) ); */
+
+        var gridDrop = $(gridstack.container[0]).droppable({
             accept: widget,
             tolerance: 'pointer',
             drop: function (event, ui) {
