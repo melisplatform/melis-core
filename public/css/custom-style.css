@@ -879,15 +879,13 @@ div.row, ul.row {
     border-radius: 100%;
   }
   /* responsive tab menu */
-  /* #tab-arrow-top {
-    top: 0;
-  } */
-  .navbar #melis-id-nav-bar-tabs > li {
+   .navbar #melis-id-nav-bar-tabs > li {
     width: 100%;
   }
   .navbar.main.navbar-primary .nav > li a.close {
     width: 47px;
     height: 47px;
+    text-indent: -5000px;
   }
   #nav-header .nav-tabs > li.active > a.close-tab, 
   #nav-header .nav-tabs > li.active > a.close-tab:focus {
@@ -932,6 +930,10 @@ div.row, ul.row {
   #id_meliscalendar_tool .innerAll .no-gutters {
     padding-left: 0;
     padding-right: 0;
+  }
+  /* melis-tipimail */
+  #content {
+    margin-top: 0 !important;
   }
 }
 @media (min-width: 576px) and (max-width: 991px) {
