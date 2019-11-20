@@ -893,6 +893,111 @@ class ToolUserController extends AbstractActionController
 
     }
 
+    /**
+     * Returns the User's Info by its User ID
+     * @return \Zend\View\Model\JsonModel
+     */
+    public function getUsersAction()
+    {
+        $success = 0;
+        $errors = [];
+        $request = $this->getRequest();
+        $results = [];
+        $morePages = false;
+        $pagination = [
+            "more" => $morePages
+        ];
+
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $post =  $this->getServiceLocator()->get('MelisCoreTool')->sanitizePost($post);
+
+            $searchValue = empty($post['search']) ? '' : $post['search'];
+            $searchableColumns = ['usr_firstname', 'usr_lastname', 'usr_email', 'usr_login'];
+            $orderBy = 'usr_firstname';
+            $orderDirection = 'ASC';
+            $limit = empty($post['length']) ? 5 : (int)$post['length'];
+            $withDefaultOption = empty($post['withDefaultOption']) ? false : (bool)$post['withDefaultOption'];
+            /**
+             * Pagination: Set offset
+             * - if no 'page' or page1 : do not offset
+             * - otherwise, get offset.
+             */
+            $start = (empty($post['page']) || $post['page'] == 1) ? null : ((int)$post['page'] - 1) * $limit;
+
+            $getColumns = [
+                "usr_id",
+                "usr_status",
+                "usr_admin",
+                "usr_email",
+                "usr_login",
+                "usr_firstname",
+                "usr_lastname",
+            ];
+            $where = [
+                'getColumns' => $getColumns,
+                'search' => $searchValue,
+                'searchableColumns' => $searchableColumns,
+                'orderBy' => $orderBy,
+                'orderDirection' => $orderDirection,
+                'start' => $start,
+                'limit' => $limit,
+            ];
+
+
+            $usersTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $users = $usersTable->getUsers($where);
+
+            /**
+             * Format data to Select2's standards
+             */
+            if (!empty($users)) {
+                if (!empty($limit)) {
+
+                    /**
+                     * $post['page']: current page, pagination wise.
+                     * $morePages: lets Select2 know if there are more items
+                     */
+                    $totalCount = $users->getObjectPrototype()->getUnfilteredDataCount();
+                    $morePages = ((int)$post['page'] * $limit) < $totalCount;
+                    $pagination['more'] = $morePages;
+
+                }
+
+                $users = $users->toArray();
+                foreach ($users as $user) {
+                    $text = $user['usr_login'] . ' (' . $user['usr_firstname'] . ' ' . $user['usr_lastname'] . ')';
+                    array_push($results, [
+                        'id' => $user['usr_id'], // Option's value
+                        'text' => $text, // Option's label
+                    ]);
+                }
+                $success = true;
+            }
+
+            if ($withDefaultOption) {
+                /** Insert default option ('All users') */
+                array_unshift(
+                    $results,
+                    [
+                        'id' => "0",
+                        'text' => $this->getTool()->getTranslation('tr_melis_cms_user_account_form_default_user')
+                    ]
+                );
+            }
+        }
+
+        $response = [
+            'results' => $results,
+            'pagination' => $pagination,
+            'success' => $success,
+            'errors' => $errors,
+        ];
+
+        return new JsonModel($response);
+
+    }
+
     private function recheckActiveUsers()
     {
         $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
@@ -1213,6 +1318,73 @@ class ToolUserController extends AbstractActionController
         }
 
         return $melisTool->exportDataToCsv($userData);
+    }
+
+    public function resetUserRightsAction(){
+
+        $response = [];
+        $this->getEventManager()->trigger('meliscore_tooluser_save_start', $this, $response);
+
+        $errors = [];
+        $datas = [];
+        $userId = null;
+        $success = 0;
+        $newXmlRights = "";
+        $container = new Container('meliscore');
+
+        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+
+        $request = $this->getRequest();
+        $postData = $request->getPost()->toArray();
+
+        $textTitle = 'tr_meliscore_tool_user';
+
+        if (!empty($postData['usr_id'])) {
+            $userId = $postData['usr_id'];
+        }
+
+        if (!empty($container['action-tool-user-setrights-tmp'])) {
+            $newXmlRights = '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0">';
+            foreach ($container['action-tool-user-setrights-tmp'] as $xmlrights)
+                $newXmlRights .= $xmlrights;
+
+            $newXmlRights = preg_replace("/<id(.*)<\/id>/iUs", "", $newXmlRights);
+            $newXmlRights .= '</document>';
+        }
+
+        foreach ($userTable->getEntryById($userId) as $user) {
+            $data = [
+                'usr_login' => $user->usr_login
+            ];
+        }
+
+        $userSession = $melisCoreAuth->getStorage()->read();
+
+        if ($data['usr_login'] == $userSession->usr_login) {
+            $userSession->usr_rights = $newXmlRights;
+        }
+
+
+        $success = $userTable->save(array('usr_rights'=>$newXmlRights), $userId);
+        if ($success < 1) {
+            $textMessage = 'tr_meliscore_tool_user_update_fail_info';
+        } else {
+            $textMessage = 'tr_meliscore_tool_user_update_success_info';
+        }
+
+        $response = [
+            'success' => $success,
+            'textTitle' => $textTitle,
+            'textMessage' => $textMessage,
+            'errors' => $errors,
+            'datas' => array('usr_rights'=>$newXmlRights)
+        ];
+
+        $this->getEventManager()->trigger('meliscore_tooluser_save_end', $this, array_merge($response, ['typeCode' => 'CORE_USER_UPDATE', 'itemId' => $userId]));
+
+        return new JsonModel($response);
+
     }
 
     /**

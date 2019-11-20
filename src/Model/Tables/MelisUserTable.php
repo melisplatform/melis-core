@@ -9,6 +9,7 @@
 
 namespace MelisCore\Model\Tables;
 
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 
 class MelisUserTable extends MelisGenericTable
@@ -68,4 +69,62 @@ class MelisUserTable extends MelisGenericTable
 
 		return $resultSet;
 	}
+
+    /**
+     * Retrieves Users based from the
+     * Where condition provided
+     * @param array $where
+     */
+    public function getUsers(array $where = [
+        'getColumns' => ['*'],
+        'search' => null,
+        'searchableColumns' => [],
+        'orderBy' => null,
+        'orderDirection' => null,
+        'start' => null,
+        'limit' => null,
+        'siteId' => null,
+        'status' => 1,
+    ])
+    {
+
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns($where['getColumns']);
+
+        if (!empty($where['searchableColumns']) && !empty($where['search'])) {
+            $searchWhere = new Where();
+            $nest = $searchWhere->nest();
+
+            foreach ($where['searchableColumns'] as $column) {
+                $nest->like($column, '%' . $where['search'] . '%')->or;
+            }
+            $select->where($searchWhere);
+        }
+
+
+        $status = empty($where['status']) ? 1 : $where['status'];
+        $select->where->equalTo('usr_status', $status);
+        /**
+         * Get "unfiltered" data (no offset and limit applied yet)
+         */
+        $unfilteredData = $this->tableGateway->selectWith($select);
+
+        if (!empty($where['limit'])) {
+            $select->limit($where['limit']);
+        }
+
+        if (!empty($where['start'])) {
+            $select->offset($where['start']);
+        }
+
+        if (!empty($where['orderBy']) && !empty($where['orderDirection'])) {
+            $select->order($where['orderBy'] . ' ' . $where['orderDirection']);
+        }
+        $resultSet = $this->tableGateway->selectWith($select);
+
+        $resultSet->getObjectPrototype()->setUnfilteredDataCount($unfilteredData->count());
+        $resultSet->getObjectPrototype()->setFilteredDataCount($resultSet->count());
+
+        return $resultSet;
+    }
 }

@@ -2220,6 +2220,11 @@ return [
                                     'controller' => 'Log',
                                     'action' => 'render-logs-tool-table-type-filter',
                                 ],
+                                'meliscore_logs_tool_export' => array(
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Log',
+                                    'action' => 'render-logs-tool-export'
+                                ),
                                 'meliscore_logs_tool_table_refresh' => [
                                     'module' => 'MelisCore',
                                     'controller' => 'Log',
@@ -2365,6 +2370,138 @@ return [
                                         ['name' => 'StringTrim'],
                                     ],
                                 ],
+                            ],
+                        ],
+                        'meliscore_logs_tool_log_export_form' => [
+                            'attributes' => [
+                                'name' => 'logExportForm',
+                                'id' => 'logExportForm',
+                                'method' => '',
+                                'action' => '',
+                                'class' => 'logExportForm',
+                            ],
+                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => [
+                                array(
+                                    'spec' => array(
+                                        'name' => 'log_user',
+                                        'type' => 'Select',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_user',
+                                            'tooltip' => 'tr_meliscore_log_export_user tooltip',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_user',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_user',
+                                        ),
+                                    ),
+                                ),array(
+                                    'spec' => array(
+                                        'name' => 'log_type',
+                                        'type' => 'MelisCoreLogTypeSelect',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_type',
+                                            'tooltip' => 'tr_meliscore_log_export_type tooltip',
+                                            'disable_inarray_validator' => true,
+                                            'empty_option' => 'tr_meliscore_common_all',
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_type',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_type',
+                                        ),
+                                    ),
+                                ),array(
+                                    'spec' => array(
+                                        'name' => 'log_date_range',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_log_date_range',
+                                            'tooltip' => 'tr_meliscore_log_export_log_date_range tooltip',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_date_range',
+                                            'class' => 'melis-input-group-button',
+                                            'data-button-icon' => 'fa fa-eraser',
+                                            'data-button-class' => 'meliscore-clear-input',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_log_date_range',
+                                        ),
+                                    ),
+                                ),array(
+                                    'spec' => array(
+                                        'name' => 'log_delimiter',
+                                        'type' => 'MelisText',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_delimiter',
+                                            'tooltip' => 'tr_meliscore_log_export_delimiter tooltip',
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_delimiter',
+                                            'value' => ';',
+                                            'placeholder' => 'tr_meliscore_log_export_delimiter',
+                                        ),
+                                    ),
+                                ),array(
+                                    'spec' => array(
+                                        'name' => 'log_enclosure',
+                                        'type' => 'Checkbox',
+                                        'options' => array(
+                                            'label' => 'tr_meliscore_log_export_enclosure',
+                                            'tooltip' => 'tr_meliscore_log_export_enclosure tooltip',
+                                            'checked_value' => 1,
+                                            'unchecked_value' => 0,
+                                            'switchOptions' => array(
+                                                'label-on' => 'tr_meliscore_common_yes',
+                                                'label-off' => 'tr_meliscore_common_no',
+                                                'label' => "<i class='glyphicon glyphicon-resize-horizontal'></i>",
+                                            ),
+                                            'disable_inarray_validator' => true,
+                                        ),
+                                        'attributes' => array(
+                                            'id' => 'log_enclosure',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_log_export_enclosure',
+                                        ),
+                                    ),
+                                ),
+
+                            ],
+                            'input_filter' => [
+                                'log_user' => array(
+                                    'name' => 'log_user',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                ),
+                                'log_type' => array(
+                                    'name' => 'log_type',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                ),
+                                'log_date_range' => array(
+                                    'name' => 'log_date_range',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                ),
+                                'log_delimiter' => array(
+                                    'name' => 'log_delimiter',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                ),
+                                'log_enclosure' => array(
+                                    'name' => 'log_enclosure',
+                                    'required' => false,
+                                    'validators' => array(),
+                                    'filters' => array(),
+                                )
                             ],
                         ],
                     ],
