@@ -37183,11 +37183,11 @@ a:not([href]).btn-danger:hover {
   float: none;
 }
 .page-item .page-link {
-  -webkit-transition-property: none;
-  -moz-transition-property: none;
-  -o-transition-property: none;
-  -ms-transition-property: none;
-  transition-property: none;
+  -webkit-transition-property: none !important;
+  -moz-transition-property: none !important;
+  -o-transition-property: none !important;
+  -ms-transition-property: none !important;
+  transition-property: none !important;
 }
 /* modal */
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a {
