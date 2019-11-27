@@ -37012,8 +37012,12 @@ div#modal-user-management div.widget {
   color: #fff;
   text-decoration: none;
 }
+/* 
+ * Text is not readable same color with the background white on #id_meliscore_header_language 
+ */
 .navbar.main .nav.navbar-right .dropdown-menu li.active:hover a {
   background-color: #fff;
+  color: #e61c23;
 }
 .content-login .card-wrapper {
   width: 38.285rem;
