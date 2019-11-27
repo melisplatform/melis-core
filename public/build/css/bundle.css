@@ -33163,7 +33163,7 @@ body #newplugin-cont.show-menu{
 }
 .navbar-nav>li>a:not(.menu-icon),
 .navbar-nav>li>a .fa:not(.close) {
-    position: initial !important;
+    position: relative;
 }
 
 

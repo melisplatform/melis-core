@@ -27055,7 +27055,7 @@ var tabExpander = (function($, window){
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
         /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
         /* tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-        tabContainerWidthPercent = 112 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        tabContainerWidthPercent = 111.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
         navUlContainer = 1;
