@@ -53,6 +53,9 @@
   color: #fff;
   text-decoration: none;
 }
+.navbar.main .toggle-button {
+  padding: 0 0 0 15px;
+}
 /* 
  * Text is not readable same color with the background white on #id_meliscore_header_language 
  */
@@ -88,6 +91,9 @@
   font-size: 1.25rem;
   padding-right: 0;
   width: 100%;
+}
+.navbar-brand {
+  font-size: 18px;
 }
 #nav-header .nav-tabs > li.active > a, 
 #nav-header .nav-tabs > li.active > a:focus {
@@ -668,6 +674,10 @@ div.row, ul.row {
   font-size: 0;
   text-indent: -99999px;
 }
+/* #content */
+#content {
+  margin-left: 274px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
@@ -684,12 +694,19 @@ div.row, ul.row {
   }
 }
 @media (min-width: 768px) {
+  /* #melis-navtabs-container-outer, #plugins-container {
+    width: calc(100% - 362px);
+  } */
+  .res-action-container {
+    width: calc(100% - 274px);
+  }
   /* .login-page */
   .login-page .navbar.main .nav.navbar-right li:first-child {
     display: block;
   }
   .login-page .navbar.main .navbar-brand {
-    width: 320px;
+    /* width: 320px; */
+    width: 274px;
   }
   .navbar.main .left-menu {
     float: none;
@@ -718,48 +735,14 @@ div.row, ul.row {
     display: block;
     border: none;
   }
-  /* .navbar.main .nav.navbar-right {
-    float: right;
-  } */
-  /* .navbar.main .nav.navbar-right > li {
-    display: block;
-    float: left;
-  }
-  .navbar.main .nav.navbar-right > li > a {
-    display: block;
-  } */
-  /* #melis-navtabs-container-outer {
-    display: flex;
-    justify-content: space-between; 
-    float: none; 
-  } */
-  /* .res-action-container {
-    width: 100% !important;
-  } */
-  /* #melis-navtabs-container-outer {
-    overflow: hidden;
-  } */
+
   #nav-header.container-fluid {
     display: block;
   }
   .navbar.main.navbar-primary .nav > li .menu-icon .fa {
     padding-right: 0;
   }
-  /* #melis-navtabs-container-inner {
-    float: left;
-    text-align: center;
-  } */
-  /* .navbar-nav.tabsbar {
-    flex-direction: row;
-    -webkit-box-orient: horizontal;
-  }
-  #melis-id-nav-bar-tabs {
-    display: flex;
-    flex-direction: row;
-  } */
-  /* #melis-id-nav-bar-tabs li {
-    float: none;
-  } */
+
   .navbar #melis-id-nav-bar-tabs > li .navtab-pagename {
     display: block;
     float: none;
@@ -771,10 +754,6 @@ div.row, ul.row {
     border-right: 0;
   }
 
-  /* #main content */
-  #main #menu .sidebar {
-    width: 320px;
-  }
   #main #content {
     margin-left: 0;
     padding-left: 0;

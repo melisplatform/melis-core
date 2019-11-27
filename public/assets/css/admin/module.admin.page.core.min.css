@@ -653,8 +653,8 @@ li[class*="col-lg-"] {
 
 #content {
     /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
-    /* margin-left: 274px; */
-    margin-left: 320px;
+    margin-left: 274px;
+    /* margin-left: 320px; */
     background: #f5f5f5;
     padding-bottom: 40px
 }

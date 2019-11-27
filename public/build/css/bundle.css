@@ -24583,8 +24583,8 @@ li[class*="col-lg-"] {
 
 #content {
     /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
-    /* margin-left: 274px; */
-    margin-left: 320px;
+    margin-left: 274px;
+    /* margin-left: 320px; */
     background: #f5f5f5;
     padding-bottom: 40px
 }
@@ -33161,8 +33161,8 @@ body #newplugin-cont.show-menu{
     top: 8px;
     left: 18px;
 }
-.navbar-nav>li>a:not(".menu-icon"),
-.navbar-nav>li>a .fa:not(".close"){
+.navbar-nav>li>a:not(.menu-icon),
+.navbar-nav>li>a .fa:not(.close) {
     position: initial !important;
 }
 
@@ -34965,15 +34965,15 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     .sidebar {
         left: 0;
         /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
-        /* width: 274px; */
-        width: 320px;
+        width: 274px;
+        /* width: 320px; */
     }
     .sidebar-mini .sidebar{
         /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
-        /* width: 274px;
-        left: -274px; */
-        width: 320px;
-        left: -320px;
+        width: 274px;
+        left: -274px;
+        /* width: 320px;
+        left: -320px; */
     }
 
 
@@ -35003,8 +35003,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     /* footer */
     #id_meliscore_footer.slide-left{
         /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
-        /* left: -274px; */
-        left: -320px;
+        left: -274px;
+        /* left: -320px; */
     }
 
     /* preloader [for issue: http://mantis.melistechnology.fr/view.php?id=3878] */
@@ -37012,6 +37012,9 @@ div#modal-user-management div.widget {
   color: #fff;
   text-decoration: none;
 }
+.navbar.main .toggle-button {
+  padding: 0 0 0 15px;
+}
 /* 
  * Text is not readable same color with the background white on #id_meliscore_header_language 
  */
@@ -37047,6 +37050,9 @@ div#modal-user-management div.widget {
   font-size: 1.25rem;
   padding-right: 0;
   width: 100%;
+}
+.navbar-brand {
+  font-size: 18px;
 }
 #nav-header .nav-tabs > li.active > a, 
 #nav-header .nav-tabs > li.active > a:focus {
@@ -37627,6 +37633,10 @@ div.row, ul.row {
   font-size: 0;
   text-indent: -99999px;
 }
+/* #content */
+#content {
+  margin-left: 274px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
@@ -37643,12 +37653,19 @@ div.row, ul.row {
   }
 }
 @media (min-width: 768px) {
+  /* #melis-navtabs-container-outer, #plugins-container {
+    width: calc(100% - 362px);
+  } */
+  .res-action-container {
+    width: calc(100% - 274px);
+  }
   /* .login-page */
   .login-page .navbar.main .nav.navbar-right li:first-child {
     display: block;
   }
   .login-page .navbar.main .navbar-brand {
-    width: 320px;
+    /* width: 320px; */
+    width: 274px;
   }
   .navbar.main .left-menu {
     float: none;
@@ -37677,48 +37694,14 @@ div.row, ul.row {
     display: block;
     border: none;
   }
-  /* .navbar.main .nav.navbar-right {
-    float: right;
-  } */
-  /* .navbar.main .nav.navbar-right > li {
-    display: block;
-    float: left;
-  }
-  .navbar.main .nav.navbar-right > li > a {
-    display: block;
-  } */
-  /* #melis-navtabs-container-outer {
-    display: flex;
-    justify-content: space-between; 
-    float: none; 
-  } */
-  /* .res-action-container {
-    width: 100% !important;
-  } */
-  /* #melis-navtabs-container-outer {
-    overflow: hidden;
-  } */
+
   #nav-header.container-fluid {
     display: block;
   }
   .navbar.main.navbar-primary .nav > li .menu-icon .fa {
     padding-right: 0;
   }
-  /* #melis-navtabs-container-inner {
-    float: left;
-    text-align: center;
-  } */
-  /* .navbar-nav.tabsbar {
-    flex-direction: row;
-    -webkit-box-orient: horizontal;
-  }
-  #melis-id-nav-bar-tabs {
-    display: flex;
-    flex-direction: row;
-  } */
-  /* #melis-id-nav-bar-tabs li {
-    float: none;
-  } */
+
   .navbar #melis-id-nav-bar-tabs > li .navtab-pagename {
     display: block;
     float: none;
@@ -37730,10 +37713,6 @@ div.row, ul.row {
     border-right: 0;
   }
 
-  /* #main content */
-  #main #menu .sidebar {
-    width: 320px;
-  }
   #main #content {
     margin-left: 0;
     padding-left: 0;

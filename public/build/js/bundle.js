@@ -26993,12 +26993,13 @@ var tabExpander = (function($, window){
     var screenSize = jQuery(window).width();
     
     // CHECK IF ENABLED
-    function checkStatus() {
+    function checkStatus(){
     	return status;
     }
 
 	// ENABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
-	function Enable() {		
+	function Enable(){
+			
 	    //set the parent container width and right icons container
         $("#melis-navtabs-container-outer").css({"width": (tabContainerWidthPercent)+"%" });
         $("#plugins-container").css({"width": (rightMenuWidthPercent)+"%"});
@@ -27024,7 +27025,7 @@ var tabExpander = (function($, window){
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
-	function Disable() {
+	function Disable(){
 		$(".melis-tabprev, .melis-tabnext").hide();
         $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style")
 	}
@@ -27040,8 +27041,8 @@ var tabExpander = (function($, window){
         
         // left
         //var leftMenuWidthPx = $(".navbar-header").width();
-        var leftMenuWidthPx = $("#brand-logo").width();
-        var leftMenuWidthPercent = (100 * leftMenuWidthPx) / totalHeaderWidthPx;
+        var leftMenuWidthPx = $(".navbar.main .navbar-brand").width();
+        var leftMenuWidthPercent = (100 * 274) / totalHeaderWidthPx;
         
         // right
         var rightMenuWidthPx = 0;
@@ -27051,10 +27052,10 @@ var tabExpander = (function($, window){
         rightMenuWidthPercent = (( 100 * rightMenuWidthPx ) / totalHeaderWidthPx ) + 1;
         
         //center
-        var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ); // - 320
-        // tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        // tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        tabContainerWidthPercent = 113.7 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
+        /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
+        /* tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
+        tabContainerWidthPercent = 112 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
         navUlContainer = 1;
@@ -27081,64 +27082,58 @@ var tabExpander = (function($, window){
 	
 	// TAB EXPANDER CONTROLS  --------------------------------------------------------------------------------------------------------
     var xleft, xright, ulContainer;
-    function calcOffset() {
+    function calcOffset(){
         ulContainer = $("#melis-navtabs-container-inner").outerWidth();
         var leftOffset = $navTabs.position().left;
         //var liIndex = $navTabs.find("li").index();
 
         var ulWidth = 1; 
-            $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
-                ulWidth += $(this).outerWidth();
-            });
+        $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
+            ulWidth += $(this).outerWidth();
+        });
 
         var rightOffset = ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset;
-            xleft = Math.abs( $navTabs.position().left );
-            xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
+        xleft = Math.abs( $navTabs.position().left );
+        xright = Math.abs( ( $("#melis-navtabs-container-inner").outerWidth() - ulWidth ) - leftOffset);
     }
     
     //NEXT 
-    $body.on("click", ".melis-tabnext", function() {
-        var currentUlContainer = ulContainer - 170;
-            
-            calcOffset();
+    $(".melis-tabnext").on("click", function() {
+        calcOffset();
+        if( xright > ulContainer - 170 ) {
+            var liIndex = $navTabs.find("li").index();
 
-            if( xright > currentUlContainer ) {
-                //var liIndex = $navTabs.find("li").index();
-                    if ( $navTabs.width() > ulContainer ) {
-                        $navTabs.animate({
-                            left: '-='+ 170
-                        },0);
-                    }
-                    else {
-                        $navTabs.css("left", "0");
-                    }
+            if ( liIndex === 0 ) {
+                $navTabs.css("left", "0");
             }
             else {
                 $navTabs.animate({
-                    left: '-=' + xright
+                    left: '-='+ 170
                 },0);
-
             }
+        }
+        else{
+            $navTabs.animate({
+                left: '-=' + xright
+            },0);
+        }
     });
     
     //PREV
-    $body.on("click", ".melis-tabprev", function(){
-        var currentUlContainer = ulContainer - 170;
-            
-            calcOffset();
-
-            if( xleft > currentUlContainer ) {
-                $navTabs.animate({
-                    left: '+='+ 170
-                },0);
-            }
-            else{
-                $navTabs.animate({
-                    left: '+=' + xleft
-                },0);
-            }
-    });
-   
+    $(".melis-tabprev").on("click", function(){
+        calcOffset();
+        if( xleft > ulContainer - 170) {
+            $navTabs.animate({
+                left: '+='+ 170
+            },0);
+        }
+        else{
+            $navTabs.animate({
+                left: '+=' + xleft
+            },0);
+        }
+    }); 
+    
 	// FOCUS TAB ON CLICK (new functionality)
     function focusTab(){
     	

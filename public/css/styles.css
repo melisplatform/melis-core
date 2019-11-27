@@ -601,8 +601,8 @@ body #newplugin-cont.show-menu{
     top: 8px;
     left: 18px;
 }
-.navbar-nav>li>a:not(".menu-icon"),
-.navbar-nav>li>a .fa:not(".close"){
+.navbar-nav>li>a:not(.menu-icon),
+.navbar-nav>li>a .fa:not(.close) {
     position: initial !important;
 }
 
@@ -2405,15 +2405,15 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     .sidebar {
         left: 0;
         /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
-        /* width: 274px; */
-        width: 320px;
+        width: 274px;
+        /* width: 320px; */
     }
     .sidebar-mini .sidebar{
         /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
-        /* width: 274px;
-        left: -274px; */
-        width: 320px;
-        left: -320px;
+        width: 274px;
+        left: -274px;
+        /* width: 320px;
+        left: -320px; */
     }
 
 
@@ -2443,8 +2443,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     /* footer */
     #id_meliscore_footer.slide-left{
         /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
-        /* left: -274px; */
-        left: -320px;
+        left: -274px;
+        /* left: -320px; */
     }
 
     /* preloader [for issue: http://mantis.melistechnology.fr/view.php?id=3878] */
