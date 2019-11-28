@@ -132,9 +132,10 @@ var melisCoreTool = (function (window) {
 
     function exportData(url, callback) {
         var newWindow = window.open(url, "_blank");
-        newWindow.onload = function () {
-            newWindow.close();
-        };
+        
+            newWindow.onload = function () {
+                newWindow.close();
+            };
     }
 
     function isTableEmpty(table) {
