@@ -27246,7 +27246,7 @@ $(document).ready(function(){
 	 	$( "#id_meliscore_leftmenu" ).resizable({
 	    	handles: 'e',
 	    	animate: false,
-	    	minWidth: 320,
+	    	minWidth: 274,
 	    	maxWidth: 400,
 	    	start: function( event, ui){
 	    		

@@ -133,9 +133,9 @@
   padding-left: 0;
   padding-right: 0;
 }
-#main #content {
+/* #main #content {
   width: 100%;
-}
+} */
 /* #melis-navtabs / contents */
 .dataTables_wrapper .bottom {
   width: 100%;
@@ -677,6 +677,7 @@ div.row, ul.row {
 /* #content */
 #content {
   margin-left: 274px;
+  overflow-x: hidden;
 }
 /* Responsive media queries */
 @media (min-width: 991px) {
@@ -775,12 +776,14 @@ div.row, ul.row {
     max-width: 620px;
   }
   /* side bar menu footer */
-  #id_meliscore_footer{
-    width: 20rem;
+  #id_meliscore_footer {
+    /* width: 20rem; */
+    width: 274px;
     left: 0;
   }
   #id_meliscore_footer.slide-left {
-    left: -20rem;
+    /* left: -20rem; */
+    left: 274px;
   }
 }
 @media (max-width: 767px) {
