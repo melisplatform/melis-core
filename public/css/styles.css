@@ -1979,6 +1979,7 @@ span.fancytree-active span.fancytree-title{
     box-shadow: 0px 1px 1px rgba(0,0,0,0.3);
 }
 /* profile pictures */
+.sidebar.sidebar-inverse .user-profile .rounded-circle,
 .sidebar.sidebar-inverse .user-profile .img-circle{
     border: 3px solid #4E4E4E !important;
 }
