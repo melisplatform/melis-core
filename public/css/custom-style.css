@@ -868,6 +868,9 @@ a:hover {
   #newplugin-cont #id_meliscore_header_flash_messenger span.badge {
     border-radius: 100%;
   }
+  .navbar.main .toggle-button {
+    padding-right: 15px;
+  }
   /* responsive tab menu */
    .navbar #melis-id-nav-bar-tabs > li {
     width: 100%;
