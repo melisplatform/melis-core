@@ -679,6 +679,10 @@ div.row, ul.row {
   margin-left: 274px;
   overflow-x: hidden;
 }
+a:focus,
+a:hover {
+  text-decoration: underline;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
