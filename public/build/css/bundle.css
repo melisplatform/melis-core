@@ -30762,9 +30762,11 @@ a.thumbnail:focus {
     margin: 0 0 15px
 }
 
+/* fix issue: http://mantis.melistechnology.fr/view.php?id=4381 */
 .layout-timeline .media .media-body {
-    padding: 10px 0 0;
-    line-height: 17px
+    padding: 0;
+    line-height: 17px;
+    margin-left: 15px;
 }
 
 .layout-timeline .media .media-body .author {
