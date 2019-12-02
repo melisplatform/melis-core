@@ -4,8 +4,7 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
-a:not([href]):not([tabindex]),
-a,
+
 a:hover {
     color: <?= $primaryColor; ?>;
 }
@@ -294,10 +293,12 @@ body .navbar.main.navbar-primary {
     background: <?= $primaryColor; ?>;
 }
 
+.commerce-toggle .card-header,
 .commerce-toggle .panel-heading {
     background-color: <?= $primaryColor; ?>;
 }
 
+.commerce-toggle .accordion-toggle,
 .commerce-toggle .accordion-toggle {
     background-color: <?= $primaryColor; ?> !important;
 }
