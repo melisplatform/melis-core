@@ -843,6 +843,8 @@ a:hover {
     -webkit-box-pack: justify!important;
     -ms-flex-pack: justify!important;
     justify-content: space-between!important;
+
+    width: 100%;
   }
   .navbar.main .nav.navbar-right {
     visibility: hidden;
