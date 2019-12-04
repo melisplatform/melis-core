@@ -28,7 +28,7 @@ return [
                         'target' => '#tableToolUserManagement',
                         'ajaxUrl' => '/melis/MelisCore/ToolUser/getUser',
                         'dataFunction' => '',
-                        'ajaxCallback' => 'paginateDataTables()',
+                        'ajaxCallback' => '',
                         'filters' => [
                             'left' => [
                                 'tooluser-limit' => [
@@ -2389,7 +2389,7 @@ return [
                         'target' => '#tableUserViewDateConnection',
                         'ajaxUrl' => '/melis/MelisCore/ToolUser/getUserConnectionData',
                         'dataFunction' => 'setUserDateConnection',
-                        'ajaxCallback' => 'paginateDataTables()',
+                        'ajaxCallback' => '',
                         'filters' => [
                             'left' => [
                                 'tooluser-limit' => [

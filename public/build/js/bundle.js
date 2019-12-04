@@ -24028,7 +24028,7 @@ var melisCore = (function(window){
                 $page_link = $page_item.find("a");
 
                 if ( $paginate.length ) {
-                    $page_item.addClass("page-item page-item-junry");
+                    $page_item.addClass("page-item");
                     $page_link.addClass("page-link");
 
                     clearInterval( paginate );
