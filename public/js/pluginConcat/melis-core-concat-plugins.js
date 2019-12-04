@@ -6066,7 +6066,7 @@ var Holder = Holder || {};
                     if (typeof evt.keyCode != 'undefined' && evt.keyCode == 13
                         && evtElementType !== 'TEXTAREA' && elementType !== 'DIV')
                     {
-                        console.log('OVERRIDE');
+                        //console.log('OVERRIDE');
                         timerWait = 1;
                         overrideBool = true;
                     }

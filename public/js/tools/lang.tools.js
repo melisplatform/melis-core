@@ -121,7 +121,4 @@ window.initLangBOJs = function () {
 			if ( currentLangApplyBtn.length ) {
 				currentLangApplyBtn.remove();
 			}
-		
-		// pagination of dataTables
-		melisCore.paginateDataTables();
 }

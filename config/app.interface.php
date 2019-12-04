@@ -151,9 +151,10 @@ return array(
                     '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css',
 
                     // Data Tables
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables.min.css',
+                    /* '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css', */
 
                     // datetimepicker
                     '/MelisCore/assets/components/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css',

@@ -102,7 +102,4 @@ window.initCorePlatformListTable = function () {
             var rowId = '#' + $(this).attr('id');
                 $(parent).find(rowId).find('.btnPlatformDelete').remove();
         });
-
-        // pagination of dataTables
-        melisCore.paginateDataTables();
 };

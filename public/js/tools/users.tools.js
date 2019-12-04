@@ -242,11 +242,6 @@ window.initRetrieveUser = function () {
         btnDelete.remove();
 }
 
-// paginate dataTables data
-window.paginateDataTables = function() {
-    melisCore.paginateDataTables();
-}
-
 var toolUserManagement = {
 
     table: function () {

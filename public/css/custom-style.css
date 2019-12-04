@@ -683,6 +683,13 @@ a:focus,
 a:hover {
   text-decoration: underline;
 }
+table.dataTable thead .sorting:before, 
+table.dataTable thead .sorting_asc:before, 
+table.dataTable thead .sorting_desc:before, 
+table.dataTable thead .sorting_asc_disabled:before,
+table.dataTable thead .sorting_desc_disabled:before {
+  content: "";
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */

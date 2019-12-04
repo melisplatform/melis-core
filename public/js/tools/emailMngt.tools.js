@@ -193,8 +193,5 @@ $(function() {
 		$('.noDeleteBtn').each(function(){
 			$('#'+$(this).attr('id')+' .btnMelisCoreEmailMngtDelete').remove();
 		});
-
-		// pagination of dataTables
-		melisCore.paginateDataTables();
 	}
 });

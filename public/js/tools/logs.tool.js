@@ -96,8 +96,3 @@ window.initDatePicker = function(){
 window.dateRangePickerApplyEvent = function(ev, picker) {
     $tableMelisLogs.draw();
 }
-
-window.initPaginate = function() {
-	// pagination of dataTables
-	melisCore.paginateDataTables();
-}
