@@ -257,9 +257,20 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
         $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
 
         $packages = array_filter($repos->getPackages(), function ($package) {
+            /**
+             * These will exclude all the modules
+             * that are not zend module
+             */
+            $extra = $package->getExtra();
+            if(isset($extra['melis-module'])) {
+                $zendModule = ($extra['melis-module']) ? true : false;
+            } else {
+                $zendModule = true;
+            }
+
             /** @var CompletePackage $package */
             return $package->getType() === 'melisplatform-module' &&
-                array_key_exists('module-name', $package->getExtra());
+                array_key_exists('module-name', $extra) && $zendModule;
         });
 
         $modules = array_map(function ($package) {
