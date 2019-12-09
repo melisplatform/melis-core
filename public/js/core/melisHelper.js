@@ -452,24 +452,24 @@ var melisHelper = (function(){
             if( melisCore.screenSize <= 767 ){
                 //var $tabArrowTop = $("#tab-arrow-top");
 
-                    // check if there are no contents open
-                    if( $navTabs.children("li").length > 0){
-                        $("#res-page-cont span b").remove();
-                    }
+                // check if there are no contents open
+                if( $navTabs.children("li").length > 0){
+                    $("#res-page-cont span b").remove();
+                }
 
-                    // close sidebar after opening a page from it
-                    $body.removeClass('sidebar-mini');
-                    // hide sidebar footer when opening tab
-                    $("#id_meliscore_footer").addClass('slide-left');
-                    $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
+                // close sidebar after opening a page from it
+                $body.removeClass('sidebar-mini');
+                // hide sidebar footer when opening tab
+                $("#id_meliscore_footer").addClass('slide-left');
+                $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
 
-                    // slide up the dropdown menu
-                    $("#melis-id-nav-bar-tabs").slideUp(300);
-                    $("#res-page-cont i").removeClass("move-arrow");
+                // slide up the dropdown menu
+                $("#melis-id-nav-bar-tabs").slideUp(300);
+                $("#res-page-cont i").removeClass("move-arrow");
 
-                    /* if ( $tabArrowTop.length ) {
-                        $tabArrowTop.removeClass("hide-arrow");
-                    } */
+                /* if ( $tabArrowTop.length ) {
+                    $tabArrowTop.removeClass("hide-arrow");
+                } */
             }
 
             var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";
@@ -616,7 +616,6 @@ var melisHelper = (function(){
             }, 300);
         }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
-            console.log(xhr.responseText);
 
             //hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
