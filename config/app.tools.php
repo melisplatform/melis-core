@@ -2611,8 +2611,8 @@ return [
                                         [
                                             'name' => 'regex', false,
                                             'options' => [
-                                                'pattern' => '/[\D-+#$]/',
-                                                'message' => 'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error',
+                                                'pattern' => '/[A-Za-z]/',
+                                                'message' => [\Zend\Validator\Regex::INVALID => 'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error'],
                                             ],
                                         ],
                                     ],
