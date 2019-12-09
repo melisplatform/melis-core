@@ -8,6 +8,13 @@
     color: <?= $primaryColor; ?> !important;
 }
 
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.show>.btn-primary.dropdown-toggle {
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+
 .footer a,
 a:hover {
     color: <?= $primaryColor; ?>;
