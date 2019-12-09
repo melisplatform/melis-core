@@ -2449,8 +2449,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
 
     /* preloader [for issue: http://mantis.melistechnology.fr/view.php?id=3878] */
-    #content .tab-content .tab-pane>#loader.overlay-loader {
-    /* #content > #loader.overlay-loader { */
+    /* #content .tab-content .tab-pane>#loader.overlay-loader { */
+    #content > #loader.overlay-loader {
         height: calc(100vh - 47px);
     }
     #content form > #loader.overlay-loader {
