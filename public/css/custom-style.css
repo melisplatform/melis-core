@@ -677,7 +677,7 @@ div.row, ul.row {
 /* #content */
 #content {
   margin-left: 274px;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */ /* fix for dashboard not fullscreen */
 }
 a:focus,
 a:hover {
