@@ -793,15 +793,13 @@ table.dataTable thead .sorting_desc_disabled:before {
     max-width: 620px;
   }
   /* side bar menu footer */
-  #id_meliscore_footer {
-    /* width: 20rem; */
+  /* #id_meliscore_footer {
     width: 274px;
     left: 0;
   }
   #id_meliscore_footer.slide-left {
-    /* left: -20rem; */
     left: 274px;
-  }
+  } */
 }
 @media (max-width: 767px) {
   /* body commmon */

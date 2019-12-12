@@ -4216,9 +4216,9 @@ div#modal-user-management div.widget {
         display: none;
     }
 
-    #melis-id-nav-bar-tabs li a.dropdown-toggle {
+    /* #melis-id-nav-bar-tabs li a.dropdown-toggle {
         width: calc(100% - 48px);
-    }
+    } */
 
     #tab-arrow-top {
         background: #e61c23;
