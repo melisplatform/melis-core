@@ -56,6 +56,10 @@
 .navbar.main .toggle-button {
   padding: 0 0 0 15px;
 }
+/* main navigation tabs dropdown-toggle caret icon */
+.nav-tabs .dropdown-toggle:before {
+  content: '';
+}
 /* 
  * Text is not readable same color with the background white on #id_meliscore_header_language 
  */
