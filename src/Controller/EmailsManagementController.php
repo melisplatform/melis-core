@@ -710,9 +710,21 @@ class EmailsManagementController extends AbstractActionController
             // will be run through the same validators and filters
             // automatically.
             $fileInput->getValidatorChain()
-                        ->attachByName('filesize',array('max' => 250000)) // bytes
+                        ->attachByName('filesize',
+                            [
+                                'max' => 250000, // bytes
+                            ]
+                        )
                         ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpeg'))
-                        ->attachByName('fileimagesize', array('maxWidth' => 800, 'maxHeight' => 800));
+                        ->attachByName('fileimagesize',
+                            [
+                                'maxWidth' => 800, 'maxHeight' => 800,
+                                'messages' => [
+                                    \Zend\Validator\File\ImageSize::HEIGHT_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_height'),
+                                    \Zend\Validator\File\ImageSize::WIDTH_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_width'),
+                                ]
+                            ]
+                        );
 
             if (!is_dir(__DIR__.'/../../../../../public/media/email-layout-logo'))
                 mkdir(__DIR__.'/../../../../../public/media/email-layout-logo', 0777);
@@ -893,8 +905,8 @@ class EmailsManagementController extends AbstractActionController
                 if (!empty($fileInputErr['fileMimeTypeFalse']))
                     $errors['boe_content_layout_logo']['fileMimeTypeFalse'] = $translator->translate('tr_emails_management_invalid_image_type');
 
-                if (!empty($fileInputErr['fileImageSizeWidthTooBig']))
-                    $errors['boe_content_layout_logo']['fileImageSizeWidthTooBig'] = $translator->translate('Image width should be 800 pexils or less');
+//                if (!empty($fileInputErr['fileImageSizeWidthTooBig']))
+//                    $errors['boe_content_layout_logo']['fileImageSizeWidthTooBig'] = $translator->translate('Image width should be 800 pexils or less');
 
                 if (!empty($fileInputErr['fileSizeTooBig']))
                     $errors['boe_content_layout_logo']['fileSizeTooBig'] = $translator->translate('tr_emails_management_invalid_image_size');

@@ -443,6 +443,7 @@ return [
     'tr_emails_management_unable_to_add' => 'Unable to add new email',
     'tr_emails_management_invalid_image_type' => 'Invalid image type',
     'tr_emails_management_invalid_image_width' => 'Image width should be 800 pexils or less',
+    'tr_emails_management_invalid_image_height' => 'Image height should be 800 pixels or less',
     'tr_emails_management_invalid_image_size' => 'Maximum allowed size for file is 250 kilobytes or less',
 
     // Action Messages
@@ -739,5 +740,10 @@ return [
     'tr_melis_cms_gdpr_banner_header' => 'Banner header',
     'tr_melis_cms_gdpr_banner_details' => 'Banner details',
 
+    'tr_melis_core_composer_scrpts_Module scripts executed' => 'Module scripts executed',
+    'tr_melis_core_composer_scrpts_scripts executed' => '%s scripts executed',
+    'tr_melis_core_composer_scrpts_No scripts executed' => 'No scripts executed',
+    'tr_melis_core_composer_scrpts_executing' => 'Executing composer scripts',
+    'tr_melis_core_composer_scrpts_executed' => 'Composer scripts executed',
     ];
 ?>

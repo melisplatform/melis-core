@@ -460,7 +460,8 @@ return [
     'tr_emails_management_unable_to_update' => 'Impossible de mettre à jour l\'email',
     'tr_emails_management_unable_to_add' => 'Impossible d\'ajouter un nouvel email',
     'tr_emails_management_invalid_image_type' => 'Type d\'image incorrect',
-    'tr_emails_management_invalid_image_width' => 'La largeur de l\'image doit être 800 pixels ou moins',
+    'tr_emails_management_invalid_image_width' => 'La largeur de l\'image doit être de 800 pixels ou moins',
+    'tr_emails_management_invalid_image_height' => 'La hauteur de l\'image doit être de 800 pixels ou moins',
     'tr_emails_management_invalid_image_size' => 'La taille maximale autorisée pour le fichier est de 250 kilo-octets ou moins',
 
     // Action Messages
@@ -752,4 +753,10 @@ return [
     'tr_melis_core_gdpr_content_tabs' => 'Contenu onglets',
     'tr_melis_cms_gdpr_banner_header' => 'Bannière En-tête',
     'tr_melis_cms_gdpr_banner_details' => 'Bannière détails',
+
+    'tr_melis_core_composer_scrpts_Module scripts executed' => 'Scripts du module executés',
+    'tr_melis_core_composer_scrpts_scripts executed' => 'Scripts de %s executés',
+    'tr_melis_core_composer_scrpts_No scripts executed' => 'Aucun script éxécuté',
+    'tr_melis_core_composer_scrpts_executing' => 'Exécution des scripts de composer',
+    'tr_melis_core_composer_scrpts_executed' => 'Scripts de composer éxécutés',
 ];
