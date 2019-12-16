@@ -34562,6 +34562,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
 
     /* footer */
+    #id_meliscore_footer{
+        width: 273px;
+        left: 0;
+    }
     #id_meliscore_footer.slide-left{
         /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
         left: -274px;
@@ -36952,6 +36956,8 @@ a:not([href]).btn-danger:hover {
 }
 .btn {
   cursor: pointer;
+  padding-left: .5rem;
+  padding-right: .5rem;
 }
 /* bootstrap specific overrides module.admin css [col-xs-] = [col-]*/
 div[class*="col-sm-"], 
