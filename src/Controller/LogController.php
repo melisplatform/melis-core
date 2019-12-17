@@ -552,6 +552,14 @@ class LogController extends AbstractActionController
                     'log_date_added' => strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($log->log_date_added))
                 );
 
+                if (strpos($melisTool->escapeHtml($translator->translate($log->log_message)), '[itemId]')) {
+                    $rowData['log_message'] = str_replace(
+                        '[itemId]',
+                        $melisTool->escapeHtml($log->log_item_id),
+                        $melisTool->escapeHtml($translator->translate($log->log_message))
+                        );
+                }
+
                 array_push($tableData, $rowData);
             }
 
