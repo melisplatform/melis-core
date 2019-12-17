@@ -2696,7 +2696,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     /* modal - confirmation modal */
     .modal .modal-footer button{
         width: 160px;
-        margin: 0 10px;
+        /* margin: 0 10px; */
     }
 
 
