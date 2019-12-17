@@ -104,7 +104,7 @@ var melisHelper = (function(){
 
     /**
      * This method will Highlight an input label where an error occured
-     * @param success, 1 or 0
+     * @param success
      * @param errors, Object array
      * @param selector, element selector
      */
@@ -113,7 +113,7 @@ var melisHelper = (function(){
         // remove red color for correctly inputted fields
         $("" + selector + " .form-group label").css("color", "inherit");
         // if all form fields are error color them red
-        if(success === 0){
+        if(!success){
             $.each( errors, function( key, error ) {
                 if("form" in error){
                     $.each(this.form, function( fkey, fvalue ){
