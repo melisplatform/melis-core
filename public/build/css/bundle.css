@@ -37226,6 +37226,9 @@ table.dataTable thead .sorting_desc_disabled:before {
   border-radius: 0 !important;
   background-color: #b9b8b8 !important;
 }
+.modal-content .widget.widget-tabs.widget-tabs-responsive>.widget-head {
+  height: 40px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
