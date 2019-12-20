@@ -37234,6 +37234,10 @@ table.dataTable thead .sorting_desc_disabled:before {
 .modal-content .widget.widget-tabs.widget-tabs-responsive>.widget-head {
   height: 40px;
 }
+.dropdown-menu > li {
+  min-height: 30px;
+  height: auto !important;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
