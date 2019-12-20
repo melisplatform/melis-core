@@ -23682,9 +23682,9 @@ var melisCore = (function(window){
                 $tabArrowTop.addClass("hide-arrow");
             }
             
-            if ( textUndefined === 'undefined' ) {
+            /* if ( textUndefined === 'undefined' ) {
                 $title.hide();
-            }
+            } */
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
