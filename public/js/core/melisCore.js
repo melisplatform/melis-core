@@ -195,20 +195,12 @@ var melisCore = (function(window){
 
     // FIRST RENDER - runs when the page is first loaded
     function firstRender() {
-        var $closeAllTab    = $("#close-all-tab"),
-            $title          = $closeAllTab.find(".title"),
-            textUndefined   = $title.text();
+        $(".nav-tabs li:first-child").addClass("active")
+        $(".tab-content > div:first-child").addClass("active");
 
-            $(".nav-tabs li:first-child").addClass("active")
-            $(".tab-content > div:first-child").addClass("active");
-
-            if ( screenSize <= 767 && $tabArrowTop.length > 0 && $pluginBox.hasClass("shown") ) {
-                $tabArrowTop.addClass("hide-arrow");
-            }
-            
-            if ( textUndefined === 'undefined' ) {
-                $title.hide();
-            }
+        if ( screenSize <= 767 && $tabArrowTop.length > 0 && $pluginBox.hasClass("shown") ) {
+            $tabArrowTop.addClass("hide-arrow");
+        }
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -921,3 +913,13 @@ var melisCore = (function(window){
         paginateDataTables                              :           paginateDataTables
     };
 })(window);
+
+$(function() {
+    var $closeAllTab    = $("#close-all-tab"),
+        $title          = $closeAllTab.find(".title"),
+        textUndefined   = $title.text();
+
+        if ( textUndefined === 'undefined' ) {
+            $title.hide();
+        }
+});
