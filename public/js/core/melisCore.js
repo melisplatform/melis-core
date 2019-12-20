@@ -913,13 +913,3 @@ var melisCore = (function(window){
         paginateDataTables                              :           paginateDataTables
     };
 })(window);
-
-$(function() {
-    var $closeAllTab    = $("#close-all-tab"),
-        $title          = $closeAllTab.find(".title"),
-        textUndefined   = $title.text();
-
-        if ( textUndefined === 'undefined' ) {
-            $title.hide();
-        }
-});
