@@ -194,13 +194,21 @@ var melisCore = (function(window){
     }
 
     // FIRST RENDER - runs when the page is first loaded
-    function firstRender(){
-        $(".nav-tabs li:first-child").addClass("active")
-        $(".tab-content > div:first-child").addClass("active");
+    function firstRender() {
+        var $closeAllTab    = $("#close-all-tab"),
+            $title          = $closeAllTab.find(".title"),
+            textUndefined   = $title.text();
 
-        if ( screenSize <= 767 && $tabArrowTop.length > 0 && $pluginBox.hasClass("shown") ) {
-            $tabArrowTop.addClass("hide-arrow");
-        }
+            $(".nav-tabs li:first-child").addClass("active")
+            $(".tab-content > div:first-child").addClass("active");
+
+            if ( screenSize <= 767 && $tabArrowTop.length > 0 && $pluginBox.hasClass("shown") ) {
+                $tabArrowTop.addClass("hide-arrow");
+            }
+            
+            if ( textUndefined === 'undefined' ) {
+                $title.hide();
+            }
     }
 
     // OPEN TOOLS - opens the tools from the sidebar

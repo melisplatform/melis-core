@@ -515,6 +515,9 @@ body #newplugin-cont.show-menu{
 #newplugin-cont #flash-messenger > li .media{
     padding: 5px 10px 10px 35px;
 }
+#newplugin-cont #melis-messenger-messages:not(.empty-notif) li {
+    min-height: 100px;
+}
 #flash-messenger > li .media{
     margin-top: 0;
     padding: 10px 10px 10px 35px;
