@@ -731,6 +731,9 @@ table.dataTable thead .sorting_desc_disabled:before {
   .res-action-container {
     width: calc(100% - 274px);
   }
+  .title-text {
+    display: none;
+  }
   /* .login-page */
   .login-page .navbar.main .nav.navbar-right li:first-child {
     display: block;
