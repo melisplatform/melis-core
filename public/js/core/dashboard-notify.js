@@ -11,7 +11,7 @@ var dashboardNotify = (function() {
      *
      * src: https://stackoverflow.com/a/22479460/7870472
      */
-    var MAX_COOKIE_AGE = 2147483647000;
+    var MAX_COOKIE_AGE = 2147483647;
 
     // cache DOM
     var $body 			    = $("body"),
