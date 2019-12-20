@@ -23682,9 +23682,9 @@ var melisCore = (function(window){
                 $tabArrowTop.addClass("hide-arrow");
             }
             
-            /* if ( textUndefined === 'undefined' ) {
+            if ( textUndefined === 'undefined' ) {
                 $title.hide();
-            } */
+            }
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -31827,7 +31827,7 @@ var dashboardNotify = (function() {
      *
      * src: https://stackoverflow.com/a/22479460/7870472
      */
-    var MAX_COOKIE_AGE = 2147483647;
+    var MAX_COOKIE_AGE = 2147483647000;
 
     // cache DOM
     var $body 			    = $("body"),
