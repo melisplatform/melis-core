@@ -505,6 +505,7 @@ body #newplugin-cont.show-menu{
 }
 #newplugin-cont #flash-messenger .media-body{
     width: auto;
+    color: #fff;
 }
 
 #flash-messenger > li {
@@ -523,6 +524,7 @@ body #newplugin-cont.show-menu{
     display: block;
     line-height: normal;
     margin-bottom: 5px;
+    padding-top: 0;
 }
 #flash-messenger > li .media .media-body .time-email{
     position: absolute;
