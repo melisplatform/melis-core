@@ -194,7 +194,7 @@ var melisCore = (function(window){
     }
 
     // FIRST RENDER - runs when the page is first loaded
-    function firstRender(){
+    function firstRender() {
         $(".nav-tabs li:first-child").addClass("active")
         $(".tab-content > div:first-child").addClass("active");
 

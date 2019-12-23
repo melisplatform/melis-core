@@ -432,6 +432,8 @@ a:not([href]).btn-danger:hover {
 }
 .btn {
   cursor: pointer;
+  padding-left: .5rem;
+  padding-right: .5rem;
 }
 /* bootstrap specific overrides module.admin css [col-xs-] = [col-]*/
 div[class*="col-sm-"], 
@@ -700,6 +702,13 @@ table.dataTable thead .sorting_desc_disabled:before {
   border-radius: 0 !important;
   background-color: #b9b8b8 !important;
 }
+.modal-content .widget.widget-tabs.widget-tabs-responsive>.widget-head {
+  height: 40px;
+}
+.dropdown-menu > li {
+  min-height: 30px;
+  height: auto !important;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
@@ -721,6 +730,9 @@ table.dataTable thead .sorting_desc_disabled:before {
   } */
   .res-action-container {
     width: calc(100% - 274px);
+  }
+  .title-text {
+    display: none;
   }
   /* .login-page */
   .login-page .navbar.main .nav.navbar-right li:first-child {

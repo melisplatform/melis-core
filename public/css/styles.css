@@ -505,6 +505,7 @@ body #newplugin-cont.show-menu{
 }
 #newplugin-cont #flash-messenger .media-body{
     width: auto;
+    color: #fff;
 }
 
 #flash-messenger > li {
@@ -513,6 +514,9 @@ body #newplugin-cont.show-menu{
 }
 #newplugin-cont #flash-messenger > li .media{
     padding: 5px 10px 10px 35px;
+}
+#newplugin-cont #melis-messenger-messages:not(.empty-notif) li {
+    min-height: 100px;
 }
 #flash-messenger > li .media{
     margin-top: 0;
@@ -523,6 +527,7 @@ body #newplugin-cont.show-menu{
     display: block;
     line-height: normal;
     margin-bottom: 5px;
+    padding-top: 0;
 }
 #flash-messenger > li .media .media-body .time-email{
     position: absolute;
@@ -2442,6 +2447,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
 
     /* footer */
+    #id_meliscore_footer{
+        width: 273px;
+        left: 0;
+    }
     #id_meliscore_footer.slide-left{
         /* changed specific for grid layout bootstrap 4 on #id_meliscore_header #nav-header */
         left: -274px;
@@ -2692,7 +2701,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     /* modal - confirmation modal */
     .modal .modal-footer button{
         width: 160px;
-        margin: 0 10px;
+        /* margin: 0 10px; */
     }
 
 

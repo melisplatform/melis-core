@@ -383,10 +383,18 @@ var melisHelper = (function(){
 
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback) {
+        var $closeAllTab    = $("#close-all-tab"),
+            $title          = $closeAllTab.find(".title"),
+            textUndefined   = $title.text();
+
         //Show the close(X) button on header
         if(melisKey !== 'meliscore_dashboard'){
             $("#close-all-tab").show();
             $("#close-all-tab").closest("li").show();
+
+            if ( textUndefined === 'undefined' ) {
+                $title.hide();
+            }
         }
         //check if the tab is already open and added to the main nav
         var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='"+ zoneId +"']");
