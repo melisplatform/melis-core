@@ -24782,7 +24782,7 @@ var melisHelper = (function(){
         if(melisKey !== 'meliscore_dashboard'){
             $("#close-all-tab").show();
             $("#close-all-tab").closest("li").show();
-            
+
             if ( textUndefined === 'undefined' ) {
                 $title.hide();
             }
