@@ -37430,6 +37430,9 @@ table.dataTable thead .sorting_desc_disabled:before {
   #newplugin-cont #id_meliscore_header_flash_messenger span.badge {
     border-radius: 100%;
   }
+  #newplugin-cont span.title {
+    display: none;
+  }
   .navbar.main .toggle-button {
     padding-right: 15px;
   }
