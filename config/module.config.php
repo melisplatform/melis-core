@@ -405,7 +405,7 @@ return array(
             'MelisCoreHeadPlugin' => 'MelisCore\View\Helper\Factory\MelisCoreHeadPluginHelperFactory',
             'MelisDashboardDragDropZone' => 'MelisCore\View\Helper\Factory\MelisDashboardDragDropZonePluginFactory',
             'getMelisSectionIcons' => 'MelisCore\View\Helper\Factory\MelisCoreSectionIconsHelperFactory',
-            'translateByLocale' => 'MelisCore\View\Helper\Factory\MelisCoreTranslationsHelperFactory',
+
         ),
     ),
     'view_manager' => array(
