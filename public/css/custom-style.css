@@ -713,9 +713,7 @@ table.dataTable thead .sorting_desc_disabled:before {
   line-height: 22px;
   margin-right: 0.5rem;
 }
-.dtActionCls .btn {
-  padding: 4px 8px;
-}
+
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
