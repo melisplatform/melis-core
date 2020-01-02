@@ -709,6 +709,10 @@ table.dataTable thead .sorting_desc_disabled:before {
   min-height: 30px;
   height: auto !important;
 }
+#id_meliscore_header_language .dropdown-menu > li > a span {
+  line-height: 22px;
+  margin-right: 0.5rem;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
