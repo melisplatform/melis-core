@@ -37242,6 +37242,9 @@ table.dataTable thead .sorting_desc_disabled:before {
   line-height: 22px;
   margin-right: 0.5rem;
 }
+.table.dataTable tbody td.dtActionCls div {
+  width: 200px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
