@@ -4,6 +4,18 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+#convo-content #chat-container .my-msg {
+    background-color: <?= $primaryColor; ?>;
+}
+
+#convo-content .chat-contact-name {
+    color: <?= $primaryColor; ?>;
+}
+
+.media-msgrBody .text-danger {
+    color: <?= $primaryColor; ?> !important;
+}
+
 #tableProductList .toolTipHoverEvent {
     color: <?= $primaryColor; ?> !important;
 }
