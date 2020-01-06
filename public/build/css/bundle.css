@@ -37456,6 +37456,9 @@ table.dataTable thead .sorting_desc_disabled:before {
     -ms-flex-pack: center;
     justify-content: center;
   }
+  #MelisCmsProspects_info {
+    white-space: normal;
+  }
   /* tabs */
   .widget-head .nav-tabs {
     -webkit-box-pack: center;
@@ -37534,6 +37537,9 @@ table.dataTable thead .sorting_desc_disabled:before {
   }
   .pagination .page-link {
     padding: 0.5rem;
+  }
+  .form-group span.select2-container {
+    width: 100% !important;
   }
 }
 @media (max-width: 400px) {

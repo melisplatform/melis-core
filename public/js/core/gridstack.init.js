@@ -443,11 +443,11 @@ var melisDashBoardDragnDrop = {
 
         // grid stack stop widget resize
         this.$gs.on('gsresizestop', function (event, elem) {
-            var $elem = $(elem),
-                $node = $elem.data('_gridstack_node'),
-                $items = $node._grid.container[0].children,
-                elemWidth = $elem.attr('data-gs-width'),
-                widthLimit = 3;
+            var $elem       = $(elem),
+                $node       = $elem.data('_gridstack_node'),
+                $items      = $node._grid.container[0].children,
+                elemWidth   = $elem.attr('data-gs-width'),
+                widthLimit  = 3;
 
                 // grid-stack-item limits its smallest width to data-gs-width 3
                 if (elemWidth <= widthLimit) {
@@ -472,6 +472,21 @@ var melisDashBoardDragnDrop = {
                     }
                 }
 
+            var $profileImg = $elem.find(".melis-cms-comments-dashboard-latest-comments .column-comment-profile-img");
+
+                if ( elemWidth <= 3 ) {
+                    $profileImg.css({
+                        'flex' : '0 0 12.3333333333%',
+                        'max-width' : '12.3333333333%'
+                    });
+                }
+                else {
+                    $profileImg.css({
+                        'flex' : '0 0 8.3333333333%',
+                        'max-width' : '8.3333333333%'
+                    });
+                }
+
                 // update size of widgets passes array of .grid-stack-items
                 self.serializeWidgetMap($items);
         });
@@ -481,22 +496,36 @@ var melisDashBoardDragnDrop = {
         var $com = $('#' + activeTabId + ' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments");
 
         $.each($com, function (i, v) {
-            var $this = $(this),
-                gsWidth = $this.closest(".grid-stack-item").data("gs-width"),
-                $filter = $this.find(".mccom-filters-tab .row .mccom-filter"),
-                $select = $filter.find(".form-group .select2-container");
+            var $this       = $(this),
+                gsWidth     = $this.closest(".grid-stack-item").data("gs-width"),
+                $filter     = $this.find(".mccom-filters-tab .row .mccom-filter"),
+                $select     = $filter.find(".form-group .select2-container"),
+                $profileImg = $this.find(".column-comment-profile-img");
 
-            if (gsWidth < 5) {
-                $filter.removeAttr("width");
-                $filter.attr("style", "width: 100%");
+                if (gsWidth < 5) {
+                    $filter.removeAttr("width");
+                    $filter.attr("style", "width: 100%");
 
-                $select.removeAttr("width");
-                $select.attr("style", "width: 100%");
-            }
-            else {
-                $filter.removeAttr("style");
-                $select.removeAttr("style");
-            }
+                    $select.removeAttr("width");
+                    $select.attr("style", "width: 100%");
+                }
+                else {
+                    $filter.removeAttr("style");
+                    $select.removeAttr("style");
+                }
+
+                if ( gsWidth <= 3 ) {
+                    $profileImg.css({
+                        'flex' : '0 0 12.3333333333%',
+                        'max-width' : '12.3333333333%'
+                    });
+                }
+                else {
+                    $profileImg.css({
+                        'flex' : '0 0 8.3333333333%',
+                        'max-width' : '8.3333333333%'
+                    });
+                }
         });
     },
     // delete single widget/plugin in the dashboard
