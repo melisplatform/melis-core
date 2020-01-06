@@ -696,54 +696,54 @@ var melisDashBoardDragnDrop = {
             dataTxt         = $(dashboardItem).find('.dashboard-plugin-json-config').text(),
             dashboardData   = dashboardItem.data('_gridstack_node');
 
-        // check dataTxt
-        if ( dataTxt ) {
-            var pluginConfig = JSON.parse(dataTxt);
-                $.each(pluginConfig, function (index, value) {
-                    if ($.isArray(value) || typeof value == "object") {
-                        dataString.push({
-                            name: index,
-                            value: JSON.stringify(value)
-                        });
-                    } else {
+            // check dataTxt
+            if ( dataTxt ) {
+                var pluginConfig = JSON.parse(dataTxt);
+                    $.each(pluginConfig, function (index, value) {
+                        // here modify x y w h of the plugin
+                        if(index === "x-axis") { value = dashboardData.x }
+                        if(index === "y-axis") { value = dashboardData.y }
+                        if(index === "width") { value = dashboardData.width }
+                        if(index === "height") { value = dashboardData.height }
+
+                        // push to dashboard array
                         dataString.push({
                             name: index,
                             value: value
                         });
-                    }
-                });
-
-            var request = $.post("/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
-
-            // loading effect
-            dashboardItem.append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
-
-            request.done(function (data) {
-
-                // get dashboard gridstack data
-                var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
-
-                // remove loader
-                $(dashboardItem).find('.overlay-loader').remove();
-
-                grid.removeWidget($(dashboardItem));
-
-                var html = $(data.html);
-
-                // add widget to dashboard default size 6 x 6
-                var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
-
-                // assigning current plugin
-                self.setCurrentPlugin(widget);
-
-                // executing plugin JsCallback
-                if (data.jsCallbacks.length) {
-                    $.each(data.jsCallbacks, function (index, value) {
-                        eval(value);
                     });
-                }
-            });
-        }
+
+                var request = $.post("/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
+
+                    // loading effect
+                    dashboardItem.append("<div class='overlay-loader'><img class='loader-icon spinning-cog' src='/MelisCore/assets/images/cog12.svg' alt=''></div>");
+
+                    request.done(function (data) {
+
+                        // get dashboard gridstack data
+                        var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
+
+                            // remove loader
+                            $(dashboardItem).find('.overlay-loader').remove();
+
+                            grid.removeWidget($(dashboardItem));
+
+                        var html = $(data.html);
+
+                        // add widget to dashboard default size 6 x 6
+                        var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
+
+                            // assigning current plugin
+                            self.setCurrentPlugin(widget);
+
+                            // executing plugin JsCallback
+                            if (data.jsCallbacks.length) {
+                                $.each(data.jsCallbacks, function (index, value) {
+                                    eval(value);
+                                });
+                            }
+                    });
+            }
     },
     // set current widget/plugin
     setCurrentPlugin: function(widget) {

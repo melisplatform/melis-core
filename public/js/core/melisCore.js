@@ -373,8 +373,7 @@ var melisCore = (function(window){
         // loop all tab list
         listData.each(function() {
             var dataID =  $(this).attr('data-tool-id');
-            //if(dataID != "id_meliscore_dashboard"){
-            if ( dataID != "id_meliscore_toolstree_section_dashboard" ) {
+            if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
                 melisHelper.tabClose(dataID);
             }
         });
@@ -382,8 +381,7 @@ var melisCore = (function(window){
         if( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
-        $("#close-all-tab").hide();
-        //$("#close-all-tab").closest("li").hide(); // fix for double border left
+        $("#close-all-tab").hide();        
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
