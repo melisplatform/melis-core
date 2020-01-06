@@ -673,10 +673,14 @@ var melisHelper = (function(){
         }
     }
 
+    function loadingHtml(){
+        return '<div id="loadingZone" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+    }
+
     // Stating zone to loading
     function loadingZone(targetElem){
         if(targetElem.length){
-            var tempLoader = '<div id="loadingZone" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+            var tempLoader = loadingHtml();
             targetElem.attr("style", "position: relative");
             targetElem.append(tempLoader);
         }
@@ -947,6 +951,7 @@ var melisHelper = (function(){
         createModal										:			createModal,
 
         // Loading zone
+        loadingHtml										:			loadingHtml,
         loadingZone										:			loadingZone,
         removeLoadingZone								:			removeLoadingZone,
         disableTab								        :			disableTab,
