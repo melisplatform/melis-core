@@ -261,13 +261,15 @@ $(function() {
 
         /**
          * Clicking on tabs
+         * .gdpr-tab-table-container
+         * table results
          */
-        /* $body.on("click", ".tabs-label li a", function() {
+        $body.on("click", ".gdpr-tab-table-container .widget-head ul li a", function() {
             var $this = $(this);
 
                 $this.toggleClass("active").siblings().removeClass("active");
                 $this.closest("li").toggleClass("active").siblings().removeClass("active");
-        }); */
+        });
 
         var GdprTool = {
             getUserInfo: function(formData) {
