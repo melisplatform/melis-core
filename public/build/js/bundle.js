@@ -27334,7 +27334,7 @@ $(function() {
          * .gdpr-tab-table-container
          * table results
          */
-        $body.on("click", ".gdpr-tab-table-container .widget-head ul li a", function() {
+        $body.on("click", ".gdpr-tab-table-container .widget-head ul li a", function(e) {
             var $this   = $(this),
                 href    = $this.attr("href");
 
@@ -27344,9 +27344,11 @@ $(function() {
                 $(href).toggleClass("active").siblings().removeClass("active");
                 $(href).tab("show");
 
-                $('html, body').animate({
+                $('html body').animate({
                     scrollTop: $(href).offset().top
-                }, 500);
+                }, 2000);
+
+                e.preventDefault();
         });
 
         var GdprTool = {
