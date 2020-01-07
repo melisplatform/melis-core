@@ -279,6 +279,8 @@ $(function() {
                 }, 2000);
 
                 e.preventDefault();
+
+                console.log( "element index: ", $this.parent().index() );
         });
 
         var GdprTool = {
