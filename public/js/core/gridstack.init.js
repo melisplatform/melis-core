@@ -700,18 +700,21 @@ var melisDashBoardDragnDrop = {
             if ( dataTxt ) {
                 var pluginConfig = JSON.parse(dataTxt);
                     $.each(pluginConfig, function (index, value) {
-                        // here modify x y w h of the plugin
-                        if(index === "x-axis") { value = dashboardData.x }
-                        if(index === "y-axis") { value = dashboardData.y }
-                        if(index === "width") { value = dashboardData.width }
-                        if(index === "height") { value = dashboardData.height }
-
-                        // push to dashboard array
-                        dataString.push({
-                            name: index,
-                            value: value
-                        });
+                        if ($.isArray(value) || typeof value == "object") {
+                            dataString.push({
+                                name: index,
+                                value: JSON.stringify(value)
+                            });
+                        } 
+                        else {
+                            dataString.push({
+                                name: index,
+                                value: value
+                            });
+                        }
                     });
+
+                    //console.log({dataString});
 
                 var request = $.post("/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 

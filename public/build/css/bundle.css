@@ -33348,7 +33348,7 @@ body #newplugin-cont.show-menu{
 .widget-tabs .nav-tabs > li > a.glyphicons {
     border-bottom: 1px solid #e5e5e5;
 }
-
+    
 .widget-tabs .nav-tabs > li.active > a.glyphicons:hover {
     transition: none;
     -ms-transition: none;
@@ -37544,18 +37544,20 @@ table.dataTable thead .sorting_desc_disabled:before {
     width: 100% !important;
   }
 }
+@media (max-width: 500px) {
+  .gdpr-table-action-button {
+    font-size: 0.875rem;
+    margin-right: 0;
+    width: 100%;
+    margin-bottom: 0.8rem;
+  }
+}
 @media (max-width: 400px) {
   .gdpr-table-action-button:first-child {
     margin-right: 0;
   }
   #MelisCmsProspects-tab .row {
     width: auto;
-  }
-  .gdpr-table-action-button {
-    font-size: 0.875rem;
-    margin-right: 0;
-    width: 100%;
-    margin-bottom: 0.8rem;
   }
   .selection-button-above,
   .selection-button-below {

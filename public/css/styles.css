@@ -1228,7 +1228,7 @@ body #newplugin-cont.show-menu{
 .widget-tabs .nav-tabs > li > a.glyphicons {
     border-bottom: 1px solid #e5e5e5;
 }
-
+    
 .widget-tabs .nav-tabs > li.active > a.glyphicons:hover {
     transition: none;
     -ms-transition: none;
