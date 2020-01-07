@@ -265,10 +265,14 @@ $(function() {
          * table results
          */
         $body.on("click", ".gdpr-tab-table-container .widget-head ul li a", function() {
-            var $this = $(this);
+            var $this   = $(this),
+                href    = $this.attr("href");
 
                 $this.toggleClass("active").siblings().removeClass("active");
                 $this.closest("li").toggleClass("active").siblings().removeClass("active");
+
+                $(href).toggleClass("active").siblings().removeClass("active");
+                $(href).tab("show");
         });
 
         var GdprTool = {
