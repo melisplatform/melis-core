@@ -37229,7 +37229,7 @@ table.dataTable thead .sorting_desc_disabled:before {
 }
 .dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before, 
 .dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
-  /* top: 20px !important; */
+  top: 20px !important;
   border-radius: 0 !important;
   background-color: #b9b8b8 !important;
 }
