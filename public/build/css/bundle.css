@@ -36673,7 +36673,9 @@ div#modal-user-management div.widget {
 } */
 /* #melis-navtabs / contents */
 .dataTables_wrapper .bottom {
+  display: block;
   width: 100%;
+  position: relative;
 }
 #id_meliscore_header_flash_messenger {
   border-left: 1px solid #c52127;
