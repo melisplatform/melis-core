@@ -27349,10 +27349,6 @@ $(function() {
                 }, 2000);
 
                 e.preventDefault();
-
-                $(href).find(".dataTables_scroll table").DataTable().ajax.reload(null, false);
-
-                //console.log( "element index: ", $this.parent().index() );
         });
 
         var GdprTool = {
