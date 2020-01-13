@@ -37247,6 +37247,10 @@ div.dataTables_scrollHead table.dataTable {
   max-width: 100% !important;
   position: relative !important;
 }
+/* site tools translation */
+#id_meliscms_tool_sites_site_translations_modal_edit h4 {
+  word-break: break-all;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
