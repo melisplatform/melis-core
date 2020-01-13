@@ -27350,7 +27350,7 @@ $(function() {
 
                 e.preventDefault();
 
-                console.log( "element index: ", $this.parent().index() );
+                //console.log( "element index: ", $this.parent().index() );
         });
 
         var GdprTool = {
