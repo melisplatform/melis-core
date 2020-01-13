@@ -134,7 +134,7 @@
                                                 $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
                                                 $("<?php echo '#' . $module['moduleName']; ?>").DataTable().draw();
                                                 $("<?php echo '#' . $module['moduleName']; ?>").DataTable().columns.adjust().responsive.recalc();
-                                                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                                                //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                                             });
 
                                             setTimeout(function(){
