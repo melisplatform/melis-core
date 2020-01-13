@@ -162,7 +162,7 @@
 
                                                         $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
                                                     }
-                                                });
+                                                }).columns.adjust().responsive.recalc();
                                             }, 1);
                                         });
                                     </script>
