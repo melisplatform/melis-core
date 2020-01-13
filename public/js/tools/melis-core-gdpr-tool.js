@@ -274,6 +274,8 @@ $(function() {
                 $(href).toggleClass("active").siblings().removeClass("active");
                 $(href).tab("show");
 
+                
+
                 $('html body').animate({
                     scrollTop: $(href).offset().top
                 }, 2000);
