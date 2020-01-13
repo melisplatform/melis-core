@@ -27344,6 +27344,8 @@ $(function() {
                 $(href).toggleClass("active").siblings().removeClass("active");
                 $(href).tab("show");
 
+                $(href).find(".dataTables_scroll table").DataTable().ajax.reload(null, false);
+
                 $('html body').animate({
                     scrollTop: $(href).offset().top
                 }, 2000);
@@ -30163,8 +30165,6 @@ var melisDashBoardDragnDrop = {
                             });
                         }
                     });
-
-                    //console.log({dataString});
 
                 var request = $.post("/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 

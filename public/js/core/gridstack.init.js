@@ -714,8 +714,6 @@ var melisDashBoardDragnDrop = {
                         }
                     });
 
-                    //console.log({dataString});
-
                 var request = $.post("/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 
                     // loading effect
