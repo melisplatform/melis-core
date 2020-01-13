@@ -709,7 +709,10 @@ table.dataTable thead .sorting_desc_disabled:before {
   line-height: 22px;
   margin-right: 0.5rem;
 }
-
+/* GDPR dataTables */
+div.dataTables_scrollHead table.dataTable {
+  width: 100% !important;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
@@ -726,9 +729,6 @@ table.dataTable thead .sorting_desc_disabled:before {
   }
 }
 @media (min-width: 768px) {
-  /* #melis-navtabs-container-outer, #plugins-container {
-    width: calc(100% - 362px);
-  } */
   .res-action-container {
     width: calc(100% - 274px);
   }
