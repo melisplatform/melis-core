@@ -162,9 +162,9 @@
 
                                                         $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
                                                     }
-                                                }).columns.adjust().responsive.recalc();
+                                                });
                                             }, 1);
-
+                                            $("<?php echo '#' . $module['moduleName']; ?>").DataTable().ajax().reload(null, false);
                                         });
                                     </script>
                                 </div>
