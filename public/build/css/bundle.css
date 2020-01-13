@@ -37242,7 +37242,10 @@ table.dataTable thead .sorting_desc_disabled:before {
 }
 /* GDPR dataTables */
 div.dataTables_scrollHead table.dataTable {
+  display: block !important;
   width: 100% !important;
+  max-width: 100% !important;
+  position: relative !important;
 }
 /* Responsive media queries */
 @media (min-width: 991px) {
