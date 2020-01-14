@@ -6,18 +6,19 @@ $(":file").filestyle({buttonBefore: true});
 function getRightsTree(userId) {
 
     var tree = $("#rights-fancytree").fancytree("getTree");
-    tree.reload({
-        url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId,
-        //load
-        lazyLoad: function (event, data) {
-            alert("expanded");
-        },
-    });
+        tree.reload({
+            url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId,
+            //load
+            lazyLoad: function (event, data) {
+                alert("expanded");
+            },
+        });
 
     var checker = setInterval(function () {
         if (tree.count() > 1) {
             $("#btnEdit").removeClass("disabled").css("pointer-events", "auto");
             $("#btnEditRights").removeClass("disabled").css("pointer-events", "auto");
+            $("#btnResetRights").removeClass("disabled").css("pointer-events", "auto");
             clearInterval(checker);
         }
     }, 500);
@@ -295,53 +296,52 @@ var toolUserManagement = {
 
             $btnEdit.addClass("disabled").css("pointer-events", "none");
             $btnEditRights.addClass("disabled").css("pointer-events", "none");
+        $.ajax({
+            type    : 'POST',
+            url     : '/melis/MelisCore/ToolUser/getUserById',
+            data    : {id: id},
+            dataType: 'json',
+            encode  : true,
+        }).done(function (data) {
+            if (data.success) {
+                var $lastLoginDate      = $("#lastlogindate"),
+                    $userLogin          = $("#userlogin"),
+                    $userMgntPass       = $("#idusermanagement #id_usr_password"),
+                    $userMgntConPass    = $("#idusermanagement #id_usr_confirm_password");
 
-            $.ajax({
-                type: 'POST',
-                url: '/melis/MelisCore/ToolUser/getUserById',
-                data: {id: id},
-                dataType: 'json',
-                encode: true
-            }).done(function(data) {
-                if (data.success) {
-                    var $lastLoginDate      = $("#lastlogindate"),
-                        $userLogin          = $("#userlogin"),
-                        $userMgntPass       = $("#idusermanagement #id_usr_password"),
-                        $userMgntConPass    = $("#idusermanagement #id_usr_confirm_password");
+                    $lastLoginDate.html(data.user.usr_last_login_date);
+                    $userLogin.html(data.user.usr_login);
+                    toolUserManagement.setImage("#profile-image", data.user.usr_image);
 
-                        $lastLoginDate.html(data.user.usr_last_login_date);
-                        $userLogin.html(data.user.usr_login);
-                        toolUserManagement.setImage("#profile-image", data.user.usr_image);
+                    $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
+                        var $this               = $(this),
+                            name                = $this.attr('name'),
+                            $toolUserMgntTmp    = $("#tool_user_management_id_tmp"),
+                            $editUserId         = $("#edituserid");
 
-                        $("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
-                            var $this               = $(this),
-                                name                = $this.attr('name'),
-                                $toolUserMgntTmp    = $("#tool_user_management_id_tmp"),
-                                $editUserId         = $("#edituserid");
+                            $("#" + $this.attr('id')).val(data.user[name]);
+                            $toolUserMgntTmp.val(data.user['usr_id']);
+                            $editUserId.html(data.user['usr_id']);
+                    });
 
-                                $("#" + $this.attr('id')).val(data.user[name]);
-                                $toolUserMgntTmp.val(data.user['usr_id']);
-                                $editUserId.html(data.user['usr_id']);
-                        });
+                    // Switching the Admin switch plugin
+                    var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
+                        if (data.user.usr_admin == 1) {
+                            userEditSwitchForm.bootstrapSwitch('setState', true);
+                        } else {
+                            userEditSwitchForm.bootstrapSwitch('setState', false);
+                        }
 
-                        // Switching the Admin switch plugin
-                        var userEditSwitchForm = $("form#idusermanagement .user-admin-switch");
-                            if (data.user.usr_admin == 1) {
-                                userEditSwitchForm.bootstrapSwitch('setState', true);
-                            } else {
-                                userEditSwitchForm.bootstrapSwitch('setState', false);
-                            }
+                        // make sure that password fields are empty when retrieving
+                        $userMgntPass.val("");
+                        $userMgntConPass.val("");
 
-                            // make sure that password fields are empty when retrieving
-                            $userMgntPass.val("");
-                            $userMgntConPass.val("");
-
-                            // re-initialize the tree with current selected userID
-                            getRightsTree(id);
-                }
-            }).fail(function() {
-                alert(translations.tr_meliscore_error_message);
-            });
+                        // re-initialize the tree with current selected userID
+                        getRightsTree(id);
+            }
+        }).fail(function() {
+            alert(translations.tr_meliscore_error_message);
+        });
     },
 
     addNewUser: function (form) {

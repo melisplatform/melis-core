@@ -43,7 +43,7 @@ $sections = [
 
 <?php
 if ($isParentTool && !empty($this->tools)):
-?>
+    ?>
     <li class="melis-opentools" data-tool-icon="<?= $tabIcon ?>" data-tool-name="<?= $tabName ?>" data-tool-id="<?= $targetId ?>" data-tool-meliskey="<?= $targetMelisKey ?>">
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
@@ -97,15 +97,17 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                     <?php
                     if (!empty($sectionTool['toolsection_has_nav_child'])):
                         ?>
-
                         <li class="hasSubmenu" data-meliskey="">
-
-                            <a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
-                                <i class="fa <?= $sectionIcon; ?>"></i>
-                                <span><?= $sectionTool['toolsection_name']; ?></span>
-                            </a>
-
-                            <ul class="collapse secondlvl-container" id="sub-load-<?= $keySection; ?>">
+                            <?php if(count($sectionTool['toolsection_children']) > 1) : ?>
+                                <a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
+                                    <i class="fa <?= $sectionIcon; ?>"></i>
+                                    <span><?= $sectionTool['toolsection_name']; ?></span>
+                                </a>
+                            <?php  endif ?>
+                            <ul  class="secondlvl-container secondlvl-container
+                                <?php if(count($sectionTool['toolsection_children']) > 1) { echo 'collapse'; }  ?>"
+                                <?php if(count($sectionTool['toolsection_children']) == 1) { echo 'style="margin-left:-15px"';} ?>
+                                 id="sub-load-<?= $keySection; ?>">
                                 <?php
                                 if (isset($sectionTool['toolsection_children']) && $sectionTool['toolsection_children']) {
                                     foreach ($sectionTool['toolsection_children'] as $keyTool => $tool) {

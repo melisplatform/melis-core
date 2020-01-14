@@ -25,8 +25,7 @@ var melisTinyMCE = (function(){
                         }catch (e) {}
                     }
                 }
-                
-                // adding of file_picker_callback on tinymce.init's config
+
                 if ( data.config['file_picker_callback'] ) {
                     data.config['file_picker_callback'] = eval(data.config['file_picker_callback']);
                 }
@@ -45,13 +44,8 @@ var melisTinyMCE = (function(){
         });
     }
 
-    /*
-     * @ https://www.tiny.cloud/docs/demo/file-picker/
-     * Adding of file picker for link image toolbar [Insert/Edit Image]
-     */
     filePickerCallback = function (cb, value, meta) {
         var input = document.createElement('input');
-
             input.setAttribute('type', 'file');
             input.setAttribute('accept', 'image/*');
 
@@ -64,9 +58,9 @@ var melisTinyMCE = (function(){
             */
 
             input.onchange = function () {
-                var file    = this.files[0],
-                    reader  = new FileReader();
-
+                var file = this.files[0],
+                    reader = new FileReader();
+                    
                     reader.onload = function () {
                         /*
                         Note: Now we need to register the blob in TinyMCEs image blob
@@ -74,21 +68,22 @@ var melisTinyMCE = (function(){
                         necessary, as we are looking to handle it internally.
                         */
                         var id          = 'blobid' + (new Date()).getTime(),
-                            blobCache   = tinymce.activeEditor.editorUpload.blobCache,
+                            blobCache   =  tinymce.activeEditor.editorUpload.blobCache,
                             base64      = reader.result.split(',')[1],
                             blobInfo    = blobCache.create(id, file, base64);
 
                             blobCache.add(blobInfo);
 
-                            /* call the callback and populate the Title field with the file name */
-                            cb(blobInfo.blobUri(), { title: file.name });
+                        /* call the callback and populate the Title field with the file name */
+                        cb(blobInfo.blobUri(), { title: file.name });
                     };
+                    
                     reader.readAsDataURL(file);
             };
 
             input.click();
     }
-    
+
     // TinyMCE  action event
     function tinyMceActionEvent(editor) {
         /**

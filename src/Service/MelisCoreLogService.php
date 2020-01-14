@@ -108,7 +108,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	    // Sending service start event
 	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_start', $arrayParameters);
 	    // Service implementation end
-	    
+
 	    $melisCoreTableLogType = $this->getServiceLocator()->get('MelisCoreTableLogType');
 	    
 	    if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId']))

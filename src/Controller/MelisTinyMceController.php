@@ -203,10 +203,13 @@ class MelisTinyMceController extends AbstractActionController
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($appConfigForm);
+
         $form->setData($this->params()->fromFiles());
+
         $target = $_SERVER['DOCUMENT_ROOT'].'/media/Uploads/';
         if (!is_dir($target))
             mkdir($target, 0777);
+
         // File Input
         $fileInput = new \Zend\InputFilter\FileInput('file');
         $fileInput->setRequired(true);
@@ -218,7 +221,9 @@ class MelisTinyMceController extends AbstractActionController
                 'use_upload_extension' => true,
             ]
         );
+
         $form->getInputFilter()->add($fileInput);
+
         $file = null;
         if ($form->isValid()){
             $data = $form->getData();

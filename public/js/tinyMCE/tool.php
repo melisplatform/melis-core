@@ -13,10 +13,10 @@
 		'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
 		'cleanup' => false,
 		'verify_html' => false,
-		'paste_auto_cleanup_on_paste' => true,
-		'file_picker_types' => 'file image media',
-		'file_picker_callback' => 'filePickerCallback',
-		'images_upload_url' => '/melis/MelisCore/MelisTinyMce/uploadImage',
+	    'paste_auto_cleanup_on_paste' => true,
+        'file_picker_types' => 'file image media',
+        'file_picker_callback' => 'filePickerCallback',
+        'images_upload_url' => '/melis/MelisCore/MelisTinyMce/uploadImage',
 		'plugins' => array(
             //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
            'lists advlist autolink link paste image charmap preview anchor emoticons help hr nonbreaking',

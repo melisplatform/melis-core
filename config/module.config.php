@@ -384,6 +384,7 @@ return array(
             'MelisToggleButton' => 'MelisCore\Form\Factory\MelisToggleButtonFactory',
             'MelisText' => 'MelisCore\Form\Factory\MelisTextFactory',
             'MelisUserRoleSelect' => 'MelisCore\Form\Factory\MelisUserRoleSelectFactory',
+            'MelisCoreLogTypeSelect' => 'MelisCore\Form\Factory\MelisCoreLogTypeSelectFactory',
             'MelisCoreMultiValInput' => 'MelisCore\Form\Factory\MelisCoreMultiValueInputFactory',
             'DateField' => 'MelisCore\Form\Factory\DateFieldFactory',
             'DatePicker' => 'MelisCore\Form\Factory\DatePickerFactory',
@@ -405,7 +406,7 @@ return array(
             'MelisCoreHeadPlugin' => 'MelisCore\View\Helper\Factory\MelisCoreHeadPluginHelperFactory',
             'MelisDashboardDragDropZone' => 'MelisCore\View\Helper\Factory\MelisDashboardDragDropZonePluginFactory',
             'getMelisSectionIcons' => 'MelisCore\View\Helper\Factory\MelisCoreSectionIconsHelperFactory',
-
+            'MelisDataTable' => 'MelisCore\View\Helper\Factory\MelisDataTableHelperFactory',
         ),
     ),
     'view_manager' => array(
