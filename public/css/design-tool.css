@@ -328,6 +328,7 @@
 /* Dashboard Chart */
 .flotchart-holder {
     width: 100%;
+    height: 400px;
 }
 .page-elements .innerAll.spacing-x2 .widget.widget-primary {
     background: #932E2A;
