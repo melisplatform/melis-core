@@ -225,14 +225,31 @@
   cursor: pointer; 
   background-color: #2980b9;
 }
+.context-menu-icon-edit,
 .context-menu-item.icon-edit { background-image: url(../images/page_white_edit.png); }
+
+.context-menu-icon-cut,
 .context-menu-item.icon-cut { background-image: url(../images/cut.png); }
+
+.context-menu-icon-copy,
 .context-menu-item.icon-copy { background-image: url(../images/page_white_copy.png); }
+
+.context-menu-icon-paste,
 .context-menu-item.icon-paste { background-image: url(../images/page_white_paste.png); }
+
+.context-menu-icon-delete,
 .context-menu-item.icon-delete { background-image: url(../images/page_white_delete.png); }
+
+.context-menu-icon-add,
 .context-menu-item.icon-add { background-image: url(../images/page_white_add.png); }
+
+.context-menu-icon-quit,
 .context-menu-item.icon-quit { background-image: url(../images/door.png); }
+
+.context-menu-icon-export,
 .context-menu-item.icon-export { background-image: url(../images/export.png); }
+
+.context-menu-icon-import,
 .context-menu-item.icon-import { background-image: url(../images/import.png); }
 
 .context-menu-item.context-menu-disabled {

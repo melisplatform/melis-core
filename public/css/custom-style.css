@@ -648,6 +648,7 @@ div.row, ul.row {
 /* flot chart */
 .flotchart-holder {
   width: 100%;
+  height: 400px;
 }
 /* pagination */
 .page-link:focus {
