@@ -364,6 +364,12 @@ null);!this.s.scrollInterval&&f&&(this.s.scrollInterval=setInterval(function(){b
 (c.rowreorder.c.enable=a)})});p.register("rowReorder.disable()",function(){return this.iterator("table",function(a){a.rowreorder&&(a.rowreorder.c.enable=!1)})});m.version="1.2.6";a.fn.dataTable.RowReorder=m;a.fn.DataTable.RowReorder=m;a(d).on("init.dt.dtr",function(c,d,b){"dt"===c.namespace&&(c=d.oInit.rowReorder,b=g.defaults.rowReorder,c||b)&&(b=a.extend({},c,b),!1!==c&&new m(d,b))});return m});
 
 /*!
+ Bootstrap 4 styling wrapper for RowReorder
+ Â©2018 SpryMedia Ltd - datatables.net/license
+*/
+(function(c){"function"===typeof define&&define.amd?define(["jquery","datatables.net-bs4","datatables.net-rowreorder"],function(a){return c(a,window,document)}):"object"===typeof exports?module.exports=function(a,b){a||(a=window);b&&b.fn.dataTable||(b=require("datatables.net-bs4")(a,b).$);b.fn.dataTable.RowReorder||require("datatables.net-rowreorder")(a,b);return c(b,a,a.document)}:c(jQuery,window,document)})(function(c,a,b,d){return c.fn.dataTable});
+
+/*!
  Responsive 2.2.3
  2014-2018 SpryMedia Ltd - datatables.net/license
 */
