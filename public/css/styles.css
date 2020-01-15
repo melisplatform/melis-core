@@ -1310,7 +1310,8 @@ body #newplugin-cont.show-menu{
 }
 .product-text-tab li a span{
     display: inline-block;
-    padding: 6px 7px 6px 15px;
+    /*padding: 6px 7px 6px 15px;*/
+    padding: 6px 7px 6px 7px;
     vertical-align: middle;
     color: #7D7B7B;
 }
