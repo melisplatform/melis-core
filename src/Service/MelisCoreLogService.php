@@ -2,11 +2,35 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Assetic\Exception\Exception;
+class MelisCoreLogService  extends MelisCoreGeneralService
+{
 
-class MelisCoreLogService  extends MelisCoreGeneralService{
+    /**
+     * Common action log types
+     */
+    const ADD = 'ADD';
+    const UPDATE = 'UPDATE';
+    const DELETE= 'DELETE';
+
+    /**
+     * Saving action to logs using Melis Core Service
+     *
+     * @param $result - 1 or 0
+     * @param $title - log title
+     * @param $message - message
+     * @param $logCode - code of the log/log identifier
+     * @param $itemId - the ID of the item to save - null if no ID
+     */
+    public function logAction($result, $title, $message, $logCode, $itemId)
+    {
+        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+
+        $icon = ($result) ? $flashMessenger::INFO:  $flashMessenger::WARNING;
+
+        $flashMessenger->addToFlashMessenger($title, $message, $icon);
+
+        $this->saveLog($title, $message, $result, $logCode, $itemId);
+    }
 	
 	/**
 	 * This method will return the list of logs 
@@ -220,7 +244,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	     
 	    $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
 	    
-	    // Get Cureent User ID
+	    // Get Current User ID
 	    $userId = null;
 	    $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
 	    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
@@ -242,7 +266,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	            // Save LogType as new Data
 	            $logTypeId = $this->saveLogType($arrayParameters['typeCode']);
 	        }
-	        catch(Exception $e){}
+	        catch(\Exception $e){}
 	    }
 	    
 	    if (!is_null($userId) && !is_null($logTypeId))
@@ -263,7 +287,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	            // Save Log
 	            $results = $melisCoreTableLog->save($log, $arrayParameters['logId']);
 	        }
-	        catch(Exception $e){
+	        catch(\Exception $e){
 	            echo $e->getMessage();
             }
 	    }
@@ -303,7 +327,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	        try {
 	            $results = $melisCoreTableLogType->save($data, $arrayParameters['logTypeId']);
 	        }
-	        catch(Exception $e){}
+	        catch(\Exception $e){}
 	    }
 	    
 	    // Adding results to parameters for events treatment if needed
@@ -336,7 +360,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	    try {
 	        $results = $melisCoreTableLogTypeTrans->save($arrayParameters['logTypeTrans'], $arrayParameters['logTypeTransId']);
 	    }
-	    catch(Exception $e){}
+	    catch(\Exception $e){}
 	    
 	    // Adding results to parameters for events treatment if needed
 	    $arrayParameters['results'] = $results;
@@ -361,7 +385,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService{
 	    try {
 	        $results = $melisCoreTableLogTypeTrans->deleteById($arrayParameters['logTypeTransId']);
 	    }
-	    catch(Exception $e){}
+	    catch(\Exception $e){}
 	     
 	    // Adding results to parameters for events treatment if needed
 	    $arrayParameters['results'] = $results;
