@@ -755,6 +755,15 @@ td.dataTables_empty {
 .btn-group input[type=radio] {
   vertical-align: middle;
 }
+/* datetimepicker */
+.bootstrap-datetimepicker-widget table td i.active, 
+.bootstrap-datetimepicker-widget table td span.active,
+.datepicker table tr td span.active, 
+.datepicker table tr td span.active.disabled, 
+.datepicker table tr td span.active.disabled:hover, 
+.datepicker table tr td span.active:hover {
+  color: #fff;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */

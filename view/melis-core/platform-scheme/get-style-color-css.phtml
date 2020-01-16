@@ -4,6 +4,12 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.datepicker table tr td span.active, 
+.datepicker table tr td span.active.disabled, 
+.datepicker table tr td span.active.disabled:hover, 
+.datepicker table tr td span.active:hover {
+    background: <?= $primaryColor; ?> !important;
+}
 #convo-content #chat-container .my-msg {
     background-color: <?= $primaryColor; ?>;
 }
