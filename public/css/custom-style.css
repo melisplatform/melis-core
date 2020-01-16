@@ -762,7 +762,7 @@ td.dataTables_empty {
 .datepicker table tr td span.active.disabled, 
 .datepicker table tr td span.active.disabled:hover, 
 .datepicker table tr td span.active:hover {
-  color: #fff;
+  color: #fff !important;
 }
 /* Responsive media queries */
 @media (min-width: 991px) {
