@@ -756,6 +756,8 @@ td.dataTables_empty {
   vertical-align: middle;
 }
 /* datetimepicker */
+.bootstrap-datetimepicker-widget table td.active, 
+.bootstrap-datetimepicker-widget table td.active:hover,
 .bootstrap-datetimepicker-widget table td i.active, 
 .bootstrap-datetimepicker-widget table td span.active,
 .datepicker table tr td span.active, 
