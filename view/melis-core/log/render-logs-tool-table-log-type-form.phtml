@@ -28,10 +28,20 @@
                         	<div class="col-12 col-md-4">
                         		<div class="product-text-tab-container">
                         			<ul class="nav-tabs product-text-tab">
+
                             			<?php foreach ($languages As $key => $val):?>
+                                            <?php
+                                                $locale = explode('_',$val['lang_locale']);
+                                                $locale[0] = strtolower($locale[0]);
+                                                $locale[1] = strtoupper($locale[1]);
+                                                $locale = implode("_",$locale);
+                                            ?>
                                     		<li class="">
                                     			<a class="clearfix" data-toggle="tab" href="#<?php echo $key?>-log-type-details" aria-expanded="false">
                                     				<span><?php echo $val['lang_name']?></span>
+                                                    <span class="pull-right">
+                                                        <img src="/MelisCore/images/lang/<?= $locale?>.png" class="imgDisplay float-right" onerror="javascript:this.src='MelisCore/images/lang/default.png'" />
+                                                    </span>
                                     			</a>
                                     		</li>
                                 		<?php endforeach;?>
