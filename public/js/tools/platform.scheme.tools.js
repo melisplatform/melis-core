@@ -78,7 +78,7 @@ $(function() {
                 }).done(function(data) {
                     if(data.success) {
                         melisCoreTool.processing();
-                        //location.reload(true);
+                        location.reload(true);
                     }
                     else {
                         melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);

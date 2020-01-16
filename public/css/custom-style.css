@@ -744,6 +744,17 @@ table.dataTable td.reorder {
 td.dataTables_empty {
   display: none;
 }
+/* dashboard plugins btn-default active bg */
+.btn-group label.btn.btn-default.btn-sm.active {
+  background-color: #e7e7e7;
+}
+.body-overflow-hidden {
+  overflow: hidden;
+}
+.btn-group input[type=checkbox],
+.btn-group input[type=radio] {
+  vertical-align: middle;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */

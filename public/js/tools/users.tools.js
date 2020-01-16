@@ -11,7 +11,7 @@ function getRightsTree(userId) {
             //load
             lazyLoad: function (event, data) {
                 alert("expanded");
-            },
+            }
         });
 
     var checker = setInterval(function () {
