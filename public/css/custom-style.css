@@ -757,13 +757,7 @@ td.dataTables_empty {
 }
 /* datetimepicker */
 .bootstrap-datetimepicker-widget table td.active, 
-.bootstrap-datetimepicker-widget table td.active:hover,
-.bootstrap-datetimepicker-widget table td i.active, 
-.bootstrap-datetimepicker-widget table td span.active,
-.datepicker table tr td span.active, 
-.datepicker table tr td span.active.disabled, 
-.datepicker table tr td span.active.disabled:hover, 
-.datepicker table tr td span.active:hover {
+.bootstrap-datetimepicker-widget table td.active:hover {
   color: #fff !important;
 }
 /* Responsive media queries */

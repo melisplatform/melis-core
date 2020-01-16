@@ -4,14 +4,8 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
-.datepicker .table-condensed tr td.active, 
-.datepicker .table-condensed tr td.active:hover, 
-.datepicker .table-condensed tr td.active.disabled, 
-.datepicker .table-condensed tr td.active.disabled:hover,
-.datepicker table tr td span.active, 
-.datepicker table tr td span.active.disabled, 
-.datepicker table tr td span.active.disabled:hover, 
-.datepicker table tr td span.active:hover {
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
     background: <?= $primaryColor; ?> !important;
 }
 #convo-content #chat-container .my-msg {
