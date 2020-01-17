@@ -1324,4 +1324,13 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         $this->_appConfig['table'] = $tableConfig;
     }
+
+    /**
+     * Detect if the user agent is mobile or not
+     * @return false|int
+     */
+    public function isMobileDevice()
+    {
+        return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+    }
 }
