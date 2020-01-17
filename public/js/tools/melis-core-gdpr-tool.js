@@ -13,8 +13,9 @@ $(function() {
         });
 
         // Toggle single checkbox
-        $body.on("click", ".cb-cont input[type=checkbox]", function () {
+        $body.on("click", ".melis-core-gdpr-checkbox input[type=checkbox]", function () {
             var $this = $(this);
+
             if ( $this.is(':checked') ) {
                 $this.prop("checked", true);
                 $this.prev("span").find(".cbmask-inner").addClass('cb-active');
