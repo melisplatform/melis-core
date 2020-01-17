@@ -674,34 +674,30 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    /*
-     * Added by: Junry @ 10/10/208
-     * For responsive placement
-     * bootstrap tooltip style, uses custom .tlp() function to solve
-     * conflict with jQuery ui same function name .tooltip()
-     */
-    /* var pos = ( $(window).width() < 460 ) ? 'auto' : 'right';
-    var dashboardTooltip = {
-        placement: pos,
-        delay: {
-            show: 800
-        },
-        template: '<div class="tooltip melis-plugin-tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-    };
+    $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a[data-toggle='tab']", function(e) {
+        /**
+         * chart class
+         * [.flotchart-holder]
+         * [.cms-pros-dash-chart-line-graph]
+         * [.commerce-dashboard-plugin-sales-revenue-placeholder]
+         */
+        var target      = e.target;
+            meliskey    = $(target).closest("li").data("tool-meliskey"),
+            $activeTab  = $("#"+activeTabId);
 
-    $body.find(".melis-core-dashboard-plugin-snippets").tlp( dashboardTooltip ); */
+            if ( meliskey === "meliscore_dashboard" ) {
+                if ( typeof prospectsDashboardLineChart !== "undefined" && 
+                $activeTab.find(".cms-pros-dash-chart-line-graph").length > 0 ) {
+                    prospectsDashboardLineChart.loadChart();
+                }
+                
+                if ( typeof commerceDashboardPluginSalesRevenue !== "undefined" && 
+                $activeTab.find(".commerce-dashboard-plugin-sales-revenue-placeholder").length > 0 ) {
+                    commerceDashboardPluginSalesRevenue.loadChart();
+                }
+            }
+    });
 
-    /*
-     * Added by: Junry @ 10/10/2018
-     * For blinking issue on hover
-     */
-    /* $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
-        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
-    }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
-        $(this).children(".melis-plugin-tooltip").stop().fadeOut();
-    }); */
-
-     
     // jQuery ui tooltip style
     $(".melis-core-dashboard-plugin-snippets").tooltip({
         position: {

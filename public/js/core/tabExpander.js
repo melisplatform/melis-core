@@ -32,7 +32,7 @@ var tabExpander = (function($, window){
         //get the width in % of #melis-navtabs-container-inner based from #melis-navtabs-container-outer - 56px for the prevnext buttons
         
         // var innerUlWidthPercent = 99 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() ); 
-        var innerUlWidthPercent = 100 - ( (100 * 47) / $("#melis-navtabs-container-outer").outerWidth() );
+        var innerUlWidthPercent = 100 - ( (100 * 56) / $("#melis-navtabs-container-outer").outerWidth() );
 
         $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"}); // change hidden to initial because of dropdown
         $navTabs.css({"width": navUlContainer });
@@ -40,13 +40,14 @@ var tabExpander = (function($, window){
         $(".melis-tabprev, .melis-tabnext").show();
 
         // toggle overflow for dropdown
-        $("#melis-navtabs-container-inner").hover(
+        /* $("#melis-navtabs-container-inner").hover(
             function() {
                 $(this).css("overflow", "visible");
             }, function() {
                 $(this).css("overflow", "hidden");
             }
-        );
+        ); */
+        $body.on("mouseover")
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
@@ -93,7 +94,10 @@ var tabExpander = (function($, window){
 		// determines if TE should be activated or not
         if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
         	Enable();
-        	status = 'enabled';
+            status = 'enabled';
+            
+            console.log("TE Enable: ", navUlContainer + " > " +  tabContainerWidthPx + " > " + screenSize + " > 768" );
+
         } else if( navUlContainer < tabContainerWidthPx){
 			Disable();
         } else if(status == 'disabled'){
