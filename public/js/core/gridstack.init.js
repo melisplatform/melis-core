@@ -695,7 +695,7 @@ var melisDashBoardDragnDrop = {
         var dashboardItem   = $(el).closest('.grid-stack-item'),
             dataTxt         = $(dashboardItem).find('.dashboard-plugin-json-config').text(),
             dashboardData   = dashboardItem.data('_gridstack_node'),
-            nextElement     = dashboardItem.next();
+            nextElementId   = dashboardItem.next().data('gsId');
             // check dataTxt
             if ( dataTxt ) {
                 var pluginConfig = JSON.parse(dataTxt);
@@ -734,7 +734,8 @@ var melisDashBoardDragnDrop = {
                         // add widget to dashboard default size 6 x 6
                         var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
                             // place in the last location
-                            $(widget).insertBefore(nextElement);
+                        // place in the last location
+                        $(widget).insertBefore($("div").find("[data-gs-id='" + nextElementId + "']"));
                             // assigning current plugin
                             self.setCurrentPlugin(widget);
 
