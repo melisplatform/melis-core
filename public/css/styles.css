@@ -4442,3 +4442,7 @@ input#log_date_range{
         font-size: 9px;
     }
 }
+/*Dashboard plugin using Chart*/
+.flotchart-holder .legend table {
+    border-collapse: collapse;
+}
