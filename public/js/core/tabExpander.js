@@ -47,7 +47,13 @@ var tabExpander = (function($, window){
                 $(this).css("overflow", "hidden");
             }
         ); */
-        $body.on("mouseover")
+        $body.on("mouseover", 
+            function() {
+                $(this).css("overflow", "visible");
+            }, function() {
+                $(this).css("overflow", "hidden");
+            }
+        );
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
@@ -95,9 +101,6 @@ var tabExpander = (function($, window){
         if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
         	Enable();
             status = 'enabled';
-            
-            console.log("TE Enable: ", navUlContainer + " > " +  tabContainerWidthPx + " > " + screenSize + " > 768" );
-
         } else if( navUlContainer < tabContainerWidthPx){
 			Disable();
         } else if(status == 'disabled'){
@@ -129,21 +132,21 @@ var tabExpander = (function($, window){
     }
     
     //NEXT 
-    $(".melis-tabnext").on("click", function() {
+    $body.on("click", ".melis-tabnext", function() {
         calcOffset();
         if( xright > ulContainer - 170 ) {
-            var liIndex = $navTabs.find("li").index();
+            //var liIndex = $navTabs.find("li").index();
 
-            if ( liIndex === 0 ) {
+            /* if ( liIndex === 0 ) {
                 $navTabs.css("left", "0");
             }
-            else {
+            else { */
                 $navTabs.animate({
                     left: '-='+ 170
                 },0);
-            }
+            //}
         }
-        else{
+        else {
             $navTabs.animate({
                 left: '-=' + xright
             },0);
@@ -151,14 +154,14 @@ var tabExpander = (function($, window){
     });
     
     //PREV
-    $(".melis-tabprev").on("click", function(){
+    $body.on("click", ".melis-tabprev", function(){
         calcOffset();
         if( xleft > ulContainer - 170) {
             $navTabs.animate({
                 left: '+='+ 170
             },0);
         }
-        else{
+        else {
             $navTabs.animate({
                 left: '+=' + xleft
             },0);
@@ -166,12 +169,12 @@ var tabExpander = (function($, window){
     }); 
     
 	// FOCUS TAB ON CLICK (new functionality)
-    function focusTab(){
+    function focusTab() {
     	
     }
 
     // CHECK tabExpander() WHEN WINDOW IS RESIZED
-    $(window).resize(function(){
+    $(window).on("resize", function(){
         screenSize = jQuery(window).width();
         if( screenSize >= 768 ){
         	checkTE();     
