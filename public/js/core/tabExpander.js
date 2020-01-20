@@ -136,15 +136,9 @@ var tabExpander = (function($, window){
         calcOffset();
         if( xright > ulContainer - 170 ) {
             //var liIndex = $navTabs.find("li").index();
-
-            /* if ( liIndex === 0 ) {
-                $navTabs.css("left", "0");
-            }
-            else { */
-                $navTabs.animate({
-                    left: '-='+ 170
-                },0);
-            //}
+            $navTabs.animate({
+                left: '-='+ 170
+            },0);
         }
         else {
             $navTabs.animate({
@@ -154,9 +148,9 @@ var tabExpander = (function($, window){
     });
     
     //PREV
-    $body.on("click", ".melis-tabprev", function(){
+    $body.on("click", ".melis-tabprev", function() {
         calcOffset();
-        if( xleft > ulContainer - 170) {
+        if( xleft > ulContainer - 170 ) {
             $navTabs.animate({
                 left: '+='+ 170
             },0);
