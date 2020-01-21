@@ -27,7 +27,7 @@
 
                             <?php if(isset($module['moduleName']) && isset($module['icon'])) { ?>
                                 <li class="<?php echo $firstItem ? 'active' : ''; ?> gdpr-tab-menu-li" style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="<?= $module['moduleName'] ?>-left-tab">
-                                    <span style="margin-bottom: 0px;margin-top: 5px;white-space: nowrap;text-overflow: ellipsis;width: 100%;overflow: hidden;"><i class="<?= $module['icon'] ?>" style="margin-left: 20px;margin-right: 12px; width: 22.86px;"></i><?= $module['moduleName'] ?></span></a>
+                                    <p style="margin-bottom: 0px;margin-top: 5px;white-space: nowrap;text-overflow: ellipsis;width: 100%;overflow: hidden;"><i class="<?= $module['icon'] ?>" style="margin-left: 20px;margin-right: 12px; width: 22.86px;"></i><?= $module['moduleName'] ?></p></a>
                                 </li>
                             <?php } ?>
                             <?php $firstItem = false; ?>
@@ -123,9 +123,24 @@
                                     </table>
                                     <script>
                                         $(document).ready(function() {
-                                            var dtTable = $("<?php echo '#' . $module['moduleName']; ?>").DataTable({
-                                                    /* scrollY: '300px',
-                                                    scrollCollapse: true, */
+                                            //redraw table when tab is shown where the table is located so that the headers will have the right size
+                                            $(document).on('shown.bs.tab', 'a[href="<?php echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
+                                                if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
+                                                } else {
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
+                                                }
+
+                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                $("<?php echo '#' . $module['moduleName']; ?>").DataTable().draw();
+                                                $("<?php echo '#' . $module['moduleName']; ?>").DataTable().columns.adjust().responsive.recalc();
+                                                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                                            });
+
+                                            setTimeout(function(){
+                                                $("<?php echo '#' . $module['moduleName']; ?>").dataTable({
+                                                    scrollY: '300px',
+                                                    scrollCollapse: true,
                                                     paging: false,
                                                     searching: false,
                                                     ordering: true,
@@ -148,52 +163,8 @@
                                                         $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
                                                     }
                                                 });
+                                            }, 1);
 
-                                                //redraw table when tab is shown where the table is located so that the headers will have the right size
-                                                $(document).on('shown.bs.tab', 'a[href='+dtTable+'"-tab"]', function (e) {
-                                                    dtTable.columns.adjust().draw();
-                                                    dtTable.columns.adjust().responsive.recalc();
-                                                });
-                                                /* $(document).on('shown.bs.tab', 'a[href="<?php //echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
-                                                    if ($("body").find("<?php //echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                        $("<?php //echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
-                                                    } else {
-                                                        $("<?php //echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
-                                                    }
-
-                                                    $("<?php //echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
-                                                    $("<?php //echo '#' . $module['moduleName']; ?>").DataTable().draw();
-                                                    $("<?php //echo '#' . $module['moduleName']; ?>").DataTable().columns.adjust().responsive.recalc();
-                                                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-                                                }); */
-
-                                                //setTimeout(function(){
-                                                    /* $("<?php //echo '#' . $module['moduleName']; ?>").dataTable({
-                                                        scrollY: '300px',
-                                                        scrollCollapse: true,
-                                                        paging: false,
-                                                        searching: false,
-                                                        ordering: true,
-                                                        order: [[0, 'desc']],
-                                                        responsive: true,
-                                                        language: {
-                                                            "info": translations.tr_meliscore_dt_sInfo,
-                                                        },
-                                                        columnDefs: [{
-                                                            orderable: false,
-                                                            targets: "sorting_disabled",
-                                                        }],
-                                                        "drawCallback": function() {
-                                                            if ($("body").find("<?php //echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                                $("<?php //echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
-                                                            } else {
-                                                                $("<?php //echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
-                                                            }
-
-                                                            $("<?php //echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
-                                                        }
-                                                    }); */
-                                                //}, 1);
                                         });
                                     </script>
                                 </div>
