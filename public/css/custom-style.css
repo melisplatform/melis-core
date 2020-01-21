@@ -1002,8 +1002,8 @@ td.dataTables_empty {
   #MelisCmsProspects-tab .dataTables_scrollHead,
   #MelisCmsProspects-tab .dataTables_scrollHeadInner,
   #MelisCmsProspects-tab table,
-  .gdpr-tab-table-container,
-  #MelisCmsProspects-tab .row {
+  .gdpr-tab-table-container
+  {
     width: 100% !important;
   } 
   /* calendar */

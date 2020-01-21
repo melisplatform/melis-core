@@ -26,7 +26,7 @@
                         <?php foreach ($modules as $module) { ?>
 
                             <?php if(isset($module['moduleName']) && isset($module['icon'])) { ?>
-                                <li class="<?php echo $firstItem ? 'active' : ''; ?> gdpr-tab-menu-li" style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="<?= $module['moduleName'] ?>-left-tab">
+                                <li class="<?php echo $firstItem ? 'active' : ''; ?> gdpr-tab-menu-li" data-table-id="<?= $module['moduleName']?>"style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="<?= $module['moduleName'] ?>-left-tab">
                                     <span style="margin-bottom: 0px;margin-top: 5px;white-space: nowrap;text-overflow: ellipsis;width: 100%;overflow: hidden;"><i class="<?= $module['icon'] ?>" style="margin-left: 20px;margin-right: 12px; width: 22.86px;"></i><?= $module['moduleName'] ?></span></a>
                                 </li>
                             <?php } ?>
@@ -131,6 +131,7 @@
                                                     ordering: true,
                                                     order: [[0, 'desc']],
                                                     responsive: true,
+
                                                     language: {
                                                         "info": translations.tr_meliscore_dt_sInfo,
                                                     },
@@ -150,10 +151,10 @@
                                                 });
 
                                                 //redraw table when tab is shown where the table is located so that the headers will have the right size
-                                                $(document).on('shown.bs.tab', 'a[href='+dtTable+'"-tab"]', function (e) {
-                                                    dtTable.columns.adjust().draw();
-                                                    dtTable.columns.adjust().responsive.recalc();
-                                                });
+                                                // $(document).on('shown.bs.tab', 'a[href='+dtTable+'"-tab"]', function (e) {
+                                                //     dtTable.columns.adjust().draw();
+                                                //     dtTable.columns.adjust().responsive.recalc();
+                                                // });
                                                 /* $(document).on('shown.bs.tab', 'a[href="<?php //echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
                                                     if ($("body").find("<?php //echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
                                                         $("<?php //echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
