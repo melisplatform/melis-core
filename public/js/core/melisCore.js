@@ -674,13 +674,13 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a[data-toggle='tab']", function(e) {
-        /**
-         * chart class
-         * [.flotchart-holder]
-         * [.cms-pros-dash-chart-line-graph]
-         * [.commerce-dashboard-plugin-sales-revenue-placeholder]
-         */
+    /**
+     * chart class
+     * [.flotchart-holder]
+     * [.cms-pros-dash-chart-line-graph]
+     * [.commerce-dashboard-plugin-sales-revenue-placeholder]
+     */
+    /* $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a[data-toggle='tab']", function(e) {
         var target      = e.target;
             meliskey    = $(target).closest("li").data("tool-meliskey"),
             $activeTab  = $("#"+activeTabId);
@@ -696,7 +696,7 @@ var melisCore = (function(window){
                     commerceDashboardPluginSalesRevenue.loadChart();
                 }
             }
-    });
+    }); */
 
     // jQuery ui tooltip style
     $(".melis-core-dashboard-plugin-snippets").tooltip({

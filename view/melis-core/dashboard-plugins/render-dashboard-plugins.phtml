@@ -33,13 +33,21 @@
                          * there is an available plugin
                          */
                         function showDashboardPluginMenu() {
-                            $("#"+activeTabId).find(".melis-core-dashboard-msg").show();
+                            /* $activeTab  = $("#"+activeTabId),
+                                $msg        = $activeTab.find(".melis-core-dashboard-msg"),
+                                $gsItem     = $activeTab.find(".grid-stack .grid-stack-item"), */
+                            var $pluginMenu = $("body").find("#id_meliscore_center_dashboard_menu");
 
-                            var pluginMenu = $("body").find("#id_meliscore_center_dashboard_menu");
-
-                                if ( pluginMenu.length > 0 && typeof melisDashBoardDragnDrop !== "undefined" ) {
+                                if ( $pluginMenu.length > 0 && typeof melisDashBoardDragnDrop !== "undefined" ) {
                                     melisDashBoardDragnDrop.checkDashboard();
                                 }
+
+                                /* if ( $gsItem.length > 0 ) {
+                                    $msg.fadeOut();
+                                }
+                                else {
+                                    $msg.fadeIn();
+                                } */
                         }
                     }());
                 </script>
