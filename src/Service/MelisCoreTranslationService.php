@@ -606,7 +606,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
             $exist = true;
         }else{
             // try to create file;
-            $this->createTranslationFile($_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/config/', 'translation.list.php');
+            $this->createTranslationFile($_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/config/', 'translation.list.php');
             
             if(file_exists($listPath)){
                 $exist = true;
