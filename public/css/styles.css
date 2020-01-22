@@ -3779,7 +3779,7 @@ div#modal-user-management div.widget {
 }
 
 @media (max-width: 767px) {
-    .grid-stack .grid-stack-item:first-child .grid-stack-item-content .btn-group {
+    .grid-stack .grid-stack-item:first-child .grid-stack-item-content .widget-head .btn-group {
         margin-right: 1.5em;
     }
 }

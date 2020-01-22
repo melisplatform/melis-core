@@ -281,7 +281,15 @@ $(function() {
 
                 e.preventDefault();
         });
+        $body.on('click', ".gdpr-tab-menu-li", function(){
+            var tableId = $(this).data('tableId');
+            var table = $("#" + tableId );
+            if (table.width() !== "auto") {
+                table.DataTable().columns.adjust().draw();
+                table.width("auto");
+            }
 
+        });
         var GdprTool = {
             getUserInfo: function(formData) {
                 $.ajax({

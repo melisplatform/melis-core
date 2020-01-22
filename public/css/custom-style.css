@@ -764,6 +764,10 @@ td.dataTables_empty {
 .bootstrap-datetimepicker-widget table td.active:hover {
   color: #fff !important;
 }
+/* dashboard graphs */
+.flotchart-holder {
+  height: 400px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
@@ -860,14 +864,9 @@ td.dataTables_empty {
     width: 620px;
     max-width: 620px;
   }
-  /* side bar menu footer */
-  /* #id_meliscore_footer {
-    width: 274px;
-    left: 0;
+  .flotchart-holder {
+    width: 715px;
   }
-  #id_meliscore_footer.slide-left {
-    left: 274px;
-  } */
 }
 @media (max-width: 767px) {
   /* body commmon */
@@ -1002,8 +1001,8 @@ td.dataTables_empty {
   #MelisCmsProspects-tab .dataTables_scrollHead,
   #MelisCmsProspects-tab .dataTables_scrollHeadInner,
   #MelisCmsProspects-tab table,
-  .gdpr-tab-table-container,
-  #MelisCmsProspects-tab .row {
+  .gdpr-tab-table-container
+  {
     width: 100% !important;
   } 
   /* calendar */
@@ -1014,6 +1013,14 @@ td.dataTables_empty {
   /* melis-tipimail */
   #content {
     margin-top: 0 !important;
+  }
+  .flotchart-holder {
+    width: 672px;
+  }
+}
+@media (max-width: 700px) {
+  .flotchart-holder {
+    width: 604px;
   }
 }
 @media (min-width: 576px) and (max-width: 991px) {
@@ -1029,6 +1036,11 @@ td.dataTables_empty {
     -ms-flex-pack: row;
     -webkit-box-direction: normal;
     -webkit-box-orient: horizontal;
+  }
+}
+@media (max-width: 600px) {
+  .flotchart-holder {
+    width: 504px;
   }
 }
 @media (max-width: 576px) {
@@ -1067,6 +1079,9 @@ td.dataTables_empty {
     width: 100%;
     margin-bottom: 0.8rem;
   }
+  .flotchart-holder {
+    width: 404px;
+  }
 }
 @media (max-width: 400px) {
   .gdpr-table-action-button:first-child {
@@ -1084,6 +1099,9 @@ td.dataTables_empty {
     margin-top: 6rem;
     padding-top: 0;
   }
+  .flotchart-holder {
+    width: 304px;
+  }
 }
 @media (max-width: 358px) {
   #calendar .fc-header td {
@@ -1097,5 +1115,8 @@ td.dataTables_empty {
   }
   #tab-menu {
     padding: 0;
+  }
+  .flotchart-holder {
+    width: 226px;
   }
 }
