@@ -768,6 +768,10 @@ td.dataTables_empty {
 .flotchart-holder {
   height: 400px;
 }
+#id_meliscore_footer .footer {
+  padding-left: 0;
+  padding-right: 0;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
