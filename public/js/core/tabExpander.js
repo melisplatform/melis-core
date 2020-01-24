@@ -40,14 +40,7 @@ var tabExpander = (function($, window){
         $(".melis-tabprev, .melis-tabnext").show();
 
         // toggle overflow for dropdown
-        /* $("#melis-navtabs-container-inner").hover(
-            function() {
-                $(this).css("overflow", "visible");
-            }, function() {
-                $(this).css("overflow", "hidden");
-            }
-        ); */
-        $body.on("mouseover", 
+        $("#melis-navtabs-container-inner").hover(
             function() {
                 $(this).css("overflow", "visible");
             }, function() {
