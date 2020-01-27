@@ -755,15 +755,6 @@ td.dataTables_empty {
 .btn-group input[type=radio] {
   vertical-align: middle;
 }
-/* datetimepicker */
-.datepicker .table-condensed tr td.active, 
-.datepicker .table-condensed tr td.active:hover, 
-.datepicker .table-condensed tr td.active.disabled, 
-.datepicker .table-condensed tr td.active.disabled:hover,
-.bootstrap-datetimepicker-widget table td.active, 
-.bootstrap-datetimepicker-widget table td.active:hover {
-  color: #fff !important;
-}
 /* dashboard graphs */
 .flotchart-holder {
   height: 400px;
