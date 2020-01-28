@@ -139,6 +139,7 @@
 
                                             setTimeout(function(){
                                                 $("<?php echo '#' . $module['moduleName']; ?>").dataTable({
+                                                    // commented, fix for adding max-height: 300px that will result to overlapping of the data details on mobile responsive
                                                     //scrollY: '300px',
                                                     scrollCollapse: true,
                                                     paging: false,
