@@ -763,6 +763,14 @@ td.dataTables_empty {
   padding-left: 0;
   padding-right: 0;
 }
+#MelisCmsComments.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before,
+#MelisCmsComments.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+  top: 33px !important;
+}
+#MelisNewsletter.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before,
+#MelisNewsletter.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+  top: 18px !important;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
