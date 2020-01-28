@@ -4,6 +4,9 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.melis-newsletter-send-subscribers-select-container .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: <?= $primaryColor; ?> !important;
+}
 .datepicker .table-condensed tr td.active, 
 .datepicker .table-condensed tr td.active:hover, 
 .datepicker .table-condensed tr td.active.disabled, 
