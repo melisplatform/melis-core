@@ -4446,3 +4446,6 @@ input#log_date_range{
 .flotchart-holder .legend table {
     border-collapse: collapse;
 }
+.page-edition-multi-ko h3 {
+    width:100%;
+}
