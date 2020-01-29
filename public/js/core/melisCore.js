@@ -281,6 +281,7 @@ var melisCore = (function(window){
     // OPEN TOOLS - opens the tools from the sidebar
     function openTools(){
         var data = $(this).data();
+        console.log("openTools melisHelper.tabOpen!");
         melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolParentMenu);
     }
 
