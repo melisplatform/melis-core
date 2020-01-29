@@ -383,6 +383,7 @@ var melisHelper = (function(){
 
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback) {
+        console.log("tabOpen from left sideMenu MelisCms newPage");
         //Show the close(X) button on header
         if(melisKey !== 'meliscore_dashboard'){
             $("#close-all-tab").show();
