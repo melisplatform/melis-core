@@ -8,6 +8,7 @@
 		'branding' => false,
 		'inline' => false,
 		'menubar' => false,
+		'autoresize_on_init' => false,
 		'templates' => 'miniTemplates',
 		'forced_root_block' => '',
 		'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
