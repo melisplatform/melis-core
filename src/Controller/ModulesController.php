@@ -97,10 +97,14 @@ class ModulesController extends AbstractActionController
 
         $modulesInfo = $this->getModuleSvc()->getModulesAndVersions();
         $modules = $this->getModules();
-        //exclude MelisDemoCms cause it is SiteModule
-        // it will complicate some default layout/layout of the melis-core
-        unset($modules['MelisDemoCms']);
-        unset($modulesInfo['MelisDemoCms']);
+        //check for sites module
+        foreach ($modules as $module => $status) {
+            // exclude SiteModules because
+            // it will complicate the default layout/layout of the melis-core
+            if ($this->getModuleSvc()->isSiteModule($module)) {
+                unset($modules[$module]);
+            }
+        }
 
         $view = new ViewModel();
 

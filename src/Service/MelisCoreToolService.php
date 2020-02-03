@@ -405,7 +405,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             $actionContainer = $table['actionButtons'];
 
             $jsSdomContentInit = '';
-            $tableTop = '<"filter-bar"<"row"';
+            $tableTop = '<"filter-bar container-fluid"<"row"';
 
             $left = $filters['left'];
             $center = $filters['center'];
@@ -477,7 +477,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
 
 
             $tableTop .= $leftDom . '>' . $centerDom . '>' . $rightDom . '>>>';
-            $tableBottom = '<"bottom" t<"pagination-cont clearfix"rip>>';
+            $tableBottom = '<"bottom" t<"pagination-cont"rip>>';
 
             // check if the filter array configuration is empty
             if (empty($left) && empty($center) && empty($right)) {
@@ -1323,5 +1323,14 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     public function setTableConfig(array $tableConfig = [])
     {
         $this->_appConfig['table'] = $tableConfig;
+    }
+
+    /**
+     * Detect if the user agent is mobile or not
+     * @return false|int
+     */
+    public function isMobileDevice()
+    {
+        return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
     }
 }

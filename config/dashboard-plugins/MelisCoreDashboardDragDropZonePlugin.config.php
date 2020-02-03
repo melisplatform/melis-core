@@ -9,10 +9,10 @@ return array(
 
                     // display notify / page walkthrough
                     '/MelisCore/assets/components/plugins/enjoyhint/css/enjoyhint.css'
+                    //'/MelisCore/assets/components/plugins/enjoyhint/css/jquery.enjoyhint.css'
                 ),
                 'js' => array(
                     // Gridstack
-                    //'/MelisCore/assets/components/plugins/gridstack/js/lodash.min.js',
                     '/MelisCore/assets/components/library/jquery-ui-touch/jquery.ui.touch-punch.min.js',
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.js',
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
@@ -20,7 +20,10 @@ return array(
                     '/MelisCore/js/core/gridstack.init.js',
 
                     // display notify / page walkthrough
+                    //'/MelisCore/assets/components/plugins/enjoyhint/js/lodash.min.js',
                     '/MelisCore/assets/components/plugins/enjoyhint/js/enjoyhint.js',
+                    //'/MelisCore/assets/components/plugins/enjoyhint/js/jquery.enjoyhint.js',
+                    //'/MelisCore/assets/components/plugins/enjoyhint/js/kinetic.min.js',
 
                     // page walkthrough
                     '/MelisCore/js/core/dashboard-notify.js'

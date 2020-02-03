@@ -22,23 +22,33 @@
         		<div class="widget-body innerAll inner-2x">
     				<div class="tab-pane active" <?php echo $id ?>>
                         <div class="row">
-                        	<div class="col-xd-12">
+                        	<div class="col-12">
                         		<h4 class="log-type-code"><?php echo $this->translate('tr_meliscore_logs_tool_log_type_code')?> : <?php echo $this->logTypeCode?></h4>
                         	</div>
-                        	<div class="col-xs-12 col-md-4">
+                        	<div class="col-12 col-md-4">
                         		<div class="product-text-tab-container">
                         			<ul class="nav-tabs product-text-tab">
+
                             			<?php foreach ($languages As $key => $val):?>
+                                            <?php
+                                                $locale = explode('_',$val['lang_locale']);
+                                                $locale[0] = strtolower($locale[0]);
+                                                $locale[1] = strtoupper($locale[1]);
+                                                $locale = implode("_",$locale);
+                                            ?>
                                     		<li class="">
                                     			<a class="clearfix" data-toggle="tab" href="#<?php echo $key?>-log-type-details" aria-expanded="false">
                                     				<span><?php echo $val['lang_name']?></span>
+                                                    <span class="pull-right">
+                                                        <img src="/MelisCore/images/lang/<?= $locale?>.png" class="imgDisplay float-right" onerror="javascript:this.src='MelisCore/images/lang/default.png'" />
+                                                    </span>
                                     			</a>
                                     		</li>
                                 		<?php endforeach;?>
                                		</ul>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-8">
+                            <div class="col-12 col-md-8">
                             	<div class="tab-content">
                                     <?php foreach ($languages As $key => $val):?>
                                     	<div id="<?php echo $key ?>-log-type-details" class="tab-pane product-text-tab-content">
@@ -72,8 +82,8 @@
 								</div>
 							</div>
                         </div>
-                        <div align="right">
-                     		<button data-dismiss="modal" class="btn btn-danger pull-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
+                        <div class="d-flex flex-row justify-content-between">
+                     		<button data-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
                      		<button class="btn btn-success saveLogTypeDetails"><i class="fa fa-save"></i>  <?php echo $this->translate('tr_meliscore_tool_gen_save'); ?></button>
                      	</div>
                     </div>

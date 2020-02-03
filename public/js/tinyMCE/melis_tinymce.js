@@ -16,7 +16,7 @@ var melisTinyMCE = (function(){
             url         : '/melis/MelisCore/MelisTinyMce/getTinyMceConfig',
             data        : dataString,
             encode      : true
-        }).success(function(data){
+        }).done(function(data) {
             if(data.success) {
                 if(typeof(tinyMCE) != 'undefined') {
                     if(selector.length) {
@@ -26,7 +26,7 @@ var melisTinyMCE = (function(){
                     }
                 }
 
-                if (data.config['file_picker_callback']){
+                if ( data.config['file_picker_callback'] ) {
                     data.config['file_picker_callback'] = eval(data.config['file_picker_callback']);
                 }
 
@@ -39,47 +39,49 @@ var melisTinyMCE = (function(){
                     }
                 });
             }
-        }).error(function(xhr, textStatus, errorThrown){
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert("ERROR !! Status = "+ textStatus + "\n Error = "+ errorThrown + "\n xhr = "+ xhr.statusText);
         });
     }
 
     filePickerCallback = function (cb, value, meta) {
         var input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
 
-        /*
-          Note: In modern browsers input[type="file"] is functional without
-          even adding it to the DOM, but that might not be the case in some older
-          or quirky browsers like IE, so you might want to add it to the DOM
-          just in case, and visually hide it. And do not forget do remove it
-          once you do not need it anymore.
-        */
+            /*
+            Note: In modern browsers input[type="file"] is functional without
+            even adding it to the DOM, but that might not be the case in some older
+            or quirky browsers like IE, so you might want to add it to the DOM
+            just in case, and visually hide it. And do not forget do remove it
+            once you do not need it anymore.
+            */
 
-        input.onchange = function () {
-            var file = this.files[0];
+            input.onchange = function () {
+                var file = this.files[0],
+                    reader = new FileReader();
+                    
+                    reader.onload = function () {
+                        /*
+                        Note: Now we need to register the blob in TinyMCEs image blob
+                        registry. In the next release this part hopefully won't be
+                        necessary, as we are looking to handle it internally.
+                        */
+                        var id          = 'blobid' + (new Date()).getTime(),
+                            blobCache   =  tinymce.activeEditor.editorUpload.blobCache,
+                            base64      = reader.result.split(',')[1],
+                            blobInfo    = blobCache.create(id, file, base64);
 
-            var reader = new FileReader();
-            reader.onload = function () {
-                /*
-                  Note: Now we need to register the blob in TinyMCEs image blob
-                  registry. In the next release this part hopefully won't be
-                  necessary, as we are looking to handle it internally.
-                */
-                var id = 'blobid' + (new Date()).getTime();
-                var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
-                var base64 = reader.result.split(',')[1];
-                var blobInfo = blobCache.create(id, file, base64);
-                blobCache.add(blobInfo);
+                            blobCache.add(blobInfo);
 
-                /* call the callback and populate the Title field with the file name */
-                cb(blobInfo.blobUri(), { title: file.name });
+                        /* call the callback and populate the Title field with the file name */
+                        cb(blobInfo.blobUri(), { title: file.name });
+                    };
+                    
+                    reader.readAsDataURL(file);
             };
-            reader.readAsDataURL(file);
-        };
 
-        input.click();
+            input.click();
     }
 
     // TinyMCE  action event
@@ -100,8 +102,7 @@ var melisTinyMCE = (function(){
 
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {
-        var $body       = $("body"),
-            $dialog     = $body.find(".tox-dialog");
+        var $body       = $("body");
 
             editor.windowManager.oldOpen = editor.windowManager.open;  // save for later
             editor.windowManager.open = function (t, r) {    // replace with our own function

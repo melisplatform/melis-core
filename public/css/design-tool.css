@@ -17,11 +17,13 @@
     display: none;
     position: relative;
     width: 100%;
+    touch-action: pan-y;
     -ms-touch-action: pan-y;
 }
 .owl-carousel .owl-wrapper{
     display: none;
     position: relative;
+    transform: translate3d(0px, 0px, 0px);
     -webkit-transform: translate3d(0px, 0px, 0px);
 }
 .owl-carousel .owl-wrapper-outer{
@@ -61,12 +63,15 @@
 /* fix */
 .owl-carousel  .owl-wrapper,
 .owl-carousel  .owl-item{
+    backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility:    hidden;
     -ms-backface-visibility:     hidden;
-  -webkit-transform: translate3d(0,0,0);
-  -moz-transform: translate3d(0,0,0);
-  -ms-transform: translate3d(0,0,0);
+
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,0,0);
+    -ms-transform: translate3d(0,0,0);
 }
 
 /* CSS3 Transitions */
@@ -323,6 +328,7 @@
 /* Dashboard Chart */
 .flotchart-holder {
     width: 100%;
+    height: 400px;
 }
 .page-elements .innerAll.spacing-x2 .widget.widget-primary {
     background: #932E2A;
@@ -337,13 +343,13 @@
 }
 .resume-documents li {
     float: left;
-    display: inline-block;
+    /* display: inline-block; */
     margin: 10px;
     background: #f7f7f7;
     border: 1px solid #efefef
 }
 .resume-documents li a {
-    float: left;
+    /* float: left; */
     display: inline;
     color: #fff;
     padding: 10px;
@@ -1232,6 +1238,7 @@ div.radio.default input {
     font-weight: 600;
     color: #fff;
     text-align: center;
+    transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
@@ -1947,9 +1954,6 @@ div.radio.default input {
   font-size:15px;
 
   cursor:col-resize;
-}
-
-.ui-editRangeSlider .ui-rangeSlider-label{
 }
 
 .ui-rangeSlider-label-inner{
@@ -3282,8 +3286,10 @@ li.plupload_droptext {
 .flotchart-holder {
     margin: 30px 0 15px;
     height: 250px;
-    padding: 0
+    padding: 0;
+    width: 100%;
 }
+
 .flotchart-holder .label {
     padding: 5px 10px
 }
@@ -3824,7 +3830,7 @@ ul.social-comments li .user-info abbr {
 .share .share-buttons {
     position: relative;
     display: inline;
-    height: 38px;
+    /* height: 38px; */
     margin: 0;
     padding: 0
 }

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 	// forget password form submit
     $('#idformmeliscoreforgot').submit(function(event) {
         var datastring = $("#idformmeliscoreforgot").serialize();
@@ -9,16 +9,16 @@ $(document).ready(function() {
             data        : datastring,
             dataType    : 'json',
             encode      : true
-        }).success(function(data){
+        }).done(function(data) {
             if (data.success) {
-            	melisCoreTool.alertSuccess('#lostpassprompt', "", data.message);
+                melisCoreTool.alertSuccess('#lostpassprompt', "", data.message);
                $('#idformmeliscoreforgot')[0].reset();
             }
             else{
-            	melisCoreTool.alertDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
+                melisCoreTool.alertDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
             }
-        }).error(function(){
-        	alert( translations.tr_meliscore_error_message );
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
     });
@@ -34,7 +34,7 @@ $(document).ready(function() {
             data        : rhash,
             dataType    : 'json',
             encode      : true
-        }).success(function(data){
+        }).done(function(data) {
             if (data.success) {
                 melisCoreTool.alertSuccess('#resetpassprompt', "", data.message);
                 $this[0].reset();
@@ -43,7 +43,7 @@ $(document).ready(function() {
             else{
                 melisCoreTool.alertDanger('#resetpassprompt', translations.tr_meliscore_common_error+"!", data.message);
             }
-        }).error(function() {
+        }).fail(function() {
             alert( translations.tr_meliscore_error_message );
         });
 

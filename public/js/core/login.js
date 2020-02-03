@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 	
 	// LOGIN 
     $('form#idformmeliscorelogin').submit(function(event) {
@@ -10,7 +10,7 @@ $(document).ready(function() {
             data        : datastring,
             dataType    : 'json',
             encode      : true
-        }).success(function(data){
+        }).done(function(data) {
             if (data.success)   {
                 window.location.replace("/melis");
             }
@@ -30,13 +30,13 @@ $(document).ready(function() {
                 $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
 
             }
-        }).error(function(){
+        }).fail(function() {
             $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
-        	alert( translations.tr_meliscore_error_message );
+            
+            alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
     });
-    
     
     // CHANGE LANGUAGE
     window.melisChangeLanguage = function(langId){
@@ -47,18 +47,17 @@ $(document).ready(function() {
             data        : datastring,
             dataType    : 'json',
             encode      : true
-        }).success(function(data){
+        }).done(function(data) {
             if (data.success){
-            	location.reload();
+                location.reload();
             }
             else{
-            	alert( translations.tr_meliscore_error_language );
+                alert( translations.tr_meliscore_error_language );
             }
-        }).error(function(){
-        	alert( translations.tr_meliscore_error_message );
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
         });
     }
-    
     
     // login checkbox (remember me) mask
     $('body').on("click", ".cb-cont input[type=checkbox]", function(){
@@ -70,6 +69,4 @@ $(document).ready(function() {
     if(rememberME){
     	$(".remember-me-cont .cbmask-inner").addClass("cb-active");
     }
-    
-    
 });

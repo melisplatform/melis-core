@@ -28,7 +28,7 @@ return [
                         'target' => '#tableToolUserManagement',
                         'ajaxUrl' => '/melis/MelisCore/ToolUser/getUser',
                         'dataFunction' => '',
-                        'ajaxCallback' => 'initRetrieveUser()',
+                        'ajaxCallback' => '',
                         'filters' => [
                             'left' => [
                                 'tooluser-limit' => [
@@ -1402,6 +1402,16 @@ return [
                                             ],
                                         ],
                                         [
+                                            'name' => 'regex', false,
+                                            'options' => [
+                                                'pattern' => '/^[a-zA-Z0-9]*$/',
+                                                'messages' => [
+                                                    \Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_platform_invalid_platform_name'
+                                                ],
+                                                'encoding' => 'UTF-8',
+                                            ],
+                                        ],
+                                        [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
@@ -1546,7 +1556,7 @@ return [
                                             'id' => 'id_lang_id',
                                             'value' => '',
                                             'disabled' => 'disabled',
-                                            'class' => 'hidden'
+                                            'class' => 'd-none'
                                         ],
                                     ],
                                 ],
@@ -1839,6 +1849,9 @@ return [
                                     'spec' => [
                                         'name' => 'boe_tag_accepted_list',
                                         'type' => 'MelisCoreMultiValInput',
+                                        'options' => [
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip',
+                                        ],
                                         'attributes' => [
                                             'id' => 'boe_tag_accepted_list',
                                             'data-label-text' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list',
@@ -2124,7 +2137,7 @@ return [
                                         'type' => 'MelisText',
                                         'attributes' => [
                                             'id' => 'boed_id',
-                                            'class' => 'hidden',
+                                            'class' => 'd-none',
                                         ],
                                     ],
                                 ],
@@ -2585,7 +2598,7 @@ return [
                                             'form_type' => 'form-horizontal',
                                         ],
                                         'attributes' => [
-                                            'id' => 'melis_core_gdpr_search_form_name',
+                                            'id' => 'melis_core_gdpr_search_form_name'
                                         ]
                                     ],
                                 ],
@@ -2598,7 +2611,7 @@ return [
                                             'form_type' => 'form-horizontal',
                                         ],
                                         'attributes' => [
-                                            'id' => 'melis_core_gdpr_search_form_email',
+                                            'id' => 'melis_core_gdpr_search_form_email'
                                         ]
                                     ],
                                 ],

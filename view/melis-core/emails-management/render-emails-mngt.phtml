@@ -6,7 +6,7 @@
     $data_melisKey = 'data-melisKey="'.$this->melisKey.'"';
 ?>
 
-<div class="tab-pane container-level-a" <?php echo $id.' '.$data_melisKey; ?> data-editor-count="1">
+<div <?php echo $id.' '.$data_melisKey; ?> class="tab-pane container-level-a" data-editor-count="1">
 	<?php 
 		if($this->noAccessPrompt){
 		    if(!empty($this->zoneconfig['interface'])) {

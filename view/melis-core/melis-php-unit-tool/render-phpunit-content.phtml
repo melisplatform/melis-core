@@ -15,60 +15,52 @@ $status = '';
             <div class="alert alert-danger">
                 <h4><i class="fa fa-warning"></i> <?= $this->translate('tr_meliscore_common_warning')?></h4>
                 <?php
-                foreach($this->warningLogs as $log) {
-                    echo '<li>'.$log.'</li>';
-                }
+                    echo '<ul>';
+                    foreach($this->warningLogs as $log) {
+                        echo '<li>'.$log.'</li>';
+                    }
+                    echo '</ul>';
                 ?>
             </div>
             <?php
             }
             ?>
-            <div class="ms-heading ">
-                <div class="pull-left">
-                    <h4>Modules</h4>
-                </div>
-                <div class="pull-right">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6 diagnostic-module-version-display">
-                            <h4>Version </h4>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
-                        </div>
+            <div class="ms-heading container-fluid">
+                <div class="row">
+                    <div class="col-md-6 col-6 diagnostic-module-heading">
+                        <h4>Modules</h4>
+                    </div>
+                    <div class="col-md-6 col-6 diagnostic-module-version-display">
+                        <h4>Version</h4>
                     </div>
                 </div>
-                <div class="clearfix"></div>
-            </div>
+           </div>
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                <div class="panel panel-default">
+                <div class="card">
                     <?php foreach($this->modules as $key => $module) { ?>
-                        <div class="panel-heading" role="tab" id="headingPU<?= $module['name']; ?>">
-                            <h4 class="panel-title">
-                                <div class="pull-left">
-                                    <?= $module['name']; ?>
-                                </div>
-                                <div class="pull-right">
-                                    <div class="row">
-                                        <div class="col-md-8 col-sm-8 col-xs-8">
-                                            <?= $this->modulesInfo[$module['name']]['version']; ?>
-                                        </div>
-                                        <div class="col-md-4 col-sm-4 col-xs-4">
+                        <div class="card-header" role="tab" id="headingPU<?= $module['name']; ?>">
+                            <h4 class="card-title d-flex justify-content-between">
+                                <div class="module-title"><?= $module['name']; ?></div>
+                                <div class="version-num">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="flex-column mr-3"><?= $this->modulesInfo[$module['name']]['version']; ?></div>
+                                        <div class="flex-column">
                                             <?php
-                                            $disabled = null;
-                                            if(!(bool) $module['hasRights']) {
-                                                $disabled = 'disabled';
-                                            }
+                                                $disabled = null;
+                                                if(!(bool) $module['hasRights']) {
+                                                    $disabled = 'disabled';
+                                                }
                                             ?>
-                                            <button data-modules="<?= $module['name']; ?>" class="btn btn-success pull-right btn-small btn-run-pu-module-test" <?= $disabled; ?>>
+                                            <button data-modules="<?= $module['name']; ?>" class="btn btn-success btn-small btn-run-pu-module-test" <?= $disabled; ?>>
                                                 <span id="icon<?= $module['name']; ?>"><i class="fa fa-play"></i> Run</span>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
                             </h4>
                         </div>
                         <div id="collapsePU<?= $module['name']; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingPU<?= $module['name']; ?>">
-                            <div class="panel-body">
+                            <div class="card-body">
                                 <div class="well divLogger" id="wellPU<?= $module['name']; ?>">
                                 </div>
                             </div>

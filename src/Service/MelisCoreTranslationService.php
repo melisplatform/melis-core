@@ -115,7 +115,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
             $locale.'.interface.php',
             $locale.'.forms.php',
         );
-
+        $insideDirTrans = [];
         set_time_limit(0);
         foreach($moduleFolders as $module) {
             if(file_exists($module.'/language')) {
@@ -124,6 +124,21 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
                         $tmpTrans[] = include($module.'/language/'.$file);
                     }
                 }
+                // get the directory
+                $iterator = new \RecursiveDirectoryIterator($module . "/language", \RecursiveDirectoryIterator::SKIP_DOTS);
+                $files = new \RecursiveIteratorIterator($iterator,\RecursiveIteratorIterator::CHILD_FIRST);
+                /** @var \SplFileInfo $file */
+                // get the files under the directory
+                foreach($files as $file) {
+                    if (stristr($file->getBasename(),$locale)){
+                        // get the translation based on locale
+                        $tmpTrans[]= include $file->getFileInfo()->getPathname();
+                    } else if (stristr($file->getBasename(),"en_EN")){
+                        // fall back locale
+                        $tmpTrans[] = include $file->getFileInfo()->getPathname();
+                    }
+                }
+
             }
         }
 
@@ -134,6 +149,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
                 }
             }
         }
+
 
         return $transMessages;
 
@@ -590,7 +606,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
             $exist = true;
         }else{
             // try to create file;
-            $this->createTranslationFile($_SERVER['DOCUMENT_ROOT'] . '../module/MelisModuleConfig/config/', 'translation.list.php');
+            $this->createTranslationFile($_SERVER['DOCUMENT_ROOT'] . '/../module/MelisModuleConfig/config/', 'translation.list.php');
             
             if(file_exists($listPath)){
                 $exist = true;

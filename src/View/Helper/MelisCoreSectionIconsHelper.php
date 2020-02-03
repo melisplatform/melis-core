@@ -16,7 +16,7 @@ class MelisCoreSectionIconsHelper extends AbstractHelper
 	
 	public function __invoke($marketPlaceSection)
 	{
-        $openTagSvg = '<div class="pull-left melis-logo" data-dash-icon="fa-tachometer" data-dash-name="MelisCore" data-dash-id="id_meliscore_toolstree_section_dashboard" style="margin-top: -2px;margin-right:9px;"><svg class="melis-icon" style="width:30px;height:30px;" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">';
+        $openTagSvg = '<div class="float-left melis-logo" data-dash-icon="fa-tachometer" data-dash-name="MelisCore" data-dash-id="id_meliscore_toolstree_section_dashboard" style="margin-top: -2px;margin-right:9px;"><svg class="melis-icon" style="width:30px;height:30px;" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">';
         $svgIcon    = "";
         if ($marketPlaceSection == 'MelisCore') {
             $svgIcon = '<g>
@@ -44,8 +44,8 @@ class MelisCoreSectionIconsHelper extends AbstractHelper
                           </g>';
         } else if ($marketPlaceSection == 'MelisCommerce') {
             $svgIcon = '<g>
-                          <rect class="bg-color" y="0.1" fill="#3997d4" width="30" height="30"></rect>
-                          <rect class="light-color" x="14.6" y="2.7" fill="#2780c4" width="12.7" height="24.6"></rect>
+                          <rect class="bg-color" y="0.1" fill="#2780c4" width="30" height="30"></rect>
+                          <rect class="light-color" x="14.6" y="2.7" fill="#3997d4" width="12.7" height="24.6"></rect>
                           <g>
                              <path fill="#FFFFFF" d="M7.4,21.1V9.5H22v11.7h-2.9v-8.8h-2.9v8.8h-2.9v-8.8h-2.9v8.8H7.4z"></path>
                           </g>

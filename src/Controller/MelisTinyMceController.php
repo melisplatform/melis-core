@@ -198,7 +198,6 @@ class MelisTinyMceController extends AbstractActionController
                 ],
             ],
         ];
-
         // Factoring Mynews event and pass to view
         $factory = new \Zend\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
@@ -230,7 +229,6 @@ class MelisTinyMceController extends AbstractActionController
             $data = $form->getData();
             $file = '/media/Uploads/' . basename($data['file']['tmp_name']);
         }
-
         return new JsonModel([
             'location' => $file
         ]);

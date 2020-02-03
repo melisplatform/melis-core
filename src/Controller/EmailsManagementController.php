@@ -910,9 +910,12 @@ class EmailsManagementController extends AbstractActionController
 
                 if (!empty($fileInputErr['fileSizeTooBig']))
                     $errors['boe_content_layout_logo']['fileSizeTooBig'] = $translator->translate('tr_emails_management_invalid_image_size');
+
+                if (!empty($fileInputErr['fileImageSizeHeightTooBig']))
+                    $errors['boe_content_layout_logo']['fileImageSizeHeightTooBig'] = $translator->translate('tr_emails_management_invalid_image_height');
             }
         }
-         
+        //die(var_dump($errors));
         $response = array(
             'success' => $status,
             'textTitle' => $textTitle,

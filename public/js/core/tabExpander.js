@@ -32,7 +32,7 @@ var tabExpander = (function($, window){
         //get the width in % of #melis-navtabs-container-inner based from #melis-navtabs-container-outer - 56px for the prevnext buttons
         
         // var innerUlWidthPercent = 99 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() ); 
-        var innerUlWidthPercent = 100 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() );
+        var innerUlWidthPercent = 100 - ( (100 * 56) / $("#melis-navtabs-container-outer").outerWidth() );
 
         $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"}); // change hidden to initial because of dropdown
         $navTabs.css({"width": navUlContainer });
@@ -65,7 +65,8 @@ var tabExpander = (function($, window){
         var totalHeaderWidthPx = $("#id_meliscore_header").width();
         
         // left
-        var leftMenuWidthPx = $(".navbar-header").width();
+        //var leftMenuWidthPx = $(".navbar-header").width();
+        var leftMenuWidthPx = $(".navbar.main .navbar-brand").width();
         var leftMenuWidthPercent = (100 * 274) / totalHeaderWidthPx;
         
         // right
@@ -77,8 +78,11 @@ var tabExpander = (function($, window){
         
         //center
         var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
+        /* var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320; */
         /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-		tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        /* tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
+        tabContainerWidthPercent = 112 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        /* tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
         
         // <ul>
         navUlContainer = 1;
@@ -89,7 +93,7 @@ var tabExpander = (function($, window){
 		// determines if TE should be activated or not
         if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
         	Enable();
-        	status = 'enabled';
+            status = 'enabled';
         } else if( navUlContainer < tabContainerWidthPx){
 			Disable();
         } else if(status == 'disabled'){
@@ -121,21 +125,15 @@ var tabExpander = (function($, window){
     }
     
     //NEXT 
-    $(".melis-tabnext").on("click", function() {
+    $body.on("click", ".melis-tabnext", function() {
         calcOffset();
         if( xright > ulContainer - 170 ) {
-            var liIndex = $navTabs.find("li").index();
-
-            if ( liIndex === 0 ) {
-                $navTabs.css("left", "0");
-            }
-            else {
-                $navTabs.animate({
-                    left: '-='+ 170
-                },0);
-            }
+            //var liIndex = $navTabs.find("li").index();
+            $navTabs.animate({
+                left: '-='+ 170
+            },0);
         }
-        else{
+        else {
             $navTabs.animate({
                 left: '-=' + xright
             },0);
@@ -143,14 +141,14 @@ var tabExpander = (function($, window){
     });
     
     //PREV
-    $(".melis-tabprev").on("click", function(){
+    $body.on("click", ".melis-tabprev", function() {
         calcOffset();
-        if( xleft > ulContainer - 170) {
+        if( xleft > ulContainer - 170 ) {
             $navTabs.animate({
                 left: '+='+ 170
             },0);
         }
-        else{
+        else {
             $navTabs.animate({
                 left: '+=' + xleft
             },0);
@@ -158,12 +156,12 @@ var tabExpander = (function($, window){
     }); 
     
 	// FOCUS TAB ON CLICK (new functionality)
-    function focusTab(){
+    function focusTab() {
     	
     }
 
     // CHECK tabExpander() WHEN WINDOW IS RESIZED
-    $(window).resize(function(){
+    $(window).on("resize", function(){
         screenSize = jQuery(window).width();
         if( screenSize >= 768 ){
         	checkTE();     

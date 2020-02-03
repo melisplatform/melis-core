@@ -16,8 +16,10 @@ use Zend\Json\Json;
 class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, MelisCoreFlashMessengerServiceInterface
 {
     
-    const INFO = 'glyphicon glyphicon-info-sign';
-    const WARNING = 'glyphicon glyphicon-warning-sign';
+    /* const INFO = 'glyphicon glyphicon-info-sign';
+    const WARNING = 'glyphicon glyphicon-warning-sign'; */
+    const INFO = 'fa fa-info-circle';
+    const WARNING = 'fa fa-warning';
     /**
      * 
      * @var $serviceLocator ServiceLocatorInterface
@@ -48,7 +50,7 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
      * @param String $text
      * @param String $img
      */
-    public function addToFlashMessenger($title, $message, $img = 'glyphicon glyphicon-info-sign', $logDate = null)
+    public function addToFlashMessenger($title, $message, $img = 'fa fa-info', $logDate = null)
     {
         $this->fmContainer = new Container('fms');
         
