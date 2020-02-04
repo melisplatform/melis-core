@@ -22,6 +22,7 @@ use MelisCore\Listener\MelisCorePhpWarningListener;
 use MelisCore\Listener\MelisCorePluginsAdditionalListener;
 use MelisCore\Listener\MelisCorePluginsListener;
 use MelisCore\Listener\MelisCorePluginsRemovalListener;
+use MelisCore\Listener\MelisCoreTableColumnDisplayListener;
 use MelisCore\Listener\MelisCoreTinyMCEConfigurationListener;
 use MelisCore\Listener\MelisCoreToolUserAddNewUserListener;
 use MelisCore\Listener\MelisCoreToolUserUpdateUserListener;
@@ -83,6 +84,8 @@ class Module
 
             $eventManager->attach(new MelisCoreDashboardPluginRightsTreeViewListener());
             $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
+
+            $eventManager->attach(new MelisCoreTableColumnDisplayListener());
         }
     }
 
