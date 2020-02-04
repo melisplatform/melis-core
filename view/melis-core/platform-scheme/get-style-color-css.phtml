@@ -4,6 +4,10 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.jstree-proton .jstree-clicked {
+    background: <?= $primaryColor; ?> !important;
+    box-shadow: inset 0 0 1px <?= $primaryColor; ?> !important;
+}
 .melis-newsletter-send-subscribers-select-container .select2-container--default.select2-container--focus .select2-selection--multiple {
     border-color: <?= $primaryColor; ?> !important;
 }
