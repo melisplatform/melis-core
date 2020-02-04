@@ -10,7 +10,7 @@
 		
 	$primaryLangImgPath = $this->flagImagePath. $this->currentLangLocale.'.png';
 ?>
-<li<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="dropdown" <?= $namePlugin; ?>>
+<li <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="dropdown" <?= $namePlugin; ?>>
 	<a href="#" class="dropdown-toggle dropdown-hover">
 		<?php if (!file_exists($primaryLangImgPath)):?>
 			<span style="padding: 0px 3px; border: 1px solid #ccc5c5; box-shadow: 0px 1px 1px #444444;"><?php echo mb_strtoupper($this->currentLangLocale)?></span>
@@ -25,7 +25,7 @@
 			foreach ($this->languages as $language):
 				$name = $this->escapeHtml($language['lang_name']);
 				if ($this->currentLangId == $language['lang_id'])
-					$name = '<b>' . $name . '</b>';
+					$name = '<span><strong>' . $name . '</strong></span>';
 				
 				$lang = explode('_', $language['lang_locale']);
 				
@@ -37,7 +37,7 @@
 				<?php if (!file_exists($imgPath)):?>
 					<span style="padding: 0px 3px; border: 1px solid #ccc5c5; box-shadow: 0px 1px 1px #444444;"><?php echo mb_strtoupper($lang[0])?></span> <?= $name; ?>
 				<?php else:?>
-					<img src="/MelisCore/assets/images/lang/<?= $lang[0]; ?>.png"> <?= $name; ?>
+					<img src="/MelisCore/assets/images/lang/<?= $lang[0]; ?>.png"><?= $name; ?>
 				<?php endif;?>
 			</a>
 			

@@ -15,13 +15,19 @@ var melisCore = (function(window){
         $centerContent  = $("#melis-id-body-content-load"),
         screenSize      = jQuery(window).width(),
 
-    // responsive menu 767px, tablet and phone
+        // responsive menu 767px, tablet and phone
         $header         = $("#id_meliscore_header"),
         $res            = $("#res-page-cont"),
-        $resArrow       = $("#res-page-cont i"),
+        $resArrow       = $("#res-page-cont span i"),
         $tabConOuter    = $("#melis-navtabs-container-outer"),
         $tabConInner    = $("#melis-navtabs-container-inner"),
-        $tabArrowTop    = $("#tab-arrow-top");
+        $tabArrowTop    = $("#tab-arrow-top"),
+        $pluginBtn      = $("#melisDashBoardPluginBtn"),
+        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+        // fixes conlict between jquery ui and bootstrap same function name .tooltip()
+        jqeBsTooltip    = $.fn.tooltip.noConflict();
+
+    $.fn.tlp = jqeBsTooltip;
 
     // MAIN FUNCTIONS =================================================================================================================
 
@@ -34,14 +40,14 @@ var melisCore = (function(window){
             data        : datastring,
             dataType    : 'json',
             encode      : true
-        }).success(function(data){
+        }).done(function(data) {
             if (data.success){
                 location.reload();
             }
             else{
                 alert( translations.tr_meliscore_error_language );
             }
-        }).error(function(){
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
     }
@@ -56,7 +62,7 @@ var melisCore = (function(window){
             data        : datastring,
             dataType    : 'json',
             encode      : true
-        }).success(function(data){
+        }).done(function(data) {
             if (data.success) {
                 melisTool.alerts.showSuccess('#lostpassprompt', "", data.message);
                 $('#idformmeliscoreforgot')[0].reset();
@@ -64,7 +70,7 @@ var melisCore = (function(window){
             else{
                 melisTool.alerts.showDanger('#lostpassprompt', translations.tr_meliscore_common_error+"!", data.message);
             }
-        }).error(function(){
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
         event.preventDefault();
@@ -85,11 +91,13 @@ var melisCore = (function(window){
     	$.ajax({
             type: 'GET',
             url: '/melis/islogin',
-            dataType: 'json',
-        }).success(function(data){
+            dataType: 'json'
+        }).done(function(data) {
             if(!data.login) {
                 window.location.reload(true);
             }
+        }).fail(function(xhr, textStatus, errorThrown) {
+            alert( translations.tr_meliscore_error_message );
         });
     }
 
@@ -115,8 +123,8 @@ var melisCore = (function(window){
         $.ajax({
             type: 'GET',
             url: '/melis/MelisCore/MelisFlashMessenger/getflashMessage',
-            dataType: 'json',
-        }).success(function(data, status, xhr){
+            dataType: 'json'
+        }).done(function(data) {
             // check if there is a flash message
             if(data.flashMessage.length) {
                 $flashMessenger.removeClass("empty-notif");
@@ -130,7 +138,7 @@ var melisCore = (function(window){
                     $.each(element, function(index, fm){
                         tempData += "" +
                             "<li>" +
-                            "	<span class='img-circle media-object "+fm.image+"'></span>" +
+                            "	<span class='rounded-circle media-object "+fm.image+"'></span>" +
                             "   <div class='media'>" +
                             "       <div class='media-body'>" +
                             "           <a  class='strong text-primary'>"+(fm.title)+"</a><span class='time-email'>"+fm.date_trans+' '+fm.time+"</span>" +
@@ -145,7 +153,7 @@ var melisCore = (function(window){
                 $body.find("#flash-messenger").append(tempData);
                 $body.find("#id_meliscore_header_flash_messenger.dropdown.notification a span.badge").text(ctr);
             }
-        }).error(function(){
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
     }
@@ -226,8 +234,8 @@ var melisCore = (function(window){
     }
 
     $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
-        if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
-        $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
+        if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden") === false )
+            $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
     });
 
     $body.on("click", "#clearNotifBtn", function(){
@@ -238,12 +246,12 @@ var melisCore = (function(window){
         $.ajax({
             type: 'GET',
             url: '/melis/MelisCore/MelisFlashMessenger/clearFlashMessage',
-            dataType: 'json',
-        }).success(function(data, status, xhr){
+            dataType: 'json'
+        }).done(function(data) {
             if(data.flashMessage) {
-                if($flashMessenger.hasClass("empty-notif")===false)
+                if( $flashMessenger.hasClass("empty-notif") === false )
                     $flashMessenger.addClass("empty-notif");
-                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden")===false)
+                if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden") === false )
                     $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
 
                 $body.find("#flash-messenger").empty();
@@ -255,15 +263,19 @@ var melisCore = (function(window){
                     '</li>';
                 $body.find("#flash-messenger").append(tempData);
             }
-        }).error(function(){
+        }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
         });
     }
 
     // FIRST RENDER - runs when the page is first loaded
-    function firstRender(){
+    function firstRender() {
         $(".nav-tabs li:first-child").addClass("active")
         $(".tab-content > div:first-child").addClass("active");
+
+        if ( screenSize <= 767 && $tabArrowTop.length > 0 && $pluginBox.hasClass("shown") ) {
+            $tabArrowTop.addClass("hide-arrow");
+        }
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -273,44 +285,51 @@ var melisCore = (function(window){
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
-    function openDashboard(){
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"} , '', function() {
-            // check if dashboard plugin menu is open
-            melisDashBoardDragnDrop.closeDBPlugSidebar();
-        });
+    function openDashboard() {
+        // responsive, on 767px and below
+        /* if ( activeTabId === "id_meliscore_toolstree_section_dashboard" ) {
+            $("#sidebar-menu").trigger("click");
+        } */
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
-    function refreshZone(){
+    function refreshZone() {
         var melisKey = $(this).closest("div.widget-parent").data("meliskey");
         var zoneId = $(this).closest("div.widget-parent").attr("id");
         melisHelper.zoneReload(zoneId, melisKey);
     }
 
     // REFRESH TABLE ITEMS
-    function refreshTable(){
+    function refreshTable() {
         var melisKey = $(this).parents(".container-level-a").data("meliskey");
         var zoneId = $(this).parents(".container-level-a").attr("id");
         melisHelper.zoneReload(zoneId, melisKey);
     }
 
-    // SIDEBAR MENU CLICK (toggle)
-    function sidebarMenuClick(){
-
+    // SIDEBAR MENU CLICK (toggle), .toggle-sidebar
+    function sidebarMenuClick() {
         // for the sidebar functionalities
-        var sidebarOffsetLeft = $( "#id_meliscore_leftmenu" ).position().left;
-        var sidebarWidth =  $( "#id_meliscore_leftmenu" ).outerWidth();
+        var $melisLeftMenu      = $("#id_meliscore_leftmenu"),
+            $melisContent       = $("#content"),
+            $melisFooter        = $("#id_meliscore_footer"),
+            sidebarOffsetLeft   = $melisLeftMenu.position().left,
+            sidebarWidth        = $melisLeftMenu.outerWidth(),
+            contentOffsetLeft   = $melisContent.position().left,
+            contentWidth        = $melisContent.outerWidth();
 
-        if( sidebarOffsetLeft == 0){
-            $( "#id_meliscore_leftmenu" ).css("left", -sidebarWidth );
+        if ( sidebarOffsetLeft == 0 ) {
+            $melisLeftMenu.css("left", -sidebarWidth );
             $body.addClass('sidebar-mini');
 
-            $("#id_meliscore_footer").addClass('slide-left');
+            $melisFooter.addClass('slide-left');
+            //$melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
         }
-        else{
-            $( "#id_meliscore_leftmenu" ).css("left", '0' );
+        else {
+            $melisLeftMenu.css("left", "0");
             $body.removeClass('sidebar-mini');
-            $("#id_meliscore_footer").removeClass('slide-left');
+            $melisFooter.removeClass('slide-left');
+            //$melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
         }
 
         $("#newplugin-cont").removeClass("show-menu");
@@ -318,14 +337,15 @@ var melisCore = (function(window){
         // HOOK - scroll the page by 1px to trigger the scroll event that resizes the pageActions container
         // check if activeTabId has a number. if it has then we assume its a page
         var matches = activeTabId.match(/\d+/g);
-        if (matches != null) {
+        
+        if (matches != null && matches !== 'undefined') {
             $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
         }
 
         // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
         setTimeout(function(){
-
             var $f = $("#"+ activeTabId + " .melis-iframe");
+
             if( $($f).length ) {
                 $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
             }
@@ -334,67 +354,90 @@ var melisCore = (function(window){
         }, 1000);
     }
 
-    if(typeof melisDashBoardDragnDrop === 'undefined')
-        $("#disable-left-menu-overlay").show();
+    /* if ( typeof melisDashBoardDragnDrop === 'undefined' )
+        $("#disable-left-menu-overlay").show(); */
 
     // MAIN TAB MENU CLICK - run codes when a tab in the main tab menu is clicked
-    function tabMenuClick(){
-        activeTabId = $(this).data("id");
+    function tabMenuClick() {
+        var $this           = $(this),
+            tabContentID    = $this.data("id"),
+            $tabLi          = $this.closest("li"),
+            meliskey        = $tabLi.data("tool-meliskey"),
+            $tabContent     = $("#"+tabContentID+".tab-panel-dashboard");
+            
+            // assign active tab id
+            activeTabId = tabContentID;
 
-        // remove all active and active-parent class
-        $("#melis-id-nav-bar-tabs li").each(function() {
-            $(this).removeClass("active");
-            $(this).removeClass("active-parent on");
-        });
+            // remove all active and active-parent class
+            $("#melis-id-nav-bar-tabs li").each(function() {
+                $this.removeClass("active");
+                $this.removeClass("active-parent on");
+            });
 
-        // highlight all parents li of selected element
-        $(this).closest("li").addClass("active").parents("li").addClass("active-parent on");
+            // highlight all parents li of selected element
+            $this.closest("li").addClass("active").parents("li").addClass("active-parent on");
 
-        // iframe height issue in pages
-        if ($.browser) {
-            // Firefox bug issue temp fix
-            var iHeight;
-            setTimeout(function(){
-                iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
-                $("#"+activeTabId+" .melis-iframe").height(iHeight);
-            }, 1);
-        }
-        else{
-            var iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
-            $("#"+activeTabId+" .melis-iframe").height( iHeight+20 );
-        }
-
-        // if in mobile hide 'PAGES' menu when clicking / opening a page
-        if(screenSize <= 768){
-            $("#res-page-cont").trigger('click');
-            $("#res-page-cont i").removeClass("move-arrow");
-
-            if ( $tabArrowTop.length ) {
-                $tabArrowTop.removeClass("hide-arrow");
+            // iframe height issue in pages
+            if ($.browser) {
+                // Firefox bug issue temp fix
+                var iHeight;
+                setTimeout(function(){
+                    iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
+                    $("#"+activeTabId+" .melis-iframe").height(iHeight);
+                }, 1);
+            }
+            else{
+                var iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
+                $("#"+activeTabId+" .melis-iframe").height( iHeight+20 );
             }
 
-            $('html, body').animate({scrollTop:0},500);
-        }
+            // if in mobile hide 'PAGES' menu when clicking / opening a page
+            if(screenSize <= 767){ //if(screenSize <= 768)
+                $("#res-page-cont").trigger('click');
+                $("#res-page-cont i").removeClass("move-arrow");
 
-        // scroll top every time we click a tab to RESET the scrollbars and return page actions to original position
-        $("#"+ activeTabId + " .page-head-container").removeAttr("style");
-        $("#"+ activeTabId + " .page-head-container > .innerAll").removeClass('sticky-pageactions');
-        $("#"+ activeTabId + " .page-head-container > .innerAll").removeAttr("style");
-        $('html, body').animate({scrollTop:0},0);
+                if ( $tabArrowTop.length ) {
+                    $tabArrowTop.removeClass("hide-arrow");
+                }
 
-        // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-        $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+                $('html, body').animate({scrollTop:0},500);
+            }
 
-        // detect dashboard tab panel
-        if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
-            // show dashboard plugin menu
-            $("body .melis-core-dashboard-dnd-box").fadeIn();
-            $("body .melis-core-dashboard-dnd-box.show").fadeIn();
-        } else {
-            // hide dashboard plugin menu
-            $("body .melis-core-dashboard-dnd-box").fadeOut();
-            $("body .melis-core-dashboard-dnd-box.show").fadeOut();
-        }
+            // scroll top every time we click a tab to RESET the scrollbars and return page actions to original position
+            $("#"+ activeTabId + " .page-head-container").removeAttr("style");
+            $("#"+ activeTabId + " .page-head-container > .innerAll").removeClass('sticky-pageactions');
+            $("#"+ activeTabId + " .page-head-container > .innerAll").removeAttr("style");
+            $('html, body').animate({scrollTop:0},0);
+
+            // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
+            $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+
+            // detect dashboard tab panel
+            if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
+                // show dashboard plugin menu
+                $("body .melis-core-dashboard-dnd-box").fadeIn();
+                $("body .melis-core-dashboard-dnd-box.show").fadeIn();
+            } else {
+                // hide dashboard plugin menu
+                $("body .melis-core-dashboard-dnd-box").fadeOut();
+                $("body .melis-core-dashboard-dnd-box.show").fadeOut();
+            }
+
+            // data-tool-meliskey="meliscore_dashboard"
+            if ( meliskey === 'meliscore_dashboard' && ! $tabLi.hasClass("active") && $pluginBox.hasClass("shown") ) {
+                $pluginBox.removeClass("shown");
+            }
+            
+            // switch to the clicked tab and also the tab container
+            melisHelper.tabSwitch( activeTabId );
+            
+            /*
+             * Check current dashboard and make necessary adjustments
+             * like .grid-stack width in connection with plugin menu box
+             */
+            if ( $tabContent.hasClass("active") && typeof melisDashBoardDragnDrop !== "undefined" ) {
+                melisDashBoardDragnDrop.checkDashboard();
+            }
     }
 
     /*
@@ -405,8 +448,7 @@ var melisCore = (function(window){
         // loop all tab list
         listData.each(function() {
             var dataID =  $(this).attr('data-tool-id');
-            //if(dataID != "id_meliscore_dashboard"){
-            if ( dataID != "id_meliscore_toolstree_section_dashboard" ) {
+            if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
                 melisHelper.tabClose(dataID);
             }
         });
@@ -414,7 +456,7 @@ var melisCore = (function(window){
         if( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
-        $("#close-all-tab").hide();
+        $("#close-all-tab").hide();        
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
@@ -525,6 +567,7 @@ var melisCore = (function(window){
             commaHandler = false;
         }
     });
+
     // ---=[ END ]=--- MULTI VALUE INPUT FILED JS --------------------------------------------------
 
     // detect IE8 and above, and edge
@@ -553,11 +596,52 @@ var melisCore = (function(window){
 
     tabDraggable("#melis-id-nav-bar-tabs", false);
 
+    // switch widget nav-tabs even if href begins with a digit e.g. #1_id_cmspage
+    function navTabsSwitch() {
+        var $this               = $(this),
+            href                = $this.attr("href"),
+            id                  = href.replace("#", "");
+
+            // .tab-pane [this a hrefs]
+            $this.addClass("active");
+            $this.closest("li").addClass("active");
+
+            // a hrefs siblings
+            $this.closest("li").siblings().removeClass("active");
+            $this.closest("li").siblings().find("a").removeClass("active");
+            
+
+            // .tab-content
+            $(href).siblings().removeClass("active");
+            $(href).addClass("active");
+            
+            return false;
+    }
+
+    // pagination of dataTables data, prior to bootstrap 4 changes on pagination classes
+    function paginateDataTables() {
+        var paginate = setInterval(function() {
+            var $paginate = $(".dataTables_paginate"),
+                $page_item = $paginate.find(".pagination li"),
+                $page_link = $page_item.find("a");
+
+                if ( $paginate.length ) {
+                    $page_item.addClass("page-item");
+                    $page_link.addClass("page-link");
+
+                    clearInterval( paginate );
+                }
+        }, 500);
+
+    }
+
     // BIND & DELEGATE EVENTS =================================================================================================================
+
+    // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
+    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch).filter(":first").click();
 
     // toggle plugin menu in mobile
     $body.on("click", "#plugin-menu", function(){
-
         $("#id_meliscore_leftmenu").removeAttr('style');
         $("#id_meliscore_footer").addClass('slide-left');
 
@@ -569,7 +653,7 @@ var melisCore = (function(window){
     $body.on("click", "#sidebar-menu", sidebarMenuClick);
 
     // main tab menu clicks (using bootstrap 'shown.bs.tab' event)
-    $body.on("shown.bs.tab", '#melis-id-nav-bar-tabs li a.tab-element', tabMenuClick);
+    $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a.tab-element", tabMenuClick);
 
     // open tool treeview
     $body.on("click", '.melis-opentools', openTools);
@@ -590,39 +674,62 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    /*
-     * Added by: Junry @ 10/10/208
-     * For responsive placement
+    /**
+     * chart class
+     * [.flotchart-holder]
+     * [.cms-pros-dash-chart-line-graph]
+     * [.commerce-dashboard-plugin-sales-revenue-placeholder]
      */
+    /* $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a[data-toggle='tab']", function(e) {
+        var target      = e.target;
+            meliskey    = $(target).closest("li").data("tool-meliskey"),
+            $activeTab  = $("#"+activeTabId);
 
-    var pos = ( $(window).width() < 460 ) ? 'auto' : 'left';
-    var dashboardTooltip = {
-        placement: pos,
-        delay: {
-            show: 800
+            if ( meliskey === "meliscore_dashboard" ) {
+                if ( typeof prospectsDashboardLineChart !== "undefined" && 
+                $activeTab.find(".cms-pros-dash-chart-line-graph").length > 0 ) {
+                    prospectsDashboardLineChart.loadChart();
+                }
+                
+                if ( typeof commerceDashboardPluginSalesRevenue !== "undefined" && 
+                $activeTab.find(".commerce-dashboard-plugin-sales-revenue-placeholder").length > 0 ) {
+                    commerceDashboardPluginSalesRevenue.loadChart();
+                }
+            }
+    }); */
+
+    // jQuery ui tooltip style
+    $(".melis-core-dashboard-plugin-snippets").tooltip({
+        position: {
+            my: "left center",
+            at: "left+110% center",
+            using: function( position, feedback ) {
+                var $this = $(this);
+                    $this.css( position );
+                    $this
+                        .addClass( "melis-dashboard-plugin-tooltip" )
+                        .addClass( feedback.vertical )
+                        .addClass( feedback.horizontal )
+                        .appendTo( this );
+            }
         },
-        template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-    };
+    });
 
-    $body.find(".melis-core-dashboard-plugin-snippets").tooltip( dashboardTooltip );
-
-    /*
-     * Added by: Junry @ 10/10/2018
-     * For blinking issue on hover
-     */
-    $body.on("mouseover", ".melis-core-dashboard-plugin-snippets", function() {
-        $(this).children(".melis-plugin-tooltip").stop().fadeIn();
-    }).on("mouseout", ".melis-core-dashboard-plugin-snippets", function() {
-        $(this).children(".melis-plugin-tooltip").stop().fadeOut();
+    $(".melis-core-dashboard-plugin-snippets").hover(function() {
+        var $this = $(this);
+            $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
     });
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
+        data = $(this).data();
+        //var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
 
-    	data = $(this).data();
-    	//var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
-
-    	melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId});
-
+        melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId}, '', function() {
+            // check dashboard if melisDashBoardDragnDrop is defined
+            if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
+                melisDashBoardDragnDrop.checkDashboard();
+            }
+        });
     });
 
     /* 
@@ -633,34 +740,36 @@ var melisCore = (function(window){
      */
     $body.on("click", "#melisDashBoardPluginBtn", showToggleDashboardPluginMenu);
 
-    // this function is called from render-dashboard-plugins.phtml and it is an update on this js file
+    // this function is called from render-dashboard-plugins.phtml
     function showToggleDashboardPluginMenu() {
-        var $btn    = $("#melisDashBoardPluginBtn"),
-            $box    = $btn.closest(".melis-core-dashboard-dnd-box"),
-            $gs     = $body.find("#"+activeTabId+" .grid-stack"),
-            dWidth  = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth  = ($gs.width() + $box.width()); // for new icon
-            
-            $box.toggleClass("shown");
+        var $gs             = $body.find("#" + activeTabId + " .grid-stack"),
+            gsi             = $gs.find(".grid-stack-item").length
+            minWidth        = $gs.data("min-width"),
+            maxWidth        = $gs.data("max-width");
+
+            $pluginBox.toggleClass("shown");
 
             // responsive main tab menu button
             if ( $tabArrowTop.length && screenSize <= 767 ) {
-                if ( $box.hasClass("shown") ) {
+                if ( $pluginBox.hasClass("shown") ) {
                     $tabArrowTop.addClass("hide-arrow");
                 } else {
                     $tabArrowTop.removeClass("hide-arrow");
                 }
             }
 
-            // desktop
-            if ( $box.hasClass("shown") ) {
-                $gs.animate({
-                    width: dWidth
-                }, 3);
-            } else {
-                $gs.animate({
-                    width: nWidth
-                }, 3);
+            // check if plugins menu is open, adjust .grid-stack width accordingly
+            if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                if ( $pluginBox.hasClass("shown") ) {
+                    $gs.animate({
+                        width: minWidth
+                    }, 3);
+                } 
+                else {
+                    $gs.animate({
+                        width: maxWidth
+                    }, 3);
+                }
             }
     }
 
@@ -732,16 +841,22 @@ var melisCore = (function(window){
         var $html   = $("html"),
             ua      = navigator.userAgent;
         
-            /* MSIE used to detect old browsers and Trident used to newer ones, Edge for Microsoft Edge */
-            if ( ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1 || ua.indexOf("Edge/") > -1 ) {
-                $html.addClass("ie_edge");
-            } else if ( ua.indexOf("Chrome/") > -1 ) {
-                $html.addClass("chrome");
-            } else if ( ua.indexOf("Safari/") > -1 ) {
-                $html.addClass("safari");
-            } else if ( ua.indexOf("Firefox/") > -1 ) {
-                $html.addClass("firefox");
-            }
+                /* MSIE used to detect old browsers and Trident used to newer ones, Edge for Microsoft Edge */
+                if ( ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1 || ua.indexOf("Edge/") > -1 ) {
+                    $html.addClass("ie_edge");
+                } else if ( ua.indexOf("Chrome/") > -1 ) {
+                    $html.addClass("chrome");
+                } else if ( ua.indexOf("Safari/") > -1 ) {
+                    $html.addClass("safari");
+                } else if ( ua.indexOf("Firefox/") > -1 ) {
+                    $html.addClass("firefox");
+                }
+
+            var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+                if ( isOpera ) {
+                    $html.addClass("opera");
+                }
     }
 
 
@@ -755,54 +870,54 @@ var melisCore = (function(window){
 
     // WINDOW RESIZE FUNCTIONALITIES ========================================================================================================
     $(window).resize(function() {
+        var $tabMenu = $("#tab-menu");
 
-        screenSize = jQuery(window).width();
+            screenSize = jQuery(window).width();
 
-        // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-        $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+            // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
+            $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
 
-        if( screenSize <= 767 ){
-            tabDraggable("#melis-id-nav-bar-tabs", true);
-        } else {
-            tabDraggable("#melis-id-nav-bar-tabs", false);
-        }
+            if( screenSize <= 767 ){
+                tabDraggable("#melis-id-nav-bar-tabs", true);
+                $tabMenu.addClass("no-gutters");
+            } else {
+                tabDraggable("#melis-id-nav-bar-tabs", false);
+                $tabMenu.removeClass("no-gutters");
+            }
 
+            //check tabExpander() when window is resized
+            if( screenSize >= 768 ){
 
-        //check tabExpander() when window is resized
-        if( screenSize >= 768 ){
+                // put plugins back to its original container
+                $("#newplugin-cont ul.ul-cont > li").each(function(key, value){
+                    $(this).find("span.title").remove();
+                    $("#id_meliscore_header .navbar-right").append( $(this) );
+                });
 
-            // put plugins back to its original container
-            $("#newplugin-cont ul.ul-cont > li").each(function(key, value){
-                $(this).find("span.title").remove();
-                $("#id_meliscore_header .navbar-right").append( $(this) );
-            });
+                // check tabExpander();
+                tabExpander.checkTE();
 
-            // check tabExpander();
-            tabExpander.checkTE();
+                //hide plugins & reset defaults
+                $("#newplugin-cont").removeClass("show-menu");
+                $("#res-page-cont i").removeClass("move-arrow");
 
-            //hide plugins & reset defaults
-            $("#newplugin-cont").removeClass("show-menu");
-            $("#res-page-cont i").removeClass("move-arrow");
+            }
+            else {
 
-        }
-        else {
+                $body.removeClass("sidebar-mini");
 
-            $body.removeClass("sidebar-mini");
+                // reset layout and remove styles
+                $("#content, #id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
 
-            // reset layout and remove styles
-            $("#content, #id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
+                // check tabExpander();
+                tabExpander.Disable();
 
-            // check tabExpander();
-            tabExpander.Disable();
-
-            // move plugins to another <div>
-            $("#id_meliscore_header .navbar-right > li").each(function(key, value){
-                $(this).children("a").append("<span class='title'>"+ $(this).data("title") +"</span>");
-                $("#newplugin-cont ul.ul-cont").append( $(this) );
-            });
-
-         
-        }
+                // move plugins to another <div>
+                $("#id_meliscore_header .navbar-right > li").each(function(key, value){
+                    $(this).children("a").append("<span class='title'>"+ $(this).data("title") +"</span>");
+                    $("#newplugin-cont ul.ul-cont").append( $(this) );
+                });
+            }
     });
 
     // WINDOW SCROLL FUNCTIONALITIES ========================================================================================================
@@ -851,7 +966,7 @@ var melisCore = (function(window){
      * sample syntax in calling it outside - melisCore.firstRender;
      */
 
-    return{
+    return {
         // key - access name outside                                 // value - name of function above
         flashMessenger                                  :           flashMessenger,
         firstRender                                     :           firstRender,
@@ -863,6 +978,7 @@ var melisCore = (function(window){
         tabDraggable                                    :           tabDraggable,
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
-        showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu // update on this js file, since dashboard notification
+        showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu, // update on this js file, since dashboard notification
+        paginateDataTables                              :           paginateDataTables
     };
 })(window);

@@ -36,7 +36,7 @@
     "ext-json": "*",
     "ext-pdo_mysql": "*",
     "justinrainbow/json-schema": "5.2.1",
-    "melisplatform/melis-asset-manager": "^3.1.0",
+    "melisplatform/melis-asset-manager": "*",
     "composer/composer": "~1.2"
   },
   "require-dev": {

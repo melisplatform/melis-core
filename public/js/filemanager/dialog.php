@@ -885,7 +885,7 @@ $files=$sorted;
 	$link="dialog.php?".$get_params;
 	?>
 	<ul class="breadcrumb">
-	<li class="pull-left"><a href="<?php echo $link?>/"><i class="icon-home"></i></a></li>
+	<li class="float-left"><a href="<?php echo $link?>/"><i class="icon-home"></i></a></li>
 	<li><span class="divider">/</span></li>
 	<?php
 	$bc=explode("/",$subdir);
@@ -901,19 +901,19 @@ $files=$sorted;
 	}
 	?>
 
-	<li class="pull-right"><a class="btn-small" href="javascript:void('')" id="info"><i class="icon-question-sign"></i></a></li>
+	<li class="float-right"><a class="btn-small" href="javascript:void('')" id="info"><i class="icon-question-sign"></i></a></li>
 	<?php if($config['show_language_selection']){ ?>
-	<li class="pull-right"><a class="btn-small" href="javascript:void('')" id="change_lang_btn"><i class="icon-globe"></i></a></li>
+	<li class="float-right"><a class="btn-small" href="javascript:void('')" id="change_lang_btn"><i class="icon-globe"></i></a></li>
 	<?php } ?>
-	<li class="pull-right"><a id="refresh" class="btn-small" href="dialog.php?<?php echo $get_params.$subdir."&".uniqid() ?>"><i class="icon-refresh"></i></a></li>
+	<li class="float-right"><a id="refresh" class="btn-small" href="dialog.php?<?php echo $get_params.$subdir."&".uniqid() ?>"><i class="icon-refresh"></i></a></li>
 
-	<li class="pull-right">
+	<li class="float-right">
 		<div class="btn-group">
 		<a class="btn dropdown-toggle sorting-btn" data-toggle="dropdown" href="#">
 		<i class="icon-signal"></i>
 		<span class="caret"></span>
 		</a>
-		<ul class="dropdown-menu pull-left sorting">
+		<ul class="dropdown-menu float-left sorting">
 			<li class="text-center"><strong><?php echo trans('Sorting') ?></strong></li>
 		<li><a class="sorter sort-name <?php if($sort_by=="name"){ echo ($descending)?"descending":"ascending"; } ?>" href="javascript:void('')" data-sort="name"><?php echo trans('Filename');?></a></li>
 		<li><a class="sorter sort-date <?php if($sort_by=="date"){ echo ($descending)?"descending":"ascending"; } ?>" href="javascript:void('')" data-sort="date"><?php echo trans('Date');?></a></li>

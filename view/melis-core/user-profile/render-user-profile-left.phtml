@@ -5,7 +5,7 @@ if (!empty($this->zoneconfig['conf']['id']))
 $data_melisKey = $this->melisKey;
 
 ?>
-<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' data-user-id="<?=$this->user_id?>">
+<div <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' data-user-id="<?=$this->user_id?>">
     <!-- Profile Photo -->
     <?php foreach($this->userInfo AS $user){ ?>
         <div class="text-center">
@@ -13,7 +13,7 @@ $data_melisKey = $this->melisKey;
             	<div class="image-tool-tip">
             		<i class="fa fa-pencil"></i>
             	</div>
-                <img src="<?=$user['usr_image']?>" alt="" class="img-responsive img-circle" id="user-profile-pic">
+                <img src="<?=$user['usr_image']?>" alt="" class="img-fluid rounded-circle" id="user-profile-pic">
                 <div class="photo-overlay"></div>
                 <div class="profile-photo-edit">
                     <i class="fa fa-camera"></i>

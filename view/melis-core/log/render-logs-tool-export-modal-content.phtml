@@ -19,21 +19,19 @@ if (!empty($this->zoneconfig['conf']['id']))
         		<div class="widget-body innerAll inner-2x">
         			<div class="tab-content">
         				<div class="tab-pane active" id="<?= $id ?>">
-                            <div class="row">
-                                <?php
-                                echo $this->form()->openTag($this->form);
-                                echo $this->melisFieldCollection($this->form);
-                                ?>
+                            <?php
+                            echo $this->form()->openTag($this->form);
+                            echo $this->melisFieldCollection($this->form);
+                            ?>
 
-                                <div align="right">
-                                    <button type="button" data-dismiss="modal" id="btn-export-logs-cancel" class="btn btn-danger pull-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_logs_cancel')?></button>
-                                    <button type="submit" class="btn btn-success" id="btn-export-logs"><i class="fa fa-file-text-o"></i>  <?php echo $this->translate('tr_meliscore_log_export_export_btn') ?></button>
-                                </div>
-                                <div class="clearfix"></div>
-
-                                <?php echo $this->form()->closeTag();?>
-                                <a href="#" id="exportNewTab" target="_blank" ></a>
+                            <div class="footer-modal d-flex flex-row justify-content-between">
+                                <button type="button" data-dismiss="modal" id="btn-export-logs-cancel" class="btn btn-danger pull-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_logs_cancel')?></button>
+                                <button type="submit" class="btn btn-success" id="btn-export-logs"><i class="fa fa-file-text-o"></i>  <?php echo $this->translate('tr_meliscore_log_export_export_btn') ?></button>
                             </div>
+                            <div class="clearfix"></div>
+
+                            <?php echo $this->form()->closeTag();?>
+                            <a href="#" id="exportNewTab" target="_blank" ></a>
                         </div>
                     </div>
                 </div>
@@ -80,5 +78,7 @@ if (!empty($this->zoneconfig['conf']['id']))
                 e.preventDefault();
             }
         });
+
+        $("#logExportForm .form-group:nth-child(3) label").addClass("d-flex flex-row justify-content-between");
     });
 </script>

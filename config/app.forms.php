@@ -181,7 +181,8 @@ return array(
                 'melis_core_platform_scheme_form' => array(
                     'attributes' => array(
                         'name' => 'melis_core_platform_scheme_form',
-                        'id' => 'melis_core_platform_scheme_form',
+						'id' => 'melis_core_platform_scheme_form',
+						'class' => 'd-md-flex flex-row justify-content-between row',
                         'method' => 'POST',
                     ),
                     'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',

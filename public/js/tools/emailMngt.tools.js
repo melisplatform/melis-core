@@ -1,9 +1,11 @@
-$(function(){
-	$("body").on("click", '.btnMelisCoreEmailMngtCreation', function() {
+$(function() {
+	var $body = $("body");
+
+	$body.on("click", '.btnMelisCoreEmailMngtCreation', function() {
 		melisHelper.tabOpen(translations.tr_emails_management_creation, 'fa-envelope-o', 'NEW_id_meliscore_tool_emails_mngt_generic_from', 'meliscore_tool_emails_mngt_generic_from', {codename:'NEW'});
 	});
 	
-	$("body").on("click", ".btnMelisCoreEmailMngtEdittion", function(){
+	$body.on("click", ".btnMelisCoreEmailMngtEdittion", function(){
 		var codename = $(this).parents("tr").attr("id");
 		
 		var dataString = new Array;
@@ -26,7 +28,7 @@ $(function(){
 		});
 	});
 	
-	$("body").on("click", ".btnMelisCoreEmailMngtSave", function(){
+	$body.on("click", ".btnMelisCoreEmailMngtSave", function(){
 		melisCoreTool.pending(".btnMelisCoreEmailMngtSave");
 		var codename = $(this).data("codename");
 		var formId = '#'+codename+'_generalPropertiesform';
@@ -64,7 +66,7 @@ $(function(){
                 data        :formData,
                 cache       :false,
                 contentType : false,
-                processData : false,
+                processData : false
             }).done(function(data){
                 if(data.success) {
                     melisHelper.melisOkNotification(data.textTitle, data.textMessage);
@@ -98,7 +100,7 @@ $(function(){
         form.submit();
     }
 	
-	$("body").on("click", ".btnMelisCoreEmailMngtDelete", function(){
+	$body.on("click", ".btnMelisCoreEmailMngtDelete", function(){
 		var codename = $(this).parents("tr").attr("id");
 		var hasMergeData = $(this).parents("tr").hasClass("boEmailsMergeData");
 		var dataString = new Array;
@@ -134,6 +136,16 @@ $(function(){
 				});
 		});
 	});
+
+	/**
+	 * Clicking on tabs
+	 */
+	/* $body.on("click", ".product-text-tab li a", function() {
+		var $this = $(this);
+
+			$this.toggleClass("active").siblings().removeClass("active");
+			$this.closest("li").toggleClass("active").siblings().removeClass("active");
+	}); */
 	
 	window.initEmailsEditors = function(){
 		$('.boed_lang_id').each(function(){

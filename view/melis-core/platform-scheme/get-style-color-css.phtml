@@ -4,11 +4,61 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
-a,
+.melis-newsletter-send-subscribers-select-container .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: <?= $primaryColor; ?> !important;
+}
+.datepicker .table-condensed tr td.active, 
+.datepicker .table-condensed tr td.active:hover, 
+.datepicker .table-condensed tr td.active.disabled, 
+.datepicker .table-condensed tr td.active.disabled:hover,
+.datepicker table tr td span.active, 
+.datepicker table tr td span.active:hover, 
+.datepicker table tr td span.active.disabled, 
+.datepicker table tr td span.active.disabled:hover {
+    background: <?= $primaryColor; ?> !important;
+}
+
+.tabsbar ul.order-checkout-steps li a i:before {
+    color: <?= $primaryColor; ?>;
+}
+.bootstrap-datetimepicker-widget table td span.active,
+.bootstrap-datetimepicker-widget table td i.active,
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+    background-color: <?= $primaryColor; ?> !important;
+    color: #fff;
+}
+#convo-content #chat-container .my-msg {
+    background-color: <?= $primaryColor; ?>;
+}
+
+#convo-content .chat-contact-name {
+    color: <?= $primaryColor; ?>;
+}
+
+.media-msgrBody .text-danger {
+    color: <?= $primaryColor; ?> !important;
+}
+
+#tableProductList .toolTipHoverEvent {
+    color: <?= $primaryColor; ?> !important;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.show>.btn-primary.dropdown-toggle {
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+
+.footer a,
 a:hover {
     color: <?= $primaryColor; ?>;
 }
 
+.jstree-proton .jstree-hovered,
+.jstree-proton .jstree-anchor:hover,
+.jstree-proton .jstree-clicked,
 body .navbar.main.navbar-primary {
     background-color: <?= $primaryColor; ?>;
 }
@@ -30,6 +80,10 @@ body .navbar.main.navbar-primary {
     color: <?= $primaryColor; ?> !important;
 }
 
+.navbar.main.navbar-primary .nav > li > a:hover > i {
+    color: <?= $primaryColor; ?> !important;
+}
+
 .nav-tabs.product-text-tab li.active a,
 .nav-tabs.product-text-tab li.active:focus a,
 .nav-tabs.product-text-tab li.active:active a,
@@ -44,11 +98,9 @@ body .navbar.main.navbar-primary {
 .navbar.main .nav.navbar-right {
     background: <?= $primaryColor; ?>;
 }
+
 .navbar.main .nav.navbar-right li:first-child {
     border-left: 1px solid <?= $secondaryColor; ?>;
-}
-.navbar.main.navbar-primary .nav>li>a:hover {
-    background: <?= $secondaryColor; ?>;
 }
 
 .navbar.main .nav.navbar-right li {
@@ -106,8 +158,26 @@ body .navbar.main.navbar-primary {
     color: <?= $primaryColor; ?>;
 }
 
+.navbar.main .nav.navbar-right .dropdown-menu li.active a,
 .dropdown-menu li.active a,
 .dropdown-menu li.active:hover a {
+    background-color: <?= $primaryColor; ?>;
+}
+
+.widget.widget-tabs>.widget-head ul li.active a, 
+.widget.widget-tabs-double>.widget-head ul li a .fa:before, 
+.widget.widget-tabs>.widget-head ul li.active a .fa:before,
+.mccom-dashboard-latest-heading .widget-head ul li.active > a i:before,
+.navbar.main .nav.navbar-right .dropdown-menu li.active:hover a {
+    color: <?= $primaryColor; ?>;
+}
+
+
+#id_meliscore_header_flash_messenger {
+    border-left: 1px solid <?= $secondaryColor; ?> !important;
+}
+
+#tab-arrow-top {
     background-color: <?= $primaryColor; ?>;
 }
 
@@ -147,6 +217,18 @@ body .navbar.main.navbar-primary {
 .pagination>li>a:hover,
 .pagination>li.primary>a {
     background: <?= $primaryColor; ?>;
+}
+
+.pagination > .page-item.active > .page-link, 
+.pagination > .page-item.active > .page-link:focus, 
+.pagination > .page-item.active > .page-link:hover {
+    background-color: <?= $primaryColor; ?>;
+    border-color: <?= $primaryColor; ?>;
+}
+
+.bs-tooltip-auto[x-placement^=left] .arrow::before, 
+.bs-tooltip-left .arrow::before {
+    border-left-color: <?= $secondaryColor; ?>;
 }
 
 /* Buttons */
@@ -261,10 +343,12 @@ body .navbar.main.navbar-primary {
     background: <?= $primaryColor; ?>;
 }
 
+.commerce-toggle .card-header,
 .commerce-toggle .panel-heading {
     background-color: <?= $primaryColor; ?>;
 }
 
+.commerce-toggle .accordion-toggle,
 .commerce-toggle .accordion-toggle {
     background-color: <?= $primaryColor; ?> !important;
 }
@@ -366,6 +450,7 @@ input[type="color"]:focus,
 .module-display-heading .ms-heading {
     background: <?= $primaryColor; ?>!important;
 }
+.melis-cms-filter-btn-sub-category.active,
 .melis-cms-ps-box .melis-cms-filter-btn.active, .melis-cms-category-btn.active {
     background: <?= $primaryColor; ?>!important;
     border-color: <?= $primaryColor; ?>!important;
@@ -378,6 +463,9 @@ input[type="color"]:focus,
     -ms-box-shadow: 0 0 0 1px <?= $primaryColor; ?>!important;
     z-index: 9999996 !important;
 }
+.melis-cms-category-plugins-box {
+    border-bottom-color: <?= $secondaryColor; ?> !important;
+}
 
 /* Commerce */
 .red-box-panel h3 {
@@ -385,6 +473,14 @@ input[type="color"]:focus,
     background: <?= $primaryColor; ?>;
 }
 
+.progress .progress-bar.progress-bar-danger {
+    background: <?= $primaryColor; ?>;
+}
+
+.client-contact-address .default-card>.card-header,
+.client-contact-address .panel-default>.panel-heading {
+    background-color: <?= $primaryColor; ?>;
+}
 
 .widget-red {
     background: <?= $primaryColor; ?> !important;
@@ -588,6 +684,11 @@ div.glyphicons-social.glyphicon-primary i:before {
 .cb-cont .cbmask-outer {
     border: 2px solid <?= $secondaryColor; ?>;
 }
+
+.cb-cont .cbmask-inner.cb-active {
+    background: <?= $secondaryColor; ?>;
+}
+
 .navbar.main.navbar-primary .navbar-brand {
     border-bottom: 1px solid <?= $secondaryColor; ?>;
 }
@@ -609,6 +710,9 @@ div.glyphicons-social.glyphicon-primary i:before {
     background-color: <?= $secondaryColor; ?>;
 }
 
+.tooltip.bs-tooltip-left .arrow {
+    border-left-color: <?= $secondaryColor; ?>;
+}
 .tooltip.left .tooltip-arrow {
     border-left-color: <?= $secondaryColor; ?>;
 }

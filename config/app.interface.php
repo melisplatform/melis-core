@@ -132,7 +132,7 @@ return array(
             'ressources' => array(
                 'css' => array(
                     '/MelisCore/assets/components/library/jquery-ui/css/jquery-ui.min.css',
-                    '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
+                    // '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
                     '/MelisCore/assets/components/modules/admin/charts/easy-pie/assets/lib/css/jquery.easy-pie-chart.css',
                     '/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/jquery.notyfy.css',
                     '/MelisCore/assets/components/modules/admin/notifications/notyfy/assets/lib/css/notyfy.theme.default.css',
@@ -151,12 +151,12 @@ return array(
                     '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css',
 
                     // Data Tables
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables.min.css',
+                    /* '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/dataTables.bootstrap.css',
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css', */
 
-                    // datetimepicker
-                    '/MelisCore/assets/components/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css',
+
 
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
@@ -170,6 +170,9 @@ return array(
                     '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
                     '/MelisCore/assets/components/library/animate/animate.min.css',
                     '/MelisCore/assets/components/modules/admin/tables/responsive/assets/lib/css/footable.core.min.css',
+
+                    // datetimepicker
+                    '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/css/bootstrap-datetimepicker.min.css',
 
                     // admin
                     '/MelisCore/assets/css/admin/module.admin.page.form_elements.min.css',
@@ -187,15 +190,16 @@ return array(
 
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
+                    // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
+                    '/MelisCore/css/custom-style.css',
                     '/MelisCore/css/diagnostic.css',
-
 
                     // Custom font-awesome checkbox
                     '/MelisCore/css/custom-fontawesome.css'
                 ),
                 'js' => array(
                     '/melis/get-translations',
-                    '/MelisCore/assets/components/library/jquery/jquery.min.js?v=v1.2.3',
+                    '/MelisCore/assets/components/library/jquery/jquery.min.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
@@ -228,7 +232,7 @@ return array(
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
 
                     // datetimepicker
-                    '/MelisCore/assets/components/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js',
+                    '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
                     '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 
                     '/MelisCore/js/core/tabExpander.js',
@@ -564,6 +568,8 @@ return array(
                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
+                    // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
+                    '/MelisCore/css/custom-style.css',
                 ),
                 'js' => array(
                     '/melis/get-translations',

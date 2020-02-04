@@ -1,15 +1,12 @@
 <?php
-
 	$id = '';
 	if (!empty($this->zoneconfig['conf']['id']))
 		$id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
-	$data_melisKey = $this->melisKey;
-		
+	$data_melisKey = $this->melisKey;	
 ?>
-<div<?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="user-profile media innerAll">
-	<a href="" class="pull-left" id="img-user-link">
-		<img src="/melis/MelisCore/MelisAuth/getProfilePicture?v=<?= time(); ?>" alt="" class="img-circle" id="meliscore_left_menu_profile_pic" width="50" height="50">
-
+<div <?= $id; ?> data-melisKey='<?= $data_melisKey; ?>' class="user-profile media innerAll">
+	<a href="" id="img-user-link">
+		<img src="/melis/MelisCore/MelisAuth/getProfilePicture?v=<?= time(); ?>" alt="" class="rounded-circle" id="meliscore_left_menu_profile_pic" width="50" height="50">
 	</a>
 	<div class="media-body">
 		<a href="" class="strong" id="user-name-link" data-user-id="<?= $this->userAuthDatas->usr_id; ?>">
@@ -27,13 +24,11 @@
 		</p>
 	</div>
 	<ul>
-		 
 		<li class="active">
     		<a href="#" id="btnUserInfoEdit" title="<?=$this->translate('tr_meliscore_user_profile_profile_text'); ?>">
     			<i class="fa fa-fw fa-user"></i>
     		</a>
 		</li> 
-
 		<li><a href="melis/logout" title="<?= $this->translate('tr_meliscore_header_logout'); ?>"><i class="fa fa-fw fa-lock"></i></a></li>  
 	</ul> 
 </div>

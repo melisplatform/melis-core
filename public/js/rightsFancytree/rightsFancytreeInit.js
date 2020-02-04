@@ -4,10 +4,15 @@
 			$(trees).fancytree({
 		          checkbox: true,
 		          selectMode: 2,
-		          debugLevel: 0,
+				  debugLevel: 0,
+				  toggleEffect: {
+					effect: "slideToggle",
+					duration: 500
+				  },
 		          source: {
 		              url: url,
-		          },
+				  },
+				  //load
 		          lazyLoad: function(event, data) {
 				      var lazyURL = data.node.data.melisData.lazyURL;
 				      data.result = { 
@@ -21,10 +26,11 @@
 		              
 		              if(data.node.isSelected() === true){
 		            	  $(data.node.span).find('.fancytree-title').css("color",data.node.data.melisData.colorSelected );
-		            	  $(data.node.span).find('.fancytree-checkbox').removeClass("fa-square-o").addClass("fa-check-square-o").css("color",data.node.data.melisData.colorSelected );
+						  $(data.node.span).find('.fancytree-checkbox').removeClass("fa-square-o").addClass("fa-check-square-o").css("color",data.node.data.melisData.colorSelected );
+						  //$(data.node.span).closest("li").addClass("fancytree-animating");
 		              }
 		              else{
-		            	  $(data.node.span).find('.fancytree-title').css("color","#686868" );
+						  $(data.node.span).find('.fancytree-title').css("color","#686868" );
 		              }
 		          },
 		          loadChildren: function(event, data){

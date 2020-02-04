@@ -45,7 +45,7 @@ $(function(){
 					cache       :false,
 					contentType : false,
 					processData : false,
-                }).success(function(data){
+                }).done(function(data){
                     if(data.success === 1) {
                         melisCoreTool.pending(".button");
                         queryString = $.param(data.postValues);
@@ -71,8 +71,9 @@ $(function(){
                         melisHelper.melisKoNotification(data.title, data.textMessage, data.errors);
                     }
                     melisCoreTool.done(".button");
-                }).error(function(){
-                    melisCoreTool.done(".button");
+                }).fail(function(){
+					melisCoreTool.done(".button");
+					alert( translations.tr_meliscore_error_message);
                 });
             }
         );
@@ -138,19 +139,19 @@ $(function(){
 window.initLogDataTable = function(data){
 	
 	data.userId = -1;
-	if($("#logUserfilter").length !== 0){
+	if ( $("#logUserfilter").length !== 0 ) {
 		data.userId = $("#logUserfilter").val();
 	}
 	
 	data.typeId = -1;
-	if($("#logTypefilter").length !== 0){
+	if ( $("#logTypefilter").length !== 0 ) {
 		data.typeId = $("#logTypefilter").val();
 	}
 	
 	data.startDate = "";
 	data.endDate = "";
-	if($('#logsTableDaterange').data('daterangepicker') !== undefined){
-		if($("#logsTableDaterange span").text() !== ''){
+	if ( $('#logsTableDaterange').data('daterangepicker') !== undefined ) {
+		if ( $("#logsTableDaterange span").text() !== '' ) {
 			data.startDate = $('#logsTableDaterange').data('daterangepicker').startDate.format("YYYY-MM-DD");
 			data.endDate = $('#logsTableDaterange').data('daterangepicker').endDate.format("YYYY-MM-DD");
 		}
@@ -166,8 +167,8 @@ window.dateRangePickerApplyEvent = function(ev, picker) {
     $tableMelisLogs.draw();
 }
 
-function initExportLogDateRangePicker(){
-    if($("#log_date_range").length > 0){
+function initExportLogDateRangePicker() {
+    if ( $("#log_date_range").length > 0) {
         melisHelper.initDateRangePicker("#log_date_range");
         setTimeout(function(){
             $("#log_date_range").data('daterangepicker').setStartDate(moment().subtract(6, 'days'));
@@ -179,9 +180,9 @@ function initExportLogDateRangePicker(){
 
 function exportData(url) {
     var downloadLink = document.createElement("a");
-    downloadLink.href = url;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    if($("#btn-export-logs-cancel").length >0 ) $("#btn-export-logs-cancel").click();
+		downloadLink.href = url;
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+		document.body.removeChild(downloadLink);
+    	if ( $("#btn-export-logs-cancel").length > 0 ) $("#btn-export-logs-cancel").click();
 }

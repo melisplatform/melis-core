@@ -15,12 +15,11 @@ class MelisFieldRow extends FormRow
     const MELIS_INPUT_GROUP_BUTTON    = 'melis-input-group-button';
     const MELIS_TEXT_REQUIRED         = 'required';
     const MELIS_TEXT_WITH_BUTTON      = 'MelisTextButton';
-    const MELIS_MSGR_MSG_BOX         = 'melis-messenger-msg-box';
-
-    public function render(ElementInterface $element, $labelPosition = null)
-    {
-        $translator = $this->getTranslator();
-
+    const MELIS_MSGR_MSG_BOX          = 'melis-messenger-msg-box';
+ 
+	public function render(ElementInterface $element, $labelPosition = null)
+	{
+	    $translator = $this->getTranslator();
 
         if (empty($element->getAttribute('id'))){
             /**
@@ -42,17 +41,22 @@ class MelisFieldRow extends FormRow
         if(!empty($element->getOption('tooltip'))){
             if (strpos($element->getOption('tooltip'), 'tr_') === false) {
                 $element->setLabelOptions(['disable_html_escape' => true]);
-                $label = $element->getLabel().'<i class="fa fa-info-circle fa-lg pull-right tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$element->getOption('tooltip').'"></i>';
+                $element->setLabelAttributes([
+                    'class' => 'd-flex flex-row justify-content-between'
+                ]);
+                $label = '<div class="label-text">' . $element->getLabel() . '</div>';
+                $label = $label . '<i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i>';
+                
                 $element->setLabel($label);
             }
-        }
+	    }
+	    
+	    if (!empty($element->getOption('open_tool'))){
 
-        if (!empty($element->getOption('open_tool'))){
-
-            $toolConfig = $element->getOption('open_tool');
-
-            $element->setLabelOptions(['disable_html_escape' => true]);
-            $label = $element->getLabel().'<i class="fa fa-wrench fa-lg pull-right melis-opentools m-dnd-tool-open" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$toolConfig['tooltip'].'"
+	        $toolConfig = $element->getOption('open_tool');
+	         
+	        $element->setLabelOptions(['disable_html_escape' => true]);
+	        $label = $element->getLabel().'<i class="fa fa-wrench fa-lg float-right melis-opentools m-dnd-tool-open" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$toolConfig['tooltip'].'"
 	            data-tool-icon="'.$toolConfig['tool_icon'].'"
                 data-tool-name="'.$toolConfig['tool_name'].'"
                 data-tool-id="'.$toolConfig['tool_id'].'"
@@ -153,7 +157,7 @@ class MelisFieldRow extends FormRow
             $switchOptions = $element->getOption('switchOptions');
             $switchLabel = $switchOptions['label'] ?? $translator->translate('tr_meliscore_tool_user_col_status');
             $switch  = '<div class="form-group">';
-            $switch .= '<label for="'.$element->getName().'">'. $element->getLabel() . '</label>';
+            $switch .= '<label for="'.$element->getName().'" class="d-flex flex-row justify-content-between">'. $element->getLabel() . '</label>';
             $switch .= '    <div id="'. $switchId .'" class="make-switch" data-on-label="'. $switchOptions['label-on'] .'" data-off-label="'. $switchOptions['label-off'] .'" data-text-label="'. $switchLabel .'">';
             $switch .= '       <input type="checkbox" name="'.$element->getName().'" id="'.$element->getName().'" '.$isChecked.' value="1">';
             $switch .= '    </div>';
@@ -194,7 +198,9 @@ class MelisFieldRow extends FormRow
             // Set Input to Null value as default
             $element->setAttribute('value', null);
 
-            $label = '<label for="tags">' . $element->getAttribute('data-label-text') . '</label>';
+            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' .$element->getOption('tooltip') . '"></i>';
+            
+            $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $element->getAttribute('data-label-text') . '</div>' . $multiValTooltip . '</label>';
             $getTags = explode(',', $dataTags);
             $ulStart = '<ul class="multi-value-input clearfix">';
             $ulEnd   = '</ul>';
@@ -225,13 +231,13 @@ class MelisFieldRow extends FormRow
                 $formElement = '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
             }
 
-        }elseif (strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE)){
-
-            $label = $element->getLabel();
-            $element->setLabel('');
-            $attrib = $element->getAttributes();
-            $formElement = '<div class="form-group">
-    	                       <label for="'.$element->getName().'">'.$label.'</label>
+	    }elseif (strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE)){
+            
+	        $label = $element->getLabel();
+	        $element->setLabel('');
+	        $attrib = $element->getAttributes();
+	        $formElement = '<div class="form-group">
+    	                       <label for="'.$element->getName().'" class="'.$element->getOption('class').'">'.$label.'</label>
     	                        <div class="input-group date '.$attrib['dateId'].'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon">
@@ -276,14 +282,13 @@ class MelisFieldRow extends FormRow
                                     <span class="input-group-addon"><i></i></span>
                                 </div>
 	                        </div>';
-
-        }elseif (!empty($element->getOption('button'))){
-
-            $label = $element->getLabel();
-            $element->setLabel('');
-            $attrib = $element->getAttributes();
-            $formElement = '<div class="form-group">
-    	                       <label for="'.$element->getName().'">'.$label.'</label>
+	    }elseif (!empty($element->getOption('button'))){
+	        
+	        $label = $element->getLabel();
+	        $element->setLabel('');
+	        $attrib = $element->getAttributes();
+	        $formElement = '<div class="form-group">
+    	                       <label for="'.$element->getName().'" class="d-flex flex-row justify-content-between">'.$label.'</label>
     	                        <div class="form-group input-group '.$element->getOption('button-class').'" id="'.$element->getOption('button-id').'">
     	                        '.parent::render($element).'
                                     <span class="input-group-addon input-button-hover-pointer">
@@ -364,6 +369,10 @@ class MelisFieldRow extends FormRow
             $label = $element->getLabel();
             $element->setLabel('');
 
+            $element->setLabelAttributes([
+                'class' => 'melis-radio-box'
+            ]);
+
             $elemOpts = $element->getOptions();
 
             if (!empty($elemOpts['value_options'])){
@@ -383,25 +392,21 @@ class MelisFieldRow extends FormRow
                             </div>';
 
         }elseif ($element->getOption('type') != 'hidden'){
-
             $formElement = '<div class="form-group ' . $element->getOption('form_type') . '">'. parent::render($element, $labelPosition).'</div>';
-
         }else{
-
             $formElement = parent::render($element, $labelPosition);
-
         }
 
-        return $formElement;
-    }
-
-    /**
-     * Returns the class attribute of the element
-     * @param ElementInterface $element
-     * @return String
-     */
-    protected function getClass(ElementInterface $element)
-    {
-        return $element->getAttribute('class');
-    }
+		return $formElement;
+	}
+	
+	/**
+	 * Returns the class attribute of the element
+	 * @param ElementInterface $element
+	 * @return String
+	 */
+	protected function getClass(ElementInterface $element)
+	{
+	    return $element->getAttribute('class');
+	}
 }
