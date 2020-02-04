@@ -768,6 +768,12 @@ td.dataTables_empty {
   background: none;
   border-color: transparent;
 }
+.btnLangUpdate i.fa.fa-download {
+  color: #72af46;
+}
+.dtActionCls .btnLangUpdate:hover i.fa.fa-download {
+  color: #fff;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
