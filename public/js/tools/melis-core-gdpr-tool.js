@@ -131,7 +131,7 @@ $(function() {
                         lengthToDelete  = charIndex - p.text().length;
 
                         p.text().slice(charIndex, lengthToDelete);
-                        p.append( "texting");
+                        //p.append( "texting");
                 });
 
             var moduleName          = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id'),
@@ -281,6 +281,7 @@ $(function() {
 
                 e.preventDefault();
         });
+
         $body.on('click', ".gdpr-tab-menu-li", function(){
             var tableId = $(this).data('tableId');
             var table = $("#" + tableId );
@@ -290,6 +291,7 @@ $(function() {
             }
 
         });
+
         var GdprTool = {
             getUserInfo: function(formData) {
                 $.ajax({
