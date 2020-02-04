@@ -387,7 +387,7 @@ class MelisFieldRow extends FormRow
             }
 
             $formElement = '<div class="form-group">
-                                <label for="' . $element->getName() . '"> ' . $label . ' </label>
+                                <label class="d-flex flex-row justify-content-between" for="' . $element->getName() . '"> ' . $label . ' </label>
                                 ' . parent::render($element, $labelPosition) . '
                             </div>';
 
