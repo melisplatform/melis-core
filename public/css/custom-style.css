@@ -768,6 +768,12 @@ td.dataTables_empty {
   background: none;
   border-color: transparent;
 }
+.btnLangUpdate i.fa.fa-download {
+  color: #72af46;
+}
+.dtActionCls .btnLangUpdate:hover i.fa.fa-download {
+  color: #fff;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
@@ -1001,10 +1007,17 @@ td.dataTables_empty {
   #MelisCmsProspects-tab .dataTables_scrollHead,
   #MelisCmsProspects-tab .dataTables_scrollHeadInner,
   #MelisCmsProspects-tab table,
-  .gdpr-tab-table-container
-  {
+  .gdpr-tab-table-container {
     width: 100% !important;
-  } 
+  }
+  /* 
+   * fix for adding max-height: 300px
+   * that will result to overlapping of the data details on mobile responsive 
+   * caused by dataTable option scrollY: '300px'
+   */
+  .dataTables_scrollBody {
+    max-height: 100% !important;
+  }
   /* calendar */
   #id_meliscalendar_tool .innerAll .no-gutters {
     padding-left: 0;

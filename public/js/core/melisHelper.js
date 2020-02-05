@@ -104,7 +104,7 @@ var melisHelper = (function(){
 
     /**
      * This method will Highlight an input label where an error occured
-     * @param success, 1 or 0
+     * @param success
      * @param errors, Object array
      * @param selector, element selector
      */
@@ -113,7 +113,7 @@ var melisHelper = (function(){
         // remove red color for correctly inputted fields
         $("" + selector + " .form-group label").css("color", "inherit");
         // if all form fields are error color them red
-        if(success === 0){
+        if(!success){
             $.each( errors, function( key, error ) {
                 if("form" in error){
                     $.each(this.form, function( fkey, fvalue ){
@@ -679,10 +679,14 @@ var melisHelper = (function(){
         }
     }
 
+    function loadingHtml(){
+        return '<div id="loadingZone" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+    }
+
     // Stating zone to loading
     function loadingZone(targetElem) {
         if(targetElem.length){
-            var tempLoader = '<div id="loadingZone" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+            var tempLoader = loadingHtml();
             targetElem.attr("style", "position: relative");
             targetElem.append(tempLoader);
         }
@@ -787,7 +791,7 @@ var melisHelper = (function(){
                 var leftDom = '<"fb-dt-left col-xs-12 col-md-4"';
                 var centerDom = '<"fb-dt-center col-xs-12 col-md-4"';
                 var rightDom = '<"fb-dt-right col-xs-12 col-md-4"';
-                var tableBottom = '<"bottom" t<"pagination-cont clearfix"rip>>';
+                var tableBottom = '<"bottom" t<"pagination-cont"rip>>';
                 var jsSdomContentInit = [];
 
                 // left filter area
@@ -953,6 +957,7 @@ var melisHelper = (function(){
         createModal										:			createModal,
 
         // Loading zone
+        loadingHtml										:			loadingHtml,
         loadingZone										:			loadingZone,
         removeLoadingZone								:			removeLoadingZone,
         disableTab								        :			disableTab,
