@@ -791,7 +791,7 @@ var melisHelper = (function(){
                 var leftDom = '<"fb-dt-left col-xs-12 col-md-4"';
                 var centerDom = '<"fb-dt-center col-xs-12 col-md-4"';
                 var rightDom = '<"fb-dt-right col-xs-12 col-md-4"';
-                var tableBottom = '<"bottom" t<"pagination-cont clearfix"rip>>';
+                var tableBottom = '<"bottom" t<"pagination-cont"rip>>';
                 var jsSdomContentInit = [];
 
                 // left filter area
