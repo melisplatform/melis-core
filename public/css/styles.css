@@ -2404,7 +2404,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         margin-right: 10px;
     }
     .navbar.main.navbar-primary .left-menu{
-        width: auto;
+        /* width: auto; */
+        width: 274px;
+        overflow: hidden;
     }
 
 
@@ -2666,7 +2668,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         /* float: right;
         right: -10px; */
         float: right !important;
-        right: -21px;
+        right: -12px;
     }
     .melis-tabprev:hover,
     .melis-tabnext:hover{

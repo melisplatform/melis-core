@@ -4,10 +4,13 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.navbar.main.navbar-primary .navbar-brand {
+    background: <?= $primaryColor; ?> !important;
+}
 .btn-primary:not(:disabled):not(.disabled).active, 
 .btn-primary:not(:disabled):not(.disabled):active, 
 .show>.btn-primary.dropdown-toggle {
-
+    background: <?= $primaryColor; ?> !important;
 }
 .melis-gdpr-banner-container {
     background: <?= $primaryColor; ?> !important;

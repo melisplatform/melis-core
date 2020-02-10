@@ -31,8 +31,8 @@ var tabExpander = (function($, window){
         
         //get the width in % of #melis-navtabs-container-inner based from #melis-navtabs-container-outer - 56px for the prevnext buttons
         
-        // var innerUlWidthPercent = 99 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() ); 
-        var innerUlWidthPercent = 100 - ( (100 * 56) / $("#melis-navtabs-container-outer").outerWidth() );
+        var innerUlWidthPercent = 99 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() ); 
+        // var innerUlWidthPercent = 100 - ( (100 * 56) / $("#melis-navtabs-container-outer").outerWidth() );
 
         $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"}); // change hidden to initial because of dropdown
         $navTabs.css({"width": navUlContainer });
@@ -82,6 +82,8 @@ var tabExpander = (function($, window){
         /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
         /* tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
         tabContainerWidthPercent = 112 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        //tabContainerWidthPercent = 111.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
+        //tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         /* tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
         
         // <ul>

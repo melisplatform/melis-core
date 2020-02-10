@@ -687,10 +687,10 @@ div.row, ul.row {
   text-indent: -99999px;
 }
 /* #content */
-#content {
+/* #content {
   margin-left: 274px;
-  /* overflow-x: hidden; */ /* fix for dashboard not fullscreen */
-}
+  overflow-x: hidden;
+} */
 a:focus,
 a:hover {
   text-decoration: underline;
@@ -767,6 +767,12 @@ td.dataTables_empty {
 #MelisNewsletter.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
   top: 18px !important;
 }
+.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before,
+.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+  top: 20px !important;
+  border-radius: 0 !important;
+  background-color: #b9b8b8 !important;
+}
 .modal .modal-body, .modal .modal-footer {
   background: none;
   border-color: transparent;
@@ -776,6 +782,21 @@ td.dataTables_empty {
 }
 .dtActionCls .btnLangUpdate:hover i.fa.fa-download {
   color: #fff;
+}
+.notransition {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+  transition: none !important;
+}
+.melis-id-nav-bar-tabs-notransition {
+  left: 0;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+  transition: none !important;
 }
 /* Responsive media queries */
 @media (min-width: 991px) {
@@ -804,8 +825,17 @@ td.dataTables_empty {
     display: block;
   }
   .login-page .navbar.main .navbar-brand {
-    /* width: 320px; */
     width: 274px;
+  }
+  /**
+   * tabExpander
+   */
+  .navbar.main .navbar-brand {
+    width: 274px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
   }
   /**
    * tabExpander
@@ -873,8 +903,8 @@ td.dataTables_empty {
   /* #melis-navtabs */
   .melis-tabprev,
   .melis-tabnext {
-    /* padding: 8px 10px; */
-    padding: 8px;
+    padding: 8px 10px;
+    /* padding: 8px; */
     float: left;
   }
   /* modal */
@@ -887,6 +917,10 @@ td.dataTables_empty {
   }
 }
 @media (max-width: 767px) {
+  #id_meliscore_tool_user_module_management_content .ms-cont {
+    min-width: auto;
+    width: auto;
+  }
   /* body commmon */
   body {
     padding-top: 47px;
@@ -973,7 +1007,7 @@ td.dataTables_empty {
     padding-right: 15px;
   }
   /* responsive tab menu */
-   .navbar #melis-id-nav-bar-tabs > li {
+  .navbar #melis-id-nav-bar-tabs > li {
     width: 100%;
   }
   .navbar.main.navbar-primary .nav > li a.close {
@@ -1036,9 +1070,9 @@ td.dataTables_empty {
     padding-right: 0;
   }
   /* melis-tipimail */
-  #content {
+  /* #content {
     margin-top: 0 !important;
-  }
+  } */
   .flotchart-holder {
     width: 672px;
   }
