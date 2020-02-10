@@ -53,9 +53,12 @@
   color: #fff;
   text-decoration: none;
 }
-.navbar.main .toggle-button {
+/**
+ * tabExpander
+ */
+/* .navbar.main .toggle-button {
   padding: 0 0 0 15px;
-}
+} */
 /* main navigation tabs dropdown-toggle caret icon */
 .nav-tabs .dropdown-toggle:before {
   content: '';
@@ -804,18 +807,27 @@ td.dataTables_empty {
     /* width: 320px; */
     width: 274px;
   }
-  .navbar.main .left-menu {
+  /**
+   * tabExpander
+   */
+  /* .navbar.main .left-menu {
     float: none;
-  }
-  .navbar.main.navbar-primary .appbrand {
+  } */
+  /**
+   * tabExpander
+   */
+  /* .navbar.main.navbar-primary .appbrand {
     float: none !important;
-  }
+  } */
   .navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
     color: #e61c23;
   }
-  #plugin-menu {
+  /**
+   * tabExpander
+   */
+  /* #plugin-menu {
     visibility: hidden;
-  }
+  } */
   .toggle-plugin-menu {
     /* padding-left: 1.8rem; */
     padding-left: 0;

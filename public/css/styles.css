@@ -2659,11 +2659,14 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         z-index: 100;
         line-height: 31px;
     }
+    /**
+     * tabExpander
+     */
     .melis-tabnext{
         /* float: right;
         right: -10px; */
         float: right !important;
-        right: -3px;
+        right: -21px;
     }
     .melis-tabprev:hover,
     .melis-tabnext:hover{

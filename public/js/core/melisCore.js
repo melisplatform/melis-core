@@ -456,7 +456,12 @@ var melisCore = (function(window){
         if( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
-        $("#close-all-tab").hide();        
+        $("#close-all-tab").hide();
+
+        if ( $("#melis-id-nav-bar-tabs").find("li").length === 1 && screenSize >= 768 ) {
+            $("#melis-id-nav-bar-tabs").css("left", "0");
+            console.log("#melis-id-nav-bar-tabs li left 0");
+        }
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
