@@ -4,6 +4,10 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.forgot-password a,
+.forgot-password a:hover {
+    color: <?= $primaryColor; ?> !important;
+}
 .navbar.main.navbar-primary .navbar-brand {
     background: <?= $primaryColor; ?> !important;
 }
