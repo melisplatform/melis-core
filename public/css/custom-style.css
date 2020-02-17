@@ -774,6 +774,9 @@ td.dataTables_empty {
 .dtActionCls .btnLangUpdate:hover i.fa.fa-download {
   color: #fff;
 }
+.bootstrap-datetimepicker-widget table td.active {
+  color:#fff !important;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
