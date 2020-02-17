@@ -2667,7 +2667,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         /* float: right;
         right: -10px; */
         float: right !important;
-        right: -12px;
+        right: -20px;
     }
     .melis-tabprev:hover,
     .melis-tabnext:hover{
