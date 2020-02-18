@@ -2663,6 +2663,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     /**
      * tabExpander
      */
+    .firefox .melis-tabnext {
+        right: -19px;
+    }
     .melis-tabnext{
         /* float: right;
         right: -10px; */

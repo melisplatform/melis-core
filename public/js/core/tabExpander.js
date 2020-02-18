@@ -40,13 +40,34 @@ var tabExpander = (function($, window){
         $(".melis-tabprev, .melis-tabnext").show();
 
         // toggle overflow for dropdown
-        $("#melis-navtabs-container-inner").hover(
+        /* $("#melis-navtabs-container-inner").hover(
             function() {
                 $(this).css("overflow", "visible");
             }, function() {
                 $(this).css("overflow", "hidden");
             }
-        );
+        ); */
+
+        /* $("#melis-id-nav-bar-tabs li").hover(
+            function() {
+                if ( $(this).find(".nav-group-dropdown") ) {
+                    $("#melis-navtabs-container-inner").css("overflow", "visible");
+                }
+                console.log("$(this): ", $(this) );
+            }, function() {
+                $("#melis-navtabs-container-inner").css("overflow", "hidden");
+            }
+        ); */
+        var $navLi = $("#melis-id-nav-bar-tabs li");
+            
+            $navLi.on({
+                mouseenter: function(e) {
+                    $(this).closest("#melis-navtabs-container-inner").css("overflow", "visible");                    
+                },
+                mouseleave: function() {
+                    $(this).closest("#melis-navtabs-container-inner").css("overflow", "hidden");
+                }
+            });
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
@@ -65,9 +86,10 @@ var tabExpander = (function($, window){
         var totalHeaderWidthPx = $("#id_meliscore_header").width();
         
         // left
-        var leftMenuWidthPx = ( $(".navbar-header").width() === "undefined" ) ? 320 : 0;
+        //var leftMenuWidthPx = ( $(".navbar-header").width() === "undefined" ) ? 320 : 0;
+        var leftMenuWidthPx = $(".navbar-brand").width();
         var leftMenuWidthPercent = (100 * 274) / totalHeaderWidthPx;
-        
+       
         // right
         var rightMenuWidthPx = 0;
         $('#id_meliscore_header .navbar-right > li').each(function() {
@@ -86,12 +108,6 @@ var tabExpander = (function($, window){
         $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
             navUlContainer += $(this).outerWidth();
         });
-
-        console.log("leftMenuWidthPx: ", leftMenuWidthPx);
-        console.log("rightMenuWidthPx: ", rightMenuWidthPx);
-        console.log("======================================");
-        console.log("navUlContainer: ", navUlContainer);
-        console.log("tabContainerWidthPx: ", tabContainerWidthPx);
         		
 		// determines if TE should be activated or not
         if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
