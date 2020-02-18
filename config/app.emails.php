@@ -66,13 +66,13 @@ return array(
                     ),
                     'contents' => array(
                         'en_EN' => array(
-                            'subject' => 'tr_meliscore_email_create_account_Subject',
-                            'html' => 'tr_meliscore_email_create_account_html_Content',
+                            'subject' => 'tr_meliscore_email_create_password_Subject',
+                            'html' => 'tr_meliscore_email_create_password_html_Content',
                             'text' => '',
                         ),
                         'fr_FR' => array(
-                            'subject' => 'tr_meliscore_email_create_account_Subject',
-                            'html' => 'tr_meliscore_email_create_account_html_Content',
+                            'subject' => 'tr_meliscore_email_create_password_Subject',
+                            'html' => 'tr_meliscore_email_create_password_html_Content',
                             'text' => '',
                         ),
                     ),
