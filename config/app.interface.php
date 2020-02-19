@@ -195,7 +195,9 @@ return array(
                     '/MelisCore/css/diagnostic.css',
 
                     // Custom font-awesome checkbox
-                    '/MelisCore/css/custom-fontawesome.css'
+                    '/MelisCore/css/custom-fontawesome.css',
+                    // GDPR Auto delete
+                    '/MelisCore/css/gdpr-autodelete.css'
                 ),
                 'js' => array(
                     '/melis/get-translations',
@@ -259,6 +261,7 @@ return array(
                  * lesser requests
                  */
                 'build' => [
+                    'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
                     'use_build_assets' =>  true,
                     // path to where the build CSS and JS are located

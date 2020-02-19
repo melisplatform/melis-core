@@ -1,0 +1,30 @@
+.cron-info {
+    padding:20px 0 0 20px;
+    text-decoration:underline;
+}
+#list-config {
+    border-bottom:1px solid rgba(0,0,0,.125);
+}
+.custom-accordion-heading {
+    background-color: #fff;
+}
+.custom-accordion-heading{
+    display: block;
+}
+.accordion-heading {
+    padding: 20px 14px;
+    display:block;
+    cursor:pointer;
+}
+
+.accordion-subtitle {
+    margin-top:10px;
+    display:block;
+    font-size:60% !important;
+    font-weight:400 !important;
+    color:#686868!important
+}
+#id_meliscoregdpr_auto_delete_content_accordion_list_config #accordion {
+    margin-top: 15px;
+    padding:0 30px;
+}

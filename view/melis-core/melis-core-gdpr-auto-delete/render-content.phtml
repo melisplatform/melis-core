@@ -1,0 +1,25 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+
+<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' style="overflow: hidden;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget flex-row widget-inverse">
+                <div class="auto-delete-content">
+                    <h3 class="cron-info"><a href="#">Click here to get information on how to activate automatic sending</a></h3>
+                    <?php
+                        if(!empty($this->zoneconfig['interface'])) {
+                            foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                                echo $this->$keyConfig;
+                            }
+                        }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

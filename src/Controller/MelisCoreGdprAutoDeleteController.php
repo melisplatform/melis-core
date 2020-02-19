@@ -1,0 +1,274 @@
+<?php
+namespace MelisCore\Controller;
+/**
+ * Melis Technology (http://www.melistechnology.com)
+ *
+ * @copyright Copyright (c) 2020 Melis Technology (http://www.melistechnology.com)
+ *
+ */
+
+use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
+use MelisCore\Service\MelisCoreGdprAutoDeleteService;
+use MelisCore\Service\MelisCoreToolService;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
+use Zend\View\Model\ViewModel;
+
+class MelisCoreGdprAutoDeleteController extends AbstractActionController
+{
+    /**
+     * @return ViewModel
+     */
+    public function renderContentContainerAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+        return $view;
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+        return $view;
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionsAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+        return $view;
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+
+        return $view;
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigHeaderAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+        return $view;
+    }
+
+    /**
+     *
+     * limit view of the table
+     *
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigContentLimitAction()
+    {
+        return new ViewModel();
+    }
+
+    /**
+     *
+     * limit view of the table
+     *
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigContentEditAction()
+    {
+        return new ViewModel();
+    }
+
+    /**
+     *
+     * limit view of the table
+     *
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigContentDeleteAction()
+    {
+        return new ViewModel();
+    }
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigContentAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // table columns
+        $columns = $this->getTool()->getColumns();
+        // set table heading Action label
+        $columns['actions'] = [
+            'text' => $this->getTool()->getTranslation('tr_meliscore_global_action'), 'width' => '10%'
+        ];
+        $view->setVariable('tableColumns', $columns);
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+        // data table configuration
+        $view->setVariable('toolDataTableConfig', $this->getTool()->getDataTableConfiguration("#tableGdprAutoDeleteConfig", true,false,['order' => '[[0, "desc"]]']));
+
+        return $view;
+    }
+
+    /**
+     *  get gdpr delete config data
+     *
+     * @return JsonModel
+     */
+    public function getGdprDeleteConfigDataAction()
+    {
+        // request
+        $request = $this->getRequest();
+        $tableData = [];
+        $post = [];
+        if($request->isPost()) {
+            // post data
+            $post = $this->processPostdata(get_object_vars($request->getPost()));
+            // get data and format
+            $tableData = $this->formatDataIntoDataTableFormat (
+                // get gdpr delete config data from service
+                $this->getGdprAutoDeleteService()->getGdprDeleteConfigData (
+                    // search key
+                    $post['searchKey'],
+                    // searchable columns
+                    $this->getTool()->getSearchableColumns(),
+                    // order by (field)
+                    $post['orderBy'],
+                    // order direction
+                    $post['orderDir'],
+                    // start
+                    $post['start'],
+                    // length
+                    $post['limit']
+                )
+            );
+        }
+
+        return new JsonModel([
+            'draw'            => (int) $post['draw'],
+            'data'            => $tableData,
+            'recordsFiltered' => $this->getGdprDeleteConfigTable()->getTotalFiltered(),
+            'recordsTotal'    => $this->getGdprDeleteConfigTable()->getTotalData()
+        ]);
+    }
+
+    /**
+     *
+     * group post data and process
+     *
+     * @param $postData
+     * @return array
+     */
+    private function processPostdata($postData)
+    {
+        return [
+            'draw'       => (int) $postData['draw'],
+            'orderBy'    => array_keys($this->getTool()->getColumns())[(int) $postData['order'][0]['column']],
+            'orderDir'   => isset($postData['order']['0']['dir']) ? strtoupper($postData['order']['0']['dir']) : 'DESC',
+            'searchKey'  => isset($postData['search']['value']) ? $postData['search']['value'] : null,
+            'start'      => (int) $postData['start'],
+            'limit'      => (int) $postData['length'],
+        ];
+    }
+    /**
+     *
+     * format data from db into js datatable format
+     *
+     * @param $data
+     * @return array
+     */
+    private function formatDataIntoDataTableFormat($data)
+    {
+        $formattedData = [];
+        if (! empty($data)) {
+            for($ctr = 0; $ctr < count($data); $ctr++) {
+                // apply text limits
+                foreach($data[$ctr] as $vKey => $vValue) {
+                    // apply limit text
+                    $formattedData[$ctr][$vKey] = $this->getTool()->limitedText($vValue, 80);
+                }
+                // set data for match fields
+                $formattedData[$ctr]['DT_RowId'] = $data[$ctr]['mgdprc_id'];
+                $formattedData[$ctr]['mgdprc_site_id'] = $data[$ctr]['mgdprc_site_id'];
+                $formattedData[$ctr]['mgdprc_module_name'] = $data[$ctr]['mgdprc_module_name'];
+                $formattedData[$ctr]['mgdprc_alert_email_status'] = $data[$ctr]['mgdprc_alert_email_status'];
+                $formattedData[$ctr]['mgdprc_alert_email_resend'] = $data[$ctr]['mgdprc_alert_email_resend'];
+                $formattedData[$ctr]['mgdprc_delete_days'] = $data[$ctr]['mgdprc_delete_days'];
+            }
+        } else {
+            $formattedData = $data;
+        }
+
+        return $formattedData;
+    }
+    /**
+     * this method will get the melisKey from route params
+     */
+    private function getMelisKey()
+    {
+        return $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey'), null);
+    }
+
+    /**
+     * this method will get the meliscore tool
+     * @return MelisCoreToolService
+     */
+    private function getTool()
+    {
+        /** @var MelisCoreToolService $toolSvc */
+        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
+        // set melis tool key
+        $toolSvc->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
+
+        return $toolSvc;
+    }
+
+    /**
+     * @return MelisCoreGdprAutoDeleteService
+     */
+    private function getGdprAutoDeleteService()
+    {
+        /** @var MelisCoreGdprAutoDeleteService $gdprAutoDeleteSvc */
+        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService');
+
+        return $gdprAutoDeleteSvc;
+    }
+
+    /**
+     * @return MelisGdprDeleteConfigTable
+     */
+    private function getGdprDeleteConfigTable()
+    {
+        /** @var MelisGdprDeleteConfigTable $gdprDeleteConfigTable */
+        $gdprDeleteConfigTable = $this->getServiceLocator()->get('MelisGdprDeleteConfigTable');
+
+        return $gdprDeleteConfigTable;
+    }
+
+}
