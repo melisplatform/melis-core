@@ -145,7 +145,7 @@ class MelisAuthController extends AbstractActionController
         $loginForm = $factory->createForm($appConfigForm);
 
         if ($request->isPost()) {
-            $postValues = get_object_vars($request->getPost());
+            $postValues = $request->getPost()->toArray();
 
             $loginForm->setData($postValues);
 
