@@ -296,8 +296,12 @@ class Module
             include __DIR__ . '/../config/setup/update.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
+            /*
+             * gdpr auto delete
+             */
             include __DIR__ . '/../config/gdpr/app.interface.php',
             include __DIR__ . '/../config/gdpr/app.tools.php',
+            include __DIR__ . '/../config/gdpr/app.forms.php',
         ];
 
         foreach ($configFiles as $file) {

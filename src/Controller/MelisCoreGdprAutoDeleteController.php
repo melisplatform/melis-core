@@ -65,7 +65,6 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey',$this->getMelisKey());
 
-
         return $view;
     }
 
@@ -131,7 +130,14 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey',$this->getMelisKey());
         // data table configuration
-        $view->setVariable('toolDataTableConfig', $this->getTool()->getDataTableConfiguration("#tableGdprAutoDeleteConfig", true,false,['order' => '[[0, "desc"]]']));
+        $view->setVariable('toolDataTableConfig',
+            $this->getTool()->getDataTableConfiguration(
+                "#tableGdprAutoDeleteConfig",
+                true,
+                false,
+                ['order' => '[[0, "desc"]]']
+            )
+        );
 
         return $view;
     }
@@ -149,7 +155,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $post = [];
         if($request->isPost()) {
             // post data
-            $post = $this->processPostdata(get_object_vars($request->getPost()));
+            $post = $this->processPostData(get_object_vars($request->getPost()));
             // get data and format
             $tableData = $this->formatDataIntoDataTableFormat (
                 // get gdpr delete config data from service
@@ -185,7 +191,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      * @param $postData
      * @return array
      */
-    private function processPostdata($postData)
+    private function processPostData($postData)
     {
         return [
             'draw'       => (int) $postData['draw'],
@@ -270,5 +276,65 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
 
         return $gdprDeleteConfigTable;
     }
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionAddEditConfigAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
 
+        return $view;
+    }
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionAddEditConfigHeaderAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+        return $view;
+    }
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionAddEditConfigContentAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+        return $view;
+    }
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionAddEditConfigFiltersAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('formFilter', $this->getTool()->getForm('melisgdprautodelete_add_edit_config_filters'));
+
+        return $view;
+    }
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAccordionAddEditConfigMultiTabAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+        return $view;
+    }
 }

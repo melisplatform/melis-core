@@ -196,8 +196,7 @@ return array(
 
                     // Custom font-awesome checkbox
                     '/MelisCore/css/custom-fontawesome.css',
-                    // GDPR Auto delete
-                    '/MelisCore/css/gdpr-autodelete.css'
+
                 ),
                 'js' => array(
                     '/melis/get-translations',

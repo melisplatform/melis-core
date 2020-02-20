@@ -3,6 +3,16 @@
 return [
     'plugins' => [
         'meliscore' => [
+            'ressources' => [
+                'css' => [
+                    // GDPR Auto delete css
+                    '/MelisCore/css/gdpr-autodelete.css'
+                ],
+                'js' => [
+                    // GDPR Auto delete js
+                    '/MelisCore/js/tools/gdpr-autodelete.js'
+                ]
+            ],
             'interface' => [
                 'meliscore_leftmenu' => [
                     'interface' => [
@@ -106,16 +116,119 @@ return [
                                                                                         ]
 
                                                                                     ]
+                                                                                ],
+                                                                                'meliscoregdpr_auto_delete_content_accordion_add_edit_config' => [
+                                                                                    'conf' => [
+                                                                                        'id' => 'id_meliscoregdpr_auto_delete_content_accordion_add_edit_config',
+                                                                                        'name' => 'Add / Edit auto delete congi',
+                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_content_accordion_add_edit_config',
+                                                                                    ],
+                                                                                    'forward' => [
+                                                                                        'module' => 'MelisCore',
+                                                                                        'controller' => 'MelisCoreGdprAutoDelete',
+                                                                                        'action' => 'render-content-accordion-add-edit-config',
+                                                                                        'jscallback' => '',
+                                                                                        'jsdatas' => [],
+                                                                                    ],
+                                                                                    'interface' => [
+                                                                                        'meliscoregdpr_auto_delete_content_accordion_add_edit_config_header' => [
+                                                                                            'conf' => [
+                                                                                                'id' => 'id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_header',
+                                                                                                'name' => 'Add / Edit auto delete config header',
+                                                                                                'melisKey' => 'meliscoregdpr_auto_delete_content_accordion_add_edit_config_header',
+                                                                                            ],
+                                                                                            'forward' => [
+                                                                                                'module' => 'MelisCore',
+                                                                                                'controller' => 'MelisCoreGdprAutoDelete',
+                                                                                                'action' => 'render-content-accordion-add-edit-config-header',
+                                                                                                'jscallback' => '',
+                                                                                                'jsdatas' => [],
+                                                                                            ],
+                                                                                        ],
+                                                                                        'meliscoregdpr_auto_delete_content_accordion_add_edit_config_content' => [
+                                                                                            'conf' => [
+                                                                                                'id' => 'id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content',
+                                                                                                'name' => 'Add / Edit auto delete config content',
+                                                                                                'melisKey' => 'meliscoregdpr_auto_delete_content_accordion_add_edit_config_content',
+                                                                                            ],
+                                                                                            'forward' => [
+                                                                                                'module' => 'MelisCore',
+                                                                                                'controller' => 'MelisCoreGdprAutoDelete',
+                                                                                                'action' => 'render-content-accordion-add-edit-config-content',
+                                                                                                'jscallback' => '',
+                                                                                                'jsdatas' => [],
+                                                                                            ],
+                                                                                            'interface' => [
+                                                                                                'meliscoregdpr_auto_delete_add_edit_config_filters' => [
+                                                                                                    'conf' => [
+                                                                                                        'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_filters',
+                                                                                                        'name' => 'Site and Module Filters',
+                                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_filters',
+                                                                                                    ],
+                                                                                                    'forward' => [
+                                                                                                        'module' => 'MelisCore',
+                                                                                                        'controller' => 'MelisCoreGdprAutoDelete',
+                                                                                                        'action' => 'render-content-accordion-add-edit-config-filters',
+                                                                                                        'jscallback' => '',
+                                                                                                        'jsdatas' => [],
+                                                                                                    ],
+                                                                                                ],
+                                                                                                'meliscoregdpr_auto_delete_add_edit_config_multi_tab' => [
+                                                                                                    'conf' => [
+                                                                                                        'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_multi_tab',
+                                                                                                        'name' => 'Add / Edit Multi Tabs ',
+                                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_multi_tab',
+                                                                                                    ],
+                                                                                                    'forward' => [
+                                                                                                        'module' => 'MelisCore',
+                                                                                                        'controller' => 'MelisCoreGdprAutoDelete',
+                                                                                                        'action' => 'render-content-accordion-add-edit-config-multi-tab',
+                                                                                                        'jscallback' => '',
+                                                                                                        'jsdatas' => [],
+                                                                                                    ],
+                                                                                                    'interface' => [
+                                                                                                        'meliscoregdpr_auto_delete_add_edit_config_tab_config' => [
+                                                                                                            'conf' => [
+                                                                                                                'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_tab_config',
+                                                                                                                'name' => 'Configuration',
+                                                                                                                'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_tab_config',
+                                                                                                            ],
+                                                                                                            'forward' => [
+                                                                                                                'module' => 'MelisCore',
+                                                                                                                'controller' => 'MelisCoreGdprAutoDeleteConfigTab',
+                                                                                                                'action' => 'render-config-tab',
+                                                                                                                'jscallback' => '',
+                                                                                                                'jsdatas' => [],
+                                                                                                            ],
+                                                                                                            'interface' => [
+                                                                                                                'meliscoregdpr_auto_delete_add_edit_config_tab_config_header' => [
+                                                                                                                    'conf' => [
+                                                                                                                        'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_tab_config',
+                                                                                                                        'name' => 'Configuration',
+                                                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_tab_config',
+                                                                                                                    ],
+                                                                                                                    'forward' => [
+                                                                                                                        'module' => 'MelisCore',
+                                                                                                                        'controller' => 'MelisCoreGdprAutoDeleteConfigTab',
+                                                                                                                        'action' => 'render-config-tab',
+                                                                                                                        'jscallback' => '',
+                                                                                                                        'jsdatas' => [],
+                                                                                                                    ],
+                                                                                                                ]
+                                                                                                            ]
+                                                                                                        ]
+                                                                                                    ]
+                                                                                                ]
+                                                                                            ]
+                                                                                        ]
+                                                                                    ]
                                                                                 ]
                                                                             ]
-                                                                        ]
-                                                                        // </editor-fold>
+                                                                        ]// </editor-fold>
                                                                     ]
-                                                                ]
-                                                                // </editor-fold>
+                                                                ]// </editor-fold>
                                                             ]
-                                                        ]
-                                                        // </editor-fold>
+                                                        ] // </editor-fold>
                                                     ]
                                                 ]
                                             ]

@@ -1,0 +1,18 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+
+<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' >
+    <div id="add-edit-config-content" class="collapse show" aria-labelledby="add-edit-config" data-parent="#accordion-add-edit">
+        <?php
+        if(!empty($this->zoneconfig['interface'])) {
+            foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                echo $this->$keyConfig;
+            }
+        }
+        ?>
+    </div>
+</div>
