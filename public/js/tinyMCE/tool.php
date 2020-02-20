@@ -7,7 +7,7 @@
 		'language' => 'en',
 		'mobile' => [
 			'theme' => 'silver',
-			'height' => 400
+			'height' => 300
 		],
 		'branding' => false,
 		'inline' => false,
