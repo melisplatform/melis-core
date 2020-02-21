@@ -363,7 +363,7 @@ return array(
             'MelisCore\Controller\DashboardPlugins' => 'MelisCore\Controller\DashboardPluginsController',
             'MelisCore\Controller\MelisCoreGdpr' => 'MelisCore\Controller\MelisCoreGdprController',
             'MelisCore\Controller\MelisCoreGdprAutoDelete' => 'MelisCore\Controller\MelisCoreGdprAutoDeleteController',
-            'MelisCore\Controller\MelisCoreGdprAutoDeleteConfigTab' => 'MelisCore\Controller\MelisCoreGdprAutoDeleteConfigTabController',
+            'MelisCore\Controller\MelisCoreGdprAutoDeleteTabs' => 'MelisCore\Controller\MelisCoreGdprAutoDeleteTabsController',
         ),
     ),
     'controller_plugins' => array(

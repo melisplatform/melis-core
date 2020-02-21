@@ -6,6 +6,7 @@ return [
             'tools' => [
                 'melis_core_gdpr_auto_delete' => [
                     'forms' => [
+                        // <editor-fold desc="GDPR Auto delete config filtersform">
                         'melisgdprautodelete_add_edit_config_filters' => [
                             'attributes' => array(
                                 'name' => 'melisgdprautodelete_add_edit_config_filters',
@@ -26,72 +27,15 @@ return [
                                 ]
                             ]
                         ],
-                        'melisgdprautodelete_add_edit_cron_config_form' => [
-                            'attributes' => array(
-                                'name' => 'melisgdprautodelete_add_edit_cron_config_form',
-                                'id' => 'id_melisgdprautodelete_add_edit_cron_config_form',
-                                'method' => 'POST',
-                                'action' => '',
-                            ),
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
-                            'elements' => [
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdprc_alert_email_status',
-                                        'type' => "checkbox",
-                                        'options' => [
-                                            'label' => 'Activate email warning',
-                                            'switch_options' => [
-                                                'label-on' => 'Yes',
-                                                'label-off' => 'No',
-                                                'icon' => "glyphicon glyphicon-resize-horizontal",
-                                            ],
-                                            'checked_value' => 1,
-                                            'unchecked_value' => 0,
-                                        ],
-                                        'value' => '1'
-                                    ]
-                                ],
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdprc_alert_email_days',
-                                        'type' => "MelisText",
-                                        'options' => [
-                                            'label' => 'Alert email sent after inactivity of:'
-                                        ]
-                                    ]
-                                ],
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdprc_alert_email_resend',
-                                        'type' => "checkbox",
-                                        'options' => [
-                                            'label' => 'Resend alert 7 days before deadline:',
-                                            'switch_options' => [
-                                                'label-on' => 'Yes',
-                                                'label-off' => 'No',
-                                                'icon' => "glyphicon glyphicon-resize-horizontal",
-                                            ]
-                                        ]
-                                    ]
-                                ],
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdprc_delete_days',
-                                        'type' => "MelisText",
-                                        'options' => [
-                                            'label' => 'Account will be deleted automatically after an inactivity of:'
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
+                        // </editor-fold>
+                        // <editor-fold desc="GDPR Auto delete email setup form">
                         'melisgdprautodelete_add_edit_email_setup' => [
                             'attributes' => array(
                                 'name' => 'melisgdprautodelete_add_edit_email_setup',
                                 'id' => 'id_melisgdprautodelete_add_edit_email_setup',
                                 'method' => 'POST',
                                 'action' => '',
+                                'entype' => 'multipart/form'
                             ),
                             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
                             'elements' => [
@@ -206,7 +150,98 @@ return [
                                     ]
                                 ]
                             ]
+                        ],
+                        // </editor-fold>
+                        // <editor-fold desc="GDPR Add edit cron config form">
+                        'melisgdprautodelete_add_edit_cron_config_form' => [
+                            'attributes' => array(
+                                'name' => 'melisgdprautodelete_add_edit_cron_config_form',
+                                'id' => 'id_melisgdprautodelete_add_edit_cron_config_form',
+                                'method' => 'POST',
+                                'action' => '',
+                            ),
+                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => [
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_alert_email_status',
+                                        'type' => "checkbox",
+                                        'options' => [
+                                            'label' => 'Activate email warning',
+                                            'switch_options' => [
+                                                'label-on' => 'Yes',
+                                                'label-off' => 'No',
+                                                'icon' => "glyphicon glyphicon-resize-horizontal",
+                                            ],
+                                            'checked_value' => 1,
+                                            'unchecked_value' => 0,
+                                        ],
+                                        'attributes' => [
+                                            'placeholder' => '365',
+                                            'required' => 'true',
+                                            'class' => 'form-control'
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_alert_email_days',
+                                        'type' => "MelisText",
+                                        'options' => [
+                                            'label' => 'Alert email sent after inactivity of:'
+                                        ],
+                                        'attributes' => [
+                                            'class' => 'mgdprc_alert_email_days form-control'
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_alert_email_resend',
+                                        'type' => "checkbox",
+                                        'options' => [
+                                            'label' => 'Resend alert 7 days before deadline:',
+                                            'switch_options' => [
+                                                'label-on' => 'Yes',
+                                                'label-off' => 'No',
+                                                'icon' => "glyphicon glyphicon-resize-horizontal",
+                                            ]
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_delete_days',
+                                        'type' => "MelisText",
+                                        'options' => [
+                                            'label' => 'Account will be deleted automatically after an inactivity of:'
+                                        ],
+                                        'attributes' => [
+                                            'class' => 'mgdprc_delete_days form-control'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        // </editor-fold>
+                        // <editor-fold desc="GDPR Alert email form">
+                        'melisgdprautodelete_add_edit_alert_email' => [
+                            'attributes' => array(
+                                'name' => 'melisgdprautodelete_add_edit_cron_config_form',
+                                'id' => 'id_melisgdprautodelete_add_edit_cron_config_form',
+                                'method' => 'POST',
+                                'action' => '',
+                            ),
+                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => [
+                                [
+                                    'spec' => [
+
+                                    ]
+                                ]
+                            ]
                         ]
+                        // </editor-fold>
                     ]
                 ]
             ]

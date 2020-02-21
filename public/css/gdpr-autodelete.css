@@ -12,7 +12,7 @@
     display: block;
 }
 .accordion-heading {
-    padding: 20px 14px;
+    /* padding: 20px 14px; */
     display:block;
     cursor:pointer;
 }
@@ -62,18 +62,47 @@
 #cron-configuration a,
 #email-setup a{
     display: block;
-    padding: 20px;
+    padding: 5px;
     cursor: pointer;
     border: 1px solid rgba(0,0,0,.125);
     -webkit-box-shadow: 0 2px 2px #eee;
     -moz-box-shadow: 0 2px 2px #eee;
     box-shadow: 0 2px 2px #eee;
     background-color: #f5f5f5;
+    border-radius: 2px;
+}
+#cron-configuration h5,
+#email-setup h5 {
+    margin-bottom:0;
 }
 #cron-configuration-content,
 #email-setup-content {
-    padding:25px 0 25px 10px;
+    padding: 25px 0 0 10px;
 }
 #accordion-email-setup {
     margin-top:5px;
+}
+#id_meliscoregdpr_auto_delete_add_edit_config_multi_tab #v-pills-tabContent {
+    padding-bottom:25px;
+}
+.pad-20 {
+    padding:20px;
+}
+.pad-10 {
+    padding:10px;
+}
+.accordion-heading-sm {
+    display: block;
+    padding: 5px;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,.125);
+    -webkit-box-shadow: 0 2px 2px #eee;
+    -moz-box-shadow: 0 2px 2px #eee;
+    box-shadow: 0 2px 2px #eee;
+    background-color: #f5f5f5;
+    border-radius: 2px;
+    margin-bottom:15px;
+}
+.accordion-heading-sm h5 {
+    margin-bottom:0 !important;
 }

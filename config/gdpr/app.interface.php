@@ -181,8 +181,8 @@ return [
                                                                                                     ],
                                                                                                     'forward' => [
                                                                                                         'module' => 'MelisCore',
-                                                                                                        'controller' => 'MelisCoreGdprAutoDelete',
-                                                                                                        'action' => 'render-content-accordion-add-edit-config-multi-tab',
+                                                                                                        'controller' => 'MelisCoreGdprAutoDeleteTabs',
+                                                                                                        'action' => 'render-content-add-edit-tabs-handler',
                                                                                                         'jscallback' => '',
                                                                                                         'jsdatas' => [],
                                                                                                     ],
@@ -195,7 +195,7 @@ return [
                                                                                                             ],
                                                                                                             'forward' => [
                                                                                                                 'module' => 'MelisCore',
-                                                                                                                'controller' => 'MelisCoreGdprAutoDeleteConfigTab',
+                                                                                                                'controller' => 'MelisCoreGdprAutoDeleteTabs',
                                                                                                                 'action' => 'render-config-tab',
                                                                                                                 'jscallback' => '',
                                                                                                                 'jsdatas' => [],
@@ -209,13 +209,28 @@ return [
                                                                                                                     ],
                                                                                                                     'forward' => [
                                                                                                                         'module' => 'MelisCore',
-                                                                                                                        'controller' => 'MelisCoreGdprAutoDeleteConfigTab',
+                                                                                                                        'controller' => 'MelisCoreGdprAutoDeleteTabs',
                                                                                                                         'action' => 'render-config-tab',
                                                                                                                         'jscallback' => '',
                                                                                                                         'jsdatas' => [],
                                                                                                                     ],
                                                                                                                 ]
                                                                                                             ]
+                                                                                                        ],
+                                                                                                        // for Alert emails language refer to melis-core/render-content-add-edit-tabs-handler.phtml
+                                                                                                        'meliscoregdpr_auto_delete_add_edit_config_tab_alert_emails' => [
+                                                                                                            'conf' => [
+                                                                                                                'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_tab_alert_emails',
+                                                                                                                'name' => 'Alert Emails',
+                                                                                                                'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_tab_alert_emails',
+                                                                                                            ],
+                                                                                                            'forward' => [
+                                                                                                                'module' => 'MelisCore',
+                                                                                                                'controller' => 'MelisCoreGdprAutoDeleteTabs',
+                                                                                                                'action' => 'render-alert-tab',
+                                                                                                                'jscallback' => '',
+                                                                                                                'jsdatas' => [],
+                                                                                                            ],
                                                                                                         ]
                                                                                                     ]
                                                                                                 ]

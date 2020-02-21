@@ -9,7 +9,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
     <div id="accordion-cron-configuration">
         <div class="card" style="border: none;">
             <div id="cron-configuration" >
-                <a data-toggle="collapse" data-target="#cron-configuration-content" aria-expanded="true" aria-controls="cron-configuration" class="accordion-heading">
+                <a data-toggle="collapse" data-target="#cron-configuration-content" aria-expanded="true" aria-controls="cron-configuration" >
                     <h5 class="accordion-heading-title">Cron Config</h5>
                 </a>
             </div>
@@ -30,7 +30,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
     <div id="accordion-email-setup">
         <div class="card" style="border: none;">
             <div id="email-setup" >
-                <a data-toggle="collapse" data-target="#email-setup-content" aria-expanded="true" aria-controls="email-setup" class="accordion-heading">
+                <a data-toggle="collapse" data-target="#email-setup-content" aria-expanded="true" aria-controls="email-setup" >
                     <h5 class="accordion-heading-title">Email Setup</h5>
                 </a>
             </div>
@@ -38,10 +38,10 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                 <div class="row">
                     <div class="col-md-6">
                         <?php
-                        $this->formEmailSetup->prepare();
-                        echo $this->form()->openTag($this->formEmailSetup);
-                        echo $this->melisFieldCollection($this->formEmailSetup);
-                        echo $this->form()->closeTag();
+                            $this->formEmailSetup->prepare();
+                            echo $this->form()->openTag($this->formEmailSetup);
+                            echo $this->melisFieldCollection($this->formEmailSetup);
+                            echo $this->form()->closeTag();
                         ?>
                     </div>
                 </div>

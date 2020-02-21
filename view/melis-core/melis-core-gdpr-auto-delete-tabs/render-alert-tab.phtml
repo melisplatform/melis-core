@@ -1,0 +1,33 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+
+<?php foreach ($this->melisCoreLang as $i => $data) { ?>
+    <div class="tab-pane fade" id="alert_emails_<?= strtolower($data['lang_locale'])?>" role="tabpanel" aria-labelledby="alert_emails_<?= strtolower($data['lang_locale'])?>">
+        <div class="me-heading bg-white border-bottom">
+            <h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?= $data['lang_name'] ?></h3>
+        </div>
+        <!-- accordion -->
+        <div id="accordion-alert-email-<?= $data['lang_locale'] ?>" class="innerAll spacing-x2">
+            <div class="card" style="border: none;">
+                <div id="alert-email" >
+                    <a data-toggle="collapse" data-target="#alert-email-content-<?= $data['lang_locale'] ?>" aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10" >
+                        <h5 class="accordion-heading-title">Alert Email</h5>
+                    </a>
+                </div>
+                <div id="alert-email-content-<?= $data['lang_locale'] ?>" class="collapse show" aria-labelledby="alert-email-content-<?= $data['lang_locale'] ?>" data-parent="#accordion-alert-email-<?= $data['lang_locale'] ?>">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="float-right"><a href="#" class="" style="text-decoration: underline">Delete everything</a></h5>
+                            <div class="clearfix"></div>
+                            <p>Reminder on the list of accepted tags :</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php }

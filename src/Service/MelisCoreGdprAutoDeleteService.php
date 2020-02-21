@@ -2,6 +2,7 @@
 namespace MelisCore\Service;
 
 use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
+use MelisCore\Model\Tables\MelisLangTable;
 use MelisCore\Service\MelisCoreGeneralService;
 use Zend\Http\PhpEnvironment\Response as HttpResponse;
 
@@ -45,5 +46,16 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_config_data_end', $arrayParameters);
 
         return $arrayParameters['results'];
+    }
+
+    /**
+     * @return MelisLangTable
+     */
+    public function getMelisCoreLang()
+    {
+        /** @var MelisLangTable $melisCoreLangTbl */
+        $melisCoreLangTbl = $this->getServiceLocator()->get('MelisCoreTableLang');
+
+        return $melisCoreLangTbl->fetchAll()->toArray();
     }
 }

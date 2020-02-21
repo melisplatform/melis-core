@@ -325,16 +325,4 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
 
         return $view;
     }
-    /**
-     * @return ViewModel
-     */
-    public function renderContentAccordionAddEditConfigMultiTabAction()
-    {
-        // view model
-        $view = new ViewModel();
-        // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
-
-        return $view;
-    }
 }

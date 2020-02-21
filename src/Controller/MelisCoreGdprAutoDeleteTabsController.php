@@ -14,8 +14,22 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
-class MelisCoreGdprAutoDeleteConfigTabController extends AbstractActionController
+class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
 {
+    /**
+     * @return ViewModel
+     */
+    public function renderContentAddEditTabsHandlerAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+        // get melis core languages for nav
+        $view->setVariable('melisCoreLang'  , $this->getGdprAutoDeleteService()->getMelisCoreLang());
+
+        return $view;
+    }
     /**
      * @return ViewModel
      */
@@ -24,12 +38,25 @@ class MelisCoreGdprAutoDeleteConfigTabController extends AbstractActionControlle
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
-        $view->setVariable('formCronConfig', $this->getTool()->getForm('melisgdprautodelete_add_edit_cron_config_form'));
-        $view->setVariable('formEmailSetup', $this->getTool()->getForm('melisgdprautodelete_add_edit_email_setup'));
+        $view->setVariable('melisKey'       ,$this->getMelisKey());
+        // get form for the Cron Config
+        $view->setVariable('formCronConfig' , $this->getTool()->getForm('melisgdprautodelete_add_edit_cron_config_form'));
+        // get form for Email Setup
+        $view->setVariable('formEmailSetup' , $this->getTool()->getForm('melisgdprautodelete_add_edit_email_setup'));
 
         return $view;
     }
+    public function renderAlertTabAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+        // for contents
+        $view->setVariable('melisCoreLang'  , $this->getGdprAutoDeleteService()->getMelisCoreLang());
+        return $view;
+    }
+
 
     /**
      * this method will get the melisKey from route params
