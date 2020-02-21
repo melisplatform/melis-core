@@ -23,7 +23,13 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                         <div class="col-md-12">
                             <h5 class="float-right"><a href="#" class="" style="text-decoration: underline">Delete everything</a></h5>
                             <div class="clearfix"></div>
-                            <p>Reminder on the list of accepted tags :</p>
+                            <?php
+                                $this->melisCoreGdprAlertEmailForm->prepare();
+                                $form = clone $this->melisCoreGdprAlertEmailForm;
+                                echo $this->form()->openTag($form);
+                                echo $this->melisFieldCollection($form);
+                                echo $this->form()->closeTag();
+                            ?>
                         </div>
                     </div>
                 </div>

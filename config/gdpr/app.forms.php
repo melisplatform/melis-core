@@ -85,14 +85,13 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'replacement_tags_accepted',
-                                        'type' => "MelisText",
+                                        'type' => "MelisMultiValInput",
                                         'options' => [
-                                            'label' => 'Replacement tags accepted',
                                             'tooltip' => 'Tags',
                                         ],
                                         'attributes' => [
-                                            'placeholder' => 'noreply@melistechnology.com',
-                                            'required' => 'true'
+                                            'required' => 'true',
+                                            'data-label-text' => 'Replacement tags accepted',
                                         ]
                                     ]
                                 ],
@@ -236,9 +235,17 @@ return [
                             'elements' => [
                                 [
                                     'spec' => [
-
+                                        'name' => 'replacement_tags_accepted',
+                                        'type' => "MelisMultiValInput",
+                                        'options' => [
+                                            'tooltip' => 'Tags',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'data-label-text' => 'Replacement tags accepted',
+                                        ]
                                     ]
-                                ]
+                                ],
                             ]
                         ]
                         // </editor-fold>

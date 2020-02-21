@@ -46,7 +46,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
 
         return $view;
     }
-    public function renderAlertTabAction()
+    public function renderAlertEmailTabAction()
     {
         // view model
         $view = new ViewModel();
@@ -54,6 +54,9 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisKey',$this->getMelisKey());
         // for contents
         $view->setVariable('melisCoreLang'  , $this->getGdprAutoDeleteService()->getMelisCoreLang());
+        // get alert email form
+        $view->setVariable('melisCoreGdprAlertEmailForm'  , $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email'));
+
         return $view;
     }
 

@@ -227,7 +227,7 @@ return [
                                                                                                             'forward' => [
                                                                                                                 'module' => 'MelisCore',
                                                                                                                 'controller' => 'MelisCoreGdprAutoDeleteTabs',
-                                                                                                                'action' => 'render-alert-tab',
+                                                                                                                'action' => 'render-alert-email-tab',
                                                                                                                 'jscallback' => '',
                                                                                                                 'jsdatas' => [],
                                                                                                             ],
