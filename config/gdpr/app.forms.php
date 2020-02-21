@@ -85,12 +85,13 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'replacement_tags_accepted',
-                                        'type' => "MelisMultiValInput",
+                                        'type' => "text",
                                         'options' => [
                                             'tooltip' => 'Tags',
                                         ],
                                         'attributes' => [
                                             'required' => 'true',
+                                            'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'Replacement tags accepted',
                                         ]
                                     ]
@@ -236,15 +237,58 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'replacement_tags_accepted',
-                                        'type' => "MelisMultiValInput",
+                                        'type' => "text",
                                         'options' => [
                                             'tooltip' => 'Tags',
                                         ],
                                         'attributes' => [
                                             'required' => 'true',
+                                            'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'Replacement tags accepted',
                                         ]
-                                    ]
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_subject ',
+                                        'type' => "text",
+                                        'options' => [
+                                            'label' => 'Subject',
+                                            'tooltip' => 'Subject of the email',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'class' => 'form-control'
+                                        ]
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_html',
+                                        'type' => "MelisCoreTinyMCE",
+                                        'options' => [
+                                            'label' => 'Message',
+                                            'tooltip' => 'Message of the email',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'class' => 'form-control'
+                                        ]
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_text',
+                                        'type' => "textarea",
+                                        'options' => [
+                                            'label' => 'Text Version',
+                                            'tooltip' => 'Message of the email in text version',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'class' => 'form-control'
+                                        ]
+                                    ],
                                 ],
                             ]
                         ]

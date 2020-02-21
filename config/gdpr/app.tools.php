@@ -8,6 +8,7 @@ return [
                 'rightsDisplay' => 'none',
             ],
             'tools' => [
+                // <editor-fold desc="GDPR Auto delete config table">
                'melis_core_gdpr_auto_delete' => [
                    'table' => [
                        'target' => '#tableAutoDeleteListConfig',
@@ -59,7 +60,6 @@ return [
                                'sortable' => false,
                            ],
                        ],
-
                        // define what columns can be used in searching
                        'searchables' => ['mgdprc_id', 'mgdprc_module_name','mgdprc_site_id'],
                        'actionButtons' => [
@@ -75,7 +75,96 @@ return [
                            ),
                        ],
                    ]
-               ]
+               ],
+                //</editor-fold>
+                // <editor-fold desc="GDPR Auto delete logs table">
+                'melis_core_gdpr_auto_delete_log' => [
+                    'table' => [
+                        'target' => '#tableGdprAutoDeleteLogs',
+                        'ajaxUrl' => '/melis/MelisCore/MelisCoreGdprAutoDeleteTabs/getGdprDeleteEmailsLogs',
+                        'dataFunction' => '',
+                        'ajaxCallback' => '',
+                        'filters' => [
+                            'left' => [
+                                'tool_limit_config' => [
+                                    'module' => 'MelisCore',
+                                    'controller' => 'MelisCoreGdprAutoDelete',
+                                    'action' => 'render-content-accordion-list-config-content-limit'
+                                ],
+                            ],
+                            'center' => [
+                            ],
+                            'right' => [
+                            ],
+                        ],
+                        'columns' => [
+                            'mgdprl_id' => [
+                                'text' => 'Id',
+                                'css' => ['width' => '5%', 'padding-right' => '0'],
+                                'sortable' => true,
+                            ],
+                            'mgdprl_log_date' => [
+                                'text' => 'Date',
+                                'css' => ['width' => '15%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mgdprl_warning1_ok' => [
+                                'text' => 'W1 OK',
+                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mgdprl_warning1_ko' => [
+                                'text' => 'WI KO',
+                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mgdprl_warning2_ok' => [
+                                'text' => 'w2 OK',
+                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mgdprl_warning2_ko' => [
+                                'text' => 'w2 KO',
+                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mgdprl_delete_ok' => [
+                                'text' => 'Del OK',
+                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mgdprl_delete_ko' => [
+                                'text' => 'Del KO',
+                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                        ],
+                        // define what columns can be used in searching
+                        'searchables' => [
+                            'mgdprl_id',
+                            'mgdpr_log_date',
+                            'mgdprl_warning1_ko',
+                            'mgdprl_warning1_ko',
+                            'mgdprl_warning2_ok',
+                            'mgdprl_warning2_ko',
+                            'mgdpr_delete_ok',
+                            'mgdpr_delete_ko',
+                        ],
+                        'actionButtons' => [
+//                            'edit' => array(
+//                                'module' => 'MelisCore',
+//                                'controller' => 'MelisCoreGdprAutoDelete',
+//                                'action' => 'render-content-accordion-list-config-content-edit',
+//                            ),
+//                            'delete' => array(
+//                                'module' => 'MelisCore',
+//                                'controller' => 'MelisCoreGdprAutoDelete',
+//                                'action' => 'render-content-accordion-list-config-content-delete',
+//                            ),
+                        ],
+                    ]
+                ]
+                //</editor-fold>
             ]
         ]
     ]

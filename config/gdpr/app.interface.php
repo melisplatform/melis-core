@@ -217,7 +217,6 @@ return [
                                                                                                                 ]
                                                                                                             ]
                                                                                                         ],
-                                                                                                        // for Alert emails language refer to melis-core/render-content-add-edit-tabs-handler.phtml
                                                                                                         'meliscoregdpr_auto_delete_add_edit_config_tab_alert_emails' => [
                                                                                                             'conf' => [
                                                                                                                 'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_tab_alert_emails',
@@ -228,6 +227,20 @@ return [
                                                                                                                 'module' => 'MelisCore',
                                                                                                                 'controller' => 'MelisCoreGdprAutoDeleteTabs',
                                                                                                                 'action' => 'render-alert-email-tab',
+                                                                                                                'jscallback' => '',
+                                                                                                                'jsdatas' => [],
+                                                                                                            ],
+                                                                                                        ],
+                                                                                                        'meliscoregdpr_auto_delete_add_edit_config_tab_logs' => [
+                                                                                                            'conf' => [
+                                                                                                                'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_tab_logs',
+                                                                                                                'name' => 'Logs',
+                                                                                                                'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_tab_logs',
+                                                                                                            ],
+                                                                                                            'forward' => [
+                                                                                                                'module' => 'MelisCore',
+                                                                                                                'controller' => 'MelisCoreGdprAutoDeleteTabs',
+                                                                                                                'action' => 'render-logs-tab',
                                                                                                                 'jscallback' => '',
                                                                                                                 'jsdatas' => [],
                                                                                                             ],

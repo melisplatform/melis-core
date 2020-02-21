@@ -17,10 +17,12 @@ class MelisCoreGdprAutoDeleteServiceFactory implements FactoryInterface{
     {
         /** @var MelisGdprDeleteConfigTable $gdprDeleteConfigTbl */
         $gdprDeleteConfigTbl = $sl->get('MelisGdprDeleteConfigTable');
+        $gdprDeleteEmailsLogTbl = $sl->get('MelisGdprDeleteEmailsLogsTable');
         /*
         * inject melis gdpr delete config table
+        * inject melis gdpr delete emails logs table
         */
-        $melisCoreGdprService = new MelisCoreGdprAutoDeleteService($gdprDeleteConfigTbl);
+        $melisCoreGdprService = new MelisCoreGdprAutoDeleteService($gdprDeleteConfigTbl,$gdprDeleteEmailsLogTbl);
         // set service locator
         $melisCoreGdprService->setServiceLocator($sl);
 

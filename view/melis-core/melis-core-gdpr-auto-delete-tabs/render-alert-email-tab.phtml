@@ -10,8 +10,8 @@ if (!empty($this->zoneconfig['conf']['id'])) {
         <div class="me-heading bg-white border-bottom">
             <h3 class=""><i class="fa fa-language" aria-hidden="true"></i> <?= $data['lang_name'] ?></h3>
         </div>
-        <!-- accordion -->
-        <div id="accordion-alert-email-<?= $data['lang_locale'] ?>" class="innerAll spacing-x2">
+        <!-- accordion alert email -->
+        <div id="accordion-alert-email-<?= $data['lang_locale'] ?>" class="">
             <div class="card" style="border: none;">
                 <div id="alert-email" >
                     <a data-toggle="collapse" data-target="#alert-email-content-<?= $data['lang_locale'] ?>" aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10" >
@@ -19,17 +19,44 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                     </a>
                 </div>
                 <div id="alert-email-content-<?= $data['lang_locale'] ?>" class="collapse show" aria-labelledby="alert-email-content-<?= $data['lang_locale'] ?>" data-parent="#accordion-alert-email-<?= $data['lang_locale'] ?>">
+                    <h5 class="float-right"><a href="#" class="" style="text-decoration: underline">Delete everything</a></h5>
+                    <div class="clearfix"></div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <h5 class="float-right"><a href="#" class="" style="text-decoration: underline">Delete everything</a></h5>
-                            <div class="clearfix"></div>
+                        <div class="col-md-8">
                             <?php
+                                $excludedFieldInLoop = [
+                                    'replacement_tags_accepted',
+                                    'mgdpre_link',
+                                ];
                                 $this->melisCoreGdprAlertEmailForm->prepare();
                                 $form = clone $this->melisCoreGdprAlertEmailForm;
-                                echo $this->form()->openTag($form);
-                                echo $this->melisFieldCollection($form);
-                                echo $this->form()->closeTag();
-                            ?>
+                                echo $this->form()->openTag($form); ?>
+                                <?php foreach ( $excludedFieldInLoop as $element) {?>
+                                    <?= $this->melisFieldRow($form->get($element))?>
+                                <?php } ?>
+                                <?php foreach ( $form as $element => $options) {?>
+                                    <?php if (!in_array($element,$excludedFieldInLoop)) {?>
+                                        <?= $this->melisFieldRow($form->get($element))?>
+                                     <?php } ?>
+                                <?php } ?>
+                                <?= $this->form()->closeTag() ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- accordion account deleted emails -->
+        <div id="accordion-account-deleted-email-<?= $data['lang_locale'] ?>" class="">
+            <div class="card" style="border: none;">
+                <div id="alert-email" >
+                    <a data-toggle="collapse" data-target="#account-deleted-email-<?= $data['lang_locale'] ?>" aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10" >
+                        <h5 class="accordion-heading-title">Account Deleted Email</h5>
+                    </a>
+                </div>
+                <div id="account-deleted-email-<?= $data['lang_locale'] ?>" class="collapse" aria-labelledby="account-deleted-email-<?= $data['lang_locale'] ?>" data-parent="#accordion-account-deleted-email-<?= $data['lang_locale'] ?>">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p><i><span class="fa fa-exclamation-triangle text-warning"></span> Under construction ...</i></p>
                         </div>
                     </div>
                 </div>
