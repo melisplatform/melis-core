@@ -37,6 +37,28 @@ class MelisFieldRow extends FormRow
             $label = $element->getLabel().' *';
             $element->setLabel($label);
         }
+        $firstLabel = $element->getLabel();
+        $openTool = null;
+        if (!empty($element->getOption('open_tool'))){
+
+            $toolConfig = $element->getOption('open_tool');
+             
+            $element->setLabelOptions(['disable_html_escape' => true]);
+        
+            $openTool = '<i class="fa fa-wrench fa-lg melis-opentools m-dnd-tool-open" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$toolConfig['tooltip'].'"
+                data-tool-icon="'.$toolConfig['tool_icon'].'"
+                data-tool-name="'.$toolConfig['tool_name'].'"
+                data-tool-id="'.$toolConfig['tool_id'].'"
+                data-tool-meliskey="'.$toolConfig['tool_meliskey'].'"
+                ></i>';
+
+            if(empty($element->getOption('tooltip'))){
+                $openTool = $element->getLabel() . $openTool;
+                $element->setLabel($openTool);
+
+            }
+            
+        }
 
         if(!empty($element->getOption('tooltip'))){
             if (strpos($element->getOption('tooltip'), 'tr_') === false) {
@@ -45,26 +67,17 @@ class MelisFieldRow extends FormRow
                     'class' => 'd-flex flex-row justify-content-between'
                 ]);
                 $label = '<div class="label-text">' . $element->getLabel() . '</div>';
-                $label = $label . '<i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i>';
+                
+                if (!is_null($openTool)) {
+                    $label = '<div class="label-text">' . $firstLabel . '</div>';
+                }
+                $label = $label . "<div class='slider-open-tooltip'>". $openTool .'<i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i></div>';
                 
                 $element->setLabel($label);
             }
 	    }
 	    
-	    if (!empty($element->getOption('open_tool'))){
-
-	        $toolConfig = $element->getOption('open_tool');
-	         
-	        $element->setLabelOptions(['disable_html_escape' => true]);
-	        $label = $element->getLabel().'<i class="fa fa-wrench fa-lg float-right melis-opentools m-dnd-tool-open" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$toolConfig['tooltip'].'"
-	            data-tool-icon="'.$toolConfig['tool_icon'].'"
-                data-tool-name="'.$toolConfig['tool_name'].'"
-                data-tool-id="'.$toolConfig['tool_id'].'"
-                data-tool-meliskey="'.$toolConfig['tool_meliskey'].'"
-	            ></i>';
-
-            $element->setLabel($label);
-        }
+	   
 
         if ($this->getClass($element) == self::MELIS_TOGGLE_BUTTON_FACTORY){
 

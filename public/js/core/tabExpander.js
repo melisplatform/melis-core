@@ -31,8 +31,8 @@ var tabExpander = (function($, window){
         
         //get the width in % of #melis-navtabs-container-inner based from #melis-navtabs-container-outer - 56px for the prevnext buttons
         
-        //var innerUlWidthPercent = 99 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() ); 
-        var innerUlWidthPercent = 100 - ( (100 * 56) / $("#melis-navtabs-container-outer").outerWidth() );
+        // var innerUlWidthPercent = 99 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() ); 
+        var innerUlWidthPercent = 100 - ( (100 * 65) / $("#melis-navtabs-container-outer").outerWidth() );
 
         $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"}); // change hidden to initial because of dropdown
         $navTabs.css({"width": navUlContainer });
@@ -40,13 +40,34 @@ var tabExpander = (function($, window){
         $(".melis-tabprev, .melis-tabnext").show();
 
         // toggle overflow for dropdown
-        $("#melis-navtabs-container-inner").hover(
+        /* $("#melis-navtabs-container-inner").hover(
             function() {
                 $(this).css("overflow", "visible");
             }, function() {
                 $(this).css("overflow", "hidden");
             }
-        );
+        ); */
+
+        /* $("#melis-id-nav-bar-tabs li").hover(
+            function() {
+                if ( $(this).find(".nav-group-dropdown") ) {
+                    $("#melis-navtabs-container-inner").css("overflow", "visible");
+                }
+                console.log("$(this): ", $(this) );
+            }, function() {
+                $("#melis-navtabs-container-inner").css("overflow", "hidden");
+            }
+        ); */
+        var $navLi = $("#melis-id-nav-bar-tabs li");
+            
+            $navLi.on({
+                mouseenter: function(e) {
+                    $(this).closest("#melis-navtabs-container-inner").css("overflow", "visible");                    
+                },
+                mouseleave: function() {
+                    $(this).closest("#melis-navtabs-container-inner").css("overflow", "hidden");
+                }
+            });
 	}
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
@@ -65,10 +86,10 @@ var tabExpander = (function($, window){
         var totalHeaderWidthPx = $("#id_meliscore_header").width();
         
         // left
-        //var leftMenuWidthPx = $(".navbar-header").width();
-        var leftMenuWidthPx = $(".navbar.main .navbar-brand").width();
+        //var leftMenuWidthPx = ( $(".navbar-header").width() === "undefined" ) ? 320 : 0;
+        var leftMenuWidthPx = $(".navbar-brand").width();
         var leftMenuWidthPercent = (100 * 274) / totalHeaderWidthPx;
-        
+       
         // right
         var rightMenuWidthPx = 0;
         $('#id_meliscore_header .navbar-right > li').each(function() {
@@ -77,25 +98,22 @@ var tabExpander = (function($, window){
         rightMenuWidthPercent = (( 100 * rightMenuWidthPx ) / totalHeaderWidthPx ) + 1;
         
         //center
-        var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
-        /* var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320; */
+        //var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx ) - 320;
+        var tabContainerWidthPx = totalHeaderWidthPx - ( leftMenuWidthPx + rightMenuWidthPx );
         /* tabContainerWidthPercent = 99 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-        /* tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
-        tabContainerWidthPercent = 112 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        //tabContainerWidthPercent = 111.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         //tabContainerWidthPercent = 100.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
-        /* tabContainerWidthPercent = 114.5 - ( leftMenuWidthPercent + rightMenuWidthPercent); */
+        tabContainerWidthPercent = 111.5 - ( leftMenuWidthPercent + rightMenuWidthPercent);
         
         // <ul>
         navUlContainer = 1;
         $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
             navUlContainer += $(this).outerWidth();
         });
-		
+        		
 		// determines if TE should be activated or not
         if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
         	Enable();
-            status = 'enabled';
+        	status = 'enabled';
         } else if( navUlContainer < tabContainerWidthPx){
 			Disable();
         } else if(status == 'disabled'){
@@ -114,8 +132,7 @@ var tabExpander = (function($, window){
     function calcOffset(){
         ulContainer = $("#melis-navtabs-container-inner").outerWidth();
         var leftOffset = $navTabs.position().left;
-        //var liIndex = $navTabs.find("li").index();
-
+        
         var ulWidth = 1; 
         $('#id_meliscore_header #melis-id-nav-bar-tabs > li').each(function() {
             ulWidth += $(this).outerWidth();
@@ -127,15 +144,14 @@ var tabExpander = (function($, window){
     }
     
     //NEXT 
-    $body.on("click", ".melis-tabnext", function() {
+    $(".melis-tabnext").on("click", function(){
         calcOffset();
-        if( xright > ulContainer - 170 ) {
-            //var liIndex = $navTabs.find("li").index();
+        if( xright > ulContainer - 170 ){
             $navTabs.animate({
                 left: '-='+ 170
             },0);
         }
-        else {
+        else{
             $navTabs.animate({
                 left: '-=' + xright
             },0);
@@ -143,14 +159,14 @@ var tabExpander = (function($, window){
     });
     
     //PREV
-    $body.on("click", ".melis-tabprev", function() {
+    $(".melis-tabprev").on("click", function(){
         calcOffset();
-        if( xleft > ulContainer - 170 ) {
+        if( xleft > ulContainer - 170){
             $navTabs.animate({
                 left: '+='+ 170
             },0);
         }
-        else {
+        else{
             $navTabs.animate({
                 left: '+=' + xleft
             },0);
@@ -158,7 +174,7 @@ var tabExpander = (function($, window){
     }); 
     
 	// FOCUS TAB ON CLICK (new functionality)
-    function focusTab() {
+    function focusTab(){
     	
     }
 

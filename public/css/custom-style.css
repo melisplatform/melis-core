@@ -798,6 +798,10 @@ td.dataTables_empty {
   -ms-transition: none !important;
   transition: none !important;
 }
+.dtActionCls .btn {
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
 /**
  * Fix issue: https://mantis2.uat.melistechnology.fr/view.php?id=18
  * Double hover effect on li as well as on the anchor tag
@@ -806,6 +810,12 @@ td.dataTables_empty {
 .navbar.main.navbar-primary .nav.navbar-right>li.active,
 .navbar.main.navbar-primary .nav.navbar-right>li.active:hover {
 	background-color: transparent;
+}
+/**
+ * Slider
+ */
+.slider-open-tooltip .melis-opentools {
+    margin-right: 0.75rem;
 }
 /* Responsive media queries */
 @media (min-width: 991px) {
