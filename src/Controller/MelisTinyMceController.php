@@ -26,7 +26,7 @@ class MelisTinyMceController extends AbstractActionController
         if ($request->isPost()) {
             $modulesSvc = $this->getServiceLocator()->get('ModulesService');
             // Getting the Posted Values
-            $postValues = get_object_vars($request->getPost());
+            $postValues = $request->getPost();
 
             $type = $postValues['type'];
             $selector = $postValues['selector'];
@@ -117,7 +117,7 @@ class MelisTinyMceController extends AbstractActionController
 
         $modulesSvc = $this->getServiceLocator()->get('ModulesService');
         // Getting the Posted Values
-        $postValues = get_object_vars($request->getPost());
+        $postValues = $request->getPost()->toArray();
 
         $type = $postValues['type'];
         $selector = $postValues['selector'];

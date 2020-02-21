@@ -1506,7 +1506,7 @@ class ToolUserController extends AbstractActionController
 
         if($request->isPost()) {
 
-            $post    = get_object_vars($request->getPost());
+            $post    = $request->getPost()->toArray();
 
             $columns = array_keys($melisTool->getColumns());
 

@@ -29,7 +29,7 @@ class MelisCoreGdprController extends AbstractActionController
         $errors = [];
 
         if ($request->isPost()) {
-            $formInputs = $this->getTool('meliscore', 'melis_core_gdpr_tool')->sanitizeRecursive(get_object_vars($request->getPost()), [], true);
+            $formInputs = $this->getTool('meliscore', 'melis_core_gdpr_tool')->sanitizeRecursive($request->getPost()->toArray(), [], true);
             $formConfig = $this->getFormConfig('meliscore/tools/melis_core_gdpr_tool/forms/melis_core_gdpr_search_form', 'melis_core_gdpr_search_form');
             $form = $this->getForm($formConfig);
             $form->setData($formInputs);
@@ -93,7 +93,7 @@ class MelisCoreGdprController extends AbstractActionController
         $success = 0;
 
         if ($request->isPost()) {
-            $idsToBeDeleted = get_object_vars($request->getPost());
+            $idsToBeDeleted = $request->getPost()->toArray();
 
             $melisCoreGdprService = $this->getServiceLocator()->get('MelisCoreGdprService');
             $finalData = $melisCoreGdprService->deleteSelected($idsToBeDeleted);

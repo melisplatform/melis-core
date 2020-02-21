@@ -164,7 +164,7 @@ class LogController extends AbstractActionController
 
             $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
             $translator = $this->getServiceLocator()->get('translator');
-            $postValues = get_object_vars($request->getPost());
+            $postValues = $request->getPost()->toArray();
             $container = new Container('meliscore');
             $locale = $container['melis-lang-locale'];
             $dates = array();
@@ -230,7 +230,7 @@ class LogController extends AbstractActionController
         $translator = $this->getServiceLocator()->get('translator');
 
         $request = $this->getRequest();
-        $queryValues = get_object_vars($request->getQuery());
+        $queryValues = $request->getQuery()->toArray();
 
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
@@ -656,7 +656,7 @@ class LogController extends AbstractActionController
 
         if ($request->isPost())
         {
-            $postValues = get_object_vars($request->getPost());
+            $postValues = $request->getPost()->toArray();
 
             $translator = $this->getServiceLocator()->get('translator');
             $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');

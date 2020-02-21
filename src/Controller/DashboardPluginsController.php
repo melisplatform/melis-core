@@ -156,7 +156,7 @@ class DashboardPluginsController extends AbstractActionController
     {
         // return plugin view
         $request = $this->getRequest();
-        $pluginConfigPost = get_object_vars($request->getPost());
+        $pluginConfigPost = $request->getPost()->toArray();
 
         /**
          * decode the string
@@ -216,7 +216,7 @@ class DashboardPluginsController extends AbstractActionController
     {
         $success = 0;
         $request = $this->getRequest();
-        $post = $request->getPost();
+        $post = $request->getPost()->toArray();
         $result = array();
         try{
             /**
@@ -224,7 +224,7 @@ class DashboardPluginsController extends AbstractActionController
              */
             $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
             $dragDropPlugin = $pluginManager->get('MelisCoreDashboardDragDropZonePlugin');
-            $success = $dragDropPlugin->savePlugins(get_object_vars($post));
+            $success = $dragDropPlugin->savePlugins($post);
             
             $result = array(
                 'success' => $success

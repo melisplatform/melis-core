@@ -937,7 +937,7 @@ class EmailsManagementController extends AbstractActionController
         $translator = $this->getServiceLocator()->get('translator');
     
         $request = $this->getRequest();
-        $datas = get_object_vars($request->getPost());
+        $datas = $request->getPost()->toArray();
     
         $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
         $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($datas['codename']);
@@ -969,7 +969,7 @@ class EmailsManagementController extends AbstractActionController
         $translator = $this->getServiceLocator()->get('translator');
 
         $request = $this->getRequest();
-        $datas = get_object_vars($request->getPost());
+        $datas = $request->getPost()->toArray();
 
         $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
         $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($datas['codename']);
