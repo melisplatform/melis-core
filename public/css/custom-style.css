@@ -811,6 +811,12 @@ td.dataTables_empty {
 .navbar.main.navbar-primary .nav.navbar-right>li.active:hover {
 	background-color: transparent;
 }
+/**
+ * Slider
+ */
+.slider-open-tooltip .melis-opentools {
+    margin-right: 0.75rem;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
