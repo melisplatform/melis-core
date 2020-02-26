@@ -4,6 +4,7 @@
 }
 #list-config {
     border-bottom:1px solid rgba(0,0,0,.125);
+    padding-bottom:20px;
 }
 .custom-accordion-heading {
     background-color: #fff;
@@ -105,4 +106,7 @@
 }
 .accordion-heading-sm h5 {
     margin-bottom:0 !important;
+}
+.cursor-pointer {
+    cursor: pointer;
 }

@@ -30,9 +30,11 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
      * @param string $orderDirection
      * @param int $start
      * @param null $limit
+     * @param int $siteId
+     * @param null $module
      * @return \Zend\Db\ResultSet\ResultSetInterface
      */
-    public function getGdprDeleteConfigData($search = "",$searchableColumns = [], $orderBy = '', $orderDirection = "DESC" , $start = 0 ,$limit = null )
+    public function getGdprDeleteConfigData($search = "",$searchableColumns = [], $orderBy = '', $orderDirection = "DESC" , $start = 0 ,$limit = null, $siteId = 0 , $module = null )
     {
         // table selection query
         $select = $this->tableGateway->getSql()->select();
@@ -51,8 +53,14 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
             // set where query
             $select->where($searchWhere);
         }
-//        $status = empty($where['status']) ? 1 : $where['status'];
-//        $select->where->equalTo('usr_status', $status);
+        // site filter
+        if ($siteId) {
+            $select->where->equalTo('mgdprc_site_id', $siteId);
+        }
+        // module filter
+        if ($module) {
+            $select->where->equalTo('mgdprc_module_name', $module);
+        }
         // length of the data
         if (!empty($limit)) {
             $select->limit($limit);

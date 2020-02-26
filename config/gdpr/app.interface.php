@@ -72,6 +72,20 @@ return [
                                                                                 'jsdatas' => [],
                                                                             ],
                                                                             'interface' => [
+                                                                                'meliscoregdpr_auto_delete_content_accordion_list_config_modal' => [
+                                                                                    'conf' => [
+                                                                                        'id' => 'id_meliscoregdpr_auto_delete_content_accordion_list_config_modal',
+                                                                                        'name' => 'How to activate automatic mail sending',
+                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_content_accordion_list_config_modal',
+                                                                                    ],
+                                                                                    'forward' => [
+                                                                                        'module' => 'MelisCore',
+                                                                                        'controller' => 'MelisCoreGdprAutoDelete',
+                                                                                        'action' => 'render-content-modal',
+                                                                                        'jscallback' => '',
+                                                                                        'jsdatas' => [],
+                                                                                    ],
+                                                                                ],
                                                                                 'meliscoregdpr_auto_delete_content_accordion_list_config' => [
                                                                                     'conf' => [
                                                                                         'id' => 'id_meliscoregdpr_auto_delete_content_accordion_list_config',

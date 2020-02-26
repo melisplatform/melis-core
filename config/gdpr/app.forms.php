@@ -19,7 +19,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'module_filter',
-                                        'type' => "select",
+                                        'type' => "MelisCoreGdprModuleSelect",
                                         'options' => [
                                             'empty_option' => 'Choose module',
                                         ]

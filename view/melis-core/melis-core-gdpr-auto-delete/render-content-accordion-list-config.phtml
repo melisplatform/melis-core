@@ -4,7 +4,8 @@ if (!empty($this->zoneconfig['conf']['id'])) {
     $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
 }
 ?>
-<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>'>
+
+<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' style="margin-top:20px;">
     <div id="accordion">
         <div class="card default-card" style="border:none;">
             <?php

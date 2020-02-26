@@ -19,6 +19,18 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     /**
      * @return ViewModel
      */
+    public function renderContentModalAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // melisKey
+        $view->setVariable('melisKey',$this->getMelisKey());
+
+        return $view;
+    }
+    /**
+     * @return ViewModel
+     */
     public function renderContentContainerAction()
     {
         // view model
@@ -90,6 +102,36 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     public function renderContentAccordionListConfigContentLimitAction()
     {
         return new ViewModel();
+    }
+
+    /**
+     *
+     * limit view of the table
+     *
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigContentSiteFilterAction()
+    {
+        $view = new ViewModel();
+        if (in_array('MelisCms',$this->getServiceLocator()->get('ModulesService')->getAllModules())) {
+            $view->setVariable('sites', $this->getServiceLocator()->get('MelisEngineTableSite')->fetchAll()->toArray());
+        }
+
+        return $view;
+    }
+
+    /**
+     *
+     * limit view of the table
+     *
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigContentModuleFilterAction()
+    {
+        $view = new ViewModel();
+        $view->setVariable('modules',$this->getGdprAutoDeleteService()->getAutoDeleteModulesList());
+
+        return $view;
     }
 
     /**
@@ -171,7 +213,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                     // start
                     $post['start'],
                     // length
-                    $post['limit']
+                    $post['limit'],
+                    // site id
+                    $post['siteId'],
+                    // module
+                    $post['module']
                 )
             );
         }
@@ -200,6 +246,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             'searchKey'  => isset($postData['search']['value']) ? $postData['search']['value'] : null,
             'start'      => (int) $postData['start'],
             'limit'      => (int) $postData['length'],
+            'siteId'     => ($postData['gpdr_auto_delete_site_id']) ? $postData['gpdr_auto_delete_site_id'] : null,
+            'module'     => ($postData['gdpr_auto_delete_module'])  ? $postData['gdpr_auto_delete_module'] : null,
         ];
     }
     /**
@@ -222,7 +270,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 // set data for match fields
                 $formattedData[$ctr]['DT_RowId'] = $data[$ctr]['mgdprc_id'];
                 $formattedData[$ctr]['mgdprc_site_id'] = $data[$ctr]['mgdprc_site_id'];
-                $formattedData[$ctr]['mgdprc_module_name'] = $data[$ctr]['mgdprc_module_name'];
+                $formattedData[$ctr]['mgdprc_module_name'] = $this->getGdprAutoDeleteService()->getAutoDeleteModulesList()[$data[$ctr]['mgdprc_module_name']];
                 $formattedData[$ctr]['mgdprc_alert_email_status'] = $data[$ctr]['mgdprc_alert_email_status'];
                 $formattedData[$ctr]['mgdprc_alert_email_resend'] = $data[$ctr]['mgdprc_alert_email_resend'];
                 $formattedData[$ctr]['mgdprc_delete_days'] = $data[$ctr]['mgdprc_delete_days'];
@@ -324,5 +372,12 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $view->setVariable('formFilter', $this->getTool()->getForm('melisgdprautodelete_add_edit_config_filters'));
 
         return $view;
+    }
+    public function runGdprAutoDeleteCronAction()
+    {
+        $this->getGdprAutoDeleteService()->getAutoDeleteModulesList();
+        return new JsonModel([
+            'success' => true
+        ]);
     }
 }

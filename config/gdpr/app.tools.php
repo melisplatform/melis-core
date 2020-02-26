@@ -13,15 +13,25 @@ return [
                    'table' => [
                        'target' => '#tableAutoDeleteListConfig',
                        'ajaxUrl' => '/melis/MelisCore/MelisCoreGdprAutoDelete/getGdprDeleteConfigData',
-                       'dataFunction' => '',
+                       'dataFunction' => 'initGdprAutoDeleteConfigFilters',
                        'ajaxCallback' => '',
                        'filters' => [
                            'left' => [
-                            'tool_limit_config' => [
-                                'module' => 'MelisCore',
-                                'controller' => 'MelisCoreGdprAutoDelete',
-                                'action' => 'render-content-accordion-list-config-content-limit'
-                            ],
+                                'tool_limit_config' => [
+                                    'module' => 'MelisCore',
+                                    'controller' => 'MelisCoreGdprAutoDelete',
+                                    'action' => 'render-content-accordion-list-config-content-limit'
+                                ],
+                               'tool_site_filter' => [
+                                   'module' => 'MelisCore',
+                                   'controller' => 'MelisCoreGdprAutoDelete',
+                                   'action' => 'render-content-accordion-list-config-content-site-filter'
+                               ],
+                               'tool_module_filter' => [
+                                   'module' => 'MelisCore',
+                                   'controller' => 'MelisCoreGdprAutoDelete',
+                                   'action' => 'render-content-accordion-list-config-content-module-filter'
+                               ]
                            ],
                            'center' => [
                            ],

@@ -219,6 +219,7 @@ class Module
             'melis-backoffice/get-platform-color-css',
             'melis-backoffice/reset-old-password',
             'melis-backoffice/webpack_builder',
+            'melis-backoffice/gdpr-autodelete-cron',
         ];
         if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli') {
             return true;

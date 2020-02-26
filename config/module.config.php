@@ -221,6 +221,20 @@ return array(
                             ),
                         ),
                     ),
+                    /*
+                     * GDPR Autodelete CROn
+                     */
+                    'gdpr-autodelete-cron' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'gdprautodelete[/]',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'MelisCore\Controller',
+                                'controller'    => 'MelisCoreGdprAutoDelete',
+                                'action'        => 'run-gdpr-auto-delete-cron'
+                            ]
+                        ]
+                    ]
                 ),
             ),
 
@@ -398,6 +412,7 @@ return array(
             'DateTimePicker' => 'MelisCore\Form\Factory\DateTimePickerFactory',
             'MelisCoreTinyMCE' => 'MelisCore\Form\Factory\MelisCoreTinyMCEFactory',
             'MelisCoreUserSelect' => 'MelisCore\Form\Factory\MelisCoreUsersSelect2Factory',
+            'MelisCoreGdprModuleSelect' => 'MelisCore\Form\Factory\MelisGdprAutoDeleteModuleListSelectFactory',
         ),
     ),
     'view_helpers' => array(

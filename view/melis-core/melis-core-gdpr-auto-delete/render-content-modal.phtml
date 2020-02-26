@@ -1,0 +1,36 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+
+<div class="modal fade" id="<?= $this->zoneconfig['conf']['id'] ?>_modal">
+    <div class="modal-dialog" role="modal">
+        <div class="modal-content">
+            <div class="modal-body padding-none">
+                <div class="wizard">
+                    <div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
+                        <div class="widget-head">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#" class="glyphicons pencil" data-toggle="tab" aria-expanded="true"><i></i> CRON Activation</a></li>
+                            </ul>
+                        </div>
+                        <div class="widget-body innerAll inner-2x">
+                            <div class="tab-content">
+                                <div class="tab-pane active">
+                                    <p>In order to activate the automatic system, an admin system must activate this line as a CRON on the server, running once a day everyday (here at 1am everyday in this example):</p>
+                                    <p class="text-info">0 1 * * * wget http://[HOST]/melis/gdprautodelete</p>
+                                    <p>This CRON can also be launched manually by simply calling this URL.</p>
+                                    <div class="footer-modal d-flex flex-row justify-content-between">
+                                        <button data-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
