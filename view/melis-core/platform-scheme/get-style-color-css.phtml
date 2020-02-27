@@ -4,6 +4,35 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.bootbox .modal-dialog .modal-footer .btn-danger,
+.badge.badge-primary.badge-stroke {
+    border-color: <?= $primaryColor; ?> !important;
+}
+.bootbox .modal-dialog .modal-footer .btn-danger,
+.vevent a,
+.contacts .innerLR .media .media-body h4 a,
+.badge.badge-primary.badge-stroke,
+.pricing-table ul li a:hover,
+.widget .half .list-unstyled li a,
+.widget .innerT .media .media-body .text-muted a,
+.widget .innerT .media .media-body h5 a,
+.widget .half h5 a,
+.widget .half .media-body .text-small,
+.media-list .media-body a:not(.user-ticket-action),
+.media-list .media-body small a {
+    color: <?= $primaryColor; ?> !important;
+}
+.nav-pills .nav-link,
+#id_melis_support_questions .widget .bg-primary:hover,
+#id_melis_support_questions .widget .bg-primary,
+.label.label-primary,
+.badge.badge-primary {
+    background: <?= $primaryColor; ?> !important;
+}
+.timeline-activity a, 
+.timeline-activity a:hover {
+    color: <?= $primaryColor; ?> !important;
+}
 .forgot-password a,
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
