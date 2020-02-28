@@ -384,6 +384,10 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             'success' => true
         ]);
     }
+
+    /**
+     * @return JsonModel
+     */
     public function saveAutoDeleteConfigurationAction()
     {
         $request = $this->getRequest();

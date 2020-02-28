@@ -240,7 +240,7 @@ return [
                             ]
                         ],
                         // </editor-fold>
-                        // <editor-fold desc="GDPR Alert email form">
+                        // <editor-fold desc="GDPR Alert email form warning">
                         'melisgdprautodelete_add_edit_alert_email' => [
                             'attributes' => array(
                                 'name' => 'melisgdprautodelete_add_edit_cron_config_form',
@@ -308,8 +308,77 @@ return [
                                     ],
                                 ],
                             ]
-                        ]
+                        ],
                         // </editor-fold>
+                          // <editor-fold desc="GDPR Alert email form delete">
+                        'melisgdprautodelete_add_edit_alert_email_delete' => [
+                            'attributes' => array(
+                                'name' => 'melisgdprautodelete_add_edit_alert_email_delete',
+                                'method' => 'POST',
+                                'action' => '',
+                                'class' => 'melisgdprautodelete_add_edit_alert_email_delete'
+                            ),
+                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => [
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdpre_email_tags',
+                                        'type' => "text",
+                                        'options' => [
+                                            'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'class' => 'melis-multi-val-input',
+                                            'data-label-text' => 'Replacement tags accepted',
+                                            'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
+                                        ]
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdpre_subject',
+                                        'type' => "text",
+                                        'options' => [
+                                            'label' => 'Subject',
+                                            'tooltip' => 'Subject of the email',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'class' => 'form-control'
+                                        ]
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdpre_html',
+                                        'type' => "MelisCoreTinyMCE",
+                                        'options' => [
+                                            'label' => 'Message',
+                                            'tooltip' => 'Message of the email',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'class' => 'form-control'
+                                        ]
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdpre_text',
+                                        'type' => "textarea",
+                                        'options' => [
+                                            'label' => 'Text Version',
+                                            'tooltip' => 'Message of the email in text version',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'class' => 'form-control'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]// </editor-fold>
                     ]
                 ]
             ]
