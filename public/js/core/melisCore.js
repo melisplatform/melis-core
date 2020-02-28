@@ -814,9 +814,10 @@ var melisCore = (function(window){
     });
 
     // prevent to show tooltip on hover of data-toggle tab
-    /* $body.on("mouseover", "a[data-toggle='tab']", function() {
+    $body.on("mouseover", "a[data-toggle='tab']", function() {
         $(".ui-tooltip").remove();
-    }); */
+    });
+    
     $body.on("show.bs.tab", "a[data-toggle='tab']", function(e) {
         $(".ui-tooltip").remove();
     });
