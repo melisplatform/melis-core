@@ -15,7 +15,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
             </div>
             <div id="cron-configuration-content" class="collapse show" aria-labelledby="cron-configuration-content" data-parent="#accordion-cron-configuration">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <?php
                             $this->formCronConfig->prepare();
                             echo $this->form()->openTag($this->formCronConfig);
@@ -34,7 +34,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                     <h5 class="accordion-heading-title">Email Setup</h5>
                 </a>
             </div>
-            <div id="email-setup-content" class="collapse" aria-labelledby="email-setup-content" data-parent="#accordion-email-setup">
+            <div id="email-setup-content" class="collapse show" aria-labelledby="email-setup-content" data-parent="#accordion-email-setup">
                 <div class="row">
                     <div class="col-md-6">
                         <?php

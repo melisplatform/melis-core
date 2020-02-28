@@ -5,6 +5,7 @@
 #list-config {
     border-bottom:1px solid rgba(0,0,0,.125);
     padding-bottom:20px;
+    padding-left: 27px;
 }
 .custom-accordion-heading {
     background-color: #fff;
@@ -109,4 +110,28 @@
 }
 .cursor-pointer {
     cursor: pointer;
+}
+#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content .form-control::-webkit-input-placeholder { color: #c3bdbd; }  /* WebKit, Blink, Edge */
+#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content .form-control:-moz-placeholder { color: #c3bdbd; }  /* Mozilla Firefox 4 to 18 */
+#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content .form-control::-moz-placeholder { color: #c3bdbd; }  /* Mozilla Firefox 19+ */
+#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content .form-control:-ms-input-placeholder { color: #c3bdbd; }  /* Internet Explorer 10-11 */
+#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content .form-control::-ms-input-placeholder { color: #c3bdbd; }  /* Microsoft Edge */
+
+.arrow-indication-down:before {
+    font-family:"Glyphicons Halflings";
+    content:"\e114";
+    color: grey;
+    font-size: 20px;
+    padding: 0 10px 0 0;
+    position: absolute;
+    left: 0;
+}
+.arrow-indication-right:before {
+    font-family:"Glyphicons Halflings";
+    content:"\e080";
+    color: grey;
+    font-size: 20px;
+    padding: 0 10px 0 0;
+    position: absolute;
+    left: 0;
 }

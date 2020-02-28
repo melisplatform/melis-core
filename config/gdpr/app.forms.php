@@ -6,7 +6,7 @@ return [
             'tools' => [
                 'melis_core_gdpr_auto_delete' => [
                     'forms' => [
-                        // <editor-fold desc="GDPR Auto delete config filtersform">
+                        // <editor-fold desc="GDPR Auto delete config filters form">
                         'melisgdprautodelete_add_edit_config_filters' => [
                             'attributes' => array(
                                 'name' => 'melisgdprautodelete_add_edit_config_filters',
@@ -18,10 +18,96 @@ return [
                             'elements' => [
                                 [
                                     'spec' => [
-                                        'name' => 'module_filter',
+                                        'name' => 'mgdprc_module_name',
                                         'type' => "MelisCoreGdprModuleSelect",
                                         'options' => [
+                                            'label' => 'Module',
+                                            'tooltip' => 'Module',
                                             'empty_option' => 'Choose module',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'required',
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        // </editor-fold>
+                        // <editor-fold desc="GDPR Add edit cron config form">
+                        'melisgdprautodelete_add_edit_cron_config_form' => [
+                            'attributes' => array(
+                                'name' => 'melisgdprautodelete_add_edit_cron_config_form',
+                                'id' => 'id_melisgdprautodelete_add_edit_cron_config_form',
+                                'method' => 'POST',
+                                'action' => '',
+                            ),
+                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'elements' => [
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_alert_email_status',
+                                        'type' => "checkbox",
+                                        'options' => [
+                                            'label' => 'Activate email warning',
+                                            //'tooltip' => 'Activate automatic sending warning email',
+                                            'switch_options' => [
+                                                'label-on' => 'Yes',
+                                                'label-off' => 'No',
+                                                'icon' => "glyphicon glyphicon-resize-horizontal",
+                                            ],
+                                            'checked_value' => 1,
+                                            'unchecked_value' => 0,
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'true',
+                                            'class' => 'form-control',
+                                            'value' => 1
+                                        ],
+
+                                    ]
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_alert_email_days',
+                                        'type' => "MelisText",
+                                        'options' => [
+                                            'label' => 'Alert email sent after inactivity of:',
+                                            'tooltip' => 'Number of days user\'s inactivity that cron will sent a warning email to the account'
+                                        ],
+                                        'attributes' => [
+                                            'placeholder' => '365',
+                                            'class' => 'mgdprc_alert_email_days form-control col-md-2'
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_alert_email_resend',
+                                        'type' => "checkbox",
+                                        'options' => [
+                                            'label' => 'Resend alert 7 days before deadline:',
+                                            'switch_options' => [
+                                                'label-on' => 'Yes',
+                                                'label-off' => 'No',
+                                                'icon' => "glyphicon glyphicon-resize-horizontal",
+                                            ]
+                                        ],
+                                        'attributes' => [
+                                            'value' => 1
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdprc_delete_days',
+                                        'type' => "MelisText",
+                                        'options' => [
+                                            'label' => 'Account will be deleted automatically after an inactivity of:',
+                                            'tooltip' => 'Number of days user\'s inactivity that cron will delete the account'
+                                        ],
+                                        'attributes' => [
+                                            'placeholder' => '365',
+                                            'class' => 'mgdprc_delete_days form-control col-md-2'
                                         ]
                                     ]
                                 ]
@@ -35,7 +121,7 @@ return [
                                 'id' => 'id_melisgdprautodelete_add_edit_email_setup',
                                 'method' => 'POST',
                                 'action' => '',
-                                'entype' => 'multipart/form'
+                                'enctype' => 'multipart/form-data'
                             ),
                             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
                             'elements' => [
@@ -49,7 +135,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'Melis technology',
-                                            'required' => 'true'
+                                            'required' => 'required'
                                         ]
                                     ]
                                 ],
@@ -63,7 +149,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'noreply@melistechnology.com',
-                                            'required' => 'true',
+                                            'required' => 'required',
                                             'class' => 'form-control'
                                         ]
                                     ]
@@ -84,15 +170,16 @@ return [
                                 ],
                                 [
                                     'spec' => [
-                                        'name' => 'replacement_tags_accepted',
+                                        'name' => 'mgdprc_email_conf_tags',
                                         'type' => "text",
                                         'options' => [
-                                            'tooltip' => 'Tags',
+                                            'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
                                         ],
                                         'attributes' => [
                                             'required' => 'true',
-                                            'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'Replacement tags accepted',
+                                            'class' => 'melis-multi-val-input',
+                                            'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ]
                                 ],
@@ -106,6 +193,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'melis-core/view/layout/layoutEmail.phtml',
+                                            'value' => 'melis-core/view/layout/layoutEmail.phtml'
                                         ]
                                     ]
                                 ],
@@ -152,105 +240,34 @@ return [
                             ]
                         ],
                         // </editor-fold>
-                        // <editor-fold desc="GDPR Add edit cron config form">
-                        'melisgdprautodelete_add_edit_cron_config_form' => [
-                            'attributes' => array(
-                                'name' => 'melisgdprautodelete_add_edit_cron_config_form',
-                                'id' => 'id_melisgdprautodelete_add_edit_cron_config_form',
-                                'method' => 'POST',
-                                'action' => '',
-                            ),
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
-                            'elements' => [
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdprc_alert_email_status',
-                                        'type' => "checkbox",
-                                        'options' => [
-                                            'label' => 'Activate email warning',
-                                            'switch_options' => [
-                                                'label-on' => 'Yes',
-                                                'label-off' => 'No',
-                                                'icon' => "glyphicon glyphicon-resize-horizontal",
-                                            ],
-                                            'checked_value' => 1,
-                                            'unchecked_value' => 0,
-                                        ],
-                                        'attributes' => [
-                                            'placeholder' => '365',
-                                            'required' => 'true',
-                                            'class' => 'form-control'
-                                        ]
-                                    ]
-                                ],
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdprc_alert_email_days',
-                                        'type' => "MelisText",
-                                        'options' => [
-                                            'label' => 'Alert email sent after inactivity of:'
-                                        ],
-                                        'attributes' => [
-                                            'class' => 'mgdprc_alert_email_days form-control'
-                                        ]
-                                    ]
-                                ],
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdprc_alert_email_resend',
-                                        'type' => "checkbox",
-                                        'options' => [
-                                            'label' => 'Resend alert 7 days before deadline:',
-                                            'switch_options' => [
-                                                'label-on' => 'Yes',
-                                                'label-off' => 'No',
-                                                'icon' => "glyphicon glyphicon-resize-horizontal",
-                                            ]
-                                        ]
-                                    ]
-                                ],
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdprc_delete_days',
-                                        'type' => "MelisText",
-                                        'options' => [
-                                            'label' => 'Account will be deleted automatically after an inactivity of:'
-                                        ],
-                                        'attributes' => [
-                                            'class' => 'mgdprc_delete_days form-control'
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        // </editor-fold>
                         // <editor-fold desc="GDPR Alert email form">
                         'melisgdprautodelete_add_edit_alert_email' => [
                             'attributes' => array(
                                 'name' => 'melisgdprautodelete_add_edit_cron_config_form',
-                                'id' => 'id_melisgdprautodelete_add_edit_cron_config_form',
                                 'method' => 'POST',
                                 'action' => '',
+                                'class' => 'melisgdprautodelete_add_edit_email_setup_form'
                             ),
                             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
-                                        'name' => 'replacement_tags_accepted',
+                                        'name' => 'mgdpre_email_tags',
                                         'type' => "text",
                                         'options' => [
-                                            'tooltip' => 'Tags',
+                                            'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
                                         ],
                                         'attributes' => [
                                             'required' => 'true',
                                             'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'Replacement tags accepted',
+                                            'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ],
                                 ],
                                 [
                                     'spec' => [
-                                        'name' => 'mgdprc_subject ',
+                                        'name' => 'mgdpre_subject',
                                         'type' => "text",
                                         'options' => [
                                             'label' => 'Subject',
@@ -264,7 +281,7 @@ return [
                                 ],
                                 [
                                     'spec' => [
-                                        'name' => 'mgdprc_html',
+                                        'name' => 'mgdpre_html',
                                         'type' => "MelisCoreTinyMCE",
                                         'options' => [
                                             'label' => 'Message',
@@ -278,7 +295,7 @@ return [
                                 ],
                                 [
                                     'spec' => [
-                                        'name' => 'mgdprc_text',
+                                        'name' => 'mgdpre_text',
                                         'type' => "textarea",
                                         'options' => [
                                             'label' => 'Text Version',

@@ -3,10 +3,8 @@ namespace MelisCore\Service;
 
 use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable;
+use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
 use MelisCore\Model\Tables\MelisLangTable;
-use MelisCore\Service\MelisCoreGeneralService;
-use Zend\EventManager\ResponseCollection;
-use Zend\Http\PhpEnvironment\Response as HttpResponse;
 
 class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 {
@@ -18,15 +16,25 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @var MelisGdprDeleteEmailsLogsTable
      */
     protected $gdprAutoDeleteEmailsLogsTable;
+    /**
+     * @var MelisGdprDeleteEmailsTable
+     */
+    protected $gdprAutoDeleteEmailsTable;
 
     /**
      * MelisCoreGdprAutoDeleteService constructor.
      * @param MelisGdprDeleteConfigTable $gdprAutoDeleteConfigTable
+     * @param MelisGdprDeleteEmailsTable $gdprAutoDeleteEmailsTable
      * @param MelisGdprDeleteEmailsLogsTable $gdprAutoDeleteEmailsLogsTable
      */
-    public function __construct(MelisGdprDeleteConfigTable $gdprAutoDeleteConfigTable, MelisGdprDeleteEmailsLogsTable $gdprAutoDeleteEmailsLogsTable)
+    public function __construct(
+        MelisGdprDeleteConfigTable $gdprAutoDeleteConfigTable,
+        MelisGdprDeleteEmailsLogsTable $gdprAutoDeleteEmailsLogsTable,
+        MelisGdprDeleteEmailsTable $gdprAutoDeleteEmailsTable
+    )
     {
         $this->gdprAutoDeleteConfigTable     = $gdprAutoDeleteConfigTable;
+        $this->gdprAutoDeleteEmailsTable     = $gdprAutoDeleteEmailsTable;
         $this->gdprAutoDeleteEmailsLogsTable = $gdprAutoDeleteEmailsLogsTable;
     }
 
@@ -122,5 +130,49 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
 
         return $moduleList;
+    }
+
+    /**
+     * @param $postData
+     * @param null $id
+     * @return int|null
+     */
+    public function saveGdprAutoDeleteConfig($postData, $id = null)
+    {
+        return $this->gdprAutoDeleteConfigTable->save($postData,$id);
+    }
+
+    /**
+     * @param $validatedData
+     * @param $id
+     * @return int|null
+     */
+    public function saveGdprDeleteWarningEmails($validatedData, $id)
+    {
+        return $this->gdprAutoDeleteEmailsTable->save($validatedData, $id);
+    }
+
+    /**
+     * @return MelisGdprDeleteEmailsTable
+     */
+    public function getGdprDeleteWarningEmailsTable()
+    {
+        return $this->gdprAutoDeleteEmailsTable;
+    }
+
+    /**
+     * @return MelisGdprDeleteConfigTable
+     */
+    public function getGdprAutoDeleteConfigTable()
+    {
+        return $this->gdprAutoDeleteConfigTable;
+    }
+
+    /**
+     * @return MelisGdprDeleteEmailsLogsTable
+     */
+    public function getGdprAutoDeleteLogsTable()
+    {
+        return $this->gdprAutoDeleteEmailsLogsTable;
     }
 }

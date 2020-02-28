@@ -28,6 +28,8 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisKey',$this->getMelisKey());
         // get melis core languages for nav
         $view->setVariable('melisCoreLang'  , $this->getGdprAutoDeleteService()->getMelisCoreLang());
+        // get config id
+        $view->setVariable('configId'  , $this->getConfigId());
 
         return $view;
     }
@@ -61,6 +63,8 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisCoreLang'  , $this->getGdprAutoDeleteService()->getMelisCoreLang());
         // get alert email form
         $view->setVariable('melisCoreGdprAlertEmailForm'  , $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email'));
+        // get config id
+        $view->setVariable('configId'  , $this->getConfigId());
 
         return $view;
     }
@@ -146,14 +150,14 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
                     $formattedData[$ctr][$vKey] = $this->getTool()->limitedText($vValue, 80);
                 }
                 // set data for match fields
-                $formattedData[$ctr]['DT_RowId']            = $data[$ctr]['mgdprl_id'];
-                $formattedData[$ctr]['mgdprl_log_date']      = $data[$ctr]['mgdprl_log_date'];
-                $formattedData[$ctr]['mgdprl_warning1_ok']  = $data[$ctr]['mgdprl_warning1_ok'];
-                $formattedData[$ctr]['mgdprl_warning1_ko']  = $data[$ctr]['mgdprl_warning1_ko'];
-                $formattedData[$ctr]['mgdprl_warning2_ok']  = $data[$ctr]['mgdprl_warning2_ok'];
-                $formattedData[$ctr]['mgdprl_warning2_ko']  = $data[$ctr]['mgdprl_warning2_ko'];
-                $formattedData[$ctr]['mgdprl_delete_ok']     = $data[$ctr]['mgdprl_delete_ok'];
-                $formattedData[$ctr]['mgdprl_delete_ko']     = $data[$ctr]['mgdprl_delete_ko'];
+                $formattedData[$ctr]['DT_RowId']           = $data[$ctr]['mgdprl_id'];
+                $formattedData[$ctr]['mgdprl_log_date']    = $data[$ctr]['mgdprl_log_date'];
+                $formattedData[$ctr]['mgdprl_warning1_ok'] = $data[$ctr]['mgdprl_warning1_ok'];
+                $formattedData[$ctr]['mgdprl_warning1_ko'] = $data[$ctr]['mgdprl_warning1_ko'];
+                $formattedData[$ctr]['mgdprl_warning2_ok'] = $data[$ctr]['mgdprl_warning2_ok'];
+                $formattedData[$ctr]['mgdprl_warning2_ko'] = $data[$ctr]['mgdprl_warning2_ko'];
+                $formattedData[$ctr]['mgdprl_delete_ok']   = $data[$ctr]['mgdprl_delete_ok'];
+                $formattedData[$ctr]['mgdprl_delete_ko']   = $data[$ctr]['mgdprl_delete_ko'];
             }
         } else {
             $formattedData = $data;
@@ -161,6 +165,11 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
 
         return $formattedData;
     }
+
+    /**
+     * Logs tab
+     * @return ViewModel
+     */
     public function renderLogsTabAction()
     {
         // view model
@@ -195,6 +204,15 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
     private function getMelisKey()
     {
         return $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey'), null);
+    }
+
+    /**
+     * get config id from the url
+     * @return mixed
+     */
+    private function getConfigId()
+    {
+        return $this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null);
     }
 
     /**

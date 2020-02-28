@@ -85,6 +85,8 @@ class MelisFieldRow extends FormRow
             $markup = '<div class="make-switch" data-on="1" data-off="0"><input type="%s" class="switch" name="%s" id="%s" value="%s" onchange="%s" %s></div>';
             $attrib = $element->getAttributes();
             $value  = $element->getValue();
+            var_dump($element->getValue());
+
             $isChecked = !empty($value) ? 'checked' : '';
             $toggleButton = sprintf($markup, $attrib['type'], $attrib['name'], $attrib['id'], $value, $attrib['onchange'], $isChecked);
 
