@@ -163,6 +163,7 @@ class Module
                 'forms',
                 'install',
                 'setup',
+                'gdpr.autodelete',
             ];
 
             $translationList = [];
@@ -300,9 +301,9 @@ class Module
             /*
              * gdpr auto delete
              */
-            include __DIR__ . '/../config/gdpr/app.interface.php',
-            include __DIR__ . '/../config/gdpr/app.tools.php',
-            include __DIR__ . '/../config/gdpr/app.forms.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.interface.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.tools.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.forms.php',
         ];
 
         foreach ($configFiles as $file) {

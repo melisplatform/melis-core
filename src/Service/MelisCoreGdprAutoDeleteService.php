@@ -1,6 +1,7 @@
 <?php
 namespace MelisCore\Service;
 
+use MelisCore\Form\MelisForm;
 use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
@@ -20,6 +21,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @var MelisGdprDeleteEmailsTable
      */
     protected $gdprAutoDeleteEmailsTable;
+    /**
+     * @var array
+     */
+    protected $gdprAutoDeleteForms = [];
 
     /**
      * MelisCoreGdprAutoDeleteService constructor.
@@ -174,5 +179,135 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     public function getGdprAutoDeleteLogsTable()
     {
         return $this->gdprAutoDeleteEmailsLogsTable;
+    }
+    /**
+     * this method will get the meliscore tool
+     * @return MelisCoreToolService
+     */
+    private function getTool()
+    {
+        /** @var MelisCoreToolService $toolSvc */
+        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
+        // set melis tool key
+        $toolSvc->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
+
+        return $toolSvc;
+    }
+
+    /**
+     * get add edit filters form
+     *  - (site)
+     *  - (module)
+     *
+     * @return \Zend\Form\ElementInterface
+     */
+    public function getAddEditFiltersForm()
+    {
+        return $this->getTool()->getForm('melisgdprautodelete_add_edit_config_filters');
+    }
+
+    /**
+     * get add/edit cron config form
+     *
+     * @return \Zend\Form\ElementInterface
+     */
+    public function getAddEditCronConfigForm()
+    {
+        return $this->getTool()->getForm('melisgdprautodelete_add_edit_cron_config_form');
+    }
+     /**
+     * get add/edit cron config form
+     *
+     * @return \Zend\Form\ElementInterface
+     */
+    public function getAddEditEmailStupForm()
+    {
+        return $this->getTool()->getForm('melisgdprautodelete_add_edit_email_setup');
+    }
+
+    /**
+     * get add/edit alert email form
+     *
+     * @return \Zend\Form\ElementInterface
+     */
+    public function getAddEditAlertEmailForm()
+    {
+        return $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email');
+    }
+
+    /**
+     * get add/edit delete email form
+     *
+     * @return \Zend\Form\ElementInterface
+     */
+    public function getAddEditDeleteForm()
+    {
+        return $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email_delete');
+    }
+
+    /**
+     * @param $postData
+     * @return mixed
+     */
+    public function validateForm($postData)
+    {
+        // errors data
+        $errors = [];
+
+        $gdprAutoDeleteForms = [
+            'melisgdprautodelete_add_edit_config_filters'     => [
+                'name' => 'Configuration Filters',
+                'form' => $this->getAddEditFiltersForm()
+            ],
+            'melisgdprautodelete_add_edit_cron_config_form'   => [
+                'name' => 'Cron Config',
+                'form' => $this->getAddEditCronConfigForm()
+            ],
+            'melisgdprautodelete_add_edit_email_setup'        => [
+                'name' => 'Alert Email',
+                'form' => $this->getAddEditEmailStupForm()
+            ],
+            'melisgdprautodelete_add_edit_alert_email_delete' => [
+                'name' => 'Account Deleted Email',
+                'form' => $this->getAddEditDeleteForm()
+            ]
+        ];
+
+        foreach ($gdprAutoDeleteForms as $formkey => $form) {
+            /** @var MelisForm $form */
+            // validate form
+            $validatedForm = $form['form']->setData($postData);
+            // check form it its valid
+            if (!$validatedForm->isValid()) {
+                // set form errors
+                $errors = $errors + $this->formatErrorMessage($validatedForm->getMessages(), "MelisCoreGdprAutoDelete/tools/melis_core_gdpr_auto_delete/forms/" . $formkey) ;
+            }
+        }
+
+        return $errors;
+    }
+    /**
+     * This will pop an error after validating the form
+     *
+     * @param array $errors
+     * @param $formConfigPath
+     * @return array
+     */
+    private function formatErrorMessage($errors = array(),$formConfigPath)
+    {
+        /** @var MelisCoreConfigService $config */
+        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        // get form elements
+        $formConfig = $config->getItem($formConfigPath)['elements'];
+        // set label for each field
+        foreach ($errors as $keyError => $valueError) {
+            foreach ($formConfig as $keyForm => $valueForm) {
+                if ($valueForm['spec']['name'] == $keyError &&
+                    !empty($valueForm['spec']['options']['label']))
+                    $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+            }
+        }
+
+        return $errors;
     }
 }

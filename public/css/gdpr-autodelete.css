@@ -135,3 +135,7 @@
     position: absolute;
     left: 0;
 }
+.accordion-content-bg {
+    padding: 20px 20px 0;
+    margin-bottom: 20px;
+}

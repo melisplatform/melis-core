@@ -45,7 +45,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
         // get form for the Cron Config
-        $view->setVariable('formCronConfig', $this->getTool()->getForm('melisgdprautodelete_add_edit_cron_config_form'));
+        $view->setVariable('formCronConfig', $this->getGdprAutoDeleteService()->getAddEditCronConfigForm());
         // get form for Email Setup
         $view->setVariable('formEmailSetup', $this->getTool()->getForm('melisgdprautodelete_add_edit_email_setup'));
 
@@ -62,9 +62,9 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         // for contents
         $view->setVariable('melisCoreLang', $this->getGdprAutoDeleteService()->getMelisCoreLang());
         // get alert email form
-        $view->setVariable('melisCoreGdprAlertEmailForm', $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email'));
+        $view->setVariable('melisCoreGdprAlertEmailForm', $this->getGdprAutoDeleteService()->getAddEditAlertEmailForm());
         // get alert email delete form
-        $view->setVariable('melisCoreGdprAlertEmailDeleteForm', $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email_delete'));
+        $view->setVariable('melisCoreGdprAlertEmailDeleteForm', $this->getGdprAutoDeleteService()->getAddEditDeleteForm());
         // get config id
         $view->setVariable('configId', $this->getConfigId());
 

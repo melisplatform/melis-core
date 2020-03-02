@@ -7,7 +7,9 @@ namespace MelisCore\Controller;
  *
  */
 
+use MelisCore\Form\MelisForm;
 use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
+use MelisCore\Service\MelisCoreConfigService;
 use MelisCore\Service\MelisCoreGdprAutoDeleteService;
 use MelisCore\Service\MelisCoreToolService;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -16,6 +18,27 @@ use Zend\View\Model\ViewModel;
 
 class MelisCoreGdprAutoDeleteController extends AbstractActionController
 {
+    /**
+     * form errors
+     * @var array
+     */
+    private $formErrors = [];
+
+    /**
+     * @param $errors
+     */
+    public function setFormErrors($errors)
+    {
+        $this->formErrors = $errors;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormErrors()
+    {
+        return $this->formErrors;
+    }
     /**
      * @return ViewModel
      */
@@ -366,14 +389,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      */
     public function renderContentAccordionAddEditConfigFiltersAction()
     {
-        // set melis key
-        $this->getTool()->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
-        // view model
         $view = new ViewModel();
         // melisKey
         $view->setVariable('melisKey',$this->getMelisKey());
         // get filters form
-        $view->setVariable('formFilter', $this->getTool()->getForm('melisgdprautodelete_add_edit_config_filters'));
+        $view->setVariable('formFilter', $this->getGdprAutoDeleteService()->getAddEditFiltersForm());
 
         return $view;
     }
@@ -391,6 +411,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     public function saveAutoDeleteConfigurationAction()
     {
         $request = $this->getRequest();
+        $success = false;
+        $errors  = [];
         // save only when request is post
         if ($request->isPost()){
             // sanitized url data
@@ -399,24 +421,32 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             $postValues = array_merge($postValues,$this->parseSerializedData($postValues['auto_delete_config']));
             // remove auto_delete_config key
             unset($postValues['auto_delete_config']);
-            // parse serialized data from url
-            $postValues = array_merge($postValues,$this->parseSerializedData($postValues['alert_delete_conf']));
-            // remove auto_delete_config key
-            unset($postValues['alert_delete_conf']);
             // convert json string to array
-            $alertEmailsTransData = $this->jsonToArray($postValues['alert_emails_trans']);
-            // remove alert_emails_trans key
-            unset($postValues['alert_emails_trans']);
-            // save gdpr auto delete configs
-            $configId = $this->getGdprAutoDeleteService()->saveGdprAutoDeleteConfig($postValues);
-            // save gdpr alert emails translations
-            $this->saveAlertEmailsTrans($alertEmailsTransData,$configId);
+            $alertEmailsWarningTransData = $this->jsonToArray($postValues['alert_emails_warning_trans']);
+            // remove auto_delete_config key
+            unset($postValues['alert_emails_warning_trans']);
+            $alertEmailsDeleteTransData = $this->jsonToArray($postValues['alert_emails_delete_trans']);
+            // remove auto_delete_config key
+            unset($postValues['alert_emails_delete_trans']);
+            // validate all forms inputs from requests
+            $this->setFormErrors($this->getGdprAutoDeleteService()->validateForm($postValues));
+            // save data if no errors of forms
+            if (empty($this->getFormErrors())) {
+                // if empty then no errors save
+                // save gdpr auto delete configs
+                $configId = $this->getGdprAutoDeleteService()->saveGdprAutoDeleteConfig($postValues);
+                // save gdpr alert emails translations
+                $this->saveAlertEmailsTrans($alertEmailsWarningTransData,$configId);
+            } else {
+                // set errors for the return of ajax
+                $errors = $this->getFormErrors();
+            }
         }
         return new JsonModel([
-            'success' => true
+            'success' => $success,
+            'errors'  => $errors
         ]);
     }
-
     /**
      * @param $validatedData
      * @param $configId

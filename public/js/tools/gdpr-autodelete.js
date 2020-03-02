@@ -48,9 +48,11 @@ var gdprAutoDelete = {
         var dataString = gdprAutoDelete.getEmailSetupData();
         // set data for gdpr auto delete config
         dataString.append('auto_delete_config',gdprAutoDelete.getConfigInputs());
-        // set data for gdpr alert emails translations
-        dataString.append('alert_emails_trans',gdprAutoDelete.getAlertEmailsTransData());
-        dataString.append('alert_delete_conf',$("#id_melisgdprautodelete_add_edit_config_filters").serialize());
+        // set data for gdpr alert emails warning translations
+        dataString.append('alert_emails_warning_trans',gdprAutoDelete.getAlertEmailsTransData());
+        // set data for gdpr alert emails delete translations
+        dataString.append('alert_emails_delete_trans', gdprAutoDelete.getAlertEmailsDeleteTransData());
+
         // ajax
         $.ajax({
             type        : "POST",
@@ -69,9 +71,11 @@ var gdprAutoDelete = {
                 // clear data to save
                 gdprAutoDelete.dataTosave = [];
             } else {
+                melisHelper.melisKoNotification('GDPR Auto Delete','Unable to save',data.errors);
                 if(typeof callbackFail !== "undefined" && typeof callbackFail === "function") {
                     callbackFail(data);
                 }
+
             }
         }).fail(function(){
 
@@ -96,6 +100,27 @@ var gdprAutoDelete = {
     getAlertEmailsTransData : function () {
         var alertEmailTransData = [];
         $(".melisgdprautodelete_add_edit_email_setup_form").each(function(i , form){
+            // tmp form
+            var form2 = $(form);
+            // serialize array
+            var dataString  = form2.serialize();
+            if (typeof (form2.find('input[name="mgdprc_alert_email_tags"]').data('tags')) !== 'undefined') {
+                // get tags
+                dataString += "&mgdpre_email_tags=" + form2.find('input[name="mgdprc_alert_email_tags"]').data('tags').toString();
+            }
+            dataString += "&mgdpre_lang_id=" + form2.data('langId') + "&mgdpre_type=1";
+            // data lang locale
+            alertEmailTransData.push({
+                locale : form2.data('langLocale'),
+                data : dataString
+            });
+        });
+
+        return JSON.stringify(alertEmailTransData);
+    },
+    getAlertEmailsDeleteTransData : function () {
+        var alertEmailTransData = [];
+        $(".melisgdprautodelete_add_edit_alert_email_delete").each(function(i , form){
             // tmp form
             var form2 = $(form);
             // serialize array

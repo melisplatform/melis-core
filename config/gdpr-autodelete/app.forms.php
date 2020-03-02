@@ -24,10 +24,27 @@ return [
                                             'label' => 'Module',
                                             'tooltip' => 'Module',
                                             'empty_option' => 'Choose module',
+                                            'disable_inarray_validator' => true,
                                         ],
                                         'attributes' => [
                                             'required' => 'required',
                                         ]
+                                    ]
+                                ]
+                            ],
+                            'input_filter' => [
+                                'mgdprc_module_name' => [
+                                    'name' => 'mgdprc_module_name',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => array(
+                                                'messages' => array(
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_melis_core_gdpr_autodelete_choose_module',
+                                                ),
+                                            ),
+                                        ],
                                     ]
                                 ]
                             ]
@@ -48,8 +65,8 @@ return [
                                         'name' => 'mgdprc_alert_email_status',
                                         'type' => "checkbox",
                                         'options' => [
-                                            'label' => 'Activate email warning',
-                                            //'tooltip' => 'Activate automatic sending warning email',
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status',
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip',
                                             'switch_options' => [
                                                 'label-on' => 'Yes',
                                                 'label-off' => 'No',
@@ -71,8 +88,8 @@ return [
                                         'name' => 'mgdprc_alert_email_days',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'Alert email sent after inactivity of:',
-                                            'tooltip' => 'Number of days user\'s inactivity that cron will sent a warning email to the account'
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days',
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days tooltip'
                                         ],
                                         'attributes' => [
                                             'placeholder' => '365',
@@ -85,7 +102,8 @@ return [
                                         'name' => 'mgdprc_alert_email_resend',
                                         'type' => "checkbox",
                                         'options' => [
-                                            'label' => 'Resend alert 7 days before deadline:',
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend',
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend tooltip',
                                             'switch_options' => [
                                                 'label-on' => 'Yes',
                                                 'label-off' => 'No',
@@ -102,12 +120,35 @@ return [
                                         'name' => 'mgdprc_delete_days',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'Account will be deleted automatically after an inactivity of:',
-                                            'tooltip' => 'Number of days user\'s inactivity that cron will delete the account'
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days',
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip'
                                         ],
                                         'attributes' => [
                                             'placeholder' => '365',
                                             'class' => 'mgdprc_delete_days form-control col-md-2'
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            'input_filter' => [
+                                'mgdprc_delete_days' => [
+                                    'name' => 'mgdprc_delete_days',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        [
+                                            'name' => 'StripTags'
+                                        ], [
+                                            'name' => 'StringTrim'
                                         ]
                                     ]
                                 ]
@@ -142,10 +183,11 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'mgdprc_email_conf_from_email',
-                                        'type' => "Email",
+                                        'type' => "MelisText",
                                         'options' => [
                                             'label' => 'Sender email (From)',
                                             'tooltip' => 'Email of the sender (from)',
+                                            'disable_inarray_validator' => true,
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'noreply@melistechnology.com',
@@ -157,7 +199,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'mgdprc_email_conf_reply_to',
-                                        'type' => "Email",
+                                        'type' => "MelisText",
                                         'options' => [
                                             'label' => 'Reply to',
                                             'tooltip' => 'Reply to',
@@ -176,8 +218,7 @@ return [
                                             'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
-                                            'data-label-text' => 'Replacement tags accepted',
+                                            'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_email_setup_tags',
                                             'class' => 'melis-multi-val-input',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
@@ -188,8 +229,8 @@ return [
                                         'name' => 'mgdprc_email_conf_layout',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'Layout',
-                                            'tooltip' => 'Layout of the email',
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout',
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout tooltip',
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'melis-core/view/layout/layoutEmail.phtml',
@@ -202,8 +243,8 @@ return [
                                         'name' => 'mgdprc_email_conf_layout_title',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'Layout title',
-                                            'tooltip' => 'Title of the email layout',
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_title',
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_title tooltip',
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'Melis Technology',
@@ -215,8 +256,8 @@ return [
                                         'name' => 'mgdprc_email_conf_layout_logo',
                                         'type' => "file",
                                         'options' => [
-                                            'label' => 'Logo',
-                                            'tooltip' => 'Logo of the email',
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_logo',
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_logo tooltip',
                                             'filestyle_options' => [
                                                 'buttonBefore' => true,
                                                 'buttonText' => 'Choose',
@@ -232,8 +273,121 @@ return [
                                         'name' => 'mgdprc_email_conf_layout_desc',
                                         'type' => "MelisCoreTinyMCE",
                                         'options' => [
-                                            'label' => 'Layout information',
-                                            'tooltip' => 'Email body',
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc',
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip',
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            'input_filter' => [
+                                'mgdprc_email_conf_from_name' => [
+                                    'name' => 'mgdprc_email_conf_from_name',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ], [
+                                            'name' => 'EmailAddress',
+                                            'options' => [
+                                                'domain'   => 'true',
+                                                'hostname' => 'true',
+                                                'mx'       => 'true',
+                                                'deep'     => 'true',
+                                                'message'  => 'tr_melis_core_gdpr_autodelete_invalid_email',
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        [
+                                            'name' => 'StripTags'
+                                        ], [
+                                            'name' => 'StringTrim'
+                                        ]
+                                    ]
+                                ],
+                                'mgdprc_email_conf_from_email' => [
+                                    'name' => 'mgdprc_email_conf_from_email',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ], [
+                                            'name' => 'EmailAddress',
+                                            'options' => [
+                                                'domain'   => 'true',
+                                                'hostname' => 'true',
+                                                'mx'       => 'true',
+                                                'deep'     => 'true',
+                                                'message'  => 'tr_melis_core_gdpr_autodelete_invalid_email',
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        [
+                                            'name' => 'StripTags'
+                                        ], [
+                                            'name' => 'StringTrim'
+                                        ]
+                                    ]
+                                ],
+                                'mgdprc_email_conf_reply_to' => [
+                                    'name' => 'mgdprc_email_conf_reply_to',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ], [
+                                            'name' => 'EmailAddress',
+                                            'options' => [
+                                                'domain'   => 'true',
+                                                'hostname' => 'true',
+                                                'mx'       => 'true',
+                                                'deep'     => 'true',
+                                                'message'  => 'tr_melis_core_gdpr_autodelete_invalid_email',
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        [
+                                            'name' => 'StripTags'
+                                        ], [
+                                            'name' => 'StringTrim'
+                                        ]
+                                    ]
+                                ],
+                                'mgdprc_email_conf_layout' => [
+                                    'name' => 'mgdprc_email_conf_layout',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        [
+                                            'name' => 'StripTags'
+                                        ], [
+                                            'name' => 'StringTrim'
                                         ]
                                     ]
                                 ]
@@ -243,7 +397,7 @@ return [
                         // <editor-fold desc="GDPR Alert email form warning">
                         'melisgdprautodelete_add_edit_alert_email' => [
                             'attributes' => array(
-                                'name' => 'melisgdprautodelete_add_edit_cron_config_form',
+                                'name' => 'melisgdprautodelete_add_edit_alert_email',
                                 'method' => 'POST',
                                 'action' => '',
                                 'class' => 'melisgdprautodelete_add_edit_email_setup_form'
@@ -258,7 +412,7 @@ return [
                                             'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
+                                            'required' => 'required',
                                             'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'Replacement tags accepted',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
@@ -307,6 +461,22 @@ return [
                                         ]
                                     ],
                                 ],
+                            ],
+                            'input_filter' => [
+                                'mgdpre_email_tags' => [
+                                    'name' => 'mgdpre_email_tags',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                ]
                             ]
                         ],
                         // </editor-fold>
