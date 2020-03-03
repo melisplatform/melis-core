@@ -3,6 +3,7 @@ $id = '';
 if (!empty($this->zoneconfig['conf']['id'])) {
     $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
 }
+$availableLang = "";
 ?>
 
 <?php foreach ($this->melisCoreLang as $i => $data) { ?>
@@ -20,8 +21,8 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                 </div>
                 <div id="alert-email-content-<?= $data['lang_locale'] ?>" class="collapse show accordion-content-bg" aria-labelledby="alert-email-content-<?= $data['lang_locale'] ?>" data-parent="#accordion-alert-email-<?= $data['lang_locale'] ?>">
                     <h5 class="float-right"><a href="#" class="" style="text-decoration: underline">Delete everything</a></h5>
-                    <div class="clearfix"></div>
                     <div class="row">
+
                         <div class="col-md-8">
                             <?php
                             $excludedFieldInLoop = [
@@ -34,6 +35,8 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                             $form->setAttribute('data-lang-locale', $data['lang_locale']);
                             // set lang id
                             $form->setAttribute('data-lang-id', $data['lang_id']);
+                            // set id for forms
+                            $form->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_' . $data['lang_locale']);
                             // form open tag
                             echo $this->form()->openTag($form); ?>
                             <?php foreach ($excludedFieldInLoop as $element) { ?>
@@ -74,6 +77,8 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                             $formEmailDelete->setAttribute('data-lang-locale', $data['lang_locale']);
                             // set lang id
                             $formEmailDelete->setAttribute('data-lang-id', $data['lang_id']);
+                            // set id
+                            $formEmailDelete->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_delete_' . $data['lang_locale']);
                             // form open tag
                             echo $this->form()->openTag($formEmailDelete); ?>
                             <?php foreach ($excludedFieldInLoop as $element) { ?>
@@ -88,11 +93,12 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                             <?php }
                             ?>
                             <?= $this->form()->closeTag() ?>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<?php }
+<?php $availableLang .=  $data['lang_locale'] . ",";} ?>
+<input type="hidden" value="<?= $availableLang ?>" id="available-lang" />
+

@@ -220,7 +220,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      *
      * @return \Zend\Form\ElementInterface
      */
-    public function getAddEditEmailStupForm()
+    public function getAddEditEmailSetupForm()
     {
         return $this->getTool()->getForm('melisgdprautodelete_add_edit_email_setup');
     }
@@ -240,7 +240,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      *
      * @return \Zend\Form\ElementInterface
      */
-    public function getAddEditDeleteForm()
+    public function getAddEditAlertEmailDeleteForm()
     {
         return $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email_delete');
     }
@@ -255,21 +255,25 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $errors = [];
 
         $gdprAutoDeleteForms = [
-            'melisgdprautodelete_add_edit_config_filters'     => [
+            'melisgdprautodelete_add_edit_config_filters' => [
                 'name' => 'Configuration Filters',
                 'form' => $this->getAddEditFiltersForm()
             ],
-            'melisgdprautodelete_add_edit_cron_config_form'   => [
+            'melisgdprautodelete_add_edit_cron_config_form' => [
                 'name' => 'Cron Config',
                 'form' => $this->getAddEditCronConfigForm()
             ],
-            'melisgdprautodelete_add_edit_email_setup'        => [
-                'name' => 'Alert Email',
-                'form' => $this->getAddEditEmailStupForm()
+            'melisgdprautodelete_add_edit_email_setup' => [
+                'name' => 'Email Setup',
+                'form' => $this->getAddEditEmailSetupForm()
+            ],
+            'melisgdprautodelete_add_edit_alert_email' => [
+                'name' => 'Alert email',
+                'form' => $this->getAddEditAlertEmailForm()
             ],
             'melisgdprautodelete_add_edit_alert_email_delete' => [
                 'name' => 'Account Deleted Email',
-                'form' => $this->getAddEditDeleteForm()
+                'form' => $this->getAddEditAlertEmailDeleteForm()
             ]
         ];
 
@@ -286,6 +290,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
         return $errors;
     }
+    public function validateTranslationsForm($postDataTranslations, $form)
+    {
+        print_r($postDataTranslations);
+        die;
+    }
     /**
      * This will pop an error after validating the form
      *
@@ -293,7 +302,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $formConfigPath
      * @return array
      */
-    private function formatErrorMessage($errors = array(),$formConfigPath)
+    private function formatErrorMessage($errors = [],$formConfigPath)
     {
         /** @var MelisCoreConfigService $config */
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
@@ -302,9 +311,13 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         // set label for each field
         foreach ($errors as $keyError => $valueError) {
             foreach ($formConfig as $keyForm => $valueForm) {
-                if ($valueForm['spec']['name'] == $keyError &&
-                    !empty($valueForm['spec']['options']['label']))
-                    $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                if ($valueForm['spec']['name'] == $keyError) {
+                    if (!empty($valueForm['spec']['options']['label'])) {
+                        $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                    } else {
+                        $errors[$keyError]['label'] = $valueForm['spec']['attributes']['data-label-text'];
+                    }
+                }
             }
         }
 

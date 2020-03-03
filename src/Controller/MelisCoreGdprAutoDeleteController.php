@@ -1,5 +1,7 @@
 <?php
+
 namespace MelisCore\Controller;
+
 /**
  * Melis Technology (http://www.melistechnology.com)
  *
@@ -25,21 +27,6 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     private $formErrors = [];
 
     /**
-     * @param $errors
-     */
-    public function setFormErrors($errors)
-    {
-        $this->formErrors = $errors;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFormErrors()
-    {
-        return $this->formErrors;
-    }
-    /**
      * @return ViewModel
      */
     public function renderContentModalAction()
@@ -47,10 +34,19 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
+
+    /**
+     * this method will get the melisKey from route params
+     */
+    private function getMelisKey()
+    {
+        return $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey'), null);
+    }
+
     /**
      * @return ViewModel
      */
@@ -59,7 +55,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
@@ -72,7 +68,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
@@ -85,7 +81,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
@@ -98,7 +94,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
@@ -111,7 +107,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
@@ -136,8 +132,9 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     public function renderContentAccordionListConfigContentSiteFilterAction()
     {
         $view = new ViewModel();
-        if (in_array('MelisCms',$this->getServiceLocator()->get('ModulesService')->getAllModules())) {
-            $view->setVariable('sites', $this->getServiceLocator()->get('MelisEngineTableSite')->fetchAll()->toArray());
+        if (in_array('MelisCms', $this->getServiceLocator()->get('ModulesService')->getAllModules())) {
+            $view->setVariable('sites', $this->getServiceLocator()
+                ->get('MelisEngineTableSite')->fetchAll()->toArray());
         }
 
         return $view;
@@ -152,9 +149,20 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     public function renderContentAccordionListConfigContentModuleFilterAction()
     {
         $view = new ViewModel();
-        $view->setVariable('modules',$this->getGdprAutoDeleteService()->getAutoDeleteModulesList());
+        $view->setVariable('modules', $this->getGdprAutoDeleteService()->getAutoDeleteModulesList());
 
         return $view;
+    }
+
+    /**
+     * @return MelisCoreGdprAutoDeleteService
+     */
+    private function getGdprAutoDeleteService()
+    {
+        /** @var MelisCoreGdprAutoDeleteService $gdprAutoDeleteSvc */
+        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService');
+
+        return $gdprAutoDeleteSvc;
     }
 
     /**
@@ -178,6 +186,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     {
         return new ViewModel();
     }
+
     /**
      * @return ViewModel
      */
@@ -194,7 +203,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         ];
         $view->setVariable('tableColumns', $columns);
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
         // data table configuration
         $view->setVariable('toolDataTableConfig',
             $this->getTool()->getDataTableConfiguration(
@@ -209,6 +218,18 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     }
 
     /**
+     * this method will get the meliscore tool
+     * @return MelisCoreToolService
+     */
+    private function getTool()
+    {
+        /** @var MelisCoreToolService $toolSvc */
+        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
+
+        return $toolSvc;
+    }
+
+    /**
      *  get gdpr delete config data
      *
      * @return JsonModel
@@ -219,16 +240,16 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $request = $this->getRequest();
         $tableData = [];
         $post = [];
-        if($request->isPost()) {
+        if ($request->isPost()) {
             // set melis tool key
             $this->getTool()->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
             // post data
             $post = $this->processPostData(get_object_vars($request->getPost()));
             // get data and format
-            $tableData = $this->formatDataIntoDataTableFormat (
-                // get gdpr delete config data from service
-                $this->getGdprAutoDeleteService()->getGdprDeleteConfigData (
-                    // search key
+            $tableData = $this->formatDataIntoDataTableFormat(
+            // get gdpr delete config data from service
+                $this->getGdprAutoDeleteService()->getGdprDeleteConfigData(
+                // search key
                     $post['searchKey'],
                     // searchable columns
                     $this->getTool()->getSearchableColumns(),
@@ -249,10 +270,10 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         }
 
         return new JsonModel([
-            'draw'            => (int) $post['draw'],
-            'data'            => $tableData,
+            'draw' => (int)$post['draw'],
+            'data' => $tableData,
             'recordsFiltered' => $this->getGdprDeleteConfigTable()->getTotalFiltered(),
-            'recordsTotal'    => $this->getGdprDeleteConfigTable()->getTotalData()
+            'recordsTotal' => $this->getGdprDeleteConfigTable()->getTotalData()
         ]);
     }
 
@@ -266,16 +287,17 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     private function processPostData($postData)
     {
         return [
-            'draw'       => (int) $postData['draw'],
-            'orderBy'    => array_keys($this->getTool()->getColumns())[(int) $postData['order'][0]['column']],
-            'orderDir'   => isset($postData['order']['0']['dir']) ? strtoupper($postData['order']['0']['dir']) : 'DESC',
-            'searchKey'  => isset($postData['search']['value']) ? $postData['search']['value'] : null,
-            'start'      => (int) $postData['start'],
-            'limit'      => (int) $postData['length'],
-            'siteId'     => isset($postData['gpdr_auto_delete_site_id']) ? $postData['gpdr_auto_delete_site_id'] : null,
-            'module'     => isset($postData['gdpr_auto_delete_module'])  ? $postData['gdpr_auto_delete_module'] : null,
+            'draw' => (int)$postData['draw'],
+            'orderBy' => array_keys($this->getTool()->getColumns())[(int)$postData['order'][0]['column']],
+            'orderDir' => isset($postData['order']['0']['dir']) ? strtoupper($postData['order']['0']['dir']) : 'DESC',
+            'searchKey' => isset($postData['search']['value']) ? $postData['search']['value'] : null,
+            'start' => (int)$postData['start'],
+            'limit' => (int)$postData['length'],
+            'siteId' => isset($postData['gpdr_auto_delete_site_id']) ? $postData['gpdr_auto_delete_site_id'] : null,
+            'module' => isset($postData['gdpr_auto_delete_module']) ? $postData['gdpr_auto_delete_module'] : null,
         ];
     }
+
     /**
      *
      * format data from db into js datatable format
@@ -286,10 +308,10 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     private function formatDataIntoDataTableFormat($data)
     {
         $formattedData = [];
-        if (! empty($data)) {
-            for($ctr = 0; $ctr < count($data); $ctr++) {
+        if (!empty($data)) {
+            for ($ctr = 0; $ctr < count($data); $ctr++) {
                 // apply text limits
-                foreach($data[$ctr] as $vKey => $vValue) {
+                foreach ($data[$ctr] as $vKey => $vValue) {
                     // apply limit text
                     $formattedData[$ctr][$vKey] = $this->getTool()->limitedText($vValue, 80);
                 }
@@ -307,36 +329,6 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
 
         return $formattedData;
     }
-    /**
-     * this method will get the melisKey from route params
-     */
-    private function getMelisKey()
-    {
-        return $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey'), null);
-    }
-
-    /**
-     * this method will get the meliscore tool
-     * @return MelisCoreToolService
-     */
-    private function getTool()
-    {
-        /** @var MelisCoreToolService $toolSvc */
-        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
-
-        return $toolSvc;
-    }
-
-    /**
-     * @return MelisCoreGdprAutoDeleteService
-     */
-    private function getGdprAutoDeleteService()
-    {
-        /** @var MelisCoreGdprAutoDeleteService $gdprAutoDeleteSvc */
-        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService');
-
-        return $gdprAutoDeleteSvc;
-    }
 
     /**
      * @return MelisGdprDeleteConfigTable
@@ -348,6 +340,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
 
         return $gdprDeleteConfigTable;
     }
+
     /**
      * @return ViewModel
      */
@@ -356,10 +349,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
+
     /**
      * @return ViewModel
      */
@@ -368,10 +362,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
+
     /**
      * @return ViewModel
      */
@@ -380,10 +375,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // view model
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
 
         return $view;
     }
+
     /**
      * @return ViewModel
      */
@@ -391,12 +387,13 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     {
         $view = new ViewModel();
         // melisKey
-        $view->setVariable('melisKey',$this->getMelisKey());
+        $view->setVariable('melisKey', $this->getMelisKey());
         // get filters form
         $view->setVariable('formFilter', $this->getGdprAutoDeleteService()->getAddEditFiltersForm());
 
         return $view;
     }
+
     public function runGdprAutoDeleteCronAction()
     {
         $this->getGdprAutoDeleteService()->getAutoDeleteModulesList();
@@ -412,31 +409,33 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     {
         $request = $this->getRequest();
         $success = false;
-        $errors  = [];
+        $errors = [];
+        $configId = null;
         // save only when request is post
-        if ($request->isPost()){
+        if ($request->isPost()) {
             // sanitized url data
             $postValues = get_object_vars($request->getPost());
             // parse serialized data from url
-            $postValues = array_merge($postValues,$this->parseSerializedData($postValues['auto_delete_config']));
-            // remove auto_delete_config key
-            unset($postValues['auto_delete_config']);
+            $postValues = $this->parseSerializedData($postValues);
             // convert json string to array
             $alertEmailsWarningTransData = $this->jsonToArray($postValues['alert_emails_warning_trans']);
-            // remove auto_delete_config key
-            unset($postValues['alert_emails_warning_trans']);
+            // convert json string to array
             $alertEmailsDeleteTransData = $this->jsonToArray($postValues['alert_emails_delete_trans']);
-            // remove auto_delete_config key
-            unset($postValues['alert_emails_delete_trans']);
             // validate all forms inputs from requests
             $this->setFormErrors($this->getGdprAutoDeleteService()->validateForm($postValues));
+            // remove auto_delete_config key
+            unset($postValues['alert_emails_warning_trans']);
+            // remove auto_delete_config key
+            unset($postValues['alert_emails_delete_trans']);
             // save data if no errors of forms
             if (empty($this->getFormErrors())) {
-                // if empty then no errors save
                 // save gdpr auto delete configs
                 $configId = $this->getGdprAutoDeleteService()->saveGdprAutoDeleteConfig($postValues);
                 // save gdpr alert emails translations
-                $this->saveAlertEmailsTrans($alertEmailsWarningTransData,$configId);
+                $this->saveAlertEmailsTrans($alertEmailsWarningTransData, $configId);
+                // save gdpr alert deleted emails
+                $this->saveAlertEmailsTrans($alertEmailsDeleteTransData, $configId);
+                $success = true;
             } else {
                 // set errors for the return of ajax
                 $errors = $this->getFormErrors();
@@ -444,24 +443,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         }
         return new JsonModel([
             'success' => $success,
-            'errors'  => $errors
+            'errors' => $errors,
+            'id' => $configId
         ]);
     }
-    /**
-     * @param $validatedData
-     * @param $configId
-     */
-    private function saveAlertEmailsTrans($validatedData,$configId)
-    {
-        if (! empty($validatedData)) {
-            // get config id
-            foreach ($validatedData as $idx => $val) {
-                $val['data']['mgdpre_config_id'] = $configId;
-                // save alert emails trans
-                $this->getGdprAutoDeleteService()->saveGdprDeleteWarningEmails($val['data'],null);
-            }
-        }
-    }
+
     /**
      * parse url serialized data
      *
@@ -470,9 +456,23 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      */
     private function parseSerializedData($postData)
     {
-        parse_str($postData, $data);
+        $dataToParse = [
+            'auto_delete_config',
+            'auto_delete_filters'
+        ];
+        // loop to make an array
+        foreach ($postData as $idx => $val) {
+            if (in_array($idx, $dataToParse)) {
+                // parse passed url params
+                parse_str($postData[$idx], $data);
+                // override current post data
+                $postData = array_merge($postData, $data);
+                // remove partial keys used
+                unset($postData[$idx]);
+            }
+        }
 
-        return $data;
+        return $postData;
     }
 
     /**
@@ -484,13 +484,48 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     private function jsonToArray($jsonData)
     {
         // decond json data
-        $data = json_decode($jsonData,true);
+        $data = json_decode($jsonData, true);
+
         // parse serialized data from url
         foreach ($data as $idx => $val) {
             // overwrite old data
-            $data[$idx]['data'] = $this->parseSerializedData($val['data']);
+            parse_str($val['data'], $parseData);
+            $data[$idx]['data'] = $parseData;
         }
 
+
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormErrors()
+    {
+        return $this->formErrors;
+    }
+
+    /**
+     * @param $errors
+     */
+    public function setFormErrors($errors)
+    {
+        $this->formErrors = $errors;
+    }
+
+    /**
+     * @param $validatedData
+     * @param $configId
+     */
+    private function saveAlertEmailsTrans($validatedData, $configId)
+    {
+        if (!empty($validatedData)) {
+            // get config id
+            foreach ($validatedData as $idx => $val) {
+                $val['data']['mgdpre_config_id'] = $configId;
+                // save alert emails trans
+                $this->getGdprAutoDeleteService()->saveGdprDeleteWarningEmails($val['data'], null);
+            }
+        }
     }
 }

@@ -291,15 +291,6 @@ return [
                                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
-                                        ], [
-                                            'name' => 'EmailAddress',
-                                            'options' => [
-                                                'domain'   => 'true',
-                                                'hostname' => 'true',
-                                                'mx'       => 'true',
-                                                'deep'     => 'true',
-                                                'message'  => 'tr_melis_core_gdpr_autodelete_invalid_email',
-                                            ]
                                         ]
                                     ],
                                     'filters' => [
@@ -370,6 +361,27 @@ return [
                                         ]
                                     ]
                                 ],
+                                'mgdprc_email_conf_tags' => [
+                                    'name' => 'mgdprc_email_conf_tags',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        [
+                                            'name' => 'StripTags'
+                                        ], [
+                                            'name' => 'StringTrim'
+                                        ]
+                                    ]
+                                ],
                                 'mgdprc_email_conf_layout' => [
                                     'name' => 'mgdprc_email_conf_layout',
                                     'required' => true,
@@ -412,7 +424,6 @@ return [
                                             'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
                                         ],
                                         'attributes' => [
-                                            'required' => 'required',
                                             'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'Replacement tags accepted',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
@@ -428,7 +439,6 @@ return [
                                             'tooltip' => 'Subject of the email',
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -442,7 +452,6 @@ return [
                                             'tooltip' => 'Message of the email',
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -456,7 +465,6 @@ return [
                                             'tooltip' => 'Message of the email in text version',
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -465,7 +473,7 @@ return [
                             'input_filter' => [
                                 'mgdpre_email_tags' => [
                                     'name' => 'mgdpre_email_tags',
-                                    'required' => true,
+                                    'required' => false,
                                     'validators' => [
                                         [
                                             'name' => 'NotEmpty',
@@ -498,7 +506,6 @@ return [
                                             'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
                                             'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'Replacement tags accepted',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
@@ -514,7 +521,6 @@ return [
                                             'tooltip' => 'Subject of the email',
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -528,7 +534,6 @@ return [
                                             'tooltip' => 'Message of the email',
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -542,7 +547,6 @@ return [
                                             'tooltip' => 'Message of the email in text version',
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
                                             'class' => 'form-control'
                                         ]
                                     ]

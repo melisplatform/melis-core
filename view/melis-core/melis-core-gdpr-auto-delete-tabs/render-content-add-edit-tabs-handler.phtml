@@ -43,19 +43,10 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                         if (!empty($this->zoneconfig['interface'])) {
                             foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) { ?>
                                 <?php if (!in_array($menuConfig['conf']['melisKey'], $exludedInterface)) { ?>
-                                    <?php if (!in_array($menuConfig['conf']['melisKey'], $interfaceNeedId)) { ?>
-                                        <a class="nav-link" id="<?= $menuConfig['conf']['id'] ?? null ?>_tab"
-                                           data-toggle="pill" href="#<?= $menuConfig['conf']['id'] ?? null ?>"
-                                           role="tab" aria-controls="<?= $menuConfig['conf']['id'] ?? null ?>"
-                                           aria-selected="false"><?= $menuConfig['conf']['name'] ?? null ?></a>
-                                    <?php } else { ?>
-                                        <?php if ($this->configId) { ?>
-                                            <a class="nav-link" id="<?= $menuConfig['conf']['id'] ?? null ?>_tab"
-                                               data-toggle="pill" href="#<?= $menuConfig['conf']['id'] ?? null ?>"
-                                               role="tab" aria-controls="<?= $menuConfig['conf']['id'] ?? null ?>"
-                                               aria-selected="false"><?= $menuConfig['conf']['name'] ?? null ?></a>
-                                        <?php } ?>
-                                    <?php } ?>
+                                    <a class="nav-link" id="<?= $menuConfig['conf']['id'] ?? null ?>_tab"
+                                       data-toggle="pill" href="#<?= $menuConfig['conf']['id'] ?? null ?>"
+                                       role="tab" aria-controls="<?= $menuConfig['conf']['id'] ?? null ?>"
+                                       aria-selected="false"><?= $menuConfig['conf']['name'] ?? null ?></a>
                                 <?php } ?>
                             <?php }
                         }
@@ -67,13 +58,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                         <?php
                         if (!empty($this->zoneconfig['interface'])) {
                             foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
-                                if (in_array($keyConfig,$interfaceNeedId)) {
-                                    if ($this->configId) {
-                                        echo $this->$keyConfig;
-                                    }
-                                } else {
-                                    echo $this->$keyConfig;
-                                }
+                                echo $this->$keyConfig;
                             }
                         }
                         ?>
