@@ -4,10 +4,12 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.ui-slider-wrap .slider-primary .ui-slider-handle,
 .bootbox .modal-dialog .modal-footer .btn-danger,
 .badge.badge-primary.badge-stroke {
     border-color: <?= $primaryColor; ?> !important;
 }
+.checkbox-custom i.checked,
 .bootbox .modal-dialog .modal-footer .btn-danger,
 .vevent a,
 .contacts .innerLR .media .media-body h4 a,
@@ -22,6 +24,14 @@
 .media-list .media-body small a {
     color: <?= $primaryColor; ?> !important;
 }
+.sliderContainer .ui-rangeSlider-rightArrow .ui-rangeSlider-arrow-inner {
+    border-left-color: <?= $primaryColor; ?>!important;
+}
+.sliderContainer .ui-rangeSlider-leftArrow .ui-rangeSlider-arrow-inner {
+    border-right-color: <?= $primaryColor; ?>!important;
+}
+.sliderContainer .ui-rangeSlider-bar,
+.ui-slider-wrap .slider-primary .ui-slider-range,
 .nav-pills .nav-link,
 #id_melis_support_questions .widget .bg-primary:hover,
 #id_melis_support_questions .widget .bg-primary,
@@ -34,6 +44,11 @@
 .timeline-activity a:hover {
     color: <?= $primaryColor; ?> !important;
 }
+.widgets .menubar li a,
+.widget-timeline a,
+.widgets .widget .widget-body a,
+.widgets .widget .widget-body strong a,
+.widgets .widget .widget-body .widgets-stats,
 .forgot-password a,
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
@@ -77,10 +92,25 @@
     background-color: <?= $primaryColor; ?> !important;
     color: #fff;
 }
+.widget.widget-body-primary>.widget-body,
+.ColVis .ColVis_Button,
 #convo-content #chat-container .my-msg {
     background-color: <?= $primaryColor; ?>;
 }
 
+.btn-group .btn-danger.btn-regular {
+    background-color: <?= $primaryColor; ?> !important;
+    border-color: <?= $primaryColor; ?> !important;
+}
+
+.btn-group .btn-danger.btn-regular:hover,
+.btn-group .btn-danger.btn-regular:focus {
+    background-color: #fff !important;
+    color: <?= $primaryColor; ?> !important;
+}
+
+.innerTB .glyphicons p a,
+.widget .widget-body p a,
 #convo-content .chat-contact-name {
     color: <?= $primaryColor; ?>;
 }
@@ -675,7 +705,8 @@ div.glyphicons-social.glyphicon-primary i:before {
     background: <?= $primaryColor; ?>;
 }
 
-.widget.widget-wizard-pills .widget-head ul li.primary a {
+.modals .wizard .widget.widget-wizard-pills .widget-head.widget-steps-head ul li.active a.active,
+.widget.widget-wizard-pills .widget-head ul li.active.primary a {
     background: <?= $primaryColor; ?>;
 }
 
