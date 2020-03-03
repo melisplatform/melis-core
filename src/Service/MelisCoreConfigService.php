@@ -313,20 +313,32 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
         return $this;
     }
 
-    private function getItemRec($pathTab, $position, $configTab)
+    private function getItemRec($pathString, $position, $configTab)
     {
-        if (!empty($pathTab[$position])) {
+        if (!empty($pathString[$position])) {
             foreach ($configTab as $keyConfig => $valueConfig) {
-                if ($pathTab[$position] == $keyConfig) {
-                    return $this->getItemRec($pathTab, $position + 1, $configTab[$keyConfig]);
+                if ($pathString[$position] == $keyConfig) {
+                    return $this->getItemRec($pathString, $position + 1, $configTab[$keyConfig]);
                 }
             }
 
             return [];
         } else {
             if ($position == 0) {
-                return $this->getItemRec($pathTab, $position + 1, $configTab);
+                return $this->getItemRec($pathString, $position + 1, $configTab);
             } else {
+
+                /**
+                 * Sending event with string config position
+                 * and config array retrieved as parameters
+                 *
+                 * $pathString[$position - 1] - this will get the last position as param
+                 */
+                $coreSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+                $configTab = $coreSrv->sendEvent('melis_core_config_get_item_rec',
+                    ['pathString' => $pathString[$position - 1] , 'config' => $configTab]
+                )['config'];
+
                 return $configTab;
             }
         }

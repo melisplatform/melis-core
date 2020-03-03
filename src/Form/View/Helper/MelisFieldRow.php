@@ -131,7 +131,7 @@ class MelisFieldRow extends FormRow
             $element->setLabel("");
 
             $switch  = '<div class="form-group">';
-            $switch .= '<label for="'.$element->getName().'">'. $lable .'</label>';
+            $switch .= '<label class="d-flex flex-row justify-content-between" for="'.$element->getName().'">'. $lable .'</label>';
             $switch .= '   <div id="'. $switchId .'" class="make-switch" data-input-name="' .$element->getName(). '" data-on-label="'. $switchOptions['label-on'] .'" data-off-label="'. $switchOptions['label-off'] .'" '.$switchLabel.'>';
             $switch .= parent::render($element);
             $switch .= '    </div>';

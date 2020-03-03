@@ -815,7 +815,10 @@ td.dataTables_empty {
  * Slider
  */
 .slider-open-tooltip .melis-opentools {
-    margin-right: 0.75rem;
+  margin-right: 0.75rem;
+}
+.bootstrap-datetimepicker-widget table td.active {
+  color:#fff !important;
 }
 /* Responsive media queries */
 @media (min-width: 991px) {
