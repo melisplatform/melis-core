@@ -634,6 +634,7 @@ class ToolUserController extends AbstractActionController
                                 $langId = $language;
 
                                 $melisEmailBO->sendBoEmailByCode('ACCOUNTCREATION', $tags, $email_to, $name_to, $langId);
+                                $melisEmailBO->sendBoEmailByCode('PASSWORDCREATION', $tags, $email_to, $name_to, $langId);
                             }
                         }
                     } else {

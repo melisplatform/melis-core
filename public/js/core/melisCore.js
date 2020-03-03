@@ -452,11 +452,29 @@ var melisCore = (function(window){
                 melisHelper.tabClose(dataID);
             }
         });
+
         // detect if mobile / tablet
         if( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
-        $("#close-all-tab").hide();        
+
+        $("#close-all-tab").hide();
+
+        if ( screenSize >= 768 ) {
+            setTimeout(function() {
+                $("#melis-id-nav-bar-tabs").css("left", "0");
+            }, 1);
+        }
+
+        /* if ( screenSize >= 768 ) {
+            setTimeout(function() {
+                $("#melis-id-nav-bar-tabs").addClass("melis-id-nav-bar-tabs-notransition");
+            }, 1);
+
+            setTimeout(function() {
+                $("#melis-id-nav-bar-tabs").removeClass("melis-id-nav-bar-tabs-notransition");
+            }, 500);
+        } */
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--

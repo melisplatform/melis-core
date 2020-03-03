@@ -282,7 +282,6 @@ body{
 
 /* left menu*/
 .navbar.main.navbar-primary .left-menu{
-    background: #e61c23;
     position: relative;
     width: 100%;
 }
@@ -2404,7 +2403,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         margin-right: 10px;
     }
     .navbar.main.navbar-primary .left-menu{
-        width: auto;
+        /* width: auto; */
+        width: 274px;
+        overflow: hidden;
     }
 
 
@@ -2659,11 +2660,17 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         z-index: 100;
         line-height: 31px;
     }
+    /**
+     * tabExpander
+     */
+    /* .firefox .melis-tabnext {
+        right: -19px;
+    } */
     .melis-tabnext{
         /* float: right;
         right: -10px; */
         float: right !important;
-        right: -3px;
+        right: -11px;
     }
     .melis-tabprev:hover,
     .melis-tabnext:hover{

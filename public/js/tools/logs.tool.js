@@ -79,7 +79,6 @@ $(function(){
         );
 
     });
-
 	
 	$body.on("click", ".saveLogTypeDetails", function(){
 		
@@ -162,7 +161,6 @@ window.initDatePicker = function(){
 	melisHelper.initDateRangePicker("#logsTableDaterange", dateRangePickerApplyEvent);
 }
 
-
 window.dateRangePickerApplyEvent = function(ev, picker) {
     $tableMelisLogs.draw();
 }
@@ -176,7 +174,6 @@ function initExportLogDateRangePicker() {
         }, 1000);
     }
 }
-
 
 function exportData(url) {
     var downloadLink = document.createElement("a");

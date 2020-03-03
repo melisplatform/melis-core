@@ -4,6 +4,21 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.forgot-password a,
+.forgot-password a:hover {
+    color: <?= $primaryColor; ?> !important;
+}
+.navbar.main.navbar-primary .navbar-brand {
+    background: <?= $primaryColor; ?> !important;
+}
+.btn-primary:not(:disabled):not(.disabled).active, 
+.btn-primary:not(:disabled):not(.disabled):active, 
+.show>.btn-primary.dropdown-toggle {
+    background: <?= $primaryColor; ?> !important;
+}
+.melis-gdpr-banner-container {
+    background: <?= $primaryColor; ?> !important;
+}
 .jstree-proton .jstree-clicked {
     background: <?= $primaryColor; ?> !important;
     box-shadow: inset 0 0 1px <?= $primaryColor; ?> !important;
@@ -44,6 +59,8 @@
     color: <?= $primaryColor; ?> !important;
 }
 
+#categoryProductListTbl .toolTipHoverEvent,
+#categoryProductListTbl .toolTipCatHoverEvent,
 #tableProductList .toolTipHoverEvent {
     color: <?= $primaryColor; ?> !important;
 }
@@ -92,10 +109,6 @@ body .navbar.main.navbar-primary {
 .nav-tabs.product-text-tab li.active:focus a,
 .nav-tabs.product-text-tab li.active:active a,
 .nav-tabs.product-text-tab li a:hover {
-    background: <?= $primaryColor; ?>;
-}
-
-.navbar.main.navbar-primary .left-menu {
     background: <?= $primaryColor; ?>;
 }
 
@@ -209,6 +222,7 @@ body .navbar.main.navbar-primary {
 .table-primary thead th {
     border-color: <?= $primaryColor; ?>;
     background-color: <?= $primaryColor; ?>;
+    color: #fff;
 }
 
 .pagination > li.active > a,

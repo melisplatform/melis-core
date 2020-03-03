@@ -55,6 +55,28 @@ return array(
                         ),
                     ),
                 ),
+                'PASSWORDCREATION' => array(
+                    'email_name' => 'Password Creation',
+                    'layout' => 'melis-core/view/layout/layoutEmail.phtml',
+                    'headers' => array(
+                        'from' => 'noreply@melistechnology.com',
+                        'from_name' => 'Melis Technology',
+                        'replyTo' => 'noreply@melistechnology.com',
+                        'tags' => 'NAME,EMAIL,LOGIN,PASSWORD',
+                    ),
+                    'contents' => array(
+                        'en_EN' => array(
+                            'subject' => 'tr_meliscore_email_create_password_Subject',
+                            'html' => 'tr_meliscore_email_create_password_html_Content',
+                            'text' => '',
+                        ),
+                        'fr_FR' => array(
+                            'subject' => 'tr_meliscore_email_create_password_Subject',
+                            'html' => 'tr_meliscore_email_create_password_html_Content',
+                            'text' => '',
+                        ),
+                    ),
+                ),
                 'PASSWORDMODIFICATION' => array(
                     'email_name' => 'Password Modification',
                     'layout' => 'melis-core/view/layout/layoutEmail.phtml',

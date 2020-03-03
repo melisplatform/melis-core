@@ -36,18 +36,18 @@ $headerExclusions = array(
     <div class="left-menu"> 
         <div class="navbar-brand">
             <div class="pull-left">
-            <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
-                <i class="fa fa-bars"></i>
-            </a>
-            </div>
-            <a href="/melis" class="appbrand innerL">
-                <img alt="melis platform" src="<?= $sidebarHeaderLogo; ?>">
-                <?= $headerTitle ?>
-            </a>              
-            <div class="pull-right">
-            <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
-                <i class="fa fa-cog"></i>
-            </a>
+                <a class="toggle-button toggle-sidebar btn-navbar" id="sidebar-menu">
+                    <i class="fa fa-bars"></i>
+                </a>
+                </div>
+                <a href="/melis" class="appbrand innerL">          
+                    <img alt="melis platform" src="/MelisCore/images/dashboard/melis-logo.svg">
+                    <?= $headerTitle ?>
+                </a>
+                <div class="pull-right">
+                <a class="toggle-button toggle-sidebar btn-navbar" id="plugin-menu">
+                    <i class="fa fa-cog"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@ $headerExclusions = array(
         <!-- main nav tabs --> 
         <div id="melis-navtabs-container-outer">
             <span class="melis-tabprev">
-            <i class="fa fa-angle-left"></i>
+                <i class="fa fa-angle-left"></i>
             </span>
             <div id="melis-navtabs-container-inner">
                 <!-- responsive tab menu -->
@@ -84,21 +84,18 @@ $headerExclusions = array(
                                     $zoneId = $menuConfig['conf']['id'];
                                 if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['melisKey']))
                                     $melisKey = $menuConfig['conf']['melisKey'];
-
                                 echo '<li class="" data-tool-name="'.$tabname.'" data-tool-icon="'.$icon.'" data-tool-id="'.$zoneId.'" data-tool-meliskey="'.$melisKey.'"><a  data-toggle="tab" class="dropdown-toggle menu-icon tab-element" href="#'. $menuConfig['conf']['id'] .'" data-id="'. $menuConfig['conf']['id'] .'"><i class="fa ' . $icon . ' fa-2x"></i><span class="navtab-pagename">' . $tabname . '</span></a><a class="close close-tab"  data-id="'. $menuConfig['conf']['id'] .'">Close</a></li>';
                             }
                         } 
                     ?>
-                    
                 </ul>
             </div>    
             <span class="melis-tabnext">
-            <i class="fa fa-angle-right"></i>
+                <i class="fa fa-angle-right"></i>
             </span>  
         </div>
         <ul class="nav navbar-nav navbar-right">
             <!-- add flash messenger here -->
-            
             <?php 
                 if (!empty($this->zoneconfig['interface']))
                 {
@@ -121,5 +118,5 @@ $headerExclusions = array(
 </div>
 <div id="newplugin-cont">
     <ul class="nav ul-cont">
-    </ul>
+    </ul>  
 </div>
