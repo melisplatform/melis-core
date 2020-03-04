@@ -32,7 +32,7 @@ return array(
                     'emails' => array(
                         'active' => 1,
                     ),
-
+                    'pwd_request_expiry' => 1440, //minutes (1440 min = 24 hrs)
                     'export' => array(
                         'csv' => array(
                             'separator' => ',',
@@ -794,6 +794,80 @@ return array(
                     'conf' => array(
                         'id' => 'id_meliscore_login_footer',
                         'melisKey' => 'meliscore_reset_password_footer'
+                    ),
+                    'forward' => array(
+                        'module' => 'MelisCore',
+                        'controller' => 'Index',
+                        'action' => 'footer',
+                        'jscallback' => '',
+                        'jsdatas' => array()
+                    ),
+                ),
+            ),
+        ),
+        'meliscore_generate_password' => array(
+            'conf' => array(
+                'rightsDisplay' => 'none',
+            ),
+            'datas' => array(
+                'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
+                'generate_password_logo' => '/MelisCore/images/login/melis-box.png',
+            ),
+            'interface' => array(
+                'meliscore_generate_password_header' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_generate_password_header',
+                        'melisKey' => 'meliscore_generate_password_header'
+                    ),
+                    'forward' => array(
+                        'module' => 'MelisCore',
+                        'controller' => 'Index',
+                        'action' => 'header',
+                        'jscallback' => '',
+                        'jsdatas' => array()
+                    ),
+                    'interface' => array(
+                        'meliscore_headerlogin_language' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_header_language',
+                                'melisKey' => 'meliscore_headerlogin_language'
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'Language',
+                                'action' => 'headerLanguage',
+                                'jscallback' => '',
+                                'jsdatas' => array('variable2' => 'titi')
+                            ),
+                        ),
+                    ),
+                ),
+
+                'meliscore_generate_password_center' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_generate_password_center',
+                        'melisKey' => 'meliscore_generate_password_center'
+                    ),
+                    'interface' => array(
+                        'meliscore_generate_password_form' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_generate_password_form',
+                                'melisKey' => 'meliscore_generate_password_form',
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'User',
+                                'action' => 'generate-password',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                        ),
+                    ),
+                ),
+                'meliscore_generate_password_footer' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_login_footer',
+                        'melisKey' => 'meliscore_generate_password_footer'
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',

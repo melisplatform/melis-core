@@ -225,6 +225,20 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	
 	    $start = (int) $options['start'];
 	    $limit = (int) $options['limit'] === -1 ? $this->getTotalData() : (int) $options['limit'];
+
+        switch ($options['status']){
+            case 'ACTIVE' :
+                $status = 1;
+                break;
+            case 'INACTIVE' :
+                $status = 0;
+                break;
+            case 'PENDING' :
+                $status = 2;
+                break;
+            default :
+                $status = null;
+        }
 	
 	    $columns = $options['columns'];
 	    
@@ -237,7 +251,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	            $dateFilterSql = '`' . $dateFilter['key'] . '` BETWEEN \'' . $dateFilter['startDate'] . '\' AND \'' . $dateFilter['endDate'] . '\'';
 	        }
 	    }
-	
+
         // this is used when searching
 	    if(!empty($where)) {
 	        $w = new Where();
@@ -246,7 +260,8 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	        $likes = array();
 	        foreach($columns as $colKeys)
 	        {
-	            $likes[] = new Like($colKeys, '%'.$whereValue.'%');
+                if($colKeys != "usr_status")
+	                $likes[] = new Like($colKeys, '%'.$whereValue.'%');
 	        }
 	        
 	        if(!empty($dateFilterSql)) 
@@ -271,8 +286,10 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	        }
 	        
 	    }
-	    
-	   
+
+        if(!is_null($status))
+            $select->where("usr_status = ".$status );
+
 	    // used when column ordering is clicked
 	    if(!empty($order))
 	        $select->order($order . ' ' . $orderDir);
