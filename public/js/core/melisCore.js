@@ -737,6 +737,9 @@ var melisCore = (function(window){
         var $this = $(this);
             $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
     });
+
+    // disable tooltip on hover elements, added attribute aria-describedby
+    // $(":not(.melis-core-dashboard-plugin-snippets) *[title]").tooltip('disable');
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
         data = $(this).data();

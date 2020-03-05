@@ -4,12 +4,28 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.btn-primary.active[data-toggle="button"],
+.btn-group-toggle .btn-primary.active {
+    background: none !important;
+    color: <?= $primaryColor; ?> !important;
+}
+.wizard-design .bwizard-steps li.active a,
+.wizard-design .wizard-head .bwizard-steps .nav-item.active .nav-link.active,
+.tabsbar .nav-tabs .nav-item.active .nav-link.active,
+.tabsbar .nav-tabs > li.active > a:hover {
+    background: <?= $primaryColor; ?> !important;
+}
+.nav-pills.nav-timeline .nav-item .nav-link {
+    background: <?= $primaryColor; ?> !important;
+}
+.nav-pills.nav-timeline .nav-item .nav-link:hover {
+    background: <?= $secondaryColor; ?> !important;
+}
 .ui-slider-wrap .slider-primary .ui-slider-handle,
 .bootbox .modal-dialog .modal-footer .btn-danger,
 .badge.badge-primary.badge-stroke {
     border-color: <?= $primaryColor; ?> !important;
 }
-.checkbox-custom i.checked,
 .bootbox .modal-dialog .modal-footer .btn-danger,
 .vevent a,
 .contacts .innerLR .media .media-body h4 a,
@@ -56,8 +72,6 @@
 .navbar.main.navbar-primary .navbar-brand {
     background: <?= $primaryColor; ?> !important;
 }
-.btn-primary:not(:disabled):not(.disabled).active, 
-.btn-primary:not(:disabled):not(.disabled):active, 
 .show>.btn-primary.dropdown-toggle {
     background: <?= $primaryColor; ?> !important;
 }
@@ -292,6 +306,7 @@ body .navbar.main.navbar-primary {
     border-color: <?= $primaryColor; ?>;
 }
 
+.pagination>li.primary>a:focus,
 .pagination>li>a:hover,
 .pagination>li.primary>a {
     background: <?= $primaryColor; ?>;
@@ -904,9 +919,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 .workflow-modal-content .wmc-content.wmc-header > span{
     background-color: <?= $primaryColor; ?>;
-}
-.modal .modal-header .modal-title {
-    color : #fff;
 }
 
 .workflow-modal-content .wmc-header span {
