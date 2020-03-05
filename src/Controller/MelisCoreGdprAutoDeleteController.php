@@ -317,7 +317,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 }
                 // set data for match fields
                 $formattedData[$ctr]['DT_RowId'] = $data[$ctr]['mgdprc_id'];
-                $formattedData[$ctr]['mgdprc_site_id'] = $data[$ctr]['mgdprc_site_id'];
+                $formattedData[$ctr]['mgdprc_site_id'] = $this->getGdprAutoDeleteService()->getSiteNameBySiteId($data[$ctr]['mgdprc_site_id']);
                 $formattedData[$ctr]['mgdprc_module_name'] = $this->getGdprAutoDeleteService()->getAutoDeleteModulesList()[$data[$ctr]['mgdprc_module_name']];
                 $formattedData[$ctr]['mgdprc_alert_email_status'] = $data[$ctr]['mgdprc_alert_email_status'];
                 $formattedData[$ctr]['mgdprc_alert_email_resend'] = $data[$ctr]['mgdprc_alert_email_resend'];
@@ -363,6 +363,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $view = new ViewModel();
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
+        $view->setVariable('configId', $this->getConfigId());
 
         return $view;
     }
@@ -389,7 +390,9 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
         // get filters form
-        $view->setVariable('formFilter', $this->getGdprAutoDeleteService()->getAddEditFiltersForm());
+        $view->setVariable('formFilter', $this->getGdprAutoDeleteService()->getAddEditFiltersForm()->setData(
+            $this->getGdprAutoDeleteService()->getAutoDeleteConfigurationData($this->getConfigId())
+        ));
 
         return $view;
     }
@@ -527,5 +530,13 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 $this->getGdprAutoDeleteService()->saveGdprDeleteWarningEmails($val['data'], null);
             }
         }
+    }
+    /**
+     * get config id from the url
+     * @return mixed
+     */
+    private function getConfigId()
+    {
+        return $this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null);
     }
 }

@@ -92,7 +92,7 @@ return [
                     'table' => [
                         'target' => '#tableGdprAutoDeleteLogs',
                         'ajaxUrl' => '/melis/MelisCore/MelisCoreGdprAutoDeleteTabs/getGdprDeleteEmailsLogs',
-                        'dataFunction' => '',
+                        'dataFunction' => 'initGdprDeleteEmailsLogsFilters',
                         'ajaxCallback' => '',
                         'filters' => [
                             'left' => [
@@ -161,16 +161,11 @@ return [
                             'mgdpr_delete_ko',
                         ],
                         'actionButtons' => [
-//                            'edit' => array(
-//                                'module' => 'MelisCore',
-//                                'controller' => 'MelisCoreGdprAutoDelete',
-//                                'action' => 'render-content-accordion-list-config-content-edit',
-//                            ),
-//                            'delete' => array(
-//                                'module' => 'MelisCore',
-//                                'controller' => 'MelisCoreGdprAutoDelete',
-//                                'action' => 'render-content-accordion-list-config-content-delete',
-//                            ),
+                            'show_details' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'MelisCoreGdprAutoDeleteTabs',
+                                'action' => 'render-logs-table-show-details',
+                            ),
                         ],
                     ]
                 ]

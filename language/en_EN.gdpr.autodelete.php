@@ -1,7 +1,8 @@
 <?php
 
 return [
-
+    // interaces logs area
+    'tr_melis_core_gdpr_autodelete_email_logs_show_details_btn' => 'Show details',
     // form filters translations
     'tr_melis_core_gdpr_autodelete_choose_module' => 'Please choose a module',
     'tr_melis_core_gdpr_autodelete_choose_site' => 'Please choose a site',

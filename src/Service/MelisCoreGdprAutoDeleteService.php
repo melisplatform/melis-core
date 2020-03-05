@@ -323,4 +323,25 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
         return $errors;
     }
+
+    public function getAutoDeleteConfigurationData($configId)
+    {
+        return (array) $this->gdprAutoDeleteConfigTable->getEntryById($configId)->current();
+    }
+    public function getAutoDeleteConfigBySiteModule($siteId,$moduleName)
+    {
+        return (array) $this->gdprAutoDeleteConfigTable->getDeleteConfigBySiteIdModuleName($siteId,$moduleName);
+    }
+    public function getAlertEmailsTranslationsData($configId)
+    {
+        return $this->gdprAutoDeleteEmailsTable->getEntryByField('mgdpre_config_id',$configId)->toArray();
+    }
+    public function getAlertEmeailsLogsData($configId)
+    {
+        return $this->gdprAutoDeleteEmailsLogsTable;
+    }
+    public function getSiteNameBySiteId($siteId)
+    {
+        return $this->getServiceLocator()->get('MelisEngineTableSite')->getEntryById($siteId)->current()->site_label;
+    }
 }

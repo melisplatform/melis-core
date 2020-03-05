@@ -5,6 +5,8 @@
         </button>
     </div>
     <a data-toggle="collapse" data-target="#add-edit-config-content" aria-expanded="true" aria-controls="add-edit-config-content" class="accordion-heading-add-delete">
-        <h3 class="accordion-heading-title">Add configuration</h3>
+        <h3 class="accordion-heading-title">
+            <?= ($this->configId) ? "<i class='fa fa-pencil'></i> Edit configuration" : "<i class='fa fa-plus'></i> Add configuration"?>
+        </h3>
     </a>
 </div>

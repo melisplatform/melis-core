@@ -30,9 +30,11 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
      * @param string $orderDirection
      * @param int $start
      * @param null $limit
+     * @param null $siteId
+     * @param null $moduleName
      * @return \Zend\Db\ResultSet\ResultSetInterface
      */
-    public function getGdprDeleteEmailsLogsData($search = "",$searchableColumns = [], $orderBy = '', $orderDirection = "DESC" , $start = 0 ,$limit = null )
+    public function getGdprDeleteEmailsLogsData($search = "",$searchableColumns = [], $orderBy = '', $orderDirection = "DESC" , $start = 0 ,$limit = null, $siteId = null, $moduleName = null)
     {
         // table selection query
         $select = $this->tableGateway->getSql()->select();
@@ -51,8 +53,15 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
             // set where query
             $select->where($searchWhere);
         }
-//        $status = empty($where['status']) ? 1 : $where['status'];
-//        $select->where->equalTo('usr_status', $status);
+        // filter by site id
+        if (!is_null($siteId)) {
+            $select->where->equalTo('mgdprl_site_id', $siteId);
+        }
+        // module filter
+        if (!is_null($moduleName)) {
+            $select->where->equalTo('mgdprl_module_name', $moduleName);
+        }
+
         // length of the data
         if (!empty($limit)) {
             $select->limit($limit);
@@ -68,6 +77,30 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
 
         // set current data count for pagination
         $this->setCurrentDataCount((int) $this->tableGateway->selectWith($select)->count());
+
+        return $this->tableGateway->selectWith($select);
+    }
+
+    /**
+     * get warning/deleted email logs by siteId and module name
+     * @param $siteId
+     * @param $moduleName
+     * @return \Zend\Db\ResultSet\ResultSetInterface
+     */
+    public function getWarningDeletedEmailBySiteIdModuleName($siteId, $moduleName)
+    {
+        // table selection query
+        $select = $this->tableGateway->getSql()->select();
+        // columns to select
+        $select->columns(array('*'));
+        // site filter
+        if ($siteId) {
+            $select->where->equalTo('mgdprl_site_id', $siteId);
+        }
+        // module filter
+        if ($moduleName) {
+            $select->where->equalTo('mgdprl_module_name', $moduleName);
+        }
 
         return $this->tableGateway->selectWith($select);
     }

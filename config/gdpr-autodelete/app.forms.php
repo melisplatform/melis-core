@@ -28,6 +28,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'required' => 'required',
+                                            'id' => 'mgdprc_module_name'
                                         ]
                                     ]
                                 ]
@@ -74,6 +75,7 @@ return [
                                             ],
                                             'checked_value' => 1,
                                             'unchecked_value' => 0,
+                                            'class' => 'd-flex flex-row justify-content-between'
                                         ],
                                         'attributes' => [
                                             'required' => 'true',
@@ -103,6 +105,9 @@ return [
                                         'type' => "checkbox",
                                         'options' => [
                                             'label' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend',
+                                            'label_attributes' => [
+                                                'class' => 'd-flex flex-row justify-content-between'
+                                            ],
                                             'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend tooltip',
                                             'switch_options' => [
                                                 'label-on' => 'Yes',

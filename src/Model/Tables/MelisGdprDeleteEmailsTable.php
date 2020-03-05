@@ -14,6 +14,15 @@ use Zend\Db\TableGateway\TableGateway;
 class MelisGdprDeleteEmailsTable extends MelisGenericTable
 {
     /**
+     * saved warning email type
+     */
+    const EMAIL_WARNING = "1";
+    /**
+     * saved deleted email type
+     */
+    const EMAIL_DELETED = "2";
+
+    /**
      * MelisGdprDeleteConfigTable constructor.
      * @param TableGateway $tableGateway
      */

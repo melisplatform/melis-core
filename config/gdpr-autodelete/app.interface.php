@@ -250,6 +250,7 @@ return [
                                                                                                                 'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_tab_logs',
                                                                                                                 'name' => 'Logs',
                                                                                                                 'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_tab_logs',
+                                                                                                                'icon' => 'fa-list-alt'
                                                                                                             ],
                                                                                                             'forward' => [
                                                                                                                 'module' => 'MelisCore',

@@ -22,7 +22,6 @@ $availableLang = "";
                 <div id="alert-email-content-<?= $data['lang_locale'] ?>" class="collapse show accordion-content-bg" aria-labelledby="alert-email-content-<?= $data['lang_locale'] ?>" data-parent="#accordion-alert-email-<?= $data['lang_locale'] ?>">
                     <h5 class="float-right"><a href="#" class="" style="text-decoration: underline">Delete everything</a></h5>
                     <div class="row">
-
                         <div class="col-md-8">
                             <?php
                             $excludedFieldInLoop = [
@@ -37,6 +36,16 @@ $availableLang = "";
                             $form->setAttribute('data-lang-id', $data['lang_id']);
                             // set id for forms
                             $form->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_' . $data['lang_locale']);
+                            // set data
+                            if ($this->alertEmailsTransData) {
+                                foreach ($this->alertEmailsTransData as $idx => $val) {
+                                    if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_WARNING &&
+                                        $val['mgdpre_lang_id'] == $data['lang_id']) {
+                                        $form->setData($val);
+                                        break;
+                                    }
+                                }
+                            }
                             // form open tag
                             echo $this->form()->openTag($form); ?>
                             <?php foreach ($excludedFieldInLoop as $element) { ?>
@@ -79,6 +88,15 @@ $availableLang = "";
                             $formEmailDelete->setAttribute('data-lang-id', $data['lang_id']);
                             // set id
                             $formEmailDelete->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_delete_' . $data['lang_locale']);
+                            if ($this->alertEmailsTransData) {
+                                foreach ($this->alertEmailsTransData as $idx => $val) {
+                                    if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_DELETED &&
+                                        $val['mgdpre_lang_id'] == $data['lang_id']) {
+                                        $formEmailDelete->setData($val);
+                                        break;
+                                    }
+                                }
+                            }
                             // form open tag
                             echo $this->form()->openTag($formEmailDelete); ?>
                             <?php foreach ($excludedFieldInLoop as $element) { ?>

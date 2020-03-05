@@ -139,6 +139,7 @@
     padding: 20px 20px 0;
     margin-bottom: 20px;
 }
-#id_meliscoregdpr_auto_delete_content_accordion_list_config_content {
+#id_meliscoregdpr_auto_delete_content_accordion_list_config_content,
+#id_meliscoregdpr_auto_delete_add_edit_config_multi_tab {
     position:relative;
 }

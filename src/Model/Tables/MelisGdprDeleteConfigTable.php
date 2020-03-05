@@ -80,4 +80,27 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
+    /**
+     * get delete configuration by siteId and module name
+     * @param $siteId
+     * @param $moduleName
+     * @return \Zend\Db\ResultSet\ResultSetInterface
+     */
+    public function getDeleteConfigBySiteIdModuleName($siteId, $moduleName)
+    {
+        // table selection query
+        $select = $this->tableGateway->getSql()->select();
+        // columns to select
+        $select->columns(array('*'));
+        if ($siteId) {
+            $select->where->equalTo('mgdprc_site_id', $siteId);
+        }
+        // module filter
+        if ($moduleName) {
+            $select->where->equalTo('mgdprc_module_name', $moduleName);
+        }
+
+        return $this->tableGateway->selectWith($select);
+    }
+
 }
