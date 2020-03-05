@@ -112,9 +112,9 @@ return [
     'tr_meliscore_tool_user_col_remove_picture' => "Remove Photo",
 
     //USER PROFILE MANAGEMENT
-    'tr_meliscore_user_status_inactive' => 'INACTIVE',
-    'tr_meliscore_user_status_active' => 'ACTIVE',
-    'tr_meliscore_user_status_pending' => 'PENDING',
+    'tr_meliscore_user_status_inactive' => 'Inactive',
+    'tr_meliscore_user_status_active' => 'Active',
+    'tr_meliscore_user_status_pending' => 'Pending',
 
     'tr_meliscore_user_profile' => 'User Profile Management',
     'tr_meliscore_user_profile_success_info' => 'Profile successfully updated',
