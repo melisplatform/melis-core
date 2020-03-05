@@ -680,241 +680,268 @@ class EmailsManagementController extends AbstractActionController
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $propertyForm = $factory->createForm($generalProperties);
+
+        $postData = $request->getPost();
+        $codename = $postData['codename'];
+
+        $logTypeCode = 'CORE_BO_EMAIL_ADD';
+        $textTitle = 'tr_emails_management_creation';
+        $textMessage = 'tr_emails_management_unable_to_add';
+        if ($codename != 'NEW') {
+            $logTypeCode = 'CORE_BO_EMAIL_UPDATE';
+            $textTitle = 'tr_emails_management_edition';
+            $textMessage = 'tr_emails_management_unable_to_update';
+        }
         
         if($request->isPost()) {
 
-            $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-            $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
-             
-            $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
-            $coreLangResult = $coreLang->fetchAll();
-            $coreLangLocale = array();
-            foreach ($coreLangResult->toArray() As $val)
-            {
-                array_push($coreLangLocale, $val['lang_locale']);
-            }
-            
-            $datas = $melisTool->sanitizeRecursive($request->getPost()->toArray(), $coreLangLocale, true);
+            $propertyForm->setData($request->getPost());
 
-            // avoiding sanitize the layout footr info content
-            $layoutFtrInfoPost['boe_content_layout_ftr_info'] = $request->getPost()->toArray()['boe_content_layout_ftr_info'];
+            if ($propertyForm->isValid()) {
 
-            $datas = array_merge($datas, $request->getFiles()->toArray(), $layoutFtrInfoPost);
+                $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+                $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
+                 
+                $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+                $coreLangResult = $coreLang->fetchAll();
+                $coreLangLocale = array();
+                foreach ($coreLangResult->toArray() As $val) {
+                    array_push($coreLangLocale, $val['lang_locale']);
+                }
+                
+                $datas = $melisTool->sanitizeRecursive($request->getPost()->toArray(), $coreLangLocale, true);
 
-            // File Input Validator and Filter
-            $fileInput = new FileInput('boe_content_layout_logo');
-            $fileInput->setRequired(false);
+                // avoiding sanitize the layout footr info content
+                $layoutFtrInfoPost['boe_content_layout_ftr_info'] = $request->getPost()->toArray()['boe_content_layout_ftr_info'];
 
-            // You only need to define validators and filters
-            // as if only one file was being uploaded. All files
-            // will be run through the same validators and filters
-            // automatically.
-            $fileInput->getValidatorChain()
-                        ->attachByName('filesize',
-                            [
-                                'max' => 250000, // bytes
-                            ]
-                        )
-                        ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpeg'))
-                        ->attachByName('fileimagesize',
-                            [
-                                'maxWidth' => 800, 'maxHeight' => 800,
-                                'messages' => [
-                                    \Zend\Validator\File\ImageSize::HEIGHT_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_height'),
-                                    \Zend\Validator\File\ImageSize::WIDTH_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_width'),
+                $datas = array_merge($datas, $request->getFiles()->toArray(), $layoutFtrInfoPost);
+
+                print_r($datas);
+
+                // File Input Validator and Filter
+                $fileInput = new FileInput('boe_content_layout_logo');
+                $fileInput->setRequired(false);
+
+                // You only need to define validators and filters
+                // as if only one file was being uploaded. All files
+                // will be run through the same validators and filters
+                // automatically.
+                $fileInput->getValidatorChain()
+                            ->attachByName('filesize',
+                                [
+                                    'max' => 250000, // bytes
                                 ]
-                            ]
-                        );
+                            )
+                            ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpeg'))
+                            ->attachByName('fileimagesize',
+                                [
+                                    'maxWidth' => 800, 'maxHeight' => 800,
+                                    'messages' => [
+                                        \Zend\Validator\File\ImageSize::HEIGHT_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_height'),
+                                        \Zend\Validator\File\ImageSize::WIDTH_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_width'),
+                                    ]
+                                ]
+                            );
 
-            if (!is_dir(__DIR__.'/../../../../../public/media/email-layout-logo'))
-                mkdir(__DIR__.'/../../../../../public/media/email-layout-logo', 0777);
+                if (!is_dir(__DIR__.'/../../../../../public/media/email-layout-logo'))
+                    mkdir(__DIR__.'/../../../../../public/media/email-layout-logo', 0777);
 
-            // All files will be renamed, i.e.:
-            //   ../melis-logo_4b3403665fea6.png,
-            //   .../melis-logo_5c45147660fb7.png
-            $fileInput->getFilterChain()                  // Filters are run second w/ FileInput
-                ->attach(new \Zend\Filter\File\RenameUpload(
-                    array(
-                        'target'    => __DIR__.'/../../../../../public/media/email-layout-logo/melis-logo.png',
-                        'randomize' => true,
-                    )
-                )
-            );
-
-            $inputFilter = new InputFilter();
-            $inputFilter->add($fileInput);
-            $propertyForm->setInputFilter($inputFilter);
-
-            // File input end
-
-            $codename = $datas['codename'];
-
-            if ($codename=='NEW'){
-                $logTypeCode = 'CORE_BO_EMAIL_ADD';
-            }else{
-                $logTypeCode = 'CORE_BO_EMAIL_UPDATE';
-            }
-
-            unset($datas['codename']);
-
-            // Response Temporary Initialized and can be overrided
-            if ($codename!='NEW'){
-                $textTitle = 'tr_emails_management_edition';
-                $textMessage = 'tr_emails_management_unable_to_update';
-            }else{
-                $textTitle = 'tr_emails_management_creation';
-                $textMessage = 'tr_emails_management_unable_to_add';
-            }
-
-            // Reinitialize Codename if not Set
-            // This means that Codename is Exist in App.mail that disabled on Email Edition
-            if (!isset($datas['boe_code_name'])){
-                $datas['boe_code_name'] = $codename;
-            }
-
-            /*
-             * Code Name Validation
-             * Codename must be unique
-             * */
-            $codeNameError = array();
-            if ($datas['boe_code_name']!=$codename){
-                $codeNameValidator = new \Zend\Validator\Db\NoRecordExists(
-                    array(
-                        'table'   => 'melis_core_bo_emails',
-                        'field'   => 'boe_code_name',
-                        'adapter' => $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter')
+                // All files will be renamed, i.e.:
+                //   ../melis-logo_4b3403665fea6.png,
+                //   .../melis-logo_5c45147660fb7.png
+                $fileInput->getFilterChain()                  // Filters are run second w/ FileInput
+                    ->attach(new \Zend\Filter\File\RenameUpload(
+                        array(
+                            'target'    => __DIR__.'/../../../../../public/media/email-layout-logo/melis-logo.png',
+                            'randomize' => true,
+                        )
                     )
                 );
 
-                if(!$codeNameValidator->isValid($datas['boe_code_name'])){
-                    //  Codename in already exist on Database
-                    $codeNameError['boe_code_name'] = array(
-                        'noUniqueBD' => $translator->translate('tr_emails_management_emal_boe_code_name_must_be_unique')
-                        );
+                $inputFilter = new InputFilter();
+                $inputFilter->add($fileInput);
+                $propertyForm->setInputFilter($inputFilter);
+
+                // File input end
+
+                $codename = $datas['codename'];
+
+                // if ($codename=='NEW'){
+                //     $logTypeCode = 'CORE_BO_EMAIL_ADD';
+                // }else{
+                //     $logTypeCode = 'CORE_BO_EMAIL_UPDATE';
+                // }
+
+                unset($datas['codename']);
+
+                // // Response Temporary Initialized and can be overrided
+                // if ($codename!='NEW'){
+                //     $textTitle = 'tr_emails_management_edition';
+                //     $textMessage = 'tr_emails_management_unable_to_update';
+                // }else{
+                //     $textTitle = 'tr_emails_management_creation';
+                //     $textMessage = 'tr_emails_management_unable_to_add';
+                // }
+
+                // Reinitialize Codename if not Set
+                // This means that Codename is Exist in App.mail that disabled on Email Edition
+                if (!isset($datas['boe_code_name'])){
+                    $datas['boe_code_name'] = $codename;
                 }
 
-                $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-                $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/'.$datas['boe_code_name']);
-
-                if(!empty($emailsConfig)&&empty($codeNameError)){
-                    // Codename in already exist on App.Email
-                    $codeNameError['boe_code_name'] = array(
-                        'noUniqueFile' => $translator->translate('tr_emails_management_emal_boe_code_name_must_be_unique')
+                /*
+                 * Code Name Validation
+                 * Codename must be unique
+                 * */
+                $codeNameError = array();
+                if ($datas['boe_code_name']!=$codename){
+                    $codeNameValidator = new \Zend\Validator\Db\NoRecordExists(
+                        array(
+                            'table'   => 'melis_core_bo_emails',
+                            'field'   => 'boe_code_name',
+                            'adapter' => $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter')
+                        )
                     );
-                }
-            }
 
-            // Codename "NEW" is reserve Codename
-            if ($datas['boe_code_name']=='NEW'){
-                $codeNameError['boe_code_name'] = array(
-                    'codenameReserve' => $translator->translate('tr_emails_management_emal_boe_code_name_reserved')
-                );
-            }
+                    if(!$codeNameValidator->isValid($datas['boe_code_name'])){
+                        //  Codename in already exist on Database
+                        $codeNameError['boe_code_name'] = array(
+                            'noUniqueBD' => $translator->translate('tr_emails_management_emal_boe_code_name_must_be_unique')
+                            );
+                    }
 
-            /*
-             * Layout Path and extension validations
-             * */
-            $layoutPathError = array();
-            if (!empty($datas['boe_content_layout'])){
-                // Only allow files that exist in ~both~ directories
-                $layoutPathValidator = new \Zend\Validator\File\Exists();
+                    $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+                    $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/'.$datas['boe_code_name']);
 
-                $layout = $datas['boe_content_layout'];
+                    print_r($emailsConfig);
+                    print_r($codeNameError);
 
-                $validLayout = false;
-                if ($layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)){
-                    $layout = __DIR__ .'/../../../'.$layout;
-                    $validLayout = true;
-                }elseif ($layoutPathValidator->isValid($_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout)){
-                    $layout = $_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout;
-                    $validLayout = true;
-                }
-
-                if ($validLayout){
-                    // Allow file with 'phtml' extension
-                    $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
-
-                    if (!$layoutExtensionValidator->isValid($layout)) {
-                        $layoutPathError['boe_content_layout'] = array(
-                            'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_extension')
+                    if(!empty($emailsConfig)&&empty($codeNameError)){
+                        // Codename in already exist on App.Email
+                        $codeNameError['boe_code_name'] = array(
+                            'noUniqueFile' => $translator->translate('tr_emails_management_emal_boe_code_name_must_be_unique')
                         );
                     }
-                }else{
-                    $layoutPathError['boe_content_layout'] = array(
-                        'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_path')
+                }
+
+                // Codename "NEW" is reserve Codename
+                if ($datas['boe_code_name']=='NEW'){
+                    $codeNameError['boe_code_name'] = array(
+                        'codenameReserve' => $translator->translate('tr_emails_management_emal_boe_code_name_reserved')
                     );
                 }
-            }
 
-            $propertyForm->setData($datas);
+                /*
+                 * Layout Path and extension validations
+                 * */
+                $layoutPathError = array();
+                if (!empty($datas['boe_content_layout'])){
+                    // Only allow files that exist in ~both~ directories
+                    $layoutPathValidator = new \Zend\Validator\File\Exists();
 
-            if($propertyForm->isValid()&&empty($codeNameError)&&empty($layoutPathError)) {
+                    $layout = $datas['boe_content_layout'];
 
-                // This will upload image to the target location
-                $formValue = $inputFilter->getValues();
+                    $validLayout = false;
+                    if ($layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)){
+                        $layout = __DIR__ .'/../../../'.$layout;
+                        $validLayout = true;
+                    }elseif ($layoutPathValidator->isValid($_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout)){
+                        $layout = $_SERVER['DOCUMENT_ROOT'] .'/../module/'.$layout;
+                        $validLayout = true;
+                    }
 
-                if (!empty($formValue['boe_content_layout_logo']['tmp_name']))
-                {
-                    $layoutLogoPath = $formValue['boe_content_layout_logo']['tmp_name'];
-                    $layoutLogo = pathinfo($layoutLogoPath, PATHINFO_FILENAME);
-                    $datas['boe_content_layout_logo'] = '/media/email-layout-logo/'.$layoutLogo.'.png';
+                    if ($validLayout){
+                        // Allow file with 'phtml' extension
+                        $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
+
+                        if (!$layoutExtensionValidator->isValid($layout)) {
+                            $layoutPathError['boe_content_layout'] = array(
+                                'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_extension')
+                            );
+                        }
+                    }else{
+                        $layoutPathError['boe_content_layout'] = array(
+                            'invalidPath' => $translator->translate('tr_meliscore_emails_mngt_tool_general_properties_form_invalid_layout_path')
+                        );
+                    }
                 }
-                else
-                {
-                    unset($datas['boe_content_layout_logo']);
-                }
 
-                $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
-                $BoEmailId = $melisCoreBOEmailService->saveBoEmailByCode($codename, $datas);
+                $propertyForm->setData($datas);
 
-                if ($codename=='NEW'){
-                    $textTitle = 'tr_emails_management_title_creation';
-                    $textMessage = $translator->translate('tr_emails_management_email').' '.$datas['boe_name'].' '.$translator->translate('tr_emails_management_created');
+                if($propertyForm->isValid()&&empty($codeNameError)&&empty($layoutPathError)) {
+
+                    // This will upload image to the target location
+                    $formValue = $inputFilter->getValues();
+
+                    if (!empty($formValue['boe_content_layout_logo']['tmp_name']))
+                    {
+                        $layoutLogoPath = $formValue['boe_content_layout_logo']['tmp_name'];
+                        $layoutLogo = pathinfo($layoutLogoPath, PATHINFO_FILENAME);
+                        $datas['boe_content_layout_logo'] = '/media/email-layout-logo/'.$layoutLogo.'.png';
+                    }
+                    else
+                    {
+                        unset($datas['boe_content_layout_logo']);
+                    }
+
+                    $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+                    $BoEmailId = $melisCoreBOEmailService->saveBoEmailByCode($codename, $datas);
+
+                    if ($codename=='NEW'){
+                        $textTitle = 'tr_emails_management_title_creation';
+                        $textMessage = $translator->translate('tr_emails_management_email').' '.$datas['boe_name'].' '.$translator->translate('tr_emails_management_created');
+                    }else{
+                        $textTitle = 'tr_emails_management_title_edition';
+                        $textMessage = $translator->translate('tr_emails_management_email').' '.$datas['boe_name'].' '.$translator->translate('tr_emails_management_edited');
+                    }
+
+                    $status  = 1;
                 }else{
-                    $textTitle = 'tr_emails_management_title_edition';
-                    $textMessage = $translator->translate('tr_emails_management_email').' '.$datas['boe_name'].' '.$translator->translate('tr_emails_management_edited');
+                    $errors = $propertyForm->getMessages();
                 }
 
-                $status  = 1;
+                $errors = array_merge($errors,$codeNameError,$layoutPathError);
+                
             }else{
                 $errors = $propertyForm->getMessages();
             }
 
-            $errors = array_merge($errors,$codeNameError,$layoutPathError);
 
-            $appConfigForm = $generalProperties['elements'];
+            if (!empty($errors)) {
+                $appConfigForm = $generalProperties['elements'];
 
-            foreach ($errors as $keyError => $valueError)
-            {
-                foreach ($appConfigForm as $keyForm => $valueForm)
+                foreach ($errors as $keyError => $valueError)
                 {
-                    if ($valueForm['spec']['name'] == $keyError && !empty($valueForm['spec']['options']['label']))
-                        $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                    foreach ($appConfigForm as $keyForm => $valueForm)
+                    {
+                        if ($valueForm['spec']['name'] == $keyError && !empty($valueForm['spec']['options']['label']))
+                            $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                    }
+                }
+
+                // Fileinput error messages
+                if (!empty($errors['boe_content_layout_logo'])) {
+                    $fileInputErr = $errors['boe_content_layout_logo'];
+
+                    // Unsetting error message for image sizze not detected
+                    if (!empty($fileInputErr['fileImageSizeNotDetected']))
+                        unset($errors['boe_content_layout_logo']['fileImageSizeNotDetected']);
+
+                    if (!empty($fileInputErr['fileMimeTypeFalse']))
+                        $errors['boe_content_layout_logo']['fileMimeTypeFalse'] = $translator->translate('tr_emails_management_invalid_image_type');
+
+    //                if (!empty($fileInputErr['fileImageSizeWidthTooBig']))
+    //                    $errors['boe_content_layout_logo']['fileImageSizeWidthTooBig'] = $translator->translate('Image width should be 800 pexils or less');
+
+                    if (!empty($fileInputErr['fileSizeTooBig']))
+                        $errors['boe_content_layout_logo']['fileSizeTooBig'] = $translator->translate('tr_emails_management_invalid_image_size');
+
+                    if (!empty($fileInputErr['fileImageSizeHeightTooBig']))
+                        $errors['boe_content_layout_logo']['fileImageSizeHeightTooBig'] = $translator->translate('tr_emails_management_invalid_image_height');
                 }
             }
-
-            // Fileinput error messages
-            if (!empty($errors['boe_content_layout_logo']))
-            {
-                $fileInputErr = $errors['boe_content_layout_logo'];
-
-                // Unsetting error message for image sizze not detected
-                if (!empty($fileInputErr['fileImageSizeNotDetected']))
-                    unset($errors['boe_content_layout_logo']['fileImageSizeNotDetected']);
-
-                if (!empty($fileInputErr['fileMimeTypeFalse']))
-                    $errors['boe_content_layout_logo']['fileMimeTypeFalse'] = $translator->translate('tr_emails_management_invalid_image_type');
-
-//                if (!empty($fileInputErr['fileImageSizeWidthTooBig']))
-//                    $errors['boe_content_layout_logo']['fileImageSizeWidthTooBig'] = $translator->translate('Image width should be 800 pexils or less');
-
-                if (!empty($fileInputErr['fileSizeTooBig']))
-                    $errors['boe_content_layout_logo']['fileSizeTooBig'] = $translator->translate('tr_emails_management_invalid_image_size');
-
-                if (!empty($fileInputErr['fileImageSizeHeightTooBig']))
-                    $errors['boe_content_layout_logo']['fileImageSizeHeightTooBig'] = $translator->translate('tr_emails_management_invalid_image_height');
-            }
         }
+
         //die(var_dump($errors));
         $response = array(
             'success' => $status,

@@ -1850,11 +1850,11 @@ return [
                                         'name' => 'boe_tag_accepted_list',
                                         'type' => 'MelisCoreMultiValInput',
                                         'options' => [
-                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list tooltip',
                                         ],
                                         'attributes' => [
                                             'id' => 'boe_tag_accepted_list',
-                                            'data-label-text' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder',
                                         ],
                                     ],
@@ -1965,6 +1965,7 @@ return [
                                             'options' => [
                                                 'pattern' => '/[\w]+/',
                                                 'messages' => [\Zend\Validator\Regex::INVALID => 'tr_emails_management_emal_boe_code_name_invalid'],
+                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_emails_management_emal_boe_code_name_invalid'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],

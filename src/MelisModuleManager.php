@@ -28,7 +28,7 @@ class MelisModuleManager
         $composer = new MelisComposer();
 
         // This needs to be set when using MelisPlatform
-        error_reporting(E_ALL & ~E_USER_DEPRECATED & !E_WARNING);
+        error_reporting(E_ALL);
         if (empty(date_default_timezone_get()))
             date_default_timezone_set('Europe/Paris');
 
