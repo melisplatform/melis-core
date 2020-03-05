@@ -180,10 +180,10 @@ return [
     // Create Password Email
     'tr_meliscore_email_create_password_Subject' => 'Password Creation',
     'tr_meliscore_email_create_password_html_Content' => '<p>Hi [NAME],</p><p>An account has been created for you on Melis Platform.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Please click this <a title="link" href="[URL]">link</a>&nbsp; to create your password.</p>',
-    'tr_meliscore_generate_password_page_header' => 'Create Password',
+    'tr_meliscore_generate_password_page_header' => 'Password Creation',
     'tr_meliscore_generate_password_button' => 'Create Password',
     'tr_meliscore_common_regenerate_link' => 'Resend password creation email',
-    'tr_meliscore_tool_resend_password_create_email_title' => 'Resend password creation email',
+    'tr_meliscore_tool_resend_password_create_email_title' => 'Password creation',
     'tr_meliscore_tool_resend_password_create_email_ok' => 'Password creation email sent successfully',
     'tr_meliscore_tool_resend_password_create_email_ko' => 'Password creation email sending failed',
 
