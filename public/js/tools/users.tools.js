@@ -216,7 +216,6 @@ $(document).ready(function () {
 
         $("body").on("click", '.btnUserRegenerateLink', function() {
             var id = $(this).parents("tr").attr("id");
-            melisCoreTool.pending(".btnUserRegenerateLink");
             toolUserManagement.resendPasswordCreateEmail(id);
         });
 
@@ -320,7 +319,7 @@ var toolUserManagement = {
                     dataType    : 'json',
                     encode		: true,
                 }).done(function(data){
-
+                    melisCoreTool.pending(".btnUserRegenerateLink");
                     if(data.success) {
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
                         melisCore.flashMessenger();
