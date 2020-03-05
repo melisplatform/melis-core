@@ -19,7 +19,7 @@ class MelisGdprAutoDeleteModuleListSelectFactory extends MelisSelectFactory
      */
     protected function loadValueOptions(ServiceLocatorInterface $serviceLocator)
     {
-        return $serviceLocator->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getAutoDeleteModulesList();
+        return $serviceLocator->getServiceLocator()->get('MelisCoreGdprAutoDeleteToolService')->getAutoDeleteModulesList();
     }
 
 }

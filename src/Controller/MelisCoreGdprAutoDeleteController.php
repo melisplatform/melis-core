@@ -13,6 +13,7 @@ use MelisCore\Form\MelisForm;
 use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
 use MelisCore\Service\MelisCoreConfigService;
 use MelisCore\Service\MelisCoreGdprAutoDeleteService;
+use MelisCore\Service\MelisCoreGdprAutoDeleteToolService;
 use MelisCore\Service\MelisCoreToolService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -155,12 +156,12 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     }
 
     /**
-     * @return MelisCoreGdprAutoDeleteService
+     * @return MelisCoreGdprAutoDeleteToolService
      */
     private function getGdprAutoDeleteService()
     {
-        /** @var MelisCoreGdprAutoDeleteService $gdprAutoDeleteSvc */
-        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService');
+        /** @var MelisCoreGdprAutoDeleteToolService $gdprAutoDeleteSvc */
+        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteToolService');
 
         return $gdprAutoDeleteSvc;
     }
@@ -363,6 +364,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $view = new ViewModel();
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
+        //config id
         $view->setVariable('configId', $this->getConfigId());
 
         return $view;
@@ -399,7 +401,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
 
     public function runGdprAutoDeleteCronAction()
     {
-        $this->getGdprAutoDeleteService()->getAutoDeleteModulesList();
+        print_r($this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getModulesSecondWarningListOfUsers());
         return new JsonModel([
             'success' => true
         ]);

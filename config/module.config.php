@@ -332,6 +332,7 @@ return array(
             'MelisCorePluginsService' => 'MelisCore\Service\Factory\MelisCorePluginsServiceFactory',
             'MelisCoreDashboardPluginsService' => 'MelisCore\Service\Factory\MelisCoreDashboardPluginsRightsServiceFactory',
             'MelisCoreGdprAutoDeleteService' => 'MelisCore\Service\Factory\MelisCoreGdprAutoDeleteServiceFactory',
+            'MelisCoreGdprAutoDeleteToolService' => 'MelisCore\Service\Factory\MelisCoreGdprAutoDeleteToolServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',

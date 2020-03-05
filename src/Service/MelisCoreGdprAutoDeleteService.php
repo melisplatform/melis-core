@@ -1,347 +1,88 @@
 <?php
 namespace MelisCore\Service;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
-use MelisCore\Form\MelisForm;
-use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
-use MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable;
-use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
-use MelisCore\Model\Tables\MelisLangTable;
+/**
+ * Melis Technology (http://www.melistechnology.com)
+ *
+ * Class MelisCoreGdprAutoDeleteService
+ *
+ * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
+ * @package MelisCore\Service
+ */
 
 class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 {
     /**
-     * @var MelisGdprDeleteConfigTable
+     * constants to avoid incorrect entries of events,keys and can be use everywhere
      */
-    protected $gdprAutoDeleteConfigTable;
-    /**
-     * @var MelisGdprDeleteEmailsLogsTable
-     */
-    protected $gdprAutoDeleteEmailsLogsTable;
-    /**
-     * @var MelisGdprDeleteEmailsTable
-     */
-    protected $gdprAutoDeleteEmailsTable;
-    /**
-     * @var array
-     */
-    protected $gdprAutoDeleteForms = [];
+    // validation key use
+    const VALIDATION_KEY          = "validation_key";
+    const CONFIG_KEY              = "config";
+    const LANG_KEY                = "lang";
+    const TAGS_EVENT              = "melis_core_gdpr_auto_delete_modules_tags_list";
+    const TAG_LIST_KEY            = "modules_tags_list";
+    const TAG_KEY                 = "tags";
+    const WARNING_EVENT           = "melis_core_gdpr_auto_delete_warning_list_of_users";
+    const WARNING_LIST_KEY        = "modules_warning_list";
+    const SECOND_WARNING_EVENT    = "melis_core_gdpr_auto_delete_second_warning_list_of_users";
+    const SECOND_WARNING_LIST_KEY = "modules_second_warning_list";
 
     /**
-     * MelisCoreGdprAutoDeleteService constructor.
-     * @param MelisGdprDeleteConfigTable $gdprAutoDeleteConfigTable
-     * @param MelisGdprDeleteEmailsTable $gdprAutoDeleteEmailsTable
-     * @param MelisGdprDeleteEmailsLogsTable $gdprAutoDeleteEmailsLogsTable
-     */
-    public function __construct(
-        MelisGdprDeleteConfigTable $gdprAutoDeleteConfigTable,
-        MelisGdprDeleteEmailsLogsTable $gdprAutoDeleteEmailsLogsTable,
-        MelisGdprDeleteEmailsTable $gdprAutoDeleteEmailsTable
-    )
-    {
-        $this->gdprAutoDeleteConfigTable     = $gdprAutoDeleteConfigTable;
-        $this->gdprAutoDeleteEmailsTable     = $gdprAutoDeleteEmailsTable;
-        $this->gdprAutoDeleteEmailsLogsTable = $gdprAutoDeleteEmailsLogsTable;
-    }
-
-    /**
-     * @param $searchValue
-     * @param $searchableCols
-     * @param $selColOrder
-     * @param $orderDirection
-     * @param $start
-     * @param $length
-     * @param int $sitId
-     * @param null $module
-     * @return mixed
-     */
-    public function getGdprDeleteConfigData($searchValue,$searchableCols, $selColOrder, $orderDirection , $start ,$length, $sitId = 0, $module = null )
-    {
-        // Event parameters prepare
-        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-        // Sending service start event
-        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_config_data_start', $arrayParameters);
-        // get the updated value of a variable
-        foreach ($arrayParameters as $var => $val) {
-            $$var = $val;
-        }
-        // Adding results to parameters for events treatment if needed
-        $arrayParameters['results'] = $this->gdprAutoDeleteConfigTable->getGdprDeleteConfigData($searchValue,$searchableCols,$selColOrder, $orderDirection, $start, $length, $sitId , $module)->toArray();
-        // Sending service end event
-        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_config_data_end', $arrayParameters);
-
-        return $arrayParameters['results'];
-    }
-    /**
-     *
-     * get gdpr delete config data
-     *
-     * @param $searchValue
-     * @param $searchableCols
-     * @param $selColOrder
-     * @param $orderDirection
-     * @param $start
-     * @param $length
-     * @return mixed
-     */
-    public function getGdprDeleteEmailLogsData($searchValue,$searchableCols, $selColOrder, $orderDirection , $start ,$length )
-    {
-        // Event parameters prepare
-        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
-        // Sending service start event
-        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_email_logs_data_start', $arrayParameters);
-        // get the updated value of a variable
-        foreach ($arrayParameters as $var => $val) {
-            $$var = $val;
-        }
-        // Adding results to parameters for events treatment if needed
-        $arrayParameters['results'] = $this->gdprAutoDeleteEmailsLogsTable->getGdprDeleteEmailsLogsData($searchValue,$searchableCols,$selColOrder, $orderDirection, $start, $length)->toArray();
-        // Sending service end event
-        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_email_logs_data_end', $arrayParameters);
-
-        return $arrayParameters['results'];
-    }
-
-    /**
-     * @return MelisLangTable
-     */
-    public function getMelisCoreLang()
-    {
-        /** @var MelisLangTable $melisCoreLangTbl */
-        $melisCoreLangTbl = $this->getServiceLocator()->get('MelisCoreTableLang');
-
-        return $melisCoreLangTbl->fetchAll()->toArray();
-    }
-
-    /**
-     * get the list of modules
-     *
+     * get the list of tags in every modules that was sent through their respective listeners
      * @return array
      */
-    public function getAutoDeleteModulesList()
+    public function getModulesListOfTags()
     {
-        // trigger event to get list of modules
-        $list = $this->getEventManager()->trigger('melis_core_gdpr_auto_delete_modules_list');
-        $moduleList = [];
-        // get the returned data from each module listener
-        for ($list->rewind();$list->valid();$list->next()) {
-            // check if current data is not empty
-            if (!empty($list->current())) {
-                // get the lists
-                foreach ($list->current()['modules_list'] as $moduleName => $moduleOptions) {
-                    $moduleList[$moduleName] = $moduleOptions['name'] ?? $moduleName;
-                }
-            }
-        };
-
-
-        return $moduleList;
+        return $this->getDataOfAnEvent(self::TAGS_EVENT,self::TAG_LIST_KEY,self::TAG_KEY);
     }
 
     /**
-     * @param $postData
-     * @param null $id
-     * @return int|null
-     */
-    public function saveGdprAutoDeleteConfig($postData, $id = null)
-    {
-        return $this->gdprAutoDeleteConfigTable->save($postData,$id);
-    }
-
-    /**
-     * @param $validatedData
-     * @param $id
-     * @return int|null
-     */
-    public function saveGdprDeleteWarningEmails($validatedData, $id)
-    {
-        return $this->gdprAutoDeleteEmailsTable->save($validatedData, $id);
-    }
-
-    /**
-     * @return MelisGdprDeleteEmailsTable
-     */
-    public function getGdprDeleteWarningEmailsTable()
-    {
-        return $this->gdprAutoDeleteEmailsTable;
-    }
-
-    /**
-     * @return MelisGdprDeleteConfigTable
-     */
-    public function getGdprAutoDeleteConfigTable()
-    {
-        return $this->gdprAutoDeleteConfigTable;
-    }
-
-    /**
-     * @return MelisGdprDeleteEmailsLogsTable
-     */
-    public function getGdprAutoDeleteLogsTable()
-    {
-        return $this->gdprAutoDeleteEmailsLogsTable;
-    }
-    /**
-     * this method will get the meliscore tool
-     * @return MelisCoreToolService
-     */
-    private function getTool()
-    {
-        /** @var MelisCoreToolService $toolSvc */
-        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
-        // set melis tool key
-        $toolSvc->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
-
-        return $toolSvc;
-    }
-
-    /**
-     * get add edit filters form
-     *  - (site)
-     *  - (module)
-     *
-     * @return \Zend\Form\ElementInterface
-     */
-    public function getAddEditFiltersForm()
-    {
-        return $this->getTool()->getForm('melisgdprautodelete_add_edit_config_filters');
-    }
-
-    /**
-     * get add/edit cron config form
-     *
-     * @return \Zend\Form\ElementInterface
-     */
-    public function getAddEditCronConfigForm()
-    {
-        return $this->getTool()->getForm('melisgdprautodelete_add_edit_cron_config_form');
-    }
-     /**
-     * get add/edit cron config form
-     *
-     * @return \Zend\Form\ElementInterface
-     */
-    public function getAddEditEmailSetupForm()
-    {
-        return $this->getTool()->getForm('melisgdprautodelete_add_edit_email_setup');
-    }
-
-    /**
-     * get add/edit alert email form
-     *
-     * @return \Zend\Form\ElementInterface
-     */
-    public function getAddEditAlertEmailForm()
-    {
-        return $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email');
-    }
-
-    /**
-     * get add/edit delete email form
-     *
-     * @return \Zend\Form\ElementInterface
-     */
-    public function getAddEditAlertEmailDeleteForm()
-    {
-        return $this->getTool()->getForm('melisgdprautodelete_add_edit_alert_email_delete');
-    }
-
-    /**
-     * @param $postData
-     * @return mixed
-     */
-    public function validateForm($postData)
-    {
-        // errors data
-        $errors = [];
-
-        $gdprAutoDeleteForms = [
-            'melisgdprautodelete_add_edit_config_filters' => [
-                'name' => 'Configuration Filters',
-                'form' => $this->getAddEditFiltersForm()
-            ],
-            'melisgdprautodelete_add_edit_cron_config_form' => [
-                'name' => 'Cron Config',
-                'form' => $this->getAddEditCronConfigForm()
-            ],
-            'melisgdprautodelete_add_edit_email_setup' => [
-                'name' => 'Email Setup',
-                'form' => $this->getAddEditEmailSetupForm()
-            ],
-            'melisgdprautodelete_add_edit_alert_email' => [
-                'name' => 'Alert email',
-                'form' => $this->getAddEditAlertEmailForm()
-            ],
-            'melisgdprautodelete_add_edit_alert_email_delete' => [
-                'name' => 'Account Deleted Email',
-                'form' => $this->getAddEditAlertEmailDeleteForm()
-            ]
-        ];
-
-        foreach ($gdprAutoDeleteForms as $formkey => $form) {
-            /** @var MelisForm $form */
-            // validate form
-            $validatedForm = $form['form']->setData($postData);
-            // check form it its valid
-            if (!$validatedForm->isValid()) {
-                // set form errors
-                $errors = $errors + $this->formatErrorMessage($validatedForm->getMessages(), "MelisCoreGdprAutoDelete/tools/melis_core_gdpr_auto_delete/forms/" . $formkey) ;
-            }
-        }
-
-        return $errors;
-    }
-    public function validateTranslationsForm($postDataTranslations, $form)
-    {
-        print_r($postDataTranslations);
-        die;
-    }
-    /**
-     * This will pop an error after validating the form
-     *
-     * @param array $errors
-     * @param $formConfigPath
+     * get the list of warning users in every modules that was sent through their respective listeners
      * @return array
      */
-    private function formatErrorMessage($errors = [],$formConfigPath)
+    public function getModulesWarningListOfUsers()
     {
-        /** @var MelisCoreConfigService $config */
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
-        // get form elements
-        $formConfig = $config->getItem($formConfigPath)['elements'];
-        // set label for each field
-        foreach ($errors as $keyError => $valueError) {
-            foreach ($formConfig as $keyForm => $valueForm) {
-                if ($valueForm['spec']['name'] == $keyError) {
-                    if (!empty($valueForm['spec']['options']['label'])) {
-                        $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
-                    } else {
-                        $errors[$keyError]['label'] = $valueForm['spec']['attributes']['data-label-text'];
-                    }
-                }
-            }
-        }
-
-        return $errors;
+        return $this->getDataOfAnEvent(self::WARNING_EVENT,self::WARNING_LIST_KEY);
     }
 
-    public function getAutoDeleteConfigurationData($configId)
+    /**
+     * get the list of second warning users in every modules that was sent through their respective listeners
+     * @return array
+     */
+    public function getModulesSecondWarningListOfUsers()
     {
-        return (array) $this->gdprAutoDeleteConfigTable->getEntryById($configId)->current();
+        return $this->getDataOfAnEvent(self::SECOND_WARNING_EVENT,self::SECOND_WARNING_LIST_KEY);
     }
-    public function getAutoDeleteConfigBySiteModule($siteId,$moduleName)
-    {
-        return (array) $this->gdprAutoDeleteConfigTable->getDeleteConfigBySiteIdModuleName($siteId,$moduleName);
-    }
-    public function getAlertEmailsTranslationsData($configId)
-    {
-        return $this->gdprAutoDeleteEmailsTable->getEntryByField('mgdpre_config_id',$configId)->toArray();
-    }
-    public function getAlertEmeailsLogsData($configId)
-    {
-        return $this->gdprAutoDeleteEmailsLogsTable;
-    }
-    public function getSiteNameBySiteId($siteId)
-    {
-        return $this->getServiceLocator()->get('MelisEngineTableSite')->getEntryById($siteId)->current()->site_label;
-    }
+
+    /**
+     * trigger an event and then get data based from main key to retrieve or with sub key to retrieve
+     * @param $mvcEventName
+     * @param $mainKeyToRetrieve
+     * @param null $subKeyToRetrieve
+     * @return array
+     */
+   private function getDataOfAnEvent($mvcEventName, $mainKeyToRetrieve, $subKeyToRetrieve = null)
+   {
+       // trigger zend mvc event
+       $list = $this->getEventManager()->trigger($mvcEventName);
+       $data = [];
+       // get the returned data from each module listener
+       for ($list->rewind();$list->valid();$list->next()) {
+           // check if current data is not empty
+           if (!empty($list->current())) {
+               // get the lists
+               foreach ($list->current()[$mainKeyToRetrieve] as $moduleName => $moduleOptions) {
+
+                   if (!is_null($subKeyToRetrieve)) {
+                       $data[$moduleName] = $moduleOptions[$subKeyToRetrieve] ?? [];
+                   } else {
+                       $data[$moduleName] = $moduleOptions;
+                   }
+               }
+           }
+       };
+
+       return $data;
+   }
 }

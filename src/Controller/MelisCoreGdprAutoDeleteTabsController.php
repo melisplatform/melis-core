@@ -11,7 +11,7 @@ namespace MelisCore\Controller;
 
 use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable;
-use MelisCore\Service\MelisCoreGdprAutoDeleteService;
+use MelisCore\Service\MelisCoreGdprAutoDeleteToolService;
 use MelisCore\Service\MelisCoreToolService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -63,12 +63,12 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
     }
 
     /**
-     * @return MelisCoreGdprAutoDeleteService
+     * @return MelisCoreGdprAutoDeleteToolService
      */
     private function getGdprAutoDeleteService()
     {
-        /** @var MelisCoreGdprAutoDeleteService $gdprAutoDeleteSvc */
-        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService');
+        /** @var MelisCoreGdprAutoDeleteToolService $gdprAutoDeleteSvc */
+        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteToolService');
 
         return $gdprAutoDeleteSvc;
     }
