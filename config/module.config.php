@@ -77,6 +77,32 @@ return array(
                             ),
                         ),
                     ),
+                    'generate-password' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => 'generate-password[/:rhash]',
+                            'constraints' => array(
+                                'rhash' => '[a-f0-9]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\User',
+                                'action' => 'renderGeneratePassword',
+                            ),
+                        ),
+                    ),
+                    'create-password' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => 'create-password[/:rhash]',
+                            'constraints' => array(
+                                'rhash' => '[a-f0-9]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\User',
+                                'action' => 'createPassword',
+                            ),
+                        ),
+                    ),
                     'authenticate' => array(
                         'type' => 'Segment',
                         'options' => array(
@@ -292,6 +318,7 @@ return array(
             'MelisCoreTableUser' => 'MelisCore\Model\Tables\MelisUserTable',
             'MelisCoreTableUserRole' => 'MelisCore\Model\Tables\MelisUserRoleTable',
             'MelisLostPasswordTable' => 'MelisCore\Model\Tables\MelisLostPasswordTable',
+            'MelisCreatePasswordTable' => 'MelisCore\Model\Tables\MelisCreatePasswordTable',
             'MelisCoreTableBOEmails' => 'MelisCore\Model\Tables\MelisBOEmailsTable',
             'MelisCoreTableBOEmailsDetails' => 'MelisCore\Model\Tables\MelisBOEmailsDetailsTable',
             'MelisCoreTableLog' => 'MelisCore\Model\Tables\MelisLogTable',
@@ -316,6 +343,7 @@ return array(
             'MelisCoreImage' => 'MelisCore\Service\Factory\MelisCoreImageServiceFactory',
             'MelisCoreTranslation' => 'MelisCore\Service\Factory\MelisCoreTranslationServiceFactory',
             'MelisCoreLostPassword' => 'MelisCore\Service\Factory\MelisCoreLostPasswordServiceFactory',
+            'MelisCoreCreatePassword' => 'MelisCore\Service\Factory\MelisCoreCreatePasswordServiceFactory',
             'MelisCoreTool' => 'MelisCore\Service\Factory\MelisCoreToolServiceFactory',
             'MelisCoreBOEmailService' => 'MelisCore\Service\Factory\MelisCoreBOEmailServiceFactory',
             'MelisCoreEmailSendingService' => 'MelisCore\Service\Factory\MelisCoreEmailSendingServiceFactory',
@@ -339,6 +367,7 @@ return array(
             'MelisCore\Model\Tables\MelisUserRoleTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserRoleTableFactory',
             'MelisCore\Model\Tables\MelisPlatformTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisPlatformTableFactory',
             'MelisCore\Model\Tables\MelisLostPasswordTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLostPasswordTableFactory',
+            'MelisCore\Model\Tables\MelisCreatePasswordTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisCreatePasswordTableFactory',
             'MelisCore\Model\Tables\MelisBOEmailsTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisBOEmailsTableFactory',
             'MelisCore\Model\Tables\MelisBOEmailsDetailsTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisBOEmailsDetailsTableFactory',
             'MelisCore\Model\Tables\MelisLogTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLogTableFactory',

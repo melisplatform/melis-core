@@ -49,4 +49,31 @@ $(function() {
 
         event.preventDefault();
     });
+
+    $("#idformmeliscoregeneratepass").submit(function(event) {
+        //window.location.href = window.location.href;
+        var $this = $(this),
+            rhash = $(this).serialize();
+
+        $.ajax({
+            type        : 'POST',
+            url         : '/melis/create-password',
+            data        : rhash,
+            dataType    : 'json',
+            encode      : true
+        }).done(function(data){
+            if (data.success) {
+                melisCoreTool.alertSuccess('#resetpassprompt', "", data.message);
+                $this[0].reset();
+                window.location.replace("/melis/login/");
+            }
+            else{
+                melisCoreTool.alertDanger('#resetpassprompt', translations.tr_meliscore_common_error+"!", data.message);
+            }
+        }).fail(function() {
+            alert( translations.tr_meliscore_error_message );
+        });
+
+        event.preventDefault();
+    });
 });

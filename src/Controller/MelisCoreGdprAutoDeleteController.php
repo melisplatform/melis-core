@@ -319,7 +319,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 // set data for match fields
                 $formattedData[$ctr]['DT_RowId'] = $data[$ctr]['mgdprc_id'];
                 $formattedData[$ctr]['mgdprc_site_id'] = $this->getGdprAutoDeleteService()->getSiteNameBySiteId($data[$ctr]['mgdprc_site_id']);
-                $formattedData[$ctr]['mgdprc_module_name'] = $this->getGdprAutoDeleteService()->getAutoDeleteModulesList()[$data[$ctr]['mgdprc_module_name']];
+                $formattedData[$ctr]['mgdprc_module_name'] = $data[$ctr]['mgdprc_module_name'];
                 $formattedData[$ctr]['mgdprc_alert_email_status'] = $data[$ctr]['mgdprc_alert_email_status'];
                 $formattedData[$ctr]['mgdprc_alert_email_resend'] = $data[$ctr]['mgdprc_alert_email_resend'];
                 $formattedData[$ctr]['mgdprc_delete_days'] = $data[$ctr]['mgdprc_delete_days'];
