@@ -9,6 +9,8 @@ use MelisCore\Model\Tables\MelisLangTable;
 
 class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
 {
+    const EMAIL_WARNING_CONTENT_TYPE = "email_warning_content";
+    const EMAIL_DELETE_CONTENT_TYPE = "email_delete_content";
     /**
      * @var MelisGdprDeleteConfigTable
      */
@@ -156,30 +158,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     {
         return $this->gdprAutoDeleteEmailsTable->save($validatedData, $id);
     }
-
-    /**
-     * @return MelisGdprDeleteEmailsTable
-     */
-    public function getGdprDeleteWarningEmailsTable()
-    {
-        return $this->gdprAutoDeleteEmailsTable;
-    }
-
-    /**
-     * @return MelisGdprDeleteConfigTable
-     */
-    public function getGdprAutoDeleteConfigTable()
-    {
-        return $this->gdprAutoDeleteConfigTable;
-    }
-
-    /**
-     * @return MelisGdprDeleteEmailsLogsTable
-     */
-    public function getGdprAutoDeleteLogsTable()
-    {
-        return $this->gdprAutoDeleteEmailsLogsTable;
-    }
     /**
      * this method will get the meliscore tool
      * @return MelisCoreToolService
@@ -324,24 +302,125 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
         return $errors;
     }
 
-    public function getAutoDeleteConfigurationData($configId)
+    /**
+     * @param $configId
+     * @return array
+     */
+    public function getGdprAutoDeleteConfigDataById($configId)
     {
         return (array) $this->gdprAutoDeleteConfigTable->getEntryById($configId)->current();
     }
-    public function getAutoDeleteConfigBySiteModule($siteId,$moduleName)
+
+    /**
+     * @return mixed
+     */
+    public function getAllGdprAutoDeleteConfigData()
+    {
+        return $this->gdprAutoDeleteConfigTable->fetchAll()->toArray();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAllGdprAutoDeleteConfigDataWithEmailTrans()
+    {
+        // get gdpr auto delete config data
+        $configData = $this->gdprAutoDeleteConfigTable->fetchAll()->toArray();
+        if (!empty($configData)) {
+            foreach ($configData as $idx => $data) {
+                $configData[$idx]['email_trans'] = $this->groupAlertEmailsTransDataByType($this->getAlertEmailsTranslationsData($data['mgdprc_id']));
+            }
+        }
+
+        return $configData;
+    }
+
+    /**
+     * group alert email translations data by type of email
+     * @param $alertemailsTransData
+     * @return array
+     */
+    public function groupAlertEmailsTransDataByType($alertEmailsTransData)
+    {
+        $data = [];
+        if (!empty($alertEmailsTransData)) {
+            foreach($alertEmailsTransData as $idx => $transData) {
+                // get the link url
+                $transData['mgdpre_link'] = $this->getLinkUrl($transData['mgdpre_link']);
+                // group the data by email type
+                switch ($transData['mgdpre_type']) {
+                    case MelisGdprDeleteEmailsTable::EMAIL_WARNING;
+                        // set data
+                        $data[self::EMAIL_WARNING_CONTENT_TYPE][] = $transData;
+                        break;
+                    case MelisGdprDeleteEmailsTable::EMAIL_DELETED;
+                        // set data
+                        $data[self::EMAIL_DELETE_CONTENT_TYPE][] = $transData;
+                        break;
+                    default;break;
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * trigger a listener to get the link url from melis-engine service to respect it's dependency
+     *
+     * @param $pageId
+     * @return mixed
+     */
+    public function getLinkUrl($pageId)
+    {
+        $list = $this->getEventManager()->trigger('melis_engine_gdpr_auto_delete_link_provider',$this,[ 'pageId' => $pageId ]);
+        // check for the data
+        for ($list->rewind();$list->valid();$list->next()) {
+            // check if current data is not empty
+            if (!empty($list->current())) {
+                $pageId = $list->current();
+                break;
+            }
+        };
+
+        return $pageId;
+    }
+
+    /**
+     * @param $siteId
+     * @param $moduleName
+     * @return array
+     */
+    public function getGdprAutoDeleteConfigBySiteModule($siteId,$moduleName)
     {
         return (array) $this->gdprAutoDeleteConfigTable->getDeleteConfigBySiteIdModuleName($siteId,$moduleName);
     }
+
+    /**
+     * @param $configId
+     * @return mixed
+     */
     public function getAlertEmailsTranslationsData($configId)
     {
         return $this->gdprAutoDeleteEmailsTable->getEntryByField('mgdpre_config_id',$configId)->toArray();
     }
+
+    /**
+     * @param $configId
+     * @return MelisGdprDeleteEmailsLogsTable
+     */
     public function getAlertEmeailsLogsData($configId)
     {
         return $this->gdprAutoDeleteEmailsLogsTable;
     }
+
+    /**
+     * @param $siteId
+     * @return mixed
+     */
     public function getSiteNameBySiteId($siteId)
     {
         return $this->getServiceLocator()->get('MelisEngineTableSite')->getEntryById($siteId)->current()->site_label;
     }
+
 }

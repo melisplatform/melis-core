@@ -13,7 +13,10 @@ class MelisCoreGdprAutoDeleteServiceFactory implements FactoryInterface{
      */
     public function createService(ServiceLocatorInterface $sl)
     {
-        $melisCoreGdprService = new MelisCoreGdprAutoDeleteService();
+
+        $melisCoreGdprService = new MelisCoreGdprAutoDeleteService(
+            $sl->get('MelisCoreGdprAutoDeleteToolService')
+        );
         // set service locator
         $melisCoreGdprService->setServiceLocator($sl);
 

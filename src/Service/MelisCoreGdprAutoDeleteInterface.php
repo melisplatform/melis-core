@@ -11,7 +11,7 @@ interface MelisCoreGdprAutoDeleteInterface
     public function getWarningListOfUsers();
 
     // Return the list of users that are concerned with the auto-delete at this moment
-    public function getWarning2ListOfUsers();
+    public function getSecondWarningListOfUsers();
 
     // Return a user (its TAGS) if found in a module
     public function getUserPerValidationKey($validationKey);

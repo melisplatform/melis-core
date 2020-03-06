@@ -46,7 +46,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $this->setConfigId($this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null));
         // set config id for other methods
         if (!is_null($siteId) && !is_null($moduleName)) {
-            $this->setConfigId($this->getGdprAutoDeleteService()->getAutoDeleteConfigBySiteModule($siteId,$moduleName));
+            $this->setConfigId($this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigBySiteModule($siteId,$moduleName));
         }
         // get config id
         $view->setVariable('configId', $this->getConfigId());
@@ -97,14 +97,14 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable(
             'formCronConfig',
             $this->getGdprAutoDeleteService()->getAddEditCronConfigForm()->setData(
-                $this->getGdprAutoDeleteService()->getAutoDeleteConfigurationData($this->getConfigId())
+                $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigDataById($this->getConfigId())
             )
         );
         // get form for Email Setup
         $view->setVariable(
             'formEmailSetup',
             $this->getGdprAutoDeleteService()->getAddEditEmailSetupForm()->setData(
-                $this->getGdprAutoDeleteService()->getAutoDeleteConfigurationData($this->getConfigId())
+                $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigDataById($this->getConfigId())
             )
         );
 
