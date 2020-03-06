@@ -256,8 +256,8 @@ body{
     color: #bd362f;
 }
 .btn-danger:hover{
-    background: #e61c23;
-    border-color: #e61c23;
+    background: #bd362f;
+    border-color: #bd362f;
     color: #fff;
 }
 .btn-info{
