@@ -20,7 +20,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                             <div class="tab-content">
                                 <div class="tab-pane active">
                                     <p>In order to activate the automatic system, an admin system must activate this line as a CRON on the server, running once a day everyday (here at 1am everyday in this example):</p>
-                                    <p class="text-info">0 1 * * * wget http://[HOST]/melis/gdprautodelete</p>
+                                    <p class="text-info">0 1 * * * wget <?= $this->scheme ?>://<?= $this->host ?>/melis/gdprautodelete</p>
                                     <p>This CRON can also be launched manually by simply calling this URL.</p>
                                     <div class="footer-modal d-flex flex-row justify-content-between">
                                         <button data-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>

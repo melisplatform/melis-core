@@ -36,6 +36,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $view = new ViewModel();
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
+        $view->setVariable('scheme', $this->getRequest()->getUri()->getScheme());
+        $view->setVariable('host', $this->getRequest()->getUri()->getHost());
 
         return $view;
     }
