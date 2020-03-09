@@ -19,7 +19,7 @@ return [
     // email setup form translations
     'tr_melis_core_gdpr_autodelete_label_email_setup_tags' => 'Replacement tags accepted *',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout' => 'Layout',
-    'tr_melis_core_gdpr_autodelete_label_email_setup_layout tooltip' => 'Layout of the email',
+    'tr_melis_core_gdpr_autodelete_label_email_setup_layout tooltip' => 'Layout to be used in sending the mail. File must has .phtml extension.',
     'tr_melis_core_gdpr_autodelete_label_email_setup_title' => 'Layout title',
     'tr_melis_core_gdpr_autodelete_label_email_setup_title tooltip' => 'Title of the email layout',
     'tr_melis_core_gdpr_autodelete_label_email_setup_logo' => 'Logo',

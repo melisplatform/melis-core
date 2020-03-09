@@ -405,6 +405,10 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
         return $this->gdprAutoDeleteEmailsTable->getEntryByField('mgdpre_config_id',$configId)->toArray();
     }
 
+    public function getAlertEmailsTransData($configId,$type, $langId)
+    {
+        return $this->gdprAutoDeleteEmailsTable->getAlertEmailsTransData($configId, $type, $langId)->current();
+    }
     /**
      * @param $configId
      * @return MelisGdprDeleteEmailsLogsTable

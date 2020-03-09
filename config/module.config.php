@@ -332,6 +332,7 @@ return array(
             'MelisGdprDeleteConfigTable' => 'MelisCore\Model\Tables\MelisGdprDeleteConfigTable',
             'MelisGdprDeleteEmailsLogsTable' => 'MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable',
             'MelisGdprDeleteEmailsTable' => 'MelisCore\Model\Tables\MelisGdprDeleteEmailsTable',
+            'MelisGdprDeleteEmailsSent' => 'MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable',
         ),
         'factories' => array(
             'MelisCoreConfig' => 'MelisCore\Service\Factory\MelisCoreConfigServiceFactory',
@@ -381,6 +382,7 @@ return array(
             'MelisCore\Model\Tables\MelisGdprDeleteConfigTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteConfigTableFactory',
             'MelisCore\Model\Tables\MelisGdprDeleteEmailsTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteEmailsTableFactory',
             'MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteEmailsLogsTableFactory',
+            'MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteEmailsSentTableFactory',
         ),
     ),
     'controllers' => array(

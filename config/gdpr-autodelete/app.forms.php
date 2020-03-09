@@ -239,7 +239,8 @@ return [
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'melis-core/view/layout/layoutEmail.phtml',
-                                            'value' => 'melis-core/view/layout/layoutEmail.phtml'
+                                            'value' => 'melis-core/view/layout/layoutEmail.phtml',
+                                            'required' => 'required'
                                         ]
                                     ]
                                 ],
@@ -280,6 +281,9 @@ return [
                                         'options' => [
                                             'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc',
                                             'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip',
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'required'
                                         ]
                                     ]
                                 ]
@@ -299,11 +303,8 @@ return [
                                         ]
                                     ],
                                     'filters' => [
-                                        [
-                                            'name' => 'StripTags'
-                                        ], [
-                                            'name' => 'StringTrim'
-                                        ]
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
                                     ]
                                 ],
                                 'mgdprc_email_conf_from_email' => [
@@ -320,20 +321,17 @@ return [
                                         ], [
                                             'name' => 'EmailAddress',
                                             'options' => [
-                                                'domain'   => 'true',
+                                                'domain' => 'true',
                                                 'hostname' => 'true',
-                                                'mx'       => 'true',
-                                                'deep'     => 'true',
-                                                'message'  => 'tr_melis_core_gdpr_autodelete_invalid_email',
+                                                'mx' => 'true',
+                                                'deep' => 'true',
+                                                'message' => 'tr_melis_core_gdpr_autodelete_invalid_email',
                                             ]
                                         ]
                                     ],
                                     'filters' => [
-                                        [
-                                            'name' => 'StripTags'
-                                        ], [
-                                            'name' => 'StringTrim'
-                                        ]
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
                                     ]
                                 ],
                                 'mgdprc_email_conf_reply_to' => [
@@ -350,20 +348,17 @@ return [
                                         ], [
                                             'name' => 'EmailAddress',
                                             'options' => [
-                                                'domain'   => 'true',
+                                                'domain' => 'true',
                                                 'hostname' => 'true',
-                                                'mx'       => 'true',
-                                                'deep'     => 'true',
-                                                'message'  => 'tr_melis_core_gdpr_autodelete_invalid_email',
+                                                'mx' => 'true',
+                                                'deep' => 'true',
+                                                'message' => 'tr_melis_core_gdpr_autodelete_invalid_email',
                                             ]
                                         ]
                                     ],
                                     'filters' => [
-                                        [
-                                            'name' => 'StripTags'
-                                        ], [
-                                            'name' => 'StringTrim'
-                                        ]
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
                                     ]
                                 ],
                                 'mgdprc_email_conf_tags' => [
@@ -380,11 +375,8 @@ return [
                                         ]
                                     ],
                                     'filters' => [
-                                        [
-                                            'name' => 'StripTags'
-                                        ], [
-                                            'name' => 'StringTrim'
-                                        ]
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
                                     ]
                                 ],
                                 'mgdprc_email_conf_layout' => [
@@ -401,11 +393,26 @@ return [
                                         ]
                                     ],
                                     'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
+                                    ]
+                                ],
+                                'mgdprc_email_conf_layout_desc' => [
+                                    'name' => 'mgdprc_email_conf_layout_desc',
+                                    'required' => true,
+                                    'validators' => [
                                         [
-                                            'name' => 'StripTags'
-                                        ], [
-                                            'name' => 'StringTrim'
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
                                         ]
+                                    ],
+                                    'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
                                     ]
                                 ]
                             ]
@@ -493,7 +500,7 @@ return [
                             ]
                         ],
                         // </editor-fold>
-                          // <editor-fold desc="GDPR Alert email form delete">
+                        // <editor-fold desc="GDPR Alert email form delete">
                         'melisgdprautodelete_add_edit_alert_email_delete' => [
                             'attributes' => array(
                                 'name' => 'melisgdprautodelete_add_edit_alert_email_delete',
