@@ -4,94 +4,15 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
-.modal .wizard .widget.widget-tabs-double>.widget-head ul li.active a.active.glyphicons, 
-.modal .wizard .widget.widget-tabs-double>.widget-head ul li.active a.active.glyphicons i:before,
-.widget-activity a,
-.checkbox-custom i.checked,
-.text-muted-dark a,
-.author a,
-.view-map,
-.widget-heading-simple ul li a,
-.social-comments li a,
-.activity-line .text a,
-.widget-heading-simple span a,
-.activity-line span a,
-.metricsDrawHook th a,
-.metricsDrawHook td a,
-.box-generic a h5,
-.widget.widget-3 .widget-footer a:hover i:before,
-.widget.widget-3 .widget-footer a:hover,
-.widget.widget-3 .widget-body.large.cancellations span span:first-child,
-.list-group-1>li:hover>a>[class*="fa-"],
-.inbox-app .email-content .from a,
-.btn-primary.active[data-toggle="button"],
-.btn-group-toggle .btn-primary.active {
-    background: none !important;
-    color: <?= $primaryColor; ?> !important;
-}
-.wizard-design .bwizard-steps li.active a,
-.wizard-design .wizard-head .bwizard-steps .nav-item.active .nav-link.active,
-.tabsbar .nav-tabs .nav-item.active .nav-link.active,
-.tabsbar .nav-tabs > li.active > a:hover {
-    background: <?= $primaryColor; ?> !important;
-}
-.nav-pills.nav-timeline .nav-item .nav-link {
-    background: <?= $primaryColor; ?> !important;
-}
-.nav-pills.nav-timeline .nav-item .nav-link:hover {
-    background: <?= $secondaryColor; ?> !important;
-}
-.label.label-primary.label-stroke,
-.ui-slider-wrap .slider-primary .ui-slider-handle,
-.bootbox .modal-dialog .modal-footer .btn-danger,
-.badge.badge-primary.badge-stroke {
-    border-color: <?= $primaryColor; ?> !important;
-}
-.widget .widget-body .jumbotron .btn-primary:hover,
-.label.label-primary.label-stroke,
-.bootbox .modal-dialog .modal-footer .btn-danger,
-.vevent a,
-.contacts .innerLR .media .media-body h4 a,
-.badge.badge-primary.badge-stroke,
-.pricing-table ul li a:hover,
-.widget .half .list-unstyled li a,
-.widget .innerT .media .media-body .text-muted a,
-.widget .innerT .media .media-body h5 a,
-.widget .half h5 a,
-.widget .half .media-body .text-small,
-.media-list .media-body a:not(.user-ticket-action),
-.media-list .media-body small a {
-    color: <?= $primaryColor; ?> !important;
-}
-.sliderContainer .ui-rangeSlider-rightArrow .ui-rangeSlider-arrow-inner {
-    border-left-color: <?= $primaryColor; ?>!important;
-}
-.sliderContainer .ui-rangeSlider-leftArrow .ui-rangeSlider-arrow-inner {
-    border-right-color: <?= $primaryColor; ?>!important;
-}
-.sliderContainer .ui-rangeSlider-bar,
-.ui-slider-wrap .slider-primary .ui-slider-range,
-.nav-pills .nav-link,
-#id_melis_support_questions .widget .bg-primary:hover,
-#id_melis_support_questions .widget .bg-primary,
-.label.label-primary,
-.badge.badge-primary {
-    background: <?= $primaryColor; ?> !important;
-}
-.row-icons [class*="col"] i, .row-icons [class*="col"] i:before,
-.timeline-activity a, 
-.timeline-activity a:hover {
-    color: <?= $primaryColor; ?> !important;
-}
-.widgets .menubar li a,
-.widget-timeline a,
-.widgets .widget .widget-body a,
-.widgets .widget .widget-body strong a,
-.widgets .widget .widget-body .widgets-stats,
+.glyphicons-social.single i:before, .glyphicons.single i:before,
+.glyphicons-social.single, .glyphicons.single,
+.email-content .from a,
 .forgot-password a,
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
 }
+.label.label-primary,
+.badge.badge-primary,
 .navbar.main.navbar-primary .navbar-brand {
     background: <?= $primaryColor; ?> !important;
 }
@@ -236,6 +157,8 @@ body .navbar.main.navbar-primary {
 }
 
 /* Widgets */
+.modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons,
+.modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons i:before,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons i:before {
     color: <?= $primaryColor; ?>;
@@ -619,6 +542,11 @@ input[type="color"]:focus,
     background: <?= $primaryColor; ?>;
 }
 
+.timeline-top-info a,
+#pdfTarget .box-generic address a,
+.inbox-scrollable .list-group-1>li:hover>a>[class*="fa-"],
+.finances_summary .widget-body .separator a i,
+.finances_summary .widget-body .separator a,
 .resume-documents li a i {
     color: <?= $primaryColor; ?>;
 }
@@ -628,12 +556,21 @@ input[type="color"]:focus,
     border: 2px solid <?= $primaryColor; ?>;
 }
 
+.table-vertical-center.checkboxs .selectable .center .btn-group .btn-danger,
+#resetPlatformScheme i,
+#resetPlatformScheme,
+.table-thead-simple .actions .btn-danger .fa,
+.table-thead-simple .actions .btn-danger,
+.table-thead-simple .important .btn-danger .fa,
+.table-thead-simple .important .btn-danger,
 .timeline-activity li:hover i.list-icon,
 .timeline-activity li.active:hover i.list-icon {
     border-color: <?= $primaryColor; ?>;
     color: <?= $primaryColor; ?>;
 }
 
+.table-vertical-center.checkboxs .selectable .center .btn-group .btn-danger:hover,
+#resetPlatformScheme:hover,
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: <?= $primaryColor; ?>;
 }
