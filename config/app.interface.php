@@ -156,8 +156,6 @@ return array(
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css', */
 
-
-
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
                     '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
@@ -200,6 +198,7 @@ return array(
                 'js' => array(
                     '/melis/get-translations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
+                    '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
@@ -235,10 +234,10 @@ return array(
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
                     '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 
-                    '/MelisCore/js/core/tabExpander.js',
-                    '/MelisCore/js/core/melisSidebar.js',
-                    '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
                     '/MelisCore/js/core/melisCore.js',
+                    '/MelisCore/js/core/tabExpander.js',
+                    '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
+                    '/MelisCore/js/core/melisSidebar.js',
                     '/MelisCore/js/core/melisHelper.js',
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/tools/users.tools.js',
@@ -260,7 +259,7 @@ return array(
                  */
                 'build' => [
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' =>  true,
+                    'use_build_assets' =>  false,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
