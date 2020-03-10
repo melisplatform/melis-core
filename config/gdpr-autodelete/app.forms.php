@@ -78,7 +78,7 @@ return [
                                             'class' => 'd-flex flex-row justify-content-between'
                                         ],
                                         'attributes' => [
-                                            'required' => 'true',
+                                            'required' => 'required',
                                             'class' => 'form-control',
                                             'value' => 1
                                         ],
@@ -94,7 +94,7 @@ return [
                                             'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days tooltip'
                                         ],
                                         'attributes' => [
-                                            'placeholder' => '365',
+                                            'placeholder' => '100',
                                             'class' => 'mgdprc_alert_email_days form-control col-md-2'
                                         ]
                                     ]
@@ -116,6 +116,7 @@ return [
                                             ]
                                         ],
                                         'attributes' => [
+                                            'required' => 'required',
                                             'value' => 1
                                         ]
                                     ]
@@ -129,7 +130,8 @@ return [
                                             'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip'
                                         ],
                                         'attributes' => [
-                                            'placeholder' => '365',
+                                            'placeholder' => '100',
+                                            'required' => 'required',
                                             'class' => 'mgdprc_delete_days form-control col-md-2'
                                         ]
                                     ]

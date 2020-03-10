@@ -337,7 +337,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
 
     /**
      * group alert email translations data by type of email
-     * @param $alertemailsTransData
+     * @param $alertEmailsTransData
      * @return array
      */
     public function groupAlertEmailsTransDataByType($alertEmailsTransData)

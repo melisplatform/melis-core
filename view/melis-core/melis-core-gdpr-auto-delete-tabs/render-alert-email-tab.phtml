@@ -42,7 +42,6 @@ $availableLang = "";
                                     if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_WARNING &&
                                         $val['mgdpre_lang_id'] == $data['lang_id']) {
                                         $form->setData($val);
-                                        break;
                                     }
                                 }
                             }
@@ -93,7 +92,6 @@ $availableLang = "";
                                     if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_DELETED &&
                                         $val['mgdpre_lang_id'] == $data['lang_id']) {
                                         $formEmailDelete->setData($val);
-                                        break;
                                     }
                                 }
                             }

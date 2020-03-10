@@ -54,6 +54,7 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 	    }else{
 	        $body->addPart($html);
 	    }
+
 	    
 	    $message = new Message();
 	    $message->setFrom($emailFrom, $fromName);
@@ -94,6 +95,7 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
                 throw new \Exception($exception->getMessage());
             }
         }
+
 
         $transport->send($message);
 	}
