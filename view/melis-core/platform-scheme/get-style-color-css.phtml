@@ -4,15 +4,24 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.tickets .media .media-body .content-text p a,
+.tickets .media .media-body small a,
+.panel-flip .widget-scroll table tr td a,
+.timeline-activity li a,
+.chat-items .media .author a,
+.widget-activity .widget-body .tab-pane .list li span a,
+.glyphicons-social.single i:before, .glyphicons.single i:before,
+.glyphicons-social.single, .glyphicons.single,
+.email-content .from a,
 .forgot-password a,
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
 }
+.label.label-primary,
+.badge.badge-primary,
 .navbar.main.navbar-primary .navbar-brand {
     background: <?= $primaryColor; ?> !important;
 }
-.btn-primary:not(:disabled):not(.disabled).active, 
-.btn-primary:not(:disabled):not(.disabled):active, 
 .show>.btn-primary.dropdown-toggle {
     background: <?= $primaryColor; ?> !important;
 }
@@ -47,10 +56,25 @@
     background-color: <?= $primaryColor; ?> !important;
     color: #fff;
 }
+.widget.widget-body-primary>.widget-body,
+.ColVis .ColVis_Button,
 #convo-content #chat-container .my-msg {
     background-color: <?= $primaryColor; ?>;
 }
 
+.table-with-progress .text-right .btn-group .btn-danger.btn-regular {
+    background-color: <?= $primaryColor; ?> !important;
+    border-color: <?= $primaryColor; ?> !important;
+}
+
+.btn-group .btn-danger.btn-regular:hover,
+.btn-group .btn-danger.btn-regular:focus {
+    background-color: #fff !important;
+    color: <?= $primaryColor; ?> !important;
+}
+
+.innerTB .glyphicons p a,
+.widget .widget-body p a,
 #convo-content .chat-contact-name {
     color: <?= $primaryColor; ?>;
 }
@@ -139,6 +163,8 @@ body .navbar.main.navbar-primary {
 }
 
 /* Widgets */
+.modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons,
+.modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons i:before,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons i:before {
     color: <?= $primaryColor; ?>;
@@ -232,6 +258,7 @@ body .navbar.main.navbar-primary {
     border-color: <?= $primaryColor; ?>;
 }
 
+.pagination>li.primary>a:focus,
 .pagination>li>a:hover,
 .pagination>li.primary>a {
     background: <?= $primaryColor; ?>;
@@ -521,6 +548,23 @@ input[type="color"]:focus,
     background: <?= $primaryColor; ?>;
 }
 
+.pricing-table ul li a.btn.btn-primary.btn-lg:hover,
+.view-map:hover .fa,
+.view-map,
+.widget-heading-simple .widget-body .innerAll a,
+.social-comments .user-info a,
+.activity-line .widget-body .innerAll a,
+.activity-line .activity-status .text a,
+.activity-line .widget-body span a,
+.share .share-buttons .glyphicons:hover i:before,
+.share .share-buttons .glyphicons-social:hover i:before,
+#metrics .legendLabel a,
+#id_melis_medical_memos .box-generic a,
+.timeline-top-info a,
+#pdfTarget .box-generic address a,
+.inbox-scrollable .list-group-1>li:hover>a>[class*="fa-"],
+.finances_summary .widget-body .separator a i,
+.finances_summary .widget-body .separator a,
 .resume-documents li a i {
     color: <?= $primaryColor; ?>;
 }
@@ -530,12 +574,21 @@ input[type="color"]:focus,
     border: 2px solid <?= $primaryColor; ?>;
 }
 
+.table-vertical-center.checkboxs .selectable .center .btn-group .btn-danger,
+#resetPlatformScheme i,
+#resetPlatformScheme,
+.table-thead-simple .actions .btn-danger .fa,
+.table-thead-simple .actions .btn-danger,
+.table-thead-simple .important .btn-danger .fa,
+.table-thead-simple .important .btn-danger,
 .timeline-activity li:hover i.list-icon,
 .timeline-activity li.active:hover i.list-icon {
     border-color: <?= $primaryColor; ?>;
     color: <?= $primaryColor; ?>;
 }
 
+.table-vertical-center.checkboxs .selectable .center .btn-group .btn-danger:hover,
+#resetPlatformScheme:hover,
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: <?= $primaryColor; ?>;
 }
@@ -645,7 +698,8 @@ div.glyphicons-social.glyphicon-primary i:before {
     background: <?= $primaryColor; ?>;
 }
 
-.widget.widget-wizard-pills .widget-head ul li.primary a {
+.modals .wizard .widget.widget-wizard-pills .widget-head.widget-steps-head ul li.active a.active,
+.widget.widget-wizard-pills .widget-head ul li.active.primary a {
     background: <?= $primaryColor; ?>;
 }
 
@@ -843,9 +897,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 .workflow-modal-content .wmc-content.wmc-header > span{
     background-color: <?= $primaryColor; ?>;
-}
-.modal .modal-header .modal-title {
-    color : #fff;
 }
 
 .workflow-modal-content .wmc-header span {

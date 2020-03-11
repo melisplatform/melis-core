@@ -737,6 +737,9 @@ var melisCore = (function(window){
         var $this = $(this);
             $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
     });
+
+    // disable tooltip on hover elements, added attribute aria-describedby
+    // $(":not(.melis-core-dashboard-plugin-snippets) *[title]").tooltip('disable');
     
     $body.on("click", ".melis-dashboard-plugins-menu", function(){
         data = $(this).data();
@@ -811,6 +814,19 @@ var melisCore = (function(window){
             $tabConInner.show();
             $res.trigger("click");
             $tabConOuter.removeClass("hide-res-menus");
+    });
+
+    // prevent to show tooltip on hover of data-toggle tab
+    $body.on("mouseover", "a[data-toggle='tab']", function() {
+        $(".ui-tooltip").remove();
+    });
+    
+    $body.on("show.bs.tab", "a[data-toggle='tab']", function(e) {
+        $(".ui-tooltip").remove();
+    });
+
+    $body.on("shown.bs.tab", "a[data-toggle='tab']", function(e) {
+        $(".ui-tooltip").remove();
     });
 
     function showPlugLists() {
