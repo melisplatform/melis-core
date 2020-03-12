@@ -1,10 +1,14 @@
 <?php
-	return array(
+	return [
         'branding' => false,
 		'relative_urls' => false,
 	    'mode' => 'textareas',
 	    'selector' => 'tool-editable-selector',
 		'language' => 'en',
+		'mobile' => [
+			'theme' => 'silver',
+			'height' => 300
+		],
 		'branding' => false,
 		'inline' => false,
 		'menubar' => false,
@@ -17,17 +21,17 @@
         'file_picker_types' => 'file image media',
         'file_picker_callback' => 'filePickerCallback',
         'images_upload_url' => '/melis/MelisCore/MelisTinyMce/uploadImage',
-		'plugins' => array(
+		'plugins' => [
             //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
            'lists advlist autolink link paste image charmap preview anchor emoticons help hr nonbreaking',
            'searchreplace visualblocks code fullscreen',
            'insertdatetime media table template'
-        ),
+		],
         'image_advtab' => true,
         'toolbar' => 'insertfile undo redo paste | formatselect | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media template | code',
         'setup' => 'melisTinyMCE.tinyMceActionEvent',
         'init_instance_callback' => 'tinyMceCleaner'
-	);
+	];
 
 # For reference before implementing this fixed: http://mantis.melistechnology.fr/view.php?id=3675
 /* return array(
