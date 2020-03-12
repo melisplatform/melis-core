@@ -738,6 +738,14 @@ var melisCore = (function(window){
             $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
     });
 
+    /* $body.on("mouseover", "a[title]", function() {
+        var $this = $(this);
+
+            if ( $this.attr("title") ) {
+                $this.removeAttr("aria-describedby");
+            }
+    }); */
+
     // disable tooltip on hover elements, added attribute aria-describedby
     // $(":not(.melis-core-dashboard-plugin-snippets) *[title]").tooltip('disable');
     
@@ -817,7 +825,7 @@ var melisCore = (function(window){
     });
 
     // prevent to show tooltip on hover of data-toggle tab
-    $body.on("mouseover", "a[data-toggle='tab']", function() {
+    /* $body.on("mouseover", "a[data-toggle='tab']", function() {
         $(".ui-tooltip").remove();
     });
     
@@ -827,7 +835,7 @@ var melisCore = (function(window){
 
     $body.on("shown.bs.tab", "a[data-toggle='tab']", function(e) {
         $(".ui-tooltip").remove();
-    });
+    }); */
 
     function showPlugLists() {
         if($(this).hasClass("active")) {

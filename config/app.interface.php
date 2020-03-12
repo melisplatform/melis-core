@@ -198,7 +198,7 @@ return array(
                 'js' => array(
                     '/melis/get-translations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
-                    '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
+                    //'/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
@@ -259,7 +259,7 @@ return array(
                  */
                 'build' => [
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' =>  false,
+                    'use_build_assets' =>  true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
