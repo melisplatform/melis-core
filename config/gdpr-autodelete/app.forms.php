@@ -439,7 +439,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'Replacement tags accepted',
+                                            'data-label-text' => 'Replacement tags accepted *',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ],
@@ -453,6 +453,7 @@ return [
                                             'tooltip' => 'Subject of the email',
                                         ],
                                         'attributes' => [
+                                            'required' => 'required',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -463,9 +464,10 @@ return [
                                         'type' => "MelisCoreTinyMCE",
                                         'options' => [
                                             'label' => 'Message',
-                                            'tooltip' => 'Message of the email',
+                                            'tooltip' => 'Message of the email. When using tags place it inside [ ], ex [LINK]',
                                         ],
                                         'attributes' => [
+                                            'required' => 'required',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -487,7 +489,7 @@ return [
                             'input_filter' => [
                                 'mgdpre_email_tags' => [
                                     'name' => 'mgdpre_email_tags',
-                                    'required' => false,
+                                    'required' => true,
                                     'validators' => [
                                         [
                                             'name' => 'NotEmpty',
@@ -521,7 +523,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'Replacement tags accepted',
+                                            'data-label-text' => 'Replacement tags accepted *',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ],
@@ -535,7 +537,8 @@ return [
                                             'tooltip' => 'Subject of the email',
                                         ],
                                         'attributes' => [
-                                            'class' => 'form-control'
+                                            'class' => 'form-control',
+                                            'required' => 'required'
                                         ]
                                     ],
                                 ],
@@ -545,10 +548,11 @@ return [
                                         'type' => "MelisCoreTinyMCE",
                                         'options' => [
                                             'label' => 'Message',
-                                            'tooltip' => 'Message of the email',
+                                            'tooltip' => 'Message of the email. When using tags place it inside [ ], ex [LINK]',
                                         ],
                                         'attributes' => [
-                                            'class' => 'form-control'
+                                            'class' => 'form-control',
+                                            'required' => 'required'
                                         ]
                                     ],
                                 ],
@@ -561,9 +565,54 @@ return [
                                             'tooltip' => 'Message of the email in text version',
                                         ],
                                         'attributes' => [
-                                            'class' => 'form-control'
+                                            'class' => 'form-control',
+                                            'required' => 'required'
                                         ]
                                     ]
+                                ]
+                            ],
+                            'input_filter' => [
+                                'mgdpre_email_tags' => [
+                                    'name' => 'mgdpre_email_tags',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                ],
+                                'mgdpre_html' => [
+                                    'name' => 'mgdpre_html',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                ],
+                                'mgdpre_subject' => [
+                                    'name' => 'mgdpre_subject',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
                                 ]
                             ]
                         ]// </editor-fold>

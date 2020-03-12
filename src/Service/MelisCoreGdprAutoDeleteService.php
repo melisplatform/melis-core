@@ -90,54 +90,84 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     }
 
     /**
+     * merge tags on the auto delete config
+     * @param $autoDeleteConfig
+     * @return mixed
+     */
+    private function mergeTagsConfig($autoDeleteConfig)
+    {
+        $tags = $this->getAllModulesListOfTags();
+        if (! empty($tags)) {
+            foreach ($tags as $moduleName => $val) {
+                if ($autoDeleteConfig['mgdprc_module_name'] == $moduleName) {
+                    $autoDeleteConfig['email_setup_tags'] = $val;
+                }
+            }
+        }
+
+        return $autoDeleteConfig;
+    }
+
+    /**
      * send first warning email for users that are inactvie
      * @param $autoDelConf
-     * @return bool
+     * @return array
      */
     private function sendEmailForWarningUsers($autoDelConf)
     {
-        // if alert email status is in active then we get the list of warning users to mailed for revalidation
-        if ($autoDelConf['mgdprc_alert_email_status']) {
-            // check if the is days of inactivity set
-            if ($autoDelConf['mgdprc_alert_email_days'] > 0) {
-                // get all modules warning list of users
-                $modulesWarningListsOfUsers = $this->getAllModulesWarningListOfUsers();
-                if (!empty($modulesWarningListsOfUsers)) {
-                    foreach ($modulesWarningListsOfUsers as $moduleName => $emails) {
-                        // first check if user is belong to current site of the config
-                        foreach ($emails as $email => $emailOpts) {
-                            // check emmail logs on email_sent if email is not yet mailed
-                            if (empty($this->getEmailSentAlertByEmailDatetime($email, date('Y-m-d')))) {
-                                // check user if it belongs to the auto delete config
-                                if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'],$autoDelConf['mgdprc_site_id'])){
-                                    // check user's inactive number of days
-                                    if ($this->checkUsersInactiveDays($emailOpts,$autoDelConf['mgdprc_alert_email_days'])) {
-                                        // send email
-                                        $this->sendWarningEmails($autoDelConf,$email, $emailOpts);
-                                    } else {
-                                        $message = "";
+        $response = [];
+        // get all modules warning list of users
+        $modulesWarningListsOfUsers = $this->getAllModulesWarningListOfUsers();
+        foreach ($modulesWarningListsOfUsers as $moduleName => $emails) {
+            if ($moduleName == $autoDelConf['mgdprc_module_name']) {
+                // if alert email status is in active then we get the list of warning users to mailed for revalidation
+                if ($autoDelConf['mgdprc_alert_email_status']) {
+                    // check if the is days of inactivity set
+                    if ($autoDelConf['mgdprc_alert_email_days'] > 0) {
+                        if (!empty($modulesWarningListsOfUsers)) {
+                            // check if user is belong to current site of the config
+                            foreach ($emails as $email => $emailOpts) {
+                                // check emmail logs on email_sent if email is not yet mailed
+                                if (empty($this->getEmailSentAlertByEmailDatetime($email, date('Y-m-d')))) {
+                                    // check user if it belongs to the auto delete config
+                                    if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'], $autoDelConf['mgdprc_site_id'])) {
+                                        // check user's inactive number of days
+                                        if ($this->checkUsersInactiveDays($emailOpts, $autoDelConf['mgdprc_alert_email_days'])) {
+                                            // send email
+                                            $this->prepareSendWarningEmail(
+                                                // merge tags
+                                                $this->mergeTagsConfig($autoDelConf),
+                                                $email,
+                                                $emailOpts
+                                            );
+                                        } else {
+                                            $message = "";
+                                        }
                                     }
+                                } else {
+                                    $message = "Email " . $email . " was already mailed today";
                                 }
-                            } else {
-                                $message = "Email " .$email . " was already mailed today";
                             }
                         }
+                    } else {
+                        $message = "Error logs no inactivity days was set";
                     }
+                } else {
+                    $message = "Logs Alert email is off";
                 }
-            } else {
-                $message =  "Error logs no inactivity days was set";
             }
-        } else {
-            $message = "Logs Alert email is off";
         }
+
+        return $response;
     }
 
     /**
      * @param $autoDelConf
-     * @return bool
+     * @return array
      */
     private function sendEmailForSecondWarningUsers($autoDelConf)
     {
+        $response = [];
         // if alert resend email status is in active then we get the list of warning users to mailed for revalidation again
         if ($autoDelConf['mgdprc_alert_email_resend']) {
             // get all modules second warning list of users
@@ -148,11 +178,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         // check if email is already mailed or not on this date
                         if (empty($this->getEmailSentAlertByEmailDatetime($email, date('Y-m-d')))) {
                             // check sites of user if it belongs to the auto delete config
-                            if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'],$autoDelConf['mgdprc_site_id'])) {
+                            if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'], $autoDelConf['mgdprc_site_id'])) {
                                 // check users inactive days
-                                if ($this->checkUsersInactiveDays7DaysBeforeDeadline($emailOpts,$autoDelConf['mgdprc_delete_days'])) {
+                                if ($this->checkUsersInactiveDays7DaysBeforeDeadline($emailOpts, $autoDelConf['mgdprc_delete_days'])) {
                                     // send email
-                                    $this->sendWarningEmails($autoDelConf,$email, $emailOpts);
+                                    // $this->prepareSendWarningEmail($autoDelConf,$email, $emailOpts);
                                 }
                             }
                         } else {
@@ -160,11 +190,12 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         }
                     }
                 }
-                return true;
             }
         } else {
             $message = "Logs Alert email is off";
         }
+
+        return $response;
     }
 
     /**
@@ -225,55 +256,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         }
 
         return $status;
-    }
-
-    /**
-     * @param $emails
-     * @param $autoDelConf
-     * @param $firstEmail
-     * @return array
-     */
-    private function checkUsersLastDateValidityOld($emails, $autoDelConf, $firstEmail = false)
-    {
-        $inactiveUsers = [];
-        foreach ($emails as $email => $opt) {
-            // get the users days of inactivity
-            $usersDaysOfInactive = $this->getDaysDiff($opt[self::CONFIG_KEY]['last_date'], date('Y-m-d'));
-            if ($firstEmail) {
-                iF ($usersDaysOfInactive > $autoDelConf['mgdprc_alert_email_days']) {
-                    $inactiveUsers[$email] = $opt;
-                }
-            } else {
-                // check if the day has come 7 days before the delete days of inactivity
-                if ($usersDaysOfInactive == ($autoDelConf['mgdprc_delete_days']) - 7) {
-                    $inactiveUsers[$email] = $opt;
-                }
-            }
-
-        }
-
-        return $inactiveUsers;
-    }
-    /**
-     * check if the email is already mailed date to day
-     * @param $emails
-     * @return array
-     */
-    private function verifyAlertEmailSentStatus($emails)
-    {
-        // emails not mailed
-        $emailsNotMailed = [];
-        if (!empty($emails)) {
-            foreach ($emails as $email => $emailOptions) {
-                $data = $this->getEmailSentAlertByEmailDatetime($email, date('Y-m-d'));
-                if (empty($data)) {
-                    // now we know the email is not yet emailed
-                    $emailsNotMailed[$email] = $emailOptions;
-                }
-            }
-        }
-
-        return $emailsNotMailed;
     }
 
     /**
@@ -351,6 +333,51 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     }
 
     /**
+     * send first warning for those email are inactive for the set days
+     * @param $emailSetupConfig
+     * @param $email
+     * @param $emailOptions
+     * @param $type
+     * @return array
+     */
+    public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING)
+    {
+        $response = [];
+        // check config key is present
+        if ($this->isExists(MelisCoreGdprAutoDeleteService::CONFIG_KEY, $emailOptions)) {
+            // check lang id is present
+            if ($this->isExists(MelisCoreGdprAutoDeleteService::LANG_KEY,$emailOptions[MelisCoreGdprAutoDeleteService::CONFIG_KEY])) {
+                // get lang id
+                $langId = $emailOptions[MelisCoreGdprAutoDeleteService::CONFIG_KEY][MelisCoreGdprAutoDeleteService::LANG_KEY];
+                // get alert emails required data for the email
+                $alertEmailData = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], $type, $langId);
+                //  get the link of page id
+                $alertEmailData->mgdpre_link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
+                // send email
+                $this->sendEmail(
+                    $emailSetupConfig['mgdprc_email_conf_from_email'],
+                    $emailSetupConfig['mgdprc_email_conf_from_name'],
+                    $email,
+                    null,
+                    $emailSetupConfig['mgdprc_email_conf_reply_to'],
+                    $alertEmailData->mgdpre_subject,
+                    $this->getEmailLayoutContent(
+                        $emailSetupConfig,
+                        $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions)
+                    ),
+                    $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions)
+                );
+            } else {
+                // logs lang id not present
+            }
+        } else {
+            // logs config key not present
+        }
+
+        return $response;
+    }
+
+    /**
      * send email
      * @param $emailFrom
      * @param $emailFromName
@@ -371,6 +398,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $messageHtml,
         $messageText = null
     ) {
+
         return $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
             $emailFrom,
             $emailFromName,
@@ -431,46 +459,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         return $this->getDataOfAnEvent(self::SECOND_WARNING_EVENT, self::SECOND_WARNING_LIST_KEY);
     }
 
-    /**
-     * send first warning for those email are inactive for the set days
-     * @param $emailSetupConfig
-     * @param $email
-     * @param $emailOptions
-     * @return array
-     */
-    public function sendWarningEmails($emailSetupConfig, $email ,$emailOptions)
-    {
-        $response = [];
-        // check config key is present
-        if ($this->isExists(MelisCoreGdprAutoDeleteService::CONFIG_KEY, $emailOptions)) {
-            // check lang id is present
-            if ($this->isExists(MelisCoreGdprAutoDeleteService::LANG_KEY,$emailOptions[MelisCoreGdprAutoDeleteService::CONFIG_KEY])) {
-                // get lang id
-                $langId = $emailOptions[MelisCoreGdprAutoDeleteService::CONFIG_KEY][MelisCoreGdprAutoDeleteService::LANG_KEY];
-                // get alert emails required data for the email
-                $emailContent = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_WARNING, $langId);
-                // send email
-                $this->sendEmail(
-                    $emailSetupConfig['mgdprc_email_conf_from_email'],
-                    $emailSetupConfig['mgdprc_email_conf_from_name'],
-                    $email,
-                    null,
-                    $emailSetupConfig['mgdprc_email_conf_reply_to'],
-                    $emailContent->mgdpre_subject,
-                    $this->prepareEmailLayout($emailSetupConfig, $emailContent->mgdpre_html),
-                    $emailContent->mgdpre_text
-                );
-            } else {
-                // logs lang id not present
-            }
-
-        } else {
-            // logs config key not present
-        }
-
-        return $response;
-    }
-
     private function isExists($key, array $array)
     {
         if (isset($array[$key]) && ! empty($array[$key])) {
@@ -483,7 +471,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $content
      * @return null|string
      */
-    private function prepareEmailLayout($emailData, $content)
+    private function getEmailLayoutContent($emailData, $content)
     {
         $messageContent = null;
         $file = null;
@@ -508,6 +496,40 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         }
 
         return $messageContent;
+    }
+
+    /**
+     * replace tags on the content
+     * @param array $tags
+     * @param $data
+     * @param $emailOptions
+     * @return mixed|string
+     */
+    private function replaceTagsByModuleTags(array $tags, $data, $emailOptions)
+    {
+        $tagsNotFoundOnModule = [];
+        $moduleTags = $emailOptions['tags'];
+        $content = $data->mgdpre_html;
+        if (!empty($tags)) {
+            // accepted tags
+            foreach ($tags as $idx => $dbTag) {
+                // replace the reserved tag and replace the content
+                if ($dbTag == "URL") {
+                    // url for revalidation of user
+                    $moduleTags['URL'] = $data->mgdpre_link . "?u=" . $emailOptions['config']['validationkey'];
+                }
+
+                // look for module tags
+                if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
+                    // get email content and replace tags
+                    $content = str_replace('[' . $dbTag . ']', $moduleTags[$dbTag], $content);
+                } else {
+                    $tagsNotFoundOnModule[] = $dbTag;
+                }
+            }
+        }
+
+        return $content;
     }
 
     private function print($data)

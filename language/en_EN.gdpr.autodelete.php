@@ -25,7 +25,7 @@ return [
     'tr_melis_core_gdpr_autodelete_label_email_setup_logo' => 'Logo',
     'tr_melis_core_gdpr_autodelete_label_email_setup_logo tooltip' => 'Logo of the email',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc' => 'Layout information',
-    'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip' => 'Content of the email',
+    'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip' => 'Content of the email, When using tags place it inside [ ], ex [LINK]',
     // alert emails translations
     'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Replacement tags accepted *',
 ];
