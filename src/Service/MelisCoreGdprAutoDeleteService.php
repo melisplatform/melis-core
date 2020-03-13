@@ -229,14 +229,14 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      */
     private function checkUsersInactiveDays($emailOpt, $alertEmailDays)
     {
-        $inactiveUsers = false;
+        $userStatus = false;
         // compare the users inactive days to auto delete config (Alert email sent after inactivity of)
         $usersDaysOfInactive = $this->getDaysDiff($emailOpt[self::CONFIG_KEY]['last_date'], date('Y-m-d'));
         iF ($usersDaysOfInactive > $alertEmailDays) {
-            $inactiveUsers = true;
+            $userStatus = true;
         }
 
-        return $inactiveUsers;
+        return $userStatus;
     }
 
     /**
@@ -266,11 +266,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      */
     private function getDaysDiff($date1, $date2)
     {
-        $diff = abs(strtotime($date2) - strtotime($date1));
-        $years = floor($diff / (365*60*60*24));
-        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
-
-        return floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24) / (60*60*24));
+        return round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
     }
 
     /**
