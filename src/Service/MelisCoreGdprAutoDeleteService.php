@@ -340,7 +340,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $type
      * @return array
      */
-    public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING)
+    public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING )
     {
         $response = [];
         // check config key is present
@@ -503,6 +503,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param array $tags
      * @param $data
      * @param $emailOptions
+     * @param $firstEmail
      * @return mixed|string
      */
     private function replaceTagsByModuleTags(array $tags, $data, $emailOptions)
@@ -518,7 +519,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     // url for revalidation of user
                     $moduleTags['URL'] = $data->mgdpre_link . "?u=" . $emailOptions['config']['validationkey'];
                 }
-
                 // look for module tags
                 if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
                     // get email content and replace tags
