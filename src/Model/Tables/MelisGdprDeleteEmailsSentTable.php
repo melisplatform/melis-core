@@ -22,16 +22,14 @@ class MelisGdprDeleteEmailsSentTable extends MelisGenericTable
 		$this->idField = 'mgdprs_id';
 	}
 
-	public function getEmailSentAlertDataByEmailAndDate($email , $dateTime)
+	public function getEmailSentByValidationKey($validationKey)
     {
         // table selection query
         $select = $this->tableGateway->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         // email
-        $select->where->equalTo('mgdprs_email', $email);
-        // datetime
-        $select->where->equalTo('mgdprs_alert_email_sent_date', $dateTime);
+        $select->where->equalTo('mgdprs_validation_key', $validationKey);
 
         return $this->tableGateway->selectWith($select);
     }
