@@ -1,9 +1,23 @@
 <?php
-    // use default colors if platform scheme table is empty
+    // #1c3ce6 - primary color
+    // #5ece54 - secondary color 
+
+    // original hex
     $primaryColor   = $this->melis_core_platform_color_primary_color   ?: '#981a1f';
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.contacts .innerLR .media .media-body .media-heading a,
+.contacts .innerLR .media a,
+.widget .innerAll.half.media .media-body .text-muted-dark a,
+.widget .innerAll .list-unstyled li a,
+.widget .row-hover a,
+.widget .media .media-body .innerB small a,
+.widget .media .media-body h5 a,
+.widget .innerAll.row-hover h5 a,
+.widget .innerAll .media .media-body .text-muted-dark a,
+.widget .innerAll .media .media-body a.text-small,
+.widget.widget-tabs .widget-body .tab-content .tab-pane a.small,
 .tickets .media .media-body .content-text p a,
 .tickets .media .media-body small a,
 .panel-flip .widget-scroll table tr td a,
@@ -13,10 +27,24 @@
 .glyphicons-social.single i:before, .glyphicons.single i:before,
 .glyphicons-social.single, .glyphicons.single,
 .email-content .from a,
+.widget .widget-body .jumbotron .btn-primary:hover,
+.widgets .widget .widget-body .widget-stats,
+.widgets .widget .widget-body .well address strong a,
+.widgets .widget .widget-body .well address a,
+.widget-timeline .list-timeline li span a,
+.panel-group.accordion .panel .panel-heading .panel-title a,
+.menubar ul li a,
+.vevent a,
+.pager .next > a,
+.row-icons [class*="col"] i,
+.row-icons [class*="col"] i:before,
 .forgot-password a,
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
 }
+.label.label-primary,
+.tabsbar ul li.active a,
+.tabsbar .nav-tabs > li.active > a
 .label.label-primary,
 .badge.badge-primary,
 .navbar.main.navbar-primary .navbar-brand {
@@ -62,6 +90,7 @@
     background-color: <?= $primaryColor; ?>;
 }
 
+.survey .nav-pills .nav-link,
 .table-with-progress .text-right .btn-group .btn-danger.btn-regular {
     background-color: <?= $primaryColor; ?> !important;
     border-color: <?= $primaryColor; ?> !important;
@@ -288,8 +317,8 @@ body .navbar.main.navbar-primary {
     background: #fff;
 }
 
-
-
+.label.label-primary.label-stroke,
+.badge.badge-primary.badge-stroke,
 .btn-group.open .btn-primary.dropdown-toggle,
 .btn-primary.disabled,
 .btn-primary[disabled],
@@ -566,7 +595,7 @@ input[type="color"]:focus,
 .finances_summary .widget-body .separator a i,
 .finances_summary .widget-body .separator a,
 .resume-documents li a i {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .timeline-activity li.active i.list-icon {
@@ -575,8 +604,6 @@ input[type="color"]:focus,
 }
 
 .table-vertical-center.checkboxs .selectable .center .btn-group .btn-danger,
-#resetPlatformScheme i,
-#resetPlatformScheme,
 .table-thead-simple .actions .btn-danger .fa,
 .table-thead-simple .actions .btn-danger,
 .table-thead-simple .important .btn-danger .fa,
@@ -588,7 +615,6 @@ input[type="color"]:focus,
 }
 
 .table-vertical-center.checkboxs .selectable .center .btn-group .btn-danger:hover,
-#resetPlatformScheme:hover,
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: <?= $primaryColor; ?>;
 }
