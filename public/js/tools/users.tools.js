@@ -323,6 +323,8 @@ var toolUserManagement = {
                     if(data.success) {
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
                         melisCore.flashMessenger();
+                        var el = "tr#"+id;
+                        $(el).find("span.text-success").removeClass( "text-success" ).addClass( "text-info" );
                     }
                     melisCoreTool.done(".btnUserRegenerateLink");
                 }).fail(function(){

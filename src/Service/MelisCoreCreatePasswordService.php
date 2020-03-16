@@ -427,6 +427,13 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
             $emailResult = $melisEmailBO->sendBoEmailByCode('PASSWORDCREATION',  $tags, $email_to, $name_to, $langId);
             
             if ($emailResult){
+                $userTable     = $this->getServiceLocator()->get('MelisCoreTableUser');
+                if($this->isDataExists($login))
+                {
+                    $userTable->update(array(
+                        'usr_status' => 2,
+                    ),'usr_login', $login);
+                }
                 return true;
             }else{
                 return false;
