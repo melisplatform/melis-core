@@ -99,7 +99,11 @@ $availableLang = "";
                             echo $this->form()->openTag($formEmailDelete); ?>
                             <?php foreach ($excludedFieldInLoop as $element) { ?>
                                 <!-- render element -->
-                                <?= $this->melisFieldRow($formEmailDelete->get($element)) ?>
+                                <?php
+                                // check if the element is in the form
+                                if ($formEmailDelete->has($element)) { ?>
+                                    <?php echo $this->melisFieldRow($formEmailDelete->get($element));
+                                } ?>
                             <?php } ?>
                             <?php foreach ($formEmailDelete as $element => $options) { ?>
                                 <?php if (!in_array($element, $excludedFieldInLoop)) { ?>

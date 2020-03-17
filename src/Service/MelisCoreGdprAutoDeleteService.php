@@ -1,42 +1,46 @@
 <?php
-
 namespace MelisCore\Service;
-
-use MelisCmsUserAccount\Service\MelisCmsUserAccountGdprAutoDeleteService;
-use MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable;
-use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
-use Zend\Validator\File\Exists;
-use Zend\Validator\File\Extension;
-use Zend\Validator\IsInstanceOf;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver\TemplateMapResolver;
-
 /**
  * Melis Technology (http://www.melistechnology.com)
  *
  * Class MelisCoreGdprAutoDeleteService
  *
- * @copyright Copyright (c) 2016 Melis Technology (http://www.melistechnology.com)
+ * @copyright Copyright (c) 2020 Melis Technology (http://www.melistechnology.com)
  * @package MelisCore\Service
  */
+
+use MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable;
+use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
+use Zend\Validator\File\Exists;
+use Zend\Validator\File\Extension;
+use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\PhpRenderer;
+use Zend\View\Resolver\TemplateMapResolver;
+
 class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 {
     /**
      * constants to avoid incorrect entries of events,keys and can be use everywhere
      */
     const MODULE_LIST_KEY = "modules_list";
-    const TAGS_EVENT = "melis_core_gdpr_auto_delete_modules_tags_list";
-    const TAG_LIST_KEY = "modules_tags_list";
-    const TAG_KEY = "tags";
-    const WARNING_EVENT = "melis_core_gdpr_auto_delete_warning_list_of_users";
-    const WARNING_LIST_KEY = "modules_warning_list";
+    /*
+     * optional keys event
+     */
+    const TAGS_EVENT           = "melis_core_gdpr_auto_delete_modules_tags_list";
+    const WARNING_EVENT        = "melis_core_gdpr_auto_delete_warning_list_of_users";
     const SECOND_WARNING_EVENT = "melis_core_gdpr_auto_delete_second_warning_list_of_users";
+    const DELETE_EVENT         = "melis_core_gdpr_auto_delete_for_delete_users";
+    /*
+     * optional constant keys
+     */
+    const TAG_LIST_KEY            = "modules_tags_list";
+    const WARNING_LIST_KEY        = "modules_warning_list";
     const SECOND_WARNING_LIST_KEY = "modules_second_warning_list";
-    const VALIDATION_KEY = "validation_key";
-    const CONFIG_KEY = "config";
-    const LANG_KEY = "lang";
-    const WARNING_METHONG = '';
+    const DELETE_USERS_KEY        = "modules_for_delete_list";
+    const TAG_KEY                 = "tags";
+    const VALIDATION_KEY          = "validationKey";
+    const CONFIG_KEY              = "config";
+    const LANG_KEY                = "lang";
 
     /**
      * @var MelisCoreGdprAutoDeleteToolService
@@ -50,6 +54,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * MelisCoreGdprAutoDeleteService constructor.
+     *
      * @param MelisCoreGdprAutoDeleteToolService $autoDeleteToolService
      * @param MelisGdprDeleteEmailsSentTable $deleteEmailsSentTable
      */
@@ -63,6 +68,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     }
     /**
      * get the list of tags in every modules that was sent through their respective listeners
+     *
      * @return array
      */
     public function getAllModulesListOfTags()
@@ -70,11 +76,21 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         return $this->getDataOfAnEvent(self::TAGS_EVENT, self::TAG_LIST_KEY, self::TAG_KEY);
     }
 
+    /**
+     * get the list of users that for deletion
+     *
+     * @return array
+     */
+    public function getUsersForDeletion()
+    {
+        return $this->getDataOfAnEvent(self::DELETE_EVENT,self::DELETE_USERS_KEY);
+    }
+
     public function runCron()
     {
         // retrieving list of modules and list of sites
         $autoDelConfig = $this->gdprAutoDeleteToolService->getAllGdprAutoDeleteConfigData();
-        // retrieving list of users' emails for first warning
+        //etrieving list of users' emails for first warning
         if (!empty($autoDelConfig)) {
             foreach ($autoDelConfig as $idx => $config) {
                 // send email for first warning users
@@ -93,6 +109,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * merge tags on the auto delete config
+     *
      * @param $autoDeleteConfig
      * @return mixed
      */
@@ -112,6 +129,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * send first warning email for users that are inactvie
+     *
      * @param $autoDelConf
      * @return array
      */
@@ -130,7 +148,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                             // check if user is belong to current site of the config
                             foreach ($emails as $email => $emailOpts) {
                                 // check emmail logs on email_sent if email is not yet mailed
-                                if (empty($this->getEmailSentByValidationKey($emailOpts['config']['validationkey']))) {
+                                if (empty($this->getEmailSentByValidationKey($emailOpts['config']['validationKey']))) {
                                     // check user if it belongs to the auto delete config
                                     if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'], $autoDelConf['mgdprc_site_id'])) {
                                         // check user's inactive number of days
@@ -146,7 +164,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                             $this->saveEmailsSentData([
                                                 'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
                                                 'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
-                                                'mgdprs_validation_key' => $emailOpts['config']['validationkey'],
+                                                'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
                                                 'mgdprs_alert_email_sent' => 1,
                                                 'mgdprs_alert_email_sent_date' => date('Y-m-d h:i:s'),
                                             ]);
@@ -170,6 +188,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     }
 
     /**
+     *
      * @param $autoDelConf
      * @return array
      */
@@ -194,7 +213,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                     $emailOpts
                                 );
                                 // check if email is already mailed for second warning
-                                $data = $this->getEmailSentByValidationKey($emailOpts['config']['validationkey']);
+                                $data = $this->getEmailSentByValidationKey($emailOpts['config']['validationKey']);
                                 if (!empty($data)) {
                                     // user was already mailed for revalidateion and did not revalidate yet
                                     // update table gdpr delete email sent
@@ -207,7 +226,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                     $this->saveEmailsSentData([
                                         'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
                                         'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
-                                        'mgdprs_validation_key' => $emailOpts['config']['validationkey'],
+                                        'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
                                         'mgdprs_alert_email_second_sent' => 1,
                                         'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
                                     ]);
@@ -226,12 +245,16 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     private function deleteSendEmailForDeletedUsers($autoDelConf)
     {
-        print_r($autoDelConf);
+        $usersToDelete = $this->getUsersForDeletion();
+        print_r($usersToDelete);
         die;
+//        print_r($autoDelConf);
+//        die;
     }
 
     /**
-     * check user sites on the auto delete config
+     * check user site if it belongs the current auto delete config
+     *
      * @param $site
      * @param $autoDeleteSiteId
      * @return bool
@@ -255,6 +278,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * check users inactive days for first warning email
+     *
      * @param $emailOpt
      * @param $alertEmailDays
      * @return bool
@@ -273,6 +297,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * check users inactive days for first warning email
+     *
      * @param $emailOpt
      * @param $alertEmailDays
      * @return bool
@@ -281,7 +306,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         $status = false;
         // compare the users inactive days to auto delete config (Alert email sent after inactivity of)
-        $usersDaysOfInactive = $this->getDaysDiff($emailOpt[self::CONFIG_KEY]['last_date'], date('Y-m-d'));
+        $usersDaysOfInactive = $this->getDaysDiff($emailOpt['config']['last_date'], date('Y-m-d'));
         // check if the day has come, 7 days before the delete days of inactivity
         if ($usersDaysOfInactive == ($alertEmailDays) - 7) {
             $status = true;
@@ -292,6 +317,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * calculate the diffrence of two dates in days
+     *
      * @param $date1
      * @param $date2
      * @return float
@@ -301,6 +327,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         return round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
     }
     /**
+     *
      * @param $validationKey
      * @return mixed
      */
@@ -360,6 +387,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * send first warning for those email are inactive for the set days
+     *
      * @param $emailSetupConfig
      * @param $email
      * @param $emailOptions
@@ -405,6 +433,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * send email
+     *
      * @param $emailFrom
      * @param $emailFromName
      * @param $emailTo
@@ -439,6 +468,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * add data on table melis_core_gdpr_delete_emails_sent
+     *
      * @param $data
      * @param null $id
      * @return int|null
@@ -450,6 +480,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * trigger an event and then get data based from main key to retrieve or with sub key to retrieve
+     *
      * @param $mvcEventName
      * @param $mainKeyToRetrieve
      * @param null $subKeyToRetrieve
@@ -480,6 +511,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * get the list of warning users in every modules that was sent through their respective listeners
+     *
      * @return array
      */
     public function getAllModulesWarningListOfUsers()
@@ -489,6 +521,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * get the list of second warning users in every modules that was sent through their respective listeners
+     *
      * @return array
      */
     public function getAllModulesSecondWarningListOfUsers()
@@ -537,10 +570,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     /**
      * replace tags on the content
+     *
      * @param array $tags
      * @param $data
      * @param $emailOptions
-     * @param $firstEmail
      * @return mixed|string
      */
     private function replaceTagsByModuleTags(array $tags, $data, $emailOptions)
@@ -554,7 +587,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // replace the reserved tag and replace the content
                 if ($dbTag == "URL") {
                     // url for revalidation of user
-                    $moduleTags['URL'] = $data->mgdpre_link . "?u=" . $emailOptions['config']['validationkey'];
+                    $moduleTags['URL'] = $data->mgdpre_link . "?u=" . $emailOptions['config']['validationKey'];
                 }
                 // look for module tags
                 if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
