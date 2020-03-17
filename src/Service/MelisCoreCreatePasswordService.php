@@ -163,7 +163,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         // Sending service start event
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_start', $arrayParameters);
 
-// Service implementation start
+        // Service implementation start
 
         $data = $this->getPasswordRequestData($arrayParameters['hash']);
         $h = '';
@@ -188,7 +188,43 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
 
         return $arrayParameters['results'];
     }
-    
+
+    /**
+     * get user data by hash
+     * @param String $hash
+     * @return boolean
+     */
+    public function getUserByHash($hash)
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_start', $arrayParameters);
+
+        // Service implementation start
+
+        $data = $this->getPasswordRequestData($arrayParameters['hash']);
+        $usr_login = '';
+        foreach($data as $val)
+        {
+            $usr_login = $val->mcp_login;
+        }
+
+        $usertbl = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $user = $usertbl->getEntryByField("usr_login",$usr_login)->current();
+
+        // Service implementation end
+
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] = $user;
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+
+
     /**
      * Checks if the username exists in the create password table
      * @param String $login
