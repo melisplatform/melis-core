@@ -23,13 +23,6 @@ interface MelisCoreGdprAutoDeleteInterface
     public function getSecondWarningListOfUsers();
 
     /**
-     * list of users that are for deletion
-     *
-     * @return mixed
-     */
-    public function getForDeleteListOfUsers();
-
-    /**
      * Return a user (its TAGS) if found in a module
      *
      * @param $validationKey
@@ -48,7 +41,8 @@ interface MelisCoreGdprAutoDeleteInterface
     /**
      * Removal of users who have missed the deadline, returns the list of users deleted with their tags
      *
+     * @param $autoDeleteConfig
      * @return mixed
      */
-    public function removeOldUnvalidatedUsers();
+    public function removeOldUnvalidatedUsers($autoDeleteConfig);
 }
