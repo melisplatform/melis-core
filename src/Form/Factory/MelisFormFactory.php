@@ -9,9 +9,9 @@
 
 namespace MelisCore\Form\Factory;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
 use MelisCore\Form\MelisForm;
 
 class MelisFormFactory implements FactoryInterface

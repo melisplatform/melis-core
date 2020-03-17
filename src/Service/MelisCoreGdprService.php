@@ -3,7 +3,7 @@
 namespace MelisCore\Service;
 
 use MelisCore\Service\MelisCoreGeneralService;
-use Zend\Http\PhpEnvironment\Response as HttpResponse;
+use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 
 class MelisCoreGdprService extends MelisCoreGeneralService {
 

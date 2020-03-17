@@ -9,16 +9,16 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\ValidatorChain;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Session\ValidatorChain;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Validator\File\IsImage;
-use Zend\File\Transfer\Adapter\Http;
-use Zend\Validator\File\Size;
-use Zend\Validator\File\Extension;
-use Zend\Validator;
+use Laminas\Validator\File\IsImage;
+use Laminas\File\Transfer\Adapter\Http;
+use Laminas\Validator\File\Size;
+use Laminas\Validator\File\Extension;
+use Laminas\Validator;
 /**
  * Platform Color Tool
  */
@@ -447,7 +447,7 @@ class PlatformSchemeController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm()
     {
@@ -455,7 +455,7 @@ class PlatformSchemeController extends AbstractActionController
         $config = $this->getServiceLocator()->get('MelisCoreConfig');
         $formConfig = $config->getItem('meliscore/forms/melis_core_platform_scheme_form');
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->getServiceLocator()->get('FormElementManager');
 
         $factory->setFormElementManager($formElements);

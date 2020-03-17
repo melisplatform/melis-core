@@ -8,11 +8,11 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Session\Container;
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
-use Zend\Json\Json;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Session\Container;
+use Laminas\Mvc\Controller\Plugin\FlashMessenger;
+use Laminas\Json\Json;
 class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, MelisCoreFlashMessengerServiceInterface
 {
     

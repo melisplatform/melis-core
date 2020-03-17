@@ -9,10 +9,10 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Session\Container;
 use MelisCore\Service\MelisCoreRightsService;
 /**
  * Platform Tool
@@ -87,7 +87,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the Edit button inside the table content (Action column)
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentActionEditAction()
     {
@@ -101,7 +101,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the Delete button inside the table content (Action column)
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentActionDeleteAction()
     {
@@ -115,7 +115,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the refresh button placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentFiltersRefreshAction()
     {
@@ -124,7 +124,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the search button placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentFiltersSearchAction()
     {
@@ -133,7 +133,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the limit button placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentFiltersLimitAction()
     {
@@ -144,7 +144,7 @@ class PlatformsController extends AbstractActionController
      * Renders the Generic form of the Platform 
      * for creating new and updating new platform
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformGenericFormAction()
     {
@@ -188,7 +188,7 @@ class PlatformsController extends AbstractActionController
     /**
      * This method return the list of core platform available
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getPlatformsAction()
     {
@@ -277,7 +277,7 @@ class PlatformsController extends AbstractActionController
      * This method saving the platform info
      * this include adding and updating platform
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function savePlatformAction() 
     {
@@ -399,7 +399,7 @@ class PlatformsController extends AbstractActionController
     /**
      * Deletion of the platform
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function deletePlatformAction()
     {

@@ -2,16 +2,16 @@
 
 namespace MelisCore\Service;
 
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MelisCoreAuthService
     extends AuthenticationService
     implements MelisCoreAuthServiceInterface, ServiceLocatorAwareInterface
 {
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
     public $serviceLocator;
 
@@ -21,7 +21,7 @@ class MelisCoreAuthService
     public function getAuthRights()
     {
         /**
-         * @var \Zend\EventManager\EventManagerInterface $e
+         * @var \Laminas\EventManager\EventManagerInterface $e
          */
         $e = $this->getServiceLocator()->get('Application')->getEventManager();
         $e->trigger('melis_core_check_user_rights', $this);
@@ -43,7 +43,7 @@ class MelisCoreAuthService
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     * @return \Laminas\ServiceManager\ServiceLocatorInterface
      */
     public function getServiceLocator()
     {
@@ -51,7 +51,7 @@ class MelisCoreAuthService
     }
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
      *
      * @return $this
      */

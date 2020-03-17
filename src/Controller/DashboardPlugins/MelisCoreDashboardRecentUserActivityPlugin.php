@@ -10,10 +10,10 @@
 namespace MelisCore\Controller\DashboardPlugins;
 
 use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Session\Container;
+use Laminas\Session\Container;
 
 class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTemplatingPlugin
 {

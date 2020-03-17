@@ -2,14 +2,14 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Sendmail;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
-use Zend\Mail\Transport\SmtpOptions;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\Sendmail;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Part as MimePart;
+use Laminas\Mail\Transport\Smtp as SmtpTransport;
+use Laminas\Mail\Transport\SmtpOptions;
 
 class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 	protected $serviceLocator;

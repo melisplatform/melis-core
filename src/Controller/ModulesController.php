@@ -9,13 +9,13 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Session\Container;
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Config\Config;
-use Zend\Config\Writer\PhpArray;
+use Laminas\Config\Config;
+use Laminas\Config\Writer\PhpArray;
 use MelisCalendar\Service\MelisCalendarService;
 /**
  * Module Management Tool
@@ -37,7 +37,7 @@ class ModulesController extends AbstractActionController
 
     /**
      * Main Tool Container
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolModulesAction()
     {
@@ -71,7 +71,7 @@ class ModulesController extends AbstractActionController
 
     /**
      * Renders the header section of the tool
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolModulesHeaderAction()
     {
@@ -88,7 +88,7 @@ class ModulesController extends AbstractActionController
 
     /**
      * Renders the content section of the tool
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolModulesContentAction()
     {

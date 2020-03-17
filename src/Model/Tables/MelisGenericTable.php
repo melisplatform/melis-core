@@ -9,16 +9,16 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Db\Sql\Select;
-use Zend\Db\Metadata\Metadata;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Predicate\PredicateSet;
-use Zend\Db\Sql\Predicate\Like;
-use Zend\Db\Sql\Predicate\Operator;
-use Zend\Db\Sql\Predicate\Predicate;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Db\Sql\Select;
+use Laminas\Db\Metadata\Metadata;
+use Laminas\Db\Sql\Where;
+use Laminas\Db\Sql\Predicate\PredicateSet;
+use Laminas\Db\Sql\Predicate\Like;
+use Laminas\Db\Sql\Predicate\Operator;
+use Laminas\Db\Sql\Predicate\Predicate;
 class MelisGenericTable implements ServiceLocatorAwareInterface
 {
 	protected $serviceLocator;
@@ -270,7 +270,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	        
 	        if(!empty($dateFilterSql)) 
 	        {
-	            $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Zend\Db\Sql\Predicate\Expression($dateFilterSql));
+	            $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
 	        }
 	        else 
 	        {

@@ -9,7 +9,7 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
+use Laminas\EventManager\EventManagerInterface;
 
 /**
  * Melis General Listener implements detach
@@ -19,7 +19,7 @@ use Zend\EventManager\EventManagerInterface;
 class MelisCoreGeneralListener 
 {
     /**
-     * @var \Zend\Stdlib\CallbackHandler[]
+     * @var \Laminas\Stdlib\CallbackHandler[]
      */
     protected $listeners = array();
     

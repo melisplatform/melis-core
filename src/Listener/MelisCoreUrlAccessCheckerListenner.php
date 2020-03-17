@@ -9,10 +9,10 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\Segment;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Router\Http\Segment;
 
 /**
  * Site Redirect to real back office listener

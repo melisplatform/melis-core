@@ -3,8 +3,8 @@
 namespace MelisCore\View\Helper\Factory;
 
 use MelisCore\View\Helper\MelisDataTableHelper;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 class MelisDataTableHelperFactory implements FactoryInterface
 {

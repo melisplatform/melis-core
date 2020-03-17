@@ -10,8 +10,8 @@
 namespace MelisCore\Service\Factory;
 
 use MelisCore\Service\MelisCoreDashboardPluginsRightsService;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 class MelisCoreDashboardPluginsRightsServiceFactory implements FactoryInterface
 {

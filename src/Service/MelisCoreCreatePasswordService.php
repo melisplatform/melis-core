@@ -3,8 +3,8 @@
 namespace MelisCore\Service;
 
 use MelisCore\Model\Tables\MelisCreatePasswordTable;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements ServiceLocatorAwareInterface, MelisCoreCreatePasswordServiceInterface
 {

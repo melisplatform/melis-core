@@ -1,12 +1,12 @@
 <?php
 namespace MelisCore;
 use PHPUnit_Framework_TestCase;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Mvc\Service\ServiceManagerConfig;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Stdlib\Hydrator\ObjectProperty;
-use Zend\Db\Adapter\Adapter;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Mvc\Service\ServiceManagerConfig;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Stdlib\Hydrator\ObjectProperty;
+use Laminas\Db\Adapter\Adapter;
 class ServiceManagerGrabber extends PHPUnit_Framework_TestCase
 {
     protected static $serviceConfig = null;
@@ -52,7 +52,7 @@ class ServiceManagerGrabber extends PHPUnit_Framework_TestCase
                 }
             }
             if(is_array($db) && !empty($db)) {
-                $config = new \Zend\Config\Config($db);
+                $config = new \Laminas\Config\Config($db);
                 $adapter = new Adapter($config->db->toArray());
                 $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), $model);
                 $tableGateway = new TableGateway($table, $adapter, null, $hydratingResultSet);

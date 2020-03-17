@@ -9,11 +9,11 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Json\Json;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Json\Json;
+use Laminas\Session\Container;
 
 /**
  * This class handles Melis CMS Flash Messenger
@@ -23,7 +23,7 @@ class MelisFlashMessengerController extends AbstractActionController
     
     /**
      * Renders the Flash Messenger view in Melis CMS 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function headerFlashMessengerAction()
     {
@@ -78,7 +78,7 @@ class MelisFlashMessengerController extends AbstractActionController
     
     /**
      * Returns the flash messages content
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getflashMessageAction()
     {

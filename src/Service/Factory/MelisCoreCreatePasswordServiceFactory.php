@@ -10,8 +10,8 @@
 namespace MelisCore\Service\Factory;
 
 use MelisCore\Service\MelisCoreCreatePasswordService;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 class MelisCoreCreatePasswordServiceFactory implements FactoryInterface
 {

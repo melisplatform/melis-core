@@ -10,10 +10,10 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Session\Container;
 
 /**
  * This class renders User Profile Management
@@ -25,7 +25,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render the user profile
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileAction()
     {
@@ -39,7 +39,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render user profile right side view
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileRightAction()
     {
@@ -53,7 +53,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render user profile tabs on right side view
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileTabsAction()
     {
@@ -67,7 +67,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render user profile left side view
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileLeftAction()
     {
@@ -100,7 +100,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render user form
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileFormAction()
     {
@@ -129,7 +129,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to update basic user information
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function updateUserInformationAction()
     {
@@ -301,7 +301,7 @@ class UserProfileController extends AbstractActionController
     /**
      * Function to check the user profile whether to show it or not
      * depending if the session exist (it will show only if the user change his / her language)
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function checkUserSessionIfExistAction()
     {

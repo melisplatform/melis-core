@@ -9,9 +9,9 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\Session\Container;
 
 use MelisCore\Service\MelisCoreRightsService;
 
@@ -23,7 +23,7 @@ class DashboardController extends AbstractActionController
 	/**
 	 * Shows the leftmenu dasboard entry point
 	 * 
-	 * @return \Zend\View\Model\ViewModel
+	 * @return \Laminas\View\Model\ViewModel
 	 */
     public function leftmenuDashboardAction()
     {

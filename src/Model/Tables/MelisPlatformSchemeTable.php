@@ -9,7 +9,7 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPlatformSchemeTable extends MelisGenericTable
 {
@@ -23,7 +23,7 @@ class MelisPlatformSchemeTable extends MelisGenericTable
      * Query scheme table by ID
      * @param $id
      * @param bool $colorsOnly
-     * @return null|\Zend\Db\ResultSet\ResultSetInterface
+     * @return null|\Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getSchemeById($id, $colorsOnly = false)
     {
@@ -48,7 +48,7 @@ class MelisPlatformSchemeTable extends MelisGenericTable
      * Query scheme table by name
      * @param $name
      * @param bool $colorsOnly
-     * @return null|\Zend\Db\ResultSet\ResultSetInterface
+     * @return null|\Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getSchemeByName($name, $colorsOnly = false)
     {
@@ -70,7 +70,7 @@ class MelisPlatformSchemeTable extends MelisGenericTable
     /**
      * Returns the currently active scheme
      * @param bool $colorsOnly
-     * @return null|\Zend\Db\ResultSet\ResultSetInterface
+     * @return null|\Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getActiveScheme($colorsOnly = false)
     {
@@ -92,7 +92,7 @@ class MelisPlatformSchemeTable extends MelisGenericTable
     /**
      * Returns the Melis default scheme
      * @param bool $colorsOnly
-     * @return null|\Zend\Db\ResultSet\ResultSetInterface
+     * @return null|\Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getDefaultScheme($colorsOnly = false)
     {

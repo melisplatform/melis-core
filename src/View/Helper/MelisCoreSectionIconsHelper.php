@@ -2,7 +2,7 @@
 
 namespace MelisCore\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 use MelisCore\Library\MelisAppConfig;
 
 class MelisCoreSectionIconsHelper extends AbstractHelper

@@ -8,8 +8,8 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 class MelisCoreImageService implements ServiceLocatorAwareInterface, MelisCoreImageServiceInterface 
 {
     const EXT_PNG = 'png';

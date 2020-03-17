@@ -9,9 +9,9 @@
 
 namespace MelisCore\Form\Factory;
 
-use Zend\Form\Element\Textarea;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\Form\Element\Textarea;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 /**
  * MelisCore TinyMCE textarea field

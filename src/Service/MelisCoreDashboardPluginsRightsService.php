@@ -2,9 +2,9 @@
 
 namespace MelisCore\Service;
 
-use Zend\Json\Json;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Json\Json;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MelisCoreDashboardPluginsRightsService implements MelisCoreRightsServiceInterface, ServiceLocatorAwareInterface
 {

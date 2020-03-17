@@ -15,7 +15,7 @@ return array(
             //                 'method' => 'POST',
             //                 'action' => $_SERVER['REQUEST_URI'],
             //             ),
-            //             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            //             'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
             //             'elements' => array(
             //                 array(
             //                     'spec' => array(
@@ -47,7 +47,7 @@ return array(
             //                 'method' => 'POST',
             //                 'action' => $_SERVER['REQUEST_URI'],
             //             ),
-            //             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            //             'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
             //             'elements' => array(
             //                 array(
             //                     'spec' => array(
@@ -98,7 +98,7 @@ return array(
             //                 'method' => 'POST',
             //                 'action' => $_SERVER['REQUEST_URI'],
             //             ),
-            //             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            //             'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
             //             'elements' => array(
             //                 array(
             //                     'spec' => array(
@@ -125,7 +125,7 @@ return array(
             //                             'name' => 'NotEmpty',
             //                             'options' => array(
             //                                 'messages' => array(
-            //                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of fillMeIn argument',
+            //                                     \Laminas\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of fillMeIn argument',
             //                                 ),
             //                             ),
             //                         ),
@@ -148,7 +148,7 @@ return array(
             //                 'method' => 'POST',
             //                 'action' => $_SERVER['REQUEST_URI'],
             //             ),
-            //             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            //             'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
             //             'elements' => array(
             //                 array(
             //                     'spec' => array(
@@ -190,7 +190,7 @@ return array(
             //                             'name' => 'NotEmpty',
             //                             'options' => array(
             //                                 'messages' => array(
-            //                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of fillMe argument',
+            //                                     \Laminas\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of fillMe argument',
             //                                 ),
             //                             ),
             //                         ),
@@ -208,7 +208,7 @@ return array(
             //                             'name' => 'NotEmpty',
             //                             'options' => array(
             //                                 'messages' => array(
-            //                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of andMe argument',
+            //                                     \Laminas\Validator\NotEmpty::IS_EMPTY => 'Please enter the value of andMe argument',
             //                                 ),
             //                             ),
             //                         ),
@@ -231,7 +231,7 @@ return array(
             //                 'method' => 'POST',
             //                 'action' => $_SERVER['REQUEST_URI'],
             //             ),
-            //             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            //             'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
             //             'elements' => array(
             //                 array(
             //                     'spec' => array(

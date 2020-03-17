@@ -2,9 +2,9 @@
 
 namespace MelisCore\Service;
 
-use Zend\Json\Json;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Json\Json;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MelisCoreRightsService implements MelisCoreRightsServiceInterface, ServiceLocatorAwareInterface
 {
@@ -21,7 +21,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     const MELIS_CMS_SITE_TOOLS = 'meliscms_site_tools';
 
     const OLD_MELISCMS_TOOLSTREE = 'meliscms_toolstree';
-    /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
+    /** @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator */
     public $serviceLocator;
     /** @var array */
     private $tools = [];
@@ -49,7 +49,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     * @return \Laminas\ServiceManager\ServiceLocatorInterface
      */
     public function getServiceLocator(): ServiceLocatorInterface
     {
@@ -57,7 +57,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     }
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
      *
      * @return $this
      */

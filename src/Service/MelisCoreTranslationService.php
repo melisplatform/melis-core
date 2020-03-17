@@ -8,10 +8,10 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\I18n\Translator\Translator;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\I18n\Translator\Translator;
+use Laminas\Stdlib\ArrayUtils;
 /**
  * Translation Service for retrieveing all the translation messages
  *

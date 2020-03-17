@@ -2,12 +2,12 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Sendmail;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\Sendmail;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Part as MimePart;
 class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, MelisCoreLostPasswordServiceInterface
 {
     public $serviceLocator;

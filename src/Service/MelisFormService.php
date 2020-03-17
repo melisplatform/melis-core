@@ -2,20 +2,20 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Form\Factory as ZendFormFactory;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Form\Factory as LaminasFormFactory;
 use MelisCore\Form\MelisForm;
 
-class MelisFormService extends ZendFormFactory implements ServiceLocatorAwareInterface
+class MelisFormService extends LaminasFormFactory implements ServiceLocatorAwareInterface
 {
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
     public $serviceLocator;
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
      *
      * @return $this
      */
@@ -26,7 +26,7 @@ class MelisFormService extends ZendFormFactory implements ServiceLocatorAwareInt
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     * @return \Laminas\ServiceManager\ServiceLocatorInterface
      */
     public function getServiceLocator()
     {

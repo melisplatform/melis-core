@@ -9,7 +9,7 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisLogTypeTransTable extends MelisGenericTable
 {

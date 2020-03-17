@@ -9,11 +9,11 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Session\Container;
 class MelisCoreMicroServiceController extends AbstractActionController
 {
     /**
@@ -333,11 +333,11 @@ class MelisCoreMicroServiceController extends AbstractActionController
     /**
      * Create a form from the configuration
      * @param $formConfig
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm($formConfig)
     {
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);

@@ -214,7 +214,7 @@ return array(
 						'id' => 'idformmeliscorelogin',
 						'method' => 'POST',
 					),
-					'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+					'hydrator'  => 'Laminas\Stdlib\Hydrator\ArraySerializable',
 					'elements' => array(  
 						array(
 							'spec' => array(

@@ -9,9 +9,9 @@
 
 namespace MelisCore\Form\Factory;
 
-use Zend\Form\Element\Checkbox;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\Form\Element\Checkbox;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 /**
  * Creates a toggle button by using a checkbox element, 
@@ -24,7 +24,7 @@ class MelisToggleButtonFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      */
     public function createService(ServiceLocatorInterface $formElementManager)
     {

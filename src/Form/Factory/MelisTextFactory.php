@@ -9,9 +9,9 @@
 
 namespace MelisCore\Form\Factory; 
 
-use Zend\Form\Element\Text;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\Form\Element\Text;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 /**
  * Melis Text Input Element
  * 
@@ -21,7 +21,7 @@ class MelisTextFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
-     * @see \Zend\ServiceManager\FactoryInterface::createService()
+     * @see \Laminas\ServiceManager\FactoryInterface::createService()
      */
     public function createService(ServiceLocatorInterface $formElementManager)
     {

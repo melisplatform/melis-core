@@ -9,11 +9,11 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
 use MelisCore\Listener\MelisCoreGeneralListener;
-use Zend\Mvc\MvcEvent;
-use Zend\Session\Container;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Session\Container;
 class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
     const INTERVAL_TO_UPDATE = 5;

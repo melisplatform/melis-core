@@ -11,11 +11,11 @@ namespace MelisCore\Controller;
 
 use DateTime;
 use MelisCore\Service\MelisCoreToolService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Validator\File\Count;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Session\Container;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Validator\File\Count;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Session\Container;
 /**
  * This class deals with the Melis Backoffice Logs
  */
@@ -24,7 +24,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool page
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolAction()
     {
@@ -39,7 +39,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Header
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolHeaderAction()
     {
@@ -54,7 +54,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Content
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolContentAction()
     {
@@ -70,7 +70,7 @@ class LogController extends AbstractActionController
      * Render Log Tool Table
      * This will generate DataTable for Listing of Logs
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableAction()
     {
@@ -93,7 +93,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table limit
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableLimitAction()
     {
@@ -104,7 +104,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Modal Container
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolModalContainerAction()
     {
@@ -121,7 +121,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Export
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolExportAction()
     {
@@ -133,7 +133,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Modal Edit Content
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolExportModalContentAction()
     {
@@ -279,7 +279,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table limit
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableDateRangeAction()
     {
@@ -290,7 +290,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table Search
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableSearchAction()
     {
@@ -301,7 +301,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table User Filter
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableUserFilterAction()
     {
@@ -364,7 +364,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table Type Filter
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableTypeFilterAction()
     {
@@ -394,7 +394,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool page Refresh Button
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableRefreshAction()
     {
@@ -443,7 +443,7 @@ class LogController extends AbstractActionController
     /**
      * Retrieving all the list of logs for DataTable
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getLogsAction()
     {
@@ -613,7 +613,7 @@ class LogController extends AbstractActionController
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_type_form','meliscore_logs_tool_log_type_form');
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $propertyForm = $factory->createForm($appConfigForm);
@@ -665,7 +665,7 @@ class LogController extends AbstractActionController
             $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
             $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_type_form','meliscore_logs_tool_log_type_form');
 
-            $factory = new \Zend\Form\Factory();
+            $factory = new \Laminas\Form\Factory();
             $formElements = $this->serviceLocator->get('FormElementManager');
             $factory->setFormElementManager($formElements);
             $propertyForm = $factory->createForm($appConfigForm);
@@ -795,11 +795,11 @@ class LogController extends AbstractActionController
     /**
      * Gets the form
      * @param formConfig
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm($formConfig)
     {
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);

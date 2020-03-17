@@ -9,9 +9,9 @@
 
 namespace MelisCore\Form\Factory;
 
-use Zend\Form\Element\Select;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\Form\Element\Select;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 class MelisSelectFactory implements FactoryInterface
 {

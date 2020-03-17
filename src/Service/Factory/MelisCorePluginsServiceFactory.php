@@ -8,8 +8,8 @@
 namespace MelisCore\Service\Factory;
 
 use MelisCore\Service\MelisCorePluginsService;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 class MelisCorePluginsServiceFactory implements FactoryInterface
 {

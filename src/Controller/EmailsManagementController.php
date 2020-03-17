@@ -9,12 +9,12 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Diactoros\UploadedFile;
-use Zend\InputFilter\FileInput;
-use Zend\InputFilter\InputFilter;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\Diactoros\UploadedFile;
+use Laminas\InputFilter\FileInput;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
 use MelisCore\Model\MelisBOEmails;
 /**
@@ -435,7 +435,7 @@ class EmailsManagementController extends AbstractActionController
         $generalProperties = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_emails_mngt_tool/forms/meliscore_emails_mngt_tool_general_properties_form','meliscore_emails_mngt_tool_general_properties_form');
         
         // Factoring Calendar event and pass to view
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $generalPropertiesForm = $factory->createForm($generalProperties);
@@ -676,7 +676,7 @@ class EmailsManagementController extends AbstractActionController
         $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $generalProperties = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_emails_mngt_tool/forms/meliscore_emails_mngt_tool_general_properties_form');
          
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $propertyForm = $factory->createForm($generalProperties);
@@ -720,8 +720,8 @@ class EmailsManagementController extends AbstractActionController
                             [
                                 'maxWidth' => 800, 'maxHeight' => 800,
                                 'messages' => [
-                                    \Zend\Validator\File\ImageSize::HEIGHT_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_height'),
-                                    \Zend\Validator\File\ImageSize::WIDTH_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_width'),
+                                    \Laminas\Validator\File\ImageSize::HEIGHT_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_height'),
+                                    \Laminas\Validator\File\ImageSize::WIDTH_TOO_BIG => $translator->translate('tr_emails_management_invalid_image_width'),
                                 ]
                             ]
                         );
@@ -733,7 +733,7 @@ class EmailsManagementController extends AbstractActionController
             //   ../melis-logo_4b3403665fea6.png,
             //   .../melis-logo_5c45147660fb7.png
             $fileInput->getFilterChain()                  // Filters are run second w/ FileInput
-                ->attach(new \Zend\Filter\File\RenameUpload(
+                ->attach(new \Laminas\Filter\File\RenameUpload(
                     array(
                         'target'    => __DIR__.'/../../../../../public/media/email-layout-logo/melis-logo.png',
                         'randomize' => true,
@@ -778,11 +778,11 @@ class EmailsManagementController extends AbstractActionController
              * */
             $codeNameError = array();
             if ($datas['boe_code_name']!=$codename){
-                $codeNameValidator = new \Zend\Validator\Db\NoRecordExists(
+                $codeNameValidator = new \Laminas\Validator\Db\NoRecordExists(
                     array(
                         'table'   => 'melis_core_bo_emails',
                         'field'   => 'boe_code_name',
-                        'adapter' => $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter')
+                        'adapter' => $this->getServiceLocator()->get('Laminas\Db\Adapter\Adapter')
                     )
                 );
 
@@ -817,7 +817,7 @@ class EmailsManagementController extends AbstractActionController
             $layoutPathError = array();
             if (!empty($datas['boe_content_layout'])){
                 // Only allow files that exist in ~both~ directories
-                $layoutPathValidator = new \Zend\Validator\File\Exists();
+                $layoutPathValidator = new \Laminas\Validator\File\Exists();
 
                 $layout = $datas['boe_content_layout'];
 
@@ -832,7 +832,7 @@ class EmailsManagementController extends AbstractActionController
 
                 if ($validLayout){
                     // Allow file with 'phtml' extension
-                    $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
+                    $layoutExtensionValidator = new \Laminas\Validator\File\Extension('phtml');
 
                     if (!$layoutExtensionValidator->isValid($layout)) {
                         $layoutPathError['boe_content_layout'] = array(

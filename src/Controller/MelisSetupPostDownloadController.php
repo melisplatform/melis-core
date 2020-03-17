@@ -9,10 +9,10 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\Container;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use MelisCore\MelisSetupInterface;
 use MelisMarketPlace\Support\MelisMarketPlace as MarketPlace;
 use MelisMarketPlace\Support\MelisMarketPlaceCmsTables as Melis;
@@ -32,7 +32,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     protected $formConfigPath = 'MelisCore/' . MarketPlace::DOWNLOAD . '/' . MarketPlace::FORM . '/melis_core_setup_user_form';
 
     /**
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function getFormAction()
     {
@@ -58,7 +58,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     }
 
     /**
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function validateFormAction()
     {
@@ -89,7 +89,7 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
     }
 
     /**
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function submitAction()
     {
@@ -325,14 +325,14 @@ class MelisSetupPostDownloadController extends AbstractActionController implemen
      *
      * @param $formConfig
      *
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm()
     {
         $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
         $form = $coreConfig->getItem($this->formConfigPath);
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($form);

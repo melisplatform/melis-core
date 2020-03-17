@@ -10,7 +10,7 @@
 namespace MelisCore\Controller\DashboardPlugins;
 
 use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingPlugin
 {
@@ -23,7 +23,7 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
     /**
      * Render Dashboard plugin to Drag and Drop Zone
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function dragdropzone()
     {

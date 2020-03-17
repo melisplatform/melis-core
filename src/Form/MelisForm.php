@@ -2,19 +2,19 @@
 
 namespace MelisCore\Form;
 
-use Zend\Form\Form;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Form\Form;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MelisForm extends Form implements ServiceLocatorAwareInterface
 {
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
     protected $serviceLocator;
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     * @return \Laminas\ServiceManager\ServiceLocatorInterface
      */
     public function getServiceLocator()
     {
@@ -22,7 +22,7 @@ class MelisForm extends Form implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
      *
      * @return $this
      */
@@ -37,7 +37,7 @@ class MelisForm extends Form implements ServiceLocatorAwareInterface
      * @param null $triggerEvent
      * @param array $params
      *
-     * @return bool|\Zend\EventManager\ResponseCollection
+     * @return bool|\Laminas\EventManager\ResponseCollection
      */
     public  function isValid($triggerEvent = null, $params = [])
     {
@@ -48,7 +48,7 @@ class MelisForm extends Form implements ServiceLocatorAwareInterface
             $data = $this->data;
 
             /**
-             * @var \Zend\EventManager\EventManagerInterface $e
+             * @var \Laminas\EventManager\EventManagerInterface $e
              */
             $e = $this->getServiceLocator()
                 ->getServiceLocator()->get('eventmanager');

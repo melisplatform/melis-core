@@ -9,10 +9,10 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Http\PhpEnvironment\Response as HttpResponse;
+use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 
 /**
  * This class renders Melis CMS
@@ -21,7 +21,7 @@ class IndexController extends AbstractActionController
 {
     /**
      * Rendering the Melis CMS interface
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function melisAction()
     {
@@ -48,7 +48,7 @@ class IndexController extends AbstractActionController
     /**
      * Shows the header section of Melis Platform
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function headerAction()
     {
@@ -103,7 +103,7 @@ class IndexController extends AbstractActionController
     /**
      * Shows the left menu of the Melis Platform interface
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function leftMenuAction()
     {
@@ -118,7 +118,7 @@ class IndexController extends AbstractActionController
     /**
      * Shows the footer of the Melis Platform interface
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function footerAction()
     {
@@ -155,7 +155,7 @@ class IndexController extends AbstractActionController
     /**
      * Shows the center zone of the Melis Platform interface
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function centerAction()
     {
@@ -170,7 +170,7 @@ class IndexController extends AbstractActionController
     /**
      * Shows the language select to change the language
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function headerLanguageAction()
     {

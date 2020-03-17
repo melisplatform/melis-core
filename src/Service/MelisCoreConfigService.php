@@ -2,9 +2,9 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Stdlib\ArrayUtils;
 
 class MelisCoreConfigService implements MelisCoreConfigServiceInterface, ServiceLocatorAwareInterface
 {

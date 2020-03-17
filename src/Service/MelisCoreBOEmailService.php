@@ -2,9 +2,9 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Db\Sql\Ddl\Column\Boolean;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Db\Sql\Ddl\Column\Boolean;
 
 class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	protected $serviceLocator;
@@ -402,7 +402,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
     	                    
     	                    if (!empty($layout)){
     	                        
-    	                        $layoutPathValidator = new \Zend\Validator\File\Exists();
+    	                        $layoutPathValidator = new \Laminas\Validator\File\Exists();
     	                         
     	                        if ($layoutPathValidator->isValid(__DIR__ .'/../../../'.$layout)) {
     	                            $layout = __DIR__ .'/../../../'.$layout;
@@ -414,7 +414,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
     	                        
     	                        if ($layoutFlag){
     	                            // Allow file with 'phtml' extension
-    	                            $layoutExtensionValidator = new \Zend\Validator\File\Extension('phtml');
+    	                            $layoutExtensionValidator = new \Laminas\Validator\File\Extension('phtml');
     	                             
     	                            if ($layoutExtensionValidator->isValid($layout)) {
     	                                $layoutFlag = TRUE;
@@ -423,8 +423,8 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
     	                        
     	                        if ($layoutFlag){
     	                            
-            	                    $view       = new \Zend\View\Renderer\PhpRenderer();
-            	                    $resolver   = new \Zend\View\Resolver\TemplateMapResolver();
+            	                    $view       = new \Laminas\View\Renderer\PhpRenderer();
+            	                    $resolver   = new \Laminas\View\Resolver\TemplateMapResolver();
             	                    $resolver->setMap(array(
             	                        'mailTemplate' => $layout,
             	                    ));
@@ -433,7 +433,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
             	                    $host = $emailCfg['host'];
 
             	                    $headerLogo = $emailCfg['logo'];
-            	                    $viewModel  = new \Zend\View\Model\ViewModel();
+            	                    $viewModel  = new \Laminas\View\Model\ViewModel();
             	                    $viewModel->setTemplate('mailTemplate')->setVariables(array(
                                         'title' => $layoutTitle,
                                         'headerLogoLink' => $host,
@@ -452,14 +452,14 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
     	                    if (empty($layout)||!$layoutFlag){
     	                        
     	                        // Layout of the email will use the Default Layout
-    	                        $view       = new \Zend\View\Renderer\PhpRenderer();
-    	                        $resolver   = new \Zend\View\Resolver\TemplateMapResolver();
+    	                        $view       = new \Laminas\View\Renderer\PhpRenderer();
+    	                        $resolver   = new \Laminas\View\Resolver\TemplateMapResolver();
     	                        $resolver->setMap(array(
     	                            'mailTemplate' => __DIR__ .'/../../view/layout/layoutEmailDefault.phtml',
     	                        ));
     	                        $view->setResolver($resolver);
     	                        
-    	                        $viewModel  = new \Zend\View\Model\ViewModel();
+    	                        $viewModel  = new \Laminas\View\Model\ViewModel();
     	                        $viewModel->setTemplate('mailTemplate')->setVariables(array(
     	                            'content' => wordwrap($message_html,FALSE),
     	                        ));

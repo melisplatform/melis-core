@@ -9,8 +9,8 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\Sql\Expression;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Expression;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPluginsTable extends MelisGenericTable
 {
@@ -23,7 +23,7 @@ class MelisPluginsTable extends MelisGenericTable
     /**
      * Get the latest plugin installed
      * @param $pluginType   ( dashboard || templating )
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
 	public function getLatestPlugin($pluginType)
     {

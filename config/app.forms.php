@@ -11,7 +11,7 @@ return array(
 						'method' => 'POST',
 						//'action' => '/melis/MelisCore/MelisAuth/authenticate',
 					),
-					'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+					'hydrator'  => 'Laminas\Stdlib\Hydrator\ArraySerializable',
 					'elements' => array(  
 						array(
 							'spec' => array(
@@ -74,7 +74,7 @@ return array(
 			            'novalidate' => 'novalidate',
 			            //'action' => '/melis/lost-password-request',
 			        ),
-			        'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+			        'hydrator'  => 'Laminas\Stdlib\Hydrator\ArraySerializable',
 			        'elements' => array(
 			            array(
 			                'spec' => array(
@@ -129,7 +129,7 @@ return array(
 			            'method' => 'POST',
 			            'novalidate' => 'novalidate',
 			        ),
-			        'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+			        'hydrator'  => 'Laminas\Stdlib\Hydrator\ArraySerializable',
 			        'elements' => array(
 			            array(
 			                'spec' => array(
@@ -183,7 +183,7 @@ return array(
                         'method' => 'POST',
                         'novalidate' => 'novalidate',
                     ),
-                    'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                    'hydrator'  => 'Laminas\Stdlib\Hydrator\ArraySerializable',
                     'elements' => array(
                         array(
                             'spec' => array(
@@ -238,7 +238,7 @@ return array(
 						'class' => 'd-md-flex flex-row justify-content-between row',
                         'method' => 'POST',
                     ),
-                    'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                    'hydrator'  => 'Laminas\Stdlib\Hydrator\ArraySerializable',
                     'elements' => array(
                         array(
                             'spec' => array(
@@ -282,7 +282,7 @@ return array(
                                     'name' => 'regex', false,
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
-                                        'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
                                 ),
@@ -300,7 +300,7 @@ return array(
                                     'name' => 'regex', false,
                                     'options' => array(
                                         'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
-                                        'messages' => array(\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
                                         'encoding' => 'UTF-8',
                                     ),
                                 ),

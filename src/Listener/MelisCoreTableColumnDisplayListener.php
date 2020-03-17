@@ -9,8 +9,8 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
 
 class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {

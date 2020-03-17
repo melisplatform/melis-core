@@ -9,10 +9,10 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
 use MelisCore\Listener\MelisCoreGeneralListener;
-use Zend\Session\Container;
+use Laminas\Session\Container;
 class MelisCoreInstallNewPlatformListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
 	

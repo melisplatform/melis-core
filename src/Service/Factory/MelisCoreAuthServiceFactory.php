@@ -9,17 +9,17 @@
 
 namespace MelisCore\Service\Factory;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\Authentication\Storage\Session;
-use Zend\Authentication\Adapter\DbTable as DbTableAuthAdapter;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\Authentication\Storage\Session;
+use Laminas\Authentication\Adapter\DbTable as DbTableAuthAdapter;
 use MelisCore\Service\MelisCoreAuthService;
 
 class MelisCoreAuthServiceFactory implements FactoryInterface
 {
 	public function createService(ServiceLocatorInterface $sl)
 	{ 
-		$dbAdapter = $sl->get('Zend\Db\Adapter\Adapter');
+		$dbAdapter = $sl->get('Laminas\Db\Adapter\Adapter');
 		$dbTableAuthAdapter  = new DbTableAuthAdapter($dbAdapter);
 		$dbTableAuthAdapter->setTableName('melis_core_user')
 				    		->setIdentityColumn('usr_login')

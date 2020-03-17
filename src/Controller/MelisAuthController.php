@@ -9,12 +9,12 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Http\Header\SetCookie;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\Container;
-use Zend\Session\SessionManager;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Header\SetCookie;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Session\Container;
+use Laminas\Session\SessionManager;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 /**
  * This class deals with authentification to Melis Platform
@@ -27,7 +27,7 @@ class MelisAuthController extends AbstractActionController
 
     /**
      * Rendering the Melis CMS interface
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function loginpageAction()
     {
@@ -65,7 +65,7 @@ class MelisAuthController extends AbstractActionController
     /**
      * Shows login form
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function loginAction()
     {
@@ -75,7 +75,7 @@ class MelisAuthController extends AbstractActionController
         $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $loginForm = $factory->createForm($appConfigForm);
         $loginDataConfig = $melisMelisCoreConfig->getItem('meliscore_login/datas');
 
@@ -129,7 +129,7 @@ class MelisAuthController extends AbstractActionController
     /**
      * Authenticate a user to the platform
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function authenticateAction()
     {
@@ -142,7 +142,7 @@ class MelisAuthController extends AbstractActionController
 
         // Creating the Zend Form to validate datas
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $loginForm = $factory->createForm($appConfigForm);
 
         if ($request->isPost()) {
@@ -205,7 +205,7 @@ class MelisAuthController extends AbstractActionController
                                 // hash_method config
                                 $hash = $melisMelisCoreConfig->getItem('/meliscore/datas/default/accounts')['hash_method'];
 
-                                $enc = new \Zend\Crypt\BlockCipher(new \Zend\Crypt\Symmetric\Mcrypt([
+                                $enc = new \Laminas\Crypt\BlockCipher(new \Laminas\Crypt\Symmetric\Mcrypt([
                                     'algo' => 'aes',
                                     'mode' => 'cfb',
                                     'hash' => $hash,
@@ -409,7 +409,7 @@ class MelisAuthController extends AbstractActionController
     /**
      * Shows logout button in header
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function headerLogoutAction()
     {
@@ -424,7 +424,7 @@ class MelisAuthController extends AbstractActionController
     /**
      * Shows identity zone in the left menu
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function identityMenuAction()
     {
@@ -484,7 +484,7 @@ class MelisAuthController extends AbstractActionController
     /**
      * Get the profile picture
      *
-     * @return \Zend\Stdlib\ResponseInterface
+     * @return \Laminas\Stdlib\ResponseInterface
      */
     public function getProfilePictureAction()
     {

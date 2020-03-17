@@ -12,10 +12,10 @@ namespace MelisCore\Controller;
 use MelisCore\Service\MelisCoreCreatePasswordService;
 use MelisCore\Service\MelisCoreUserService;
 use MelisCore\Validator\MelisPasswordValidator;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\Container;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 /**
  * User Management Tool
@@ -27,7 +27,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders the main container of the tool
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserAction()
     {
@@ -55,7 +55,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders the header section of the tool
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserHeaderAction()
     {
@@ -78,7 +78,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the refresh button placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserContentFiltersRefreshAction()
     {
@@ -87,7 +87,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the search input placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserContentFiltersSearchAction()
     {
@@ -96,7 +96,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the limit selection  placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserContentFiltersLimitAction()
     {
@@ -105,7 +105,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the status selection  placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserContentFiltersStatusAction()
     {
@@ -135,7 +135,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders the content of the tool
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserContentAction()
     {
@@ -178,7 +178,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the Edit button inside the table content (Action column)
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserContentActionRegenerateLinkAction()
     {
@@ -192,7 +192,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the Edit button inside the table content (Action column)
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserContentActionEditAction()
     {
@@ -206,7 +206,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the Delete button inside the table content (Action column)
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserContentActionDeleteAction()
     {
@@ -220,7 +220,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders as the modal container of the tool
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalContainerAction()
     {
@@ -242,7 +242,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the empty modal (no need to create a modal handler for this in app.interface)
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalEmptyAction()
     {
@@ -256,7 +256,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Handles the rights if Add Modal Content should be displayed for the user
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalHandlerNewAction()
     {
@@ -277,7 +277,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the New Form content for the modal
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderTooluserModalNewAction()
     {
@@ -299,7 +299,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Handles the rights if Edit Content should be displayed for the user
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalHandlerEditAction()
     {
@@ -321,7 +321,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the Edit Form content for the modal
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalEditAction()
     {
@@ -344,7 +344,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Handles the rights if Edit Content should be displayed for the user
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalHandlerRightsAction()
     {
@@ -365,7 +365,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Handles the rights if New User Content should be displayed for the user
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalHandlerNewRightsAction()
     {
@@ -387,7 +387,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the Edit Rights Form content for the modal
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalRightsAction()
     {
@@ -402,7 +402,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Renders to the New Rights Form content for the modal
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderToolUserModalNewRightsAction()
     {
@@ -558,7 +558,7 @@ class ToolUserController extends AbstractActionController
             $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
             $translator = $this->getServiceLocator()->get('translator');
-            /** @var \Zend\Form\Form $userAddForm */
+            /** @var \Laminas\Form\Form $userAddForm */
             $userAddForm = $melisTool->getForm('meliscore_tool_user_form_new');
             $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
             $imgService = $this->getServiceLocator()->get('MelisCoreImage');
@@ -687,7 +687,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Handles the Delete User event
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function deleteUserAction()
     {
@@ -725,7 +725,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Handles the resend user password create email event
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function generateCreatePassRequestAction()
     {
@@ -817,7 +817,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Returns the User's Info by its User ID
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getUserAction()
     {
@@ -964,7 +964,7 @@ class ToolUserController extends AbstractActionController
 
     /**
      * Returns the User's Info by its User ID
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getUsersAction()
     {
@@ -1129,7 +1129,7 @@ class ToolUserController extends AbstractActionController
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
-        /** @var \Zend\Form\Form $userUpdateForm */
+        /** @var \Laminas\Form\Form $userUpdateForm */
         $userUpdateForm = $melisTool->getForm('meliscore_tool_user_form_edit');
 
         if ($this->getRequest()->isPost()) {

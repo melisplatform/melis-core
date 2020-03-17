@@ -9,9 +9,9 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\Container;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
 
 class MelisTinyMceController extends AbstractActionController
 {
@@ -95,7 +95,7 @@ class MelisTinyMceController extends AbstractActionController
             foreach ($tmpCfg as $idx => $cfg) {
                 if ($cfg) {
                     // get the merged and additional tinyMCE configurations
-                    $tinyMCEconfig = \Zend\Stdlib\ArrayUtils::merge($tinyMCEconfig, $cfg);
+                    $tinyMCEconfig = \Laminas\Stdlib\ArrayUtils::merge($tinyMCEconfig, $cfg);
                 }
             }
 
@@ -136,7 +136,7 @@ class MelisTinyMceController extends AbstractActionController
      * in order to list only the mini-templates of the website and not
      * all of them
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getTinyTemplatesAction()
     {
@@ -188,7 +188,7 @@ class MelisTinyMceController extends AbstractActionController
     public function uploadImageAction()
     {
         $appConfigForm = [
-            'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            'hydrator'  => 'Laminas\Stdlib\Hydrator\ArraySerializable',
             'elements' => [
                 [
                     'spec' => [
@@ -199,7 +199,7 @@ class MelisTinyMceController extends AbstractActionController
             ],
         ];
         // Factoring Mynews event and pass to view
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($appConfigForm);
@@ -211,7 +211,7 @@ class MelisTinyMceController extends AbstractActionController
             mkdir($target, 0777);
 
         // File Input
-        $fileInput = new \Zend\InputFilter\FileInput('file');
+        $fileInput = new \Laminas\InputFilter\FileInput('file');
         $fileInput->setRequired(true);
         $fileInput->getFilterChain()->attachByName(
             'filerenameupload',

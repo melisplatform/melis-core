@@ -1,8 +1,8 @@
 <?php
 namespace MelisCore\Form\View\Helper;
 
-use Zend\Form\View\Helper\FormRow;
-use Zend\Form\ElementInterface;
+use Laminas\Form\View\Helper\FormRow;
+use Laminas\Form\ElementInterface;
 
 class MelisFieldRow extends FormRow
 {

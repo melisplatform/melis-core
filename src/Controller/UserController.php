@@ -9,9 +9,9 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreCreatePasswordService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 
 /**
  * This class deals with User functionalities
@@ -24,7 +24,7 @@ class UserController extends AbstractActionController
     
     /**
      * Rendering the Melis CMS interface
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLostPasswordAction() 
     {
@@ -51,7 +51,7 @@ class UserController extends AbstractActionController
 
     /**
      * Renders to the Lost Password form
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function retrievePageAction()
     {
@@ -65,7 +65,7 @@ class UserController extends AbstractActionController
         $melisLostPass = $this->getServiceLocator()->get('MelisCoreLostPassword');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
         
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
         
         $translator = $this->getServiceLocator()->get('translator');
@@ -82,7 +82,7 @@ class UserController extends AbstractActionController
     
     /**
      * Processes the lost password request 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function lostPasswordRequestAction() 
     {
@@ -137,7 +137,7 @@ class UserController extends AbstractActionController
     
     /**
      * Rendering the Melis CMS interface
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderResetPasswordAction()
     {
@@ -165,7 +165,7 @@ class UserController extends AbstractActionController
     
     /**
      * Renders to the reset password view and process it after clicking the reset button
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function resetPasswordAction() 
     {
@@ -190,7 +190,7 @@ class UserController extends AbstractActionController
         }
 
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
         
         $translator = $this->getServiceLocator()->get('translator');
@@ -206,7 +206,7 @@ class UserController extends AbstractActionController
             
                 if(strlen($password) >= 8) {
                     if(strlen($confirmPass) >= 8) {
-                        //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
+                        //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if($passValidator->isValid($password))
                         {
@@ -282,7 +282,7 @@ class UserController extends AbstractActionController
             }
         }
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
 
         $translator = $this->getServiceLocator()->get('translator');
@@ -297,7 +297,7 @@ class UserController extends AbstractActionController
 
             if(strlen($password) >= 8) {
                 if(strlen($confirmPass) >= 8) {
-                    //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
+                    //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                     $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                     if($passValidator->isValid($password))
                     {
@@ -340,7 +340,7 @@ class UserController extends AbstractActionController
 
     /**
      * Rendering the Melis CMS interface
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderGeneratePasswordAction()
     {
@@ -369,7 +369,7 @@ class UserController extends AbstractActionController
 
     /**
      * Renders to the reset password view and process it after clicking the reset button
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function generatePasswordAction()
     {
@@ -397,7 +397,7 @@ class UserController extends AbstractActionController
         $isRequestNotExpired = $melisCreatePass->isRequestExpired($login);
         $isUserExist = $melisCreatePass->isUserExist($login);
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
 
         $translator = $this->getServiceLocator()->get('translator');
@@ -414,7 +414,7 @@ class UserController extends AbstractActionController
 
                 if (strlen($password) >= 8) {
                     if (strlen($confirmPass) >= 8) {
-                        //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
+                        //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if ($passValidator->isValid($password)) {
                             // password and confirm password matching
@@ -491,7 +491,7 @@ class UserController extends AbstractActionController
             }
         }
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
 
         $translator = $this->getServiceLocator()->get('translator');
@@ -510,7 +510,7 @@ class UserController extends AbstractActionController
             if($isRequestNotExpired && $isUserExist) {
                 if (strlen($password) >= 8) {
                     if (strlen($confirmPass) >= 8) {
-                        //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
+                        //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if ($passValidator->isValid($password)) {
                             // password and confirm password matching

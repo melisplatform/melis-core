@@ -10,8 +10,8 @@
 namespace MelisCore\View\Helper\Factory;
 
 use MelisCore\View\Helper\MelisCoreSectionIconsHelper;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 class MelisCoreSectionIconsHelperFactory implements FactoryInterface
 {

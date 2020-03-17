@@ -8,12 +8,12 @@ namespace MelisCore\Controller;
  *
  */
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Form\Factory;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Form\Factory;
 use MelisCore\Service\MelisCoreGeneralService;
-use Zend\Http\PhpEnvironment\Response as HttpResponse;
+use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 
 class MelisCoreGdprController extends AbstractActionController
 {
@@ -272,11 +272,11 @@ class MelisCoreGdprController extends AbstractActionController
     /**
      * Gets the form
      * @param formConfig
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm($formConfig)
     {
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);

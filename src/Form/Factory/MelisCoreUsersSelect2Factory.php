@@ -9,9 +9,9 @@
 
 namespace MelisCore\Form\Factory;
 
-use Zend\Form\Element\Select;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Form\Element\Select;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * MelisCoreUserSelect using Select2

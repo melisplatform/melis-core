@@ -9,8 +9,8 @@
 
 namespace MelisCore\Service\Factory;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
 use MelisCore\Service\MelisCoreGeneralService;
 
 class MelisCoreGeneralServiceFactory implements FactoryInterface

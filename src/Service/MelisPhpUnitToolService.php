@@ -2,11 +2,11 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Config\Config;
-use Zend\Config\Writer\PhpArray;
-use Zend\Config\Reader\Xml;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Config\Config;
+use Laminas\Config\Writer\PhpArray;
+use Laminas\Config\Reader\Xml;
 class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
 {
     public $serviceLocator;

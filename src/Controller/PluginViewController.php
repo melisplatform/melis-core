@@ -10,10 +10,10 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\Stdlib\ArrayUtils;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\View\Model\ViewModel;
 use MelisCore\Support\MelisCore;
 
 /**
@@ -37,7 +37,7 @@ class PluginViewController extends AbstractActionController
     /**
      * Render a view
      *
-     * @param ZendView $zoneView
+     * @param LaminasView $zoneView
      *
      * @return string
      */
@@ -61,7 +61,7 @@ class PluginViewController extends AbstractActionController
      * @routeParam appconfigpath Path in the appConfig file (ex: /meliscore/interface/meliscore_header)
      * @routeParam keyview Name of the child view for further rendering
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function generateAction()
     {
@@ -217,7 +217,7 @@ class PluginViewController extends AbstractActionController
      * @param string $key Child name view
      * @param string $fullKey Path in the appConfig file
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function generateRec($key, $fullKey, $recDatas = [])
     {

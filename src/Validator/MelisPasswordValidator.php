@@ -2,8 +2,8 @@
 
 namespace MelisCore\Validator;
 
-use Zend\Validator;
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator;
+use Laminas\Validator\AbstractValidator;
 class MelisPasswordValidator extends AbstractValidator
 {
     

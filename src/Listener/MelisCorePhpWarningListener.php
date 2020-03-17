@@ -9,11 +9,11 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\Http\Segment;
-use Zend\View\Model\ViewModel;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Router\Http\Segment;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Site 404 catcher listener

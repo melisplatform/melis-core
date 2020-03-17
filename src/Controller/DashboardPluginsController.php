@@ -10,9 +10,9 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreDashboardPluginsRightsService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 /**
  * This class handles the request from AJAX call in 
@@ -23,7 +23,7 @@ class DashboardPluginsController extends AbstractActionController
     /**
      * Render Dashboard Menu
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function dashboardMenuAction()
     {
@@ -99,7 +99,7 @@ class DashboardPluginsController extends AbstractActionController
     /**
      * This render the Dashboard plugins Drag and Drop Zone
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderDashboardPluginsAction()
     {
@@ -128,7 +128,7 @@ class DashboardPluginsController extends AbstractActionController
      * This method used to generate Dashboard plugin 
      * requested from a forward() request
      * 
-     * @return \Zend\View\Model\ViewModel;
+     * @return \Laminas\View\Model\ViewModel;
      */
     public function generateDahsboardPluginAction()
     {
@@ -150,7 +150,7 @@ class DashboardPluginsController extends AbstractActionController
     /**
      * This method handles the AJAX request to generate plugin
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getPluginAction()
     {
@@ -210,7 +210,7 @@ class DashboardPluginsController extends AbstractActionController
     /**
      * This method manage saving Dashboard plugins
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function saveDashboardPluginsAction()
     {

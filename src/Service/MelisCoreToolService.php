@@ -3,11 +3,11 @@
 namespace MelisCore\Service;
 
 use ReflectionClass;
-use Zend\Http\PhpEnvironment\Response as HttpResponse;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Session\Container;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\PhpEnvironment\Response as HttpResponse;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Session\Container;
+use Laminas\View\Model\ViewModel;
 
 /**
  * This Service helps you create your tool
@@ -66,7 +66,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      *
      * @param String $formKey
      *
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     public function getForm($formKey)
     {
@@ -117,7 +117,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     * @return \Laminas\ServiceManager\ServiceLocatorInterface
      */
     public function getServiceLocator()
     {
@@ -125,7 +125,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     }
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
      *
      * @return $this
      */
@@ -138,12 +138,12 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     /**
      * Returns all form elements of the Tool
      *
-     * @return \Zend\Form\ElementInterface[]
+     * @return \Laminas\Form\ElementInterface[]
      */
     public function getForms()
     {
         $formKeys = $this->_appConfig['forms'];
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $formElements = $this->serviceLocator->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $forms = [];
@@ -235,8 +235,8 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         $viewModel = new ViewModel();
         $viewModel = $forward->dispatch($module . '\\Controller\\' . $controller, ['action' => $action]);
 
-        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
-        $html = new \Zend\Mime\Part($renderer->render($viewModel));
+        $renderer = $this->serviceLocator->get('Laminas\View\Renderer\RendererInterface');
+        $html = new \Laminas\Mime\Part($renderer->render($viewModel));
 
         // since it will return an object with private properties, change the accessibility so we can get the content data we want.
         $reflection = new ReflectionClass($html);
@@ -1065,7 +1065,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function escapeHtml($value)
     {
-        $escaper = new \Zend\Escaper\Escaper('utf-8');
+        $escaper = new \Laminas\Escaper\Escaper('utf-8');
         $value = $escaper->escapeHtml($value);
 
         return $value;

@@ -9,15 +9,15 @@
 
 namespace MelisCore\Controller\DashboardPlugins;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Model\ViewModel;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Stdlib\Parameters;
-use Zend\Session\Container;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Model\ViewModel;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Stdlib\Parameters;
+use Laminas\Session\Container;
+use Laminas\Stdlib\ArrayUtils;
 
 /**
  *  Class that handle the Dashboard plugin 
@@ -117,7 +117,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      * @param array $pluginConfig - plugin array that applies to a plugin 
      * @param string $generatePluginId - option to generate plugin id
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function render($pluginConfig = array(), $generatePluginId = false)
     {
@@ -205,7 +205,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      * 
      * @param unknown $modelVars - the view generate from interface
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function sendViewResult($modelVars)
     {
@@ -231,7 +231,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      * 
      * @param ViewModel $pluginView - plugin view
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function setPluginContainer($pluginView)
     {

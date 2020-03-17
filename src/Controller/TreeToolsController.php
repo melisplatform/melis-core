@@ -9,12 +9,12 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
 use MelisCore\Service\MelisCoreConfigService;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\Stdlib\ArrayUtils;
 
 /**
  * This class renders Melis CMS

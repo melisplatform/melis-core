@@ -2,9 +2,9 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Session\Container;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Session\Container;
 
 class MelisCoreDispatchService implements MelisCoreDispatchServiceInterface, ServiceLocatorAwareInterface
 {	
