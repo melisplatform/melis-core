@@ -60,7 +60,6 @@ class Module
 
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
             $this->checkIdentity($e);
-
         });
 
         /** @var \MelisCore\Service\MelisCoreModulesService $moduleSvc */
@@ -306,6 +305,7 @@ class Module
             include __DIR__ . '/../config/gdpr-autodelete/app.interface.php',
             include __DIR__ . '/../config/gdpr-autodelete/app.tools.php',
             include __DIR__ . '/../config/gdpr-autodelete/app.forms.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.smtp.form.php',
         ];
 
         foreach ($configFiles as $file) {

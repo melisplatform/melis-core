@@ -9,6 +9,7 @@ namespace MelisCore\Service;
  * @package MelisCore\Service
  */
 
+use MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
 use Zend\Validator\File\Exists;
@@ -51,20 +52,26 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @var MelisGdprDeleteEmailsSentTable
      */
     protected $deleteEmailsSentTable;
+    /**
+     * @var MelisGdprDeleteEmailsLogsTable
+     */
+    protected $emailsLogsTable;
 
     /**
      * MelisCoreGdprAutoDeleteService constructor.
-     *
      * @param MelisCoreGdprAutoDeleteToolService $autoDeleteToolService
      * @param MelisGdprDeleteEmailsSentTable $deleteEmailsSentTable
+     * @param MelisGdprDeleteEmailsLogsTable $emailsLogsTable
      */
     public function __construct(
         MelisCoreGdprAutoDeleteToolService $autoDeleteToolService,
-        MelisGdprDeleteEmailsSentTable $deleteEmailsSentTable
+        MelisGdprDeleteEmailsSentTable $deleteEmailsSentTable,
+        MelisGdprDeleteEmailsLogsTable $emailsLogsTable
     )
     {
         $this->gdprAutoDeleteToolService = $autoDeleteToolService;
         $this->deleteEmailsSentTable = $deleteEmailsSentTable;
+        $this->emailsLogsTable = $emailsLogsTable;
     }
     /**
      * get the list of tags in every modules that was sent through their respective listeners
@@ -467,7 +474,19 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $messageHtml,
         $messageText = null
     ) {
-
+        $smtpDataConfig = (array) $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
+        $smtpConfig = [];
+        if (!empty($smtpDataConfig)) {
+            $smtpConfig = [
+                'host'            => $smtpDataConfig['mgdpr_smtp_host'],
+                'name'            => $smtpDataConfig['mgdpr_smtp_host'],
+                'port'            => $smtpDataConfig['mgdpr_smtp_port'],
+                'connectionClass' => $smtpDataConfig['mgdpr_smtp_connection_class'],
+                'username'        => $smtpDataConfig['mgdpr_smtp_username'],
+                'password'        => $smtpDataConfig['mgdpr_smtp_password'],
+                'ssl'             => $smtpDataConfig['mgdpr_smtp_ssl'],
+            ];
+        }
         return $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
             $emailFrom,
             $emailFromName,
@@ -476,7 +495,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             $replyTo,
             $subject,
             $messageHtml,
-            $messageText
+            $messageText,
+            $smtpConfig
         );
     }
 
@@ -548,11 +568,20 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         return $this->getDataOfAnEvent(self::SECOND_WARNING_EVENT, self::SECOND_WARNING_LIST_KEY);
     }
 
+    /**
+     * check if the key is exisiting and not empty in the given array
+     *
+     * @param $key
+     * @param array $array
+     * @return bool
+     */
     private function isExists($key, array $array)
     {
         if (isset($array[$key]) && ! empty($array[$key])) {
             return true;
         }
+
+        return false;
     }
 
     /**
@@ -619,12 +648,5 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         }
 
         return $content;
-    }
-
-    private function print($data)
-    {
-        echo "<pre>";
-        print_r($data);
-        echo "</pre>";
     }
 }

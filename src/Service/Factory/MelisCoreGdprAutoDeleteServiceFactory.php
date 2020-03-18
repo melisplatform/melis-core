@@ -17,7 +17,9 @@ class MelisCoreGdprAutoDeleteServiceFactory implements FactoryInterface{
             // inject auto delete tool service
             $sl->get('MelisCoreGdprAutoDeleteToolService'),
             // inject gdpr delete emails sent
-            $sl->get('MelisGdprDeleteEmailsSent')
+            $sl->get('MelisGdprDeleteEmailsSent'),
+            // inject gdpr delete emails logs
+            $sl->get('MelisGdprDeleteEmailsLogsTable')
         );
         // set service locator
         $melisCoreGdprService->setServiceLocator($sl);

@@ -10,7 +10,8 @@ return [
                 ],
                 'js' => [
                     // GDPR Auto delete js
-                    '/MelisCore/js/tools/gdpr-autodelete.js'
+                    '/MelisCore/js/tools/gdpr-autodelete.js',
+                    '/MelisCore/js/tools/gdpr-autodelete-smtp.js'
                 ]
             ],
             'interface' => [
@@ -271,7 +272,40 @@ return [
                                                                     ]
                                                                 ]// </editor-fold>
                                                             ]
-                                                        ] // </editor-fold>
+                                                        ], // </editor-fold>
+                                                        // <editor-fold desc="GDPR Auto delete SMTP config">
+                                                        'meliscoregdpr_auto_delete_smtp_container' => [
+                                                            'conf' => [
+                                                                'id' => 'id_meliscoregdpr_auto_delete_smtp_container',
+                                                                'name' => 'SMTP',
+                                                                'melisKey' => 'meliscoregdpr_auto_delete_smtp_container',
+                                                                'icon' => 'server',
+                                                            ],
+                                                            'forward' => [
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreGdprAutoDeleteSmtp',
+                                                                'action' => 'render-content-container',
+                                                                'jscallback' => '',
+                                                                'jsdatas' => [],
+                                                            ],
+                                                            'interface' => [
+                                                                'meliscoregdpr_auto_delete_smtp_content' => [
+                                                                    'conf' => [
+                                                                        'id' => 'id_meliscoregdpr_auto_delete_smtp_content',
+                                                                        'name' => 'SMTP content',
+                                                                        'melisKey' => 'meliscoregdpr_auto_delete_smtp_content',
+                                                                    ],
+                                                                    'forward' => [
+                                                                        'module' => 'MelisCore',
+                                                                        'controller' => 'MelisCoreGdprAutoDeleteSmtp',
+                                                                        'action' => 'render-content',
+                                                                        'jscallback' => '',
+                                                                        'jsdatas' => [],
+                                                                    ],
+                                                                ]
+                                                            ]
+                                                        ]
+                                                        // </editor-fold>
                                                     ]
                                                 ]
                                             ]

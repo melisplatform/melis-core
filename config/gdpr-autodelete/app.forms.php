@@ -506,12 +506,12 @@ return [
                         // </editor-fold>
                         // <editor-fold desc="GDPR Alert email form delete">
                         'melisgdprautodelete_add_edit_alert_email_delete' => [
-                            'attributes' => array(
+                            'attributes' => [
                                 'name' => 'melisgdprautodelete_add_edit_alert_email_delete',
                                 'method' => 'POST',
                                 'action' => '',
                                 'class' => 'melisgdprautodelete_add_edit_alert_email_delete'
-                            ),
+                            ],
                             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
