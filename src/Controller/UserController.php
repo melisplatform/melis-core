@@ -360,44 +360,6 @@ class UserController extends AbstractActionController
         if (!empty($appConfigForm['datas']['login_background']))
             $background = $appConfigForm['datas']['login_background'];
 
-        /** @var MelisCoreCreatePasswordService $melisCreatePass */
-        $melisCreatePass = $this->getServiceLocator()->get('MelisCoreCreatePassword');
-
-        $rhash = $this->getHash();
-        $usr = $melisCreatePass->getUserByHash($rhash);
-        $usrLang = $usr->usr_lang_id;
-
-        $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
-        $melisUserTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisUserTable');
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
-
-        $datasLang = $melisLangTable->getEntryById($usrLang);
-
-        // If the language was found and then exists
-        if (!empty($datasLang))
-        {
-            $datasLang = $datasLang->current();
-
-            // Update session locale for melis BO
-            $container = new Container('meliscore');
-            if($container) {
-                $container['melis-lang-id'] = $usrLang;
-                if(isset($datasLang->lang_locale)){
-                    $container['melis-lang-locale'] = $datasLang->lang_locale;
-                    $container['melis-login-lang-locale'] = $datasLang->lang_locale;
-                }
-            }
-
-            // Get user id from session auth
-            $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-
-            if(empty($userAuthDatas))
-                $userAuthDatas  = new stdClass();
-
-            // Update auth user session
-            $userAuthDatas->usr_lang_id = $usrLang;
-        }
-
         $this->layout()->addChild($view, 'content');
         $this->layout()->isLogin = 1;
         $this->layout()->login_background = $background;
