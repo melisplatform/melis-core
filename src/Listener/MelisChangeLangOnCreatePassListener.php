@@ -33,11 +33,11 @@ class MelisChangeLangOnCreatePassListener implements ListenerAggregateInterface
 
         	    if (count($matches) > 1)
         	        return;
-                $route = explode('/',$uri)[2];
+                $route = isset(explode('/',$uri)[2]) ? explode('/',$uri)[2] : null;
+                $rhash = isset(explode('/',$uri)[3]) ? explode('/',$uri)[3] : null;
+                $sm = $e->getApplication()->getServiceManager();
 
         	    if($route == "generate-password"){
-                    $rhash = explode('/',$uri)[3];
-                    $sm = $e->getApplication()->getServiceManager();
 
                     /** @var MelisCoreCreatePasswordService $melisCreatePass */
                     $melisCreatePass = $sm->get('MelisCoreCreatePassword');
