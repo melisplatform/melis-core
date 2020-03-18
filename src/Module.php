@@ -87,7 +87,6 @@ class Module
             $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
 
             $eventManager->attach(new MelisCoreTableColumnDisplayListener());
-            $eventManager->attach(new MelisChangeLangOnCreatePassListener());
         }
     }
 
@@ -150,10 +149,59 @@ class Module
 
     }
 
+    public function changePasswordPageLangOverride($e){
+        // AssetManager, we don't want listener to be executed if it's not a php code
+        $uri = $_SERVER['REQUEST_URI'];
+
+        $route = isset(explode('/',$uri)[2]) ? explode('/',$uri)[2] : null;
+        $rhash = isset(explode('/',$uri)[3]) ? explode('/',$uri)[3] : null;
+        $sm = $e->getApplication()->getServiceManager();
+
+        if($route == "generate-password"){
+
+            /** @var MelisCoreCreatePasswordService $melisCreatePass */
+            $melisCreatePass = $sm->get('MelisCoreCreatePassword');
+
+            $usr = $melisCreatePass->getUserByHash($rhash);
+            if($usr){
+                $usrLang = isset($usr->usr_lang_id) ? $usr->usr_lang_id : null;
+
+                $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
+                $melisUserTable = $sm->get('MelisCore\Model\Tables\MelisUserTable');
+                $melisCoreAuth = $sm->get('MelisCoreAuth');
+
+                $datasLang = $melisLangTable->getEntryById($usrLang);
+
+
+                // If the language was found and then exists
+                if (!empty($datasLang))
+                {
+                    $datasLang = $datasLang->current();
+
+                    // Update session locale for melis BO
+                    $container = new Container('meliscore');
+                    $container['melis-lang-id'] = $usrLang;
+                    $container['melis-lang-locale'] = isset($datasLang->lang_locale) ? $datasLang->lang_locale : "EN_en";
+                    $container['melis-login-lang-locale'] = isset($datasLang->lang_locale) ? $datasLang->lang_locale : "EN_en";
+
+                    // Get user id from session auth
+                    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+                    if(!isset($userAuthDatas->usr_lang_id))
+                        $userAuthDatas  = (object) array("usr_lang_id" => '');
+
+                    // Update auth user session
+                    $userAuthDatas->usr_lang_id = $usrLang;
+                }
+            }
+        }
+    }
+
     public function createTranslations($e, $locale = 'en_EN')
     {
         $sm = $e->getApplication()->getServiceManager();
         $translator = $sm->get('translator');
+
+        $this->changePasswordPageLangOverride($e);
 
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
