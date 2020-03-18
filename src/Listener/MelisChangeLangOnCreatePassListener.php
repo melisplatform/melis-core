@@ -60,10 +60,8 @@ class MelisChangeLangOnCreatePassListener implements ListenerAggregateInterface
                         // Update session locale for melis BO
                         $container = new Container('meliscore');
                         $container['melis-lang-id'] = $usrLang;
-                        if(isset($datasLang->lang_locale)){
-                            $container['melis-lang-locale'] = $datasLang->lang_locale;
-                            $container['melis-login-lang-locale'] = $datasLang->lang_locale;
-                        }
+                        $container['melis-lang-locale'] = $datasLang->lang_locale;
+                        $container['melis-login-lang-locale'] = $datasLang->lang_locale;
 
                         // Get user id from session auth
                         $userAuthDatas =  $melisCoreAuth->getStorage()->read();
