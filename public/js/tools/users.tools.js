@@ -214,6 +214,11 @@ $(document).ready(function () {
                 toolUserManagement.deleteUser(id);
         });
 
+        $("body").on("click", '.btnUserRegenerateLink', function() {
+            var id = $(this).parents("tr").attr("id");
+            toolUserManagement.resendPasswordCreateEmail(id);
+        });
+
         $body.on("click", "#id_meliscore_tool_user_action_new_user", function () {
             var $numup = $("form#idnewusermanagement #id_n_usr_password");
                 melisCoreTool.hideAlert("#newformalert");
@@ -227,6 +232,12 @@ $(document).ready(function () {
                     melisCoreTool.exportData( '/melis/MelisCore/ToolUser/exportToCsv?filter=' + searched );
                 }
         });
+
+        $("body").on("change", "select[name=tableToolUserManagement_status]", function () {
+            console.log("triggered");
+            var tableId = $(this).parents().eq(6).find('table').attr('id');
+            $("#" + tableId).DataTable().ajax.reload();
+        });
 });
 
 // call the empty rights data and put it inside the new user treeview
@@ -238,10 +249,13 @@ function melisNewUserRights() {
 }
 
 // get the index then make it right
-window.initRetrieveUser = function () {
+window.initRetrieveUser = function(data, tblSettings) {
+    if ($('#toolUserStatusSelect').length) {
+        data.status = $('#toolUserStatusSelect').val();
+    }
     var btnDelete = $('#tableToolUserManagement tr.clsCurrent td').find(".btnUserDelete");
-        btnDelete.remove();
-}
+    btnDelete.remove();
+};
 
 var toolUserManagement = {
 
@@ -286,6 +300,35 @@ var toolUserManagement = {
                     melisCoreTool.done(".btn-danger");
                 }).fail(function() {
                     alert(translations.tr_meliscore_error_message);
+                });
+            });
+    },
+
+    resendPasswordCreateEmail: function(id) {
+
+        melisCoreTool.confirm(
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
+            translations.tr_meliscore_tool_user_resend_password_email_title,
+            translations.tr_meliscore_tool_user_resend_password_email_msg,
+            function() {
+                $.ajax({
+                    type        : 'POST',
+                    url         : '/melis/MelisCore/ToolUser/generateCreatePassRequest',
+                    data		: {id : id},
+                    dataType    : 'json',
+                    encode		: true,
+                }).done(function(data){
+                    melisCoreTool.pending(".btnUserRegenerateLink");
+                    if(data.success) {
+                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                        melisCore.flashMessenger();
+                        var el = "tr#"+id;
+                        $(el).find("span.text-success").removeClass( "text-success" ).addClass( "text-info" );
+                    }
+                    melisCoreTool.done(".btnUserRegenerateLink");
+                }).fail(function(){
+                    alert( translations.tr_meliscore_error_message );
                 });
             });
     },

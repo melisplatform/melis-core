@@ -3,20 +3,20 @@
  * Edited by Junry @ June - Sept 2018
  **/
 
-var $body = $("body");
+/* var $body = $("body");
 
-// Binding elements
-$body.on("click", "#dashboard-plugin-delete-all", function () {
-    melisDashBoardDragnDrop.deleteAllWidget($(this));
-});
+    // Binding elements
+    $body.on("click", "#dashboard-plugin-delete-all", function () {
+        melisDashBoardDragnDrop.deleteAllWidget($(this));
+    });
 
-$body.on("click", ".dashboard-plugin-delete", function () {
-    melisDashBoardDragnDrop.deleteWidget($(this));
-});
+    $body.on("click", ".dashboard-plugin-delete", function () {
+        melisDashBoardDragnDrop.deleteWidget($(this));
+    });
 
-$body.on("click", ".dashboard-plugin-refresh", function () {
-    melisDashBoardDragnDrop.refreshWidget($(this));
-});
+    $body.on("click", ".dashboard-plugin-refresh", function () {
+        melisDashBoardDragnDrop.refreshWidget($(this));
+    }); */
 
 var melisDashBoardDragnDrop = {
 
@@ -45,14 +45,13 @@ var melisDashBoardDragnDrop = {
         this.$body              = $("body");
         this.$document          = $(document);
         this.$window            = $(window);
-        //this.$menu              = $(".sideMenu li a");
         this.$gs                = this.$body.find(".grid-stack");
         this.$gsItem            = this.$gs.find(".grid-stack-item").length;
         this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
         this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
         this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
         this.$box               = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
-        this.$deleteAllWidget   = this.$body.find("#dashboard-plugin-delete-all"); //$dbMsg      = $body.find("#"+activeTabId + " .melis-core-dashboard-msg");
+        this.$deleteAllWidget   = this.$body.find("#dashboard-plugin-delete-all");
         this.$dbMsg             = this.$body.find("#"+activeTabId + " " + this.melisDashboardMsg);
 
         // plugin sidebar
@@ -65,6 +64,7 @@ var melisDashBoardDragnDrop = {
     },
     // set .grid-stack options
     gsSetOptions: function() {
+        var self = this;
         var options = {
             cellHeight: 80,
             verticalMargin: 20,
@@ -76,9 +76,9 @@ var melisDashBoardDragnDrop = {
                 scroll: true
             },
             handle: this.gsOptHandle
-        };
+        }
 
-        this.$gs.gridstack(options);
+        self.$gs.gridstack(options);
     },
     // adjust grid w/h values
     setAdjustGridMeasurements: function() {
@@ -768,11 +768,7 @@ var melisDashBoardDragnDrop = {
     }
 };
 
-$(function () {
-    var dnd         = melisDashBoardDragnDrop;
-        // init
-        dnd.init();
-    
+(function($) {   
     var $body       = $("body"),
         gsi         = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
         $pluginBtn  = $body.find("#melisDashBoardPluginBtn"),
@@ -785,6 +781,9 @@ $(function () {
         minWidth    = $gs.data("min-width"),
         maxWidth    = $gs.data("max-width");
 
+        // init
+        melisDashBoardDragnDrop.init();
+
         // check if any .grid-stack-item is found, hide $dbMsg
         if ( gsi > 0 ) {
             $dbMsg.hide();
@@ -794,7 +793,7 @@ $(function () {
         }
 
         // .select2-container width 100% specific for latest comments plugin on document ready
-        dnd.latestCommentsPluginUIRes();
+        melisDashBoardDragnDrop.latestCommentsPluginUIRes();
 
         // animate to full width size of #grid1
         $body.on("click", "#dashboard-plugin-delete-all", function() {
@@ -812,4 +811,20 @@ $(function () {
 
         // display .grid-stack width in pixels on document load
         $gs.css("width", $gs.width());
-});
+
+        /**
+         * gridstack
+         * Binding elements
+         */
+        $body.on("click", "#dashboard-plugin-delete-all", function() {
+            melisDashBoardDragnDrop.deleteAllWidget($(this));
+        });
+
+        $body.on("click", ".dashboard-plugin-delete", function() {
+            melisDashBoardDragnDrop.deleteWidget($(this));
+        });
+
+        $body.on("click", ".dashboard-plugin-refresh", function() {
+            melisDashBoardDragnDrop.refreshWidget($(this));
+        });
+})(jQuery);

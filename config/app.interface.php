@@ -32,7 +32,7 @@ return array(
                     'emails' => array(
                         'active' => 1,
                     ),
-
+                    'pwd_request_expiry' => 1440, //minutes (1440 min = 24 hrs)
                     'export' => array(
                         'csv' => array(
                             'separator' => ',',
@@ -156,8 +156,6 @@ return array(
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Responsive/css/responsive.bootstrap.css',
                     '/MelisCore/assets/components/modules/admin/tables/datatables/assets/extensions/Buttons/css/buttons.bootstrap.css', */
 
-
-
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
                     '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
@@ -200,6 +198,7 @@ return array(
                 'js' => array(
                     '/melis/get-translations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
+                    '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
@@ -235,10 +234,10 @@ return array(
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
                     '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 
-                    '/MelisCore/js/core/tabExpander.js',
-                    '/MelisCore/js/core/melisSidebar.js',
-                    '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
                     '/MelisCore/js/core/melisCore.js',
+                    '/MelisCore/js/core/tabExpander.js',
+                    '/MelisCore/js/rightsFancytree/rightsFancytreeInit.js',
+                    '/MelisCore/js/core/melisSidebar.js',
                     '/MelisCore/js/core/melisHelper.js',
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/tools/users.tools.js',
@@ -794,6 +793,80 @@ return array(
                     'conf' => array(
                         'id' => 'id_meliscore_login_footer',
                         'melisKey' => 'meliscore_reset_password_footer'
+                    ),
+                    'forward' => array(
+                        'module' => 'MelisCore',
+                        'controller' => 'Index',
+                        'action' => 'footer',
+                        'jscallback' => '',
+                        'jsdatas' => array()
+                    ),
+                ),
+            ),
+        ),
+        'meliscore_generate_password' => array(
+            'conf' => array(
+                'rightsDisplay' => 'none',
+            ),
+            'datas' => array(
+                'login_background' => 'MelisCore/images/login/melis-blackboard.jpg',
+                'generate_password_logo' => '/MelisCore/images/login/melis-box.png',
+            ),
+            'interface' => array(
+                'meliscore_generate_password_header' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_generate_password_header',
+                        'melisKey' => 'meliscore_generate_password_header'
+                    ),
+                    'forward' => array(
+                        'module' => 'MelisCore',
+                        'controller' => 'Index',
+                        'action' => 'header',
+                        'jscallback' => '',
+                        'jsdatas' => array()
+                    ),
+                    'interface' => array(
+                        'meliscore_headerlogin_language' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_header_language',
+                                'melisKey' => 'meliscore_headerlogin_language'
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'Language',
+                                'action' => 'headerLanguage',
+                                'jscallback' => '',
+                                'jsdatas' => array('variable2' => 'titi')
+                            ),
+                        ),
+                    ),
+                ),
+
+                'meliscore_generate_password_center' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_generate_password_center',
+                        'melisKey' => 'meliscore_generate_password_center'
+                    ),
+                    'interface' => array(
+                        'meliscore_generate_password_form' => array(
+                            'conf' => array(
+                                'id' => 'id_meliscore_generate_password_form',
+                                'melisKey' => 'meliscore_generate_password_form',
+                            ),
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'User',
+                                'action' => 'generate-password',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                        ),
+                    ),
+                ),
+                'meliscore_generate_password_footer' => array(
+                    'conf' => array(
+                        'id' => 'id_meliscore_login_footer',
+                        'melisKey' => 'meliscore_generate_password_footer'
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',

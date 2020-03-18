@@ -23,6 +23,7 @@ class MelisAuthController extends AbstractActionController
 {
     const ROLE_ID_CUSTOM = 1;
     const USER_INACTIVE = 0;
+    const USER_ACTIVE = 1;
 
     /**
      * Rendering the Melis CMS interface
@@ -240,7 +241,7 @@ class MelisAuthController extends AbstractActionController
                     }
 
                     // If user is active
-                    if ($userData->usr_status != self::USER_INACTIVE) {
+                    if ($userData->usr_status == self::USER_ACTIVE) {
                         if (!$needReset) {
                             $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
                                 ->setCredential($password);

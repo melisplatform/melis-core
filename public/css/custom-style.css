@@ -536,6 +536,28 @@ div.row, ul.row {
 .tab-preview .content-cont {
   padding: 15px;
 }
+
+.dtActionCls div .btnUserRegenerateLink {
+  padding-left: .7em;
+  padding-right: .7em;
+}
+.btnUserRegenerateLink:hover > .glyphicons.message_lock i:before {
+  color: #fff;
+}
+.btnUserRegenerateLink > .glyphicons.message_lock {
+  display: block;
+  padding: 0;
+}
+.btnUserRegenerateLink > .glyphicons.message_lock i:before {
+  content: "\E129";
+  color: #466baf;
+  font-size: 20px;
+  position: relative;
+  top: auto;
+  left: auto;
+  text-align: center;
+  display: block;
+}
 /* user management */
 .userimage {
   text-align: center;

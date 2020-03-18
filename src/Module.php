@@ -9,6 +9,7 @@
 
 namespace MelisCore;
 
+use MelisCore\Listener\MelisChangeLangOnCreatePassListener;
 use MelisCore\Listener\MelisCoreDashboardPluginRightsTreeViewListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
@@ -86,6 +87,7 @@ class Module
             $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
 
             $eventManager->attach(new MelisCoreTableColumnDisplayListener());
+            $eventManager->attach(new MelisChangeLangOnCreatePassListener());
         }
     }
 
@@ -219,6 +221,8 @@ class Module
             'melis-backoffice/get-platform-color-css',
             'melis-backoffice/reset-old-password',
             'melis-backoffice/webpack_builder',
+            'melis-backoffice/generate-password',
+            'melis-backoffice/create-password',
         ];
         if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli') {
             return true;

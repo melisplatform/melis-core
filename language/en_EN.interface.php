@@ -112,6 +112,10 @@ return [
     'tr_meliscore_tool_user_col_remove_picture' => "Remove Photo",
 
     //USER PROFILE MANAGEMENT
+    'tr_meliscore_user_status_inactive' => 'Inactive',
+    'tr_meliscore_user_status_active' => 'Active',
+    'tr_meliscore_user_status_pending' => 'Pending',
+
     'tr_meliscore_user_profile' => 'User Profile Management',
     'tr_meliscore_user_profile_success_info' => 'Profile successfully updated',
     'tr_meliscore_user_profile_failed_info' => 'Unable to update profile',
@@ -141,6 +145,8 @@ return [
     'tr_meliscore_tool_user_invalid_email' => 'Invalid email address',
     'tr_meliscore_tool_user_add' => 'Add',
     'tr_meliscore_tool_user_update' => 'Save',
+    'tr_meliscore_tool_user_resend_password_email_title' => 'User password',
+    'tr_meliscore_tool_user_resend_password_email_msg' => 'Are you sure you want to resend the password creation email?',
     'tr_meliscore_tool_user_reset_rights' => 'Reset rights',
     'tr_meliscore_tool_user_reset_rights_xs' => 'Reset',
     'tr_meliscmsnews_common_label_reset_rights_msg' => 'Are you sure to reset the rights of this user? <br>This will close access to most functionalities of the platform and you will have to set the new rights manually.',
@@ -173,7 +179,13 @@ return [
 
     // Create Password Email
     'tr_meliscore_email_create_password_Subject' => 'Password Creation',
-    'tr_meliscore_email_create_password_html_Content' => '<p>Hi [NAME],</p><p>An account has been created for you on Melis Platform.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Password : [PASSWORD]</p>',
+    'tr_meliscore_email_create_password_html_Content' => '<p>Hi [NAME],</p><p>An account has been created for you on Melis Platform.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Please click this <a title="link" href="[URL]">link</a>&nbsp; to create your password.</p>',
+    'tr_meliscore_generate_password_page_header' => 'Password Creation',
+    'tr_meliscore_generate_password_button' => 'Create Password',
+    'tr_meliscore_common_regenerate_link' => 'Resend password creation email',
+    'tr_meliscore_tool_resend_password_create_email_title' => 'Password creation',
+    'tr_meliscore_tool_resend_password_create_email_ok' => 'Password creation email sent successfully',
+    'tr_meliscore_tool_resend_password_create_email_ko' => 'Password creation email sending failed',
 
     // error
     'tr_meliscore_error_An error occurred' => 'Une erreur est survenue',
@@ -208,6 +220,8 @@ return [
     'tr_meliscore_login_header' => 'Login to your Account',
 
     'tr_meliscore_common_choose' => 'Choose',
+
+    'tr_meliscore_tool_user_password_request_invalid' => 'Oops, seems like the link is not valid anymore, please contact the admin of the platform to generate a new link.',
 
     // empty flash messenger text
     'tr_meliscore_no_notificaions' => 'You don\'t have any notification at the moment.',
