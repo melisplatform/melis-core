@@ -9,6 +9,7 @@
 
 namespace MelisCore;
 
+use MelisCore\Listener\MelisChangeLangOnCreatePassListener;
 use MelisCore\Listener\MelisCoreDashboardPluginRightsTreeViewListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
@@ -86,6 +87,7 @@ class Module
             $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
 
             $eventManager->attach(new MelisCoreTableColumnDisplayListener());
+            $eventManager->attach(new MelisChangeLangOnCreatePassListener());
         }
     }
 
