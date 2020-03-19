@@ -42,6 +42,13 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     const VALIDATION_KEY          = "validationKey";
     const CONFIG_KEY              = "config";
     const LANG_KEY                = "lang";
+    /*
+     * logs type
+     */
+    const LANG_KEY_NOT_FOUND = "lang-key-not-found";
+    const TAGS_ERROR_LOG = "tags-error-log";
+    const EMAIL_CONTENT_ERROR_LOG = "email-content-error-log";
+    const TECHNICAL_ISSUE = "technical-issue";
 
     /**
      * @var
@@ -427,7 +434,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $first
      * @return array
      */
-    public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING , $first = false )
+    public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING , $first = true )
     {
         $response = [];
         // check config key is present
@@ -440,38 +447,133 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $alertEmailData = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], $type, $langId);
                 //  get the link of page id
                 $alertEmailData->mgdpre_link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
-                // send email
+                // add suffix to email subject indication of email if it is first or second
+                if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
+                    // default is first
+                    $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1ˢᵗ)";
+                    if (!$first) {
+                        $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2ⁿᵈ)";
+                    }
+                }
+                 // send email
                 $this->sendEmail(
                     $emailSetupConfig['mgdprc_email_conf_from_email'],
                     $emailSetupConfig['mgdprc_email_conf_from_name'],
                     $email,
                     null,
                     $emailSetupConfig['mgdprc_email_conf_reply_to'],
-                    $alertEmailData->mgdpre_subject . (($first) ? " (1ˢᵗ)" : " (2ⁿᵈ)"),
+                    $alertEmailData->mgdpre_subject,
                     $this->getEmailLayoutContent(
                         $emailSetupConfig,
-                        $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions)
+                        $this->replaceTagsByModuleTags(
+                            explode(',', $alertEmailData->mgdpre_email_tags),
+                            $alertEmailData,
+                            $emailOptions,
+                            $emailSetupConfig
+                        )
                     ),
-                    $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions)
+                    $this->replaceTagsByModuleTags(
+                        explode(',', $alertEmailData->mgdpre_email_tags),
+                        $alertEmailData,
+                        $emailOptions,
+                        $emailSetupConfig
+                    )
                 );
             } else {
-                // logs lang id not present
+                // logs
+                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, self::LANG_KEY_NOT_FOUND, MelisGdprDeleteEmailsTable::EMAIL_WARNING, $first);
             }
-        } else {
-            // logs config key not present
-
         }
 
         return $response;
     }
 
-    public function saveGdprAutoDeleteLogs($data)
+    private function saveGdprAutoDeleteLogs($data, $email, $logType, $emailType, $firstEmail)
     {
         if (is_array($data) && $data) {
+            // get error message
+            $errorMessage = $this->getErrorMessage($logType);
+            // prepare data to save
+            // set some required fields
+            $tmpDataToSave = [
+                'mgdprl_site_id' => $data['mgdprc_site_id'],
+                'mgdprl_module_name' => $data['mgdprc_module_name'],
+                'mgdprl_log_date' => date('Y-m-d h:i:s')
+            ];
+            if (!empty($errorMessage)) {
+                // errors | ko
+                if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
+                    if ($firstEmail) {
+                        // set to true
+                        $tmpDataToSave['mgdprl_warning1_ko'] = true;
+                        // set log error message
+                        $tmpDataToSave['mgdprl_warning1_ko_log'] = $email . "/ " . $errorMessage;
+                    } else {
+                        // set to true
+                        $tmpDataToSave['mgdprl_warning2_ko'] = true;
+                        // set log error message
+                        $tmpDataToSave['mgdprl_warning2_ko_log'] = $email . "/ " . $errorMessage;
+                    }
+                } else if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
+                    // set to true
+                    $tmpDataToSave['mgdprl_delete_ko'] = true;
+                    // set log error message
+                    $tmpDataToSave['mgdprl_delete_ko_log'] = $email . "/ " . $errorMessage;
+                }
+            } else {
+                if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
+                    if ($firstEmail) {
+                        // set to true
+                        $tmpDataToSave['mgdprl_warning1_ko'] = true;
+                        // set log error message
+                        $tmpDataToSave['mgdprl_warning1_ko_log'] = $email . "/ " . $errorMessage;
+                    } else {
+                        // set to true
+                        $tmpDataToSave['mgdprl_warning2_ko'] = true;
+                        // set log error message
+                        $tmpDataToSave['mgdprl_warning2_ko_log'] = $email . "/ " . $errorMessage;
+                    }
+                } else if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
+                    // set to true
+                    $tmpDataToSave['mgdprl_delete_ko'] = true;
+                    // set log error message
+                    $tmpDataToSave['mgdprl_delete_ko_log'] = $email . "/ " . $errorMessage;
+                }
+            }
 
+            // save logs
+            $this->emailsLogsTable->save($tmpDataToSave);
         }
     }
-    
+
+    /**
+     * @param $type
+     * @return string
+     */
+    private function getErrorMessage($type)
+    {
+        $errorMessage = "";
+
+        switch ($type) {
+            case self::LANG_KEY_NOT_FOUND:
+                $errorMessage = "Unavailable language of the user";
+                break;
+            case self::TAGS_ERROR_LOG:
+                $errorMessage = "Not all tags are filled";
+                break;
+            case self::EMAIL_CONTENT_ERROR_LOG:
+                $errorMessage = "No email content provided in asked language";
+                break;
+            case self::TECHNICAL_ISSUE:
+                $errorMessage = "Technical issue";
+                break;
+            default:break;
+        }
+
+        return $errorMessage;
+    }
+
+
     /**
      * send email
      *
@@ -642,9 +744,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param array $tags
      * @param $data
      * @param $emailOptions
+     * @param $setupEmailConfig
      * @return mixed|string
      */
-    private function replaceTagsByModuleTags(array $tags, $data, $emailOptions)
+    private function replaceTagsByModuleTags(array $tags, $data, $emailOptions, $setupEmailConfig)
     {
         $tagsNotFoundOnModule = [];
         $moduleTags = $emailOptions['tags'];
@@ -668,5 +771,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         }
 
         return $content;
+    }
+
+    private function getTranslation()
+    {
+        return $this->getServiceLocator()->get('translator');
     }
 }

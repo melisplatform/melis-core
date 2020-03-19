@@ -81,6 +81,23 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
+    public function getGdprDeleteEmailsLogs($siteId, $module, $date)
+    {
+        // table selection query
+        $select = $this->tableGateway->getSql()->select();
+        // columns to select
+        $select->columns(array('*'));
+        // site filter
+        if ($siteId) {
+            $select->where->equalTo('mgdprl_site_id', $siteId);
+        }
+        // module filter
+        if ($module) {
+            $select->where->equalTo('mgdprl_module_name', $module);
+        }
+
+        return $this->tableGateway->selectWith($select);
+    }
     /**
      * get warning/deleted email logs by siteId and module name
      * @param $siteId
