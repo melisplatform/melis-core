@@ -279,7 +279,7 @@ return [
                                                                 'id' => 'id_meliscoregdpr_auto_delete_smtp_container',
                                                                 'name' => 'SMTP',
                                                                 'melisKey' => 'meliscoregdpr_auto_delete_smtp_container',
-                                                                'icon' => 'server',
+                                                                'icon' => 'transfer',
                                                             ],
                                                             'forward' => [
                                                                 'module' => 'MelisCore',

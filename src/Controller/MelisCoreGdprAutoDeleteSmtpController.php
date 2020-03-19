@@ -76,6 +76,10 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
                 $formData = $form->getData();
                 // check if id is present
                 if (isset($formData['mgdpr_smtp_id']) && !empty($formData['mgdpr_smtp_id'])) {
+                    // remove field when it's empty to avoid password update
+                    if (empty($formData['mgdpr_smtp_password'])) {
+                        unset($formData['mgdpr_smtp_password']);
+                    }
                     // update and set id for logs
                     $id = $this->getGdprAutoDeleteSmtpTable()->save($formData, $formData['mgdpr_smtp_id']);
                 } else {

@@ -44,6 +44,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     const LANG_KEY                = "lang";
 
     /**
+     * @var
+     */
+    protected $logs = [];
+
+    /**
      * @var MelisCoreGdprAutoDeleteToolService
      */
     protected $gdprAutoDeleteToolService;
@@ -165,7 +170,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                                 // merge tags
                                                 $this->mergeTagsConfig($autoDelConf),
                                                 $email,
-                                                $emailOpts
+                                                $emailOpts,
+                                                null,
+                                                true
                                             );
                                             // update the table melis_core_gdpr_delete_emails_sent
                                             $this->saveEmailsSentData([
@@ -182,12 +189,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                 }
                             }
                         }
-                    } else {
-                        $message = "Error logs no inactivity days was set";
-                    }
-                } else {
-                    $message = "Logs Alert email is off";
-                }
+                    } // inactive days set
+                } // alert email is on
             }
         }
 
@@ -214,15 +217,17 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                             // check users inactive days
                             if ($this->checkUsersInactiveDays7DaysBeforeDeadline($emailOpts, $autoDelConf['mgdprc_delete_days'])) {
                                 // send email
-                                $this->prepareSendWarningEmail(
-                                    $this->mergeTagsConfig($autoDelConf),
-                                    $email,
-                                    $emailOpts
-                                );
                                 // check if email is already emailed for second warning
                                 $data = $this->getEmailSentByValidationKey($emailOpts['config']['validationKey']);
-                                if (!empty($data)) {
-                                    // user was already mailed for revalidateion and did not revalidate yet
+                                if (!empty($data) && !$data->mgdprs_alert_email_second_sent) {
+                                    // user was already mailed for revalidation and did not revalidate the account
+                                    // send email
+                                    $this->prepareSendWarningEmail(
+                                    // merge tags
+                                        $this->mergeTagsConfig($autoDelConf),
+                                        $email,
+                                        $emailOpts
+                                    );
                                     // update table gdpr delete email sent
                                     $this->saveEmailsSentData([
                                         'mgdprs_alert_email_second_sent'      => 1,
@@ -230,6 +235,13 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                     ], $data->mgdprs_id);
                                 } else {
                                     // email of the user have not yet emailed
+                                    // send email
+                                    $this->prepareSendWarningEmail(
+                                    // merge tags
+                                        $this->mergeTagsConfig($autoDelConf),
+                                        $email,
+                                        $emailOpts
+                                    );
                                     // add new entry
                                     $this->saveEmailsSentData([
                                         'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
@@ -244,8 +256,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     }
                 }
             }
-        } else {
-            $message = "Logs Alert email is off";
         }
 
         return $response;
@@ -328,6 +338,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $status = false;
         // compare the users inactive days to auto delete config (Alert email sent after inactivity of)
         $usersDaysOfInactive = $this->getDaysDiff($emailOpt['config']['last_date'], date('Y-m-d'));
+
         // check if the day has come, 7 days before the delete days of inactivity
         if ($usersDaysOfInactive == ($alertEmailDays) - 7) {
             $status = true;
@@ -413,9 +424,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $email
      * @param $emailOptions
      * @param $type
+     * @param $first
      * @return array
      */
-    public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING )
+    public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING , $first = false )
     {
         $response = [];
         // check config key is present
@@ -435,7 +447,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     $email,
                     null,
                     $emailSetupConfig['mgdprc_email_conf_reply_to'],
-                    $alertEmailData->mgdpre_subject,
+                    $alertEmailData->mgdpre_subject . (($first) ? " (1ˢᵗ)" : " (2ⁿᵈ)"),
                     $this->getEmailLayoutContent(
                         $emailSetupConfig,
                         $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions)
@@ -447,11 +459,19 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             }
         } else {
             // logs config key not present
+
         }
 
         return $response;
     }
 
+    public function saveGdprAutoDeleteLogs($data)
+    {
+        if (is_array($data) && $data) {
+
+        }
+    }
+    
     /**
      * send email
      *
