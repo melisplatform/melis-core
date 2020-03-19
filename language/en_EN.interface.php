@@ -98,7 +98,7 @@ return [
     'tr_meliscore_tool_user_col_admin' => 'Admin',
     'tr_meliscore_tool_user_col_admin tooltip' => 'Give administrator attributes to this account which will allow the user to visualize some contents without limitation and depending on the tool.',
     'tr_meliscore_tool_user_col_password' => 'Password',
-    'tr_meliscore_tool_user_col_password tooltip' => 'User password (must be of 8 characters minimum and contain at least a letter and a number)',
+    'tr_meliscore_tool_user_col_password tooltip' => 'User password (must be of 12 characters minimum and contain at least a letter and a number)',
     'tr_meliscore_tool_user_col_confirm_password' => 'Confirm password',
     'tr_meliscore_tool_user_col_confirm_password tooltip' => 'Password confirmation of the user',
     'tr_meliscore_tool_user_modal_empty' => 'No access',

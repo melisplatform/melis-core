@@ -206,8 +206,8 @@ class UserController extends AbstractActionController
             $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
             $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
             
-                if(strlen($password) >= 8) {
-                    if(strlen($confirmPass) >= 8) {
+                if(strlen($password) >= 12) {
+                    if(strlen($confirmPass) >= 12) {
                         //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if($passValidator->isValid($password))
@@ -297,8 +297,8 @@ class UserController extends AbstractActionController
             $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
             $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
 
-            if(strlen($password) >= 8) {
-                if(strlen($confirmPass) >= 8) {
+            if(strlen($password) >= 12) {
+                if(strlen($confirmPass) >= 12) {
                     //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                     $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                     if($passValidator->isValid($password))
@@ -413,8 +413,8 @@ class UserController extends AbstractActionController
                 $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
                 $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
 
-                if (strlen($password) >= 8) {
-                    if (strlen($confirmPass) >= 8) {
+                if (strlen($password) >= 12) {
+                    if (strlen($confirmPass) >= 12) {
                         //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if ($passValidator->isValid($password)) {
@@ -509,8 +509,8 @@ class UserController extends AbstractActionController
             $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
 
             if($isRequestNotExpired && $isUserExist) {
-                if (strlen($password) >= 8) {
-                    if (strlen($confirmPass) >= 8) {
+                if (strlen($password) >= 12) {
+                    if (strlen($confirmPass) >= 12) {
                         //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if ($passValidator->isValid($password)) {

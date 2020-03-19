@@ -1217,8 +1217,8 @@ class ToolUserController extends AbstractActionController
                 // check if the user exists
                 if ($userInfo) {
                     if (!empty($password) || !empty($confirmPass)) {
-                        if (strlen($password) >= 8) {
-                            if (strlen($confirmPass) >= 8) {
+                        if (strlen($password) >= 12) {
+                            if (strlen($confirmPass) >= 12) {
                                 $passValidator = new MelisPasswordValidator();
                                 if ($passValidator->isValid($password)) {
                                     // password and confirm password matching
