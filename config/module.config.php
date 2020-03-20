@@ -90,6 +90,19 @@ return array(
                             ),
                         ),
                     ),
+                    'renew-password' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => 'renew-password[/:rhash]',
+                            'constraints' => array(
+                                'rhash' => '[a-f0-9]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'MelisCore\Controller\User',
+                                'action' => 'renderRenewPassword',
+                            ),
+                        ),
+                    ),
                     'create-password' => array(
                         'type' => 'Segment',
                         'options' => array(

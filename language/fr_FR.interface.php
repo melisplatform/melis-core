@@ -182,12 +182,17 @@ return [
     // Create Password Email
     'tr_meliscore_email_create_password_Subject' => 'Demande de création de mot de passe',
     'tr_meliscore_email_create_password_html_Content' => '<p>Bonjour [NAME],</p><p>Vous disposez d\'un compte sur Melis Platform.</p><p>Account&nbsp;Details:</p><p>Email Address : [EMAIL]</p><p>Login : [LOGIN]</p><p>Veuillez cliquer sur ce <a href="[URL]">lien</a> pour créer votre mot de passe.</p>',
-    'tr_meliscore_generate_password_page_header' => 'Création mot de passe',
+    'tr_meliscore_generate_password_page_header' => 'Créer mot de passe',
     'tr_meliscore_generate_password_button' => 'Créer mot de passe',
     'tr_meliscore_common_regenerate_link' => 'Renvoyer l&#x27;email de création de mot de passe',
     'tr_meliscore_tool_resend_password_create_email_title' => 'Création mot de passe',
     'tr_meliscore_tool_resend_password_create_email_ok' => 'Email de création de mot de passe envoyé avec succès',
     'tr_meliscore_tool_resend_password_create_email_ko' => 'Erreur de l\'envoi de l\'email de création de mot de passe',
+
+    // Create Password Email
+    'tr_meliscore_renew_password_page_header' => 'Mot de passe expiré',
+    'tr_meliscore_renew_password_page_msg' => 'Votre mot de passe a expiré. Veuillez renouveler votre mot de passe.',
+    'tr_meliscore_renew_password_button' => 'renouveler le mot de passe',
         
     // error
     'tr_meliscore_error_An error occurred' => 'Une erreur est survenue',

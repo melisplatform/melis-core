@@ -9,6 +9,7 @@
 
 namespace MelisCore\Controller;
 
+use MelisCore\Service\MelisCoreCreatePasswordService;
 use Zend\Http\Header\SetCookie;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
@@ -175,6 +176,8 @@ class MelisAuthController extends AbstractActionController
                     $md5Regex = '/^[a-f0-9]{32}$/';
                     // @var $needReset - Flag if user need's to use the forgot password link
                     $needReset = false;
+                    // @var $isPassExpired - Flag if user need's to renew password
+                    $isPassExpired = false;
 
                     // if the user password in the user table is on MD5
                     if (preg_match($md5Regex, $userData->usr_password)) {
@@ -235,6 +238,13 @@ class MelisAuthController extends AbstractActionController
                             if ($melisCoreAuth->isPasswordCorrect($password, $userPassword)) {
                                 // this will be used in setCredential method
                                 $password = $userPassword;
+
+                                $userLastPassUpdate = $userData->usr_last_pass_update_date;
+                                $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+                                $cfg = $melisConfig->getItem('meliscore/datas/default');
+                                $expiry = $cfg['pwd_expiry'];
+                                $isPassExpired = $userLastPassUpdate >= date('Y-m-d H:i:s',strtotime('-'.$expiry.' hours')) ? false : true;
+
                             }
 
                         }
@@ -242,86 +252,98 @@ class MelisAuthController extends AbstractActionController
 
                     // If user is active
                     if ($userData->usr_status == self::USER_ACTIVE) {
-                        if (!$needReset) {
-                            $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
-                                ->setCredential($password);
+                        if(!$isPassExpired) {
+                            if (!$needReset) {
+                                $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
+                                    ->setCredential($password);
 
-                            $result = $melisCoreAuth->authenticate();
+                                $result = $melisCoreAuth->authenticate();
 
-                            if ($result->isValid()) {
-                                $user = $melisCoreAuth->getAdapter()->getResultRowObject();
+                                if ($result->isValid()) {
+                                    $user = $melisCoreAuth->getAdapter()->getResultRowObject();
 
-                                // Update the rights of the user if it's not a custom role
-                                if ($user->usr_role_id != self::ROLE_ID_CUSTOM) {
-                                    // Get rights from Role table
-                                    $rightsXML = '';
-                                    $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
-                                    $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
-                                    if ($datasRole) {
-                                        $datasRole = $datasRole->current();
-                                        if (!empty($datasRole)) {
-                                            $user->usr_rights = $datasRole->urole_rights;
+                                    // Update the rights of the user if it's not a custom role
+                                    if ($user->usr_role_id != self::ROLE_ID_CUSTOM) {
+                                        // Get rights from Role table
+                                        $rightsXML = '';
+                                        $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
+                                        $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
+                                        if ($datasRole) {
+                                            $datasRole = $datasRole->current();
+                                            if (!empty($datasRole)) {
+                                                $user->usr_rights = $datasRole->urole_rights;
+                                            }
                                         }
                                     }
-                                }
 
-                                // Write session
-                                $melisCoreAuth->getStorage()->write($user);
+                                    // Write session
+                                    $melisCoreAuth->getStorage()->write($user);
 
-                                // Update Melis BO locale
-                                $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
-                                $datasLang = $melisLangTable->getEntryById($user->usr_lang_id);
+                                    // Update Melis BO locale
+                                    $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
+                                    $datasLang = $melisLangTable->getEntryById($user->usr_lang_id);
 
-                                if (!empty($datasLang->current())) {
-                                    $datasLang = $datasLang->current();
-                                    $container = new Container('meliscore');
-                                    $container['melis-lang-id'] = $user->usr_lang_id;
-                                    $container['melis-lang-locale'] = $datasLang->lang_locale;
-                                }
+                                    if (!empty($datasLang->current())) {
+                                        $datasLang = $datasLang->current();
+                                        $container = new Container('meliscore');
+                                        $container['melis-lang-id'] = $user->usr_lang_id;
+                                        $container['melis-lang-locale'] = $datasLang->lang_locale;
+                                    }
 
-                                // update last login
-                                $loggedInDate = date('Y-m-d H:i:s');
-                                $this->getEventManager()->trigger('melis_core_auth_login_ok', $this, [
-                                    'login_date' => $loggedInDate,
-                                    'usr_id' => $user->usr_id,
-                                ]);
+                                    // update last login
+                                    $loggedInDate = date('Y-m-d H:i:s');
+                                    $this->getEventManager()->trigger('melis_core_auth_login_ok', $this, [
+                                        'login_date' => $loggedInDate,
+                                        'usr_id' => $user->usr_id,
+                                    ]);
 
-                                // update user password if the password is on MD5
-                                if ($requiresPasswordReset) {
-                                    $userTable->save([
-                                        'usr_password' => $newPassword,
-                                    ], $userData->usr_id);
-                                }
+                                    // update user password if the password is on MD5
+                                    if ($requiresPasswordReset) {
+                                        $userTable->save([
+                                            'usr_password' => $newPassword,
+                                        ], $userData->usr_id);
+                                    }
 
-                                // Retrieving recent user logs on database
-                                $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, []);
+                                    // Retrieving recent user logs on database
+                                    $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, []);
 
-                                // check if the user clicked remember me button
-                                $rememberMe = (int) $request->getPost('remember');
-                                if ($rememberMe == 1) {
-                                    $this->rememberMe($postValues['usr_login'], $postValues['usr_password']);
+                                    // check if the user clicked remember me button
+                                    $rememberMe = (int) $request->getPost('remember');
+                                    if ($rememberMe == 1) {
+                                        $this->rememberMe($postValues['usr_login'], $postValues['usr_password']);
+                                    } else {
+                                        $this->forgetMe($postValues['usr_login'], $postValues['usr_password']);
+                                    }
+
+                                    $result = [
+                                        'success' => true,
+                                        'errors' => [],
+                                    ];
                                 } else {
-                                    $this->forgetMe($postValues['usr_login'], $postValues['usr_password']);
+                                    $result = [
+                                        'success' => false,
+                                        'errors' => ['empty' => $translator->translate('tr_meliscore_login_auth_Failed authentication')],
+                                    ];
                                 }
-
-                                $result = [
-                                    'success' => true,
-                                    'errors' => [],
-                                ];
                             } else {
                                 $result = [
                                     'success' => false,
-                                    'errors' => ['empty' => $translator->translate('tr_meliscore_login_auth_Failed authentication')],
+                                    'require_reset_password' => true,
+                                    'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
                                 ];
                             }
                         } else {
+                            /** @var MelisCoreCreatePasswordService $melisCreatePwdSvc */
+                            $melisCreatePwdSvc = $this->getServiceLocator()->get('MelisCoreCreatePassword');
+                            $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login,$userData->usr_email);
+
                             $result = [
                                 'success' => false,
-                                'require_reset_password' => true,
+                                'password_expired' => true,
+                                'renew_pass_url' => $url,
                                 'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
                             ];
                         }
-
                     } else {
                         $result = [
                             'success' => false,

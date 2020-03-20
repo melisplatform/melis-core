@@ -164,7 +164,7 @@ class Module
             $container['melis-lang-changed'] = true;
         }
         else
-            if($route == "generate-password"){
+            if($route == "generate-password" || $route == "renew-password"){
 
                 /** @var MelisCoreCreatePasswordService $melisCreatePass */
                 $melisCreatePass = $sm->get('MelisCoreCreatePassword');
@@ -283,6 +283,7 @@ class Module
             'melis-backoffice/webpack_builder',
             'melis-backoffice/generate-password',
             'melis-backoffice/create-password',
+            'melis-backoffice/renew-password',
         ];
         if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli') {
             return true;
