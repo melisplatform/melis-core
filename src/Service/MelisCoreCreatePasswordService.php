@@ -469,6 +469,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         {
             $userTable->update(array(
                 'usr_status' => 1,
+                'usr_last_pass_update_date' => date('Y-m-d H:i:s'),
                 'usr_password' => $melisCoreAuth->encryptPassword($newPass)
             ),'usr_login', $login);
             
