@@ -164,12 +164,13 @@ class Module
             $container['melis-lang-changed'] = true;
         }
         else
-            if($route == "generate-password" || $route == "renew-password"){
-
+            if($route == "generate-password" || $route == "renew-password" || $route == "reset-password"){
                 /** @var MelisCoreCreatePasswordService $melisCreatePass */
                 $melisCreatePass = $sm->get('MelisCoreCreatePassword');
 
-                $usr = $melisCreatePass->getUserByHash($rhash);
+                $melisLostPass = $sm->get('MelisCoreLostPassword');
+                $usr = $route != "reset-password" ? $melisCreatePass->getUserByHash($rhash) : $melisLostPass->getUserByHash($rhash);
+
                 $container = new Container('meliscore');
                 $isLangChanged = $container['melis-lang-changed'];
                 if($usr && !$isLangChanged){
@@ -202,7 +203,6 @@ class Module
                         $userAuthDatas->usr_lang_id = $usrLang;
                     }
                 }
-
                 $container = new Container('meliscore');
                 $container['melis-lang-changed'] = false;
             }
