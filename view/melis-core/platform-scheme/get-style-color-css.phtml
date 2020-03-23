@@ -39,6 +39,7 @@
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
 }
+.has-switch span.switch-primary,
 .label.label-primary,
 .tabsbar ul li.active a,
 .tabsbar .nav-tabs > li.active > a
@@ -118,8 +119,9 @@
 .btn-primary:not(:disabled):not(.disabled).active,
 .btn-primary:not(:disabled):not(.disabled):active,
 .show>.btn-primary.dropdown-toggle {
-    background-color: <?= $primaryColor; ?>;
+    background-color: transparent;
     border-color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?>;
 }
 
 .footer a,
