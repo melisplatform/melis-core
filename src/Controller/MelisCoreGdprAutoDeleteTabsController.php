@@ -188,6 +188,8 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         ]);
     }
 
+
+
     /**
      *
      * group post data and process
@@ -244,19 +246,29 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
     }
 
     /**
-     * @return MelisGdprDeleteEmailsLogsTable
+     * @return MelisGdprDeleteEmailsLogsTable | object
      */
     private function getGdprDeleteEmailsLogsTable()
     {
-        /** @var MelisGdprDeleteEmailsLogsTable $gdprDeleteEmailsLogs */
-        $gdprDeleteEmailsLogs = $this->getServiceLocator()->get('MelisGdprDeleteEmailsLogsTable');
-
-        return $gdprDeleteEmailsLogs;
+       return $this->getServiceLocator()->get('MelisGdprDeleteEmailsLogsTable');
     }
+
+    /**
+     * @return ViewModel
+     */
     public function renderLogsTableShowDetailsAction()
     {
         return new ViewModel();
     }
+
+    /**
+     * @return ViewModel
+     */
+    public function renderLogsTableRefreshAction()
+    {
+        return new ViewModel();
+    }
+
     /**
      * Logs tab
      * @return ViewModel

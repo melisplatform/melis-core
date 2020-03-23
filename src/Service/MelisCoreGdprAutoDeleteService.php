@@ -56,6 +56,13 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     protected $logs = [];
 
     /**
+     * errors
+     *
+     * @var
+     */
+    protected $errors;
+
+    /**
      * @var MelisCoreGdprAutoDeleteToolService
      */
     protected $gdprAutoDeleteToolService;
@@ -64,6 +71,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @var MelisGdprDeleteEmailsSentTable
      */
     protected $deleteEmailsSentTable;
+
     /**
      * @var MelisGdprDeleteEmailsLogsTable
      */
@@ -117,7 +125,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // send mail for second warnign users
                 $this->sendEmailForSecondWarningUsers($config);
                 // send email for deleted users
-                $this->deleteSendEmailForDeletedUsers($config);
+             //   $this->deleteSendEmailForDeletedUsers($config);
             }
 
             return true;
@@ -173,7 +181,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                         // check user's inactive number of days
                                         if ($this->checkUsersInactiveDays($emailOpts, $autoDelConf['mgdprc_alert_email_days'])) {
                                             // send email
-                                            $this->prepareSendWarningEmail(
+                                            $sendMail = $this->prepareSendWarningEmail(
                                                 // merge tags
                                                 $this->mergeTagsConfig($autoDelConf),
                                                 $email,
@@ -181,23 +189,24 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                                 null,
                                                 true
                                             );
-                                            // update the table melis_core_gdpr_delete_emails_sent
-                                            $this->saveEmailsSentData([
-                                                'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
-                                                'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
-                                                'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
-                                                'mgdprs_alert_email_sent' => 1,
-                                                'mgdprs_alert_email_sent_date' => date('Y-m-d h:i:s'),
-                                            ]);
+                                            // if no errors then save to db
+                                            if (! $sendMail['hasError']) {
+                                                // add new entry
+                                                $this->saveEmailsSentData([
+                                                    'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
+                                                    'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
+                                                    'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
+                                                    'mgdprs_alert_email_sent' => 1,
+                                                    'mgdprs_alert_email_sent_date' => date('Y-m-d h:i:s'),
+                                                ]);
+                                            }
                                         }
                                     }
-                                } else {
-                                    $message = "Email " . $email . " was already mailed today";
                                 }
                             }
                         }
-                    } // inactive days set
-                } // alert email is on
+                    }
+                }
             }
         }
 
@@ -226,37 +235,32 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                 // send email
                                 // check if email is already emailed for second warning
                                 $data = $this->getEmailSentByValidationKey($emailOpts['config']['validationKey']);
-                                if (!empty($data) && !$data->mgdprs_alert_email_second_sent) {
-                                    // user was already mailed for revalidation and did not revalidate the account
-                                    // send email
-                                    $this->prepareSendWarningEmail(
-                                    // merge tags
-                                        $this->mergeTagsConfig($autoDelConf),
-                                        $email,
-                                        $emailOpts
-                                    );
-                                    // update table gdpr delete email sent
-                                    $this->saveEmailsSentData([
-                                        'mgdprs_alert_email_second_sent'      => 1,
-                                        'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
-                                    ], $data->mgdprs_id);
-                                } else {
-                                    // email of the user have not yet emailed
-                                    // send email
-                                    $this->prepareSendWarningEmail(
-                                    // merge tags
-                                        $this->mergeTagsConfig($autoDelConf),
-                                        $email,
-                                        $emailOpts
-                                    );
-                                    // add new entry
-                                    $this->saveEmailsSentData([
-                                        'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
-                                        'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
-                                        'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
-                                        'mgdprs_alert_email_second_sent' => 1,
-                                        'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
-                                    ]);
+                                // send email
+                                $sendMail = $this->prepareSendWarningEmail(
+                                // merge tags
+                                    $this->mergeTagsConfig($autoDelConf),
+                                    $email,
+                                    $emailOpts
+                                );
+                                // if no errors then save to db
+                                if (! $sendMail['hasError']) {
+                                    // user was already mailed for revalidation and did not revalidate his account
+                                    if (!empty($data) && !$data->mgdprs_alert_email_second_sent) {
+                                        // update table gdpr delete email sent
+                                        $this->saveEmailsSentData([
+                                            'mgdprs_alert_email_second_sent'      => 1,
+                                            'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
+                                        ], $data->mgdprs_id);
+                                    } else {
+                                        // email of the user have not yet emailed, add new entry
+                                        $this->saveEmailsSentData([
+                                            'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
+                                            'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
+                                            'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
+                                            'mgdprs_alert_email_second_sent' => 1,
+                                            'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
+                                        ]);
+                                    }
                                 }
                             }
                         }
@@ -436,7 +440,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      */
     public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING , $first = true )
     {
-        $response = [];
+        $response = [
+            'hasError' => false
+        ];
         // check config key is present
         if ($this->isExists(self::CONFIG_KEY, $emailOptions)) {
             // check lang id is present
@@ -455,44 +461,69 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2ⁿᵈ)";
                     }
                 }
-                 // send email
-                $this->sendEmail(
-                    $emailSetupConfig['mgdprc_email_conf_from_email'],
-                    $emailSetupConfig['mgdprc_email_conf_from_name'],
-                    $email,
-                    null,
-                    $emailSetupConfig['mgdprc_email_conf_reply_to'],
-                    $alertEmailData->mgdpre_subject,
-                    $this->getEmailLayoutContent(
+                // html email content
+                $htmlContent = $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
+                // text version email content
+                $textVersion =  $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
+                // check for errors
+                if (empty($htmlContent['errors']) || empty($textVersion['errors'])) {
+                    // send email
+                    $this->sendEmail(
+                        $emailSetupConfig['mgdprc_email_conf_from_email'],
+                        $emailSetupConfig['mgdprc_email_conf_from_name'],
+                        $email,
+                        null,
+                        $emailSetupConfig['mgdprc_email_conf_reply_to'],
+                        $alertEmailData->mgdpre_subject,
+                        $this->getEmailLayoutContent(
+                            $emailSetupConfig,
+                            $htmlContent
+                        ),
+                        $textVersion
+                    );
+                } else {
+                    // set has error true
+                    $response['hasError'] = true;
+                    // logs not all tags are filled
+                    $this->saveGdprAutoDeleteLogs(
                         $emailSetupConfig,
-                        $this->replaceTagsByModuleTags(
-                            explode(',', $alertEmailData->mgdpre_email_tags),
-                            $alertEmailData,
-                            $emailOptions,
-                            $emailSetupConfig
-                        )
-                    ),
-                    $this->replaceTagsByModuleTags(
-                        explode(',', $alertEmailData->mgdpre_email_tags),
-                        $alertEmailData,
-                        $emailOptions,
-                        $emailSetupConfig
-                    )
-                );
+                        $email,
+                        'Not all tags are filled',
+                        MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                        $first,
+                        false
+                    );
+                }
+
             } else {
-                // logs
-                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, self::LANG_KEY_NOT_FOUND, MelisGdprDeleteEmailsTable::EMAIL_WARNING, $first);
+                // set has error true
+                $response['hasError'] = true;
+                // logs lang key is missing
+                $this->saveGdprAutoDeleteLogs(
+                    $emailSetupConfig,
+                    $email,
+                    'No email content provided in asked language',
+                    MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                    $first,
+                    false
+                );
             }
         }
 
         return $response;
     }
 
-    private function saveGdprAutoDeleteLogs($data, $email, $logType, $emailType, $firstEmail)
+    /**
+     * @param $data
+     * @param $email
+     * @param $message
+     * @param $emailType
+     * @param $isFirstEmail
+     * @param null $success
+     */
+    private function saveGdprAutoDeleteLogs($data, $email, $message, $emailType, $isFirstEmail, $success = null)
     {
         if (is_array($data) && $data) {
-            // get error message
-            $errorMessage = $this->getErrorMessage($logType);
             // prepare data to save
             // set some required fields
             $tmpDataToSave = [
@@ -500,77 +531,183 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'mgdprl_module_name' => $data['mgdprc_module_name'],
                 'mgdprl_log_date' => date('Y-m-d h:i:s')
             ];
-            if (!empty($errorMessage)) {
-                // errors | ko
-                if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
-                    if ($firstEmail) {
-                        // set to true
-                        $tmpDataToSave['mgdprl_warning1_ko'] = true;
-                        // set log error message
-                        $tmpDataToSave['mgdprl_warning1_ko_log'] = $email . "/ " . $errorMessage;
-                    } else {
-                        // set to true
-                        $tmpDataToSave['mgdprl_warning2_ko'] = true;
-                        // set log error message
-                        $tmpDataToSave['mgdprl_warning2_ko_log'] = $email . "/ " . $errorMessage;
-                    }
-                } else if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
-                    // set to true
-                    $tmpDataToSave['mgdprl_delete_ko'] = true;
-                    // set log error message
-                    $tmpDataToSave['mgdprl_delete_ko_log'] = $email . "/ " . $errorMessage;
-                }
-            } else {
-                if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
-                    if ($firstEmail) {
-                        // set to true
-                        $tmpDataToSave['mgdprl_warning1_ko'] = true;
-                        // set log error message
-                        $tmpDataToSave['mgdprl_warning1_ko_log'] = $email . "/ " . $errorMessage;
-                    } else {
-                        // set to true
-                        $tmpDataToSave['mgdprl_warning2_ko'] = true;
-                        // set log error message
-                        $tmpDataToSave['mgdprl_warning2_ko_log'] = $email . "/ " . $errorMessage;
-                    }
-                } else if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
-                    // set to true
-                    $tmpDataToSave['mgdprl_delete_ko'] = true;
-                    // set log error message
-                    $tmpDataToSave['mgdprl_delete_ko_log'] = $email . "/ " . $errorMessage;
+            // check if there is already a log
+            $logs = $this->getEmailsLogsByDate(date('Y-m-d'),$data['mgdprc_site_id'], $data['mgdprc_module_name']);
+            // process first email warning and second warning users logs
+            if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
+                if ($isFirstEmail) {
+                    $tmpDataToSave = array_merge($tmpDataToSave, $this->prepareFirstWarningLogs($success, $email, $message, $logs));
+                } else {
+                    $tmpDataToSave = array_merge($tmpDataToSave, $this->prepareSecondWarningLogs($success, $email, $message, $logs));
                 }
             }
+            // for deleted emails
+            if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
+                $tmpDataToSave = array_merge($tmpDataToSave, $this->prepareDeletedEmailLogs($success, $email, $message. $logs));
+            }
 
-            // save logs
-            $this->emailsLogsTable->save($tmpDataToSave);
+            // save
+            if (!empty($logs)) {
+                // update log
+                $this->emailsLogsTable->save($tmpDataToSave, $logs->mgdprl_id);
+            } else {
+                // save logs
+                $this->emailsLogsTable->save($tmpDataToSave);
+            }
+
         }
     }
 
     /**
-     * @param $type
-     * @return string
+     * @param $date
+     * @param $siteId
+     * @param $module
+     * @return mixed
      */
-    private function getErrorMessage($type)
+    private function getEmailsLogsByDate($date, $siteId, $module)
     {
-        $errorMessage = "";
+        return $this->emailsLogsTable->getEmailsLogsByDate($date, $siteId, $module)->current();
+    }
 
-        switch ($type) {
-            case self::LANG_KEY_NOT_FOUND:
-                $errorMessage = "Unavailable language of the user";
-                break;
-            case self::TAGS_ERROR_LOG:
-                $errorMessage = "Not all tags are filled";
-                break;
-            case self::EMAIL_CONTENT_ERROR_LOG:
-                $errorMessage = "No email content provided in asked language";
-                break;
-            case self::TECHNICAL_ISSUE:
-                $errorMessage = "Technical issue";
-                break;
-            default:break;
+    /**
+     * @param $success
+     * @param $email
+     * @param $message
+     * @param array $logs
+     * @return array
+     */
+    private function prepareFirstWarningLogs($success, $email, $message, $logs = [])
+    {
+        $data = [];
+        if ($success) {
+            // for ok log;
+            $data = [
+                // set counter to 1
+                'mgdprl_warning1_ok' => 1,
+                // set log error message
+                'mgdprl_warning1_ok_log' => $email
+            ];
+            // check logs
+            if (!empty($logs)) {
+                // add counter
+                $data['mgdprl_warning1_ok'] = (int) ($logs->mgdprl_warning1_ok + 1);
+                // override message
+                $data['mgdprl_warning1_ok_log'] = $logs->mgdprl_warning1_ok_log . ";" . $email;
+            }
+        } else {
+            $fullMessage = $email . "/" . $message;
+            // for ko log;
+            $data = [
+                // set counter to 1
+                'mgdprl_warning1_ko' => 1,
+                // set log error message
+                'mgdprl_warning1_ko_log' => $fullMessage
+            ];
+
+            // check logs
+            if (!empty($logs)) {
+                // add counter
+                $data['mgdprl_warning1_ko'] = (int) ($logs->mgdprl_warning1_ko + 1);
+                // override message
+                $data['mgdprl_warning1_ko_log'] = $logs->mgdprl_warning1_ko_log . "/" . $fullMessage;
+            }
         }
 
-        return $errorMessage;
+        return $data;
+    }
+
+    /**
+     * @param $success
+     * @param $email
+     * @param $message
+     * @param array $logs
+     * @return array
+     */
+    public function prepareSecondWarningLogs($success, $email, $message, $logs = [])
+    {
+        $data = [];
+        if ($success) {
+            // for ok log;
+            $data = [
+                // set counter to 1
+                'mgdprl_warning2_ok' => 1,
+                // set log error message
+                'mgdprl_warning2_ok_log' => $email
+            ];
+            // check logs
+            if (!empty($logs)) {
+                // add counter
+                $data['mgdprl_warning2_ok'] = (int) ($logs->mgdprl_warning2_ok + 1);
+                // override message
+                $data['mgdprl_warning2_ok_log'] = $logs->mgdprl_warning2_ok_log . ";" . $email;
+            }
+        } else {
+            $fullMessage = $email . "/" . $message;
+            // for ko log;
+            $data = [
+                // set counter to 1
+                'mgdprl_warning2_ko' => 1,
+                // set log error message
+                'mgdprl_warning2_ko_log' => $fullMessage
+            ];
+
+            // check logs
+            if (!empty($logs)) {
+                // add counter
+                $data['mgdprl_warning2_ko'] = (int) ($logs->mgdprl_warning2_ko + 1);
+                // override message
+                $data['mgdprl_warning2_ko_log'] = $logs->mgdprl_warning2_ko_log . "/" . $fullMessage;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param $success
+     * @param $email
+     * @param $message
+     * @param array $logs
+     * @return array
+     */
+    public function prepareDeletedEmailLogs($success, $email, $message, $logs = [])
+    {
+        $data = [];
+        if ($success) {
+            // for ok log;
+            $data = [
+                // set counter to 1
+                'mgdprl_delete_ok' => 1,
+                // set log error message
+                'mgdprl_delete_ok_log' => $email
+            ];
+            // check logs
+            if (!empty($logs)) {
+                // add counter
+                $data['mgdprl_delete_ok'] = (int) ($logs->mgdprl_delete_ok + 1);
+                // override message
+                $data['mgdprl_delete_ok_log'] = $logs->mgdprl_delete_ok_log . ";" . $email;
+            }
+        } else {
+            $fullMessage = $email . "/" . $message;
+            // for ko log;
+            $data = [
+                // set counter to 1
+                'mgdprl_delete_ko' => 1,
+                // set log error message
+                'mgdprl_delete_ko_log' => $fullMessage
+            ];
+
+            // check logs
+            if (!empty($logs)) {
+                // add counter
+                $data['mgdprl_delete_ko'] = (int) ($logs->mgdprl_delete_ko + 1);
+                // override message
+                $data['mgdprl_delete_ko_log'] = $logs->mgdprl_delete_ko_log . "/" . $fullMessage;
+            }
+        }
+
+        return $data;
     }
 
 
@@ -744,14 +881,14 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param array $tags
      * @param $data
      * @param $emailOptions
+     * @param $content
      * @param $setupEmailConfig
      * @return mixed|string
      */
-    private function replaceTagsByModuleTags(array $tags, $data, $emailOptions, $setupEmailConfig)
+    private function replaceTagsByModuleTags(array $tags, $data, $emailOptions, $content, $setupEmailConfig)
     {
         $tagsNotFoundOnModule = [];
         $moduleTags = $emailOptions['tags'];
-        $content = $data->mgdpre_html;
         if (!empty($tags)) {
             // accepted tags
             foreach ($tags as $idx => $dbTag) {
@@ -770,7 +907,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             }
         }
 
-        return $content;
+        return [
+            'content' => $content,
+            'errors' => $tagsNotFoundOnModule
+        ];
     }
 
     private function getTranslation()

@@ -105,6 +105,11 @@ return [
                             'center' => [
                             ],
                             'right' => [
+                                'table_refresh' => [
+                                    'module' => 'MelisCore',
+                                    'controller' => 'MelisCoreGdprAutoDeleteTabs',
+                                    'action' => 'render-logs-table-refresh'
+                                ]
                             ],
                         ],
                         'columns' => [

@@ -122,4 +122,30 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
+    /**
+     * @param $date
+     * @return \Zend\Db\ResultSet\ResultSetInterface
+     */
+    public function getEmailsLogsByDate($date, $siteId, $module)
+    {
+        // table selection query
+        $select = $this->tableGateway->getSql()->select();
+        // columns to select
+        $select->columns(array('*'));
+        // site filter
+        if ($date) {
+            $select->where->like('mgdprl_log_date',"%" . $date .  "%");
+        }
+        // site filter
+        if ($siteId) {
+            $select->where->equalTo('mgdprl_site_id', $siteId);
+        }
+        // module filter
+        if ($module) {
+            $select->where->equalTo('mgdprl_module_name', $module);
+        }
+
+        return $this->tableGateway->selectWith($select);
+    }
+
 }

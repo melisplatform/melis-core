@@ -278,6 +278,7 @@ var gdprAutoDelete = {
  * event bindings
  */
 $(function () {
+
     /*
      * add auto delet econfig
      */
@@ -289,6 +290,7 @@ $(function () {
         // animation scroll
         gdprAutoDelete.scrollAnimationToElment('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config')
     });
+
     /*
      * modal cron ifo
      */
@@ -296,30 +298,35 @@ $(function () {
         // show modal which have CRON Info
         gdprAutoDelete.showModalCronInfo();
     });
+
     /*
      * site filter
      */
     $body.on('change', "#gdpr_site_filter", function () {
         gdprAutoDelete.reloadListAutoDeleteConfigTable();
     });
+
     /*
      * module filter
      */
     $body.on('change', "#gdpr_module_filter", function () {
         gdprAutoDelete.reloadListAutoDeleteConfigTable();
     });
+
     /*
      * save auto delete configurations
      */
     $body.on('click', "#saveAutoDeleteConfigurations", function () {
         gdprAutoDelete.saveGdprAutoDeleteConfig(null, null, this);
     });
+
     /*
      * accordion hide list config
      */
     $body.on('hide.bs.collapse', '#list-config-content', function () {
         gdprAutoDelete.toggleArrowIndicator("#gdpr-accordion-toggle-list");
     });
+
     /*
      * accordion show list config
      */
@@ -330,7 +337,17 @@ $(function () {
         gdprAutoDelete.hideListConfig();
         gdprAutoDelete.openGdprAutoDeleteConfig($(this).parent().parent().parent().attr('id'));
     });
-    $body.on('change');
+
+    $body.on('click', '#refresh-logs-table', function(){
+        var parent = $('#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs');
+        // apply loading html
+        melisHelper.loadingZone(parent);
+        // refresh log table
+        $("#tableGdprAutoDeleteLogs").DataTable().ajax.reload(function(){
+            // remove loading zone
+            melisHelper.removeLoadingZone(parent);
+        });
+    });
 });
 /**
  * gdpr list config filters initializtions
