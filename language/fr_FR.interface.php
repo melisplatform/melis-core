@@ -96,7 +96,7 @@ return [
     'tr_meliscore_tool_user_col_last_name tooltip' => 'Nom de famille de l&#39;utilisateur',
     'tr_meliscore_tool_user_col_role' => 'Rôle',
     'tr_meliscore_tool_user_col_password' => 'Mot de passe',
-    'tr_meliscore_tool_user_col_password tooltip' => 'Mot de passe utilisateur (doit être de 12 caractères minimum et contenir au moins une lettre et un chiffre)',
+    'tr_meliscore_tool_user_col_password tooltip' => 'Mot de passe utilisateur (doit être de 8 caractères minimum et contenir au moins une lettre et un chiffre)',
     'tr_meliscore_tool_user_col_confirm_password' => 'Mot de passe (2)',
     'tr_meliscore_tool_user_col_confirm_password tooltip' => 'Confirmation du mot de passe de l&#39;utilisateur',
     'tr_meliscore_tool_user_col_last_login' => 'Dernier accès',

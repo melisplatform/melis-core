@@ -177,7 +177,7 @@ class MelisAuthController extends AbstractActionController
                     // @var $needReset - Flag if user need's to use the forgot password link
                     $needReset = false;
                     // @var $isPassExpired - Flag if user need's to renew password
-                    $isPassExpired = false;
+//                    $isPassExpired = false;
 
                     // if the user password in the user table is on MD5
                     if (preg_match($md5Regex, $userData->usr_password)) {
@@ -239,11 +239,11 @@ class MelisAuthController extends AbstractActionController
                                 // this will be used in setCredential method
                                 $password = $userPassword;
 
-                                $userLastPassUpdate = $userData->usr_last_pass_update_date;
-                                $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-                                $cfg = $melisConfig->getItem('meliscore/datas/default');
-                                $expiry = $cfg['pwd_expiry'];
-                                $isPassExpired = $userLastPassUpdate >= date('Y-m-d H:i:s',strtotime('-'.$expiry.' hours')) ? false : true;
+//                                $userLastPassUpdate = $userData->usr_last_pass_update_date;
+//                                $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+//                                $cfg = $melisConfig->getItem('meliscore/datas/default');
+//                                $expiry = $cfg['pwd_expiry'];
+//                                $isPassExpired = $userLastPassUpdate >= date('Y-m-d H:i:s',strtotime('-'.$expiry.' hours')) ? false : true;
 
                             }
 
@@ -252,7 +252,7 @@ class MelisAuthController extends AbstractActionController
 
                     // If user is active
                     if ($userData->usr_status == self::USER_ACTIVE) {
-                        if(!$isPassExpired) {
+//                        if(!$isPassExpired) {
                             if (!$needReset) {
                                 $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
                                     ->setCredential($password);
@@ -332,18 +332,18 @@ class MelisAuthController extends AbstractActionController
                                     'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
                                 ];
                             }
-                        } else {
-                            /** @var MelisCoreCreatePasswordService $melisCreatePwdSvc */
-                            $melisCreatePwdSvc = $this->getServiceLocator()->get('MelisCoreCreatePassword');
-                            $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login,$userData->usr_email);
-
-                            $result = [
-                                'success' => false,
-                                'password_expired' => true,
-                                'renew_pass_url' => $url,
-                                'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
-                            ];
-                        }
+//                        } else {
+//                            /** @var MelisCoreCreatePasswordService $melisCreatePwdSvc */
+//                            $melisCreatePwdSvc = $this->getServiceLocator()->get('MelisCoreCreatePassword');
+//                            $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login,$userData->usr_email);
+//
+//                            $result = [
+//                                'success' => false,
+//                                'password_expired' => true,
+//                                'renew_pass_url' => $url,
+//                                'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
+//                            ];
+//                        }
                     } else {
                         $result = [
                             'success' => false,
