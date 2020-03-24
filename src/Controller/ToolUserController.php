@@ -627,6 +627,7 @@ class ToolUserController extends AbstractActionController
                         unset($data['usr_confirm_password']);
 
                         $data['usr_id'] = null;
+                        $data['usr_password'] = $melisCoreAuth->encryptPassword($data['usr_password']);
                         $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
                         $data['usr_image'] = $imageContent;
                         $data['usr_creation_date'] = date('Y-m-d H:i:s');
@@ -651,7 +652,7 @@ class ToolUserController extends AbstractActionController
                         }
 
                         if (empty($errors)) {
-                            $data['usr_status'] = 2;
+//                            $data['usr_status'] = 2;
                             $data['usr_id'] = $userTable->save($data);
                             if ($data['usr_id'] > 0) {
                                 $success = true;
@@ -898,30 +899,30 @@ class ToolUserController extends AbstractActionController
             {
                 $userId              = (int) $tableData[$ctr]['usr_id'];
                 $online = (int) $tableData[$ctr]['usr_is_online'] ? 'text-success' : 'text-danger';
-                
+
                 $userConnectionTable = $this->getServiceLocator()->get('MelisUserConnectionDate');
                 $userConnectionData  = $userConnectionTable->getUserLastConnectionTime($userId, null, array(), 'usrcd_last_connection_time')->current();
-                
+
                 if($userConnectionData && $online == 'text-success')
                 {
                     $now                = new \DateTime(date("H:i:s"));
                     $lastConnectionTime = new \DateTime(date('H:i:s', strtotime($userConnectionData->usrcd_last_connection_time)));
                     $difference         = $lastConnectionTime->diff($now)->i;
-    
+
                     // if user has been away for 5mins, automatically set the user status to "offline"
                     if((int) $difference > 5) {
                         // update user status
                         $userTable->save([
                             'usr_is_online' => 0
                         ], $userId);
-                        
+
                         $online = 'text-danger';
                     }
                     else {
                         $userTable->save([
                             'usr_is_online' => 1
                         ], $userId);
-                        
+
                         $online = 'text-success';
                     }
                 }
