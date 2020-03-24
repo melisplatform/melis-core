@@ -42,7 +42,7 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 	    $html->type = 'text/html';
 
 	    $body = new MimeMessage();
-	    
+
 	    if ($message_text!=null){
 	        
 	        // Add Alternative Email Text Content

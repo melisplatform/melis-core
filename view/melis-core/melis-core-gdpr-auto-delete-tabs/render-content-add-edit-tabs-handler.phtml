@@ -18,7 +18,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                                    id="id_meliscoregdpr_auto_delete_add_edit_config_tab_config_tab"
                                    data-toggle="pill" href="#id_meliscoregdpr_auto_delete_add_edit_config_tab_config"
                                    role="tab" aria-controls="id_meliscoregdpr_auto_delete_add_edit_config_tab_config"
-                                   aria-selected="true">Configuration <span class="fa fa-wrench fa-md pull-right fa-lg"></span></a>
+                                   aria-selected="true">Configuration <span class="fa fa-wrench fa-md pull-right fa-lg" style="margin:3px 5px 0 0;"></span></a>
                             <?php } ?>
                         <?php }
 
@@ -46,7 +46,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                                        data-toggle="pill" href="#<?= $menuConfig['conf']['id'] ?? null ?>"
                                        role="tab" aria-controls="<?= $menuConfig['conf']['id'] ?? null ?>"
                                        aria-selected="false"><?= $menuConfig['conf']['name'] ?? null ?>
-                                    <span class="fa <?= $menuConfig['conf']['icon'] ?? null ?> pull-right fa-lg" style="margin-top: 4px;margin-right: 2px;"></span></a>
+                                    <span class="fa <?= $menuConfig['conf']['icon'] ?? null ?> pull-right fa-lg" style="margin:3px 5px 0 0;"></span></a>
                                 <?php } ?>
                             <?php }
                         }

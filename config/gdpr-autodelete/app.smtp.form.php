@@ -80,20 +80,6 @@ return [
                                 ],
                                 [
                                     'spec' => [
-                                        'name' => 'mgdpr_smtp_connection_class',
-                                        'type' => "MelisText",
-                                        'options' => [
-                                            'label' => 'Connection class',
-                                            'tooltip' => "Connection class",
-                                        ],
-                                        'attributes' => [
-                                            'placeholder' => 'plain'
-                                        ]
-                                    ]
-                                ],
-
-                                [
-                                    'spec' => [
                                         'name' => 'mgdpr_smtp_ssl',
                                         'type' => "MelisText",
                                         'options' => [

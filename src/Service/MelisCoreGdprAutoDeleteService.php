@@ -452,7 +452,14 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // get alert emails required data for the email
                 $alertEmailData = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], $type, $langId);
                 //  get the link of page id
-                $alertEmailData->mgdpre_link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
+                $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
+                if ($link == "/") {
+                    $uri = $this->getServiceLocator()->get('request')->getUri();
+                    // if link is homepage
+                    $alertEmailData->mgdpre_link = $uri->getScheme() . "://" . $uri->getHost();
+                } else {
+                    $alertEmailData->mgdpre_link = $link;
+                }
                 // add suffix to email subject indication of email if it is first or second
                 if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
                     // default is first
@@ -477,9 +484,18 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         $alertEmailData->mgdpre_subject,
                         $this->getEmailLayoutContent(
                             $emailSetupConfig,
-                            $htmlContent
+                            $htmlContent['content']
                         ),
-                        $textVersion
+                        $textVersion['content']
+                    );
+                    // logs not all tags are filled
+                    $this->saveGdprAutoDeleteLogs(
+                        $emailSetupConfig,
+                        $email,
+                        MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                        $first,
+                        null,
+                        true
                     );
                 } else {
                     // set has error true
@@ -488,9 +504,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     $this->saveGdprAutoDeleteLogs(
                         $emailSetupConfig,
                         $email,
-                        'Not all tags are filled',
                         MelisGdprDeleteEmailsTable::EMAIL_WARNING,
                         $first,
+                        'Not all tags are filled',
                         false
                     );
                 }
@@ -502,9 +518,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $this->saveGdprAutoDeleteLogs(
                     $emailSetupConfig,
                     $email,
-                    'No email content provided in asked language',
                     MelisGdprDeleteEmailsTable::EMAIL_WARNING,
                     $first,
+                    'No email content provided in asked language',
                     false
                 );
             }
@@ -521,7 +537,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $isFirstEmail
      * @param null $success
      */
-    private function saveGdprAutoDeleteLogs($data, $email, $message, $emailType, $isFirstEmail, $success = null)
+    private function saveGdprAutoDeleteLogs($data, $email, $emailType, $isFirstEmail, $message = null, $success = null)
     {
         if (is_array($data) && $data) {
             // prepare data to save
@@ -740,12 +756,13 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'host'            => $smtpDataConfig['mgdpr_smtp_host'],
                 'name'            => $smtpDataConfig['mgdpr_smtp_host'],
                 'port'            => $smtpDataConfig['mgdpr_smtp_port'],
-                'connectionClass' => $smtpDataConfig['mgdpr_smtp_connection_class'],
+                'connectionClass' => 'plain',
                 'username'        => $smtpDataConfig['mgdpr_smtp_username'],
                 'password'        => $smtpDataConfig['mgdpr_smtp_password'],
                 'ssl'             => $smtpDataConfig['mgdpr_smtp_ssl'],
             ];
         }
+
         return $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
             $emailFrom,
             $emailFromName,
@@ -906,6 +923,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 }
             }
         }
+
 
         return [
             'content' => $content,
