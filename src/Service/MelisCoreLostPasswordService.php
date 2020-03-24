@@ -130,6 +130,27 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
 
         return false;   
     }
+
+    /**
+     * Check if the provided hash exists
+     * @param String $hash
+     * @return boolean
+     */
+    public function getUserByHash($hash)
+    {
+        $data = $this->getPasswordRequestData($hash);
+        $login = '';
+        foreach($data as $val)
+        {
+            $login = $val->rh_login;
+            //echo $login;
+        }
+
+        $usertbl = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $user = $usertbl->getEntryByField("usr_login",$login)->current();
+
+        return $user;
+    }
     
     /**
      * Checks if the username exists in the lost password table
