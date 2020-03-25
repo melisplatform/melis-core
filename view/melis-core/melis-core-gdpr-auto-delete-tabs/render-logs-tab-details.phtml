@@ -1,0 +1,27 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+
+<div data-melisKey='<?= $this->melisKey ?>' class="<?= empty($this->logData) ? "hidden" : null ?>" id="<?= $this->zoneconfig['conf']['id'] ?>" style="position:relative;min-height: 241px;margin-bottom: 10px;" aria-labelledby="<?= $this->zoneconfig['conf']['id'] ?>">
+    <?php if (!empty($this->logData)) { ?>
+        <h3>Log details</h3>
+        <br>
+        <ul class="list-unstyled">
+            <li>Site : <?= $this->logData->mgdprl_site_id?></li>
+            <li>Consectetur adipiscing elit</li>
+            <li>Integer molestie lorem at massa</li>
+            <li>Facilisis in pretium nisl aliquet</li>
+            <li>Faucibus porta lacus fringilla vel</li>
+            <li>Aenean sit amet erat nunc</li>
+            <li>Eget porttitor lorem</li>
+        </ul>
+        <pre>
+         <?php
+         print_r($this->logData);
+         ?>
+        </pre>
+    <?php } ?>
+</div>

@@ -39,3 +39,10 @@ if (!empty($this->zoneconfig['conf']['id'])) {
         </div>
     <?php } ?>
 </div>
+<?php
+if (!empty($this->zoneconfig['interface']) && $this->configId) {
+    foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+        echo $this->$keyConfig;
+    }
+}
+?>

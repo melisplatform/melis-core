@@ -125,7 +125,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // send mail for second warnign users
                 $this->sendEmailForSecondWarningUsers($config);
                 // send email for deleted users
-             //   $this->deleteSendEmailForDeletedUsers($config);
+                $this->deleteSendEmailForDeletedUsers($config);
             }
 
             return true;
@@ -186,7 +186,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                                 $this->mergeTagsConfig($autoDelConf),
                                                 $email,
                                                 $emailOpts,
-                                                null,
+                                                MelisGdprDeleteEmailsTable::EMAIL_WARNING,
                                                 true
                                             );
                                             // if no errors then save to db
@@ -453,18 +453,20 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $alertEmailData = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], $type, $langId);
                 //  get the link of page id
                 $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
+                // if link is homepage
                 if ($link == "/") {
                     $uri = $this->getServiceLocator()->get('request')->getUri();
-                    // if link is homepage
                     $alertEmailData->mgdpre_link = $uri->getScheme() . "://" . $uri->getHost();
                 } else {
                     $alertEmailData->mgdpre_link = $link;
                 }
+
                 // add suffix to email subject indication of email if it is first or second
                 if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
                     // default is first
                     $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1ˢᵗ)";
                     if (!$first) {
+                        // override
                         $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2ⁿᵈ)";
                     }
                 }
@@ -488,11 +490,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         ),
                         $textVersion['content']
                     );
-                    // logs not all tags are filled
+                    // save log ok
                     $this->saveGdprAutoDeleteLogs(
                         $emailSetupConfig,
                         $email,
-                        MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                        $type,
                         $first,
                         null,
                         true
@@ -504,7 +506,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     $this->saveGdprAutoDeleteLogs(
                         $emailSetupConfig,
                         $email,
-                        MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                        $type,
                         $first,
                         'Not all tags are filled',
                         false
@@ -518,7 +520,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $this->saveGdprAutoDeleteLogs(
                     $emailSetupConfig,
                     $email,
-                    MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                    $type,
                     $first,
                     'No email content provided in asked language',
                     false
@@ -557,11 +559,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     $tmpDataToSave = array_merge($tmpDataToSave, $this->prepareSecondWarningLogs($success, $email, $message, $logs));
                 }
             }
+
             // for deleted emails
             if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
-                $tmpDataToSave = array_merge($tmpDataToSave, $this->prepareDeletedEmailLogs($success, $email, $message. $logs));
+                $tmpDataToSave = array_merge($tmpDataToSave, $this->prepareDeletedEmailLogs($success, $email, $message,$logs));
             }
-
             // save
             if (!empty($logs)) {
                 // update log
@@ -597,27 +599,26 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $data = [];
         if ($success) {
             // for ok log;
-            $data = [
-                // set counter to 1
-                'mgdprl_warning1_ok' => 1,
-                // set log error message
-                'mgdprl_warning1_ok_log' => $email
-            ];
+            // set counter to 1
+            $data['mgdprl_warning1_ok'] = 1;
+            // set log error message
+            $data['mgdprl_warning1_ok_log'] = $email;
             // check logs
             if (!empty($logs)) {
-                // add counter
+                // override and add counter
                 $data['mgdprl_warning1_ok'] = (int) ($logs->mgdprl_warning1_ok + 1);
                 // override message
-                $data['mgdprl_warning1_ok_log'] = $logs->mgdprl_warning1_ok_log . ";" . $email;
+                $data['mgdprl_warning1_ok_log'] = !empty($logs->mgdprl_warning1_ok_log) ? $logs->mgdprl_warning1_ok_log  . ";" . $email : $email;
             }
         } else {
-            $fullMessage = $email . "/" . $message;
+            // message with error
+            $messageWithError = $email . "/" . $message;
             // for ko log;
             $data = [
                 // set counter to 1
                 'mgdprl_warning1_ko' => 1,
                 // set log error message
-                'mgdprl_warning1_ko_log' => $fullMessage
+                'mgdprl_warning1_ko_log' => $messageWithError
             ];
 
             // check logs
@@ -625,7 +626,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_warning1_ko'] = (int) ($logs->mgdprl_warning1_ko + 1);
                 // override message
-                $data['mgdprl_warning1_ko_log'] = $logs->mgdprl_warning1_ko_log . "/" . $fullMessage;
+                $data['mgdprl_warning1_ko_log'] = !empty($logs->mgdprl_warning1_ko_log) ? $logs->mgdprl_warning1_ko_log . "/" . $messageWithError : $messageWithError;
             }
         }
 
@@ -655,16 +656,16 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_warning2_ok'] = (int) ($logs->mgdprl_warning2_ok + 1);
                 // override message
-                $data['mgdprl_warning2_ok_log'] = $logs->mgdprl_warning2_ok_log . ";" . $email;
+                $data['mgdprl_warning2_ok_log'] = !empty($logs->mgdprl_warning2_ok_log) ? $logs->mgdprl_warning2_ok_log . ";" . $email : $email;
             }
         } else {
-            $fullMessage = $email . "/" . $message;
+            $messageWithError = $email . "/" . $message;
             // for ko log;
             $data = [
                 // set counter to 1
                 'mgdprl_warning2_ko' => 1,
                 // set log error message
-                'mgdprl_warning2_ko_log' => $fullMessage
+                'mgdprl_warning2_ko_log' => $messageWithError
             ];
 
             // check logs
@@ -672,7 +673,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_warning2_ko'] = (int) ($logs->mgdprl_warning2_ko + 1);
                 // override message
-                $data['mgdprl_warning2_ko_log'] = $logs->mgdprl_warning2_ko_log . "/" . $fullMessage;
+                $data['mgdprl_warning2_ko_log'] = !empty($logs->mgdprl_warning2_ko_log) ? $logs->mgdprl_warning2_ko_log . "/" . $messageWithError : $messageWithError;
             }
         }
 
@@ -702,16 +703,16 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_delete_ok'] = (int) ($logs->mgdprl_delete_ok + 1);
                 // override message
-                $data['mgdprl_delete_ok_log'] = $logs->mgdprl_delete_ok_log . ";" . $email;
+                $data['mgdprl_delete_ok_log'] = !empty($logs->mgdprl_delete_ok_log) ? $logs->mgdprl_delete_ok_log . ";" . $email : $email;
             }
         } else {
-            $fullMessage = $email . "/" . $message;
+            $messageWithError = $email . "/" . $message;
             // for ko log;
             $data = [
                 // set counter to 1
                 'mgdprl_delete_ko' => 1,
                 // set log error message
-                'mgdprl_delete_ko_log' => $fullMessage
+                'mgdprl_delete_ko_log' => $messageWithError
             ];
 
             // check logs
@@ -719,7 +720,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_delete_ko'] = (int) ($logs->mgdprl_delete_ko + 1);
                 // override message
-                $data['mgdprl_delete_ko_log'] = $logs->mgdprl_delete_ko_log . "/" . $fullMessage;
+                $data['mgdprl_delete_ko_log'] = !empty($logs->mgdprl_delete_ko_log) ? $logs->mgdprl_delete_ko_log. "/" . $messageWithError : $messageWithError;
             }
         }
 

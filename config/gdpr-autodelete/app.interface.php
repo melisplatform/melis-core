@@ -260,6 +260,22 @@ return [
                                                                                                                 'jscallback' => '',
                                                                                                                 'jsdatas' => [],
                                                                                                             ],
+                                                                                                            'interface' => [
+                                                                                                                'meliscoregdpr_auto_delete_add_edit_config_tab_logs_details' => [
+                                                                                                                    'conf' => [
+                                                                                                                        'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',
+                                                                                                                        'name' => 'Log Details',
+                                                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',
+                                                                                                                    ],
+                                                                                                                    'forward' => [
+                                                                                                                        'module' => 'MelisCore',
+                                                                                                                        'controller' => 'MelisCoreGdprAutoDeleteTabs',
+                                                                                                                        'action' => 'render-logs-tab-details',
+                                                                                                                        'jscallback' => '',
+                                                                                                                        'jsdatas' => [],
+                                                                                                                    ],
+                                                                                                                ]
+                                                                                                            ]
                                                                                                         ]
                                                                                                     ]
                                                                                                 ]

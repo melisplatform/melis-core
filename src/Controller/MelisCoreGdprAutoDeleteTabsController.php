@@ -303,6 +303,32 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         return $view;
     }
 
+    /**
+     * @return ViewModel
+     */
+    public function renderLogsTabDetailsAction()
+    {
+        // view model
+        $view = new ViewModel();
+        // get log id
+        $logId = $this->params()->fromRoute('logId', $this->params()->fromQuery('logId'), null);
+        $logData = [];
+        if (! empty($logId)) {
+            // get log data
+            $logData = $this->getGdprDeleteEmailsLogsTable()->getEntryById($logId)->current();
+            // get site name
+            $logData->mgdprl_site_id = $this->getGdprAutoDeleteService()->getSiteNameBySiteId($logData->mgdprl_site_id);
+        }
+        // log id
+        $view->setVariable('logData', $logData);
+        // melis key
+        $view->setVariable('melisKey', $this->getMelisKey());
+
+        return $view;
+    }
+
+
+
     public function getAutoDeleteConfigBySiteModuleAction()
     {
         return new JsonModel([

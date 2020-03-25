@@ -348,6 +348,11 @@ $(function () {
             melisHelper.removeLoadingZone(parent);
         });
     });
+
+    $body.on('click', ".gdpr-email-logs-show-details", function() {
+        $("#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details").removeClass('hidden');
+        melisHelper.zoneReload('id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details','meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',{ logId : $(".gdpr-email-logs-show-details").parent().parent().parent().attr('id')});
+    });
 });
 /**
  * gdpr list config filters initializtions
