@@ -3103,7 +3103,9 @@ div#modal-user-management div.widget {
 
 
 /* User Profile */
-
+#tableToolUserManagement span.text-info {
+    color : #466baf!important;
+}
 .profile-photo {
     position: relative;
     width: 190px;

@@ -88,6 +88,8 @@ $(function() {
 							melisCore.flashMessenger();
 							$('#iduserprofilemanagement #id_usr_password, #iduserprofilemanagement #id_usr_confirm_password').val('');
 						}
+						melisCoreTool.processing();
+						location.reload(true);
 					}else{//failed
 						//show errors
 						melisHelper.melisKoNotification(data.textTitle, translations.tr_meliscore_user_profile_failed_info, data.errors);

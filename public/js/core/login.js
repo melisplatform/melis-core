@@ -24,6 +24,9 @@ $(function() {
                 if(data.require_reset_password) {
                     melisCoreTool.alertWarning('#loginprompt', '<i class="fa fa-exclamation-triangle"></i> ' + translations.tr_meliscore_common_warning+"!", errorTxt);
                 }
+                else if(data.password_expired){
+                    window.location.replace(data.renew_pass_url);
+                }
                 else {
                     melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
                 }
