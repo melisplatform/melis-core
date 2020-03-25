@@ -149,8 +149,10 @@ var melisDashBoardDragnDrop = {
     dropWidget: function(widget) {
         var self = this,
             gridstack = $("#" + activeTabId + " .tab-pane .grid-stack").data("gridstack");
-        //var gridDrop = $(gridstack.container[0]).droppable({
-        var gridDrop = gridstack.container.droppable({
+            //console.log("gridstack: ", gridstack.container);
+            //console.log("gridstack: ", gridstack.container[0]);
+        var gridDrop = $(gridstack.container[0]).droppable({
+        //var gridDrop = gridstack.container.droppable({
             accept: widget,
             tolerance: 'pointer',
             drop: function (event, ui) {
