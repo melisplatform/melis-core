@@ -360,10 +360,10 @@ class UserProfileController extends AbstractActionController
         if(!empty($password) || !empty($confirmPass))
         {
             //check the length of the password
-            if(strlen($password) >= 8)
+            if(strlen($password) >= 12)
             {
                 //check the length of the confirm password
-                if(strlen($confirmPass) >= 8)
+                if(strlen($confirmPass) >= 12)
                 {
                     $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                     if($passValidator->isValid($password))
