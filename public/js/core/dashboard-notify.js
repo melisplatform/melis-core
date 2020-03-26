@@ -164,8 +164,7 @@ $(function() {
     //setTimeout(function() {
         var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
             activeModule    = '';
-
-            console.log("$dbMsg: ", $dbMsg.length );
+            
             if ( $dbMsg.length > 0 ) {
                 activeModule = $dbMsg.data("activeMods").split("-");
                 /* 
