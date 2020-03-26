@@ -1234,3 +1234,6 @@ a[data-toggle="modal"]:focus {
 #modal-user-management .widget.widget-tabs-double>.widget-head ul li.active {
   height: 39px;
 }
+.no-dashboard-access p {
+  margin-bottom: 0;
+}

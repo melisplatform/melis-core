@@ -168,11 +168,16 @@ $(function() {
          * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
          * from with melisUserTabs ajax call.
          */
-        
-        if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
+        if ( ! $.inArray( "MelisUserTabs", activeModule ) !== -1 ) {
+        //if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
             dashboardNotify.init();
+            //console.log("dashboardNotify init(): ");
         }
         else {
             melisUserTabs.getUserSavedOpenTabs();
+            //console.log("melisUserTabs getUserSavedOpenTabs(): ");
         }
+
+        /* console.log("activeModule split: ", $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-") );
+        console.log("$.inArray activeModule: ", $.inArray( "MelisUserTabs", activeModule )); */
 });
