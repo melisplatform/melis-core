@@ -161,7 +161,7 @@ var dashboardNotify = (function() {
 })();
 
 $(function() {
-    var dbMsgInterval = setInterval(function() {
+    //var dbMsgInterval = setInterval(function() {
         var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
             activeModule    = $dbMsg.data("activeMods").match(/MelisUserTabs/g); //MelisUserTabs
 
@@ -181,7 +181,7 @@ $(function() {
                     dashboardNotify.init();
                 }
 
-                clearInterval( dbMsgInterval );
+                //clearInterval( dbMsgInterval );
             }            
-    }, 500);
+    //}, 500);
 });
