@@ -150,10 +150,7 @@ var melisDashBoardDragnDrop = {
         var self            = this,
             $gridstack      = $("#" + activeTabId + " .tab-pane .grid-stack"),
             gridstackData   = $gridstack.data("gridstack");
-            //console.log("gridstack: ", gridstack.container);
-            //console.log("gridstack: ", gridstack.container[0]);
-            //console.log("gridstack: ", gridstack.container.[0]);
-            //console.log("$gridstack: ", $gridstack);
+
         //var gridDrop = $(gridstack.container[0]).droppable({
         //var gridDrop = gridstack.container.droppable({
         $gridstack.droppable({

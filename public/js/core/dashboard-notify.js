@@ -160,19 +160,6 @@ var dashboardNotify = (function() {
 
 })();
 
-/* var paginate = setInterval(function() {
-    var $paginate = $(".dataTables_paginate"),
-        $page_item = $paginate.find(".pagination li"),
-        $page_link = $page_item.find("a");
-
-        if ( $paginate.length ) {
-            $page_item.addClass("page-item");
-            $page_link.addClass("page-link");
-
-            clearInterval( paginate );
-        }
-}, 500); */
-
 $(function() {
     var dbMsgInterval = setInterval(function() {
         var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
@@ -188,9 +175,11 @@ $(function() {
                 */
                 if ( ! $.inArray( "MelisUserTabs", activeModule ) !== -1 ) {
                     dashboardNotify.init();
+                    console.log("dashboardNotify init");
                 }
                 else {
                     melisUserTabs.getUserSavedOpenTabs();
+                    console.log(" melisUserTabs getUserSavedOpenTabs");
                 }
 
                 clearInterval( dbMsgInterval );
