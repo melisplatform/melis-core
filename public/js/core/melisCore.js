@@ -692,30 +692,6 @@ var melisCore = (function(window){
     $body.on("click", '.melis-core-dashboard-filter-btn', showPlugLists);
     $body.on("click", '.melis-core-dashboard-category-btn', showCatPlugLists);
 
-    /**
-     * chart class
-     * [.flotchart-holder]
-     * [.cms-pros-dash-chart-line-graph]
-     * [.commerce-dashboard-plugin-sales-revenue-placeholder]
-     */
-    /* $body.on("shown.bs.tab", "#melis-id-nav-bar-tabs li a[data-toggle='tab']", function(e) {
-        var target      = e.target;
-            meliskey    = $(target).closest("li").data("tool-meliskey"),
-            $activeTab  = $("#"+activeTabId);
-
-            if ( meliskey === "meliscore_dashboard" ) {
-                if ( typeof prospectsDashboardLineChart !== "undefined" && 
-                $activeTab.find(".cms-pros-dash-chart-line-graph").length > 0 ) {
-                    prospectsDashboardLineChart.loadChart();
-                }
-                
-                if ( typeof commerceDashboardPluginSalesRevenue !== "undefined" && 
-                $activeTab.find(".commerce-dashboard-plugin-sales-revenue-placeholder").length > 0 ) {
-                    commerceDashboardPluginSalesRevenue.loadChart();
-                }
-            }
-    }); */
-
     // jQuery ui tooltip style
     $(".melis-core-dashboard-plugin-snippets").tooltip({
         position: {
@@ -738,18 +714,10 @@ var melisCore = (function(window){
             $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
     });
 
-    /* $body.on("mouseover", "a[title]", function() {
-        var $this = $(this);
-
-            if ( $this.attr("title") ) {
-                $this.removeAttr("aria-describedby");
-            }
-    }); */
-
     // disable tooltip on hover elements, added attribute aria-describedby
     // $(":not(.melis-core-dashboard-plugin-snippets) *[title]").tooltip('disable');
     
-    $body.on("click", ".melis-dashboard-plugins-menu", function(){
+    $body.on("click", ".melis-dashboard-plugins-menu", function() {
         data = $(this).data();
         //var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
 
