@@ -135,7 +135,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     public function renderContentAccordionListConfigContentSiteFilterAction()
     {
         $view = new ViewModel();
-        if (in_array('MelisCms', $this->getServiceLocator()->get('ModulesService')->getAllModules())) {
+        if (in_array('MelisCms', $this->getServiceLocator()->get('ModulesService')->getActiveModules())) {
             $view->setVariable('sites', $this->getServiceLocator()
                 ->get('MelisEngineTableSite')->fetchAll()->toArray());
         }

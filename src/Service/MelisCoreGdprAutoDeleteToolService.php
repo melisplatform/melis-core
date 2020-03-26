@@ -373,15 +373,9 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      */
     public function getLinkUrl($pageId)
     {
-        $list = $this->getEventManager()->trigger('melis_engine_gdpr_auto_delete_link_provider',$this,[ 'pageId' => $pageId ]);
-        // check for the data
-        for ($list->rewind();$list->valid();$list->next()) {
-            // check if current data is not empty
-            if (!empty($list->current())) {
-                $pageId = $list->current();
-                break;
-            }
-        };
+        if ($this->getServiceLocator()->has('MelisEngineTree')) {
+            return $this->getServiceLocator()->get('MelisEngineTree')->getPageLink($pageId,true);
+        }
 
         return $pageId;
     }
@@ -424,7 +418,11 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      */
     public function getSiteNameBySiteId($siteId)
     {
-        return $this->getServiceLocator()->get('MelisEngineTableSite')->getEntryById($siteId)->current()->site_label;
+        if ($this->getServiceLocator()->has('MelisEngineTableSite')){
+            return $this->getServiceLocator()->get('MelisEngineTableSite')->getEntryById($siteId)->current()->site_label;
+        }
+
+        return $siteId;
     }
 
 }

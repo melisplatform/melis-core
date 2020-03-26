@@ -9,19 +9,66 @@ if (!empty($this->zoneconfig['conf']['id'])) {
     <?php if (!empty($this->logData)) { ?>
         <h3>Log details</h3>
         <br>
-        <ul class="list-unstyled">
-            <li>Site : <?= $this->logData->mgdprl_site_id?></li>
-            <li>Consectetur adipiscing elit</li>
-            <li>Integer molestie lorem at massa</li>
-            <li>Facilisis in pretium nisl aliquet</li>
-            <li>Faucibus porta lacus fringilla vel</li>
-            <li>Aenean sit amet erat nunc</li>
-            <li>Eget porttitor lorem</li>
-        </ul>
-        <pre>
-         <?php
-         print_r($this->logData);
-         ?>
-        </pre>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="fa-ul">
+                    <li><span class="fa fa-li fa-key text-primary"></span> ID : <strong><?= $this->logData->mgdprl_id?></strong></li>
+                    <li><span class="fa fa-li fa-cloud text-info"></span> Site : <strong><?= $this->logData->mgdprl_site_id?></strong> </li>
+                    <li><span class="fa fa-li fa-calendar text-warning"></span> Log date : <strong><?= $this->logData->mgdprl_log_date?></strong></li>
+                    <li><span class="fa fa-li fa-puzzle-piece text-warning"></span> Module : <strong><?= $this->logData->mgdprl_module_name?></strong></li>
+                </ul>
+                <div class="row">
+                    <div class="col-md-4">
+                        <ul class="fa-ul">
+                            <li>
+                                <h5><span class="fa fa-li fa-envelope-o text-success"></span> First alert warning email</h5>
+                                <ul class="fa-ul">
+                                    <li><span class="fa fa-li fa-check text-success"></span> OK <span class="badge badge-success"><?= $this->logData->mgdprl_warning1_ok?></span>
+                                        <?php if (!empty($this->logData->mgdprl_warning1_ok_log)) { ?>
+                                            <ul class="list-regular innerAll px2">
+                                            <?php foreach (explode(';',$this->logData->mgdprl_warning1_ok_log) as $email) {?>
+                                                <li class="text-success"><?= $email?></li>
+                                            <?php } ?>
+                                            </ul>
+                                        <?php } ?>
+                                    </li>
+                                    <li><span class="fa fa-li fa-exclamation text-danger"></span> KO <span class="badge badge-danger text-white"><?= $this->logData->mgdprl_warning1_ko?></span>
+                                        <?php if (!empty($this->logData->mgdprl_warning1_ko_log)) { ?>
+                                            <ul class="list-regular innerAll px2">
+                                                <?php foreach (explode(';',$this->logData->mgdprl_warning1_ko_log) as $email) {?>
+                                                    <li class="text-danger"><?= $email?></li>
+                                                <?php } ?>
+                                            </ul>
+                                        <?php } ?>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="fa-ul">
+                            <li>
+                                <h5><span class="fa fa-li fa-envelope-o text-success "></span> Second alert warning email</h5>
+                                <ul class="fa-ul">
+                                    <li><span class="fa fa-li fa-check text-success"></span> OK <span class="badge badge-success"><?= $this->logData->mgdprl_warning2_ok?></span></li>
+                                    <li><span class="fa fa-li fa-exclamation text-danger"></span> KO <span class="badge badge-danger text-white"><?= $this->logData->mgdprl_warning2_ko?></span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="fa-ul">
+                            <li>
+                                <h5><span class="fa fa-li fa-envelope-o text-success"></span> Delete alert email</h5>
+                                <ul class="fa-ul">
+                                    <li><span class="fa fa-li fa-check text-success"></span> OK <span class="badge badge-success"><?= $this->logData->mgdprl_delete_ok?></span></li>
+                                    <li><span class="fa fa-li fa-exclamation text-danger"></span> KO <span class="badge badge-danger text-white"><?= $this->logData->mgdprl_delete_ko?></span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     <?php } ?>
 </div>

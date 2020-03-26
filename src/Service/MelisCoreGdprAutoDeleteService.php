@@ -626,7 +626,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_warning1_ko'] = (int) ($logs->mgdprl_warning1_ko + 1);
                 // override message
-                $data['mgdprl_warning1_ko_log'] = !empty($logs->mgdprl_warning1_ko_log) ? $logs->mgdprl_warning1_ko_log . "/" . $messageWithError : $messageWithError;
+                $data['mgdprl_warning1_ko_log'] = !empty($logs->mgdprl_warning1_ko_log) ? $logs->mgdprl_warning1_ko_log . "/" . $messageWithError . ";" : $messageWithError;
             }
         }
 
@@ -673,7 +673,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_warning2_ko'] = (int) ($logs->mgdprl_warning2_ko + 1);
                 // override message
-                $data['mgdprl_warning2_ko_log'] = !empty($logs->mgdprl_warning2_ko_log) ? $logs->mgdprl_warning2_ko_log . "/" . $messageWithError : $messageWithError;
+                $data['mgdprl_warning2_ko_log'] = !empty($logs->mgdprl_warning2_ko_log) ? $logs->mgdprl_warning2_ko_log . "/" . $messageWithError . ";" : $messageWithError;
             }
         }
 
@@ -720,7 +720,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_delete_ko'] = (int) ($logs->mgdprl_delete_ko + 1);
                 // override message
-                $data['mgdprl_delete_ko_log'] = !empty($logs->mgdprl_delete_ko_log) ? $logs->mgdprl_delete_ko_log. "/" . $messageWithError : $messageWithError;
+                $data['mgdprl_delete_ko_log'] = !empty($logs->mgdprl_delete_ko_log) ? $logs->mgdprl_delete_ko_log. "/" . $messageWithError . ";" : $messageWithError;
             }
         }
 
