@@ -161,23 +161,26 @@ var dashboardNotify = (function() {
 })();
 
 $(function() {
-    var activeModule = $("#"+activeTabId).find(".melis-core-dashboard-msg").attr("data-active-mods").split("-");
-        /* 
-         * Check if melisUserTabs is currently an active module.
-         * Negate to run the local dashboardNotify.init() function.
-         * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
-         * from with melisUserTabs ajax call.
-         */
-        if ( ! $.inArray( "MelisUserTabs", activeModule ) !== -1 ) {
-        //if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
-            dashboardNotify.init();
-            //console.log("dashboardNotify init(): ");
-        }
-        else {
-            melisUserTabs.getUserSavedOpenTabs();
-            //console.log("melisUserTabs getUserSavedOpenTabs(): ");
-        }
+    setTimeout(function() {
+        var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
+            activeModule    = $dbMsg.data("activeMods").split("-");
+            /* 
+            * Check if melisUserTabs is currently an active module.
+            * Negate to run the local dashboardNotify.init() function.
+            * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
+            * from with melisUserTabs ajax call.
+            */
+            if ( ! $.inArray( "MelisUserTabs", activeModule ) !== -1 ) {
+            //if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
+                dashboardNotify.init();
+                //console.log("dashboardNotify init(): ");
+            }
+            else {
+                melisUserTabs.getUserSavedOpenTabs();
+                //console.log("melisUserTabs getUserSavedOpenTabs(): ");
+            }
 
-        /* console.log("activeModule split: ", $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-") );
-        console.log("$.inArray activeModule: ", $.inArray( "MelisUserTabs", activeModule )); */
+            /* console.log("activeModule split: ", $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-") );
+            console.log("$.inArray activeModule: ", $.inArray( "MelisUserTabs", activeModule )); */
+    }, 1000);
 });
