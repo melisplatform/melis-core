@@ -52,11 +52,20 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 $module = $packageModuleName['module-name'];
             }
 
+            /**
+             *  check if module is bundle type
+             */
+            $bundle = false;
+            if(isset($packageModuleName['bundle'])){
+                $bundle = $packageModuleName['bundle'];
+            }
+
             if ($module) {
                 $tmpModules[$module] = [
                     'package' => $package->name,
                     'module' => $module,
                     'version' => $package->version,
+                    'is_bundle' => $bundle
                 ];
 
                 if ($module == $moduleName) {

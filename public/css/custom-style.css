@@ -224,7 +224,7 @@ a:not([href]).btn-danger:hover {
   border-left-color: #c52127;
 }
 #id_meliscore_tool_user_module_management_content .ms-cont {
-  min-width: 280px;
+  min-width: 400px;
 }
 /* platforms pagination */
 .pagination-cont {
