@@ -163,10 +163,9 @@ var dashboardNotify = (function() {
 $(function() {
     //setTimeout(function() {
         var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
-            activeModule    = '';
+            activeModule    = ( $dbMsg.length > 0 ) ? $dbMsg.data("activeMods").split("-") : '';
 
             //if ( $dbMsg.length > 0 ) {
-                activeModule = $dbMsg.data("activeMods").split("-");
                 /* 
                 * Check if melisUserTabs is currently an active module.
                 * Negate to run the local dashboardNotify.init() function.
