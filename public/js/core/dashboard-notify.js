@@ -164,8 +164,8 @@ $(function() {
     //setTimeout(function() {
         var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
             activeModule    = '';
-            
-            if ( $dbMsg.length > 0 ) {
+
+            //if ( $dbMsg.length > 0 ) {
                 activeModule = $dbMsg.data("activeMods").split("-");
                 /* 
                 * Check if melisUserTabs is currently an active module.
@@ -182,7 +182,8 @@ $(function() {
                     melisUserTabs.getUserSavedOpenTabs();
                     //console.log("melisUserTabs getUserSavedOpenTabs(): ");
                 }
-            }
+            //}
+            console.log("activeModule: ", activeModule);
 
             /* console.log("activeModule split: ", $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-") );
             console.log("$.inArray activeModule: ", $.inArray( "MelisUserTabs", activeModule )); */
