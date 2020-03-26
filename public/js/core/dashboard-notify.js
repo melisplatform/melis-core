@@ -163,23 +163,22 @@ var dashboardNotify = (function() {
 $(function() {
     var dbMsgInterval = setInterval(function() {
         var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
-            activeModule    = '';
+            activeModule    = $dbMsg.data("activeMods").match(/MelisUserTabs/g); //MelisUserTabs
 
             if ( $dbMsg.length > 0 ) {
-                activeModule = $dbMsg.data("activeMods").split("-");
+                //activeModule = $dbMsg.data("activeMods").split("-");
                 /* 
                 * Check if melisUserTabs is currently an active module.
                 * Negate to run the local dashboardNotify.init() function.
                 * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
                 * from with melisUserTabs ajax call.
                 */
-                if ( ! $.inArray( "MelisUserTabs", activeModule ) !== -1 ) {
-                    dashboardNotify.init();
-                    console.log("dashboardNotify init");
+                //if ( ! $.inArray( "MelisUserTabs", activeModule ) !== -1 ) {
+                if ( activeModule !== null ) {
+                    melisUserTabs.getUserSavedOpenTabs();
                 }
                 else {
-                    melisUserTabs.getUserSavedOpenTabs();
-                    console.log(" melisUserTabs getUserSavedOpenTabs");
+                    dashboardNotify.init();
                 }
 
                 clearInterval( dbMsgInterval );
