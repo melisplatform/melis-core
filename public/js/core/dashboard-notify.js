@@ -178,7 +178,6 @@ $(function() {
             }
             else {
                 dashboardNotify.init();
-                console.log("dashboardNotify init");
             }
         }            
 });
