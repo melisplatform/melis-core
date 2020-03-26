@@ -163,7 +163,7 @@ var dashboardNotify = (function() {
 $(function() {
     var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
         mods            = $dbMsg.data("activeMods"),
-        activeModule    = ( mods.prop !== undefined ) ? mods.match(/MelisUserTabs/g) : '';
+        activeModule    = ( mods !== undefined ) ? mods.match(/MelisUserTabs/g) : '';
         //modsMatch       = .match(/MelisUserTabs/g); //MelisUserTabs
 
         if ( $dbMsg.length > 0 ) {
