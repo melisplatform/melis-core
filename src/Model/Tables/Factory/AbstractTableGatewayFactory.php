@@ -9,7 +9,7 @@
 
 namespace MelisCore\Model\Tables\Factory;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Stdlib\Hydrator\ObjectProperty;

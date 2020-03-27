@@ -9,7 +9,7 @@
 
 namespace MelisCore\Form\Factory;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Form\Element\Text;
 
 /**
