@@ -161,3 +161,18 @@
 .message-log {
     padding-left:20px;
 }
+.first-alert-warning-email {
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px solid #eee;
+}
+.second-alert-warning-email {
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px solid #eee;
+}
+.delete-alert-email {
+    margin-top:20px;
+    padding-top:10px;
+    border-top:1px solid #eee;
+}
