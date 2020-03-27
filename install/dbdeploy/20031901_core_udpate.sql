@@ -1,0 +1,1 @@
+ALTER TABLE `melis_core_user` ADD `usr_last_pass_update_date` DATETIME NULL AFTER `usr_last_login_date`;

@@ -458,7 +458,7 @@ class UserProfileController extends AbstractActionController
            }
            //get the user role by role id
            $r = $role->getEntryById($usersInfo[$key]['usr_role_id'])->toArray();
-           $usersInfo[$key]['usr_role'] = $r[$key]['urole_name'];
+           $usersInfo[$key]['usr_role'] = $r[$key]['urole_name'] ?? '';
         }
         return $usersInfo;
     }

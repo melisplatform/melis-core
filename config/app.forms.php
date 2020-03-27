@@ -230,6 +230,60 @@ return array(
                         ),
                     ),
                 ),
+                'meliscore_renewpass' => array(
+                    'attributes' => array(
+                        'name' => 'meliscore_renew_password',
+                        'id' => 'idformmeliscorerenewpass',
+                        'method' => 'POST',
+                        'novalidate' => 'novalidate',
+                    ),
+                    'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                    'elements' => array(
+                        array(
+                            'spec' => array(
+                                'name' => 'usr_pass',
+                                'type' => 'Password',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_reset_password',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'id_usr_pass',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_reset_password',
+                                    'required' => 'required',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'usr_pass_confirm',
+                                'type' => 'Password',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_reset_password_confirm',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'id_usr_pass_confirm',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'tr_meliscore_reset_password_confirm',
+                                    'required' => 'required',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'renew_submit',
+                                'type' => 'submit',
+                                'attributes' => array(
+                                    'value' => 'tr_meliscore_renew_password_button',
+                                    'id' => 'renew_submit',
+                                    'class' => 'btn btn-primary btn-block',
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
                 // Platform Color scheme form
                 'melis_core_platform_scheme_form' => array(
                     'attributes' => array(
