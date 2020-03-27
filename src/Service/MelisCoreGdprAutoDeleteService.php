@@ -446,85 +446,68 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         // check config key is present
         if ($this->isExists(self::CONFIG_KEY, $emailOptions)) {
             // check lang id is present
-            if ($this->isExists(self::LANG_KEY,$emailOptions[self::CONFIG_KEY])) {
+            if ($this->isExists(self::LANG_KEY, $emailOptions[self::CONFIG_KEY])) {
                 // get lang id
                 $langId = $emailOptions[self::CONFIG_KEY][self::LANG_KEY];
                 // get alert emails required data for the email
                 $alertEmailData = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], $type, $langId);
-                //  get the link of page id
-                $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
-                // if link is homepage
-                if ($link == "/") {
-                    $uri = $this->getServiceLocator()->get('request')->getUri();
-                    $alertEmailData->mgdpre_link = $uri->getScheme() . "://" . $uri->getHost();
-                } else {
-                    $alertEmailData->mgdpre_link = $link;
-                }
-
-                // add suffix to email subject indication of email if it is first or second
-                if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
-                    // default is first
-                    $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1ˢᵗ)";
-                    if (!$first) {
-                        // override
-                        $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2ⁿᵈ)";
+                if (!empty($alertEmailData)) {
+                    //  get the link of page id
+                    $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
+                    // if link is homepage
+                    if ($link == "/") {
+                        $uri = $this->getServiceLocator()->get('request')->getUri();
+                        $alertEmailData->mgdpre_link = $uri->getScheme() . "://" . $uri->getHost();
+                    } else {
+                        $alertEmailData->mgdpre_link = $link;
                     }
-                }
-                // html email content
-                $htmlContent = $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
-                // text version email content
-                $textVersion =  $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
-                // check for errors
-                if (empty($htmlContent['errors']) || empty($textVersion['errors'])) {
-                    // send email
-                    $this->sendEmail(
-                        $emailSetupConfig['mgdprc_email_conf_from_email'],
-                        $emailSetupConfig['mgdprc_email_conf_from_name'],
-                        $email,
-                        null,
-                        $emailSetupConfig['mgdprc_email_conf_reply_to'],
-                        $alertEmailData->mgdpre_subject,
-                        $this->getEmailLayoutContent(
-                            $emailSetupConfig,
-                            $htmlContent['content']
-                        ),
-                        $textVersion['content']
-                    );
-                    // save log ok
-                    $this->saveGdprAutoDeleteLogs(
-                        $emailSetupConfig,
-                        $email,
-                        $type,
-                        $first,
-                        null,
-                        true
-                    );
+                    // add suffix to email subject indication of email if it is first or second
+                    if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
+                        // default is first
+                        $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1ˢᵗ)";
+                        if (!$first) {
+                            // override
+                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2ⁿᵈ)";
+                        }
+                    }
+                    // html email content
+                    $htmlContent = $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
+                    // text version email content
+                    $textVersion =  $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
+                    // check for errors
+                    if (empty($htmlContent['errors']) || empty($textVersion['errors'])) {
+                        // send email
+                        $this->sendEmail(
+                            $emailSetupConfig['mgdprc_email_conf_from_email'],
+                            $emailSetupConfig['mgdprc_email_conf_from_name'],
+                            $email,
+                            null,
+                            $emailSetupConfig['mgdprc_email_conf_reply_to'],
+                            $alertEmailData->mgdpre_subject,
+                            $this->getEmailLayoutContent(
+                                $emailSetupConfig,
+                                $htmlContent['content']
+                            ),
+                            $textVersion['content']
+                        );
+                        // save log ok
+                        $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, null, true
+                        );
+                    } else {
+                        // set has error true
+                        $response['hasError'] = true;
+                        // logs not all tags are filled
+                        $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Not all tags are filled', false);
+                    }
                 } else {
-                    // set has error true
-                    $response['hasError'] = true;
-                    // logs not all tags are filled
-                    $this->saveGdprAutoDeleteLogs(
-                        $emailSetupConfig,
-                        $email,
-                        $type,
-                        $first,
-                        'Not all tags are filled',
-                        false
-                    );
+                    // logs no content of email
+                    $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'No email content provided in asked language', false);
                 }
-
             } else {
                 // set has error true
                 $response['hasError'] = true;
                 // logs lang key is missing
-                $this->saveGdprAutoDeleteLogs(
-                    $emailSetupConfig,
-                    $email,
-                    $type,
-                    $first,
-                    'No email content provided in asked language',
-                    false
-                );
+                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Unavailability of language email', false);
             }
         }
 
@@ -618,7 +601,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // set counter to 1
                 'mgdprl_warning1_ko' => 1,
                 // set log error message
-                'mgdprl_warning1_ko_log' => $messageWithError
+                'mgdprl_warning1_ko_log' => $messageWithError . ";"
             ];
 
             // check logs
@@ -626,7 +609,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_warning1_ko'] = (int) ($logs->mgdprl_warning1_ko + 1);
                 // override message
-                $data['mgdprl_warning1_ko_log'] = !empty($logs->mgdprl_warning1_ko_log) ? $logs->mgdprl_warning1_ko_log . "/" . $messageWithError . ";" : $messageWithError;
+                $data['mgdprl_warning1_ko_log'] = !empty($logs->mgdprl_warning1_ko_log) ? $logs->mgdprl_warning1_ko_log . $messageWithError . ";" : $messageWithError;
             }
         }
 
@@ -665,7 +648,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // set counter to 1
                 'mgdprl_warning2_ko' => 1,
                 // set log error message
-                'mgdprl_warning2_ko_log' => $messageWithError
+                'mgdprl_warning2_ko_log' => $messageWithError . ";"
             ];
 
             // check logs
@@ -673,7 +656,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_warning2_ko'] = (int) ($logs->mgdprl_warning2_ko + 1);
                 // override message
-                $data['mgdprl_warning2_ko_log'] = !empty($logs->mgdprl_warning2_ko_log) ? $logs->mgdprl_warning2_ko_log . "/" . $messageWithError . ";" : $messageWithError;
+                $data['mgdprl_warning2_ko_log'] = !empty($logs->mgdprl_warning2_ko_log) ? $logs->mgdprl_warning2_ko_log . $messageWithError . ";" : $messageWithError;
             }
         }
 
@@ -712,7 +695,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // set counter to 1
                 'mgdprl_delete_ko' => 1,
                 // set log error message
-                'mgdprl_delete_ko_log' => $messageWithError
+                'mgdprl_delete_ko_log' => $messageWithError . ";"
             ];
 
             // check logs
@@ -720,7 +703,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // add counter
                 $data['mgdprl_delete_ko'] = (int) ($logs->mgdprl_delete_ko + 1);
                 // override message
-                $data['mgdprl_delete_ko_log'] = !empty($logs->mgdprl_delete_ko_log) ? $logs->mgdprl_delete_ko_log. "/" . $messageWithError . ";" : $messageWithError;
+                $data['mgdprl_delete_ko_log'] = !empty($logs->mgdprl_delete_ko_log) ? $logs->mgdprl_delete_ko_log  . $messageWithError . ";" : $messageWithError;
             }
         }
 
@@ -907,20 +890,20 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         $tagsNotFoundOnModule = [];
         $moduleTags = $emailOptions['tags'];
+        // URL tag must be reserve for revalidation link of the email
+        // replace URL tag on the content
+        $content = str_replace('[URL]', $data->mgdpre_link . "?u=" . (isset($emailOptions['config']['validationKey']) ? $emailOptions['config']['validationKey'] : null), $content);
         if (!empty($tags)) {
             // accepted tags
             foreach ($tags as $idx => $dbTag) {
-                // replace the reserved tag and replace the content
-                if ($dbTag == "URL") {
-                    // url for revalidation of user
-                    $moduleTags['URL'] = $data->mgdpre_link . "?u=" . (isset($emailOptions['config']['validationKey']) ? $emailOptions['config']['validationKey'] : null) ;
-                }
-                // look for module tags
-                if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
-                    // get email content and replace tags
-                    $content = str_replace('[' . $dbTag . ']', $moduleTags[$dbTag], $content);
-                } else {
-                    $tagsNotFoundOnModule[] = $dbTag;
+                if ($dbTag != "URL") {
+                    // look for module tags
+                    if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
+                        // get email content and replace tags
+                        $content = str_replace('[' . $dbTag . ']', $moduleTags[$dbTag], $content);
+                    } else {
+                        $tagsNotFoundOnModule[] = $dbTag;
+                    }
                 }
             }
         }
