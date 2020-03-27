@@ -240,7 +240,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                 // merge tags
                                     $this->mergeTagsConfig($autoDelConf),
                                     $email,
-                                    $emailOpts
+                                    $emailOpts,
+                                    MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                                    false
                                 );
                                 // if no errors then save to db
                                 if (! $sendMail['hasError']) {
@@ -464,10 +466,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     // add suffix to email subject indication of email if it is first or second
                     if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
                         // default is first
-                        $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1ˢᵗ)";
                         if (!$first) {
                             // override
                             $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2ⁿᵈ)";
+                        } else {
+                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1ˢᵗ)";
                         }
                     }
                     // html email content
