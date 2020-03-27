@@ -9,8 +9,6 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerInterface;
 
@@ -19,22 +17,10 @@ use Laminas\EventManager\EventManagerInterface;
  * This service handles the generic service system of Melis.
  *
  */
-class MelisCoreGeneralService implements ServiceLocatorAwareInterface, EventManagerAwareInterface
+class MelisCoreGeneralService extends MelisCoreServiceManager implements EventManagerAwareInterface
 {
-	public $serviceLocator;
-	public $eventManager;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl)
-	{
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator()
-	{
-		return $this->serviceLocator;
-	}
-	
+    protected $eventManager;
+
 	public function setEventManager(EventManagerInterface $eventManager)
 	{
 	    $this->eventManager = $eventManager;

@@ -4,18 +4,15 @@ namespace MelisCore\Service;
 
 use ReflectionClass;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Session\Container;
 use Laminas\View\Model\ViewModel;
 
 /**
  * This Service helps you create your tool
  */
-class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLocatorAwareInterface
+class MelisCoreToolService extends MelisCoreServiceManager implements MelisCoreToolServiceInterface
 {
     const TEXT_LIMIT = 25;
-    public $serviceLocator;
     protected $_melisToolKey;
     protected $_melisConfig;
     protected $_appConfig;
@@ -70,7 +67,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function getForm($formKey)
     {
-        $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $toolKey = $this->getMelisToolKey();
         $formConfig = $toolKey . '/forms/' . $formKey;
 
@@ -83,8 +80,11 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         }
 
         /** @var \MelisCore\Service\MelisFormService $factory */
-        $factory = $this->getServiceLocator()->get('MelisCoreFormService');
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory = $this->getServiceManager()->get('MelisCoreFormService');
+        $formElements = $this->getServiceManager()->get('FormElementManager');
+
+//        print_r(get_class($formElements));
+//        exit;
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);
 
@@ -111,28 +111,9 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         $this->_melisToolKey = $module . '/tools/' . $melisToolKey;
 
-        $this->_melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $this->_melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $this->_appConfig = $this->_melisConfig->getItem($this->_melisToolKey);
         $this->_usedKey = $melisToolKey;
-    }
-
-    /**
-     * @return \Laminas\ServiceManager\ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
     }
 
     /**
@@ -144,7 +125,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     {
         $formKeys = $this->_appConfig['forms'];
         $factory = new \Laminas\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $forms = [];
         foreach ($formKeys as $keys => $formValues) {
@@ -209,7 +190,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function getModalContent($formKey)
     {
-        $forward = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward');
+        $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
         $content = $this->_appConfig['modals'][$formKey]['content'];
         $contentValue = $this->getViewContent($content);
 
@@ -225,7 +206,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function getViewContent($dispatchHandler)
     {
-        $forward = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward');
+        $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
         $module = $dispatchHandler['module'];
         $controller = $dispatchHandler['controller'];
         $actionView = $dispatchHandler['action'];
@@ -235,7 +216,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
         $viewModel = new ViewModel();
         $viewModel = $forward->dispatch($module . '\\Controller\\' . $controller, ['action' => $action]);
 
-        $renderer = $this->serviceLocator->get('Laminas\View\Renderer\RendererInterface');
+        $renderer = $this->getServiceManager()->get('Laminas\View\Renderer\RendererInterface');
         $html = new \Laminas\Mime\Part($renderer->render($viewModel));
 
         // since it will return an object with private properties, change the accessibility so we can get the content data we want.
@@ -390,7 +371,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     public function getDataTableConfiguration($targetTable = null, $allowReInit = false,
                                               $selectCheckbox = false, $tableOption = [], $type = '')
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $table = $this->_appConfig['table'];
         $dtJScript = '';
 
@@ -490,7 +471,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
             // Action Buttons
             $actionButtons = '';
             $action = '';
-            $forward = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward');
+            $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
             $actionCount = 0;
             foreach ($actionContainer as $actionKey => $actionContent) {
                 $actionButtons .= $this->getViewContent($actionContent) . ' ';
@@ -713,7 +694,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function exportDataToCsv($data, $fileName = null, $customSeparator = null, $customIsEnclosed = null)
     {
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         $csvConfig = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
         $csvFileName = '';
@@ -879,7 +860,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function getCurrentLocaleID()
     {
-        $langTable = $this->getServiceLocator()->get('MelisCoreTableLang');
+        $langTable = $this->getServiceManager()->get('MelisCoreTableLang');
         $container = new Container('meliscore');
         if ($container) {
             $locale = $container['melis-lang-locale'];
@@ -902,7 +883,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function getTranslation($translationKey, $args = [])
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $translatedText = vsprintf($translator->translate($translationKey), $args);
 
         return $translatedText;
@@ -915,7 +896,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function getCurrentUserId()
     {
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $userAuthDatas = $melisCoreAuth->getStorage()->read();
         if ($userAuthDatas) {
             return $userAuthDatas->usr_id;
@@ -1207,7 +1188,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
     public function exportCsv($fileName, $data)
     {
         $response = new HttpResponse();
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $csvConfig = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
         $separator = $csvConfig['separator'];
         $enclosed = $csvConfig['enclosed'];
@@ -1261,7 +1242,7 @@ class MelisCoreToolService implements MelisCoreToolServiceInterface, ServiceLoca
      */
     public function importCsv($file)
     {
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $csvConfig = $melisCoreConfig->getItem('meliscore/datas/default/export/csv');
         $separator = $csvConfig['separator'];
         $enclosed = $csvConfig['enclosed'];

@@ -9,7 +9,6 @@
 
 namespace MelisCore\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 // use Laminas\View\Model\JsonModel;
 // use MelisCore\Service\MelisCoreRightsService;

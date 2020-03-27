@@ -8,41 +8,23 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Session\Container;
 use Laminas\Mvc\Controller\Plugin\FlashMessenger;
 use Laminas\Json\Json;
-class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, MelisCoreFlashMessengerServiceInterface
+
+class MelisCoreFlashMessengerService extends MelisCoreServiceManager implements  MelisCoreFlashMessengerServiceInterface
 {
     
     /* const INFO = 'glyphicon glyphicon-info-sign';
     const WARNING = 'glyphicon glyphicon-warning-sign'; */
     const INFO = 'fa fa-info-circle';
     const WARNING = 'fa fa-warning';
-    /**
-     * 
-     * @var $serviceLocator ServiceLocatorInterface
-     */
-    public $serviceLocator;
-    
+
     /**
      * 
      * @var $fmContainer Container
      */
     protected $fmContainer;
-    
-
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
     
     /*
      * Adds a new message in the Flash Messenger MVC helper, this will be displayed
@@ -66,9 +48,9 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
             $date = date('M d y',  strtotime($logDate));
         }
 
-        $translatorSvc = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $translatorSvc = $this->getServiceManager()->get('MelisCoreTranslation');
 
-        $tool       = $this->getServiceLocator()->get('MelisCoreTool');
+        $tool       = $this->getServiceManager()->get('MelisCoreTool');
 
         $title      = $tool->escapeHtml($title);
         $title      = !empty($translatorSvc->getMessage($title, $locale))? $translatorSvc->getMessage($title, $locale) : $title;
@@ -123,7 +105,7 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
     {
         $this->fmContainer = new Container('fms');
         $this->fmContainer->getManager()->getStorage()->clear('fms');
-        $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
+        $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
         $melisCoreTableLog->update(array("log_status"=>0),"log_status",1);
     }
     /**
@@ -138,7 +120,7 @@ class MelisCoreFlashMessengerService implements ServiceLocatorAwareInterface, Me
     public function dateMod($date, $locale)
     {
     
-        $translatorSvc = $this->serviceLocator->get('MelisCoreTranslation');
+        $translatorSvc = $this->getServiceManager()->get('MelisCoreTranslation');
     
         $data = $date;
         $today = date('M d y');

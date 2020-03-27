@@ -9,17 +9,37 @@
 
 namespace MelisCore\Model\Tables;
 
+use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Hydrator\ObjectProperty;
+use MelisCore\Model\Hydrator\MelisUser;
 
 class MelisUserTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'usr_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_user';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'usr_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
+    /**
+     * @return HydratingResultSet
+     */
+    public function hydratingResultSet()
+    {
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisUser());
+    }
+
 	public function getUserOrderByName()
 	{
 	    $select = $this->tableGateway->getSql()->select();

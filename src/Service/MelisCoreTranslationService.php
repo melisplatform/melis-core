@@ -8,39 +8,43 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\I18n\Translator\Translator;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 /**
  * Translation Service for retrieveing all the translation messages
  *
  */
-class MelisCoreTranslationService extends Translator implements ServiceLocatorAwareInterface, MelisCoreTranslationServiceInterface
+class MelisCoreTranslationService extends Translator implements MelisCoreTranslationServiceInterface
 {
-    /**
-     *
-     * @var $serviceLocator ServiceLocatorInterface
-     */
-    public $serviceLocator;
-
     /**
      *
      * @var $fmContainer Container
      */
     protected $fmContainer;
 
+
     protected $updated;
 
-    public function setServiceLocator(ServiceLocatorInterface $sl)
+    /**
+     * @var Laminas\ServiceManager\ServiceManager $serviceManager
+     */
+    protected $serviceManager;
+
+    /**
+     * @param ServiceManager $service
+     */
+    public function setServiceManager(ServiceManager $service)
     {
-        $this->serviceLocator = $sl;
-        return $this;
+        $this->serviceManager = $service;
     }
 
-    public function getServiceLocator()
+    /**
+     * @return Laminas\ServiceManager\ServiceManager
+     */
+    public function getServiceManager()
     {
-        return $this->serviceLocator;
+        return $this->serviceManager;
     }
 
     /**
@@ -54,7 +58,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     public function getTranslationMessages($locale = 'en_EN', $textDomain = 'default')
     {
         // Get the translation service, so we would be able to fetch the current configs
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $translation = $translator->getTranslator();
         $messages = array();
 
@@ -99,7 +103,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
 
     public function getTranslatedMessageByLocale($locale = 'en_EN')
     {
-        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modulesSvc = $this->getServiceManager()->get('ModulesService');
         $modules = $modulesSvc->getAllModules();
 
         $moduleFolders = array();
@@ -221,8 +225,8 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $transForms     = $locale.'.forms.php';
         $modules = array();
 
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $moduleSvc = $this->getServiceManager()->get('ModulesService');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $directory = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_dir');
         $vendorModules = $moduleSvc->getVendorModules();
         $userModules   = $moduleSvc->getUserModules();
@@ -309,7 +313,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $cdir = scandir($path);
         $fileName = '';
         $updatedFile = array();
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         $confLanguage = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_files');
         $directory = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_dir');
@@ -399,7 +403,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
      */
     private function checkLanguageDirectory($dir, $modulePath)
     {
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $confLanguage = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_files');
         $defaultTransInterface = $confLanguage['defaultTransInterface'];
         $defaultTransForms = $confLanguage['defaultTransForms'];
@@ -447,7 +451,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
         $excludeModules = array('.', '..', '.gitignore', 'MelisSites');
         $modules = array();
 
-        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modulesSvc = $this->getServiceManager()->get('ModulesService');
         $modules = $modulesSvc->getAllModules();
 
         foreach ($modules as $moduleName)
@@ -487,7 +491,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
 
     public function getTranslationsLocale()
     {
-        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modulesSvc = $this->getServiceManager()->get('ModulesService');
         $modules = $modulesSvc->getAllModules();
         $modulePath = $modulesSvc->getModulePath('MelisCore');
 
@@ -568,7 +572,7 @@ class MelisCoreTranslationService extends Translator implements ServiceLocatorAw
     public function updateTranslationList()
     {
         $status = false;
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $translationListDir = $melisCoreConfig->getItem('meliscore/datas/default/langauges/trans_list_dir')[0];
 
         $translationList = include $translationListDir;

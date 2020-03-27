@@ -2,8 +2,6 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Mail\Message;
 use Laminas\Mail\Transport\Sendmail;
 use Laminas\Mime\Message as MimeMessage;
@@ -11,18 +9,7 @@ use Laminas\Mime\Part as MimePart;
 use Laminas\Mail\Transport\Smtp as SmtpTransport;
 use Laminas\Mail\Transport\SmtpOptions;
 
-class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
-	protected $serviceLocator;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl){
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator(){
-		return $this->serviceLocator;
-	}
-
+class MelisCoreEmailSendingService extends MelisCoreServiceManager{
     /**
      * Sending Email
      * @param $emailFrom
@@ -100,7 +87,7 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
 	
 	public function send($email, $name, $subject, $content)
 	{
-	    $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+	    $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
 	    $emailCfg = $melisConfig->getItem('meliscore/datas/default/emails/details/default');
 	    
 	    $from = $emailCfg['sender_mail'];

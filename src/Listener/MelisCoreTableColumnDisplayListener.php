@@ -14,7 +14,7 @@ use Laminas\EventManager\ListenerAggregateInterface;
 
 class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $sharedEvents      = $events->getSharedManager();
 
@@ -23,7 +23,7 @@ class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener imple
             'melis_tool_column_display_dot_color',
             function($e){
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $params = $e->getParams();
 
                 $params['data'] = '<span class="text-'.($params['data'] ? 'success' : 'danger').'"><i class="fa fa-fw fa-circle"></i></span>';
@@ -35,7 +35,7 @@ class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener imple
             'melis_tool_column_display_char_length_limit',
             function($e){
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $params = $e->getParams();
 
                 $str = $params['data'];
@@ -53,7 +53,7 @@ class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener imple
             'melis_tool_column_display_admin_name',
             function($e){
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $params = $e->getParams();
 
                 $tblUser  = $sm->get('MelisCoreTableUser');

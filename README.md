@@ -122,7 +122,7 @@ File: /melis-core/src/Service/MelisCoreConfigService.php
 ```
 // Example 1
 // Get the service
-$melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+$melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
 // Get the subpart of the config file
 $appsConfigCenter = $melisAppConfig->getItem('/meliscore/interface/meliscore_center/');
 ```
@@ -136,7 +136,7 @@ $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools
 ```
 // Example 3
 // Get the service
-$melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+$melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
 // Get the "datas" part of the "meliscore" key in the config and, using getItemPerPlatform, select depending on the platform you're on
 $datas = $melisAppConfig->getItemPerPlatform('/meliscore/datas');
 ```
@@ -146,7 +146,7 @@ Gets the user's auth and validates authentication, extends ZF AuthenticationServ
 File: /melis-core/src/Service/MelisCoreAuthService.php  
 ```
 // Get the service
-$melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');  
+$melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');  
 // check identity
 $logged = $melisCoreAuth->hasIdentity()  
 ```
@@ -156,8 +156,8 @@ Get the rights defined for the user and adapt access to the different elements o
 File: /melis-core/src/Service/MelisCoreRightsService.php  
 ```
 // Get the services  
-$melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-$melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+$melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+$melisCoreRights = $this->getServiceManager()->get('MelisCoreRights');
 if($melisCoreAuth->hasIdentity())
 {
 	// Get the user's rights
@@ -175,7 +175,7 @@ if($melisCoreAuth->hasIdentity())
 * MelisCoreFlashMessenger  
 Add logs to flash messenger and get some notifications in the back office  
 ```
-$flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+$flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
 $flashMessenger->addToFlashMessenger('title', 'message', $flashMessenger::WARNING);
 ```  
 
@@ -184,7 +184,7 @@ File: /melis-core/src/Service/MelisCoreBOEmailService.php
 Add or override emails sent from the back office to send them from your modules and manage them through a tool  
 ```
 // Get the service
-$melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');  
+$melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');  
 // Send the mail and fills the blanks in the mail (tags), get the language version
 $melisEmailBO->sendBoEmailByCode('ACCOUNTCREATION',  $tags, $email_to, $name_to, $langId);  
 ```
@@ -314,7 +314,7 @@ public function attach(EventManagerInterface $events)
 		),
 		function($e){
 
-			$sm = $e->getTarget()->getServiceLocator();
+			$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
     		
     		// custom code
     	},

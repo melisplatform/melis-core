@@ -3,10 +3,8 @@
 namespace MelisCore\Service;
 
 use Laminas\Json\Json;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-class MelisCoreRightsService implements MelisCoreRightsServiceInterface, ServiceLocatorAwareInterface
+class MelisCoreRightsService extends MelisCoreServiceManager implements MelisCoreRightsServiceInterface
 {
     const MELISCORE_PREFIX_INTERFACE = 'meliscore_interface';
     const MELIS_PLATFORM_TOOLS_PREFIX = 'meliscore_leftmenu';
@@ -21,8 +19,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     const MELIS_CMS_SITE_TOOLS = 'meliscms_site_tools';
 
     const OLD_MELISCMS_TOOLSTREE = 'meliscms_toolstree';
-    /** @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator */
-    public $serviceLocator;
+
     /** @var array */
     private $tools = [];
     /** @var string|null - cache holder for section parents */
@@ -38,7 +35,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
      */
     public function canAccess($key): bool
     {
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $xmlRights = $melisCoreAuth->getAuthRights();
 
         $isAccessible = $this->isAccessible($xmlRights, self::MELIS_PLATFORM_TOOLS_PREFIX, $key);
@@ -49,31 +46,11 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     }
 
     /**
-     * @return \Laminas\ServiceManager\ServiceLocatorInterface
-     */
-    public function getServiceLocator(): ServiceLocatorInterface
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-
-        return $this;
-    }
-
-    /**
      * @return \MelisCore\Service\MelisCoreConfigService
      */
     public function getConfig()
     {
-        return $this->getServiceLocator()->get('MelisCoreConfig');
+        return $this->getServiceManager()->get('MelisCoreConfig');
     }
 
     /**
@@ -276,15 +253,15 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
      */
     public function getRightsValues($id, $isRole = false)
     {
-        $translator = $this->serviceLocator->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         /** @var \MelisCore\Service\MelisCoreUserService $melisCoreUser */
-        $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
+        $melisCoreUser = $this->getServiceManager()->get('MelisCoreUser');
         if (!$isRole) {
 
             $xml = $melisCoreUser->getUserXmlRights($id);
         } else {
             $xml = '';
-            $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
+            $tableUserRole = $this->getServiceManager()->get('MelisCoreTableUserRole');
             $datasRole = $tableUserRole->getEntryById($id);
             if ($datasRole) {
                 $datasRole = $datasRole->current();
@@ -322,7 +299,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
 
         // interface rights
         $interfaceItems = [];
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceManager()->get('config');
         foreach ($config['plugins'] as $pluginName => $plugin) {
             $child = $this->getInterfaceKeysRecursive('/' . $pluginName, $xml);
             if ($child) {
@@ -349,8 +326,8 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     private function getInterfaceKeysRecursive($keyInterface, $userXml, $key = null)
     {
         /** @var \MelisCore\Service\MelisCoreUserService $melisCoreUser */
-        $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreUser = $this->getServiceManager()->get('MelisCoreUser');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $tmpKeyInterface = $keyInterface;
         $configInterface = $melisAppConfig->getItem($keyInterface);
 
@@ -460,8 +437,8 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
      */
     private function getToolsKeys($userXml)
     {
-        $melisCoreUser = $this->getServiceLocator()->get('MelisCoreUser');
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreUser = $this->getServiceManager()->get('MelisCoreUser');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $melisKeys = $this->getConfig()->getMelisKeys();
         $appConfigPaths = $this->getMelisKeyPaths();
         $exemptedPath = [
@@ -606,7 +583,7 @@ class MelisCoreRightsService implements MelisCoreRightsServiceInterface, Service
     public function createXmlRightsValues($id, $datas, $isRole = false): array
     {
         /** @var \MelisCore\Service\MelisCoreConfigService $melisAppConfig */
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $melisKeys = $melisAppConfig->getMelisKeys();
 
         /**

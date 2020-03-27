@@ -9,17 +9,16 @@
 
 namespace MelisCore\Form\Factory;
 
+use Interop\Container\ContainerInterface;
 use Laminas\Form\Element\Textarea;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\ServiceManager\FactoryInterface;
 
 /**
  * MelisCore TinyMCE textarea field
  */
 
-class MelisCoreTinyMCEFactory extends Textarea implements FactoryInterface
+class MelisCoreTinyMCEFactory extends Textarea
 {
-    public function createService(ServiceLocatorInterface $formElementManager)
+    public function __invoke(ContainerInterface $container, $requestedName)
     {
         $element = new Textarea;
         $element->setAttribute('meliscore-tinymce-textarea', true);

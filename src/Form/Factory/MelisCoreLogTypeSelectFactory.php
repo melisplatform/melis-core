@@ -9,23 +9,18 @@
 
 namespace MelisCore\Form\Factory;
 
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Form\Factory\MelisSelectFactory;
 
 class MelisCoreLogTypeSelectFactory extends MelisSelectFactory
 {
-	protected function loadValueOptions(ServiceLocatorInterface $formElementManager)
-	{
-        $serviceManager = $formElementManager->getServiceLocator();
-
+    protected function loadValueOptions(ServiceManager $serviceManager)
+    {
         $logTypeTable = $serviceManager->get('MelisCoreTableLogType');
-        $logType = $logTypeTable->getLogTypeOrderByCode();
-        $valueoptions = array();
+        $valueoptions = [];
 
-        foreach ($logType As $val)
-        {
+        foreach ($logTypeTable->getLogTypeOrderByCode() As $val)
             $valueoptions[$val->logt_id] = $val->logt_code;
-        }
 
 		return $valueoptions;
 	}

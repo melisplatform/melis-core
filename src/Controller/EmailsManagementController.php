@@ -12,7 +12,6 @@ namespace MelisCore\Controller;
 use Laminas\Diactoros\UploadedFile;
 use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\InputFilter;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
@@ -31,7 +30,7 @@ class EmailsManagementController extends AbstractActionController
      * */
     public function renderToolEmailsMngtContainerAction(){
 
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         
         $noAccessPrompt = '';
         if($this->hasAccess(self::INTERFACE_KEY)) { 
@@ -100,7 +99,7 @@ class EmailsManagementController extends AbstractActionController
         
         $codename = $this->params()->fromPOST('codename','');
         
-        $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $meilsEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
         $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($codename);
         
         $title = ($emailsPropertiesAndDetails['email_name']) ? $emailsPropertiesAndDetails['email_name'] : $codename;
@@ -131,8 +130,8 @@ class EmailsManagementController extends AbstractActionController
      * */
     public function renderToolEmailsMngtContentTableAction(){
         
-        $translator = $this->getServiceLocator()->get('translator');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceManager()->get('translator');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
         
         $columns = $melisTool->getColumns();
@@ -156,10 +155,10 @@ class EmailsManagementController extends AbstractActionController
      * */
     public function getEmailsEntriesAction(){
         
-        $BOEmails = $this->getServiceLocator()->get('MelisCoreTableBOEmails');
-        $translator = $this->getServiceLocator()->get('translator');
+        $BOEmails = $this->getServiceManager()->get('MelisCoreTableBOEmails');
+        $translator = $this->getServiceManager()->get('translator');
     
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
     
         $colId = array();
@@ -173,7 +172,7 @@ class EmailsManagementController extends AbstractActionController
             $dataCount = $BOEmails->getTotalData();
     
             // Get Email App
-            $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+            $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/');
             
             
@@ -231,7 +230,7 @@ class EmailsManagementController extends AbstractActionController
             foreach ($emailsConfig As $key => $val){
                 
                 // Get the Email Content Languages Available
-                $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+                $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
                 $emailsConfigData = $melisMelisCoreConfig->getItem('meliscore/emails/'.$key);
                 
                 $emailLang = (isset($emailsConfigData['contents'])) ? $emailsConfigData['contents'] : array();
@@ -289,7 +288,7 @@ class EmailsManagementController extends AbstractActionController
      * @return String - Concatinated of Langauges that available for the Email
      * */
     public function getEmailsLanguages($codename){
-        $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $melisCoreBOEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
         $emailDetials = $melisCoreBOEmailService->getBoEmailByCode($codename);
         
         $emailLang = (isset($emailDetials['contents'])) ? $emailDetials['contents'] : array();
@@ -324,7 +323,7 @@ class EmailsManagementController extends AbstractActionController
      * */
     public function renderEmailsMngtAction(){
         
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $codename = $this->params()->fromRoute('codename', $this->params()->fromQuery('codename', ''));
         
         $noAccessPrompt = '';
@@ -343,12 +342,12 @@ class EmailsManagementController extends AbstractActionController
      * Render Page Creation and Edition Header
      * */
     public function renderEmailsMngtHeaderAction(){
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $codename = $this->params()->fromRoute('codename', $this->params()->fromQuery('codename', ''));
         
         if ($codename!='NEW'){
          
-            $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+            $meilsEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
             $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($codename);
             
             $title = (isset($emailsPropertiesAndDetails['email_name'])) ? $emailsPropertiesAndDetails['email_name'] : $codename;
@@ -367,7 +366,7 @@ class EmailsManagementController extends AbstractActionController
      * Render Page Creation and Edition Header Save Button
      * */
     public function renderEmailsMngtHeaderSaveAction(){
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $codename = $this->params()->fromRoute('codename', $this->params()->fromQuery('codename', ''));
         
         $view = new ViewModel();
@@ -389,9 +388,9 @@ class EmailsManagementController extends AbstractActionController
      * Render Page Creation and Edition Tab Navigator
      * */
     public function renderEmailsMngtContentlangTabNavAction(){
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $codename = $this->params()->fromRoute('codename', $this->params()->fromQuery('codename', ''));
-        $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+        $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
         $coreLangResult = $coreLang->fetchAll();
         
         $coreLangDatas = array();
@@ -415,11 +414,11 @@ class EmailsManagementController extends AbstractActionController
      * */
     public function renderEmailsMngtContentLangTabContentAction() {
         $view = new ViewModel();
-        $translator = $this->getServiceLocator()->get('translator');
-        $melisCoreTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $translator = $this->getServiceManager()->get('translator');
+        $melisCoreTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
         $codename = $this->params()->fromRoute('boeId', $this->params()->fromQuery('codename', ''));
         
-        $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+        $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
         $coreLangResult = $coreLang->fetchAll();
         
         $coreLangDatas = array();
@@ -431,31 +430,31 @@ class EmailsManagementController extends AbstractActionController
         }
         
         // Genderal Properties Form at app.tools
-        $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $generalProperties = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_emails_mngt_tool/forms/meliscore_emails_mngt_tool_general_properties_form','meliscore_emails_mngt_tool_general_properties_form');
         
         // Factoring Calendar event and pass to view
         $factory = new \Laminas\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $generalPropertiesForm = $factory->createForm($generalProperties);
 
         if ($codename!='NEW'){
 	        
-            $melisBOEmails = $this->getServiceLocator()->get('MelisCoreTableBOEmails');
+            $melisBOEmails = $this->getServiceManager()->get('MelisCoreTableBOEmails');
             $emailsDatasResult = $melisBOEmails->getEntryByField('boe_code_name', $codename);
             $emailsDatas = $emailsDatasResult->current();
             
             $dbExist = TRUE;
             
             // Get Email App
-            $melisMelisCoreConfig = $this->getServiceLocator()->get('config');
+            $melisMelisCoreConfig = $this->getServiceManager()->get('config');
             $emailsConfig = isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename]) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
             
             if (!empty($emailsConfig)){
 
                 $configPath = 'meliscore/datas';
-                $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+                $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
                 $emailCfg = $melisConfig->getItemPerPlatform($configPath);
                 $cfgLayoutLogo = $emailCfg['logo'];
                 $cfgLayoutTitle = $emailCfg['emails']['default_layout_title'];
@@ -525,7 +524,7 @@ class EmailsManagementController extends AbstractActionController
             if ($dbExist){
                 
                 $emailsDetailsData = array();
-                $melisBOEmailsDetails = $this->getServiceLocator()->get('MelisCoreTableBOEmailsDetails');
+                $melisBOEmailsDetails = $this->getServiceManager()->get('MelisCoreTableBOEmailsDetails');
                 foreach ($coreLangResult As $key => $val){
                     $emailsDetailsDatasResult = $melisBOEmailsDetails->getEmailDetailsByEmailId($emailsDatas->boe_id,$coreLangResult[$key]['lang_id']);
                     $emailsDetailsDatas = $emailsDetailsDatasResult->current();
@@ -609,7 +608,7 @@ class EmailsManagementController extends AbstractActionController
         }
         
         // Get Cms Platform ID form from  App Tool
-        $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $emailsDetails = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_emails_mngt_tool/forms/meliscore_emails_mngt_tool_emails_details_form','meliscore_emails_mngt_tool_emails_details_form');
         $emailsDetailsForm = $factory->createForm($emailsDetails);
         
@@ -630,7 +629,7 @@ class EmailsManagementController extends AbstractActionController
     {
         if (empty($path)) return [];
 
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $fileStatus= [
             'status' => false,
             'msg' => $translator->translate('tr_meliscore_file_not_exists') // File was not found.
@@ -661,7 +660,7 @@ class EmailsManagementController extends AbstractActionController
      * Adding new Email
      * */
     public function saveEmailAction(){
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         
         $request = $this->getRequest();
         // Default Values
@@ -673,20 +672,20 @@ class EmailsManagementController extends AbstractActionController
         $responseData = array();
          
         // Genderal Properties Form at app.tools
-        $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $generalProperties = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_emails_mngt_tool/forms/meliscore_emails_mngt_tool_general_properties_form');
          
         $factory = new \Laminas\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $propertyForm = $factory->createForm($generalProperties);
         
         if($request->isPost()) {
 
-            $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+            $melisTool = $this->getServiceManager()->get('MelisCoreTool');
             $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
              
-            $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+            $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
             $coreLangResult = $coreLang->fetchAll();
             $coreLangLocale = array();
             foreach ($coreLangResult->toArray() As $val)
@@ -782,7 +781,7 @@ class EmailsManagementController extends AbstractActionController
                     array(
                         'table'   => 'melis_core_bo_emails',
                         'field'   => 'boe_code_name',
-                        'adapter' => $this->getServiceLocator()->get('Laminas\Db\Adapter\Adapter')
+                        'adapter' => $this->getServiceManager()->get('Laminas\Db\Adapter\Adapter')
                     )
                 );
 
@@ -793,7 +792,7 @@ class EmailsManagementController extends AbstractActionController
                         );
                 }
 
-                $melisMelisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+                $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
                 $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/'.$datas['boe_code_name']);
 
                 if(!empty($emailsConfig)&&empty($codeNameError)){
@@ -864,7 +863,7 @@ class EmailsManagementController extends AbstractActionController
                     unset($datas['boe_content_layout_logo']);
                 }
 
-                $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+                $melisCoreBOEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
                 $BoEmailId = $melisCoreBOEmailService->saveBoEmailByCode($codename, $datas);
 
                 if ($codename=='NEW'){
@@ -934,15 +933,15 @@ class EmailsManagementController extends AbstractActionController
      * */
     public function deleteEmailAction(){
          
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
     
         $request = $this->getRequest();
         $datas = get_object_vars($request->getPost());
     
-        $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $meilsEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
         $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($datas['codename']);
     
-        $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $melisCoreBOEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
         $BoEmailId = $melisCoreBOEmailService->deleteEmail($datas);
     
         $title = ($emailsPropertiesAndDetails['email_name']) ? $emailsPropertiesAndDetails['email_name'] : $datas['codename'];
@@ -966,15 +965,15 @@ class EmailsManagementController extends AbstractActionController
 
         $textTitle = '';
         $textMessage = '';
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         $request = $this->getRequest();
         $datas = get_object_vars($request->getPost());
 
-        $meilsEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $meilsEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
         $emailsPropertiesAndDetails = $meilsEmailService->getBoEmailByCode($datas['codename']);
 
-        $melisCoreBOEmailService = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+        $melisCoreBOEmailService = $this->getServiceManager()->get('MelisCoreBOEmailService');
         $BoEmailId = $melisCoreBOEmailService->deleteEmail("Get");
 
 
@@ -996,7 +995,7 @@ class EmailsManagementController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
+        $hasAccess = $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }

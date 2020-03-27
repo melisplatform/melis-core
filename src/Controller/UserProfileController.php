@@ -10,7 +10,6 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreRightsService;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Laminas\Session\Container;
@@ -108,7 +107,7 @@ class UserProfileController extends AbstractActionController
         $melisKey = $this->getMelisKey();
         
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -143,21 +142,21 @@ class UserProfileController extends AbstractActionController
         $formErrors = array();
         $reloadPage = false;
         // translator
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
         //get the user profile form
         $userUpdateForm = $melisTool->getForm('meliscore_user_profile_form');
         //prepare the users table
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         //prepare the image service
-        $imgService = $this->getServiceLocator()->get('MelisCoreImage');
+        $imgService = $this->getServiceManager()->get('MelisCoreImage');
         
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_user_profile_management/forms/meliscore_user_profile_form','meliscore_user_profile_form');
 
         $appConfigForm = $appConfigForm['elements'];
@@ -427,7 +426,7 @@ class UserProfileController extends AbstractActionController
     }
     private function getLastUserInfo()
     {
-        $user = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $user = $this->getServiceManager()->get('MelisCoreTableUser');
         foreach($usersInfo AS $key=>$val)
         {
             if($encodeImg)
@@ -448,8 +447,8 @@ class UserProfileController extends AbstractActionController
      */
     private function getCurrentUserInfo($encodeImg = false)
     {
-        $user = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $role = $this->getServiceLocator()->get('MelisCoreTableUserRole');
+        $user = $this->getServiceManager()->get('MelisCoreTableUser');
+        $role = $this->getServiceManager()->get('MelisCoreTableUserRole');
         $usersInfo = $user->getEntryById($this->getCurrentUserId())->toArray();
         foreach($usersInfo AS $key=>$val)
         {
@@ -471,7 +470,7 @@ class UserProfileController extends AbstractActionController
     private function getCurrentUserId()
     {
         $userId = null;
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         if($melisCoreAuth->hasIdentity()) {
             $userAuthDatas =  $melisCoreAuth->getStorage()->read();
             $userId = (int) $userAuthDatas->usr_id;

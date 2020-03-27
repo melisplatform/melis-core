@@ -28,7 +28,7 @@ class MelisCorePluginsListener extends MelisCoreGeneralListener implements Liste
         	),
         	function($e){
 
-        		$sm = $e->getTarget()->getServiceLocator();
+        		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$corePluginSvc = $sm->get('MelisCorePluginsService');
         		// check for new dashboard plugins
                 $corePluginSvc->checkDashboardPlugins();

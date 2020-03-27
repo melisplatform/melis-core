@@ -18,7 +18,7 @@ use MelisCore\Listener\MelisCoreGeneralListener;
 class MelisCoreTinyMCEConfigurationListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $sharedEvents      = $events->getSharedManager();
 
@@ -29,7 +29,7 @@ class MelisCoreTinyMCEConfigurationListener extends MelisCoreGeneralListener imp
 
                 $params     = $e->getParams();
                 $config     = array();
-                $sm         = $e->getTarget()->getServiceLocator();
+                $sm         = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $translator = $sm->get('translator');
 
                 $config['plugins'][]                 = 'responsivefilemanager';

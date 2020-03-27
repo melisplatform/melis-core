@@ -10,7 +10,6 @@
 namespace MelisCore\Controller;
 
 use Laminas\Http\Header\SetCookie;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Session\Container;
 use Laminas\Session\SessionManager;
 use Laminas\View\Model\JsonModel;
@@ -39,16 +38,16 @@ class MelisAuthController extends AbstractActionController
             ]);
 
         $background = '';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
         if (!empty($appConfigForm['datas']['login_background'])) {
             $background = $appConfigForm['datas']['login_background'];
         }
 
-        $schemeSvc = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeSvc = $this->getServiceManager()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
 
-        $bundleAsset = $this->getServiceLocator()->get('MelisAssetManagerWebPack')->getAssets();
+        $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets();
 
 
         $this->layout()->addChild($view, 'content');
@@ -72,7 +71,7 @@ class MelisAuthController extends AbstractActionController
         $isChecked = false;
         $pathAppConfigForm = '/meliscore/forms/meliscore_login';
 
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
 
         $factory = new \Laminas\Form\Factory();
@@ -109,7 +108,7 @@ class MelisAuthController extends AbstractActionController
      */
     protected function crypt($data, $type = 'encrypt')
     {
-        $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $datas = $melisConfig->getItemPerPlatform('meliscore/datas');
 
         $hashMethod = $datas['accounts']['hash_method'];
@@ -134,10 +133,10 @@ class MelisAuthController extends AbstractActionController
     public function authenticateAction()
     {
         $request = $this->getRequest();
-        $translator = $this->serviceLocator->get('translator');
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $translator = $this->getServiceManager()->get('translator');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         $pathAppConfigForm = '/meliscore/forms/meliscore_login';
 
         // Creating the Zend Form to validate datas
@@ -255,7 +254,7 @@ class MelisAuthController extends AbstractActionController
                                 if ($user->usr_role_id != self::ROLE_ID_CUSTOM) {
                                     // Get rights from Role table
                                     $rightsXML = '';
-                                    $tableUserRole = $this->serviceLocator->get('MelisCoreTableUserRole');
+                                    $tableUserRole = $this->getServiceManager()->get('MelisCoreTableUserRole');
                                     $datasRole = $tableUserRole->getEntryById($user->usr_role_id);
                                     if ($datasRole) {
                                         $datasRole = $datasRole->current();
@@ -269,7 +268,7 @@ class MelisAuthController extends AbstractActionController
                                 $melisCoreAuth->getStorage()->write($user);
 
                                 // Update Melis BO locale
-                                $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
+                                $melisLangTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisLangTable');
                                 $datasLang = $melisLangTable->getEntryById($user->usr_lang_id);
 
                                 if (!empty($datasLang->current())) {
@@ -358,7 +357,7 @@ class MelisAuthController extends AbstractActionController
      */
     protected function rememberMe($username, $password)
     {
-        $melisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $authCookieConfig = $melisCoreConfig->getItem('meliscore/datas/default/auth_cookies');
         $remember = $authCookieConfig['remember'];
 
@@ -371,7 +370,7 @@ class MelisAuthController extends AbstractActionController
         $this->getResponse()->getHeaders()->addHeader($remember);
 
         // add code here for the session
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $autoLogoutTimeConf = $melisCoreConfig->getItem('meliscore/datas/default/auto_logout');
         $autoLogoutTime = (int) $autoLogoutTimeConf['after'];
 
@@ -389,7 +388,7 @@ class MelisAuthController extends AbstractActionController
      */
     protected function forgetMe($username, $password)
     {
-        $melisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $authCookieConfig = $melisCoreConfig->getItem('meliscore/datas/default/auth_cookies');
         $expire = $authCookieConfig['expire'];
 
@@ -430,7 +429,7 @@ class MelisAuthController extends AbstractActionController
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         $userAuthDatas = $melisCoreAuth->getStorage()->read();
 
@@ -452,14 +451,14 @@ class MelisAuthController extends AbstractActionController
         $container = new Container('meliscms');
         $container->getManager()->getStorage()->clear('meliscms');
 
-        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+        $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
         $flashMessenger->clearFlashMessageSession();
 
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         if ($melisCoreAuth->hasIdentity()) {
             $userData = $melisCoreAuth->getIdentity();
-            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             # get the latest rights
             $userData  = $userTable->getEntryById($userData->usr_id)->current();
 
@@ -488,8 +487,8 @@ class MelisAuthController extends AbstractActionController
      */
     public function getProfilePictureAction()
     {
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $moduleSvc = $this->getServiceManager()->get('ModulesService');
         $user = $melisCoreAuth->getIdentity();
         $imageDefault = $moduleSvc->getModulePath('MelisCore') . '/public/images/profile/default_picture.jpg';
 
@@ -511,7 +510,7 @@ class MelisAuthController extends AbstractActionController
 
     public function getCurrentLoggedInUserAction()
     {
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $user = $melisCoreAuth->getIdentity();
 
         return new JsonModel(['login' => $user->usr_login]);
@@ -520,12 +519,12 @@ class MelisAuthController extends AbstractActionController
     public function getCurrentLoggedInIdAction()
     {
 
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $user = $melisCoreAuth->getIdentity();
         $id = $user->usr_id; //get user identity through user id
 
         $data = [];
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         if ($this->getRequest()->isXmlHttpRequest()) {
             if (is_numeric($id)) {
                 $data['usr_id'] = $userTable->getEntryById($id)->current()->usr_id;
@@ -542,13 +541,13 @@ class MelisAuthController extends AbstractActionController
     {
         $isLoggedIn = false;
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+            $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
             $user = $melisCoreAuth->getIdentity();
             if (!empty($user)) {
                 $isLoggedIn = true;
 
                 // update the connection time.
-                $table = $this->getServiceLocator()->get('MelisUserConnectionDate');
+                $table = $this->getServiceManager()->get('MelisUserConnectionDate');
                 $data = $table->getUserLastConnectionDate((int) $user->usr_id, $user->usr_last_login_date)->current();
 
                 $currentData = date('Y-m-d H:i:s');
@@ -569,7 +568,7 @@ class MelisAuthController extends AbstractActionController
                     ];
                 }
 
-                $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+                $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
                 $userTable->update([
                     'usr_is_online' => 1,
                 ], 'usr_login',$user->usr_id);
@@ -588,7 +587,7 @@ class MelisAuthController extends AbstractActionController
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         $userAuthDatas = $melisCoreAuth->getStorage()->read();
 

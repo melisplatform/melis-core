@@ -16,7 +16,7 @@ use Laminas\Session\Container;
 
 class MelisCoreDashboardPluginRightsTreeViewListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $sharedEvents      = $events->getSharedManager();
 
@@ -24,7 +24,7 @@ class MelisCoreDashboardPluginRightsTreeViewListener extends MelisCoreGeneralLis
             'MelisCore',
             'meliscore_tooluser_getrightstreeview_start',
             function ($e) {
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $container = new Container('meliscore');
 
                 // Add MelisDashboardPlugins right management rights management

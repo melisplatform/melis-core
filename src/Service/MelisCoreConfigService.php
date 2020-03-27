@@ -2,13 +2,11 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 
-class MelisCoreConfigService implements MelisCoreConfigServiceInterface, ServiceLocatorAwareInterface
+class MelisCoreConfigService extends MelisCoreServiceManager implements MelisCoreConfigServiceInterface
 {
-    public $serviceLocator;
     public $appConfig;
 
     public function getJsCallbacksDatas($array, $final = [], $datas = [])
@@ -207,7 +205,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
     public function getItem($pathString = '', $prefix = '')
     {
-        $config = $this->serviceLocator->get('config');
+        $config = $this->getServiceManager()->get('config');
         if (!empty($config['plugins'])) {
             $this->appConfig = $config['plugins'];
         } else {
@@ -278,7 +276,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
         if (empty($array)) {
 
-            $config = $this->getServiceLocator()->get('config');
+            $config = $this->getServiceManager()->get('config');
             if (!empty($config['plugins'])) {
                 $array = $config['plugins'];
             } else {
@@ -299,18 +297,6 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
         }
 
         return $final;
-    }
-
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-
-        return $this;
     }
 
     private function getItemRec($pathString, $position, $configTab)
@@ -334,7 +320,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
                  *
                  * $pathString[$position - 1] - this will get the last position as param
                  */
-                $coreSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+                $coreSrv = $this->getServiceManager()->get('MelisCoreGeneralService');
                 $configTab = $coreSrv->sendEvent('melis_core_config_get_item_rec',
                     ['pathString' => $pathString[$position - 1] , 'config' => $configTab]
                 )['config'];
@@ -378,7 +364,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
     public function translateAppConfig($array)
     {
-        $translator = $this->serviceLocator->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         $final = [];
         foreach ($array as $key => $value) {
@@ -421,7 +407,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
     public function getOrderFormsConfig($keyForm)
     {
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceManager()->get('config');
         if (!empty($config['forms_ordering'])) {
             $array = $config['forms_ordering'];
         } else {
@@ -437,7 +423,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
     public function getOrderInterfaceConfig($keyInterface)
     {
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceManager()->get('config');
         if (!empty($config['interface_ordering'])) {
             $array = $config['interface_ordering'];
         } else {
@@ -453,7 +439,7 @@ class MelisCoreConfigService implements MelisCoreConfigServiceInterface, Service
 
     public function isInterfaceDisabled($keyInterface)
     {
-        $config = $this->getServiceLocator()->get('config');
+        $config = $this->getServiceManager()->get('config');
         if (!empty($config['interface_disable'])) {
             $array = $config['interface_disable'];
         } else {

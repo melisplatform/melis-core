@@ -10,7 +10,6 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreRightsService;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\View\Model\ViewModel;
@@ -48,7 +47,7 @@ class PluginViewController extends AbstractActionController
             $keyInterface = $zoneViewChild->getVariable('keyInterface');
             $zoneView->setVariable($keyInterface, $htmlZoneViewChild);
         }
-        $htmlZoneView = $this->getServiceLocator()
+        $htmlZoneView = $this->getServiceManager()
             ->get('ViewRenderer')
             ->render($zoneView);
 
@@ -99,7 +98,7 @@ class PluginViewController extends AbstractActionController
         /**
          * Get the appConfig
          */
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         /**
          * Get the real path, from the MelisKey, if needed
@@ -179,7 +178,7 @@ class PluginViewController extends AbstractActionController
      */
     public function orderInterfaceChildren($parentKey, $childrenInterface)
     {
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $orderInterface = $melisAppConfig->getOrderInterfaceConfig($parentKey);
 
         if (empty($orderInterface)) {
@@ -222,7 +221,7 @@ class PluginViewController extends AbstractActionController
     public function generateRec($key, $fullKey, $recDatas = [])
     {
 
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         /**
          * This will whether config is came from the dashboard plugin
@@ -279,8 +278,8 @@ class PluginViewController extends AbstractActionController
          * Second check if rendering is allowed for the user
          * according to his rights
          */
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $melisCoreRights = $this->getServiceManager()->get('MelisCoreRights');
         $xmlRights = $melisCoreAuth->getAuthRights();
         $isAccessible = $melisCoreRights->isAccessible($xmlRights, MelisCoreRightsService::MELISCORE_PREFIX_INTERFACE, $fullKey);
         $isDisabled = $melisAppConfig->isInterfaceDisabled($key);
@@ -351,12 +350,12 @@ class PluginViewController extends AbstractActionController
                 // Get the view
                 try {
                     // maxNestedForwards for generation of interface
-                    $config = $this->getServiceLocator()->get('config');
+                    $config = $this->getServiceManager()->get('config');
                     $specialConfigZf2 = $config['plugins']['meliscore']['datas']['zf2'];
 
                     $view = $this->forward()->setMaxNestedForwards($specialConfigZf2['maxNestedForwards'])->dispatch($ctrlPath, $datas);
 
-                    $melisCoreGeneralSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+                    $melisCoreGeneralSrv = $this->getServiceManager()->get('MelisCoreGeneralService');
                     $eventRes = $melisCoreGeneralSrv->sendEvent('meliscore_generate_interface_'.$datas['melisKey'], array('view' => $view));
                     $view = $eventRes['view'];
 
@@ -409,7 +408,7 @@ class PluginViewController extends AbstractActionController
             
             if (isset($itemConfig['conf']['dashboard']) && $itemConfig['conf']['dashboard'])
             {
-                $melisDashboardSrv = $this->getServiceLocator()->get('MelisCoreDashboardService');
+                $melisDashboardSrv = $this->getServiceManager()->get('MelisCoreDashboardService');
                 list($jsCallBacks, $datasCallback) = $melisDashboardSrv->getDashboardPluginsJsCallbackJsDatas($itemConfig['conf']['id']);
                 
                 $view->setVariable('jsCallBacks', $jsCallBacks);

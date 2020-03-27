@@ -11,9 +11,7 @@ namespace MelisCore\Controller\DashboardPlugins;
 
 use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
 use Laminas\View\Model\ViewModel;
-
 use MelisCore\Service\MelisCoreRightsService;
-use Laminas\Session\Container;
 
 class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTemplatingPlugin
 {
@@ -25,14 +23,14 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
     
     public function recentActivityUsers()
     {
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
-        
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
+
         $melisKeys = $melisAppConfig->getMelisKeys();
         $fullKeyToolUser = $melisKeys['meliscore_tool_user'];
 
         /** @var \MelisCore\Service\MelisCoreDashboardPluginsRightsService $dashboardPluginsService */
-        $dashboardPluginsService = $this->getServiceLocator()->get('MelisCoreDashboardPluginsService');
+        $dashboardPluginsService = $this->getServiceManager()->get('MelisCoreDashboardPluginsService');
         //get the class name to make it as a key to the plugin
         $path = explode('\\', __CLASS__);
         $className = array_pop($path);
@@ -44,19 +42,15 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
         $toolMelisKey = '';
         $toolIcon = '';
         $itemConfigToolUser = $melisAppConfig->getItem($fullKeyToolUser);
-        if ($itemConfigToolUser)
-        {
+        if ($itemConfigToolUser) {
             $toolName = $itemConfigToolUser['conf']['name'];
             $toolId = $itemConfigToolUser['conf']['id'];
             $toolMelisKey = $itemConfigToolUser['conf']['melisKey'];
             $toolIcon = $itemConfigToolUser['conf']['icon'];
-        }
-        else
+        } else
             $isAccessible = false; // Not possible in theory
             
-        $container = new Container('meliscore');
-        $locale = $container['melis-lang-locale'];
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         
         // Max lines
         $maxLines = 8;
@@ -65,13 +59,10 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
             
         // Getting last users' logged in
         $users = $userTable->getLastLoggedInUsers((int)$maxLines);
-        if ($users)
-        {
+        if ($users) {
             $users = $users->toArray();
             foreach ($users as $keyUser => $user)
-            {
-                $users[$keyUser]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($user['usr_last_login_date']));
-            }
+                $users[$keyUser]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($this->locale), strtotime($user['usr_last_login_date']));
         }
         
         $view = new ViewModel();

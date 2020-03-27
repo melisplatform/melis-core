@@ -14,11 +14,20 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPluginsTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'plugin_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_plugins';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'plugin_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
     /**
      * Get the latest plugin installed
@@ -28,14 +37,10 @@ class MelisPluginsTable extends MelisGenericTable
 	public function getLatestPlugin($pluginType)
     {
         $select = $this->tableGateway->getSql()->select();
+
         $select->columns(['latest_plugin_datetime' => new Expression('max(`plugin_date_installed`)')]);
         $select->where->equalTo('plugin_type',$pluginType);
-//        $select->group('plugin_name');
-//        $select->limit(1);
-//
-        $resultSet = $this->tableGateway->selectWith($select);
 
-        return $resultSet;
+        return $this->tableGateway->selectWith($select);
     }
-
 }

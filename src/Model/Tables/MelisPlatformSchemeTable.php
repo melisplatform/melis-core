@@ -13,10 +13,19 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisPlatformSchemeTable extends MelisGenericTable
 {
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_platform_scheme';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'pscheme_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'pscheme_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 
     /**

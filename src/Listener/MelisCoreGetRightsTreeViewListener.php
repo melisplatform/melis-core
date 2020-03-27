@@ -23,7 +23,7 @@ use MelisCore\Listener\MelisCoreGeneralListener;
  */
 class MelisCoreGetRightsTreeViewListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $sharedEvents      = $events->getSharedManager();
 
@@ -33,7 +33,7 @@ class MelisCoreGetRightsTreeViewListener extends MelisCoreGeneralListener implem
         	'meliscore_tooluser_getrightstreeview_start',
         	function($e){
 
-        		$sm = $e->getTarget()->getServiceLocator();
+        		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$container = new Container('meliscore');
 
 	        	$userId = $sm->get('request')->getQuery()->get('userId');

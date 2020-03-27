@@ -28,7 +28,7 @@ class MelisCorePluginsRemovalListener extends MelisCoreGeneralListener implement
         	),
         	function($e){
 
-        		$sm = $e->getTarget()->getServiceLocator();
+        		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$corePluginSvc = $sm->get('MelisCorePluginsService');
                 $pluginsTbl    = $corePluginSvc->pluginsTbl;
                 $params        = $e->getParams();

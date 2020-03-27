@@ -2,35 +2,40 @@
 
 namespace MelisCore\Form;
 
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerInterface;
 use Laminas\Form\Form;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 
-class MelisForm extends Form implements ServiceLocatorAwareInterface
+class MelisForm extends Form implements EventManagerAwareInterface
 {
     /**
-     * @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @var $events
      */
-    protected $serviceLocator;
+    protected $events;
 
     /**
-     * @return \Laminas\ServiceManager\ServiceLocatorInterface
+     * @param EventManagerInterface $events
      */
-    public function getServiceLocator()
+    public function setEventManager(EventManagerInterface $events)
     {
-        return $this->serviceLocator;
+        $events->setIdentifiers([
+            __CLASS__,
+            get_class($this)
+        ]);
+        $this->events = $events;
     }
 
     /**
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
+     * @return EventManagerInterface
      */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
+    public function getEventManager()
     {
-        $this->serviceLocator = $sl;
-
-        return $this;
+        if (!$this->events) {
+            $this->setEventManager(new EventManager());
+        }
+        return $this->events;
     }
 
     /**
@@ -47,14 +52,8 @@ class MelisForm extends Form implements ServiceLocatorAwareInterface
         if ($isValid) {
             $data = $this->data;
 
-            /**
-             * @var \Laminas\EventManager\EventManagerInterface $e
-             */
-            $e = $this->getServiceLocator()
-                ->getServiceLocator()->get('eventmanager');
-
             if ($triggerEvent) {
-                return $e->trigger($triggerEvent, $this, [
+                return $this->getEventManager()->trigger($triggerEvent, $this, [
                     'elements' => $this->getElements(),
                     'data' => array_merge($data, $params)
                 ]);
@@ -62,6 +61,5 @@ class MelisForm extends Form implements ServiceLocatorAwareInterface
         }
 
         return $isValid;
-
     }
 }

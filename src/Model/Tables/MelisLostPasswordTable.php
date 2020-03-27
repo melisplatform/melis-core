@@ -13,9 +13,18 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisLostPasswordTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'rh_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_lost_password';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'rh_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 }

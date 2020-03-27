@@ -12,7 +12,6 @@ namespace MelisCore\Controller;
 use MelisCore\Service\MelisCoreCreatePasswordService;
 use MelisCore\Service\MelisCoreUserService;
 use MelisCore\Validator\MelisPasswordValidator;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
@@ -31,7 +30,7 @@ class ToolUserController extends AbstractActionController
      */
     public function renderToolUserAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $noAccessPrompt = 'tr_meliscore_no_access_to_tool';
         $hasAccess = $this->hasAccess($this::TOOL_KEY);
@@ -41,7 +40,7 @@ class ToolUserController extends AbstractActionController
         }
 
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
         $view = new ViewModel();
@@ -61,7 +60,7 @@ class ToolUserController extends AbstractActionController
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $zoneConfig = $this->params()->fromRoute('zoneconfig', array());
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
 
@@ -109,7 +108,7 @@ class ToolUserController extends AbstractActionController
      */
     public function renderToolUserContentFiltersStatusAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $opts = ['tr_meliscore_all' => 'ALL','tr_meliscore_user_status_active' => 'ACTIVE', 'tr_meliscore_user_status_inactive' => 'INACTIVE', 'tr_meliscore_user_status_pending' => 'PENDING'];
         $options = "";
 
@@ -140,12 +139,12 @@ class ToolUserController extends AbstractActionController
     public function renderToolUserContentAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-        $translator = $this->getServiceLocator()->get('translator');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
+        $translator = $this->getServiceManager()->get('translator');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
-        $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
+        $moduleSvc       =  $this->getServiceManager()->get('ModulesService');
         $modules         = $moduleSvc->getAllModules();
 
         $request = $this->getRequest();
@@ -227,7 +226,7 @@ class ToolUserController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -263,7 +262,7 @@ class ToolUserController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -284,7 +283,7 @@ class ToolUserController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -306,7 +305,7 @@ class ToolUserController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -328,7 +327,7 @@ class ToolUserController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -351,7 +350,7 @@ class ToolUserController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -372,7 +371,7 @@ class ToolUserController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -420,7 +419,7 @@ class ToolUserController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -435,9 +434,9 @@ class ToolUserController extends AbstractActionController
     public function renderTooluserViewDateConnectionModalAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-        $translator = $this->getServiceLocator()->get('translator');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
+        $translator = $this->getServiceManager()->get('translator');
         $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
 
         $columns = $melisTool->getColumns();
@@ -459,7 +458,7 @@ class ToolUserController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
+        $hasAccess = $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }
@@ -478,7 +477,7 @@ class ToolUserController extends AbstractActionController
         $response = [];
         $this->getEventManager()->trigger('meliscore_tooluser_savenew_start', $this, $response);
 
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_tool_user/forms/meliscore_tool_user_form_new');
         $appConfigForm = $appConfigForm['elements'];
 
@@ -554,15 +553,15 @@ class ToolUserController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             // tell the Tool what configuration in the app.tool.php that will be used.
-            $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+            $melisTool = $this->getServiceManager()->get('MelisCoreTool');
             $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
-            $translator = $this->getServiceLocator()->get('translator');
+            $translator = $this->getServiceManager()->get('translator');
             /** @var \Laminas\Form\Form $userAddForm */
             $userAddForm = $melisTool->getForm('meliscore_tool_user_form_new');
-            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-            $imgService = $this->getServiceLocator()->get('MelisCoreImage');
-            $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+            $imgService = $this->getServiceManager()->get('MelisCoreImage');
+            $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
             $postValues = $melisTool->sanitizePost($this->getRequest()->getPost()->toArray());
             $userAddForm->setData($postValues);
@@ -667,7 +666,7 @@ class ToolUserController extends AbstractActionController
 
         if($success){
             /** @var MelisCoreCreatePasswordService $createPwdSvc */
-            $createPwdSvc = $this->getServiceLocator()->get('MelisCoreCreatePassword');
+            $createPwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
             $createPwdSvc->generateCreatePassRequest($data['usr_login'],$data['usr_email']);
         }
 
@@ -694,12 +693,12 @@ class ToolUserController extends AbstractActionController
 
         $response = array();
         $this->getEventManager()->trigger('meliscore_tooluser_delete_start', $this, $response);
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $id = null;
         $success = 0;
         $textTitle = 'tr_meliscore_tool_user_delete';
         $textMessage = 'tr_meliscore_tool_user_delete_unable';
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
 
         if($this->getRequest()->isPost())
         {
@@ -732,15 +731,15 @@ class ToolUserController extends AbstractActionController
 
         $response = array();
         $this->getEventManager()->trigger('meliscore_tooluser_resend_password_create_email_start', $this, $response);
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $id = null;
         $success = 0;
         $textTitle = 'tr_meliscore_tool_resend_password_create_email_title';
         $textMessage = 'tr_meliscore_tool_resend_password_create_email_ko';
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
 
         /** @var MelisCoreCreatePasswordService $createPwdSvc */
-        $createPwdSvc = $this->getServiceLocator()->get('MelisCoreCreatePassword');
+        $createPwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
 
         if($this->getRequest()->isPost())
         {
@@ -768,13 +767,13 @@ class ToolUserController extends AbstractActionController
     {
         $id = 0;
         $success = false;
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         $data = array();
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-        $userSvc = $this->getServiceLocator()->get('MelisCoreUser');
-        $translation = $this->getServiceLocator()->get('translator');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
+        $userSvc = $this->getServiceManager()->get('MelisCoreUser');
+        $translation = $this->getServiceManager()->get('translator');
 
         if($this->getRequest()->isPost())
         {
@@ -821,11 +820,11 @@ class ToolUserController extends AbstractActionController
      */
     public function getUserAction()
     {
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $translator = $this->getServiceLocator()->get('translator');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+        $translator = $this->getServiceManager()->get('translator');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
 
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
@@ -837,7 +836,7 @@ class ToolUserController extends AbstractActionController
 
         if($this->getRequest()->isPost())
         {
-            $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+            $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
             $user = $melisCoreAuth->hasIdentity() ? $melisCoreAuth->getIdentity() : null;
 
             $colId = array_keys($melisTool->getColumns());
@@ -894,29 +893,29 @@ class ToolUserController extends AbstractActionController
                 $userId              = (int) $tableData[$ctr]['usr_id'];
                 $online = (int) $tableData[$ctr]['usr_is_online'] ? 'text-success' : 'text-danger';
                 
-                $userConnectionTable = $this->getServiceLocator()->get('MelisUserConnectionDate');
+                $userConnectionTable = $this->getServiceManager()->get('MelisUserConnectionDate');
                 $userConnectionData  = $userConnectionTable->getUserLastConnectionTime($userId, null, array(), 'usrcd_last_connection_time')->current();
-                
+
                 if($userConnectionData && $online == 'text-success')
                 {
                     $now                = new \DateTime(date("H:i:s"));
                     $lastConnectionTime = new \DateTime(date('H:i:s', strtotime($userConnectionData->usrcd_last_connection_time)));
                     $difference         = $lastConnectionTime->diff($now)->i;
-    
+
                     // if user has been away for 5mins, automatically set the user status to "offline"
                     if((int) $difference > 5) {
                         // update user status
                         $userTable->save([
                             'usr_is_online' => 0
                         ], $userId);
-                        
+
                         $online = 'text-danger';
                     }
                     else {
                         $userTable->save([
                             'usr_is_online' => 1
                         ], $userId);
-                        
+
                         $online = 'text-success';
                     }
                 }
@@ -979,7 +978,7 @@ class ToolUserController extends AbstractActionController
 
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
-            $post =  $this->getServiceLocator()->get('MelisCoreTool')->sanitizePost($post);
+            $post =  $this->getServiceManager()->get('MelisCoreTool')->sanitizePost($post);
 
             $searchValue = empty($post['search']) ? '' : $post['search'];
             $searchableColumns = ['usr_firstname', 'usr_lastname', 'usr_email', 'usr_login'];
@@ -1014,7 +1013,7 @@ class ToolUserController extends AbstractActionController
             ];
 
 
-            $usersTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $usersTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $users = $usersTable->getUsers($where);
 
             /**
@@ -1069,9 +1068,9 @@ class ToolUserController extends AbstractActionController
 
     private function recheckActiveUsers()
     {
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         $users     = $userTable->fetchAll();
-        $userConnectionTable = $this->getServiceLocator()->get('MelisUserConnectionDate');
+        $userConnectionTable = $this->getServiceManager()->get('MelisUserConnectionDate');
 
         foreach($users as $idx => $user) {
 
@@ -1122,10 +1121,10 @@ class ToolUserController extends AbstractActionController
         $datas = [];
         $userInfo = [];
         // translator
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -1144,9 +1143,9 @@ class ToolUserController extends AbstractActionController
             $removeImg = $this->getRequest()->getPost('usr_image_remove');
 
             if ($userUpdateForm->isValid()) {
-                $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-                $imgService = $this->getServiceLocator()->get('MelisCoreImage');
-                $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+                $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+                $imgService = $this->getServiceManager()->get('MelisCoreImage');
+                $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
                 $newXmlRights = ''; // xml rights temp holder
                 // pass values that should not be changed
                 foreach ($userTable->getEntryById($userId) as $user) {
@@ -1223,10 +1222,10 @@ class ToolUserController extends AbstractActionController
                                 if ($passValidator->isValid($password)) {
                                     // password and confirm password matching
                                     if ($password == $confirmPass) {
-                                        $melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+                                        $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
 
                                         // Fetching user language Id
-                                        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+                                        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
                                         $userDataResult = $userTable->getEntryById($userId);
                                         $userDatas = $userDataResult->current();
 
@@ -1311,7 +1310,7 @@ class ToolUserController extends AbstractActionController
                             }
                         } else {
                             $data['usr_role_id'] = $roleId;
-                            $rolesTable = $this->getServiceLocator()->get('MelisUserRole');
+                            $rolesTable = $this->getServiceManager()->get('MelisUserRole');
                             $roleData = $rolesTable->getEntryById($roleId);
                             $roleData = $roleData->current();
                             $newXmlRights = $roleData->urole_rights;
@@ -1368,9 +1367,9 @@ class ToolUserController extends AbstractActionController
 
     public function exportToCsvAction()
     {
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $translator = $this->getServiceLocator()->get('translator');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+        $translator = $this->getServiceManager()->get('translator');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
 
         $searched = $this->getRequest()->getQuery('filter');
@@ -1401,8 +1400,8 @@ class ToolUserController extends AbstractActionController
         $newXmlRights = "";
         $container = new Container('meliscore');
 
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         $request = $this->getRequest();
         $postData = $request->getPost()->toArray();
@@ -1467,7 +1466,7 @@ class ToolUserController extends AbstractActionController
 
         $container = new Container('meliscore');
 
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_tool_user/forms/meliscore_tool_user_form_edit');
         $appConfigForm = $appConfigForm['elements'];
 
@@ -1554,13 +1553,13 @@ class ToolUserController extends AbstractActionController
     public function getUserConnectionDataAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-        $translator = $this->getServiceLocator()->get('translator');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
+        $translator = $this->getServiceManager()->get('translator');
         $melisTool->setMelisToolKey('meliscore', 'user_view_date_connection_tool');
-        $userSvc = $this->getServiceLocator()->get('MelisCoreUser');
-        $userTbl = $this->getServiceLocator()->get('MelisUserConnectionDate');
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $userSvc = $this->getServiceManager()->get('MelisCoreUser');
+        $userTbl = $this->getServiceManager()->get('MelisUserConnectionDate');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
 
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];

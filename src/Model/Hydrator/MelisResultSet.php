@@ -1,15 +1,15 @@
-<?php 
+<?php
 
 /**
  * Melis Technology (http://www.melistechnology.com)
  *
- * @copyright Copyright (c) 2015 Melis Technology (http://www.melistechnology.com)
+ * @copyright Copyright (c) 2019 Melis Technology (http://www.melistechnology.com)
  *
  */
 
-namespace MelisCore\Model;
+namespace MelisCore\Model\Hydrator;
 
-class MelisLogTypeTrans
+class MelisResultSet
 {
     public function getArrayCopy()
     {

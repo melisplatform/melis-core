@@ -2,26 +2,12 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
 use Laminas\Config\Reader\Xml;
-class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
+
+class MelisPhpUnitToolService extends MelisCoreLogService
 {
-    public $serviceLocator;
-
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
     public function setAppConfig()
     {
         $env = getenv('MELIS_PLATFORM');
@@ -66,7 +52,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
      */
     public function init($moduleName, $moduleTestName, $unitTestPath = 'test')
     {
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $moduleSvc = $this->getServiceManager()->get('ModulesService');
         $modulePath = $moduleSvc->getModulePath($moduleName);
         $bootstrapSavePath = $modulePath.'/'.$unitTestPath.'/Bootstrap.php';
         $xmlSavePath = $modulePath.'/'.$unitTestPath.'/phpunit.xml';
@@ -135,10 +121,10 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
      */
     public function runTest($moduleName, $moduleTestName, $unitTestPath = 'test')
     {
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $phpUnit = $config->getItem('meliscore/datas/default/diagnostics')[$this->getOS()]['phpunit'];
         $phpCli  = $config->getItem('meliscore/datas/default/diagnostics')[$this->getOS()]['php_cli'];
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $moduleSvc = $this->getServiceManager()->get('ModulesService');
         $modulePath = $moduleSvc->getModulePath($moduleName);
         $testSavePath = $modulePath.'/'.$unitTestPath;
         $bootstrapPath  = $modulePath.'/'.$unitTestPath.'/Bootstrap.php';
@@ -197,7 +183,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
      */
     public function getTestResult($moduleName, $moduleTestName, $unitTestPath = 'test')
     {
-        $moduleSvc   = $this->getServiceLocator()->get('ModulesService');
+        $moduleSvc   = $this->getServiceManager()->get('ModulesService');
         $modulePath  = $moduleSvc->getModulePath($moduleName);
         $testCfgDir  = $_SERVER['DOCUMENT_ROOT'].'/../test';
         $resultsFile = $testCfgDir. '/results.xml';
@@ -311,7 +297,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
             $method  = strrpos($methodName, "::") !== false ? explode('::', $methodName) : null;
             if(!is_null($method) && is_array($method)) {
                 $method = $method[1];
-                $config = $this->getServiceLocator()->get('MelisCoreConfig');
+                $config = $this->getServiceManager()->get('MelisCoreConfig');
                 $payloads = $config->getItem('diagnostic/'.$module.'/methods/'. $method .'/payloads');
             }
         }
@@ -329,7 +315,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
     {
         $payloads = array();
 
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $payloads = $config->getItem('diagnostic/'.$module.'/methods/'. $this->getMethodName($methodName) .'/payloads');
 
         return $payloads;
@@ -346,7 +332,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
     public function getTable($module, $methodName)
     {
         $db = array();
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $db = $config->getItem('diagnostic/'.$module.'/db/'.$this->getMethodName($methodName));
         return $db;
     }
@@ -371,7 +357,7 @@ class MelisPhpUnitToolService implements ServiceLocatorAwareInterface
 
     public function getDbMethods($module)
     {
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $config = $config->getItem('diagnostic/'.$module.'/db');
         $methods = $config;
         $methodLists = '';

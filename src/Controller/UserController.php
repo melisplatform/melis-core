@@ -9,7 +9,6 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreCreatePasswordService;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
@@ -35,7 +34,7 @@ class UserController extends AbstractActionController
             'keyview' => 'meliscore_lost_password'));
 
         $background = '';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
         if (!empty($appConfigForm['datas']['login_background']))
             $background = $appConfigForm['datas']['login_background'];
@@ -57,19 +56,19 @@ class UserController extends AbstractActionController
     {
         
         $configPath = 'meliscore/datas';
-        $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $cfg = $melisConfig->getItemPerPlatform($configPath);
 
         $pathAppConfigForm = '/meliscore/forms/meliscore_forgot';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
-        $melisLostPass = $this->getServiceLocator()->get('MelisCoreLostPassword');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+        $melisLostPass = $this->getServiceManager()->get('MelisCoreLostPassword');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
         
         $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
         
-        $translator = $this->getServiceLocator()->get('translator');
-        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_forgot_page_title'));
+        $translator = $this->getServiceManager()->get('translator');
+        $this->getServiceManager()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_forgot_page_title'));
         
         $view = new ViewModel();
         $view->setVariable('meliscore_forgot', $forgotForm);
@@ -87,9 +86,9 @@ class UserController extends AbstractActionController
     public function lostPasswordRequestAction() 
     {
         $pathAppConfigForm = '/meliscore/forms/meliscore_forgot';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         
         $success = false;
         $errors  = array();
@@ -101,8 +100,8 @@ class UserController extends AbstractActionController
             $login = $this->getRequest()->getPost('usr_login');
             $email = $this->getRequest()->getPost('usr_email');
             
-            $melisLostPass = $this->getServiceLocator()->get('MelisCoreLostPassword');
-            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $melisLostPass = $this->getServiceManager()->get('MelisCoreLostPassword');
+            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $userData = $userTable->getDataByLoginAndEmail($login, $email);
             $userData = $userData->current();
             
@@ -149,7 +148,7 @@ class UserController extends AbstractActionController
             ));
         
         $background = '';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
         if (!empty($appConfigForm['datas']['login_background']))
             $background = $appConfigForm['datas']['login_background'];
@@ -170,12 +169,12 @@ class UserController extends AbstractActionController
     public function resetPasswordAction() 
     {
         $pathAppConfigForm = '/meliscore/forms/meliscore_resetpass';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         $rhash = $this->getHash();
-        $melisLostPass = $this->getServiceLocator()->get('MelisCoreLostPassword');
+        $melisLostPass = $this->getServiceManager()->get('MelisCoreLostPassword');
         $hashExists = false;
         $textMessage = '';
         $success = 0;
@@ -193,8 +192,8 @@ class UserController extends AbstractActionController
         $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
         
-        $translator = $this->getServiceLocator()->get('translator');
-        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
+        $translator = $this->getServiceManager()->get('translator');
+        $this->getServiceManager()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
         
         $view = new ViewModel();
         if($this->getRequest()->isPost())
@@ -262,13 +261,13 @@ class UserController extends AbstractActionController
     public function resetOldPasswordAction()
     {
         $pathAppConfigForm = '/meliscore/forms/meliscore_resetpass';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         $postValues = get_object_vars($this->getRequest()->getPost());
         $rhash = $postValues['rhash'] ?? null;
-        $melisLostPass = $this->getServiceLocator()->get('MelisCoreLostPassword');
+        $melisLostPass = $this->getServiceManager()->get('MelisCoreLostPassword');
         $hashExists = false;
         $textMessage = '';
         $success = 0;
@@ -285,8 +284,8 @@ class UserController extends AbstractActionController
         $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
 
-        $translator = $this->getServiceLocator()->get('translator');
-        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
+        $translator = $this->getServiceManager()->get('translator');
+        $this->getServiceManager()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
 
         $view = new ViewModel();
         if($this->getRequest()->isPost())
@@ -353,7 +352,7 @@ class UserController extends AbstractActionController
             ));
 
         $background = '';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('/meliscore_login');
         if (!empty($appConfigForm['datas']['login_background']))
             $background = $appConfigForm['datas']['login_background'];
@@ -374,13 +373,13 @@ class UserController extends AbstractActionController
     public function generatePasswordAction()
     {
         $pathAppConfigForm = '/meliscore/forms/meliscore_generatepass';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         $rhash = $this->getHash();
         /** @var MelisCoreCreatePasswordService $melisCreatePass */
-        $melisCreatePass = $this->getServiceLocator()->get('MelisCoreCreatePassword');
+        $melisCreatePass = $this->getServiceManager()->get('MelisCoreCreatePassword');
         $hashExists = false;
         $textMessage = '';
         $success = 0;
@@ -400,8 +399,8 @@ class UserController extends AbstractActionController
         $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
 
-        $translator = $this->getServiceLocator()->get('translator');
-        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
+        $translator = $this->getServiceManager()->get('translator');
+        $this->getServiceManager()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
 
         $view = new ViewModel();
         if($this->getRequest()->isPost())
@@ -470,14 +469,14 @@ class UserController extends AbstractActionController
     public function createPasswordAction()
     {
         $pathAppConfigForm = '/meliscore/forms/meliscore_generatepass';
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         $postValues = get_object_vars($this->getRequest()->getPost());
         $rhash = $postValues['rhash'] ?? null;
         /** @var MelisCoreCreatePasswordService $melisCreatePwdSvc */
-        $melisCreatePwdSvc = $this->getServiceLocator()->get('MelisCoreCreatePassword');
+        $melisCreatePwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
         $hashExists = false;
         $textMessage = '';
         $success = 0;
@@ -494,8 +493,8 @@ class UserController extends AbstractActionController
         $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
 
-        $translator = $this->getServiceLocator()->get('translator');
-        $this->getServiceLocator()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
+        $translator = $this->getServiceManager()->get('translator');
+        $this->getServiceManager()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
 
         $isRequestNotExpired = $melisCreatePwdSvc->isRequestExpired($login);
         $isUserExist = $melisCreatePwdSvc->isUserExist($login);
@@ -573,7 +572,7 @@ class UserController extends AbstractActionController
 
     private function getSchemes()
     {
-        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeSvc  = $this->getServiceManager()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
 
         return $schemeData;

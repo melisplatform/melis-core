@@ -9,9 +9,9 @@
 
 namespace MelisCore\Form\Factory;
 
+use Interop\Container\ContainerInterface;
 use Laminas\Form\Element\Select;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * MelisCoreUserSelect using Select2
@@ -20,27 +20,31 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  * https://select2.org/getting-started
  */
 
-class MelisCoreUsersSelect2Factory implements FactoryInterface
+class MelisCoreUsersSelect2Factory
 {
-    public function createService(ServiceLocatorInterface $formElementManager)
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @return Select
+     */
+    public function __invoke(ContainerInterface $container, $requestedName)
     {
         $element = new Select;
-        $element->setValueOptions($this->loadValueOptions($formElementManager));
+        $element->setValueOptions($this->loadValueOptions($container));
         $element->setAttribute('meliscore-user-select2', true);
         return $element;
     }
 
-    protected function loadValueOptions(ServiceLocatorInterface $formElementManager)
+    /**
+     * @param ServiceManager $serviceManager
+     * @return array
+     */
+    protected function loadValueOptions(ServiceManager $serviceManager)
     {
-        $serviceManager = $formElementManager->getServiceLocator();
-
+        $valueoptions = [];
         $tableLang = $serviceManager->get('MelisCoreTableUser');
-        $languages = $tableLang->fetchAll();
-
-        $valueoptions = array();
-        foreach ($languages As $val){
+        foreach ($tableLang->fetchAll() As $val)
             $valueoptions[$val->usr_id] = $val->usr_firstname.' '.$val->usr_lastname;
-        }
 
         return $valueoptions;
     }

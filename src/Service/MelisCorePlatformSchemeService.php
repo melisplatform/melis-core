@@ -18,14 +18,13 @@ use MelisCore\Entity\MelisCorePlatformScheme;
  */
 class MelisCorePlatformSchemeService extends MelisCoreGeneralService
 {
-
     /**
      * Returns the Melis Core Platform Scheme table
      * @return array|object
      */
     private function schemeTable()
     {
-        return $this->getServiceLocator()->get('MelisCorePlatformSchemeTable');
+        return $this->getServiceManager()->get('MelisCorePlatformSchemeTable');
     }
 
     /**

@@ -18,13 +18,13 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
 {
     const INTERVAL_TO_UPDATE = 5;
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $sharedEvents    = $events->getSharedManager();
         $callBackHandler = $sharedEvents->attach('*', MvcEvent::EVENT_DISPATCH,
             function ($e) {
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 // update the session last check and interval
                 $container  = new Container('meliscore');
                 $userSvc    = $sm->get('MelisCoreAuth');

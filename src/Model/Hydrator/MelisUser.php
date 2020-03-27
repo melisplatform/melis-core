@@ -7,7 +7,7 @@
  *
  */
 
-namespace MelisCore\Model;
+namespace MelisCore\Model\Hydrator;
 
 class MelisUser
 {
@@ -38,7 +38,7 @@ class MelisUser
         return $this->unfilteredDataCount;
     }
 
-    public function setUnfilteredDataCount(int $count = 0)
+    public function setUnfilteredDataCount(int $count = null)
     {
         $this->unfilteredDataCount = $count;
     }
@@ -52,5 +52,4 @@ class MelisUser
     {
         $this->filteredDataCount = $count;
     }
-
 }

@@ -9,7 +9,6 @@
 
 namespace MelisCore\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 
@@ -24,7 +23,7 @@ class MelisTinyMceController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+            $modulesSvc = $this->getServiceManager()->get('ModulesService');
             // Getting the Posted Values
             $postValues = get_object_vars($request->getPost());
 
@@ -33,7 +32,7 @@ class MelisTinyMceController extends AbstractActionController
             $options = !empty($postValues['options']) ? $postValues['options'] : array();
 
             // Get the list of TinyMce configuration files declared
-            $config = $this->serviceLocator->get('config');
+            $config = $this->getServiceManager()->get('config');
             $configTinyMce = $config['tinyMCE'];
 
             // Checking if the type requested is exist on configuration
@@ -115,7 +114,7 @@ class MelisTinyMceController extends AbstractActionController
         $tinyMCEconfig = '';
         $request = $this->getRequest();
 
-        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modulesSvc = $this->getServiceManager()->get('ModulesService');
         // Getting the Posted Values
         $postValues = get_object_vars($request->getPost());
 
@@ -124,7 +123,7 @@ class MelisTinyMceController extends AbstractActionController
         $options = !empty($postValues['options']) ? $postValues['options'] : array();
 
         // Get the list of TinyMce configuration files declared
-        $config = $this->serviceLocator->get('config');
+        $config = $this->getServiceManager()->get('config');
         $configTinyMce = $config['tinyMCE'];
 
         return $configTinyMce;
@@ -145,7 +144,7 @@ class MelisTinyMceController extends AbstractActionController
 
         if (!empty($siteId)) {
             /** @var \MelisEngine\Model\Tables\MelisTemplateTable $tplTable */
-            $tplTable = $this->serviceLocator->get('MelisEngineTableTemplate');
+            $tplTable = $this->getServiceManager()->get('MelisEngineTableTemplate');
             $siteData = $tplTable->getData(null, $siteId, null, null, null, null, 1);
             if (!empty($siteData)) {
                 $siteData = $siteData->toArray();
@@ -154,7 +153,7 @@ class MelisTinyMceController extends AbstractActionController
                 $publicPath = '/public/' . self::MINI_TEMPLATES_FOLDER;
 
                 // Checking if the module path is vendor
-                $composerSrv = $this->getServiceLocator()->get('ModulesService');
+                $composerSrv = $this->getServiceManager()->get('ModulesService');
                 $path = $composerSrv->getComposerModulePath($moduleName);
                 if (!empty($path)) {
                     $folderSite = $path . $publicPath;
@@ -200,7 +199,7 @@ class MelisTinyMceController extends AbstractActionController
         ];
         // Factoring Mynews event and pass to view
         $factory = new \Laminas\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($appConfigForm);
 

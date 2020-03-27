@@ -13,11 +13,20 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisLogTypeTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{ 
-		parent::__construct($tableGateway);
-		$this->idField = 'logt_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_log_type';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'logt_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 	
 	public function getLogTypeOrderByCode()
 	{

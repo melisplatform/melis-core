@@ -9,7 +9,6 @@
 
 namespace MelisCore\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
@@ -34,10 +33,10 @@ class IndexController extends AbstractActionController
         $this->layout()->setVariable('jsCallBacks', $view->getVariable('jsCallBacks'));
         $this->layout()->setVariable('datasCallback', $view->getVariable('datasCallback'));
 
-        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeSvc  = $this->getServiceManager()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
 
-        $bundleAsset = $this->getServiceLocator()->get('MelisAssetManagerWebPack')->getAssets();
+        $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets();
 
         $this->layout()->setVariable('schemes', $schemeData);
         $this->layout()->setVariable('bundle', $bundleAsset);
@@ -53,14 +52,14 @@ class IndexController extends AbstractActionController
     public function headerAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         if ($melisCoreAuth->hasIdentity())
         {
-            $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+            $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $appsConfigCenter = $melisAppConfig->getItem('/meliscore/interface/meliscore_center/');
 
-            $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+            $melisCoreRights = $this->getServiceManager()->get('MelisCoreRights');
             $xmlRights = $melisCoreAuth->getAuthRights();
             if (!empty($appsConfigCenter['interface']))
             {
@@ -81,7 +80,7 @@ class IndexController extends AbstractActionController
         else
             $appsConfigCenter = array();
 
-        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeSvc  = $this->getServiceManager()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
 
         $view                   = new ViewModel();
@@ -124,8 +123,8 @@ class IndexController extends AbstractActionController
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
-        $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
-        $coreTool        =  $this->getServiceLocator()->get('MelisCoreTool');
+        $moduleSvc       =  $this->getServiceManager()->get('ModulesService');
+        $coreTool        =  $this->getServiceManager()->get('MelisCoreTool');
         $modules         =  $moduleSvc->getAllModules();
         $platformVersion =  $moduleSvc->getModulesAndVersions('MelisCore');
 

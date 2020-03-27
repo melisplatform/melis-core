@@ -9,9 +9,8 @@
 
 namespace MelisCore\Form\Factory;
 
+use Interop\Container\ContainerInterface;
 use Laminas\Form\Element\Checkbox;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\ServiceManager\FactoryInterface;
 
 /**
  * Creates a toggle button by using a checkbox element, 
@@ -20,18 +19,18 @@ use Laminas\ServiceManager\FactoryInterface;
  * Files needed:
  * bootstrap-switch.js?v=v1.2.3 & bootstrap-switch.init.js?v=v1.2.3
  */
-class MelisToggleButtonFactory implements FactoryInterface
+class MelisToggleButtonFactory
 {
     /**
-     * {@inheritDoc}
-     * @see \Laminas\ServiceManager\FactoryInterface::createService()
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @return Checkbox
      */
-    public function createService(ServiceLocatorInterface $formElementManager)
+    public function __invoke(ContainerInterface $container, $requestedName)
     {
         $element = new Checkbox;
         $element->setAttribute('class', 'switch');
         return $element;
     }
-    
 }
 

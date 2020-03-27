@@ -9,28 +9,19 @@
 
 namespace MelisCore\Form\Factory;
 
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Form\Factory\MelisSelectFactory;
 
 class MelisSiteSelectFactory extends MelisSelectFactory
 {
-	protected function loadValueOptions(ServiceLocatorInterface $formElementManager)
-	{
-		$serviceManager = $formElementManager->getServiceLocator();
-
+    protected function loadValueOptions(ServiceManager $serviceManager)
+    {
 		$tableSite = $serviceManager->get('MelisEngineTableSite');
-		$sites = $tableSite->fetchAll();
-		
-		$valueoptions = array();
-		$max = $sites->count();
-		for ($i = 0; $i < $max; $i++)
-		{
-			$site = $sites->current();
-			$valueoptions[$site->site_id] = !empty($site->site_label) ? $site->site_label : $site->site_name;
-			$sites->next();
-		}
+
+		$valueoptions = [];
+		foreach ($tableSite->fetchAll() As $site)
+            $valueoptions[$site->site_id] = !empty($site->site_label) ? $site->site_label : $site->site_name;
 		
 		return $valueoptions;
 	}
-
 }

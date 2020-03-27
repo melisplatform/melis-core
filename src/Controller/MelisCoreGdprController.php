@@ -8,7 +8,6 @@ namespace MelisCore\Controller;
  *
  */
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Laminas\Form\Factory;
@@ -58,7 +57,7 @@ class MelisCoreGdprController extends AbstractActionController
         $idsToBeExtracted = $this->getRequest()->getPost('id');
 
         /** @var \MelisCore\Service\MelisCoreGdprService $melisCoreGdprService */
-        $melisCoreGdprService = $this->getServiceLocator()->get('MelisCoreGdprService');
+        $melisCoreGdprService = $this->getServiceManager()->get('MelisCoreGdprService');
         $xml = $melisCoreGdprService->extractSelected($idsToBeExtracted);
 
         $name = "melisplatformgdpr.xml";
@@ -95,7 +94,7 @@ class MelisCoreGdprController extends AbstractActionController
         if ($request->isPost()) {
             $idsToBeDeleted = get_object_vars($request->getPost());
 
-            $melisCoreGdprService = $this->getServiceLocator()->get('MelisCoreGdprService');
+            $melisCoreGdprService = $this->getServiceManager()->get('MelisCoreGdprService');
             $finalData = $melisCoreGdprService->deleteSelected($idsToBeDeleted);
             $success = 1;
 
@@ -239,7 +238,7 @@ class MelisCoreGdprController extends AbstractActionController
             foreach ($formData as $input) {
                 $finalData[$input['name']] = $input['value'];
             }
-            $melisCoreGdprService = $this->getServiceLocator()->get('MelisCoreGdprService');
+            $melisCoreGdprService = $this->getServiceManager()->get('MelisCoreGdprService');
             $modulesData = $melisCoreGdprService->getUserInfo($finalData);
         }
 
@@ -263,7 +262,7 @@ class MelisCoreGdprController extends AbstractActionController
      */
     private function getTool($pluginKey, $toolKey)
     {
-        $tool = $this->getServiceLocator()->get('MelisCoreTool');
+        $tool = $this->getServiceManager()->get('MelisCoreTool');
         $tool->setMelisToolKey($pluginKey, $toolKey);
 
         return $tool;
@@ -277,7 +276,7 @@ class MelisCoreGdprController extends AbstractActionController
     private function getForm($formConfig)
     {
         $factory = new \Laminas\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);
 
@@ -292,7 +291,7 @@ class MelisCoreGdprController extends AbstractActionController
      */
     private function getFormConfig($formPath, $form)
     {
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered($formPath, $form);
 
         return $appConfigForm;

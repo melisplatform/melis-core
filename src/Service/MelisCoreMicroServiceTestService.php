@@ -2,23 +2,8 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-class MelisCoreMicroServiceTestService implements ServiceLocatorAwareInterface
+class MelisCoreMicroServiceTestService extends MelisCoreServiceManager
 {
-    public $serviceLocator;
-
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
 
     public function oneParam($fillMeIn)
     {

@@ -9,9 +9,8 @@
 
 namespace MelisCore\Form\Factory;
 
+use Interop\Container\ContainerInterface;
 use Laminas\Form\Element\Text;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\ServiceManager\FactoryInterface;
 
 /**
  * MelisCore date field
@@ -21,9 +20,9 @@ use Laminas\ServiceManager\FactoryInterface;
  * http://eonasdan.github.io/bootstrap-datetimepicker/
  */
 
-class DatePickerFactory extends Text implements FactoryInterface
+class DatePickerFactory extends Text
 {
-    public function createService(ServiceLocatorInterface $formElementManager)
+    public function __invoke(ContainerInterface $container, $requestedName)
     {
         $element = new Text;
         $element->setAttribute('meliscore-datetimepicker', true);

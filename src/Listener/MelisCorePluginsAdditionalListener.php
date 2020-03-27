@@ -27,7 +27,7 @@ class MelisCorePluginsAdditionalListener extends MelisCoreGeneralListener implem
                 'melis_marketplace_product_do_start'
             ),
             function($e){
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $corePluginSvc = $sm->get('MelisCorePluginsService');
                 $pluginsTbl    = $corePluginSvc->pluginsTbl;
                 $params        = $e->getParams();

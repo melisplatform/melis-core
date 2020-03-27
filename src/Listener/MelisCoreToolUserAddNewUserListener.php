@@ -18,7 +18,7 @@ use MelisCore\Listener\MelisCoreGeneralListener;
 class MelisCoreToolUserAddNewUserListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
 	
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $sharedEvents      = $events->getSharedManager();
         
@@ -27,7 +27,7 @@ class MelisCoreToolUserAddNewUserListener extends MelisCoreGeneralListener imple
         	'meliscore_tooluser_savenew_start', 
         	function($e){
 
-        		$sm = $e->getTarget()->getServiceLocator();
+        		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$melisCoreDispatchService = $sm->get('MelisCoreDispatch');
         		$container = new Container('meliscore');
         		

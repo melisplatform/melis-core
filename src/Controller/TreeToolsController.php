@@ -9,7 +9,6 @@
 
 namespace MelisCore\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
@@ -39,7 +38,7 @@ class TreeToolsController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         /** @var \MelisCore\Service\MelisCoreConfigService $melisAppConfig */
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $melisKeys = $melisAppConfig->getMelisKeys();
 
         // Get the order list for ordering tools
@@ -54,10 +53,10 @@ class TreeToolsController extends AbstractActionController
         $tools = [];
 
         /** @var \MelisCore\Service\MelisCoreAuthService $melisCoreAuth */
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         /** @var \MelisCore\Service\MelisCoreRightsService $melisCoreRights */
-        $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+        $melisCoreRights = $this->getServiceManager()->get('MelisCoreRights');
         $xmlRights = $melisCoreAuth->getAuthRights();
 
         // Merge config if melisKey is "Others"
@@ -244,7 +243,7 @@ class TreeToolsController extends AbstractActionController
      */
     private function getConfig(): MelisCoreConfigService
     {
-        return $this->getServiceLocator()->get('MelisCoreConfig');
+        return $this->getServiceManager()->get('MelisCoreConfig');
     }
 
     /**
@@ -276,7 +275,7 @@ class TreeToolsController extends AbstractActionController
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
         /** @var \MelisCore\Service\MelisCoreConfigService $melisAppConfig */
-        $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         $melisKeys = $melisAppConfig->getMelisKeys();
 
@@ -316,11 +315,11 @@ class TreeToolsController extends AbstractActionController
     {
         // melis/MelisCore/TreeTools/hasRights
         /** @var \MelisCore\Service\MelisCoreConfigService $config */
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         /** @var \MelisCore\Service\MelisCoreRightsService $rights */
-        $rights = $this->getServiceLocator()->get('MelisCoreRights');
+        $rights = $this->getServiceManager()->get('MelisCoreRights');
         /** @var \MelisCore\Service\MelisCoreAuthService $user */
-        $user = $this->getServiceLocator()->get('MelisCoreAuth');
+        $user = $this->getServiceManager()->get('MelisCoreAuth');
 
         dd($rights->canAccess('melismarketplace_toolstree_section'));
 

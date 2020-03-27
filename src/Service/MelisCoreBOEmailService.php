@@ -2,22 +2,10 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Db\Sql\Ddl\Column\Boolean;
 
-class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
-	protected $serviceLocator;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl){
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator(){
-		return $this->serviceLocator;
-	}
-	
+class MelisCoreBOEmailService extends MelisCoreServiceManager
+{
 	/**
 	 * Saving Emails Properties and Details
 	 * @param string $codename - Codename of the email
@@ -29,17 +17,17 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	    
 	    $boeID = null;
 	    
-	    $melisBOEmails = $this->getServiceLocator()->get('MelisCoreTableBOEmails');
-	    $melisBOEmailsDetails = $this->getServiceLocator()->get('MelisCoreTableBOEmailsDetails');
+	    $melisBOEmails = $this->getServiceManager()->get('MelisCoreTableBOEmails');
+	    $melisBOEmailsDetails = $this->getServiceManager()->get('MelisCoreTableBOEmailsDetails');
 	    
-	    $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+	    $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 	    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
 	    $userId = (int) $userAuthDatas->usr_id;
 	    
 	    $data['boe_last_edit_date'] = date('Y-m-d H:i:s');
 	    $data['boe_last_user_id'] = $userId;
 	    
-	    $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+	    $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
 	    $coreLangResult = $coreLang->fetchAll();
 	    
 	    $coreLangDatas = array();
@@ -113,7 +101,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	public function deleteEmail($data){
 	    $emailBoId = null;
 	    if (!empty($data['codename'])){
-	        $melisBOEmails = $this->getServiceLocator()->get('MelisCoreTableBOEmails');
+	        $melisBOEmails = $this->getServiceManager()->get('MelisCoreTableBOEmails');
 	        $boeID = $melisBOEmails->getEntryByField('boe_code_name', $data['codename']);
 	        
 	        if (!empty($boeID)){
@@ -121,7 +109,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	            $emailBoId = $boeID->boe_id;
 	            $melisBOEmails->deleteById($boeID->boe_id);
 	            
-	            $melisBOEmailsDetails = $this->getServiceLocator()->get('MelisCoreTableBOEmailsDetails');
+	            $melisBOEmailsDetails = $this->getServiceManager()->get('MelisCoreTableBOEmailsDetails');
 	            $melisBOEmailsDetails->deleteByField('boed_email_id', $boeID->boe_id);
 	        }
 	    }
@@ -173,9 +161,9 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	 * @return Array
 	 */
 	public function getBoEmailByCode($codename, $langId = null) {
-	    $melisCoreTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
-	    $melisBOEmails = $this->getServiceLocator()->get('MelisCoreTableBOEmails');
-	    $melisBOEmailsDetails = $this->getServiceLocator()->get('MelisCoreTableBOEmailsDetails');
+	    $melisCoreTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
+	    $melisBOEmails = $this->getServiceManager()->get('MelisCoreTableBOEmails');
+	    $melisBOEmailsDetails = $this->getServiceManager()->get('MelisCoreTableBOEmailsDetails');
 	    
 	    $result = array();
 	    $result['headers'] = array();
@@ -184,7 +172,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	    if (!empty($codename)){
 
             $configPath = 'meliscore/datas';
-            $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+            $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $emailCfg = $melisConfig->getItemPerPlatform($configPath);
             $cfgLayoutLogo = $emailCfg['logo'];
             $cfgLayoutTitle = $emailCfg['emails']['default_layout_title'];
@@ -198,7 +186,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	            if(!empty($melisBOEmailsData)){
 
 	                // Get Email App
-	                $melisMelisCoreConfig = $this->getServiceLocator()->get('config');
+	                $melisMelisCoreConfig = $this->getServiceManager()->get('config');
 	                $emailsConfig = (isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename])) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
 	                
                     // Emails Config Initialization
@@ -241,7 +229,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	                    $melisBOEmailsDetailsResult = $getEmailsDetails->toArray();
 	                    if (!empty($melisBOEmailsDetailsResult)){
 	                        
-	                        $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+	                        $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
 	                        
 	                        for ($i = 0; $i < count($melisBOEmailsDetailsResult); $i++){
 	                            
@@ -277,7 +265,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	        
 	        if (empty($result['headers'])){
 	            // Get Email App
-	            $melisMelisCoreConfig = $this->getServiceLocator()->get('config');
+	            $melisMelisCoreConfig = $this->getServiceManager()->get('config');
 	            $emailsConfig = (isset($melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename])) ? $melisMelisCoreConfig['plugins']['meliscore']['emails'][$codename] : array();
 	             
 	            $result['email_name']           = (isset($emailsConfig['email_name'])) ? $emailsConfig['email_name'] : '';
@@ -290,7 +278,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	            $result['layout_logo']          = (isset($emailsConfig['layout_logo'])) ? $emailsConfig['layout_logo'] : $cfgLayoutLogo;
 	            $result['layout_ftr_info']      = (isset($emailsConfig['layout_ftr_info'])) ? $emailsConfig['layout_ftr_info'] : $cfgLayoutFtrInfo;
 
-                $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+                $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
                 
                 $localeLang = 'en_EN';
                 
@@ -330,7 +318,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	    
 	    // Getting the Current Dev. Environment
 	    $configPath = 'meliscore/datas';
-	    $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+	    $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
 	    $emailCfg = $melisConfig->getItemPerPlatform($configPath);
 	    $emailActive = (isset($emailCfg['emails']['active'])) ? $emailCfg['emails']['active'] : 0;
 	    
@@ -387,7 +375,7 @@ class MelisCoreBOEmailService  implements  ServiceLocatorAwareInterface{
 	                    }
 	                }
 	                
-	                $sendEmailBO = $this->getServiceLocator()->get('MelisCoreEmailSendingService');
+	                $sendEmailBO = $this->getServiceManager()->get('MelisCoreEmailSendingService');
 	                
 	                foreach ($emailPropertiesDetails As $key => $val){
 	                    $subject = $emailPropertiesDetails[$key]['subject'];

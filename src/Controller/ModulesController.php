@@ -9,7 +9,6 @@
 
 namespace MelisCore\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Laminas\Session\Container;
@@ -41,9 +40,9 @@ class ModulesController extends AbstractActionController
      */
     public function renderToolModulesAction()
     {
-        $translator      = $this->getServiceLocator()->get('translator');
-        $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
-        $coreTool        =  $this->getServiceLocator()->get('MelisCoreTool');
+        $translator      = $this->getServiceManager()->get('translator');
+        $moduleSvc       =  $this->getServiceManager()->get('ModulesService');
+        $coreTool        =  $this->getServiceManager()->get('MelisCoreTool');
         $modules         = $moduleSvc->getAllModules();
 
         $melisKey = $this->params()->fromRoute('melisKey', '');
@@ -75,7 +74,7 @@ class ModulesController extends AbstractActionController
      */
     public function renderToolModulesHeaderAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $zoneConfig = $this->params()->fromRoute('zoneconfig', array());
 
@@ -122,7 +121,7 @@ class ModulesController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
+        $hasAccess = $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }
@@ -134,7 +133,7 @@ class ModulesController extends AbstractActionController
      */
     public function saveModuleChangesAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $request = $this->getRequest();
         $success = 0;
         $textTitle = 'tr_meliscore_module_management_modules';
@@ -245,7 +244,7 @@ class ModulesController extends AbstractActionController
         $modules = array();
         $request = $this->getRequest();
         $message = 'tr_meliscore_module_management_no_dependencies';
-        $tool    = $this->getServiceLocator()->get('MelisCoreTool');
+        $tool    = $this->getServiceManager()->get('MelisCoreTool');
 
         if ($request->isPost()) {
             $module = $tool->sanitize($request->getPost('module'));
@@ -274,7 +273,7 @@ class ModulesController extends AbstractActionController
         $success = 0;
         $modules = array();
         $request = $this->getRequest();
-        $tool    = $this->getServiceLocator()->get('MelisCoreTool');
+        $tool    = $this->getServiceManager()->get('MelisCoreTool');
 
         if($request->isPost()) {
             $module = $tool->sanitize($request->getPost('module'));
@@ -315,7 +314,7 @@ class ModulesController extends AbstractActionController
         /**
          * @var \MelisCore\Service\MelisCoreModulesService $modulesSvc
          */
-        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modulesSvc = $this->getServiceManager()->get('ModulesService');
         return $modulesSvc;
     }
 

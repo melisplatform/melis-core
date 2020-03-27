@@ -13,10 +13,19 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisUserConnectionDateTable extends MelisGenericTable
 {
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_user_connection_date';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'usrcd_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'usrcd_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 
      public function getUserConnectionData($userId = null, $lastLoginDate = null, $search = '', $searchableColumns = [], $orderBy = '', $orderDirection = 'ASC', $start = 0, $limit = null)
@@ -50,7 +59,7 @@ class MelisUserConnectionDateTable extends MelisGenericTable
 
          $getCount = $this->tableGateway->selectWith($select);
          // set current data count for pagination
-         $this->setCurrentDataCount((int) $getCount->count());
+         $this->setCurrentDataCount((int) $getCount->getFieldCount());
 
          if(!empty($limit)) {
              $select->limit($limit);

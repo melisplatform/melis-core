@@ -9,29 +9,27 @@
 
 namespace MelisCore\Form\Factory; 
 
+use Interop\Container\ContainerInterface;
 use Laminas\Form\Element\Text;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\ServiceManager\FactoryInterface;
+
 /**
  * Melis Text Input Element
- * 
  */
-
-class MelisTextFactory implements FactoryInterface
+class MelisTextFactory
 {
     /**
-     * {@inheritDoc}
-     * @see \Laminas\ServiceManager\FactoryInterface::createService()
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @return Text|object
      */
-    public function createService(ServiceLocatorInterface $formElementManager)
+    public function __invoke(ContainerInterface $container, $requestedName)
     {
         $element = new Text;
 
         $element->setAttribute('class', 'form-control');
         $element->setLabelOption('class','col-sm-2 control-label');
-        
+
         return $element;
     }
-    
 }
 

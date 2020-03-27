@@ -9,17 +9,21 @@
 
 namespace MelisCore\Form\Factory;
 
+use Interop\Container\ContainerInterface;
 use Laminas\Form\Element\Select;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\ServiceManager\FactoryInterface;
 
-class MelisSelectFactory implements FactoryInterface
+class MelisSelectFactory
 {
-	public function createService(ServiceLocatorInterface $formElementManager)
-	{
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @return Select
+     */
+    public function __invoke(ContainerInterface $container, $requestedName)
+    {
 		$element = new Select;
-		$element->setValueOptions($this->loadValueOptions($formElementManager));
+		$element->setValueOptions($this->loadValueOptions($container));
+
 		return $element;
 	}
-
 }

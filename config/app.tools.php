@@ -230,7 +230,7 @@ return [
                                 'action' => '',
                                 'novalidate' => 'novalidate',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -526,7 +526,7 @@ return [
                                 'action' => '',
                                 'novalidate' => 'novalidate',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -925,7 +925,7 @@ return [
                                 'action' => '',
                                 'novalidate' => 'novalidate',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -1148,7 +1148,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -1382,7 +1382,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -1613,7 +1613,7 @@ return [
                                 'action' => '',
                                 'enctype' => 'multipart/form-data',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -1968,7 +1968,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -2133,7 +2133,7 @@ return [
                                 'action' => '',
                                 'class' => 'logTypeForm',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -2232,7 +2232,7 @@ return [
                                 'action' => '',
                                 'class' => 'logExportForm',
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 array(
                                     'spec' => array(
@@ -2426,7 +2426,7 @@ return [
                                 'action' => '',
                                 'class' => 'form-horizontal'
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [

@@ -13,12 +13,21 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class MelisLogTypeTransTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{ 
-		parent::__construct($tableGateway);
-		$this->idField = 'logtt_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_log_type_trans';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'logtt_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	public function getLogTypeTranslations($logTypeId, $langId = null)
 	{
 	    $select = $this->tableGateway->getSql()->select();

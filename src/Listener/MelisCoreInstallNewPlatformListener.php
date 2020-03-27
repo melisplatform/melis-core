@@ -27,7 +27,7 @@ class MelisCoreInstallNewPlatformListener extends MelisCoreGeneralListener imple
         	),
         	function($e){
 
-        		$sm = $e->getTarget()->getServiceLocator();
+        		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$params = $e->getParams();
         		$container = new Container('melisinstaller');
         		$platforms = $params['platforms'];

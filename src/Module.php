@@ -41,7 +41,6 @@ use Laminas\Stdlib\ArrayUtils;
  */
 class Module
 {
-
     public function onBootstrap(MvcEvent $e)
     {
         $this->initShowErrorsByconfig($e);
@@ -49,6 +48,10 @@ class Module
         $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+
+//        $profiler = $e->getApplication()->getServiceManager()->get('Laminas\Db\Adapter\Adapter')->getProfiler();
+//        $queryProfiles = $profiler->getQueryProfiles();
 
         $this->initSession($e);
         $this->createTranslations($e);
@@ -60,7 +63,6 @@ class Module
 
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
             $this->checkIdentity($e);
-
         });
 
         /** @var \MelisCore\Service\MelisCoreModulesService $moduleSvc */
@@ -68,24 +70,20 @@ class Module
         $moduleSvc->unloadModule('MelisInstaller');
 
         if (!$this->isInInstallMode($e)) {
-            $eventManager->attach(new MelisCoreGetRightsTreeViewListener());
-            $eventManager->attach(new MelisCoreToolUserAddNewUserListener());
-            $eventManager->attach(new MelisCoreToolUserUpdateUserListener());
-            $eventManager->attach(new MelisCoreFlashMessengerListener());
-            $eventManager->attach(new MelisCoreNewPlatformListener());
-            $eventManager->attach(new MelisCoreUserRecentLogsListener());
-
-            $eventManager->attach(new MelisCoreCheckUserRightsListener());
-            $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
-            $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
-
-            $eventManager->attach(new MelisCoreAuthSuccessListener());
-            $eventManager->attach(new MelisCorePhpWarningListener());
-
-            $eventManager->attach(new MelisCoreDashboardPluginRightsTreeViewListener());
-            $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
-
-            $eventManager->attach(new MelisCoreTableColumnDisplayListener());
+            (new MelisCoreFlashMessengerListener())->attach($eventManager);
+            (new MelisCoreGetRightsTreeViewListener())->attach($eventManager);
+            (new MelisCoreToolUserAddNewUserListener())->attach($eventManager);
+            (new MelisCoreToolUserUpdateUserListener())->attach($eventManager);
+            (new MelisCoreNewPlatformListener())->attach($eventManager);
+            (new MelisCoreUserRecentLogsListener())->attach($eventManager);
+            (new MelisCoreCheckUserRightsListener())->attach($eventManager);
+            (new MelisCoreTinyMCEConfigurationListener())->attach($eventManager);
+            (new MelisCoreMicroServiceRouteParamListener())->attach($eventManager);
+            (new MelisCoreAuthSuccessListener())->attach($eventManager);
+            (new MelisCorePhpWarningListener())->attach($eventManager);
+            (new MelisCoreDashboardPluginRightsTreeViewListener())->attach($eventManager);
+            (new MelisCoreUrlAccessCheckerListenner())->attach($eventManager);
+            (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
         }
     }
 
@@ -130,7 +128,7 @@ class Module
         $dbConfFile = 'config/autoload/platforms/' . $env . '.php';
         if (file_exists($dbConfFile)) {
             if (empty($container['melis-lang-locale'])) {
-                $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
+                $melisLangTable = $sm->get('MelisCoreTableLang');
                 $datasLang = $melisLangTable->getEntryByField('lang_locale', $locale)->current();
 
                 if ($datasLang) {
@@ -145,7 +143,6 @@ class Module
             $container['melis-lang-id'] = $langId;
             $container['melis-lang-locale'] = $locale;
         }
-
     }
 
     public function createTranslations($e, $locale = 'en_EN')

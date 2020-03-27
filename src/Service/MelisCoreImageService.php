@@ -8,26 +8,11 @@
 
 namespace MelisCore\Service;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-class MelisCoreImageService implements ServiceLocatorAwareInterface, MelisCoreImageServiceInterface 
+class MelisCoreImageService extends MelisCoreServiceManager implements MelisCoreImageServiceInterface
 {
     const EXT_PNG = 'png';
     const EXT_GIF = 'gif';
     const EXT_JPG = 'jpg';
-
-    public $serviceLocator;
-    
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-    
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
     
     /**
      * Creates a 200x200 image thumbnail

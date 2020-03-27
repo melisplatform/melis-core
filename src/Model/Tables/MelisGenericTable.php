@@ -9,9 +9,10 @@
 
 namespace MelisCore\Model\Tables;
 
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Db\ResultSet\ResultSet;
+use Laminas\Db\Sql\Sql;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Metadata\Metadata;
 use Laminas\Db\Sql\Where;
@@ -19,9 +20,13 @@ use Laminas\Db\Sql\Predicate\PredicateSet;
 use Laminas\Db\Sql\Predicate\Like;
 use Laminas\Db\Sql\Predicate\Operator;
 use Laminas\Db\Sql\Predicate\Predicate;
-class MelisGenericTable implements ServiceLocatorAwareInterface
+use Laminas\Hydrator\ObjectProperty;
+use Laminas\ServiceManager\ServiceManager;
+use MelisCore\Model\Hydrator\MelisResultSet;
+
+class MelisGenericTable
 {
-	protected $serviceLocator;
+	protected $serviceManager;
 	protected $tableGateway;
 	protected $idField;
 	protected $lastInsertId;
@@ -33,24 +38,49 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	{
 		$this->tableGateway = $tableGateway;
 	}
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl)
+
+    /**
+     * @param ServiceManager $serviceManager
+     */
+	public function setServiceManager(ServiceManager $serviceManager)
 	{
-		$this->serviceLocator = $sl;
-		return $this;
+		$this->serviceManager = $serviceManager;
 	}
-	
-	public function getServiceLocator()
+
+    /**
+     * @return mixed
+     */
+	public function getServiceManager()
 	{
-		return $this->serviceLocator;
+		return $this->serviceManager;
 	}
-	
+
+    /**
+     * @param TableGateway $tableGateway
+     */
+    public function setTableGateway(TableGateway $tableGateway)
+    {
+        $this->tableGateway = $tableGateway;
+    }
+
+    /**
+     * @return TableGateway
+     */
 	public function getTableGateway()
 	{
 	    return $this->tableGateway;
 	}
 
-	public function fetchAll()
+    /**
+     * @return HydratingResultSet
+     */
+    public function hydratingResultSet()
+    {
+        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisResultSet());
+    }
+
+
+    public function fetchAll()
 	{
 		$resultSet = $this->tableGateway->select();
 		
@@ -215,8 +245,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	public function getPagedData(array $options, $fixedCriteria = null)
 	{
 	    $select = $this->tableGateway->getSql()->select();
-	    $result = $this->tableGateway->select();
-	
+
 	    $where = !empty($options['where']['key']) ? $options['where']['key'] : '';
 	    $whereValue = !empty($options['where']['value']) ? $options['where']['value'] : '';
 	
@@ -240,7 +269,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
                 default :
                     $status = null;
             }
-        }else{
+        } else {
             $status = null;
         }
 	
@@ -257,38 +286,31 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	    }
 
         // this is used when searching
-	    if(!empty($where)) {
+	    if(!empty($where) && !empty($whereValue)) {
 	        $w = new Where();
 	        $p = new PredicateSet();
 	        $filters = array();
 	        $likes = array();
-	        foreach($columns as $colKeys)
-	        {
+	        foreach($columns as $colKeys) {
                 if($colKeys != "usr_status")
 	                $likes[] = new Like($colKeys, '%'.$whereValue.'%');
 	        }
 	        
-	        if(!empty($dateFilterSql)) 
-	        {
+	        if(!empty($dateFilterSql)) {
 	            $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR), new \Laminas\Db\Sql\Predicate\Expression($dateFilterSql));
-	        }
-	        else 
-	        {
+	        } else {
 	            $filters = array(new PredicateSet($likes,PredicateSet::COMBINED_BY_OR));
 	        }
+
 	        $fixedWhere = array(new PredicateSet(array(new Operator('', '=', ''))));
-	        if(is_null($fixedCriteria)) 
-	        {
+	        if(is_null($fixedCriteria)) {
 	            $select->where($filters);
-	        }
-	        else 
-	        {
+	        } else {
 	            $select->where(array(
 	                $fixedWhere,
 	                $filters,
 	            ), PredicateSet::OP_AND);
 	        }
-	        
 	    }
 
         if(!is_null($status))
@@ -297,23 +319,23 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	    // used when column ordering is clicked
 	    if(!empty($order))
 	        $select->order($order . ' ' . $orderDir);
-	
-	        
+
+//        $artistTable = new TableGateway($this->tableGateway->getTable(), $this->tableGateway->getAdapter());
+//        $res = $artistTable->selectWith($select);
+//        dd($res->count());
+
 	    $getCount = $this->tableGateway->selectWith($select);
-	    $this->setCurrentDataCount((int) $getCount->count());
-	    
-	    
+	    $this->setCurrentDataCount((int) $getCount->getFieldCount());
+
+
         // this is used in paginations
         $select->limit($limit);
         $select->offset($start);
 
+
         $resultSet = $this->tableGateway->selectWith($select);
         
-        $sql = $this->tableGateway->getSql();
-        $raw = $sql->getSqlstringForSqlObject($select);
-        
         return $resultSet;
-        
 	}
 	
 	
@@ -332,7 +354,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	    
 	    $resultSet = $this->tableGateway->selectWith($select);
 
-	    return $resultSet->count();
+	    return $resultSet->getFieldCount();
 	}
 	
 	/**
