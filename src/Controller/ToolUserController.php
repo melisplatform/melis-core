@@ -676,15 +676,6 @@ class ToolUserController extends AbstractActionController
             }
         }
 
-<<<<<<< HEAD
-        if($success){
-            /** @var MelisCoreCreatePasswordService $createPwdSvc */
-            $createPwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
-            $createPwdSvc->generateCreatePassRequest($data['usr_login'],$data['usr_email']);
-        }
-
-=======
->>>>>>> develop
         if (!empty($errors)) {
             $success = false;
         }
@@ -907,13 +898,8 @@ class ToolUserController extends AbstractActionController
             {
                 $userId              = (int) $tableData[$ctr]['usr_id'];
                 $online = (int) $tableData[$ctr]['usr_is_online'] ? 'text-success' : 'text-danger';
-<<<<<<< HEAD
-                
-                $userConnectionTable = $this->getServiceManager()->get('MelisUserConnectionDate');
-=======
 
-                $userConnectionTable = $this->getServiceLocator()->get('MelisUserConnectionDate');
->>>>>>> develop
+                $userConnectionTable = $this->getServiceManager()->get('MelisUserConnectionDate');
                 $userConnectionData  = $userConnectionTable->getUserLastConnectionTime($userId, null, array(), 'usrcd_last_connection_time')->current();
 
                 if($userConnectionData && $online == 'text-success')
