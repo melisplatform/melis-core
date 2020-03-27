@@ -333,7 +333,7 @@ class MelisFieldRow extends FormRow
                 $buttonTitle = $element->getAttribute('data-button-title');
 
             $formElement = '<div class="form-group">
-	                            <label for="">'.$element->getLabel().'</label>
+	                            <label class ="d-flex flex-row justify-content-between" for="">'.$element->getLabel().'</label>
 	                            <div class="input-group">';
 
             if ($type == true)
