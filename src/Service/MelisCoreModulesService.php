@@ -602,7 +602,6 @@ class MelisCoreModulesService extends MelisCoreServiceManager
                 } else {
                     array_unshift($modules, $module);
                 }
-
             }
 
             foreach ($bottomModules as $module) {
@@ -615,6 +614,7 @@ class MelisCoreModulesService extends MelisCoreServiceManager
 
             $config = new Config($modules, true);
             $writer = new PhpArray();
+            $writer->setUseBracketArraySyntax(true);
             $conf = $writer->toString($config);
             $conf = preg_replace('/    \d+/u', '', $conf); // remove the number index
             $conf = str_replace('=>', '', $conf); // remove the => characters.
