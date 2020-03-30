@@ -431,7 +431,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     }
 
     /**
-     * send first warning for those email are inactive for the set days
+     * send first warning for those email who are inactive for the set days
      *
      * @param $emailSetupConfig
      * @param $email
@@ -453,7 +453,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $langId = $emailOptions[self::CONFIG_KEY][self::LANG_KEY];
                 // get alert emails required data for the email
                 $alertEmailData = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], $type, $langId);
-                if (!empty($alertEmailData)) {
+                if (!empty($alertEmailData) && (!empty($alertEmailData->mgdpre_html) || !empty($alertEmailData->mgdpre_text))) {
                     //  get the link of page id
                     $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
                     // if link is homepage
@@ -855,24 +855,24 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     private function getEmailLayoutContent($emailData, $content)
     {
         $messageContent = null;
-        $file = null;
+        $layoutFile = null;
         // file validator
         $layoutPathValidator = new Exists();
         // check layout first in vendor directory
         if ($layoutPathValidator->isValid(__DIR__ . '/../../../' . $emailData['mgdprc_email_conf_layout'])) {
-            $file = __DIR__ . '/../../../' . $emailData['mgdprc_email_conf_layout'];
+            $layoutFile = __DIR__ . '/../../../' . $emailData['mgdprc_email_conf_layout'];
         }
         // if no file in vendor directory then check in module root directory
-        if (!$file) {
+        if (!$layoutFile) {
             if ($layoutPathValidator->isValid($_SERVER['DOCUMENT_ROOT'] . '/../module/' . $emailData['mgdprc_email_conf_layout'])) {
-                $file = $_SERVER['DOCUMENT_ROOT'] . '/../module/' . $emailData['mgdprc_email_conf_layout'];
+                $layoutFile = $_SERVER['DOCUMENT_ROOT'] . '/../module/' . $emailData['mgdprc_email_conf_layout'];
             }
         }
         // check file extenstion
-        if ($file) {
+        if ($layoutFile) {
             $layoutExtValidator = new Extension('phtml');
-            if ($layoutExtValidator->isValid($file)) {
-                $messageContent = $this->createEmailViewTemplate($file, $emailData, $content);
+            if ($layoutExtValidator->isValid($layoutFile)) {
+                $messageContent = $this->createEmailViewTemplate($layoutFile, $emailData, $content);
             }
         }
 

@@ -39,10 +39,16 @@ interface MelisCoreGdprAutoDeleteInterface
     public function updateGdprUserStatus($validationKey);
 
     /**
+     * @return mixed
+     */
+    public function getDeleteListOfUsers();
+
+    /**
      * Removal of users who have missed the deadline, returns the list of users deleted with their tags
      *
      * @param $autoDeleteConfig
      * @return mixed
      */
     public function removeOldUnvalidatedUsers($autoDeleteConfig);
+
 }

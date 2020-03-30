@@ -262,7 +262,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
             // check form it its valid
             if (!$validatedForm->isValid()) {
                 // set form errors
-                $errors = $errors + $this->formatErrorMessage($validatedForm->getMessages(), "MelisCoreGdprAutoDelete/tools/melis_core_gdpr_auto_delete/forms/" . $formkey) ;
+                $errors = array_merge($errors, $this->formatErrorMessage($validatedForm->getMessages(), "MelisCoreGdprAutoDelete/tools/melis_core_gdpr_auto_delete/forms/" . $formkey)) ;
             }
         }
 
@@ -399,10 +399,26 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
         return $this->gdprAutoDeleteEmailsTable->getEntryByField('mgdpre_config_id',$configId)->toArray();
     }
 
-    public function getAlertEmailsTransData($configId,$type, $langId)
+    /**
+     * @param $configId
+     * @param null $type
+     * @param null $langId
+     * @return mixed
+     */
+    public function getAlertEmailsTransData($configId,$type = null, $langId = null)
     {
         return $this->gdprAutoDeleteEmailsTable->getAlertEmailsTransData($configId, $type, $langId)->current();
     }
+
+    /**
+     * @param $configId
+     * @return mixed
+     */
+    public function getAlertEmailsTransDataByConfigId($configId)
+    {
+        return $this->gdprAutoDeleteEmailsTable->getEntryByField('mgdpre_config_id', $configId)->toArray();
+    }
+
     /**
      * @param $configId
      * @return MelisGdprDeleteEmailsLogsTable

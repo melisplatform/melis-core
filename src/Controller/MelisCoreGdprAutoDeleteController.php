@@ -11,6 +11,7 @@ namespace MelisCore\Controller;
 
 use MelisCore\Form\MelisForm;
 use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
+use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
 use MelisCore\Service\MelisCoreConfigService;
 use MelisCore\Service\MelisCoreGdprAutoDeleteService;
 use MelisCore\Service\MelisCoreGdprAutoDeleteToolService;
@@ -322,9 +323,9 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 $formattedData[$ctr]['DT_RowId'] = $data[$ctr]['mgdprc_id'];
                 $formattedData[$ctr]['mgdprc_site_id'] = $this->getGdprAutoDeleteService()->getSiteNameBySiteId($data[$ctr]['mgdprc_site_id']);
                 $formattedData[$ctr]['mgdprc_module_name'] = $data[$ctr]['mgdprc_module_name'];
-                $formattedData[$ctr]['mgdprc_alert_email_status'] = $data[$ctr]['mgdprc_alert_email_status'] ? $data[$ctr]['mgdprc_alert_email_days'] . " day(s)" : "Deactivated";
-                $formattedData[$ctr]['mgdprc_alert_email_resend'] = $data[$ctr]['mgdprc_alert_email_resend'] ? "Activated" : "Deactivated";
-                $formattedData[$ctr]['mgdprc_delete_days'] = $data[$ctr]['mgdprc_delete_days'];
+                $formattedData[$ctr]['mgdprc_alert_email_status'] = $data[$ctr]['mgdprc_alert_email_status'] ? $data[$ctr]['mgdprc_alert_email_days'] . " day(s)" . $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_WARNING) : "Deactivated";
+                $formattedData[$ctr]['mgdprc_alert_email_resend'] = $data[$ctr]['mgdprc_alert_email_resend'] ? "Activated" . $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_WARNING): "Deactivated";
+                $formattedData[$ctr]['mgdprc_delete_days'] = $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_DELETED);
             }
         } else {
             $formattedData = $data;
@@ -334,14 +335,58 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     }
 
     /**
-     * @return MelisGdprDeleteConfigTable
+     * @param $configId
+     * @param $type
+     * @return string
+     */
+    private function getLocaleEmailTrans($configId, $type)
+    {
+        $data = $this->getGdprAutoDeleteService()->getAlertEmailsTransDataByConfigId($configId);
+        $locale = "";
+        $ctr = 0;
+        if (!empty($data)) {
+            foreach ($data as $idx => $val) {
+                if ($type == $val['mgdpre_type']) {
+                    if (!empty($val['mgdpre_html']) || !empty($val['mgdpre_text'])) {
+                        if ($type == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
+                            if ($ctr > 0) {
+                                $locale .= " / " .$this->getLocaleNameByLangId($val['mgdpre_lang_id']);
+                            } else {
+                                $locale .= $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
+                            }
+                        } else {
+                            $locale .= " / " . $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
+                        }
+                    }
+                    $ctr++;
+                }
+
+            }
+        }
+
+        return $locale;
+    }
+
+    /**
+     * @param $langId
+     * @return null
+     */
+    private function getLocaleNameByLangId($langId)
+    {
+        $locale = null;
+        if ($this->getServiceLocator()->has('MelisEngineLang')){
+            $locale =  explode('_', $this->getServiceLocator()->get('MelisEngineLang')->getLocaleByLangId($langId))[1];
+        }
+
+        return $locale;
+    }
+
+    /**
+     * @return MelisGdprDeleteConfigTable | array | object
      */
     private function getGdprDeleteConfigTable()
     {
-        /** @var MelisGdprDeleteConfigTable $gdprDeleteConfigTable */
-        $gdprDeleteConfigTable = $this->getServiceLocator()->get('MelisGdprDeleteConfigTable');
-
-        return $gdprDeleteConfigTable;
+        return $this->getServiceLocator()->get('MelisGdprDeleteConfigTable');
     }
 
     /**
