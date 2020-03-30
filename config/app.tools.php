@@ -2153,7 +2153,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'boed_html',
-                                        'type' => 'TextArea',
+                                        'type' => 'Textarea',
                                         'options' => [
                                             'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html',
                                             'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html tooltip',
@@ -2167,7 +2167,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'boed_text',
-                                        'type' => 'TextArea',
+                                        'type' => 'Textarea',
                                         'options' => [
                                             'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text',
                                             'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text tooltip',

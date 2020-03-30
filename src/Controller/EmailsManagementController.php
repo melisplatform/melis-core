@@ -14,8 +14,9 @@ use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\InputFilter;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
+use MelisCore\Model\Hydrator\MelisResultSet;
 use MelisCore\Service\MelisCoreRightsService;
-use MelisCore\Model\MelisBOEmails;
+
 /**
  * MelisCore BO Emails Management
  */
@@ -488,7 +489,7 @@ class EmailsManagementController extends AbstractActionController
                     }
                 }else{
                     $dbExist = FALSE;
-                    $emailsDatas = new MelisBOEmails();
+                    $emailsDatas = new MelisResultSet();
                     $emailsDatas->boe_name                      = $emailName;
                     $emailsDatas->boe_from_email                =  $from;
                     $emailsDatas->boe_code_name                 = $codename;
