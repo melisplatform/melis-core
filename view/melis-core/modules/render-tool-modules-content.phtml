@@ -29,13 +29,13 @@ if (!empty($this->zoneconfig['conf']['id']))
                 <h4 id="meliscore-tool-module-content-title"><?= $this->translate('tr_meliscore_module_management_modules'); ?></h4>
                 <div class="ms-cont">
                     <div class="row">
-                        <div class="col-md-2 col-2">
+                        <div class="col-md-2 col-sm-4 d-none d-sm-block">
                             <h4>Type </h4>
                         </div>
-                        <div class="col-md-5 col-5">
+                        <div class="col-md-5 col-sm-4 col-6">
                             <h4>Version </h4>
                         </div>
-                        <div class="col-md-5 col-5">
+                        <div class="col-md-5 col-sm-4 col-6">
                             <div class="icon-cont">
                                 <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
                             </div>
@@ -56,15 +56,15 @@ if (!empty($this->zoneconfig['conf']['id']))
                                 <h4><?= $moduleName; ?></h4>
                             </div>
                             <div class="float-right">
-                                <div style="min-width:360px">
+                                <div class="module-data-content">
                                     <div class="row">
-                                        <div class="col-md-2 col-sm-2 col-xs-2 ">
+                                        <div class="col-md-2 col-sm-3 d-none d-sm-block">
                                             <?= ($this->modulesInfo[$moduleName]['is_bundle']) ?  '<span title="Bundle" class="glyphicons package"><i></i></span>' : ''; ?>
                                         </div>
-                                        <div class="col-md-5 col-sm-5 col-xs-5 ">
+                                        <div class="col-md-5 col-sm-4 col-6">
                                             <h4><?= isset($this->modulesInfo[$moduleName]['version']) ? $this->modulesInfo[$moduleName]['version'] : 'v1.0'; ?> </h4>
                                         </div>
-                                        <div class="col-md-5 col-sm-5 col-xs-5 ">
+                                        <div class="col-md-5 col-sm-5 col-6">
                                             <div data-module-name="<?= $moduleName; ?>" class="make-switch module-switch" data-on-label="<?= $this->translate('tr_meliscore_common_active'); ?>" data-off-label="<?= $this->translate('tr_meliscore_common_inactive'); ?>" data-text-label="<?= $this->translate('tr_meliscore_tool_user_col_status'); ?>">
                                                 <?php
                                                 $status = $moduleStatus > 0 ? 'checked' : '';

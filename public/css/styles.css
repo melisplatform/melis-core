@@ -4458,3 +4458,16 @@ input#log_date_range{
 .page-edition-multi-ko h3 {
     width:100%;
 }
+/*Module tool responsiveness*/
+.module-data-content{
+    width: 360px;
+}
+@media only screen and (max-width: 575px) {
+    .module-data-content{
+        width: auto;
+    }
+
+    #id_meliscore_tool_user_module_management_content .ms-cont{
+        min-width: 280px !important;
+    }
+}

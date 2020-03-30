@@ -962,8 +962,8 @@ td.dataTables_empty {
 }
 @media (max-width: 767px) {
   #id_meliscore_tool_user_module_management_content .ms-cont {
-    min-width: auto;
-    width: auto;
+    /*min-width: auto;*/
+    /*width: auto;*/
   }
   /* body commmon */
   body {
