@@ -233,6 +233,7 @@ return array(
 
                     // datetimepicker
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
+                    //'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/js/bootstrap-timerpicker.js',
                     '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 
                     '/MelisCore/js/core/melisCore.js',

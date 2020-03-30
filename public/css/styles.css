@@ -2915,8 +2915,12 @@ div#modal-user-management div.widget {
 */
 .tabsbar .nav-group-dropdown li.active > a.tab-element {
     position: relative;
-    background: #fff;
+    background: #fff !important;
     color: #e61c23 !important;
+}
+
+.tabsbar .nav-group-dropdown li.active > a.close-tab {
+    background: #fff !important;
 }
 
 .tabsbar .nav-group-dropdown li.active > a.tab-element > i:before {
