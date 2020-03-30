@@ -407,7 +407,7 @@ return array(
             'translator'                        => 'MvcTranslator',
             // Service
             'MelisCoreConfig'                   => MelisCoreConfigService::class,
-            'MelisCoreDispatch'                 => MelisCoreConfigService::class,
+            'MelisCoreDispatch'                 => MelisCoreDispatchService::class,
             'MelisCoreAuth'                     => MelisCoreAuthService::class,
             'MelisCoreUser'                     => MelisCoreUserService::class,
             'MelisCoreRights'                   => MelisCoreRightsService::class,
