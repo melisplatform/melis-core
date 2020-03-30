@@ -211,9 +211,14 @@ class MelisFieldRow extends FormRow
             // Set Input to Null value as default
             $element->setAttribute('value', null);
 
-            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' .$element->getOption('tooltip') . '"></i>';
-            
-            $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $element->getAttribute('data-label-text') . '</div>' . $multiValTooltip . '</label>';
+            $label = $element->getLabel();
+            if (!empty($element->getAttribute('data-label-text'))) {
+                $label = $element->getAttribute('data-label-text');
+            }
+
+            $label = '<label for="tags" class="d-flex flex-row justify-content-between">' . $label . '</label>';
+            $element->setLabel("");
+
             $getTags = explode(',', $dataTags);
             $ulStart = '<ul class="multi-value-input clearfix">';
             $ulEnd   = '</ul>';
@@ -221,8 +226,9 @@ class MelisFieldRow extends FormRow
             $liInput = '<li class="tag-creator">' . parent::render($element, $labelPosition) . '</li>';
             $tagItems= '';
 
+
             $multiValElement = $label . $ulStart.'';
-            if(!empty($dataTags))
+            if (!empty($dataTags))
                 foreach($getTags as $tagValues)
                     $tagItems .= sprintf($liSpan, $tagValues);
 
