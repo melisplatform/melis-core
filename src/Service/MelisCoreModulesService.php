@@ -56,8 +56,8 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
              *  check if module is bundle type
              */
             $bundle = false;
-            if(isset($packageModuleName['bundle'])){
-                $bundle = $packageModuleName['bundle'];
+            if(isset($packageModuleName['melis-bundle'])){
+                $bundle = $packageModuleName['melis-bundle'];
             }
 
             if ($module) {
