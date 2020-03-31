@@ -39,6 +39,8 @@ $availableLang = "";
                             // set data
                             if ($this->alertEmailsTransData) {
                                 foreach ($this->alertEmailsTransData as $idx => $val) {
+                                    // set data tags attribute for mgdpre_email_tags
+                                    $form->get('mgdpre_email_tags')->setAttribute('data-tags', $val['mgdpre_email_tags']);
                                     if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_WARNING &&
                                         $val['mgdpre_lang_id'] == $data['lang_id']) {
                                         $form->setData($val);
@@ -69,6 +71,7 @@ $availableLang = "";
         </div>
         <!-- accordion account deleted emails -->
         <div id="accordion-account-deleted-email-<?= $data['lang_locale'] ?>" class="">
+            <h5 class="float-right"><a href="#" class="" style="text-decoration: underline">Delete everything</a></h5>
             <div class="card" style="border: none;">
                 <div id="alert-email">
                     <a data-toggle="collapse" data-target="#account-deleted-email-<?= $data['lang_locale'] ?>"
@@ -92,6 +95,8 @@ $availableLang = "";
                             $formEmailDelete->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_delete_' . $data['lang_locale']);
                             if ($this->alertEmailsTransData) {
                                 foreach ($this->alertEmailsTransData as $idx => $val) {
+                                    // set data tags attribute for mgdpre_email_tags
+                                    $formEmailDelete->get('mgdpre_email_tags')->setAttribute('data-tags', $val['mgdpre_email_tags']);
                                     if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_DELETED &&
                                         $val['mgdpre_lang_id'] == $data['lang_id']) {
                                         $formEmailDelete->setData($val);

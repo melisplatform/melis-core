@@ -211,7 +211,7 @@ class MelisFieldRow extends FormRow
             // Get Value
             $dataTags = $element->getValue();
             // Set Input to Null value as default
-            $element->setAttribute('value', null);
+            // $element->setAttribute('value', null);
 
             $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' .$element->getOption('tooltip') . '"></i>';
             

@@ -93,21 +93,20 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $this->getTool()->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
+        // get email setup data
+        $emailSetupData = $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
         // get form for the Cron Config
-        $view->setVariable(
-            'formCronConfig',
-            $this->getGdprAutoDeleteService()->getAddEditCronConfigForm()->setData(
-                $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigDataById($this->getConfigId())
-            )
-        );
+        $view->setVariable('formCronConfig', $this->getGdprAutoDeleteService()->getAddEditCronConfigForm()->setData($emailSetupData));
+        // get add edit email setup form
+        $form = $this->getGdprAutoDeleteService()->getAddEditEmailSetupForm();
+        // set data
+        if (! empty($emailSetupData)) {
+            // set data tags for the mgdprc_email_conf_tags field
+            $form->get('mgdprc_email_conf_tags')->setAttribute('data-tags', $emailSetupData['mgdprc_email_conf_tags']);
+            $form->setData($emailSetupData);
+        }
         // get form for Email Setup
-        $view->setVariable(
-            'formEmailSetup',
-            $this->getGdprAutoDeleteService()->getAddEditEmailSetupForm()->setData(
-                $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigDataById($this->getConfigId())
-            )
-        );
-
+        $view->setVariable('formEmailSetup', $form);
 
         return $view;
     }

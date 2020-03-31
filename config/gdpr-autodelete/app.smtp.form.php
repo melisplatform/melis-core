@@ -8,10 +8,11 @@ return [
                     'forms' => [
                         'melisgdprautodelete_smtp_form' => [
                             'attributes' => [
-                                'name' => 'melisgdprautodelete_add_edit_alert_email_delete',
+                                'name' => 'melisgdprautodelete_smtp_form',
                                 'method' => 'POST',
                                 'action' => '',
-                                'class' => 'melisgdprautodelete_add_edit_alert_email_delete'
+                                'class' => 'melisgdprautodelete_smtp_form',
+                                'id' => 'melisgdprautodelete_smtp_form'
                             ],
                             'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
                             'elements' => [

@@ -209,9 +209,9 @@ var gdprAutoDelete = {
             var form2 = $(form);
             // serialize array
             var dataString = form2.serialize();
-            if (typeof (form2.find('input[name="mgdprc_alert_email_tags"]').data('tags')) !== 'undefined') {
+            if (typeof (form2.find('input[name="mgdpre_email_tags"]').data('tags')) !== 'undefined') {
                 // get tags
-                dataString += "&mgdpre_email_tags=" + form2.find('input[name="mgdprc_alert_email_tags"]').data('tags').toString();
+                dataString += "&mgdpre_email_tags=" + form2.find('input[name="mgdpre_email_tags"]').data('tags').toString();
             }
             dataString += "&mgdpre_lang_id=" + form2.data('langId') + "&mgdpre_type=1";
             // data lang locale
@@ -233,9 +233,9 @@ var gdprAutoDelete = {
             var form2 = $(form);
             // serialize array
             var dataString = form2.serialize();
-            if (typeof (form2.find('input[name="mgdprc_alert_email_tags"]').data('tags')) !== 'undefined') {
+            if (typeof (form2.find('input[name="mgdpre_email_tags"]').data('tags')) !== 'undefined') {
                 // get tags
-                dataString += "&mgdpre_email_tags=" + form2.find('input[name="mgdprc_alert_email_tags"]').data('tags').toString();
+                dataString += "&mgdpre_email_tags=" + form2.find('input[name="mgdpre_email_tags"]').data('tags').toString();
             }
             dataString += "&mgdpre_lang_id=" + form2.data('langId') + "&mgdpre_type=2";
             // data lang locale
@@ -247,6 +247,7 @@ var gdprAutoDelete = {
 
         return JSON.stringify(alertEmailTransData);
     },
+
     /**
      * get add / edit filters
      *  - site
@@ -351,7 +352,13 @@ $(function () {
 
     $body.on('click', ".gdpr-email-logs-show-details", function() {
         $("#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details").removeClass('hidden');
-        melisHelper.zoneReload('id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details','meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',{ logId : $(this).parent().parent().parent().attr('id')});
+        melisHelper.zoneReload(
+            'id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',
+            'meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',
+            {
+                logId : $(this).parent().parent().parent().attr('id')
+            }
+        );
     });
 });
 /**

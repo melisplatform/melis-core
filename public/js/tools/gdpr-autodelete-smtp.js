@@ -28,6 +28,6 @@ var gdprautodeletesmtp = {
 $(function(){
     // save gdpr auto delete smtp
     $("body").on('click', "#save-smtp" , function(){
-        gdprautodeletesmtp.saveSmtpConfig($("#melisgdprautodelete_add_edit_alert_email_delete").serialize());
+        gdprautodeletesmtp.saveSmtpConfig($("#melisgdprautodelete_smtp_form").serialize());
     });
 });

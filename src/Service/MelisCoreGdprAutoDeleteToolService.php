@@ -308,7 +308,12 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      */
     public function getGdprAutoDeleteConfigDataById($configId)
     {
-        return (array) $this->gdprAutoDeleteConfigTable->getEntryById($configId)->current();
+        $data = $this->gdprAutoDeleteConfigTable->getEntryById($configId)->current() ?: [];
+        if (! empty($data)) {
+            $data = (array) $data;
+        }
+
+        return $data;
     }
 
     /**
