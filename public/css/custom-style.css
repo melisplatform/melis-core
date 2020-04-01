@@ -1241,3 +1241,10 @@ a[data-toggle="modal"]:focus {
 .datepicker tbody tr td {
   cursor: default;
 }
+.commerce-dashboard-plugin-order-messages .label.label-inverse.pull-right {
+  color: #fff !important;
+}
+.commerce-dashboard-plugin-order-messages:hover .list-group-item-text,
+.commerce-dashboard-plugin-order-messages .list-group-item-text {
+  color: #686868 !important;
+}
