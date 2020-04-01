@@ -23,11 +23,11 @@ var melisCore = (function(window){
         $tabConInner    = $("#melis-navtabs-container-inner"),
         $tabArrowTop    = $("#tab-arrow-top"),
         $pluginBtn      = $("#melisDashBoardPluginBtn"),
-        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box");
+        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         // fixes conlict between jquery ui and bootstrap same function name .tooltip()
-        //jqeBsTooltip    = $.fn.tooltip.noConflict();
+        jqeBsTooltip    = $.fn.tooltip.noConflict();
 
-    //$.fn.tlp = jqeBsTooltip;
+    $.fn.tlp = jqeBsTooltip;
 
     // MAIN FUNCTIONS =================================================================================================================
 
