@@ -63,6 +63,12 @@ return [
                             'elements' => [
                                 [
                                     'spec' => [
+                                        'name' => 'mgdprc_id',
+                                        'type' => "hidden",
+                                    ]
+                                ],
+                                [
+                                    'spec' => [
                                         'name' => 'mgdprc_alert_email_status',
                                         'type' => "checkbox",
                                         'options' => [

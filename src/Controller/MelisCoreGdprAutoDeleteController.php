@@ -474,10 +474,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             $alertEmailsWarningTransData = $this->jsonToArray($postValues['alert_emails_warning_trans']);
             // convert json string to array
             $alertEmailsDeleteTransData = $this->jsonToArray($postValues['alert_emails_delete_trans']);
-            print_r($alertEmailsWarningTransData);
-            print_r($alertEmailsDeleteTransData);
+
             // validate all forms inputs from requests
-die;
             $this->setFormErrors($this->getGdprAutoDeleteService()->validateForm($postValues));
             // remove auto_delete_config key
             unset($postValues['alert_emails_warning_trans']);
@@ -486,7 +484,14 @@ die;
             // save data if no errors of forms
             if (empty($this->getFormErrors())) {
                 // save gdpr auto delete configs
-                $configId = $this->getGdprAutoDeleteService()->saveGdprAutoDeleteConfig($postValues);
+                if (! empty($postValues['mgdprc_id'])) {
+                    // update
+                    $configId = $postValues['mgdprc_id'];
+                    $this->getGdprAutoDeleteService()->saveGdprAutoDeleteConfig($postValues, $configId);
+                } else {
+                    // new entry
+                    $configId = $this->getGdprAutoDeleteService()->saveGdprAutoDeleteConfig($postValues);
+                }
                 // save gdpr alert emails translations
                 $this->saveAlertEmailsTrans($alertEmailsWarningTransData, $configId);
                 // save gdpr alert deleted emails
@@ -576,11 +581,26 @@ die;
     private function saveAlertEmailsTrans($validatedData, $configId)
     {
         if (!empty($validatedData)) {
-            // get config id
-            foreach ($validatedData as $idx => $val) {
-                $val['data']['mgdpre_config_id'] = $configId;
-                // save alert emails trans
-                $this->getGdprAutoDeleteService()->saveGdprDeleteWarningEmails($val['data'], null);
+            $alertEmailsTransData = $this->getGdprAutoDeleteService()->getAlertEmailsTransData($configId);
+            if (! empty($alertEmailsTransData)) {
+                // for update
+                foreach ($alertEmailsTransData as $i => $v1) {
+                    foreach ($validatedData as $ii => $v2) {
+                        if ($v1['mgdpre_type'] == $v2['data']['mgdpre_type'] && $v1['mgdpre_lang_id'] == $v2['data']['mgdpre_lang_id']) {
+                            // add config id
+                            $v2['data']['mgdpre_config_id'] = $configId;
+                            // update alert emails trans
+                            $this->getGdprAutoDeleteService()->saveGdprDeleteAlertEmails($v2['data'], $v1['mgdpre_id']);
+                        }
+                    }
+                }
+            } else {
+                // new entry
+                foreach ($validatedData as $idx => $val) {
+                    $val['data']['mgdpre_config_id'] = $configId;
+                    // save alert emails trans
+                    $this->getGdprAutoDeleteService()->saveGdprDeleteAlertEmails($val['data'], null);
+                }
             }
         }
     }

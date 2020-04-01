@@ -154,7 +154,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      * @param $id
      * @return int|null
      */
-    public function saveGdprDeleteWarningEmails($validatedData, $id)
+    public function saveGdprDeleteAlertEmails($validatedData, $id)
     {
         return $this->gdprAutoDeleteEmailsTable->save($validatedData, $id);
     }
@@ -245,14 +245,14 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
                 'name' => 'Email Setup',
                 'form' => $this->getAddEditEmailSetupForm()
             ],
-            'melisgdprautodelete_add_edit_alert_email' => [
-                'name' => 'Alert email',
-                'form' => $this->getAddEditAlertEmailForm()
-            ],
-            'melisgdprautodelete_add_edit_alert_email_delete' => [
-                'name' => 'Account Deleted Email',
-                'form' => $this->getAddEditAlertEmailDeleteForm()
-            ]
+//            'melisgdprautodelete_add_edit_alert_email' => [
+//                'name' => 'Alert email',
+//                'form' => $this->getAddEditAlertEmailForm()
+//            ],
+//            'melisgdprautodelete_add_edit_alert_email_delete' => [
+//                'name' => 'Account Deleted Email',
+//                'form' => $this->getAddEditAlertEmailDeleteForm()
+//            ]
         ];
 
         foreach ($gdprAutoDeleteForms as $formkey => $form) {
@@ -412,7 +412,11 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      */
     public function getAlertEmailsTransData($configId,$type = null, $langId = null)
     {
-        return $this->gdprAutoDeleteEmailsTable->getAlertEmailsTransData($configId, $type, $langId)->current();
+        $data = $this->gdprAutoDeleteEmailsTable->getAlertEmailsTransData($configId, $type, $langId)->toArray();
+        if (! empty($type) && !empty($langId)) {
+            $data = $this->gdprAutoDeleteEmailsTable->getAlertEmailsTransData($configId, $type, $langId)->current();
+        }
+        return $data;
     }
 
     /**
