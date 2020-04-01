@@ -86,6 +86,12 @@ var gdprAutoDelete = {
     hideAddEditConfig: function () {
         $("#add-edit-config-content").collapse('hide')
     },
+    customHighlightLabelError : function(label){
+        $(label).css("color", "rgb(255, 0, 0);")
+    },
+    removecustomHighlightLabelError : function(label) {
+
+    },
     /**
      * save all forms data
      * @param callbackSuccess

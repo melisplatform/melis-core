@@ -468,9 +468,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         // default is first
                         if (!$first) {
                             // override
-                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2ⁿᵈ)";
+                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2)";
                         } else {
-                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1ˢᵗ)";
+                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1)";
                         }
                     }
                     // html email content
@@ -893,20 +893,24 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         $tagsNotFoundOnModule = [];
         $moduleTags = $emailOptions['tags'];
-        // URL tag must be reserve for revalidation link of the email
-        // replace URL tag on the content
-        $content = str_replace('[URL]', $data->mgdpre_link . "?u=" . (isset($emailOptions['config']['validationKey']) ? $emailOptions['config']['validationKey'] : null), $content);
         if (!empty($tags)) {
             // accepted tags
             foreach ($tags as $idx => $dbTag) {
-                if ($dbTag != "URL") {
-                    // look for module tags
-                    if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
-                        // get email content and replace tags
-                        $content = str_replace('[' . $dbTag . ']', $moduleTags[$dbTag], $content);
-                    } else {
-                        $tagsNotFoundOnModule[] = $dbTag;
+                // look for module tags
+                if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
+                    // for value of revlidation url
+                    if ($moduleTags[$dbTag] == "%revalidation_url%") {
+                        // replace URL tag on the content
+                        $fullUrl = $data->mgdpre_link . "?u=" . (isset($emailOptions['config']['validationKey']) ? $emailOptions['config']['validationKey'] : null);
+                        // for tinymce html
+                        $content = str_replace('/[' . $dbTag . ']', $fullUrl , $content);
+                        // for text version
+                        $content = str_replace('[' . $dbTag . ']', $fullUrl , $content);
                     }
+                    // get email content and replace tags
+                    $content = str_replace('[' . $dbTag . ']', $moduleTags[$dbTag], $content);
+                } else {
+                    $tagsNotFoundOnModule[] = $dbTag;
                 }
             }
         }

@@ -475,6 +475,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             // convert json string to array
             $alertEmailsDeleteTransData = $this->jsonToArray($postValues['alert_emails_delete_trans']);
 
+
             // validate all forms inputs from requests
             $this->setFormErrors($this->getGdprAutoDeleteService()->validateForm($postValues));
             // remove auto_delete_config key

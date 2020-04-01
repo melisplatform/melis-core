@@ -228,7 +228,7 @@ return [
                                         'name' => 'mgdprc_email_conf_tags',
                                         'type' => "text",
                                         'options' => [
-                                            'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
+                                            'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME]).",
                                         ],
                                         'attributes' => [
                                             'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_email_setup_tags',
