@@ -1237,3 +1237,7 @@ a[data-toggle="modal"]:focus {
 .no-dashboard-access p {
   margin-bottom: 0;
 }
+.datepicker thead tr th,
+.datepicker tbody tr td {
+  cursor: default;
+}
