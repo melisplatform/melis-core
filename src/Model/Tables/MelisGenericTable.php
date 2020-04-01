@@ -226,7 +226,7 @@ class MelisGenericTable implements ServiceLocatorAwareInterface
 	    $start = (int) $options['start'];
 	    $limit = (int) $options['limit'] === -1 ? $this->getTotalData() : (int) $options['limit'];
 
-        switch ($options['status']){
+        switch ($options['status'] ?? null){
             case 'ACTIVE' :
                 $status = 1;
                 break;

@@ -44,9 +44,13 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisCoreLang', $this->getGdprAutoDeleteService()->getMelisCoreLang());
         // set config id
         $this->setConfigId($this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null));
+
         // set config id for other methods
         if (!is_null($siteId) && !is_null($moduleName)) {
-            $this->setConfigId($this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigBySiteModule($siteId,$moduleName));
+            $configData = $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigBySiteModule($siteId,$moduleName)->current();
+            if (! empty($configData)) {
+                $this->setConfigId($configData->mgdprc_id);
+            }
         }
         // get config id
         $view->setVariable('configId', $this->getConfigId());

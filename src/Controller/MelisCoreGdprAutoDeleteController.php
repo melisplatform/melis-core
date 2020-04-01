@@ -438,10 +438,18 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $view = new ViewModel();
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
+        // get auto delete config data
+        $data = $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
+        // override data if there is siteid or module on request
+        if (! empty($this->getSiteId()) || !empty($this->getModule())) {
+            $data = [
+                'mgdprc_site_id' => $this->getSiteId(),
+                'mgdprc_module_name' => $this->getModule()
+            ];
+        }
+
         // get filters form
-        $view->setVariable('formFilter', $this->getGdprAutoDeleteService()->getAddEditFiltersForm()->setData(
-            $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigDataById($this->getConfigId())
-        ));
+        $view->setVariable('formFilter', $this->getGdprAutoDeleteService()->getAddEditFiltersForm()->setData($data));
 
         return $view;
     }
@@ -582,7 +590,36 @@ die;
      */
     private function getConfigId()
     {
-        return $this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null);
+        $configId = $this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null);
+        if (!empty($this->getSiteId()) && !empty($this->getModule())) {
+            // check for data
+            $data = $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigBySiteModule($this->getSiteId(), $this->getModule())->current();
+            // override config id
+            if (!empty($data)) {
+                $configId = $data->mgdprc_id;
+            }
+        }
+
+
+        return $configId;
+    }
+
+    /**
+     * get config id from the url
+     * @return mixed
+     */
+    private function getSiteId()
+    {
+        return $this->params()->fromRoute('siteId', $this->params()->fromQuery('siteId'), null);
+    }
+
+    /**
+     * get config id from the url
+     * @return mixed
+     */
+    private function getModule()
+    {
+        return $this->params()->fromRoute('moduleName', $this->params()->fromQuery('moduleName'), null);
     }
 
     /**

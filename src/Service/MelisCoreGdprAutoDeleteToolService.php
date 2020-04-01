@@ -388,11 +388,11 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     /**
      * @param $siteId
      * @param $moduleName
-     * @return array
+     * @return object
      */
     public function getGdprAutoDeleteConfigBySiteModule($siteId,$moduleName)
     {
-        return (array) $this->gdprAutoDeleteConfigTable->getDeleteConfigBySiteIdModuleName($siteId,$moduleName);
+        return $this->gdprAutoDeleteConfigTable->getDeleteConfigBySiteIdModuleName($siteId,$moduleName);
     }
 
     /**
