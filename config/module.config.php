@@ -468,7 +468,7 @@ return [
             'MelisCore\Controller\MelisGenericModal'        => \MelisCore\Controller\MelisGenericModalController::class,
             'MelisCore\Controller\Platforms'                => \MelisCore\Controller\PlatformsController::class,
             'MelisCore\Controller\EmailsManagement'         => \MelisCore\Controller\EmailsManagementController::class,
-// @TODO Missing controller
+// @TODO Missing controllers
 //            'MelisCore\Controller\ModuleDiagnostic'         => \MelisCore\Controller\ModuleDiagnosticController::class,
 //            'MelisCore\Controller\Diagnostic'               => \MelisCore\Controller\DiagnosticController::class,
             'MelisCore\Controller\MelisTinyMce'             => \MelisCore\Controller\MelisTinyMceController::class,
