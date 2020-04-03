@@ -1248,6 +1248,7 @@ a[data-toggle="modal"]:focus {
 .commerce-dashboard-plugin-order-messages .list-group-item-text {
   color: #686868 !important;
 }
+/* specific for melis-core, has same css but without the below css id selector on melis-commerce */
 #idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
   padding-top: 6px;
 }
