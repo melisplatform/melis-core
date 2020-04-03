@@ -33,11 +33,6 @@ class MelisGenericTable
 	protected $_selectedColumns;
 	protected $_selectedValues;
 	protected $_currentDataCount;
-	
-	public function __construct(TableGateway $tableGateway)
-	{
-		$this->tableGateway = $tableGateway;
-	}
 
     /**
      * @param ServiceManager $serviceManager
@@ -64,7 +59,7 @@ class MelisGenericTable
     }
 
     /**
-     * @return TableGateway
+     * @return TableGateway $tableGateway
      */
 	public function getTableGateway()
 	{

@@ -10,6 +10,7 @@
 
 namespace MelisCore;
 
+use function Composer\Autoload\includeFile;
 use MelisComposerDeploy\MelisComposer;
 
 /**
@@ -21,6 +22,43 @@ use MelisComposerDeploy\MelisComposer;
 class MelisModuleManager
 {
     /**
+     * Modules module load file
+     */
+    const MODULE_LOAD_FILE = 'config/module.load.php';
+
+    /**
+     * Retrieve Activated module components
+     * and placed on top of the modules
+     * @return array
+     */
+    public static function getModuleComponents()
+    {
+        $composer = new MelisComposer();
+
+        $moduleComponents = [];
+        foreach (self::getModules() As $module) {
+            // Checking module path from composer
+            $modulePath = $composer->getComposerModulePath($module);
+
+            if (!empty($module) && file_exists($modulePath. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE)) {
+                $moduleComponents = array_merge($moduleComponents , include $modulePath. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE);
+            } else {
+                // Check module/ dir if module has module.load
+
+                $docRoot = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '../..';
+
+                if (file_exists($docRoot.'/../module/'.$module. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE)) {
+                    $moduleComponents = array_merge($moduleComponents, include $docRoot.'/../module/'.$module. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE);
+                }
+            }
+        }
+
+        return $moduleComponents;
+    }
+
+    /**
+     * Retrieve Activated modules from vendor/melisplatform
+     * and module/
      * @return array
      */
     public static function getModules()
@@ -92,7 +130,7 @@ class MelisModuleManager
             }
 
         } else {
-            $modules = array();
+            $modules = [];
         }
 
         return $modules;
