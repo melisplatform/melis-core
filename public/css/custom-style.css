@@ -1248,3 +1248,6 @@ a[data-toggle="modal"]:focus {
 .commerce-dashboard-plugin-order-messages .list-group-item-text {
   color: #686868 !important;
 }
+#idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
+  padding-top: 6px;
+}
