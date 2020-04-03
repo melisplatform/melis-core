@@ -4,8 +4,7 @@
 }
 #list-config {
     border-bottom:1px solid rgba(0,0,0,.125);
-    padding-bottom:20px;
-    padding-left: 27px;
+    padding:0 29px 20px 39px;
 }
 .custom-accordion-heading {
     background-color: #fff;
@@ -28,7 +27,6 @@
 }
 #id_meliscoregdpr_auto_delete_content_accordion_list_config #accordion{
     margin-top: 15px;
-    padding:0 30px;
 }
 #accordion-add-edit  {
     /* padding:20px 30px 0 30px; */
@@ -139,16 +137,16 @@
     font-size: 20px;
     padding: 0 10px 0 0;
     position: absolute;
-    left: 0;
+    left: 15px;
 }
 .arrow-indication-right:before {
     font-family:"Glyphicons Halflings";
     content:"\e080";
     color: grey;
     font-size: 20px;
-    padding: 0 10px 0 0;
+    padding: 0 0px 0 0;
     position: absolute;
-    left: 0;
+    left: 15px;
 }
 .accordion-content-bg {
     padding: 20px 20px 0;

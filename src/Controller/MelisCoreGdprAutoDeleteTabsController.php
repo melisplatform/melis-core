@@ -46,12 +46,13 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $this->setConfigId($this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null));
 
         // set config id for other methods
-        if (!is_null($siteId) && !is_null($moduleName)) {
+        if (!empty($siteId) && !empty($moduleName)) {
             $configData = $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigBySiteModule($siteId,$moduleName)->current();
             if (! empty($configData)) {
                 $this->setConfigId($configData->mgdprc_id);
             }
         }
+
         // get config id
         $view->setVariable('configId', $this->getConfigId());
 
@@ -141,8 +142,10 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisCoreGdprAlertEmailForm', $this->getGdprAutoDeleteService()->getAddEditAlertEmailForm());
         // get alert email delete form
         $view->setVariable('melisCoreGdprAlertEmailDeleteForm', $this->getGdprAutoDeleteService()->getAddEditAlertEmailDeleteForm());
-        // translations data
+        // translations dataqweqwe
         $view->setVariable('alertEmailsTransData', $this->getGdprAutoDeleteService()->getAlertEmailsTranslationsData($this->getConfigId()));
+        // config id
+        $view->setVariable('configId', $this->getConfigId());
 
         return $view;
     }
@@ -331,6 +334,18 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
     }
 
 
+    public function deleteEverythingAction()
+    {
+        $response = [];
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $data = get_object_vars($request->getPost());
+            print_r($data);
+            die;
+        }
+
+        return new JsonModel($response);
+    }
 
     public function getAutoDeleteConfigBySiteModuleAction()
     {

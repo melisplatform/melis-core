@@ -92,6 +92,9 @@ var gdprAutoDelete = {
     removecustomHighlightLabelError : function(label) {
 
     },
+    deleteEverything : function(langId, configId) {
+
+    },
     /**
      * save all forms data
      * @param callbackSuccess
