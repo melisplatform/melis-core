@@ -50,10 +50,6 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
-
-//        $profiler = $e->getApplication()->getServiceManager()->get('Laminas\Db\Adapter\Adapter')->getProfiler();
-//        $queryProfiles = $profiler->getQueryProfiles();
-
         $this->initSession($e);
         $this->createTranslations($e);
 
