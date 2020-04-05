@@ -92,8 +92,18 @@ var gdprAutoDelete = {
     removecustomHighlightLabelError : function(label) {
 
     },
-    deleteEverything : function(langId, configId) {
+    deleteEverything : function(type, langId, configId) {
+        // ajax
+        $.ajax({
+            type: "POST",
+            url: "/melis/MelisCore/MelisCoreGdprAutoDeleteTabs/deleteEverything",
+            data: { type :type, langId : langId, configId : configId},
+            dataType: 'json'
+        }).done(function (data) {
 
+        }).fail(function () {
+
+        });
     },
     /**
      * save all forms data
@@ -343,6 +353,23 @@ $(function () {
     $body.on('show.bs.collapse', '#list-config-content', function () {
         gdprAutoDelete.toggleArrowIndicator("#gdpr-accordion-toggle-list");
     });
+    /*
+     * accordion hide list config
+     */
+    $body.on('hide.bs.collapse', '#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content', function () {
+        gdprAutoDelete.toggleArrowIndicator(".accordion-heading-add-delete");
+    });
+
+    /*
+     * accordion show list config
+     */
+    $body.on('show.bs.collapse', '#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content', function () {
+        gdprAutoDelete.toggleArrowIndicator(".accordion-heading-add-delete");
+    });
+
+
+
+
     $body.on('click', '.gdpr-edit-delete-confg', function () {
         gdprAutoDelete.hideListConfig();
         gdprAutoDelete.openGdprAutoDeleteConfig($(this).parent().parent().parent().attr('id'));
@@ -376,6 +403,11 @@ $(function () {
 
     $body.on('change', "#mgdprc_module_name", function(){
         gdprAutoDelete.openGdprAutoDeleteConfig(null, $("#mgdprc_site_id").val(), this.value );
+    });
+
+    $body.on('click', '.delete-everything', function(){
+        var data = $(this).data();
+        gdprAutoDelete.deleteEverything(data['emailType'], data['langId'], data['configId'])
     });
 });
 /**
