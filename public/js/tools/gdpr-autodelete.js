@@ -100,8 +100,12 @@ var gdprAutoDelete = {
             data: { type :type, langId : langId, configId : configId},
             dataType: 'json'
         }).done(function (data) {
-            // re open the config
-            gdprAutoDelete.openGdprAutoDeleteConfig(null, mgdprc_site_id);
+            if (data.success) {
+                // re open the config
+                gdprAutoDelete.openGdprAutoDeleteConfig(null, $("#mgdprc_site_id").val(), $("#mgdprc_module_name").val());
+                // show ok notification
+                melisHelper.melisOkNotification('GDPR Auto Delete', 'Successfully saved');
+            }
         }).fail(function () {
 
         });
@@ -419,7 +423,15 @@ $(function () {
 
     $body.on('click', '.delete-everything', function(){
         var data = $(this).data();
-        gdprAutoDelete.deleteEverything(data['emailType'], data['langId'], data['configId'])
+        melisCoreTool.confirm(
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
+            "Delete everything",
+            "Do you want to delete all data of this current language ?",
+            function (){
+                gdprAutoDelete.deleteEverything(data['emailType'], data['langId'], data['configId'])
+            }
+        );
     });
 });
 /**

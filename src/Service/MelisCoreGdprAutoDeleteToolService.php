@@ -450,4 +450,25 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
         return $siteId;
     }
 
+    /**
+     * @param $configId
+     * @param $emailType
+     * @param $langId
+     * @return int|null
+     */
+    public function deleteEverything($configId, $emailType, $langId )
+    {
+        // get the data
+        $data = $this->gdprAutoDeleteEmailsTable->getAlertEmailsTransData($configId, $emailType,$langId)->current();
+
+        // set fields into null
+        return $this->gdprAutoDeleteEmailsTable->save([
+            'mgdpre_link' => null,
+            'mgdpre_subject' => null,
+            'mgdpre_html' => null,
+            'mgdpre_text' => null,
+            'mgdpre_email_tags' => null,
+        ], $data->mgdpre_id);
+    }
+
 }

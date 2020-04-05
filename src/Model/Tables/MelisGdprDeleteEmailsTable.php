@@ -51,4 +51,6 @@ class MelisGdprDeleteEmailsTable extends MelisGenericTable
 
         return $this->tableGateway->selectWith($select);
     }
+
+
 }

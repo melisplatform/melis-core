@@ -41,13 +41,13 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
         // get melis core languages for nav
-        $view->setVariable('melisCoreLang', $this->getGdprAutoDeleteService()->getMelisCoreLang());
+        $view->setVariable('melisCoreLang', $this->getGdprAutoDeleteToolService()->getMelisCoreLang());
         // set config id
         $this->setConfigId($this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null));
 
         // set config id for other methods
         if (!empty($siteId) && !empty($moduleName)) {
-            $configData = $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigBySiteModule($siteId,$moduleName)->current();
+            $configData = $this->getGdprAutoDeleteToolService()->getGdprAutoDeleteConfigBySiteModule($siteId,$moduleName)->current();
             if (! empty($configData)) {
                 $this->setConfigId($configData->mgdprc_id);
             }
@@ -70,7 +70,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
     /**
      * @return MelisCoreGdprAutoDeleteToolService
      */
-    private function getGdprAutoDeleteService()
+    private function getGdprAutoDeleteToolService()
     {
         /** @var MelisCoreGdprAutoDeleteToolService $gdprAutoDeleteSvc */
         $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteToolService');
@@ -99,11 +99,11 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
         // get email setup data
-        $emailSetupData = $this->getGdprAutoDeleteService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
+        $emailSetupData = $this->getGdprAutoDeleteToolService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
         // get form for the Cron Config
-        $view->setVariable('formCronConfig', $this->getGdprAutoDeleteService()->getAddEditCronConfigForm()->setData($emailSetupData));
+        $view->setVariable('formCronConfig', $this->getGdprAutoDeleteToolService()->getAddEditCronConfigForm()->setData($emailSetupData));
         // get add edit email setup form
-        $form = $this->getGdprAutoDeleteService()->getAddEditEmailSetupForm();
+        $form = $this->getGdprAutoDeleteToolService()->getAddEditEmailSetupForm();
         // set data
         if (! empty($emailSetupData)) {
             // set data tags for the mgdprc_email_conf_tags field
@@ -137,13 +137,13 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
         // for contents
-        $view->setVariable('melisCoreLang', $this->getGdprAutoDeleteService()->getMelisCoreLang());
+        $view->setVariable('melisCoreLang', $this->getGdprAutoDeleteToolService()->getMelisCoreLang());
         // get alert email form
-        $view->setVariable('melisCoreGdprAlertEmailForm', $this->getGdprAutoDeleteService()->getAddEditAlertEmailForm());
+        $view->setVariable('melisCoreGdprAlertEmailForm', $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailForm());
         // get alert email delete form
-        $view->setVariable('melisCoreGdprAlertEmailDeleteForm', $this->getGdprAutoDeleteService()->getAddEditAlertEmailDeleteForm());
+        $view->setVariable('melisCoreGdprAlertEmailDeleteForm', $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailDeleteForm());
         // translations dataqweqwe
-        $view->setVariable('alertEmailsTransData', $this->getGdprAutoDeleteService()->getAlertEmailsTranslationsData($this->getConfigId()));
+        $view->setVariable('alertEmailsTransData', $this->getGdprAutoDeleteToolService()->getAlertEmailsTranslationsData($this->getConfigId()));
         // config id
         $view->setVariable('configId', $this->getConfigId());
 
@@ -169,7 +169,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
             // get data and format
             $tableData = $this->formatDataIntoDataTableFormat(
             // get gdpr delete config data from service
-                $this->getGdprAutoDeleteService()->getGdprDeleteEmailLogsData(
+                $this->getGdprAutoDeleteToolService()->getGdprDeleteEmailLogsData(
                 // search key
                     $post['searchKey'],
                     // searchable columns
@@ -300,7 +300,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
                 "#tableGdprAutoDeleteLogs",
                 true,
                 false,
-                ['order' => '[[0, "desc"]]']
+                ['order' => '[[0, "desc"]]', 'pageLength' => '5']
             )
         );
         // get config id
@@ -323,7 +323,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
             // get log data
             $logData = $this->getGdprDeleteEmailsLogsTable()->getEntryById($logId)->current();
             // get site name
-            $logData->mgdprl_site_id = $this->getGdprAutoDeleteService()->getSiteNameBySiteId($logData->mgdprl_site_id);
+            $logData->mgdprl_site_id = $this->getGdprAutoDeleteToolService()->getSiteNameBySiteId($logData->mgdprl_site_id);
         }
         // log id
         $view->setVariable('logData', $logData);
@@ -340,8 +340,9 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
             $data = get_object_vars($request->getPost());
-            print_r($data);
-            die;
+            if ($this->getGdprAutoDeleteToolService()->deleteEverything($data['configId'], $data['type'], $data['langId'])) {
+                $response['success'] = true;
+            }
         }
 
         return new JsonModel($response);

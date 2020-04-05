@@ -41,7 +41,7 @@ return [
                                ]
                            ],
                            'right' => [
-                               'table_refresh' => [
+                               'table_refresh_auto_delete_list' => [
                                    'module' => 'MelisCore',
                                    'controller' => 'MelisCoreGdprAutoDelete',
                                    'action' => 'render-content-accordion-list-config-content-refresh'
