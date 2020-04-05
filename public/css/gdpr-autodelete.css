@@ -181,3 +181,25 @@
 .list-config-content-table {
     padding:20px 31px;
 }
+.arrow-down-sm-accordion:after {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    content:"\f078";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    right: 7px;
+    top:7px;
+    position: absolute;
+}
+.arrow-right-sm-accordion:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    content:"\f054";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    right: 7px;
+    top:10px;
+    position: absolute;
+}

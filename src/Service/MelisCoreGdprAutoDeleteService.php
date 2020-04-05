@@ -292,6 +292,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     $emailOpts,
                     MelisGdprDeleteEmailsTable::EMAIL_DELETED
                 );
+                // delete entries
+                $this->deleteEmailsSentTable->deleteByField('mgdprs_validation_key',$emailOpts[self::CONFIG_KEY][self::VALIDATION_KEY]);
             }
         }
     }
