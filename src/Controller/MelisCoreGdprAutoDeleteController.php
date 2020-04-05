@@ -186,6 +186,28 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      *
      * @return ViewModel
      */
+    public function renderContentAccordionListConfigContentRefreshAction()
+    {
+        return new ViewModel();
+    }
+
+    /**
+     *
+     * limit view of the table
+     *
+     * @return ViewModel
+     */
+    public function renderContentAccordionListConfigContentSearchAction()
+    {
+        return new ViewModel();
+    }
+
+    /**
+     *
+     * limit view of the table
+     *
+     * @return ViewModel
+     */
     public function renderContentAccordionListConfigContentDeleteAction()
     {
         return new ViewModel();

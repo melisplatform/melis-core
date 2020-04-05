@@ -100,7 +100,8 @@ var gdprAutoDelete = {
             data: { type :type, langId : langId, configId : configId},
             dataType: 'json'
         }).done(function (data) {
-
+            // re open the config
+            gdprAutoDelete.openGdprAutoDeleteConfig(null, mgdprc_site_id);
         }).fail(function () {
 
         });
@@ -146,11 +147,11 @@ var gdprAutoDelete = {
                     callbackSuccess(data);
                 }
                 // show ok notification
-                melisHelper.melisOkNotification('GDPR Auto Delete', 'Unable to save');
+                melisHelper.melisOkNotification('GDPR Auto Delete', 'Successfully saved');
                 // show gdpr list of auto delete configuration
                 gdprAutoDelete.showListConfig();
                 // reload the table
-                gdprAutoDelete.reloadAutoDeleteConfigList();
+                $("#refresh-auto-delete-list").trigger('click');
                 // open gdpr config
                 gdprAutoDelete.openGdprAutoDeleteConfig(data.id);
                 // flash messenger
@@ -367,14 +368,24 @@ $(function () {
         gdprAutoDelete.toggleArrowIndicator(".accordion-heading-add-delete");
     });
 
-
-
-
+    // edit config
     $body.on('click', '.gdpr-edit-delete-confg', function () {
         gdprAutoDelete.hideListConfig();
         gdprAutoDelete.openGdprAutoDeleteConfig($(this).parent().parent().parent().attr('id'));
     });
 
+    $body.on('click', '#refresh-auto-delete-list', function(){
+        var parent = $('#id_meliscoregdpr_auto_delete_content_accordion_list_config_content');
+        // apply loading html
+        melisHelper.loadingZone(parent);
+        // refresh log table
+        $("#tableGdprAutoDeleteConfig").DataTable().ajax.reload(function(){
+            // remove loading zone
+            melisHelper.removeLoadingZone(parent);
+        });
+    });
+
+    // refresh log table
     $body.on('click', '#refresh-logs-table', function(){
         var parent = $('#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs');
         // apply loading html
@@ -386,6 +397,7 @@ $(function () {
         });
     });
 
+    // show email logs details
     $body.on('click', ".gdpr-email-logs-show-details", function() {
         $("#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details").removeClass('hidden');
         melisHelper.zoneReload(

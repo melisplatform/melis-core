@@ -34,8 +34,18 @@ return [
                                ]
                            ],
                            'center' => [
+                               'table_search' => [
+                                   'module' => 'MelisCore',
+                                   'controller' => 'MelisCoreGdprAutoDelete',
+                                   'action' => 'render-content-accordion-list-config-content-search'
+                               ]
                            ],
                            'right' => [
+                               'table_refresh' => [
+                                   'module' => 'MelisCore',
+                                   'controller' => 'MelisCoreGdprAutoDelete',
+                                   'action' => 'render-content-accordion-list-config-content-refresh'
+                               ]
                            ],
                        ],
                        'columns' => [

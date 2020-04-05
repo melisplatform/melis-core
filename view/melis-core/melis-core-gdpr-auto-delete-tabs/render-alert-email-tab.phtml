@@ -20,7 +20,11 @@ $availableLang = "";
                         </a>
                     </div>
                     <div id="alert-email-content-<?= $data['lang_locale'] ?>" class="collapse show accordion-content-bg" aria-labelledby="alert-email-content-<?= $data['lang_locale'] ?>" data-parent="#accordion-alert-email-<?= $data['lang_locale'] ?>">
-                        <h5 class="float-right"><a href="#" class="delete-everything" data-lang-id="<?= $data['lang_id']?>" data-config-id="<?= $this->configId ?>" style="text-decoration: underline">Delete everything</a></h5>
+                        <?php if (! empty($this->configId)) {?>
+                            <h5 class="float-right">
+                                <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_id']?>" data-email-type="1" data-config-id="<?= $this->configId ?>" style="text-decoration: underline">Delete everything</a>
+                            </h5>
+                        <?php }?>
                         <div class="row">
                             <div class="col-md-8">
                                 <?php
@@ -78,10 +82,14 @@ $availableLang = "";
                             <h5 class="accordion-heading-title">Account Deleted Email</h5>
                         </a>
                     </div>
-                    <div id="account-deleted-email-<?= $data['lang_locale'] ?>" class="collapse show accordion-content-bg"
+                    <div id="account-deleted-email-<?= $data['lang_locale'] ?>" class="collapse accordion-content-bg"
                          aria-labelledby="account-deleted-email-<?= $data['lang_locale'] ?>"
                          data-parent="#accordion-account-deleted-email-<?= $data['lang_locale'] ?>">
-                        <h5 class="float-right"><a href="#" class="" style="text-decoration: underline">Delete everything</a></h5>
+                        <?php if (! empty($this->configId)) {?>
+                            <h5 class="float-right">
+                                <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_id']?>" data-config-id="<?= $this->configId ?>" data-email-type="2" style="text-decoration: underline">Delete everything</a>
+                            </h5>
+                        <?php }?>
                         <div class="row">
                             <div class="col-md-8">
                                 <?php
