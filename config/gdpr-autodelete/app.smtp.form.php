@@ -38,20 +38,6 @@ return [
                                 ],
                                 [
                                     'spec' => [
-                                        'name' => 'mgdpr_smtp_port',
-                                        'type' => "MelisText",
-                                        'options' => [
-                                            'label' => 'Port',
-                                            'tooltip' => "Port for the smtp",
-                                        ],
-                                        'attributes' => [
-                                            'required' => 'required',
-                                            'placeholder' => 'Port'
-                                        ]
-                                    ]
-                                ],
-                                [
-                                    'spec' => [
                                         'name' => 'mgdpr_smtp_username',
                                         'type' => "MelisText",
                                         'options' => [
@@ -76,19 +62,6 @@ return [
                                             'required' => 'required',
                                             'class' => 'form-control',
                                             'placeholder' => 'Password'
-                                        ]
-                                    ]
-                                ],
-                                [
-                                    'spec' => [
-                                        'name' => 'mgdpr_smtp_ssl',
-                                        'type' => "MelisText",
-                                        'options' => [
-                                            'label' => 'SSL',
-                                            'tooltip' => "SSL type",
-                                        ],
-                                        'attributes' => [
-                                            'placeholder' => 'TLS'
                                         ]
                                     ]
                                 ],
