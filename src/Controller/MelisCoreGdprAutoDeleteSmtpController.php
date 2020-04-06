@@ -84,6 +84,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
                     // update and set id for logs
                     $id = $this->getGdprAutoDeleteSmtpTable()->save($formData, $formData['mgdpr_smtp_id']);
                 } else {
+                    unset($formData['mgdpr_smtp_id']);
                     // save new entry
                     $id = $this->getGdprAutoDeleteSmtpTable()->save($formData);
                 }

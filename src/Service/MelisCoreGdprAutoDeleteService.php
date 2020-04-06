@@ -738,9 +738,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $messageHtml,
         $messageText = null
     ) {
-        $smtpDataConfig = (array) $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
+        $smtpDataConfig = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
         $smtpConfig = [];
         if (!empty($smtpDataConfig)) {
+            $smtpDataConfig = (array) $smtpDataConfig;
             $smtpConfig = [
                 'host'            => $smtpDataConfig['mgdpr_smtp_host'],
                 'name'            => $smtpDataConfig['mgdpr_smtp_host'],
