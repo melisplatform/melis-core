@@ -490,13 +490,15 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         if ($request->isPost()) {
             // sanitized url data
             $postValues = get_object_vars($request->getPost());
+            if (!empty($request->getFiles('mgdprc_email_conf_layout_logo')['tmp_name'])) {
+                $postValues['mgdprc_email_conf_layout_logo'] = $this->processFile($request->getFiles('mgdprc_email_conf_layout_logo'));
+            }
             // parse serialized data from url
             $postValues = $this->parseSerializedData($postValues);
             // convert json string to array
             $alertEmailsWarningTransData = $this->jsonToArray($postValues['alert_emails_warning_trans']);
             // convert json string to array
             $alertEmailsDeleteTransData = $this->jsonToArray($postValues['alert_emails_delete_trans']);
-
             // validate all forms inputs from requests
             $this->setFormErrors($this->getGdprAutoDeleteToolService()->validateForm($postValues));
             // remove auto_delete_config key
@@ -511,6 +513,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                     $configId = $postValues['mgdprc_id'];
                     $this->getGdprAutoDeleteToolService()->saveGdprAutoDeleteConfig($postValues, $configId);
                 } else {
+                    unset($postValues['mgdprc_id']);
+                    $postValues['mgdprc_alert_email_days'] = (int) $postValues['mgdprc_alert_email_days'];
                     // new entry
                     $configId = $this->getGdprAutoDeleteToolService()->saveGdprAutoDeleteConfig($postValues);
                 }
@@ -529,6 +533,20 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             'errors' => $errors,
             'id' => $configId
         ]);
+    }
+
+    private function processFile($file)
+    {
+        $dirToUpload = $_SERVER['DOCUMENT_ROOT'] . "/media/melis-gdpr-auto-delete/";
+        // create folder
+        if (! file_exists($dirToUpload)) {
+            mkdir($dirToUpload, 0777);
+        }
+
+        // upload file
+        move_uploaded_file($file['tmp_name'],$dirToUpload . $file['name']);
+
+        return "/media/melis-gdpr-auto-delete/" . $file['name'];
     }
 
     /**
