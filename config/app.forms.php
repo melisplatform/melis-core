@@ -237,7 +237,7 @@ return array(
                         'method' => 'POST',
                         'novalidate' => 'novalidate',
                     ),
-                    'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
                     'elements' => array(
                         array(
                             'spec' => array(
