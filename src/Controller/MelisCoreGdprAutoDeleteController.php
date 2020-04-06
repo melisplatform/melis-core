@@ -375,11 +375,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                         } else {
                             $locale .= $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
                         }
+                        $ctr++;
                     } else {
                         $locale .= " / " . $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
                     }
                 }
-                $ctr++;
             }
         }
 
