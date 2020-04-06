@@ -14,6 +14,7 @@ use MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
 use Zend\Validator\File\Exists;
 use Zend\Validator\File\Extension;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplateMapResolver;
@@ -440,7 +441,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $emailOptions
      * @param $type
      * @param $first
-     * @return array
+     * @return array | object
      */
     public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING , $first = true )
     {
@@ -495,9 +496,15 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                             ),
                             $textVersion['content']
                         );
-                        // save log ok
-                        $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, null, true
-                        );
+                        if (empty($this->errors)) {
+                            // save log ok
+                            $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, null, true);
+                        } else {
+                            // save error log
+                            $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, "Technical issue", false);
+                            echo "\"Technical issue\"";
+                            die;
+                        }
                     } else {
                         // set has error true
                         $response['hasError'] = true;
@@ -740,7 +747,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     ) {
         $smtpDataConfig = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
         $smtpConfig = [];
-        if (!empty($smtpDataConfig)) {
+        if (!empty($smtpDataConfig) && !empty($smtpDataConfig->mgdpr_smtp_host)) {
             $smtpDataConfig = (array) $smtpDataConfig;
             $smtpConfig = [
                 'host'            => $smtpDataConfig['mgdpr_smtp_host'],
@@ -752,18 +759,21 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'ssl'             => 'tls',
             ];
         }
+        try {
+            $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
+                $emailFrom,
+                $emailFromName,
+                $emailTo,
+                $emailToName,
+                $replyTo,
+                $subject,
+                $messageHtml,
+                $messageText,
+                $smtpConfig);
+        } catch (\Exception $error) {
+            $this->errors = "Technical error";
+        }
 
-        return $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
-            $emailFrom,
-            $emailFromName,
-            $emailTo,
-            $emailToName,
-            $replyTo,
-            $subject,
-            $messageHtml,
-            $messageText,
-            $smtpConfig
-        );
     }
 
     /**

@@ -113,6 +113,11 @@ return [
                                 ],
                             ],
                             'center' => [
+                                'table_search_log' => [
+                                    'module' => 'MelisCore',
+                                    'controller' => 'MelisCoreGdprAutoDelete',
+                                    'action' => 'render-content-accordion-list-config-content-search'
+                                ]
                             ],
                             'right' => [
                                 'table_refresh' => [
@@ -167,13 +172,13 @@ return [
                         // define what columns can be used in searching
                         'searchables' => [
                             'mgdprl_id',
-                            'mgdpr_log_date',
+                            'mgdprl_log_date',
                             'mgdprl_warning1_ko',
                             'mgdprl_warning1_ko',
                             'mgdprl_warning2_ok',
                             'mgdprl_warning2_ko',
-                            'mgdpr_delete_ok',
-                            'mgdpr_delete_ko',
+                            'mgdprl_delete_ok',
+                            'mgdprl_delete_ko',
                         ],
                         'actionButtons' => [
                             'show_details' => array(

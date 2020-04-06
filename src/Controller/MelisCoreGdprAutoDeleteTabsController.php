@@ -181,7 +181,11 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
                     // start
                     $post['start'],
                     // length
-                    $post['limit']
+                    $post['limit'],
+                    // site id
+                    $post['siteId'],
+                    // module name
+                    $post['moduleName']
                 )
             );
         }
@@ -214,6 +218,8 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
             'searchKey' => isset($postData['search']['value']) ? $postData['search']['value'] : null,
             'start' => (int)$postData['start'],
             'limit' => (int)$postData['length'],
+            'siteId' => $postData['site_id'],
+            'moduleName' => $postData['module_name'],
         ];
     }
 

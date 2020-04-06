@@ -89,6 +89,7 @@ class MelisCoreEmailSendingService  implements  ServiceLocatorAwareInterface{
                     ),
                     'port' => $transportConfig['port'],
                 ));
+
                 $transport->setOptions($options);
             }
             catch (\Exception $exception){

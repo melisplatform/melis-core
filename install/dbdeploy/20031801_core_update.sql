@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `melis_core_gdpr_delete_emails_smtp` (
-  `mgdpr_smtp` int(11) NOT NULL,
+  `mgdpr_smtp_id` int(11) NOT NULL,
   `mgdpr_smtp_host` varchar(255) NOT NULL,
   `mgdpr_smtp_username` varchar(255) NOT NULL,
   `mgdpr_smtp_password` varchar(255) NOT NULL

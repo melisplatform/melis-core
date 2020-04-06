@@ -73,8 +73,8 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
 
         return $arrayParameters['results'];
     }
+
     /**
-     *
      * get gdpr delete config data
      *
      * @param $searchValue
@@ -83,9 +83,11 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      * @param $orderDirection
      * @param $start
      * @param $length
+     * @param $siteId
+     * @param $moduleName
      * @return mixed
      */
-    public function getGdprDeleteEmailLogsData($searchValue,$searchableCols, $selColOrder, $orderDirection , $start ,$length )
+    public function getGdprDeleteEmailLogsData($searchValue,$searchableCols, $selColOrder, $orderDirection , $start ,$length, $siteId, $moduleName)
     {
         // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
@@ -96,7 +98,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
             $$var = $val;
         }
         // Adding results to parameters for events treatment if needed
-        $arrayParameters['results'] = $this->gdprAutoDeleteEmailsLogsTable->getGdprDeleteEmailsLogsData($searchValue,$searchableCols,$selColOrder, $orderDirection, $start, $length)->toArray();
+        $arrayParameters['results'] = $this->gdprAutoDeleteEmailsLogsTable->getGdprDeleteEmailsLogsData($searchValue,$searchableCols,$selColOrder, $orderDirection, $start, $length, $siteId, $moduleName)->toArray();
         // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_gdrp_delete_email_logs_data_end', $arrayParameters);
 
