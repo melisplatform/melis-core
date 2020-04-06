@@ -47,7 +47,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
         // pass meliskey
         $view->setVariable('melisKey', $this->getMelisKey());
         // smtp form
-        $view->setVariable('smtpForm', $this->getGdprAutoDeleteSmtpForm((array) $this->getGdprAutoDeleteSmtpTable()->fetchAll()->current()));
+        $view->setVariable('smtpForm', $this->getGdprAutoDeleteSmtpForm($this->getGdprAutoDeleteSmtpTable()->fetchAll()->current()));
 
         return $view;
     }
@@ -56,7 +56,8 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
     {
         $form = $this->getTool()->getForm('melisgdprautodelete_smtp_form');
         if (!empty($data)) {
-            $form->setData($data);
+            
+            $form->setData((array) $data);
             // change place holder of the password
             $form->get('mgdpr_smtp_password')->setAttribute('placeholder','tr_meliscore_login_pass_placeholder');
         }
