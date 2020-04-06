@@ -248,7 +248,6 @@ return [
                                         'attributes' => [
                                             'placeholder' => 'melis-core/view/layout/layoutEmail.phtml',
                                             'value' => 'melis-core/view/layout/layoutEmail.phtml',
-                                            'required' => 'required'
                                         ]
                                     ]
                                 ],
@@ -290,9 +289,6 @@ return [
                                             'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc',
                                             'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip',
                                         ],
-                                        'attributes' => [
-                                            'required' => 'required'
-                                        ]
                                     ]
                                 ]
                             ],
@@ -344,7 +340,7 @@ return [
                                 ],
                                 'mgdprc_email_conf_reply_to' => [
                                     'name' => 'mgdprc_email_conf_reply_to',
-                                    'required' => true,
+                                    'required' => false,
                                     'validators' => [
                                         [
                                             'name' => 'NotEmpty',
@@ -369,27 +365,9 @@ return [
                                         ['name' => 'StringTrim']
                                     ]
                                 ],
-                                'mgdprc_email_conf_tags' => [
-                                    'name' => 'mgdprc_email_conf_tags',
-                                    'required' => true,
-                                    'validators' => [
-                                        [
-                                            'name' => 'NotEmpty',
-                                            'options' => [
-                                                'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
-                                                ]
-                                            ]
-                                        ]
-                                    ],
-                                    'filters' => [
-                                        ['name' => 'StripTags'],
-                                        ['name' => 'StringTrim']
-                                    ]
-                                ],
                                 'mgdprc_email_conf_layout' => [
                                     'name' => 'mgdprc_email_conf_layout',
-                                    'required' => true,
+                                    'required' => false,
                                     'validators' => [
                                         [
                                             'name' => 'NotEmpty',
@@ -407,7 +385,7 @@ return [
                                 ],
                                 'mgdprc_email_conf_layout_desc' => [
                                     'name' => 'mgdprc_email_conf_layout_desc',
-                                    'required' => true,
+                                    'required' => false,
                                     'validators' => [
                                         [
                                             'name' => 'NotEmpty',
@@ -445,7 +423,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'Replacement tags accepted *',
+                                            'data-label-text' => 'Replacement tags accepted',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ],
@@ -459,7 +437,6 @@ return [
                                             'tooltip' => 'Subject of the email',
                                         ],
                                         'attributes' => [
-                                            'required' => 'required',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -473,7 +450,6 @@ return [
                                             'tooltip' => 'Message of the email. When using tags place it inside [ ], ex [LINK]',
                                         ],
                                         'attributes' => [
-                                            'required' => 'required',
                                             'class' => 'form-control'
                                         ]
                                     ],
@@ -493,20 +469,6 @@ return [
                                 ],
                             ],
                             'input_filter' => [
-                                'mgdpre_email_tags' => [
-                                    'name' => 'mgdpre_email_tags',
-                                    'required' => true,
-                                    'validators' => [
-                                        [
-                                            'name' => 'NotEmpty',
-                                            'options' => [
-                                                'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
-                                                ]
-                                            ]
-                                        ]
-                                    ],
-                                ]
                             ]
                         ],
                         // </editor-fold>
@@ -529,7 +491,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'Replacement tags accepted *',
+                                            'data-label-text' => 'Replacement tags accepted',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ],
@@ -544,7 +506,6 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control',
-                                            'required' => 'required'
                                         ]
                                     ],
                                 ],
@@ -558,7 +519,6 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control',
-                                            'required' => 'required'
                                         ]
                                     ],
                                 ],

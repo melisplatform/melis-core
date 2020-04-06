@@ -17,7 +17,7 @@ return [
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days' => 'Account will be deleted automatically after an inactivity of:',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip' => 'Number of days user\'s inactivity that cron will delete the account',
     // email setup form translations
-    'tr_melis_core_gdpr_autodelete_label_email_setup_tags' => 'Replacement tags accepted *',
+    'tr_melis_core_gdpr_autodelete_label_email_setup_tags' => 'Replacement tags accepted',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout' => 'Layout',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout tooltip' => 'Layout to be used in sending the mail. File must has .phtml extension.',
     'tr_melis_core_gdpr_autodelete_label_email_setup_title' => 'Layout title',
@@ -27,5 +27,5 @@ return [
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc' => 'Layout information',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip' => 'Content of the email, When using tags place it inside [ ], ex [LINK]',
     // alert emails translations
-    'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Replacement tags accepted *',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Replacement tags accepted',
 ];

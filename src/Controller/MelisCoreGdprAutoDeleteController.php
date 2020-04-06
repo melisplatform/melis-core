@@ -368,21 +368,18 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $ctr = 0;
         if (!empty($data)) {
             foreach ($data as $idx => $val) {
-                if ($type == $val['mgdpre_type']) {
-                    if (!empty($val['mgdpre_html']) || !empty($val['mgdpre_text'])) {
-                        if ($type == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
-                            if ($ctr > 0) {
-                                $locale .= " / " .$this->getLocaleNameByLangId($val['mgdpre_lang_id']);
-                            } else {
-                                $locale .= $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
-                            }
+                if (!empty($val['mgdpre_html']) || !empty($val['mgdpre_text'])) {
+                    if ($type == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
+                        if ($ctr > 0) {
+                            $locale .= " / " .$this->getLocaleNameByLangId($val['mgdpre_lang_id']);
                         } else {
-                            $locale .= " / " . $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
+                            $locale .= $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
                         }
+                    } else {
+                        $locale .= " / " . $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
                     }
-                    $ctr++;
                 }
-
+                $ctr++;
             }
         }
 
@@ -535,6 +532,16 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         ]);
     }
 
+    private function validateAlertEmailData($data)
+    {
+        $errors = [];
+        foreach ($data as $i => $val) {
+            $errors[] = $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailForm()->setData($data);
+        }
+
+        return $errors;
+    }
+
     private function processFile($file)
     {
         $dirToUpload = $_SERVER['DOCUMENT_ROOT'] . "/media/melis-gdpr-auto-delete/";
@@ -555,6 +562,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      * @param $postData
      * @return mixed
      */
+
     private function parseSerializedData($postData)
     {
         $dataToParse = [
@@ -585,13 +593,12 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     private function jsonToArray($jsonData)
     {
         // decond json data
-        $data = json_decode($jsonData, true);
-
+        $data = [];
         // parse serialized data from url
-        foreach ($data as $idx => $val) {
+        foreach (json_decode($jsonData, true) as $idx => $val) {
             // overwrite old data
             parse_str($val['data'], $parseData);
-            $data[$idx]['data'] = $parseData;
+            $data[] = $parseData;
         }
 
 
@@ -626,20 +633,20 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 // for update
                 foreach ($alertEmailsTransData as $i => $v1) {
                     foreach ($validatedData as $ii => $v2) {
-                        if ($v1['mgdpre_type'] == $v2['data']['mgdpre_type'] && $v1['mgdpre_lang_id'] == $v2['data']['mgdpre_lang_id']) {
+                        if ($v1['mgdpre_type'] == $v2['mgdpre_type'] && $v1['mgdpre_lang_id'] == $v2['mgdpre_lang_id']) {
                             // add config id
-                            $v2['data']['mgdpre_config_id'] = $configId;
+                            $v2['mgdpre_config_id'] = $configId;
                             // update alert emails trans
-                            $this->getGdprAutoDeleteToolService()->saveGdprDeleteAlertEmails($v2['data'], $v1['mgdpre_id']);
+                            $this->getGdprAutoDeleteToolService()->saveGdprDeleteAlertEmails($v2, $v1['mgdpre_id']);
                         }
                     }
                 }
             } else {
                 // new entry
                 foreach ($validatedData as $idx => $val) {
-                    $val['data']['mgdpre_config_id'] = $configId;
+                    $val['mgdpre_config_id'] = $configId;
                     // save alert emails trans
-                    $this->getGdprAutoDeleteToolService()->saveGdprDeleteAlertEmails($val['data'], null);
+                    $this->getGdprAutoDeleteToolService()->saveGdprDeleteAlertEmails($val, null);
                 }
             }
         }
