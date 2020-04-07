@@ -508,6 +508,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 if (! empty($postValues['mgdprc_id'])) {
                     // update
                     $configId = $postValues['mgdprc_id'];
+                    $pos['mgdprc_config_update_date'] = date('Y-m-d h:i:s');
                     $this->getGdprAutoDeleteToolService()->saveGdprAutoDeleteConfig($postValues, $configId);
                 } else {
                     unset($postValues['mgdprc_id']);
@@ -516,9 +517,9 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                     $configId = $this->getGdprAutoDeleteToolService()->saveGdprAutoDeleteConfig($postValues);
                 }
                 // save gdpr alert emails translations
-                $this->saveAlertEmailsTrans($alertEmailsWarningTransData, $configId);
+                $this->saveAlertEmailsTrans($alertEmailsWarningTransData, $configId, MelisGdprDeleteEmailsTable::EMAIL_WARNING);
                 // save gdpr alert deleted emails
-                $this->saveAlertEmailsTrans($alertEmailsDeleteTransData, $configId);
+                $this->saveAlertEmailsTrans($alertEmailsDeleteTransData, $configId, MelisGdprDeleteEmailsTable::EMAIL_DELETED);
                 $success = true;
             } else {
                 // set errors for the return of ajax
@@ -624,11 +625,12 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     /**
      * @param $validatedData
      * @param $configId
+     * @param $type
      */
-    private function saveAlertEmailsTrans($validatedData, $configId)
+    private function saveAlertEmailsTrans($validatedData, $configId, $type)
     {
         if (!empty($validatedData)) {
-            $alertEmailsTransData = $this->getGdprAutoDeleteToolService()->getAlertEmailsTransData($configId);
+            $alertEmailsTransData = $this->getGdprAutoDeleteToolService()->getAlertEmailsTransData($configId, $type);
             if (! empty($alertEmailsTransData)) {
                 // for update
                 foreach ($alertEmailsTransData as $i => $v1) {

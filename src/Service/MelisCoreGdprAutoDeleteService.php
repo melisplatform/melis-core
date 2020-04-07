@@ -264,6 +264,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                                     'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
                                                     'mgdprs_alert_email_sent' => 1,
                                                     'mgdprs_alert_email_sent_date' => date('Y-m-d h:i:s'),
+                                                    'mgdprs_account_id' => $emailOpts['config']['account_id'],
                                                 ]);
                                             }
                                         }
@@ -359,7 +360,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     MelisGdprDeleteEmailsTable::EMAIL_DELETED
                 );
                 // delete entries
-                $this->deleteEmailsSentTable->deleteByField('mgdprs_validation_key',$emailOpts[self::CONFIG_KEY][self::VALIDATION_KEY]);
+                $this->deleteEmailsSentTable->deleteByField('mgdprs_validation_key', $emailOpts[self::CONFIG_KEY][self::VALIDATION_KEY]);
             }
         }
     }
