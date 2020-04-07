@@ -13,7 +13,8 @@ var gdprautodeletesmtp = {
                     successCallback(data);
                 }
                 // show ok notification
-                melisHelper.melisOkNotification('GDPR auto delete SMTP', 'Unable to save');
+                melisHelper.melisOkNotification('GDPR auto delete SMTP', 'Successfully saved');
+                melisHelper.zoneReload('id_meliscoregdpr_auto_delete_smtp_content',"meliscoregdpr_auto_delete_smtp_content");
                 // flash messenger
                 melisCore.flashMessenger();
             } else {

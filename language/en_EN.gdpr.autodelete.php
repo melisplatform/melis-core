@@ -28,4 +28,9 @@ return [
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip' => 'Content of the email, When using tags place it inside [ ], ex [LINK]',
     // alert emails translations
     'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Replacement tags accepted',
+    // form erros
+    'tr_smtp_form_mgdpr_smtp_host' => 'Host',
+    'tr_smtp_form_mgdpr_smtp_username' => 'Username',
+    'tr_smtp_form_mgdpr_smtp_password' => 'Password',
+    'tr_smtp_form_mgdpr_smtp_confirm_password' => 'Confirm password',
 ];

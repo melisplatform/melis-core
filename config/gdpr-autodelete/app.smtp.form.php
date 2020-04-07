@@ -65,6 +65,96 @@ return [
                                         ]
                                     ]
                                 ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mgdpr_smtp_confirm_password',
+                                        'type' => "password",
+                                        'options' => [
+                                            'label' => 'Confirm password',
+                                            'tooltip' => "Confirm password of the user",
+                                        ],
+                                        'attributes' => [
+                                            'required' => 'required',
+                                            'class' => 'form-control',
+                                            'placeholder' => 'Password'
+                                        ]
+                                    ]
+                                ],
+                            ],
+                            'input_filter' => [
+                                'mgdpr_smtp_host' => [
+                                    'name' => 'mgdpr_smtp_host',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
+                                    ]
+                                ],
+                                'mgdpr_smtp_username' => [
+                                    'name' => 'mgdpr_smtp_username',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
+                                    ]
+                                ],
+                                'mgdpr_smtp_password' => [
+                                    'name' => 'mgdpr_smtp_password',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
+                                    ]
+                                ],
+                                'mgdpr_smtp_confirm_password' => [
+                                    'name' => 'mgdpr_smtp_confirm_password',
+                                    'required' => true,
+                                    'label' => 'test',
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim']
+                                    ]
+                                ]
                             ]
                         ]
                     ]

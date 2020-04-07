@@ -52,53 +52,99 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
         return $view;
     }
 
+    /**
+     * @param null $data
+     * @return mixed
+     */
     private function getGdprAutoDeleteSmtpForm($data = null)
     {
         $form = $this->getTool()->getForm('melisgdprautodelete_smtp_form');
         if (!empty($data)) {
-            
             $form->setData((array) $data);
             // change place holder of the password
             $form->get('mgdpr_smtp_password')->setAttribute('placeholder','tr_meliscore_login_pass_placeholder');
+            $form->get('mgdpr_smtp_confirm_password')->setAttribute('placeholder','tr_meliscore_login_pass_placeholder');
         }
 
         return $form;
     }
+
+    /**
+     * @return JsonModel
+     */
     public function saveSmtpConfigAction()
     {
         $id = null;
+        $success = 0;
+        // request
         $request = $this->getRequest();
         if ($request->isPost()){
             $params = get_object_vars($request->getPost());
-            // smtp table
             // set data for validation
             $form = $this->getGdprAutoDeleteSmtpForm()->setData($params);
             if ($form->isValid()) {
                 $formData = $form->getData();
-                // check if id is present
-                if (isset($formData['mgdpr_smtp_id']) && !empty($formData['mgdpr_smtp_id'])) {
-                    // remove field when it's empty to avoid password update
-                    if (empty($formData['mgdpr_smtp_password'])) {
-                        unset($formData['mgdpr_smtp_password']);
+                $formData['mgdpr_smtp_password'] = $this->verifyUserPassword($formData['mgdpr_smtp_password'], $formData['mgdpr_smtp_confirm_password']);
+                if (empty($this->formErrors)) {
+                    unset($formData['mgdpr_smtp_confirm_password']);
+                    // check if id is present
+                    if (isset($formData['mgdpr_smtp_id']) && !empty($formData['mgdpr_smtp_id'])) {
+                        // remove field when it's empty to avoid password update
+                        if (empty($formData['mgdpr_smtp_password'])) {
+                            unset($formData['mgdpr_smtp_password']);
+                        }
+                        // update and set id for logs
+                        $id = $this->getGdprAutoDeleteSmtpTable()->save($formData, $formData['mgdpr_smtp_id']);
+                    } else {
+                        unset($formData['mgdpr_smtp_id']);
+                        // save new entry
+                        $id = $this->getGdprAutoDeleteSmtpTable()->save($formData);
                     }
-                    // update and set id for logs
-                    $id = $this->getGdprAutoDeleteSmtpTable()->save($formData, $formData['mgdpr_smtp_id']);
-                } else {
-                    unset($formData['mgdpr_smtp_id']);
-                    // save new entry
-                    $id = $this->getGdprAutoDeleteSmtpTable()->save($formData);
+                    $success = true;
                 }
+
             } else {
-                var_dump($form->getMessages());
-                die;
+                $this->formErrors = array_merge($this->translateFields($form->getMessages()), $this->formErrors);
             }
         }
         return new JsonModel([
-            'success' => 1,
-            'item'    => $id
+            'success' => $success,
+            'item'    => $id,
+            'errors' => $this->formErrors
         ]);
     }
 
+    /**
+     * translate fields
+     *
+     * @param $formErrors
+     * @return mixed
+     */
+    private function translateFields($formErrors)
+    {
+        $translator = $this->getServiceLocator()->get('translator');
+        foreach ($formErrors as $i => $val) {
+            $formErrors[$i]['label'] = $translator->translate('tr_smtp_form_' . $i);
+        }
+
+        return $formErrors;
+    }
+
+    private function verifyUserPassword($password, $confirmpassword)
+    {
+        $newPass = null;
+        if ($password == $confirmpassword) {
+            $newPass = password_hash($password, PASSWORD_DEFAULT);
+        } else {
+            $this->formErrors['mgdpr_smtp_password'] = [
+                'label' => 'Password',
+                'message' => 'Password does not match'
+            ];
+        }
+
+
+        return $newPass;
+    }
 
     /**
      * @return object | \MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable
