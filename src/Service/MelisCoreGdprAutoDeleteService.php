@@ -360,7 +360,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     MelisGdprDeleteEmailsTable::EMAIL_DELETED
                 );
                 // delete entries
-                $this->deleteEmailsSentTable->deleteByField('mgdprs_validation_key', $emailOpts[self::CONFIG_KEY][self::VALIDATION_KEY]);
+                $this->deleteEmailsSentTable->deleteByField('mgdprs_account_id', $emailOpts[self::CONFIG_KEY]['account_id']);
             }
         }
     }
@@ -537,15 +537,15 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         // default is first
                         if (!$first) {
                             // override
-                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (2)";
+                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " 2";
                         } else {
-                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " (1)";
+                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " 1";
                         }
                     }
                     // html email content
-                    $htmlContent = $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
+                    $htmlContent = $this->replaceTagsByModuleTags($alertEmailData->mgdpre_email_tags, $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
                     // text version email content
-                    $textVersion =  $this->replaceTagsByModuleTags(explode(',', $alertEmailData->mgdpre_email_tags), $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
+                    $textVersion =  $this->replaceTagsByModuleTags($alertEmailData->mgdpre_email_tags, $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
                     // check for errors
                     if (empty($htmlContent['errors']) || empty($textVersion['errors'])) {
                         // send email
@@ -930,18 +930,20 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     /**
      * replace tags on the content
      *
-     * @param array $tags
+     * @param $tags
      * @param $data
      * @param $emailOptions
      * @param $content
      * @param $setupEmailConfig
      * @return mixed|string
      */
-    private function replaceTagsByModuleTags(array $tags, $data, $emailOptions, $content, $setupEmailConfig)
+    private function replaceTagsByModuleTags($tags, $data, $emailOptions, $content, $setupEmailConfig)
     {
         $tagsNotFoundOnModule = [];
         $moduleTags = $emailOptions['tags'];
         if (!empty($tags)) {
+            // explode tags
+            $tags = explode(',', $tags);
             // accepted tags
             foreach ($tags as $idx => $dbTag) {
                 // look for module tags
