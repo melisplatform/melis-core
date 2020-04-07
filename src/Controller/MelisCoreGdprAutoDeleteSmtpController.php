@@ -81,11 +81,23 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
         if ($request->isPost()){
             $params = get_object_vars($request->getPost());
             // set data for validation
-            $form = $this->getGdprAutoDeleteSmtpForm()->setData($params);
+            $form = $this->getGdprAutoDeleteSmtpForm();
+            // remove filter if it s empty for updating to keep it's current password
+            if (!empty($params['mgdpr_smtp_id'])) {
+                if (empty($params['mgdpr_smtp_password']) ||  empty($params['mgdpr_smtp_confirm_password'])) {
+                    $form->getInputFilter()->remove('mgdpr_smtp_password');
+                    $form->getInputFilter()->remove('mgdpr_smtp_confirm_password');
+                }
+            }
+            // set data
+            $form = $form->setData($params);
             if ($form->isValid()) {
                 $formData = $form->getData();
-                $formData['mgdpr_smtp_password'] = $this->verifyUserPassword($formData['mgdpr_smtp_password'], $formData['mgdpr_smtp_confirm_password']);
+                if (!empty($formData['mgdpr_smtp_password']) && !empty($formData['mgdpr_smtp_confirm_password'])) {
+                    $formData['mgdpr_smtp_password'] = $this->verifyUserPassword($formData['mgdpr_smtp_password'], $formData['mgdpr_smtp_confirm_password']);
+                }
                 if (empty($this->formErrors)) {
+                    // remove confirm password field
                     unset($formData['mgdpr_smtp_confirm_password']);
                     // check if id is present
                     if (isset($formData['mgdpr_smtp_id']) && !empty($formData['mgdpr_smtp_id'])) {
