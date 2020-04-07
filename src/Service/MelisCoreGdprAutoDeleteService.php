@@ -94,28 +94,20 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $this->deleteEmailsSentTable = $deleteEmailsSentTable;
         $this->emailsLogsTable = $emailsLogsTable;
     }
-    /**
-     * get the list of tags in every modules that was sent through their respective listeners
-     *
-     * @return array
-     */
-    public function getAllModulesListOfTags()
-    {
-        return $this->getDataOfAnEvent(self::TAGS_EVENT, self::TAG_LIST_KEY, self::TAG_KEY);
-    }
 
     /**
-     * get the list of users that for deletion
+     * run GDPR Auto delete
      *
-     * @return array
+     * @return mixed
      */
-    public function getUsersForDeletion()
+    public function run()
     {
-        return $this->getDataOfAnEvent(self::DELETE_EVENT,self::DELETE_USERS_KEY);
-    }
-
-    public function runCron()
-    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_user_run_cron_start', $arrayParameters);
+        // result
+        $results = false;
         // retrieving list of modules and list of sites
         $autoDelConfig = $this->gdprAutoDeleteToolService->getAllGdprAutoDeleteConfigData();
         //etrieving list of users' emails for first warning
@@ -128,11 +120,84 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // send email for deleted users
                 $this->deleteSendEmailForDeletedUsers($config);
             }
-
-            return true;
+            $results = true;
         }
 
-        return false;
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] = $results;
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_user_run_cron_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+
+    /**
+     * get the list of tags in every modules that was sent through their respective listeners
+     *
+     * @return array
+     */
+    public function getAllModulesListOfTags()
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_user_gdpr_auto_delete_get_all_module_tags_start', $arrayParameters);
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] = $this->getDataOfAnEvent(self::TAGS_EVENT, self::TAG_LIST_KEY, self::TAG_KEY);;
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_user_gdpr_auto_delete_get_all_module_tags_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+
+    /**
+     * get the list of warning users in every modules that was sent through their respective listeners
+     *
+     * @return array
+     */
+    public function getAllModulesWarningListOfUsers()
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_modules_warning_list_start', $arrayParameters);
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] = $this->getDataOfAnEvent(self::WARNING_EVENT, self::WARNING_LIST_KEY);
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_modules_warning_list_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+
+    /**
+     * get the list of second warning users in every modules that was sent through their respective listeners
+     *
+     * @return array
+     */
+    public function getAllModulesSecondWarningListOfUsers()
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_modules_second_warning_list_start', $arrayParameters);
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] = $this->getDataOfAnEvent(self::SECOND_WARNING_EVENT, self::SECOND_WARNING_LIST_KEY);
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_modules_second_warning_list_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+
+    /**
+     * add data on table melis_core_gdpr_delete_emails_sent
+     *
+     * @param $data
+     * @param null $id
+     * @return int|null
+     */
+    public function saveEmailsSentData($data, $id = null)
+    {
+        return $this->deleteEmailsSentTable->save($data, $id);
     }
 
     /**
@@ -443,7 +508,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $first
      * @return array | object
      */
-    public function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING , $first = true )
+    private function prepareSendWarningEmail($emailSetupConfig, $email ,$emailOptions, $type = MelisGdprDeleteEmailsTable::EMAIL_WARNING , $first = true )
     {
         $response = [
             'hasError' => false
@@ -635,7 +700,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param array $logs
      * @return array
      */
-    public function prepareSecondWarningLogs($success, $email, $message, $logs = [])
+    private function prepareSecondWarningLogs($success, $email, $message, $logs = [])
     {
         $data = [];
         if ($success) {
@@ -682,7 +747,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param array $logs
      * @return array
      */
-    public function prepareDeletedEmailLogs($success, $email, $message, $logs = [])
+    private function prepareDeletedEmailLogs($success, $email, $message, $logs = [])
     {
         $data = [];
         if ($success) {
@@ -735,7 +800,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $messageHtml
      * @param null $messageText
      */
-    public function sendEmail(
+    private function sendEmail(
         $emailFrom,
         $emailFromName,
         $emailTo,
@@ -758,6 +823,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'password'        => $smtpDataConfig['mgdpr_smtp_password'],
                 'ssl'             => 'tls',
             ];
+
         }
         try {
             $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
@@ -774,18 +840,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             $this->errors = "Technical error";
         }
 
-    }
-
-    /**
-     * add data on table melis_core_gdpr_delete_emails_sent
-     *
-     * @param $data
-     * @param null $id
-     * @return int|null
-     */
-    public function saveEmailsSentData($data, $id = null)
-    {
-        return $this->deleteEmailsSentTable->save($data, $id);
     }
 
     /**
@@ -822,26 +876,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         };
 
         return $data;
-    }
-
-    /**
-     * get the list of warning users in every modules that was sent through their respective listeners
-     *
-     * @return array
-     */
-    public function getAllModulesWarningListOfUsers()
-    {
-        return $this->getDataOfAnEvent(self::WARNING_EVENT, self::WARNING_LIST_KEY);
-    }
-
-    /**
-     * get the list of second warning users in every modules that was sent through their respective listeners
-     *
-     * @return array
-     */
-    public function getAllModulesSecondWarningListOfUsers()
-    {
-        return $this->getDataOfAnEvent(self::SECOND_WARNING_EVENT, self::SECOND_WARNING_LIST_KEY);
     }
 
     /**

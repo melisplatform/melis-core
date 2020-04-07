@@ -144,9 +144,9 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
 
     private function verifyUserPassword($password, $confirmpassword)
     {
-        $newPass = null;
+        $validatedPassword = null;
         if ($password == $confirmpassword) {
-            $newPass = password_hash($password, PASSWORD_DEFAULT);
+            $validatedPassword = $password;
         } else {
             $this->formErrors['mgdpr_smtp_password'] = [
                 'label' => 'Password',
@@ -155,7 +155,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
         }
 
 
-        return $newPass;
+        return $validatedPassword;
     }
 
     /**

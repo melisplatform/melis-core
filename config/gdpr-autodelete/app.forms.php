@@ -423,7 +423,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'Replacement tags accepted',
+                                            'data-label-text' => 'Reminder on the list of accepted tags',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ],
@@ -491,7 +491,7 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'Replacement tags accepted',
+                                            'data-label-text' => 'Reminder on the list of accepted tags',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ],
