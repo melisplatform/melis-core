@@ -42,6 +42,16 @@ var gdprAutoDelete = {
             el.addClass('arrow-indication-down')
         }
     },
+    toggleSmArrowIndicator: function (element) {
+        var el = $(element);
+        if (el.hasClass('arrow-down-sm-accordion')) {
+            el.removeClass('arrow-down-sm-accordion');
+            el.addClass('arrow-right-sm-accordion')
+        } else {
+            el.removeClass('arrow-right-sm-accordion');
+            el.addClass('arrow-down-sm-accordion')
+        }
+    },
     /**
      * reload data table
      */
@@ -358,19 +368,21 @@ $(function () {
     $body.on('show.bs.collapse', '#list-config-content', function () {
         gdprAutoDelete.toggleArrowIndicator("#gdpr-accordion-toggle-list");
     });
+
     /*
      * accordion hide list config
      */
-    $body.on('hide.bs.collapse', '#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content', function () {
-        gdprAutoDelete.toggleArrowIndicator(".accordion-heading-add-delete");
+    $body.on('click', ".accordion-heading-add-delete", function() {
+        gdprAutoDelete.toggleArrowIndicator(this);
     });
 
     /*
-     * accordion show list config
-     */
-    $body.on('show.bs.collapse', '#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content', function () {
-        gdprAutoDelete.toggleArrowIndicator(".accordion-heading-add-delete");
+    * accordion hide list config
+    */
+    $body.on('click', ".toggle-arrow-indication", function() {
+        gdprAutoDelete.toggleSmArrowIndicator(this);
     });
+
 
     // edit config
     $body.on('click', '.gdpr-edit-delete-confg', function () {
