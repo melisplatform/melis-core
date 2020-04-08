@@ -65,8 +65,14 @@ class MelisModuleManager
     {
         $composer = new MelisComposer();
 
-        // This needs to be set when using MelisPlatform
-        error_reporting(E_ALL & ~E_USER_DEPRECATED & !E_WARNING);
+        if (file_exists($_SERVER['DOCUMENT_ROOT']. '/../config/development.config.php')){
+            // Development mode will show all errors
+            error_reporting(E_ALL);
+        } else {
+            // This needs to be set when using MelisPlatform
+            error_reporting(E_ALL & ~E_USER_DEPRECATED & !E_WARNING);
+        }
+
         if (empty(date_default_timezone_get()))
             date_default_timezone_set('Europe/Paris');
 

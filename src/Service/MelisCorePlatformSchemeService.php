@@ -9,14 +9,14 @@
 
 namespace MelisCore\Service;
 
-use MelisCore\Service\MelisCoreGeneralService;
+use MelisCore\Service\MelisGeneralService;
 use MelisCore\Entity\MelisCorePlatformScheme;
 /**
  *
  * This service provides data in getting the platform colors and images.
  *
  */
-class MelisCorePlatformSchemeService extends MelisCoreGeneralService
+class MelisCorePlatformSchemeService extends MelisGeneralService
 {
     /**
      * Returns the Melis Core Platform Scheme table

@@ -12,7 +12,7 @@ use Laminas\Session\Container;
 use Laminas\Mvc\Controller\Plugin\FlashMessenger;
 use Laminas\Json\Json;
 
-class MelisCoreFlashMessengerService extends MelisCoreServiceManager implements  MelisCoreFlashMessengerServiceInterface
+class MelisCoreFlashMessengerService extends MelisServiceManager implements  MelisCoreFlashMessengerServiceInterface
 {
     
     /* const INFO = 'glyphicon glyphicon-info-sign';

@@ -463,7 +463,7 @@ class UserController extends AbstractActionController
 
     /**
      * Rendering the Melis CMS interface
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderRenewPasswordAction()
     {
@@ -491,7 +491,7 @@ class UserController extends AbstractActionController
 
     /**
      * Renders to the renew password view and process it after clicking the submit button
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renewPasswordAction()
     {
@@ -519,7 +519,7 @@ class UserController extends AbstractActionController
         $isRequestNotExpired = $melisCreatePass->isRequestExpired($login);
         $isUserExist = $melisCreatePass->isUserExist($login);
 
-        $factory = new \Zend\Form\Factory();
+        $factory = new \Laminas\Form\Factory();
         $forgotForm = $factory->createForm($appConfigForm);
 
         $translator = $this->getServiceManager()->get('translator');

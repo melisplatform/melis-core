@@ -110,7 +110,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin
     {
         $this->updatesPluginConfig = $pluginConfig;
 
-        $melisCoreGeneralSrv = $this->getServiceManager()->get('MelisCoreGeneralService');
+        $melisCoreGeneralSrv = $this->getServiceManager()->get('MelisGeneralService');
         $this->updatesPluginConfig = $melisCoreGeneralSrv->sendEvent($this->pluginName . '_melisdashboard_render_start', $this->updatesPluginConfig);
 
         $this->getPluginConfig($generatePluginId);
@@ -182,7 +182,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin
         
         $this->pluginConfig = $this->translateConfig($this->pluginConfig);
 
-        $melisCoreGeneralSrv = $this->getServiceManager()->get('MelisCoreGeneralService');
+        $melisCoreGeneralSrv = $this->getServiceManager()->get('MelisGeneralService');
         $this->pluginConfig = $melisCoreGeneralSrv->sendEvent($this->pluginName . '_melisdashboard_getpluginconfig_end', $this->pluginConfig);
     }
     

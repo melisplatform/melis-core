@@ -4,7 +4,7 @@ namespace MelisCore\Service;
 
 use Laminas\ServiceManager\ServiceManager;
 
-class MelisCorePluginsService extends MelisCoreGeneralService
+class MelisCorePluginsService extends MelisGeneralService
 {
     const DASHBOARD_PLUGIN_TYPE = "dashboard";
     const TEMPLATING_PLUGIN_TYPE = "templating";

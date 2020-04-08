@@ -2,7 +2,7 @@
 
 namespace MelisCore\Service;
 
-class MelisCoreLogService  extends MelisCoreGeneralService
+class MelisCoreLogService  extends MelisGeneralService
 {
     /**
      * Common action log types

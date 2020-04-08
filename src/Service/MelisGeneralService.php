@@ -17,19 +17,39 @@ use Laminas\EventManager\EventManagerInterface;
  * This service handles the generic service system of Melis.
  *
  */
-class MelisCoreGeneralService extends MelisCoreServiceManager implements EventManagerAwareInterface
+class MelisGeneralService extends MelisServiceManager implements EventManagerAwareInterface
 {
+    /**
+     * @var $eventManager
+     */
     protected $eventManager;
 
+    /**
+     * @param EventManagerInterface $eventManager
+     */
 	public function setEventManager(EventManagerInterface $eventManager)
 	{
 	    $this->eventManager = $eventManager;
 	}
-	
+
+    /**
+     * @return EventManagerInterface
+     */
 	public function getEventManager()
 	{
 	    return $this->eventManager;
 	}
+
+    public function getRenderMode()
+    {
+        $router = $this->getServiceManager()->get('router');
+        $request = $this->getServiceManager()->get('request');
+
+        $routeMatch = $router->match($request);
+        $renderMode = $routeMatch->getParam('renderMode', 'melis');
+
+        return $renderMode;
+    }
 	
 	/**
 	 * This method creates an array from the parameters, using parameters' name as keys
@@ -84,12 +104,23 @@ class MelisCoreGeneralService extends MelisCoreServiceManager implements EventMa
 	    
 	    return $parametersArray;
 	}
-	
-	public function sendEvent($eventName, $parameters)
+
+    /**
+     * Send event using eventManager
+     * @param $eventName
+     * @param $parameters
+     * @param null $target
+     * @return array
+     */
+	public function sendEvent($eventName, $parameters, $target = null)
 	{
         if($this->eventManager) {
+
+            if (is_null($target))
+                $target = $this;
+
             $parameters = $this->eventManager->prepareArgs($parameters);
-            $this->eventManager->trigger($eventName, $this, $parameters);
+            $this->eventManager->trigger($eventName, $target, $parameters);
             $parameters = get_object_vars($parameters);
         }
 
@@ -101,19 +132,16 @@ class MelisCoreGeneralService extends MelisCoreServiceManager implements EventMa
 	 * @param String $prefix of the array data
 	 * @param array $haystack
 	 */
-	public function splitData($prefix, $haystack = array())
+	public function splitData($prefix, $haystack = [])
 	{
-	    $data = array();
+	    $data = [];
 	    
 	    if($haystack) {
-	        
 	        foreach($haystack as $key => $value) {
 	            if(strpos($key, $prefix) !== false) {
 	                $data[$key] = $value;
 	            }
-	            
 	        }
-	        
 	    }
 	    
 	    return $data;

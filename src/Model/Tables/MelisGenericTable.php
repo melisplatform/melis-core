@@ -23,8 +23,9 @@ use Laminas\Db\Sql\Predicate\Predicate;
 use Laminas\Hydrator\ObjectProperty;
 use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Model\Hydrator\MelisResultSet;
+use MelisCore\Service\MelisServiceManager;
 
-class MelisGenericTable
+class MelisGenericTable extends MelisServiceManager
 {
 	protected $serviceManager;
 	protected $tableGateway;
@@ -33,22 +34,6 @@ class MelisGenericTable
 	protected $_selectedColumns;
 	protected $_selectedValues;
 	protected $_currentDataCount;
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-	public function setServiceManager(ServiceManager $serviceManager)
-	{
-		$this->serviceManager = $serviceManager;
-	}
-
-    /**
-     * @return mixed
-     */
-	public function getServiceManager()
-	{
-		return $this->serviceManager;
-	}
 
     /**
      * @param TableGateway $tableGateway
@@ -136,7 +121,7 @@ class MelisGenericTable
 	
 	protected function aliasColumnsFromTableDefinition($serviceTableName, $prefix)
 	{
-		$melisPageColumns = $this->serviceLocator->get($serviceTableName);
+		$melisPageColumns = $this->getServiceManager()->get($serviceTableName);
 		
 		$final = array();
 		foreach ($melisPageColumns as $column)

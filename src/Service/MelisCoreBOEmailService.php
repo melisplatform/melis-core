@@ -4,7 +4,7 @@ namespace MelisCore\Service;
 
 use Laminas\Db\Sql\Ddl\Column\Boolean;
 
-class MelisCoreBOEmailService extends MelisCoreServiceManager
+class MelisCoreBOEmailService extends MelisServiceManager
 {
 	/**
 	 * Saving Emails Properties and Details

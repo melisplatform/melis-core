@@ -64,7 +64,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
                 $modules = $moduleSvc->getAllModules();
 
                 /**
-                 * Checker whether the provided module in the route parameter does exists in Zend Active Modules
+                 * Checker whether the provided module in the route parameter does exists in Laminas Active Modules
                  */
                 if (in_array($module, $modules)) {
 

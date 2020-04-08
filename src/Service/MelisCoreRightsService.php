@@ -4,7 +4,7 @@ namespace MelisCore\Service;
 
 use Laminas\Json\Json;
 
-class MelisCoreRightsService extends MelisCoreServiceManager implements MelisCoreRightsServiceInterface
+class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRightsServiceInterface
 {
     const MELISCORE_PREFIX_INTERFACE = 'meliscore_interface';
     const MELIS_PLATFORM_TOOLS_PREFIX = 'meliscore_leftmenu';

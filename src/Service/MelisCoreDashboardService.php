@@ -2,7 +2,7 @@
 
 namespace MelisCore\Service;
 
-class MelisCoreDashboardService extends MelisCoreServiceManager
+class MelisCoreDashboardService extends MelisServiceManager
 {
 	/**
 	 * This method return JsCallbacks of active plugins

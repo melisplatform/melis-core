@@ -9,7 +9,8 @@ use Laminas\Mime\Part as MimePart;
 use Laminas\Mail\Transport\Smtp as SmtpTransport;
 use Laminas\Mail\Transport\SmtpOptions;
 
-class MelisCoreEmailSendingService extends MelisCoreServiceManager{
+class MelisCoreEmailSendingService extends MelisServiceManager
+{
     /**
      * Sending Email
      * @param $emailFrom

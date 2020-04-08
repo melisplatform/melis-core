@@ -10,7 +10,7 @@ use Laminas\View\Model\ViewModel;
 /**
  * This Service helps you create your tool
  */
-class MelisCoreToolService extends MelisCoreServiceManager implements MelisCoreToolServiceInterface
+class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolServiceInterface
 {
     const TEXT_LIMIT = 25;
     protected $_melisToolKey;

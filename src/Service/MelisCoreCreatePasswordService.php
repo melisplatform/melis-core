@@ -4,7 +4,7 @@ namespace MelisCore\Service;
 
 use MelisCore\Model\Tables\MelisCreatePasswordTable;
 
-class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements MelisCoreCreatePasswordServiceInterface
+class MelisCoreCreatePasswordService extends MelisGeneralService implements MelisCoreCreatePasswordServiceInterface
 {
     /**
      * Adds new record for create password request

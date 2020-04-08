@@ -2,10 +2,10 @@
 
 namespace MelisCore\Service;
 
-use MelisCore\Service\MelisCoreGeneralService;
+use MelisCore\Service\MelisGeneralService;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 
-class MelisCoreGdprService extends MelisCoreGeneralService {
+class MelisCoreGdprService extends MelisGeneralService {
 
     /**
      * This will send an event that will get all the user's information based on the form inputs and Returns the retrieved user's info

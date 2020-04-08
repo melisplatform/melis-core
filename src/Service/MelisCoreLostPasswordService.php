@@ -6,7 +6,7 @@ use Laminas\Mail\Message;
 use Laminas\Mail\Transport\Sendmail;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Part as MimePart;
-class MelisCoreLostPasswordService extends MelisCoreServiceManager implements MelisCoreLostPasswordServiceInterface
+class MelisCoreLostPasswordService extends MelisServiceManager implements MelisCoreLostPasswordServiceInterface
 {
     /**
      * Adds new record for lost password request 
@@ -131,7 +131,7 @@ class MelisCoreLostPasswordService extends MelisCoreServiceManager implements Me
             //echo $login;
         }
 
-        $usertbl = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $usertbl = $this->getServiceManager()->get('MelisCoreTableUser');
         $user = $usertbl->getEntryByField("usr_login",$login)->current();
 
         return $user;

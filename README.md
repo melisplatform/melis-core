@@ -129,7 +129,7 @@ $appsConfigCenter = $melisAppConfig->getItem('/meliscore/interface/meliscore_cen
 ```
 // Example 2
 // Get the service
-$melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+$melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
 // Get a form config, always use getFormMergedAndOrdered
 $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_type_form','meliscore_logs_tool_log_type_form');
 ```
@@ -214,7 +214,7 @@ return array(
 						'id' => 'idformmeliscorelogin',
 						'method' => 'POST',
 					),
-					'hydrator'  => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+					'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
 					'elements' => array(  
 						array(
 							'spec' => array(
@@ -294,7 +294,7 @@ return array(
 MelisCoreConfig Service provides a method called getFormMergedAndOrdered that will get the form and give it back reordered:  
 ```
 // Get the service
-$melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+$melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
 // Get a form config, always use getFormMergedAndOrdered
 $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_type_form','meliscore_logs_tool_log_type_form');
 ```

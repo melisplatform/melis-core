@@ -2,7 +2,7 @@
 
 namespace MelisCore\Service;
 
-class MelisCoreMicroServiceTestService extends MelisCoreServiceManager
+class MelisCoreMicroServiceTestService extends MelisServiceManager
 {
 
     public function oneParam($fillMeIn)

@@ -4,7 +4,7 @@ namespace MelisCore\Service;
 
 use Laminas\Session\Container;
 
-class MelisCoreDispatchService extends MelisCoreServiceManager implements MelisCoreDispatchServiceInterface
+class MelisCoreDispatchService extends MelisServiceManager implements MelisCoreDispatchServiceInterface
 {	
 	/**
 	 * Dispatch to a module/controller/action to get back a json result

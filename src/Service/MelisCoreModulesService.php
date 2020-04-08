@@ -15,7 +15,7 @@ use Composer\Package\CompletePackage;
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
 
-class MelisCoreModulesService extends MelisCoreServiceManager
+class MelisCoreModulesService extends MelisServiceManager
 {
     private const MELIS_SITES_FOLDER = 'MelisSites';
 
@@ -254,18 +254,18 @@ class MelisCoreModulesService extends MelisCoreServiceManager
         $packages = array_filter($repos->getPackages(), function ($package) {
             /**
              * These will exclude all the modules
-             * that are not zend module
+             * that are not laminas module
              */
             $extra = $package->getExtra();
             if(isset($extra['melis-module'])) {
-                $zendModule = ($extra['melis-module']) ? true : false;
+                $laminasModule = ($extra['melis-module']) ? true : false;
             } else {
-                $zendModule = true;
+                $laminasModule = true;
             }
 
             /** @var CompletePackage $package */
             return $package->getType() === 'melisplatform-module' &&
-                array_key_exists('module-name', $extra) && $zendModule;
+                array_key_exists('module-name', $extra) && $laminasModule;
         });
 
         $modules = array_map(function ($package) {
@@ -475,7 +475,7 @@ class MelisCoreModulesService extends MelisCoreServiceManager
     }
 
     /**
-     * Returns all the modules that has been loaded in zend
+     * Returns all the modules that has been loaded in laminas
      *
      * @param array $exclude
      *

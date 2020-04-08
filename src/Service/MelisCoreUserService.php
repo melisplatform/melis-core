@@ -2,7 +2,7 @@
 
 namespace MelisCore\Service;
 
-class MelisCoreUserService extends MelisCoreServiceManager implements MelisCoreUserServiceInterface
+class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserServiceInterface
 {
     public function getUserXmlRights($userId = null)
     {

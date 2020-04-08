@@ -5,7 +5,7 @@ namespace MelisCore\Service;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 
-class MelisCoreConfigService extends MelisCoreServiceManager implements MelisCoreConfigServiceInterface
+class MelisCoreConfigService extends MelisServiceManager implements MelisCoreConfigServiceInterface
 {
     public $appConfig;
 
@@ -320,7 +320,7 @@ class MelisCoreConfigService extends MelisCoreServiceManager implements MelisCor
                  *
                  * $pathString[$position - 1] - this will get the last position as param
                  */
-                $coreSrv = $this->getServiceManager()->get('MelisCoreGeneralService');
+                $coreSrv = $this->getServiceManager()->get('MelisGeneralService');
                 $configTab = $coreSrv->sendEvent('melis_core_config_get_item_rec',
                     ['pathString' => $pathString[$position - 1] , 'config' => $configTab]
                 )['config'];

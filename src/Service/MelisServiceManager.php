@@ -13,10 +13,10 @@ use Laminas\ServiceManager\ServiceManager;
 
 /**
  *
- * This service handles the Service Manager
+ * This Class handles the Service Manager
  *
  */
-class MelisCoreServiceManager
+class MelisServiceManager
 {
     /**
      * @var Laminas\ServiceManager\ServiceManager $serviceManager

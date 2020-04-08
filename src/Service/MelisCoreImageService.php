@@ -8,7 +8,7 @@
 
 namespace MelisCore\Service;
 
-class MelisCoreImageService extends MelisCoreServiceManager implements MelisCoreImageServiceInterface
+class MelisCoreImageService extends MelisServiceManager implements MelisCoreImageServiceInterface
 {
     const EXT_PNG = 'png';
     const EXT_GIF = 'gif';

@@ -7,8 +7,6 @@
  *
  */
 
-use MelisCore\Service\Factory\AbstractFactory;
-use MelisCore\Model\Tables\Factory\AbstractTableGatewayFactory;
 use MelisCore\View\Helper\MelisCoreSectionIconsHelper;
 use MelisCore\View\Helper\MelisDataTableHelper;
 use MelisCore\Service\MelisCoreConfigService;
@@ -30,7 +28,7 @@ use MelisCore\Service\MelisPhpUnitToolService;
 use MelisCore\Service\MelisCoreMicroServiceTestService;
 use MelisCore\Service\MelisCorePlatformSchemeService;
 use MelisCore\Service\MelisFormService;
-use MelisCore\Service\MelisCoreGeneralService;
+use MelisCore\Service\MelisGeneralService;
 use MelisCore\Service\MelisCoreDashboardService;
 use MelisCore\Service\MelisCoreGdprService;
 use MelisCore\Service\MelisCorePluginsService;
@@ -55,9 +53,6 @@ use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
 use MelisCore\View\Helper\MelisDashboardDragDropZonePluginHelper;
 
 return [
-    'modules' =>[
-        'Laminas\Cache',
-    ],
     'router' => [
         'routes' => [
             'melis-backoffice' => [
@@ -337,9 +332,7 @@ return [
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ],
-                            'defaults' => [
-//
-                            ],
+                            'defaults' => [],
                         ],
                     ],
                     'setup' => [
@@ -360,55 +353,11 @@ return [
         'locale' => 'en_EN',
     ],
     'service_manager' => [
-        'factories' => [
-            // Services
-            MelisCoreConfigService::class                   => AbstractFactory::class,
-            MelisCoreDispatchService::class                 => AbstractFactory::class,
-            MelisCoreAuthService::class                     => AbstractFactory::class,
-            MelisCoreUserService::class                     => AbstractFactory::class,
-            MelisCoreRightsService::class                   => AbstractFactory::class,
-            MelisCoreFlashMessengerService::class           => AbstractFactory::class,
-            MelisCoreImageService::class                    => AbstractFactory::class,
-            MelisCoreTranslationService::class              => AbstractFactory::class,
-            MelisCoreLostPasswordService::class             => AbstractFactory::class,
-            MelisCoreCreatePasswordService::class           => AbstractFactory::class,
-            MelisCoreToolService::class                     => AbstractFactory::class,
-            MelisCoreBOEmailService::class                  => AbstractFactory::class,
-            MelisCoreEmailSendingService::class             => AbstractFactory::class,
-            MelisCoreModulesService::class                  => AbstractFactory::class,
-            MelisCoreLogService::class                      => AbstractFactory::class,
-            MelisPhpUnitToolService::class                  => AbstractFactory::class,
-            MelisCoreMicroServiceTestService::class         => AbstractFactory::class,
-            MelisCorePlatformSchemeService::class           => AbstractFactory::class,
-            MelisFormService::class                         => AbstractFactory::class,
-            MelisCoreGeneralService::class                  => AbstractFactory::class,
-            MelisCoreDashboardService::class                => AbstractFactory::class,
-            MelisCoreGdprService::class                     => AbstractFactory::class,
-            MelisCorePluginsService::class                  => AbstractFactory::class,
-            MelisCoreDashboardPluginsRightsService::class   => AbstractFactory::class,
-
-            // Model Tables
-            MelisLangTable::class               => AbstractTableGatewayFactory::class,
-            MelisUserTable::class               => AbstractTableGatewayFactory::class,
-            MelisUserRoleTable::class           => AbstractTableGatewayFactory::class,
-            MelisPlatformTable::class           => AbstractTableGatewayFactory::class,
-            MelisLostPasswordTable::class       => AbstractTableGatewayFactory::class,
-            MelisCreatePasswordTable::class     => AbstractTableGatewayFactory::class,
-            MelisBOEmailsTable::class           => AbstractTableGatewayFactory::class,
-            MelisBOEmailsDetailsTable::class    => AbstractTableGatewayFactory::class,
-            MelisLogTable::class                => AbstractTableGatewayFactory::class,
-            MelisLogTypeTable::class            => AbstractTableGatewayFactory::class,
-            MelisLogTypeTransTable::class       => AbstractTableGatewayFactory::class,
-            MelisUserConnectionDateTable::class => AbstractTableGatewayFactory::class,
-            MelisMicroServiceAuthTable::class   => AbstractTableGatewayFactory::class,
-            MelisPlatformSchemeTable::class     => AbstractTableGatewayFactory::class,
-            MelisDashboardsTable::class         => AbstractTableGatewayFactory::class,
-            MelisPluginsTable::class            => AbstractTableGatewayFactory::class,
-        ],
         'aliases' => [
             // Laminas Mvc translator Service
             'translator'                        => 'MvcTranslator',
             // Service
+            'MelisGeneralService'               => MelisGeneralService::class,
             'MelisCoreConfig'                   => MelisCoreConfigService::class,
             'MelisCoreDispatch'                 => MelisCoreDispatchService::class,
             'MelisCoreAuth'                     => MelisCoreAuthService::class,
@@ -428,7 +377,6 @@ return [
             'MelisCoreMicroServiceTestService'  => MelisCoreMicroServiceTestService::class,
             'MelisCorePlatformSchemeService'    => MelisCorePlatformSchemeService::class,
             'MelisCoreFormService'              => MelisFormService::class,
-            'MelisCoreGeneralService'           => MelisCoreGeneralService::class,
             'MelisCoreDashboardService'         => MelisCoreDashboardService::class,
             'MelisCoreGdprService'              => MelisCoreGdprService::class,
             'MelisCorePluginsService'           => MelisCorePluginsService::class,
@@ -452,6 +400,13 @@ return [
             'MelisCoreDashboardsTable'          => MelisDashboardsTable::class,
             'MelisPluginsTable'                 => MelisPluginsTable::class,
         ],
+        'abstract_factories' => [
+            /**
+             * This Abstract factory will create requested service
+             * that match on the onCreate() condetions
+             */
+            \MelisCore\Factory\MelisAbstractFactory::class
+        ]
     ],
     'controllers' => [
         'invokables' => [
@@ -468,9 +423,9 @@ return [
             'MelisCore\Controller\MelisGenericModal'        => \MelisCore\Controller\MelisGenericModalController::class,
             'MelisCore\Controller\Platforms'                => \MelisCore\Controller\PlatformsController::class,
             'MelisCore\Controller\EmailsManagement'         => \MelisCore\Controller\EmailsManagementController::class,
-// @TODO Missing controllers
-//            'MelisCore\Controller\ModuleDiagnostic'         => \MelisCore\Controller\ModuleDiagnosticController::class,
-//            'MelisCore\Controller\Diagnostic'               => \MelisCore\Controller\DiagnosticController::class,
+            // @TODO Missing controllers
+            // 'MelisCore\Controller\ModuleDiagnostic'         => \MelisCore\Controller\ModuleDiagnosticController::class,
+            // 'MelisCore\Controller\Diagnostic'               => \MelisCore\Controller\DiagnosticController::class,
             'MelisCore\Controller\MelisTinyMce'             => \MelisCore\Controller\MelisTinyMceController::class,
             'MelisCore\Controller\MelisPhpUnitTool'         => \MelisCore\Controller\MelisPhpUnitToolController::class,
             'MelisCore\Controller\Log'                      => \MelisCore\Controller\LogController::class,
@@ -520,12 +475,6 @@ return [
             'MelisModalInvoker'             => \MelisCore\View\Helper\MelisModalInvoker::class,
             'MelisTextHelper'               => \MelisCore\View\Helper\MelisTextHelper::class,
         ],
-        'factories' => [
-            MelisCoreHeadPluginHelper::class                => AbstractFactory::class,
-            MelisDashboardDragDropZonePluginHelper::class   => AbstractFactory::class,
-            MelisDataTableHelper::class                     => AbstractFactory::class,
-            MelisCoreSectionIconsHelper::class              => AbstractFactory::class,
-        ],
         'aliases' => [
             'MelisCoreHeadPlugin'           => MelisCoreHeadPluginHelper::class,
             'MelisDashboardDragDropZone'    => MelisDashboardDragDropZonePluginHelper::class,
@@ -536,6 +485,13 @@ return [
             'melisGenericTable'             => 'MelisGenericTable',
             'melisModalInvoker'             => 'MelisModalInvoker',
             'melisModal'                    => 'MelisModal',
+        ],
+        'abstract_factories' => [
+            /**
+             * This Abstract factory will create requested service
+             * that match on the onCreate() condetions
+             */
+            \MelisCore\Factory\MelisAbstractFactory::class
         ]
     ],
     'view_manager' => [

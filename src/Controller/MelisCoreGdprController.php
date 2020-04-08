@@ -11,7 +11,6 @@ namespace MelisCore\Controller;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Laminas\Form\Factory;
-use MelisCore\Service\MelisCoreGeneralService;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 
 class MelisCoreGdprController extends AbstractActionController

@@ -242,7 +242,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'usr_status',
-                                        'type' => 'Zend\Form\Element\Select',
+                                        'type' => 'Laminas\Form\Element\Select',
                                         'options' => [
                                             'label' => 'tr_meliscore_tool_user_col_status',
                                             'tooltip' => 'tr_meliscore_tool_user_col_status tooltip',
@@ -443,7 +443,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_status_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_status_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -452,7 +452,7 @@ return [
                                             'options' => [
                                                 'haystack' => [1, 0],
                                                 'messages' => [
-                                                    \Zend\Validator\InArray::NOT_IN_ARRAY => 'tr_meliscore_tool_user_usr_status_error_invalid',
+                                                    \Laminas\Validator\InArray::NOT_IN_ARRAY => 'tr_meliscore_tool_user_usr_status_error_invalid',
                                                 ],
                                             ],
                                         ],
@@ -498,7 +498,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_password_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_password_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -520,7 +520,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_password_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_password_error_long',
                                                 ],
                                             ],
                                         ],
@@ -539,7 +539,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_confirm_password_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_confirm_password_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -560,7 +560,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_confirm_password_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_confirm_password_error_long',
                                                 ],
                                             ],
                                         ],

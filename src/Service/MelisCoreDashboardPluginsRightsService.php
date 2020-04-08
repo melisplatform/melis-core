@@ -4,7 +4,7 @@ namespace MelisCore\Service;
 
 use Laminas\Json\Json;
 
-class MelisCoreDashboardPluginsRightsService extends MelisCoreServiceManager implements MelisCoreRightsServiceInterface
+class MelisCoreDashboardPluginsRightsService extends MelisServiceManager implements MelisCoreRightsServiceInterface
 {
     const DASHBOARD_PLUGIN_ROOT = 'melis_dashboardplugin_root';
     const MELISCORE_DASHBOARDPLUGIN_PREFIX = 'melis_dashboardplugin';

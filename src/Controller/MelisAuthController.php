@@ -140,7 +140,7 @@ class MelisAuthController extends AbstractActionController
         $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         $pathAppConfigForm = '/meliscore/forms/meliscore_login';
 
-        // Creating the Zend Form to validate datas
+        // Creating the Laminas Form to validate datas
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
         $factory = new \Laminas\Form\Factory();
         $loginForm = $factory->createForm($appConfigForm);
@@ -239,7 +239,7 @@ class MelisAuthController extends AbstractActionController
                                 $password = $userPassword;
 
 //                                $userLastPassUpdate = $userData->usr_last_pass_update_date;
-//                                $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+//                                $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
 //                                $cfg = $melisConfig->getItem('meliscore/datas/default');
 //                                $expiry = $cfg['pwd_expiry'];
 //                                $isPassExpired = $userLastPassUpdate >= date('Y-m-d H:i:s',strtotime('-'.$expiry.' hours')) ? false : true;
@@ -333,7 +333,7 @@ class MelisAuthController extends AbstractActionController
                             }
 //                        } else {
 //                            /** @var MelisCoreCreatePasswordService $melisCreatePwdSvc */
-//                            $melisCreatePwdSvc = $this->getServiceLocator()->get('MelisCoreCreatePassword');
+//                            $melisCreatePwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
 //                            $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login,$userData->usr_email);
 //
 //                            $result = [
