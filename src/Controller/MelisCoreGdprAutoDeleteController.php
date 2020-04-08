@@ -363,7 +363,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      */
     private function getLocaleEmailTrans($configId, $type)
     {
-        $data = $this->getGdprAutoDeleteToolService()->getAlertEmailsTransDataByConfigId($configId);
+        $data = $this->getGdprAutoDeleteToolService()->getAlertEmailsTransData($configId, $type);
         $locale = "";
         $ctr = 0;
         if (!empty($data)) {
@@ -496,9 +496,6 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             $alertEmailsWarningTransData = $this->jsonToArray($postValues['alert_emails_warning_trans']);
             // convert json string to array
             $alertEmailsDeleteTransData = $this->jsonToArray($postValues['alert_emails_delete_trans']);
-            print_r($alertEmailsWarningTransData);
-            print_r($alertEmailsWarningTransData);
-            die;
             // validate all forms inputs from requests
             $this->setFormErrors($this->getGdprAutoDeleteToolService()->validateForm($postValues));
             // remove auto_delete_config key
