@@ -28,9 +28,18 @@ return [
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip' => 'Content of the email, When using tags place it inside [ ], ex [LINK]',
     // alert emails translations
     'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Replacement tags accepted',
-    // form erros
+    // form errors
     'tr_smtp_form_mgdpr_smtp_host' => 'Host',
     'tr_smtp_form_mgdpr_smtp_username' => 'Username',
     'tr_smtp_form_mgdpr_smtp_password' => 'Password',
     'tr_smtp_form_mgdpr_smtp_confirm_password' => 'Confirm password',
+    // logs messages
+    'tr_melis_core_gdpr_autodelete_config_title' => 'GDPR auto delete',
+    'tr_melis_core_gdpr_autodelete_config_save_ko' => 'Unable to save gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_save_ok' => 'Successfully saved gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_update_ok' => 'Successfully updated gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_delete_ok' => 'Successfully deleted gdpr auto delete config',
+    // confirm delete
+    'tr_melis_core_gdpr_autodelete_config_delete_title' => 'Delete gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_delete_message' => 'Are you sure you want to delete this auto delete config?',
 ];

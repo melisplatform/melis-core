@@ -473,4 +473,13 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
         ], $data->mgdpre_id);
     }
 
+    /**
+     * @param $id
+     * @return int
+     */
+    public function deleteConfig($id)
+    {
+        return $this->gdprAutoDeleteConfigTable->deleteById($id);
+    }
+
 }

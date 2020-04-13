@@ -9,11 +9,8 @@ namespace MelisCore\Controller;
  *
  */
 
-use MelisCore\Form\MelisForm;
 use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
-use MelisCore\Service\MelisCoreConfigService;
-use MelisCore\Service\MelisCoreGdprAutoDeleteService;
 use MelisCore\Service\MelisCoreGdprAutoDeleteToolService;
 use MelisCore\Service\MelisCoreToolService;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -22,6 +19,10 @@ use Zend\View\Model\ViewModel;
 
 class MelisCoreGdprAutoDeleteController extends AbstractActionController
 {
+    const SAVE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_SAVE';
+    const UPDATE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_UPDATE';
+    const DELETE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_DELETE';
+
     /**
      * form errors
      * @var array
@@ -483,6 +484,9 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $success = false;
         $errors = [];
         $configId = null;
+        $logtypeCode = self::SAVE_LOG_TYPE;
+        $title = "tr_melis_core_gdpr_autodelete_config_title";
+        $message = "tr_melis_core_gdpr_autodelete_config_save_ko";
         // save only when request is post
         if ($request->isPost()) {
             // sanitized url data
@@ -510,11 +514,14 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                     $configId = $postValues['mgdprc_id'];
                     $pos['mgdprc_config_update_date'] = date('Y-m-d h:i:s');
                     $this->getGdprAutoDeleteToolService()->saveGdprAutoDeleteConfig($postValues, $configId);
+                    $logtypeCode = self::UPDATE_LOG_TYPE;
+                    $message = "tr_melis_core_gdpr_autodelete_config_update_ok";
                 } else {
                     unset($postValues['mgdprc_id']);
                     $postValues['mgdprc_alert_email_days'] = (int) $postValues['mgdprc_alert_email_days'];
                     // new entry
                     $configId = $this->getGdprAutoDeleteToolService()->saveGdprAutoDeleteConfig($postValues);
+                    $message = "tr_melis_core_gdpr_autodelete_config_save_ok";
                 }
                 // save gdpr alert emails translations
                 $this->saveAlertEmailsTrans($alertEmailsWarningTransData, $configId, MelisGdprDeleteEmailsTable::EMAIL_WARNING);
@@ -526,24 +533,62 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 $errors = $this->getFormErrors();
             }
         }
+        // prepare response
+        $response = [
+            'success'     => $success,
+            'textMessage' => $message,
+            'textTitle'   => $title,
+            'typeCode'    => $logtypeCode,
+            'itemId'      => $configId,
+            'errors'      => $errors
+        ];
 
-        return new JsonModel([
-            'success' => $success,
-            'errors' => $errors,
-            'id' => $configId
-        ]);
+        // save melis core log
+        $this->getEventManager()->trigger('meliscore_gdpr_auto_delete', $this, $response);
+
+        return new JsonModel($response);
     }
 
-    private function validateAlertEmailData($data)
+    /**
+     * @return JsonModel
+     */
+    public function deleteAction()
     {
+        $request = $this->getRequest();
+        $success = false;
         $errors = [];
-        foreach ($data as $i => $val) {
-            $errors[] = $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailForm()->setData($data);
+        $configId = null;
+        $title = "tr_melis_core_gdpr_autodelete_config_title";
+        $message = "tr_melis_core_gdpr_autodelete_config_delete_ok";
+        // perform delete
+        if ($request->isPost()) {
+            // delete
+            $configId = $this->getGdprAutoDeleteToolService()->deleteConfig($request->getPost('id'));
+            $success = true;
         }
 
-        return $errors;
+        // response
+        $response = [
+            'success'     => $success,
+            'errors'      => $errors,
+            'itemId'      => $configId,
+            'typeCode'    => self::DELETE_LOG_TYPE,
+            'textMessage' => $message,
+            'textTitle'       => $title
+        ];
+
+        // save melis core log
+        $this->getEventManager()->trigger('meliscore_gdpr_auto_delete', $this, $response);
+
+        return new JsonModel($response);
     }
 
+    /**
+     * upload file
+     *
+     * @param $file
+     * @return string
+     */
     private function processFile($file)
     {
         $dirToUpload = $_SERVER['DOCUMENT_ROOT'] . "/media/melis-gdpr-auto-delete/";

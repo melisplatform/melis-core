@@ -33,4 +33,13 @@ return [
     'tr_smtp_form_mgdpr_smtp_username' => 'Username',
     'tr_smtp_form_mgdpr_smtp_password' => 'Password',
     'tr_smtp_form_mgdpr_smtp_confirm_password' => 'Confirm password',
+    // logs messages
+    'tr_melis_core_gdpr_autodelete_config_title' => 'GDPR auto delete',
+    'tr_melis_core_gdpr_autodelete_config_save_ko' => 'Unable to save gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_save_ok' => 'Successfully saved gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_update_ok' => 'Successfully updated gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_delete_ok' => 'Successfully deleted gdpr auto delete config',
+    // conrim delete
+    'tr_melis_core_gdpr_autodelete_config_delete_title' => 'Delete gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_delete_message' => 'Are you sure you want to delete this auto delete config?',
 ];

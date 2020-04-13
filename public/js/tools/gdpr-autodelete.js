@@ -86,21 +86,9 @@ var gdprAutoDelete = {
     openGdprAutoDeleteConfig : function (configId, siteId, module) {
         // remove class d-none to show the add/edit config area
         $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
-        melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config', { configId : configId , siteId : siteId, moduleName : module}, function () {
+        melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config', { configId : configId , siteId : siteId, moduleName : module , cacheData : gdprAutoDelete.getFormData()}, function () {
             $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
         });
-    },
-    /**
-     * hide add/edit config
-     */
-    hideAddEditConfig: function () {
-        $("#add-edit-config-content").collapse('hide')
-    },
-    customHighlightLabelError : function(label){
-        $(label).css("color", "rgb(255, 0, 0);")
-    },
-    removecustomHighlightLabelError : function(label) {
-
     },
     deleteEverything : function(type, langId, configId) {
         // ajax
@@ -161,17 +149,17 @@ var gdprAutoDelete = {
                     callbackSuccess(data);
                 }
                 // show ok notification
-                melisHelper.melisOkNotification('GDPR Auto Delete', 'Successfully saved');
+                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
                 // show gdpr list of auto delete configuration
                 gdprAutoDelete.showListConfig();
                 // reload the table
                 $("#refresh-auto-delete-list").trigger('click');
                 // open gdpr config
-                gdprAutoDelete.openGdprAutoDeleteConfig(data.id);
+                gdprAutoDelete.openGdprAutoDeleteConfig(data.itemId);
                 // flash messenger
                 melisCore.flashMessenger();
             } else {
-                melisHelper.melisKoNotification('GDPR Auto Delete', 'Unable to save', data.errors);
+                melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
                 // highlight form errors
                 gdprAutoDelete.highlightGdprFormErrors(data);
                 if (typeof callbackFail !== "undefined" && typeof callbackFail === "function") {
@@ -290,22 +278,44 @@ var gdprAutoDelete = {
     getAddEditFilters : function () {
         return $("#id_melisgdprautodelete_add_edit_config_filters").serialize();
     },
-    getAutoDeleteConfigDataBySiteIdModuleName : function (siteId, modulename) {
+    deleteConfig : function (id) {
+        // ajax
         $.ajax({
             type: "POST",
-            url: "/melis/MelisCore/MelisCoreGdprAutoDelete/getAutoDeleteConfigBySiteModule",
-            data: {
-                siteId : siteId,
-                moduleName : modulename
-            },
-            contentType: false,
-            processData: false,
-            cache: false,
+            url: "/melis/MelisCore/MelisCoreGdprAutoDelete/delete",
+            data: { id : id},
             dataType: 'json'
-        })
-    },
-    reloadData : function () {
+        }).done(function (data) {
+            if (data.success) {
+                // show ok notification
+                melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                // show gdpr list of auto delete configuration
+                gdprAutoDelete.showListConfig();
+                // reload the table
+                $("#refresh-auto-delete-list").trigger('click');
+                $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").addClass('d-none');
+                // flash messenger
+                melisCore.flashMessenger();
+            }
+            // set element done
+            melisCoreTool.done("#add-auto-delete-config");
+        }).fail(function () {
 
+        });
+    },
+    getFormData : function(){
+        // set first email setup form in order to get the file upload
+        var dataString = gdprAutoDelete.getEmailSetupData();
+        // set data for gdpr auto delete filters
+        dataString.append('auto_delete_filters', gdprAutoDelete.getAddEditFilters());
+        // set data for gdpr auto delete config
+        dataString.append('auto_delete_config', gdprAutoDelete.getConfigInputs());
+        // set data for gdpr alert emails warning translations
+        dataString.append('alert_emails_warning_trans', gdprAutoDelete.getAlertEmailsTransData());
+        // set data for gdpr alert emails delete translations
+        dataString.append('alert_emails_delete_trans', gdprAutoDelete.getAlertEmailsDeleteTransData());
+
+        return dataString;
     }
 
 };
@@ -314,6 +324,18 @@ var gdprAutoDelete = {
  */
 $(function () {
 
+    $body.on('click', ".btn-gdpr-delete-config", function(){
+        var btn = this;
+        melisCoreTool.confirm(
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
+            translations.tr_melis_core_gdpr_autodelete_config_delete_title,
+            translations.tr_melis_core_gdpr_autodelete_config_delete_message,
+            function(){
+                gdprAutoDelete.deleteConfig($(btn).parent().parent().parent().attr('id'))
+            }
+        );
+    });
     /*
      * add auto delet econfig
      */
