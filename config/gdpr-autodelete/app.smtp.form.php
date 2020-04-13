@@ -20,6 +20,9 @@ return [
                                     'spec' => [
                                         'name' => 'mgdpr_smtp_id',
                                         'type' => "hidden",
+                                        'attributes' => [
+                                            'id' => 'mgdpr_smtp_id'
+                                        ]
                                     ]
                                 ],
                                 [

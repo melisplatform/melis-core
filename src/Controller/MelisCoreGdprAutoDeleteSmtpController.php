@@ -46,8 +46,16 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
         $view = new ViewModel();
         // pass meliskey
         $view->setVariable('melisKey', $this->getMelisKey());
+        // get smtp config
+        $smtpConfigData = $this->getGdprAutoDeleteSmtpTable()->fetchAll()->current();
+        $hasConfig = false;
+        if (! empty($smtpConfigData)) {
+            $hasConfig = true;
+        }
         // smtp form
-        $view->setVariable('smtpForm', $this->getGdprAutoDeleteSmtpForm($this->getGdprAutoDeleteSmtpTable()->fetchAll()->current()));
+        $view->setVariable('smtpForm', $this->getGdprAutoDeleteSmtpForm($smtpConfigData));
+        // set has config
+        $view->setVariable('hasConfig', $hasConfig);
 
         return $view;
     }
@@ -119,6 +127,28 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
                 $this->formErrors = array_merge($this->translateFields($form->getMessages()), $this->formErrors);
             }
         }
+        return new JsonModel([
+            'success' => $success,
+            'item'    => $id,
+            'errors' => $this->formErrors
+        ]);
+    }
+
+    public function deleteSmtpAction()
+    {
+        $id = null;
+        $success = false;
+        // request
+        $request = $this->getRequest();
+        if ($request->isPost()){
+            $params = get_object_vars($request->getPost());
+            if ($params['id']) {
+                $id = $params['id'];
+                $this->getGdprAutoDeleteSmtpTable()->deleteById($params['id']);
+                $success = true;
+            }
+        }
+
         return new JsonModel([
             'success' => $success,
             'item'    => $id,

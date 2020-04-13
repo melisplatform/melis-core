@@ -23,6 +23,26 @@ var gdprautodeletesmtp = {
         }).fail(function () {
 
         });
+    },
+    deleteStmpConfig : function (id) {
+        $.ajax({
+            type: "POST",
+            url: "/melis/MelisCore/MelisCoreGdprAutoDeleteSmtp/deleteSmtp",
+            data: { id : id},
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.success) {
+                // show ok notification
+                melisHelper.melisOkNotification('GDPR auto delete SMTP', 'Successfully deleted');
+                melisHelper.zoneReload('id_meliscoregdpr_auto_delete_smtp_content',"meliscoregdpr_auto_delete_smtp_content");
+                // flash messenger
+                melisCore.flashMessenger();
+            } else {
+                melisHelper.melisKoNotification('GDPR auto delete SMTP', 'Unable to delete config', data.errors);
+            }
+        }).fail(function () {
+
+        });
     }
 };
 
@@ -30,5 +50,17 @@ $(function(){
     // save gdpr auto delete smtp
     $("body").on('click', "#save-smtp" , function(){
         gdprautodeletesmtp.saveSmtpConfig($("#melisgdprautodelete_smtp_form").serialize());
+    });
+    $("body").on('click', "#delete-smtp" , function(){
+        melisCoreTool.confirm(
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
+            "Delete smtp config",
+            "Are you sure you want to delete the current smtp config ?",
+            function(){
+                gdprautodeletesmtp.deleteStmpConfig($("#mgdpr_smtp_id").val());
+            }
+        );
+
     });
 });
