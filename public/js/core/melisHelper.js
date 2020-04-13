@@ -679,7 +679,7 @@ var melisHelper = (function(){
         }
     }
 
-    function loadingHtml(){
+    function loadingHtml() {
         return '<div id="loadingZone" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
     }
 
