@@ -107,7 +107,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_user_run_cron_start', $arrayParameters);
         // result
-        $results = false;
+        $results = [
+            'status' => false,
+            'mesasge' => ""
+        ];
         // retrieving list of modules and list of sites
         $autoDelConfig = $this->gdprAutoDeleteToolService->getAllGdprAutoDeleteConfigData();
         //etrieving list of users' emails for first warning
@@ -120,7 +123,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // send email for deleted users
                 $this->deleteSendEmailForDeletedUsers($config);
             }
-            $results = true;
+            $results['status'] = true;
+        } else {
+            $results['message'] = "No config data";
         }
 
         // Adding results to parameters for events treatment if needed
@@ -910,6 +915,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         $messageContent = null;
         $layoutFile = null;
+        if (empty($emailData['mgdprc_email_conf_layout'])) {
+            // we use the default layout from melis core
+            $emailData['mgdprc_email_conf_layout'] = 'melis-core/view/layout/layoutEmail.phtml';
+        }
         // file validator
         $layoutPathValidator = new Exists();
         // check layout first in vendor directory

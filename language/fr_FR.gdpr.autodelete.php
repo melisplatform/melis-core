@@ -7,6 +7,7 @@ return [
     'tr_melis_core_gdpr_autodelete_choose_module' => 'Please choose a module',
     'tr_melis_core_gdpr_autodelete_choose_site' => 'Please choose a site',
     'tr_melis_core_gdpr_autodelete_invalid_email' => 'Invalid email address',
+    'tr_meliscore_gdpr_auto_delete_not_int' => 'Value must be an integer',
     // cron config translations
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status' => 'Activate email warning',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip' => 'Activate automatic sending warning email',

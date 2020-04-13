@@ -518,7 +518,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                     $message = "tr_melis_core_gdpr_autodelete_config_update_ok";
                 } else {
                     unset($postValues['mgdprc_id']);
+                    /*
+                     * cast int
+                     */
                     $postValues['mgdprc_alert_email_days'] = (int) $postValues['mgdprc_alert_email_days'];
+                    $postValues['mgdprc_delete_days']      = (int) $postValues['mgdprc_delete_days'];
                     // new entry
                     $configId = $this->getGdprAutoDeleteToolService()->saveGdprAutoDeleteConfig($postValues);
                     $message = "tr_melis_core_gdpr_autodelete_config_save_ok";
@@ -563,7 +567,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         // perform delete
         if ($request->isPost()) {
             // delete
-            $configId = $this->getGdprAutoDeleteToolService()->deleteConfig($request->getPost('id'));
+            $configId = $request->getPost('id');
+            $this->getGdprAutoDeleteToolService()->deleteConfig($request->getPost('id'));
             $success = true;
         }
 
@@ -742,8 +747,10 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      */
     public function runGdprAutoDeleteCronAction()
     {
+        $autoDelete = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->run();
         return new JsonModel([
-            'success' => $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->run()
+            'success' => $autoDelete['status'],
+            'message' => $autoDelete['message']
         ]);
     }
 }

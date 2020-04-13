@@ -84,9 +84,7 @@ return [
                                             'class' => 'd-flex flex-row justify-content-between'
                                         ],
                                         'attributes' => [
-                                            'required' => 'required',
                                             'class' => 'form-control',
-                                            'value' => 1
                                         ],
 
                                     ]
@@ -100,7 +98,7 @@ return [
                                             'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days tooltip'
                                         ],
                                         'attributes' => [
-                                            'placeholder' => '100',
+                                            'placeholder' => '350',
                                             'class' => 'mgdprc_alert_email_days form-control col-md-2'
                                         ]
                                     ]
@@ -121,10 +119,6 @@ return [
                                                 'icon' => "glyphicon glyphicon-resize-horizontal",
                                             ]
                                         ],
-                                        'attributes' => [
-                                            'required' => 'required',
-                                            'value' => 1
-                                        ]
                                     ]
                                 ],
                                 [
@@ -136,9 +130,9 @@ return [
                                             'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip'
                                         ],
                                         'attributes' => [
-                                            'placeholder' => '100',
-                                            'required' => 'required',
-                                            'class' => 'mgdprc_delete_days form-control col-md-2'
+                                            'placeholder' => '350',
+                                            'class' => 'mgdprc_delete_days form-control col-md-2',
+                                            'required' => 'required'
                                         ]
                                     ]
                                 ]
@@ -149,10 +143,31 @@ return [
                                     'required' => true,
                                     'validators' => [
                                         [
-                                            'name' => 'NotEmpty',
+                                            'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_gdpr_auto_delete_not_int',
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    'filters' => [
+                                        [
+                                            'name' => 'StripTags'
+                                        ], [
+                                            'name' => 'StringTrim'
+                                        ]
+                                    ]
+                                ],
+                                'mgdprc_alert_email_days' => [
+                                    'name' => 'mgdprc_alert_email_days',
+                                    'required' => false,
+                                    'validators' => [
+                                        [
+                                            'name' => 'IsInt',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_gdpr_auto_delete_not_int',
                                                 ]
                                             ]
                                         ]

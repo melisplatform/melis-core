@@ -83,10 +83,10 @@ var gdprAutoDelete = {
      * open a gdpr auto delete config
      * @param configId
      */
-    openGdprAutoDeleteConfig : function (configId, siteId, module) {
+    openGdprAutoDeleteConfig : function (configId, siteId, module ) {
         // remove class d-none to show the add/edit config area
         $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
-        melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config', { configId : configId , siteId : siteId, moduleName : module , cacheData : gdprAutoDelete.getFormData()}, function () {
+        melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config', { configId : configId , siteId : siteId, moduleName : module }, function () {
             $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
         });
     },
