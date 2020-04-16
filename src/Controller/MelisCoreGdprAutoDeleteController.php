@@ -750,7 +750,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $autoDelete = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->run();
         return new JsonModel([
             'success' => $autoDelete['status'],
-            'message' => $autoDelete['message']
+            'message' => $autoDelete['message'] ?? null
         ]);
     }
 }
