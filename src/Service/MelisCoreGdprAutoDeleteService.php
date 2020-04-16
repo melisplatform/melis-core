@@ -356,6 +356,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         // trigger delete event
         $deletedUsers = $this->getDataOfAnEvent(self::DELETE_ACTION_EVENT, null, null , $autoDelConf);
+
         if (! empty($deletedUsers)) {
             foreach ($deletedUsers as $email => $emailOpts) {
                 // send email
@@ -406,10 +407,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         $userStatus = false;
         // compare the users inactive days to auto delete config (Alert email sent after inactivity of)
-        $usersDaysOfInactive = $this->getDaysDiff($emailOpt[self::CONFIG_KEY]['last_date'], date('Y-m-d'));
+        $usersDaysOfInactive = $this->getDaysDiff($emailOpt[self::CONFIG_KEY]['last_date'], date('Y-m-d h:i:s'));
         iF ($usersDaysOfInactive > $noOfDays) {
             $userStatus = true;
         }
+
 
         return $userStatus;
     }
@@ -436,7 +438,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     }
 
     /**
-     * calculate the diffrence of two dates in days
+     * calculate the diffrence of two dates in days ( datetime for testing)
      *
      * @param $date1
      * @param $date2
@@ -444,7 +446,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      */
     private function getDaysDiff($date1, $date2)
     {
-        return round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
+       // return round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
+        return round((time() - strtotime($date1)) / 60);
     }
     /**
      *
@@ -539,16 +542,16 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         $alertEmailData->mgdpre_link = $link;
                     }
                     // add suffix to email subject indication of email if it is first or second
-                    if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
-                        // default is first
-                        if (!$first) {
-                            // override
-                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " 2";
-                        } else {
-                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " 1";
-
-                        }
-                    }
+//                    if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
+//                        // default is first
+//                        if (!$first) {
+//                            // override
+//                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " 2";
+//                        } else {
+//                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " 1";
+//
+//                        }
+//                    }
                     // email setup content (layout information)
                     $emailSetupLayout = $this->replaceTagsForEmailLayout($emailSetupConfig['mgdprc_email_conf_tags'], $emailSetupConfig['email_setup_tags'], $emailSetupConfig['mgdprc_email_conf_layout_desc']);
                     // change the value of layout desc
@@ -559,6 +562,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     $textVersion =  $this->replaceTagsByModuleTags($alertEmailData->mgdpre_email_tags, $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
                     // check for errors
                     if (empty($htmlContent['errors']) && empty($textVersion['errors']) && empty($emailSetupLayout['errors'])) {
+
                         // send email
                         $this->sendEmail(
                             $emailSetupConfig['mgdprc_email_conf_from_email'],
@@ -569,7 +573,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                             $alertEmailData->mgdpre_subject,
                             $this->getEmailLayoutContent(
                                 $emailSetupConfig,
-                                $htmlContent['content']
+                                $htmlContent['content'] ?? $textVersion['content']
                             ),
                             $textVersion['content']
                         );
@@ -995,7 +999,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     // look for module tags
                     if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
                         // for value of revlidation url
-                        if ($moduleTags[$dbTag] == "%revalidation_url%") {
+                        if ($moduleTags[$dbTag] == "%revalidation_link%") {
                             // replace URL tag on the content
                             $fullUrl = $data->mgdpre_link . "?u=" . (isset($emailOptions['config']['validationKey']) ? $emailOptions['config']['validationKey'] : null);
                             // for tinymce html
