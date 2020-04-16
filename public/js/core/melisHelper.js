@@ -547,6 +547,9 @@ var melisHelper = (function(){
         // add the temp loader
         var tempLoader = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
         $("#"+zoneId).append(tempLoader);
+        
+        // add an inline css overflow: hidden
+        melisCoreTool.addOverflowHidden();
 
         $.ajax({
             url         : '/melis/zoneview',
@@ -556,6 +559,9 @@ var melisHelper = (function(){
         }).done(function(data) {
             // hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+            
+            // remove the inline style
+            melisCoreTool.removeOverflowHidden();
 
             setTimeout(function() {
                 if( data !== null ){

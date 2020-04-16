@@ -86,18 +86,37 @@ var melisTinyMCE = (function(){
 
     // TinyMCE  action event
     function tinyMceActionEvent(editor) {
-        /**
-        var targetId = editor.id;
-        */
         editor.on("change", function () {
             // Any changes will sync to the selector (Ex. textarea)
             // tinymce.triggerSave();
             editor.save();
         });
         
-        editor.on("init",function() {
+        editor.on("init", function() {
             tinyMceDialogInitAddTreeViewBtn(editor);
         });
+
+        var melisCmsInterval = setTimeout(function() {
+            var $pageEdition = $("[data-meliskey='meliscms_page'] .tab-pane.active").find(".iframe-container");
+                if ( $pageEdition.length > 0 ) {
+                    editor.on("focusout", function() {
+                        setUpPluginWidth( $(this) );                
+                    });
+
+                    //clearInterval( melisCmsInterval );
+                }
+
+                console.log("$pageEdition: ", $pageEdition);
+        }, 3000);
+    }
+
+    function setUpPluginWidth( el ) {
+        elWidth = $(el[0].targetElm.offsetParent).outerWidth();
+        //totalWidth = 
+
+        console.log("setUpPluginWidth called!");
+        console.log("$(el[0].targetElm): ", $(el[0].targetElm));
+        console.log("elWidth: ", elWidth);
     }
 
     // adding of add tree view button from dialog initialization
