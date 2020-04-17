@@ -151,7 +151,14 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisCoreGdprAlertEmailForm', $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailForm());
         // get alert email delete form
         $view->setVariable('melisCoreGdprAlertEmailDeleteForm', $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailDeleteForm());
-        // translations dataqweqwe
+        // translations data
+        if (!empty($this->getModuleName())) {
+            $tags = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getAllModulesListOfTags();
+            if (isset($tags[$this->getModuleName()]) && ! empty($tags[$this->getModuleName()])) {
+                $view->setVariable('module_tags', implode(',', array_keys($tags[$this->getModuleName()])));
+            }
+        }
+
         $view->setVariable('alertEmailsTransData', $this->getGdprAutoDeleteToolService()->getAlertEmailsTranslationsData($this->getConfigId()));
         // config id
         $view->setVariable('configId', $this->getConfigId());
