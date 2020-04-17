@@ -117,6 +117,21 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     }
 
     /**
+     * @return array
+     */
+    public function getCmsLang()
+    {
+        $service = [];
+
+        if ($this->getServiceLocator()->has('MelisEngineTableCmsLang')) {
+            /** @var MelisLangTable $melisCmsLang */
+            $service = $this->getServiceLocator()->get('MelisEngineTableCmsLang')->fetchAll()->toArray();
+        }
+
+        return $service;
+    }
+
+    /**
      * get the list of modules
      *
      * @return array

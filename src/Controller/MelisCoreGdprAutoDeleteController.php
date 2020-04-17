@@ -348,7 +348,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 $formattedData[$ctr]['mgdprc_module_name'] = $data[$ctr]['mgdprc_module_name'];
                 $formattedData[$ctr]['mgdprc_alert_email_status'] = $data[$ctr]['mgdprc_alert_email_status'] ? $data[$ctr]['mgdprc_alert_email_days'] . ($data[$ctr]['mgdprc_alert_email_days'] > 1 ? " days"  :  " day") . $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_WARNING) : "Deactivated";
                 $formattedData[$ctr]['mgdprc_alert_email_resend'] = $data[$ctr]['mgdprc_alert_email_resend'] ? "Activated" . $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_WARNING): "Deactivated";
-                $formattedData[$ctr]['mgdprc_delete_days'] = $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_DELETED);
+                $formattedData[$ctr]['mgdprc_delete_days'] = $data[$ctr]['mgdprc_delete_days'] . " days " . $this->getLocaleEmailTrans($data[$ctr]['mgdprc_id'], MelisGdprDeleteEmailsTable::EMAIL_DELETED);
             }
         } else {
             $formattedData = $data;
@@ -370,16 +370,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         if (!empty($data)) {
             foreach ($data as $idx => $val) {
                 if (!empty($val['mgdpre_html']) || !empty($val['mgdpre_text'])) {
-                    if ($type == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
-                        if ($ctr > 0) {
-                            $locale .= " / " .$this->getLocaleNameByLangId($val['mgdpre_lang_id']);
-                        } else {
-                            $locale .= $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
-                        }
-                        $ctr++;
-                    } else {
-                        $locale .= " / " . $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
-                    }
+                    $locale .= " / " . $this->getLocaleNameByLangId($val['mgdpre_lang_id']);
                 }
             }
         }

@@ -10,7 +10,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
         <div class="col-md-12">
             <div class="widget flex-row widget-inverse">
                 <div class="auto-delete-content">
-                    <h3 class="cron-info"><a href="#" data-toggle="modal" class="cron-info-toggle"  data-target="#modal">Click here to get information on how to activate automatic sending</a></h3>
+                    <h3 class="cron-info"><a href="#" data-toggle="modal" class="cron-info-toggle"  data-target="#modal"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_text_modal_link')?></a></h3>
                     <?php
                         if(!empty($this->zoneconfig['interface'])) {
                             foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {

@@ -41,7 +41,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
         // get melis core languages for nav
-        $view->setVariable('melisCoreLang', $this->getGdprAutoDeleteToolService()->getMelisCoreLang());
+        $view->setVariable('melisCmsLang', $this->getGdprAutoDeleteToolService()->getCmsLang());
         // set config id
         $this->setConfigId($this->params()->fromRoute('configId', $this->params()->fromQuery('configId'), null));
 
@@ -137,7 +137,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         // melisKey
         $view->setVariable('melisKey', $this->getMelisKey());
         // for contents
-        $view->setVariable('melisCoreLang', $this->getGdprAutoDeleteToolService()->getMelisCoreLang());
+        $view->setVariable('melisCmsLang', $this->getGdprAutoDeleteToolService()->getCmsLang());
         // get alert email form
         $view->setVariable('melisCoreGdprAlertEmailForm', $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailForm());
         // get alert email delete form
@@ -218,7 +218,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
             'searchKey' => isset($postData['search']['value']) ? $postData['search']['value'] : null,
             'start' => (int)$postData['start'],
             'limit' => (int)$postData['length'],
-            'siteId' => $postData['site_id'],
+            'siteId' => $postData['site_id'] ?? null,
             'moduleName' => $postData['module_name'],
         ];
     }

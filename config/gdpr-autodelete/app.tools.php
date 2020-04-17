@@ -65,12 +65,12 @@ return [
                                'sortable' => false,
                            ],
                            'mgdprc_alert_email_status' => [
-                               'text' => 'Warning 1',
+                               'text' => 'Alert 1',
                                'css' => ['width' => '25%', 'padding-right' => '0'],
                                'sortable' => false,
                            ],
                            'mgdprc_alert_email_resend' => [
-                               'text' => 'Warning 2',
+                               'text' => 'Alert 2',
                                'css' => ['width' => '25%', 'padding-right' => '0'],
                                'sortable' => false,
                            ],

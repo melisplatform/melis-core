@@ -434,11 +434,11 @@ return [
                                         'name' => 'mgdpre_email_tags',
                                         'type' => "text",
                                         'options' => [
-                                            'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
+                                            'tooltip' => "tr_melis_core_gdpr_autodelete_label_alert_email_tags tooltip",
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'Reminder on the list of accepted tags',
+                                            'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
                                         ]
                                     ],

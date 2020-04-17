@@ -135,7 +135,7 @@ return [
                                                                                 'meliscoregdpr_auto_delete_content_accordion_add_edit_config' => [
                                                                                     'conf' => [
                                                                                         'id' => 'id_meliscoregdpr_auto_delete_content_accordion_add_edit_config',
-                                                                                        'name' => 'Add / Edit auto delete congi',
+                                                                                        'name' => 'Add / Edit auto delete config',
                                                                                         'melisKey' => 'meliscoregdpr_auto_delete_content_accordion_add_edit_config',
                                                                                     ],
                                                                                     'forward' => [

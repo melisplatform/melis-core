@@ -121,7 +121,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // send mail for second warnign users
                 $this->sendEmailForSecondWarningUsers($config);
                 // send email for deleted users
-                $this->deleteSendEmailForDeletedUsers($config);
+//                $this->deleteSendEmailForDeletedUsers($config);
             }
             $results['status'] = true;
         } else {
@@ -237,6 +237,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $response = [];
         // get all modules warning list of users
         $modulesWarningListsOfUsers = $this->getAllModulesWarningListOfUsers();
+        print_r($modulesWarningListsOfUsers);
+        die;
         foreach ($modulesWarningListsOfUsers as $moduleName => $emails) {
             if ($moduleName == $autoDelConf['mgdprc_module_name']) {
                 // if alert email status is in active then we get the list of warning users to mailed for revalidation
