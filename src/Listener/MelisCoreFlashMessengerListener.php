@@ -12,9 +12,8 @@ namespace MelisCore\Listener;
 use Laminas\EventManager\EventInterface;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
 
-class MelisCoreFlashMessengerListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreFlashMessengerListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
 	
     public function attach(EventManagerInterface $events, $priority = 1)

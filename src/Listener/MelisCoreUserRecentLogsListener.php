@@ -12,9 +12,7 @@ namespace MelisCore\Listener;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 
-use MelisCore\Listener\MelisCoreGeneralListener;
-
-class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreUserRecentLogsListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {
@@ -50,7 +48,7 @@ class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implement
 						
 						$flashMsgSrv->addToFlashMessenger($title, $message, $icon, $log->log_date_added);
 					}
-        		
+
         		}
     	    }
         );

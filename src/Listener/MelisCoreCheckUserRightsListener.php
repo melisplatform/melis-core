@@ -11,17 +11,19 @@ namespace MelisCore\Listener;
 
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
-class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+
+class MelisCoreCheckUserRightsListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     const INTERVAL_TO_UPDATE = 5;
 
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents    = $events->getSharedManager();
-        $callBackHandler = $sharedEvents->attach('*', MvcEvent::EVENT_DISPATCH,
+        $this->attachEventListener(
+            $events,
+            '*',
+            MvcEvent::EVENT_DISPATCH,
             function ($e) {
 
                 $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
@@ -77,9 +79,8 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                         }
                     }
                 }
-
-            }, -10000);
-
-        $this->listeners[] = $callBackHandler;
+            },
+            -10000
+        );
     }
 }

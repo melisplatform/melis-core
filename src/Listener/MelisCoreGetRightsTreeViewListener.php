@@ -13,15 +13,13 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Session\Container;
 
-use MelisCore\Listener\MelisCoreGeneralListener;
-
 /**
  * Listenner for getting rights of MelisCore
  * - Interface exclusions
  * - Tools
  * Rights are added to session to combine with other modules
  */
-class MelisCoreGetRightsTreeViewListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreGetRightsTreeViewListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {

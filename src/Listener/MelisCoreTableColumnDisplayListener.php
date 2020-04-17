@@ -12,7 +12,7 @@ namespace MelisCore\Listener;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 
-class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreTableColumnDisplayListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {

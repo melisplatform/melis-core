@@ -14,7 +14,7 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Session\Container;
 
-class MelisCoreDashboardPluginRightsTreeViewListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreDashboardPluginRightsTreeViewListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {

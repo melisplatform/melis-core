@@ -11,10 +11,9 @@ namespace MelisCore\Listener;
 
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
 use Laminas\Session\Container;
 
-class MelisCoreNewPlatformListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreNewPlatformListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {
@@ -23,12 +22,10 @@ class MelisCoreNewPlatformListener extends MelisCoreGeneralListener implements L
             'MelisInstaller',
             'melis_install_new_platform_start',
         	function($e){
-
         		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$params = $e->getParams();
         		$container = new Container('melisinstaller');
         		$platforms = $params['siteDomain'];
-        		
                 $ctr = 0;
                 $container->platforms = array();
         		foreach($platforms as $platform) {
@@ -38,7 +35,6 @@ class MelisCoreNewPlatformListener extends MelisCoreGeneralListener implements L
         		          'plf_name' => $platform['environment']
         		        );
         		    }
-        		    
         		    $ctr++;
         		}
         	},

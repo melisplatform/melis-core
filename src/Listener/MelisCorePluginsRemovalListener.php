@@ -11,10 +11,9 @@ namespace MelisCore\Listener;
 
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
 use Laminas\Session\Container;
 
-class MelisCorePluginsRemovalListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCorePluginsRemovalListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {

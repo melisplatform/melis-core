@@ -12,7 +12,7 @@ namespace MelisCore\Listener;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 
-class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreAuthSuccessListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {

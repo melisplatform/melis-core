@@ -11,8 +11,8 @@ namespace MelisCore\Listener;
 
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
-class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+
+class MelisCoreMicroServiceRouteParamListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
 
     public function attach(EventManagerInterface $events, $priority = 1)

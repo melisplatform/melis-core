@@ -11,19 +11,15 @@ namespace MelisCore\Listener;
 
 use Laminas\EventManager\EventInterface;
 use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\AbstractListenerAggregate;
 
 /**
  * Melis General Listener implements detach
  * so that other listener can extends this class and not
  * redefine those
  */
-class MelisCoreGeneralListener 
+abstract class MelisGeneralListener extends AbstractListenerAggregate
 {
-    /**
-     * @var \Laminas\Stdlib\CallbackHandler[]
-     */
-    protected $listeners = array();
-    
 	protected function getControllerAction($e)
 	{
 		$routeMatch = $e->getRouteMatch();
@@ -80,15 +76,6 @@ class MelisCoreGeneralListener
                 $this->listeners[] = $sharedEvents->attach($identifier, $event, $listiner, $priority);
         }else{
             $this->listeners[] = $sharedEvents->attach($identifier, $eventName, $listiner, $priority);
-        }
-    }
-
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
-            }
         }
     }
 }

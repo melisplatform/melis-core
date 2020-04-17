@@ -14,9 +14,7 @@ use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
 
-use MelisCore\Listener\MelisCoreGeneralListener;
-
-class MelisCoreToolUserUpdateUserListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreToolUserUpdateUserListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {
