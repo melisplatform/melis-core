@@ -18,9 +18,8 @@ class MelisCoreDashboardPluginRightsTreeViewListener extends MelisCoreGeneralLis
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisCore',
             'meliscore_tooluser_getrightstreeview_start',
             function ($e) {
@@ -39,8 +38,8 @@ class MelisCoreDashboardPluginRightsTreeViewListener extends MelisCoreGeneralLis
                 // Merge the DashboardPlugin rights with other ones (from Core or other modules)
                 $container['action-tool-user-getrights-tmp'] = array_merge($container['action-tool-user-getrights-tmp'], $rightsDashboard);
             },
-            100);
+            100
+        );
 
-        $this->listeners[] = $callBackHandler;
     }
 }

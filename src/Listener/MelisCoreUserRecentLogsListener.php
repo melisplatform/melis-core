@@ -16,12 +16,10 @@ use MelisCore\Listener\MelisCoreGeneralListener;
 
 class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-	
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-        
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
         	'MelisCore',
             'meliscore_get_recent_user_logs',
         	function($e){
@@ -54,8 +52,7 @@ class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implement
 					}
         		
         		}
-    	});
-        
-        $this->listeners[] = $callBackHandler;
+    	    }
+        );
     }
 }

@@ -13,14 +13,13 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use MelisCore\Listener\MelisCoreGeneralListener;
 use Laminas\Session\Container;
+
 class MelisCoreNewPlatformListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-	
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-        
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisInstaller',
             'melis_install_new_platform_start',
         	function($e){
@@ -43,8 +42,7 @@ class MelisCoreNewPlatformListener extends MelisCoreGeneralListener implements L
         		    $ctr++;
         		}
         	},
-        100);
-        
-        $this->listeners[] = $callBackHandler;
+        100
+        );
     }
 }

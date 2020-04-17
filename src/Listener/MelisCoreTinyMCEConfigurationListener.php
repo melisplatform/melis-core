@@ -20,9 +20,8 @@ class MelisCoreTinyMCEConfigurationListener extends MelisCoreGeneralListener imp
 
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             '*',
             'meliscore_tinymce_config',
             function($e){
@@ -54,8 +53,7 @@ class MelisCoreTinyMCEConfigurationListener extends MelisCoreGeneralListener imp
                 );
             },
             // the priority number of your tinyMCE configuration listener should not be less than the value below
-            -10000);
-
-        $this->listeners[] = $callBackHandler;
+            -10000
+        );
     }
 }

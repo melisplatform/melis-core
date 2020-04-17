@@ -16,28 +16,23 @@ use Laminas\Session\Container;
 
 class MelisCorePluginsListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-	
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-        
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
         	'MelisCore',
-        	array(
+        	[
                 'melis_core_auth_login_ok'
-        	),
+        	],
         	function($e){
-
         		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$corePluginSvc = $sm->get('MelisCorePluginsService');
         		// check for new dashboard plugins
                 $corePluginSvc->checkDashboardPlugins();
                 // check for new templating plugins
                 $corePluginSvc->checkTemplatingPlugins();
-                
         	},
-        -1000);
-        
-        $this->listeners[] = $callBackHandler;
+        -1000
+        );
     }
 }

@@ -14,16 +14,13 @@ use Laminas\EventManager\ListenerAggregateInterface;
 
 class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisCore',
             'melis_core_auth_login_ok',
             function ($e) {
-
                 $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $table = $sm->get('MelisUserConnectionDate');
                 $params = $e->getParams();
@@ -49,11 +46,8 @@ class MelisCoreAuthSuccessListener extends MelisCoreGeneralListener implements L
                         'usr_last_login_date' => $params['login_date'],
                         'usr_is_online' => true,
                     ], $params['usr_id']);
-
                 }
             },
             -10000);
-
-        $this->listeners[] = $callBackHandler;
     }
 }

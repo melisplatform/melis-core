@@ -62,31 +62,31 @@ class MelisGenericTable extends MelisServiceManager
 
     public function fetchAll()
 	{
-		$resultSet = $this->tableGateway->select();
+		$resultSet = $this->getTableGateway()->select();
 		
 		return $resultSet;
 	}
 
 	public function getEntryById($id)
 	{
-		$rowset = $this->tableGateway->select(array($this->idField => (int)$id));
+		$rowset = $this->getTableGateway()->select(array($this->idField => (int)$id));
 		return $rowset;
 	}
 
 	public function getEntryByField($field, $value)
 	{
-		$rowset = $this->tableGateway->select(array($field => $value));
+		$rowset = $this->getTableGateway()->select(array($field => $value));
 		return $rowset;
 	}
 
 	public function deleteById($id)
 	{
-		return $this->tableGateway->delete(array($this->idField => (int)$id));
+		return $this->getTableGateway()->delete(array($this->idField => (int)$id));
 	}
 	
 	public function deleteByField($field, $value)
 	{
-		return $this->tableGateway->delete(array($field => $value));
+		return $this->getTableGateway()->delete(array($field => $value));
 	}
 	
 	public function save($datas, $id = null)
@@ -95,13 +95,13 @@ class MelisGenericTable extends MelisServiceManager
 
 		if ($this->getEntryById($id)->current())
 		{
-			$this->tableGateway->update($datas, array($this->idField => $id));
+			$this->getTableGateway()->update($datas, array($this->idField => $id));
 			return $id;
 		} 
 		else 
 		{
-			$this->tableGateway->insert($datas);
-			$insertedId = $this->tableGateway->lastInsertValue;
+			$this->getTableGateway()->insert($datas);
+			$insertedId = $this->getTableGateway()->lastInsertValue;
 			return $insertedId;
 		}
 	}
@@ -110,7 +110,7 @@ class MelisGenericTable extends MelisServiceManager
 	{
 	    if($this->getEntryByField($whereField, $whereValue)->current())
 	    {
-	        $this->tableGateway->update($datas, array($whereField => $whereValue));
+	        $this->getTableGateway()->update($datas, array($whereField => $whereValue));
 	    }
 	}
 	
@@ -137,8 +137,8 @@ class MelisGenericTable extends MelisServiceManager
 	 */
 	public function getTableColumns()
 	{
-	    $metadata = new MetaData($this->tableGateway->getAdapter());
-	    $columns = $metadata->getColumnNames($this->tableGateway->getTable());
+	    $metadata = new MetaData($this->getTableGateway()->getAdapter());
+	    $columns = $metadata->getColumnNames($this->getTableGateway()->getTable());
 	
 	    return $columns;
 	}
@@ -176,8 +176,8 @@ class MelisGenericTable extends MelisServiceManager
 	    $select = new Select();
 	
 	    $select->columns(array_keys($this->_selectedColumns));
-	    $select->from($this->tableGateway->getTable());
-	    $resultSet = $this->tableGateway->selectWith($select);
+	    $select->from($this->getTableGateway()->getTable());
+	    $resultSet = $this->getTableGateway()->selectWith($select);
 	    $resultSet->buffer();
 	    $this->_selectedValues = $resultSet;
 	
@@ -224,7 +224,7 @@ class MelisGenericTable extends MelisServiceManager
 	 */
 	public function getPagedData(array $options, $fixedCriteria = null)
 	{
-	    $select = $this->tableGateway->getSql()->select();
+	    $select = $this->getTableGateway()->getSql()->select();
 
 	    $where = !empty($options['where']['key']) ? $options['where']['key'] : '';
 	    $whereValue = !empty($options['where']['value']) ? $options['where']['value'] : '';
@@ -300,11 +300,11 @@ class MelisGenericTable extends MelisServiceManager
 	    if(!empty($order))
 	        $select->order($order . ' ' . $orderDir);
 
-//        $artistTable = new TableGateway($this->tableGateway->getTable(), $this->tableGateway->getAdapter());
+//        $artistTable = new TableGateway($this->$this->getTableGateway()->getTable(), $this->$this->getTableGateway()->getAdapter());
 //        $res = $artistTable->selectWith($select);
 //        dd($res->count());
 
-	    $getCount = $this->tableGateway->selectWith($select);
+	    $getCount = $this->getTableGateway()->selectWith($select);
 	    $this->setCurrentDataCount((int) $getCount->getFieldCount());
 
 
@@ -313,7 +313,7 @@ class MelisGenericTable extends MelisServiceManager
         $select->offset($start);
 
 
-        $resultSet = $this->tableGateway->selectWith($select);
+        $resultSet = $this->getTableGateway()->selectWith($select);
         
         return $resultSet;
 	}
@@ -325,14 +325,14 @@ class MelisGenericTable extends MelisServiceManager
 	 */
 	public function getTotalData($field = null, $idValue = null)
 	{
-	    $select = $this->tableGateway->getSql()->select();
+	    $select = $this->getTableGateway()->getSql()->select();
 	    
 	    if (!empty($field) && !empty($idValue))
 	    {
 	    	$select->where(array($field => (int) $idValue));
 	    }
 	    
-	    $resultSet = $this->tableGateway->selectWith($select);
+	    $resultSet = $this->getTableGateway()->selectWith($select);
 
 	    return $resultSet->getFieldCount();
 	}
@@ -354,7 +354,7 @@ class MelisGenericTable extends MelisServiceManager
 	 */
 	public function getDataForExport($filter, $columns = array())
 	{
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         $select->columns(array('*'));
         
         $w = new Where();
@@ -370,7 +370,7 @@ class MelisGenericTable extends MelisServiceManager
         
         $select->where($filters);
         
-        $resultSet = $this->tableGateway->selectWith($select);
+        $resultSet = $this->getTableGateway()->selectWith($select);
         
         return $resultSet;
         
@@ -399,10 +399,9 @@ class MelisGenericTable extends MelisServiceManager
 	
 	protected function getRawSql($select)
 	{
-	    $sql = $this->tableGateway->getSql();
+	    $sql = $this->getTableGateway()->getSql();
 	    $raw = $sql->getSqlstringForSqlObject($select);
 	
 	    return $raw;
 	}
-	
 }

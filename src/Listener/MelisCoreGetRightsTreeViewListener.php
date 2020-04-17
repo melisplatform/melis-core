@@ -25,10 +25,9 @@ class MelisCoreGetRightsTreeViewListener extends MelisCoreGeneralListener implem
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
         // Listening to Tool User start
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
         	'MelisCore',
         	'meliscore_tooluser_getrightstreeview_start',
         	function($e){
@@ -47,8 +46,7 @@ class MelisCoreGetRightsTreeViewListener extends MelisCoreGeneralListener implem
 	        	// Loading rights into session for further use
 	        	$container['action-tool-user-getrights-tmp'] = array_merge($container['action-tool-user-getrights-tmp'], $rightsCore);
         	},
-        100);
-
-        $this->listeners[] = $callBackHandler;
+        100
+        );
     }
 }

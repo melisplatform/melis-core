@@ -16,16 +16,14 @@ use Laminas\Session\Container;
 
 class MelisCorePluginsAdditionalListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisMarketPlace',
-            array(
+            [
                 'melis_marketplace_product_do_start'
-            ),
+            ],
             function($e){
                 $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $corePluginSvc = $sm->get('MelisCorePluginsService');
@@ -54,8 +52,7 @@ class MelisCorePluginsAdditionalListener extends MelisCoreGeneralListener implem
                     }
                 }
             },
-            -1000);
-
-        $this->listeners[] = $callBackHandler;
+            -1000
+        );
     }
 }

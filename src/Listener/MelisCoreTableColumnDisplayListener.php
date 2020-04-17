@@ -18,7 +18,8 @@ class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener imple
     {
         $sharedEvents      = $events->getSharedManager();
 
-        $this->listeners[] = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             '*',
             'melis_tool_column_display_dot_color',
             function($e){
@@ -30,7 +31,8 @@ class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener imple
             }
         );
 
-        $this->listeners[] = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             '*',
             'melis_tool_column_display_char_length_limit',
             function($e){
@@ -48,7 +50,8 @@ class MelisCoreTableColumnDisplayListener extends MelisCoreGeneralListener imple
             }
         );
 
-        $this->listeners[] = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             '*',
             'melis_tool_column_display_admin_name',
             function($e){

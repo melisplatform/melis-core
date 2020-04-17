@@ -15,16 +15,14 @@ use MelisCore\Listener\MelisCoreGeneralListener;
 use Laminas\Session\Container;
 class MelisCoreInstallNewPlatformListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
 {
-	
     public function attach(EventManagerInterface $events)
     {
-        $sharedEvents      = $events->getSharedManager();
-        
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
         	'MelisInstaller',
-        	array(
+        	[
                 'melis_install_last_process_start'
-        	),
+        	],
         	function($e){
 
         		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
@@ -47,8 +45,7 @@ class MelisCoreInstallNewPlatformListener extends MelisCoreGeneralListener imple
                     }
                 }
         	},
-        -1000);
-        
-        $this->listeners[] = $callBackHandler;
+        -1000
+        );
     }
 }

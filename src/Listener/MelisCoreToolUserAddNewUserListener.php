@@ -20,9 +20,8 @@ class MelisCoreToolUserAddNewUserListener extends MelisCoreGeneralListener imple
 	
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-        
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
         	'MelisCore',
         	'meliscore_tooluser_savenew_start', 
         	function($e){
@@ -62,8 +61,7 @@ class MelisCoreToolUserAddNewUserListener extends MelisCoreGeneralListener imple
                	if(!$success)
                     return;
         	},
-        100);
-        
-        $this->listeners[] = $callBackHandler;
+        100
+        );
     }
 }

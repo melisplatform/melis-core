@@ -17,9 +17,8 @@ class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener i
 
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisCore',
             'melis_core_microservice_route_param',
             function($e){
@@ -45,8 +44,6 @@ class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener i
                      * Sample string value: 1,3,1,4,1
                      */
                     $post['arrayParam'] = explode(',', $post['arrayParam']);
-
-
                 }
 
                 return array(
@@ -55,10 +52,8 @@ class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener i
                     'method'  => $method,
                     'post'    => $post
                 );
-
             },
-            -10000);
-
-        $this->listeners[] = $callBackHandler;
+            -10000
+        );
     }
 }
