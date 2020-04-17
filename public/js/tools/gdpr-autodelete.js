@@ -231,10 +231,6 @@ var gdprAutoDelete = {
             var form2 = $(form);
             // serialize array
             var dataString = form2.serialize();
-            if (typeof (form2.find('input[name="mgdpre_email_tags"]').data('tags')) !== 'undefined') {
-                // get tags
-                dataString += "&mgdpre_email_tags=" + form2.find('input[name="mgdpre_email_tags"]').data('tags').toString();
-            }
             dataString += "&mgdpre_lang_id=" + form2.data('langId') + "&mgdpre_type=1";
             // data lang locale
             alertEmailTransData.push({
@@ -255,10 +251,6 @@ var gdprAutoDelete = {
             var form2 = $(form);
             // serialize array
             var dataString = form2.serialize();
-            if (typeof (form2.find('input[name="mgdpre_email_tags"]').data('tags')) !== 'undefined') {
-                // get tags
-                dataString += "&mgdpre_email_tags=" + form2.find('input[name="mgdpre_email_tags"]').data('tags').toString();
-            }
             dataString += "&mgdpre_lang_id=" + form2.data('langId') + "&mgdpre_type=2";
             // data lang locale
             alertEmailTransData.push({

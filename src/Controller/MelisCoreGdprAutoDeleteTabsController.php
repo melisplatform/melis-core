@@ -100,10 +100,12 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisKey', $this->getMelisKey());
         // get email setup data
         $emailSetupData = $this->getGdprAutoDeleteToolService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
-        if (!empty($this->getModuleName())) {
+        if (!empty($this->getModuleName()) || isset($emailSetupData['mgdprc_module_name'])) {
+            // get tags
             $tags = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getAllModulesListOfTags();
-            if (isset($tags[$this->getModuleName()]) && ! empty($tags[$this->getModuleName()])) {
-                $emailSetupData['mgdprc_email_conf_tags'] = implode(',', array_keys($tags[$this->getModuleName()]));
+            $moduleName = $emailSetupData['mgdprc_module_name'] ?? $this->getModuleName();
+            if (! empty($moduleName)) {
+                $emailSetupData['mgdprc_email_conf_tags'] = implode(',', array_keys($tags[$moduleName]));
             }
         }
         // get form for the Cron Config
@@ -151,14 +153,16 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisCoreGdprAlertEmailForm', $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailForm());
         // get alert email delete form
         $view->setVariable('melisCoreGdprAlertEmailDeleteForm', $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailDeleteForm());
+        // get config data to get the module name
+        $emailSetupData = $this->getGdprAutoDeleteToolService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
         // translations data
-        if (!empty($this->getModuleName())) {
+        if (!empty($this->getModuleName()) || isset($emailSetupData['mgdprc_module_name'])) {
             $tags = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getAllModulesListOfTags();
-            if (isset($tags[$this->getModuleName()]) && ! empty($tags[$this->getModuleName()])) {
-                $view->setVariable('module_tags', implode(',', array_keys($tags[$this->getModuleName()])));
+            $moduleName = $emailSetupData['mgdprc_module_name'] ?? $this->getModuleName();
+            if (!empty($moduleName)) {
+                $view->setVariable('module_tags', implode(',', array_keys($tags[$moduleName])));
             }
         }
-
         $view->setVariable('alertEmailsTransData', $this->getGdprAutoDeleteToolService()->getAlertEmailsTranslationsData($this->getConfigId()));
         // config id
         $view->setVariable('configId', $this->getConfigId());

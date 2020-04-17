@@ -497,6 +497,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             unset($postValues['alert_emails_warning_trans']);
             // remove auto_delete_config key
             unset($postValues['alert_emails_delete_trans']);
+            unset($postValues['mgdprc_email_conf_tags']);
             // save data if no errors of forms
             if (empty($this->getFormErrors())) {
                 // save gdpr auto delete configs
@@ -641,9 +642,9 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         foreach (json_decode($jsonData, true) as $idx => $val) {
             // overwrite old data
             parse_str($val['data'], $parseData);
+            unset($parseData['mgdpre_email_tags']);
             $data[] = $parseData;
         }
-
 
         return $data;
     }

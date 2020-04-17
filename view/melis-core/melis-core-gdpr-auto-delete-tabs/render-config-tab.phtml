@@ -7,7 +7,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
 
 <div data-melisKey='<?= $this->melisKey ?>' class="tab-pane show active" id="<?= $this->zoneconfig['conf']['id']?>" role="tabpanel" aria-labelledby="<?= $this->zoneconfig['conf']['id'] ?>">
     <div id="accordion-cron-configuration">
-        <div class="card" style="border: none;">
+        <div class="card" style="border: none;margin-bottom:10px;">
             <div id="cron-configuration" >
                 <a data-toggle="collapse" class='toggle-arrow-indication arrow-down-sm-accordion' data-target="#cron-configuration-content" aria-expanded="true" aria-controls="cron-configuration" >
                     <h5 class="accordion-heading-title"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_cron_config_title')?></h5>
@@ -26,7 +26,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                 </div>
             </div>
         </div>
-        <div class="card" style="border: none;">
+        <div class="card" style="border: none;margin-bottom:10px;">
             <div id="email-setup" >
                 <a data-toggle="collapse" class="toggle-arrow-indication arrow-right-sm-accordion" data-target="#email-setup-content" aria-expanded="true" aria-controls="email-setup" >
                     <h5 class="accordion-heading-title" ><?= $this->translate('tr_melis_core_gdpr_autodelete_label_email_setup_title')?></h5>

@@ -75,67 +75,67 @@ $availableLang = "";
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- accordion account deleted emails -->
-            <div id="accordion-account-deleted-email-<?= $data['lang_cms_locale'] ?>" class="">
-                <div class="card" style="border: none;">
-                    <div id="alert-email">
-                        <a data-toggle="collapse" data-target="#account-deleted-email-<?= $data['lang_cms_locale'] ?>"
-                           aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10 toggle-arrow-indication arrow-right-sm-accordion">
-                            <h5 class="accordion-heading-title ">Account Deleted Email</h5>
-                        </a>
-                    </div>
-                    <div id="account-deleted-email-<?= $data['lang_cms_locale'] ?>" class="collapse accordion-content-bg"
-                         aria-labelledby="account-deleted-email-<?= $data['lang_cms_locale'] ?>"
-                         data-parent="#accordion-account-deleted-email-<?= $data['lang_cms_locale'] ?>">
-                        <?php if (! empty($this->configId)) {?>
-                            <h5 class="float-right">
-                                <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_cms_id']?>" data-config-id="<?= $this->configId ?>" data-email-type="2" style="text-decoration: underline">Delete everything</a>
-                            </h5>
-                        <?php }?>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <?php
-                                $this->melisCoreGdprAlertEmailDeleteForm->prepare();
-                                $formEmailDelete = clone $this->melisCoreGdprAlertEmailDeleteForm;
-                                // set form option according to lang_cms_locale
-                                $formEmailDelete->setAttribute('data-lang-locale', $data['lang_cms_locale']);
-                                // set lang id
-                                $formEmailDelete->setAttribute('data-lang-id', $data['lang_cms_id']);
-                                // set id
-                                $formEmailDelete->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_delete_' . $data['lang_cms_locale']);
-                                // set value for tags
-                                if (!empty($this->module_tags)) {
-                                    // remove url revalidation
-                                    $forDeleteTags = str_replace(',URL_VALIDATION', null, $this->module_tags);
-                                    $formEmailDelete->get('mgdpre_email_tags')->setValue($forDeleteTags);
-                                }
-                                if ($this->alertEmailsTransData) {
-                                    foreach ($this->alertEmailsTransData as $idx => $val) {
-                                        if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_DELETED &&
-                                            $val['mgdpre_lang_id'] == $data['lang_id']) {
-                                            $formEmailDelete->setData($val);
+                <!-- accordion account deleted emails -->
+                <div id="accordion-account-deleted-email-<?= $data['lang_cms_locale'] ?>" class="">
+                    <div class="card" style="border: none;">
+                        <div id="alert-email">
+                            <a data-toggle="collapse" data-target="#account-deleted-email-<?= $data['lang_cms_locale'] ?>"
+                               aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10 toggle-arrow-indication arrow-right-sm-accordion">
+                                <h5 class="accordion-heading-title ">Account Deleted Email</h5>
+                            </a>
+                        </div>
+                        <div id="account-deleted-email-<?= $data['lang_cms_locale'] ?>" class="collapse accordion-content-bg"
+                             aria-labelledby="account-deleted-email-<?= $data['lang_cms_locale'] ?>"
+                             data-parent="#accordion-alert-email-<?= $data['lang_cms_locale'] ?>">
+                            <?php if (! empty($this->configId)) {?>
+                                <h5 class="float-right">
+                                    <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_cms_id']?>" data-config-id="<?= $this->configId ?>" data-email-type="2" style="text-decoration: underline">Delete everything</a>
+                                </h5>
+                            <?php }?>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <?php
+                                    $this->melisCoreGdprAlertEmailDeleteForm->prepare();
+                                    $formEmailDelete = clone $this->melisCoreGdprAlertEmailDeleteForm;
+                                    // set form option according to lang_cms_locale
+                                    $formEmailDelete->setAttribute('data-lang-locale', $data['lang_cms_locale']);
+                                    // set lang id
+                                    $formEmailDelete->setAttribute('data-lang-id', $data['lang_cms_id']);
+                                    // set id
+                                    $formEmailDelete->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_delete_' . $data['lang_cms_locale']);
+                                    // set value for tags
+                                    if (!empty($this->module_tags)) {
+                                        // remove url revalidation
+                                        $forDeleteTags = str_replace(',URL_VALIDATION', null, $this->module_tags);
+                                        $formEmailDelete->get('mgdpre_email_tags')->setValue($forDeleteTags);
+                                    }
+                                    if ($this->alertEmailsTransData) {
+                                        foreach ($this->alertEmailsTransData as $idx => $val) {
+                                            if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_DELETED &&
+                                                $val['mgdpre_lang_id'] == $data['lang_cms_id']) {
+                                                $formEmailDelete->setData($val);
+                                            }
                                         }
                                     }
-                                }
-                                // form open tag
-                                echo $this->form()->openTag($formEmailDelete); ?>
-                                <?php foreach ($excludedFieldInLoop as $element) { ?>
-                                    <!-- render element -->
-                                    <?php
-                                    // check if the element is in the form
-                                    if ($formEmailDelete->has($element)) { ?>
-                                        <?php echo $this->melisFieldRow($formEmailDelete->get($element));
-                                    } ?>
-                                <?php } ?>
-                                <?php foreach ($formEmailDelete as $element => $options) { ?>
-                                    <?php if (!in_array($element, $excludedFieldInLoop)) { ?>
+                                    // form open tag
+                                    echo $this->form()->openTag($formEmailDelete); ?>
+                                    <?php foreach ($excludedFieldInLoop as $element) { ?>
                                         <!-- render element -->
-                                        <?= $this->melisFieldRow($formEmailDelete->get($element)) ?>
+                                        <?php
+                                        // check if the element is in the form
+                                        if ($formEmailDelete->has($element)) { ?>
+                                            <?php echo $this->melisFieldRow($formEmailDelete->get($element));
+                                        } ?>
                                     <?php } ?>
-                                <?php }
-                                ?>
-                                <?= $this->form()->closeTag() ?>
+                                    <?php foreach ($formEmailDelete as $element => $options) { ?>
+                                        <?php if (!in_array($element, $excludedFieldInLoop)) { ?>
+                                            <!-- render element -->
+                                            <?= $this->melisFieldRow($formEmailDelete->get($element)) ?>
+                                        <?php } ?>
+                                    <?php }
+                                    ?>
+                                    <?= $this->form()->closeTag() ?>
+                                </div>
                             </div>
                         </div>
                     </div>

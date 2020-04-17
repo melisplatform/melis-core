@@ -250,7 +250,8 @@ return [
                                         'attributes' => [
                                             'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_email_setup_tags',
                                             'class' => 'melis-multi-val-input',
-                                            'style' => 'width:0;'
+                                            'style' => 'width:0;',
+                                            'readonly' => 'true'
                                         ]
                                     ]
                                 ],
@@ -443,7 +444,8 @@ return [
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
-                                            'style' => 'width:0;'
+                                            'style' => 'width:0;',
+                                            'readonly' => 'true'
                                         ]
                                     ],
                                 ],
@@ -513,7 +515,8 @@ return [
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'Reminder on the list of accepted tags',
-                                            'style' => 'width:0;'
+                                            'style' => 'width:0;',
+                                            'readonly' => 'true'
                                         ]
                                     ],
                                 ],
@@ -559,20 +562,6 @@ return [
                                 ]
                             ],
                             'input_filter' => [
-                                'mgdpre_email_tags' => [
-                                    'name' => 'mgdpre_email_tags',
-                                    'required' => true,
-                                    'validators' => [
-                                        [
-                                            'name' => 'NotEmpty',
-                                            'options' => [
-                                                'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
-                                                ]
-                                            ]
-                                        ]
-                                    ],
-                                ],
                                 'mgdpre_html' => [
                                     'name' => 'mgdpre_html',
                                     'required' => true,
