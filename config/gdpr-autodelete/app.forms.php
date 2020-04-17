@@ -244,11 +244,13 @@ return [
                                         'type' => "text",
                                         'options' => [
                                             'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME]).",
+                                            'not_editable' => true,
+                                            'no_tags_text' => 'No tags available'
                                         ],
                                         'attributes' => [
                                             'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_email_setup_tags',
                                             'class' => 'melis-multi-val-input',
-                                            'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder'
+                                            'style' => 'width:0;'
                                         ]
                                     ]
                                 ],

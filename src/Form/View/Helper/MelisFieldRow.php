@@ -211,25 +211,45 @@ class MelisFieldRow extends FormRow
             // Get Value
             $dataTags = $element->getValue();
             // Set Input to Null value as default
-             $element->setAttribute('data-tags', $dataTags);
-             $element->setAttribute('value', null);
+            $element->setAttribute('data-tags', $dataTags);
+            // set value to null in order to hide the text
+            $element->setAttribute('value', null);
+            // get option if it's editable
+            $notEditable = $element->getOption('not_editable');
+            // text for no available tags
+            $textNoTags = $element->getOption('no_tags_text');
 
-            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' .$element->getOption('tooltip') . '"></i>';
-            
+            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i>';
+
             $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $element->getAttribute('data-label-text') . '</div>' . $multiValTooltip . '</label>';
             $getTags = explode(',', $dataTags);
             $ulStart = '<ul class="multi-value-input clearfix">';
-            $ulEnd   = '</ul>';
-            $liSpan  = '<li><span>%s</span><a class="remove-tag fa fa-times"></a></li>';
+            $ulEnd = '</ul>';
+            if ($notEditable) {
+                $liSpan = '<li><span>%s</span></li>';
+            } else {
+                $liSpan = '<li><span>%s</span><a class="remove-tag fa fa-times"></a></li>';
+            }
+
             $liInput = '<li class="tag-creator">' . parent::render($element, $labelPosition) . '</li>';
-            $tagItems= '';
+            $tagItems = '';
 
-            $multiValElement = $label . $ulStart.'';
-            if(!empty($dataTags))
-                foreach($getTags as $tagValues)
+            $multiValElement = $label . $ulStart . '';
+            if (!empty($dataTags)) {
+                foreach ($getTags as $tagValues) {
                     $tagItems .= sprintf($liSpan, $tagValues);
+                }
+            } else {
+                if ($notEditable) {
+                    if (! empty($textNoTags)) {
+                        $tagItems = "<span class='text-danger float-left' style='padding: 10px 0 5px;'> $textNoTags</span>";
+                    }
+                }
+            }
 
-            $multiValElement .=  $tagItems . $liInput. $ulEnd;
+
+            $multiValElement .= $tagItems . $liInput . $ulEnd;
+
 
             $formElement = '<div class="form-group">' . $multiValElement . '</div>';
 

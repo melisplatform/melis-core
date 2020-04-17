@@ -100,14 +100,23 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $view->setVariable('melisKey', $this->getMelisKey());
         // get email setup data
         $emailSetupData = $this->getGdprAutoDeleteToolService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
+        if (!empty($this->getModuleName())) {
+            $tags = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getAllModulesListOfTags();
+            if (isset($tags[$this->getModuleName()]) && ! empty($tags[$this->getModuleName()])) {
+                $emailSetupData['mgdprc_email_conf_tags'] = implode(',', array_keys($tags[$this->getModuleName()]));
+            }
+        }
         // get form for the Cron Config
         $view->setVariable('formCronConfig', $this->getGdprAutoDeleteToolService()->getAddEditCronConfigForm()->setData($emailSetupData));
         // get add edit email setup form
         $form = $this->getGdprAutoDeleteToolService()->getAddEditEmailSetupForm();
+        // add attributes to tags element
+        if (isset($emailSetupData['mgdprc_email_conf_tags'])) {
+            $form->get('mgdprc_email_conf_tags')->setAttribute('data-tags', $emailSetupData['mgdprc_email_conf_tags']);
+        }
         // set data
         if (! empty($emailSetupData)) {
             // set data tags for the mgdprc_email_conf_tags field
-            $form->get('mgdprc_email_conf_tags')->setAttribute('data-tags', $emailSetupData['mgdprc_email_conf_tags']);
             $form->setData($emailSetupData);
         }
         // get form for Email Setup
@@ -359,5 +368,10 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         return new JsonModel([
             'success' => true
         ]);
+    }
+
+    private function getModuleName()
+    {
+        return $this->params()->fromRoute('moduleName', $this->params()->fromQuery('moduleName'), null);
     }
 }
