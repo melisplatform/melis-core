@@ -9,6 +9,7 @@
 
 namespace MelisCore\Listener;
 
+use Laminas\EventManager\EventInterface;
 use Laminas\EventManager\EventManagerInterface;
 
 /**
@@ -38,6 +39,49 @@ class MelisCoreGeneralListener
 		
 		return array($controller, $action);
 	}
+
+    /**
+     * Melis Logging actions
+     *
+     * @param EventInterface $event
+     */
+    public function logMessages(EventInterface $event)
+    {
+        $params = $event->getParams();
+        $results = $event->getTarget()->forward()->dispatch(
+            \MelisCore\Controller\MelisFlashMessengerController::class,
+            array_merge(['action' => 'log'],
+            $params)
+        )->getVariables();
+    }
+
+    /**
+     * Attach a listener to an event emitted by components with specific identifiers.
+     *
+     * @param  EventManagerInterface $events
+     * @param  string $identifier Identifier for event emitting component
+     * @param  string $eventName
+     * @param  callable $listener Listener that will handle the event.
+     * @param  int $priority Priority at which listener should execute
+     *
+     */
+	public function attachEventListener(EventManagerInterface $events, $identifier, $eventName, callable $listiner,  $priority = 1)
+    {
+        $sharedEvents = $events->getSharedManager();
+
+        if (empty($eventName))
+            return;
+
+        if (!is_callable($listiner))
+            return;
+
+        if (is_array($eventName)) {
+            foreach ($eventName As $event)
+                $this->listeners[] = $sharedEvents->attach($identifier, $event, $listiner, $priority);
+        }else{
+            $this->listeners[] = $sharedEvents->attach($identifier, $eventName, $listiner, $priority);
+        }
+    }
 
     public function detach(EventManagerInterface $events)
     {

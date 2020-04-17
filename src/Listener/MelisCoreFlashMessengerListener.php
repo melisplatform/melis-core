@@ -19,7 +19,6 @@ class MelisCoreFlashMessengerListener extends MelisCoreGeneralListener implement
 	
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
         /**
          * Attach a listener to an event emitted by components with specific identifiers.
          *
@@ -53,18 +52,9 @@ class MelisCoreFlashMessengerListener extends MelisCoreGeneralListener implement
 
         $priority = -1000;
 
-        foreach ($eventsName As $event)
-            $this->listeners[] = $sharedEvents->attach($identifier, $event, [$this, 'logMessages'], $priority);
-    }
-
-    public function logMessages(EventInterface $event)
-    {
-        $sm = $event->getTarget()->getEvent()->getApplication()->getServiceManager();
-
-        $flashMessenger = $sm->get('MelisCoreFlashMessenger');
-        $params = $event->getParams();
-        $results = $event->getTarget()->forward()->dispatch(
-            \MelisCore\Controller\MelisFlashMessengerController::class,
-            array_merge(array('action' => 'log'), $params))->getVariables();
+        /**
+         * Attaching Events listiners
+         */
+        $this->attachEventListener($events, $identifier, $eventsName, [$this, 'logMessages'], $priority);
     }
 }
