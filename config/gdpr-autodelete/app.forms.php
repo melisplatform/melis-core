@@ -199,8 +199,8 @@ return [
                                         'name' => 'mgdprc_email_conf_from_name',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'Sender name',
-                                            'tooltip' => 'Name of the sender',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_name',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_name tooltip',
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'Melis technology',
@@ -213,8 +213,8 @@ return [
                                         'name' => 'mgdprc_email_conf_from_email',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'Sender email (From)',
-                                            'tooltip' => 'Email of the sender (from)',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email tooltip',
                                             'disable_inarray_validator' => true,
                                         ],
                                         'attributes' => [
@@ -229,8 +229,8 @@ return [
                                         'name' => 'mgdprc_email_conf_reply_to',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'Reply to',
-                                            'tooltip' => 'Reply to',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to tooltip',
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'noreply@melistechnology.com',
@@ -260,8 +260,8 @@ return [
                                         'name' => 'mgdprc_email_conf_layout',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout',
-                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout tooltip',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout tooltip',
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'melis-core/view/layout/layoutEmail.phtml',
@@ -274,8 +274,8 @@ return [
                                         'name' => 'mgdprc_email_conf_layout_title',
                                         'type' => "MelisText",
                                         'options' => [
-                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_title',
-                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_title tooltip',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip tooltip',
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'Melis Technology',
@@ -287,8 +287,8 @@ return [
                                         'name' => 'mgdprc_email_conf_layout_logo',
                                         'type' => "file",
                                         'options' => [
-                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_logo',
-                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_logo tooltip',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo tooltip',
                                             'filestyle_options' => [
                                                 'buttonBefore' => true,
                                                 'buttonText' => 'Choose',
@@ -304,8 +304,8 @@ return [
                                         'name' => 'mgdprc_email_conf_layout_desc',
                                         'type' => "MelisCoreTinyMCE",
                                         'options' => [
-                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc',
-                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_ftr_info tooltip',
                                         ],
                                     ]
                                 ]
