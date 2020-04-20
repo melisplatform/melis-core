@@ -121,7 +121,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // send mail for second warnign users
                 $this->sendEmailForSecondWarningUsers($config);
                 // send email for deleted users
-//                $this->deleteSendEmailForDeletedUsers($config);
+                $this->deleteSendEmailForDeletedUsers($config);
             }
             $results['status'] = true;
         } else {
@@ -218,7 +218,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         if (! empty($tags)) {
             foreach ($tags as $moduleName => $val) {
                 if ($autoDeleteConfig['mgdprc_module_name'] == $moduleName) {
-                    $autoDeleteConfig['email_setup_tags'] = $val;
+                    $autoDeleteConfig['email_setup_tags'] = array_keys($val);
                 }
             }
         }
@@ -237,8 +237,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $response = [];
         // get all modules warning list of users
         $modulesWarningListsOfUsers = $this->getAllModulesWarningListOfUsers();
-        print_r($modulesWarningListsOfUsers);
-        die;
         foreach ($modulesWarningListsOfUsers as $moduleName => $emails) {
             if ($moduleName == $autoDelConf['mgdprc_module_name']) {
                 // if alert email status is in active then we get the list of warning users to mailed for revalidation
@@ -555,13 +553,13 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 //                        }
 //                    }
                     // email setup content (layout information)
-                    $emailSetupLayout = $this->replaceTagsForEmailLayout($emailSetupConfig['mgdprc_email_conf_tags'], $emailSetupConfig['email_setup_tags'], $emailSetupConfig['mgdprc_email_conf_layout_desc']);
+                    $emailSetupLayout = $this->replaceTagsForEmailLayout($emailSetupConfig['email_setup_tags'], $emailSetupConfig['email_setup_tags'], $emailSetupConfig['mgdprc_email_conf_layout_desc']);
                     // change the value of layout desc
                     $emailSetupConfig['mgdprc_email_conf_layout_desc'] = $emailSetupLayout['content'];
                     // html email content
-                    $htmlContent = $this->replaceTagsByModuleTags($alertEmailData->mgdpre_email_tags, $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
+                    $htmlContent = $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'], $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
                     // text version email content
-                    $textVersion =  $this->replaceTagsByModuleTags($alertEmailData->mgdpre_email_tags, $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
+                    $textVersion =  $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'], $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
                     // check for errors
                     if (empty($htmlContent['errors']) && empty($textVersion['errors']) && empty($emailSetupLayout['errors'])) {
 
@@ -959,7 +957,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $tagsNoValue = [];
         if (! empty($dbTags)) {
             // explode tags
-            $dbTags = explode(',', $dbTags);
             foreach ($dbTags as $tag) {
                 if (strpos($content, "[" . $tag . "]")) {
                     if (isset($moduleTags[$tag]) && !empty($moduleTags[$tag])) {
@@ -985,43 +982,38 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $data
      * @param $emailOptions
      * @param $content
-     * @param $setupEmailConfig
      * @return mixed|string
      */
-    private function replaceTagsByModuleTags($tags, $data, $emailOptions, $content, $setupEmailConfig)
+    private function replaceTagsByModuleTags($tags, $data, $emailOptions, $content)
     {
-        $tagsNotFoundOnModule = [];
+        $tagsNoValue = [];
+        // module tags
         $moduleTags = $emailOptions['tags'];
-        if (!empty($tags)) {
-            // explode tags
-            $tags = explode(',', $tags);
+        if (!empty($moduleTags)) {
             // accepted tags
-            foreach ($tags as $idx => $dbTag) {
-                if (strpos($content, "[" . $dbTag . "]")) {
-                    // look for module tags
-                    if (isset($moduleTags[$dbTag]) && !empty($moduleTags[$dbTag])) {
-                        // for value of revlidation url
-                        if ($moduleTags[$dbTag] == "%revalidation_link%") {
-                            // replace URL tag on the content
-                            $fullUrl = $data->mgdpre_link . "?u=" . (isset($emailOptions['config']['validationKey']) ? $emailOptions['config']['validationKey'] : null);
-                            // for tinymce html
-                            $content = str_replace('/[' . $dbTag . ']', $fullUrl , $content);
-                            // for text version
-                            $content = str_replace('[' . $dbTag . ']', $fullUrl , $content);
-                        }
-                        // get email content and replace tags
-                        $content = str_replace('[' . $dbTag . ']', $moduleTags[$dbTag], $content);
+            foreach ($moduleTags as $tag => $tagValue) {
+                if (!empty($tagValue)) {
+                    // link
+                    if ($tagValue == '%revalidation_link%') {
+                        // replace URL tag on the content
+                        $fullUrl = $data->mgdpre_link . "?u=" . (isset($emailOptions['config']['validationKey']) ? $emailOptions['config']['validationKey'] : null);
+                        // for tinymce html
+                        $content = str_replace('/[' . $tag . ']', $fullUrl , $content);
+                        // for text version
+                        $content = str_replace('[' . $tag . ']', $fullUrl , $content);
                     } else {
-                        $tagsNotFoundOnModule[] = $dbTag;
+                        // get email content and replace tags
+                        $content = str_replace('[' . $tag . ']', $tagValue, $content);
                     }
+                } else {
+                    $tagsNoValue[] = $tag;
                 }
             }
         }
 
-
         return [
             'content' => $content,
-            'errors' => $tagsNotFoundOnModule
+            'errors' => $tagsNoValue
         ];
     }
 
