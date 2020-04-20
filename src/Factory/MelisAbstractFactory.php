@@ -41,8 +41,11 @@ class MelisAbstractFactory implements AbstractFactoryInterface
         /**
          * RequestedName must have Melis to create the service
          */
-        if (0 !== strpos($requestedName, self::SERVICE_PREFIX))
-            return false;
+//        $reflector = new \ReflectionClass($requestedName);
+//        if (0 !== strpos($requestedName, self::SERVICE_PREFIX) &&
+//            0 !== strpos($reflector->getFileName(), '\\module\\') &&
+//            0 !== strpos($reflector->getFileName(), '\\melisplatform\\'))
+//            return false;
 
         if (class_exists($requestedName)) {
             $instance = new $requestedName();
