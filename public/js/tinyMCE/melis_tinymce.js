@@ -96,28 +96,31 @@ var melisTinyMCE = (function(){
             tinyMceDialogInitAddTreeViewBtn(editor);
         });
 
-        var melisCmsInterval = setTimeout(function() {
-            var $pageEdition = $("[data-meliskey='meliscms_page'] .tab-pane.active").find(".iframe-container");
-                if ( $pageEdition.length > 0 ) {
-                    editor.on("focusout", function() {
-                        setUpPluginWidth( $(this) );                
-                    });
+        // focusout event for melis cms page edition
+        /* editor.on("focusout", function() {
+            var $this       = $(this),
+                $melisUI    = $($this[0].targetElm.offsetParent);
 
-                    //clearInterval( melisCmsInterval );
-                }
+                    if ( $melisUI.hasClass("melis-ui-outlined") ) {
+                        setUpPluginWidth( $melisUI );
+                    }
 
-                console.log("$pageEdition: ", $pageEdition);
-        }, 3000);
+                    console.log("$melisUI: ", $melisUI);
+        }); */
     }
 
-    function setUpPluginWidth( el ) {
-        elWidth = $(el[0].targetElm.offsetParent).outerWidth();
-        //totalWidth = 
+    // drag and drop plugin melis cms page edition
+    /* function setUpPluginWidth( el ) {
+        var parentWidth     = el.parent().outerWidth(),
+            elWidth         = el.outerWidth(),
+            toolBox         = el.children(".melis-plugin-tools-box");
 
-        console.log("setUpPluginWidth called!");
-        console.log("$(el[0].targetElm): ", $(el[0].targetElm));
-        console.log("elWidth: ", elWidth);
-    }
+            percentTotalWidth = ( 100 * elWidth / parentWidth );
+            percentTotalWidth = percentTotalWidth.toFixed(2);
+
+            // plugins.edition.js
+            melisPluginEdition.getPluginData( toolBox, percentTotalWidth );
+    } */
 
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {
