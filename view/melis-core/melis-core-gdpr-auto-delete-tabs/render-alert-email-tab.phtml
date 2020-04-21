@@ -40,10 +40,6 @@ $availableLang = "";
                                 $form->setAttribute('data-lang-id', $data['lang_cms_id']);
                                 // set id for forms
                                 $form->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_' . $data['lang_cms_locale']);
-                                // set value for tags
-                                if (!empty($this->module_tags)) {
-                                    $form->get('mgdpre_email_tags')->setValue($this->module_tags);
-                                }
                                 // set data
                                 if ($this->alertEmailsTransData) {
                                     foreach ($this->alertEmailsTransData as $idx => $val) {
@@ -53,6 +49,10 @@ $availableLang = "";
                                             $form->setData($val);
                                         }
                                     }
+                                }
+                                // set value for tags
+                                if (!empty($this->module_tags)) {
+                                    $form->get('mgdpre_email_tags')->setValue($this->module_tags);
                                 }
                                 // form open tag
                                 echo $this->form()->openTag($form); ?>
@@ -103,12 +103,6 @@ $availableLang = "";
                                     $formEmailDelete->setAttribute('data-lang-id', $data['lang_cms_id']);
                                     // set id
                                     $formEmailDelete->setAttribute('id', 'melisgdprautodelete_add_edit_alert_email_delete_' . $data['lang_cms_locale']);
-                                    // set value for tags
-                                    if (!empty($this->module_tags)) {
-                                        // remove url revalidation
-                                        $forDeleteTags = str_replace(',URL_VALIDATION', null, $this->module_tags);
-                                        $formEmailDelete->get('mgdpre_email_tags')->setValue($forDeleteTags);
-                                    }
                                     if ($this->alertEmailsTransData) {
                                         foreach ($this->alertEmailsTransData as $idx => $val) {
                                             if ($val['mgdpre_type'] == \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::EMAIL_DELETED &&
@@ -116,6 +110,12 @@ $availableLang = "";
                                                 $formEmailDelete->setData($val);
                                             }
                                         }
+                                    }
+                                    // set value for tags
+                                    if (!empty($this->module_tags)) {
+                                        // remove url revalidation
+                                        $forDeleteTags = str_replace(',URL_VALIDATION', null, $this->module_tags);
+                                        $formEmailDelete->get('mgdpre_email_tags')->setValue($forDeleteTags);
                                     }
                                     // form open tag
                                     echo $this->form()->openTag($formEmailDelete); ?>
