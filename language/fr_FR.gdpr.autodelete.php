@@ -57,4 +57,11 @@ return [
     'tr_melis_core_gdpr_autodelete_log_details_first_warning_heading' => 'Premier email d\'alerte',
     'tr_melis_core_gdpr_autodelete_log_details_second_warning_heading' => 'Deuxième email d\'alerte',
     'tr_melis_core_gdpr_autodelete_log_details_delete_alert_heading' => 'Email d\'alerte de suppression',
+    'tr_melis_core_gdpr_auto_delete_site' => 'Site',
+    'tr_melis_core_gdpr_auto_delete_site tooltip' => 'Sélectionnez le site',
+    'tr_melis_core_gdpr_auto_delete_module' => 'Module',
+    'tr_melis_core_gdpr_auto_delete_module tooltip' => 'Sélectionnez le module',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_tags tooltip' => 'Liste des tags disponibles pouvant être utilisés dans l\'email',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_link' => 'Page de validation',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_link tooltip' => 'Saisissez l\'identifiant de la page sur laquelle l\'utilisateur sera redirigé pour valider le statut',
 ];

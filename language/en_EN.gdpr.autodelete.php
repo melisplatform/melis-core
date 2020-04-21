@@ -63,13 +63,13 @@ return [
     'tr_melis_core_gdpr_autodelete_log_details_first_warning_heading' => 'First alert warning email',
     'tr_melis_core_gdpr_autodelete_log_details_second_warning_heading' => 'Second alert warning email',
     'tr_melis_core_gdpr_autodelete_log_details_delete_alert_heading' => 'Delete alert email',
-
-    'tr_melis_core_gdpr_auto_delete_site tooltip' => 'Site',
+    'tr_melis_core_gdpr_auto_delete_site' => 'Site',
+    'tr_melis_core_gdpr_auto_delete_site tooltip' => 'Select the site',
     'tr_melis_core_gdpr_auto_delete_module' => 'Module',
-    'tr_melis_core_gdpr_auto_delete_module tooltip' => 'Module',
-    'tr_melis_core_gdpr_autodelete_label_alert_email_tags tooltip' => 'Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])',
-    'tr_melis_core_gdpr_autodelete_label_alert_email_link' => 'User will validate status on page:',
-    'tr_melis_core_gdpr_autodelete_label_alert_email_link tooltip' => 'Link for revalidating user',
+    'tr_melis_core_gdpr_auto_delete_module tooltip' => 'Select the module',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_tags tooltip' => 'List of available tags that can be used in the email',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_link' => 'Validation page',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_link tooltip' => 'Type in the page ID on which the user will be redirected to validate the status',
 
 
 

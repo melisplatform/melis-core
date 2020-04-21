@@ -21,9 +21,9 @@ return [
                                         'name' => 'mgdprc_module_name',
                                         'type' => "MelisCoreGdprModuleSelect",
                                         'options' => [
-                                            'label' => 'Module',
-                                            'tooltip' => 'Module',
-                                            'empty_option' => 'Choose module',
+                                            'label' => 'tr_melis_core_gdpr_auto_delete_module',
+                                            'tooltip' => 'tr_melis_core_gdpr_auto_delete_module tooltip',
+                                            'empty_option' => 'tr_melis_core_gdpr_auto_delete_module tooltip',
                                             'disable_inarray_validator' => true,
                                         ],
                                         'attributes' => [
@@ -251,7 +251,7 @@ return [
                                             'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_email_setup_tags',
                                             'class' => 'melis-multi-val-input',
                                             'style' => 'width:0;',
-                                            'readonly' => 'true'
+                                            'disabled' => 'disabled'
                                         ]
                                     ]
                                 ],
@@ -275,7 +275,7 @@ return [
                                         'type' => "MelisText",
                                         'options' => [
                                             'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title',
-                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip tooltip',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip',
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'Melis Technology',
@@ -288,7 +288,7 @@ return [
                                         'type' => "file",
                                         'options' => [
                                             'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo',
-                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo tooltip',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_logo Tooltip',
                                             'filestyle_options' => [
                                                 'buttonBefore' => true,
                                                 'buttonText' => 'Choose',
@@ -445,7 +445,7 @@ return [
                                             'class' => 'melis-multi-val-input',
                                             'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
                                             'style' => 'width:0;',
-                                            'readonly' => 'true'
+                                            'disabled' => 'disabled'
                                         ]
                                     ],
                                 ],
@@ -454,8 +454,8 @@ return [
                                         'name' => 'mgdpre_subject',
                                         'type' => "text",
                                         'options' => [
-                                            'label' => 'Subject',
-                                            'tooltip' => 'Subject of the email',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject tooltip',
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control'
@@ -467,8 +467,8 @@ return [
                                         'name' => 'mgdpre_html',
                                         'type' => "MelisCoreTinyMCE",
                                         'options' => [
-                                            'label' => 'Message',
-                                            'tooltip' => 'Message of the email. When using tags place it inside [ ], ex [LINK]',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html tooltip',
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control'
@@ -480,8 +480,8 @@ return [
                                         'name' => 'mgdpre_text',
                                         'type' => "textarea",
                                         'options' => [
-                                            'label' => 'Text Version',
-                                            'tooltip' => 'Message of the email in text version',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text tooltip',
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control'
@@ -514,9 +514,9 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'Reminder on the list of accepted tags',
+                                            'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
                                             'style' => 'width:0;',
-                                            'readonly' => 'true'
+                                            'disabled' => 'disabled'
                                         ]
                                     ],
                                 ],
@@ -525,8 +525,8 @@ return [
                                         'name' => 'mgdpre_subject',
                                         'type' => "text",
                                         'options' => [
-                                            'label' => 'Subject',
-                                            'tooltip' => 'Subject of the email',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_subject tooltip',
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control',
@@ -538,8 +538,8 @@ return [
                                         'name' => 'mgdpre_html',
                                         'type' => "MelisCoreTinyMCE",
                                         'options' => [
-                                            'label' => 'Message',
-                                            'tooltip' => 'Message of the email. When using tags place it inside [ ], ex [LINK]',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html tooltip',
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control',
@@ -551,8 +551,8 @@ return [
                                         'name' => 'mgdpre_text',
                                         'type' => "textarea",
                                         'options' => [
-                                            'label' => 'Text Version',
-                                            'tooltip' => 'Message of the email in text version',
+                                            'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text',
+                                            'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text tooltip',
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control',

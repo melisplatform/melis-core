@@ -223,7 +223,7 @@ class MelisFieldRow extends FormRow
 
             $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $element->getAttribute('data-label-text') . '</div>' . $multiValTooltip . '</label>';
             $getTags = explode(',', $dataTags);
-            $ulStart = '<ul class="multi-value-input clearfix">';
+            $ulStart = '<ul class="multi-value-input clearfix" ' . ($notEditable ? "style=\"cursor:not-allowed\"" : null) . '>';
             $ulEnd = '</ul>';
             if ($notEditable) {
                 $liSpan = '<li><span>%s</span></li>';
@@ -246,14 +246,10 @@ class MelisFieldRow extends FormRow
                     }
                 }
             }
-
-
             $multiValElement .= $tagItems . $liInput . $ulEnd;
-
-
             $formElement = '<div class="form-group">' . $multiValElement . '</div>';
 
-        }elseif (strpos($element->getAttribute('class'), self::MELIS_DRAGGABLE_INPUT)){
+        } elseif (strpos($element->getAttribute('class'), self::MELIS_DRAGGABLE_INPUT)){
 
             $isDraggable = $element->getAttribute('data-draggable');
 
