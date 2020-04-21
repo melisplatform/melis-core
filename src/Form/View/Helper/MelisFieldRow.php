@@ -93,7 +93,7 @@ class MelisFieldRow extends FormRow
             // disect label and element so it would not be included in the switch feature
             $formElement = '<div class="form-group"><label for="'.$attrib['name'].'">'.$element->getLabel().'</label> '.$toggleButton.'</div>';
 
-        }elseif ($element->hasAttribute('meliscore-user-select2')){
+        } elseif ($element->hasAttribute('meliscore-user-select2')){
 
             $slct2Id = 'selec2-'.uniqid();
             $element->setEmptyOption('tr_meliscore_common_choose');
@@ -120,7 +120,7 @@ class MelisFieldRow extends FormRow
             $formElement .= 'melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\''.$tinyceId.'\']", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});';
             $formElement .= '</script>';
 
-        }elseif (!empty($element->getOption('switch_options'))){
+        } elseif (!empty($element->getOption('switch_options'))){
 
             $switchId = $element->getAttribute('id').uniqid();
             $switchOptions = $element->getOption('switch_options');
@@ -424,7 +424,12 @@ class MelisFieldRow extends FormRow
                             </div>';
 
         }elseif ($element->getOption('type') != 'hidden'){
-            $formElement = '<div class="form-group ' . $element->getOption('form_type') . '">'. parent::render($element, $labelPosition).'</div>';
+            $textAfter = null;
+            if ($element->getOption('text_after')) {
+                $textAfter  = " <span style='margin-left:5px;'>" . $element->getOption('text_after') . "</span>";
+            }
+
+            $formElement = '<div class="form-group ' . $element->getOption('form_type') . '">'. parent::render($element, $labelPosition). $textAfter. '</div>';
         }else{
             $formElement = parent::render($element, $labelPosition);
         }

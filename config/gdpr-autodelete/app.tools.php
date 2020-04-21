@@ -65,12 +65,12 @@ return [
                                'sortable' => false,
                            ],
                            'mgdprc_alert_email_status' => [
-                               'text' => 'Alert 1',
+                               'text' => 'tr_melis_core_gdpr_autodelete_label_table_col_alert_1',
                                'css' => ['width' => '25%', 'padding-right' => '0'],
                                'sortable' => false,
                            ],
                            'mgdprc_alert_email_resend' => [
-                               'text' => 'Alert 2',
+                               'text' => 'tr_melis_core_gdpr_autodelete_label_table_col_alert_2',
                                'css' => ['width' => '25%', 'padding-right' => '0'],
                                'sortable' => false,
                            ],

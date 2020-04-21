@@ -92,14 +92,16 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'mgdprc_alert_email_days',
-                                        'type' => "MelisText",
+                                        'type' => "text",
                                         'options' => [
                                             'label' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days',
-                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days tooltip'
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days tooltip',
+                                            'text_after' => "tr_melis_core_gdpr_autodelete_label_days_text"
                                         ],
                                         'attributes' => [
                                             'placeholder' => '350',
-                                            'class' => 'mgdprc_alert_email_days form-control col-md-2'
+                                            'class' => 'mgdprc_alert_email_days form-control col-md-2',
+                                            'style' => 'display:inline-block'
                                         ]
                                     ]
                                 ],
@@ -124,15 +126,17 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'mgdprc_delete_days',
-                                        'type' => "MelisText",
+                                        'type' => "text",
                                         'options' => [
                                             'label' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days',
-                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip'
+                                            'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip',
+                                            'text_after' => "tr_melis_core_gdpr_autodelete_label_days_text"
                                         ],
                                         'attributes' => [
                                             'placeholder' => '350',
                                             'class' => 'mgdprc_delete_days form-control col-md-2',
-                                            'required' => 'required'
+                                            'required' => 'required',
+                                            'style' => 'display:inline-block'
                                         ]
                                     ]
                                 ]
@@ -243,7 +247,7 @@ return [
                                         'name' => 'mgdprc_email_conf_tags',
                                         'type' => "text",
                                         'options' => [
-                                            'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME]).",
+                                            'tooltip' => "tr_melis_core_gdpr_autodelete_label_alert_email_tags tooltip",
                                             'not_editable' => true,
                                             'no_tags_text' => 'No tags available'
                                         ],
@@ -490,6 +494,7 @@ return [
                                 ],
                             ],
                             'input_filter' => [
+
                             ]
                         ],
                         // </editor-fold>
@@ -508,7 +513,7 @@ return [
                                         'name' => 'mgdpre_email_tags',
                                         'type' => "text",
                                         'options' => [
-                                            'tooltip' => "Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])",
+                                            'tooltip' => "tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip",
                                             'not_editable' => true,
                                             'no_tags_text' => 'No tags available'
                                         ],

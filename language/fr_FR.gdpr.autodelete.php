@@ -12,6 +12,8 @@ return [
     'tr_melis_core_gdpr_autodelete_label_list_config_sub_heading' => 'Gérez ici vos configurations d\'auto suppression',
     'tr_melis_core_gdpr_autodelete_label_add_accordion_heading' => 'Ajouter une configuration',
     'tr_melis_core_gdpr_autodelete_label_edit_accordion_heading' => 'Editer une configuration',
+    'tr_melis_core_gdpr_autodelete_label_table_col_alert_1' => 'Alerte 1',
+    'tr_melis_core_gdpr_autodelete_label_table_col_alert_2' => 'Alerte 2',
     // interaces logs area
     'tr_melis_core_gdpr_autodelete_email_logs_show_details_btn' => 'Afficher les détails',
     // form filters translations
@@ -20,6 +22,7 @@ return [
     'tr_melis_core_gdpr_autodelete_invalid_email' => 'Adresse email invalide',
     'tr_meliscore_gdpr_auto_delete_not_int' => 'La valeur doit être un nombre entier',
     // cron config translations
+    'tr_melis_core_gdpr_autodelete_label_days_text' => 'Jour(s)',
     'tr_melis_core_gdpr_autodelete_label_cron_config_title' => 'Configuration du Cron',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status' => 'Activer l\'alerte email',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip' => 'Active ou désactive l\'email d\'alerte',

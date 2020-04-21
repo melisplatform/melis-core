@@ -12,6 +12,8 @@ return [
     'tr_melis_core_gdpr_autodelete_label_list_config_sub_heading' => 'Manage here your auto delete configurations',
     'tr_melis_core_gdpr_autodelete_label_add_accordion_heading' => 'Add configuration',
     'tr_melis_core_gdpr_autodelete_label_edit_accordion_heading' => 'Edit configuration',
+    'tr_melis_core_gdpr_autodelete_label_table_col_alert_1' => 'Alert 1',
+    'tr_melis_core_gdpr_autodelete_label_table_col_alert_2' => 'Alert 2',
     // interaces logs area
     'tr_melis_core_gdpr_autodelete_email_logs_show_details_btn' => 'Show details',
     // form filters translations
@@ -20,18 +22,19 @@ return [
     'tr_melis_core_gdpr_autodelete_invalid_email' => 'Invalid email address',
     'tr_meliscore_gdpr_auto_delete_not_int' => 'Value must be an integer',
     // cron config translations
+    'tr_melis_core_gdpr_autodelete_label_days_text' => 'Day(s)',
     'tr_melis_core_gdpr_autodelete_label_cron_config_title' => 'Cron config',
-    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status' => 'Activate email warning',
-    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip' => 'Activate automatic sending warning email',
+    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status' => 'Activate alert email',
+    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip' => 'Activate or not the alert email',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days' => 'Alert email sent after inactivity of:',
-    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days tooltip' => 'Number of days user\'s inactivity that cron will sent a warning email to the account',
+    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days tooltip' => 'Type in the numbers of days of inactivity of a user to send the alert email',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend' => 'Resend alert 7 days before deadline:',
-    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend tooltip' => 'Send warning email 7 days before the day of deletion',
+    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend tooltip' => 'Sends an alert email 7 days before the deadline',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days' => 'Account will be deleted automatically after an inactivity of:',
-    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip' => 'Number of days user\'s inactivity that cron will delete the account',
+    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip' => 'Type in the numbers of days of inactivity of a user after which the account is automatically deleted',
     // email setup form translations
     'tr_melis_core_gdpr_autodelete_label_email_setup_title' => 'Email Setup',
-    'tr_melis_core_gdpr_autodelete_label_email_setup_tags' => 'Reminder on the list of accepted tags',
+    'tr_melis_core_gdpr_autodelete_label_email_setup_tags' => 'Replacement tags available',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout' => 'Layout',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout tooltip' => 'Layout to be used in sending the mail. File must has .phtml extension.',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_title' => 'Layout title',
@@ -41,7 +44,7 @@ return [
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc' => 'Layout information',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip' => 'Content of the email, When using tags place it inside [ ], ex [LINK]',
     // alert emails translations
-    'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Reminder on the list of accepted tags',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Replacement tags available',
     'tr_melis_core_gdpr_autodelete_label_alert_email_validation_page' => 'User will validate status on page',
     'tr_melis_core_gdpr_autodelete_label_delete_everything' => 'Delete everything',
     // form erros
@@ -50,8 +53,8 @@ return [
     'tr_smtp_form_mgdpr_smtp_password' => 'Password',
     'tr_smtp_form_mgdpr_smtp_confirm_password' => 'Confirm password',
     // confirm delete
-    'tr_melis_core_gdpr_autodelete_config_delete_title' => 'Delete gdpr auto delete config',
-    'tr_melis_core_gdpr_autodelete_config_delete_message' => 'Are you sure you want to delete this auto delete config?',
+    'tr_melis_core_gdpr_autodelete_config_delete_title' => 'Delete configuration',
+    'tr_melis_core_gdpr_autodelete_config_delete_message' => 'Are you sure you want to delete this configuration?',
     // logs messages
     'tr_melis_core_gdpr_autodelete_config_title' => 'GDPR auto delete',
     'tr_melis_core_gdpr_autodelete_config_save_ko' => 'Unable to save gdpr auto delete config',

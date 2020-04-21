@@ -63,10 +63,10 @@ $availableLang = "";
                                         <?= $this->melisFieldRow($form->get($element)) ?>
                                     <?php }
                                 } ?>
-                                <?php foreach ($form as $element => $options) { ?>
+                                <?php foreach ($form as $element => $options) {  ?>
                                     <?php if (!in_array($element, $excludedFieldInLoop)) { ?>
                                         <!-- render element -->
-                                        <?= $this->melisFieldRow($form->get($element)) ?>
+                                        <?= $form->has($element) ? $this->melisFieldRow($form->get($element)) : null?>
                                     <?php } ?>
                                 <?php }
                                 ?>
