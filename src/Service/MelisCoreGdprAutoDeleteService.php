@@ -243,7 +243,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // if alert email status is in active then we get the list of warning users to mailed for revalidation
                 if ($autoDelConf['mgdprc_alert_email_status']) {
                     // check if the is days of inactivity set
-
                     if ($autoDelConf['mgdprc_alert_email_days'] > 0) {
                         // check if user is belong to current site of the config
                         foreach ($emails as $email => $emailOpts) {
@@ -300,41 +299,44 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             $modulesWarningListsOfUsers = $this->getSecondAlertUsers();
             if (!empty($modulesWarningListsOfUsers)) {
                 foreach ($modulesWarningListsOfUsers as $moduleName => $emails) {
-                    foreach ($emails as $email => $emailOpts) {
-                        // check sites of user if it belongs to the auto delete config
-                        if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'], $autoDelConf['mgdprc_site_id'])) {
-                            // check users inactive days
-                            if ($this->checkUsersInactiveDays7DaysBeforeDeadline($emailOpts, $autoDelConf['mgdprc_delete_days'])) {
-                                // send email
-                                // check if email is already emailed for second warning
-                                $data = $this->getEmailSentByValidationKey($emailOpts['config']['validationKey']);
-                                // send email
-                                $sendMail = $this->prepareSendWarningEmail(
-                                // merge tags
-                                    $this->mergeTagsConfig($autoDelConf),
-                                    $email,
-                                    $emailOpts,
-                                    MelisGdprDeleteEmailsTable::EMAIL_WARNING,
-                                    false
-                                );
-                                // if no errors then save to db
-                                if (! $sendMail['hasError']) {
-                                    // user was already mailed for revalidation and did not revalidate his account
-                                    if (!empty($data) && !$data->mgdprs_alert_email_second_sent) {
-                                        // update table gdpr delete email sent
-                                        $this->saveEmailsSentData([
-                                            'mgdprs_alert_email_second_sent'      => 1,
-                                            'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
-                                        ], $data->mgdprs_id);
-                                    } else {
-                                        // email of the user have not yet emailed, add new entry
-                                        $this->saveEmailsSentData([
-                                            'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
-                                            'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
-                                            'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
-                                            'mgdprs_alert_email_second_sent' => 1,
-                                            'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
-                                        ]);
+                    if ($moduleName == $autoDelConf['mgdprc_module_name'] && !empty($emails)) {
+                        foreach ($emails as $email => $emailOpts) {
+                            // check sites of user if it belongs to the auto delete config
+                            if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'], $autoDelConf['mgdprc_site_id'])) {
+                                // check users inactive days
+                                if ($this->checkUsersInactiveDays7DaysBeforeDeadline($emailOpts, $autoDelConf['mgdprc_delete_days'])) {
+                                    // send email
+                                    // check if email is already emailed for second warning
+                                    $data = $this->getEmailSentByValidationKey($emailOpts['config']['validationKey']);
+                                    // send email
+                                    $sendMail = $this->prepareSendWarningEmail(
+                                    // merge tags
+                                        $this->mergeTagsConfig($autoDelConf),
+                                        $email,
+                                        $emailOpts,
+                                        MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                                        false
+                                    );
+                                    // if no errors then save to db
+                                    if (! $sendMail['hasError']) {
+                                        // user was already mailed for revalidation and did not revalidate his account
+                                        if (!empty($data) && !$data->mgdprs_alert_email_second_sent) {
+                                            // update table gdpr delete email sent
+                                            $this->saveEmailsSentData([
+                                                'mgdprs_alert_email_second_sent'      => 1,
+                                                'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
+                                            ], $data->mgdprs_id);
+                                        } else {
+                                            // email of the user have not yet emailed, add new entry
+                                            $this->saveEmailsSentData([
+                                                'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
+                                                'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
+                                                'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
+                                                'mgdprs_alert_email_second_sent' => 1,
+                                                'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
+                                                'mgdprs_account_id' => $emailOpts['config']['account_id'],
+                                            ]);
+                                        }
                                     }
                                 }
                             }
