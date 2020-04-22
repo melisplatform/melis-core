@@ -864,6 +864,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $messageText,
                 $this->getSmtpConfig());
         } catch (\Exception $error) {
+            echo $error->getMessage();
             $this->errors = "Technical error";
         }
 
