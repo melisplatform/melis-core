@@ -358,18 +358,21 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         // trigger delete event
         $deletedUsers = $this->getDataOfAnEvent(self::DELETE_ACTION_EVENT, null, null , $autoDelConf);
-
         if (! empty($deletedUsers)) {
-            foreach ($deletedUsers as $email => $emailOpts) {
-                // send email
-                $this->prepareSendWarningEmail(
-                    $this->mergeTagsConfig($autoDelConf),
-                    $email,
-                    $emailOpts,
-                    MelisGdprDeleteEmailsTable::EMAIL_DELETED
-                );
-                // delete entries on email sent table
-                $this->deleteEmailsSentTable->deleteByField('mgdprs_account_id', $emailOpts[self::CONFIG_KEY]['account_id']);
+            foreach ($deletedUsers as $module => $emails) {
+                if ($module == $autoDelConf['mgdprc_module_name'] && !empty($emails)) {
+                    foreach ($emails as $email => $emailOpts) {
+                        // send email
+                        $this->prepareSendWarningEmail(
+                            $this->mergeTagsConfig($autoDelConf),
+                            $email,
+                            $emailOpts,
+                            MelisGdprDeleteEmailsTable::EMAIL_DELETED
+                        );
+                        // delete entries on email sent table
+                        $this->deleteEmailsSentTable->deleteByField('mgdprs_account_id', $emailOpts[self::CONFIG_KEY]['account_id']);
+                    }
+                }
             }
         }
     }
