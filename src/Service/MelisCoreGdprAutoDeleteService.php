@@ -12,6 +12,7 @@ namespace MelisCore\Service;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
+use Zend\Mail\Protocol\Smtp\Auth\Plain;
 use Zend\Validator\File\Exists;
 use Zend\Validator\File\Extension;
 use Zend\View\Model\JsonModel;
@@ -580,7 +581,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                 $emailSetupConfig,
                                 $htmlContent['content'] ?? $textVersion['content']
                             ),
-                            $textVersion['content']
+                            $textVersion['content'],
+                            $this->getSmtpConfig()
                         );
                         if (empty($this->errors)) {
                             // save log ok
@@ -610,6 +612,28 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         }
 
         return $response;
+    }
+
+    private function getSmtpConfig()
+    {
+        $smtpDataConfig = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
+        $smtpConfig = [];
+        $connectionClass = new Plain('mgdpr_smtp_host',587,['username' => $smtpDataConfig['mgdpr_smtp_username'], 'password' => $smtpDataConfig['mgdpr_smtp_password']]);
+        if (!empty($smtpDataConfig) && !empty($smtpDataConfig->mgdpr_smtp_host)) {
+            $smtpDataConfig = (array) $smtpDataConfig;
+            $smtpConfig = [
+                'host'            => $smtpDataConfig['mgdpr_smtp_host'],
+                'name'            => $smtpDataConfig['mgdpr_smtp_host'],
+                'port'            => 587,
+                'connectionClass' => $connectionClass,
+                'username'        => $smtpDataConfig['mgdpr_smtp_username'],
+                'password'        => $smtpDataConfig['mgdpr_smtp_password'],
+                'ssl'             => 'tls',
+            ];
+        }
+
+
+        return $smtpConfig;
     }
 
     /**
@@ -829,23 +853,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $replyTo,
         $subject,
         $messageHtml,
-        $messageText = null
+        $messageText = null,
+        $smtpConfig = null
     ) {
-        $smtpDataConfig = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
-        $smtpConfig = [];
-        if (!empty($smtpDataConfig) && !empty($smtpDataConfig->mgdpr_smtp_host)) {
-            $smtpDataConfig = (array) $smtpDataConfig;
-            $smtpConfig = [
-                'host'            => $smtpDataConfig['mgdpr_smtp_host'],
-                'name'            => $smtpDataConfig['mgdpr_smtp_host'],
-                'port'            => 587,
-                'connectionClass' => 'plain',
-                'username'        => $smtpDataConfig['mgdpr_smtp_username'],
-                'password'        => $smtpDataConfig['mgdpr_smtp_password'],
-                'ssl'             => 'tls',
-            ];
-
-        }
         try {
             $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
                 $emailFrom,
