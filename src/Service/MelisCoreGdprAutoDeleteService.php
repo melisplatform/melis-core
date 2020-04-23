@@ -359,6 +359,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         // trigger delete event
         $deletedUsers = $this->getDataOfAnEvent(self::DELETE_ACTION_EVENT, null, null , $autoDelConf);
+
         if (! empty($deletedUsers)) {
             foreach ($deletedUsers as $module => $emails) {
                 if ($module == $autoDelConf['mgdprc_module_name'] && !empty($emails)) {
@@ -622,7 +623,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'host'            => $smtpDataConfig['mgdpr_smtp_host'],
                 'name'            => $smtpDataConfig['mgdpr_smtp_host'],
                 'port'            => 587,
-                'connectionClass' => 'login',
+                'connectionClass' => 'plain',
                 'username'        => $smtpDataConfig['mgdpr_smtp_username'],
                 'password'        => $smtpDataConfig['mgdpr_smtp_password'],
                 'ssl'             => 'tls',
@@ -898,7 +899,13 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         }
                     }
                 } else {
-                    $data = $list->current();
+                    foreach ($list->current() as $moduleName => $moduleOptions) {
+                        if (!is_null($subKeyToRetrieve)) {
+                            $data[$moduleName] = $moduleOptions[$subKeyToRetrieve] ?? [];
+                        } else {
+                            $data[$moduleName] = $moduleOptions;
+                        }
+                    }
                 }
             }
         };
