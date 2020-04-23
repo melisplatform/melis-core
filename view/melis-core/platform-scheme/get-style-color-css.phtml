@@ -303,11 +303,6 @@ body .navbar.main.navbar-primary {
     border-color: <?= $primaryColor; ?>;
 }
 
-.bs-tooltip-auto[x-placement^=left] .arrow::before, 
-.bs-tooltip-left .arrow::before {
-    border-left-color: <?= $secondaryColor; ?>;
-}
-
 /* Buttons */
 .btn-primary {
     background: <?= $primaryColor; ?>;
@@ -818,7 +813,22 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-left-color: <?= $secondaryColor; ?>;
 }
 
-
+.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
+.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: <?= $secondaryColor; ?>;
+}
+.bs-tooltip-auto[x-placement^=top] .arrow::before,
+.bs-tooltip-top .arrow::before {
+    border-top-color: <?= $secondaryColor; ?>;
+}
+.bs-tooltip-auto[x-placement^=right] .arrow::before,
+.bs-tooltip-right .arrow::before {
+    border-right-color: <?= $secondaryColor; ?>;
+}
+.bs-tooltip-auto[x-placement^=left] .arrow::before, 
+.bs-tooltip-left .arrow::before {
+    border-left-color: <?= $secondaryColor; ?>;
+}
 
 .tickets li .media-heading {
     color: <?= $secondaryColor; ?>;
