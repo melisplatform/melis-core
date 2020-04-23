@@ -622,7 +622,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'host'            => $smtpDataConfig['mgdpr_smtp_host'],
                 'name'            => $smtpDataConfig['mgdpr_smtp_host'],
                 'port'            => 587,
-                'connectionClass' => Plain::class,
+                'connectionClass' => 'login',
                 'username'        => $smtpDataConfig['mgdpr_smtp_username'],
                 'password'        => $smtpDataConfig['mgdpr_smtp_password'],
                 'ssl'             => 'tls',
