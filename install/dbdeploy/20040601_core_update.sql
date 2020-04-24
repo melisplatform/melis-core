@@ -123,7 +123,8 @@ CREATE TABLE `melis_core_gdpr_delete_emails_sent` (
   `mgdprs_alert_email_sent` tinyint(4) NOT NULL DEFAULT '0',
   `mgdprs_alert_email_sent_date` datetime DEFAULT NULL,
   `mgdprs_alert_email_second_sent` tinyint(4) NOT NULL DEFAULT '0',
-  `mgdprs_alert_email_second_sent_date` datetime NOT NULL DEFAULT NULL
+  `mgdprs_alert_email_second_sent_date` datetime NULL DEFAULT NULL
+  `mgdprs_account_id` INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
