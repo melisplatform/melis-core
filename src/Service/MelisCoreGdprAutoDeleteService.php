@@ -502,11 +502,12 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         // set template for the view
         $viewModel->setTemplate('mail-template');
         $uri = $this->getServiceLocator()->get('request')->getUri();
+        $url = $uri->getScheme() . "://" . $uri->getHost() . "/";
         // set variables for the view model
         $viewModel->setVariables([
             'title'          => $viewData['mgdprc_email_conf_layout_title'],
             'headerLogoLink' => 'https://www.google.com/',
-            'headerLogo'     => !empty($viewData['mgdprc_email_conf_layout_logo']) ?  $viewData['mgdprc_email_conf_layout_logo'] : "http://dev9.test.melistechnology.fr/img/MelisTech.png",
+            'headerLogo'     => !empty($viewData['mgdprc_email_conf_layout_logo']) ? $url .  $viewData['mgdprc_email_conf_layout_logo'] : $url . "/img/MelisTech.png",
             'footerInfo'     => $viewData['mgdprc_email_conf_layout_desc'],
             'content'        => wordwrap($content, FALSE),
             'fromName'       => $viewData['mgdprc_email_conf_from_name']
@@ -628,6 +629,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'password'        => $smtpDataConfig['mgdpr_smtp_password'],
                 'ssl'             => 'tls',
             ];
+
         }
 
         return $smtpConfig;
@@ -852,7 +854,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $messageHtml,
         $messageText = null
     ) {
-
         try {
             $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
                 $emailFrom,
