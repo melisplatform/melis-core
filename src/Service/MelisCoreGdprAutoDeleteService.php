@@ -561,7 +561,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 //                        }
 //                    }
                     // email setup content (layout information)
-                    $emailSetupLayout = $this->replaceTagsForEmailLayout($emailSetupConfig['email_setup_tags'], $emailSetupConfig['email_setup_tags'], $emailSetupConfig['mgdprc_email_conf_layout_desc']);
+                    $emailSetupLayout = $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'],$alertEmailData, $emailOptions, $emailSetupConfig['mgdprc_email_conf_layout_desc'], $emailSetupConfig);
                     // change the value of layout desc
                     $emailSetupConfig['mgdprc_email_conf_layout_desc'] = $emailSetupLayout['content'];
                     // html email content
