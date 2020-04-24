@@ -34,7 +34,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
         </div>
     <?php }  else {?>
         <div class="alert alert-warning">
-            <i><span><i class="fa fa-info-circle"></i> No logs data yet.</span></i>
+            <i><span><i class="fa fa-info-circle"></i> <?= $this->translate('tr_melis_core_gdpr_autodelete_log_empty_data')?></span></i>
         </div>
     <?php } ?>
     <?php
