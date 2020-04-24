@@ -31,7 +31,7 @@ return [
                                         'type' => "MelisText",
                                         'options' => [
                                             'label' => 'tr_smtp_form_mgdpr_smtp_host',
-                                            'tooltip' => "Host of the server",
+                                            'tooltip' => "tr_smtp_form_mgdpr_smtp_host tooltip",
                                         ],
                                         'attributes' => [
                                             'required' => 'required',
@@ -45,7 +45,7 @@ return [
                                         'type' => "MelisText",
                                         'options' => [
                                             'label' => 'tr_smtp_form_mgdpr_smtp_username',
-                                            'tooltip' => "Username of the user",
+                                            'tooltip' => "tr_smtp_form_mgdpr_smtp_username tooltip",
                                         ],
                                         'attributes' => [
                                             'required' => 'required',
@@ -59,7 +59,7 @@ return [
                                         'type' => "password",
                                         'options' => [
                                             'label' => 'tr_smtp_form_mgdpr_smtp_password',
-                                            'tooltip' => "Password of the user",
+                                            'tooltip' => "tr_smtp_form_mgdpr_smtp_password tooltip",
                                         ],
                                         'attributes' => [
                                             'required' => 'required',
@@ -74,7 +74,7 @@ return [
                                         'type' => "password",
                                         'options' => [
                                             'label' => 'tr_smtp_form_mgdpr_smtp_confirm_password',
-                                            'tooltip' => "Confirm password of the user",
+                                            'tooltip' => "tr_smtp_form_mgdpr_smtp_confirm_password tooltip",
                                         ],
                                         'attributes' => [
                                             'required' => 'required',

@@ -75,7 +75,7 @@ return [
                                'sortable' => false,
                            ],
                            'mgdprc_delete_days' => [
-                               'text' => 'Delete',
+                               'text' => 'tr_melis_core_gdpr_autodelete_label_table_col_delete_heading',
                                'css' => ['width' => '25%', 'padding-right' => '0'],
                                'sortable' => false,
                            ],

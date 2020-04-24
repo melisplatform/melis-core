@@ -15,9 +15,9 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                     <?= $this->melisFieldCollection($this->smtpForm) ?>
                     <?= $this->form()->closeTag($this->smtpForm) ?>
                     <div>
-                        <button class="btn btn-success float-right" id="save-smtp"><i class="fa fa-save"></i> Save</button>
+                        <button class="btn btn-success float-right" id="save-smtp"><i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_tool_gen_save') ?></button>
                         <?php if ($this->hasConfig) { ?>
-                            <button class="btn btn-danger float-left" id="delete-smtp"><i class="fa fa-times"></i> Delete smpt config</button>
+                            <button class="btn btn-danger float-left" id="delete-smtp"><i class="fa fa-times"></i> <?= $this->translate('tr_smtp_form_mgdpr_smtp_delete_smtp_config_btn')?></button>
                         <?php }?>
                         <div class="clearfix"></div>
                     </div>

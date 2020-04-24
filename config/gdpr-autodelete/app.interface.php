@@ -31,7 +31,7 @@ return [
                                                         'meliscoregdpr_auto_delete' => [
                                                             'conf' => [
                                                                 'id' => 'id_meliscoregdpr_auto_delete',
-                                                                'name' => 'Auto Delete',
+                                                                'name' => 'tr_melis_core_gdpr_autodelete_label_heading',
                                                                 'melisKey' => 'meliscoregdpr_auto_delete',
                                                                 'icon' => 'server_minus',
                                                             ],
