@@ -568,6 +568,8 @@ class ToolUserController extends AbstractActionController
             $userAddForm->setData($postValues);
 
             $userLogin = empty($postValues['usr_login']) ? null : $postValues['usr_login'];
+            $password = empty($postValues['usr_password']) ? '' : $postValues['usr_password'];
+            $confirmPass = empty($postValues['usr_confirm_password']) ? '' : $postValues['usr_confirm_password'];
             $language = empty($postValues['usr_lang_id']) ? 0 : (int)$postValues['usr_lang_id'];
             $roleId = empty($postValues['usr_role_id']) ? 0 : (int)$postValues['usr_role_id'];
 
@@ -587,72 +589,82 @@ class ToolUserController extends AbstractActionController
                         'label' => $translator->translate('tr_meliscore_tool_user_form_language')
                     ];
                 } else {
-                    $imageContent = null;
-                    // create tmp folder if not exists
-                    $dirName = $_SERVER['DOCUMENT_ROOT'] . '/media/';
-                    if (!file_exists($dirName) && is_writable($dirName)) {
-                        mkdir($dirName, 0777, true);
-                    }
+                    if ($password == $confirmPass) {
+                        $imageContent = null;
+                        // create tmp folder if not exists
+                        $dirName = $_SERVER['DOCUMENT_ROOT'] . '/media/';
+                        if (!file_exists($dirName) && is_writable($dirName)) {
+                            mkdir($dirName, 0777, true);
+                        }
 
-                    if (file_exists($dirName)) {
-                        $imageFile = $this->params()->fromFiles('usr_image');
+                        if (file_exists($dirName)) {
+                            $imageFile = $this->params()->fromFiles('usr_image');
 
-                        /** Ensuring file is an image */
-                        if($imageFile['tmp_name'] !== ""){
-                            $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
-                            if ($sourceImg === false) {
-                                $errors['usr_image'] = [
-                                    'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
-                                    'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
-                                ];
-                            } else {
-                                if (!empty($imageFile['tmp_name'])) {
-                                    $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
-                                }
-                                $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : null;
+                            /** Ensuring file is an image */
+                            if($imageFile['tmp_name'] !== ""){
+                                $sourceImg = @imagecreatefromstring(@file_get_contents($imageFile['tmp_name']));
+                                if ($sourceImg === false) {
+                                    $errors['usr_image'] = [
+                                        'invalidImage' => $translator->translate('tr_meliscore_tool_user_usr_image_error_invalid'),
+                                        'label' => $translator->translate('tr_meliscore_tool_user_col_profile'),
+                                    ];
+                                } else {
+                                    if (!empty($imageFile['tmp_name'])) {
+                                        $imgService->createThumbnail($dirName, $imageFile['name'], $imageFile['tmp_name']);
+                                    }
+                                    $imageContent = !empty($imageFile['tmp_name']) ? file_get_contents($dirName . 'tmb_' . $imageFile['name']) : null;
 
-                                // delete tmp image
-                                if (!empty($imageFile['tmp_name'])) {
-                                    unlink($dirName . 'tmb_' . $imageFile['name']);
+                                    // delete tmp image
+                                    if (!empty($imageFile['tmp_name'])) {
+                                        unlink($dirName . 'tmb_' . $imageFile['name']);
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    $data = $userAddForm->getData();
-                    // remove confirm pass when adding
-                    unset($data['usr_confirm_password']);
+                        $data = $userAddForm->getData();
+                        // remove confirm pass when adding
+                        unset($data['usr_confirm_password']);
 
-                    $data['usr_id'] = null;
-                    $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
-                    $data['usr_image'] = $imageContent;
-                    $data['usr_creation_date'] = date('Y-m-d H:i:s');
-                    $data['usr_last_login_date'] = null;
+                        $data['usr_id'] = null;
+                        $data['usr_password'] = $melisCoreAuth->encryptPassword($data['usr_password']);
+                        $data['usr_admin'] = ($data['usr_admin']) ? 1 : 0;
+                        $data['usr_image'] = $imageContent;
+                        $data['usr_creation_date'] = date('Y-m-d H:i:s');
+                        $data['usr_last_login_date'] = null;
 
-                    if ($roleId == 0 || $roleId == 1) {
-                        $data['usr_role_id'] = 1;
-                        $container = new Container('meliscore');
-                        if (!empty($container['action-tool-user-setrights-tmp'])) {
-                            $newXmlRights = '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0">';
-                            foreach ($container['action-tool-user-setrights-tmp'] as $xmlrights) {
-                                $newXmlRights .= $xmlrights;
+                        if ($roleId == 0 || $roleId == 1) {
+                            $data['usr_role_id'] = 1;
+                            $container = new Container('meliscore');
+                            if (!empty($container['action-tool-user-setrights-tmp'])) {
+                                $newXmlRights = '<?xml version="1.0" encoding="UTF-8"?><document type="MelisUserRights" author="MelisTechnology" version="2.0">';
+                                foreach ($container['action-tool-user-setrights-tmp'] as $xmlrights) {
+                                    $newXmlRights .= $xmlrights;
+                                }
+
+                                $newXmlRights .= '</document>';
+
+                                $data['usr_rights'] = $newXmlRights;
                             }
+                        } else {
+                            $data['usr_role_id'] = $roleId;
+                            $data['usr_rights'] = null;
+                        }
 
-                            $newXmlRights .= '</document>';
-
-                            $data['usr_rights'] = $newXmlRights;
+                        if (empty($errors)) {
+//                            $data['usr_status'] = 2;
+                            $data['usr_id'] = $userTable->save($data);
+                            if ($data['usr_id'] > 0) {
+                                $success = true;
+                            }
                         }
                     } else {
-                        $data['usr_role_id'] = $roleId;
-                        $data['usr_rights'] = null;
-                    }
-
-                    if (empty($errors)) {
-                        $data['usr_status'] = 2;
-                        $data['usr_id'] = $userTable->save($data);
-                        if ($data['usr_id'] > 0) {
-                            $success = true;
-                        }
+                        $success = false;
+                        $textMessage = 'tr_meliscore_tool_user_new_fail_pass';
+                        $errors['usr_password'] = [
+                            'user_exists' => $translator->translate($textMessage),
+                            'label' => $translator->translate('tr_meliscore_tool_user_col_password'),
+                        ];
                     }
                 }
             } else {
@@ -663,12 +675,6 @@ class ToolUserController extends AbstractActionController
                     $errors[$fieldName]['label'] = $userAddForm->get($fieldName)->getLabel();
                 }
             }
-        }
-
-        if($success){
-            /** @var MelisCoreCreatePasswordService $createPwdSvc */
-            $createPwdSvc = $this->getServiceLocator()->get('MelisCoreCreatePassword');
-            $createPwdSvc->generateCreatePassRequest($data['usr_login'],$data['usr_email']);
         }
 
         if (!empty($errors)) {
@@ -893,30 +899,30 @@ class ToolUserController extends AbstractActionController
             {
                 $userId              = (int) $tableData[$ctr]['usr_id'];
                 $online = (int) $tableData[$ctr]['usr_is_online'] ? 'text-success' : 'text-danger';
-                
+
                 $userConnectionTable = $this->getServiceLocator()->get('MelisUserConnectionDate');
                 $userConnectionData  = $userConnectionTable->getUserLastConnectionTime($userId, null, array(), 'usrcd_last_connection_time')->current();
-                
+
                 if($userConnectionData && $online == 'text-success')
                 {
                     $now                = new \DateTime(date("H:i:s"));
                     $lastConnectionTime = new \DateTime(date('H:i:s', strtotime($userConnectionData->usrcd_last_connection_time)));
                     $difference         = $lastConnectionTime->diff($now)->i;
-    
+
                     // if user has been away for 5mins, automatically set the user status to "offline"
                     if((int) $difference > 5) {
                         // update user status
                         $userTable->save([
                             'usr_is_online' => 0
                         ], $userId);
-                        
+
                         $online = 'text-danger';
                     }
                     else {
                         $userTable->save([
                             'usr_is_online' => 1
                         ], $userId);
-                        
+
                         $online = 'text-success';
                     }
                 }

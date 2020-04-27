@@ -35,12 +35,7 @@ return [
                                     'module' => 'MelisCore',
                                     'controller' => 'ToolUser',
                                     'action' => 'render-tool-user-content-filters-limit'
-                                ],
-                                'tooluser-status' => array(
-                                    'module' => 'MelisCore',
-                                    'controller' => 'ToolUser',
-                                    'action' => 'render-tool-user-content-filters-status'
-                                ),
+                                ]
                             ],
                             'center' => [
                                 'tooluser-search' => [
@@ -116,11 +111,6 @@ return [
                         // define what columns can be used in searching
                         'searchables' => ['usr_id', 'usr_status', 'usr_login', 'usr_email', 'usr_firstname', 'usr_lastname', 'usr_last_login_date', 'usr_email'],
                         'actionButtons' => [
-                            'regenerateLink' => array(
-                                'module' => 'MelisCore',
-                                'controller' => 'ToolUser',
-                                'action' => 'render-tool-user-content-action-regenerate-link',
-                            ),
                             'edit' => [
                                 'module' => 'MelisCore',
                                 'controller' => 'ToolUser',
@@ -251,6 +241,27 @@ return [
                                 ],
                                 [
                                     'spec' => [
+                                        'name' => 'usr_status',
+                                        'type' => 'Zend\Form\Element\Select',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_tool_user_col_status',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_status tooltip',
+                                            'empty_option' => 'tr_meliscore_common_choose',
+                                            'disable_inarray_validator' => true,
+                                            'value_options' => [
+                                                '0' => 'tr_meliscore_common_inactive',
+                                                '1' => 'tr_meliscore_common_active',
+                                            ],
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_n_usr_status',
+                                            'value' => '',
+                                            'required' => 'required',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
                                         'name' => 'usr_email',
                                         'type' => 'MelisText',
                                         'options' => [
@@ -262,6 +273,44 @@ return [
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_tool_user_col_Email',
                                             'required' => 'required',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'usr_password',
+                                        'type' => 'Password',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_tool_user_col_password',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_password tooltip',
+                                            'label_options' => [
+                                                'disable_html_escape' => true,
+                                            ],
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_usr_password_new',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_login_pass_placeholder',
+                                            'class' => 'form-control',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'usr_confirm_password',
+                                        'type' => 'Password',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_tool_user_col_confirm_password',
+                                            'tooltip' => 'tr_meliscore_tool_user_col_confirm_password tooltip',
+                                            'label_options' => [
+                                                'disable_html_escape' => true,
+                                            ],
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_usr_confirm_password_new',
+                                            'value' => '',
+                                            'placeholder' => 'tr_meliscore_login_pass_placeholder',
+                                            'class' => 'form-control',
                                         ],
                                     ],
                                 ],
@@ -385,6 +434,32 @@ return [
                                         ['name' => 'StringTrim'],
                                     ],
                                 ],
+                                'usr_status' => [
+                                    'name' => 'usr_status',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_status_error_empty',
+                                                ],
+                                            ],
+                                        ],
+                                        [
+                                            'name' => 'InArray',
+                                            'options' => [
+                                                'haystack' => [1, 0],
+                                                'messages' => [
+                                                    \Zend\Validator\InArray::NOT_IN_ARRAY => 'tr_meliscore_tool_user_usr_status_error_invalid',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'filters' => [
+                                    ],
+                                ],
                                 'usr_email' => [
                                     'name' => 'usr_email',
                                     'required' => true,
@@ -406,6 +481,87 @@ return [
                                                 'mx' => 'true',
                                                 'deep' => 'true',
                                                 'message' => 'tr_meliscore_tool_user_invalid_email',
+                                            ],
+                                        ],
+                                    ],
+                                    'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim'],
+                                    ],
+                                ],
+                                'usr_password' => [
+                                    'name' => 'usr_password',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_password_error_empty',
+                                                ],
+                                            ],
+                                        ],
+                                        [
+                                            'name' => '\MelisCore\Validator\MelisPasswordValidator',
+                                            'break_chain_on_failure' => true,
+                                            'options' => [
+                                                'min' => 8,
+                                                'messages' => [
+                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_error_low',
+                                                    \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                                    \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                                ],
+                                            ],
+                                        ],
+                                        [
+                                            'name' => 'StringLength',
+                                            'options' => [
+                                                'encoding' => 'UTF-8',
+                                                'max' => 255,
+                                                'messages' => [
+                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_password_error_long',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim'],
+                                    ],
+                                ],
+                                'usr_confirm_password' => [
+                                    'name' => 'usr_confirm_password',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_confirm_password_error_empty',
+                                                ],
+                                            ],
+                                        ],
+                                        [
+                                            'name' => '\MelisCore\Validator\MelisPasswordValidator',
+                                            'options' => [
+                                                'min' => 8,
+                                                'messages' => [
+                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_confirm_password_error_low',
+                                                    \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                                    \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                                ],
+                                            ],
+                                        ],
+                                        [
+                                            'name' => 'StringLength',
+                                            'options' => [
+                                                'encoding' => 'UTF-8',
+                                                'max' => 255,
+                                                'messages' => [
+                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_confirm_password_error_long',
+                                                ],
                                             ],
                                         ],
                                     ],
