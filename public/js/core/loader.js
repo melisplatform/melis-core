@@ -34,22 +34,30 @@ var loader = (function($, window) {
             });
         },
         pageEditionLoading = function() {
-            var $melisCmsPage       = $("[data-meliskey='meliscms_page']").find(".active"),
-                $iframeContainer    = $melisCmsPage.find(".iframe-container"),
-                $iframeTab          = $iframeContainer.find(".widget-body.tab-content .meliscms-page-tab-edition.active"),
-                $iframe             = $iframeTab.find(".melis-iframe");
+            var $melisCmsPage       = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active"),
+                $iframeContainer    = $melisCmsPage.find(".iframe-container");
 
                 if ( $melisCmsPage.length > 0 ) {
-                    $melisCmsPage.prepend(overlayLoader);
+                    $iframeContainer.parent().prepend(overlayLoader);
+                    melisCoreTool.addOverflowHidden();
+                }
+        },
+        removeEditionLoading = function() {
+            var $melisCmsPage       = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active"),
+                $loader             = $melisCmsPage.find("#loader");
+
+                if ( $loader.length > 0 ) {
+                    $loader.remove();
+                    melisCoreTool.removeOverflowHidden();
                 }
         };
 
+        init();
+
         return {
-            init : init
+            init : init,
+            pageEditionLoading : pageEditionLoading,
+            removeEditionLoading : removeEditionLoading
         };
 
 })(jQuery, window);
-
-/* $(function() {
-    loader.init();
-}); */
