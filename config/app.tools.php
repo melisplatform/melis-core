@@ -483,6 +483,14 @@ return [
                                                 'message' => 'tr_meliscore_tool_user_invalid_email',
                                             ],
                                         ],
+                                        [
+                                            'name' => 'regex', false,
+                                            'options' => [
+                                                'pattern' => '/^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9])*$/',
+                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
+                                                'encoding' => 'UTF-8',
+                                            ],
+                                        ],
                                     ],
                                     'filters' => [
                                         ['name' => 'StripTags'],

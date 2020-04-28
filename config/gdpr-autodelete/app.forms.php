@@ -344,7 +344,8 @@ return [
                                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
-                                        ], [
+                                        ],
+                                        [
                                             'name' => 'EmailAddress',
                                             'options' => [
                                                 'domain' => 'true',
@@ -353,7 +354,15 @@ return [
                                                 'deep' => 'true',
                                                 'message' => 'tr_melis_core_gdpr_autodelete_invalid_email',
                                             ]
-                                        ]
+                                        ],
+                                        [
+                                            'name' => 'regex', false,
+                                            'options' => [
+                                                'pattern' => '/^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9])*$/',
+                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
+                                                'encoding' => 'UTF-8',
+                                            ],
+                                        ],
                                     ],
                                     'filters' => [
                                         ['name' => 'StripTags'],
@@ -380,7 +389,15 @@ return [
                                                 'deep' => 'true',
                                                 'message' => 'tr_melis_core_gdpr_autodelete_invalid_email',
                                             ]
-                                        ]
+                                        ],
+                                        [
+                                            'name' => 'regex', false,
+                                            'options' => [
+                                                'pattern' => '/^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9])*$/',
+                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
+                                                'encoding' => 'UTF-8',
+                                            ],
+                                        ],
                                     ],
                                     'filters' => [
                                         ['name' => 'StripTags'],
