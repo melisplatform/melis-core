@@ -22,7 +22,7 @@ class MelisGdprDeleteEmailsSentTable extends MelisGenericTable
 		$this->idField = 'mgdprs_id';
 	}
 
-	public function getEmailSentByValidationKey($validationKey)
+	public function getEmailSentByValidationKey($validationKey,$moduleName)
     {
         // table selection query
         $select = $this->tableGateway->getSql()->select();
@@ -30,7 +30,21 @@ class MelisGdprDeleteEmailsSentTable extends MelisGenericTable
         $select->columns(array('*'));
         // email
         $select->where->equalTo('mgdprs_validation_key', $validationKey);
+        $select->where->equalTo('mgdprs_module_name', $moduleName);
 
         return $this->tableGateway->selectWith($select);
+    }
+
+    /**
+     * @param $accountId
+     * @param $module
+     * @return int
+     */
+    public function deleteSentLog($accountId, $module)
+    {
+        return $this->tableGateway->delete([
+            'mgdprs_module_name' => $module,
+            'mgdprs_account_id' => $accountId,
+        ]);
     }
 }
