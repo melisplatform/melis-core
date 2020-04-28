@@ -126,7 +126,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'mgdprc_delete_days',
-                                        'type' => "text",
+                                        'type' => "MelisText",
                                         'options' => [
                                             'label' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days',
                                             'tooltip' => 'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip',
@@ -146,6 +146,15 @@ return [
                                     'name' => 'mgdprc_delete_days',
                                     'required' => true,
                                     'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
+                                            'options' => [
+                                                'messages' => [
+                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                ]
+                                            ]
+                                        ],
                                         [
                                             'name' => 'IsInt',
                                             'options' => [
@@ -235,6 +244,7 @@ return [
                                         'options' => [
                                             'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to',
                                             'tooltip' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to tooltip',
+                                            'disable_inarray_validator' => true,
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'noreply@melistechnology.com',
@@ -321,6 +331,7 @@ return [
                                     'validators' => [
                                         [
                                             'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
                                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
@@ -339,6 +350,7 @@ return [
                                     'validators' => [
                                         [
                                             'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
                                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
@@ -375,12 +387,14 @@ return [
                                     'validators' => [
                                         [
                                             'name' => 'NotEmpty',
+                                            'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
                                                     \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
-                                        ], [
+                                        ],
+                                        [
                                             'name' => 'EmailAddress',
                                             'options' => [
                                                 'domain' => 'true',
