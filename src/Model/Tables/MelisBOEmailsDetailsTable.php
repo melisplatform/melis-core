@@ -9,10 +9,7 @@
 
 namespace MelisCore\Model\Tables;
 
-use Laminas\Db\TableGateway\TableGateway;
-use MelisCore\Model\Tables\Factory\TableGatewayInterface;
-
-class MelisBOEmailsDetailsTable extends MelisGenericTable implements TableGatewayInterface
+class MelisBOEmailsDetailsTable extends MelisGenericTable
 {
     /**
      * Model table
