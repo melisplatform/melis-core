@@ -163,10 +163,10 @@ var melisCore = (function(window){
         melisCoreTool.pending("#btnResetRights");
 
         melisCoreTool.confirm(
-            translations.tr_meliscmsnews_common_label_yes,
-            translations.tr_meliscmsnews_common_label_no,
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
             translations.tr_meliscore_tool_user_reset_rights,
-            translations.tr_meliscmsnews_common_label_reset_rights_msg,
+            translations.tr_meliscore_common_label_reset_rights_msg,
             function () {
                 resetUserRights();
             });
@@ -178,10 +178,10 @@ var melisCore = (function(window){
         melisCoreTool.pending("#btnResetRightsNew");
 
         melisCoreTool.confirm(
-            translations.tr_meliscmsnews_common_label_yes,
-            translations.tr_meliscmsnews_common_label_no,
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
             translations.tr_meliscore_tool_user_reset_rights,
-            translations.tr_meliscmsnews_common_label_reset_rights_msg,
+            translations.tr_meliscore_common_label_reset_rights_msg,
             function () {
                 var tree = $("#new-rights-fancytree").fancytree("getTree");
                 tree.findAll(function(node){
