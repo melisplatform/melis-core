@@ -161,18 +161,28 @@ var dashboardNotify = (function() {
 })();
 
 $(function() {
-    var activeModule    = $("#"+activeTabId).find(".melis-core-dashboard-msg").data("activeMods").split("-");
-        /* 
-         * Check if melisUserTabs is currently an active module.
-         * Negate to run the local dashboardNotify.init() function.
-         * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
-         * from with melisUserTabs ajax call.
-         */
-        
-        if ( !( $.inArray( "MelisUserTabs", activeModule ) !== -1 ) ) {
-            dashboardNotify.init();
+    var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
+        mods            = $dbMsg.data("activeMods"),
+        $noDbAccess     = $(".no-dashboard-access"),
+        activeModule    = ( mods !== undefined ) ? mods.match(/MelisUserTabs/g) : '';
+
+        if ( $dbMsg.length > 0 ) {
+            /* 
+            * Check if melisUserTabs is currently an active module.
+            * Negate to run the local dashboardNotify.init() function.
+            * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
+            * from with melisUserTabs ajax call.
+            */
+            //if ( ! $.inArray( "MelisUserTabs", activeModule ) !== -1 ) {
+            if ( activeModule !== null ) {
+                melisUserTabs.getUserSavedOpenTabs();
+            }
+            else {
+                dashboardNotify.init();
+            }
         }
-        else {
-            melisUserTabs.getUserSavedOpenTabs();
+        
+        if ( $noDbAccess.length > 0 ) {
+            dashboardNotify.removeEnjoyHintHtml();
         }
 });

@@ -288,7 +288,7 @@ return [
                                             ],
                                         ],
                                         'attributes' => [
-                                            'id' => 'id_usr_password',
+                                            'id' => 'id_usr_password_new',
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_login_pass_placeholder',
                                             'class' => 'form-control',
@@ -307,7 +307,7 @@ return [
                                             ],
                                         ],
                                         'attributes' => [
-                                            'id' => 'id_usr_confirm_password',
+                                            'id' => 'id_usr_confirm_password_new',
                                             'value' => '',
                                             'placeholder' => 'tr_meliscore_login_pass_placeholder',
                                             'class' => 'form-control',
