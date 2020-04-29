@@ -206,7 +206,7 @@ class PlatformSchemeController extends AbstractActionController
                                     /**
                                      * Forece override file if the file already exists
                                      */
-                                    $adapter->addFilter('File\Rename', array(
+                                    $adapter->addFilter('FileRename', array(
                                         'target'    => $fileName,
                                         'overwrite' => true,
                                     ));
