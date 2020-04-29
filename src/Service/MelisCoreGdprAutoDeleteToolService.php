@@ -461,7 +461,10 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     public function getSiteNameBySiteId($siteId)
     {
         if ($this->getServiceLocator()->has('MelisEngineTableSite')){
-            return $this->getServiceLocator()->get('MelisEngineTableSite')->getEntryById($siteId)->current()->site_label;
+            $data = $this->getServiceLocator()->get('MelisEngineTableSite')->getEntryById($siteId)->current();
+            if (! empty($data)) {
+                return $data->site_label;
+            }
         }
 
         return $siteId;

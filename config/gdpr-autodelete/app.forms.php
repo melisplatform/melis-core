@@ -65,6 +65,9 @@ return [
                                     'spec' => [
                                         'name' => 'mgdprc_id',
                                         'type' => "hidden",
+                                        'attributes' => [
+                                            'id' => 'mgdprc_id'
+                                        ]
                                     ]
                                 ],
                                 [

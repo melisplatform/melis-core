@@ -4,15 +4,15 @@ if (!empty($this->zoneconfig['conf']['id'])) {
     $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
 }
 ?>
-
-<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' >
-    <div id="add-edit-config-content" class="collapse show" aria-labelledby="add-edit-config" data-parent="#accordion-add-edit">
-        <?php
-        if(!empty($this->zoneconfig['interface'])) {
-            foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
-                echo $this->$keyConfig;
-            }
-        }
-        ?>
+    <div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' style="position:relative;min-height:350px;">
+        <?php if (! empty($this->module) && ! empty($this->site)) {?>
+                <?php
+                if(!empty($this->zoneconfig['interface'])) {
+                    foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                        echo $this->$keyConfig;
+                    }
+                }
+                ?>
+        <?php } ?>
     </div>
-</div>
+</div> <!-- fixed issue on accordion -->

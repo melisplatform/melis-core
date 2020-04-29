@@ -1,11 +1,22 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+
 <div id="add-edit-config" class="custom-accordion-heading">
     <div class="button-right">
-        <button class="btn btn-success float-right" id="saveAutoDeleteConfigurations" style="margin:20px 30px 0 0">
-            <i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_tool_gen_save')?>
-        </button>
+        <?php
+        if(!empty($this->zoneconfig['interface'])) {
+            foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                echo $this->$keyConfig;
+            }
+        }
+        ?>
     </div>
     <a data-toggle="collapse" data-target="#add-edit-config-content" aria-expanded="true" aria-controls="add-edit-config-content" class="accordion-heading-add-delete arrow-indication-down" style="border-top:1px solid #eee">
-        <h3 class="accordion-heading-title">
+        <h3 class="accordion-heading-title" id="add-edit-main-heading">
             <?= ($this->configId) ? $this->translate('tr_melis_core_gdpr_autodelete_label_edit_accordion_heading') : $this->translate('tr_melis_core_gdpr_autodelete_label_add_accordion_heading')?>
         </h3>
     </a>

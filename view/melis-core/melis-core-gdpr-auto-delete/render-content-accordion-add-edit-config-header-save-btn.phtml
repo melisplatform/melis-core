@@ -1,0 +1,14 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+$isDisabled = true;
+?>
+
+<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' class="float-right fade show" >
+    <?php if ($this->configId || ($this->site && $this->module)) { $isDisabled = false; }?>
+    <button class="btn btn-success " id="saveAutoDeleteConfigurations" <?= $isDisabled ? "disabled" : null?> style="margin:20px 30px 0 0;position: relative;" >
+        <i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_tool_gen_save')?>
+    </button>
+</div>

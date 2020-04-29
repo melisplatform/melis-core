@@ -159,6 +159,36 @@ return [
                                                                                                 'jscallback' => '',
                                                                                                 'jsdatas' => [],
                                                                                             ],
+                                                                                            'interface' => [
+                                                                                                'meliscoregdpr_auto_delete_content_accordion_add_edit_config_header_save_btn' => [
+                                                                                                    'conf' => [
+                                                                                                        'id' => 'id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_header_save_btn',
+                                                                                                        'name' => 'Save button',
+                                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_content_accordion_add_edit_config_header_save_btn',
+                                                                                                    ],
+                                                                                                    'forward' => [
+                                                                                                        'module' => 'MelisCore',
+                                                                                                        'controller' => 'MelisCoreGdprAutoDelete',
+                                                                                                        'action' => 'render-content-accordion-add-edit-config-header-save-btn',
+                                                                                                        'jscallback' => '',
+                                                                                                        'jsdatas' => [],
+                                                                                                    ],
+                                                                                                ]
+                                                                                            ]
+                                                                                        ],
+                                                                                        'meliscoregdpr_auto_delete_add_edit_config_filters' => [
+                                                                                            'conf' => [
+                                                                                                'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_filters',
+                                                                                                'name' => 'Site and Module Filters',
+                                                                                                'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_filters',
+                                                                                            ],
+                                                                                            'forward' => [
+                                                                                                'module' => 'MelisCore',
+                                                                                                'controller' => 'MelisCoreGdprAutoDelete',
+                                                                                                'action' => 'render-content-accordion-add-edit-config-filters',
+                                                                                                'jscallback' => '',
+                                                                                                'jsdatas' => [],
+                                                                                            ],
                                                                                         ],
                                                                                         'meliscoregdpr_auto_delete_content_accordion_add_edit_config_content' => [
                                                                                             'conf' => [
@@ -174,20 +204,20 @@ return [
                                                                                                 'jsdatas' => [],
                                                                                             ],
                                                                                             'interface' => [
-                                                                                                'meliscoregdpr_auto_delete_add_edit_config_filters' => [
-                                                                                                    'conf' => [
-                                                                                                        'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_filters',
-                                                                                                        'name' => 'Site and Module Filters',
-                                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_filters',
-                                                                                                    ],
-                                                                                                    'forward' => [
-                                                                                                        'module' => 'MelisCore',
-                                                                                                        'controller' => 'MelisCoreGdprAutoDelete',
-                                                                                                        'action' => 'render-content-accordion-add-edit-config-filters',
-                                                                                                        'jscallback' => '',
-                                                                                                        'jsdatas' => [],
-                                                                                                    ],
-                                                                                                ],
+//                                                                                                'meliscoregdpr_auto_delete_add_edit_config_filters' => [
+//                                                                                                    'conf' => [
+//                                                                                                        'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_filters',
+//                                                                                                        'name' => 'Site and Module Filters',
+//                                                                                                        'melisKey' => 'meliscoregdpr_auto_delete_add_edit_config_filters',
+//                                                                                                    ],
+//                                                                                                    'forward' => [
+//                                                                                                        'module' => 'MelisCore',
+//                                                                                                        'controller' => 'MelisCoreGdprAutoDelete',
+//                                                                                                        'action' => 'render-content-accordion-add-edit-config-filters',
+//                                                                                                        'jscallback' => '',
+//                                                                                                        'jsdatas' => [],
+//                                                                                                    ],
+//                                                                                                ],
                                                                                                 'meliscoregdpr_auto_delete_add_edit_config_multi_tab' => [
                                                                                                     'conf' => [
                                                                                                         'id' => 'id_meliscoregdpr_auto_delete_add_edit_config_multi_tab',

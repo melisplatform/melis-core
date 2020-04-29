@@ -7,6 +7,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
 <div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' class="d-none" style="position:relative;">
     <div id="accordion-add-edit">
         <div class="card default-card" style="border:none;">
+
             <?php
             if(!empty($this->zoneconfig['interface'])) {
                 foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
