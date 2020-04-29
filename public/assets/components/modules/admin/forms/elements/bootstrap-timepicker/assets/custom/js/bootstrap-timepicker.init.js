@@ -1,5 +1,4 @@
-$(function()
-{
+$(function() {
     /*
      * bootstrap-timepicker
      */
@@ -28,5 +27,4 @@ $(function()
         showInputs: false,
         minuteStep: 5
     });
-
 });

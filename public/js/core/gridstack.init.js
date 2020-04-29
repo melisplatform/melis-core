@@ -147,10 +147,13 @@ var melisDashBoardDragnDrop = {
     },
     // drops a widget/plugin from dashboard's plugin sidebar
     dropWidget: function(widget) {
-        var self = this,
-            gridstack = $("#" + activeTabId + " .tab-pane .grid-stack").data("gridstack");
+        var self            = this,
+            $gridstack      = $("#" + activeTabId + " .tab-pane .grid-stack"),
+            gridstackData   = $gridstack.data("gridstack");
+
         //var gridDrop = $(gridstack.container[0]).droppable({
-        var gridDrop = gridstack.container.droppable({
+        //var gridDrop = gridstack.container.droppable({
+        $gridstack.droppable({
             accept: widget,
             tolerance: 'pointer',
             drop: function (event, ui) {
