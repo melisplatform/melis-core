@@ -484,7 +484,7 @@ class EmailsManagementController extends AbstractActionController
 
                     if (!empty($emailsDatas->boe_code_name)){
                         if ($emailsDatas->boe_code_name==$codename){
-                            $generalPropertiesForm->get('boe_code_name')->setAttribute('disabled','disabled');
+                            $generalPropertiesForm->get('boe_code_name')->setAttribute('readonly','readonly');
                         }
                     }
                 }else{
@@ -501,7 +501,7 @@ class EmailsManagementController extends AbstractActionController
                     $emailsDatas->boe_content_layout_logo       = $layoutLogo;
                     $emailsDatas->boe_content_layout_ftr_info   = $layoutFtrInfo;
 
-                    $generalPropertiesForm->get('boe_code_name')->setAttribute('disabled','disabled');
+                    $generalPropertiesForm->get('boe_code_name')->setAttribute('readonly','readonly');
                 }
 
                 if (!empty($emailsDatas->boe_tag_accepted_list)||!empty($acceptedTags)){
@@ -716,8 +716,6 @@ class EmailsManagementController extends AbstractActionController
 
                 $datas = array_merge($datas, $request->getFiles()->toArray(), $layoutFtrInfoPost);
 
-                print_r($datas);
-
                 // File Input Validator and Filter
                 $fileInput = new FileInput('boe_content_layout_logo');
                 $fileInput->setRequired(false);
@@ -812,9 +810,6 @@ class EmailsManagementController extends AbstractActionController
 
                     $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
                     $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/'.$datas['boe_code_name']);
-
-                    print_r($emailsConfig);
-                    print_r($codeNameError);
 
                     if(!empty($emailsConfig)&&empty($codeNameError)){
                         // Codename in already exist on App.Email
