@@ -62,6 +62,9 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
             $select->where->equalTo('mgdprl_module_name', $moduleName);
         }
 
+        // set current data count for pagination
+        $this->setCurrentDataCount((int) $this->tableGateway->selectWith($select)->count());
+
         // length of the data
         if (!empty($limit)) {
             $select->limit($limit);
@@ -74,9 +77,6 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
         if (!empty($orderBy) && !empty($orderDirection)) {
             $select->order($orderBy . ' ' . $orderDirection);
         }
-
-        // set current data count for pagination
-        $this->setCurrentDataCount((int) $this->tableGateway->selectWith($select)->count());
 
         return $this->tableGateway->selectWith($select);
     }
@@ -134,7 +134,7 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
         $select->columns(array('*'));
         // site filter
         if ($date) {
-            $select->where->like('mgdprl_log_date',"%" . $date .  "%");
+            $select->where->equalTo('mgdprl_log_date',$date);
         }
         // site filter
         if ($siteId) {

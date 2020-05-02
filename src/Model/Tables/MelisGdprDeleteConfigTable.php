@@ -61,6 +61,8 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
         if ($module) {
             $select->where->equalTo('mgdprc_module_name', $module);
         }
+        // set current data count for pagination
+        $this->setCurrentDataCount((int) $this->tableGateway->selectWith($select)->count());
         // length of the data
         if (!empty($limit)) {
             $select->limit($limit);
@@ -73,9 +75,6 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
         if (!empty($orderBy) && !empty($orderDirection)) {
             $select->order($orderBy . ' ' . $orderDirection);
         }
-
-        // set current data count for pagination
-        $this->setCurrentDataCount((int) $this->tableGateway->selectWith($select)->count());
 
         return $this->tableGateway->selectWith($select);
     }

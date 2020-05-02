@@ -80,6 +80,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     protected $emailsLogsTable;
 
     /**
+     * @var
+     */
+    protected $currentTime;
+
+    /**
      * MelisCoreGdprAutoDeleteService constructor.
      * @param MelisCoreGdprAutoDeleteToolService $autoDeleteToolService
      * @param MelisGdprDeleteEmailsSentTable $deleteEmailsSentTable
@@ -112,6 +117,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             'status' => false,
             'mesasge' => ""
         ];
+        // set current time
+        $this->currentTime = date('Y-m-d h:i:s');
         // retrieving list of modules and list of sites
         $autoDelConfig = $this->gdprAutoDeleteToolService->getAllGdprAutoDeleteConfigData();
         //etrieving list of users' emails for first warning
@@ -240,39 +247,41 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         // get all modules warning list of users
         $firstAlertUsers = $this->getFirstAlertUsers();
         foreach ($firstAlertUsers as $moduleName => $emails) {
-            if ($moduleName == $autoDelConf['mgdprc_module_name'] && !empty($emails)) {
+            if ($moduleName == $autoDelConf['mgdprc_module_name']) {
                 // if alert email status is in active then we get the list of warning users to mailed for revalidation
                 if ($autoDelConf['mgdprc_alert_email_status']) {
                     // check if the is days of inactivity set
                     if ($autoDelConf['mgdprc_alert_email_days'] > 0) {
                         // check if user is belong to current site of the config
-                        foreach ($emails as $email => $emailOpts) {
-                            // check email logs on email_sent if email is not yet mailed
-                            if (empty($this->getEmailSentByValidationKey($emailOpts['config']['validationKey'], $autoDelConf['mgdprc_module_name']))) {
-                                // check user if it belongs to the auto delete config
-                                if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'], $autoDelConf['mgdprc_site_id'])) {
-                                    // check user's inactive number of days
-                                    if ($this->checkUsersInactiveDays($emailOpts, $autoDelConf['mgdprc_alert_email_days'])) {
-                                        // send email
-                                        $sendMail = $this->prepareSendWarningEmail(
-                                        // merge tags
-                                            $this->mergeTagsConfig($autoDelConf),
-                                            $email,
-                                            $emailOpts,
-                                            MelisGdprDeleteEmailsTable::EMAIL_WARNING,
-                                            true
-                                        );
-                                        // if no errors then save to db
-                                        if (! $sendMail['hasError']) {
-                                            // add new entry
-                                            $this->saveEmailsSentData([
-                                                'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
-                                                'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
-                                                'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
-                                                'mgdprs_alert_email_sent' => 1,
-                                                'mgdprs_alert_email_sent_date' => date('Y-m-d h:i:s'),
-                                                'mgdprs_account_id' => $emailOpts['config']['account_id'],
-                                            ]);
+                        if (!empty($emails)) {
+                            foreach ($emails as $email => $emailOpts) {
+                                // check email logs on email_sent if email is not yet mailed
+                                if (empty($this->getEmailSentByValidationKey($emailOpts['config']['validationKey'], $autoDelConf['mgdprc_module_name']))) {
+                                    // check user if it belongs to the auto delete config
+                                    if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'], $autoDelConf['mgdprc_site_id'])) {
+                                        // check user's inactive number of days
+                                        if ($this->checkUsersInactiveDays($emailOpts, $autoDelConf['mgdprc_alert_email_days'])) {
+                                            // send email
+                                            $sendMail = $this->prepareSendWarningEmail(
+                                            // merge tags
+                                                $this->mergeTagsConfig($autoDelConf),
+                                                $email,
+                                                $emailOpts,
+                                                MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                                                true
+                                            );
+                                            // if no errors then save to db
+                                            if (! $sendMail['hasError']) {
+                                                // add new entry
+                                                $this->saveEmailsSentData([
+                                                    'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
+                                                    'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
+                                                    'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
+                                                    'mgdprs_alert_email_sent' => 1,
+                                                    'mgdprs_alert_email_sent_date' => date('Y-m-d h:i:s'),
+                                                    'mgdprs_account_id' => $emailOpts['config']['account_id'],
+                                                ]);
+                                            }
                                         }
                                     }
                                 }
@@ -280,7 +289,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         }
                     }
                 }
+                // save logs
+                $this->saveGdprAutoDeleteLogs($autoDelConf, null, null, null, null, true);
             }
+
         }
 
         return $response;
@@ -346,6 +358,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 }
             }
         }
+        // save log
+        $this->saveGdprAutoDeleteLogs($autoDelConf, null, null, null, null, true);
 
         return $response;
     }
@@ -376,6 +390,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 }
             }
         }
+        // save log
+        $this->saveGdprAutoDeleteLogs($autoDelConf, null, null, null, null, true);
     }
 
     /**
@@ -650,10 +666,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             $tmpDataToSave = [
                 'mgdprl_site_id' => $data['mgdprc_site_id'],
                 'mgdprl_module_name' => $data['mgdprc_module_name'],
-                'mgdprl_log_date' => date('Y-m-d h:i:s')
+                'mgdprl_log_date' => $this->currentTime
             ];
             // check if there is already a log
-            $logs = $this->getEmailsLogsByDate(date('Y-m-d'),$data['mgdprc_site_id'], $data['mgdprc_module_name']);
+            $logs = $this->getEmailsLogsByDate($this->currentTime, $data['mgdprc_site_id'], $data['mgdprc_module_name']);
             // process first email warning and second warning users logs
             if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
                 if ($isFirstEmail) {

@@ -247,14 +247,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
 
     /**
      * this method will get the meliscore tool
-     * @return MelisCoreToolService
+     * @return MelisCoreToolService | object
      */
     private function getTool()
     {
-        /** @var MelisCoreToolService $toolSvc */
-        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
-
-        return $toolSvc;
+        return $this->getServiceLocator()->get('MelisCoreTool');
     }
 
     /**
@@ -268,40 +265,43 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $request = $this->getRequest();
         $tableData = [];
         $post = [];
+        $dataFilteredCount = 0;
+        $dataCount = 0;
         if ($request->isPost()) {
             // set melis tool key
             $this->getTool()->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
             // post data
             $post = $this->processPostData(get_object_vars($request->getPost()));
+//            // get gdpr delete config data from service
+            $data = $this->getGdprDeleteConfigTable()->getGdprDeleteConfigData(
+            // search key
+                $post['searchKey'],
+                // searchable columns
+                $this->getTool()->getSearchableColumns(),
+                // order by (field)
+                $post['orderBy'],
+                // order direction
+                $post['orderDir'],
+                // start
+                $post['start'],
+                // length
+                $post['limit'],
+                // site id
+                $post['siteId'],
+                // module
+                $post['module']
+            )->toArray();
+            $dataCount = $this->getGdprDeleteConfigTable()->getTotalData();
+            $dataFilteredCount = $this->getGdprDeleteConfigTable()->getTotalFiltered();
             // get data and format
-            $tableData = $this->formatDataIntoDataTableFormat(
-            // get gdpr delete config data from service
-                $this->getGdprAutoDeleteToolService()->getGdprDeleteConfigData(
-                // search key
-                    $post['searchKey'],
-                    // searchable columns
-                    $this->getTool()->getSearchableColumns(),
-                    // order by (field)
-                    $post['orderBy'],
-                    // order direction
-                    $post['orderDir'],
-                    // start
-                    $post['start'],
-                    // length
-                    $post['limit'],
-                    // site id
-                    $post['siteId'],
-                    // module
-                    $post['module']
-                )
-            );
+            $tableData = $this->formatDataIntoDataTableFormat($data);
         }
 
         return new JsonModel([
             'draw' => (int)$post['draw'],
             'data' => $tableData,
-            'recordsFiltered' => $this->getGdprDeleteConfigTable()->getTotalFiltered(),
-            'recordsTotal' => $this->getGdprDeleteConfigTable()->getTotalData()
+            'recordsFiltered' => $dataFilteredCount,
+            'recordsTotal' => $dataCount
         ]);
     }
 
@@ -314,6 +314,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      */
     private function processPostData($postData)
     {
+        $this->getTool()->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
         return [
             'draw' => (int)$postData['draw'],
             'orderBy' => array_keys($this->getTool()->getColumns())[(int)$postData['order'][0]['column']],

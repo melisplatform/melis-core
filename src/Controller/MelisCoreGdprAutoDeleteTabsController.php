@@ -183,38 +183,41 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $request = $this->getRequest();
         $tableData = [];
         $post = [];
+        $dataCount = 0;
+        $dataFilteredCount = 0;
         if ($request->isPost()) {
             // post data
             $post = $this->processPostData(get_object_vars($request->getPost()));
-            // get data and format
-            $tableData = $this->formatDataIntoDataTableFormat(
             // get gdpr delete config data from service
-                $this->getGdprAutoDeleteToolService()->getGdprDeleteEmailLogsData(
-                // search key
-                    $post['searchKey'],
-                    // searchable columns
-                    $this->getTool()->getSearchableColumns(),
-                    // order by (field)
-                    $post['orderBy'],
-                    // order direction
-                    $post['orderDir'],
-                    // start
-                    $post['start'],
-                    // length
-                    $post['limit'],
-                    // site id
-                    $post['siteId'],
-                    // module name
-                    $post['moduleName']
-                )
+            $data =   $this->getGdprAutoDeleteToolService()->getGdprDeleteEmailLogsData(
+            // search key
+                $post['searchKey'],
+                // searchable columns
+                $this->getTool()->getSearchableColumns(),
+                // order by (field)
+                $post['orderBy'],
+                // order direction
+                $post['orderDir'],
+                // start
+                $post['start'],
+                // length
+                $post['limit'],
+                // site id
+                $post['siteId'],
+                // module name
+                $post['moduleName']
             );
+            $dataCount = $this->getGdprDeleteEmailsLogsTable()->getTotalData();
+            $dataFilteredCount = $this->getGdprDeleteEmailsLogsTable()->getTotalFiltered();
+            // get data and format
+            $tableData = $this->formatDataIntoDataTableFormat($data);
         }
 
         return new JsonModel([
             'draw' => (int)$post['draw'],
             'data' => $tableData,
-            'recordsFiltered' => $this->getGdprDeleteEmailsLogsTable()->getTotalFiltered(),
-            'recordsTotal' => $this->getGdprDeleteEmailsLogsTable()->getTotalData()
+            'recordsFiltered' => $dataFilteredCount,
+            'recordsTotal' => $dataCount
         ]);
     }
 
