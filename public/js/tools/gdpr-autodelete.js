@@ -451,7 +451,8 @@ $(function () {
     });
 
     // show email logs details
-    $body.on('click', ".gdpr-email-logs-show-details", function() {
+    $body.on('click', ".gdpr-email-logs-show-details", function(e) {
+        e.preventDefault();
         $("#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details").removeClass('hidden');
         melisHelper.zoneReload(
             'id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',
