@@ -64,6 +64,15 @@ return [
     // confirm delete
     'tr_melis_core_gdpr_autodelete_config_delete_title' => 'Supprimer la configuration',
     'tr_melis_core_gdpr_autodelete_config_delete_message' => 'Etes-vous sûr(e) de vouloir supprimer cette configuration ?',
+    // log table columns
+    'tr_melis_core_gdpr_autodelete_log_table_col_id' => 'Id',
+    'tr_melis_core_gdpr_autodelete_log_table_col_log_date' => 'Date',
+    'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ok' => 'A1 OK',
+    'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ko' => 'A1 KO',
+    'tr_melis_core_gdpr_autodelete_log_table_col_warning2_ok' => 'A2 OK',
+    'tr_melis_core_gdpr_autodelete_log_table_col_warning2_ko' => 'A2 KO',
+    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ok' => 'SUP OK',
+    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ko' => 'SUP KO',
     // logs messages
     'tr_melis_core_gdpr_autodelete_config_title' => 'Auto suppression RGPD',
     'tr_melis_core_gdpr_autodelete_config_save_ko' => 'Impossible de sauvegarder La configuration de l\'auto suppression RGPD',

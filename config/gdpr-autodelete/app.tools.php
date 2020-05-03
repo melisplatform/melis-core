@@ -129,42 +129,42 @@ return [
                         ],
                         'columns' => [
                             'mgdprl_id' => [
-                                'text' => 'Id',
+                                'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_id',
                                 'css' => ['width' => '5%', 'padding-right' => '0'],
                                 'sortable' => true,
                             ],
                             'mgdprl_log_date' => [
-                                'text' => 'Date',
+                                'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_log_date',
                                 'css' => ['width' => '15%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                             'mgdprl_warning1_ok' => [
-                                'text' => 'W1 OK',
+                                'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ok',
                                 'css' => ['width' => '10%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                             'mgdprl_warning1_ko' => [
-                                'text' => 'WI KO',
+                                'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ko',
                                 'css' => ['width' => '10%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                             'mgdprl_warning2_ok' => [
-                                'text' => 'w2 OK',
+                                'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_warning2_ok',
                                 'css' => ['width' => '10%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                             'mgdprl_warning2_ko' => [
-                                'text' => 'w2 KO',
+                                'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_warning2_ko',
                                 'css' => ['width' => '10%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                             'mgdprl_delete_ok' => [
-                                'text' => 'Del OK',
+                                'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_delete_ok',
                                 'css' => ['width' => '10%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                             'mgdprl_delete_ko' => [
-                                'text' => 'Del KO',
+                                'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_delete_ko',
                                 'css' => ['width' => '10%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
