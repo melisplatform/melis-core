@@ -50,6 +50,8 @@ return [
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc' => 'Layout information',
     'tr_melis_core_gdpr_autodelete_label_email_setup_layout_desc tooltip' => 'Content of the email, When using tags place it inside [ ], ex [LINK]',
     // alert emails translations
+    'tr_melis_core_gdpr_autodelete_label_alert_email_heading' => 'Alert Email',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_heading2' => 'Account Deleted Email', 
     'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Replacement tags available',
     'tr_melis_core_gdpr_autodelete_label_alert_email_validation_page' => 'User will validate status on page',
     'tr_melis_core_gdpr_autodelete_label_delete_everything' => 'Delete everything',

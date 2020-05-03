@@ -44,6 +44,8 @@ return [
     'tr_melis_core_gdpr_autodelete_label_email_setup_tags' => 'Tags de remplacement disponibles',
 
     // alert emails translations
+    'tr_melis_core_gdpr_autodelete_label_alert_email_heading' => 'Email d\'alerte',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_heading2' => 'Email de suppression de compte',
     'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Tags de remplacement disponibles',
     'tr_melis_core_gdpr_autodelete_label_alert_email_validation_page' => 'Page de validation',
     'tr_melis_core_gdpr_autodelete_label_delete_everything' => 'Tout supprimer',
