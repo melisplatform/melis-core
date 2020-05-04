@@ -536,12 +536,18 @@ var melisHelper = (function(){
     function zoneReload(zoneId, melisKey, parameters, callback) {
 
         var datastring = { cpath: melisKey };
+        var $melisCmsPage = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active");
 
         //add parameters value to datastring object if available
         if ( parameters !== undefined ) {
             $.each(parameters, function( index, value ) {
                 datastring[index] = value;
             });
+        }
+
+        // loader.js add #loader
+        if ( typeof loader !== "undefined" ) { //&& $melisCmsPage.length > 0
+            loader.pageEditionLoading();
         }
 
         // add the temp loader
@@ -554,11 +560,16 @@ var melisHelper = (function(){
             encode		: true,
             dataType	: "json"
         }).done(function(data) {
+            // loader.js remove #loader
+            if ( typeof loader !== "undefined" ) { //&& $melisCmsPage.length > 0
+                loader.removeEditionLoading();
+            }
+            
             // hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
             setTimeout(function() {
-                if( data !== null ){
+                if ( data !== null ) {
                     $("#"+zoneId).html(data.html).children().unwrap();
 
                     // set the current active tab based from 'activeTabId' value
@@ -602,7 +613,7 @@ var melisHelper = (function(){
                         });
                     });
                 }
-                else{
+                else {
                     $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
                     $('#'+zoneId).remove();
 
@@ -617,8 +628,14 @@ var melisHelper = (function(){
         }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
 
+            // loader.js remove #loader
+            if ( typeof loader !== "undefined" ) { // && $melisCmsPage.length > 0
+                loader.removeEditionLoading();
+            }
+
             //hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+
             $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
             $('#'+zoneId).remove();
         });
