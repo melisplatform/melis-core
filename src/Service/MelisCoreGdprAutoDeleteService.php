@@ -83,6 +83,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @var
      */
     protected $currentTime;
+    /**
+     * @var
+     */
+    protected $logId;
 
     /**
      * MelisCoreGdprAutoDeleteService constructor.
@@ -248,6 +252,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $firstAlertUsers = $this->getFirstAlertUsers();
         foreach ($firstAlertUsers as $moduleName => $emails) {
             if ($moduleName == $autoDelConf['mgdprc_module_name']) {
+                // add a log first
+                $this->logId = $this->saveGdprAutoDeleteLogs($autoDelConf, null, null, null, null, true);
                 // if alert email status is in active then we get the list of warning users to mailed for revalidation
                 if ($autoDelConf['mgdprc_alert_email_status']) {
                     // check if the is days of inactivity set
@@ -289,8 +295,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         }
                     }
                 }
-                // save logs
-                $this->saveGdprAutoDeleteLogs($autoDelConf, null, null, null, null, true);
+
             }
 
         }
@@ -358,8 +363,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 }
             }
         }
-        // save log
-        $this->saveGdprAutoDeleteLogs($autoDelConf, null, null, null, null, true);
+
 
         return $response;
     }
@@ -653,13 +657,15 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     /**
      * @param $data
      * @param $email
-     * @param $message
      * @param $emailType
      * @param $isFirstEmail
+     * @param null $message
      * @param null $success
+     * @return int|null
      */
     private function saveGdprAutoDeleteLogs($data, $email, $emailType, $isFirstEmail, $message = null, $success = null)
     {
+        $id = null;
         if (is_array($data) && $data) {
             // prepare data to save
             // set some required fields
@@ -669,7 +675,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'mgdprl_log_date' => $this->currentTime
             ];
             // check if there is already a log
-            $logs = $this->getEmailsLogsByDate($this->currentTime, $data['mgdprc_site_id'], $data['mgdprc_module_name']);
+            $logs = $this->emailsLogsTable->getEntryById($this->logId)->current();
             // process first email warning and second warning users logs
             if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
                 if ($isFirstEmail) {
@@ -686,13 +692,15 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             // save
             if (!empty($logs)) {
                 // update log
-                $this->emailsLogsTable->save($tmpDataToSave, $logs->mgdprl_id);
+                $id = $this->emailsLogsTable->save($tmpDataToSave, $this->logId);
             } else {
                 // save logs
-                $this->emailsLogsTable->save($tmpDataToSave);
+                $id = $this->emailsLogsTable->save($tmpDataToSave);
             }
 
         }
+
+        return $id;
     }
 
     /**
