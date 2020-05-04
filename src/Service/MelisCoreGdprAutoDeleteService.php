@@ -889,8 +889,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $messageText,
                 $this->getSmtpConfig());
         } catch (\Exception $error) {
-            echo $error->getMessage();
-            $this->errors = "Technical error";
+            if (!strpos($error->getMessage(), 'Could not read from smtp.gmail.com')) {
+                echo $error->getMessage();$this->errors = "Technical error";
+            }
         }
 
     }
