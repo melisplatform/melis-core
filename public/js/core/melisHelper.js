@@ -534,7 +534,6 @@ var melisHelper = (function(){
 
     // ZONE RELOADING =================================================================================================================
     function zoneReload(zoneId, melisKey, parameters, callback) {
-
         var datastring = { cpath: melisKey };
         var $melisCmsPage = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active");
 
@@ -543,11 +542,6 @@ var melisHelper = (function(){
             $.each(parameters, function( index, value ) {
                 datastring[index] = value;
             });
-        }
-
-        // loader.js add #loader
-        if ( typeof loader !== "undefined" ) { //&& $melisCmsPage.length > 0
-            loader.pageEditionLoading();
         }
 
         // add the temp loader
@@ -560,11 +554,6 @@ var melisHelper = (function(){
             encode		: true,
             dataType	: "json"
         }).done(function(data) {
-            // loader.js remove #loader
-            if ( typeof loader !== "undefined" ) { //&& $melisCmsPage.length > 0
-                loader.removeEditionLoading();
-            }
-            
             // hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
@@ -627,12 +616,6 @@ var melisHelper = (function(){
             }, 300);
         }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
-
-            // loader.js remove #loader
-            if ( typeof loader !== "undefined" ) { // && $melisCmsPage.length > 0
-                loader.removeEditionLoading();
-            }
-
             //hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 

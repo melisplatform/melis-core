@@ -35,16 +35,19 @@ var loader = (function($, window) {
         },
         pageEditionLoading = function() {
             var $melisCmsPage       = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active"),
-                $iframeContainer    = $melisCmsPage.find(".iframe-container");
+                $iframeContainer    = $melisCmsPage.find(".iframe-container"),
+                $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition");
 
-                if ( $melisCmsPage.length > 0 ) {
-                    $iframeContainer.parent().prepend(overlayLoader);
+                if ( $melisTabEdition.length > 0 ) {
+                    $melisTabEdition.prepend(overlayLoader);
                     melisCoreTool.addOverflowHidden();
                 }
         },
         removeEditionLoading = function() {
             var $melisCmsPage       = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active"),
-                $loader             = $melisCmsPage.find("#loader");
+                $iframeContainer    = $melisCmsPage.find(".iframe-container"),
+                $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
+                $loader             = $melisTabEdition.find("#loader");
 
                 if ( $loader.length > 0 ) {
                     $loader.remove();
