@@ -284,7 +284,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         if (!empty($emails)) {
                             foreach ($emails as $email => $emailOpts) {
                                 // check email logs on email_sent if email is not yet mailed
-                                if (empty($this->getEmailSentByValidationKey($emailOpts['config']['validationKey'], $autoDelConf['mgdprc_module_name']))) {
+                                $sentLogs = $this->getEmailSentByValidationKey($emailOpts['config']['validationKey'], $autoDelConf['mgdprc_module_name']);
+                                if (empty($sentLogs)) {
                                     // check user if it belongs to the auto delete config
                                     if ($this->checkUsersSite($emailOpts[self::CONFIG_KEY]['site_id'], $autoDelConf['mgdprc_site_id'])) {
                                         // check user's inactive number of days
@@ -506,12 +507,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_emaiL_sent_data_by_email_start', $arrayParameters);
-        // get the updated value of a variable
-        foreach ($arrayParameters as $var => $val) {
-            $$var = $val;
-        }
+
         // Adding results to parameters for events treatment if needed
-        $arrayParameters['results'] = $this->deleteEmailsSentTable->getEmailSentByValidationKey($validationKey, $moduleName)->current();
+        $arrayParameters['results'] = $this->deleteEmailsSentTable->getEmailSentByValidationKey($arrayParameters['validationKey'], $arrayParameters['moduleName'])->current();
         // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_emaiL_sent_data_by_email_end', $arrayParameters);
 
