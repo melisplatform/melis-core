@@ -128,6 +128,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         //etrieving list of users' emails for first warning
         if (!empty($autoDelConfig)) {
             foreach ($autoDelConfig as $idx => $config) {
+                // add a log first
+                $this->addInitialLog($config);
                 // send email for first warning users
                 $this->sendFirstAlertEmail($config);
                 // send mail for second warnign users
@@ -135,6 +137,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 // send email for deleted users
                 $this->sendDeleteAlertEmail($config);
             }
+
             $results['status'] = true;
             $results['message'] = "CRON was successfully executed";
         } else {
@@ -148,6 +151,27 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
         return $arrayParameters['results'];
     }
+
+    /**
+     * add a initial log
+     *
+     * @param $data
+     */
+    private function addInitialLog($data)
+    {
+        $toSaveData = [
+            'mgdprl_site_id' => $data['mgdprc_site_id'],
+            'mgdprl_module_name' => $data['mgdprc_module_name'],
+            'mgdprl_log_date' => $this->currentTime
+        ];
+
+        // check if there is already a log
+        $data = $this->getEmailsLogsByDate($this->currentTime, $data['mgdprc_site_id'], $data['mgdprc_module_name']);
+        if (empty($data)) {
+            $this->emailsLogsTable->save($toSaveData);
+        }
+    }
+
 
     /**
      * get the list of tags in every modules that was sent through their respective listeners
@@ -252,8 +276,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $firstAlertUsers = $this->getFirstAlertUsers();
         foreach ($firstAlertUsers as $moduleName => $emails) {
             if ($moduleName == $autoDelConf['mgdprc_module_name']) {
-                // add a log first
-                $this->logId = $this->saveGdprAutoDeleteLogs($autoDelConf, null, null, null, null, true);
                 // if alert email status is in active then we get the list of warning users to mailed for revalidation
                 if ($autoDelConf['mgdprc_alert_email_status']) {
                     // check if the is days of inactivity set
@@ -394,8 +416,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 }
             }
         }
-        // save log
-        $this->saveGdprAutoDeleteLogs($autoDelConf, null, null, null, null, true);
     }
 
     /**
@@ -660,10 +680,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $emailType
      * @param $isFirstEmail
      * @param null $message
-     * @param null $success
+     * @param true $success
      * @return int|null
      */
-    private function saveGdprAutoDeleteLogs($data, $email, $emailType, $isFirstEmail, $message = null, $success = null)
+    private function saveGdprAutoDeleteLogs($data, $email = null, $emailType = null, $isFirstEmail = null, $message = null, $success = true)
     {
         $id = null;
         if (is_array($data) && $data) {
@@ -675,7 +695,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 'mgdprl_log_date' => $this->currentTime
             ];
             // check if there is already a log
-            $logs = $this->emailsLogsTable->getEntryById($this->logId)->current();
+            $logs = $this->emailsLogsTable->getEmailsLogsByDate($this->currentTime, $data['mgdprc_site_id'], $data['mgdprc_module_name'])->current();
             // process first email warning and second warning users logs
             if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
                 if ($isFirstEmail) {
@@ -689,14 +709,17 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             if ($emailType == MelisGdprDeleteEmailsTable::EMAIL_DELETED) {
                 $tmpDataToSave = array_merge($tmpDataToSave, $this->prepareDeletedEmailLogs($success, $email, $message,$logs));
             }
+
+
             // save
             if (!empty($logs)) {
                 // update log
-                $id = $this->emailsLogsTable->save($tmpDataToSave, $this->logId);
+                $id = $this->emailsLogsTable->save($tmpDataToSave, $logs->mgdprl_id);
             } else {
                 // save logs
                 $id = $this->emailsLogsTable->save($tmpDataToSave);
             }
+
 
         }
 
