@@ -122,7 +122,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             'mesasge' => ""
         ];
         // set current time
-        $this->currentTime = date('Y-m-d h:i:s');
+        $this->currentTime = date('Y-m-d H:i:s');
         // retrieving list of modules and list of sites
         $autoDelConfig = $this->gdprAutoDeleteToolService->getAllGdprAutoDeleteConfigData();
         //etrieving list of users' emails for first warning
@@ -348,35 +348,37 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                 if ($this->checkUsersInactiveDays7DaysBeforeDeadline($emailOpts, $autoDelConf['mgdprc_delete_days'])) {
                                     // send email
                                     // check if email is already emailed for second warning
-                                    $data = $this->getEmailSentByValidationKey($emailOpts['config']['validationKey'], $autoDelConf['mgdprc_module_name']);
-                                    // send email
-                                    $sendMail = $this->prepareSendWarningEmail(
-                                    // merge tags
-                                        $this->mergeTagsConfig($autoDelConf),
-                                        $email,
-                                        $emailOpts,
-                                        MelisGdprDeleteEmailsTable::EMAIL_WARNING,
-                                        false
-                                    );
-                                    // if no errors then save to db
-                                    if (! $sendMail['hasError']) {
-                                        // user was already mailed for revalidation and did not revalidate his account
-                                        if (!empty($data) && !$data->mgdprs_alert_email_second_sent) {
-                                            // update table gdpr delete email sent
-                                            $this->saveEmailsSentData([
-                                                'mgdprs_alert_email_second_sent'      => 1,
-                                                'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
-                                            ], $data->mgdprs_id);
-                                        } else {
-                                            // email of the user have not yet emailed, add new entry
-                                            $this->saveEmailsSentData([
-                                                'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
-                                                'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
-                                                'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
-                                                'mgdprs_alert_email_second_sent' => 1,
-                                                'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
-                                                'mgdprs_account_id' => $emailOpts['config']['account_id'],
-                                            ]);
+                                    $sentLogs = $this->getEmailSentByValidationKey($emailOpts['config']['validationKey'], $autoDelConf['mgdprc_module_name']);
+                                    if (empty($sentLogs)) {
+                                        // send email
+                                        $sendMail = $this->prepareSendWarningEmail(
+                                        // merge tags
+                                            $this->mergeTagsConfig($autoDelConf),
+                                            $email,
+                                            $emailOpts,
+                                            MelisGdprDeleteEmailsTable::EMAIL_WARNING,
+                                            false
+                                        );
+                                        // if no errors then save to db
+                                        if (! $sendMail['hasError']) {
+                                            // user was already mailed for revalidation and did not revalidate his account
+                                            if (!empty($data) && !$data->mgdprs_alert_email_second_sent) {
+                                                // update table gdpr delete email sent
+                                                $this->saveEmailsSentData([
+                                                    'mgdprs_alert_email_second_sent'      => 1,
+                                                    'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
+                                                ], $data->mgdprs_id);
+                                            } else {
+                                                // email of the user have not yet emailed, add new entry
+                                                $this->saveEmailsSentData([
+                                                    'mgdprs_site_id'     => $autoDelConf['mgdprc_site_id'],
+                                                    'mgdprs_module_name' => $autoDelConf['mgdprc_module_name'],
+                                                    'mgdprs_validation_key' => $emailOpts['config']['validationKey'],
+                                                    'mgdprs_alert_email_second_sent' => 1,
+                                                    'mgdprs_alert_email_second_sent_date' => date('Y-m-d h:i:s'),
+                                                    'mgdprs_account_id' => $emailOpts['config']['account_id'],
+                                                ]);
+                                            }
                                         }
                                     }
                                 }
@@ -475,9 +477,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $status = false;
         // compare the users inactive days to auto delete config (Alert email sent after inactivity of)
         $usersDaysOfInactive = $this->getDaysDiff($emailOpt['config']['last_date'], date('Y-m-d'));
-
-        // check if the day has come, 7 days before the delete days of inactivity
-        if ($usersDaysOfInactive == ($alertEmailDays) - 7) {
+        // check if the day has come, 7 days before the delete days of inactivity or in between
+        if ($usersDaysOfInactive >= ($alertEmailDays) - 7 && $usersDaysOfInactive <= $alertEmailDays ) {
             $status = true;
         }
 
