@@ -1,10 +1,12 @@
 .cron-info {
-    padding:20px 0 0 20px;
+    /* padding:20px 0 0 20px; */
+    padding: 0;
     text-decoration:underline;
 }
 #list-config {
     border-bottom:1px solid rgba(0,0,0,.125);
-    padding:0 29px 20px 39px;
+    /* padding:0 29px 20px 39px; */
+    padding: 0 0 20px 39px;
 }
 .custom-accordion-heading {
     background-color: #fff;
@@ -33,7 +35,8 @@
 }
 
 .add-edit-config-filters {
-    padding : 26px 30px 0 40px;
+    /* padding : 26px 30px 0 40px; */
+    padding: 26px 0 0;
 }
 .add-edit-config-filters select {
     cursor:pointer;
@@ -137,7 +140,8 @@
     font-size: 20px;
     padding: 0 10px 0 0;
     position: absolute;
-    left: 15px;
+    /* left: 15px; */
+    left: 0;
 }
 .arrow-indication-right:before {
     font-family:"Glyphicons Halflings";
@@ -179,7 +183,8 @@
     width:100px;
 }
 .list-config-content-table {
-    padding:20px 31px;
+    /* padding:20px 31px; */
+    padding: 20px 0;
 }
 .arrow-down-sm-accordion:after {
     font: normal normal normal 14px/1 FontAwesome;
