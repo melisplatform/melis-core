@@ -587,18 +587,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                     } else {
                         $alertEmailData->mgdpre_link = $link;
                     }
-                    /*
-                     * temporary for testing
-                     */
-                    if ($type == MelisGdprDeleteEmailsTable::EMAIL_WARNING) {
-                        // default is first
-                        if ($first) {
-                            // override
-                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " 1st";
-                        } else {
-                            $alertEmailData->mgdpre_subject = $alertEmailData->mgdpre_subject . " 2nd";
-                        }
-                    }
                     // email setup content (layout information)
                     $emailSetupLayout = $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'],$alertEmailData, $emailOptions, $emailSetupConfig['mgdprc_email_conf_layout_desc'], $emailSetupConfig);
                     // change the value of layout desc
