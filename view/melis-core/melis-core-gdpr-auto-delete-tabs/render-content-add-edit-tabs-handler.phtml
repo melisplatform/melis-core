@@ -18,7 +18,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                                    id="id_meliscoregdpr_auto_delete_add_edit_config_tab_config_tab"
                                    data-toggle="pill" href="#id_meliscoregdpr_auto_delete_add_edit_config_tab_config"
                                    role="tab" aria-controls="id_meliscoregdpr_auto_delete_add_edit_config_tab_config"
-                                   aria-selected="true">Configuration <span class="fa fa-wrench fa-md pull-right fa-lg" style="margin:3px 5px 0 0;"></span></a>
+                                   aria-selected="true">Configuration <span class="fa fa-wrench fa-md float-right fa-lg" style="margin:3px 5px 0 0;"></span></a>
                             <?php } ?>
                         <?php }
 
@@ -27,7 +27,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                             <a class="nav-link" id="alert_emails_<?= strtolower($data['lang_cms_locale']) ?>_tab"
                                data-toggle="pill" href="#alert_emails_<?= strtolower($data['lang_cms_locale']) ?>"
                                role="tab" aria-controls="alert_emails_<?= strtolower($data['lang_cms_locale']) ?>"
-                               aria-selected="false"><?= $data['lang_cms_name'] ?> <img class='imgDisplay pull-right' src="/MelisCore/images/lang/<?= $data['lang_cms_locale'] ?>.png" style="margin-top: 4px;margin-right: 2px;"/></a>
+                               aria-selected="false"><div class="float-left"><?= $data['lang_cms_name'] ?></div> <img class='imgDisplay float-right' src="/MelisCore/images/lang/<?= $data['lang_cms_locale'] ?>.png" /><div class="clearfix"></div></a>
                         <?php }
                         ?>
                         <?php
@@ -46,7 +46,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                                        data-toggle="pill" href="#<?= $menuConfig['conf']['id'] ?? null ?>"
                                        role="tab" aria-controls="<?= $menuConfig['conf']['id'] ?? null ?>"
                                        aria-selected="false"><?= $menuConfig['conf']['name'] ?? null ?>
-                                    <span class="fa <?= $menuConfig['conf']['icon'] ?? null ?> pull-right fa-lg" style="margin:3px 5px 0 0;"></span></a>
+                                    <span class="fa <?= $menuConfig['conf']['icon'] ?? null ?> float-right fa-lg" style="margin:3px 5px 0 0;"></span></a>
                                 <?php } ?>
                             <?php }
                         }
