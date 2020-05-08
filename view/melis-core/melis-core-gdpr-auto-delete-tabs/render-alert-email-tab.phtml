@@ -93,13 +93,12 @@ $availableLang = "";
                         <div id="account-deleted-email-<?= $data['lang_cms_locale'] ?>" class="collapse accordion-content-bg"
                              aria-labelledby="account-deleted-email-<?= $data['lang_cms_locale'] ?>"
                              data-parent="#accordion-alert-email-<?= $data['lang_cms_locale'] ?>">
-                            <?php if (! empty($this->configId)) {?>
-                                <h5 class="float-right">
-                                    <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_cms_id']?>" data-config-id="<?= $this->configId ?>" data-email-type="2" style="text-decoration: underline"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_delete_everything')?></a>
-                                </h5>
-                            <?php }?>
                             <div class="row">
+                                <?php if (! empty($this->configId)) { ?>
                                 <div class="col-md-8">
+                                <?php } else { ?>            
+                                <div class="col-md-12">
+                                <?php  } ?>
                                     <?php
                                     $this->melisCoreGdprAlertEmailDeleteForm->prepare();
                                     $formEmailDelete = clone $this->melisCoreGdprAlertEmailDeleteForm;
@@ -143,6 +142,13 @@ $availableLang = "";
                                     <?= $this->form()->closeTag() ?>
                                 </div>
                             </div>
+                           <?php if (! empty($this->configId)) {?>
+                               <div class="col-md-4">
+                                     <h5 class="float-right">
+                                        <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_cms_id']?>" data-config-id="<?= $this->configId ?>" data-email-type="2" style="text-decoration: underline"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_delete_everything')?></a>
+                                    </h5>
+                                </div>
+                            <?php }?> 
                         </div>
                     </div>
                 </div>
