@@ -1223,12 +1223,11 @@ td.dataTables_empty {
     width: 226px;
   }
 }
-@media (max-width: 767px) {
-  #id_melis_core_gdpr_search_form .melis-core-gdpr-check-box1 .checkbox input[type="checkbox"] {
-    margin-left: -13px;
-    margin-right: 0;
-  }
-  #id_melis_core_gdpr_search_form .custom-melis-core-gdpr-checkbox-span {
-    margin-top: 3px;
-  }
+
+#id_melis_core_gdpr_search_form .melis-core-gdpr-check-box1 .checkbox input[type="checkbox"] {
+  margin-left: -12px;
+  margin-right: 0;
+}
+#id_melis_core_gdpr_search_form .custom-melis-core-gdpr-checkbox-span {
+  margin-top: 3px;
 }
