@@ -141,14 +141,14 @@ $availableLang = "";
                                     ?>
                                     <?= $this->form()->closeTag() ?>
                                 </div>
+                                   <?php if (! empty($this->configId)) {?>
+                                       <div class="col-md-4">
+                                             <h5 class="float-right">
+                                                <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_cms_id']?>" data-config-id="<?= $this->configId ?>" data-email-type="2" style="text-decoration: underline"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_delete_everything')?></a>
+                                            </h5>
+                                        </div>
+                                  <?php }?> 
                             </div>
-                           <?php if (! empty($this->configId)) {?>
-                               <div class="col-md-4">
-                                     <h5 class="float-right">
-                                        <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_cms_id']?>" data-config-id="<?= $this->configId ?>" data-email-type="2" style="text-decoration: underline"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_delete_everything')?></a>
-                                    </h5>
-                                </div>
-                            <?php }?> 
                         </div>
                     </div>
                 </div>
