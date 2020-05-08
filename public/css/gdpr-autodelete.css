@@ -80,7 +80,7 @@
 }
 #cron-configuration-content,
 #email-setup-content {
-    padding: 25px 0 0 10px;
+    padding: 25px 0 0 0;
 }
 #accordion-email-setup {
     margin-top:5px;
