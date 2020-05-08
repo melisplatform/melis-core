@@ -20,13 +20,12 @@ $availableLang = "";
                         </a>
                     </div>
                     <div id="alert-email-content-<?= $data['lang_cms_locale'] ?>" class="collapse show accordion-content-bg" aria-labelledby="alert-email-content-<?= $data['lang_cms_locale'] ?>" data-parent="#accordion-alert-email-<?= $data['lang_cms_locale'] ?>">
-                        <?php if (! empty($this->configId)) {?>
-                            <h5 class="float-right">
-                                <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_cms_id']?>" data-email-type="1" data-config-id="<?= $this->configId ?>" style="text-decoration: underline"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_delete_everything')?></a>
-                            </h5>
-                        <?php }?>
                         <div class="row">
+                           <?php if (! empty($this->configId)) {?>
                             <div class="col-md-8">
+                            <?php } else {?>
+                            <div class="col-md-12">
+                            <?php } ?>
                                 <?php
                                 $excludedFieldInLoop = [
                                     'mgdpre_email_tags',
@@ -72,6 +71,13 @@ $availableLang = "";
                                 ?>
                                 <?= $this->form()->closeTag() ?>
                             </div>
+                            <?php if (! empty($this->configId)) { ?>
+                            <div class="col-md-4"> 
+                                <h5 class="float-right">
+                                    <a href="#" class="delete-everything" data-lang-id="<?= $data['lang_cms_id']?>" data-email-type="1" data-config-id="<?= $this->configId ?>" style="text-decoration: underline"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_delete_everything')?></a>
+                                </h5> 
+                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
