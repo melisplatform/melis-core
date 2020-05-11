@@ -620,8 +620,6 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                             } else {
                                 // save error log
                                 $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, "Technical issue", false);
-                                echo "\"Technical issue\"";
-                                die;
                             }
                         } else {
                             // set has error true
@@ -924,7 +922,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $this->getSmtpConfig());
         } catch (\Exception $error) {
             if (!strpos($error->getMessage(), 'Could not read from smtp.gmail.com')) {
-                echo $error->getMessage();$this->errors = "Technical error";
+                $this->errors = "Technical issue";
             }
         }
 
@@ -1099,4 +1097,20 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         return $this->getServiceLocator()->get('translator');
     }
+
+    public function getSmtpConfigData()
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_smtp_config_start', $arrayParameters);
+
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_stmp_config_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+
 }

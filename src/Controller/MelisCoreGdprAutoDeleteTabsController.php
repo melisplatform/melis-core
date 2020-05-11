@@ -121,6 +121,14 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
             // set data tags for the mgdprc_email_conf_tags field
             $form->setData($emailSetupData);
         }
+        // set email from based from the smtp
+        $smtpConfigData = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getSmtpConfigData();
+        if (! empty($smtpConfigData)){
+            $form->get('mgdprc_email_conf_from_email')->setValue($smtpConfigData->mgdpr_smtp_username);
+            $form->get('mgdprc_email_conf_from_email')->setAttribute('readonly','readonly');
+        }
+
+        
         // get form for Email Setup
         $view->setVariable('formEmailSetup', $form);
 

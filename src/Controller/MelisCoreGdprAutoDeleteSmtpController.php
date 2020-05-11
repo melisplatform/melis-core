@@ -197,6 +197,14 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
     }
 
     /**
+     * @return object
+     */
+    private function getGdprAutoDeleteService()
+    {
+        return $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService');
+    }
+
+    /**
      * this method will get the meliscore tool
      * @return object
      */
