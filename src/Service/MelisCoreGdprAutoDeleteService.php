@@ -766,7 +766,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             // message with error
             $messageWithError = $email . "/" . $message;
             if (empty($email)) {
-                $messageWithError = $message;
+                $messageWithError = 'tr_melis_core_gdpr_autodelete_log_no_email';
             }
             
             // for ko log;
@@ -817,7 +817,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         } else {
             $messageWithError = $email . "/" . $message;
             if (empty($email)){
-                $messageWithError = $message; 
+                $messageWithError = 'tr_melis_core_gdpr_autodelete_log_no_email';
             }
             // for ko log;
             $data = [

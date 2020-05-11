@@ -97,7 +97,7 @@ return [
     'tr_melis_core_gdpr_autodelete_label_alert_email_link' => 'Validation page',
     'tr_melis_core_gdpr_autodelete_label_alert_email_link tooltip' => 'Type in the page ID on which the user will be redirected to validate the status',
     'tr_melis_core_gdpr_autodelete_log_empty_data' => 'No logs data yet',
-
+    'tr_melis_core_gdpr_autodelete_log_no_email' => 'Email not available'
 
 
 ];

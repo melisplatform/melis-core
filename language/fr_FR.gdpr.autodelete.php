@@ -92,4 +92,6 @@ return [
     'tr_melis_core_gdpr_autodelete_label_alert_email_link' => 'Page de validation',
     'tr_melis_core_gdpr_autodelete_label_alert_email_link tooltip' => 'Saisissez l\'identifiant de la page sur laquelle l\'utilisateur sera redirigé pour valider le statut',
     'tr_melis_core_gdpr_autodelete_log_empty_data' => 'Aucun log',
+    'tr_melis_core_gdpr_autodelete_log_no_email' => 'Email non disponible'
+
 ];

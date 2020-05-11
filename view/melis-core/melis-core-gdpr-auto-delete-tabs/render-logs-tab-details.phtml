@@ -43,7 +43,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                                                     <ul class="list-regular innerAll px2">
                                                         <?php foreach (array_reverse(explode(';', $this->logData->mgdprl_warning1_ko_log)) as $email) { ?>
                                                             <?php if ($email) { ?>
-                                                                <li class="text-danger"><?= $email ?></li>
+                                                                <li class="text-danger"><?= $this->translate($email) ?></li>
                                                             <?php } ?>
                                                         <?php } ?>
                                                     </ul>
@@ -80,7 +80,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                                                     <ul class="list-regular innerAll px2">
                                                         <?php foreach (array_reverse(explode(';',$this->logData->mgdprl_warning2_ko_log)) as $email) {?>
                                                             <?php if ($email) { ?>
-                                                                <li class="text-danger"><?= $email ?></li>
+                                                                <li class="text-danger"><?= $this->translate($email)?></li>
                                                             <?php } ?>
                                                         <?php } ?>
                                                     </ul>
