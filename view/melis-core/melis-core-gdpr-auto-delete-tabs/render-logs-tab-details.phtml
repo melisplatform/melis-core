@@ -80,7 +80,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                                                     <ul class="list-regular innerAll px2">
                                                         <?php foreach (array_reverse(explode(';',$this->logData->mgdprl_warning2_ko_log)) as $email) {?>
                                                             <?php if ($email) { ?>
-                                                                <li class="text-success"><?= $email ?></li>
+                                                                <li class="text-danger"><?= $email ?></li>
                                                             <?php } ?>
                                                         <?php } ?>
                                                     </ul>

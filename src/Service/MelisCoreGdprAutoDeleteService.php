@@ -478,7 +478,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         // compare the users inactive days to auto delete config (Alert email sent after inactivity of)
         $usersDaysOfInactive = $this->getDaysDiff($emailOpt['config']['last_date'], date('Y-m-d'));
         // check if the day has come, 7 days before the delete days of inactivity or in between
-        if ($usersDaysOfInactive >= ($alertEmailDays) - 7 && $usersDaysOfInactive <= $alertEmailDays ) {
+        if ($usersDaysOfInactive >= ($alertEmailDays) - 7) {
             $status = true;
         }
 
@@ -570,71 +570,87 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             'hasError' => false
         ];
         // check config key is present
-        if ($this->isExists(self::CONFIG_KEY, $emailOptions)) {
-            // check lang id is present
-            if ($this->isExists(self::LANG_KEY, $emailOptions[self::CONFIG_KEY])) {
-                // get lang id
-                $langId = $emailOptions[self::CONFIG_KEY][self::LANG_KEY];
-                // get alert emails required data for the email
-                $alertEmailData = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], $type, $langId);
-                if (!empty($alertEmailData) && (!empty($alertEmailData->mgdpre_html) || !empty($alertEmailData->mgdpre_text))) {
-                    //  get the link of page id
-                    $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
-                    // if link is homepage
-                    if ($link == "/") {
-                        $uri = $this->getServiceLocator()->get('request')->getUri();
-                        $alertEmailData->mgdpre_link = $uri->getScheme() . "://" . $uri->getHost();
-                    } else {
-                        $alertEmailData->mgdpre_link = $link;
-                    }
-                    // email setup content (layout information)
-                    $emailSetupLayout = $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'],$alertEmailData, $emailOptions, $emailSetupConfig['mgdprc_email_conf_layout_desc'], $emailSetupConfig);
-                    // change the value of layout desc
-                    $emailSetupConfig['mgdprc_email_conf_layout_desc'] = $emailSetupLayout['content'];
-                    // html email content
-                    $htmlContent = $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'], $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
-                    // text version email content
-                    $textVersion =  $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'], $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
-                    // check for errors
-                    if (empty($htmlContent['errors']) && empty($textVersion['errors']) && empty($emailSetupLayout['errors'])) {
-                        // send email
-                        $this->sendEmail(
-                            $emailSetupConfig['mgdprc_email_conf_from_email'],
-                            $emailSetupConfig['mgdprc_email_conf_from_name'],
-                            $email,
-                            null,
-                            $emailSetupConfig['mgdprc_email_conf_reply_to'],
-                            $alertEmailData->mgdpre_subject,
-                            $this->getEmailLayoutContent(
-                                $emailSetupConfig,
-                                $htmlContent['content'] ?? $textVersion['content']
-                            ),
-                            $textVersion['content']
-                        );
-                        if (empty($this->errors)) {
-                            // save log ok
-                            $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, null, true);
+        // for module that doesnt required email
+        if (!empty($email)) {
+            // check
+            if ($this->isExists(self::CONFIG_KEY, $emailOptions)) {
+                // check lang id is present
+                if ($this->isExists(self::LANG_KEY, $emailOptions[self::CONFIG_KEY])) {
+                    // get lang id
+                    $langId = $emailOptions[self::CONFIG_KEY][self::LANG_KEY];
+                    // get alert emails required data for the email
+                    $alertEmailData = $this->gdprAutoDeleteToolService->getAlertEmailsTransData($emailSetupConfig['mgdprc_id'], $type, $langId);
+                    if (!empty($alertEmailData) && (!empty($alertEmailData->mgdpre_html) || !empty($alertEmailData->mgdpre_text))) {
+                        //  get the link of page id
+                        $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
+                        // if link is homepage
+                        if ($link == "/") {
+                            $uri = $this->getServiceLocator()->get('request')->getUri();
+                            $alertEmailData->mgdpre_link = $uri->getScheme() . "://" . $uri->getHost();
                         } else {
-                            // save error log
-                            $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, "Technical issue", false);
-                            echo "\"Technical issue\"";
-                            die;
+                            $alertEmailData->mgdpre_link = $link;
+                        }
+                        // email setup content (layout information)
+                        $emailSetupLayout = $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'],$alertEmailData, $emailOptions, $emailSetupConfig['mgdprc_email_conf_layout_desc'], $emailSetupConfig);
+                        // change the value of layout desc
+                        $emailSetupConfig['mgdprc_email_conf_layout_desc'] = $emailSetupLayout['content'];
+                        // html email content
+                        $htmlContent = $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'], $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
+                        // text version email content
+                        $textVersion =  $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'], $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
+                        // check for errors
+                        if (empty($htmlContent['errors']) && empty($textVersion['errors']) && empty($emailSetupLayout['errors'])) {
+                            // send email
+                            $this->sendEmail(
+                                $emailSetupConfig['mgdprc_email_conf_from_email'],
+                                $emailSetupConfig['mgdprc_email_conf_from_name'],
+                                $email,
+                                null,
+                                $emailSetupConfig['mgdprc_email_conf_reply_to'],
+                                $alertEmailData->mgdpre_subject,
+                                $this->getEmailLayoutContent(
+                                    $emailSetupConfig,
+                                    $htmlContent['content'] ?? $textVersion['content']
+                                ),
+                                $textVersion['content']
+                            );
+                            if (empty($this->errors)) {
+                                // save log ok
+                                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, null, true);
+                            } else {
+                                // save error log
+                                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, "Technical issue", false);
+                                echo "\"Technical issue\"";
+                                die;
+                            }
+                        } else {
+                            // set has error true
+                            $response['hasError'] = true;
+                            // logs not all tags are filled
+                            $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Not all tags are filled', false);
                         }
                     } else {
-                        // set has error true
-                        $response['hasError'] = true;
-                        // logs not all tags are filled
-                        $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Not all tags are filled', false);
+                        // logs no content of email
+                        $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'No email content provided in asked language', false);
                     }
                 } else {
-                    // logs no content of email
-                    $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'No email content provided in asked language', false);
+                    // set has error true
+                    $response['hasError'] = true;
+                    // logs lang key is missing
+                    $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Unavailability of language email', false);
                 }
+            }
+
+        } else {
+            // for module that doesnt require email we throw error as ko
+            // set has error true
+            if ($type == MelisGdprDeleteEmailsTable::EMAIL_DELETED ) {
+                $this->saveGdprAutoDeleteLogs($emailSetupConfig, '(no email address)', $type, $first, null, true);
             } else {
-                // set has error true
                 $response['hasError'] = true;
                 // logs lang key is missing
-                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Unavailability of language email', false);
+                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Email cannot be sent', false);
+
             }
         }
 
@@ -751,6 +767,10 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         } else {
             // message with error
             $messageWithError = $email . "/" . $message;
+            if (empty($email)) {
+                $messageWithError = $message;
+            }
+            
             // for ko log;
             $data = [
                 // set counter to 1
@@ -798,6 +818,9 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             }
         } else {
             $messageWithError = $email . "/" . $message;
+            if (empty($email)){
+                $messageWithError = $message; 
+            }
             // for ko log;
             $data = [
                 // set counter to 1

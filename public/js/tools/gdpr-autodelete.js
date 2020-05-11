@@ -448,6 +448,15 @@ $(function () {
             // remove loading zone
             melisHelper.removeLoadingZone(parent);
         });
+        // reload log details zone
+        melisHelper.zoneReload(
+            'id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',
+            'meliscoregdpr_auto_delete_add_edit_config_tab_logs_details',
+            {
+                logId :  0
+            }
+        );
+
     });
 
     // show email logs details
