@@ -493,6 +493,18 @@ $(function () {
             }
         );
     });
+    $body.on('click', "a[href='#id_meliscoregdpr_auto_delete']", function() {
+        setTimeout(function(){
+                $("#tableGdprAutoDeleteConfig").DataTable().responsive.recalc();
+        },500)
+        clearTimeout();
+    });
+    $body.on('click', "#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_tab", function(){
+         setTimeout(function(){
+                $("#tableGdprAutoDeleteLogs").DataTable().responsive.recalc();
+        },500)
+        clearTimeout();
+    })
 });
 /**
  * gdpr list config filters initializtions
