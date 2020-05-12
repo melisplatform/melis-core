@@ -80,6 +80,7 @@ return [
     'tr_melis_core_gdpr_autodelete_config_update_ok' => 'Successfully updated gdpr auto delete config',
     'tr_melis_core_gdpr_autodelete_config_delete_ok' => 'Successfully deleted gdpr auto delete config',
     // log details
+    'tr_melis_core_gdpr_autodelete_log_details_log_date' => 'Date du log',
     'tr_melis_core_gdpr_autodelete_log_details_heading' => 'Détails des logs',
     'tr_melis_core_gdpr_autodelete_log_details_first_warning_heading' => 'Premier email d\'alerte',
     'tr_melis_core_gdpr_autodelete_log_details_second_warning_heading' => 'Deuxième email d\'alerte',

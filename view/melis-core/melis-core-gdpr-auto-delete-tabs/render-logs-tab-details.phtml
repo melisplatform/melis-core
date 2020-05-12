@@ -7,22 +7,22 @@ if (!empty($this->zoneconfig['conf']['id'])) {
 
 <div data-melisKey='<?= $this->melisKey ?>' class="<?= empty($this->logData) ? "hidden" : null ?>" id="<?= $this->zoneconfig['conf']['id'] ?>" style="position:relative;min-height: 241px;margin-bottom: 10px;" aria-labelledby="<?= $this->zoneconfig['conf']['id'] ?>">
     <?php if (!empty($this->logData)) { ?>
-        <h3>Log details</h3>
+    <h3><?= $this->translate('tr_melis_core_gdpr_autodelete_log_details_heading')?></h3>
         <br>
         <div class="row">
             <div class="col-md-12">
                 <ul class="fa-ul">
-                    <li><span class="fa fa-li fa-key text-primary"></span> ID : <strong><?= $this->logData->mgdprl_id?></strong></li>
-                    <li><span class="fa fa-li fa-cloud text-info"></span> Site : <strong><?= $this->logData->mgdprl_site_id?></strong> </li>
-                    <li><span class="fa fa-li fa-calendar text-warning"></span> Log date : <strong><?= $this->logData->mgdprl_log_date?></strong></li>
-                    <li><span class="fa fa-li fa-puzzle-piece text-warning"></span> Module : <strong><?= $this->logData->mgdprl_module_name?></strong></li>
+                    <li><span class="fa fa-li fa-key text-primary"></span> <?= $this->translate('tr_melis_core_gdpr_autodelete_log_table_col_id') ?> : <strong><?= $this->logData->mgdprl_id?></strong></li>
+                    <li><span class="fa fa-li fa-cloud text-info"></span>  <?= $this->translate('tr_melis_core_gdpr_auto_delete_site') ?> : <strong><?= $this->logData->mgdprl_site_id?></strong> </li>
+                    <li><span class="fa fa-li fa-calendar text-warning"></span> <?= $this->translate('tr_melis_core_gdpr_autodelete_log_details_log_date') ?>: <strong><?= $this->logData->mgdprl_log_date?></strong></li>
+                    <li><span class="fa fa-li fa-puzzle-piece text-warning"></span> <?= $this->translate('tr_melis_core_gdpr_auto_delete_module') ?>: <strong><?= $this->logData->mgdprl_module_name?></strong></li>
                 </ul>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="first-alert-warning-email">
                             <ul class="fa-ul">
                                 <li>
-                                    <h5><span class="fa fa-li fa-envelope-o text-success"></span> First alert warning email</h5>
+                                <h5><span class="fa fa-li fa-envelope-o text-success"></span> <?= $this->translate('tr_melis_core_gdpr_autodelete_log_details_first_warning_heading') ?> </h5>
                                     <ul class="fa-ul">
                                         <li><span class="fa fa-li"></span> <span class="badge badge-success"><?= $this->logData->mgdprl_warning1_ok?></span> OK
                                             <?php if (!empty($this->logData->mgdprl_warning1_ok_log)) { ?>
@@ -59,7 +59,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                         <div class="second-alert-warning-email">
                             <ul class="fa-ul">
                                 <li>
-                                    <h5><span class="fa fa-li fa-envelope-o text-success "></span> Second alert warning email</h5>
+                                    <h5><span class="fa fa-li fa-envelope-o text-success "></span> <?= $this->translate('tr_melis_core_gdpr_autodelete_log_details_second_warning_heading') ?></h5>
                                     <ul class="fa-ul">
                                         <li><span class="fa fa-li text-success"></span><span class="badge badge-success"><?= $this->logData->mgdprl_warning2_ok?></span> OK
                                             <?php if (!empty($this->logData->mgdprl_warning2_ok_log)) { ?>
@@ -96,7 +96,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                         <div class="delete-alert-email">
                             <ul class="fa-ul">
                                 <li>
-                                    <h5><span class="fa fa-li fa-envelope-o text-success"></span> Delete alert email</h5>
+                                    <h5><span class="fa fa-li fa-envelope-o text-success"></span>  <?= $this->translate('tr_melis_core_gdpr_autodelete_log_details_delete_alert_heading') ?></h5>
                                     <ul class="fa-ul">
                                         <li><span class="fa fa-li text-success"></span><span class="badge badge-success"><?= $this->logData->mgdprl_delete_ok?></span> OK
                                             <?php if (!empty($this->logData->mgdprl_delete_ok_log)) { ?>

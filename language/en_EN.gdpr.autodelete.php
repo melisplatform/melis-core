@@ -86,8 +86,9 @@ return [
     'tr_melis_core_gdpr_autodelete_config_delete_ok' => 'Successfully deleted gdpr auto delete config',
     // log details
     'tr_melis_core_gdpr_autodelete_log_details_heading' => 'Log details',
-    'tr_melis_core_gdpr_autodelete_log_details_first_warning_heading' => 'First alert warning email',
-    'tr_melis_core_gdpr_autodelete_log_details_second_warning_heading' => 'Second alert warning email',
+    'tr_melis_core_gdpr_autodelete_log_details_first_warning_heading' => 'First alert email',
+    'tr_melis_core_gdpr_autodelete_log_details_log_date' => 'Log date',
+    'tr_melis_core_gdpr_autodelete_log_details_second_warning_heading' => 'Second alert email',
     'tr_melis_core_gdpr_autodelete_log_details_delete_alert_heading' => 'Delete alert email',
     'tr_melis_core_gdpr_auto_delete_site' => 'Site',
     'tr_melis_core_gdpr_auto_delete_site tooltip' => 'Select the site',
