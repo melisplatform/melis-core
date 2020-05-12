@@ -173,8 +173,6 @@ var gdprAutoDelete = {
                 }
                 // show ok notification
                 melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                // show gdpr list of auto delete configuration
-                gdprAutoDelete.showListConfig();
                 // reload the table
                 $("#refresh-auto-delete-list").trigger('click');
                 // open gdpr config

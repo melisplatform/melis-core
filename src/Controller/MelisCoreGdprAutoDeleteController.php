@@ -19,7 +19,7 @@ use Zend\View\Model\ViewModel;
 
 class MelisCoreGdprAutoDeleteController extends AbstractActionController
 {
-    const SAVE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_SAVE';
+    const SAVE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_ADD';
     const UPDATE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_UPDATE';
     const DELETE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_DELETE';
 
