@@ -76,9 +76,9 @@ return [
     // logs messages
     'tr_melis_core_gdpr_autodelete_config_title' => 'Auto suppression RGPD',
     'tr_melis_core_gdpr_autodelete_config_save_ko' => 'Impossible de sauvegarder La configuration de l\'auto suppression RGPD',
-    'tr_melis_core_gdpr_autodelete_config_save_ok' => 'Successfully saved gdpr auto delete config',
-    'tr_melis_core_gdpr_autodelete_config_update_ok' => 'Successfully updated gdpr auto delete config',
-    'tr_melis_core_gdpr_autodelete_config_delete_ok' => 'Successfully deleted gdpr auto delete config',
+    'tr_melis_core_gdpr_autodelete_config_save_ok' => 'Configuration RGPD ajoutée avec succès',
+    'tr_melis_core_gdpr_autodelete_config_update_ok' => 'Configuration RGPD éditée avec succès',
+    'tr_melis_core_gdpr_autodelete_config_delete_ok' => 'Configuration RGPD supprimée avec succès',
     // log details
     'tr_melis_core_gdpr_autodelete_log_details_log_date' => 'Date du log',
     'tr_melis_core_gdpr_autodelete_log_details_heading' => 'Détails des logs',
