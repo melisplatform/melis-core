@@ -134,7 +134,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                 $this->sendFirstAlertEmail($config);
                 // send mail for second warnign users
                 $this->sendSecondAlertEmail($config);
-                // send email for deleted users
+                 // send email for deleted users
                 $this->sendDeleteAlertEmail($config);
             }
 
@@ -294,7 +294,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                             $sendMail = $this->prepareSendWarningEmail(
                                             // merge tags
                                                 $this->mergeTagsConfig($autoDelConf),
-                                                $email,
+                                                $emailOpts['config']['email'] ?? null,
                                                 $emailOpts,
                                                 MelisGdprDeleteEmailsTable::EMAIL_WARNING,
                                                 true
@@ -318,9 +318,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         }
                     }
                 }
-
             }
-
         }
 
         return $response;
@@ -354,7 +352,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                         $sendMail = $this->prepareSendWarningEmail(
                                         // merge tags
                                             $this->mergeTagsConfig($autoDelConf),
-                                            $email,
+                                            $emailOpts['config']['email'] ?? null,
                                             $emailOpts,
                                             MelisGdprDeleteEmailsTable::EMAIL_WARNING,
                                             false
@@ -409,7 +407,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         // send email
                         $this->prepareSendWarningEmail(
                             $this->mergeTagsConfig($autoDelConf),
-                            $email,
+                            $emailOpts['config']['email'] ?? null,
                             $emailOpts,
                             MelisGdprDeleteEmailsTable::EMAIL_DELETED
                         );
@@ -571,7 +569,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         ];
         // check config key is present
         // for module that doesnt required email
-        if (!empty($email)) {
+        if (isset($emailOptions['config']['email']) && !empty($emailOptions['config']['email'])) {
             // check
             if ($this->isExists(self::CONFIG_KEY, $emailOptions)) {
                 // check lang id is present
@@ -604,7 +602,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                             $this->sendEmail(
                                 $emailSetupConfig['mgdprc_email_conf_from_email'],
                                 $emailSetupConfig['mgdprc_email_conf_from_name'],
-                                $email,
+                                $emailOptions['config']['email'],
                                 null,
                                 $emailSetupConfig['mgdprc_email_conf_reply_to'],
                                 $alertEmailData->mgdpre_subject,
@@ -766,7 +764,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             // message with error
             $messageWithError = $email . "/" . $message;
             if (empty($email)) {
-                $messageWithError = 'tr_melis_core_gdpr_autodelete_log_no_email';
+                $messageWithError = 'tr_melis_core_gdpr_autodelete_log_no_email;';
             }
             
             // for ko log;
@@ -817,7 +815,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         } else {
             $messageWithError = $email . "/" . $message;
             if (empty($email)){
-                $messageWithError = 'tr_melis_core_gdpr_autodelete_log_no_email';
+                $messageWithError = 'tr_melis_core_gdpr_autodelete_log_no_email;';
             }
             // for ko log;
             $data = [
