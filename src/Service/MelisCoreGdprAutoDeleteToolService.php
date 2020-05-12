@@ -396,8 +396,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     public function getLinkUrl($pageId)
     {
         if ($this->getServiceLocator()->has('MelisEngineTree')) {
-            if (is_int($pageId)) 
-                return $this->getServiceLocator()->get('MelisEngineTree')->getPageLink($pageId,true);
+            return $this->getServiceLocator()->get('MelisEngineTree')->getPageLink((int) $pageId,true);
         }
 
         return $pageId;

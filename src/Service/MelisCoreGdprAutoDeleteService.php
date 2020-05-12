@@ -584,7 +584,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         //  get the link of page id
                         $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
                         // if link is homepage
-                        if ($link == "/") {
+                        if ($link === "/") {
                             $uri = $this->getServiceLocator()->get('request')->getUri();
                             $alertEmailData->mgdpre_link = $uri->getScheme() . "://" . $uri->getHost();
                         } else {
