@@ -81,10 +81,10 @@ return [
     // logs messages
     'tr_melis_core_gdpr_autodelete_config_title' => 'GDPR auto delete',
     'tr_melis_core_gdpr_autodelete_config_save_ko' => 'Unable to save gdpr auto delete config',
-    'tr_melis_core_gdpr_autodelete_config_save_ok' => 'Successfully saved gdpr auto delete config',
-    'tr_melis_core_gdpr_autodelete_config_update_ok' => 'Successfully updated gdpr auto delete config',
-    'tr_melis_core_gdpr_autodelete_config_delete_ok' => 'Successfully deleted gdpr auto delete config',
-    // log details
+    'tr_melis_core_gdpr_autodelete_config_save_ok' => 'GDPR config added successfully',
+    'tr_melis_core_gdpr_autodelete_config_update_ok' => 'GDPR config edited successfully',
+    'tr_melis_core_gdpr_autodelete_config_delete_ok' => 'GDPR config deleted successfully',
+     // log details
     'tr_melis_core_gdpr_autodelete_log_details_heading' => 'Log details',
     'tr_melis_core_gdpr_autodelete_log_details_first_warning_heading' => 'First alert email',
     'tr_melis_core_gdpr_autodelete_log_details_log_date' => 'Log date',
