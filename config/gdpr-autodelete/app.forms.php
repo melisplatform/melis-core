@@ -595,7 +595,6 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'form-control',
-                                            'required' => 'required'
                                         ]
                                     ]
                                 ]
