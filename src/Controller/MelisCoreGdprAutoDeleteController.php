@@ -598,14 +598,18 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             $alertEmailForm->setData($val);
             // validate form
             if (!$alertEmailForm->isValid()) {
-                $tmpError['mgdpre_link_' . $locale]['label'] = $this->getTool()->getTranslation('tr_melis_core_gdpr_autodelete_label_alert_email_link') . " ( " . explode('_',$locale)[1] . " )";
-                $tmpError['mgdpre_link_' . $locale]['notInt'] = $alertEmailForm->getMessages()['mgdpre_link']['notInt'];
-                $error['errors'] = array_merge($error['errors'] ?? [],$tmpError);
-                // put indiciation
-                if (isset($error['indications'])) {
-                    array_push($error['indications'], 'alert-email-' . strtolower($locale));
-                } else {
-                    $error['indications'][] = 'alert-email-' . strtolower($locale);
+                $formErrorMessage = $alertEmailForm->getMessages();
+                if (! empty($formErrorMessage) {
+                    $tmpError['mgdpre_link_' . $locale]['label'] = $this->getTool()->getTranslation('tr_melis_core_gdpr_autodelete_label_alert_email_link') . " ( " . explode('_',$locale)[1] . " )";
+                    $tmpError['mgdpre_link_' . $locale]['notInt'] = $alertEmailForm->getMessages()['mgdpre_link']['notInt'];
+                    $error['errors'] = array_merge($error['errors'] ?? [],$tmpError);
+                    // put indiciation
+                    if (isset($error['indications'])) {
+                        array_push($error['indications'], 'alert-email-' . strtolower($locale));
+                    } else {
+                        $error['indications'][] = 'alert-email-' . strtolower($locale);
+                    }
+     
                 }
             }
 
