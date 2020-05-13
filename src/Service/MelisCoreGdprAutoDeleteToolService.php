@@ -255,11 +255,11 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
                 'form' => $this->getAddEditFiltersForm()
             ],
             'melisgdprautodelete_add_edit_cron_config_form' => [
-                'name' => 'Cron Config',
+                'name' => 'cron_form',
                 'form' => $this->getAddEditCronConfigForm()
             ],
             'melisgdprautodelete_add_edit_email_setup' => [
-                'name' => 'Email Setup',
+                'name' => 'email_setup_form',
                 'form' => $this->getAddEditEmailSetupForm()
             ],
 //            'melisgdprautodelete_add_edit_alert_email' => [
@@ -278,18 +278,16 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
             $validatedForm = $form['form']->setData($postData);
             // check form it its valid
             if (!$validatedForm->isValid()) {
+                // error indications
+                $errors['indications'][] = $form['name'];
                 // set form errors
-                $errors = array_merge($errors, $this->formatErrorMessage($validatedForm->getMessages(), "MelisCoreGdprAutoDelete/tools/melis_core_gdpr_auto_delete/forms/" . $formkey)) ;
+                $errors['errors'] = array_merge($errors['errors'] ?? [], $this->formatErrorMessage($validatedForm->getMessages(), "MelisCoreGdprAutoDelete/tools/melis_core_gdpr_auto_delete/forms/" . $formkey)) ;
             }
         }
 
         return $errors;
     }
-    public function validateTranslationsForm($postDataTranslations, $form)
-    {
-        print_r($postDataTranslations);
-        die;
-    }
+
     /**
      * This will pop an error after validating the form
      *

@@ -511,6 +511,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $request = $this->getRequest();
         $success = false;
         $errors = [];
+        $otherErrors = [];
         $configId = null;
         $logtypeCode = self::SAVE_LOG_TYPE;
         $title = "tr_melis_core_gdpr_autodelete_config_title";
@@ -528,9 +529,12 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             $alertEmailsWarningTransData = $this->jsonToArray($postValues['alert_emails_warning_trans']);
             // convert json string to array
             $alertEmailsDeleteTransData = $this->jsonToArray($postValues['alert_emails_delete_trans']);
-
             // validate all forms inputs from requests
             $errors = $this->getGdprAutoDeleteToolService()->validateForm($postValues);
+            // validate alert email form
+            $errors = $this->validateTransForm($alertEmailsWarningTransData, $errors);
+            $otherErrors = $errors['indications'];
+            $errors = $errors['errors'];
             // remove auto_delete_config key
             unset($postValues['alert_emails_warning_trans']);
             // remove auto_delete_config key
@@ -572,7 +576,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             'textTitle'   => $title,
             'typeCode'    => $logtypeCode,
             'itemId'      => $configId,
-            'errors'      => $errors
+            'errors'      => $errors,
+            'errors_indication'  => $otherErrors
         ];
 
         // save melis core log
@@ -581,10 +586,28 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         return new JsonModel($response);
     }
 
-    private function validateTransData($data)
+    private function validateTransForm($data,$error)
     {
+        $alertErrors = [];
+        $alertEmailForm = $this->getGdprAutoDeleteToolService()->getAddEditAlertEmailForm();
+        foreach ($data as $locale => $val) {
+            // set for mdata
+            $alertEmailForm->setData($val);
+            // validate form
+            if (!$alertEmailForm->isValid()) {
+                $tmpError['mgdpre_link_' . $locale]['label'] = $this->getTool()->getTranslation('tr_melis_core_gdpr_autodelete_label_alert_email_link') . " ( " . explode('_',$locale)[1] . " )";
+                $tmpError['mgdpre_link_' . $locale]['notInt'] = $alertEmailForm->getMessages()['mgdpre_link']['notInt'];
+                $error['errors'] = array_merge($error['errors'],$tmpError);
+                // put indiciation
+                array_push($error['indications'], 'translation_' . $locale);
 
+            }
+
+        }
+
+        return $error; 
     }
+    
 
     /**
      * @return JsonModel
@@ -684,7 +707,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             // overwrite old data
             parse_str($val['data'], $parseData);
             unset($parseData['mgdpre_email_tags']);
-            $data[] = $parseData;
+            $data[$val['locale']] = $parseData;
         }
 
         return $data;
