@@ -597,10 +597,13 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             if (!$alertEmailForm->isValid()) {
                 $tmpError['mgdpre_link_' . $locale]['label'] = $this->getTool()->getTranslation('tr_melis_core_gdpr_autodelete_label_alert_email_link') . " ( " . explode('_',$locale)[1] . " )";
                 $tmpError['mgdpre_link_' . $locale]['notInt'] = $alertEmailForm->getMessages()['mgdpre_link']['notInt'];
-                $error['errors'] = array_merge($error['errors'],$tmpError);
+                $error['errors'] = array_merge($error['errors'] ?? [],$tmpError);
                 // put indiciation
-                array_push($error['indications'], 'translation_' . $locale);
-
+                if (isset($error['indications'])) {
+                    array_push($error['indications'], 'translation_' . $locale);
+                } else {
+                    $error['indications'][] = 'translation_' . $locale;
+                }
             }
 
         }
