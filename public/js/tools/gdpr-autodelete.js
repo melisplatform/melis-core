@@ -104,9 +104,9 @@ var gdprAutoDelete = {
             // changed dynamically the main heading of add / edit accordion
             if (configId !== ""  && typeof(configId) !== "undefined") {
                 
-                headingTitle.text(translations.tr_melis_core_gdpr_autodelete_label_edit_accordion_heading + "<p class='accordion-subtitle'>" + translations.tr_melis_core_gdpr_autodelete_label_edit_accordion_sub_heading + "</p>");
+                headingTitle.html(translations.tr_melis_core_gdpr_autodelete_label_edit_accordion_heading + "<p class='accordion-subtitle'>" + translations.tr_melis_core_gdpr_autodelete_label_edit_accordion_sub_heading + "</p>");
             } else {
-                headingTitle.text(translations.tr_melis_core_gdpr_autodelete_label_add_accordion_heading + "<p class='accordion-subtitle'>" + translations.tr_melis_core_gdpr_autodelete_label_add_accordion_sub_heading + "</p>");
+                headingTitle.html(translations.tr_melis_core_gdpr_autodelete_label_add_accordion_heading + "<p class='accordion-subtitle'>" + translations.tr_melis_core_gdpr_autodelete_label_add_accordion_sub_heading + "</p>");
             }
             // for save button
             if (typeof(configId) !== "undefined") {
