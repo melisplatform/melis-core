@@ -643,7 +643,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             if ($type == MelisGdprDeleteEmailsTable::EMAIL_DELETED ) {
                 $this->saveGdprAutoDeleteLogs($emailSetupConfig, '(no email address)', $type, $first, null, true);
             } else {
-                $response['hasError'] = true;
+                //$response['hasError'] = true;
                 // logs lang key is missing
                 $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Email cannot be sent', false);
 
