@@ -18,6 +18,9 @@ if (!empty($this->zoneconfig['conf']['id'])) {
     <a data-toggle="collapse" data-target="#add-edit-config-content" aria-expanded="true" aria-controls="add-edit-config-content" class="accordion-heading-add-delete arrow-indication-down" style="border-top:1px solid #eee">
         <h3 class="accordion-heading-title" id="add-edit-main-heading">
             <?= ($this->configId) ? $this->translate('tr_melis_core_gdpr_autodelete_label_edit_accordion_heading') : $this->translate('tr_melis_core_gdpr_autodelete_label_add_accordion_heading')?>
+            <p class='accordion-subtitle' id="add-edit-config-sub-heading">
+                <?= ($this->configId) ? $this->translate('tr_melis_core_gdpr_autodelete_label_edit_accordion_sub_heading') : $this->translate('tr_melis_core_gdpr_autodelete_label_add_accordion_sub_heading')?>
+            </p>
         </h3>
     </a>
 </div>
