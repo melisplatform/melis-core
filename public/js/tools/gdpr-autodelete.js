@@ -181,6 +181,19 @@ var gdprAutoDelete = {
                 // flash messenger
                 melisCore.flashMessenger();
             } else {
+                // remove first all errors
+                $("#accordion-add-edit").find('.gdpr-auto-delete-error').removeClass('gdpr-auto-delete-error');
+                if (data.errors_indication.length > 0) {
+                    for (var i = 0; i < data.errors_indication.length; i++) {
+                        if (data.errors_indication[i] == "id_meliscoregdpr_auto_delete_add_edit_config_tab_config_tab") {
+                            // highlight cron config accordion
+                            $("#email-config-heading").addClass('gdpr-auto-delete-error');
+                        }
+                        // append class to the area
+                        $("#" + data.errors_indication[i]).addClass('gdpr-auto-delete-error');
+                        $("." + data.errors_indication[i]).addClass('gdpr-auto-delete-error');
+                    }
+                }
                 melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
                 // highlight form errors
                 gdprAutoDelete.highlightGdprFormErrors(data);

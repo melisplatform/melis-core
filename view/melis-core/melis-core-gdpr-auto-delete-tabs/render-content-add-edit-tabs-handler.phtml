@@ -24,7 +24,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
 
                         // special case for languages
                         foreach ($this->melisCmsLang as $i => $data) { ?>
-                            <a class="nav-link" id="alert_emails_<?= strtolower($data['lang_cms_locale']) ?>_tab"
+                            <a class="nav-link alert-email-<?= strtolower($data['lang_cms_locale']) ?>" id="alert_emails_<?= strtolower($data['lang_cms_locale']) ?>_tab"
                                data-toggle="pill" href="#alert_emails_<?= strtolower($data['lang_cms_locale']) ?>"
                                role="tab" aria-controls="alert_emails_<?= strtolower($data['lang_cms_locale']) ?>"
                                aria-selected="false"><div class="float-left"><?= $data['lang_cms_name'] ?></div> <img class='imgDisplay float-right' src="/MelisCore/images/lang/<?= $data['lang_cms_locale'] ?>.png" /><div class="clearfix"></div></a>

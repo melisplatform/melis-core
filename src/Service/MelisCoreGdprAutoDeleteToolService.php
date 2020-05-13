@@ -255,11 +255,11 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
                 'form' => $this->getAddEditFiltersForm()
             ],
             'melisgdprautodelete_add_edit_cron_config_form' => [
-                'name' => 'cron_form',
+                'name' => 'id_meliscoregdpr_auto_delete_add_edit_config_tab_config_tab',
                 'form' => $this->getAddEditCronConfigForm()
             ],
             'melisgdprautodelete_add_edit_email_setup' => [
-                'name' => 'email_setup_form',
+                'name' => 'email-setup-heading',
                 'form' => $this->getAddEditEmailSetupForm()
             ],
 //            'melisgdprautodelete_add_edit_alert_email' => [

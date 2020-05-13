@@ -16,7 +16,7 @@ $availableLang = "";
                 <div class="card" style="border: none;">
                     <div id="alert-email" >
                         <a data-toggle="collapse" data-target="#alert-email-content-<?= $data['lang_cms_locale'] ?>" aria-expanded="true" aria-controls="alert-email" class="accordion-heading-sm pad-10 toggle-arrow-indication arrow-down-sm-accordion" >
-                        <h5 class="accordion-heading-title"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_alert_email_heading')?></h5>
+                        <h5 class="accordion-heading-title alert-email-<?= strtolower($data['lang_cms_locale'])?>"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_alert_email_heading')?></h5>
                         </a>
                     </div>
                     <div id="alert-email-content-<?= $data['lang_cms_locale'] ?>" class="collapse show accordion-content-bg" aria-labelledby="alert-email-content-<?= $data['lang_cms_locale'] ?>" data-parent="#accordion-alert-email-<?= $data['lang_cms_locale'] ?>">
@@ -86,6 +86,9 @@ $availableLang = "";
                         </div>
                     </div>
                 </div>
+                <script>
+                    $("#melisgdprautodelete_add_edit_alert_email_<?= $data['lang_cms_locale'] ?>").find('input[name=mgdpre_link]').parent().siblings().addClass('alert-email-<?= strtolower($data['lang_cms_locale']) ?>');
+                </script>
                 <!-- accordion account deleted emails -->
                 <div id="accordion-account-deleted-email-<?= $data['lang_cms_locale'] ?>" class="">
                     <div class="card" style="border: none;">

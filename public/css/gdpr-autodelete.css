@@ -51,7 +51,7 @@
     margin-bottom:7px;
 }
 .gdpr-auto-delete-multi-tabs .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-    color:#fff;
+    color:#fff !important;
     background-color:#e61c23;
 }
 .gdpr-auto-delete-multi-tabs .nav-pills .nav-link , .nav-pills .show>.nav-link {
@@ -59,7 +59,7 @@
     color:#1e1e1e;
 }
 .gdpr-auto-delete-multi-tabs .nav-pills .nav-link:hover {
-    color:#fff;
+    color:#fff !important;
     background-color:#e61c23;
 }
 #cron-configuration a,
@@ -208,4 +208,7 @@
     right: 7px;
     top:10px;
     position: absolute;
+}
+.gdpr-auto-delete-error {
+    color :red !important;
 }

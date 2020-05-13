@@ -533,8 +533,11 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             $errors = $this->getGdprAutoDeleteToolService()->validateForm($postValues);
             // validate alert email form
             $errors = $this->validateTransForm($alertEmailsWarningTransData, $errors);
-            $otherErrors = $errors['indications'];
-            $errors = $errors['errors'];
+            if (! empty($errors)) {
+                $otherErrors = $errors['indications'];
+                $errors = $errors['errors'];
+            } 
+
             // remove auto_delete_config key
             unset($postValues['alert_emails_warning_trans']);
             // remove auto_delete_config key
@@ -600,9 +603,9 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 $error['errors'] = array_merge($error['errors'] ?? [],$tmpError);
                 // put indiciation
                 if (isset($error['indications'])) {
-                    array_push($error['indications'], 'translation_' . $locale);
+                    array_push($error['indications'], 'alert-email-' . strtolower($locale));
                 } else {
-                    $error['indications'][] = 'translation_' . $locale;
+                    $error['indications'][] = 'alert-email-' . strtolower($locale);
                 }
             }
 
