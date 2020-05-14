@@ -3,9 +3,9 @@ $(function() {
 	var $body = $("body");
 	
 		//check if whether to open the user profile tab on page finish load
-		$(window).on('load', function(){
-			checkUserProfileTabOnReload();
-		});
+		// $(window).on('load', function(){
+		// 	checkUserProfileTabOnReload();
+		// });
 		
 		/**
 		 * Open up user profile
@@ -69,10 +69,14 @@ $(function() {
 					contentType	: false,
 					dataType    : 'json',
 					beforeSend	: function(){
-						//make the button as loader before sending
-						_this.html("<i class='fa fa-cog fa-spin'></i> "+ translations.tr_meliscore_tool_user_update);
+						//show loader
+						melisCoreTool.pending(".btnUpdateUser");
+						melisCoreTool.processing();
 					},
 				}).done(function(data) {
+					//clear loader
+					melisCoreTool.done(".btnUpdateUser");
+					melisCoreTool.processDone();
 					//process the returned data
 					if(data.success){//success
 						$("#meliscore_left_menu_profile_pic, #user-profile-pic").attr("src", data.data.profilePic);
@@ -88,8 +92,6 @@ $(function() {
 							melisCore.flashMessenger();
 							$('#iduserprofilemanagement #id_usr_password, #iduserprofilemanagement #id_usr_confirm_password').val('');
 						}
-						melisCoreTool.processing();
-						location.reload(true);
 					}else{//failed
 						//show errors
 						melisHelper.melisKoNotification(data.textTitle, translations.tr_meliscore_user_profile_failed_info, data.errors);
@@ -98,9 +100,9 @@ $(function() {
 						//refresh notifications
 						melisCore.flashMessenger();
 					}
-					_this.html("<i class='fa fa-save'></i> "+ translations.tr_meliscore_tool_user_update);
 				}).fail(function(){//some error happened
-					_this.html("<i class='fa fa-save'></i> "+ translations.tr_meliscore_tool_user_update);
+					melisCoreTool.done(".btnUpdateUser");
+					melisCoreTool.processDone();
 					alert( translations.tr_meliscore_error_message );
 				});
 		}
