@@ -13,7 +13,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                     <h5 class="accordion-heading-title" id="email-config-heading" ><?= $this->translate('tr_melis_core_gdpr_autodelete_label_cron_config_title')?></h5>
                 </a>
             </div>
-            <div id="cron-configuration-content" class="collapse show accordion-content-bg" aria-labelledby="cron-configuration-content" data-parent="#accordion-cron-configuration">
+            <div id="cron-configuration-content" class="accordion-content collapse show accordion-content-bg" data-parent-container='#cron-configuration' aria-labelledby="cron-configuration-content" data-parent="#accordion-cron-configuration">
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <?php
@@ -32,7 +32,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                     <h5 class="accordion-heading-title" id="email-setup-heading"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_email_setup_title')?></h5>
                 </a>
             </div>
-            <div id="email-setup-content" class="collapse accordion-content-bg" aria-labelledby="email-setup-content" data-parent="#accordion-cron-configuration">
+            <div id="email-setup-content" class="collapse accordion-content-bg accordion-content" data-parent-container="#email-setup" aria-labelledby="email-setup-content" data-parent="#accordion-cron-configuration">
                 <div class="row">
                     <div class="col-md-6">
                         <?php

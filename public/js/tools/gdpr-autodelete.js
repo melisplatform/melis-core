@@ -43,14 +43,14 @@ var gdprAutoDelete = {
         }
     },
     toggleSmArrowIndicator: function (element) {
-        var el = $(element);
+        /*var el = $(element);
         if (el.hasClass('arrow-down-sm-accordion')) {
             el.removeClass('arrow-down-sm-accordion');
             el.addClass('arrow-right-sm-accordion')
         } else {
             el.removeClass('arrow-right-sm-accordion');
             el.addClass('arrow-down-sm-accordion')
-        }
+        }*/
     },
     /**
      * reload data table
@@ -525,7 +525,24 @@ $(function () {
                 $("#tableGdprAutoDeleteLogs").DataTable().responsive.recalc();
         },500)
         clearTimeout();
-    })
+    });
+    $body.on('shown.bs.collapse', ".accordion-content", function(){
+        var parentContainer = $(this).data('parentContainer');
+        var content = $(parentContainer);
+        var toggle = content.find('.toggle-arrow-indication');
+        toggle.removeClass('arrow-right-sm-accordion');
+        toggle.addClass('arrow-down-sm-accordion')
+    });
+
+   $body.on('hidden.bs.collapse', ".accordion-content", function(){
+        var parentContainer = $(this).data('parentContainer');
+        var content = $(parentContainer);
+        var toggle = content.find('.toggle-arrow-indication');
+        toggle.removeClass('arrow-down-sm-accordion');
+        toggle.addClass('arrow-right-sm-accordion')
+    });
+
+
 });
 /**
  * gdpr list config filters initializtions
