@@ -90,7 +90,7 @@ $(function() {
 						}else{
 							//reload notficiations
 							melisCore.flashMessenger();
-							$('#iduserprofilemanagement #id_usr_password, #iduserprofilemanagement #id_usr_confirm_password').val('');
+							$('#iduserprofilemanagement #id_usr_profile_password, #iduserprofilemanagement #id_usr_profile_confirm_password').val('');
 						}
 					}else{//failed
 						//show errors
