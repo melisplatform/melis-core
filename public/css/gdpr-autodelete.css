@@ -212,3 +212,12 @@
 .gdpr-auto-delete-error {
     color :red !important;
 }
+#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details .text-success {
+    color:#72AF46 !important;
+}
+#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_details .text-danger {
+    color :#BD2130;
+}
+.gdpr-delete-warning-info {
+    margin:0;
+}
