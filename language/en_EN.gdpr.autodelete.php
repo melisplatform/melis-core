@@ -30,6 +30,7 @@ return [
     'tr_meliscore_gdpr_auto_delete_not_int' => 'Value must be an integer',
     // cron config translations
     'tr_melis_core_gdpr_autodelete_label_days_text' => 'Day(s)',
+    'tr_melis_core_gdpr_autodelete_label_warning_delete' => 'Warning, if the account doesn\'t have an email address associated, it will be automatically anonymized as we cannot send any consent email.',
     'tr_melis_core_gdpr_autodelete_label_cron_config_title' => 'Cron config',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status' => 'Activate alert email',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip' => 'Activate or not the alert email',
@@ -77,8 +78,8 @@ return [
     'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ko' => 'A1 KO',
     'tr_melis_core_gdpr_autodelete_log_table_col_warning2_ok' => 'A2 OK',
     'tr_melis_core_gdpr_autodelete_log_table_col_warning2_ko' => 'A2 KO',
-    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ok' => 'DEL OK',
-    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ko' => 'DEL KO',
+    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ok' => 'ANO OK',
+    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ko' => 'ANO KO',
 
     // logs messages
     'tr_melis_core_gdpr_autodelete_config_title' => 'GDPR auto delete',
@@ -91,7 +92,7 @@ return [
     'tr_melis_core_gdpr_autodelete_log_details_first_warning_heading' => 'First alert email',
     'tr_melis_core_gdpr_autodelete_log_details_log_date' => 'Log date',
     'tr_melis_core_gdpr_autodelete_log_details_second_warning_heading' => 'Second alert email',
-    'tr_melis_core_gdpr_autodelete_log_details_delete_alert_heading' => 'Delete alert email',
+    'tr_melis_core_gdpr_autodelete_log_details_delete_alert_heading' => 'Anonymization',
     'tr_melis_core_gdpr_auto_delete_site' => 'Site',
     'tr_melis_core_gdpr_auto_delete_site tooltip' => 'Select the site',
     'tr_melis_core_gdpr_auto_delete_module' => 'Module',

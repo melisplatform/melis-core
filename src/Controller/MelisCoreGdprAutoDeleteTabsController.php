@@ -359,9 +359,26 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         if (! empty($logId)) {
             // get log data
             $logData = $this->getGdprDeleteEmailsLogsTable()->getEntryById($logId)->current();
+            if (! empty($logData)) {
+                // get email of the id for warning1 ok
+                $logData->mgdprl_warning1_ok_log = $this->getUserEmailInOk($logData->mgdprl_warning1_ok_log, $logData->mgdprl_module_name);
+                // get email of the id form warning1 ko
+                $logData->mgdprl_warning1_ko_log = $this->getUserEmailInKo($logData->mgdprl_warning1_ko_log, $logData->mgdprl_module_name);
+                // get email of the id for warning2 ok
+                $logData->mgdprl_warning2_ok_log = $this->getUserEmailInOk($logData->mgdprl_warning2_ok_log, $logData->mgdprl_module_name);
+                // get email of the id for warning2 ko 
+                $logData->mgdprl_warning2_ko_log = $this->getUserEmailInKo($logData->mgdprl_warning2_ko_log, $logData->mgdprl_module_name);
+                 // get email of the id for delete ok 
+                $logData->mgdprl_delete_ok_log = $this->getUserEmailInOk($logData->mgdprl_delete_ok_log, $logData->mgdprl_module_name);
+                // get email of the id for delete ko 
+                $logData->mgdprl_delete_ko_log = $this->getUserEmailInKo($logData->mgdprl_delete_ko_log, $logData->mgdprl_module_name);
+
+            }
             // get site name
             $logData->mgdprl_site_id = $this->getGdprAutoDeleteToolService()->getSiteNameBySiteId($logData->mgdprl_site_id);
+
         }
+    
         // log id
         $view->setVariable('logData', $logData);
         // melis key
@@ -370,6 +387,77 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         return $view;
     }
 
+    /**
+     * retrieve user email to their respective by module for KO log messages
+     * @param $ids
+     * @param $module
+     */
+    private function getUserEmailInKo($ids, $module)
+    {
+        $emails = "";
+        if (! empty($ids)) {
+            // explode
+            $ids = explode(';',$ids);
+            foreach ($ids as $val) {
+                $id = explode('/', $val)[0];
+                if (! empty($val)) {
+                    $message = explode('/', $val)[1];
+                    //trigger an event to get respective user email by its module
+                    $list = $this->getEventManager()->trigger('melis_core_gdpr_auto_delete_log_get_user_email', $this, ['module' => $module, 'id' => $id]);
+                    for ($list->rewind();$list->valid();$list->next()) {
+                        if (! empty($list->current())) {
+                            $returnedData = $list->current();
+                            $returnedModule = $returnedData['module'] ?? null;
+                            $email = $returnedData['email'] ?? null;
+                            if (! empty($email)) {
+                                $emails .= $email . "/" . $message . ";";
+                            } else {
+                                $emails .= $id . "/" . $message . ";";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $emails;
+    } 
+
+    /**
+     * retrieve user email to their respective by module for OK log messages
+     *
+     * @param $ids
+     * @param $module
+     */
+    private function getUserEmailInOk($ids, $module)
+    {
+        $emails = "";
+        if (! empty($ids)) {
+            // explode
+            $ids = explode(';',$ids);
+            foreach ($ids as $id) {
+                //trigger an event to get respective user email by its module
+                $list = $this->getEventManager()->trigger('melis_core_gdpr_auto_delete_log_get_user_email', $this, ['module' => $module, 'id' => $id]);
+                for ($list->rewind(); $list->valid(); $list->next()) {
+                    // check if current data is not empty
+                    if (! empty($list->current())) {
+                        $returnedData = $list->current();
+                        $email = $returnedData['email'] ?? null;
+                        $returnedModule = $returnedData['module'] ?? null;
+                        if ($returnedModule == $module) {
+                            if (! empty($email)) {
+                                $emails .= $email . ";";
+                            } else {
+                                $emails .= $id . ";";
+                            }
+                        }
+                    }
+                };
+            }
+        }
+
+        return $emails;
+    } 
 
     public function deleteEverythingAction()
     {

@@ -31,6 +31,7 @@ return [
     // cron config translations
     'tr_melis_core_gdpr_autodelete_label_days_text' => 'Jour(s)',
     'tr_melis_core_gdpr_autodelete_label_cron_config_title' => 'Configuration du Cron',
+    'tr_melis_core_gdpr_autodelete_label_warning_delete' => 'Attention, si le compte ne contient pas d\'email, il sera automatiquement anonymisé car nous ne pouvons pas envoyer d\'email de consentement.',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status' => 'Activer l\'alerte email',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip' => 'Active ou désactive l\'email d\'alerte',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days' => 'Email d\'alerte envoyé après une inactivité de :',
@@ -73,8 +74,8 @@ return [
     'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ko' => 'A1 KO',
     'tr_melis_core_gdpr_autodelete_log_table_col_warning2_ok' => 'A2 OK',
     'tr_melis_core_gdpr_autodelete_log_table_col_warning2_ko' => 'A2 KO',
-    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ok' => 'SUP OK',
-    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ko' => 'SUP KO',
+    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ok' => 'ANO OK',
+    'tr_melis_core_gdpr_autodelete_log_table_col_delete_ko' => 'ANO KO',
     // logs messages
     'tr_melis_core_gdpr_autodelete_config_title' => 'Auto suppression RGPD',
     'tr_melis_core_gdpr_autodelete_config_save_ko' => 'Impossible de sauvegarder La configuration de l\'auto suppression RGPD',
@@ -86,7 +87,7 @@ return [
     'tr_melis_core_gdpr_autodelete_log_details_heading' => 'Détails des logs',
     'tr_melis_core_gdpr_autodelete_log_details_first_warning_heading' => 'Premier email d\'alerte',
     'tr_melis_core_gdpr_autodelete_log_details_second_warning_heading' => 'Deuxième email d\'alerte',
-    'tr_melis_core_gdpr_autodelete_log_details_delete_alert_heading' => 'Email d\'alerte de suppression',
+    'tr_melis_core_gdpr_autodelete_log_details_delete_alert_heading' => 'Anonymisation',
     'tr_melis_core_gdpr_auto_delete_site' => 'Site',
     'tr_melis_core_gdpr_auto_delete_site tooltip' => 'Sélectionnez le site',
     'tr_melis_core_gdpr_auto_delete_module' => 'Module',
