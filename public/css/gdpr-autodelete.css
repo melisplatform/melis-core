@@ -221,3 +221,9 @@
 .gdpr-delete-warning-info {
     margin:0;
 }
+@media screen and (max-width: 767px) {
+    .nav-gdpr-auto-delete-tabs {
+        margin-bottom:15px;
+    }
+}
+
