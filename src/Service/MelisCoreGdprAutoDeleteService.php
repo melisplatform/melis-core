@@ -198,14 +198,14 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      *
      * @return array
      */
-    public function getFirstAlertUsers($autoDelConf)
+    public function getFirstAlertUsers()
     {
         // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_modules_warning_list_start', $arrayParameters);
         // Adding results to parameters for events treatment if needed
-        $arrayParameters['results'] = $this->getDataOfAnEvent(self::WARNING_EVENT, self::WARNING_LIST_KEY, null,  $autoDelConf);
+        $arrayParameters['results'] = $this->getDataOfAnEvent(self::WARNING_EVENT, self::WARNING_LIST_KEY);
         // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_modules_warning_list_end', $arrayParameters);
 
@@ -217,14 +217,14 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      *
      * @return array
      */
-    public function getSecondAlertUsers($autoDelConf)
+    public function getSecondAlertUsers()
     {
         // Event parameters prepare
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_modules_second_warning_list_start', $arrayParameters);
         // Adding results to parameters for events treatment if needed
-        $arrayParameters['results'] = $this->getDataOfAnEvent(self::SECOND_WARNING_EVENT, self::SECOND_WARNING_LIST_KEY, null , $autoDelConf);
+        $arrayParameters['results'] = $this->getDataOfAnEvent(self::SECOND_WARNING_EVENT, self::SECOND_WARNING_LIST_KEY);
         // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_modules_second_warning_list_end', $arrayParameters);
 
@@ -273,7 +273,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     {
         $response = [];
         // get all modules warning list of users
-        $firstAlertUsers = $this->getFirstAlertUsers($autoDelConf);
+        $firstAlertUsers = $this->getFirstAlertUsers();
         foreach ($firstAlertUsers as $moduleName => $emails) {
             if ($moduleName == $autoDelConf['mgdprc_module_name']) {
                 // if alert email status is in active then we get the list of warning users to mailed for revalidation
@@ -335,7 +335,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         // if alert resend email status is in active then we get the list of warning users to mailed for revalidation again
         if ($autoDelConf['mgdprc_alert_email_resend']) {
             // get all modules second warning list of users
-            $modulesWarningListsOfUsers = $this->getSecondAlertUsers($autoDelConf);
+            $modulesWarningListsOfUsers = $this->getSecondAlertUsers();
             if (!empty($modulesWarningListsOfUsers)) {
                 foreach ($modulesWarningListsOfUsers as $moduleName => $emails) {
                     if ($moduleName == $autoDelConf['mgdprc_module_name'] && !empty($emails)) {

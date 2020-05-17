@@ -14,13 +14,13 @@ interface MelisCoreGdprAutoDeleteInterface
      * Return the list of users that are concerned with the auto-delete at this moment
      * @return mixed
      */
-    public function getWarningListOfUsers($autoDeleteConfig);
+    public function getWarningListOfUsers();
     /**
      * Return the list of users that are concerned with the auto-delete at this moment
      *
      * @return mixed
      */
-    public function getSecondWarningListOfUsers($autoDeleteConfig);
+    public function getSecondWarningListOfUsers();
 
     /**
      * Return a user (its TAGS) if found in a module
