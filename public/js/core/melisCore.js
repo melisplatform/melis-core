@@ -914,11 +914,18 @@ var melisCore = (function(window){
     });
 
     // WINDOW SCROLL FUNCTIONALITIES ========================================================================================================
-    if( screenSize <= 767 ) {
+    
+    if ( screenSize <= 767 ) {
         // move plugins to another <div>
         $("#id_meliscore_header .navbar-right > li").each(function(key, value){
             $(this).children("a").append("<span class='title'>"+ $(this).data("title") +"</span>");
             $("#newplugin-cont ul.ul-cont").append( $(this) );
+        });
+
+        // click on li with inner ul
+        $body.on("click", "#newplugin-cont .ul-cont li", function() {
+            $(this).find("ul").addClass("ul-open");
+            $(this).siblings().find("ul").removeClass("ul-open");
         });
     }
 
