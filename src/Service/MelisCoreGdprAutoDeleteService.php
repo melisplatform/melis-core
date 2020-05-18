@@ -160,8 +160,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             $results['message'] = "No config data";
         }
 
-        // destroy the container
-        $container->getManager()->destroy();
+        // set empty  the container
+        $container['config'] = [];
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $results;
         // Sending service end event
