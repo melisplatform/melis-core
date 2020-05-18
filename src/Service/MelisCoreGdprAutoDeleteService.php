@@ -19,6 +19,7 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver\TemplateMapResolver;
+use Zend\Session\Container;
 
 class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 {
@@ -52,6 +53,12 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     const EMAIL_CONTENT_ERROR_LOG = "email-content-error-log";
     const TECHNICAL_ISSUE = "technical-issue";
 
+    /**
+     * anonymized value
+     *
+     * @var
+     */
+    const ANO_VALUE = "melis-xxx";
     /**
      * @var
      */
@@ -89,6 +96,11 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     protected $logId;
 
     /**
+     * @var
+     */
+    protected $currentConfig;
+
+    /**
      * MelisCoreGdprAutoDeleteService constructor.
      * @param MelisCoreGdprAutoDeleteToolService $autoDeleteToolService
      * @param MelisGdprDeleteEmailsSentTable $deleteEmailsSentTable
@@ -123,11 +135,15 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         ];
         // set current time
         $this->currentTime = date('Y-m-d H:i:s');
+        // auto delete container
+        $container = new Container('melis_auto_delete_gdpr');
         // retrieving list of modules and list of sites
         $autoDelConfig = $this->gdprAutoDeleteToolService->getAllGdprAutoDeleteConfigData();
         //etrieving list of users' emails for first warning
         if (!empty($autoDelConfig)) {
             foreach ($autoDelConfig as $idx => $config) {
+                // add a session data
+                $container['config'] = $config;
                 // add a log first
                 $this->addInitialLog($config);
                 // send email for first warning users
@@ -144,6 +160,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             $results['message'] = "No config data";
         }
 
+        // destroy the container
+        $container->getManager()->destroy();
         // Adding results to parameters for events treatment if needed
         $arrayParameters['results'] = $results;
         // Sending service end event
@@ -921,6 +939,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         } catch (\Exception $error) {
             if (!strpos($error->getMessage(), 'Could not read from smtp.gmail.com')) {
                 $this->errors = "Technical issue";
+
             }
         }
 
