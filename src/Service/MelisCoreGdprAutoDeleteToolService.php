@@ -105,6 +105,15 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
         return $arrayParameters['results'];
     }
 
+    public function getGdprDeleteEmailsLogs($siteId, $module) 
+    {
+        $data = $this->gdprAutoDeleteEmailsLogsTable->getGdprDeleteEmailsLogs($siteId, $module);
+        if (! empty($data)) {
+            return $data->toArray();
+        }
+    }
+
+
     /**
      * @return MelisLangTable
      */

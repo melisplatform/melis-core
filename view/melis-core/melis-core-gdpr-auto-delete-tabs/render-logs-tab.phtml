@@ -6,7 +6,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
 ?>
 <div data-melisKey='<?= $this->melisKey ?>' class="tab-pane" id="<?= $this->zoneconfig['conf']['id'] ?>" role="tabpanel"
      aria-labelledby="<?= $this->zoneconfig['conf']['id'] ?>">
-    <?php if ($this->configId) { ?>
+    <?php if ($this->logsData) { ?>
         <div <?= $id; ?> data-melisKey="<?= $this->melisKey; ?>">
             <div class="">
                 <?php

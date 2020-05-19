@@ -81,7 +81,7 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
         return $this->tableGateway->selectWith($select);
     }
 
-    public function getGdprDeleteEmailsLogs($siteId, $module, $date)
+    public function getGdprDeleteEmailsLogs($siteId, $module, $date = null)
     {
         // table selection query
         $select = $this->tableGateway->getSql()->select();

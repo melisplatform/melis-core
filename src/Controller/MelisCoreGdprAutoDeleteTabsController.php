@@ -342,6 +342,8 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         );
         // get config id
         $view->setVariable('configId', $this->getConfigId());
+        
+        $view->setVariable('logsData', $this->getGdprAutoDeleteToolService()->getGdprDeleteEmailsLogs($this->getSiteId(), $this->getModuleName()));
 
         return $view;
     }
@@ -483,5 +485,11 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
     private function getModuleName()
     {
         return $this->params()->fromRoute('moduleName', $this->params()->fromQuery('moduleName'), null);
+    }
+
+
+    private function getSiteId()
+    {
+        return $this->params()->fromRoute('siteId', $this->params()->fromQuery('siteId'), null);
     }
 }
