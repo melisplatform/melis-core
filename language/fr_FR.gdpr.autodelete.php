@@ -17,7 +17,7 @@ return [
     'tr_melis_core_gdpr_autodelete_label_edit_accordion_sub_heading' => 'Choisissez votre site et module pour éditer sa configuration',
     'tr_melis_core_gdpr_autodelete_label_table_col_alert_1' => 'Alerte 1',
     'tr_melis_core_gdpr_autodelete_label_table_col_alert_2' => 'Alerte 2',
-    'tr_melis_core_gdpr_autodelete_label_table_col_delete_heading' => 'Suppression',
+    'tr_melis_core_gdpr_autodelete_label_table_col_delete_heading' => 'Anonymisation',
     'tr_melis_core_gdpr_autodelete_label_table_col_alert_2_activated' => 'Activé',
     'tr_melis_core_gdpr_autodelete_label_table_col_alert_2_deactivated' => 'Désactivé',
     'tr_melis_core_gdpr_autodelete_label_table_filter_empty' => 'Sélectionner',
@@ -38,7 +38,7 @@ return [
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days tooltip' => 'Saisir le nombre de jours d\'inactivité de l\'utilisateur pour l\'envoi de l\'email d\'alerte',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend' => 'Renvoyer l\'alerte 7 jours avant la date limite :',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_resend tooltip' => 'Envoi un email d\'alerte 7 jours avant la date limite',
-    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days' => 'Le compte sera supprimé automatiquement après une inactivité de :',
+    'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days' => 'Le compte sera anonymisé automatiquement après une inactivité de :',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days tooltip' => 'Saisissez le nombre de jours d\'inactivité de l\'utilisateur après lequel le compte est automatiquement supprimé',
     'tr_melis_core_gdpr_autodelete_label_list_config_heading_add_new_config' => 'Ajouter une configuration',
 
@@ -48,7 +48,7 @@ return [
 
     // alert emails translations
     'tr_melis_core_gdpr_autodelete_label_alert_email_heading' => 'Email d\'alerte',
-    'tr_melis_core_gdpr_autodelete_label_alert_email_heading2' => 'Email de suppression de compte',
+    'tr_melis_core_gdpr_autodelete_label_alert_email_heading2' => 'Email d\'anonymisation',
     'tr_melis_core_gdpr_autodelete_label_alert_email_tags' => 'Tags de remplacement disponibles',
     'tr_melis_core_gdpr_autodelete_label_alert_email_validation_page' => 'Page de validation',
     'tr_melis_core_gdpr_autodelete_label_delete_everything' => 'Tout supprimer',
