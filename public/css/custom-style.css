@@ -1263,3 +1263,8 @@ a[data-toggle="modal"]:focus {
     display: block !important;
   }
 }
+@media (min-width: 768px) and (max-width: 790px) {
+  .navbar.main .nav>li a.menu-icon {
+    padding: 0 12px;
+  }
+}
