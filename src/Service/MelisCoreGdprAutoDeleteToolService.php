@@ -497,7 +497,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     {
         $data = $this->getGdprAutoDeleteConfigDataById($id);
         // delete logs data
-        $this->gdprAutoDeleteEmailsLogsTable->deleteByField('mgdprl_module_name', $data['mgdprc_module_name']);
 
         return $this->gdprAutoDeleteConfigTable->deleteById($id);
     }
