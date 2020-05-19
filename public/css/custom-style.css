@@ -1265,6 +1265,6 @@ a[data-toggle="modal"]:focus {
 }
 @media (min-width: 768px) and (max-width: 790px) {
   .navbar.main .nav>li a.menu-icon {
-    padding: 0 12px;
+    padding: 0 11px;
   }
 }
