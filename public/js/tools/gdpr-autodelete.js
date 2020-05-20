@@ -526,7 +526,7 @@ $(function () {
         },500)
         clearTimeout();
     });
-    $body.on('shown.bs.collapse', ".accordion-content", function(){
+    $body.on('show.bs.collapse', ".accordion-content", function(){
         var parentContainer = $(this).data('parentContainer');
         var content = $(parentContainer);
         var toggle = content.find('.toggle-arrow-indication');
@@ -534,7 +534,7 @@ $(function () {
         toggle.addClass('arrow-down-sm-accordion')
     });
 
-   $body.on('hidden.bs.collapse', ".accordion-content", function(){
+   $body.on('hide.bs.collapse', ".accordion-content", function(){
         var parentContainer = $(this).data('parentContainer');
         var content = $(parentContainer);
         var toggle = content.find('.toggle-arrow-indication');
