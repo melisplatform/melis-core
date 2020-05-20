@@ -57,12 +57,12 @@ return [
                            'mgdprc_site_id' => [
                                'text' => 'Site',
                                'css' => ['width' => '15%', 'padding-right' => '0'],
-                               'sortable' => false,
+                               'sortable' => true,
                            ],
                            'mgdprc_module_name' => [
                                'text' => 'Module',
                                'css' => ['width' => '15%', 'padding-right' => '0'],
-                               'sortable' => false,
+                               'sortable' => true,
                            ],
                            'mgdprc_alert_email_status' => [
                                'text' => 'tr_melis_core_gdpr_autodelete_label_table_col_alert_1',
