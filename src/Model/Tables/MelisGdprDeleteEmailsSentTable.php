@@ -47,4 +47,14 @@ class MelisGdprDeleteEmailsSentTable extends MelisGenericTable
             'mgdprs_account_id' => $accountId,
         ]);
     }
+
+    public function deleteEmailSentData($accountId, $module, $siteId)
+    {
+        return $this->tableGateway->delete([
+            'mgdprs_module_name' => $module,
+            'mgdprs_account_id' => $accountId,
+            'mgdprs_site_id' => $siteId
+
+        ]);
+    }
 }
