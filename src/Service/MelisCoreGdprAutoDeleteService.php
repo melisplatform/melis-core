@@ -175,15 +175,23 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     private function getFirstAvailableLang($configId)
     {
         $transData = $this->gdprAutoDeleteToolService->getAlertEmailsTranslationsData($configId);
-        $availableLang = [];
+        $availableLang = [
+            'alert_email',
+            'delete_email'
+        ];
         if (! empty($transData)) {
-            foreach ($transData as $i => $val) {
+            // for alert email
+             foreach ($transData as $i => $val) {
                 if ($val['mgdpre_type'] == 1) {
                     if ($val['mgdpre_html'] || $val['mgdpre_text']) {
                         $availableLang['alert_email'] = $val['mgdpre_lang_id'];
+                        break;
                     }
                 }
 
+             }           
+             // for delete email
+             foreach ($transData as $i => $val) {
                 if ($val['mgdpre_type'] == 2) {
                     if ($val['mgdpre_html'] || $val['mgdpre_text']) {
                         $availableLang['delete_email'] = $val['mgdpre_lang_id'];
