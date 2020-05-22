@@ -105,7 +105,8 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
             $tags = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getModuleTags();
             $moduleName = $emailSetupData['mgdprc_module_name'] ?? $this->getModuleName();
             if (! empty($moduleName)) {
-                $emailSetupData['mgdprc_email_conf_tags'] = implode(',', array_keys($tags[$moduleName]));
+                if (isset($tags[$moduleName]))
+                    $emailSetupData['mgdprc_email_conf_tags'] = implode(',', array_keys($tags[$moduleName]));
             }
         }
         // get form for the Cron Config
@@ -168,7 +169,8 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
             $tags = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getModuleTags();
             $moduleName = $emailSetupData['mgdprc_module_name'] ?? $this->getModuleName();
             if (!empty($moduleName)) {
-                $view->setVariable('module_tags', implode(',', array_keys($tags[$moduleName])));
+                if (isset($tags[$moduleName]))
+                    $view->setVariable('module_tags', implode(',', array_keys($tags[$moduleName])));
             }
         }
         $view->setVariable('alertEmailsTransData', $this->getGdprAutoDeleteToolService()->getAlertEmailsTranslationsData($this->getConfigId()));

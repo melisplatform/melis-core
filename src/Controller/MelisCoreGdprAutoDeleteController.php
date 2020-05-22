@@ -466,7 +466,12 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
             $module = $data['mgdprc_module_name'];
             $site = $data['mgdprc_site_id'];
         }
-
+        // check if module exists or activated                                                                                                                                                                                                                           
+        $moduleLists = $this->getGdprAutoDeleteToolService()->getAutoDeleteModulesList();                                                                                                                                                                               
+        if (!isset($moduleLists[$module])) {                                                                                                                                                                                                                             
+            // make the module to null so it will not cause error everywhere                                                                                                                                                                                             
+            $module = null;                                                                                                                                                                                                                                              
+        }
         // view model
         $view = new ViewModel();
         // melisKey
