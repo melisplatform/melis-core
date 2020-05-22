@@ -7,57 +7,79 @@
             </div>
         </div>
         <?php
-        $plugins = $this->MelisDashboardDragDropZone($this->dashboardId);
-        if ($this->hasPlugins):
-            /** Number of plugins loaded inside the dashboard's last saved state */
-            $pluginCount = substr_count($plugins, "data-gs-id");
+            $plugins = $this->MelisDashboardDragDropZone($this->dashboardId);
+            if ( $this->hasPlugins ):
+                /** Number of plugins loaded inside the dashboard's last saved state */
+                $pluginCount = substr_count($plugins, "data-gs-id");
+                if ($pluginCount === 0):
+        ?>
+                    <script type="text/javascript">
+                        (function() {
+                            // Waits for jQuery to be available before executing the function
+                            waitForJquery(showDashboardPluginMenu);
 
-            if ($pluginCount === 0):?>
+                            function waitForJquery(method) {
+                                if (window.jQuery && typeof melisDashBoardDragnDrop !== "undefined") {
+                                    method();
+                                } else {
+                                    setTimeout(function () {
+                                        waitForJquery(method)
+                                    }, 50);
+                                }
+                            }
+
+                            /**
+                             * Automatically open plugin menu when dashboard is empty &
+                             * there is an available plugin
+                             */
+                            function showDashboardPluginMenu() {
+                                var $pluginMenu = $("body").find("#id_meliscore_center_dashboard_menu");
+
+                                    if ( $pluginMenu.length > 0 && typeof melisDashBoardDragnDrop !== "undefined" ) {
+                                        melisDashBoardDragnDrop.checkDashboard();
+                                    }
+                            }
+                        }());
+                    </script>
+        <?php   
+                endif;
+            else: 
+        ?>
                 <script type="text/javascript">
-                    (function () {
+                    (function() {
                         // Waits for jQuery to be available before executing the function
-                        waitForJquery(showDashboardPluginMenu);
+                        waitForJquery( hideNoPluginsAlert );
 
                         function waitForJquery(method) {
-                            if (window.jQuery && typeof melisDashBoardDragnDrop !== "undefined") {
+                            if ( window.jQuery ) {
                                 method();
-                            } else {
+                            }
+                            else {
                                 setTimeout(function () {
                                     waitForJquery(method)
-                                }, 50);
+                                }, 500);
                             }
                         }
+                        
+                        function hideNoPluginsAlert() {
+                            var $body       = $("body"),
+                                $dbMsg      = $(".melis-core-dashboard-msg"),
+                                $noDbAccess = $(".no-dashboard-access"),
+                                $noPlugins  = $dbMsg.find(".no-plugins");
 
-                        /**
-                         * Automatically open plugin menu when dashboard is empty &
-                         * there is an available plugin
-                         */
-                        function showDashboardPluginMenu() {
-                            /* $activeTab  = $("#"+activeTabId),
-                                $msg        = $activeTab.find(".melis-core-dashboard-msg"),
-                                $gsItem     = $activeTab.find(".grid-stack .grid-stack-item"), */
-                            var $pluginMenu = $("body").find("#id_meliscore_center_dashboard_menu");
-
-                                if ( $pluginMenu.length > 0 && typeof melisDashBoardDragnDrop !== "undefined" ) {
-                                    melisDashBoardDragnDrop.checkDashboard();
-                                }
-
-                                /* if ( $gsItem.length > 0 ) {
-                                    $msg.fadeOut();
-                                }
-                                else {
-                                    $msg.fadeIn();
-                                } */
+                                //&& $noPlugins.is(":visible")
+                                if ( $noPlugins.length > 0 && $noDbAccess.length > 0 )
+                                    $noPlugins.css("display", "none");
                         }
                     }());
                 </script>
-            <?php endif;
-        else: ?>
-            <div class="alert alert-warning no-dashboard-access" role="alert">
-                <p><?= $this->translate('tr_meliscore_melis_dashboard_no_access'); ?></p>
-            </div>
-            <?php
-        endif;
-        echo $plugins; ?>
+                <div class="alert alert-warning no-dashboard-access" role="alert">
+                    <p><?= $this->translate('tr_meliscore_melis_dashboard_no_access'); ?></p>
+                </div>
+        <?php
+            endif;
+
+            echo $plugins; 
+        ?>
     </div>
 </div>
