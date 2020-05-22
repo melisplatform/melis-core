@@ -537,12 +537,21 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
                 $otherErrors = $errors['indications'];
                 $errors = $errors['errors'];
             } 
-
             // remove auto_delete_config key
             unset($postValues['alert_emails_warning_trans']);
             // remove auto_delete_config key
             unset($postValues['alert_emails_delete_trans']);
             unset($postValues['mgdprc_email_conf_tags']);
+            // validate cron config data , validate after no error found
+            if (empty($errors)) {
+                $errors = $this->validateCronConfigData($postValues['mgdprc_alert_email_days'], $postValues['mgdprc_delete_days'], $postValues['mgdprc_alert_email_resend']);
+                if (! empty($errors)) {
+                    // get the indications for highlighting
+                    $otherErrors = [
+                        'id_meliscoregdpr_auto_delete_add_edit_config_tab_config_tab'
+                    ];
+                }
+            }
             // save data if no errors of forms
             if (empty($errors)) {
                 // save gdpr auto delete configs
@@ -589,6 +598,43 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         return new JsonModel($response);
     }
 
+    /**
+     * validate cron config values
+     *
+     * @param $alertDays
+     * @param $deleteDays
+     * @param $resend
+     */
+    private function validateCronConfigData($alertDays, $deleteDays, $resend = false)
+    {
+        $errorMessage = [];
+        $translator = $this->getServiceLocator()->get('translator');
+        $deleteLabel = $translator->translate("tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days");
+        if ($deleteDays > $alertDays) {
+            if ($resend) {
+                $diff = ($deleteDays - $alertDays);
+                if ($diff < 7) {
+                    $errorMessage['mgdprc_delete_days'] =[
+                        'inValid' => $translator->translate('tr_melis_core_gdpr_auto_delete_config_second_alert_below'),
+                        'label' => $deleteLabel
+                    ];
+                }
+
+            }
+        } else {
+            $errorMessage['mgdprc_delete_days'] =[
+                'inValid' => $translator->translate('tr_melis_core_gdpr_auto_delete_config_anonymization_days_lower'),
+                'label' => $deleteLabel
+            ];
+        }
+           
+        return $errorMessage;
+    }
+
+    /**
+     * validate translations data 
+     *
+     */
     private function validateTransForm($data,$error)
     {
         $alertErrors = [];

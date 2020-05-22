@@ -220,7 +220,6 @@ return [
                                         ],
                                         'attributes' => [
                                             'placeholder' => 'Melis technology',
-                                            'required' => 'required'
                                         ]
                                     ]
                                 ],
@@ -328,25 +327,6 @@ return [
                                 ]
                             ],
                             'input_filter' => [
-                                'mgdprc_email_conf_from_name' => [
-                                    'name' => 'mgdprc_email_conf_from_name',
-                                    'required' => true,
-                                    'validators' => [
-                                        [
-                                            'name' => 'NotEmpty',
-                                            'break_chain_on_failure' => true,
-                                            'options' => [
-                                                'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
-                                                ]
-                                            ]
-                                        ]
-                                    ],
-                                    'filters' => [
-                                        ['name' => 'StripTags'],
-                                        ['name' => 'StringTrim']
-                                    ]
-                                ],
                                 'mgdprc_email_conf_from_email' => [
                                     'name' => 'mgdprc_email_conf_from_email',
                                     'required' => true,

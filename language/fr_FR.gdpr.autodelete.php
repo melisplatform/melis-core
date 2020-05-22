@@ -96,6 +96,9 @@ return [
     'tr_melis_core_gdpr_autodelete_label_alert_email_link' => 'Page de validation',
     'tr_melis_core_gdpr_autodelete_label_alert_email_link tooltip' => 'Saisissez l\'identifiant de la page sur laquelle l\'utilisateur sera redirigé pour valider le statut',
     'tr_melis_core_gdpr_autodelete_log_empty_data' => 'Aucun log',
-    'tr_melis_core_gdpr_autodelete_log_no_email' => 'Email non disponible'
+    'tr_melis_core_gdpr_autodelete_log_no_email' => 'Email non disponible',
 
+    // error messages 
+    'tr_melis_core_gdpr_auto_delete_config_anonymization_days_lower' => 'L\'anonymization doit être située après les alertes',
+    'tr_melis_core_gdpr_auto_delete_config_second_alert_below' => 'Il devrait y avoir au moins 7 jours entre la 1ère alerte et l\'anonymisation'
 ];
