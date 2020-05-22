@@ -333,11 +333,16 @@ class MelisFieldRow extends FormRow
 
             $type = $element->getAttribute('data-button-right');
 
+            $noId = $element->getOption('no_id');
+
             $buttonIcon = 'fa fa-search';
             if (!empty($element->getAttribute('data-button-icon')))
                 $buttonIcon = $element->getAttribute('data-button-icon');
 
             $buttonId = $element->getAttribute('name').'-button';
+            if ($noId) {
+                $buttonId = null;
+            }
             if ($element->getAttribute('data-button-id'))
                 $buttonId = $element->getAttribute('data-button-id');
 
@@ -353,9 +358,12 @@ class MelisFieldRow extends FormRow
 	                            <label class ="d-flex flex-row justify-content-between" for="">'.$element->getLabel().'</label>
 	                            <div class="input-group">';
 
+
+
+
             if ($type == true)
                 $formElement .='<span class="input-group-btn">
-                                   <button class="btn btn-default" id="'.$buttonId.'" type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
+                                   <button class="btn btn-default" ' . ($buttonId) ? "id='" . $buttonId . "'"  : null . ' type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
                                 </span>';
 
             $inputAttr = [];
@@ -369,7 +377,7 @@ class MelisFieldRow extends FormRow
 
             if (empty($type))
                 $formElement .='<span class="input-group-btn">
-                                   <button class="btn btn-default '.$buttonClass.'" id="'.$buttonId.'" type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
+                                   <button class="btn btn-default '.$buttonClass.'" '. ($buttonId ? "id='" . $buttonId . "'" : null ) .' type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
                                 </span>';
 
             $formElement .= '</div>
