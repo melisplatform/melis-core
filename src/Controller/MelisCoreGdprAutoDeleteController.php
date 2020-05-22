@@ -610,7 +610,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
         $errorMessage = [];
         $translator = $this->getServiceLocator()->get('translator');
         $deleteLabel = $translator->translate("tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days");
-        if ($deleteDays > $alertDays) {
+        if ($deleteDays >= $alertDays) {
             if ($resend) {
                 $diff = ($deleteDays - $alertDays);
                 if ($diff < 7) {
