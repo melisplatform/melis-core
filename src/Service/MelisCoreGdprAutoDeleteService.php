@@ -178,15 +178,19 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $availableLang = [];
         if (! empty($transData)) {
             foreach ($transData as $i => $val) {
-                if ($val['mgdpre_html'] || $val['mgdpre_text']) {
-                    if ($val['mgdpre_type'] == 1) {
+                if ($val['mgdpre_type'] == 1) {
+                    if ($val['mgdpre_html'] || $val['mgdpre_text']) {
                         $availableLang['alert_email'] = $val['mgdpre_lang_id'];
                     }
+                }
 
-                    if ($val['mgdpre_type'] == 2) {
+                if ($val['mgdpre_type'] == 2) {
+                    if ($val['mgdpre_html'] || $val['mgdpre_text']) {
                         $availableLang['delete_email'] = $val['mgdpre_lang_id'];
+                        break;
                     }
                 }
+
             }
         }
 
