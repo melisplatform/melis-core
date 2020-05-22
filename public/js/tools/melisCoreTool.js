@@ -267,7 +267,7 @@ var melisCoreTool = (function (window) {
     function addOverflowHidden() {
         $("html, body").animate(
             { scrollTop: 0 }, 
-            100, function() {
+            0, function() {
                 $body.css("overflow", "hidden");
             }
         );

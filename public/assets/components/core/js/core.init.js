@@ -70,7 +70,13 @@ if (window.location != window.parent.location)
     // $('#content .modal').appendTo('body');
     
     // tooltips
-    $('body').tooltip({ selector: '[data-toggle="tooltip"]' });
+    $('body').tooltip({ 
+        selector: '[data-toggle="tooltip"]',
+        delay: {
+            show: 500,
+            hide: 0
+        }
+    });
     
     // popovers
     $('[data-toggle="popover"]').popover();
