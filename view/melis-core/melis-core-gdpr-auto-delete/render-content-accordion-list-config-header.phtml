@@ -1,12 +1,14 @@
 <div id="list-config" class="custom-accordion-heading">
-    <div class="button-right">
-        <button class="btn btn-success float-right" id="add-auto-delete-config">
-            <i class="fa fa-plus"></i> <?= $this->translate('tr_melis_core_gdpr_autodelete_label_list_config_heading_add_new_config') ?>
-        </button>
-    </div>
-    <a data-toggle="collapse" data-target="#list-config-content" aria-expanded="true" aria-controls="list-config-content" id="gdpr-accordion-toggle-list" class="accordion-heading  arrow-indication-down">
-        <h3 class="accordion-heading-title"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_list_config_heading')?>
-            <span class="accordion-subtitle"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_list_config_sub_heading')?></span>
-        </h3>
-    </a>
+        <a data-toggle="collapse" data-target="#list-config-content" aria-expanded="true" aria-controls="list-config-content" id="gdpr-accordion-toggle-list" class="accordion-heading  arrow-indication-down">
+            <div class="row">
+                <h3 class="accordion-heading-title col-md-8"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_list_config_heading')?>
+                    <span class="accordion-subtitle"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_list_config_sub_heading')?></span>
+                </h3>
+                <div class="col-md-4">
+                    <button class="btn btn-success float-right" id="add-auto-delete-config">
+                        <i class="fa fa-plus"></i> <?= $this->translate('tr_melis_core_gdpr_autodelete_label_list_config_heading_add_new_config') ?>
+                    </button>
+                </div>
+            </div>
+        </a>
 </div>

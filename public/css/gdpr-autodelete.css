@@ -25,7 +25,8 @@
     display:block;
     font-size:60% !important;
     font-weight:400 !important;
-    color:#686868!important
+    color:#686868!important;
+    margin-bottom:0;
 }
 #id_meliscoregdpr_auto_delete_content_accordion_list_config #accordion{
     margin-top: 15px;
@@ -224,6 +225,10 @@
 @media screen and (max-width: 767px) {
     .nav-gdpr-auto-delete-tabs {
         margin-bottom:15px;
+    }
+    #add-auto-delete-config {
+        float:none !important;
+        margin-top:20px;
     }
 }
 
