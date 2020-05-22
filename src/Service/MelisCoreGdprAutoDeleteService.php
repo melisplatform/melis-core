@@ -144,6 +144,8 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
             foreach ($autoDelConfig as $idx => $config) {
                 // add a session data
                 $container['config'] = $config;
+                // add available langauge
+                $container['config']['available_lang'] = $this->getFirstAvailableLang($config['mgdprc_id']);
                 // add a log first
                 $this->addInitialLog($config);
                 // send email for first warning users
@@ -170,6 +172,27 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         return $arrayParameters['results'];
     }
 
+    private function getFirstAvailableLang($configId)
+    {
+        $transData = $this->gdprAutoDeleteToolService->getAlertEmailsTranslationsData($configId);
+        $availableLang = [];
+        if (! empty($transData)) {
+            foreach ($transData as $i => $val) {
+                if ($val['mgdpre_html'] || $val['mgdpre_text']) {
+                    if ($val['mgdpre_type'] == 1) {
+                        $availableLang['alert_email'] = $val['mgdpre_lang_id'];
+                    }
+
+                    if ($val['mgdpre_type'] == 2) {
+                        $availableLang['delete_email'] = $val['mgdpre_lang_id'];
+                    }
+                }
+            }
+        }
+
+        return $availableLang;
+
+    }
     /**
      * add a initial log
      *
@@ -614,6 +637,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         $htmlContent = $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'], $alertEmailData, $emailOptions, $alertEmailData->mgdpre_html, $emailSetupConfig);
                         // text version email content
                         $textVersion =  $this->replaceTagsByModuleTags($emailSetupConfig['email_setup_tags'], $alertEmailData, $emailOptions, $alertEmailData->mgdpre_text, $emailSetupConfig);
+                        $content = !empty($htmlContent['content']) ? $htmlContent['content'] : $textVersion['content'];
                         // check for errors
                         if (empty($htmlContent['errors']) && empty($textVersion['errors']) && empty($emailSetupLayout['errors'])) {
                             // send email
@@ -626,7 +650,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                                 $alertEmailData->mgdpre_subject,
                                 $this->getEmailLayoutContent(
                                     $emailSetupConfig,
-                                    $htmlContent['content'] ?? $textVersion['content']
+                                    $content 
                                 ),
                                 $textVersion['content']
                             );
