@@ -1252,3 +1252,19 @@ a[data-toggle="modal"]:focus {
 #idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
   padding-top: 6px;
 }
+@media (max-width: 767px) {
+  /* mobile nav-right click open second ul */
+  #newplugin-cont ul > li > ul {
+    position: relative;
+    top: 0;
+    width: 100%;
+  }
+  .ul-open {
+    display: block !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 790px) {
+  .navbar.main .nav>li a.menu-icon {
+    padding: 0 11px;
+  }
+}

@@ -534,8 +534,8 @@ var melisHelper = (function(){
 
     // ZONE RELOADING =================================================================================================================
     function zoneReload(zoneId, melisKey, parameters, callback) {
-
         var datastring = { cpath: melisKey };
+        var $melisCmsPage = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active");
 
         //add parameters value to datastring object if available
         if ( parameters !== undefined ) {
@@ -547,6 +547,9 @@ var melisHelper = (function(){
         // add the temp loader
         var tempLoader = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
         $("#"+zoneId).append(tempLoader);
+        
+        // add an inline css overflow: hidden
+        melisCoreTool.addOverflowHidden();
 
         $.ajax({
             url         : '/melis/zoneview',
@@ -556,9 +559,12 @@ var melisHelper = (function(){
         }).done(function(data) {
             // hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+            
+            // remove the inline style
+            melisCoreTool.removeOverflowHidden();
 
             setTimeout(function() {
-                if( data !== null ){
+                if ( data !== null ) {
                     $("#"+zoneId).html(data.html).children().unwrap();
 
                     // set the current active tab based from 'activeTabId' value
@@ -602,7 +608,7 @@ var melisHelper = (function(){
                         });
                     });
                 }
-                else{
+                else {
                     $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
                     $('#'+zoneId).remove();
 
@@ -616,9 +622,9 @@ var melisHelper = (function(){
             }, 300);
         }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
-
             //hide the loader
             $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+
             $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
             $('#'+zoneId).remove();
         });
@@ -679,7 +685,7 @@ var melisHelper = (function(){
         }
     }
 
-    function loadingHtml(){
+    function loadingHtml() {
         return '<div id="loadingZone" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
     }
 

@@ -551,8 +551,8 @@ body #newplugin-cont.show-menu{
 }
 
 /* plugins container hover */
-.navbar.main .nav.navbar-right li:hover ul,
-#newplugin-cont .ul-cont li:hover ul{
+/* #newplugin-cont .ul-cont li:hover ul */
+.navbar.main .nav.navbar-right li:hover ul {
     display: block;
     position: static;
     width: 100%;

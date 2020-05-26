@@ -86,19 +86,41 @@ var melisTinyMCE = (function(){
 
     // TinyMCE  action event
     function tinyMceActionEvent(editor) {
-        /**
-        var targetId = editor.id;
-        */
         editor.on("change", function () {
             // Any changes will sync to the selector (Ex. textarea)
             // tinymce.triggerSave();
             editor.save();
         });
         
-        editor.on("init",function() {
+        editor.on("init", function() {
             tinyMceDialogInitAddTreeViewBtn(editor);
         });
+
+        // focusout event for melis cms page edition
+        /* editor.on("focusout", function() {
+            var $this       = $(this),
+                $melisUI    = $($this[0].targetElm.offsetParent);
+
+                    if ( $melisUI.hasClass("melis-ui-outlined") ) {
+                        setUpPluginWidth( $melisUI );
+                    }
+
+                    console.log("$melisUI: ", $melisUI);
+        }); */
     }
+
+    // drag and drop plugin melis cms page edition
+    /* function setUpPluginWidth( el ) {
+        var parentWidth     = el.parent().outerWidth(),
+            elWidth         = el.outerWidth(),
+            toolBox         = el.children(".melis-plugin-tools-box");
+
+            percentTotalWidth = ( 100 * elWidth / parentWidth );
+            percentTotalWidth = percentTotalWidth.toFixed(2);
+
+            // plugins.edition.js
+            melisPluginEdition.getPluginData( toolBox, percentTotalWidth );
+    } */
 
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {

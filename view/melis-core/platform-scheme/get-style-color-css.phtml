@@ -4,6 +4,10 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.client-contact-address .default-card>.card-header,
+.client-contact-address .panel-default>.panel-heading {
+    background-color: <?= $primaryColor; ?> !important;
+}
 .contacts .innerLR .media .media-body .media-heading a,
 .contacts .innerLR .media a,
 .widget .innerAll.half.media .media-body .text-muted-dark a,
@@ -57,7 +61,7 @@
 .melis-gdpr-banner-container {
     background: <?= $primaryColor; ?> !important;
 }
-.jstree-proton .jstree-clicked {
+#categoryTreeView .jstree-proton .jstree-clicked {
     background: <?= $primaryColor; ?> !important;
     box-shadow: inset 0 0 1px <?= $primaryColor; ?> !important;
 }
@@ -817,7 +821,9 @@ div.glyphicons-social.glyphicon-primary i:before {
 .bs-tooltip-bottom .arrow::before {
     border-bottom-color: <?= $secondaryColor; ?>;
 }
+.bs-tooltip-auto[x-placement^=top] .arrow:before,
 .bs-tooltip-auto[x-placement^=top] .arrow::before,
+.bs-tooltip-top .arrow:before,
 .bs-tooltip-top .arrow::before {
     border-top-color: <?= $secondaryColor; ?>;
 }
