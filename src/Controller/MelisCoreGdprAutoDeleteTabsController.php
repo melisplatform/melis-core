@@ -452,7 +452,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
                             if (! empty($email)) {
                                 $emails .= $email . ";";
                             } else {
-                                $emails .= $id . ";";
+                                $emails .= "ID " .  $id . ";";
                             }
                         }
                     }

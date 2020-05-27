@@ -50,7 +50,7 @@ return [
                        ],
                        'columns' => [
                            'mgdprc_id' => [
-                               'text' => 'Id',
+                               'text' => 'tr_melis_core_gdpr_autodelete_log_table_col_id',
                                'css' => ['width' => '5%', 'padding-right' => '0'],
                                'sortable' => true,
                            ],
@@ -60,7 +60,7 @@ return [
                                'sortable' => true,
                            ],
                            'mgdprc_module_name' => [
-                               'text' => 'Module',
+                               'text' => 'tr_melis_core_gdpr_auto_delete_module',
                                'css' => ['width' => '15%', 'padding-right' => '0'],
                                'sortable' => true,
                            ],

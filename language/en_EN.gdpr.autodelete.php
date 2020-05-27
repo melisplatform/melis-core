@@ -72,7 +72,7 @@ return [
     'tr_melis_core_gdpr_autodelete_config_delete_title' => 'Delete configuration',
     'tr_melis_core_gdpr_autodelete_config_delete_message' => 'Are you sure you want to delete this configuration?',
     // for log table columns
-    'tr_melis_core_gdpr_autodelete_log_table_col_id' => 'Id',
+    'tr_melis_core_gdpr_autodelete_log_table_col_id' => 'ID',
     'tr_melis_core_gdpr_autodelete_log_table_col_log_date' => 'Date',
     'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ok' => 'A1 OK',
     'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ko' => 'A1 KO',

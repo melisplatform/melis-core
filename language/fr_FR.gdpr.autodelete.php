@@ -68,7 +68,7 @@ return [
     'tr_melis_core_gdpr_autodelete_config_delete_title' => 'Supprimer la configuration',
     'tr_melis_core_gdpr_autodelete_config_delete_message' => 'Etes-vous sûr(e) de vouloir supprimer cette configuration ?',
     // log table columns
-    'tr_melis_core_gdpr_autodelete_log_table_col_id' => 'Id',
+    'tr_melis_core_gdpr_autodelete_log_table_col_id' => 'ID',
     'tr_melis_core_gdpr_autodelete_log_table_col_log_date' => 'Date',
     'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ok' => 'A1 OK',
     'tr_melis_core_gdpr_autodelete_log_table_col_warning1_ko' => 'A1 KO',
