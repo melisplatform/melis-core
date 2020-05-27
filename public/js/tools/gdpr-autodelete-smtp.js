@@ -55,8 +55,8 @@ $(function(){
         melisCoreTool.confirm(
             translations.tr_meliscore_common_yes,
             translations.tr_meliscore_common_no,
-            "Delete smtp config",
-            "Are you sure you want to delete the current smtp config ?",
+            translations.tr_melis_core_gdpr_autodelete_config_delete_title,
+            translations.tr_melis_core_gdpr_autodelete_config_delete_message,
             function(){
                 gdprautodeletesmtp.deleteStmpConfig($("#mgdpr_smtp_id").val());
             }
