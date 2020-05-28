@@ -115,7 +115,7 @@ var melisTinyMCE = (function(){
                     }
 
                     // check the select option if there are image extension found
-                    setTimeout(function() {
+                    /* setTimeout(function() {
                         var $select = $(".tox-selectfield select option");
 
                             if ( t.title === 'Insert Template' ) {
@@ -138,7 +138,7 @@ var melisTinyMCE = (function(){
                                         }
                                 });
                             }
-                    }, 500);
+                    }, 500); */
 
                 var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
 
