@@ -494,7 +494,6 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
             'mgdpre_subject' => null,
             'mgdpre_html' => null,
             'mgdpre_text' => null,
-            'mgdpre_email_tags' => null,
         ], $data->mgdpre_id);
     }
 
