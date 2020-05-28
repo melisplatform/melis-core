@@ -213,6 +213,7 @@ return array(
 
                     // tinyMCE
                     '/MelisCore/js/library/tinymce/tinymce.min.js?v=' . time(),
+                    '/MelisCore/js/library/tinymce/icons/default/icons.min.js',
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
