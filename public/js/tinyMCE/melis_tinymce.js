@@ -95,41 +95,15 @@ var melisTinyMCE = (function(){
         editor.on("init", function() {
             tinyMceDialogInitAddTreeViewBtn(editor);
         });
-
-        // focusout event for melis cms page edition
-        /* editor.on("focusout", function() {
-            var $this       = $(this),
-                $melisUI    = $($this[0].targetElm.offsetParent);
-
-                    if ( $melisUI.hasClass("melis-ui-outlined") ) {
-                        setUpPluginWidth( $melisUI );
-                    }
-
-                    console.log("$melisUI: ", $melisUI);
-        }); */
     }
-
-    // drag and drop plugin melis cms page edition
-    /* function setUpPluginWidth( el ) {
-        var parentWidth     = el.parent().outerWidth(),
-            elWidth         = el.outerWidth(),
-            toolBox         = el.children(".melis-plugin-tools-box");
-
-            percentTotalWidth = ( 100 * elWidth / parentWidth );
-            percentTotalWidth = percentTotalWidth.toFixed(2);
-
-            // plugins.edition.js
-            melisPluginEdition.getPluginData( toolBox, percentTotalWidth );
-    } */
 
     // adding of add tree view button from dialog initialization
     function tinyMceDialogInitAddTreeViewBtn(editor) {
-        var $body       = $("body");
+        var $body = $("body");
 
             editor.windowManager.oldOpen = editor.windowManager.open;  // save for later
             editor.windowManager.open = function (t, r) {    // replace with our own function
                 var modal = this.oldOpen.apply(this, [t, r]);  // call original
-
                     if ( t.title === 'Insert/Edit Link' && typeof melisLinkTree != "undefined" ) {
                         $(".tox-form__controls-h-stack").append(
                             '<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
@@ -139,6 +113,31 @@ var melisTinyMCE = (function(){
                             melisLinkTree.createTreeModal();
                         });
                     }
+
+                    // check the select option if there are image extension found
+                    setTimeout(function() {
+                        var $select = $(".tox-selectfield select option");
+
+                            if ( t.title === 'Insert Template' ) {
+                                $.each( $select, function(index, value) {
+                                    var $value      = $(value),
+                                        filename    = $value.val(),
+                                        extension   = filename.replace(/^.*\./, '');
+
+                                        if ( extension === filename ) {
+                                            extension = '';
+                                        }
+                                        else {
+                                            extension = extension.toLowerCase();
+                                        }
+
+                                        if ( extension === 'jpg' || extension === 'jpeg'
+                                            || extension === 'png' || extension === 'gif' ) {
+                                            $value.hide();
+                                        }
+                                });
+                            }
+                    }, 500);
 
                 var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
 
