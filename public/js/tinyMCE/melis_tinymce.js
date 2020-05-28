@@ -133,7 +133,7 @@ var melisTinyMCE = (function(){
 
                                         if ( extension === 'jpg' || extension === 'jpeg'
                                             || extension === 'png' || extension === 'gif' ) {
-                                            $value.remove();
+                                            //$value.remove();
                                             $value.hide();
                                         }
                                 });
