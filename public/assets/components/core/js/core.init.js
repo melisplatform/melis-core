@@ -71,13 +71,13 @@ if (window.location != window.parent.location)
     
     // tooltips
     $('body').tooltip({ 
-        selector: '[data-toggle="tooltip"]',
-        delay: {
+        selector: '.fa-info-circle[data-toggle="tooltip"]',
+        delay: 0
+    });
+    /* delay: {
             show: 500,
             hide: 0
-        }
-    });
-    
+        } */
     // popovers
     $('[data-toggle="popover"]').popover();
     
