@@ -813,26 +813,28 @@ div.glyphicons-social.glyphicon-primary i:before {
 .tooltip.bs-tooltip-left .arrow {
     border-left-color: <?= $secondaryColor; ?>;
 }
+
 .tooltip.left .tooltip-arrow {
     border-left-color: <?= $secondaryColor; ?>;
 }
 
-.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
-.bs-tooltip-bottom .arrow::before {
+.tooltip.fade.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
+.tooltip.fade.bs-tooltip-bottom .arrow::before {
     border-bottom-color: <?= $secondaryColor; ?>;
 }
-.bs-tooltip-auto[x-placement^=top] .arrow:before,
-.bs-tooltip-auto[x-placement^=top] .arrow::before,
-.bs-tooltip-top .arrow:before,
-.bs-tooltip-top .arrow::before {
+
+.tooltip.fade.bs-tooltip-auto[x-placement^=top] .arrow::before,
+.tooltip.fade.bs-tooltip-top .arrow::before {
     border-top-color: <?= $secondaryColor; ?>;
 }
-.bs-tooltip-auto[x-placement^=right] .arrow::before,
-.bs-tooltip-right .arrow::before {
+
+.tooltip.fade.bs-tooltip-auto[x-placement^=right] .arrow::before, 
+.tooltip.fade.bs-tooltip-right .arrow::before {
     border-right-color: <?= $secondaryColor; ?>;
 }
-.bs-tooltip-auto[x-placement^=left] .arrow::before, 
-.bs-tooltip-left .arrow::before {
+
+.tooltip.fade.bs-tooltip-auto[x-placement^=left] .arrow::before, 
+.tooltip.fade.bs-tooltip-left .arrow::before {
     border-left-color: <?= $secondaryColor; ?>;
 }
 
@@ -915,6 +917,10 @@ div.glyphicons-social.glyphicon-primary i:before {
 #dashboard-plugin-delete-all:hover {
     background-color: <?= $secondaryColor; ?>;
     border-color: <?= $secondaryColor; ?>;
+}
+
+#id_melismessenger_tool_header_messages:hover a .fa-comment {
+    color: <?= $primaryColor; ?>;
 }
 
 .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active, .melis-core-dashboard-category-btn.active {
