@@ -8,7 +8,7 @@ var dEndDate = ''; //moment().format(melisDateFormat);
 
 
 var melisCoreTool = (function (window) {
-
+    var $body = $("body");
     function translate(transKey) {
         var translated = translations[transKey]
         if (translated === undefined) {
@@ -263,6 +263,19 @@ var melisCoreTool = (function (window) {
             reader.readAsDataURL(src.files[0]);
         }
     }
+
+    function addOverflowHidden() {
+        $("html, body").animate(
+            { scrollTop: 0 }, 
+            0, function() {
+                $body.css("overflow", "hidden");
+            }
+        );
+    }
+
+    function removeOverflowHidden() {
+        $body.removeAttr("style");
+    }
     
     return {
         // modal
@@ -305,6 +318,10 @@ var melisCoreTool = (function (window) {
         init: init,
 
         // image changer
-        changeImage: changeImage
+        changeImage: changeImage,
+
+        // overflow: hidden body tag
+        addOverflowHidden : addOverflowHidden,
+        removeOverflowHidden : removeOverflowHidden
     }
 })(window);

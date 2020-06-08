@@ -165,7 +165,7 @@ class MelisTinyMceController extends AbstractActionController
                 if (is_dir($folderSite)) {
                     if ($handle = opendir($folderSite)) {
                         while (false !== ($entry = readdir($handle))) {
-                            if (is_dir($folderSite . '/' . $entry) || $entry == '.' || $entry == '..')
+                            if (is_dir($folderSite . '/' . $entry) || $entry == '.' || $entry == '..' || !$this->isImage($entry))
                                 continue;
                             array_push($tinyTemplates,
                                 array(
@@ -231,6 +231,18 @@ class MelisTinyMceController extends AbstractActionController
         return new JsonModel([
             'location' => $file
         ]);
+    }
+
+    function isImage($fileName)
+    {
+        $image_ext = ['PNG', 'png', 'JPG', 'jpg', 'JPEG', 'jpeg'];
+        foreach($image_ext as $ext){
+            //if file is image, don't include it
+            if(strpos($fileName, $ext) !== false) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

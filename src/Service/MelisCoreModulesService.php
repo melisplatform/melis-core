@@ -34,13 +34,11 @@ class MelisCoreModulesService extends MelisServiceManager
     public function getModulesAndVersions($moduleName = null)
     {
         $tmpModules = [];
-        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
 
-        $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
-        $composer = (array) \Laminas\Json\Json::decode(file_get_contents($composerFile));
-       
+        $melisComposer = new \MelisComposerDeploy\MelisComposer();
+        $melisInstalledPackages = $melisComposer->getInstalledPackages();
 
-        foreach ($composer as $package) {
+        foreach ($melisInstalledPackages as $package) {
             $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
             $module = null;
             if (isset($packageModuleName['module-name'])) {
@@ -105,12 +103,8 @@ class MelisCoreModulesService extends MelisServiceManager
     public function getComposer()
     {
         if (is_null($this->composer)) {
-            // required by composer factory but not used to parse local repositories
-            if (!isset($_ENV['COMPOSER_HOME'])) {
-                putenv("COMPOSER_HOME=/tmp");
-            }
-            $factory = new Factory();
-            $this->setComposer($factory->createComposer(new NullIO()));
+            $composer = new \MelisComposerDeploy\MelisComposer();
+            $this->composer = $composer->getComposer();
         }
 
         return $this->composer;
@@ -249,28 +243,29 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     public function getVendorModules()
     {
-        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
+        $melisComposer = new \MelisComposerDeploy\MelisComposer();
+        $melisInstalledPackages = $melisComposer->getInstalledPackages();
 
-        $packages = array_filter($repos->getPackages(), function ($package) {
-            /**
-             * These will exclude all the modules
-             * that are not laminas module
-             */
-            $extra = $package->getExtra();
-            if(isset($extra['melis-module'])) {
-                $laminasModule = ($extra['melis-module']) ? true : false;
-            } else {
-                $laminasModule = true;
+        $packages = array_filter($melisInstalledPackages, function ($package) {
+
+            $type = $package->type;
+            $extra = $package->extra ?? [];
+            $isMelisModule = true;
+            if (array_key_exists('melis-module', $extra)) {
+                $key = 'melis-module';
+                if (!$extra->$key)
+                    $isMelisModule = false;
             }
 
             /** @var CompletePackage $package */
-            return $package->getType() === 'melisplatform-module' &&
-                array_key_exists('module-name', $extra) && $laminasModule;
+            return $type === 'melisplatform-module' &&
+                array_key_exists('module-name', $extra) && $isMelisModule;
         });
 
         $modules = array_map(function ($package) {
+            $extra = (array) $package->extra;
             /** @var CompletePackage $package */
-            return $package->getExtra()['module-name'];
+            return $extra['module-name'];
         }, $packages);
 
         sort($modules);
@@ -449,29 +444,8 @@ class MelisCoreModulesService extends MelisServiceManager
 
     public function getComposerModulePath($moduleName, $returnFullPath = true)
     {
-        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
-        $packages = $repos->getPackages();
-
-        if (!empty($packages)) {
-            foreach ($packages as $repo) {
-                if ($repo->getType() == 'melisplatform-module') {
-                    if (array_key_exists('module-name', $repo->getExtra())
-                        && $moduleName == $repo->getExtra()['module-name']) {
-                        foreach ($repo->getRequires() as $require) {
-                            $source = $require->getSource();
-
-                            if ($returnFullPath) {
-                                return $_SERVER['DOCUMENT_ROOT'] . '/../vendor/' . $source;
-                            } else {
-                                return '/vendor/' . $source;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return '';
+        $melisComposer = new \MelisComposerDeploy\MelisComposer();
+        return $melisComposer->getComposerModulePath($moduleName, $returnFullPath);
     }
 
     /**
@@ -711,14 +685,12 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     public function isSiteModule($module)
     {
-        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
-
-        $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
-        $composer = (array) \Laminas\Json\Json::decode(file_get_contents($composerFile));
+        $melisComposer = new \MelisComposerDeploy\MelisComposer();
+        $packages = $melisComposer->getInstalledPackages();
 
         $repo = null;
 
-        foreach ($composer as $package) {
+        foreach ($packages as $package) {
             $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
 
             if (isset($packageModuleName['module-name']) && $packageModuleName['module-name'] == $module) {
@@ -727,10 +699,8 @@ class MelisCoreModulesService extends MelisServiceManager
             }
         }
 
-        if ($repo) {
-            if(isset($repo['melis-site'])) {
-                return (bool)$repo['melis-site'] ?? false;
-            }
+        if (isset($repo['melis-site'])) {
+            return (bool) $repo['melis-site'] ?? false;
         }
 
         return false;

@@ -199,7 +199,7 @@ return array(
                 'js' => array(
                     '/melis/get-translations',
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
-                    '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
+                    //'/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
@@ -213,6 +213,7 @@ return array(
 
                     // tinyMCE
                     '/MelisCore/js/library/tinymce/tinymce.min.js?v=' . time(),
+                    '/MelisCore/js/library/tinymce/icons/default/icons.min.js',
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
@@ -233,6 +234,7 @@ return array(
 
                     // datetimepicker
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
+                    //'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/js/bootstrap-timerpicker.js',
                     '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 
                     '/MelisCore/js/core/melisCore.js',
@@ -252,7 +254,8 @@ return array(
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
-                    '/MelisCore/js/tools/melis-core-gdpr-tool.js'
+                    '/MelisCore/js/tools/melis-core-gdpr-tool.js',
+                    '/MelisCore/js/core/loader.js'
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
