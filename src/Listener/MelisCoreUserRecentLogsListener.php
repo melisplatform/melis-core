@@ -39,21 +39,30 @@ class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implement
     		    $flashMsgSrv = $sm->get('MelisCoreFlashMessenger');
 
     		    $recentUserLogs = array_reverse($recentUserLogs);
-		
-        		foreach ($recentUserLogs As $key => $val)
-        		{
 
-        		    // Retrieving the Log from Log Entity
-					$log = $val->getLog();
-					if (! empty($log)) {
-						$title   = $log->log_title;
-						$message = $log->log_message;
-						$icon = ($log->log_action_status) ? $flashMsgSrv::INFO : $flashMsgSrv::WARNING;
-						
-						$flashMsgSrv->addToFlashMessenger($title, $message, $icon, $log->log_date_added);
-					}
-        		
-        		}
+                $log = $recentUserLogs[0]->getLog();
+                if (! empty($log)) {
+                    $title   = $log->log_title;
+                    $message = $log->log_message;
+                    $icon = ($log->log_action_status) ? $flashMsgSrv::INFO : $flashMsgSrv::WARNING;
+
+                    $flashMsgSrv->addToFlashMessenger($title, $message, $icon, $log->log_date_added);
+                }
+		
+//        		foreach ($recentUserLogs As $key => $val)
+//        		{
+//
+//        		    // Retrieving the Log from Log Entity
+//					$log = $val->getLog();
+//					if (! empty($log)) {
+//						$title   = $log->log_title;
+//						$message = $log->log_message;
+//						$icon = ($log->log_action_status) ? $flashMsgSrv::INFO : $flashMsgSrv::WARNING;
+//
+//						$flashMsgSrv->addToFlashMessenger($title, $message, $icon, $log->log_date_added);
+//					}
+//
+//        		}
     	});
         
         $this->listeners[] = $callBackHandler;
