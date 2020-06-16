@@ -17,18 +17,18 @@ use Laminas\View\Model\ViewModel;
  * This class renders Melis CMS appConfig views recursively
  * to generate web interface based on it
  */
-class MelisGenericModalController extends AbstractActionController
+class MelisGenericModalController extends MelisAbstractActionController
 {
     public function genericModalAction()
     {
-		$id = $this->params()->fromRoute('id', $this->params()->fromQuery('id', ''));
-		$melisKey = $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey', ''));
-         
+        $id = $this->params()->fromRoute('id', $this->params()->fromQuery('id', ''));
+        $melisKey = $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey', ''));
+        
         $view = new ViewModel();
         $view->setTerminal(true);
         $view->id = $id;
         $view->melisKey = $melisKey;
-         
+        
         return $view;
     }
 
@@ -46,7 +46,7 @@ class MelisGenericModalController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('id', $this->params()->fromQuery('id', ''));
         $melisKey = $this->params()->fromRoute('melisKey', $this->params()->fromQuery('melisKey', ''));
-         
+        
         $view = new ViewModel();
         $view->setTerminal(true);
         $view->id = $id;

@@ -17,7 +17,7 @@ use Laminas\Session\Container;
 /**
  * This class renders User Profile Management
  */
-class UserProfileController extends AbstractActionController
+class UserProfileController extends MelisAbstractActionController
 {
     
     const TOOL_KEY = 'meliscore_user_profile_management';

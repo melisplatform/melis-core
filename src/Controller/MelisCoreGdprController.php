@@ -13,7 +13,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\Form\Factory;
 use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 
-class MelisCoreGdprController extends AbstractActionController
+class MelisCoreGdprController extends MelisAbstractActionController
 {
     /**
      * This will get the data from the service which will get

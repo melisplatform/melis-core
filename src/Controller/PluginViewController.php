@@ -19,7 +19,7 @@ use MelisCore\Support\MelisCore;
  * This class renders Melis CMS appConfig views recursively
  * to generate web interface based on it
  */
-class PluginViewController extends AbstractActionController
+class PluginViewController extends MelisAbstractActionController
 {
     public function renderViewRecList($zoneView)
     {

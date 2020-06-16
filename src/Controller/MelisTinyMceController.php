@@ -12,7 +12,7 @@ namespace MelisCore\Controller;
 use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 
-class MelisTinyMceController extends AbstractActionController
+class MelisTinyMceController extends MelisAbstractActionController
 {
     const MINI_TEMPLATES_FOLDER = 'miniTemplatesTinyMce';
 

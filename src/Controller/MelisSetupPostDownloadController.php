@@ -20,7 +20,7 @@ use MelisMarketPlace\Support\MelisMarketPlaceSiteInstall as Site;
 /**
  * @property bool $showOnMarketplacePostSetup
  */
-class MelisSetupPostDownloadController extends AbstractActionController implements MelisSetupInterface
+class MelisSetupPostDownloadController extends MelisAbstractActionController implements MelisSetupInterface
 {
     /**
      * flag for Marketplace whether to display the setup form or not

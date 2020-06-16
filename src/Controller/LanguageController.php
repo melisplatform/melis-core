@@ -16,7 +16,7 @@ use MelisCore\Service\MelisCoreRightsService;
 /**
  * This class deals with the languages button in the header
  */
-class LanguageController extends AbstractActionController
+class LanguageController extends MelisAbstractActionController
 {
     const TOOL_INDEX = 'meliscore';
     const TOOL_KEY = 'meliscore_language_tool';

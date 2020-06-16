@@ -18,7 +18,7 @@ use Laminas\Session\Container;
 /**
  * This class deals with the Melis Backoffice Logs
  */
-class LogController extends AbstractActionController
+class LogController extends MelisAbstractActionController
 {
     /**
      * Render Log Tool page

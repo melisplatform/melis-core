@@ -16,7 +16,7 @@ use MelisCore\MelisSetupInterface;
 /**
  * @property bool $showOnMarketplacePostSetup
  */
-class MelisSetupPostUpdateController extends AbstractActionController implements MelisSetupInterface
+class MelisSetupPostUpdateController extends MelisAbstractActionController implements MelisSetupInterface
 {
     /**
      * flag for Marketplace whether to display the setup form or not

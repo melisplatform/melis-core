@@ -21,7 +21,7 @@ use Laminas\Validator;
 /**
  * Platform Color Tool
  */
-class PlatformSchemeController extends AbstractActionController
+class PlatformSchemeController extends MelisAbstractActionController
 {
 
     const SCHEME_FOLDER_PERMISSION = 0755;

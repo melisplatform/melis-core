@@ -17,7 +17,7 @@ use Laminas\View\Model\ViewModel;
  * This class handles the request from AJAX call in 
  * generating plugin and saving Dashboard plugins
  */
-class DashboardPluginsController extends AbstractActionController
+class DashboardPluginsController extends MelisAbstractActionController
 {
     /**
      * Render Dashboard Menu

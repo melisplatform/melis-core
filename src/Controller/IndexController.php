@@ -16,7 +16,7 @@ use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 /**
  * This class renders Melis CMS
  */
-class IndexController extends AbstractActionController
+class IndexController extends MelisAbstractActionController
 {
     /**
      * Rendering the Melis CMS interface

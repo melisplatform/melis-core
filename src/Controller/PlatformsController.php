@@ -16,7 +16,7 @@ use MelisCore\Service\MelisCoreRightsService;
 /**
  * Platform Tool
  */
-class PlatformsController extends AbstractActionController
+class PlatformsController extends MelisAbstractActionController
 {
     const TOOL_INDEX = 'meliscore';
     const TOOL_KEY = 'meliscore_platform_tool';

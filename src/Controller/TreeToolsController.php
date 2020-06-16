@@ -18,7 +18,7 @@ use Laminas\Stdlib\ArrayUtils;
 /**
  * This class renders Melis CMS
  */
-class TreeToolsController extends AbstractActionController
+class TreeToolsController extends MelisAbstractActionController
 {
     const CORE = 'meliscore';
     const CMS = 'meliscms';

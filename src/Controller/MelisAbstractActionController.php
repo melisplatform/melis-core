@@ -13,7 +13,7 @@ use Laminas\Mvc\Controller\AbstractActionController as AbstractController;
 /**
  * Basic action controller
  */
-abstract class AbstractActionController extends AbstractController
+abstract class MelisAbstractActionController extends AbstractController
 {
     protected $serviceManager = null;
 

@@ -19,7 +19,7 @@ use Laminas\View\Model\ViewModel;
 /**
  * User Management Tool
  */
-class ToolUserController extends AbstractActionController
+class ToolUserController extends MelisAbstractActionController
 {
     const TOOL_USER_MGMT_CONFIG_KEY = 'meliscore/tools/meliscore_tool_user';
     const TOOL_KEY = 'meliscore_tool_user';

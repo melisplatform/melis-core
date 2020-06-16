@@ -17,20 +17,20 @@ use MelisCore\Service\MelisCoreRightsService;
 /**
  * This class renders Melis CMS Dashboard
 */
-class DashboardController extends AbstractActionController
+class DashboardController extends MelisAbstractActionController
 {
 	/**
 	 * Shows the leftmenu dasboard entry point
 	 * 
 	 * @return \Laminas\View\Model\ViewModel
 	 */
-    public function leftmenuDashboardAction()
-    {
-    	$melisKey = $this->params()->fromRoute('melisKey', '');
-    	
-    	$view = new ViewModel();
-    	$view->melisKey = $melisKey;
-    	 
-    	return $view;
-    }
+	public function leftmenuDashboardAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
 }

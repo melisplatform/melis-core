@@ -17,7 +17,7 @@ use Laminas\Session\Container;
 /**
  * This class handles Melis CMS Flash Messenger
  */
-class MelisFlashMessengerController extends AbstractActionController
+class MelisFlashMessengerController extends MelisAbstractActionController
 { 
     
     /**
@@ -28,7 +28,7 @@ class MelisFlashMessengerController extends AbstractActionController
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
-         
+        
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->flashMessages = $this->getflashMessageAction();
@@ -112,9 +112,9 @@ class MelisFlashMessengerController extends AbstractActionController
             }
         }
         
-    	return new JsonModel(array(
-    		'flashMessage' => $fmArray,
-    	));
+        return new JsonModel(array(
+            'flashMessage' => $fmArray,
+        ));
     }
     
     /**

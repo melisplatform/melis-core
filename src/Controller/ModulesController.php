@@ -19,7 +19,7 @@ use MelisCalendar\Service\MelisCalendarService;
 /**
  * Module Management Tool
  */
-class ModulesController extends AbstractActionController
+class ModulesController extends MelisAbstractActionController
 {
 
     const MODULE_LOADER_FILE = 'config/melis.module.load.php';

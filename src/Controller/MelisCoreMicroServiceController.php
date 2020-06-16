@@ -14,7 +14,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Session\Container;
 
-class MelisCoreMicroServiceController extends AbstractActionController
+class MelisCoreMicroServiceController extends MelisAbstractActionController
 {
     /**
      * This handles the requests and the displays of the

@@ -20,7 +20,7 @@ use MelisCore\Model\MelisBOEmails;
 /**
  * MelisCore BO Emails Management
  */
-class EmailsManagementController extends AbstractActionController
+class EmailsManagementController extends MelisAbstractActionController
 {
     const TOOL_INDEX = 'meliscore';
     const TOOL_KEY = 'meliscore_emails_mngt_tool';

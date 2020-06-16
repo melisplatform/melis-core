@@ -18,7 +18,7 @@ use Laminas\Session\Container;
  * This class deals with User functionalities
  *
  */
-class UserController extends AbstractActionController
+class UserController extends MelisAbstractActionController
 {
     const CONFIG_PATH = 'meliscore/datas';
     protected $_hash = '';

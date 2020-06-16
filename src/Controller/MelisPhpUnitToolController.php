@@ -13,7 +13,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
 
-class MelisPhpUnitToolController extends AbstractActionController
+class MelisPhpUnitToolController extends MelisAbstractActionController
 {
 
     const TEST_FAILED = 'failed';

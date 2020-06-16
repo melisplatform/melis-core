@@ -19,7 +19,7 @@ use Laminas\View\Model\ViewModel;
 /**
  * This class deals with authentification to Melis Platform
  */
-class MelisAuthController extends AbstractActionController
+class MelisAuthController extends MelisAbstractActionController
 {
     const ROLE_ID_CUSTOM = 1;
     const USER_INACTIVE = 0;
