@@ -60,7 +60,5 @@ class MelisCoreUserRecentLogsListener extends MelisGeneralListener implements Li
 //
 //        		}
 		});
-		
-		$this->listeners[] = $callBackHandler;
 	}
 }
