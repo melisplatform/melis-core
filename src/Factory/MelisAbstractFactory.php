@@ -81,9 +81,9 @@ class MelisAbstractFactory implements AbstractFactoryInterface
              * Object result set
              */
             $resultSetPrototype = null;
-            // if (method_exists($instance, 'hydratingResultSet')) {
-            //     $resultSetPrototype = $instance->hydratingResultSet();
-            // }
+            if (method_exists($instance, 'hydratingResultSet')) {
+                $resultSetPrototype = $instance->hydratingResultSet();
+            }
 
             /**
              * TableGateway instance
