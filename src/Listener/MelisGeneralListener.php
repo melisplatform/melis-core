@@ -61,21 +61,21 @@ abstract class MelisGeneralListener extends AbstractListenerAggregate
      * @param  int $priority Priority at which listener should execute
      *
      */
-	public function attachEventListener(EventManagerInterface $events, $identifier, $eventName, callable $listiner,  $priority = 1)
+	public function attachEventListener(EventManagerInterface $events, $identifier, $eventName, callable $listener,  $priority = 1)
     {
         $sharedEvents = $events->getSharedManager();
 
         if (empty($eventName))
             return;
 
-        if (!is_callable($listiner))
+        if (!is_callable($listener))
             return;
 
         if (is_array($eventName)) {
             foreach ($eventName As $event)
-                $this->listeners[] = $sharedEvents->attach($identifier, $event, $listiner, $priority);
+                $this->listeners[] = $sharedEvents->attach($identifier, $event, $listener, $priority);
         }else{
-            $this->listeners[] = $sharedEvents->attach($identifier, $eventName, $listiner, $priority);
+            $this->listeners[] = $sharedEvents->attach($identifier, $eventName, $listener, $priority);
         }
     }
 }

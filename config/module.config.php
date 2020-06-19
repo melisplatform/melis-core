@@ -403,7 +403,7 @@ return [
         'abstract_factories' => [
             /**
              * This Abstract factory will create requested service
-             * that match on the onCreate() condetions
+             * that match on the onCreate() conditions
              */
             \MelisCore\Factory\MelisAbstractFactory::class
         ]
@@ -489,7 +489,7 @@ return [
         'abstract_factories' => [
             /**
              * This Abstract factory will create requested service
-             * that match on the onCreate() condetions
+             * that match on the onCreate() conditions
              */
             \MelisCore\Factory\MelisAbstractFactory::class
         ]
