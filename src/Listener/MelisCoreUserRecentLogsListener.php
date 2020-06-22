@@ -40,15 +40,17 @@ class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implement
 
     		    $recentUserLogs = array_reverse($recentUserLogs);
 
-                $log = $recentUserLogs[0]->getLog();
-                if (! empty($log)) {
-                    $title   = $log->log_title;
-                    $message = $log->log_message;
-                    $icon = ($log->log_action_status) ? $flashMsgSrv::INFO : $flashMsgSrv::WARNING;
+                if(isset($recentUserLogs[0])){
+                    $log = $recentUserLogs[0]->getLog();
+                    if (! empty($log)) {
+                        $title   = $log->log_title;
+                        $message = $log->log_message;
+                        $icon = ($log->log_action_status) ? $flashMsgSrv::INFO : $flashMsgSrv::WARNING;
 
-                    $flashMsgSrv->addToFlashMessenger($title, $message, $icon, $log->log_date_added);
+                        $flashMsgSrv->addToFlashMessenger($title, $message, $icon, $log->log_date_added);
+                    }
                 }
-		
+
 //        		foreach ($recentUserLogs As $key => $val)
 //        		{
 //
