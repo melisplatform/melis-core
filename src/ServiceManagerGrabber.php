@@ -5,7 +5,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\Mvc\Service\ServiceManagerConfig;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Stdlib\Hydrator\ObjectProperty;
+use Laminas\Hydrator\ObjectProperty;
 use Laminas\Db\Adapter\Adapter;
 class ServiceManagerGrabber extends PHPUnit_Framework_TestCase
 {
