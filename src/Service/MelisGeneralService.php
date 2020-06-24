@@ -19,37 +19,37 @@ use Laminas\EventManager\EventManagerInterface;
  */
 class MelisGeneralService extends MelisServiceManager implements EventManagerAwareInterface
 {
-    /**
-     * @var $eventManager
-     */
-    protected $eventManager;
+	/**
+	 * @var $eventManager
+	 */
+	protected $eventManager;
 
-    /**
-     * @param EventManagerInterface $eventManager
-     */
+	/**
+	 * @param EventManagerInterface $eventManager
+	 */
 	public function setEventManager(EventManagerInterface $eventManager)
 	{
-	    $this->eventManager = $eventManager;
+		$this->eventManager = $eventManager;
 	}
 
-    /**
-     * @return EventManagerInterface
-     */
+	/**
+	 * @return EventManagerInterface
+	 */
 	public function getEventManager()
 	{
-	    return $this->eventManager;
+		return $this->eventManager;
 	}
 
-    public function getRenderMode()
-    {
-        $router = $this->getServiceManager()->get('router');
-        $request = $this->getServiceManager()->get('request');
+	public function getRenderMode()
+	{
+		$router = $this->getServiceManager()->get('router');
+		$request = $this->getServiceManager()->get('request');
 
-        $routeMatch = $router->match($request);
-        $renderMode = $routeMatch->getParam('renderMode', 'melis');
+		$routeMatch = $router->match($request);
+		$renderMode = $routeMatch->getParam('renderMode', 'melis');
 
-        return $renderMode;
-    }
+		return $renderMode;
+	}
 	
 	/**
 	 * This method creates an array from the parameters, using parameters' name as keys
@@ -61,70 +61,70 @@ class MelisGeneralService extends MelisServiceManager implements EventManagerAwa
 	 */
 	public function makeArrayFromParameters($class_method, $parameterValues)
 	{
-	    if (empty($class_method))
-	        return array();
-	    
-	    // Get the class name and the method name
-	    list($className, $methodName) = explode('::', $class_method);
-	    if (empty($className) || empty($methodName))
-	        return array();
-	    
-	    /**
-	     * Build an array from the parameters
-	     * Parameters' name will become keys
-	     * Values will be parameters' values or default values
-	     */ 
-	    $parametersArray = array();
-	    try 
-	    {
-	        // Gets the data of class/method from Reflection object
-    	    $reflectionMethod = new \ReflectionMethod($className, $methodName);
-    	    $parameters = $reflectionMethod->getParameters();
-    	    
-    	    // Loop on parameters
-    	    foreach ($parameters as $keyParameter => $parameter)
-    	    {
-    	        // Check if we have a value given
-    	        if (!empty($parameterValues[$keyParameter]))
-    	            $parametersArray[$parameter->getName()] = $parameterValues[$keyParameter];
-    	            else
-    	                // No value given, check if parameter has an optional value
-    	                if ($parameter->isOptional())
-    	                    $parametersArray[$parameter->getName()] = $parameter->getDefaultValue();
-    	                    else
-    	                        // Else
-    	                        $parametersArray[$parameter->getName()] = null;
-    	    }
-	    }
-	    catch (\Exception $e)
-	    {
-	        // Class or method were not found
-	        return array();
-	    }
-	    
-	    return $parametersArray;
+		if (empty($class_method))
+			return array();
+		
+		// Get the class name and the method name
+		list($className, $methodName) = explode('::', $class_method);
+		if (empty($className) || empty($methodName))
+			return array();
+		
+		/**
+		 * Build an array from the parameters
+		 * Parameters' name will become keys
+		 * Values will be parameters' values or default values
+		 */ 
+		$parametersArray = array();
+		try 
+		{
+			// Gets the data of class/method from Reflection object
+			$reflectionMethod = new \ReflectionMethod($className, $methodName);
+			$parameters = $reflectionMethod->getParameters();
+			
+			// Loop on parameters
+			foreach ($parameters as $keyParameter => $parameter)
+			{
+				// Check if we have a value given
+				if (!empty($parameterValues[$keyParameter]))
+					$parametersArray[$parameter->getName()] = $parameterValues[$keyParameter];
+					else
+						// No value given, check if parameter has an optional value
+						if ($parameter->isOptional())
+							$parametersArray[$parameter->getName()] = $parameter->getDefaultValue();
+							else
+								// Else
+								$parametersArray[$parameter->getName()] = null;
+			}
+		}
+		catch (\Exception $e)
+		{
+			// Class or method were not found
+			return array();
+		}
+		
+		return $parametersArray;
 	}
 
-    /**
-     * Send event using eventManager
-     * @param $eventName
-     * @param $parameters
-     * @param null $target
-     * @return array
-     */
+	/**
+	 * Send event using eventManager
+	 * @param $eventName
+	 * @param $parameters
+	 * @param null $target
+	 * @return array
+	 */
 	public function sendEvent($eventName, $parameters, $target = null)
 	{
-        if($this->eventManager) {
+		if($this->eventManager) {
 
-            if (is_null($target))
-                $target = $this;
+			if (is_null($target))
+				$target = $this;
 
-            $parameters = $this->eventManager->prepareArgs($parameters);
-            $this->eventManager->trigger($eventName, $target, $parameters);
-            $parameters = get_object_vars($parameters);
-        }
+			$parameters = $this->eventManager->prepareArgs($parameters);
+			$this->eventManager->trigger($eventName, $target, $parameters);
+			$parameters = get_object_vars($parameters);
+		}
 
-	    return $parameters;
+		return $parameters;
 	}
 	
 	/**
@@ -134,16 +134,16 @@ class MelisGeneralService extends MelisServiceManager implements EventManagerAwa
 	 */
 	public function splitData($prefix, $haystack = [])
 	{
-	    $data = [];
-	    
-	    if($haystack) {
-	        foreach($haystack as $key => $value) {
-	            if(strpos($key, $prefix) !== false) {
-	                $data[$key] = $value;
-	            }
-	        }
-	    }
-	    
-	    return $data;
+		$data = [];
+		
+		if($haystack) {
+			foreach($haystack as $key => $value) {
+				if(strpos($key, $prefix) !== false) {
+					$data[$key] = $value;
+				}
+			}
+		}
+		
+		return $data;
 	}
 }
