@@ -124,12 +124,12 @@ class MelisFlashMessengerController extends MelisAbstractActionController
     {
         $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
         
-        $success = $this->params()->fromRoute('success', $this->params()->fromQuery('success', ''));
-        $title   = $this->params()->fromRoute('textTitle', $this->params()->fromQuery('textTitle', ''));
-        $message = $this->params()->fromRoute('textMessage', $this->params()->fromQuery('textMessage', ''));
-        $typeCode = $this->params()->fromRoute('typeCode', $this->params()->fromQuery('typeCode', ''));
-        $itemId = $this->params()->fromRoute('itemId', $this->params()->fromQuery('itemId', ''));
-    
+        $success = $this->params()->fromRoute('success', $this->params()->fromQuery('success', $this->params()->fromRoute('success', $this->params()->fromQuery('success', ''))));
+        $title   = $this->params()->fromRoute('textTitle', $this->params()->fromQuery('textTitle', $this->params()->fromRoute('title', $this->params()->fromQuery('title', ''))));
+        $message = $this->params()->fromRoute('textMessage', $this->params()->fromQuery('textMessage', $this->params()->fromRoute('message', $this->params()->fromQuery('title', ''))));
+        $typeCode = $this->params()->fromRoute('typeCode', $this->params()->fromQuery('typeCode', $this->params()->fromRoute('typeCode', $this->params()->fromQuery('typeCode', ''))));
+        $itemId = $this->params()->fromRoute('itemId', $this->params()->fromQuery('itemId', $this->params()->fromRoute('itemId', $this->params()->fromQuery('itemId', ''))));
+
         $img = $success == 1 ? $flashMessenger::INFO : $flashMessenger::WARNING;
     
         $flashMessenger->addToFlashMessenger($title, $message, $img);
@@ -137,6 +137,4 @@ class MelisFlashMessengerController extends MelisAbstractActionController
         $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
         $logSrv->saveLog($title, $message, $success, $typeCode, $itemId);
     }
-
-
 }
