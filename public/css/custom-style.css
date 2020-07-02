@@ -1252,6 +1252,13 @@ a[data-toggle="modal"]:focus {
 #idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
   padding-top: 6px;
 }
+/* 
+ * Fix for Dashboard > horizontal scrollbars problem
+ * https://mantis2.uat.melistechnology.fr/view.php?id=480
+ */
+.flotchart-holder {
+  overflow: auto;
+}
 @media (max-width: 767px) {
   /* mobile nav-right click open second ul */
   #newplugin-cont ul > li > ul {
