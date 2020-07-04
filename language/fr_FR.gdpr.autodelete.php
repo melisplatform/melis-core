@@ -6,7 +6,7 @@ return [
     'tr_melis_core_gdpr_autodelete_label_text_modal_link' => 'Cliquez ici pour savoir comment activer l\'envoi automatique',
     // cron activation modal
     'tr_melis_core_gdpr_autodelete_label_modal_tab_heading' => 'Activation du CRON',
-    'tr_melis_core_gdpr_autodelete_label_modal_tab_text' => 'Pour activer le système automatique, un administrateur système doit activer cette ligne en tant que CRON sur le serveur, s\'activant une fois par jour tous les jours(ici à 1h00 dans cet exemple):',
+    'tr_melis_core_gdpr_autodelete_label_modal_tab_text' => 'Pour activer le système automatique, un administrateur système doit activer cette ligne en tant que CRON sur le serveur, s\'activant une fois par jour tous les jours (ici à 1h00 dans cet exemple):',
     'tr_melis_core_gdpr_autodelete_label_modal_tab_text2' => 'Ce CRON peut aussi être lancé manuellement simplement en appelant cette URL.',
     // list auto delete configuration
     'tr_melis_core_gdpr_autodelete_label_list_config_heading' => 'Liste des configurations d\'auto suppression',
@@ -31,7 +31,7 @@ return [
     // cron config translations
     'tr_melis_core_gdpr_autodelete_label_days_text' => 'Jour(s)',
     'tr_melis_core_gdpr_autodelete_label_cron_config_title' => 'Configuration du Cron',
-    'tr_melis_core_gdpr_autodelete_label_warning_delete' => 'Attention, si le compte ne contient pas d\'email, il sera automatiquement anonymisé car nous ne pouvons pas envoyer d\'email de consentement.',
+    'tr_melis_core_gdpr_autodelete_label_warning_delete' => 'Attention, si le compte ne contient pas d\'email, il sera automatiquement anonymisé car aucune nouvelle demande de consentement ne pourra être envoyé',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status' => 'Activer l\'alerte email',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip' => 'Active ou désactive l\'email d\'alerte',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_days' => 'Email d\'alerte envoyé après une inactivité de :',
