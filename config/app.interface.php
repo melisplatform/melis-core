@@ -129,6 +129,14 @@ return array(
                     'menu_handler' => "5", // equivalent to 5 days
                     "inside_menu"  => "10" // equivalent to 10 days
                 ],
+                /**
+                 * time in hours of the data to be anonymized
+                 *  - this is for testing only by default it's days
+                 *
+                 * m - minutes
+                 * d - days
+                 */
+                'gdpr_auto_anonymized_time_format' => "d",
             ),
             'ressources' => array(
                 'css' => array(
