@@ -543,10 +543,24 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
      * @param $date2
      * @return float
      */
-    private function getDaysDiff($date1, $date2)
+    public function getDaysDiff($date1, $date2)
     {
-       // return round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
-        return round((time() - strtotime($date1)) / 60);
+        // get config time format 
+        $timeFormat = $this->getServiceLocator()->get('MelisConfig')->getItem('meliscore/datas')['gdpr_auto_anonymized_time_format'] ?? null;
+        $diff = 0;
+        // 
+        switch ($timeFormat) {
+            case "d":
+                $diff = round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
+                break;
+            case "m":
+                $diff = round((time() - strtotime($date1)) / 60);
+                break;
+            default:
+                $diff = round((strtotime($date2) - strtotime($date1)) / (60 * 60 * 24));
+        }
+
+        return $diff; 
     }
     /**
      *
