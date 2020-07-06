@@ -263,7 +263,7 @@ return array(
                  * lesser requests
                  */
                 'build' => [
-                    'disable_bundle' => true,
+                    //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
                     'use_build_assets' =>  true,
                     // path to where the build CSS and JS are located
