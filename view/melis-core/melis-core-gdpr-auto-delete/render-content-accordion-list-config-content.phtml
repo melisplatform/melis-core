@@ -1,0 +1,34 @@
+<div id="list-config-content" class="collapse show" aria-labelledby="list-config" data-parent="#accordion">
+    <div class="list-config-content-table">
+        <?php
+        $id = '';
+        if (!empty($this->zoneconfig['conf']['id']))
+            $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+        ?>
+        <div <?= $id; ?> data-melisKey="<?= $this->melisKey; ?>">
+            <?php
+
+            $this->melisGenericTable()->setTable(array(
+                'id' => 'tableGdprAutoDeleteConfig',
+                'class' => 'table table-striped table-primary dt-responsive nowrap',
+                'cellspacing' => '0',
+                'width' => '100%'
+            ));
+            $columns = array();
+            $columnStyle = array();
+            foreach($this->tableColumns as $columnText)
+            {
+                $columns[] = $columnText['text'];
+            }
+            $this->melisGenericTable()->setColumns($columns);
+
+            echo $this->melisGenericTable()->renderTable();
+            ?>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    <?= $this->toolDataTableConfig; ?>
+                });
+            </script>
+        </div>
+    </div>
+</div>

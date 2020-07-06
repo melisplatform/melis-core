@@ -320,10 +320,10 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
                  *
                  * $pathString[$position - 1] - this will get the last position as param
                  */
-                $coreSrv = $this->getServiceManager()->get('MelisGeneralService');
-                $configTab = $coreSrv->sendEvent('melis_core_config_get_item_rec',
-                    ['pathString' => $pathString[$position - 1] , 'config' => $configTab]
-                )['config'];
+                // $coreSrv = $this->getServiceManager()->get('MelisGeneralService');
+                // $configTab = $coreSrv->sendEvent('melis_core_config_get_item_rec',
+                //     ['pathString' => $pathString[$position - 1] , 'config' => $configTab]
+                // )['config'];
 
                 return $configTab;
             }

@@ -1,0 +1,24 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id']))
+    $id = ' id="' .$this->zoneconfig['conf']['id'] . '"';
+
+$data_melisKey = $this->melisKey;
+$this->noAccess = false;
+?>
+<div <?= $id; ?>  class="tab-pane clearfix" data-melisKey='<?= $data_melisKey; ?>'>
+    <?php
+    if($this->noAccess) {
+        echo '<h4>No rights for this interface</h4>';
+    }
+    else
+    {
+        if(!empty($this->zoneconfig['interface'])) {
+            foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                echo $this->$keyConfig;
+            }
+        }
+    }
+
+    ?>
+</div>

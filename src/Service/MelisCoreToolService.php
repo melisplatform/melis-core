@@ -594,11 +594,11 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 'ordering' => 'true',
                 'serverSide' => 'true',
                 'searching' => 'true',
+                'pageLength' => '10',
             ];
             // Merging Default Configuration and Param Configuration
             // This process will override default config if index exist on param config
             $finalTblOption = array_merge($defaultTblOptions, $tableOption);
-
             // Table Option
             $finalTblOptionStr = '';
             foreach ($finalTblOption As $key => $val) {
@@ -627,7 +627,6 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                     responsive:true,
                     processing: true,
                     lengthMenu: [ [5, 10, 25, 50], [5, 10, 25, 50] ],
-                    pageLength: 10,
                     ajax: {
                         url: "' . $ajaxUrl . '",
                         type: "POST",

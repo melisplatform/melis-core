@@ -536,7 +536,7 @@ class UserController extends MelisAbstractActionController
 
                 if (strlen($password) >= 8) {
                     if (strlen($confirmPass) >= 8) {
-                        //$passValidator = new \Zend\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
+                        //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if ($passValidator->isValid($password)) {
                             // password and confirm password matching

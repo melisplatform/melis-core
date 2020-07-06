@@ -1,47 +1,47 @@
 {
-    "name": "melisplatform/melis-core",
-    "description": "Melis Platform Core module",
-    "type": "melisplatform-module",
-    "license": "OSL-3.0",
-    "homepage": "https://github.com/melisplatform/melis-core",
-    "support": {
-        "email": "contact@melistechnology.com",
-        "source": "https://github.com/melisplatform/melis-core",
-        "issues": "https://github.com/melisplatform/melis-core/issues",
-        "docs": "https://www.melistechnology.com/melistechnology/resources/download-documentation/id/17#documentation"
-    },
-    "authors": [
-        {
-            "name": "Melis Technology",
-            "email": "contact@melistechnology.com",
-            "homepage": "https://www.melistechnology.com",
-            "role": "Developer"
-        }
-    ],
-    "keywords": [
-        "cms",
-        "melis",
-        "zf2",
-        "module"
-    ],
-    "extra": {
-        "module-name": "MelisCore",
-        "dbdeploy": true,
-        "melis-site": false,
-        "melis-module-category": "core"
-    },
-    "require": {
-        "php": "^7.0",
-        "ext-openssl": "*",
-        "ext-json": "*",
-        "ext-pdo_mysql": "*",
-        "justinrainbow/json-schema": "5.2.1",
-        "melisplatform/melis-asset-manager": "*",
-        "composer/composer": "~1.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "MelisCore\\": "src/"
-        }
+  "name": "melisplatform/melis-core",
+  "description": "Melis Platform Core module",
+  "type": "melisplatform-module",
+  "license": "OSL-3.0",
+  "homepage": "https://github.com/melisplatform/melis-core",
+  "support": {
+    "email": "contact@melistechnology.com",
+    "source": "https://github.com/melisplatform/melis-core",
+    "issues": "https://github.com/melisplatform/melis-core/issues",
+    "docs": "https://www.melistechnology.com/melistechnology/resources/download-documentation/id/17#documentation"
+  },
+  "authors": [
+    {
+      "name": "Melis Technology",
+      "email": "contact@melistechnology.com",
+      "homepage": "https://www.melistechnology.com",
+      "role": "Developer"
     }
+  ],
+  "keywords": [
+    "cms",
+    "melis",
+    "zf2",
+    "module"
+  ],
+  "extra": {
+    "module-name": "MelisCore",
+    "dbdeploy": true,
+    "melis-site": false,
+    "melis-module-category": "core"
+  },
+  "require": {
+    "php": "^7.0",
+    "ext-openssl": "*",
+    "ext-json": "*",
+    "ext-pdo_mysql": "*",
+    "justinrainbow/json-schema": "5.2.1",
+    "melisplatform/melis-asset-manager": "*",
+    "composer/composer": "~1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "MelisCore\\": "src/"
+    }
+  }
 }

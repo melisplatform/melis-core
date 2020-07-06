@@ -6,52 +6,6 @@
  * @copyright Copyright (c) 2015 Melis Technology (http://www.melistechnology.com)
  *
  */
-
-use MelisCore\View\Helper\MelisCoreSectionIconsHelper;
-use MelisCore\View\Helper\MelisDataTableHelper;
-use MelisCore\Service\MelisCoreConfigService;
-use MelisCore\Service\MelisCoreDispatchService;
-use MelisCore\Service\MelisCoreAuthService;
-use MelisCore\Service\MelisCoreUserService;
-use MelisCore\Service\MelisCoreRightsService;
-use MelisCore\Service\MelisCoreFlashMessengerService;
-use MelisCore\Service\MelisCoreImageService;
-use MelisCore\Service\MelisCoreTranslationService;
-use MelisCore\Service\MelisCoreLostPasswordService;
-use MelisCore\Service\MelisCoreCreatePasswordService;
-use MelisCore\Service\MelisCoreToolService;
-use MelisCore\Service\MelisCoreBOEmailService;
-use MelisCore\Service\MelisCoreEmailSendingService;
-use MelisCore\Service\MelisCoreModulesService;
-use MelisCore\Service\MelisCoreLogService;
-use MelisCore\Service\MelisPhpUnitToolService;
-use MelisCore\Service\MelisCoreMicroServiceTestService;
-use MelisCore\Service\MelisCorePlatformSchemeService;
-use MelisCore\Service\MelisFormService;
-use MelisCore\Service\MelisGeneralService;
-use MelisCore\Service\MelisCoreDashboardService;
-use MelisCore\Service\MelisCoreGdprService;
-use MelisCore\Service\MelisCorePluginsService;
-use MelisCore\Service\MelisCoreDashboardPluginsRightsService;
-use MelisCore\Model\Tables\MelisLangTable;
-use MelisCore\Model\Tables\MelisUserTable;
-use MelisCore\Model\Tables\MelisUserRoleTable;
-use MelisCore\Model\Tables\MelisPlatformTable;
-use MelisCore\Model\Tables\MelisLostPasswordTable;
-use MelisCore\Model\Tables\MelisCreatePasswordTable;
-use MelisCore\Model\Tables\MelisBOEmailsTable;
-use MelisCore\Model\Tables\MelisBOEmailsDetailsTable;
-use MelisCore\Model\Tables\MelisLogTable;
-use MelisCore\Model\Tables\MelisLogTypeTable;
-use MelisCore\Model\Tables\MelisLogTypeTransTable;
-use MelisCore\Model\Tables\MelisUserConnectionDateTable;
-use MelisCore\Model\Tables\MelisMicroServiceAuthTable;
-use MelisCore\Model\Tables\MelisPlatformSchemeTable;
-use MelisCore\Model\Tables\MelisDashboardsTable;
-use MelisCore\Model\Tables\MelisPluginsTable;
-use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
-use MelisCore\View\Helper\MelisDashboardDragDropZonePluginHelper;
-
 return [
     'router' => [
         'routes' => [
@@ -305,9 +259,22 @@ return [
                             ],
                         ],
                     ],
+                    /*
+                     * GDPR Autodelete CROn
+                     */
+                    'gdpr-autodelete-cron' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'gdprautodelete[/]',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'MelisCore\Controller',
+                                'controller'    => 'MelisCoreGdprAutoDelete',
+                                'action'        => 'run-gdpr-auto-delete-cron'
+                            ]
+                        ]
+                    ]
                 ],
             ],
-
             /*
              * This route will handle the
              * alone setup of a module
@@ -355,50 +322,57 @@ return [
     'service_manager' => [
         'aliases' => [
             // Laminas Mvc translator Service
-            'translator'                        => 'MvcTranslator',
+            'translator'                            => 'MvcTranslator',
             // Service
-            'MelisGeneralService'               => MelisGeneralService::class,
-            'MelisCoreConfig'                   => MelisCoreConfigService::class,
-            'MelisCoreDispatch'                 => MelisCoreDispatchService::class,
-            'MelisCoreAuth'                     => MelisCoreAuthService::class,
-            'MelisCoreUser'                     => MelisCoreUserService::class,
-            'MelisCoreRights'                   => MelisCoreRightsService::class,
-            'MelisCoreFlashMessenger'           => MelisCoreFlashMessengerService::class,
-            'MelisCoreImage'                    => MelisCoreImageService::class,
-            'MelisCoreTranslation'              => MelisCoreTranslationService::class,
-            'MelisCoreLostPassword'             => MelisCoreLostPasswordService::class,
-            'MelisCoreCreatePassword'           => MelisCoreCreatePasswordService::class,
-            'MelisCoreTool'                     => MelisCoreToolService::class,
-            'MelisCoreBOEmailService'           => MelisCoreBOEmailService::class,
-            'MelisCoreEmailSendingService'      => MelisCoreEmailSendingService::class,
-            'ModulesService'                    => MelisCoreModulesService::class,
-            'MelisCoreLogService'               => MelisCoreLogService::class,
-            'MelisPhpUnitTool'                  => MelisPhpUnitToolService::class,
-            'MelisCoreMicroServiceTestService'  => MelisCoreMicroServiceTestService::class,
-            'MelisCorePlatformSchemeService'    => MelisCorePlatformSchemeService::class,
-            'MelisCoreFormService'              => MelisFormService::class,
-            'MelisCoreDashboardService'         => MelisCoreDashboardService::class,
-            'MelisCoreGdprService'              => MelisCoreGdprService::class,
-            'MelisCorePluginsService'           => MelisCorePluginsService::class,
-            'MelisCoreDashboardPluginsService'  => MelisCoreDashboardPluginsRightsService::class,
+            'MelisGeneralService'                   => \MelisCore\Service\MelisGeneralService::class,
+            'MelisCoreConfig'                       => \MelisCore\Service\MelisCoreConfigService::class,
+            'MelisCoreDispatch'                     => \MelisCore\Service\MelisCoreDispatchService::class,
+            'MelisCoreAuth'                         => \MelisCore\Service\MelisCoreAuthService::class,
+            'MelisCoreUser'                         => \MelisCore\Service\MelisCoreUserService::class,
+            'MelisCoreRights'                       => \MelisCore\Service\MelisCoreRightsService::class,
+            'MelisCoreFlashMessenger'               => \MelisCore\Service\MelisCoreFlashMessengerService::class,
+            'MelisCoreImage'                        => \MelisCore\Service\MelisCoreImageService::class,
+            'MelisCoreTranslation'                  => \MelisCore\Service\MelisCoreTranslationService::class,
+            'MelisCoreLostPassword'                 => \MelisCore\Service\MelisCoreLostPasswordService::class,
+            'MelisCoreCreatePassword'               => \MelisCore\Service\MelisCoreCreatePasswordService::class,
+            'MelisCoreTool'                         => \MelisCore\Service\MelisCoreToolService::class,
+            'MelisCoreBOEmailService'               => \MelisCore\Service\MelisCoreBOEmailService::class,
+            'MelisCoreEmailSendingService'          => \MelisCore\Service\MelisCoreEmailSendingService::class,
+            'ModulesService'                        => \MelisCore\Service\MelisCoreModulesService::class,
+            'MelisCoreLogService'                   => \MelisCore\Service\MelisCoreLogService::class,
+            'MelisPhpUnitTool'                      => \MelisCore\Service\MelisPhpUnitToolService::class,
+            'MelisCoreMicroServiceTestService'      => \MelisCore\Service\MelisCoreMicroServiceTestService::class,
+            'MelisCorePlatformSchemeService'        => \MelisCore\Service\MelisCorePlatformSchemeService::class,
+            'MelisCoreFormService'                  => \MelisCore\Service\MelisFormService::class,
+            'MelisCoreDashboardService'             => \MelisCore\Service\MelisCoreDashboardService::class,
+            'MelisCoreGdprService'                  => \MelisCore\Service\MelisCoreGdprService::class,
+            'MelisCorePluginsService'               => \MelisCore\Service\MelisCorePluginsService::class,
+            'MelisCoreDashboardPluginsService'      => \MelisCore\Service\MelisCoreDashboardPluginsRightsService::class,
+            'MelisCoreGdprAutoDeleteService'        => \MelisCore\Service\MelisCoreGdprAutoDeleteService::class,
+            'MelisCoreGdprAutoDeleteToolService'    => \MelisCore\Service\MelisCoreGdprAutoDeleteToolService::class,
 
             // Model
-            'MelisCoreTableLang'                => MelisLangTable::class,
-            'MelisCoreTableUser'                => MelisUserTable::class,
-            'MelisCoreTableUserRole'            => MelisUserRoleTable::class,
-            'MelisCoreTablePlatform'            => MelisPlatformTable::class,
-            'MelisLostPasswordTable'            => MelisLostPasswordTable::class,
-            'MelisCreatePasswordTable'          => MelisCreatePasswordTable::class,
-            'MelisCoreTableBOEmails'            => MelisBOEmailsTable::class,
-            'MelisCoreTableBOEmailsDetails'     => MelisBOEmailsDetailsTable::class,
-            'MelisCoreTableLog'                 => MelisLogTable::class,
-            'MelisCoreTableLogType'             => MelisLogTypeTable::class,
-            'MelisCoreTableLogTypeTrans'        => MelisLogTypeTransTable::class,
-            'MelisUserConnectionDate'           => MelisUserConnectionDateTable::class,
-            'MelisMicroServiceAuthTable'        => MelisMicroServiceAuthTable::class,
-            'MelisCorePlatformSchemeTable'      => MelisPlatformSchemeTable::class,
-            'MelisCoreDashboardsTable'          => MelisDashboardsTable::class,
-            'MelisPluginsTable'                 => MelisPluginsTable::class,
+            'MelisCoreTableLang'                    => \MelisCore\Model\Tables\MelisLangTable::class,
+            'MelisCoreTableUser'                    => \MelisCore\Model\Tables\MelisUserTable::class,
+            'MelisCoreTableUserRole'                => \MelisCore\Model\Tables\MelisUserRoleTable::class,
+            'MelisCoreTablePlatform'                => \MelisCore\Model\Tables\MelisPlatformTable::class,
+            'MelisLostPasswordTable'                => \MelisCore\Model\Tables\MelisLostPasswordTable::class,
+            'MelisCreatePasswordTable'              => \MelisCore\Model\Tables\MelisCreatePasswordTable::class,
+            'MelisCoreTableBOEmails'                => \MelisCore\Model\Tables\MelisBOEmailsTable::class,
+            'MelisCoreTableBOEmailsDetails'         => \MelisCore\Model\Tables\MelisBOEmailsDetailsTable::class,
+            'MelisCoreTableLog'                     => \MelisCore\Model\Tables\MelisLogTable::class,
+            'MelisCoreTableLogType'                 => \MelisCore\Model\Tables\MelisLogTypeTable::class,
+            'MelisCoreTableLogTypeTrans'            => \MelisCore\Model\Tables\MelisLogTypeTransTable::class,
+            'MelisUserConnectionDate'               => \MelisCore\Model\Tables\MelisUserConnectionDateTable::class,
+            'MelisMicroServiceAuthTable'            => \MelisCore\Model\Tables\MelisMicroServiceAuthTable::class,
+            'MelisCorePlatformSchemeTable'          => \MelisCore\Model\Tables\MelisPlatformSchemeTable::class,
+            'MelisCoreDashboardsTable'              => \MelisCore\Model\Tables\MelisDashboardsTable::class,
+            'MelisPluginsTable'                     => \MelisCore\Model\Tables\MelisPluginsTable::class,
+            'MelisGdprDeleteConfigTable'            => \MelisCore\Model\Tables\MelisGdprDeleteConfigTable::class,
+            'MelisGdprDeleteEmailsLogsTable'        => \MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable::class,
+            'MelisGdprDeleteEmailsSent'             => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable::class,
+            'MelisGdprDeleteEmailsTable'            => \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::class,
+            'MelisGdprDeleteEmailsSmtp'             => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable::class,
         ],
         'abstract_factories' => [
             /**
@@ -410,32 +384,35 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'MelisCore\Controller\Index'                    => \MelisCore\Controller\IndexController::class,
-            'MelisCore\Controller\TreeTools'                => \MelisCore\Controller\TreeToolsController::class,
-            'MelisCore\Controller\Language'                 => \MelisCore\Controller\LanguageController::class,
-            'MelisCore\Controller\PluginView'               => \MelisCore\Controller\PluginViewController::class,
-            'MelisCore\Controller\Dashboard'                => \MelisCore\Controller\DashboardController::class,
-            'MelisCore\Controller\MelisAuth'                => \MelisCore\Controller\MelisAuthController::class,
-            'MelisCore\Controller\MelisFlashMessenger'      => \MelisCore\Controller\MelisFlashMessengerController::class,
-            'MelisCore\Controller\ToolUser'                 => \MelisCore\Controller\ToolUserController::class,
-            'MelisCore\Controller\User'                     => \MelisCore\Controller\UserController::class,
-            'MelisCore\Controller\Modules'                  => \MelisCore\Controller\ModulesController::class,
-            'MelisCore\Controller\MelisGenericModal'        => \MelisCore\Controller\MelisGenericModalController::class,
-            'MelisCore\Controller\Platforms'                => \MelisCore\Controller\PlatformsController::class,
-            'MelisCore\Controller\EmailsManagement'         => \MelisCore\Controller\EmailsManagementController::class,
+            'MelisCore\Controller\Index'                        => \MelisCore\Controller\IndexController::class,
+            'MelisCore\Controller\TreeTools'                    => \MelisCore\Controller\TreeToolsController::class,
+            'MelisCore\Controller\Language'                     => \MelisCore\Controller\LanguageController::class,
+            'MelisCore\Controller\PluginView'                   => \MelisCore\Controller\PluginViewController::class,
+            'MelisCore\Controller\Dashboard'                    => \MelisCore\Controller\DashboardController::class,
+            'MelisCore\Controller\MelisAuth'                    => \MelisCore\Controller\MelisAuthController::class,
+            'MelisCore\Controller\MelisFlashMessenger'          => \MelisCore\Controller\MelisFlashMessengerController::class,
+            'MelisCore\Controller\ToolUser'                     => \MelisCore\Controller\ToolUserController::class,
+            'MelisCore\Controller\User'                         => \MelisCore\Controller\UserController::class,
+            'MelisCore\Controller\Modules'                      => \MelisCore\Controller\ModulesController::class,
+            'MelisCore\Controller\MelisGenericModal'            => \MelisCore\Controller\MelisGenericModalController::class,
+            'MelisCore\Controller\Platforms'                    => \MelisCore\Controller\PlatformsController::class,
+            'MelisCore\Controller\EmailsManagement'             => \MelisCore\Controller\EmailsManagementController::class,
             // @TODO Missing controllers
             // 'MelisCore\Controller\ModuleDiagnostic'         => \MelisCore\Controller\ModuleDiagnosticController::class,
             // 'MelisCore\Controller\Diagnostic'               => \MelisCore\Controller\DiagnosticController::class,
-            'MelisCore\Controller\MelisTinyMce'             => \MelisCore\Controller\MelisTinyMceController::class,
-            'MelisCore\Controller\MelisPhpUnitTool'         => \MelisCore\Controller\MelisPhpUnitToolController::class,
-            'MelisCore\Controller\Log'                      => \MelisCore\Controller\LogController::class,
-            'MelisCore\Controller\UserProfile'              => \MelisCore\Controller\UserProfileController::class,
-            'MelisCore\Controller\MelisCoreMicroService'    => \MelisCore\Controller\MelisCoreMicroServiceController::class,
-            'MelisCore\Controller\MelisSetupPostDownload'   => \MelisCore\Controller\MelisSetupPostDownloadController::class,
-            'MelisCore\Controller\MelisSetupPostUpdate'     => \MelisCore\Controller\MelisSetupPostUpdateController::class,
-            'MelisCore\Controller\PlatformScheme'           => \MelisCore\Controller\PlatformSchemeController::class,
-            'MelisCore\Controller\DashboardPlugins'         => \MelisCore\Controller\DashboardPluginsController::class,
-            'MelisCore\Controller\MelisCoreGdpr'            => \MelisCore\Controller\MelisCoreGdprController::class,
+            'MelisCore\Controller\MelisTinyMce'                 => \MelisCore\Controller\MelisTinyMceController::class,
+            'MelisCore\Controller\MelisPhpUnitTool'             => \MelisCore\Controller\MelisPhpUnitToolController::class,
+            'MelisCore\Controller\Log'                          => \MelisCore\Controller\LogController::class,
+            'MelisCore\Controller\UserProfile'                  => \MelisCore\Controller\UserProfileController::class,
+            'MelisCore\Controller\MelisCoreMicroService'        => \MelisCore\Controller\MelisCoreMicroServiceController::class,
+            'MelisCore\Controller\MelisSetupPostDownload'       => \MelisCore\Controller\MelisSetupPostDownloadController::class,
+            'MelisCore\Controller\MelisSetupPostUpdate'         => \MelisCore\Controller\MelisSetupPostUpdateController::class,
+            'MelisCore\Controller\PlatformScheme'               => \MelisCore\Controller\PlatformSchemeController::class,
+            'MelisCore\Controller\DashboardPlugins'             => \MelisCore\Controller\DashboardPluginsController::class,
+            'MelisCore\Controller\MelisCoreGdpr'                => \MelisCore\Controller\MelisCoreGdprController::class,
+            'MelisCore\Controller\MelisCoreGdprAutoDelete'      => \MelisCore\Controller\MelisCoreGdprAutoDeleteController::class,
+            'MelisCore\Controller\MelisCoreGdprAutoDeleteTabs'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteTabsController::class,
+            'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtp'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteSmtpController::class,
         ],
     ],
     'controller_plugins' => [
@@ -464,6 +441,7 @@ return [
             'DateTimePicker'                => \MelisCore\Form\Factory\DateTimePickerFactory::class,
             'MelisCoreTinyMCE'              => \MelisCore\Form\Factory\MelisCoreTinyMCEFactory::class,
             'MelisCoreUserSelect'           => \MelisCore\Form\Factory\MelisCoreUsersSelect2Factory::class,
+            'MelisCoreGdprModuleSelect'     => \MelisCore\Form\Factory\MelisGdprAutoDeleteModuleListSelectFactory::class,
         ],
     ],
     'view_helpers' => [
@@ -476,10 +454,10 @@ return [
             'MelisTextHelper'               => \MelisCore\View\Helper\MelisTextHelper::class,
         ],
         'aliases' => [
-            'MelisCoreHeadPlugin'           => MelisCoreHeadPluginHelper::class,
-            'MelisDashboardDragDropZone'    => MelisDashboardDragDropZonePluginHelper::class,
-            'MelisDataTable'                => MelisDataTableHelper::class,
-            'getMelisSectionIcons'          => MelisCoreSectionIconsHelper::class,
+            'MelisCoreHeadPlugin'           => \MelisCore\View\Helper\MelisCoreHeadPluginHelper::class,
+            'MelisDashboardDragDropZone'    => \MelisCore\View\Helper\MelisDashboardDragDropZonePluginHelper::class,
+            'MelisDataTable'                => \MelisCore\View\Helper\MelisDataTableHelper::class,
+            'getMelisSectionIcons'          => \MelisCore\View\Helper\MelisCoreSectionIconsHelper::class,
             'melisFieldCollection'          => 'MelisFieldCollection',
             'melisTextHelper'               => 'MelisTextHelper',
             'melisGenericTable'             => 'MelisGenericTable',

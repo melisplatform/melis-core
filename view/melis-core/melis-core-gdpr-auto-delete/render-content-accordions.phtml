@@ -1,0 +1,15 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' >
+    <?php
+        if(!empty($this->zoneconfig['interface'])) {
+            foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                echo $this->$keyConfig;
+            }
+        }
+    ?>
+</div>

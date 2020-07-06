@@ -30,7 +30,7 @@ class MelisCoreEmailSendingService extends MelisServiceManager
 	    $html->type = 'text/html';
 
 	    $body = new MimeMessage();
-	    
+
 	    if ($message_text!=null){
 	        
 	        // Add Alternative Email Text Content
@@ -42,6 +42,7 @@ class MelisCoreEmailSendingService extends MelisServiceManager
 	    }else{
 	        $body->addPart($html);
 	    }
+
 	    
 	    $message = new Message();
 	    $message->setFrom($emailFrom, $fromName);
@@ -76,12 +77,14 @@ class MelisCoreEmailSendingService extends MelisServiceManager
                     ),
                     'port' => $transportConfig['port'],
                 ));
+
                 $transport->setOptions($options);
             }
             catch (\Exception $exception){
                 throw new \Exception($exception->getMessage());
             }
         }
+
 
         $transport->send($message);
 	}
