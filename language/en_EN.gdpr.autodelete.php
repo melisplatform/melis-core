@@ -30,7 +30,7 @@ return [
     'tr_meliscore_gdpr_auto_delete_not_int' => 'Value must be an integer',
     // cron config translations
     'tr_melis_core_gdpr_autodelete_label_days_text' => 'Day(s)',
-    'tr_melis_core_gdpr_autodelete_label_warning_delete' => 'Warning, if the account doesn\'t have an email address associated, it will be automatically anonymized as we cannot send any consent email.',
+    'tr_melis_core_gdpr_autodelete_label_warning_delete' => ' Warning, if the account doesn\'t have an email address associated, it will be automatically anonymized as no new demand of consent can be sent',
     'tr_melis_core_gdpr_autodelete_label_cron_config_title' => 'Cron config',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status' => 'Activate alert email',
     'tr_melis_core_gdpr_autodelete_label_cron_alert_email_status tooltip' => 'Activate or not the alert email',
