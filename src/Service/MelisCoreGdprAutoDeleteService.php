@@ -542,7 +542,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
     public function getDaysDiff($date1, $date2)
     {
         // get config time format 
-        $timeFormat = $this->getServiceLocator()->get('MelisConfig')->getItem('meliscore/datas')['gdpr_auto_anonymized_time_format'] ?? null;
+        $timeFormat = $this->getServiceManager()->get('MelisConfig')->getItem('meliscore/datas')['gdpr_auto_anonymized_time_format'] ?? null;
         $diff = 0;
         // 
         switch ($timeFormat) {
@@ -600,7 +600,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $view->setResolver($resolver);
         // set template for the view
         $viewModel->setTemplate('mail-template');
-        $uri = $this->getServiceLocator()->get('request')->getUri();
+        $uri = $this->getServiceManager()->get('request')->getUri();
         $url = $uri->getScheme() . "://" . $uri->getHost() . "/";
         // set variables for the view model
         $viewModel->setVariables([
@@ -646,7 +646,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
                         $link = $this->gdprAutoDeleteToolService->getLinkUrl($alertEmailData->mgdpre_link);
                         // if link is homepage
                         if ($link === "/") {
-                            $uri = $this->getServiceLocator()->get('request')->getUri();
+                            $uri = $this->getServiceManager()->get('request')->getUri();
                             $alertEmailData->mgdpre_link = $uri->getScheme() . "://" . $uri->getHost();
                         } else {
                             $alertEmailData->mgdpre_link = $link;
@@ -719,7 +719,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     private function getSmtpConfig()
     {
-        $smtpDataConfig = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
+        $smtpDataConfig = $this->getServiceManager()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
         $smtpConfig = [];
         if (!empty($smtpDataConfig) && !empty($smtpDataConfig->mgdpr_smtp_host)) {
             $smtpDataConfig = (array) $smtpDataConfig;
@@ -972,7 +972,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $messageText = null
     ) {
         try {
-            $this->getServiceLocator()->get('MelisCoreEmailSendingService')->sendEmail(
+            $this->getServiceManager()->get('MelisCoreEmailSendingService')->sendEmail(
                 $emailFrom,
                 $emailFromName,
                 $emailTo,
@@ -1158,7 +1158,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
 
     private function getTranslation()
     {
-        return $this->getServiceLocator()->get('translator');
+        return $this->getServiceManager()->get('translator');
     }
 
     public function getSmtpConfigData()
@@ -1169,7 +1169,7 @@ class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_smtp_config_start', $arrayParameters);
 
         // Adding results to parameters for events treatment if needed
-        $arrayParameters['results'] = $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
+        $arrayParameters['results'] = $this->getServiceManager()->get('MelisGdprDeleteEmailsSmtp')->fetchAll()->current();
         // Sending service end event
         $arrayParameters = $this->sendEvent('melis_core_gdpr_auto_delete_get_stmp_config_end', $arrayParameters);
 
