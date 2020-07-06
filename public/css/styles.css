@@ -551,8 +551,8 @@ body #newplugin-cont.show-menu{
 }
 
 /* plugins container hover */
-.navbar.main .nav.navbar-right li:hover ul,
-#newplugin-cont .ul-cont li:hover ul{
+/* #newplugin-cont .ul-cont li:hover ul */
+.navbar.main .nav.navbar-right li:hover ul {
     display: block;
     position: static;
     width: 100%;
@@ -2915,8 +2915,12 @@ div#modal-user-management div.widget {
 */
 .tabsbar .nav-group-dropdown li.active > a.tab-element {
     position: relative;
-    background: #fff;
+    background: #fff !important;
     color: #e61c23 !important;
+}
+
+.tabsbar .nav-group-dropdown li.active > a.close-tab {
+    background: #fff !important;
 }
 
 .tabsbar .nav-group-dropdown li.active > a.tab-element > i:before {

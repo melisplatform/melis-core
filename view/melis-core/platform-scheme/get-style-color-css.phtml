@@ -4,6 +4,21 @@
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
 ?>
 /* =============== Primary Color =============== */
+.client-contact-address .default-card>.card-header,
+.client-contact-address .panel-default>.panel-heading {
+    background-color: <?= $primaryColor; ?> !important;
+}
+.contacts .innerLR .media .media-body .media-heading a,
+.contacts .innerLR .media a,
+.widget .innerAll.half.media .media-body .text-muted-dark a,
+.widget .innerAll .list-unstyled li a,
+.widget .row-hover a,
+.widget .media .media-body .innerB small a,
+.widget .media .media-body h5 a,
+.widget .innerAll.row-hover h5 a,
+.widget .innerAll .media .media-body .text-muted-dark a,
+.widget .innerAll .media .media-body a.text-small,
+.widget.widget-tabs .widget-body .tab-content .tab-pane a.small,
 .tickets .media .media-body .content-text p a,
 .tickets .media .media-body small a,
 .panel-flip .widget-scroll table tr td a,
@@ -13,11 +28,29 @@
 .glyphicons-social.single i:before, .glyphicons.single i:before,
 .glyphicons-social.single, .glyphicons.single,
 .email-content .from a,
+.widget .widget-body .jumbotron .btn-primary:hover,
+.widgets .widget .widget-body .widget-stats,
+.widgets .widget .widget-body .well address strong a,
+.widgets .widget .widget-body .well address a,
+.widget-timeline .list-timeline li span a,
+.panel-group.accordion .panel .panel-heading .panel-title a,
+.commerce-dashboard-plugin-order-messages .media-body.media-body-inline span:not(.label.label-inverse),
+.commerce-dashboard-plugin-order-messages .media-body.media-body-inline small,
+.commerce-dashboard-plugin-order-messages .media-body.media-body-inline i,
+.menubar ul li a,
+.vevent a,
+.pager .next > a,
+.row-icons [class*="col"] i,
+.row-icons [class*="col"] i:before,
 .forgot-password a,
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
 }
+.commerce-dashboard-plugin-order-messages.answered .media-body.media-body-inline span.label.label-inverse,
+.has-switch span.switch-primary,
 .label.label-primary,
+.tabsbar ul li.active a,
+.tabsbar .nav-tabs > li.active > a,
 .badge.badge-primary,
 .navbar.main.navbar-primary .navbar-brand {
     background: <?= $primaryColor; ?> !important;
@@ -28,7 +61,7 @@
 .melis-gdpr-banner-container {
     background: <?= $primaryColor; ?> !important;
 }
-.jstree-proton .jstree-clicked {
+#categoryTreeView .jstree-proton .jstree-clicked {
     background: <?= $primaryColor; ?> !important;
     box-shadow: inset 0 0 1px <?= $primaryColor; ?> !important;
 }
@@ -62,6 +95,7 @@
     background-color: <?= $primaryColor; ?>;
 }
 
+.survey .nav-pills .nav-link,
 .table-with-progress .text-right .btn-group .btn-danger.btn-regular {
     background-color: <?= $primaryColor; ?> !important;
     border-color: <?= $primaryColor; ?> !important;
@@ -89,11 +123,13 @@
     color: <?= $primaryColor; ?> !important;
 }
 
+.ColVis_MasterButton:hover,
 .btn-primary:not(:disabled):not(.disabled).active,
 .btn-primary:not(:disabled):not(.disabled):active,
 .show>.btn-primary.dropdown-toggle {
-    background-color: <?= $primaryColor; ?>;
+    background-color: transparent;
     border-color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?>;
 }
 
 .footer a,
@@ -271,11 +307,6 @@ body .navbar.main.navbar-primary {
     border-color: <?= $primaryColor; ?>;
 }
 
-.bs-tooltip-auto[x-placement^=left] .arrow::before, 
-.bs-tooltip-left .arrow::before {
-    border-left-color: <?= $secondaryColor; ?>;
-}
-
 /* Buttons */
 .btn-primary {
     background: <?= $primaryColor; ?>;
@@ -288,8 +319,8 @@ body .navbar.main.navbar-primary {
     background: #fff;
 }
 
-
-
+.label.label-primary.label-stroke,
+.badge.badge-primary.badge-stroke,
 .btn-group.open .btn-primary.dropdown-toggle,
 .btn-primary.disabled,
 .btn-primary[disabled],
@@ -566,7 +597,7 @@ input[type="color"]:focus,
 .finances_summary .widget-body .separator a i,
 .finances_summary .widget-body .separator a,
 .resume-documents li a i {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .timeline-activity li.active i.list-icon {
@@ -575,8 +606,6 @@ input[type="color"]:focus,
 }
 
 .table-vertical-center.checkboxs .selectable .center .btn-group .btn-danger,
-#resetPlatformScheme i,
-#resetPlatformScheme,
 .table-thead-simple .actions .btn-danger .fa,
 .table-thead-simple .actions .btn-danger,
 .table-thead-simple .important .btn-danger .fa,
@@ -588,7 +617,6 @@ input[type="color"]:focus,
 }
 
 .table-vertical-center.checkboxs .selectable .center .btn-group .btn-danger:hover,
-#resetPlatformScheme:hover,
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: <?= $primaryColor; ?>;
 }
@@ -785,11 +813,30 @@ div.glyphicons-social.glyphicon-primary i:before {
 .tooltip.bs-tooltip-left .arrow {
     border-left-color: <?= $secondaryColor; ?>;
 }
+
 .tooltip.left .tooltip-arrow {
     border-left-color: <?= $secondaryColor; ?>;
 }
 
+.tooltip.fade.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
+.tooltip.fade.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: <?= $secondaryColor; ?>;
+}
 
+.tooltip.fade.bs-tooltip-auto[x-placement^=top] .arrow::before,
+.tooltip.fade.bs-tooltip-top .arrow::before {
+    border-top-color: <?= $secondaryColor; ?>;
+}
+
+.tooltip.fade.bs-tooltip-auto[x-placement^=right] .arrow::before, 
+.tooltip.fade.bs-tooltip-right .arrow::before {
+    border-right-color: <?= $secondaryColor; ?>;
+}
+
+.tooltip.fade.bs-tooltip-auto[x-placement^=left] .arrow::before, 
+.tooltip.fade.bs-tooltip-left .arrow::before {
+    border-left-color: <?= $secondaryColor; ?>;
+}
 
 .tickets li .media-heading {
     color: <?= $secondaryColor; ?>;
@@ -870,6 +917,10 @@ div.glyphicons-social.glyphicon-primary i:before {
 #dashboard-plugin-delete-all:hover {
     background-color: <?= $secondaryColor; ?>;
     border-color: <?= $secondaryColor; ?>;
+}
+
+#id_melismessenger_tool_header_messages:hover a .fa-comment {
+    color: <?= $primaryColor; ?>;
 }
 
 .melis-core-dashboard-ps-box .melis-core-dashboard-filter-btn.active, .melis-core-dashboard-category-btn.active {
