@@ -343,6 +343,17 @@ var gdprAutoDelete = {
         dataString.append('alert_emails_delete_trans', gdprAutoDelete.getAlertEmailsDeleteTransData());
 
         return dataString;
+    }, 
+    appendModalToBody : function(){
+        $modal = $("#id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal");
+        if ($("body > #id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal").length == 0) {
+            $("body").append($modal);
+        } else {
+            //re append modal
+            //remove first current modal
+            $("body > #id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal").remove();
+            $("body").append($modal);
+        }
     }
 
 };
