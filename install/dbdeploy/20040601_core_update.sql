@@ -22,7 +22,7 @@ ALTER TABLE `melis_core_gdpr_delete_config`
 ADD PRIMARY KEY (`mgdprc_id`);
 
 ALTER TABLE `melis_core_gdpr_delete_config`
-  MODIFY `mgdprc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `mgdprc_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 CREATE TABLE `melis_core_gdpr_delete_emails` (
@@ -43,7 +43,7 @@ ALTER TABLE `melis_core_gdpr_delete_emails`
   ADD KEY `FK_melis_core_gdpr_delete_emails_melis_core_gdpr_delete_config` (`mgdpre_config_id`);
 
 ALTER TABLE `melis_core_gdpr_delete_emails`
-  MODIFY `mgdpre_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `mgdpre_id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `melis_core_gdpr_delete_emails`
   ADD CONSTRAINT `FK_melis_core_gdpr_delete_emails_melis_core_gdpr_delete_config` FOREIGN KEY (`mgdpre_config_id`) REFERENCES `melis_core_gdpr_delete_config` (`mgdprc_id`) ON DELETE CASCADE;
@@ -87,5 +87,5 @@ CREATE TABLE `melis_core_gdpr_delete_emails_logs` (
  `mgdprl_delete_ko_log` longtext,
  `mgdprl_log_date` datetime DEFAULT NULL,
  PRIMARY KEY (`mgdprl_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB CHARSET=utf8;
 
