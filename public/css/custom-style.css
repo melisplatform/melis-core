@@ -1223,6 +1223,14 @@ td.dataTables_empty {
     width: 226px;
   }
 }
+#id_melis_core_gdpr_search_form .melis-core-gdpr-check-box1 .checkbox input[type="checkbox"] {
+  margin-left: -12px;
+  margin-right: 0;
+}
+#id_melis_core_gdpr_search_form .custom-melis-core-gdpr-checkbox-span {
+  margin-top: 3px;
+}
+
 a[data-toggle="modal"]:focus {
   text-decoration: none;
 }
@@ -1251,6 +1259,13 @@ a[data-toggle="modal"]:focus {
 /* specific for melis-core, has same css but without the below css id selector on melis-commerce */
 #idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
   padding-top: 6px;
+}
+/* 
+ * Fix for Dashboard > horizontal scrollbars problem
+ * https://mantis2.uat.melistechnology.fr/view.php?id=480
+ */
+.flotchart-holder {
+  overflow: auto;
 }
 @media (max-width: 767px) {
   /* mobile nav-right click open second ul */

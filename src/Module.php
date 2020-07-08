@@ -61,7 +61,6 @@ class Module
 
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
             $this->checkIdentity($e);
-
         });
 
         /** @var \MelisCore\Service\MelisCoreModulesService $moduleSvc */
@@ -225,6 +224,7 @@ class Module
                 'forms',
                 'install',
                 'setup',
+                'gdpr.autodelete',
             ];
 
             $translationList = [];
@@ -281,6 +281,7 @@ class Module
             'melis-backoffice/get-platform-color-css',
             'melis-backoffice/reset-old-password',
             'melis-backoffice/webpack_builder',
+            'melis-backoffice/gdpr-autodelete-cron',
             'melis-backoffice/generate-password',
             'melis-backoffice/create-password',
             'melis-backoffice/renew-password',
@@ -361,6 +362,13 @@ class Module
             include __DIR__ . '/../config/setup/update.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
+            /*
+             * gdpr auto delete
+             */
+            include __DIR__ . '/../config/gdpr-autodelete/app.interface.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.tools.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.forms.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.smtp.form.php',
         ];
 
         foreach ($configFiles as $file) {

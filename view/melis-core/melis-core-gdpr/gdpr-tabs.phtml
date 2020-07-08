@@ -14,28 +14,29 @@ $data_melisKey = $this->melisKey;
                 <?php
                 if (!empty($this->zoneconfig['interface'])):
                     foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig):
-                        $id = '';
-                        if (!empty($menuConfig['conf']['id'])) {
-                            $id = ' id="' . $menuConfig['conf']['id'] . '_title"';
-                        }
+                        if (!empty($menuConfig)) {
+                            $id = '';
+                            if (!empty($menuConfig['conf']['id'])) {
+                                $id = ' id="' . $menuConfig['conf']['id'] . '_title"';
+                            }
 
-                        $tabname = 'Tab';
-                        if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['name'])) {
-                            $tabname = $menuConfig['conf']['name'];
-                        }
+                            $tabname = 'Tab';
+                            if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['name'])) {
+                                $tabname = $menuConfig['conf']['name'];
+                            }
 
-                        $icon = '';
-                        if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['icon'])) {
-                            $icon = $menuConfig['conf']['icon'];
-                        } ?>
-                        <li> <!-- <?= $id; ?> -->
-                            <a class="glyphicons <?= $icon; ?>" data-toggle="tab"
-                               href="#<?= $menuConfig['conf']['id']; ?>">
-                                <i> </i>
-                                <span><?= $tabname; ?></span>
-                            </a>
-                        </li>
-                        <?php
+                            $icon = '';
+                            if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['icon'])) {
+                                $icon = $menuConfig['conf']['icon'];
+                            } ?>
+                            <li> <!-- <?= $id; ?> -->
+                                <a class="glyphicons <?= $icon; ?>" data-toggle="tab"
+                                   href="#<?= $menuConfig['conf']['id']; ?>">
+                                    <i> </i>
+                                    <span><?= $tabname; ?></span>
+                                </a>
+                            </li>
+                        <?php }
                     endforeach;
                 endif; ?>
             </ul>

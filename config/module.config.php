@@ -260,6 +260,20 @@ return array(
                             ),
                         ),
                     ),
+                    /*
+                     * GDPR Autodelete CROn
+                     */
+                    'gdpr-autodelete-cron' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'gdprautodelete[/]',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'MelisCore\Controller',
+                                'controller'    => 'MelisCoreGdprAutoDelete',
+                                'action'        => 'run-gdpr-auto-delete-cron'
+                            ]
+                        ]
+                    ]
                 ),
             ),
 
@@ -328,6 +342,11 @@ return array(
             'MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\MelisCorePlatformSchemeTable',
             'MelisCoreDashboardsTable' => 'MelisCore\Model\Tables\MelisDashboardsTable',
             'MelisPluginsTable' => 'MelisCore\Model\Tables\MelisPluginsTable',
+            'MelisGdprDeleteConfigTable' => 'MelisCore\Model\Tables\MelisGdprDeleteConfigTable',
+            'MelisGdprDeleteEmailsLogsTable' => 'MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable',
+            'MelisGdprDeleteEmailsTable' => 'MelisCore\Model\Tables\MelisGdprDeleteEmailsTable',
+            'MelisGdprDeleteEmailsSent' => 'MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable',
+            'MelisGdprDeleteEmailsSmtp' => 'MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable',
         ),
         'factories' => array(
             'MelisCoreConfig' => 'MelisCore\Service\Factory\MelisCoreConfigServiceFactory',
@@ -355,6 +374,8 @@ return array(
             'MelisCoreGdprService' => 'MelisCore\Service\Factory\MelisCoreGdprServiceFactory',
             'MelisCorePluginsService' => 'MelisCore\Service\Factory\MelisCorePluginsServiceFactory',
             'MelisCoreDashboardPluginsService' => 'MelisCore\Service\Factory\MelisCoreDashboardPluginsRightsServiceFactory',
+            'MelisCoreGdprAutoDeleteService' => 'MelisCore\Service\Factory\MelisCoreGdprAutoDeleteServiceFactory',
+            'MelisCoreGdprAutoDeleteToolService' => 'MelisCore\Service\Factory\MelisCoreGdprAutoDeleteToolServiceFactory',
 
             'MelisCore\Model\Tables\MelisLangTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisLangTableFactory',
             'MelisCore\Model\Tables\MelisUserTable' => 'MelisCore\Model\Tables\Factory\MelisCoreMelisUserTableFactory',
@@ -372,6 +393,11 @@ return array(
             'MelisCore\Model\Tables\MelisCorePlatformSchemeTable' => 'MelisCore\Model\Tables\Factory\MelisCorePlatformSchemeTableFactory',
             'MelisCore\Model\Tables\MelisDashboardsTable' => 'MelisCore\Model\Tables\Factory\MelisDashboardsTableFactory',
             'MelisCore\Model\Tables\MelisPluginsTable' => 'MelisCore\Model\Tables\Factory\MelisCorePluginsTableFactory',
+            'MelisCore\Model\Tables\MelisGdprDeleteConfigTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteConfigTableFactory',
+            'MelisCore\Model\Tables\MelisGdprDeleteEmailsTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteEmailsTableFactory',
+            'MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteEmailsLogsTableFactory',
+            'MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteEmailsSentTableFactory',
+            'MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable' => 'MelisCore\Model\Tables\Factory\MelisGdprDeleteEmailsSmtpTableFactory',
         ),
     ),
     'controllers' => array(
@@ -401,6 +427,9 @@ return array(
             'MelisCore\Controller\PlatformScheme' => 'MelisCore\Controller\PlatformSchemeController',
             'MelisCore\Controller\DashboardPlugins' => 'MelisCore\Controller\DashboardPluginsController',
             'MelisCore\Controller\MelisCoreGdpr' => 'MelisCore\Controller\MelisCoreGdprController',
+            'MelisCore\Controller\MelisCoreGdprAutoDelete' => 'MelisCore\Controller\MelisCoreGdprAutoDeleteController',
+            'MelisCore\Controller\MelisCoreGdprAutoDeleteTabs' => 'MelisCore\Controller\MelisCoreGdprAutoDeleteTabsController',
+            'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtp' => 'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtpController',
         ),
     ),
     'controller_plugins' => array(
@@ -433,6 +462,7 @@ return array(
             'DateTimePicker' => 'MelisCore\Form\Factory\DateTimePickerFactory',
             'MelisCoreTinyMCE' => 'MelisCore\Form\Factory\MelisCoreTinyMCEFactory',
             'MelisCoreUserSelect' => 'MelisCore\Form\Factory\MelisCoreUsersSelect2Factory',
+            'MelisCoreGdprModuleSelect' => 'MelisCore\Form\Factory\MelisGdprAutoDeleteModuleListSelectFactory',
         ),
     ),
     'view_helpers' => array(

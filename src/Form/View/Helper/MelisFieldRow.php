@@ -85,13 +85,15 @@ class MelisFieldRow extends FormRow
             $markup = '<div class="make-switch" data-on="1" data-off="0"><input type="%s" class="switch" name="%s" id="%s" value="%s" onchange="%s" %s></div>';
             $attrib = $element->getAttributes();
             $value  = $element->getValue();
+            var_dump($element->getValue());
+
             $isChecked = !empty($value) ? 'checked' : '';
             $toggleButton = sprintf($markup, $attrib['type'], $attrib['name'], $attrib['id'], $value, $attrib['onchange'], $isChecked);
 
             // disect label and element so it would not be included in the switch feature
             $formElement = '<div class="form-group"><label for="'.$attrib['name'].'">'.$element->getLabel().'</label> '.$toggleButton.'</div>';
 
-        }elseif ($element->hasAttribute('meliscore-user-select2')){
+        } elseif ($element->hasAttribute('meliscore-user-select2')){
 
             $slct2Id = 'selec2-'.uniqid();
             $element->setEmptyOption('tr_meliscore_common_choose');
@@ -118,7 +120,7 @@ class MelisFieldRow extends FormRow
             $formElement .= 'melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\''.$tinyceId.'\']", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});';
             $formElement .= '</script>';
 
-        }elseif (!empty($element->getOption('switch_options'))){
+        } elseif (!empty($element->getOption('switch_options'))){
 
             $switchId = $element->getAttribute('id').uniqid();
             $switchOptions = $element->getOption('switch_options');
@@ -209,28 +211,45 @@ class MelisFieldRow extends FormRow
             // Get Value
             $dataTags = $element->getValue();
             // Set Input to Null value as default
+            $element->setAttribute('data-tags', $dataTags);
+            // set value to null in order to hide the text
             $element->setAttribute('value', null);
+            // get option if it's editable
+            $notEditable = $element->getOption('not_editable');
+            // text for no available tags
+            $textNoTags = $element->getOption('no_tags_text');
 
-            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' .$element->getOption('tooltip') . '"></i>';
-            
+            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i>';
+
             $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $element->getAttribute('data-label-text') . '</div>' . $multiValTooltip . '</label>';
             $getTags = explode(',', $dataTags);
-            $ulStart = '<ul class="multi-value-input clearfix">';
-            $ulEnd   = '</ul>';
-            $liSpan  = '<li><span>%s</span><a class="remove-tag fa fa-times"></a></li>';
+            $ulStart = '<ul class="multi-value-input clearfix" ' . ($notEditable ? "style=\"cursor:not-allowed\"" : null) . '>';
+            $ulEnd = '</ul>';
+            if ($notEditable) {
+                $liSpan = '<li><span>%s</span></li>';
+            } else {
+                $liSpan = '<li><span>%s</span><a class="remove-tag fa fa-times"></a></li>';
+            }
+
             $liInput = '<li class="tag-creator">' . parent::render($element, $labelPosition) . '</li>';
-            $tagItems= '';
+            $tagItems = '';
 
-            $multiValElement = $label . $ulStart.'';
-            if(!empty($dataTags))
-                foreach($getTags as $tagValues)
+            $multiValElement = $label . $ulStart . '';
+            if (!empty($dataTags)) {
+                foreach ($getTags as $tagValues) {
                     $tagItems .= sprintf($liSpan, $tagValues);
-
-            $multiValElement .=  $tagItems . $liInput. $ulEnd;
-
+                }
+            } else {
+                if ($notEditable) {
+                    if (! empty($textNoTags)) {
+                        $tagItems = "<span class='text-danger float-left' style='padding: 10px 0 5px;'> $textNoTags</span>";
+                    }
+                }
+            }
+            $multiValElement .= $tagItems . $liInput . $ulEnd;
             $formElement = '<div class="form-group">' . $multiValElement . '</div>';
 
-        }elseif (strpos($element->getAttribute('class'), self::MELIS_DRAGGABLE_INPUT)){
+        } elseif (strpos($element->getAttribute('class'), self::MELIS_DRAGGABLE_INPUT)){
 
             $isDraggable = $element->getAttribute('data-draggable');
 
@@ -314,11 +333,16 @@ class MelisFieldRow extends FormRow
 
             $type = $element->getAttribute('data-button-right');
 
+            $noId = $element->getOption('no_id');
+
             $buttonIcon = 'fa fa-search';
             if (!empty($element->getAttribute('data-button-icon')))
                 $buttonIcon = $element->getAttribute('data-button-icon');
 
             $buttonId = $element->getAttribute('name').'-button';
+            if ($noId) {
+                $buttonId = null;
+            }
             if ($element->getAttribute('data-button-id'))
                 $buttonId = $element->getAttribute('data-button-id');
 
@@ -331,12 +355,15 @@ class MelisFieldRow extends FormRow
                 $buttonTitle = $element->getAttribute('data-button-title');
 
             $formElement = '<div class="form-group">
-	                            <label for="">'.$element->getLabel().'</label>
+	                            <label class ="d-flex flex-row justify-content-between" for="">'.$element->getLabel().'</label>
 	                            <div class="input-group">';
+
+
+
 
             if ($type == true)
                 $formElement .='<span class="input-group-btn">
-                                   <button class="btn btn-default" id="'.$buttonId.'" type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
+                                   <button class="btn btn-default" ' . ($buttonId) ? "id='" . $buttonId . "'"  : null . ' type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
                                 </span>';
 
             $inputAttr = [];
@@ -350,7 +377,7 @@ class MelisFieldRow extends FormRow
 
             if (empty($type))
                 $formElement .='<span class="input-group-btn">
-                                   <button class="btn btn-default '.$buttonClass.'" id="'.$buttonId.'" type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
+                                   <button class="btn btn-default '.$buttonClass.'" '. ($buttonId ? "id='" . $buttonId . "'" : null ) .' type="button" title="'.$buttonTitle.'"><i class="'.$buttonIcon.'"></i></button>
                                 </span>';
 
             $formElement .= '</div>
@@ -405,7 +432,12 @@ class MelisFieldRow extends FormRow
                             </div>';
 
         }elseif ($element->getOption('type') != 'hidden'){
-            $formElement = '<div class="form-group ' . $element->getOption('form_type') . '">'. parent::render($element, $labelPosition).'</div>';
+            $textAfter = null;
+            if ($element->getOption('text_after')) {
+                $textAfter  = " <span style='margin-left:5px;'>" . $element->getOption('text_after') . "</span>";
+            }
+
+            $formElement = '<div class="form-group ' . $element->getOption('form_type') . '">'. parent::render($element, $labelPosition). $textAfter. '</div>';
         }else{
             $formElement = parent::render($element, $labelPosition);
         }

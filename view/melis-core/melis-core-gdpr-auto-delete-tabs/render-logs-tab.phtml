@@ -1,0 +1,47 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+<div data-melisKey='<?= $this->melisKey ?>' class="tab-pane" id="<?= $this->zoneconfig['conf']['id'] ?>" role="tabpanel"
+     aria-labelledby="<?= $this->zoneconfig['conf']['id'] ?>">
+    <?php if ($this->logsData) { ?>
+        <div <?= $id; ?> data-melisKey="<?= $this->melisKey; ?>">
+            <div class="">
+                <?php
+                $this->melisGenericTable()->setTable(array(
+                    'id' => 'tableGdprAutoDeleteLogs',
+                    'class' => 'table table-striped table-primary dt-responsive nowrap',
+                    'cellspacing' => '0',
+                    'width' => '100%'
+                ));
+                $columns = array();
+                $columnStyle = array();
+                foreach ($this->tableColumns as $columnText) {
+                    $columns[] = $columnText['text'];
+                }
+                $this->melisGenericTable()->setColumns($columns);
+
+                echo $this->melisGenericTable()->renderTable();
+                ?>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        <?= $this->toolDataTableConfig; ?>
+                    });
+                </script>
+            </div>
+        </div>
+    <?php }  else {?>
+        <div class="alert alert-warning">
+            <i><span><i class="fa fa-info-circle"></i> <?= $this->translate('tr_melis_core_gdpr_autodelete_log_empty_data')?></span></i>
+        </div>
+    <?php } ?>
+    <?php
+    if (!empty($this->zoneconfig['interface']) && $this->configId) {
+        foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+            echo $this->$keyConfig;
+        }
+    }
+    ?>
+</div>

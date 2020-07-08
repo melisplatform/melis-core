@@ -1,0 +1,50 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+
+<div data-melisKey='<?= $this->melisKey ?>' class="tab-pane show active" id="<?= $this->zoneconfig['conf']['id']?>" role="tabpanel" aria-labelledby="<?= $this->zoneconfig['conf']['id'] ?>">
+    <div id="accordion-cron-configuration">
+        <div class="card" style="border: none;margin-bottom:10px;">
+            <div id="cron-configuration" >
+                <a data-toggle="collapse" class='toggle-arrow-indication arrow-down-sm-accordion' data-target="#cron-configuration-content" aria-expanded="true" aria-controls="cron-configuration" >
+                    <h5 class="accordion-heading-title" id="email-config-heading" ><?= $this->translate('tr_melis_core_gdpr_autodelete_label_cron_config_title')?></h5>
+                </a>
+            </div>
+            <div id="cron-configuration-content" class="accordion-content collapse show accordion-content-bg" data-parent-container='#cron-configuration' aria-labelledby="cron-configuration-content" data-parent="#accordion-cron-configuration">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <?php
+                            $this->formCronConfig->prepare();
+                            echo $this->form()->openTag($this->formCronConfig);
+                            echo $this->melisFieldCollection($this->formCronConfig);
+                            echo $this->form()->closeTag();
+                        ?>
+                    </div>
+                </div>
+                <p class='text-small text-danger gdpr-delete-warning-info'><?= $this->translate('tr_melis_core_gdpr_autodelete_label_warning_delete')?> </p>
+            </div>
+        </div>
+        <div class="card" style="border: none;margin-bottom:10px;">
+            <div id="email-setup" >
+                <a data-toggle="collapse" class="toggle-arrow-indication arrow-right-sm-accordion" data-target="#email-setup-content" aria-expanded="true" aria-controls="email-setup" >
+                    <h5 class="accordion-heading-title" id="email-setup-heading"><?= $this->translate('tr_melis_core_gdpr_autodelete_label_email_setup_title')?></h5>
+                </a>
+            </div>
+            <div id="email-setup-content" class="collapse accordion-content-bg accordion-content" data-parent-container="#email-setup" aria-labelledby="email-setup-content" data-parent="#accordion-cron-configuration">
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php
+                        $this->formEmailSetup->prepare();
+                        echo $this->form()->openTag($this->formEmailSetup);
+                        echo $this->melisFieldCollection($this->formEmailSetup);
+                        echo $this->form()->closeTag();
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
