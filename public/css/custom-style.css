@@ -400,14 +400,20 @@ a:not([href]).btn-danger:hover {
   border-bottom: 1px solid #e5e5e5;
   height: 70px;
 }
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover,
+.wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover,
+.widget-tabs .nav-tabs > li.active > a.glyphicons:hover,
+.widget-tabs .nav-tabs > li > a.glyphicons:hover {
+  background: #fff;
+}
 #id_melis_core_gdpr_tabs .widget-tabs .nav-tabs > li > a.glyphicons {
   display: block;
-  background: none;
 }
 #id_melis_core_gdpr_search_form .cb-cont label {
   padding-left: 0;
   margin-bottom: 0;
   width: 26px;
+  cursor: pointer;
 }
 #id_melis_core_gdpr_search_form .cb-cont .cbmask-outer {
   top: 4px;
