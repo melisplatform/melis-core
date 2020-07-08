@@ -402,6 +402,15 @@ a:not([href]).btn-danger:hover {
 }
 #id_melis_core_gdpr_tabs .widget-tabs .nav-tabs > li > a.glyphicons {
   display: block;
+  background: none;
+}
+#id_melis_core_gdpr_search_form .cb-cont label {
+  padding-left: 0;
+  margin-bottom: 0;
+  width: 26px;
+}
+#id_melis_core_gdpr_search_form .cb-cont .cbmask-outer {
+  top: 4px;
 }
 /* 
  * form 
