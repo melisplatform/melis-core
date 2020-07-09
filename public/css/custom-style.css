@@ -418,6 +418,7 @@ a:not([href]).btn-danger:hover {
   height: 22px;
   cursor: pointer;
   display: inline-block;
+  margin-left: 2px;
 }
 #id_melis_core_gdpr_search_form .cb-cont .cbmask-outer {
   top: 4px;
@@ -425,6 +426,7 @@ a:not([href]).btn-danger:hover {
 #id_melis_core_gdpr_search_form .melis-core-gdpr-check-box1 .checkbox input[type="checkbox"] {
   margin-left: -12px;
   margin-right: 0;
+  float: none;
 }
 #id_melis_core_gdpr_search_form .custom-melis-core-gdpr-checkbox-span {
   margin-top: 0;
