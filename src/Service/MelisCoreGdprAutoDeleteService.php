@@ -22,7 +22,7 @@ use Laminas\View\Resolver\TemplateMapResolver;
 use Laminas\Session\Container;
 use Laminas\ServiceManager\ServiceManager;
 
-class MelisCoreGdprAutoDeleteService extends MelisCoreGeneralService
+class MelisCoreGdprAutoDeleteService extends MelisGeneralService
 {
     /**
      * constants to avoid incorrect entries of events,keys and can be use everywhere
