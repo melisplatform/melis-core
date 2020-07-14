@@ -83,7 +83,7 @@ return [
                                                                                         'module' => 'MelisCore',
                                                                                         'controller' => 'MelisCoreGdprAutoDelete',
                                                                                         'action' => 'render-content-modal',
-                                                                                        'jscallback' => '',
+                                                                                        'jscallback' => 'gdprAutoDelete.appendModalToBody();',
                                                                                         'jsdatas' => [],
                                                                                     ],
                                                                                 ],

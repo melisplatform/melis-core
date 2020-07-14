@@ -1,29 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.7.7
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3306
--- Generation Time: Apr 06, 2020 at 05:11 AM
--- Server version: 5.7.29-0ubuntu0.16.04.1
--- PHP Version: 7.3.15
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `melis_core_gdpr_delete_config`
---
-
 CREATE TABLE `melis_core_gdpr_delete_config` (
   `mgdprc_id` int(11) NOT NULL,
   `mgdprc_site_id` int(11) NOT NULL,
@@ -41,33 +15,15 @@ CREATE TABLE `melis_core_gdpr_delete_config` (
   `mgdprc_email_conf_layout_desc` text,
   `mgdprc_email_conf_tags` text,
   `mgdprc_config_creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `mgdprc_config_update_date` datetime NOT NULL
+  `mgdprc_config_update_date` datetime NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `melis_core_gdpr_delete_config`
---
 ALTER TABLE `melis_core_gdpr_delete_config`
-  ADD PRIMARY KEY (`mgdprc_id`);
+ADD PRIMARY KEY (`mgdprc_id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `melis_core_gdpr_delete_config`
---
 ALTER TABLE `melis_core_gdpr_delete_config`
-  MODIFY `mgdprc_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `mgdprc_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
-
---
--- Table structure for table `melis_core_gdpr_delete_emails`
---
 
 CREATE TABLE `melis_core_gdpr_delete_emails` (
   `mgdpre_id` int(11) NOT NULL,
@@ -82,34 +38,13 @@ CREATE TABLE `melis_core_gdpr_delete_emails` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `melis_core_gdpr_delete_emails`
---
 ALTER TABLE `melis_core_gdpr_delete_emails`
   ADD PRIMARY KEY (`mgdpre_id`),
   ADD KEY `FK_melis_core_gdpr_delete_emails_melis_core_gdpr_delete_config` (`mgdpre_config_id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `melis_core_gdpr_delete_emails`
---
 ALTER TABLE `melis_core_gdpr_delete_emails`
-  MODIFY `mgdpre_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `mgdpre_id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `melis_core_gdpr_delete_emails`
---
 ALTER TABLE `melis_core_gdpr_delete_emails`
   ADD CONSTRAINT `FK_melis_core_gdpr_delete_emails_melis_core_gdpr_delete_config` FOREIGN KEY (`mgdpre_config_id`) REFERENCES `melis_core_gdpr_delete_config` (`mgdprc_id`) ON DELETE CASCADE;
 COMMIT;
@@ -127,23 +62,9 @@ CREATE TABLE `melis_core_gdpr_delete_emails_sent` (
   `mgdprs_account_id` INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `melis_core_gdpr_delete_emails_sent`
---
 ALTER TABLE `melis_core_gdpr_delete_emails_sent`
   ADD PRIMARY KEY (`mgdprs_id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `melis_core_gdpr_delete_emails_sent`
---
 ALTER TABLE `melis_core_gdpr_delete_emails_sent`
   MODIFY `mgdprs_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
@@ -166,8 +87,5 @@ CREATE TABLE `melis_core_gdpr_delete_emails_logs` (
  `mgdprl_delete_ko_log` longtext,
  `mgdprl_log_date` datetime DEFAULT NULL,
  PRIMARY KEY (`mgdprl_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB CHARSET=utf8;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
