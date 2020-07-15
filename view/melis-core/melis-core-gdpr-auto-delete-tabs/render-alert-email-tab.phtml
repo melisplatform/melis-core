@@ -64,13 +64,13 @@ $availableLang = "";
                                     <!-- render element -->
                                     <?php
                                     if ($form->has($element)) {?>
-                                        <?= $this->melisFieldRow($form->get($element)) ?>
+                                        <?= $this->MelisFieldRow($form->get($element)) ?>
                                     <?php }
                                 } ?>
                                 <?php foreach ($form as $element => $options) {  ?>
                                     <?php if (!in_array($element, $excludedFieldInLoop)) { ?>
                                         <!-- render element -->
-                                        <?= $form->has($element) ? $this->melisFieldRow($form->get($element)) : null?>
+                                        <?= $form->has($element) ? $this->MelisFieldRow($form->get($element)) : null?>
                                     <?php } ?>
                                 <?php }
                                 ?>
@@ -144,13 +144,13 @@ $availableLang = "";
                                         <?php
                                         // check if the element is in the form
                                         if ($formEmailDelete->has($element)) { ?>
-                                            <?php echo $this->melisFieldRow($formEmailDelete->get($element));
+                                            <?php echo $this->MelisFieldRow($formEmailDelete->get($element));
                                         } ?>
                                     <?php } ?>
                                     <?php foreach ($formEmailDelete as $element => $options) { ?>
                                         <?php if (!in_array($element, $excludedFieldInLoop)) { ?>
                                             <!-- render element -->
-                                            <?= $this->melisFieldRow($formEmailDelete->get($element)) ?>
+                                            <?= $this->MelisFieldRow($formEmailDelete->get($element)) ?>
                                         <?php } ?>
                                     <?php }
                                     ?>
