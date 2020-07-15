@@ -14,7 +14,7 @@ return [
                                 'class' => 'melisgdprautodelete_smtp_form',
                                 'id' => 'melisgdprautodelete_smtp_form'
                             ],
-                            'hydrator' => 'Laminas\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
