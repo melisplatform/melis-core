@@ -292,7 +292,7 @@ class MelisFieldRow extends FormRow
             $icon = (!empty($element->getOption('icon'))) ? $element->getOption('icon') : 'glyphicon glyphicon-calendar';
             $element->setAttributes(['autocomplete' => 'off']);
             $formElement = '<div class="form-group">
-                            <label for="'.$element->getName().'">'.$label.'</label>
+                            <label for="'.$element->getName().'" class="d-flex flex-row justify-content-between">'.$label.'</label>
                                 <div class="input-group date" id="'.$datePickerId.'">
                                 '.parent::render($element).'
                                     <span class="input-group-addon">
