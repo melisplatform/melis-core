@@ -37,7 +37,8 @@
     "ext-pdo_mysql": "*",
     "justinrainbow/json-schema": "5.2.1",
     "melisplatform/melis-asset-manager": "*",
-    "composer/composer": "~1.2"
+    "composer/composer": "~1.2",
+    "laminas/laminas-mail": "^2.11"
   },
   "autoload": {
     "psr-4": {
