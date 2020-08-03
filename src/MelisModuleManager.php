@@ -35,19 +35,20 @@ class MelisModuleManager
         $composer = new MelisComposer();
 
         $moduleComponents = [];
+
         foreach (self::getModules() As $module) {
             // Checking module path from composer
             $modulePath = $composer->getComposerModulePath($module);
 
-            if (!empty($module) && file_exists($modulePath. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE)) {
-                $moduleComponents = array_merge($moduleComponents , include $modulePath. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE);
+            if (php_sapi_name() == "cli") 
+                $modulePath = realpath(__DIR__ .'/../../../..' . $modulePath);
+
+            if (!empty($module) && file_exists($modulePath . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE)) {
+                $moduleComponents = array_merge($moduleComponents , include $modulePath . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE);
             } else {
                 // Check module/ dir if module has module.load
-
-                $docRoot = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '../..';
-
-                if (file_exists($docRoot.'/../module/'.$module. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE)) {
-                    $moduleComponents = array_merge($moduleComponents, include $docRoot.'/../module/'.$module. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE);
+                if (file_exists('/module/' . $module . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE)) {
+                    $moduleComponents = array_merge($moduleComponents, include '/module/'.$module. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE);
                 }
             }
         }
@@ -64,7 +65,9 @@ class MelisModuleManager
     {
         $assetsModuleSrv = new \MelisAssetManager\Service\MelisModulesService();
 
-        if (file_exists($_SERVER['DOCUMENT_ROOT']. '/../config/development.config.php')){
+        $docRoot = __DIR__ .'/../../../../';
+
+        if (file_exists($docRoot. 'config/development.config.php')){
             // Development mode will show all errors
             error_reporting(E_ALL);
         } else {
@@ -75,11 +78,10 @@ class MelisModuleManager
         if (empty(date_default_timezone_get()))
             date_default_timezone_set('Europe/Paris');
 
-        $rootMelisSites = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
+        $rootMelisSites = $docRoot . 'module/MelisSites';
 
         $modules = array();
-        $docRoot = $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '../..';
-        $modulesMelisBackOffice = include $docRoot . '/../config/melis.module.load.php';
+        $modulesMelisBackOffice = include $docRoot . 'config/melis.module.load.php';
 
         if (array_key_exists('REQUEST_URI', $_SERVER)) {
 
@@ -91,8 +93,6 @@ class MelisModuleManager
 
             $melisSite = self::sanitize($_GET['melisSite'] ?? null);
 
-            // var_dump($melisSite);
-            // exit;
             if ($uri1 == 'melis' || !empty($melisSite) || in_array($uri1, $modulesMelisBackOffice))
             {
                 // Loading of the website needed for display in MelisCMS if needed
@@ -130,8 +130,6 @@ class MelisModuleManager
                         file_exists($platformFile)
                     ) {
                         $modules = include $siteModuleLoad;
-
-                        // print_r($modules);
                     }
                     else {
                         $modules = $modulesMelisBackOffice;
@@ -140,7 +138,11 @@ class MelisModuleManager
             }
 
         } else {
-            $modules = [];
+
+            if (php_sapi_name() == "cli")
+                $modules = $modulesMelisBackOffice;
+            else
+                $modules = [];
         }
 
         return $modules;
