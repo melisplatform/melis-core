@@ -121,14 +121,14 @@ class MelisModuleManager
                 $melisModuleName = getenv('MELIS_MODULE');
                 // include in module load if Melis Module exists on this folder
                 $modulePath      = $rootMelisSites . '/' . $melisModuleName;
-                $platformFile    = $docRoot . '/../config/autoload/platforms/'.$env.'.php';
+                $platformFile    = $docRoot . 'config/autoload/platforms/'.$env.'.php';
                 if($melisModuleName) {
                     $siteModuleLoad = $modulePath . '/config/module.load.php';
+                    if (!file_exists($siteModuleLoad)) {
+                        $siteModuleLoad = $assetsModuleSrv->getComposerModulePath($melisModuleName).'/config/module.load.php';
+                    }
 
-                    if (file_exists($siteModuleLoad) || 
-                        file_exists($siteModuleLoad = $assetsModuleSrv->getComposerModulePath($melisModuleName).'/config/module.load.php') &&
-                        file_exists($platformFile)
-                    ) {
+                    if (file_exists($siteModuleLoad) && file_exists($platformFile) ) {
                         $modules = include $siteModuleLoad;
                     }
                     else {
