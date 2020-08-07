@@ -25,6 +25,8 @@ class MelisModuleManager
      */
     const MODULE_LOAD_FILE = 'config/module.load.php';
 
+    const MELIS_MODULE_LOAD = 'config/melis.module.load.php';
+
     /**
      * Retrieve Activated module components
      * and placed on top of the modules
@@ -36,7 +38,10 @@ class MelisModuleManager
 
         $moduleComponents = [];
 
-        foreach (self::getModules() As $module) {
+        // CLI access mode will use melis module file to get modules
+        $modules = (php_sapi_name() == "cli") ? include __DIR__ . '/../../../../' . self::MELIS_MODULE_LOAD : self::getModules();
+
+        foreach ($modules As $module) {
             // Checking module path from composer
             $modulePath = $composer->getComposerModulePath($module);
 
@@ -45,7 +50,8 @@ class MelisModuleManager
 
             if (!empty($module) && file_exists($modulePath . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE)) {
                 $moduleComponents = array_merge($moduleComponents , include $modulePath . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE);
-            } else {
+            } 
+            else {
                 // Check module/ dir if module has module.load
                 if (file_exists('/module/' . $module . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE)) {
                     $moduleComponents = array_merge($moduleComponents, include '/module/'.$module. DIRECTORY_SEPARATOR .self::MODULE_LOAD_FILE);
@@ -61,8 +67,11 @@ class MelisModuleManager
      * and module/
      * @return array
      */
-    public static function getModules()
+    public static function getModules($temp = true)
     {
+        if (php_sapi_name() == "cli")
+            return [];
+
         $assetsModuleSrv = new \MelisAssetManager\Service\MelisModulesService();
 
         $docRoot = __DIR__ .'/../../../../';
@@ -70,7 +79,8 @@ class MelisModuleManager
         if (file_exists($docRoot. 'config/development.config.php')){
             // Development mode will show all errors
             error_reporting(E_ALL);
-        } else {
+        } 
+        else {
             // This needs to be set when using MelisPlatform
             error_reporting(E_ALL & ~E_USER_DEPRECATED & !E_WARNING);
         }
@@ -81,7 +91,7 @@ class MelisModuleManager
         $rootMelisSites = $docRoot . 'module/MelisSites';
 
         $modules = array();
-        $modulesMelisBackOffice = include $docRoot . 'config/melis.module.load.php';
+        $modulesMelisBackOffice = include $docRoot . self::MELIS_MODULE_LOAD;
 
         if (array_key_exists('REQUEST_URI', $_SERVER)) {
 
@@ -93,39 +103,39 @@ class MelisModuleManager
 
             $melisSite = self::sanitize($_GET['melisSite'] ?? null);
 
-            if ($uri1 == 'melis' || !empty($melisSite) || in_array($uri1, $modulesMelisBackOffice))
-            {
+            if ($uri1 == 'melis' || !empty($melisSite) || in_array($uri1, $modulesMelisBackOffice)) {
                 // Loading of the website needed for display in MelisCMS if needed
                 // This won't be loaded except if asked from MelisFront
-                if (!empty($melisSite))
-                {
-                    if (file_exists($siteModuleLoad = $rootMelisSites . '/' . $melisSite . '/config/module.load.php') || 
-                        file_exists($siteModuleLoad = $assetsModuleSrv->getComposerModulePath($melisSite).'/config/module.load.php')
-                    ) {
+                if (!empty($melisSite)) {
+                    $siteModuleLoad = $rootMelisSites . '/' . $melisSite . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE;
+                    if (!file_exists($siteModuleLoad)) {
+                        $siteModuleLoad = $assetsModuleSrv->getComposerModulePath($melisSite) . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE;
+                    }
+
+                    if (file_exists($siteModuleLoad)) {
                         $modules = array_merge($modulesMelisBackOffice, include $siteModuleLoad);
-                    }else{
+                    }
+                    else{
                         /**
                          * load the default modules if $melisSite
                          * is not found
                          */
                         $modules = $modulesMelisBackOffice;
                     }
-
                 }
                 else
                     $modules = $modulesMelisBackOffice;
             }
-            else
-            {
+            else {
                 $env             = getenv('MELIS_PLATFORM');
                 $melisModuleName = getenv('MELIS_MODULE');
                 // include in module load if Melis Module exists on this folder
                 $modulePath      = $rootMelisSites . '/' . $melisModuleName;
                 $platformFile    = $docRoot . 'config/autoload/platforms/'.$env.'.php';
                 if($melisModuleName) {
-                    $siteModuleLoad = $modulePath . '/config/module.load.php';
+                    $siteModuleLoad = $modulePath . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE;
                     if (!file_exists($siteModuleLoad)) {
-                        $siteModuleLoad = $assetsModuleSrv->getComposerModulePath($melisModuleName).'/config/module.load.php';
+                        $siteModuleLoad = $assetsModuleSrv->getComposerModulePath($melisModuleName) . DIRECTORY_SEPARATOR . self::MODULE_LOAD_FILE;
                     }
 
                     if (file_exists($siteModuleLoad) && file_exists($platformFile) ) {
@@ -138,11 +148,7 @@ class MelisModuleManager
             }
 
         } else {
-
-            if (php_sapi_name() == "cli")
-                $modules = $modulesMelisBackOffice;
-            else
-                $modules = [];
+            $modules = [];
         }
 
         return $modules;
@@ -194,5 +200,4 @@ class MelisModuleManager
             return $array;
         }
     }
-
 }
