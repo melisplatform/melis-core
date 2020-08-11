@@ -1078,6 +1078,7 @@ body #newplugin-cont.show-menu{
     width: 26px;
     height: 26px;
     margin: -13px 0 0 -13px;
+    z-index: 9999;
 }
 .overlay-loader .loader-icon.spinning-cog {
     -webkit-animation: spinning-cog 1.3s infinite ease;
@@ -2471,6 +2472,10 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
     #content .overlay-loader {
         top: 0;
+    }
+
+    #content .tab-content .tab-pane .meliscms-page-tab-edition > #loader.overlay-loader {
+        height: 100%;
     }
 
     /* notification */

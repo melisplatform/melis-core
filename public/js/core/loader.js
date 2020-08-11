@@ -1,25 +1,31 @@
-var loader = (function($, window) {
+var loader = (function(window) {
     // overlay loader .svg icon with spinning effect
     var $body           = $("body"),
         overlayLoader   = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>',
         // window selector
-        $window         = $(window),
-        init = function() {
+        $window         = $(window);
+
+        // initial function
+        function init() {
             // check left menu selector is found
             addLoadingLeftMenu();
 
             // if window is loaded remove the #loader element
-            removeLoadingLeftMenu();
-        },
-        addLoadingLeftMenu = function() {
+            removeLoadingLeftMenuOnWindowLoad();
+        }
+
+        // adding of loader overlay on left menu
+        function addLoadingLeftMenu() {
             // the left menu id selector
             var $leftMenu = $("#id_meliscore_leftmenu");
 
                 if ( $leftMenu.length > 0 ) {
                     $leftMenu.prepend(overlayLoader);
                 }
-        },
-        removeLoadingLeftMenu = function() {
+        }
+
+        // remove loader overlay on left menu on window load
+        function removeLoadingLeftMenuOnWindowLoad() {
             $window.on("load", function() {
                 // #loader element
                 var $loader = $("#loader");
@@ -32,35 +38,57 @@ var loader = (function($, window) {
                     }
                 }, 1000);
             });
-        },
-        pageEditionLoading = function() {
-            var $melisCmsPage       = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active"),
-                $iframeContainer    = $melisCmsPage.find(".iframe-container"),
-                $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition");
+        }
 
-                if ( $melisTabEdition.length > 0 ) {
-                    $melisTabEdition.prepend(overlayLoader);
-                    melisCoreTool.addOverflowHidden();
-                }
-        },
-        removeEditionLoading = function() {
-            var $melisCmsPage       = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active"),
-                $iframeContainer    = $melisCmsPage.find(".iframe-container"),
-                $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
-                $loader             = $melisTabEdition.find("#loader");
+        // added loader overlay on the page edition iframe container
+        function addPageEditionLoading() {
+            var $melisCms = $body.find("[data-meliskey='meliscms_page'].tab-pane.container-level-a");
 
-                if ( $loader.length > 0 ) {
-                    $loader.remove();
-                    melisCoreTool.removeOverflowHidden();
-                }
-        };
+                $melisCms.each(function(i, v) {
+                    var $this               = $(v),
+                        $melisCmsID         = $("#"+$this.attr("id") ),
+                        $iframeContainer    = $melisCmsID.find(".iframe-container"),
+                        $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
+                        $loader             = $melisTabEdition.find("#loader");
+                        
+                        // check if loader overlay is already present
+                        if ( $loader.length === 0 ) {
+                            $melisTabEdition.prepend(overlayLoader);
+                            melisCoreTool.addOverflowHidden();
+                        }
+                });
+        }
+
+        // remove loader overlay on the page edition iframe container
+        function removePageEditionLoading() {
+            var $melisCms = $body.find("[data-meliskey='meliscms_page'].tab-pane.container-level-a");
+
+                $melisCms.each(function(i, v) {
+                    var $this               = $(v),
+                        $melisCmsID         = $("#"+$this.attr("id") ),
+                        $iframeContainer    = $melisCmsID.find(".iframe-container"),
+                        $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
+                        $melisIframe        = $melisTabEdition.find(".melis-iframe"),
+                        melisIframeHeight   = $melisIframe.contents().find("body").height(),
+                        $loader             = $melisTabEdition.find("#loader");
+
+                        // remove loader overlay and set the height of the iframe
+                        if ( $loader.length > 0 ) {
+                            $loader.remove();
+                            melisCoreTool.removeOverflowHidden();
+                        }
+
+                        // set .melis-iframe css height
+                        $melisIframe.css("height", melisIframeHeight);
+                });
+        }
 
         init();
 
         return {
             init : init,
-            pageEditionLoading : pageEditionLoading,
-            removeEditionLoading : removeEditionLoading
+            addPageEditionLoading : addPageEditionLoading,
+            removePageEditionLoading : removePageEditionLoading,
+            removeLoadingLeftMenuOnWindowLoad : removeLoadingLeftMenuOnWindowLoad
         };
-
-})(jQuery, window);
+})(window);
