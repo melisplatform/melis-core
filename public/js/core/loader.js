@@ -62,7 +62,7 @@ var loader = (function(window) {
         // remove loader overlay on the page edition iframe container
         function removePageEditionLoading() {
             var $melisCms = $body.find("[data-meliskey='meliscms_page'].tab-pane.container-level-a");
-
+                
                 $melisCms.each(function(i, v) {
                     var $this               = $(v),
                         $melisCmsID         = $("#"+$this.attr("id") ),
@@ -72,23 +72,31 @@ var loader = (function(window) {
                         melisIframeHeight   = $melisIframe.contents().find("body").height(),
                         $loader             = $melisTabEdition.find("#loader");
 
-                        // remove loader overlay and set the height of the iframe
-                        if ( $loader.length > 0 ) {
-                            $loader.remove();
-                            melisCoreTool.removeOverflowHidden();
-                        }
+                        // check if iframe is loaded
+                        $melisIframe.each(function() {
+                            var $this           = $(this),
+                                $iframeChildren = $this.contents().find("body").children();
+                              
+                                if ( $iframeChildren.length ) {
+                                    // remove loader
+                                    $loader.remove();
 
-                        // set .melis-iframe css height
-                        $melisIframe.css("height", melisIframeHeight);
+                                    // remove overflow hidden
+                                    melisCoreTool.removeOverflowHidden();
+                                }
+
+                                // set .melis-iframe css height
+                                $melisIframe.css("height", melisIframeHeight);
+                        });
                 });
         }
 
         init();
 
         return {
-            init : init,
-            addPageEditionLoading : addPageEditionLoading,
-            removePageEditionLoading : removePageEditionLoading,
-            removeLoadingLeftMenuOnWindowLoad : removeLoadingLeftMenuOnWindowLoad
+            init                                : init,
+            addPageEditionLoading               : addPageEditionLoading,
+            removePageEditionLoading            : removePageEditionLoading,
+            removeLoadingLeftMenuOnWindowLoad   : removeLoadingLeftMenuOnWindowLoad
         };
 })(window);

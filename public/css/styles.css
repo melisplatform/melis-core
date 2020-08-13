@@ -2461,7 +2461,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
     }
 
     /* preloader [for issue: http://mantis.melistechnology.fr/view.php?id=3878] */
-    #content .tab-content .tab-pane>#loader.overlay-loader,
+    .meliscms-page-tab-edition > #loader,
+    #content .tab-content .tab-pane > #loader.overlay-loader,
     #content > #loader.overlay-loader {
         height: calc(100vh - 47px);
     }
@@ -2474,9 +2475,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
         top: 0;
     }
 
-    #content .tab-content .tab-pane .meliscms-page-tab-edition > #loader.overlay-loader {
+    /* #content .tab-content .tab-pane .meliscms-page-tab-edition > #loader.overlay-loader {
         height: 100%;
-    }
+    } */
 
     /* notification */
     .modal-error-cont{

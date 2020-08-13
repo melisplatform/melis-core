@@ -556,15 +556,15 @@ var melisHelper = (function(){
             data        : datastring,
             encode		: true,
             dataType	: "json"
-        }).done(function(data) {
-            // hide the loader
-            $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
-            
+        }).done(function(data) {           
             // remove the inline style
             melisCoreTool.removeOverflowHidden();
 
             setTimeout(function() {
                 if ( data !== null ) {
+                    // hide the loader
+                    //$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+                    
                     $("#"+zoneId).html(data.html).children().unwrap();
 
                     // set the current active tab based from 'activeTabId' value
@@ -623,7 +623,7 @@ var melisHelper = (function(){
         }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
             //hide the loader
-            $('.loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+            //$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
             $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
             $('#'+zoneId).remove();
