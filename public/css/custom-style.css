@@ -842,6 +842,58 @@ td.dataTables_empty {
 .bootstrap-datetimepicker-widget table td.active {
   color:#fff !important;
 }
+
+#id_melis_core_gdpr_search_form .melis-core-gdpr-check-box1 .checkbox input[type="checkbox"] {
+  margin-left: -12px;
+  margin-right: 0;
+}
+#id_melis_core_gdpr_search_form .custom-melis-core-gdpr-checkbox-span {
+  margin-top: 3px;
+}
+
+a[data-toggle="modal"]:focus {
+  text-decoration: none;
+}
+#modal-user-management .widget.widget-tabs-double>.widget-head ul li a,
+#modal-user-management .widget.widget-tabs-double>.widget-head ul li.active a {
+  height: 40px;
+}
+#modal-user-management .widget.widget-tabs-double>.widget-head ul li,
+#modal-user-management .widget.widget-tabs-double>.widget-head ul li.active {
+  height: 39px;
+}
+.no-dashboard-access p {
+  margin-bottom: 0;
+}
+.datepicker thead tr th,
+.datepicker tbody tr td {
+  cursor: default;
+}
+.commerce-dashboard-plugin-order-messages .label.label-inverse.pull-right {
+  color: #fff !important;
+}
+.commerce-dashboard-plugin-order-messages:hover .list-group-item-text,
+.commerce-dashboard-plugin-order-messages .list-group-item-text {
+  color: #686868 !important;
+}
+/* specific for melis-core, has same css but without the below css id selector on melis-commerce */
+#idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
+  padding-top: 6px;
+}
+/* 
+ * Fix for Dashboard > horizontal scrollbars problem
+ * https://mantis2.uat.melistechnology.fr/view.php?id=480
+ */
+.flotchart-holder {
+  overflow: auto;
+}
+#ACCOUNTCREATION_general_properties .form-group [for='tags'] > .label-text {
+  width: 225px;
+}
+#ACCOUNTCREATION_general_properties .form-group [for='tags'] .slider-open-tooltip {
+  height: 15px;
+  margin-top: -18px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
@@ -855,6 +907,11 @@ td.dataTables_empty {
   .selection-button-below .gdpr-table-action-button:first-child,
   .selection-button-above .gdpr-table-action-button:first-child {
     margin-right: 2rem;
+  }
+}
+@media (min-width: 768px) and (max-width: 790px) {
+  .navbar.main .nav>li a.menu-icon {
+    padding: 0 11px;
   }
 }
 @media (min-width: 768px) {
@@ -961,6 +1018,15 @@ td.dataTables_empty {
   }
 }
 @media (max-width: 767px) {
+  /* mobile nav-right click open second ul */
+  #newplugin-cont ul > li > ul {
+    position: relative;
+    top: 0;
+    width: 100%;
+  }
+  .ul-open {
+    display: block !important;
+  }
   #id_meliscore_tool_user_module_management_content .ms-cont {
     min-width: auto;
     width: auto;
@@ -1221,65 +1287,5 @@ td.dataTables_empty {
   }
   .flotchart-holder {
     width: 226px;
-  }
-}
-#id_melis_core_gdpr_search_form .melis-core-gdpr-check-box1 .checkbox input[type="checkbox"] {
-  margin-left: -12px;
-  margin-right: 0;
-}
-#id_melis_core_gdpr_search_form .custom-melis-core-gdpr-checkbox-span {
-  margin-top: 3px;
-}
-
-a[data-toggle="modal"]:focus {
-  text-decoration: none;
-}
-#modal-user-management .widget.widget-tabs-double>.widget-head ul li a,
-#modal-user-management .widget.widget-tabs-double>.widget-head ul li.active a {
-  height: 40px;
-}
-#modal-user-management .widget.widget-tabs-double>.widget-head ul li,
-#modal-user-management .widget.widget-tabs-double>.widget-head ul li.active {
-  height: 39px;
-}
-.no-dashboard-access p {
-  margin-bottom: 0;
-}
-.datepicker thead tr th,
-.datepicker tbody tr td {
-  cursor: default;
-}
-.commerce-dashboard-plugin-order-messages .label.label-inverse.pull-right {
-  color: #fff !important;
-}
-.commerce-dashboard-plugin-order-messages:hover .list-group-item-text,
-.commerce-dashboard-plugin-order-messages .list-group-item-text {
-  color: #686868 !important;
-}
-/* specific for melis-core, has same css but without the below css id selector on melis-commerce */
-#idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
-  padding-top: 6px;
-}
-/* 
- * Fix for Dashboard > horizontal scrollbars problem
- * https://mantis2.uat.melistechnology.fr/view.php?id=480
- */
-.flotchart-holder {
-  overflow: auto;
-}
-@media (max-width: 767px) {
-  /* mobile nav-right click open second ul */
-  #newplugin-cont ul > li > ul {
-    position: relative;
-    top: 0;
-    width: 100%;
-  }
-  .ul-open {
-    display: block !important;
-  }
-}
-@media (min-width: 768px) and (max-width: 790px) {
-  .navbar.main .nav>li a.menu-icon {
-    padding: 0 11px;
   }
 }
