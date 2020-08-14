@@ -229,7 +229,7 @@ class UserController extends MelisAbstractActionController
                                 $success = 0;
                                 $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
                         } // password regex validator
-                    }
+                    // }
                     // else {
                     //     $success = 0;
                     //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
