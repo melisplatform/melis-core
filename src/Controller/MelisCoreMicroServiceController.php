@@ -112,7 +112,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                  */
                                 if (isset($post[0]) && isset($post[0]['post'])) {
 
-                                    $post = $post->bottom()['post'];
+                                    $post = $post[0]['post'];
 
                                     $form = $this->getForm($form);
                                     $form->setData($post);
@@ -120,7 +120,7 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                     if ($form->isValid()) {
 
                                         $tmpInstance = new $servicePath();
-                                        $tmpInstance->setgetServiceManager($this->getServiceManager());
+                                        $tmpInstance->setServiceManager($this->getServiceManager());
 
                                         $setEventManagerMethodExists = (bool) method_exists($servicePath, 'setEventManager');
 
