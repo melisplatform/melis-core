@@ -206,7 +206,7 @@ class UserController extends MelisAbstractActionController
             $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
             
                 if(strlen($password) >= 8) {
-                    if(strlen($confirmPass) >= 8) {
+                    // if(strlen($confirmPass) >= 8) {
                         //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if($passValidator->isValid($password))
@@ -229,11 +229,11 @@ class UserController extends MelisAbstractActionController
                                 $success = 0;
                                 $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
                         } // password regex validator
-                    }
-                    else {
-                        $success = 0;
-                        $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
-                    }// end confirm password length
+                    // }
+                    // else {
+                    //     $success = 0;
+                    //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
+                    // }// end confirm password length
                 }
                 else {
                     $success = 0;
@@ -297,7 +297,7 @@ class UserController extends MelisAbstractActionController
             $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
 
             if(strlen($password) >= 8) {
-                if(strlen($confirmPass) >= 8) {
+                // if(strlen($confirmPass) >= 8) {
                     //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                     $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                     if($passValidator->isValid($password))
@@ -319,11 +319,11 @@ class UserController extends MelisAbstractActionController
                         $success = 0;
                         $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
                     } // password regex validator
-                }
-                else {
-                    $success = 0;
-                    $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
-                }// end confirm password length
+                // }
+                // else {
+                //     $success = 0;
+                //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
+                // }// end confirm password length
             }
             else {
                 $success = 0;
@@ -413,7 +413,7 @@ class UserController extends MelisAbstractActionController
                 $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
 
                 if (strlen($password) >= 8) {
-                    if (strlen($confirmPass) >= 8) {
+                    // if (strlen($confirmPass) >= 8) {
                         //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if ($passValidator->isValid($password)) {
@@ -431,10 +431,10 @@ class UserController extends MelisAbstractActionController
                             $success = 0;
                             $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
                         } // password regex validator
-                    } else {
-                        $success = 0;
-                        $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
-                    }// end confirm password length
+                    // } else {
+                    //     $success = 0;
+                    //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
+                    // }// end confirm password length
                 } else {
                     $success = 0;
                     $textMessage = 'tr_meliscore_tool_user_usr_password_error_low';
@@ -535,7 +535,7 @@ class UserController extends MelisAbstractActionController
                 $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
 
                 if (strlen($password) >= 8) {
-                    if (strlen($confirmPass) >= 8) {
+                    // if (strlen($confirmPass) >= 8) {
                         //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if ($passValidator->isValid($password)) {
@@ -553,10 +553,10 @@ class UserController extends MelisAbstractActionController
                             $success = 0;
                             $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
                         } // password regex validator
-                    } else {
-                        $success = 0;
-                        $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
-                    }// end confirm password length
+                    // } else {
+                    //     $success = 0;
+                    //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
+                    // }// end confirm password length
                 } else {
                     $success = 0;
                     $textMessage = 'tr_meliscore_tool_user_usr_password_error_low';
@@ -631,7 +631,7 @@ class UserController extends MelisAbstractActionController
 
             if($isRequestNotExpired && $isUserExist) {
                 if (strlen($password) >= 8) {
-                    if (strlen($confirmPass) >= 8) {
+                    // if (strlen($confirmPass) >= 8) {
                         //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
                         $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
                         if ($passValidator->isValid($password)) {
@@ -648,10 +648,10 @@ class UserController extends MelisAbstractActionController
                             $success = 0;
                             $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
                         } // password regex validator
-                    } else {
-                        $success = 0;
-                        $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
-                    }// end confirm password length
+                    // } else {
+                    //     $success = 0;
+                    //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
+                    // }// end confirm password length
                 } else {
                     $success = 0;
                     $textMessage = 'tr_meliscore_tool_user_usr_password_error_low';
