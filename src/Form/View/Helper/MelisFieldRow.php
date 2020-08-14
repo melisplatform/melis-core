@@ -222,8 +222,8 @@ class MelisFieldRow extends FormRow
             $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i>';
 
             $label = $element->getLabel();
-            if (!empty($element->getAttribute('data-label-text'))) {
-                $label = $element->getAttribute('data-label-text');
+            if (!empty($element->getOption('label'))) {
+                $label = $element->getOption('label');
             }
 
             $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $label . '</div>' . $multiValTooltip . '</label>';
