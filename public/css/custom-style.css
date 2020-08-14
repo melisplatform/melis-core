@@ -894,6 +894,20 @@ a[data-toggle="modal"]:focus {
   height: 15px;
   margin-top: -18px;
 }
+.nav-tabs > li > a:hover,
+.nav-pills > li > a,
+.nav-pills > li > a:hover {
+  background: #fff;
+}
+#id_melis_core_gdpr_search_form .cb-cont label {
+  padding-left: 0;
+  margin-bottom: 0;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 2px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
   /* gdpr buttons */
