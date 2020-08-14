@@ -843,14 +843,6 @@ td.dataTables_empty {
   color:#fff !important;
 }
 
-#id_melis_core_gdpr_search_form .melis-core-gdpr-check-box1 .checkbox input[type="checkbox"] {
-  margin-left: -12px;
-  margin-right: 0;
-}
-#id_melis_core_gdpr_search_form .custom-melis-core-gdpr-checkbox-span {
-  margin-top: 3px;
-}
-
 a[data-toggle="modal"]:focus {
   text-decoration: none;
 }
@@ -887,6 +879,7 @@ a[data-toggle="modal"]:focus {
 .flotchart-holder {
   overflow: auto;
 }
+/* email account creation */
 #ACCOUNTCREATION_general_properties .form-group [for='tags'] > .label-text {
   width: 225px;
 }
@@ -894,6 +887,7 @@ a[data-toggle="modal"]:focus {
   height: 15px;
   margin-top: -18px;
 }
+/* gdpr */
 .nav-tabs > li > a:hover,
 .nav-pills > li > a,
 .nav-pills > li > a:hover {
@@ -907,6 +901,14 @@ a[data-toggle="modal"]:focus {
   cursor: pointer;
   display: inline-block;
   margin-left: 2px;
+}
+#id_melis_core_gdpr_search_form .melis-core-gdpr-check-box1 .checkbox input[type="checkbox"] {
+  margin-left: -12px;
+  margin-right: 0;
+}
+#id_melis_core_gdpr_search_form .custom-melis-core-gdpr-checkbox-span {
+  margin-top: 3px;
+  margin-left: 5px;
 }
 /* Responsive media queries */
 @media (min-width: 991px) {
