@@ -516,7 +516,7 @@ return [
                                             'options' => [
                                                 'min' => 8,
                                                 'messages' => [
-                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_error_low',
+                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                     \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                     \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                 ],
@@ -556,7 +556,7 @@ return [
                                             'options' => [
                                                 'min' => 8,
                                                 'messages' => [
-                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_confirm_password_error_low',
+                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                     \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                     \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                 ],
