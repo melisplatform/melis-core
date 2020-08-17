@@ -220,7 +220,7 @@ return [
                                 'action' => '',
                                 'novalidate' => 'novalidate',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -242,7 +242,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'usr_status',
-                                        'type' => 'Zend\Form\Element\Select',
+                                        'type' => 'Laminas\Form\Element\Select',
                                         'options' => [
                                             'label' => 'tr_meliscore_tool_user_col_status',
                                             'tooltip' => 'tr_meliscore_tool_user_col_status tooltip',
@@ -405,7 +405,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_login_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_login_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -416,7 +416,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_login_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_login_error_long',
                                                 ],
                                             ],
                                         ],
@@ -424,7 +424,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/^[a-zA-Z0-9]+([_ -]?[a-zA-Z0-9])*$/',
-                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_login_invalid'],
+                                                'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_login_invalid'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -443,7 +443,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_status_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_status_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -452,7 +452,7 @@ return [
                                             'options' => [
                                                 'haystack' => [1, 0],
                                                 'messages' => [
-                                                    \Zend\Validator\InArray::NOT_IN_ARRAY => 'tr_meliscore_tool_user_usr_status_error_invalid',
+                                                    \Laminas\Validator\InArray::NOT_IN_ARRAY => 'tr_meliscore_tool_user_usr_status_error_invalid',
                                                 ],
                                             ],
                                         ],
@@ -469,7 +469,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_email_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_email_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -487,7 +487,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9])*$/',
-                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
+                                                'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -506,7 +506,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_password_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_password_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -516,7 +516,7 @@ return [
                                             'options' => [
                                                 'min' => 8,
                                                 'messages' => [
-                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_error_low',
+                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                     \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                     \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                 ],
@@ -528,7 +528,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_password_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_password_error_long',
                                                 ],
                                             ],
                                         ],
@@ -547,7 +547,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_confirm_password_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_confirm_password_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -556,7 +556,7 @@ return [
                                             'options' => [
                                                 'min' => 8,
                                                 'messages' => [
-                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_confirm_password_error_low',
+                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                     \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                     \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
                                                 ],
@@ -568,7 +568,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_confirm_password_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_confirm_password_error_long',
                                                 ],
                                             ],
                                         ],
@@ -587,7 +587,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_firstname_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_firstname_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -598,7 +598,7 @@ return [
                                                 //'min'      => 1,
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_firstname_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_firstname_error_long',
                                                 ],
                                             ],
                                         ],
@@ -606,7 +606,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/(\w)+/',
-                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_firstname_invalid'],
+                                                'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_firstname_invalid'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -625,7 +625,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lastname_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lastname_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -635,7 +635,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_lastname_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_lastname_error_long',
                                                 ],
                                             ],
                                         ],
@@ -643,7 +643,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/(\w)+/',
-                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_lastname_invalid'],
+                                                'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_lastname_invalid'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -662,7 +662,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lang_id_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lang_id_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -670,8 +670,8 @@ return [
                                             'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
-                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Laminas\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Laminas\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
                                                 ],
                                             ],
                                         ],
@@ -690,7 +690,7 @@ return [
                                 'action' => '',
                                 'novalidate' => 'novalidate',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -728,7 +728,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'usr_status',
-                                        'type' => 'Zend\Form\Element\Select',
+                                        'type' => 'Laminas\Form\Element\Select',
                                         'options' => [
                                             'label' => 'tr_meliscore_tool_user_col_status',
                                             'tooltip' => 'tr_meliscore_tool_user_col_status tooltip',
@@ -904,8 +904,8 @@ return [
                                             'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_id',
-                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_id',
+                                                    \Laminas\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_id',
+                                                    \Laminas\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_id',
                                                 ],
                                             ],
                                         ],
@@ -924,7 +924,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_status_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_status_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -933,7 +933,7 @@ return [
                                             'options' => [
                                                 'haystack' => [1, 0],
                                                 'messages' => [
-                                                    \Zend\Validator\InArray::NOT_IN_ARRAY => 'tr_meliscore_tool_user_usr_status_error_invalid',
+                                                    \Laminas\Validator\InArray::NOT_IN_ARRAY => 'tr_meliscore_tool_user_usr_status_error_invalid',
                                                 ],
                                             ],
                                         ],
@@ -950,7 +950,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_email_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_email_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -981,7 +981,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_firstname_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_firstname_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -992,7 +992,7 @@ return [
                                                 //'min'      => 1,
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_firstname_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_firstname_error_long',
                                                 ],
                                             ],
                                         ],
@@ -1000,7 +1000,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/(\w)+/',
-                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_firstname_invalid'],
+                                                'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_firstname_invalid'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -1019,7 +1019,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lastname_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lastname_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -1030,7 +1030,7 @@ return [
                                                 //'min'      => 1,
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_lastname_error_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_user_usr_lastname_error_long',
                                                 ],
                                             ],
                                         ],
@@ -1038,7 +1038,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/(\w)+/',
-                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_lastname_invalid'],
+                                                'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_user_usr_lastname_invalid'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -1057,7 +1057,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lang_id_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lang_id_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -1065,8 +1065,8 @@ return [
                                             'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
-                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Laminas\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Laminas\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
                                                 ],
                                             ],
                                         ],
@@ -1089,7 +1089,7 @@ return [
                                 'action' => '',
                                 'novalidate' => 'novalidate',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -1185,7 +1185,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_email_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_email_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -1214,7 +1214,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lang_id_error_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_user_usr_lang_id_error_empty',
                                                 ],
                                             ],
                                         ],
@@ -1222,8 +1222,8 @@ return [
                                             'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
-                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Laminas\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
+                                                    \Laminas\I18n\Validator\IsInt::INVALID => 'tr_meliscore_tool_user_usr_lang_id_error_invalid',
                                                 ],
                                             ],
                                         ],
@@ -1312,7 +1312,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -1379,8 +1379,8 @@ return [
                                             'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_invalid_id',
-                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_invalid_id',
+                                                    \Laminas\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_invalid_id',
+                                                    \Laminas\I18n\Validator\IsInt::INVALID => 'tr_meliscore_invalid_id',
                                                 ],
                                             ],
                                         ],
@@ -1400,7 +1400,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 100,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_platform_forms_name_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_platform_forms_name_long',
                                                 ],
                                             ],
                                         ],
@@ -1409,7 +1409,7 @@ return [
                                             'options' => [
                                                 'pattern' => '/^[a-zA-Z0-9]*$/',
                                                 'messages' => [
-                                                    \Zend\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_platform_invalid_platform_name'
+                                                    \Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_platform_invalid_platform_name'
                                                 ],
                                                 'encoding' => 'UTF-8',
                                             ],
@@ -1418,7 +1418,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_platform_forms_name_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_platform_forms_name_empty',
                                                 ],
                                             ],
                                         ],
@@ -1546,7 +1546,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -1604,8 +1604,8 @@ return [
                                             'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_invalid_id',
-                                                    \Zend\I18n\Validator\IsInt::INVALID => 'tr_meliscore_invalid_id',
+                                                    \Laminas\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_invalid_id',
+                                                    \Laminas\I18n\Validator\IsInt::INVALID => 'tr_meliscore_invalid_id',
                                                 ],
                                             ],
                                         ],
@@ -1625,7 +1625,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 10,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_language_lang_locale_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_language_lang_locale_long',
                                                 ],
                                             ],
                                         ],
@@ -1633,7 +1633,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_language_lang_locale_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_language_lang_locale_empty',
                                                 ],
                                             ],
                                         ],
@@ -1653,7 +1653,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 10,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_language_lang_name_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_tool_language_lang_name_long',
                                                 ],
                                             ],
                                         ],
@@ -1661,7 +1661,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_language_lang_name_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_language_lang_name_empty',
                                                 ],
                                             ],
                                         ],
@@ -1777,7 +1777,7 @@ return [
                                 'action' => '',
                                 'enctype' => 'multipart/form-data',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -1853,11 +1853,11 @@ return [
                                         'name' => 'boe_tag_accepted_list',
                                         'type' => 'MelisCoreMultiValInput',
                                         'options' => [
+                                            'label' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list',
                                             'tooltip' => 'tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip',
                                         ],
                                         'attributes' => [
                                             'id' => 'boe_tag_accepted_list',
-                                            'data-label-text' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list',
                                             'placeholder' => 'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list_placeholder',
                                         ],
                                     ],
@@ -1930,7 +1930,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ],
                                             ],
                                         ],
@@ -1940,7 +1940,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
                                                 ],
                                             ],
                                         ],
@@ -1959,15 +1959,18 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ],
                                             ],
                                         ],
                                         [
-                                            'name' => 'regex', false,
+                                            'name' => 'regex',
                                             'options' => [
                                                 'pattern' => '/[\w]+/',
-                                                'messages' => [\Zend\Validator\Regex::INVALID => 'tr_emails_management_emal_boe_code_name_invalid'],
+                                                'messages' => [
+                                                    \Laminas\Validator\Regex::INVALID => 'tr_emails_management_emal_boe_code_name_invalid',
+                                                    \Laminas\Validator\Regex::NOT_MATCH => 'tr_emails_management_emal_boe_code_name_invalid',
+                                                ],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -1977,7 +1980,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
                                                 ],
                                             ],
                                         ],
@@ -1995,7 +1998,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ],
                                             ],
                                         ],
@@ -2005,7 +2008,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
                                                 ],
                                             ],
                                         ],
@@ -2033,7 +2036,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ],
                                             ],
                                         ],
@@ -2043,7 +2046,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
                                                 ],
                                             ],
                                         ],
@@ -2073,7 +2076,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
                                                 ],
                                             ],
                                         ],
@@ -2093,7 +2096,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
                                                 ],
                                             ],
                                         ],
@@ -2113,7 +2116,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_emails_mngt_tool_general_properties_form_long',
                                                 ],
                                             ],
                                         ],
@@ -2132,7 +2135,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -2161,7 +2164,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'boed_html',
-                                        'type' => 'TextArea',
+                                        'type' => 'Textarea',
                                         'options' => [
                                             'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html',
                                             'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_html tooltip',
@@ -2175,7 +2178,7 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'boed_text',
-                                        'type' => 'TextArea',
+                                        'type' => 'Textarea',
                                         'options' => [
                                             'label' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text',
                                             'tooltip' => 'tr_meliscore_emails_mngt_tool_emails_details_form_boed_text tooltip',
@@ -2297,7 +2300,7 @@ return [
                                 'action' => '',
                                 'class' => 'logTypeForm',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -2356,7 +2359,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_logs_tool_log_input_to_long_255',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_logs_tool_log_input_to_long_255',
                                                 ],
                                             ],
                                         ],
@@ -2376,7 +2379,7 @@ return [
                                                 'encoding' => 'UTF-8',
                                                 'max' => 255,
                                                 'messages' => [
-                                                    \Zend\Validator\StringLength::TOO_LONG => 'tr_meliscore_logs_tool_log_input_to_long_255',
+                                                    \Laminas\Validator\StringLength::TOO_LONG => 'tr_meliscore_logs_tool_log_input_to_long_255',
                                                 ],
                                             ],
                                         ],
@@ -2396,7 +2399,7 @@ return [
                                 'action' => '',
                                 'class' => 'logExportForm',
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 array(
                                     'spec' => array(
@@ -2590,7 +2593,7 @@ return [
                                 'action' => '',
                                 'class' => 'form-horizontal'
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -2628,7 +2631,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/[A-Za-z]/',
-                                                'message' => [\Zend\Validator\Regex::INVALID => 'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error'],
+                                                'message' => [\Laminas\Validator\Regex::INVALID => 'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error'],
                                             ],
                                         ],
                                     ],

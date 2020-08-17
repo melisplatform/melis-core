@@ -9,7 +9,7 @@
 
 namespace MelisCore\Form\Factory;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Form\Factory\MelisSelectFactory;
 
 /**
@@ -17,25 +17,18 @@ use MelisCore\Form\Factory\MelisSelectFactory;
  */
 class MelisUserRoleSelectFactory extends MelisSelectFactory
 {
-	protected function loadValueOptions(ServiceLocatorInterface $formElementManager)
-	{
-		$serviceManager = $formElementManager->getServiceLocator();
-
+    protected function loadValueOptions(ServiceManager $serviceManager)
+    {
 		$userRolesTable = $serviceManager->get('MelisCoreTableUserRole');
 		$roles = $userRolesTable->fetchAll();
 		
-		$valueoptions = array();
+		$valueoptions = [];
 		
 		// default option
 		$valueoptions[''] = 'tr_meliscms_form_common_Choose';
 		
-		$max = $roles->count();
-		for ($i = 0; $i < $max; $i++)
-		{
-			$role = $roles->current();
-			$valueoptions[$role->urole_id] = $role->urole_name;
-			$roles->next();
-		}
+        foreach ($roles->fetchAll() As $role)
+            $valueoptions[$role->urole_id] = $role->urole_name;
 		
 		return $valueoptions;
 	}

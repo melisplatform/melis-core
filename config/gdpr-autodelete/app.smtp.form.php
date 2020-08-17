@@ -14,7 +14,7 @@ return [
                                 'class' => 'melisgdprautodelete_smtp_form',
                                 'id' => 'melisgdprautodelete_smtp_form'
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -93,7 +93,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ]
@@ -111,7 +111,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ]
@@ -129,7 +129,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ]
@@ -148,7 +148,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ]

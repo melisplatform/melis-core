@@ -14,11 +14,11 @@ use MelisCore\Service\MelisCoreConfigService;
 use MelisCore\Service\MelisCoreGdprAutoDeleteService;
 use MelisCore\Service\MelisCoreGdprAutoDeleteToolService;
 use MelisCore\Service\MelisCoreToolService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use MelisCore\Controller\MelisAbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
-class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
+class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionController
 {
     /**
      * form errors
@@ -164,7 +164,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
      */
     private function translateFields($formErrors)
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         foreach ($formErrors as $i => $val) {
             $formErrors[$i]['label'] = $translator->translate('tr_smtp_form_' . $i);
         }
@@ -193,7 +193,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
      */
     private function getGdprAutoDeleteSmtpTable()
     {
-        return $this->getServiceLocator()->get('MelisGdprDeleteEmailsSmtp');
+        return $this->getServiceManager()->get('MelisGdprDeleteEmailsSmtp');
     }
 
     /**
@@ -201,7 +201,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
      */
     private function getGdprAutoDeleteService()
     {
-        return $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService');
+        return $this->getServiceManager()->get('MelisCoreGdprAutoDeleteService');
     }
 
     /**
@@ -210,7 +210,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends AbstractActionController
      */
     private function getTool()
     {
-        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
+        $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
         // set melis tool key
         $toolSvc->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
 

@@ -2,9 +2,8 @@
 
 namespace MelisCore\Service;
 
-class MelisCoreLogService  extends MelisCoreGeneralService
+class MelisCoreLogService  extends MelisGeneralService
 {
-
     /**
      * Common action log types
      */
@@ -23,7 +22,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
      */
     public function logAction($result, $title, $message, $logCode, $itemId)
     {
-        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+        $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
 
         $icon = ($result) ? $flashMessenger::INFO:  $flashMessenger::WARNING;
 
@@ -58,7 +57,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    // Service implementation end
 
 	    // Retrieving the list of logs
-	    $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
+	    $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
 	    $logList = $melisCoreTableLog->getLogList($arrayParameters['typeId'], $arrayParameters['itemId'], $arrayParameters['userId'], $arrayParameters['dateCreationMin'],
 	                                                $arrayParameters['dateCreationMax'], $arrayParameters['start'], $arrayParameters['limit'], $arrayParameters['order'], $arrayParameters['search'], $arrayParameters['status']);
 	    $logs = array();
@@ -92,7 +91,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    // Service implementation end
 	    
 	    $logEntity = new \MelisCore\Entity\MelisLog();
-	    $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
+	    $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
 	    
 	    if (!empty($arrayParameters['logId']) && is_numeric($arrayParameters['logId']))
 	    {
@@ -133,7 +132,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_start', $arrayParameters);
 	    // Service implementation end
 
-	    $melisCoreTableLogType = $this->getServiceLocator()->get('MelisCoreTableLogType');
+	    $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
 	    
 	    if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId']))
 	    {
@@ -167,7 +166,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_by_code_start', $arrayParameters);
 	    // Service implementation end
 	    
-	    $melisCoreTableLogType = $this->getServiceLocator()->get('MelisCoreTableLogType');
+	    $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
 	    
 	    if (!empty($arrayParameters['logTypeCode']))
 	    {
@@ -202,7 +201,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    $arrayParameters = $this->sendEvent('meliscore_get_log_type_start', $arrayParameters);
 	    // Service implementation end
 	     
-	    $melisCoreTableLogTypeTrans = $this->getServiceLocator()->get('MelisCoreTableLogTypeTrans');
+	    $melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
 	     
 	    if (!empty($arrayParameters['logTypeId']) && is_numeric($arrayParameters['logTypeId']))
 	    {
@@ -242,11 +241,11 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    $arrayParameters = $this->sendEvent('meliscore_save_log_start', $arrayParameters);
 	    // Service implementation end
 	     
-	    $melisCoreTableLog = $this->getServiceLocator()->get('MelisCoreTableLog');
+	    $melisCoreTableLog = $this->getServiceManager()->get('MelisCoreTableLog');
 	    
 	    // Get Current User ID
 	    $userId = null;
-	    $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+	    $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 	    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
 	    if ($userAuthDatas)
 	    {
@@ -316,7 +315,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_start', $arrayParameters);
 	    // Service implementation end
 	     
-	    $melisCoreTableLogType = $this->getServiceLocator()->get('MelisCoreTableLogType');
+	    $melisCoreTableLogType = $this->getServiceManager()->get('MelisCoreTableLogType');
 	    
 	    if (!empty($arrayParameters['logTypeCode']))
 	    {
@@ -355,7 +354,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_start', $arrayParameters);
 	    // Service implementation end
 	    
-	    $melisCoreTableLogTypeTrans = $this->getServiceLocator()->get('MelisCoreTableLogTypeTrans');
+	    $melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
 	    
 	    try {
 	        $results = $melisCoreTableLogTypeTrans->save($arrayParameters['logTypeTrans'], $arrayParameters['logTypeTransId']);
@@ -380,7 +379,7 @@ class MelisCoreLogService  extends MelisCoreGeneralService
 	    $arrayParameters = $this->sendEvent('meliscore_save_log_type_trans_start', $arrayParameters);
 	    // Service implementation end
 	     
-	    $melisCoreTableLogTypeTrans = $this->getServiceLocator()->get('MelisCoreTableLogTypeTrans');
+	    $melisCoreTableLogTypeTrans = $this->getServiceManager()->get('MelisCoreTableLogTypeTrans');
 	     
 	    try {
 	        $results = $melisCoreTableLogTypeTrans->deleteById($arrayParameters['logTypeTransId']);

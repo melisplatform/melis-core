@@ -1,50 +1,63 @@
 {
-  "name": "melisplatform/melis-core",
-  "description": "Melis Platform Core module",
-  "type": "melisplatform-module",
-  "license": "OSL-3.0",
-  "homepage": "https://github.com/melisplatform/melis-core",
-  "support": {
-    "email": "contact@melistechnology.com",
-    "source": "https://github.com/melisplatform/melis-core",
-    "issues": "https://github.com/melisplatform/melis-core/issues",
-    "docs": "https://www.melistechnology.com/melistechnology/resources/download-documentation/id/17#documentation"
-  },
-  "authors": [
-    {
-      "name": "Melis Technology",
-      "email": "contact@melistechnology.com",
-      "homepage": "https://www.melistechnology.com",
-      "role": "Developer"
-    }
-  ],
-  "keywords": [
-    "cms",
-    "melis",
-    "zf2",
-    "module"
-  ],
-  "extra": {
-    "module-name": "MelisCore",
-    "dbdeploy": true,
-    "melis-site": false,
-    "melis-module-category": "core"
-  },
-  "require": {
-    "php": "^7.0",
-    "ext-openssl": "*",
-    "ext-json": "*",
-    "ext-pdo_mysql": "*",
-    "justinrainbow/json-schema": "5.2.1",
-    "melisplatform/melis-asset-manager": "^3.2",
-    "composer/composer": "~1.2"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "~4.8"
-  },
-  "autoload": {
-    "psr-4": {
-      "MelisCore\\": "src/"
-    }
-  }
+	"name": "melisplatform/melis-core",
+	"description": "Melis Platform Core module",
+	"type": "melisplatform-module",
+	"license": "OSL-3.0",
+	"homepage": "https://github.com/melisplatform/melis-core",
+	"support": {
+		"email": "contact@melistechnology.com",
+		"source": "https://github.com/melisplatform/melis-core",
+		"issues": "https://github.com/melisplatform/melis-core/issues",
+		"docs": "https://www.melistechnology.com/melistechnology/resources/download-documentation/id/17#documentation"
+	},
+	"authors": [
+		{
+			"name": "Melis Technology",
+			"email": "contact@melistechnology.com",
+			"homepage": "https://www.melistechnology.com",
+			"role": "Developer"
+		}
+	],
+	"keywords": [
+		"cms",
+		"melis",
+		"zf2",
+		"module"
+	],
+	"extra": {
+		"module-name": "MelisCore",
+		"dbdeploy": true,
+		"melis-site": false,
+		"melis-module-category": "core"
+	},
+	"require": {
+		"php": "^7.0",
+		"ext-intl": "*",
+		"ext-json": "*",
+		"ext-openssl": "*",
+		"ext-pdo_mysql": "*",
+		"composer/composer": "1.9.3",
+		"laminas/laminas-mvc": "^3.1.1",
+		"laminas/laminas-i18n": "^2.10",
+		"laminas/laminas-session": "^2.9",
+		"laminas/laminas-form": "^2.14",
+		"laminas/laminas-hydrator": "^2.4",
+		"laminas/laminas-mvc-i18n": "^1.1",
+		"laminas/laminas-db": "^2.11",
+		"laminas/laminas-authentication": "^2.7",
+		"laminas/laminas-mail": "^2.11",
+		"laminas/laminas-mime": "^2.7",
+		"laminas/laminas-inputfilter": "^2.10",
+		"laminas/laminas-file": "^2.8",
+		"laminas/laminas-crypt": "^3.3",
+		"laminas/laminas-development-mode": "^3.2",
+		"symfony/service-contracts": "1.1.8",
+		"justinrainbow/json-schema": "5.2.1",
+		"melisplatform/melis-asset-manager": "^4.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"MelisCore\\": "src/"
+		}
+	}
 }

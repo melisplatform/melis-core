@@ -12,17 +12,12 @@ use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\NullIO;
 use Composer\Package\CompletePackage;
-use Zend\Config\Config;
-use Zend\Config\Writer\PhpArray;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Config\Config;
+use Laminas\Config\Writer\PhpArray;
 
-class MelisCoreModulesService implements ServiceLocatorAwareInterface
+class MelisCoreModulesService extends MelisServiceManager
 {
     private const MELIS_SITES_FOLDER = 'MelisSites';
-
-    /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
-    public $serviceLocator;
 
     /**
      * @var Composer
@@ -376,7 +371,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
             if ($convertPackageNameToNamespace) {
                 $tmpDependencies = [];
-                $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
+                $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
 
                 foreach ($dependencies as $dependency) {
                     $tmpDependencies[] = ucfirst($toolSvc->convertToNormalFunction($dependency));
@@ -454,27 +449,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-
-        return $this;
-    }
-
-    /**
-     * Returns all the modules that has been loaded in zend
+     * Returns all the modules that has been loaded in laminas
      *
      * @param array $exclude
      *
@@ -482,7 +457,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      */
     public function getActiveModules($exclude = [])
     {
-        $mm = $this->getServiceLocator()->get('ModuleManager');
+        $mm = $this->getServiceManager()->get('ModuleManager');
         $loadedModules = array_keys($mm->getLoadedModules());
         $pluginModules = $this->getModulePlugins();
         $modules = [];
@@ -601,7 +576,6 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
                 } else {
                     array_unshift($modules, $module);
                 }
-
             }
 
             foreach ($bottomModules as $module) {
@@ -614,6 +588,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
             $config = new Config($modules, true);
             $writer = new PhpArray();
+            $writer->setUseBracketArraySyntax(true);
             $conf = $writer->toString($config);
             $conf = preg_replace('/    \d+/u', '', $conf); // remove the number index
             $conf = str_replace('=>', '', $conf); // remove the => characters.

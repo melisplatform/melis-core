@@ -1,7 +1,7 @@
 <?php
 namespace MelisCore\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 /**
  * Renders a bootstrap Modal with Tabs

@@ -9,13 +9,22 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisBOEmailsTable extends MelisGenericTable
 {
-    public function __construct(TableGateway $tableGateway)
-    { 
-        parent::__construct($tableGateway);
-        $this->idField = 'boe_id';
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_bo_emails';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'boe_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
     }
 }

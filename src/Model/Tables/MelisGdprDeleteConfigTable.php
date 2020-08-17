@@ -8,20 +8,24 @@ namespace MelisCore\Model\Tables;
  *
  */
 
-use Zend\Db\Sql\Where;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Where;
 
 class MelisGdprDeleteConfigTable extends MelisGenericTable
 {
     /**
-     * MelisGdprDeleteConfigTable constructor.
-     * @param TableGateway $tableGateway
+     * Model table
      */
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'mgdprc_id';
-	}
+    const TABLE = 'melis_core_gdpr_delete_config';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mgdprc_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
     /**
      * @param string $search
@@ -32,12 +36,12 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
      * @param null $limit
      * @param int $siteId
      * @param null $module
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getGdprDeleteConfigData($search = "",$searchableColumns = [], $orderBy = '', $orderDirection = "DESC" , $start = 0 ,$limit = null, $siteId = 0 , $module = null )
     {
         // table selection query
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         // searchable columns and search string
@@ -62,7 +66,7 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
             $select->where->equalTo('mgdprc_module_name', $module);
         }
         // set current data count for pagination
-        $this->setCurrentDataCount((int) $this->tableGateway->selectWith($select)->count());
+        $this->setCurrentDataCount((int) $this->getTableGateway()->selectWith($select)->count());
         // length of the data
         if (!empty($limit)) {
             $select->limit($limit);
@@ -76,19 +80,19 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
 
     /**
      * get delete configuration by siteId and module name
      * @param $siteId
      * @param $moduleName
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getDeleteConfigBySiteIdModuleName($siteId, $moduleName)
     {
         // table selection query
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         if ($siteId) {
@@ -99,7 +103,7 @@ class MelisGdprDeleteConfigTable extends MelisGenericTable
             $select->where->equalTo('mgdprc_module_name', $moduleName);
         }
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
 
 }

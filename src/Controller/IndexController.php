@@ -9,19 +9,18 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Http\PhpEnvironment\Response as HttpResponse;
+use Laminas\Http\PhpEnvironment\Response as HttpResponse;
 
 /**
  * This class renders Melis CMS
  */
-class IndexController extends AbstractActionController
+class IndexController extends MelisAbstractActionController
 {
     /**
      * Rendering the Melis CMS interface
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function melisAction()
     {
@@ -34,10 +33,10 @@ class IndexController extends AbstractActionController
         $this->layout()->setVariable('jsCallBacks', $view->getVariable('jsCallBacks'));
         $this->layout()->setVariable('datasCallback', $view->getVariable('datasCallback'));
 
-        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeSvc  = $this->getServiceManager()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
 
-        $bundleAsset = $this->getServiceLocator()->get('MelisAssetManagerWebPack')->getAssets();
+        $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets();
 
         $this->layout()->setVariable('schemes', $schemeData);
         $this->layout()->setVariable('bundle', $bundleAsset);
@@ -48,19 +47,19 @@ class IndexController extends AbstractActionController
     /**
      * Shows the header section of Melis Platform
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function headerAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         if ($melisCoreAuth->hasIdentity())
         {
-            $melisAppConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+            $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $appsConfigCenter = $melisAppConfig->getItem('/meliscore/interface/meliscore_center/');
 
-            $melisCoreRights = $this->getServiceLocator()->get('MelisCoreRights');
+            $melisCoreRights = $this->getServiceManager()->get('MelisCoreRights');
             $xmlRights = $melisCoreAuth->getAuthRights();
             if (!empty($appsConfigCenter['interface']))
             {
@@ -81,7 +80,7 @@ class IndexController extends AbstractActionController
         else
             $appsConfigCenter = array();
 
-        $schemeSvc  = $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        $schemeSvc  = $this->getServiceManager()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
 
         $view                   = new ViewModel();
@@ -103,7 +102,7 @@ class IndexController extends AbstractActionController
     /**
      * Shows the left menu of the Melis Platform interface
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function leftMenuAction()
     {
@@ -118,14 +117,14 @@ class IndexController extends AbstractActionController
     /**
      * Shows the footer of the Melis Platform interface
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function footerAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
-        $moduleSvc       =  $this->getServiceLocator()->get('ModulesService');
-        $coreTool        =  $this->getServiceLocator()->get('MelisCoreTool');
+        $moduleSvc       =  $this->getServiceManager()->get('ModulesService');
+        $coreTool        =  $this->getServiceManager()->get('MelisCoreTool');
         $modules         =  $moduleSvc->getAllModules();
         $platformVersion =  $moduleSvc->getModulesAndVersions('MelisCore');
 
@@ -155,7 +154,7 @@ class IndexController extends AbstractActionController
     /**
      * Shows the center zone of the Melis Platform interface
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function centerAction()
     {
@@ -170,7 +169,7 @@ class IndexController extends AbstractActionController
     /**
      * Shows the language select to change the language
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function headerLanguageAction()
     {

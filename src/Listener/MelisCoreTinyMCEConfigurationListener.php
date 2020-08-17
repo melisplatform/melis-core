@@ -9,27 +9,24 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Session\Container;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Session\Container;
 
-use MelisCore\Listener\MelisCoreGeneralListener;
-
-class MelisCoreTinyMCEConfigurationListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreTinyMCEConfigurationListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             '*',
             'meliscore_tinymce_config',
             function($e){
 
                 $params     = $e->getParams();
                 $config     = array();
-                $sm         = $e->getTarget()->getServiceLocator();
+                $sm         = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $translator = $sm->get('translator');
 
                 $config['plugins'][]                 = 'responsivefilemanager';
@@ -54,8 +51,7 @@ class MelisCoreTinyMCEConfigurationListener extends MelisCoreGeneralListener imp
                 );
             },
             // the priority number of your tinyMCE configuration listener should not be less than the value below
-            -10000);
-
-        $this->listeners[] = $callBackHandler;
+            -10000
+        );
     }
 }

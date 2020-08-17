@@ -8,31 +8,34 @@ namespace MelisCore\Model\Tables;
  *
  */
 
-use Zend\Db\TableGateway\TableGateway;
-
 class MelisGdprDeleteEmailsSentTable extends MelisGenericTable
 {
     /**
-     * MelisGdprDeleteConfigTable constructor.
-     * @param TableGateway $tableGateway
+     * Model table
      */
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'mgdprs_id';
-	}
+    const TABLE = 'melis_core_gdpr_delete_emails_sent';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mgdprs_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
 	public function getEmailSentByValidationKey($validationKey,$moduleName)
     {
         // table selection query
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         // email
         $select->where->equalTo('mgdprs_validation_key', $validationKey);
         $select->where->equalTo('mgdprs_module_name', $moduleName);
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
 
     /**
@@ -42,7 +45,7 @@ class MelisGdprDeleteEmailsSentTable extends MelisGenericTable
      */
     public function deleteSentLog($accountId, $module)
     {
-        return $this->tableGateway->delete([
+        return $this->getTableGateway()->delete([
             'mgdprs_module_name' => $module,
             'mgdprs_account_id' => $accountId,
         ]);
@@ -50,7 +53,7 @@ class MelisGdprDeleteEmailsSentTable extends MelisGenericTable
 
     public function deleteEmailSentData($accountId, $module, $siteId)
     {
-        return $this->tableGateway->delete([
+        return $this->getTableGateway()->delete([
             'mgdprs_module_name' => $module,
             'mgdprs_account_id' => $accountId,
             'mgdprs_site_id' => $siteId

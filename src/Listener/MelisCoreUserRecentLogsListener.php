@@ -9,36 +9,32 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
 
-use MelisCore\Listener\MelisCoreGeneralListener;
-
-class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreUserRecentLogsListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
-	
-    public function attach(EventManagerInterface $events)
-    {
-        $sharedEvents      = $events->getSharedManager();
-        
-        $callBackHandler = $sharedEvents->attach(
-        	'MelisCore',
-            'meliscore_get_recent_user_logs',
-        	function($e){
-        	    
-        		$sm = $e->getTarget()->getServiceLocator();
-        		
-    		    // Get Cureent User ID
-    		    $melisCoreAuth = $sm->get('MelisCoreAuth');
-    		    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-    		    $userId = (int) $userAuthDatas->usr_id;
-    		    
-    		    $logSrv = $sm->get('MelisCoreLogService');
-    		    $recentUserLogs = $logSrv->getLogList(null, null, $userId, null, null, null, null, 'desc',null,1);
+	public function attach(EventManagerInterface $events, $priority = 1)
+	{
+		$this->attachEventListener(
+			$events,
+			'MelisCore',
+			'meliscore_get_recent_user_logs',
+			function($e){
+				
+				$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
+				
+				// Get Cureent User ID
+				$melisCoreAuth = $sm->get('MelisCoreAuth');
+				$userAuthDatas =  $melisCoreAuth->getStorage()->read();
+				$userId = (int) $userAuthDatas->usr_id;
+				
+				$logSrv = $sm->get('MelisCoreLogService');
+				$recentUserLogs = $logSrv->getLogList(null, null, $userId, null, null, null, null, 'desc',null,1);
 
-    		    $flashMsgSrv = $sm->get('MelisCoreFlashMessenger');
+				$flashMsgSrv = $sm->get('MelisCoreFlashMessenger');
 
-    		    $recentUserLogs = array_reverse($recentUserLogs);
+				$recentUserLogs = array_reverse($recentUserLogs);
 
                 if(isset($recentUserLogs[0])){
                     $log = $recentUserLogs[0]->getLog();
@@ -65,8 +61,6 @@ class MelisCoreUserRecentLogsListener extends MelisCoreGeneralListener implement
 //					}
 //
 //        		}
-    	});
-        
-        $this->listeners[] = $callBackHandler;
-    }
+		});
+	}
 }

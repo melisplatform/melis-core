@@ -2,17 +2,18 @@
 
 namespace MelisCore\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\AbstractHelper;
 use MelisCore\Library\MelisAppConfig;
 
 class MelisDashboardDragDropZonePluginHelper extends AbstractHelper
 {
 	public $serviceManager;
 
-	public function __construct($sm)
-	{
-		$this->serviceManager = $sm;
-	}
+	public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+    }
 	
 	public function __invoke($dashboardId)
 	{

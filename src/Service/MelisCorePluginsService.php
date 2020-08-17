@@ -2,21 +2,26 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 
-class MelisCorePluginsService extends MelisCoreGeneralService
+class MelisCorePluginsService extends MelisGeneralService
 {
     const DASHBOARD_PLUGIN_TYPE = "dashboard";
     const TEMPLATING_PLUGIN_TYPE = "templating";
     /**
-     * @var servicelocator
-     */
-    public $serviceLocator;
-    /**
      * @var $pluginsTbl \MelisCore\Model\Tables\MelisPluginsTable
      */
     public $pluginsTbl;
+
+    /**
+     * @param ServiceManager $service
+     */
+    public function setServiceManager(ServiceManager $service)
+    {
+        parent::setServiceManager($service);
+        $this->pluginsTbl = $service->get('MelisPluginsTable');
+    }
+
     /**
      * @return mixed
      */
@@ -28,7 +33,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_templating_plugins_start', $arrayParameters);
         // Implementation start
-        $melisConfig = $this->serviceLocator->get('config');
+        $melisConfig = $this->getServiceManager()->get('config');
         // get plugin config
         $plugins = $melisConfig['plugins'];
         $dashboardPlugins = [];
@@ -69,7 +74,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_dashboard_plugins_start', $arrayParameters);
         // Implementation start
-        $melisConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $dashboardPlugins = $melisConfig->getItem('/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section');
         $plugins = [];
         if (isset($dashboardPlugins['interface']) && count($dashboardPlugins['interface'])) {
@@ -296,7 +301,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_menu_handler_notif_duration_start', $arrayParameters);
         // Implementation start
-        $melisConfig = $this->serviceLocator->get('config');
+        $melisConfig = $this->getServiceManager()->get('config');
         // get plugin config
         $pluginMenuHandlerDuration = $melisConfig['plugins']['meliscore']['datas']['new_plugin_notification']['menu_handler'] ?? "5";
 
@@ -319,7 +324,7 @@ class MelisCorePluginsService extends MelisCoreGeneralService
         // Sending service start event
         $arrayParameters = $this->sendEvent('melis_core_get_new_plugin_notif_menu_duration_start', $arrayParameters);
         // Implementation start
-        $melisConfig = $this->serviceLocator->get('config');
+        $melisConfig = $this->getServiceManager()->get('config');
         // get plugin config
         $newPluginNotifInsideMenu = $melisConfig['plugins']['meliscore']['datas']['new_plugin_notification']['inside_menu'] ?? "10";
         // Adding results to parameters for events treatment if needed

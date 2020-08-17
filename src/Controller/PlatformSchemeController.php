@@ -9,20 +9,19 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\ValidatorChain;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\Session\ValidatorChain;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Validator\File\IsImage;
-use Zend\File\Transfer\Adapter\Http;
-use Zend\Validator\File\Size;
-use Zend\Validator\File\Extension;
-use Zend\Validator;
+use Laminas\Validator\File\IsImage;
+use Laminas\File\Transfer\Adapter\Http;
+use Laminas\Validator\File\Size;
+use Laminas\Validator\File\Extension;
+use Laminas\Validator;
 /**
  * Platform Color Tool
  */
-class PlatformSchemeController extends AbstractActionController
+class PlatformSchemeController extends MelisAbstractActionController
 {
 
     const SCHEME_FOLDER_PERMISSION = 0755;
@@ -207,7 +206,7 @@ class PlatformSchemeController extends AbstractActionController
                                     /**
                                      * Forece override file if the file already exists
                                      */
-                                    $adapter->addFilter('File\Rename', array(
+                                    $adapter->addFilter('FileRename', array(
                                         'target'    => $fileName,
                                         'overwrite' => true,
                                     ));
@@ -447,16 +446,16 @@ class PlatformSchemeController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm()
     {
 
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $formConfig = $config->getItem('meliscore/forms/melis_core_platform_scheme_form');
 
-        $factory = new \Zend\Form\Factory();
-        $formElements = $this->getServiceLocator()->get('FormElementManager');
+        $factory = new \Laminas\Form\Factory();
+        $formElements = $this->getServiceManager()->get('FormElementManager');
 
         $factory->setFormElementManager($formElements);
 
@@ -472,7 +471,7 @@ class PlatformSchemeController extends AbstractActionController
      */
     private function formatErrorMessage($errors = array())
     {
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/forms/melis_core_platform_scheme_form');
         $appConfigForm = $appConfigForm['elements'];
 
@@ -494,7 +493,7 @@ class PlatformSchemeController extends AbstractActionController
      */
     private function melisTool()
     {
-        return $this->getServiceLocator()->get('MelisCoreTool');
+        return $this->getServiceManager()->get('MelisCoreTool');
     }
 
     /**
@@ -504,7 +503,7 @@ class PlatformSchemeController extends AbstractActionController
     private function getSchemeFolder()
     {
         $uriPath = '/media/platform-scheme/';
-        $config  = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config  = $this->getServiceManager()->get('MelisCoreConfig');
         $path    = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree_section/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
 
         if($path) {
@@ -535,7 +534,7 @@ class PlatformSchemeController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
+        $hasAccess = $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }
@@ -572,7 +571,7 @@ class PlatformSchemeController extends AbstractActionController
      */
     private function getMaxImageSize()
     {
-        $config    = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config    = $this->getServiceManager()->get('MelisCoreConfig');
         $path      = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree_section/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
         $imagesize = null;
 
@@ -590,7 +589,7 @@ class PlatformSchemeController extends AbstractActionController
      */
     public function getAllowedUploadableExtension()
     {
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $path   = $config->getItem('meliscore/interface/meliscore_leftmenu/interface/meliscore_toolstree_section/interface/meliscore_tool_system_config/interface/meliscore_tool_platform_scheme');
         $ext    = null;
 
@@ -608,7 +607,7 @@ class PlatformSchemeController extends AbstractActionController
      */
     public function getPlatformSchemeSvc()
     {
-        return $this->getServiceLocator()->get('MelisCorePlatformSchemeService');
+        return $this->getServiceManager()->get('MelisCorePlatformSchemeService');
     }
 
 }

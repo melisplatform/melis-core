@@ -13,11 +13,11 @@ use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
 use MelisCore\Service\MelisCoreGdprAutoDeleteToolService;
 use MelisCore\Service\MelisCoreToolService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use MelisCore\Controller\MelisAbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
-class MelisCoreGdprAutoDeleteController extends AbstractActionController
+class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
 {
     const SAVE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_ADD';
     const UPDATE_LOG_TYPE = 'CORE_GDPR_AUTO_DELETE_UPDATE';
@@ -138,8 +138,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     public function renderContentAccordionListConfigContentSiteFilterAction()
     {
         $view = new ViewModel();
-        if (in_array('MelisCms', $this->getServiceLocator()->get('ModulesService')->getActiveModules())) {
-            $view->setVariable('sites', $this->getServiceLocator()
+        if (in_array('MelisCms', $this->getServiceManager()->get('ModulesService')->getActiveModules())) {
+            $view->setVariable('sites', $this->getServiceManager()
                 ->get('MelisEngineTableSite')->fetchAll()->toArray());
         }
 
@@ -166,7 +166,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     private function getGdprAutoDeleteToolService()
     {
         /** @var MelisCoreGdprAutoDeleteToolService $gdprAutoDeleteSvc */
-        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteToolService');
+        $gdprAutoDeleteSvc = $this->getServiceManager()->get('MelisCoreGdprAutoDeleteToolService');
 
         return $gdprAutoDeleteSvc;
     }
@@ -251,7 +251,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      */
     private function getTool()
     {
-        return $this->getServiceLocator()->get('MelisCoreTool');
+        return $this->getServiceManager()->get('MelisCoreTool');
     }
 
     /**
@@ -390,8 +390,8 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     private function getLocaleNameByLangId($langId)
     {
         $locale = null;
-        if ($this->getServiceLocator()->has('MelisEngineLang')){
-            $locale =  explode('_', $this->getServiceLocator()->get('MelisEngineLang')->getLocaleByLangId($langId))[1];
+        if ($this->getServiceManager()->has('MelisEngineLang')){
+            $locale =  explode('_', $this->getServiceManager()->get('MelisEngineLang')->getLocaleByLangId($langId))[1];
         }
 
         return $locale;
@@ -402,7 +402,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      */
     private function getGdprDeleteConfigTable()
     {
-        return $this->getServiceLocator()->get('MelisGdprDeleteConfigTable');
+        return $this->getServiceManager()->get('MelisGdprDeleteConfigTable');
     }
 
     /**
@@ -613,7 +613,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
     private function validateCronConfigData($alertDays, $deleteDays, $resend = false)
     {
         $errorMessage = [];
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $deleteLabel = $translator->translate("tr_melis_core_gdpr_autodelete_label_cron_alert_email_delete_days");
         if ($deleteDays >= $alertDays) {
             if ($resend) {
@@ -862,7 +862,7 @@ class MelisCoreGdprAutoDeleteController extends AbstractActionController
      */
     public function runGdprAutoDeleteCronAction()
     {
-        $autoDelete = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->run();
+        $autoDelete = $this->getServiceManager()->get('MelisCoreGdprAutoDeleteService')->run();
         return new JsonModel([
             'success' => $autoDelete['status'],
             'message' => $autoDelete['message'] ?? null

@@ -2,27 +2,12 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Sendmail;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
-class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, MelisCoreLostPasswordServiceInterface
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\Sendmail;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Part as MimePart;
+class MelisCoreLostPasswordService extends MelisServiceManager implements MelisCoreLostPasswordServiceInterface
 {
-    public $serviceLocator;
-    
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-    
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-     
     /**
      * Adds new record for lost password request 
      * @param String $url
@@ -31,7 +16,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
      */
     public function addLostPassRequest($login, $email)
     {
-        $table = $this->getServiceLocator()->get('MelisLostPasswordTable');
+        $table = $this->getServiceManager()->get('MelisLostPasswordTable');
         $data = $this->getPassRequestDataByLogin($email);
         $success = false;
         if(!$this->isDataExists($login)) {
@@ -91,7 +76,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
      */
     public function userExists($login) 
     {
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         $data = $userTable->getEntryByField('usr_login', $login);
         $user = '';
         foreach($data as $val) 
@@ -146,7 +131,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
             //echo $login;
         }
 
-        $usertbl = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $usertbl = $this->getServiceManager()->get('MelisCoreTableUser');
         $user = $usertbl->getEntryByField("usr_login",$login)->current();
 
         return $user;
@@ -180,7 +165,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
      */
     public function getPassRequestDataByLogin($login) 
     {
-        $table = $this->getServiceLocator()->get('MelisLostPasswordTable');
+        $table = $this->getServiceManager()->get('MelisLostPasswordTable');
         $data = $table->getEntryByField('rh_login', $login);
         
         if($data)
@@ -194,7 +179,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
      */
     public function getPasswordRequestData($hash) 
     {
-        $table = $this->getServiceLocator()->get('MelisLostPasswordTable');
+        $table = $this->getServiceManager()->get('MelisLostPasswordTable');
         $data = $table->getEntryByField('rh_hash', $hash);
         
         if($data) 
@@ -209,8 +194,8 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
     protected function updatePassword($login, $newPass)
     {
         $success       = false;
-        $userTable     = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $userTable     = $this->getServiceManager()->get('MelisCoreTableUser');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         if($this->isDataExists($login)) 
         {
@@ -230,7 +215,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
      */
     protected function deletePasswordRequestData($hash) 
     {
-        $table = $this->getServiceLocator()->get('MelisLostPasswordTable');
+        $table = $this->getServiceManager()->get('MelisLostPasswordTable');
         $data = $this->getPasswordRequestData($hash);
         
         if($data)
@@ -256,7 +241,7 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
         $hash  = $datas['rh_hash'];
         
         $configPath = 'meliscore/datas';
-        $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         
         $cfg = $melisConfig->getItem('meliscore/datas/'.getenv('MELIS_PLATFORM'));
         
@@ -281,12 +266,12 @@ class MelisCoreLostPasswordService implements ServiceLocatorAwareInterface, Meli
             $email_to = $email;
             
             // Fetching user language Id
-            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $userData = $userTable->getDataByLoginAndEmail($login, $email);
             $userData = $userData->current();
             $langId = $userData->usr_lang_id;
             
-            $melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+            $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
             $emailResult = $melisEmailBO->sendBoEmailByCode('LOSTPASSWORD',  $tags, $email_to, $name_to, $langId);
             
             if ($emailResult){

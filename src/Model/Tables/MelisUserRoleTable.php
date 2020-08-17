@@ -9,13 +9,22 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisUserRoleTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'urole_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_user_role';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'urole_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 }

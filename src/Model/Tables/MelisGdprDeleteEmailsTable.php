@@ -8,8 +8,7 @@ namespace MelisCore\Model\Tables;
  *
  */
 
-use Zend\Db\Sql\Where;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Where;
 
 class MelisGdprDeleteEmailsTable extends MelisGenericTable
 {
@@ -23,19 +22,24 @@ class MelisGdprDeleteEmailsTable extends MelisGenericTable
     const EMAIL_DELETED = "2";
 
     /**
-     * MelisGdprDeleteConfigTable constructor.
-     * @param TableGateway $tableGateway
+     * Model table
      */
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'mgdpre_id';
-	}
+    const TABLE = 'melis_core_gdpr_delete_emails';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mgdpre_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
 	public function getAlertEmailsTransData($configId, $type = null, $langId = null)
     {
         // table selection query
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         if ($configId) {
@@ -49,7 +53,7 @@ class MelisGdprDeleteEmailsTable extends MelisGenericTable
             $select->where->equalTo('mgdpre_lang_id', $langId);
         }
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
 
 

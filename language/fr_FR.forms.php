@@ -45,8 +45,8 @@
         
         'tr_meliscore_tool_user_usr_password_error_empty' => 'Veuillez saisir un mot de passe',
         'tr_meliscore_tool_user_usr_password_error_long'  => 'Mot de passe trop long, il doit faire moins de 255 caractères',
-        'tr_meliscore_tool_user_usr_password_not_match' => 'Le mot de passe ne correspond pas',
-        'tr_meliscore_tool_user_usr_password_regex_not_match' => 'Le mot de passe doit contenir au moins une lettre minuscule et un chiffre',
+        'tr_meliscore_tool_user_usr_password_not_match' => 'Les deux mots de passe ne sont pas identiques',
+        'tr_meliscore_tool_user_usr_password_regex_not_match' => 'Votre mot de passe doit être de 8 caractères ou plus avec au moins une lettre minuscule et un chiffre',
         'tr_meliscore_tool_user_usr_password_error_low' => 'Le mot de passe doit être de 8 caractères minimum',
         
         'tr_meliscore_tool_user_usr_confirm_password_error_empty' => 'Veuillez confirmer le mot de passe',

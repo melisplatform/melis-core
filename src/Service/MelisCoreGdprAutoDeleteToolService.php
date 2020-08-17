@@ -6,8 +6,9 @@ use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsTable;
 use MelisCore\Model\Tables\MelisLangTable;
+use Laminas\ServiceManager\ServiceManager;
 
-class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
+class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
 {
     const EMAIL_WARNING_CONTENT_TYPE = "email_warning_content";
     const EMAIL_DELETE_CONTENT_TYPE = "email_delete_content";
@@ -29,22 +30,21 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     protected $gdprAutoDeleteForms = [];
 
     /**
-     * MelisCoreGdprAutoDeleteService constructor.
-     * @param MelisGdprDeleteConfigTable $gdprAutoDeleteConfigTable
-     * @param MelisGdprDeleteEmailsTable $gdprAutoDeleteEmailsTable
-     * @param MelisGdprDeleteEmailsLogsTable $gdprAutoDeleteEmailsLogsTable
+     * @param ServiceManager $service
      */
-    public function __construct(
-        MelisGdprDeleteConfigTable $gdprAutoDeleteConfigTable,
-        MelisGdprDeleteEmailsLogsTable $gdprAutoDeleteEmailsLogsTable,
-        MelisGdprDeleteEmailsTable $gdprAutoDeleteEmailsTable
-    )
+    public function setServiceManager(ServiceManager $service)
     {
-        $this->gdprAutoDeleteConfigTable     = $gdprAutoDeleteConfigTable;
-        $this->gdprAutoDeleteEmailsTable     = $gdprAutoDeleteEmailsTable;
-        $this->gdprAutoDeleteEmailsLogsTable = $gdprAutoDeleteEmailsLogsTable;
-    }
+        // Tables declaration
+        /** @var MelisGdprDeleteConfigTable $gdprDeleteConfigTbl */
+        $this->gdprAutoDeleteConfigTable     = $service->get('MelisGdprDeleteConfigTable');
+        /** @var MelisGdprDeleteEmailsTable $gdprDeleteEmailsTbl */
+        $this->gdprAutoDeleteEmailsTable     = $service->get('MelisGdprDeleteEmailsTable');
+        /** @var MelisGdprDeleteEmailsLogsTable $gdprDeleteEmailsLogTbl */
+        $this->gdprAutoDeleteEmailsLogsTable = $service->get('MelisGdprDeleteEmailsLogsTable');
 
+        $this->serviceManager = $service;
+    }
+    
     /**
      * @param $searchValue
      * @param $searchableCols
@@ -120,7 +120,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     public function getMelisCoreLang()
     {
         /** @var MelisLangTable $melisCoreLangTbl */
-        $melisCoreLangTbl = $this->getServiceLocator()->get('MelisCoreTableLang');
+        $melisCoreLangTbl = $this->getServiceManager()->get('MelisCoreTableLang');
 
         return $melisCoreLangTbl->fetchAll()->toArray();
     }
@@ -132,9 +132,9 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     {
         $service = [];
 
-        if ($this->getServiceLocator()->has('MelisEngineTableCmsLang')) {
+        if ($this->getServiceManager()->has('MelisEngineTableCmsLang')) {
             /** @var MelisLangTable $melisCmsLang */
-            $service = $this->getServiceLocator()->get('MelisEngineTableCmsLang')->fetchAll()->toArray();
+            $service = $this->getServiceManager()->get('MelisEngineTableCmsLang')->fetchAll()->toArray();
         }
 
         return $service;
@@ -191,7 +191,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     private function getTool()
     {
         /** @var MelisCoreToolService $toolSvc */
-        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
+        $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
         // set melis tool key
         $toolSvc->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
 
@@ -203,7 +203,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      *  - (site)
      *  - (module)
      *
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     public function getAddEditFiltersForm()
     {
@@ -213,16 +213,16 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     /**
      * get add/edit cron config form
      *
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     public function getAddEditCronConfigForm()
     {
         return $this->getTool()->getForm('melisgdprautodelete_add_edit_cron_config_form');
     }
-     /**
+    /**
      * get add/edit cron config form
      *
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     public function getAddEditEmailSetupForm()
     {
@@ -232,7 +232,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     /**
      * get add/edit alert email form
      *
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     public function getAddEditAlertEmailForm()
     {
@@ -242,7 +242,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     /**
      * get add/edit delete email form
      *
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     public function getAddEditAlertEmailDeleteForm()
     {
@@ -307,7 +307,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
     private function formatErrorMessage($errors = [],$formConfigPath)
     {
         /** @var MelisCoreConfigService $config */
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         // get form elements
         $formConfig = $config->getItem($formConfigPath)['elements'];
         // set label for each field
@@ -402,8 +402,8 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      */
     public function getLinkUrl($pageId)
     {
-        if ($this->getServiceLocator()->has('MelisEngineTree')) {
-            return $this->getServiceLocator()->get('MelisEngineTree')->getPageLink((int) $pageId,true);
+        if ($this->getServiceManager()->has('MelisEngineTree')) {
+            return $this->getServiceManager()->get('MelisEngineTree')->getPageLink((int) $pageId,true);
         }
 
         return $pageId;
@@ -467,8 +467,8 @@ class MelisCoreGdprAutoDeleteToolService extends MelisCoreGeneralService
      */
     public function getSiteNameBySiteId($siteId)
     {
-        if ($this->getServiceLocator()->has('MelisEngineTableSite')){
-            $data = $this->getServiceLocator()->get('MelisEngineTableSite')->getEntryById($siteId)->current();
+        if ($this->getServiceManager()->has('MelisEngineTableSite')){
+            $data = $this->getServiceManager()->get('MelisEngineTableSite')->getEntryById($siteId)->current();
             if (! empty($data)) {
                 return $data->site_label;
             }

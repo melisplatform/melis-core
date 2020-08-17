@@ -11,20 +11,19 @@ namespace MelisCore\Controller;
 
 use DateTime;
 use MelisCore\Service\MelisCoreToolService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Validator\File\Count;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Session\Container;
+use Laminas\Validator\File\Count;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Session\Container;
 /**
  * This class deals with the Melis Backoffice Logs
  */
-class LogController extends AbstractActionController
+class LogController extends MelisAbstractActionController
 {
     /**
      * Render Log Tool page
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolAction()
     {
@@ -39,7 +38,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Header
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolHeaderAction()
     {
@@ -54,7 +53,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Content
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolContentAction()
     {
@@ -70,15 +69,15 @@ class LogController extends AbstractActionController
      * Render Log Tool Table
      * This will generate DataTable for Listing of Logs
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', 'meliscore_logs_tool');
         $columns = $melisTool->getColumns();
 
@@ -93,7 +92,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table limit
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableLimitAction()
     {
@@ -104,7 +103,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Modal Container
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolModalContainerAction()
     {
@@ -121,7 +120,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Export
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolExportAction()
     {
@@ -133,7 +132,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Modal Edit Content
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolExportModalContentAction()
     {
@@ -162,8 +161,8 @@ class LogController extends AbstractActionController
         if ($request->isPost()) {
 
 
-            $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
-            $translator = $this->getServiceLocator()->get('translator');
+            $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
+            $translator = $this->getServiceManager()->get('translator');
             $postValues = get_object_vars($request->getPost());
             $container = new Container('meliscore');
             $locale = $container['melis-lang-locale'];
@@ -223,11 +222,11 @@ class LogController extends AbstractActionController
     }
     public function  exportLogsAction(){
 
-        $userTbl = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $logTbl = $this->getServiceLocator()->get('MelisCoreTableLog');
-        $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
-        $translator = $this->getServiceLocator()->get('translator');
+        $userTbl = $this->getServiceManager()->get('MelisCoreTableUser');
+        $logTbl = $this->getServiceManager()->get('MelisCoreTableLog');
+        $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
+        $translator = $this->getServiceManager()->get('translator');
 
         $request = $this->getRequest();
         $queryValues = get_object_vars($request->getQuery());
@@ -279,7 +278,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table limit
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableDateRangeAction()
     {
@@ -290,7 +289,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table Search
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableSearchAction()
     {
@@ -301,12 +300,12 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table User Filter
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableUserFilterAction()
     {
         // Get Cureent User ID
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $userId        = null;
         
         if($melisCoreAuth->hasIdentity()){
@@ -320,7 +319,7 @@ class LogController extends AbstractActionController
         
 
         $isAdmin = false;
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         $user = $userTable->getEntryById($userId)->current();
         if (!empty($user))
         {
@@ -338,8 +337,8 @@ class LogController extends AbstractActionController
         if ($isAdmin)
         {
             $selectContainer = '%s %s';
-            $translator = $this->getServiceLocator()->get('translator');
-            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $translator = $this->getServiceManager()->get('translator');
+            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $users = $userTable->getUserOrderByName();
 
             $select = '<select id="logUserfilter" class="form-control input-sm"> %s</select>';
@@ -364,12 +363,12 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool Table Type Filter
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableTypeFilterAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
-        $logTypeTable = $this->getServiceLocator()->get('MelisCoreTableLogType');
+        $translator = $this->getServiceManager()->get('translator');
+        $logTypeTable = $this->getServiceManager()->get('MelisCoreTableLogType');
         $logType = $logTypeTable->getLogTypeOrderByCode();
 
         $selectContainer = '%s %s';
@@ -394,7 +393,7 @@ class LogController extends AbstractActionController
     /**
      * Render Log Tool page Refresh Button
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderLogsToolTableRefreshAction()
     {
@@ -416,7 +415,7 @@ class LogController extends AbstractActionController
             $locale = $container['melis-lang-locale'];
 
             // Get Cureent User ID
-            $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+            $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
             $userAuthDatas =  $melisCoreAuth->getStorage()->read();
             $userId = (int) $userAuthDatas->usr_id;
 
@@ -428,7 +427,7 @@ class LogController extends AbstractActionController
 
             $typeId = $this->getRequest()->getPost('typeId');
 
-            $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+            $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
 
         }
 
@@ -443,7 +442,7 @@ class LogController extends AbstractActionController
     /**
      * Retrieving all the list of logs for DataTable
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getLogsAction()
     {
@@ -460,12 +459,12 @@ class LogController extends AbstractActionController
             $locale = $container['melis-lang-locale'];
 
             // Get Cureent User ID
-            $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+            $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
             $userAuthDatas =  $melisCoreAuth->getStorage()->read();
             $userId = (int) $userAuthDatas->usr_id;
 
             $isAdmin = false;
-            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $user = $userTable->getEntryById($userId)->current();
             if (!empty($user))
             {
@@ -475,14 +474,14 @@ class LogController extends AbstractActionController
                 }
             }
 
-            $translator = $this->getServiceLocator()->get('translator');
-            $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+            $translator = $this->getServiceManager()->get('translator');
+            $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
 
             // Getting the table configuration from config tool
-            $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+            $melisTool = $this->getServiceManager()->get('MelisCoreTool');
             $melisTool->setMelisToolKey('meliscore', 'meliscore_logs_tool');
 
-            $melisUserTable = $this->serviceLocator->get('MelisCoreTableUser');
+            $melisUserTable = $this->getServiceManager()->get('MelisCoreTableUser');
 
             $colId = array_keys($melisTool->getColumns());
 
@@ -511,7 +510,7 @@ class LogController extends AbstractActionController
 
             $typeId = $this->getRequest()->getPost('typeId');
 
-            $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+            $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
 
             // Retreiving the list of logs using Log Service with filters as parameters
             $logs = $logSrv->getLogList($typeId, null, $userId, $startDate, $endDate, null, null, $sortOrder,null,null);
@@ -606,19 +605,19 @@ class LogController extends AbstractActionController
         $logId = $this->params()->fromQuery('logId');
         $logTypeId = $this->params()->fromQuery('logTypeId');
 
-        $coreLang = $this->getServiceLocator()->get('MelisCoreTableLang');
+        $coreLang = $this->getServiceManager()->get('MelisCoreTableLang');
         $languages = $coreLang->getLanguageInOrdered();
 
         // Getting the Site Redirect Form from Tool config
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_type_form','meliscore_logs_tool_log_type_form');
 
-        $factory = new \Zend\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory = new \Laminas\Form\Factory();
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $propertyForm = $factory->createForm($appConfigForm);
 
-        $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+        $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
         $logEntity = $logSrv->getLog($logId);
         $logType = $logEntity->getType();
         $logTypeTrans = $logEntity->getTranslations();
@@ -658,15 +657,15 @@ class LogController extends AbstractActionController
         {
             $postValues = get_object_vars($request->getPost());
 
-            $translator = $this->getServiceLocator()->get('translator');
-            $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+            $translator = $this->getServiceManager()->get('translator');
+            $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
 
             // Getting the Site Redirect Form from Tool config
-            $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+            $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_logs_tool/forms/meliscore_logs_tool_log_type_form','meliscore_logs_tool_log_type_form');
 
-            $factory = new \Zend\Form\Factory();
-            $formElements = $this->serviceLocator->get('FormElementManager');
+            $factory = new \Laminas\Form\Factory();
+            $formElements = $this->getServiceManager()->get('FormElementManager');
             $factory->setFormElementManager($formElements);
             $propertyForm = $factory->createForm($appConfigForm);
 
@@ -787,7 +786,7 @@ class LogController extends AbstractActionController
      */
     private function getFormConfig($formPath, $form)
     {
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered($formPath, $form);
 
         return $appConfigForm;
@@ -795,12 +794,12 @@ class LogController extends AbstractActionController
     /**
      * Gets the form
      * @param formConfig
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm($formConfig)
     {
-        $factory = new \Zend\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory = new \Laminas\Form\Factory();
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);
 

@@ -9,24 +9,21 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
-class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+
+class MelisCoreMicroServiceRouteParamListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisCore',
-            array(
-                'melis_core_microservice_route_param'
-            ),
+            'melis_core_microservice_route_param',
             function($e){
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $params = $e->getParams();
 
                 $module  = isset($params['module'])  ? $params['module']  : null;
@@ -47,8 +44,6 @@ class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener i
                      * Sample string value: 1,3,1,4,1
                      */
                     $post['arrayParam'] = explode(',', $post['arrayParam']);
-
-
                 }
 
                 return array(
@@ -57,10 +52,8 @@ class MelisCoreMicroServiceRouteParamListener extends MelisCoreGeneralListener i
                     'method'  => $method,
                     'post'    => $post
                 );
-
             },
-            -10000);
-
-        $this->listeners[] = $callBackHandler;
+            -10000
+        );
     }
 }

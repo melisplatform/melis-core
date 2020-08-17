@@ -9,11 +9,10 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\Container;
-use Zend\View\Model\JsonModel;
+use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
 
-class MelisTinyMceController extends AbstractActionController
+class MelisTinyMceController extends MelisAbstractActionController
 {
     const MINI_TEMPLATES_FOLDER = 'miniTemplatesTinyMce';
 
@@ -24,7 +23,7 @@ class MelisTinyMceController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+            $modulesSvc = $this->getServiceManager()->get('ModulesService');
             // Getting the Posted Values
             $postValues = get_object_vars($request->getPost());
 
@@ -33,7 +32,7 @@ class MelisTinyMceController extends AbstractActionController
             $options = !empty($postValues['options']) ? $postValues['options'] : array();
 
             // Get the list of TinyMce configuration files declared
-            $config = $this->serviceLocator->get('config');
+            $config = $this->getServiceManager()->get('config');
             $configTinyMce = $config['tinyMCE'];
 
             // Checking if the type requested is exist on configuration
@@ -95,7 +94,7 @@ class MelisTinyMceController extends AbstractActionController
             foreach ($tmpCfg as $idx => $cfg) {
                 if ($cfg) {
                     // get the merged and additional tinyMCE configurations
-                    $tinyMCEconfig = \Zend\Stdlib\ArrayUtils::merge($tinyMCEconfig, $cfg);
+                    $tinyMCEconfig = \Laminas\Stdlib\ArrayUtils::merge($tinyMCEconfig, $cfg);
                 }
             }
 
@@ -115,7 +114,7 @@ class MelisTinyMceController extends AbstractActionController
         $tinyMCEconfig = '';
         $request = $this->getRequest();
 
-        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modulesSvc = $this->getServiceManager()->get('ModulesService');
         // Getting the Posted Values
         $postValues = get_object_vars($request->getPost());
 
@@ -124,7 +123,7 @@ class MelisTinyMceController extends AbstractActionController
         $options = !empty($postValues['options']) ? $postValues['options'] : array();
 
         // Get the list of TinyMce configuration files declared
-        $config = $this->serviceLocator->get('config');
+        $config = $this->getServiceManager()->get('config');
         $configTinyMce = $config['tinyMCE'];
 
         return $configTinyMce;
@@ -136,7 +135,7 @@ class MelisTinyMceController extends AbstractActionController
      * in order to list only the mini-templates of the website and not
      * all of them
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getTinyTemplatesAction()
     {
@@ -145,7 +144,7 @@ class MelisTinyMceController extends AbstractActionController
 
         if (!empty($siteId)) {
             /** @var \MelisEngine\Model\Tables\MelisTemplateTable $tplTable */
-            $tplTable = $this->serviceLocator->get('MelisEngineTableTemplate');
+            $tplTable = $this->getServiceManager()->get('MelisEngineTableTemplate');
             $siteData = $tplTable->getData(null, $siteId, null, null, null, null, 1);
             if (!empty($siteData)) {
                 $siteData = $siteData->toArray();
@@ -154,7 +153,7 @@ class MelisTinyMceController extends AbstractActionController
                 $publicPath = '/public/' . self::MINI_TEMPLATES_FOLDER;
 
                 // Checking if the module path is vendor
-                $composerSrv = $this->getServiceLocator()->get('ModulesService');
+                $composerSrv = $this->getServiceManager()->get('ModulesService');
                 $path = $composerSrv->getComposerModulePath($moduleName);
                 if (!empty($path)) {
                     $folderSite = $path . $publicPath;
@@ -188,7 +187,7 @@ class MelisTinyMceController extends AbstractActionController
     public function uploadImageAction()
     {
         $appConfigForm = [
-            'hydrator'  => 'Zend\Stdlib\Hydrator\ArraySerializable',
+            'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
             'elements' => [
                 [
                     'spec' => [
@@ -199,8 +198,8 @@ class MelisTinyMceController extends AbstractActionController
             ],
         ];
         // Factoring Mynews event and pass to view
-        $factory = new \Zend\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory = new \Laminas\Form\Factory();
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($appConfigForm);
 
@@ -211,7 +210,7 @@ class MelisTinyMceController extends AbstractActionController
             mkdir($target, 0777);
 
         // File Input
-        $fileInput = new \Zend\InputFilter\FileInput('file');
+        $fileInput = new \Laminas\InputFilter\FileInput('file');
         $fileInput->setRequired(true);
         $fileInput->getFilterChain()->attachByName(
             'filerenameupload',

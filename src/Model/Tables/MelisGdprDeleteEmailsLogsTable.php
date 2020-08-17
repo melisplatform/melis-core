@@ -8,20 +8,24 @@ namespace MelisCore\Model\Tables;
  *
  */
 
-use Zend\Db\Sql\Where;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\Sql\Where;
 
 class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
 {
     /**
-     * MelisGdprDeleteConfigTable constructor.
-     * @param TableGateway $tableGateway
+     * Model table
      */
-	public function __construct(TableGateway $tableGateway)
-	{
-		parent::__construct($tableGateway);
-		$this->idField = 'mgdprl_id';
-	}
+    const TABLE = 'melis_core_gdpr_delete_emails_logs';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'mgdprl_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 
     /**
      * @param string $search
@@ -32,12 +36,12 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
      * @param null $limit
      * @param null $siteId
      * @param null $moduleName
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getGdprDeleteEmailsLogsData($search = "",$searchableColumns = [], $orderBy = '', $orderDirection = "DESC" , $start = 0 ,$limit = null, $siteId = null, $moduleName = null)
     {
         // table selection query
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         // searchable columns and search string
@@ -63,7 +67,7 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
         }
 
         // set current data count for pagination
-        $this->setCurrentDataCount((int) $this->tableGateway->selectWith($select)->count());
+        $this->setCurrentDataCount((int) $this->getTableGateway()->selectWith($select)->count());
 
         // length of the data
         if (!empty($limit)) {
@@ -78,13 +82,13 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
             $select->order($orderBy . ' ' . $orderDirection);
         }
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
 
     public function getGdprDeleteEmailsLogs($siteId, $module, $date = null)
     {
         // table selection query
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         // site filter
@@ -96,18 +100,18 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
             $select->where->equalTo('mgdprl_module_name', $module);
         }
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
     /**
      * get warning/deleted email logs by siteId and module name
      * @param $siteId
      * @param $moduleName
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getWarningDeletedEmailBySiteIdModuleName($siteId, $moduleName)
     {
         // table selection query
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         // site filter
@@ -119,17 +123,17 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
             $select->where->equalTo('mgdprl_module_name', $moduleName);
         }
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
 
     /**
      * @param $date
-     * @return \Zend\Db\ResultSet\ResultSetInterface
+     * @return \Laminas\Db\ResultSet\ResultSetInterface
      */
     public function getEmailsLogsByDate($date, $siteId, $module)
     {
         // table selection query
-        $select = $this->tableGateway->getSql()->select();
+        $select = $this->getTableGateway()->getSql()->select();
         // columns to select
         $select->columns(array('*'));
         // site filter
@@ -145,7 +149,6 @@ class MelisGdprDeleteEmailsLogsTable extends MelisGenericTable
             $select->where->equalTo('mgdprl_module_name', $module);
         }
 
-        return $this->tableGateway->selectWith($select);
+        return $this->getTableGateway()->selectWith($select);
     }
-
 }

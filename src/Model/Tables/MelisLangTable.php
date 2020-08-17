@@ -9,16 +9,23 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
-
 class MelisLangTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{ 
-		parent::__construct($tableGateway);
-		$this->idField = 'lang_id';
-	}
-	
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_lang';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'lang_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
+
 	public function getLanguageInOrdered()
 	{
 	    $select = $this->tableGateway->getSql()->select();

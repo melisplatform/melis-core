@@ -9,12 +9,12 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Session\Container;
-class MelisCoreMicroServiceController extends AbstractActionController
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
+use Laminas\Db\ResultSet\HydratingResultSet;
+use Laminas\Session\Container;
+
+class MelisCoreMicroServiceController extends MelisAbstractActionController
 {
     /**
      * This handles the requests and the displays of the
@@ -33,7 +33,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
         $service = ucfirst($this->params()->fromRoute('service_alias'));
         $method = $this->params()->fromRoute('service_method');
 
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $userApiData = $this->getMicroServiceAuthTable()->getUserByApiKey($apiKey)->current();
 
         /**
@@ -42,7 +42,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
         if ($userApiData) {
 
             // set the langauge 
-            $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
+            $melisLangTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisLangTable');
             $langData = $melisLangTable->getEntryById($userApiData->usr_lang_id)->current();
             if($langData) {
                 $container = new Container('meliscore');
@@ -60,16 +60,16 @@ class MelisCoreMicroServiceController extends AbstractActionController
             if ($isUserCanExec) {
 
                 // check if the module in the route param exists
-                $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+                $moduleSvc = $this->getServiceManager()->get('ModulesService');
                 $modules = $moduleSvc->getAllModules();
 
                 /**
-                 * Checker whether the provided module in the route parameter does exists in Zend Active Modules
+                 * Checker whether the provided module in the route parameter does exists in Laminas Active Modules
                  */
                 if (in_array($module, $modules)) {
 
                     // check if the service alias exists
-                    $config = $this->getServiceLocator()->get('config');
+                    $config = $this->getServiceManager()->get('config');
                     $services = array_merge($config['service_manager']['aliases'], $config['service_manager']['factories']);
                     $servicesKeys = array_keys($services);
                     
@@ -78,13 +78,13 @@ class MelisCoreMicroServiceController extends AbstractActionController
                      */
                     if (in_array($service, $servicesKeys)) {
 
-                        $tool = $this->getServiceLocator()->get('MelisCoreTool');
+                        $tool = $this->getServiceManager()->get('MelisCoreTool');
                         $post = $tool->sanitizeRecursive($this->getRequest()->getPost());
 
                         $servicePath = "\\$module\\Service\\$service";
                         $methodExists = method_exists($servicePath, $method);
                         //echo func_num_args($servicePath."\\" . $method);
-                        $coreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+                        $coreConfig = $this->getServiceManager()->get('MelisCoreConfig');
                         $form = $coreConfig->getItem('microservice/' . $module . '/' . $service . '/' . $method);
                        
 
@@ -112,7 +112,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                  */
                                 if (isset($post[0]) && isset($post[0]['post'])) {
 
-                                    $post = $post->bottom()['post'];
+                                    $post = $post[0]['post'];
 
                                     $form = $this->getForm($form);
                                     $form->setData($post);
@@ -120,7 +120,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                     if ($form->isValid()) {
 
                                         $tmpInstance = new $servicePath();
-                                        $tmpInstance->setServiceLocator($this->getServiceLocator());
+                                        $tmpInstance->setServiceManager($this->getServiceManager());
 
                                         $setEventManagerMethodExists = (bool) method_exists($servicePath, 'setEventManager');
 
@@ -233,7 +233,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
                                     else {
 
                                         $tmpInstance = new $servicePath();
-                                        $tmpInstance->setServiceLocator($this->getServiceLocator());
+                                        $tmpInstance->setgetServiceManager($this->getServiceManager());
                                         $reflectionMethod = new \ReflectionMethod($servicePath, $method);
 
                                          // Check data if it's an Object
@@ -325,7 +325,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
      */
     private function getMicroServiceAuthTable()
     {
-        $table = $this->getServiceLocator()->get('MelisMicroServiceAuthTable');
+        $table = $this->getServiceManager()->get('MelisMicroServiceAuthTable');
 
         return $table;
     }
@@ -333,12 +333,12 @@ class MelisCoreMicroServiceController extends AbstractActionController
     /**
      * Create a form from the configuration
      * @param $formConfig
-     * @return \Zend\Form\ElementInterface
+     * @return \Laminas\Form\ElementInterface
      */
     private function getForm($formConfig)
     {
-        $factory = new \Zend\Form\Factory();
-        $formElements = $this->serviceLocator->get('FormElementManager');
+        $factory = new \Laminas\Form\Factory();
+        $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
         $form = $factory->createForm($formConfig);
 
@@ -352,7 +352,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
      */
     private function tool()
     {
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey('meliscore', 'meliscore_tool_user');
 
         return $melisTool;
@@ -372,7 +372,7 @@ class MelisCoreMicroServiceController extends AbstractActionController
     public function renderToolUserViewMicroServiceModalAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -535,13 +535,13 @@ class MelisCoreMicroServiceController extends AbstractActionController
     {
 
         $view         = new ViewModel();
-        $translator   = $this->getServiceLocator()->get('translator');
+        $translator   = $this->getServiceManager()->get('translator');
         $apiKey       = trim($this->params()->fromRoute('api_key', ''));
         $userExists   = false;
         $microservice = array();
         $userApiData  = $this->getMicroServiceAuthTable()->getUserByApiKey($apiKey)->current(); 
         $apiStatus    = '';
-        $toolTranslator = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $toolTranslator = $this->getServiceManager()->get('MelisCoreTranslation');
         
 
         
@@ -551,11 +551,11 @@ class MelisCoreMicroServiceController extends AbstractActionController
             $apiStatus = $userApiData->msoa_status;
             // to validate the API key if it's Active or Inactvie
             if($apiStatus){
-                $config       = $this->getServiceLocator()->get('MelisCoreConfig');
+                $config       = $this->getServiceManager()->get('MelisCoreConfig');
                 $microservice = $config->getItem('microservice');
              
                 // set the langauge 
-                $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
+                $melisLangTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisLangTable');
                 $langData = $melisLangTable->getEntryById($userApiData->usr_lang_id)->current();
                 if($langData) {
                     $container = new Container('meliscore');

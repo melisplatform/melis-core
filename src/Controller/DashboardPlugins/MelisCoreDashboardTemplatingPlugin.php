@@ -9,36 +9,28 @@
 
 namespace MelisCore\Controller\DashboardPlugins;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Model\ViewModel;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
-use Zend\Stdlib\Parameters;
-use Zend\Session\Container;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Model\ViewModel;
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\Stdlib\Parameters;
+use Laminas\Session\Container;
+use Laminas\Stdlib\ArrayUtils;
 
 /**
  *  Class that handle the Dashboard plugin 
  */
-abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implements ServiceLocatorAwareInterface
+abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin
 {
     protected $pluginName;
-    protected $pluginModule   = '';
-    
-    protected $pluginConfig = array();
-    
-    protected $updatesPluginConfig = array();
-    
+    protected $pluginModule = '';
+    protected $pluginConfig = [];
+    protected $updatesPluginConfig = [];
     protected $pluginXmlDbValue = '';
-    
-    protected $serviceLocator;
     protected $eventManager;
-    
     protected $locale;
-    
-    
+    protected $serviceManager;
+
     public function __construct()
     {
         $className = explode('\\', get_class($this));
@@ -50,17 +42,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $container = new Container('meliscore');
         $this->locale = $container['melis-lang-locale'];
     }
-    
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) 
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-    
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator->getServiceLocator();
-    }
-    
+
     public function setEventManager(EventManagerInterface $eventManager)
     {
         $this->eventManager = $eventManager;
@@ -70,6 +52,11 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     {
         return $this->eventManager;
     }
+
+    public function getServiceManager()
+    {
+        return $this->getController()->getEvent()->getApplication()->getServiceManager();
+    }
     
     public function loadDbXmlToPluginConfig()
     {
@@ -78,13 +65,13 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
     
     public function loadGetDataPluginConfig()
     {
-        $request = $this->getServiceLocator()->get('request');
+        $request = $this->getServiceManager()->get('request');
         return $request->getQuery()->toArray();
     }
     
     public function loadPostDataPluginConfig()
     {
-        $request = $this->getServiceLocator()->get('request');
+        $request = $this->getServiceManager()->get('request');
         return $this->decodeStringData($request->getPost()->toArray());
     }
     
@@ -117,13 +104,13 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      * @param array $pluginConfig - plugin array that applies to a plugin 
      * @param string $generatePluginId - option to generate plugin id
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function render($pluginConfig = array(), $generatePluginId = false)
     {
         $this->updatesPluginConfig = $pluginConfig;
 
-        $melisCoreGeneralSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+        $melisCoreGeneralSrv = $this->getServiceManager()->get('MelisGeneralService');
         $this->updatesPluginConfig = $melisCoreGeneralSrv->sendEvent($this->pluginName . '_melisdashboard_render_start', $this->updatesPluginConfig);
 
         $this->getPluginConfig($generatePluginId);
@@ -132,7 +119,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         if (!empty($this->pluginConfig['conf']) && is_array($this->pluginConfig['conf']))
         {
             $appconfigpath = $this->pluginConfig['conf']['path'];
-            $request = $this->getServiceLocator()->get('request');
+            $request = $this->getServiceManager()->get('request');
 
             if ($request->isXmlHttpRequest())
             {
@@ -168,7 +155,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      */
     public function getPluginConfig($generatePluginId = false)
     {
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $pluginConfig = $config->getItem("/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section/interface/$this->pluginName");
         $this->pluginConfig = ArrayUtils::merge($pluginConfig, $this->updatesPluginConfig);
 
@@ -195,7 +182,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         
         $this->pluginConfig = $this->translateConfig($this->pluginConfig);
 
-        $melisCoreGeneralSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+        $melisCoreGeneralSrv = $this->getServiceManager()->get('MelisGeneralService');
         $this->pluginConfig = $melisCoreGeneralSrv->sendEvent($this->pluginName . '_melisdashboard_getpluginconfig_end', $this->pluginConfig);
     }
     
@@ -205,7 +192,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      * 
      * @param unknown $modelVars - the view generate from interface
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function sendViewResult($modelVars)
     {
@@ -231,7 +218,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      * 
      * @param ViewModel $pluginView - plugin view
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function setPluginContainer($pluginView)
     {
@@ -245,7 +232,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
             $plugin->deleteCallBack = $this->pluginConfig['datas']['deleteCallback'];
         }
 
-        $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+        $viewRender = $this->getServiceManager()->get('ViewRenderer');
 
         // Rendering sub plugin interface
         if (!empty($pluginView->getChildren())) {
@@ -275,7 +262,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         $this->pluginXmlDbValue = '';
         
         // Retreiving the current user in-order to get the User dashboard
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $userAuthDatas =  $melisCoreAuth->getStorage()->read();
         $userId = (int) $userAuthDatas->usr_id;
         // Dashboard Id
@@ -287,7 +274,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
         if (!empty($dashboardId))
         {
             // Retreiving User dashboard from database
-            $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
+            $dashboardPluginsTbl = $this->getServiceManager()->get('MelisCoreDashboardsTable');
             $plugins = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->toArray();
 
             foreach ($plugins As $key => $val)
@@ -383,7 +370,7 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin  implem
      */
     private function translateConfig($config)
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         
         $final = array();
         foreach($config as $key => $value)

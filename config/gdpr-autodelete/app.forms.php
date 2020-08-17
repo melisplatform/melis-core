@@ -14,7 +14,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ),
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -42,7 +42,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => array(
                                                 'messages' => array(
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_melis_core_gdpr_autodelete_choose_module',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melis_core_gdpr_autodelete_choose_module',
                                                 ),
                                             ),
                                         ],
@@ -59,7 +59,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ),
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -154,7 +154,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ],
@@ -162,7 +162,7 @@ return [
                                             'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_gdpr_auto_delete_not_int',
+                                                    \Laminas\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_gdpr_auto_delete_not_int',
                                                 ]
                                             ]
                                         ]
@@ -183,7 +183,7 @@ return [
                                             'name' => 'IsInt',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_gdpr_auto_delete_not_int',
+                                                    \Laminas\I18n\Validator\IsInt::NOT_INT => 'tr_meliscore_gdpr_auto_delete_not_int',
                                                 ]
                                             ]
                                         ]
@@ -208,7 +208,7 @@ return [
                                 'action' => '',
                                 'enctype' => 'multipart/form-data'
                             ),
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -336,7 +336,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ],
@@ -354,7 +354,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9])*$/',
-                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
+                                                'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -373,7 +373,7 @@ return [
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ],
@@ -391,7 +391,7 @@ return [
                                             'name' => 'regex', false,
                                             'options' => [
                                                 'pattern' => '/^[a-zA-Z0-9]+([._@]?[a-zA-Z0-9])*$/',
-                                                'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
+                                                'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_melis_core_gdpr_autodelete_invalid_email'],
                                                 'encoding' => 'UTF-8',
                                             ],
                                         ],
@@ -409,7 +409,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ]
@@ -427,7 +427,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ]
@@ -448,7 +448,7 @@ return [
                                 'action' => '',
                                 'class' => 'melisgdprautodelete_add_edit_email_setup_form'
                             ),
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -520,7 +520,7 @@ return [
                                 'action' => '',
                                 'class' => 'melisgdprautodelete_add_edit_alert_email_delete'
                             ],
-                            'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -588,7 +588,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ]
@@ -602,7 +602,7 @@ return [
                                             'name' => 'NotEmpty',
                                             'options' => [
                                                 'messages' => [
-                                                    \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty',
                                                 ]
                                             ]
                                         ]

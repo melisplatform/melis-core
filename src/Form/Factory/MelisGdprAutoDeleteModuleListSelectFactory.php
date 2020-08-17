@@ -9,17 +9,16 @@
 
 namespace MelisCore\Form\Factory;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 
 class MelisGdprAutoDeleteModuleListSelectFactory extends MelisSelectFactory
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceManager $serviceManager
      * @return array
      */
-    protected function loadValueOptions(ServiceLocatorInterface $serviceLocator)
+    protected function loadValueOptions(ServiceManager $serviceManager)
     {
-        return $serviceLocator->getServiceLocator()->get('MelisCoreGdprAutoDeleteToolService')->getAutoDeleteModulesList();
+        return $serviceManager->get('MelisCoreGdprAutoDeleteToolService')->getAutoDeleteModulesList();
     }
-
 }

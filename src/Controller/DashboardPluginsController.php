@@ -10,20 +10,19 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreDashboardPluginsRightsService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 /**
  * This class handles the request from AJAX call in 
  * generating plugin and saving Dashboard plugins
  */
-class DashboardPluginsController extends AbstractActionController
+class DashboardPluginsController extends MelisAbstractActionController
 {
     /**
      * Render Dashboard Menu
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function dashboardMenuAction()
     {
@@ -31,10 +30,10 @@ class DashboardPluginsController extends AbstractActionController
         
         $plugins = [];
         /** @var \MelisCore\Service\MelisCoreConfigService $config */
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
 
         /** @var \MelisCore\Service\MelisCoreDashboardPluginsRightsService $dashboardPluginsService */
-        $dashboardPluginsService = $this->getServiceLocator()->get('MelisCoreDashboardPluginsService');
+        $dashboardPluginsService = $this->getServiceManager()->get('MelisCoreDashboardPluginsService');
 
         $dashboardPlugins = $config->getItem('/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section');
         if (isset($dashboardPlugins['interface']) && count($dashboardPlugins['interface'])) {
@@ -75,7 +74,7 @@ class DashboardPluginsController extends AbstractActionController
             }
         }
         // melis plugin service
-        $pluginSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
+        $pluginSvc = $this->getServiceManager()->get('MelisCorePluginsService');
         // check for new  or manually installed plugins and saved in db
         $pluginSvc->checkDashboardPlugins();
         // put section of dashboard plugins
@@ -99,20 +98,20 @@ class DashboardPluginsController extends AbstractActionController
     /**
      * This render the Dashboard plugins Drag and Drop Zone
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderDashboardPluginsAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         /** @var \MelisCore\Service\MelisCoreDashboardPluginsRightsService $dashboardPluginsService */
-        $dashboardPluginsService = $this->getServiceLocator()->get('MelisCoreDashboardPluginsService');
+        $dashboardPluginsService = $this->getServiceManager()->get('MelisCoreDashboardPluginsService');
         $hasPlugins = $dashboardPluginsService->hasPlugins();
 
         // Dashboard ID
         $dashboardId = $this->params()->fromQuery('dashboardId', 'id_meliscore_toolstree_section_dashboard');
 
-        $moduleSvc = $this->getServiceLocator()->get('MelisAssetManagerModulesService');
+        $moduleSvc = $this->getServiceManager()->get('MelisAssetManagerModulesService');
         $activeMods = implode("-", $moduleSvc->getActiveModules());
 
         $view = new ViewModel();
@@ -128,7 +127,7 @@ class DashboardPluginsController extends AbstractActionController
      * This method used to generate Dashboard plugin 
      * requested from a forward() request
      * 
-     * @return \Zend\View\Model\ViewModel;
+     * @return \Laminas\View\Model\ViewModel;
      */
     public function generateDahsboardPluginAction()
     {
@@ -137,7 +136,7 @@ class DashboardPluginsController extends AbstractActionController
         
         try 
         {
-            $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
+            $pluginManager = $this->getServiceManager()->get('ControllerPluginManager');
             $tmp = $pluginManager->get($plugin);
             return $tmp->$function(); 
         }
@@ -150,7 +149,7 @@ class DashboardPluginsController extends AbstractActionController
     /**
      * This method handles the AJAX request to generate plugin
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getPluginAction()
     {
@@ -170,8 +169,8 @@ class DashboardPluginsController extends AbstractActionController
             }
         }
 
-        $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
-        $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+        $pluginManager = $this->getServiceManager()->get('ControllerPluginManager');
+        $viewRender = $this->getServiceManager()->get('ViewRenderer');
 
         $module = $pluginConfigPost['module'] ?? (!empty($pluginConfigPost['forward']['module'])) ? $pluginConfigPost['forward']['module'] : null;
         $pluginName = $pluginConfigPost['plugin'] ?? (!empty($pluginConfigPost['forward']['plugin'])) ? $pluginConfigPost['forward']['plugin'] : null;
@@ -184,7 +183,7 @@ class DashboardPluginsController extends AbstractActionController
         $jsCallBacks = array();
         $datasCallback = array();
 
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
 
         $pluginConfig = $config->getItem("/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section/interface/$pluginName");
 
@@ -210,7 +209,7 @@ class DashboardPluginsController extends AbstractActionController
     /**
      * This method manage saving Dashboard plugins
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function saveDashboardPluginsAction()
     {
@@ -222,7 +221,7 @@ class DashboardPluginsController extends AbstractActionController
             /**
              * Calling MelisCoreDashboardDragDropZonePlugin to save Dashboard plugins
              */
-            $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
+            $pluginManager = $this->getServiceManager()->get('ControllerPluginManager');
             $dragDropPlugin = $pluginManager->get('MelisCoreDashboardDragDropZonePlugin');
             $success = $dragDropPlugin->savePlugins(get_object_vars($post));
             
@@ -265,9 +264,9 @@ class DashboardPluginsController extends AbstractActionController
     }
     private function organizedPluginsBySection($plugins)
     {
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
-        $configSvc = $this->getServiceLocator()->get('MelisCoreConfig');
-        $melisPuginsSvc = $this->getServiceLocator()->get('MelisCorePluginsService');
+        $moduleSvc = $this->getServiceManager()->get('ModulesService');
+        $configSvc = $this->getServiceManager()->get('MelisCoreConfig');
+        $melisPuginsSvc = $this->getServiceManager()->get('MelisCorePluginsService');
         $marketPlaceModuleSection = $melisPuginsSvc->getPackagistCategories();
         /*
          * In case there is no internet or cant connect to the markeplace domain

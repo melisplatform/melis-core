@@ -13,11 +13,11 @@ use MelisCore\Model\Tables\MelisGdprDeleteConfigTable;
 use MelisCore\Model\Tables\MelisGdprDeleteEmailsLogsTable;
 use MelisCore\Service\MelisCoreGdprAutoDeleteToolService;
 use MelisCore\Service\MelisCoreToolService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use MelisCore\Controller\MelisAbstractActionController;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
-class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
+class MelisCoreGdprAutoDeleteTabsController extends MelisAbstractActionController
 {
     /**
      * @var
@@ -73,7 +73,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
     private function getGdprAutoDeleteToolService()
     {
         /** @var MelisCoreGdprAutoDeleteToolService $gdprAutoDeleteSvc */
-        $gdprAutoDeleteSvc = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteToolService');
+        $gdprAutoDeleteSvc = $this->getServiceManager()->get('MelisCoreGdprAutoDeleteToolService');
 
         return $gdprAutoDeleteSvc;
     }
@@ -102,7 +102,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $emailSetupData = $this->getGdprAutoDeleteToolService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
         if (!empty($this->getModuleName()) || isset($emailSetupData['mgdprc_module_name'])) {
             // get tags
-            $tags = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getModuleTags();
+            $tags = $this->getServiceManager()->get('MelisCoreGdprAutoDeleteService')->getModuleTags();
             $moduleName = $emailSetupData['mgdprc_module_name'] ?? $this->getModuleName();
             if (! empty($moduleName)) {
                 if (isset($tags[$moduleName]))
@@ -123,7 +123,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
             $form->setData($emailSetupData);
         }
         // set email from based from the smtp
-        $smtpConfigData = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getSmtpConfigData();
+        $smtpConfigData = $this->getServiceManager()->get('MelisCoreGdprAutoDeleteService')->getSmtpConfigData();
         if (! empty($smtpConfigData)){
             $form->get('mgdprc_email_conf_from_email')->setValue($smtpConfigData->mgdpr_smtp_username);
             $form->get('mgdprc_email_conf_from_email')->setAttribute('readonly','readonly');
@@ -143,7 +143,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
     private function getTool()
     {
         /** @var MelisCoreToolService $toolSvc */
-        $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
+        $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
 
         return $toolSvc;
     }
@@ -166,7 +166,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
         $emailSetupData = $this->getGdprAutoDeleteToolService()->getGdprAutoDeleteConfigDataById($this->getConfigId());
         // translations data
         if (!empty($this->getModuleName()) || isset($emailSetupData['mgdprc_module_name'])) {
-            $tags = $this->getServiceLocator()->get('MelisCoreGdprAutoDeleteService')->getModuleTags();
+            $tags = $this->getServiceManager()->get('MelisCoreGdprAutoDeleteService')->getModuleTags();
             $moduleName = $emailSetupData['mgdprc_module_name'] ?? $this->getModuleName();
             if (!empty($moduleName)) {
                 if (isset($tags[$moduleName]))
@@ -295,7 +295,7 @@ class MelisCoreGdprAutoDeleteTabsController extends AbstractActionController
      */
     private function getGdprDeleteEmailsLogsTable()
     {
-       return $this->getServiceLocator()->get('MelisGdprDeleteEmailsLogsTable');
+       return $this->getServiceManager()->get('MelisGdprDeleteEmailsLogsTable');
     }
 
     /**
