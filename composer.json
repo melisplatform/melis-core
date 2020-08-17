@@ -31,7 +31,7 @@
 		"melis-module-category": "core"
 	},
 	"require": {
-		"php": "^7.0",
+		"php": "^7.1.3|^7.2|^7.3",
 		"ext-intl": "*",
 		"ext-json": "*",
 		"ext-openssl": "*",
