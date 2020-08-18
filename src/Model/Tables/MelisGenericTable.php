@@ -305,7 +305,7 @@ class MelisGenericTable extends MelisServiceManager
 //        dd($res->count());
 
 		$getCount = $this->getTableGateway()->selectWith($select);
-		$this->setCurrentDataCount((int) $getCount->getFieldCount());
+		$this->setCurrentDataCount((int) $getCount->count());
 
 
 		// this is used in paginations
