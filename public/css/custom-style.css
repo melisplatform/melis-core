@@ -1032,11 +1032,12 @@ a[data-toggle="modal"]:focus {
 	width: 100%;
 }
 /* tooltips */
-.tooltip.fade.bs-tooltip-left.show {
+.modal-open .tooltip.fade.bs-tooltip-left,
+.modal-open .tooltip.fade.bs-tooltip-left.show {
 	left: 0 !important;
 }
-.tooltip.fade.bs-tooltip-auto[x-placement^="left"] .arrow,
-.tooltip.fade.bs-tooltip-left .arrow {
+.modal-open .tooltip.fade.bs-tooltip-auto[x-placement^="left"] .arrow,
+.modal-open .tooltip.fade.bs-tooltip-left .arrow {
 	right: 0 !important;
 }
 /* Responsive media queries */
