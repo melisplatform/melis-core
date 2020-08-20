@@ -200,6 +200,22 @@ var melisHelper = (function(){
         }
     }
 
+    // checks if activeTabId is a cms page
+    function checkIfCmsPage() {
+        var $melisCms           = $body.find("#"+activeTabId+".tab-pane.container-level-a"),
+            $iframeContainer    = $melisCms.find(".iframe-container"),
+            $melisTabEdition    = $iframeContainer.find(".melismcs-page-tab-edition"),
+            $melisIframe        = $melisTabEdition.find(".melis-iframe"),
+            $melisIframeHeight  = $melisIframe.contents().find("body").height(),
+            $loader             = $melisTabEdition.find("#loader"),
+            $iframeChildren     = $melisIframe.contents().find("body").children();
+
+            if ( $melisIframe.length && $iframeChildren.length ) {
+                // set .melis-iframe css height
+                $melisIframe.css("height", melisIframeHeight);
+            }
+    }
+
     // SWITCH ACTIVE TABS =============================================================================================================
     function tabSwitch( tabID ) {
         var $tabElement         = $("#melis-id-nav-bar-tabs a.tab-element[data-id='"+ tabID +"']"),

@@ -986,6 +986,60 @@ a[data-toggle="modal"]:focus {
 	margin-top: 3px;
 	margin-left: 5px;
 }
+a[data-toggle="modal"]:focus {
+	text-decoration: none;
+}
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a,
+#modal-user-management
+	.widget.widget-tabs-double
+	> .widget-head
+	ul
+	li.active
+	a {
+	height: 40px;
+}
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li,
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active {
+	height: 39px;
+}
+.no-dashboard-access p {
+	margin-bottom: 0;
+}
+.datepicker thead tr th,
+.datepicker tbody tr td {
+	cursor: default;
+}
+.commerce-dashboard-plugin-order-messages .label.label-inverse.pull-right {
+	color: #fff !important;
+}
+.commerce-dashboard-plugin-order-messages:hover .list-group-item-text,
+.commerce-dashboard-plugin-order-messages .list-group-item-text {
+	color: #686868 !important;
+}
+/* specific for melis-core, has same css but without the below css id selector on melis-commerce */
+#idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
+	padding-top: 6px;
+}
+/* 
+ * Fix for Dashboard > horizontal scrollbars problem
+ * https://mantis2.uat.melistechnology.fr/view.php?id=480
+ */
+.flotchart-holder .legend table {
+	top: 0 !important;
+}
+.flotchart-holder {
+	overflow: auto;
+	width: 100%;
+}
+/* tooltips */
+.modal-open .tooltip.fade.bs-tooltip-left,
+.modal-open .tooltip.fade.bs-tooltip-left.show {
+	left: 0 !important;
+}
+.modal-open .tooltip.fade.bs-tooltip-auto[x-placement^="left"] .arrow,
+.modal-open .tooltip.fade.bs-tooltip-left .arrow {
+	right: 0 !important;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
 	/* gdpr buttons */
@@ -1021,8 +1075,8 @@ a[data-toggle="modal"]:focus {
 		width: 274px;
 	}
 	/**
-   * tabExpander
-   */
+	 * tabExpander
+	 */
 	.navbar.main .navbar-brand {
 		width: 274px;
 		position: fixed;
@@ -1030,29 +1084,13 @@ a[data-toggle="modal"]:focus {
 		left: 0;
 		z-index: 9999;
 	}
-	/**
-   * tabExpander
-   */
-	/* .navbar.main .left-menu {
-    float: none;
-  } */
-	/**
-   * tabExpander
-   */
-	/* .navbar.main.navbar-primary .appbrand {
-    float: none !important;
-  } */
 	.navbar #melis-id-nav-bar-tabs > li > a.close:hover:before {
 		color: #e61c23;
 	}
 	/**
-   * tabExpander
-   */
-	/* #plugin-menu {
-    visibility: hidden;
-  } */
+     * tabExpander
+     */
 	.toggle-plugin-menu {
-		/* padding-left: 1.8rem; */
 		padding-left: 0;
 	}
 	#brand-logo,
@@ -1081,7 +1119,7 @@ a[data-toggle="modal"]:focus {
 	}
 
 	/* #menu sidebar */
-	#main #menu .sidebar.sidebar-inverse {
+	#menu .sidebar.sidebar-inverse {
 		border-right: 0;
 	}
 
@@ -1380,52 +1418,6 @@ a[data-toggle="modal"]:focus {
 	.flotchart-holder {
 		width: 226px;
 	}
-}
-
-a[data-toggle="modal"]:focus {
-	text-decoration: none;
-}
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li a,
-#modal-user-management
-	.widget.widget-tabs-double
-	> .widget-head
-	ul
-	li.active
-	a {
-	height: 40px;
-}
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li,
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active {
-	height: 39px;
-}
-.no-dashboard-access p {
-	margin-bottom: 0;
-}
-.datepicker thead tr th,
-.datepicker tbody tr td {
-	cursor: default;
-}
-.commerce-dashboard-plugin-order-messages .label.label-inverse.pull-right {
-	color: #fff !important;
-}
-.commerce-dashboard-plugin-order-messages:hover .list-group-item-text,
-.commerce-dashboard-plugin-order-messages .list-group-item-text {
-	color: #686868 !important;
-}
-/* specific for melis-core, has same css but without the below css id selector on melis-commerce */
-#idnewusermanagement .bootstrap-filestyle .group-span-filestyle .btn {
-	padding-top: 6px;
-}
-/* 
- * Fix for Dashboard > horizontal scrollbars problem
- * https://mantis2.uat.melistechnology.fr/view.php?id=480
- */
-.flotchart-holder .legend table {
-	top: 0 !important;
-}
-.flotchart-holder {
-	overflow: auto;
-	width: 100%;
 }
 @media (max-width: 767px) {
 	/* mobile nav-right click open second ul */

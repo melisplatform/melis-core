@@ -46,6 +46,12 @@
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
 }
+.tokenize-dropdown.dropdown .dropdown-menu .dropdown-item.active, 
+.tokenize-dropdown.dropdown .dropdown-menu .dropdown-item:active,
+.list-group-item.active {
+    background-color: <?= $primaryColor; ?> !important;
+    border-color: <?= $primaryColor; ?> !important;
+}
 .commerce-dashboard-plugin-order-messages.answered .media-body.media-body-inline span.label.label-inverse,
 .has-switch span.switch-primary,
 .label.label-primary,
@@ -90,9 +96,12 @@
     color: #fff;
 }
 .widget.widget-body-primary>.widget-body,
-.ColVis .ColVis_Button,
-#convo-content #chat-container .my-msg {
+.ColVis .ColVis_Button {
     background-color: <?= $primaryColor; ?>;
+}
+
+#convo-content #chat-container .my-msg {
+    background: <?= $primaryColor; ?>;
 }
 
 .survey .nav-pills .nav-link,

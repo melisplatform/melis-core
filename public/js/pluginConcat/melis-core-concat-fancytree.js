@@ -2132,7 +2132,7 @@
 
 				containerOffsetTop = $scrollParent.offset().top;
 				nodeY =
-					$(this.span).offset().top - containerOffsetTop + scrollTop; // relative to scroll parent
+					( $(this.span).length ) ? $(this.span).offset().top : 0 - containerOffsetTop + scrollTop; // relative to scroll parent
 				topNodeY = topNode
 					? $(topNode.span).offset().top -
 					  containerOffsetTop +
