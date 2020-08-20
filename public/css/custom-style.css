@@ -1031,6 +1031,14 @@ a[data-toggle="modal"]:focus {
 	overflow: auto;
 	width: 100%;
 }
+/* tooltips */
+.tooltip.fade.bs-tooltip-left.show {
+	left: 0 !important;
+}
+.tooltip.fade.bs-tooltip-auto[x-placement^="left"] .arrow,
+.tooltip.fade.bs-tooltip-left .arrow {
+	right: 0 !important;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
 	/* gdpr buttons */
