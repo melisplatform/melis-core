@@ -783,4 +783,7 @@ return [
     'tr_melis_core_composer_scrpts_No scripts executed' => 'Aucun script éxécuté',
     'tr_melis_core_composer_scrpts_executing' => 'Exécution des scripts de composer',
     'tr_melis_core_composer_scrpts_executed' => 'Scripts de composer éxécutés',
+    'tr_meliscore_logs_tool_modal_container' => 'Modal container',
+    'tr_meliscore_logs_tool_log_type_form' => 'Formulaire',
+    'tr_meliscore_logs_tool_export_modal_content' => 'Modal contenu de l\'export'
 ];
