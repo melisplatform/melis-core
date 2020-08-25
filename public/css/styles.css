@@ -4468,3 +4468,7 @@ input#log_date_range{
 .page-edition-multi-ko h3 {
     width:100%;
 }
+/* Fix for select 2 results not showing up */
+.select2-container.select2-container--default.select2-container--open {
+    z-index: 1050;
+}
