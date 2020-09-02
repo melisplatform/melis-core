@@ -27,7 +27,7 @@ class MelisUserRoleSelectFactory extends MelisSelectFactory
 		$valueoptions = array();
 		
 		// default option
-		$valueoptions[''] = 'tr_meliscms_form_common_Choose';
+		$valueoptions[''] = 'tr_meliscore_common_choose';
 		
 		$max = $roles->count();
 		for ($i = 0; $i < $max; $i++)
