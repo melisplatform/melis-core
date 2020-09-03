@@ -20,14 +20,13 @@ class MelisUserRoleSelectFactory extends MelisSelectFactory
     protected function loadValueOptions(ServiceManager $serviceManager)
     {
 		$userRolesTable = $serviceManager->get('MelisCoreTableUserRole');
-		$roles = $userRolesTable->fetchAll();
 		
 		$valueoptions = [];
 		
 		// default option
 		$valueoptions[''] = 'tr_meliscms_form_common_Choose';
 		
-        foreach ($roles->fetchAll() As $role)
+        foreach ($userRolesTable->fetchAll() As $role)
             $valueoptions[$role->urole_id] = $role->urole_name;
 		
 		return $valueoptions;
