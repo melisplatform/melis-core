@@ -957,6 +957,9 @@ class ToolUserController extends AbstractActionController
             }
         }
 
+        $coreSrv = $this->getServiceLocator()->get('MelisCoreGeneralService');
+        $tableData = $coreSrv->sendEvent('meliscore_get_user_end', $tableData);
+
         return new JsonModel(array(
             'draw' => (int) $draw,
             'recordsTotal' => $dataCount,
