@@ -180,7 +180,7 @@ var tabExpander = (function($, window){
 
     // CHECK tabExpander() WHEN WINDOW IS RESIZED
     $(window).on("resize", function(){
-        screenSize = jQuery(window).width();
+        //screenSize = jQuery(window).width();
         if( screenSize >= 768 ){
         	checkTE();     
         }
