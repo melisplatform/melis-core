@@ -89,16 +89,19 @@ var melisDashBoardDragnDrop = {
             self.$gs.attr("data-max-width", self.$gs.outerWidth());
 
             // adjust grid-stack height when dashboard msg element is found
-            if ( self.$dbMsg.length ) {
-                self.$gs.css({
-                    "height": "745px",
-                    "min-height": "745px"
-                });
-            } else {
-                self.$gs.css({
-                    "height": "840px",
-                    "min-height": "840px"
-                });
+            if ( self.countGsItems() === 0 ) {
+                if ( self.$dbMsg.length > 0 && self.$dbMsg.is(":visible") ) {
+                    self.$gs.css({
+                        "height": "745px",
+                        "min-height": "745px"
+                    });
+                }
+                else {
+                    self.$gs.css({
+                        "height": "872px",
+                        "min-height": "872px"
+                    });
+                }
             }
     },
     // drags widget/plugin from dashboard's plugin sidebar

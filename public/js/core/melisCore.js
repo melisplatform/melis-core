@@ -313,45 +313,86 @@ var melisCore = (function(window){
         var $melisLeftMenu      = $("#id_meliscore_leftmenu"),
             $melisContent       = $("#content"),
             $melisFooter        = $("#id_meliscore_footer"),
+            $dbPluginMenu       = $("#id_meliscore_center_dashboard_menu"),
+            dbPluginMenuWidth   = $dbPluginMenu.outerWidth(),
             sidebarOffsetLeft   = $melisLeftMenu.position().left,
             sidebarWidth        = $melisLeftMenu.outerWidth(),
             contentOffsetLeft   = $melisContent.position().left,
-            contentWidth        = $melisContent.outerWidth();
+            contentWidth        = $melisContent.outerWidth(),
+            $melisLeftMenuWidth = $melisLeftMenu.outerWidth(),
+            $gs                 = $body.find("#"+activeTabId+" .grid-stack"),
+            gsi                 = $gs.find(".grid-stack-item").length,
+            minWidth            = $gs.data("min-width"),
+            maxWidth            = $gs.data("max-width");
 
-        if ( sidebarOffsetLeft == 0 ) {
-            $melisLeftMenu.css("left", -sidebarWidth );
-            $body.addClass('sidebar-mini');
+            // shown class added
+            $melisLeftMenu.toggleClass("shown");
 
-            $melisFooter.addClass('slide-left');
-            //$melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
-        }
-        else {
-            $melisLeftMenu.css("left", "0");
-            $body.removeClass('sidebar-mini');
-            $melisFooter.removeClass('slide-left');
-            //$melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
-        }
-
-        $("#newplugin-cont").removeClass("show-menu");
-
-        // HOOK - scroll the page by 1px to trigger the scroll event that resizes the pageActions container
-        // check if activeTabId has a number. if it has then we assume its a page
-        var matches = activeTabId.match(/\d+/g);
-        
-        if (matches != null && matches !== 'undefined') {
-            $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
-        }
-
-        // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
-        setTimeout(function(){
-            var $f = $("#"+ activeTabId + " .melis-iframe");
-
-            if( $($f).length ) {
-                $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
+            /**
+             * Dashboard grid-stack
+             * Check if plugins menu is open, adjust .grid-stack with accordingly
+             */
+            if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                if ( $melisLeftMenu.hasClass("shown") ) {
+                    if ( $dbPluginMenu.hasClass("shown") ) {
+                        $gs.animate({
+                            width: minWidth
+                        }, 3);
+                    }
+                    else {
+                        $gs.animate({
+                            width: maxWidth
+                        }, 3);
+                    }
+                }
+                else {
+                    if ( $dbPluginMenu.hasClass("shown") ) {
+                        $gs.animate({
+                            width: maxWidth + 50
+                        }, 3);
+                    }
+                    else {
+                        $gs.animate({
+                            width: maxWidth + dbPluginMenuWidth + 50
+                        }, 3);
+                    }
+                }
             }
-            // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-            $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
-        }, 1000);
+
+            if ( sidebarOffsetLeft == 0 ) {
+                $melisLeftMenu.css("left", -sidebarWidth );
+                $body.addClass('sidebar-mini');
+
+                $melisFooter.addClass('slide-left');
+                //$melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
+            }
+            else {
+                $melisLeftMenu.css("left", "0");
+                $body.removeClass('sidebar-mini');
+                $melisFooter.removeClass('slide-left');
+                //$melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
+            }
+
+            $("#newplugin-cont").removeClass("show-menu");
+
+            // HOOK - scroll the page by 1px to trigger the scroll event that resizes the pageActions container
+            // check if activeTabId has a number. if it has then we assume its a page
+            var matches = activeTabId.match(/\d+/g);
+            
+            if (matches != null && matches !== 'undefined') {
+                $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
+            }
+
+            // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
+            setTimeout(function(){
+                var $f = $("#"+ activeTabId + " .melis-iframe");
+
+                if( $($f).length ) {
+                    $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
+                }
+                // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
+                $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+            }, 1000);
     }
 
     /* if ( typeof melisDashBoardDragnDrop === 'undefined' )
@@ -735,11 +776,15 @@ var melisCore = (function(window){
 
     // this function is called from render-dashboard-plugins.phtml
     function showToggleDashboardPluginMenu() {
-        var $gs             = $body.find("#" + activeTabId + " .grid-stack"),
-            gsi             = $gs.find(".grid-stack-item").length
-            minWidth        = $gs.data("min-width"),
-            maxWidth        = $gs.data("max-width");
+        var $gs                 = $body.find("#" + activeTabId + " .grid-stack"),
+            gsi                 = $gs.find(".grid-stack-item").length,
+            minWidth            = $gs.data("min-width"),
+            maxWidth            = $gs.data("max-width"),
+            $melisLeftMenu      = $("#id_meliscore_leftmenu"),
+            melisLeftMenuWidth  = $melisLeftMenu.outerWidth(),
+            pluginBoxWidth      = $pluginBox.outerWidth();
 
+            // dashboard plugin menu
             $pluginBox.toggleClass("shown");
 
             // responsive main tab menu button
@@ -754,14 +799,28 @@ var melisCore = (function(window){
             // check if plugins menu is open, adjust .grid-stack width accordingly
             if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                 if ( $pluginBox.hasClass("shown") ) {
-                    $gs.animate({
-                        width: minWidth
-                    }, 3);
-                } 
+                    if ( $melisLeftMenu.hasClass("shown") ) {
+                        $gs.animate({
+                            width: minWidth
+                        }, 3);
+                    }
+                    else {
+                        $gs.animate({
+                            width: maxWidth + 50
+                        }, 3);
+                    }
+                }
                 else {
-                    $gs.animate({
-                        width: maxWidth
-                    }, 3);
+                    if ( $melisLeftMenu.hasClass("shown") ) {
+                        $gs.animate({
+                            width: maxWidth
+                        }, 3);
+                    }
+                    else {
+                        $gs.animate({
+                            width: maxWidth + melisLeftMenuWidth
+                        }, 3);
+                    }
                 }
             }
     }
@@ -862,10 +921,10 @@ var melisCore = (function(window){
 
 
     // WINDOW RESIZE FUNCTIONALITIES ========================================================================================================
-    $(window).resize(function() {
+    $(window).on("resize", function() {
         var $tabMenu = $("#tab-menu");
 
-            screenSize = jQuery(window).width();
+            //screenSize = jQuery(window).width();
 
             // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
             $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
