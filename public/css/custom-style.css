@@ -1044,6 +1044,12 @@ a[data-toggle="modal"]:focus {
 .modal-open .tooltip.fade.bs-tooltip-left .arrow {
 	right: 0 !important;
 }
+/* .grid-stack {
+	border: 1px dashed red;
+} */
+.overflowHidden {
+	overflow-x: hidden;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
 	/* gdpr buttons */
