@@ -163,10 +163,10 @@ var melisCore = (function(window){
         melisCoreTool.pending("#btnResetRights");
 
         melisCoreTool.confirm(
-            translations.tr_meliscmsnews_common_label_yes,
-            translations.tr_meliscmsnews_common_label_no,
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
             translations.tr_meliscore_tool_user_reset_rights,
-            translations.tr_meliscmsnews_common_label_reset_rights_msg,
+            translations.tr_meliscore_common_label_reset_rights_msg,
             function () {
                 resetUserRights();
             });
@@ -178,10 +178,10 @@ var melisCore = (function(window){
         melisCoreTool.pending("#btnResetRightsNew");
 
         melisCoreTool.confirm(
-            translations.tr_meliscmsnews_common_label_yes,
-            translations.tr_meliscmsnews_common_label_no,
+            translations.tr_meliscore_common_yes,
+            translations.tr_meliscore_common_no,
             translations.tr_meliscore_tool_user_reset_rights,
-            translations.tr_meliscmsnews_common_label_reset_rights_msg,
+            translations.tr_meliscore_common_label_reset_rights_msg,
             function () {
                 var tree = $("#new-rights-fancytree").fancytree("getTree");
                 tree.findAll(function(node){
@@ -270,6 +270,7 @@ var melisCore = (function(window){
 
     // FIRST RENDER - runs when the page is first loaded
     function firstRender() {
+        $("#id_meliscore_leftmenu").addClass("shown");
         $(".nav-tabs li:first-child").addClass("active")
         $(".tab-content > div:first-child").addClass("active");
 
@@ -310,29 +311,31 @@ var melisCore = (function(window){
     // SIDEBAR MENU CLICK (toggle), .toggle-sidebar
     function sidebarMenuClick() {
         // for the sidebar functionalities
-        var $melisLeftMenu      = $("#id_meliscore_leftmenu"),
-            $melisContent       = $("#content"),
-            $melisFooter        = $("#id_meliscore_footer"),
-            $dbPluginMenu       = $("#id_meliscore_center_dashboard_menu"),
-            dbPluginMenuWidth   = $dbPluginMenu.outerWidth(),
-            sidebarOffsetLeft   = $melisLeftMenu.position().left,
-            sidebarWidth        = $melisLeftMenu.outerWidth(),
-            contentOffsetLeft   = $melisContent.position().left,
-            contentWidth        = $melisContent.outerWidth(),
-            $melisLeftMenuWidth = $melisLeftMenu.outerWidth(),
-            $gs                 = $body.find("#"+activeTabId+" .grid-stack"),
-            gsi                 = $gs.find(".grid-stack-item").length,
-            minWidth            = $gs.data("min-width"),
-            maxWidth            = $gs.data("max-width");
+        var $melisLeftMenu 		= $("#id_meliscore_leftmenu"),
+            $melisContent 		= $("#content"),
+            $melisFooter 		= $("#id_meliscore_footer"),
+            $dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
+            sidebarOffsetLeft 	= $melisLeftMenu.position().left,
+            sidebarWidth 		= $melisLeftMenu.outerWidth(),
+            contentOffsetLeft 	= $melisContent.position().left,
+            contentWidth 		= $melisContent.outerWidth(),
+            melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
+            dbPluginMenuWidth 	= $dbPluginMenu.outerWidth(),
+            $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
+            gsi 				= $gs.find(".grid-stack-item").length,
+            minWidth 			= $gs.data("min-width"),
+            maxWidth 			= $gs.data("max-width");
+
+            // prevent from having a scrollbar below
+            $body.toggleClass("overflowHidden");
 
             /**
-             * Dashboard grid-stack
-             * Check if plugins menu is open, adjust .grid-stack with accordingly
+             * Dashboard .grid-stack. Check if plugins menu is open, adjust .gris-stack width accordingly
              */
-            if ( melisCore.screenSize >= 768 ) {
-                // shown class added
-                $melisLeftMenu.toggleClass("shown");
+            // shown class added
+            $melisLeftMenu.toggleClass("shown");
 
+            if ( melisCore.screenSize >= 768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $melisLeftMenu.hasClass("shown") ) {
                         if ( $dbPluginMenu.hasClass("shown") ) {
@@ -359,9 +362,6 @@ var melisCore = (function(window){
                         }
                     }
                 }
-            }
-            else {
-                $melisLeftMenu.removeClass("shown")
             }
 
             if ( sidebarOffsetLeft == 0 ) {
@@ -781,27 +781,28 @@ var melisCore = (function(window){
 
     // this function is called from render-dashboard-plugins.phtml
     function showToggleDashboardPluginMenu() {
-        var $gs                 = $body.find("#" + activeTabId + " .grid-stack"),
-            gsi                 = $gs.find(".grid-stack-item").length,
-            minWidth            = $gs.data("min-width"),
-            maxWidth            = $gs.data("max-width"),
-            $melisLeftMenu      = $("#id_meliscore_leftmenu"),
-            melisLeftMenuWidth  = $melisLeftMenu.outerWidth(),
-            pluginBoxWidth      = $pluginBox.outerWidth();
+        var $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
+            gsi 				= $gs.find(".grid-stack-item").length,
+            minWidth			= $gs.data("min-width"),
+            maxWidth			= $gs.data("max-width"),
+            $melisLeftMenu  	= $("#id_meliscore_leftmenu"),
+            melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
+            pluginBoxWidth 		= $pluginBox.outerWidth();
 
-            // dashboard plugin menu
+            // shown class toggled
             $pluginBox.toggleClass("shown");
 
             // responsive main tab menu button
             if ( $tabArrowTop.length && screenSize <= 767 ) {
                 if ( $pluginBox.hasClass("shown") ) {
                     $tabArrowTop.addClass("hide-arrow");
-                } else {
+                }
+                else {
                     $tabArrowTop.removeClass("hide-arrow");
                 }
             }
 
-            // check if plugins menu is open, adjust .grid-stack width accordingly
+            // check if plugins menu is oepn, adjust .grid-stack width accordingly
             if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                 if ( $pluginBox.hasClass("shown") ) {
                     if ( $melisLeftMenu.hasClass("shown") ) {
@@ -926,10 +927,10 @@ var melisCore = (function(window){
 
 
     // WINDOW RESIZE FUNCTIONALITIES ========================================================================================================
-    $(window).resize(function() {
+    $(window).on("resize", function() {
         var $tabMenu = $("#tab-menu");
 
-            screenSize = jQuery(window).width();
+            //screenSize = jQuery(window).width();
 
             // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
             $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
