@@ -270,13 +270,24 @@ var melisCore = (function(window){
 
     // FIRST RENDER - runs when the page is first loaded
     function firstRender() {
-        $("#id_meliscore_leftmenu").addClass("shown");
-        $(".nav-tabs li:first-child").addClass("active")
-        $(".tab-content > div:first-child").addClass("active");
+        var $melisLeftMenu   = $("#id_meliscore_leftmenu"),
+            $leftMenuShown   = $melisLeftMenu.find(".shown");
 
-        if ( screenSize <= 767 && $tabArrowTop.length > 0 && $pluginBox.hasClass("shown") ) {
-            $tabArrowTop.addClass("hide-arrow");
-        }
+            $(".nav-tabs li:first-child").addClass("active")
+            $(".tab-content > div:first-child").addClass("active");
+
+            if ( screenSize >= 768 ) {
+                if ( $leftMenuShown.length > 0 ) {
+                    $melisLeftMenu.removeClass("shown");
+                }
+                else {
+                    $melisLeftMenu.addClass("shown");
+                }
+            }
+
+            if ( screenSize <= 767 && $tabArrowTop.length > 0 && $pluginBox.hasClass("shown") ) {
+                $tabArrowTop.addClass("hide-arrow");
+            }
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
@@ -311,27 +322,26 @@ var melisCore = (function(window){
     // SIDEBAR MENU CLICK (toggle), .toggle-sidebar
     function sidebarMenuClick() {
         // for the sidebar functionalities
-        var $melisLeftMenu      = $("#id_meliscore_leftmenu"),
-            $melisContent       = $("#content"),
-            $melisFooter        = $("#id_meliscore_footer"),
-            $dbPluginMenu       = $("#id_meliscore_center_dashboard_menu"),
-            dbPluginMenuWidth   = $dbPluginMenu.outerWidth(),
-            sidebarOffsetLeft   = $melisLeftMenu.position().left,
-            sidebarWidth        = $melisLeftMenu.outerWidth(),
-            contentOffsetLeft   = $melisContent.position().left,
-            contentWidth        = $melisContent.outerWidth(),
-            $melisLeftMenuWidth = $melisLeftMenu.outerWidth(),
-            $gs                 = $body.find("#"+activeTabId+" .grid-stack"),
-            gsi                 = $gs.find(".grid-stack-item").length,
-            minWidth            = $gs.data("min-width"),
-            maxWidth            = $gs.data("max-width");
+        var $melisLeftMenu 		= $("#id_meliscore_leftmenu"),
+            $melisContent 		= $("#content"),
+            $melisFooter 		= $("#id_meliscore_footer"),
+            $dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
+            sidebarOffsetLeft 	= $melisLeftMenu.position().left,
+            sidebarWidth 		= $melisLeftMenu.outerWidth(),
+            contentOffsetLeft 	= $melisContent.position().left,
+            contentWidth 		= $melisContent.outerWidth(),
+            melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
+            dbPluginMenuWidth 	= $dbPluginMenu.outerWidth(),
+            $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
+            gsi 				= $gs.find(".grid-stack-item").length,
+            minWidth 			= $gs.data("min-width"),
+            maxWidth 			= $gs.data("max-width");
 
             // prevent from having a scrollbar below
             $body.toggleClass("overflowHidden");
 
             /**
-             * Dashboard grid-stack
-             * Check if plugins menu is open, adjust .grid-stack with accordingly
+             * Dashboard .grid-stack. Check if plugins menu is open, adjust .gris-stack width accordingly
              */
             // shown class added
             $melisLeftMenu.toggleClass("shown");
@@ -357,9 +367,16 @@ var melisCore = (function(window){
                             }, 3);
                         }
                         else {
-                            $gs.animate({
-                                width: maxWidth + dbPluginMenuWidth + 50
-                            }, 3);
+                            if ( melisCore.screenSize === 768 ) {
+                                $gs.animate({
+                                    width: maxWidth
+                                }, 3);
+                            }
+                            else {
+                                $gs.animate({
+                                    width: maxWidth + dbPluginMenuWidth + 50
+                                }, 3);
+                            }
                         }
                     }
                 }
@@ -370,13 +387,11 @@ var melisCore = (function(window){
                 $body.addClass('sidebar-mini');
 
                 $melisFooter.addClass('slide-left');
-                //$melisContent.closest(".col").removeClass("col-md-7 col-lg-10").addClass("col-12");
             }
             else {
                 $melisLeftMenu.css("left", "0");
                 $body.removeClass('sidebar-mini');
                 $melisFooter.removeClass('slide-left');
-                //$melisContent.closest(".col").removeClass("col-12").addClass("col-md-7 col-lg-10");
             }
 
             $("#newplugin-cont").removeClass("show-menu");
@@ -804,28 +819,58 @@ var melisCore = (function(window){
             }
 
             // check if plugins menu is oepn, adjust .grid-stack width accordingly
-            if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
-                if ( $pluginBox.hasClass("shown") ) {
-                    if ( $melisLeftMenu.hasClass("shown") ) {
+            if ( melisCore.screenSize >=768 ) {
+                if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                    if ( $pluginBox.hasClass("shown") ) {
+                        if ( $melisLeftMenu.hasClass("shown") ) {
+                            $gs.animate({
+                                width: minWidth
+                            }, 3);
+                        }
+                        else {
+                            if ( melisCore.screenSize === 768 ) {
+                                $gs.animate({
+                                    width: maxWidth - pluginBoxWidth
+                                }, 3);    
+                            }
+                            else {
+                                $gs.animate({
+                                    width: maxWidth + 50
+                                }, 3);
+                            }
+                        }
+                    }
+                    else {
+                        if ( $melisLeftMenu.hasClass("shown") ) {
+                            $gs.animate({
+                                width: maxWidth
+                            }, 3);
+                        }
+                        else {
+                            if ( melisCore.screenSize === 768 ) {
+                                $gs.animate({
+                                    width: maxWidth
+                                }, 3);
+                            }
+                            else {
+                                $gs.animate({
+                                    width: maxWidth + melisLeftMenuWidth
+                                }, 3);
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                    if ( $pluginBox.hasClass("shown") ) {
                         $gs.animate({
                             width: minWidth
                         }, 3);
-                    }
+                    } 
                     else {
-                        $gs.animate({
-                            width: maxWidth + 50
-                        }, 3);
-                    }
-                }
-                else {
-                    if ( $melisLeftMenu.hasClass("shown") ) {
                         $gs.animate({
                             width: maxWidth
-                        }, 3);
-                    }
-                    else {
-                        $gs.animate({
-                            width: maxWidth + melisLeftMenuWidth
                         }, 3);
                     }
                 }
