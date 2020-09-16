@@ -85,8 +85,8 @@ var melisDashBoardDragnDrop = {
         var self = this;
 
             // set data min width and max width
-            self.$gs.attr("data-min-width", self.$gs.outerWidth() - self.$pluginBox.outerWidth());
-            self.$gs.attr("data-max-width", self.$gs.outerWidth());
+            /* self.$gs.attr("data-min-width", self.$gs.outerWidth() - self.$pluginBox.outerWidth());
+            self.$gs.attr("data-max-width", self.$gs.outerWidth()); */
 
             // adjust grid-stack height when dashboard msg element is found
             if ( self.countGsItems() === 0 ) {
@@ -775,17 +775,25 @@ var melisDashBoardDragnDrop = {
 };
 
 (function($) {   
-    var $body       = $("body"),
-        gsi         = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
-        $pluginBtn  = $body.find("#melisDashBoardPluginBtn"),
-        $pluginBox  = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-        $gs         = $body.find("#"+activeTabId + " .grid-stack"),
-        boxWidth    = parseInt( $pluginBox.outerWidth() ),
-        gsWidth     = parseInt( $gs.outerWidth() ),
-        dWidth      = gsWidth - boxWidth,
-        $dbMsg      = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
-        minWidth    = $gs.data("min-width"),
-        maxWidth    = $gs.data("max-width");
+    var $body           = $("body"),
+        $melisLeftMenu  = $("#id_meliscore_leftmenu"),      
+        gsi             = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
+        $pluginBtn      = $body.find("#melisDashBoardPluginBtn"),
+        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+        $gs             = $body.find("#"+activeTabId + " .grid-stack"),
+        /* boxWidth        = parseInt( $pluginBox.outerWidth() ),
+        gsWidth         = parseInt( $gs.outerWidth() ),
+        dWidth          = gsWidth - boxWidth, */
+        $dbMsg          = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
+        minWidth        = $gs.data("min-width"),
+        maxWidth        = $gs.data("max-width");
+
+        // set data min width and max width, from setAdjustGridMeasurements() function
+        $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
+        $gs.attr("data-max-width", $gs.outerWidth());
+
+        // display .grid-stack width in pixels on document load
+        $gs.css("width", $gs.outerWidth());
 
         // init
         melisDashBoardDragnDrop.init();
@@ -814,9 +822,6 @@ var melisDashBoardDragnDrop = {
                 width: minWidth
             }, 3);
         }
-
-        // display .grid-stack width in pixels on document load
-        $gs.css("width", $gs.width());
 
         /**
          * gridstack
