@@ -159,7 +159,6 @@ var melisCore = (function(window){
     }
 
     $body.on("click", "#btnResetRights", function(){
-
         melisCoreTool.pending("#btnResetRights");
 
         melisCoreTool.confirm(
