@@ -28,7 +28,10 @@
     "module-name": "MelisCore",
     "dbdeploy": true,
     "melis-site": false,
-    "melis-module-category": "core"
+    "melis-module-category": "core",
+    "branch-alias": {
+        "dev-zend-old-version": "v3.2.13"
+    }
   },
   "require": {
     "php": "^7.0",
