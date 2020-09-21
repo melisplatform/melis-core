@@ -159,6 +159,7 @@ var melisCore = (function(window){
     }
 
     $body.on("click", "#btnResetRights", function(){
+
         melisCoreTool.pending("#btnResetRights");
 
         melisCoreTool.confirm(
@@ -411,7 +412,9 @@ var melisCore = (function(window){
                     $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
                 }
                 // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-                $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+                if ( $("table.dataTable").length ) {
+                    $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+                }
             }, 1000);
     }
 
@@ -471,7 +474,9 @@ var melisCore = (function(window){
             $('html, body').animate({scrollTop:0},0);
 
             // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-            $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+            if ( $("table.dataTable").length ) {
+                $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+            }
 
             // detect dashboard tab panel
             if( $("#"+activeTabId).hasClass("tab-panel-dashboard") ) {
@@ -978,7 +983,9 @@ var melisCore = (function(window){
             //screenSize = jQuery(window).width();
 
             // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-            $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+            if ( $("table.dataTable").length ) {
+                $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+            }
 
             if( screenSize <= 767 ){
                 tabDraggable("#melis-id-nav-bar-tabs", true);
