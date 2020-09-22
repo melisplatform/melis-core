@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.3.1 (2020-05-27)
+ * Version: 5.4.2 (2020-08-17)
  */
 (function (domGlobals) {
     'use strict';
@@ -118,6 +118,11 @@
           args[_i] = arguments[_i];
         }
         return fa(fb.apply(null, args));
+      };
+    };
+    var compose1 = function (fbc, fab) {
+      return function (a) {
+        return fbc(fab(a));
       };
     };
     var constant = function (value) {
@@ -530,6 +535,90 @@
       return eqRecord(eq).eq(a1, a2);
     };
 
+    var isArray$1 = Array.isArray;
+    var toArray = function (obj) {
+      var array = obj, i, l;
+      if (!isArray$1(obj)) {
+        array = [];
+        for (i = 0, l = obj.length; i < l; i++) {
+          array[i] = obj[i];
+        }
+      }
+      return array;
+    };
+    var each$2 = function (o, cb, s) {
+      var n, l;
+      if (!o) {
+        return 0;
+      }
+      s = s || o;
+      if (o.length !== undefined) {
+        for (n = 0, l = o.length; n < l; n++) {
+          if (cb.call(s, o[n], n, o) === false) {
+            return 0;
+          }
+        }
+      } else {
+        for (n in o) {
+          if (o.hasOwnProperty(n)) {
+            if (cb.call(s, o[n], n, o) === false) {
+              return 0;
+            }
+          }
+        }
+      }
+      return 1;
+    };
+    var map$2 = function (array, callback) {
+      var out = [];
+      each$2(array, function (item, index) {
+        out.push(callback(item, index, array));
+      });
+      return out;
+    };
+    var filter$2 = function (a, f) {
+      var o = [];
+      each$2(a, function (v, index) {
+        if (!f || f(v, index, a)) {
+          o.push(v);
+        }
+      });
+      return o;
+    };
+    var indexOf$1 = function (a, v) {
+      var i, l;
+      if (a) {
+        for (i = 0, l = a.length; i < l; i++) {
+          if (a[i] === v) {
+            return i;
+          }
+        }
+      }
+      return -1;
+    };
+    var reduce = function (collection, iteratee, accumulator, thisArg) {
+      var i = 0;
+      if (arguments.length < 3) {
+        accumulator = collection[0];
+      }
+      for (; i < collection.length; i++) {
+        accumulator = iteratee.call(thisArg, accumulator, collection[i], i);
+      }
+      return accumulator;
+    };
+    var findIndex$1 = function (array, predicate, thisArg) {
+      var i, l;
+      for (i = 0, l = array.length; i < l; i++) {
+        if (predicate.call(thisArg, array[i], i, array)) {
+          return i;
+        }
+      }
+      return -1;
+    };
+    var last$1 = function (collection) {
+      return collection[collection.length - 1];
+    };
+
     var __assign = function () {
       __assign = Object.assign || function __assign(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -562,44 +651,6 @@
           r[k] = a[j];
       return r;
     }
-
-    var fromHtml = function (html, scope) {
-      var doc = scope || domGlobals.document;
-      var div = doc.createElement('div');
-      div.innerHTML = html;
-      if (!div.hasChildNodes() || div.childNodes.length > 1) {
-        domGlobals.console.error('HTML does not have a single root node', html);
-        throw new Error('HTML must have a single root node');
-      }
-      return fromDom(div.childNodes[0]);
-    };
-    var fromTag = function (tag, scope) {
-      var doc = scope || domGlobals.document;
-      var node = doc.createElement(tag);
-      return fromDom(node);
-    };
-    var fromText = function (text, scope) {
-      var doc = scope || domGlobals.document;
-      var node = doc.createTextNode(text);
-      return fromDom(node);
-    };
-    var fromDom = function (node) {
-      if (node === null || node === undefined) {
-        throw new Error('Node cannot be null or undefined');
-      }
-      return { dom: constant(node) };
-    };
-    var fromPoint = function (docElm, x, y) {
-      var doc = docElm.dom();
-      return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
-    };
-    var Element = {
-      fromHtml: fromHtml,
-      fromTag: fromTag,
-      fromText: fromText,
-      fromDom: fromDom,
-      fromPoint: fromPoint
-    };
 
     var cached = function (f) {
       var called = false;
@@ -955,7 +1006,321 @@
       return platform();
     };
 
-    var toArray = function (target, f) {
+    var userAgent = domGlobals.navigator.userAgent;
+    var platform$1 = detect$3();
+    var browser = platform$1.browser;
+    var os = platform$1.os;
+    var deviceType = platform$1.deviceType;
+    var webkit = /WebKit/.test(userAgent) && !browser.isEdge();
+    var fileApi = 'FormData' in domGlobals.window && 'FileReader' in domGlobals.window && 'URL' in domGlobals.window && !!domGlobals.URL.createObjectURL;
+    var windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
+    var Env = {
+      opera: browser.isOpera(),
+      webkit: webkit,
+      ie: browser.isIE() || browser.isEdge() ? browser.version.major : false,
+      gecko: browser.isFirefox(),
+      mac: os.isOSX() || os.isiOS(),
+      iOS: deviceType.isiPad() || deviceType.isiPhone(),
+      android: os.isAndroid(),
+      contentEditable: true,
+      transparentSrc: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+      caretAfter: true,
+      range: domGlobals.window.getSelection && 'Range' in domGlobals.window,
+      documentMode: browser.isIE() ? domGlobals.document.documentMode || 7 : 10,
+      fileApi: fileApi,
+      ceFalse: true,
+      cacheSuffix: null,
+      container: null,
+      experimentalShadowDom: false,
+      canHaveCSP: !browser.isIE(),
+      desktop: deviceType.isDesktop(),
+      windowsPhone: windowsPhone,
+      browser: {
+        current: browser.current,
+        version: browser.version,
+        isChrome: browser.isChrome,
+        isEdge: browser.isEdge,
+        isFirefox: browser.isFirefox,
+        isIE: browser.isIE,
+        isOpera: browser.isOpera,
+        isSafari: browser.isSafari
+      },
+      os: {
+        current: os.current,
+        version: os.version,
+        isAndroid: os.isAndroid,
+        isChromeOS: os.isChromeOS,
+        isFreeBSD: os.isFreeBSD,
+        isiOS: os.isiOS,
+        isLinux: os.isLinux,
+        isOSX: os.isOSX,
+        isSolaris: os.isSolaris,
+        isWindows: os.isWindows
+      },
+      deviceType: {
+        isDesktop: deviceType.isDesktop,
+        isiPad: deviceType.isiPad,
+        isiPhone: deviceType.isiPhone,
+        isPhone: deviceType.isPhone,
+        isTablet: deviceType.isTablet,
+        isTouch: deviceType.isTouch,
+        isWebView: deviceType.isWebView
+      }
+    };
+
+    var whiteSpaceRegExp = /^\s*|\s*$/g;
+    var trim$1 = function (str) {
+      return str === null || str === undefined ? '' : ('' + str).replace(whiteSpaceRegExp, '');
+    };
+    var is = function (obj, type) {
+      if (!type) {
+        return obj !== undefined;
+      }
+      if (type === 'array' && isArray$1(obj)) {
+        return true;
+      }
+      return typeof obj === type;
+    };
+    var makeMap = function (items, delim, map) {
+      var i;
+      items = items || [];
+      delim = delim || ',';
+      if (typeof items === 'string') {
+        items = items.split(delim);
+      }
+      map = map || {};
+      i = items.length;
+      while (i--) {
+        map[items[i]] = {};
+      }
+      return map;
+    };
+    var hasOwnProperty$1 = function (obj, prop) {
+      return Object.prototype.hasOwnProperty.call(obj, prop);
+    };
+    var create = function (s, p, root) {
+      var self = this;
+      var sp, scn, c, de = 0;
+      s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
+      var cn = s[3].match(/(^|\.)(\w+)$/i)[2];
+      var ns = self.createNS(s[3].replace(/\.\w+$/, ''), root);
+      if (ns[cn]) {
+        return;
+      }
+      if (s[2] === 'static') {
+        ns[cn] = p;
+        if (this.onCreate) {
+          this.onCreate(s[2], s[3], ns[cn]);
+        }
+        return;
+      }
+      if (!p[cn]) {
+        p[cn] = function () {
+        };
+        de = 1;
+      }
+      ns[cn] = p[cn];
+      self.extend(ns[cn].prototype, p);
+      if (s[5]) {
+        sp = self.resolve(s[5]).prototype;
+        scn = s[5].match(/\.(\w+)$/i)[1];
+        c = ns[cn];
+        if (de) {
+          ns[cn] = function () {
+            return sp[scn].apply(this, arguments);
+          };
+        } else {
+          ns[cn] = function () {
+            this.parent = sp[scn];
+            return c.apply(this, arguments);
+          };
+        }
+        ns[cn].prototype[cn] = ns[cn];
+        self.each(sp, function (f, n) {
+          ns[cn].prototype[n] = sp[n];
+        });
+        self.each(p, function (f, n) {
+          if (sp[n]) {
+            ns[cn].prototype[n] = function () {
+              this.parent = sp[n];
+              return f.apply(this, arguments);
+            };
+          } else {
+            if (n !== cn) {
+              ns[cn].prototype[n] = f;
+            }
+          }
+        });
+      }
+      self.each(p.static, function (f, n) {
+        ns[cn][n] = f;
+      });
+    };
+    var extend = function (obj) {
+      var exts = [];
+      for (var _i = 1; _i < arguments.length; _i++) {
+        exts[_i - 1] = arguments[_i];
+      }
+      for (var i = 0; i < exts.length; i++) {
+        var ext = exts[i];
+        for (var name_1 in ext) {
+          if (ext.hasOwnProperty(name_1)) {
+            var value = ext[name_1];
+            if (value !== undefined) {
+              obj[name_1] = value;
+            }
+          }
+        }
+      }
+      return obj;
+    };
+    var walk = function (o, f, n, s) {
+      s = s || this;
+      if (o) {
+        if (n) {
+          o = o[n];
+        }
+        each$2(o, function (o, i) {
+          if (f.call(s, o, i, n) === false) {
+            return false;
+          }
+          walk(o, f, n, s);
+        });
+      }
+    };
+    var createNS = function (n, o) {
+      var i, v;
+      o = o || domGlobals.window;
+      n = n.split('.');
+      for (i = 0; i < n.length; i++) {
+        v = n[i];
+        if (!o[v]) {
+          o[v] = {};
+        }
+        o = o[v];
+      }
+      return o;
+    };
+    var resolve = function (n, o) {
+      var i, l;
+      o = o || domGlobals.window;
+      n = n.split('.');
+      for (i = 0, l = n.length; i < l; i++) {
+        o = o[n[i]];
+        if (!o) {
+          break;
+        }
+      }
+      return o;
+    };
+    var explode = function (s, d) {
+      if (!s || is(s, 'array')) {
+        return s;
+      }
+      return map$2(s.split(d || ','), trim$1);
+    };
+    var _addCacheSuffix = function (url) {
+      var cacheSuffix = Env.cacheSuffix;
+      if (cacheSuffix) {
+        url += (url.indexOf('?') === -1 ? '?' : '&') + cacheSuffix;
+      }
+      return url;
+    };
+    var Tools = {
+      trim: trim$1,
+      isArray: isArray$1,
+      is: is,
+      toArray: toArray,
+      makeMap: makeMap,
+      each: each$2,
+      map: map$2,
+      grep: filter$2,
+      inArray: indexOf$1,
+      hasOwn: hasOwnProperty$1,
+      extend: extend,
+      create: create,
+      walk: walk,
+      createNS: createNS,
+      resolve: resolve,
+      explode: explode,
+      _addCacheSuffix: _addCacheSuffix
+    };
+
+    var fromHtml = function (html, scope) {
+      var doc = scope || domGlobals.document;
+      var div = doc.createElement('div');
+      div.innerHTML = html;
+      if (!div.hasChildNodes() || div.childNodes.length > 1) {
+        domGlobals.console.error('HTML does not have a single root node', html);
+        throw new Error('HTML must have a single root node');
+      }
+      return fromDom(div.childNodes[0]);
+    };
+    var fromTag = function (tag, scope) {
+      var doc = scope || domGlobals.document;
+      var node = doc.createElement(tag);
+      return fromDom(node);
+    };
+    var fromText = function (text, scope) {
+      var doc = scope || domGlobals.document;
+      var node = doc.createTextNode(text);
+      return fromDom(node);
+    };
+    var fromDom = function (node) {
+      if (node === null || node === undefined) {
+        throw new Error('Node cannot be null or undefined');
+      }
+      return { dom: constant(node) };
+    };
+    var fromPoint = function (docElm, x, y) {
+      var doc = docElm.dom();
+      return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
+    };
+    var Element = {
+      fromHtml: fromHtml,
+      fromTag: fromTag,
+      fromText: fromText,
+      fromDom: fromDom,
+      fromPoint: fromPoint
+    };
+
+    var Global = typeof domGlobals.window !== 'undefined' ? domGlobals.window : Function('return this;')();
+
+    var COMMENT = 8;
+    var DOCUMENT = 9;
+    var DOCUMENT_FRAGMENT = 11;
+    var ELEMENT = 1;
+    var TEXT = 3;
+
+    var name = function (element) {
+      var r = element.dom().nodeName;
+      return r.toLowerCase();
+    };
+    var type = function (element) {
+      return element.dom().nodeType;
+    };
+    var isType$1 = function (t) {
+      return function (element) {
+        return type(element) === t;
+      };
+    };
+    var isComment = function (element) {
+      return type(element) === COMMENT || name(element) === '#comment';
+    };
+    var isElement = isType$1(ELEMENT);
+    var isText = isType$1(TEXT);
+    var isDocument = isType$1(DOCUMENT);
+    var isDocumentFragment = isType$1(DOCUMENT_FRAGMENT);
+
+    var getHead = function (doc) {
+      var b = doc.dom().head;
+      if (b === null || b === undefined) {
+        throw new Error('Head is not available yet');
+      }
+      return Element.fromDom(b);
+    };
+
+    var toArray$1 = function (target, f) {
       var r = [];
       var recurse = function (e) {
         r.push(e);
@@ -975,16 +1340,9 @@
       return compareDocumentPosition(a, b, domGlobals.Node.DOCUMENT_POSITION_CONTAINED_BY);
     };
 
-    var COMMENT = 8;
-    var DOCUMENT = 9;
-    var ELEMENT = 1;
-    var TEXT = 3;
-
-    var ELEMENT$1 = ELEMENT;
-    var DOCUMENT$1 = DOCUMENT;
-    var is = function (element, selector) {
+    var is$1 = function (element, selector) {
       var dom = element.dom();
-      if (dom.nodeType !== ELEMENT$1) {
+      if (dom.nodeType !== ELEMENT) {
         return false;
       } else {
         var elem = dom;
@@ -1002,7 +1360,7 @@
       }
     };
     var bypassSelector = function (dom) {
-      return dom.nodeType !== ELEMENT$1 && dom.nodeType !== DOCUMENT$1 || dom.childElementCount === 0;
+      return dom.nodeType !== ELEMENT && dom.nodeType !== DOCUMENT && dom.nodeType !== DOCUMENT_FRAGMENT || dom.childElementCount === 0;
     };
     var all = function (selector, scope) {
       var base = scope === undefined ? domGlobals.document : scope.dom();
@@ -1030,6 +1388,9 @@
 
     var owner = function (element) {
       return Element.fromDom(element.dom().ownerDocument);
+    };
+    var documentOrOwner = function (dos) {
+      return isDocument(dos) ? dos : owner(dos);
     };
     var documentElement = function (element) {
       return Element.fromDom(element.dom().ownerDocument.documentElement);
@@ -1071,10 +1432,10 @@
       return Option.from(element.dom().nextSibling).map(Element.fromDom);
     };
     var prevSiblings = function (element) {
-      return reverse(toArray(element, prevSibling));
+      return reverse(toArray$1(element, prevSibling));
     };
     var nextSiblings = function (element) {
-      return toArray(element, nextSibling);
+      return toArray$1(element, nextSibling);
     };
     var children = function (element) {
       return map(element.dom().childNodes, Element.fromDom);
@@ -1091,6 +1452,24 @@
     };
     var childNodesCount = function (element) {
       return element.dom().childNodes.length;
+    };
+
+    var isShadowRoot = function (dos) {
+      return isDocumentFragment(dos);
+    };
+    var supported = isFunction(domGlobals.Element.prototype.attachShadow) && isFunction(domGlobals.Node.prototype.getRootNode);
+    var getRootNode = supported ? function (e) {
+      return Element.fromDom(e.dom().getRootNode());
+    } : documentOrOwner;
+    var getStyleContainer = function (dos) {
+      return isShadowRoot(dos) ? dos : getHead(documentOrOwner(dos));
+    };
+    var getShadowRoot = function (e) {
+      var r = getRootNode(e);
+      return isShadowRoot(r) ? Option.some(r) : Option.none();
+    };
+    var getShadowHost = function (e) {
+      return Element.fromDom(e.dom().host);
     };
 
     var before = function (marker, element) {
@@ -1157,29 +1536,14 @@
       remove(wrapper);
     };
 
-    var Global = typeof domGlobals.window !== 'undefined' ? domGlobals.window : Function('return this;')();
-
-    var name = function (element) {
-      var r = element.dom().nodeName;
-      return r.toLowerCase();
-    };
-    var type = function (element) {
-      return element.dom().nodeType;
-    };
-    var isType$1 = function (t) {
-      return function (element) {
-        return type(element) === t;
-      };
-    };
-    var isComment = function (element) {
-      return type(element) === COMMENT || name(element) === '#comment';
-    };
-    var isElement = isType$1(ELEMENT);
-    var isText = isType$1(TEXT);
-
     var inBody = function (element) {
       var dom = isText(element) ? element.dom().parentNode : element.dom();
-      return dom !== undefined && dom !== null && dom.ownerDocument.body.contains(dom);
+      if (dom === undefined || dom === null || dom.ownerDocument === null) {
+        return false;
+      }
+      return getShadowRoot(Element.fromDom(dom)).fold(function () {
+        return dom.ownerDocument.body.contains(dom);
+      }, compose1(inBody, getShadowHost));
     };
 
     var r = function (left, top) {
@@ -1355,8 +1719,8 @@
     ]);
     var isText$1 = isNodeType(3);
     var isComment$1 = isNodeType(8);
-    var isDocument = isNodeType(9);
-    var isDocumentFragment = isNodeType(11);
+    var isDocument$1 = isNodeType(9);
+    var isDocumentFragment$1 = isNodeType(11);
     var isBr = matchNodeNames(['br']);
     var isContentEditableTrue = hasContentEditableState('true');
     var isContentEditableFalse = hasContentEditableState('false');
@@ -1396,7 +1760,28 @@
     var remove$1 = function (element, key) {
       element.dom().removeAttribute(key);
     };
+    var clone = function (element) {
+      return foldl(element.dom().attributes, function (acc, attr) {
+        acc[attr.name] = attr.value;
+        return acc;
+      }, {});
+    };
 
+    var internalSet = function (dom, property, value) {
+      if (!isString(value)) {
+        domGlobals.console.error('Invalid call to CSS.set. Property ', property, ':: Value ', value, ':: Element ', dom);
+        throw new Error('CSS value must be a string: ' + value);
+      }
+      if (isSupported(dom)) {
+        dom.style.setProperty(property, value);
+      }
+    };
+    var setAll$1 = function (element, css) {
+      var dom = element.dom();
+      each$1(css, function (v, k) {
+        internalSet(dom, k, v);
+      });
+    };
     var get$4 = function (element, property) {
       var dom = element.dom();
       var styles = domGlobals.window.getComputedStyle(dom);
@@ -1428,12 +1813,12 @@
       return e.dom().offsetWidth;
     };
 
-    var browser = detect$3().browser;
+    var browser$1 = detect$3().browser;
     var firstElement = function (nodes) {
       return find(nodes, isElement);
     };
     var getTableCaptionDeltaY = function (elm) {
-      if (browser.isFirefox() && name(elm) === 'table') {
+      if (browser$1.isFirefox() && name(elm) === 'table') {
         return firstElement(children(elm)).filter(function (elm) {
           return name(elm) === 'caption';
         }).bind(function (caption) {
@@ -1485,1506 +1870,6 @@
         y: y
       };
     };
-
-    var exports$1 = {}, module$1 = { exports: exports$1 };
-    (function (define, exports, module, require) {
-      (function (f) {
-        if (typeof exports === 'object' && typeof module !== 'undefined') {
-          module.exports = f();
-        } else if (typeof define === 'function' && define.amd) {
-          define([], f);
-        } else {
-          var g;
-          if (typeof window !== 'undefined') {
-            g = window;
-          } else if (typeof global !== 'undefined') {
-            g = global;
-          } else if (typeof self !== 'undefined') {
-            g = self;
-          } else {
-            g = this;
-          }
-          g.EphoxContactWrapper = f();
-        }
-      }(function () {
-        return function () {
-          function r(e, n, t) {
-            function o(i, f) {
-              if (!n[i]) {
-                if (!e[i]) {
-                  var c = 'function' == typeof require && require;
-                  if (!f && c)
-                    return c(i, !0);
-                  if (u)
-                    return u(i, !0);
-                  var a = new Error('Cannot find module \'' + i + '\'');
-                  throw a.code = 'MODULE_NOT_FOUND', a;
-                }
-                var p = n[i] = { exports: {} };
-                e[i][0].call(p.exports, function (r) {
-                  var n = e[i][1][r];
-                  return o(n || r);
-                }, p, p.exports, r, e, n, t);
-              }
-              return n[i].exports;
-            }
-            for (var u = 'function' == typeof require && require, i = 0; i < t.length; i++)
-              o(t[i]);
-            return o;
-          }
-          return r;
-        }()({
-          1: [
-            function (require, module, exports) {
-              var process = module.exports = {};
-              var cachedSetTimeout;
-              var cachedClearTimeout;
-              function defaultSetTimout() {
-                throw new Error('setTimeout has not been defined');
-              }
-              function defaultClearTimeout() {
-                throw new Error('clearTimeout has not been defined');
-              }
-              (function () {
-                try {
-                  if (typeof setTimeout === 'function') {
-                    cachedSetTimeout = setTimeout;
-                  } else {
-                    cachedSetTimeout = defaultSetTimout;
-                  }
-                } catch (e) {
-                  cachedSetTimeout = defaultSetTimout;
-                }
-                try {
-                  if (typeof clearTimeout === 'function') {
-                    cachedClearTimeout = clearTimeout;
-                  } else {
-                    cachedClearTimeout = defaultClearTimeout;
-                  }
-                } catch (e) {
-                  cachedClearTimeout = defaultClearTimeout;
-                }
-              }());
-              function runTimeout(fun) {
-                if (cachedSetTimeout === setTimeout) {
-                  return setTimeout(fun, 0);
-                }
-                if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-                  cachedSetTimeout = setTimeout;
-                  return setTimeout(fun, 0);
-                }
-                try {
-                  return cachedSetTimeout(fun, 0);
-                } catch (e) {
-                  try {
-                    return cachedSetTimeout.call(null, fun, 0);
-                  } catch (e) {
-                    return cachedSetTimeout.call(this, fun, 0);
-                  }
-                }
-              }
-              function runClearTimeout(marker) {
-                if (cachedClearTimeout === clearTimeout) {
-                  return clearTimeout(marker);
-                }
-                if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-                  cachedClearTimeout = clearTimeout;
-                  return clearTimeout(marker);
-                }
-                try {
-                  return cachedClearTimeout(marker);
-                } catch (e) {
-                  try {
-                    return cachedClearTimeout.call(null, marker);
-                  } catch (e) {
-                    return cachedClearTimeout.call(this, marker);
-                  }
-                }
-              }
-              var queue = [];
-              var draining = false;
-              var currentQueue;
-              var queueIndex = -1;
-              function cleanUpNextTick() {
-                if (!draining || !currentQueue) {
-                  return;
-                }
-                draining = false;
-                if (currentQueue.length) {
-                  queue = currentQueue.concat(queue);
-                } else {
-                  queueIndex = -1;
-                }
-                if (queue.length) {
-                  drainQueue();
-                }
-              }
-              function drainQueue() {
-                if (draining) {
-                  return;
-                }
-                var timeout = runTimeout(cleanUpNextTick);
-                draining = true;
-                var len = queue.length;
-                while (len) {
-                  currentQueue = queue;
-                  queue = [];
-                  while (++queueIndex < len) {
-                    if (currentQueue) {
-                      currentQueue[queueIndex].run();
-                    }
-                  }
-                  queueIndex = -1;
-                  len = queue.length;
-                }
-                currentQueue = null;
-                draining = false;
-                runClearTimeout(timeout);
-              }
-              process.nextTick = function (fun) {
-                var args = new Array(arguments.length - 1);
-                if (arguments.length > 1) {
-                  for (var i = 1; i < arguments.length; i++) {
-                    args[i - 1] = arguments[i];
-                  }
-                }
-                queue.push(new Item(fun, args));
-                if (queue.length === 1 && !draining) {
-                  runTimeout(drainQueue);
-                }
-              };
-              function Item(fun, array) {
-                this.fun = fun;
-                this.array = array;
-              }
-              Item.prototype.run = function () {
-                this.fun.apply(null, this.array);
-              };
-              process.title = 'browser';
-              process.browser = true;
-              process.env = {};
-              process.argv = [];
-              process.version = '';
-              process.versions = {};
-              function noop() {
-              }
-              process.on = noop;
-              process.addListener = noop;
-              process.once = noop;
-              process.off = noop;
-              process.removeListener = noop;
-              process.removeAllListeners = noop;
-              process.emit = noop;
-              process.prependListener = noop;
-              process.prependOnceListener = noop;
-              process.listeners = function (name) {
-                return [];
-              };
-              process.binding = function (name) {
-                throw new Error('process.binding is not supported');
-              };
-              process.cwd = function () {
-                return '/';
-              };
-              process.chdir = function (dir) {
-                throw new Error('process.chdir is not supported');
-              };
-              process.umask = function () {
-                return 0;
-              };
-            },
-            {}
-          ],
-          2: [
-            function (require, module, exports) {
-              (function (setImmediate) {
-                (function (root) {
-                  var setTimeoutFunc = setTimeout;
-                  function noop() {
-                  }
-                  function bind(fn, thisArg) {
-                    return function () {
-                      fn.apply(thisArg, arguments);
-                    };
-                  }
-                  function Promise(fn) {
-                    if (typeof this !== 'object')
-                      throw new TypeError('Promises must be constructed via new');
-                    if (typeof fn !== 'function')
-                      throw new TypeError('not a function');
-                    this._state = 0;
-                    this._handled = false;
-                    this._value = undefined;
-                    this._deferreds = [];
-                    doResolve(fn, this);
-                  }
-                  function handle(self, deferred) {
-                    while (self._state === 3) {
-                      self = self._value;
-                    }
-                    if (self._state === 0) {
-                      self._deferreds.push(deferred);
-                      return;
-                    }
-                    self._handled = true;
-                    Promise._immediateFn(function () {
-                      var cb = self._state === 1 ? deferred.onFulfilled : deferred.onRejected;
-                      if (cb === null) {
-                        (self._state === 1 ? resolve : reject)(deferred.promise, self._value);
-                        return;
-                      }
-                      var ret;
-                      try {
-                        ret = cb(self._value);
-                      } catch (e) {
-                        reject(deferred.promise, e);
-                        return;
-                      }
-                      resolve(deferred.promise, ret);
-                    });
-                  }
-                  function resolve(self, newValue) {
-                    try {
-                      if (newValue === self)
-                        throw new TypeError('A promise cannot be resolved with itself.');
-                      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
-                        var then = newValue.then;
-                        if (newValue instanceof Promise) {
-                          self._state = 3;
-                          self._value = newValue;
-                          finale(self);
-                          return;
-                        } else if (typeof then === 'function') {
-                          doResolve(bind(then, newValue), self);
-                          return;
-                        }
-                      }
-                      self._state = 1;
-                      self._value = newValue;
-                      finale(self);
-                    } catch (e) {
-                      reject(self, e);
-                    }
-                  }
-                  function reject(self, newValue) {
-                    self._state = 2;
-                    self._value = newValue;
-                    finale(self);
-                  }
-                  function finale(self) {
-                    if (self._state === 2 && self._deferreds.length === 0) {
-                      Promise._immediateFn(function () {
-                        if (!self._handled) {
-                          Promise._unhandledRejectionFn(self._value);
-                        }
-                      });
-                    }
-                    for (var i = 0, len = self._deferreds.length; i < len; i++) {
-                      handle(self, self._deferreds[i]);
-                    }
-                    self._deferreds = null;
-                  }
-                  function Handler(onFulfilled, onRejected, promise) {
-                    this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
-                    this.onRejected = typeof onRejected === 'function' ? onRejected : null;
-                    this.promise = promise;
-                  }
-                  function doResolve(fn, self) {
-                    var done = false;
-                    try {
-                      fn(function (value) {
-                        if (done)
-                          return;
-                        done = true;
-                        resolve(self, value);
-                      }, function (reason) {
-                        if (done)
-                          return;
-                        done = true;
-                        reject(self, reason);
-                      });
-                    } catch (ex) {
-                      if (done)
-                        return;
-                      done = true;
-                      reject(self, ex);
-                    }
-                  }
-                  Promise.prototype['catch'] = function (onRejected) {
-                    return this.then(null, onRejected);
-                  };
-                  Promise.prototype.then = function (onFulfilled, onRejected) {
-                    var prom = new this.constructor(noop);
-                    handle(this, new Handler(onFulfilled, onRejected, prom));
-                    return prom;
-                  };
-                  Promise.all = function (arr) {
-                    var args = Array.prototype.slice.call(arr);
-                    return new Promise(function (resolve, reject) {
-                      if (args.length === 0)
-                        return resolve([]);
-                      var remaining = args.length;
-                      function res(i, val) {
-                        try {
-                          if (val && (typeof val === 'object' || typeof val === 'function')) {
-                            var then = val.then;
-                            if (typeof then === 'function') {
-                              then.call(val, function (val) {
-                                res(i, val);
-                              }, reject);
-                              return;
-                            }
-                          }
-                          args[i] = val;
-                          if (--remaining === 0) {
-                            resolve(args);
-                          }
-                        } catch (ex) {
-                          reject(ex);
-                        }
-                      }
-                      for (var i = 0; i < args.length; i++) {
-                        res(i, args[i]);
-                      }
-                    });
-                  };
-                  Promise.resolve = function (value) {
-                    if (value && typeof value === 'object' && value.constructor === Promise) {
-                      return value;
-                    }
-                    return new Promise(function (resolve) {
-                      resolve(value);
-                    });
-                  };
-                  Promise.reject = function (value) {
-                    return new Promise(function (resolve, reject) {
-                      reject(value);
-                    });
-                  };
-                  Promise.race = function (values) {
-                    return new Promise(function (resolve, reject) {
-                      for (var i = 0, len = values.length; i < len; i++) {
-                        values[i].then(resolve, reject);
-                      }
-                    });
-                  };
-                  Promise._immediateFn = typeof setImmediate === 'function' ? function (fn) {
-                    setImmediate(fn);
-                  } : function (fn) {
-                    setTimeoutFunc(fn, 0);
-                  };
-                  Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
-                    if (typeof console !== 'undefined' && console) {
-                      console.warn('Possible Unhandled Promise Rejection:', err);
-                    }
-                  };
-                  Promise._setImmediateFn = function _setImmediateFn(fn) {
-                    Promise._immediateFn = fn;
-                  };
-                  Promise._setUnhandledRejectionFn = function _setUnhandledRejectionFn(fn) {
-                    Promise._unhandledRejectionFn = fn;
-                  };
-                  if (typeof module !== 'undefined' && module.exports) {
-                    module.exports = Promise;
-                  } else if (!root.Promise) {
-                    root.Promise = Promise;
-                  }
-                }(this));
-              }.call(this, require('timers').setImmediate));
-            },
-            { 'timers': 3 }
-          ],
-          3: [
-            function (require, module, exports) {
-              (function (setImmediate, clearImmediate) {
-                var nextTick = require('process/browser.js').nextTick;
-                var apply = Function.prototype.apply;
-                var slice = Array.prototype.slice;
-                var immediateIds = {};
-                var nextImmediateId = 0;
-                exports.setTimeout = function () {
-                  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-                };
-                exports.setInterval = function () {
-                  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-                };
-                exports.clearTimeout = exports.clearInterval = function (timeout) {
-                  timeout.close();
-                };
-                function Timeout(id, clearFn) {
-                  this._id = id;
-                  this._clearFn = clearFn;
-                }
-                Timeout.prototype.unref = Timeout.prototype.ref = function () {
-                };
-                Timeout.prototype.close = function () {
-                  this._clearFn.call(window, this._id);
-                };
-                exports.enroll = function (item, msecs) {
-                  clearTimeout(item._idleTimeoutId);
-                  item._idleTimeout = msecs;
-                };
-                exports.unenroll = function (item) {
-                  clearTimeout(item._idleTimeoutId);
-                  item._idleTimeout = -1;
-                };
-                exports._unrefActive = exports.active = function (item) {
-                  clearTimeout(item._idleTimeoutId);
-                  var msecs = item._idleTimeout;
-                  if (msecs >= 0) {
-                    item._idleTimeoutId = setTimeout(function onTimeout() {
-                      if (item._onTimeout)
-                        item._onTimeout();
-                    }, msecs);
-                  }
-                };
-                exports.setImmediate = typeof setImmediate === 'function' ? setImmediate : function (fn) {
-                  var id = nextImmediateId++;
-                  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
-                  immediateIds[id] = true;
-                  nextTick(function onNextTick() {
-                    if (immediateIds[id]) {
-                      if (args) {
-                        fn.apply(null, args);
-                      } else {
-                        fn.call(null);
-                      }
-                      exports.clearImmediate(id);
-                    }
-                  });
-                  return id;
-                };
-                exports.clearImmediate = typeof clearImmediate === 'function' ? clearImmediate : function (id) {
-                  delete immediateIds[id];
-                };
-              }.call(this, require('timers').setImmediate, require('timers').clearImmediate));
-            },
-            {
-              'process/browser.js': 1,
-              'timers': 3
-            }
-          ],
-          4: [
-            function (require, module, exports) {
-              var promisePolyfill = require('promise-polyfill');
-              var Global = function () {
-                if (typeof window !== 'undefined') {
-                  return window;
-                } else {
-                  return Function('return this;')();
-                }
-              }();
-              module.exports = { boltExport: Global.Promise || promisePolyfill };
-            },
-            { 'promise-polyfill': 2 }
-          ]
-        }, {}, [4])(4);
-      }));
-    }(undefined, exports$1, module$1, undefined));
-    var Promise = module$1.exports.boltExport;
-
-    var nu$3 = function (baseFn) {
-      var data = Option.none();
-      var callbacks = [];
-      var map = function (f) {
-        return nu$3(function (nCallback) {
-          get(function (data) {
-            nCallback(f(data));
-          });
-        });
-      };
-      var get = function (nCallback) {
-        if (isReady()) {
-          call(nCallback);
-        } else {
-          callbacks.push(nCallback);
-        }
-      };
-      var set = function (x) {
-        data = Option.some(x);
-        run(callbacks);
-        callbacks = [];
-      };
-      var isReady = function () {
-        return data.isSome();
-      };
-      var run = function (cbs) {
-        each(cbs, call);
-      };
-      var call = function (cb) {
-        data.each(function (x) {
-          domGlobals.setTimeout(function () {
-            cb(x);
-          }, 0);
-        });
-      };
-      baseFn(set);
-      return {
-        get: get,
-        map: map,
-        isReady: isReady
-      };
-    };
-    var pure = function (a) {
-      return nu$3(function (callback) {
-        callback(a);
-      });
-    };
-    var LazyValue = {
-      nu: nu$3,
-      pure: pure
-    };
-
-    var errorReporter = function (err) {
-      domGlobals.setTimeout(function () {
-        throw err;
-      }, 0);
-    };
-    var make = function (run) {
-      var get = function (callback) {
-        run().then(callback, errorReporter);
-      };
-      var map = function (fab) {
-        return make(function () {
-          return run().then(fab);
-        });
-      };
-      var bind = function (aFutureB) {
-        return make(function () {
-          return run().then(function (v) {
-            return aFutureB(v).toPromise();
-          });
-        });
-      };
-      var anonBind = function (futureB) {
-        return make(function () {
-          return run().then(function () {
-            return futureB.toPromise();
-          });
-        });
-      };
-      var toLazy = function () {
-        return LazyValue.nu(get);
-      };
-      var toCached = function () {
-        var cache = null;
-        return make(function () {
-          if (cache === null) {
-            cache = run();
-          }
-          return cache;
-        });
-      };
-      var toPromise = run;
-      return {
-        map: map,
-        bind: bind,
-        anonBind: anonBind,
-        toLazy: toLazy,
-        toCached: toCached,
-        toPromise: toPromise,
-        get: get
-      };
-    };
-    var nu$4 = function (baseFn) {
-      return make(function () {
-        return new Promise(baseFn);
-      });
-    };
-    var pure$1 = function (a) {
-      return make(function () {
-        return Promise.resolve(a);
-      });
-    };
-    var Future = {
-      nu: nu$4,
-      pure: pure$1
-    };
-
-    var par = function (asyncValues, nu) {
-      return nu(function (callback) {
-        var r = [];
-        var count = 0;
-        var cb = function (i) {
-          return function (value) {
-            r[i] = value;
-            count++;
-            if (count >= asyncValues.length) {
-              callback(r);
-            }
-          };
-        };
-        if (asyncValues.length === 0) {
-          callback([]);
-        } else {
-          each(asyncValues, function (asyncValue, i) {
-            asyncValue.get(cb(i));
-          });
-        }
-      });
-    };
-
-    var par$1 = function (futures) {
-      return par(futures, Future.nu);
-    };
-
-    var value = function (o) {
-      var is = function (v) {
-        return o === v;
-      };
-      var or = function (_opt) {
-        return value(o);
-      };
-      var orThunk = function (_f) {
-        return value(o);
-      };
-      var map = function (f) {
-        return value(f(o));
-      };
-      var mapError = function (_f) {
-        return value(o);
-      };
-      var each = function (f) {
-        f(o);
-      };
-      var bind = function (f) {
-        return f(o);
-      };
-      var fold = function (_, onValue) {
-        return onValue(o);
-      };
-      var exists = function (f) {
-        return f(o);
-      };
-      var forall = function (f) {
-        return f(o);
-      };
-      var toOption = function () {
-        return Option.some(o);
-      };
-      return {
-        is: is,
-        isValue: always,
-        isError: never,
-        getOr: constant(o),
-        getOrThunk: constant(o),
-        getOrDie: constant(o),
-        or: or,
-        orThunk: orThunk,
-        fold: fold,
-        map: map,
-        mapError: mapError,
-        each: each,
-        bind: bind,
-        exists: exists,
-        forall: forall,
-        toOption: toOption
-      };
-    };
-    var error = function (message) {
-      var getOrThunk = function (f) {
-        return f();
-      };
-      var getOrDie = function () {
-        return die(String(message))();
-      };
-      var or = function (opt) {
-        return opt;
-      };
-      var orThunk = function (f) {
-        return f();
-      };
-      var map = function (_f) {
-        return error(message);
-      };
-      var mapError = function (f) {
-        return error(f(message));
-      };
-      var bind = function (_f) {
-        return error(message);
-      };
-      var fold = function (onError, _) {
-        return onError(message);
-      };
-      return {
-        is: never,
-        isValue: never,
-        isError: always,
-        getOr: identity,
-        getOrThunk: getOrThunk,
-        getOrDie: getOrDie,
-        or: or,
-        orThunk: orThunk,
-        fold: fold,
-        map: map,
-        mapError: mapError,
-        each: noop,
-        bind: bind,
-        exists: never,
-        forall: always,
-        toOption: Option.none
-      };
-    };
-    var fromOption = function (opt, err) {
-      return opt.fold(function () {
-        return error(err);
-      }, value);
-    };
-    var Result = {
-      value: value,
-      error: error,
-      fromOption: fromOption
-    };
-
-    var promise = function () {
-      function bind(fn, thisArg) {
-        return function () {
-          fn.apply(thisArg, arguments);
-        };
-      }
-      var isArray = Array.isArray || function (value) {
-        return Object.prototype.toString.call(value) === '[object Array]';
-      };
-      var Promise = function (fn) {
-        if (typeof this !== 'object') {
-          throw new TypeError('Promises must be constructed via new');
-        }
-        if (typeof fn !== 'function') {
-          throw new TypeError('not a function');
-        }
-        this._state = null;
-        this._value = null;
-        this._deferreds = [];
-        doResolve(fn, bind(resolve, this), bind(reject, this));
-      };
-      var asap = Promise.immediateFn || typeof domGlobals.setImmediate === 'function' && domGlobals.setImmediate || function (fn) {
-        domGlobals.setTimeout(fn, 1);
-      };
-      function handle(deferred) {
-        var me = this;
-        if (this._state === null) {
-          this._deferreds.push(deferred);
-          return;
-        }
-        asap(function () {
-          var cb = me._state ? deferred.onFulfilled : deferred.onRejected;
-          if (cb === null) {
-            (me._state ? deferred.resolve : deferred.reject)(me._value);
-            return;
-          }
-          var ret;
-          try {
-            ret = cb(me._value);
-          } catch (e) {
-            deferred.reject(e);
-            return;
-          }
-          deferred.resolve(ret);
-        });
-      }
-      function resolve(newValue) {
-        try {
-          if (newValue === this) {
-            throw new TypeError('A promise cannot be resolved with itself.');
-          }
-          if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
-            var then = newValue.then;
-            if (typeof then === 'function') {
-              doResolve(bind(then, newValue), bind(resolve, this), bind(reject, this));
-              return;
-            }
-          }
-          this._state = true;
-          this._value = newValue;
-          finale.call(this);
-        } catch (e) {
-          reject.call(this, e);
-        }
-      }
-      function reject(newValue) {
-        this._state = false;
-        this._value = newValue;
-        finale.call(this);
-      }
-      function finale() {
-        for (var i = 0, len = this._deferreds.length; i < len; i++) {
-          handle.call(this, this._deferreds[i]);
-        }
-        this._deferreds = null;
-      }
-      function Handler(onFulfilled, onRejected, resolve, reject) {
-        this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
-        this.onRejected = typeof onRejected === 'function' ? onRejected : null;
-        this.resolve = resolve;
-        this.reject = reject;
-      }
-      function doResolve(fn, onFulfilled, onRejected) {
-        var done = false;
-        try {
-          fn(function (value) {
-            if (done) {
-              return;
-            }
-            done = true;
-            onFulfilled(value);
-          }, function (reason) {
-            if (done) {
-              return;
-            }
-            done = true;
-            onRejected(reason);
-          });
-        } catch (ex) {
-          if (done) {
-            return;
-          }
-          done = true;
-          onRejected(ex);
-        }
-      }
-      Promise.prototype.catch = function (onRejected) {
-        return this.then(null, onRejected);
-      };
-      Promise.prototype.then = function (onFulfilled, onRejected) {
-        var me = this;
-        return new Promise(function (resolve, reject) {
-          handle.call(me, new Handler(onFulfilled, onRejected, resolve, reject));
-        });
-      };
-      Promise.all = function () {
-        var args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
-        return new Promise(function (resolve, reject) {
-          if (args.length === 0) {
-            return resolve([]);
-          }
-          var remaining = args.length;
-          function res(i, val) {
-            try {
-              if (val && (typeof val === 'object' || typeof val === 'function')) {
-                var then = val.then;
-                if (typeof then === 'function') {
-                  then.call(val, function (val) {
-                    res(i, val);
-                  }, reject);
-                  return;
-                }
-              }
-              args[i] = val;
-              if (--remaining === 0) {
-                resolve(args);
-              }
-            } catch (ex) {
-              reject(ex);
-            }
-          }
-          for (var i = 0; i < args.length; i++) {
-            res(i, args[i]);
-          }
-        });
-      };
-      Promise.resolve = function (value) {
-        if (value && typeof value === 'object' && value.constructor === Promise) {
-          return value;
-        }
-        return new Promise(function (resolve) {
-          resolve(value);
-        });
-      };
-      Promise.reject = function (value) {
-        return new Promise(function (resolve, reject) {
-          reject(value);
-        });
-      };
-      Promise.race = function (values) {
-        return new Promise(function (resolve, reject) {
-          for (var i = 0, len = values.length; i < len; i++) {
-            values[i].then(resolve, reject);
-          }
-        });
-      };
-      return Promise;
-    };
-    var promiseObj = window.Promise ? window.Promise : promise();
-
-    var requestAnimationFramePromise;
-    var requestAnimationFrame = function (callback, element) {
-      var i, requestAnimationFrameFunc = domGlobals.window.requestAnimationFrame;
-      var vendors = [
-        'ms',
-        'moz',
-        'webkit'
-      ];
-      var featurefill = function (callback) {
-        domGlobals.window.setTimeout(callback, 0);
-      };
-      for (i = 0; i < vendors.length && !requestAnimationFrameFunc; i++) {
-        requestAnimationFrameFunc = domGlobals.window[vendors[i] + 'RequestAnimationFrame'];
-      }
-      if (!requestAnimationFrameFunc) {
-        requestAnimationFrameFunc = featurefill;
-      }
-      requestAnimationFrameFunc(callback, element);
-    };
-    var wrappedSetTimeout = function (callback, time) {
-      if (typeof time !== 'number') {
-        time = 0;
-      }
-      return domGlobals.setTimeout(callback, time);
-    };
-    var wrappedSetInterval = function (callback, time) {
-      if (typeof time !== 'number') {
-        time = 1;
-      }
-      return domGlobals.setInterval(callback, time);
-    };
-    var wrappedClearTimeout = function (id) {
-      return domGlobals.clearTimeout(id);
-    };
-    var wrappedClearInterval = function (id) {
-      return domGlobals.clearInterval(id);
-    };
-    var debounce = function (callback, time) {
-      var timer, func;
-      func = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          args[_i] = arguments[_i];
-        }
-        domGlobals.clearTimeout(timer);
-        timer = wrappedSetTimeout(function () {
-          callback.apply(this, args);
-        }, time);
-      };
-      func.stop = function () {
-        domGlobals.clearTimeout(timer);
-      };
-      return func;
-    };
-    var Delay = {
-      requestAnimationFrame: function (callback, element) {
-        if (requestAnimationFramePromise) {
-          requestAnimationFramePromise.then(callback);
-          return;
-        }
-        requestAnimationFramePromise = new promiseObj(function (resolve) {
-          if (!element) {
-            element = domGlobals.document.body;
-          }
-          requestAnimationFrame(resolve, element);
-        }).then(callback);
-      },
-      setTimeout: wrappedSetTimeout,
-      setInterval: wrappedSetInterval,
-      setEditorTimeout: function (editor, callback, time) {
-        return wrappedSetTimeout(function () {
-          if (!editor.removed) {
-            callback();
-          }
-        }, time);
-      },
-      setEditorInterval: function (editor, callback, time) {
-        var timer;
-        timer = wrappedSetInterval(function () {
-          if (!editor.removed) {
-            callback();
-          } else {
-            domGlobals.clearInterval(timer);
-          }
-        }, time);
-        return timer;
-      },
-      debounce: debounce,
-      throttle: debounce,
-      clearInterval: wrappedClearInterval,
-      clearTimeout: wrappedClearTimeout
-    };
-
-    var userAgent = domGlobals.navigator.userAgent;
-    var platform$1 = detect$3();
-    var browser$1 = platform$1.browser;
-    var os = platform$1.os;
-    var deviceType = platform$1.deviceType;
-    var webkit = /WebKit/.test(userAgent) && !browser$1.isEdge();
-    var fileApi = 'FormData' in domGlobals.window && 'FileReader' in domGlobals.window && 'URL' in domGlobals.window && !!domGlobals.URL.createObjectURL;
-    var windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
-    var Env = {
-      opera: browser$1.isOpera(),
-      webkit: webkit,
-      ie: browser$1.isIE() || browser$1.isEdge() ? browser$1.version.major : false,
-      gecko: browser$1.isFirefox(),
-      mac: os.isOSX() || os.isiOS(),
-      iOS: deviceType.isiPad() || deviceType.isiPhone(),
-      android: os.isAndroid(),
-      contentEditable: true,
-      transparentSrc: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-      caretAfter: true,
-      range: domGlobals.window.getSelection && 'Range' in domGlobals.window,
-      documentMode: browser$1.isIE() ? domGlobals.document.documentMode || 7 : 10,
-      fileApi: fileApi,
-      ceFalse: true,
-      cacheSuffix: null,
-      container: null,
-      experimentalShadowDom: false,
-      canHaveCSP: !browser$1.isIE(),
-      desktop: deviceType.isDesktop(),
-      windowsPhone: windowsPhone,
-      browser: {
-        current: browser$1.current,
-        version: browser$1.version,
-        isChrome: browser$1.isChrome,
-        isEdge: browser$1.isEdge,
-        isFirefox: browser$1.isFirefox,
-        isIE: browser$1.isIE,
-        isOpera: browser$1.isOpera,
-        isSafari: browser$1.isSafari
-      },
-      os: {
-        current: os.current,
-        version: os.version,
-        isAndroid: os.isAndroid,
-        isChromeOS: os.isChromeOS,
-        isFreeBSD: os.isFreeBSD,
-        isiOS: os.isiOS,
-        isLinux: os.isLinux,
-        isOSX: os.isOSX,
-        isSolaris: os.isSolaris,
-        isWindows: os.isWindows
-      },
-      deviceType: {
-        isDesktop: deviceType.isDesktop,
-        isiPad: deviceType.isiPad,
-        isiPhone: deviceType.isiPhone,
-        isPhone: deviceType.isPhone,
-        isTablet: deviceType.isTablet,
-        isTouch: deviceType.isTouch,
-        isWebView: deviceType.isWebView
-      }
-    };
-
-    var isArray$1 = Array.isArray;
-    var toArray$1 = function (obj) {
-      var array = obj, i, l;
-      if (!isArray$1(obj)) {
-        array = [];
-        for (i = 0, l = obj.length; i < l; i++) {
-          array[i] = obj[i];
-        }
-      }
-      return array;
-    };
-    var each$2 = function (o, cb, s) {
-      var n, l;
-      if (!o) {
-        return 0;
-      }
-      s = s || o;
-      if (o.length !== undefined) {
-        for (n = 0, l = o.length; n < l; n++) {
-          if (cb.call(s, o[n], n, o) === false) {
-            return 0;
-          }
-        }
-      } else {
-        for (n in o) {
-          if (o.hasOwnProperty(n)) {
-            if (cb.call(s, o[n], n, o) === false) {
-              return 0;
-            }
-          }
-        }
-      }
-      return 1;
-    };
-    var map$2 = function (array, callback) {
-      var out = [];
-      each$2(array, function (item, index) {
-        out.push(callback(item, index, array));
-      });
-      return out;
-    };
-    var filter$2 = function (a, f) {
-      var o = [];
-      each$2(a, function (v, index) {
-        if (!f || f(v, index, a)) {
-          o.push(v);
-        }
-      });
-      return o;
-    };
-    var indexOf$1 = function (a, v) {
-      var i, l;
-      if (a) {
-        for (i = 0, l = a.length; i < l; i++) {
-          if (a[i] === v) {
-            return i;
-          }
-        }
-      }
-      return -1;
-    };
-    var reduce = function (collection, iteratee, accumulator, thisArg) {
-      var i = 0;
-      if (arguments.length < 3) {
-        accumulator = collection[0];
-      }
-      for (; i < collection.length; i++) {
-        accumulator = iteratee.call(thisArg, accumulator, collection[i], i);
-      }
-      return accumulator;
-    };
-    var findIndex$1 = function (array, predicate, thisArg) {
-      var i, l;
-      for (i = 0, l = array.length; i < l; i++) {
-        if (predicate.call(thisArg, array[i], i, array)) {
-          return i;
-        }
-      }
-      return -1;
-    };
-    var last$1 = function (collection) {
-      return collection[collection.length - 1];
-    };
-
-    var whiteSpaceRegExp = /^\s*|\s*$/g;
-    var trim$1 = function (str) {
-      return str === null || str === undefined ? '' : ('' + str).replace(whiteSpaceRegExp, '');
-    };
-    var is$1 = function (obj, type) {
-      if (!type) {
-        return obj !== undefined;
-      }
-      if (type === 'array' && isArray$1(obj)) {
-        return true;
-      }
-      return typeof obj === type;
-    };
-    var makeMap = function (items, delim, map) {
-      var i;
-      items = items || [];
-      delim = delim || ',';
-      if (typeof items === 'string') {
-        items = items.split(delim);
-      }
-      map = map || {};
-      i = items.length;
-      while (i--) {
-        map[items[i]] = {};
-      }
-      return map;
-    };
-    var hasOwnProperty$1 = function (obj, prop) {
-      return Object.prototype.hasOwnProperty.call(obj, prop);
-    };
-    var create = function (s, p, root) {
-      var self = this;
-      var sp, ns, cn, scn, c, de = 0;
-      s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec(s);
-      cn = s[3].match(/(^|\.)(\w+)$/i)[2];
-      ns = self.createNS(s[3].replace(/\.\w+$/, ''), root);
-      if (ns[cn]) {
-        return;
-      }
-      if (s[2] === 'static') {
-        ns[cn] = p;
-        if (this.onCreate) {
-          this.onCreate(s[2], s[3], ns[cn]);
-        }
-        return;
-      }
-      if (!p[cn]) {
-        p[cn] = function () {
-        };
-        de = 1;
-      }
-      ns[cn] = p[cn];
-      self.extend(ns[cn].prototype, p);
-      if (s[5]) {
-        sp = self.resolve(s[5]).prototype;
-        scn = s[5].match(/\.(\w+)$/i)[1];
-        c = ns[cn];
-        if (de) {
-          ns[cn] = function () {
-            return sp[scn].apply(this, arguments);
-          };
-        } else {
-          ns[cn] = function () {
-            this.parent = sp[scn];
-            return c.apply(this, arguments);
-          };
-        }
-        ns[cn].prototype[cn] = ns[cn];
-        self.each(sp, function (f, n) {
-          ns[cn].prototype[n] = sp[n];
-        });
-        self.each(p, function (f, n) {
-          if (sp[n]) {
-            ns[cn].prototype[n] = function () {
-              this.parent = sp[n];
-              return f.apply(this, arguments);
-            };
-          } else {
-            if (n !== cn) {
-              ns[cn].prototype[n] = f;
-            }
-          }
-        });
-      }
-      self.each(p.static, function (f, n) {
-        ns[cn][n] = f;
-      });
-    };
-    var extend = function (obj) {
-      var exts = [];
-      for (var _i = 1; _i < arguments.length; _i++) {
-        exts[_i - 1] = arguments[_i];
-      }
-      for (var i = 0; i < exts.length; i++) {
-        var ext = exts[i];
-        for (var name_1 in ext) {
-          if (ext.hasOwnProperty(name_1)) {
-            var value = ext[name_1];
-            if (value !== undefined) {
-              obj[name_1] = value;
-            }
-          }
-        }
-      }
-      return obj;
-    };
-    var walk = function (o, f, n, s) {
-      s = s || this;
-      if (o) {
-        if (n) {
-          o = o[n];
-        }
-        each$2(o, function (o, i) {
-          if (f.call(s, o, i, n) === false) {
-            return false;
-          }
-          walk(o, f, n, s);
-        });
-      }
-    };
-    var createNS = function (n, o) {
-      var i, v;
-      o = o || domGlobals.window;
-      n = n.split('.');
-      for (i = 0; i < n.length; i++) {
-        v = n[i];
-        if (!o[v]) {
-          o[v] = {};
-        }
-        o = o[v];
-      }
-      return o;
-    };
-    var resolve = function (n, o) {
-      var i, l;
-      o = o || domGlobals.window;
-      n = n.split('.');
-      for (i = 0, l = n.length; i < l; i++) {
-        o = o[n[i]];
-        if (!o) {
-          break;
-        }
-      }
-      return o;
-    };
-    var explode = function (s, d) {
-      if (!s || is$1(s, 'array')) {
-        return s;
-      }
-      return map$2(s.split(d || ','), trim$1);
-    };
-    var _addCacheSuffix = function (url) {
-      var cacheSuffix = Env.cacheSuffix;
-      if (cacheSuffix) {
-        url += (url.indexOf('?') === -1 ? '?' : '&') + cacheSuffix;
-      }
-      return url;
-    };
-    var Tools = {
-      trim: trim$1,
-      isArray: isArray$1,
-      is: is$1,
-      toArray: toArray$1,
-      makeMap: makeMap,
-      each: each$2,
-      map: map$2,
-      grep: filter$2,
-      inArray: indexOf$1,
-      hasOwn: hasOwnProperty$1,
-      extend: extend,
-      create: create,
-      walk: walk,
-      createNS: createNS,
-      resolve: resolve,
-      explode: explode,
-      _addCacheSuffix: _addCacheSuffix
-    };
-
-    function StyleSheetLoader(document, settings) {
-      if (settings === void 0) {
-        settings = {};
-      }
-      var idCount = 0;
-      var loadedStates = {};
-      var maxLoadTime;
-      maxLoadTime = settings.maxLoadTime || 5000;
-      var _setReferrerPolicy = function (referrerPolicy) {
-        settings.referrerPolicy = referrerPolicy;
-      };
-      var appendToHead = function (node) {
-        document.getElementsByTagName('head')[0].appendChild(node);
-      };
-      var load = function (url, loadedCallback, errorCallback) {
-        var link, style, startTime, state;
-        var resolve = function (status) {
-          state.status = status;
-          state.passed = [];
-          state.failed = [];
-          if (link) {
-            link.onload = null;
-            link.onerror = null;
-            link = null;
-          }
-        };
-        var passed = function () {
-          var callbacks = state.passed;
-          var i = callbacks.length;
-          while (i--) {
-            callbacks[i]();
-          }
-          resolve(2);
-        };
-        var failed = function () {
-          var callbacks = state.failed;
-          var i = callbacks.length;
-          while (i--) {
-            callbacks[i]();
-          }
-          resolve(3);
-        };
-        var isOldWebKit = function () {
-          var webKitChunks = domGlobals.navigator.userAgent.match(/WebKit\/(\d*)/);
-          return !!(webKitChunks && parseInt(webKitChunks[1], 10) < 536);
-        };
-        var wait = function (testCallback, waitCallback) {
-          if (!testCallback()) {
-            if (new Date().getTime() - startTime < maxLoadTime) {
-              Delay.setTimeout(waitCallback);
-            } else {
-              failed();
-            }
-          }
-        };
-        var waitForWebKitLinkLoaded = function () {
-          wait(function () {
-            var styleSheets = document.styleSheets;
-            var styleSheet, i = styleSheets.length, owner;
-            while (i--) {
-              styleSheet = styleSheets[i];
-              owner = styleSheet.ownerNode ? styleSheet.ownerNode : styleSheet.owningElement;
-              if (owner && owner.id === link.id) {
-                passed();
-                return true;
-              }
-            }
-          }, waitForWebKitLinkLoaded);
-        };
-        var waitForGeckoLinkLoaded = function () {
-          wait(function () {
-            try {
-              var cssRules = style.sheet.cssRules;
-              passed();
-              return !!cssRules;
-            } catch (ex) {
-            }
-          }, waitForGeckoLinkLoaded);
-        };
-        url = Tools._addCacheSuffix(url);
-        if (!loadedStates[url]) {
-          state = {
-            passed: [],
-            failed: []
-          };
-          loadedStates[url] = state;
-        } else {
-          state = loadedStates[url];
-        }
-        if (loadedCallback) {
-          state.passed.push(loadedCallback);
-        }
-        if (errorCallback) {
-          state.failed.push(errorCallback);
-        }
-        if (state.status === 1) {
-          return;
-        }
-        if (state.status === 2) {
-          passed();
-          return;
-        }
-        if (state.status === 3) {
-          failed();
-          return;
-        }
-        state.status = 1;
-        link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.id = 'u' + idCount++;
-        link.async = false;
-        link.defer = false;
-        startTime = new Date().getTime();
-        if (settings.contentCssCors) {
-          link.crossOrigin = 'anonymous';
-        }
-        if (settings.referrerPolicy) {
-          set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
-        }
-        if ('onload' in link && !isOldWebKit()) {
-          link.onload = waitForWebKitLinkLoaded;
-          link.onerror = failed;
-        } else {
-          if (domGlobals.navigator.userAgent.indexOf('Firefox') > 0) {
-            style = document.createElement('style');
-            style.textContent = '@import "' + url + '"';
-            waitForGeckoLinkLoaded();
-            appendToHead(style);
-            return;
-          }
-          waitForWebKitLinkLoaded();
-        }
-        appendToHead(link);
-        link.href = url;
-      };
-      var loadF = function (url) {
-        return Future.nu(function (resolve) {
-          load(url, compose(resolve, constant(Result.value(url))), compose(resolve, constant(Result.error(url))));
-        });
-      };
-      var unbox = function (result) {
-        return result.fold(identity, identity);
-      };
-      var loadAll = function (urls, success, failure) {
-        par$1(map(urls, loadF)).get(function (result) {
-          var parts = partition(result, function (r) {
-            return r.isValue();
-          });
-          if (parts.fail.length > 0) {
-            failure(parts.fail.map(unbox));
-          } else {
-            success(parts.pass.map(unbox));
-          }
-        });
-      };
-      return {
-        load: load,
-        loadAll: loadAll,
-        _setReferrerPolicy: _setReferrerPolicy
-      };
-    }
 
     var blocks = [
       'article',
@@ -3140,6 +2025,11 @@
     var isTableCell = lazyLookup(tableCells);
     var isWsPreserveElement = lazyLookup(wsElements);
 
+    var whiteSpaceRegExp$1 = /^[ \t\r\n]*$/;
+    var isWhitespaceText = function (text) {
+      return whiteSpaceRegExp$1.test(text);
+    };
+
     var surroundedBySpans = function (node) {
       var previousIsSpan = node.previousSibling && node.previousSibling.nodeName === 'SPAN';
       var nextIsSpan = node.nextSibling && node.nextSibling.nodeName === 'SPAN';
@@ -3156,13 +2046,13 @@
       for (i = children.length - 1; i >= 0; i--) {
         trimNode(dom, children[i]);
       }
-      if (isDocument(node) === false) {
+      if (isDocument$1(node) === false) {
         if (isText$1(node) && node.nodeValue.length > 0) {
-          var trimmedLength = Tools.trim(node.nodeValue).length;
-          if (dom.isBlock(node.parentNode) || trimmedLength > 0) {
+          var isEmpty = isWhitespaceText(node.nodeValue);
+          if (dom.isBlock(node.parentNode) || !isEmpty) {
             return;
           }
-          if (trimmedLength === 0 && surroundedBySpans(node)) {
+          if (surroundedBySpans(node)) {
             return;
           }
         } else if (isElement$1(node)) {
@@ -3180,7 +2070,6 @@
     };
 
     var makeMap$1 = Tools.makeMap;
-    var namedEntities, baseEntities, reverseEntities;
     var attrsCharsRegExp = /[&<>\"\u0060\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
     var textCharsRegExp = /[<>&\u007E-\uD7FF\uE000-\uFFEF]|[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
     var rawCharsRegExp = /[<>&\"\']/g;
@@ -3214,7 +2103,7 @@
       158: '\u017e',
       159: '\u0178'
     };
-    baseEntities = {
+    var baseEntities = {
       '"': '&quot;',
       '\'': '&#39;',
       '<': '&lt;',
@@ -3222,7 +2111,7 @@
       '&': '&amp;',
       '`': '&#96;'
     };
-    reverseEntities = {
+    var reverseEntities = {
       '&lt;': '<',
       '&gt;': '>',
       '&amp;': '&',
@@ -3230,8 +2119,7 @@
       '&apos;': '\''
     };
     var nativeDecode = function (text) {
-      var elm;
-      elm = Element.fromTag('div').dom();
+      var elm = Element.fromTag('div').dom();
       elm.innerHTML = text;
       return elm.textContent || elm.innerText || text;
     };
@@ -3252,7 +2140,7 @@
         return lookup;
       }
     };
-    namedEntities = buildEntitiesLookup('50,nbsp,51,iexcl,52,cent,53,pound,54,curren,55,yen,56,brvbar,57,sect,58,uml,59,copy,' + '5a,ordf,5b,laquo,5c,not,5d,shy,5e,reg,5f,macr,5g,deg,5h,plusmn,5i,sup2,5j,sup3,5k,acute,' + '5l,micro,5m,para,5n,middot,5o,cedil,5p,sup1,5q,ordm,5r,raquo,5s,frac14,5t,frac12,5u,frac34,' + '5v,iquest,60,Agrave,61,Aacute,62,Acirc,63,Atilde,64,Auml,65,Aring,66,AElig,67,Ccedil,' + '68,Egrave,69,Eacute,6a,Ecirc,6b,Euml,6c,Igrave,6d,Iacute,6e,Icirc,6f,Iuml,6g,ETH,6h,Ntilde,' + '6i,Ograve,6j,Oacute,6k,Ocirc,6l,Otilde,6m,Ouml,6n,times,6o,Oslash,6p,Ugrave,6q,Uacute,' + '6r,Ucirc,6s,Uuml,6t,Yacute,6u,THORN,6v,szlig,70,agrave,71,aacute,72,acirc,73,atilde,74,auml,' + '75,aring,76,aelig,77,ccedil,78,egrave,79,eacute,7a,ecirc,7b,euml,7c,igrave,7d,iacute,7e,icirc,' + '7f,iuml,7g,eth,7h,ntilde,7i,ograve,7j,oacute,7k,ocirc,7l,otilde,7m,ouml,7n,divide,7o,oslash,' + '7p,ugrave,7q,uacute,7r,ucirc,7s,uuml,7t,yacute,7u,thorn,7v,yuml,ci,fnof,sh,Alpha,si,Beta,' + 'sj,Gamma,sk,Delta,sl,Epsilon,sm,Zeta,sn,Eta,so,Theta,sp,Iota,sq,Kappa,sr,Lambda,ss,Mu,' + 'st,Nu,su,Xi,sv,Omicron,t0,Pi,t1,Rho,t3,Sigma,t4,Tau,t5,Upsilon,t6,Phi,t7,Chi,t8,Psi,' + 't9,Omega,th,alpha,ti,beta,tj,gamma,tk,delta,tl,epsilon,tm,zeta,tn,eta,to,theta,tp,iota,' + 'tq,kappa,tr,lambda,ts,mu,tt,nu,tu,xi,tv,omicron,u0,pi,u1,rho,u2,sigmaf,u3,sigma,u4,tau,' + 'u5,upsilon,u6,phi,u7,chi,u8,psi,u9,omega,uh,thetasym,ui,upsih,um,piv,812,bull,816,hellip,' + '81i,prime,81j,Prime,81u,oline,824,frasl,88o,weierp,88h,image,88s,real,892,trade,89l,alefsym,' + '8cg,larr,8ch,uarr,8ci,rarr,8cj,darr,8ck,harr,8dl,crarr,8eg,lArr,8eh,uArr,8ei,rArr,8ej,dArr,' + '8ek,hArr,8g0,forall,8g2,part,8g3,exist,8g5,empty,8g7,nabla,8g8,isin,8g9,notin,8gb,ni,8gf,prod,' + '8gh,sum,8gi,minus,8gn,lowast,8gq,radic,8gt,prop,8gu,infin,8h0,ang,8h7,and,8h8,or,8h9,cap,8ha,cup,' + '8hb,int,8hk,there4,8hs,sim,8i5,cong,8i8,asymp,8j0,ne,8j1,equiv,8j4,le,8j5,ge,8k2,sub,8k3,sup,8k4,' + 'nsub,8k6,sube,8k7,supe,8kl,oplus,8kn,otimes,8l5,perp,8m5,sdot,8o8,lceil,8o9,rceil,8oa,lfloor,8ob,' + 'rfloor,8p9,lang,8pa,rang,9ea,loz,9j0,spades,9j3,clubs,9j5,hearts,9j6,diams,ai,OElig,aj,oelig,b0,' + 'Scaron,b1,scaron,bo,Yuml,m6,circ,ms,tilde,802,ensp,803,emsp,809,thinsp,80c,zwnj,80d,zwj,80e,lrm,' + '80f,rlm,80j,ndash,80k,mdash,80o,lsquo,80p,rsquo,80q,sbquo,80s,ldquo,80t,rdquo,80u,bdquo,810,dagger,' + '811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro', 32);
+    var namedEntities = buildEntitiesLookup('50,nbsp,51,iexcl,52,cent,53,pound,54,curren,55,yen,56,brvbar,57,sect,58,uml,59,copy,' + '5a,ordf,5b,laquo,5c,not,5d,shy,5e,reg,5f,macr,5g,deg,5h,plusmn,5i,sup2,5j,sup3,5k,acute,' + '5l,micro,5m,para,5n,middot,5o,cedil,5p,sup1,5q,ordm,5r,raquo,5s,frac14,5t,frac12,5u,frac34,' + '5v,iquest,60,Agrave,61,Aacute,62,Acirc,63,Atilde,64,Auml,65,Aring,66,AElig,67,Ccedil,' + '68,Egrave,69,Eacute,6a,Ecirc,6b,Euml,6c,Igrave,6d,Iacute,6e,Icirc,6f,Iuml,6g,ETH,6h,Ntilde,' + '6i,Ograve,6j,Oacute,6k,Ocirc,6l,Otilde,6m,Ouml,6n,times,6o,Oslash,6p,Ugrave,6q,Uacute,' + '6r,Ucirc,6s,Uuml,6t,Yacute,6u,THORN,6v,szlig,70,agrave,71,aacute,72,acirc,73,atilde,74,auml,' + '75,aring,76,aelig,77,ccedil,78,egrave,79,eacute,7a,ecirc,7b,euml,7c,igrave,7d,iacute,7e,icirc,' + '7f,iuml,7g,eth,7h,ntilde,7i,ograve,7j,oacute,7k,ocirc,7l,otilde,7m,ouml,7n,divide,7o,oslash,' + '7p,ugrave,7q,uacute,7r,ucirc,7s,uuml,7t,yacute,7u,thorn,7v,yuml,ci,fnof,sh,Alpha,si,Beta,' + 'sj,Gamma,sk,Delta,sl,Epsilon,sm,Zeta,sn,Eta,so,Theta,sp,Iota,sq,Kappa,sr,Lambda,ss,Mu,' + 'st,Nu,su,Xi,sv,Omicron,t0,Pi,t1,Rho,t3,Sigma,t4,Tau,t5,Upsilon,t6,Phi,t7,Chi,t8,Psi,' + 't9,Omega,th,alpha,ti,beta,tj,gamma,tk,delta,tl,epsilon,tm,zeta,tn,eta,to,theta,tp,iota,' + 'tq,kappa,tr,lambda,ts,mu,tt,nu,tu,xi,tv,omicron,u0,pi,u1,rho,u2,sigmaf,u3,sigma,u4,tau,' + 'u5,upsilon,u6,phi,u7,chi,u8,psi,u9,omega,uh,thetasym,ui,upsih,um,piv,812,bull,816,hellip,' + '81i,prime,81j,Prime,81u,oline,824,frasl,88o,weierp,88h,image,88s,real,892,trade,89l,alefsym,' + '8cg,larr,8ch,uarr,8ci,rarr,8cj,darr,8ck,harr,8dl,crarr,8eg,lArr,8eh,uArr,8ei,rArr,8ej,dArr,' + '8ek,hArr,8g0,forall,8g2,part,8g3,exist,8g5,empty,8g7,nabla,8g8,isin,8g9,notin,8gb,ni,8gf,prod,' + '8gh,sum,8gi,minus,8gn,lowast,8gq,radic,8gt,prop,8gu,infin,8h0,ang,8h7,and,8h8,or,8h9,cap,8ha,cup,' + '8hb,int,8hk,there4,8hs,sim,8i5,cong,8i8,asymp,8j0,ne,8j1,equiv,8j4,le,8j5,ge,8k2,sub,8k3,sup,8k4,' + 'nsub,8k6,sube,8k7,supe,8kl,oplus,8kn,otimes,8l5,perp,8m5,sdot,8o8,lceil,8o9,rceil,8oa,lfloor,8ob,' + 'rfloor,8p9,lang,8pa,rang,9ea,loz,9j0,spades,9j3,clubs,9j5,hearts,9j6,diams,ai,OElig,aj,oelig,b0,' + 'Scaron,b1,scaron,bo,Yuml,m6,circ,ms,tilde,802,ensp,803,emsp,809,thinsp,80c,zwnj,80d,zwj,80e,lrm,' + '80f,rlm,80j,ndash,80k,mdash,80o,lsquo,80p,rsquo,80q,sbquo,80s,ldquo,80t,rdquo,80u,bdquo,810,dagger,' + '811,Dagger,81g,permil,81p,lsaquo,81q,rsaquo,85c,euro', 32);
     var encodeRaw = function (text, attr) {
       return text.replace(attr ? attrsCharsRegExp : textCharsRegExp, function (chr) {
         return baseEntities[chr] || chr;
@@ -3596,11 +2484,6 @@
       var elements = {};
       var children = {};
       var patternElements = [];
-      var validStyles;
-      var invalidStyles;
-      var schemaItems;
-      var whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;
-      var blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;
       var customElementsMap = {}, specialElements = {};
       var createLookupTable = function (option, defaultValue, extendWith) {
         var value = settings[option];
@@ -3617,23 +2500,23 @@
         return value;
       };
       settings = settings || {};
-      schemaItems = compileSchema(settings.schema);
+      var schemaItems = compileSchema(settings.schema);
       if (settings.verify_html === false) {
         settings.valid_elements = '*[*]';
       }
-      validStyles = compileElementMap(settings.valid_styles);
-      invalidStyles = compileElementMap(settings.invalid_styles, 'map');
-      validClasses = compileElementMap(settings.valid_classes, 'map');
-      whiteSpaceElementsMap = createLookupTable('whitespace_elements', 'pre script noscript style textarea video audio iframe object code');
-      selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li option p td tfoot th thead tr');
-      shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link ' + 'meta param embed source wbr track');
-      boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' + 'noshade nowrap readonly selected autoplay loop controls');
-      nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object ' + 'script pre code', shortEndedElementsMap);
-      moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
-      textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' + 'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
-      blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' + 'th tr td li ol ul caption dl dt dd noscript menu isindex option ' + 'datalist select optgroup figcaption details summary', textBlockElementsMap);
-      textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' + 'dfn code mark q sup sub samp');
-      each$3((settings.special || 'script noscript noframes noembed title style textarea xmp').split(' '), function (name) {
+      var validStyles = compileElementMap(settings.valid_styles);
+      var invalidStyles = compileElementMap(settings.invalid_styles, 'map');
+      var validClasses = compileElementMap(settings.valid_classes, 'map');
+      var whiteSpaceElementsMap = createLookupTable('whitespace_elements', 'pre script noscript style textarea video audio iframe object code');
+      var selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li option p td tfoot th thead tr');
+      var shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link ' + 'meta param embed source wbr track');
+      var boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize ' + 'noshade nowrap readonly selected autoplay loop controls');
+      var nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object ' + 'script pre code', shortEndedElementsMap);
+      var moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', 'table', nonEmptyElementsMap);
+      var textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' + 'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
+      var blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' + 'th tr td li ol ul caption dl dt dd noscript menu isindex option ' + 'datalist select optgroup figcaption details summary', textBlockElementsMap);
+      var textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' + 'dfn code mark q sup sub samp');
+      each$3((settings.special || 'script noscript iframe noframes noembed title style textarea xmp').split(' '), function (name) {
         specialElements[name] = new RegExp('</' + name + '[^>]*>', 'gi');
       });
       var patternToRegExp = function (str) {
@@ -3785,7 +2668,7 @@
         }
       };
       var addValidChildren = function (validChildren) {
-        var childRuleRegExp = /^([+\-]?)(\w+)\[([^\]]+)\]$/;
+        var childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-\.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)\]$/;
         mapCache[settings.schema] = null;
         if (validChildren) {
           each$3(split(validChildren, ','), function (rule) {
@@ -4002,7 +2885,6 @@
       var trimRightRegExp = /\s+$/;
       var i;
       var encodingLookup = {};
-      var encodingItems;
       var validStyles;
       var invalidStyles;
       var invisibleChar = zeroWidth;
@@ -4011,7 +2893,7 @@
         validStyles = schema.getValidStyles();
         invalidStyles = schema.getInvalidStyles();
       }
-      encodingItems = ('\\" \\\' \\; \\: ; : ' + invisibleChar).split(' ');
+      var encodingItems = ('\\" \\\' \\; \\: ; : ' + invisibleChar).split(' ');
       for (i = 0; i < encodingItems.length; i++) {
         encodingLookup[encodingItems[i]] = invisibleChar + i;
         encodingLookup[invisibleChar + i] = encodingItems[i];
@@ -4026,20 +2908,19 @@
           var urlConverter = settings.url_converter;
           var urlConverterScope = settings.url_converter_scope || this;
           var compress = function (prefix, suffix, noJoin) {
-            var top, right, bottom, left;
-            top = styles[prefix + '-top' + suffix];
+            var top = styles[prefix + '-top' + suffix];
             if (!top) {
               return;
             }
-            right = styles[prefix + '-right' + suffix];
+            var right = styles[prefix + '-right' + suffix];
             if (!right) {
               return;
             }
-            bottom = styles[prefix + '-bottom' + suffix];
+            var bottom = styles[prefix + '-bottom' + suffix];
             if (!bottom) {
               return;
             }
-            left = styles[prefix + '-left' + suffix];
+            var left = styles[prefix + '-left' + suffix];
             if (!left) {
               return;
             }
@@ -4183,11 +3064,11 @@
         serialize: function (styles, elementName) {
           var css = '';
           var serializeStyles = function (name) {
-            var styleList, i, l, value;
-            styleList = validStyles[name];
+            var value;
+            var styleList = validStyles[name];
             if (styleList) {
-              for (i = 0, l = styleList.length; i < l; i++) {
-                name = styleList[i];
+              for (var i_1 = 0, l = styleList.length; i_1 < l; i_1++) {
+                name = styleList[i_1];
                 value = styles[name];
                 if (value) {
                   css += (css.length > 0 ? ' ' : '') + name + ': ' + value + ';';
@@ -4386,9 +3267,8 @@
             fakeName = self.mouseEnterLeave[name];
             if (fakeName) {
               nativeHandler = function (evt) {
-                var current, related;
-                current = evt.currentTarget;
-                related = evt.relatedTarget;
+                var current = evt.currentTarget;
+                var related = evt.relatedTarget;
                 if (related && current.contains) {
                   related = current.contains(related);
                 } else {
@@ -4443,11 +3323,11 @@
         return callback;
       };
       EventUtils.prototype.unbind = function (target, names, callback) {
-        var id, callbackList, i, ci, name, eventMap;
+        var callbackList, i, ci, name, eventMap;
         if (!target || target.nodeType === 3 || target.nodeType === 8) {
           return this;
         }
-        id = target[this.expando];
+        var id = target[this.expando];
         if (id) {
           eventMap = this.events[id];
           if (names) {
@@ -4549,12 +3429,11 @@
         return false;
       };
       EventUtils.prototype.executeHandlers = function (evt, id) {
-        var callbackList, i, l, callback;
         var container = this.events[id];
-        callbackList = container && container[evt.type];
+        var callbackList = container && container[evt.type];
         if (callbackList) {
-          for (i = 0, l = callbackList.length; i < l; i++) {
-            callback = callbackList[i];
+          for (var i = 0, l = callbackList.length; i < l; i++) {
+            var callback = callbackList[i];
             if (callback && callback.func.call(callback.scope, evt) === false) {
               evt.preventDefault();
             }
@@ -5593,11 +4472,11 @@
       return obj && obj === obj.window;
     };
     var createFragment = function (html, fragDoc) {
-      var frag, node, container;
       fragDoc = fragDoc || doc;
-      container = fragDoc.createElement('div');
-      frag = fragDoc.createDocumentFragment();
+      var container = fragDoc.createElement('div');
+      var frag = fragDoc.createDocumentFragment();
       container.innerHTML = html;
+      var node;
       while (node = container.firstChild) {
         frag.appendChild(node);
       }
@@ -5672,9 +4551,9 @@
       }
       return -1;
     };
-    var whiteSpaceRegExp$1 = /^\s*|\s*$/g;
+    var whiteSpaceRegExp$2 = /^\s*|\s*$/g;
     var trim$2 = function (str) {
-      return str === null || str === undefined ? '' : ('' + str).replace(whiteSpaceRegExp$1, '');
+      return str === null || str === undefined ? '' : ('' + str).replace(whiteSpaceRegExp$2, '');
     };
     var each$4 = function (obj, callback) {
       var length, key, i, value;
@@ -6066,10 +4945,9 @@
           });
         } else {
           self.each(function (index, node) {
-            var existingClassName, classState;
-            classState = hasClass(node, className);
+            var classState = hasClass(node, className);
             if (classState !== state) {
-              existingClassName = node.className;
+              var existingClassName = node.className;
               if (classState) {
                 node.className = trim$2((' ' + existingClassName + ' ').replace(' ' + className + ' ', ' '));
               } else {
@@ -6449,11 +5327,1299 @@
       return TreeWalker;
     }();
 
+    var exports$1 = {}, module$1 = { exports: exports$1 };
+    (function (define, exports, module, require) {
+      (function (f) {
+        if (typeof exports === 'object' && typeof module !== 'undefined') {
+          module.exports = f();
+        } else if (typeof define === 'function' && define.amd) {
+          define([], f);
+        } else {
+          var g;
+          if (typeof window !== 'undefined') {
+            g = window;
+          } else if (typeof global !== 'undefined') {
+            g = global;
+          } else if (typeof self !== 'undefined') {
+            g = self;
+          } else {
+            g = this;
+          }
+          g.EphoxContactWrapper = f();
+        }
+      }(function () {
+        return function () {
+          function r(e, n, t) {
+            function o(i, f) {
+              if (!n[i]) {
+                if (!e[i]) {
+                  var c = 'function' == typeof require && require;
+                  if (!f && c)
+                    return c(i, !0);
+                  if (u)
+                    return u(i, !0);
+                  var a = new Error('Cannot find module \'' + i + '\'');
+                  throw a.code = 'MODULE_NOT_FOUND', a;
+                }
+                var p = n[i] = { exports: {} };
+                e[i][0].call(p.exports, function (r) {
+                  var n = e[i][1][r];
+                  return o(n || r);
+                }, p, p.exports, r, e, n, t);
+              }
+              return n[i].exports;
+            }
+            for (var u = 'function' == typeof require && require, i = 0; i < t.length; i++)
+              o(t[i]);
+            return o;
+          }
+          return r;
+        }()({
+          1: [
+            function (require, module, exports) {
+              var process = module.exports = {};
+              var cachedSetTimeout;
+              var cachedClearTimeout;
+              function defaultSetTimout() {
+                throw new Error('setTimeout has not been defined');
+              }
+              function defaultClearTimeout() {
+                throw new Error('clearTimeout has not been defined');
+              }
+              (function () {
+                try {
+                  if (typeof setTimeout === 'function') {
+                    cachedSetTimeout = setTimeout;
+                  } else {
+                    cachedSetTimeout = defaultSetTimout;
+                  }
+                } catch (e) {
+                  cachedSetTimeout = defaultSetTimout;
+                }
+                try {
+                  if (typeof clearTimeout === 'function') {
+                    cachedClearTimeout = clearTimeout;
+                  } else {
+                    cachedClearTimeout = defaultClearTimeout;
+                  }
+                } catch (e) {
+                  cachedClearTimeout = defaultClearTimeout;
+                }
+              }());
+              function runTimeout(fun) {
+                if (cachedSetTimeout === setTimeout) {
+                  return setTimeout(fun, 0);
+                }
+                if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+                  cachedSetTimeout = setTimeout;
+                  return setTimeout(fun, 0);
+                }
+                try {
+                  return cachedSetTimeout(fun, 0);
+                } catch (e) {
+                  try {
+                    return cachedSetTimeout.call(null, fun, 0);
+                  } catch (e) {
+                    return cachedSetTimeout.call(this, fun, 0);
+                  }
+                }
+              }
+              function runClearTimeout(marker) {
+                if (cachedClearTimeout === clearTimeout) {
+                  return clearTimeout(marker);
+                }
+                if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+                  cachedClearTimeout = clearTimeout;
+                  return clearTimeout(marker);
+                }
+                try {
+                  return cachedClearTimeout(marker);
+                } catch (e) {
+                  try {
+                    return cachedClearTimeout.call(null, marker);
+                  } catch (e) {
+                    return cachedClearTimeout.call(this, marker);
+                  }
+                }
+              }
+              var queue = [];
+              var draining = false;
+              var currentQueue;
+              var queueIndex = -1;
+              function cleanUpNextTick() {
+                if (!draining || !currentQueue) {
+                  return;
+                }
+                draining = false;
+                if (currentQueue.length) {
+                  queue = currentQueue.concat(queue);
+                } else {
+                  queueIndex = -1;
+                }
+                if (queue.length) {
+                  drainQueue();
+                }
+              }
+              function drainQueue() {
+                if (draining) {
+                  return;
+                }
+                var timeout = runTimeout(cleanUpNextTick);
+                draining = true;
+                var len = queue.length;
+                while (len) {
+                  currentQueue = queue;
+                  queue = [];
+                  while (++queueIndex < len) {
+                    if (currentQueue) {
+                      currentQueue[queueIndex].run();
+                    }
+                  }
+                  queueIndex = -1;
+                  len = queue.length;
+                }
+                currentQueue = null;
+                draining = false;
+                runClearTimeout(timeout);
+              }
+              process.nextTick = function (fun) {
+                var args = new Array(arguments.length - 1);
+                if (arguments.length > 1) {
+                  for (var i = 1; i < arguments.length; i++) {
+                    args[i - 1] = arguments[i];
+                  }
+                }
+                queue.push(new Item(fun, args));
+                if (queue.length === 1 && !draining) {
+                  runTimeout(drainQueue);
+                }
+              };
+              function Item(fun, array) {
+                this.fun = fun;
+                this.array = array;
+              }
+              Item.prototype.run = function () {
+                this.fun.apply(null, this.array);
+              };
+              process.title = 'browser';
+              process.browser = true;
+              process.env = {};
+              process.argv = [];
+              process.version = '';
+              process.versions = {};
+              function noop() {
+              }
+              process.on = noop;
+              process.addListener = noop;
+              process.once = noop;
+              process.off = noop;
+              process.removeListener = noop;
+              process.removeAllListeners = noop;
+              process.emit = noop;
+              process.prependListener = noop;
+              process.prependOnceListener = noop;
+              process.listeners = function (name) {
+                return [];
+              };
+              process.binding = function (name) {
+                throw new Error('process.binding is not supported');
+              };
+              process.cwd = function () {
+                return '/';
+              };
+              process.chdir = function (dir) {
+                throw new Error('process.chdir is not supported');
+              };
+              process.umask = function () {
+                return 0;
+              };
+            },
+            {}
+          ],
+          2: [
+            function (require, module, exports) {
+              (function (setImmediate) {
+                (function (root) {
+                  var setTimeoutFunc = setTimeout;
+                  function noop() {
+                  }
+                  function bind(fn, thisArg) {
+                    return function () {
+                      fn.apply(thisArg, arguments);
+                    };
+                  }
+                  function Promise(fn) {
+                    if (typeof this !== 'object')
+                      throw new TypeError('Promises must be constructed via new');
+                    if (typeof fn !== 'function')
+                      throw new TypeError('not a function');
+                    this._state = 0;
+                    this._handled = false;
+                    this._value = undefined;
+                    this._deferreds = [];
+                    doResolve(fn, this);
+                  }
+                  function handle(self, deferred) {
+                    while (self._state === 3) {
+                      self = self._value;
+                    }
+                    if (self._state === 0) {
+                      self._deferreds.push(deferred);
+                      return;
+                    }
+                    self._handled = true;
+                    Promise._immediateFn(function () {
+                      var cb = self._state === 1 ? deferred.onFulfilled : deferred.onRejected;
+                      if (cb === null) {
+                        (self._state === 1 ? resolve : reject)(deferred.promise, self._value);
+                        return;
+                      }
+                      var ret;
+                      try {
+                        ret = cb(self._value);
+                      } catch (e) {
+                        reject(deferred.promise, e);
+                        return;
+                      }
+                      resolve(deferred.promise, ret);
+                    });
+                  }
+                  function resolve(self, newValue) {
+                    try {
+                      if (newValue === self)
+                        throw new TypeError('A promise cannot be resolved with itself.');
+                      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+                        var then = newValue.then;
+                        if (newValue instanceof Promise) {
+                          self._state = 3;
+                          self._value = newValue;
+                          finale(self);
+                          return;
+                        } else if (typeof then === 'function') {
+                          doResolve(bind(then, newValue), self);
+                          return;
+                        }
+                      }
+                      self._state = 1;
+                      self._value = newValue;
+                      finale(self);
+                    } catch (e) {
+                      reject(self, e);
+                    }
+                  }
+                  function reject(self, newValue) {
+                    self._state = 2;
+                    self._value = newValue;
+                    finale(self);
+                  }
+                  function finale(self) {
+                    if (self._state === 2 && self._deferreds.length === 0) {
+                      Promise._immediateFn(function () {
+                        if (!self._handled) {
+                          Promise._unhandledRejectionFn(self._value);
+                        }
+                      });
+                    }
+                    for (var i = 0, len = self._deferreds.length; i < len; i++) {
+                      handle(self, self._deferreds[i]);
+                    }
+                    self._deferreds = null;
+                  }
+                  function Handler(onFulfilled, onRejected, promise) {
+                    this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
+                    this.onRejected = typeof onRejected === 'function' ? onRejected : null;
+                    this.promise = promise;
+                  }
+                  function doResolve(fn, self) {
+                    var done = false;
+                    try {
+                      fn(function (value) {
+                        if (done)
+                          return;
+                        done = true;
+                        resolve(self, value);
+                      }, function (reason) {
+                        if (done)
+                          return;
+                        done = true;
+                        reject(self, reason);
+                      });
+                    } catch (ex) {
+                      if (done)
+                        return;
+                      done = true;
+                      reject(self, ex);
+                    }
+                  }
+                  Promise.prototype['catch'] = function (onRejected) {
+                    return this.then(null, onRejected);
+                  };
+                  Promise.prototype.then = function (onFulfilled, onRejected) {
+                    var prom = new this.constructor(noop);
+                    handle(this, new Handler(onFulfilled, onRejected, prom));
+                    return prom;
+                  };
+                  Promise.all = function (arr) {
+                    var args = Array.prototype.slice.call(arr);
+                    return new Promise(function (resolve, reject) {
+                      if (args.length === 0)
+                        return resolve([]);
+                      var remaining = args.length;
+                      function res(i, val) {
+                        try {
+                          if (val && (typeof val === 'object' || typeof val === 'function')) {
+                            var then = val.then;
+                            if (typeof then === 'function') {
+                              then.call(val, function (val) {
+                                res(i, val);
+                              }, reject);
+                              return;
+                            }
+                          }
+                          args[i] = val;
+                          if (--remaining === 0) {
+                            resolve(args);
+                          }
+                        } catch (ex) {
+                          reject(ex);
+                        }
+                      }
+                      for (var i = 0; i < args.length; i++) {
+                        res(i, args[i]);
+                      }
+                    });
+                  };
+                  Promise.resolve = function (value) {
+                    if (value && typeof value === 'object' && value.constructor === Promise) {
+                      return value;
+                    }
+                    return new Promise(function (resolve) {
+                      resolve(value);
+                    });
+                  };
+                  Promise.reject = function (value) {
+                    return new Promise(function (resolve, reject) {
+                      reject(value);
+                    });
+                  };
+                  Promise.race = function (values) {
+                    return new Promise(function (resolve, reject) {
+                      for (var i = 0, len = values.length; i < len; i++) {
+                        values[i].then(resolve, reject);
+                      }
+                    });
+                  };
+                  Promise._immediateFn = typeof setImmediate === 'function' ? function (fn) {
+                    setImmediate(fn);
+                  } : function (fn) {
+                    setTimeoutFunc(fn, 0);
+                  };
+                  Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
+                    if (typeof console !== 'undefined' && console) {
+                      console.warn('Possible Unhandled Promise Rejection:', err);
+                    }
+                  };
+                  Promise._setImmediateFn = function _setImmediateFn(fn) {
+                    Promise._immediateFn = fn;
+                  };
+                  Promise._setUnhandledRejectionFn = function _setUnhandledRejectionFn(fn) {
+                    Promise._unhandledRejectionFn = fn;
+                  };
+                  if (typeof module !== 'undefined' && module.exports) {
+                    module.exports = Promise;
+                  } else if (!root.Promise) {
+                    root.Promise = Promise;
+                  }
+                }(this));
+              }.call(this, require('timers').setImmediate));
+            },
+            { 'timers': 3 }
+          ],
+          3: [
+            function (require, module, exports) {
+              (function (setImmediate, clearImmediate) {
+                var nextTick = require('process/browser.js').nextTick;
+                var apply = Function.prototype.apply;
+                var slice = Array.prototype.slice;
+                var immediateIds = {};
+                var nextImmediateId = 0;
+                exports.setTimeout = function () {
+                  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+                };
+                exports.setInterval = function () {
+                  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+                };
+                exports.clearTimeout = exports.clearInterval = function (timeout) {
+                  timeout.close();
+                };
+                function Timeout(id, clearFn) {
+                  this._id = id;
+                  this._clearFn = clearFn;
+                }
+                Timeout.prototype.unref = Timeout.prototype.ref = function () {
+                };
+                Timeout.prototype.close = function () {
+                  this._clearFn.call(window, this._id);
+                };
+                exports.enroll = function (item, msecs) {
+                  clearTimeout(item._idleTimeoutId);
+                  item._idleTimeout = msecs;
+                };
+                exports.unenroll = function (item) {
+                  clearTimeout(item._idleTimeoutId);
+                  item._idleTimeout = -1;
+                };
+                exports._unrefActive = exports.active = function (item) {
+                  clearTimeout(item._idleTimeoutId);
+                  var msecs = item._idleTimeout;
+                  if (msecs >= 0) {
+                    item._idleTimeoutId = setTimeout(function onTimeout() {
+                      if (item._onTimeout)
+                        item._onTimeout();
+                    }, msecs);
+                  }
+                };
+                exports.setImmediate = typeof setImmediate === 'function' ? setImmediate : function (fn) {
+                  var id = nextImmediateId++;
+                  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
+                  immediateIds[id] = true;
+                  nextTick(function onNextTick() {
+                    if (immediateIds[id]) {
+                      if (args) {
+                        fn.apply(null, args);
+                      } else {
+                        fn.call(null);
+                      }
+                      exports.clearImmediate(id);
+                    }
+                  });
+                  return id;
+                };
+                exports.clearImmediate = typeof clearImmediate === 'function' ? clearImmediate : function (id) {
+                  delete immediateIds[id];
+                };
+              }.call(this, require('timers').setImmediate, require('timers').clearImmediate));
+            },
+            {
+              'process/browser.js': 1,
+              'timers': 3
+            }
+          ],
+          4: [
+            function (require, module, exports) {
+              var promisePolyfill = require('promise-polyfill');
+              var Global = function () {
+                if (typeof window !== 'undefined') {
+                  return window;
+                } else {
+                  return Function('return this;')();
+                }
+              }();
+              module.exports = { boltExport: Global.Promise || promisePolyfill };
+            },
+            { 'promise-polyfill': 2 }
+          ]
+        }, {}, [4])(4);
+      }));
+    }(undefined, exports$1, module$1, undefined));
+    var Promise = module$1.exports.boltExport;
+
+    var nu$3 = function (baseFn) {
+      var data = Option.none();
+      var callbacks = [];
+      var map = function (f) {
+        return nu$3(function (nCallback) {
+          get(function (data) {
+            nCallback(f(data));
+          });
+        });
+      };
+      var get = function (nCallback) {
+        if (isReady()) {
+          call(nCallback);
+        } else {
+          callbacks.push(nCallback);
+        }
+      };
+      var set = function (x) {
+        if (!isReady()) {
+          data = Option.some(x);
+          run(callbacks);
+          callbacks = [];
+        }
+      };
+      var isReady = function () {
+        return data.isSome();
+      };
+      var run = function (cbs) {
+        each(cbs, call);
+      };
+      var call = function (cb) {
+        data.each(function (x) {
+          domGlobals.setTimeout(function () {
+            cb(x);
+          }, 0);
+        });
+      };
+      baseFn(set);
+      return {
+        get: get,
+        map: map,
+        isReady: isReady
+      };
+    };
+    var pure = function (a) {
+      return nu$3(function (callback) {
+        callback(a);
+      });
+    };
+    var LazyValue = {
+      nu: nu$3,
+      pure: pure
+    };
+
+    var errorReporter = function (err) {
+      domGlobals.setTimeout(function () {
+        throw err;
+      }, 0);
+    };
+    var make = function (run) {
+      var get = function (callback) {
+        run().then(callback, errorReporter);
+      };
+      var map = function (fab) {
+        return make(function () {
+          return run().then(fab);
+        });
+      };
+      var bind = function (aFutureB) {
+        return make(function () {
+          return run().then(function (v) {
+            return aFutureB(v).toPromise();
+          });
+        });
+      };
+      var anonBind = function (futureB) {
+        return make(function () {
+          return run().then(function () {
+            return futureB.toPromise();
+          });
+        });
+      };
+      var toLazy = function () {
+        return LazyValue.nu(get);
+      };
+      var toCached = function () {
+        var cache = null;
+        return make(function () {
+          if (cache === null) {
+            cache = run();
+          }
+          return cache;
+        });
+      };
+      var toPromise = run;
+      return {
+        map: map,
+        bind: bind,
+        anonBind: anonBind,
+        toLazy: toLazy,
+        toCached: toCached,
+        toPromise: toPromise,
+        get: get
+      };
+    };
+    var nu$4 = function (baseFn) {
+      return make(function () {
+        return new Promise(baseFn);
+      });
+    };
+    var pure$1 = function (a) {
+      return make(function () {
+        return Promise.resolve(a);
+      });
+    };
+    var Future = {
+      nu: nu$4,
+      pure: pure$1
+    };
+
+    var par = function (asyncValues, nu) {
+      return nu(function (callback) {
+        var r = [];
+        var count = 0;
+        var cb = function (i) {
+          return function (value) {
+            r[i] = value;
+            count++;
+            if (count >= asyncValues.length) {
+              callback(r);
+            }
+          };
+        };
+        if (asyncValues.length === 0) {
+          callback([]);
+        } else {
+          each(asyncValues, function (asyncValue, i) {
+            asyncValue.get(cb(i));
+          });
+        }
+      });
+    };
+
+    var par$1 = function (futures) {
+      return par(futures, Future.nu);
+    };
+
+    var value = function (o) {
+      var is = function (v) {
+        return o === v;
+      };
+      var or = function (_opt) {
+        return value(o);
+      };
+      var orThunk = function (_f) {
+        return value(o);
+      };
+      var map = function (f) {
+        return value(f(o));
+      };
+      var mapError = function (_f) {
+        return value(o);
+      };
+      var each = function (f) {
+        f(o);
+      };
+      var bind = function (f) {
+        return f(o);
+      };
+      var fold = function (_, onValue) {
+        return onValue(o);
+      };
+      var exists = function (f) {
+        return f(o);
+      };
+      var forall = function (f) {
+        return f(o);
+      };
+      var toOption = function () {
+        return Option.some(o);
+      };
+      return {
+        is: is,
+        isValue: always,
+        isError: never,
+        getOr: constant(o),
+        getOrThunk: constant(o),
+        getOrDie: constant(o),
+        or: or,
+        orThunk: orThunk,
+        fold: fold,
+        map: map,
+        mapError: mapError,
+        each: each,
+        bind: bind,
+        exists: exists,
+        forall: forall,
+        toOption: toOption
+      };
+    };
+    var error = function (message) {
+      var getOrThunk = function (f) {
+        return f();
+      };
+      var getOrDie = function () {
+        return die(String(message))();
+      };
+      var or = function (opt) {
+        return opt;
+      };
+      var orThunk = function (f) {
+        return f();
+      };
+      var map = function (_f) {
+        return error(message);
+      };
+      var mapError = function (f) {
+        return error(f(message));
+      };
+      var bind = function (_f) {
+        return error(message);
+      };
+      var fold = function (onError, _) {
+        return onError(message);
+      };
+      return {
+        is: never,
+        isValue: never,
+        isError: always,
+        getOr: identity,
+        getOrThunk: getOrThunk,
+        getOrDie: getOrDie,
+        or: or,
+        orThunk: orThunk,
+        fold: fold,
+        map: map,
+        mapError: mapError,
+        each: noop,
+        bind: bind,
+        exists: never,
+        forall: always,
+        toOption: Option.none
+      };
+    };
+    var fromOption = function (opt, err) {
+      return opt.fold(function () {
+        return error(err);
+      }, value);
+    };
+    var Result = {
+      value: value,
+      error: error,
+      fromOption: fromOption
+    };
+
+    var generate = function (cases) {
+      if (!isArray(cases)) {
+        throw new Error('cases must be an array');
+      }
+      if (cases.length === 0) {
+        throw new Error('there must be at least one case');
+      }
+      var constructors = [];
+      var adt = {};
+      each(cases, function (acase, count) {
+        var keys$1 = keys(acase);
+        if (keys$1.length !== 1) {
+          throw new Error('one and only one name per case');
+        }
+        var key = keys$1[0];
+        var value = acase[key];
+        if (adt[key] !== undefined) {
+          throw new Error('duplicate key detected:' + key);
+        } else if (key === 'cata') {
+          throw new Error('cannot have a case named cata (sorry)');
+        } else if (!isArray(value)) {
+          throw new Error('case arguments must be an array');
+        }
+        constructors.push(key);
+        adt[key] = function () {
+          var argLength = arguments.length;
+          if (argLength !== value.length) {
+            throw new Error('Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength);
+          }
+          var args = new Array(argLength);
+          for (var i = 0; i < args.length; i++) {
+            args[i] = arguments[i];
+          }
+          var match = function (branches) {
+            var branchKeys = keys(branches);
+            if (constructors.length !== branchKeys.length) {
+              throw new Error('Wrong number of arguments to match. Expected: ' + constructors.join(',') + '\nActual: ' + branchKeys.join(','));
+            }
+            var allReqd = forall(constructors, function (reqKey) {
+              return contains(branchKeys, reqKey);
+            });
+            if (!allReqd) {
+              throw new Error('Not all branches were specified when using match. Specified: ' + branchKeys.join(', ') + '\nRequired: ' + constructors.join(', '));
+            }
+            return branches[key].apply(null, args);
+          };
+          return {
+            fold: function () {
+              if (arguments.length !== cases.length) {
+                throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
+              }
+              var target = arguments[count];
+              return target.apply(null, args);
+            },
+            match: match,
+            log: function (label) {
+              domGlobals.console.log(label, {
+                constructors: constructors,
+                constructor: key,
+                params: args
+              });
+            }
+          };
+        };
+      });
+      return adt;
+    };
+    var Adt = { generate: generate };
+
+    var comparison = Adt.generate([
+      {
+        bothErrors: [
+          'error1',
+          'error2'
+        ]
+      },
+      {
+        firstError: [
+          'error1',
+          'value2'
+        ]
+      },
+      {
+        secondError: [
+          'value1',
+          'error2'
+        ]
+      },
+      {
+        bothValues: [
+          'value1',
+          'value2'
+        ]
+      }
+    ]);
+    var unite = function (result) {
+      return result.fold(identity, identity);
+    };
+
+    var promise = function () {
+      function bind(fn, thisArg) {
+        return function () {
+          fn.apply(thisArg, arguments);
+        };
+      }
+      var isArray = Array.isArray || function (value) {
+        return Object.prototype.toString.call(value) === '[object Array]';
+      };
+      var Promise = function (fn) {
+        if (typeof this !== 'object') {
+          throw new TypeError('Promises must be constructed via new');
+        }
+        if (typeof fn !== 'function') {
+          throw new TypeError('not a function');
+        }
+        this._state = null;
+        this._value = null;
+        this._deferreds = [];
+        doResolve(fn, bind(resolve, this), bind(reject, this));
+      };
+      var asap = Promise.immediateFn || typeof domGlobals.setImmediate === 'function' && domGlobals.setImmediate || function (fn) {
+        domGlobals.setTimeout(fn, 1);
+      };
+      function handle(deferred) {
+        var me = this;
+        if (this._state === null) {
+          this._deferreds.push(deferred);
+          return;
+        }
+        asap(function () {
+          var cb = me._state ? deferred.onFulfilled : deferred.onRejected;
+          if (cb === null) {
+            (me._state ? deferred.resolve : deferred.reject)(me._value);
+            return;
+          }
+          var ret;
+          try {
+            ret = cb(me._value);
+          } catch (e) {
+            deferred.reject(e);
+            return;
+          }
+          deferred.resolve(ret);
+        });
+      }
+      function resolve(newValue) {
+        try {
+          if (newValue === this) {
+            throw new TypeError('A promise cannot be resolved with itself.');
+          }
+          if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+            var then = newValue.then;
+            if (typeof then === 'function') {
+              doResolve(bind(then, newValue), bind(resolve, this), bind(reject, this));
+              return;
+            }
+          }
+          this._state = true;
+          this._value = newValue;
+          finale.call(this);
+        } catch (e) {
+          reject.call(this, e);
+        }
+      }
+      function reject(newValue) {
+        this._state = false;
+        this._value = newValue;
+        finale.call(this);
+      }
+      function finale() {
+        for (var i = 0, len = this._deferreds.length; i < len; i++) {
+          handle.call(this, this._deferreds[i]);
+        }
+        this._deferreds = null;
+      }
+      function Handler(onFulfilled, onRejected, resolve, reject) {
+        this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
+        this.onRejected = typeof onRejected === 'function' ? onRejected : null;
+        this.resolve = resolve;
+        this.reject = reject;
+      }
+      function doResolve(fn, onFulfilled, onRejected) {
+        var done = false;
+        try {
+          fn(function (value) {
+            if (done) {
+              return;
+            }
+            done = true;
+            onFulfilled(value);
+          }, function (reason) {
+            if (done) {
+              return;
+            }
+            done = true;
+            onRejected(reason);
+          });
+        } catch (ex) {
+          if (done) {
+            return;
+          }
+          done = true;
+          onRejected(ex);
+        }
+      }
+      Promise.prototype.catch = function (onRejected) {
+        return this.then(null, onRejected);
+      };
+      Promise.prototype.then = function (onFulfilled, onRejected) {
+        var me = this;
+        return new Promise(function (resolve, reject) {
+          handle.call(me, new Handler(onFulfilled, onRejected, resolve, reject));
+        });
+      };
+      Promise.all = function () {
+        var args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
+        return new Promise(function (resolve, reject) {
+          if (args.length === 0) {
+            return resolve([]);
+          }
+          var remaining = args.length;
+          function res(i, val) {
+            try {
+              if (val && (typeof val === 'object' || typeof val === 'function')) {
+                var then = val.then;
+                if (typeof then === 'function') {
+                  then.call(val, function (val) {
+                    res(i, val);
+                  }, reject);
+                  return;
+                }
+              }
+              args[i] = val;
+              if (--remaining === 0) {
+                resolve(args);
+              }
+            } catch (ex) {
+              reject(ex);
+            }
+          }
+          for (var i = 0; i < args.length; i++) {
+            res(i, args[i]);
+          }
+        });
+      };
+      Promise.resolve = function (value) {
+        if (value && typeof value === 'object' && value.constructor === Promise) {
+          return value;
+        }
+        return new Promise(function (resolve) {
+          resolve(value);
+        });
+      };
+      Promise.reject = function (value) {
+        return new Promise(function (resolve, reject) {
+          reject(value);
+        });
+      };
+      Promise.race = function (values) {
+        return new Promise(function (resolve, reject) {
+          for (var i = 0, len = values.length; i < len; i++) {
+            values[i].then(resolve, reject);
+          }
+        });
+      };
+      return Promise;
+    };
+    var promiseObj = window.Promise ? window.Promise : promise();
+
+    var requestAnimationFramePromise;
+    var requestAnimationFrame = function (callback, element) {
+      var i, requestAnimationFrameFunc = domGlobals.window.requestAnimationFrame;
+      var vendors = [
+        'ms',
+        'moz',
+        'webkit'
+      ];
+      var featurefill = function (callback) {
+        domGlobals.window.setTimeout(callback, 0);
+      };
+      for (i = 0; i < vendors.length && !requestAnimationFrameFunc; i++) {
+        requestAnimationFrameFunc = domGlobals.window[vendors[i] + 'RequestAnimationFrame'];
+      }
+      if (!requestAnimationFrameFunc) {
+        requestAnimationFrameFunc = featurefill;
+      }
+      requestAnimationFrameFunc(callback, element);
+    };
+    var wrappedSetTimeout = function (callback, time) {
+      if (typeof time !== 'number') {
+        time = 0;
+      }
+      return domGlobals.setTimeout(callback, time);
+    };
+    var wrappedSetInterval = function (callback, time) {
+      if (typeof time !== 'number') {
+        time = 1;
+      }
+      return domGlobals.setInterval(callback, time);
+    };
+    var wrappedClearTimeout = function (id) {
+      return domGlobals.clearTimeout(id);
+    };
+    var wrappedClearInterval = function (id) {
+      return domGlobals.clearInterval(id);
+    };
+    var debounce = function (callback, time) {
+      var timer;
+      var func = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+          args[_i] = arguments[_i];
+        }
+        domGlobals.clearTimeout(timer);
+        timer = wrappedSetTimeout(function () {
+          callback.apply(this, args);
+        }, time);
+      };
+      func.stop = function () {
+        domGlobals.clearTimeout(timer);
+      };
+      return func;
+    };
+    var Delay = {
+      requestAnimationFrame: function (callback, element) {
+        if (requestAnimationFramePromise) {
+          requestAnimationFramePromise.then(callback);
+          return;
+        }
+        requestAnimationFramePromise = new promiseObj(function (resolve) {
+          if (!element) {
+            element = domGlobals.document.body;
+          }
+          requestAnimationFrame(resolve, element);
+        }).then(callback);
+      },
+      setTimeout: wrappedSetTimeout,
+      setInterval: wrappedSetInterval,
+      setEditorTimeout: function (editor, callback, time) {
+        return wrappedSetTimeout(function () {
+          if (!editor.removed) {
+            callback();
+          }
+        }, time);
+      },
+      setEditorInterval: function (editor, callback, time) {
+        var timer = wrappedSetInterval(function () {
+          if (!editor.removed) {
+            callback();
+          } else {
+            domGlobals.clearInterval(timer);
+          }
+        }, time);
+        return timer;
+      },
+      debounce: debounce,
+      throttle: debounce,
+      clearInterval: wrappedClearInterval,
+      clearTimeout: wrappedClearTimeout
+    };
+
+    function StyleSheetLoader(documentOrShadowRoot, settings) {
+      if (settings === void 0) {
+        settings = {};
+      }
+      var idCount = 0;
+      var loadedStates = {};
+      var edos = Element.fromDom(documentOrShadowRoot);
+      var doc = documentOrOwner(edos);
+      var maxLoadTime = settings.maxLoadTime || 5000;
+      var _setReferrerPolicy = function (referrerPolicy) {
+        settings.referrerPolicy = referrerPolicy;
+      };
+      var addStyle = function (element) {
+        append(getStyleContainer(edos), element);
+      };
+      var load = function (url, loadedCallback, errorCallback) {
+        var link, style, state;
+        var resolve = function (status) {
+          state.status = status;
+          state.passed = [];
+          state.failed = [];
+          if (link) {
+            link.onload = null;
+            link.onerror = null;
+            link = null;
+          }
+        };
+        var passed = function () {
+          var callbacks = state.passed;
+          var i = callbacks.length;
+          while (i--) {
+            callbacks[i]();
+          }
+          resolve(2);
+        };
+        var failed = function () {
+          var callbacks = state.failed;
+          var i = callbacks.length;
+          while (i--) {
+            callbacks[i]();
+          }
+          resolve(3);
+        };
+        var isOldWebKit = function () {
+          var webKitChunks = domGlobals.navigator.userAgent.match(/WebKit\/(\d*)/);
+          return !!(webKitChunks && parseInt(webKitChunks[1], 10) < 536);
+        };
+        var wait = function (testCallback, waitCallback) {
+          if (!testCallback()) {
+            if (new Date().getTime() - startTime < maxLoadTime) {
+              Delay.setTimeout(waitCallback);
+            } else {
+              failed();
+            }
+          }
+        };
+        var waitForWebKitLinkLoaded = function () {
+          wait(function () {
+            var styleSheets = documentOrShadowRoot.styleSheets;
+            var styleSheet, i = styleSheets.length, owner;
+            while (i--) {
+              styleSheet = styleSheets[i];
+              owner = styleSheet.ownerNode ? styleSheet.ownerNode : styleSheet.owningElement;
+              if (owner && owner.id === link.id) {
+                passed();
+                return true;
+              }
+            }
+          }, waitForWebKitLinkLoaded);
+        };
+        var waitForGeckoLinkLoaded = function () {
+          wait(function () {
+            try {
+              var cssRules = style.sheet.cssRules;
+              passed();
+              return !!cssRules;
+            } catch (ex) {
+            }
+          }, waitForGeckoLinkLoaded);
+        };
+        url = Tools._addCacheSuffix(url);
+        if (!loadedStates[url]) {
+          state = {
+            passed: [],
+            failed: []
+          };
+          loadedStates[url] = state;
+        } else {
+          state = loadedStates[url];
+        }
+        if (loadedCallback) {
+          state.passed.push(loadedCallback);
+        }
+        if (errorCallback) {
+          state.failed.push(errorCallback);
+        }
+        if (state.status === 1) {
+          return;
+        }
+        if (state.status === 2) {
+          passed();
+          return;
+        }
+        if (state.status === 3) {
+          failed();
+          return;
+        }
+        state.status = 1;
+        link = doc.dom().createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.id = 'u' + idCount++;
+        link.async = false;
+        link.defer = false;
+        var startTime = new Date().getTime();
+        if (settings.contentCssCors) {
+          link.crossOrigin = 'anonymous';
+        }
+        if (settings.referrerPolicy) {
+          set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
+        }
+        if ('onload' in link && !isOldWebKit()) {
+          link.onload = waitForWebKitLinkLoaded;
+          link.onerror = failed;
+        } else {
+          if (domGlobals.navigator.userAgent.indexOf('Firefox') > 0) {
+            style = doc.dom().createElement('style');
+            style.textContent = '@import "' + url + '"';
+            waitForGeckoLinkLoaded();
+            addStyle(Element.fromDom(style));
+            return;
+          }
+          waitForWebKitLinkLoaded();
+        }
+        addStyle(Element.fromDom(link));
+        link.href = url;
+      };
+      var loadF = function (url) {
+        return Future.nu(function (resolve) {
+          load(url, compose(resolve, constant(Result.value(url))), compose(resolve, constant(Result.error(url))));
+        });
+      };
+      var loadAll = function (urls, success, failure) {
+        par$1(map(urls, loadF)).get(function (result) {
+          var parts = partition(result, function (r) {
+            return r.isValue();
+          });
+          if (parts.fail.length > 0) {
+            failure(parts.fail.map(unite));
+          } else {
+            success(parts.pass.map(unite));
+          }
+        });
+      };
+      return {
+        load: load,
+        loadAll: loadAll,
+        _setReferrerPolicy: _setReferrerPolicy
+      };
+    }
+
+    var create$1 = function () {
+      var map = new WeakMap();
+      var forElement = function (referenceElement, settings) {
+        var root = getRootNode(referenceElement);
+        var rootDom = root.dom();
+        return Option.from(map.get(rootDom)).getOrThunk(function () {
+          var sl = StyleSheetLoader(rootDom, settings);
+          map.set(rootDom, sl);
+          return sl;
+        });
+      };
+      return { forElement: forElement };
+    };
+    var instance = create$1();
+
     var each$5 = Tools.each;
     var grep$1 = Tools.grep;
     var isIE = Env.ie;
     var simpleSelectorRe = /^([a-z0-9],?)+$/i;
-    var whiteSpaceRegExp$2 = /^[ \t\r\n]*$/;
     var setupAttrHooks = function (styles, settings, getContext) {
       var keepValues = settings.keep_values;
       var keepUrlHook = {
@@ -6525,14 +6691,13 @@
       if (settings === void 0) {
         settings = {};
       }
-      var attrHooks;
       var addedStyles = {};
       var win = domGlobals.window;
       var files = {};
       var counter = 0;
       var stdMode = true;
       var boxModel = true;
-      var styleSheetLoader = StyleSheetLoader(doc, {
+      var styleSheetLoader = instance.forElement(Element.fromDom(doc), {
         contentCssCors: settings.contentCssCors,
         referrerPolicy: settings.referrerPolicy
       });
@@ -6562,15 +6727,7 @@
         return false;
       };
       var get = function (elm) {
-        if (elm && doc && typeof elm === 'string') {
-          var node = doc.getElementById(elm);
-          if (node && node.id !== elm) {
-            return doc.getElementsByName(elm)[1];
-          } else {
-            return node;
-          }
-        }
-        return elm;
+        return elm && doc && isString(elm) ? doc.getElementById(elm) : elm;
       };
       var $$ = function (elm) {
         return $(typeof elm === 'string' ? get(elm) : elm);
@@ -6599,16 +6756,15 @@
         return node.attributes;
       };
       var setAttrib = function (elm, name, value) {
-        var originalValue, hook;
         if (value === '') {
           value = null;
         }
         var $elm = $$(elm);
-        originalValue = $elm.attr(name);
+        var originalValue = $elm.attr(name);
         if (!$elm.length) {
           return;
         }
-        hook = attrHooks[name];
+        var hook = attrHooks[name];
         if (hook && hook.set) {
           hook.set($elm, value, name);
         } else {
@@ -6690,10 +6846,9 @@
         };
       };
       var getRect = function (elm) {
-        var pos, size;
         elm = get(elm);
-        pos = getPos$1(elm);
-        size = getSize(elm);
+        var pos = getPos$1(elm);
+        var size = getSize(elm);
         return {
           x: pos.x,
           y: pos.y,
@@ -6945,7 +7100,6 @@
         }
       };
       var loadCSS = function (url) {
-        var head;
         if (self !== DOMUtils.DOM && doc === domGlobals.document) {
           DOMUtils.DOM.loadCSS(url);
           return;
@@ -6953,15 +7107,14 @@
         if (!url) {
           url = '';
         }
-        head = doc.getElementsByTagName('head')[0];
+        var head = doc.getElementsByTagName('head')[0];
         each$5(url.split(','), function (url) {
-          var link;
           url = Tools._addCacheSuffix(url);
           if (files[url]) {
             return;
           }
           files[url] = true;
-          link = create('link', __assign(__assign({
+          var link = create('link', __assign(__assign({
             rel: 'stylesheet',
             type: 'text/css',
             href: url
@@ -7016,9 +7169,8 @@
       var insertAfter = function (node, reference) {
         var referenceNode = get(reference);
         return run(node, function (node) {
-          var parent, nextSibling;
-          parent = referenceNode.parentNode;
-          nextSibling = referenceNode.nextSibling;
+          var parent = referenceNode.parentNode;
+          var nextSibling = referenceNode.nextSibling;
           if (nextSibling) {
             parent.insertBefore(node, nextSibling);
           } else {
@@ -7114,10 +7266,10 @@
             if (type === 8) {
               return false;
             }
-            if (type === 3 && !whiteSpaceRegExp$2.test(node.nodeValue)) {
+            if (type === 3 && !isWhitespaceText(node.nodeValue)) {
               return false;
             }
-            if (type === 3 && node.parentNode && whitespace[node.parentNode.nodeName] && whiteSpaceRegExp$2.test(node.nodeValue)) {
+            if (type === 3 && node.parentNode && whitespace[node.parentNode.nodeName] && isWhitespaceText(node.nodeValue)) {
               return false;
             }
             node = walker.next();
@@ -7129,23 +7281,26 @@
         return doc.createRange();
       };
       var split = function (parentElm, splitElm, replacementElm) {
-        var r = createRng(), bef, aft, pa;
+        var range = createRng();
+        var beforeFragment;
+        var afterFragment;
+        var parentNode;
         if (parentElm && splitElm) {
-          r.setStart(parentElm.parentNode, findNodeIndex(parentElm));
-          r.setEnd(splitElm.parentNode, findNodeIndex(splitElm));
-          bef = r.extractContents();
-          r = createRng();
-          r.setStart(splitElm.parentNode, findNodeIndex(splitElm) + 1);
-          r.setEnd(parentElm.parentNode, findNodeIndex(parentElm) + 1);
-          aft = r.extractContents();
-          pa = parentElm.parentNode;
-          pa.insertBefore(trimNode(self, bef), parentElm);
+          range.setStart(parentElm.parentNode, findNodeIndex(parentElm));
+          range.setEnd(splitElm.parentNode, findNodeIndex(splitElm));
+          beforeFragment = range.extractContents();
+          range = createRng();
+          range.setStart(splitElm.parentNode, findNodeIndex(splitElm) + 1);
+          range.setEnd(parentElm.parentNode, findNodeIndex(parentElm) + 1);
+          afterFragment = range.extractContents();
+          parentNode = parentElm.parentNode;
+          parentNode.insertBefore(trimNode(self, beforeFragment), parentElm);
           if (replacementElm) {
-            pa.insertBefore(replacementElm, parentElm);
+            parentNode.insertBefore(replacementElm, parentElm);
           } else {
-            pa.insertBefore(splitElm, parentElm);
+            parentNode.insertBefore(splitElm, parentElm);
           }
-          pa.insertBefore(trimNode(self, aft), parentElm);
+          parentNode.insertBefore(trimNode(self, afterFragment), parentElm);
           remove(parentElm);
           return replacementElm || splitElm;
         }
@@ -7317,7 +7472,7 @@
         isChildOf: isChildOf,
         dumpRng: dumpRng
       };
-      attrHooks = setupAttrHooks(styles, settings, function () {
+      var attrHooks = setupAttrHooks(styles, settings, function () {
         return self;
       });
       return self;
@@ -7351,7 +7506,7 @@
       };
       ScriptLoader.prototype.loadScript = function (url, success, failure) {
         var dom = DOM;
-        var elm, id;
+        var elm;
         var done = function () {
           dom.remove(id);
           if (elm) {
@@ -7368,7 +7523,7 @@
             }
           }
         };
-        id = dom.uniqueId();
+        var id = dom.uniqueId();
         elm = domGlobals.document.createElement('script');
         elm.id = id;
         elm.type = 'text/javascript';
@@ -7415,7 +7570,6 @@
       };
       ScriptLoader.prototype.loadScripts = function (scripts, success, scope, failure) {
         var self = this;
-        var loadScripts;
         var failures = [];
         var execCallbacks = function (name, url) {
           each$6(self.scriptLoadedCallbacks[url], function (callback) {
@@ -7430,7 +7584,7 @@
           failure: failure,
           scope: scope || this
         });
-        loadScripts = function () {
+        var loadScripts = function () {
           var loadingScripts = grep$2(scripts);
           scripts.length = 0;
           each$6(loadingScripts, function (url) {
@@ -7883,17 +8037,17 @@
 
     var ancestor$1 = function (scope, selector, isRoot) {
       return ancestor(scope, function (e) {
-        return is(e, selector);
+        return is$1(e, selector);
       }, isRoot);
     };
     var descendant = function (scope, selector) {
       return one(selector, scope);
     };
     var closest$1 = function (scope, selector, isRoot) {
-      var is$1 = function (element, selector) {
-        return is(element, selector);
+      var is = function (element, selector) {
+        return is$1(element, selector);
       };
-      return ClosestOrAncestor(is$1, ancestor$1, scope, selector, isRoot);
+      return ClosestOrAncestor(is, ancestor$1, scope, selector, isRoot);
     };
 
     var annotation = constant('mce-annotation');
@@ -8051,7 +8205,7 @@
       });
     };
 
-    var create$1 = function () {
+    var create$2 = function () {
       var annotations = {};
       var register = function (name, settings) {
         annotations[name] = {
@@ -8071,7 +8225,7 @@
     };
 
     var unique = 0;
-    var generate = function (prefix) {
+    var generate$1 = function (prefix) {
       var date = new Date();
       var time = date.getTime();
       var random = Math.floor(Math.random() * 1000000000);
@@ -8105,14 +8259,14 @@
       append(element, fragment);
     };
 
-    var clone = function (original, isDeep) {
+    var clone$1 = function (original, isDeep) {
       return Element.fromDom(original.dom().cloneNode(isDeep));
     };
     var shallow = function (original) {
-      return clone(original, false);
+      return clone$1(original, false);
     };
     var deep = function (original) {
-      return clone(original, true);
+      return clone$1(original, true);
     };
 
     var TextWalker = function (startNode, rootNode, isBoundary) {
@@ -8211,10 +8365,10 @@
       return node.firstChild !== node.lastChild || !isBr(node.firstChild);
     };
     var insertInline = function (node, before) {
-      var doc, sibling, textNode, parentNode;
-      doc = node.ownerDocument;
-      textNode = doc.createTextNode(ZWSP);
-      parentNode = node.parentNode;
+      var sibling;
+      var doc = node.ownerDocument;
+      var textNode = doc.createTextNode(ZWSP);
+      var parentNode = node.parentNode;
       if (!before) {
         sibling = node.nextSibling;
         if (isText$2(sibling)) {
@@ -8265,13 +8419,12 @@
       return br;
     };
     var insertBlock = function (blockName, node, before) {
-      var doc, blockNode, parentNode;
-      doc = node.ownerDocument;
-      blockNode = doc.createElement(blockName);
+      var doc = node.ownerDocument;
+      var blockNode = doc.createElement(blockName);
       blockNode.setAttribute('data-mce-caret', before ? 'before' : 'after');
       blockNode.setAttribute('data-mce-bogus', 'all');
       blockNode.appendChild(createBogusBr());
-      parentNode = node.parentNode;
+      var parentNode = node.parentNode;
       if (!before) {
         if (node.nextSibling) {
           parentNode.insertBefore(blockNode, node.nextSibling);
@@ -8309,6 +8462,137 @@
     };
     var isRangeInCaretContainerBlock = function (range) {
       return isCaretContainerBlock(range.startContainer);
+    };
+
+    var cat = function (arr) {
+      var r = [];
+      var push = function (x) {
+        r.push(x);
+      };
+      for (var i = 0; i < arr.length; i++) {
+        arr[i].each(push);
+      }
+      return r;
+    };
+    var lift2 = function (oa, ob, f) {
+      return oa.isSome() && ob.isSome() ? Option.some(f(oa.getOrDie(), ob.getOrDie())) : Option.none();
+    };
+    var lift3 = function (oa, ob, oc, f) {
+      return oa.isSome() && ob.isSome() && oc.isSome() ? Option.some(f(oa.getOrDie(), ob.getOrDie(), oc.getOrDie())) : Option.none();
+    };
+    var someIf = function (b, a) {
+      return b ? Option.some(a) : Option.none();
+    };
+
+    var round = Math.round;
+    var clone$2 = function (rect) {
+      if (!rect) {
+        return {
+          left: 0,
+          top: 0,
+          bottom: 0,
+          right: 0,
+          width: 0,
+          height: 0
+        };
+      }
+      return {
+        left: round(rect.left),
+        top: round(rect.top),
+        bottom: round(rect.bottom),
+        right: round(rect.right),
+        width: round(rect.width),
+        height: round(rect.height)
+      };
+    };
+    var collapse = function (rect, toStart) {
+      rect = clone$2(rect);
+      if (toStart) {
+        rect.right = rect.left;
+      } else {
+        rect.left = rect.left + rect.width;
+        rect.right = rect.left;
+      }
+      rect.width = 0;
+      return rect;
+    };
+    var isEqual = function (rect1, rect2) {
+      return rect1.left === rect2.left && rect1.top === rect2.top && rect1.bottom === rect2.bottom && rect1.right === rect2.right;
+    };
+    var isValidOverflow = function (overflowY, rect1, rect2) {
+      return overflowY >= 0 && overflowY <= Math.min(rect1.height, rect2.height) / 2;
+    };
+    var isAbove = function (rect1, rect2) {
+      if (rect1.bottom - rect1.height / 2 < rect2.top) {
+        return true;
+      }
+      if (rect1.top > rect2.bottom) {
+        return false;
+      }
+      return isValidOverflow(rect2.top - rect1.bottom, rect1, rect2);
+    };
+    var isBelow = function (rect1, rect2) {
+      if (rect1.top > rect2.bottom) {
+        return true;
+      }
+      if (rect1.bottom < rect2.top) {
+        return false;
+      }
+      return isValidOverflow(rect2.bottom - rect1.top, rect1, rect2);
+    };
+    var containsXY = function (rect, clientX, clientY) {
+      return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+    };
+
+    var getSelectedNode = function (range) {
+      var startContainer = range.startContainer, startOffset = range.startOffset;
+      if (startContainer.hasChildNodes() && range.endOffset === startOffset + 1) {
+        return startContainer.childNodes[startOffset];
+      }
+      return null;
+    };
+    var getNode = function (container, offset) {
+      if (container.nodeType === 1 && container.hasChildNodes()) {
+        if (offset >= container.childNodes.length) {
+          offset = container.childNodes.length - 1;
+        }
+        container = container.childNodes[offset];
+      }
+      return container;
+    };
+
+    var extendingChars = new RegExp('[\u0300-\u036f\u0483-\u0487\u0488-\u0489\u0591-\u05bd\u05bf\u05c1-\u05c2\u05c4-\u05c5\u05c7\u0610-\u061a' + '\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e4\u06e7-\u06e8\u06ea-\u06ed\u0711\u0730-\u074a\u07a6-\u07b0' + '\u07eb-\u07f3\u0816-\u0819\u081b-\u0823\u0825-\u0827\u0829-\u082d\u0859-\u085b\u08e3-\u0902\u093a\u093c' + '\u0941-\u0948\u094d\u0951-\u0957\u0962-\u0963\u0981\u09bc\u09be\u09c1-\u09c4\u09cd\u09d7\u09e2-\u09e3' + '\u0a01-\u0a02\u0a3c\u0a41-\u0a42\u0a47-\u0a48\u0a4b-\u0a4d\u0a51\u0a70-\u0a71\u0a75\u0a81-\u0a82\u0abc' + '\u0ac1-\u0ac5\u0ac7-\u0ac8\u0acd\u0ae2-\u0ae3\u0b01\u0b3c\u0b3e\u0b3f\u0b41-\u0b44\u0b4d\u0b56\u0b57' + '\u0b62-\u0b63\u0b82\u0bbe\u0bc0\u0bcd\u0bd7\u0c00\u0c3e-\u0c40\u0c46-\u0c48\u0c4a-\u0c4d\u0c55-\u0c56' + '\u0c62-\u0c63\u0c81\u0cbc\u0cbf\u0cc2\u0cc6\u0ccc-\u0ccd\u0cd5-\u0cd6\u0ce2-\u0ce3\u0d01\u0d3e\u0d41-\u0d44' + '\u0d4d\u0d57\u0d62-\u0d63\u0dca\u0dcf\u0dd2-\u0dd4\u0dd6\u0ddf\u0e31\u0e34-\u0e3a\u0e47-\u0e4e\u0eb1\u0eb4-\u0eb9' + '\u0ebb-\u0ebc\u0ec8-\u0ecd\u0f18-\u0f19\u0f35\u0f37\u0f39\u0f71-\u0f7e\u0f80-\u0f84\u0f86-\u0f87\u0f8d-\u0f97' + '\u0f99-\u0fbc\u0fc6\u102d-\u1030\u1032-\u1037\u1039-\u103a\u103d-\u103e\u1058-\u1059\u105e-\u1060\u1071-\u1074' + '\u1082\u1085-\u1086\u108d\u109d\u135d-\u135f\u1712-\u1714\u1732-\u1734\u1752-\u1753\u1772-\u1773\u17b4-\u17b5' + '\u17b7-\u17bd\u17c6\u17c9-\u17d3\u17dd\u180b-\u180d\u18a9\u1920-\u1922\u1927-\u1928\u1932\u1939-\u193b\u1a17-\u1a18' + '\u1a1b\u1a56\u1a58-\u1a5e\u1a60\u1a62\u1a65-\u1a6c\u1a73-\u1a7c\u1a7f\u1ab0-\u1abd\u1ABE\u1b00-\u1b03\u1b34' + '\u1b36-\u1b3a\u1b3c\u1b42\u1b6b-\u1b73\u1b80-\u1b81\u1ba2-\u1ba5\u1ba8-\u1ba9\u1bab-\u1bad\u1be6\u1be8-\u1be9' + '\u1bed\u1bef-\u1bf1\u1c2c-\u1c33\u1c36-\u1c37\u1cd0-\u1cd2\u1cd4-\u1ce0\u1ce2-\u1ce8\u1ced\u1cf4\u1cf8-\u1cf9' + '\u1dc0-\u1df5\u1dfc-\u1dff\u200c-\u200d\u20d0-\u20dc\u20DD-\u20E0\u20e1\u20E2-\u20E4\u20e5-\u20f0\u2cef-\u2cf1' + '\u2d7f\u2de0-\u2dff\u302a-\u302d\u302e-\u302f\u3099-\u309a\ua66f\uA670-\uA672\ua674-\ua67d\ua69e-\ua69f\ua6f0-\ua6f1' + '\ua802\ua806\ua80b\ua825-\ua826\ua8c4\ua8e0-\ua8f1\ua926-\ua92d\ua947-\ua951\ua980-\ua982\ua9b3\ua9b6-\ua9b9\ua9bc' + '\ua9e5\uaa29-\uaa2e\uaa31-\uaa32\uaa35-\uaa36\uaa43\uaa4c\uaa7c\uaab0\uaab2-\uaab4\uaab7-\uaab8\uaabe-\uaabf\uaac1' + '\uaaec-\uaaed\uaaf6\uabe5\uabe8\uabed\ufb1e\ufe00-\ufe0f\ufe20-\ufe2f\uff9e-\uff9f]');
+    var isExtendingChar = function (ch) {
+      return typeof ch === 'string' && ch.charCodeAt(0) >= 768 && extendingChars.test(ch);
+    };
+
+    var or = function () {
+      var args = [];
+      for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+      }
+      return function (x) {
+        for (var i = 0; i < args.length; i++) {
+          if (args[i](x)) {
+            return true;
+          }
+        }
+        return false;
+      };
+    };
+    var and = function () {
+      var args = [];
+      for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+      }
+      return function (x) {
+        for (var i = 0; i < args.length; i++) {
+          if (!args[i](x)) {
+            return false;
+          }
+        }
+        return true;
+      };
     };
 
     var isContentEditableTrue$1 = isContentEditableTrue;
@@ -8376,137 +8660,6 @@
       return isCaretCandidate(node) && isInEditable(node, root);
     };
 
-    var round = Math.round;
-    var clone$1 = function (rect) {
-      if (!rect) {
-        return {
-          left: 0,
-          top: 0,
-          bottom: 0,
-          right: 0,
-          width: 0,
-          height: 0
-        };
-      }
-      return {
-        left: round(rect.left),
-        top: round(rect.top),
-        bottom: round(rect.bottom),
-        right: round(rect.right),
-        width: round(rect.width),
-        height: round(rect.height)
-      };
-    };
-    var collapse = function (rect, toStart) {
-      rect = clone$1(rect);
-      if (toStart) {
-        rect.right = rect.left;
-      } else {
-        rect.left = rect.left + rect.width;
-        rect.right = rect.left;
-      }
-      rect.width = 0;
-      return rect;
-    };
-    var isEqual = function (rect1, rect2) {
-      return rect1.left === rect2.left && rect1.top === rect2.top && rect1.bottom === rect2.bottom && rect1.right === rect2.right;
-    };
-    var isValidOverflow = function (overflowY, rect1, rect2) {
-      return overflowY >= 0 && overflowY <= Math.min(rect1.height, rect2.height) / 2;
-    };
-    var isAbove = function (rect1, rect2) {
-      if (rect1.bottom - rect1.height / 2 < rect2.top) {
-        return true;
-      }
-      if (rect1.top > rect2.bottom) {
-        return false;
-      }
-      return isValidOverflow(rect2.top - rect1.bottom, rect1, rect2);
-    };
-    var isBelow = function (rect1, rect2) {
-      if (rect1.top > rect2.bottom) {
-        return true;
-      }
-      if (rect1.bottom < rect2.top) {
-        return false;
-      }
-      return isValidOverflow(rect2.bottom - rect1.top, rect1, rect2);
-    };
-    var containsXY = function (rect, clientX, clientY) {
-      return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
-    };
-
-    var getSelectedNode = function (range) {
-      var startContainer = range.startContainer, startOffset = range.startOffset;
-      if (startContainer.hasChildNodes() && range.endOffset === startOffset + 1) {
-        return startContainer.childNodes[startOffset];
-      }
-      return null;
-    };
-    var getNode = function (container, offset) {
-      if (container.nodeType === 1 && container.hasChildNodes()) {
-        if (offset >= container.childNodes.length) {
-          offset = container.childNodes.length - 1;
-        }
-        container = container.childNodes[offset];
-      }
-      return container;
-    };
-
-    var extendingChars = new RegExp('[\u0300-\u036f\u0483-\u0487\u0488-\u0489\u0591-\u05bd\u05bf\u05c1-\u05c2\u05c4-\u05c5\u05c7\u0610-\u061a' + '\u064b-\u065f\u0670\u06d6-\u06dc\u06df-\u06e4\u06e7-\u06e8\u06ea-\u06ed\u0711\u0730-\u074a\u07a6-\u07b0' + '\u07eb-\u07f3\u0816-\u0819\u081b-\u0823\u0825-\u0827\u0829-\u082d\u0859-\u085b\u08e3-\u0902\u093a\u093c' + '\u0941-\u0948\u094d\u0951-\u0957\u0962-\u0963\u0981\u09bc\u09be\u09c1-\u09c4\u09cd\u09d7\u09e2-\u09e3' + '\u0a01-\u0a02\u0a3c\u0a41-\u0a42\u0a47-\u0a48\u0a4b-\u0a4d\u0a51\u0a70-\u0a71\u0a75\u0a81-\u0a82\u0abc' + '\u0ac1-\u0ac5\u0ac7-\u0ac8\u0acd\u0ae2-\u0ae3\u0b01\u0b3c\u0b3e\u0b3f\u0b41-\u0b44\u0b4d\u0b56\u0b57' + '\u0b62-\u0b63\u0b82\u0bbe\u0bc0\u0bcd\u0bd7\u0c00\u0c3e-\u0c40\u0c46-\u0c48\u0c4a-\u0c4d\u0c55-\u0c56' + '\u0c62-\u0c63\u0c81\u0cbc\u0cbf\u0cc2\u0cc6\u0ccc-\u0ccd\u0cd5-\u0cd6\u0ce2-\u0ce3\u0d01\u0d3e\u0d41-\u0d44' + '\u0d4d\u0d57\u0d62-\u0d63\u0dca\u0dcf\u0dd2-\u0dd4\u0dd6\u0ddf\u0e31\u0e34-\u0e3a\u0e47-\u0e4e\u0eb1\u0eb4-\u0eb9' + '\u0ebb-\u0ebc\u0ec8-\u0ecd\u0f18-\u0f19\u0f35\u0f37\u0f39\u0f71-\u0f7e\u0f80-\u0f84\u0f86-\u0f87\u0f8d-\u0f97' + '\u0f99-\u0fbc\u0fc6\u102d-\u1030\u1032-\u1037\u1039-\u103a\u103d-\u103e\u1058-\u1059\u105e-\u1060\u1071-\u1074' + '\u1082\u1085-\u1086\u108d\u109d\u135d-\u135f\u1712-\u1714\u1732-\u1734\u1752-\u1753\u1772-\u1773\u17b4-\u17b5' + '\u17b7-\u17bd\u17c6\u17c9-\u17d3\u17dd\u180b-\u180d\u18a9\u1920-\u1922\u1927-\u1928\u1932\u1939-\u193b\u1a17-\u1a18' + '\u1a1b\u1a56\u1a58-\u1a5e\u1a60\u1a62\u1a65-\u1a6c\u1a73-\u1a7c\u1a7f\u1ab0-\u1abd\u1ABE\u1b00-\u1b03\u1b34' + '\u1b36-\u1b3a\u1b3c\u1b42\u1b6b-\u1b73\u1b80-\u1b81\u1ba2-\u1ba5\u1ba8-\u1ba9\u1bab-\u1bad\u1be6\u1be8-\u1be9' + '\u1bed\u1bef-\u1bf1\u1c2c-\u1c33\u1c36-\u1c37\u1cd0-\u1cd2\u1cd4-\u1ce0\u1ce2-\u1ce8\u1ced\u1cf4\u1cf8-\u1cf9' + '\u1dc0-\u1df5\u1dfc-\u1dff\u200c-\u200d\u20d0-\u20dc\u20DD-\u20E0\u20e1\u20E2-\u20E4\u20e5-\u20f0\u2cef-\u2cf1' + '\u2d7f\u2de0-\u2dff\u302a-\u302d\u302e-\u302f\u3099-\u309a\ua66f\uA670-\uA672\ua674-\ua67d\ua69e-\ua69f\ua6f0-\ua6f1' + '\ua802\ua806\ua80b\ua825-\ua826\ua8c4\ua8e0-\ua8f1\ua926-\ua92d\ua947-\ua951\ua980-\ua982\ua9b3\ua9b6-\ua9b9\ua9bc' + '\ua9e5\uaa29-\uaa2e\uaa31-\uaa32\uaa35-\uaa36\uaa43\uaa4c\uaa7c\uaab0\uaab2-\uaab4\uaab7-\uaab8\uaabe-\uaabf\uaac1' + '\uaaec-\uaaed\uaaf6\uabe5\uabe8\uabed\ufb1e\ufe00-\ufe0f\ufe20-\ufe2f\uff9e-\uff9f]');
-    var isExtendingChar = function (ch) {
-      return typeof ch === 'string' && ch.charCodeAt(0) >= 768 && extendingChars.test(ch);
-    };
-
-    var cat = function (arr) {
-      var r = [];
-      var push = function (x) {
-        r.push(x);
-      };
-      for (var i = 0; i < arr.length; i++) {
-        arr[i].each(push);
-      }
-      return r;
-    };
-    var lift2 = function (oa, ob, f) {
-      return oa.isSome() && ob.isSome() ? Option.some(f(oa.getOrDie(), ob.getOrDie())) : Option.none();
-    };
-    var lift3 = function (oa, ob, oc, f) {
-      return oa.isSome() && ob.isSome() && oc.isSome() ? Option.some(f(oa.getOrDie(), ob.getOrDie(), oc.getOrDie())) : Option.none();
-    };
-    var someIf = function (b, a) {
-      return b ? Option.some(a) : Option.none();
-    };
-
-    var or = function () {
-      var args = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-      }
-      return function (x) {
-        for (var i = 0; i < args.length; i++) {
-          if (args[i](x)) {
-            return true;
-          }
-        }
-        return false;
-      };
-    };
-    var and = function () {
-      var args = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-      }
-      return function (x) {
-        for (var i = 0; i < args.length; i++) {
-          if (!args[i](x)) {
-            return false;
-          }
-        }
-        return true;
-      };
-    };
-
     var isElement$3 = isElement$1;
     var isCaretCandidate$1 = isCaretCandidate;
     var isBlock$1 = matchStyleValues('display', 'block table');
@@ -8543,11 +8696,10 @@
       var rng = createRange(doc);
       var nbsp$1 = doc.createTextNode(nbsp);
       var parentNode = brNode.parentNode;
-      var clientRect;
       parentNode.insertBefore(nbsp$1, brNode);
       rng.setStart(nbsp$1, 0);
       rng.setEnd(nbsp$1, 1);
-      clientRect = clone$1(rng.getBoundingClientRect());
+      var clientRect = clone$2(rng.getBoundingClientRect());
       parentNode.removeChild(nbsp$1);
       return clientRect;
     };
@@ -8568,12 +8720,12 @@
       return r.left === 0 && r.right === 0 && r.top === 0 && r.bottom === 0;
     };
     var getBoundingClientRect = function (item) {
-      var clientRect, clientRects;
-      clientRects = item.getClientRects();
+      var clientRect;
+      var clientRects = item.getClientRects();
       if (clientRects.length > 0) {
-        clientRect = clone$1(clientRects[0]);
+        clientRect = clone$2(clientRects[0]);
       } else {
-        clientRect = clone$1(item.getBoundingClientRect());
+        clientRect = clone$2(item.getBoundingClientRect());
       }
       if (!isRange(item) && isBr$3(item) && isZeroRect(clientRect)) {
         return getBrClientRect(item);
@@ -8682,8 +8834,7 @@
         return offset >= container.childNodes.length;
       };
       var toRange = function () {
-        var range;
-        range = createRange(container.ownerDocument);
+        var range = createRange(container.ownerDocument);
         range.setStart(container, offset);
         range.setEnd(container, offset);
         return range;
@@ -8749,6 +8900,35 @@
     }(CaretPosition || (CaretPosition = {})));
     var CaretPosition$1 = CaretPosition;
 
+    var trimEmptyTextNode = function (dom, node) {
+      if (isText$1(node) && node.data.length === 0) {
+        dom.remove(node);
+      }
+    };
+    var insertNode = function (dom, rng, node) {
+      rng.insertNode(node);
+      trimEmptyTextNode(dom, node.previousSibling);
+      trimEmptyTextNode(dom, node.nextSibling);
+    };
+    var insertFragment = function (dom, rng, frag) {
+      var firstChild = Option.from(frag.firstChild);
+      var lastChild = Option.from(frag.lastChild);
+      rng.insertNode(frag);
+      firstChild.each(function (child) {
+        return trimEmptyTextNode(dom, child.previousSibling);
+      });
+      lastChild.each(function (child) {
+        return trimEmptyTextNode(dom, child.nextSibling);
+      });
+    };
+    var rangeInsertNode = function (dom, rng, node) {
+      if (isDocumentFragment$1(node)) {
+        insertFragment(dom, rng, node);
+      } else {
+        insertNode(dom, rng, node);
+      }
+    };
+
     var isText$5 = isText$1;
     var isBogus$1 = isBogus;
     var nodeIndex$1 = DOMUtils$1.nodeIndex;
@@ -8787,11 +8967,11 @@
       };
     };
     var normalizedNodeIndex = function (node) {
-      var nodes, index, numTextFragments;
+      var nodes, index;
       nodes = getChildNodes(normalizedParent(node));
       index = findIndex$1(nodes, equal$1(node), node);
       nodes = nodes.slice(0, index + 1);
-      numTextFragments = reduce(nodes, function (result, node, i) {
+      var numTextFragments = reduce(nodes, function (result, node, i) {
         if (isText$5(node) && isText$5(nodes[i - 1])) {
           result++;
         }
@@ -8820,7 +9000,7 @@
       }
       return parents;
     };
-    var create$2 = function (root, caretPosition) {
+    var create$3 = function (root, caretPosition) {
       var container, offset, path = [], outputOffset, childNodes, parents;
       container = caretPosition.container();
       offset = caretPosition.offset();
@@ -8875,14 +9055,14 @@
       return CaretPosition$1(container, offset);
     };
     var resolve$1 = function (root, path) {
-      var parts, container, offset;
+      var offset;
       if (!path) {
         return null;
       }
-      parts = path.split(',');
-      path = parts[0].split('/');
+      var parts = path.split(',');
+      var paths = parts[0].split('/');
       offset = parts.length > 1 ? parts[1] : 'before';
-      container = reduce(path, function (result, value) {
+      var container = reduce(paths, function (result, value) {
         value = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
         if (!value) {
           return null;
@@ -8904,35 +9084,6 @@
         return CaretPosition$1(container.parentNode, offset);
       }
       return findTextPosition(container, parseInt(offset, 10));
-    };
-
-    var trimEmptyTextNode = function (dom, node) {
-      if (isText$1(node) && node.data.length === 0) {
-        dom.remove(node);
-      }
-    };
-    var insertNode = function (dom, rng, node) {
-      rng.insertNode(node);
-      trimEmptyTextNode(dom, node.previousSibling);
-      trimEmptyTextNode(dom, node.nextSibling);
-    };
-    var insertFragment = function (dom, rng, frag) {
-      var firstChild = Option.from(frag.firstChild);
-      var lastChild = Option.from(frag.lastChild);
-      rng.insertNode(frag);
-      firstChild.each(function (child) {
-        return trimEmptyTextNode(dom, child.previousSibling);
-      });
-      lastChild.each(function (child) {
-        return trimEmptyTextNode(dom, child.nextSibling);
-      });
-    };
-    var rangeInsertNode = function (dom, rng, node) {
-      if (isDocumentFragment(node)) {
-        insertFragment(dom, rng, node);
-      } else {
-        insertNode(dom, rng, node);
-      }
     };
 
     var isContentEditableFalse$2 = isContentEditableFalse;
@@ -9053,8 +9204,8 @@
     var getCaretBookmark = function (selection) {
       var rng = selection.getRng();
       return {
-        start: create$2(selection.dom.getRoot(), CaretPosition$1.fromRangeStart(rng)),
-        end: create$2(selection.dom.getRoot(), CaretPosition$1.fromRangeEnd(rng))
+        start: create$3(selection.dom.getRoot(), CaretPosition$1.fromRangeStart(rng)),
+        end: create$3(selection.dom.getRoot(), CaretPosition$1.fromRangeEnd(rng))
       };
     };
     var getRangeBookmark = function (selection) {
@@ -9110,21 +9261,8 @@
     };
     var getUndoBookmark = curry(getOffsetBookmark, identity, true);
 
-    var CARET_ID = '_mce_caret';
-    var isCaretNode = function (node) {
-      return isElement$1(node) && node.id === CARET_ID;
-    };
-    var getParentCaretContainer = function (body, node) {
-      while (node && node !== body) {
-        if (node.id === CARET_ID) {
-          return node;
-        }
-        node = node.parentNode;
-      }
-      return null;
-    };
-
     var DOM$1 = DOMUtils$1.DOM;
+    var defaultPreviewStyles = 'font-family font-size font-weight font-style text-decoration text-transform color background-color border border-radius outline text-shadow';
     var getBodySetting = function (editor, name, defaultValue) {
       var value = editor.getParam(name, defaultValue);
       if (value.indexOf('=') !== -1) {
@@ -9238,7 +9376,7 @@
       return editor.getParam('indentation', '40px', 'string');
     };
     var getContentCss = function (editor) {
-      var contentCss = editor.settings.content_css;
+      var contentCss = editor.getParam('content_css');
       if (isString(contentCss)) {
         return map(contentCss.split(','), trim);
       } else if (isArray(contentCss)) {
@@ -9263,6 +9401,80 @@
     };
     var getPlaceholder = function (editor) {
       return editor.getParam('placeholder', DOM$1.getAttrib(editor.getElement(), 'placeholder'), 'string');
+    };
+    var getEventRoot = function (editor) {
+      return editor.getParam('event_root');
+    };
+    var getServiceMessage = function (editor) {
+      return editor.getParam('service_message');
+    };
+    var getTheme = function (editor) {
+      return editor.getParam('theme');
+    };
+    var shouldValidate = function (editor) {
+      return editor.getParam('validate');
+    };
+    var isInlineBoundariesEnabled = function (editor) {
+      return editor.getParam('inline_boundaries') !== false;
+    };
+    var getFormats = function (editor) {
+      return editor.getParam('formats');
+    };
+    var getPreviewStyles = function (editor) {
+      var style = editor.getParam('preview_styles', defaultPreviewStyles);
+      if (isString(style)) {
+        return style;
+      } else {
+        return '';
+      }
+    };
+    var getCustomUiSelector = function (editor) {
+      return editor.getParam('custom_ui_selector', '', 'string');
+    };
+    var getThemeUrl = function (editor) {
+      return editor.getParam('theme_url');
+    };
+    var isInline$1 = function (editor) {
+      return editor.getParam('inline');
+    };
+    var hasHiddenInput = function (editor) {
+      return editor.getParam('hidden_input');
+    };
+    var shouldPatchSubmit = function (editor) {
+      return editor.getParam('submit_patch');
+    };
+    var isEncodingXml = function (editor) {
+      return editor.getParam('encoding') === 'xml';
+    };
+    var shouldAddFormSubmitTrigger = function (editor) {
+      return editor.getParam('add_form_submit_trigger');
+    };
+    var shouldAddUnloadTrigger = function (editor) {
+      return editor.getParam('add_unload_trigger');
+    };
+    var hasForcedRootBlock = function (editor) {
+      return getForcedRootBlock(editor) !== '';
+    };
+    var getCustomUndoRedoLevels = function (editor) {
+      return editor.getParam('custom_undo_redo_levels', 0, 'number');
+    };
+    var shouldDisableNodeChange = function (editor) {
+      return editor.getParam('disable_nodechange');
+    };
+    var isReadOnly = function (editor) {
+      return editor.getParam('readonly');
+    };
+    var hasContentCssCors = function (editor) {
+      return editor.getParam('content_css_cors');
+    };
+    var getPlugins = function (editor) {
+      return editor.getParam('plugins');
+    };
+    var getExternalPlugins = function (editor) {
+      return editor.getParam('external_plugins');
+    };
+    var shouldBlockUnsupportedDrop = function (editor) {
+      return editor.getParam('block_unsupported_drop', true, 'boolean');
     };
 
     var isElement$4 = isElement$1;
@@ -9373,8 +9585,8 @@
       return clientRect;
     };
     var trimInlineCaretContainers = function (root) {
-      var contentEditableFalseNodes, node, sibling, i, data;
-      contentEditableFalseNodes = descendants$1(Element.fromDom(root), '*[contentEditable=false]');
+      var node, sibling, i, data;
+      var contentEditableFalseNodes = descendants$1(Element.fromDom(root), '*[contentEditable=false]');
       for (i = 0; i < contentEditableFalseNodes.length; i++) {
         node = contentEditableFalseNodes[i].dom();
         sibling = node.previousSibling;
@@ -9556,12 +9768,11 @@
       return getParentBlock(caretPosition1.container(), rootNode) === getParentBlock(caretPosition2.container(), rootNode);
     };
     var getChildNodeAtRelativeOffset = function (relativeOffset, caretPosition) {
-      var container, offset;
       if (!caretPosition) {
         return null;
       }
-      container = caretPosition.container();
-      offset = caretPosition.offset();
+      var container = caretPosition.container();
+      var offset = caretPosition.offset();
       if (!isElement$5(container)) {
         return null;
       }
@@ -9609,11 +9820,11 @@
     var before$2 = curry(beforeAfter, true);
     var after$1 = curry(beforeAfter, false);
     var normalizeRange = function (direction, root, range) {
-      var node, container, offset, location;
+      var node, container, location;
       var leanLeft = curry(lean, true, root);
       var leanRight = curry(lean, false, root);
       container = range.startContainer;
-      offset = range.startOffset;
+      var offset = range.startOffset;
       if (isCaretContainerBlock(container)) {
         if (!isElement$5(container)) {
           container = container.parentNode;
@@ -9791,7 +10002,7 @@
     };
     var findCaretPosition = function (direction, startPos, root) {
       var node, nextNode, innerNode;
-      var rootContentEditableFalseElm, caretPosition;
+      var caretPosition;
       if (!isElement$6(root) || !startPos) {
         return null;
       }
@@ -9862,7 +10073,7 @@
         }
       }
       nextNode = findNode(node, direction, isEditableCaretCandidate$1, root);
-      rootContentEditableFalseElm = last$1(filter(getParents(container, root), isContentEditableFalse$5));
+      var rootContentEditableFalseElm = last$1(filter(getParents(container, root), isContentEditableFalse$5));
       if (rootContentEditableFalseElm && (!nextNode || !rootContentEditableFalseElm.contains(nextNode))) {
         if (isForwards(direction)) {
           caretPosition = CaretPosition$1.after(rootContentEditableFalseElm);
@@ -9959,6 +10170,20 @@
     var firstPositionIn = curry(positionIn, true);
     var lastPositionIn = curry(positionIn, false);
 
+    var CARET_ID = '_mce_caret';
+    var isCaretNode = function (node) {
+      return isElement$1(node) && node.id === CARET_ID;
+    };
+    var getParentCaretContainer = function (body, node) {
+      while (node && node !== body) {
+        if (node.id === CARET_ID) {
+          return node;
+        }
+        node = node.parentNode;
+      }
+      return null;
+    };
+
     var isStringPathBookmark = function (bookmark) {
       return typeof bookmark.start === 'string';
     };
@@ -9982,8 +10207,8 @@
       return node;
     };
     var resolveCaretPositionBookmark = function (dom, bookmark) {
-      var rng, pos;
-      rng = dom.createRng();
+      var pos;
+      var rng = dom.createRng();
       pos = resolve$1(dom.getRoot(), bookmark.start);
       rng.setStart(pos.container(), pos.offset());
       pos = resolve$1(dom.getRoot(), bookmark.end);
@@ -10441,10 +10666,10 @@
       return node || container;
     };
     var findParentContainer = function (dom, format, startContainer, startOffset, endContainer, endOffset, start) {
-      var container, parent, sibling, siblingName, root;
+      var container, parent, sibling;
       container = parent = start ? startContainer : endContainer;
-      siblingName = start ? 'previousSibling' : 'nextSibling';
-      root = dom.getRoot();
+      var siblingName = start ? 'previousSibling' : 'nextSibling';
+      var root = dom.getRoot();
       if (isText$1(container) && !isWhiteSpaceNode$1(container)) {
         if (start ? startOffset > 0 : endOffset < container.nodeValue.length) {
           return container;
@@ -10841,7 +11066,7 @@
       editor.selection.setRng(rng);
     };
     var makeAnnotation = function (eDoc, _a, annotationName, decorate) {
-      var _b = _a.uid, uid = _b === void 0 ? generate('mce-annotation') : _b, data = __rest(_a, ['uid']);
+      var _b = _a.uid, uid = _b === void 0 ? generate$1('mce-annotation') : _b, data = __rest(_a, ['uid']);
       var master = Element.fromTag('span', eDoc);
       add$3(master, annotation());
       set(master, '' + dataAnnotationId(), uid);
@@ -10920,7 +11145,7 @@
     };
 
     var Annotator = function (editor) {
-      var registry = create$1();
+      var registry = create$2();
       setup$1(editor, registry);
       var changes = setup(editor);
       return {
@@ -10952,7 +11177,6 @@
       };
     };
 
-    var whiteSpaceRegExp$3 = /^[ \t\r\n]*$/;
     var typeLookup = {
       '#text': 3,
       '#comment': 8,
@@ -10981,7 +11205,7 @@
       }
     };
     var isEmptyTextNode$1 = function (node) {
-      if (!whiteSpaceRegExp$3.test(node.value)) {
+      if (!isWhitespaceText(node.value)) {
         return false;
       }
       var parentNode = node.parent;
@@ -11225,7 +11449,7 @@
             if (node.type === 3 && !isEmptyTextNode$1(node)) {
               return false;
             }
-            if (node.type === 3 && node.parent && whitespace[node.parent.name] && whiteSpaceRegExp$3.test(node.value)) {
+            if (node.type === 3 && node.parent && whitespace[node.parent.name] && isWhitespaceText(node.value)) {
               return false;
             }
             if (predicate && predicate(node)) {
@@ -11244,13 +11468,12 @@
     var makeMap$3 = Tools.makeMap;
     var Writer = function (settings) {
       var html = [];
-      var indent, indentBefore, indentAfter, encode, htmlOutput;
       settings = settings || {};
-      indent = settings.indent;
-      indentBefore = makeMap$3(settings.indent_before || '');
-      indentAfter = makeMap$3(settings.indent_after || '');
-      encode = Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
-      htmlOutput = settings.element_format === 'html';
+      var indent = settings.indent;
+      var indentBefore = makeMap$3(settings.indent_before || '');
+      var indentAfter = makeMap$3(settings.indent_after || '');
+      var encode = Entities.getEncodeFunc(settings.entity_encoding || 'raw', settings.entities);
+      var htmlOutput = settings.element_format === 'html';
       return {
         start: function (name, attrs, empty) {
           var i, l, attr, value;
@@ -11330,9 +11553,8 @@
       settings = settings || {};
       settings.validate = 'validate' in settings ? settings.validate : true;
       var serialize = function (node) {
-        var handlers, validate;
-        validate = settings.validate;
-        handlers = {
+        var validate = settings.validate;
+        var handlers = {
           3: function (node) {
             writer.text(node.value, node.raw);
           },
@@ -11421,7 +11643,7 @@
       var dataImageUri = /data:[^;]+;base64,([a-z0-9\+\/=]+)/gi;
       var chunks = [];
       var uris = {};
-      var prefix = generate('img');
+      var prefix = generate$1('img');
       var matches;
       var index = 0;
       var count = 0;
@@ -11482,9 +11704,9 @@
       }
     };
     var findEndTagIndex = function (schema, html, startIndex) {
-      var count = 1, index, matches, tokenRegExp, shortEndedElements;
-      shortEndedElements = schema.getShortEndedElements();
-      tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
+      var count = 1, index, matches;
+      var shortEndedElements = schema.getShortEndedElements();
+      var tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
       tokenRegExp.lastIndex = index = startIndex;
       while (matches = tokenRegExp.exec(html)) {
         index = tokenRegExp.lastIndex;
@@ -11560,12 +11782,11 @@
         var matches, index = 0, value, endRegExp;
         var stack = [];
         var attrList, i, textData, name;
-        var isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;
-        var validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
-        var attributesRequired, attributesDefault, attributesForced, processHtml;
-        var anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;
+        var isInternalElement, isShortEnded;
+        var elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
+        var attributesRequired, attributesDefault, attributesForced;
+        var anyAttributesRequired, attrValue, idCount = 0;
         var decode = Entities.decode;
-        var fixSelfClosing;
         var filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
         var scriptUriRegExp = /((java|vb)script|mhtml):/i;
         var parsingMode = format === 'html' ? 0 : 1;
@@ -11662,16 +11883,16 @@
             value: value
           });
         };
-        tokenRegExp = new RegExp('<(?:' + '(?:!--([\\w\\W]*?)--!?>)|' + '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + '(?:![Dd][Oo][Cc][Tt][Yy][Pp][Ee]([\\w\\W]*?)>)|' + '(?:!(--)?)|' + '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + '(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + ')', 'g');
-        attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
-        shortEndedElements = schema.getShortEndedElements();
-        selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
-        fillAttrsMap = schema.getBoolAttrs();
-        validate = settings.validate;
-        removeInternalElements = settings.remove_internals;
-        fixSelfClosing = settings.fix_self_closing;
-        specialElements = schema.getSpecialElements();
-        processHtml = html + '>';
+        var tokenRegExp = new RegExp('<(?:' + '(?:!--([\\w\\W]*?)--!?>)|' + '(?:!\\[CDATA\\[([\\w\\W]*?)\\]\\]>)|' + '(?:![Dd][Oo][Cc][Tt][Yy][Pp][Ee]([\\w\\W]*?)>)|' + '(?:!(--)?)|' + '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + '(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + ')', 'g');
+        var attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
+        var shortEndedElements = schema.getShortEndedElements();
+        var selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
+        var fillAttrsMap = schema.getBoolAttrs();
+        var validate = settings.validate;
+        var removeInternalElements = settings.remove_internals;
+        var fixSelfClosing = settings.fix_self_closing;
+        var specialElements = schema.getSpecialElements();
+        var processHtml = html + '>';
         while (matches = tokenRegExp.exec(processHtml)) {
           var matchText = matches[0];
           if (index < matches.index) {
@@ -11880,10 +12101,10 @@
     var trimInternal = function (serializer, html) {
       var content = html;
       var bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
-      var endTagIndex, index, matchLength, matches, shortEndedElements;
+      var endTagIndex, index, matchLength, matches;
       var schema = serializer.schema;
       content = trimHtml(serializer.getTempAttrs(), content);
-      shortEndedElements = schema.getShortEndedElements();
+      var shortEndedElements = schema.getShortEndedElements();
       while (matches = bogusAllRegExp.exec(content)) {
         index = bogusAllRegExp.lastIndex;
         matchLength = matches[0].length;
@@ -12024,7 +12245,7 @@
       return ancestor$2(startNode, 'pre,code', curry(eq$2, rootElement));
     };
     var isWhitespace = function (rootNode, node) {
-      return isText$1(node) && /^[ \t\r\n]*$/.test(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
+      return isText$1(node) && isWhitespaceText(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
     };
     var isNamedAnchor = function (node) {
       return isElement$1(node) && node.nodeName === 'A' && node.hasAttribute('name');
@@ -12310,75 +12531,6 @@
         });
       }
     };
-
-    var generate$1 = function (cases) {
-      if (!isArray(cases)) {
-        throw new Error('cases must be an array');
-      }
-      if (cases.length === 0) {
-        throw new Error('there must be at least one case');
-      }
-      var constructors = [];
-      var adt = {};
-      each(cases, function (acase, count) {
-        var keys$1 = keys(acase);
-        if (keys$1.length !== 1) {
-          throw new Error('one and only one name per case');
-        }
-        var key = keys$1[0];
-        var value = acase[key];
-        if (adt[key] !== undefined) {
-          throw new Error('duplicate key detected:' + key);
-        } else if (key === 'cata') {
-          throw new Error('cannot have a case named cata (sorry)');
-        } else if (!isArray(value)) {
-          throw new Error('case arguments must be an array');
-        }
-        constructors.push(key);
-        adt[key] = function () {
-          var argLength = arguments.length;
-          if (argLength !== value.length) {
-            throw new Error('Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength);
-          }
-          var args = new Array(argLength);
-          for (var i = 0; i < args.length; i++) {
-            args[i] = arguments[i];
-          }
-          var match = function (branches) {
-            var branchKeys = keys(branches);
-            if (constructors.length !== branchKeys.length) {
-              throw new Error('Wrong number of arguments to match. Expected: ' + constructors.join(',') + '\nActual: ' + branchKeys.join(','));
-            }
-            var allReqd = forall(constructors, function (reqKey) {
-              return contains(branchKeys, reqKey);
-            });
-            if (!allReqd) {
-              throw new Error('Not all branches were specified when using match. Specified: ' + branchKeys.join(', ') + '\nRequired: ' + constructors.join(', '));
-            }
-            return branches[key].apply(null, args);
-          };
-          return {
-            fold: function () {
-              if (arguments.length !== cases.length) {
-                throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
-              }
-              var target = arguments[count];
-              return target.apply(null, args);
-            },
-            match: match,
-            log: function (label) {
-              domGlobals.console.log(label, {
-                constructors: constructors,
-                constructor: key,
-                params: args
-              });
-            }
-          };
-        };
-      });
-      return adt;
-    };
-    var Adt = { generate: generate$1 };
 
     var tableCellRng = function (start, end) {
       return {
@@ -12806,13 +12958,12 @@
       return isText$1(container) && container.nodeValue[offset - 1] === nbsp;
     };
     var trimOrPadLeftRight = function (rng, html) {
-      var container, offset;
-      container = rng.startContainer;
-      offset = rng.startOffset;
+      var container = rng.startContainer;
+      var offset = rng.startOffset;
       var hasSiblingText = function (siblingName) {
         return container[siblingName] && container[siblingName].nodeType === 3;
       };
-      if (container.nodeType === 3) {
+      if (isText$1(container)) {
         if (offset > 0) {
           html = html.replace(/^&nbsp;/, ' ');
         } else if (!hasSiblingText('previousSibling')) {
@@ -12827,10 +12978,9 @@
       return html;
     };
     var trimNbspAfterDeleteAndPadValue = function (rng, value) {
-      var container, offset;
-      container = rng.startContainer;
-      offset = rng.startOffset;
-      if (container.nodeType === 3 && rng.collapsed) {
+      var container = rng.startContainer;
+      var offset = rng.startOffset;
+      if (isText$1(container) && rng.collapsed) {
         if (container.data[offset] === nbsp) {
           container.deleteData(offset, 1);
           if (!/[\u00a0| ]$/.test(value)) {
@@ -12921,9 +13071,9 @@
       return node && !editor.schema.getShortEndedElements()[node.nodeName];
     };
     var moveSelectionToMarker = function (editor, marker) {
-      var parentEditableFalseElm, parentBlock, nextRng;
+      var nextRng;
       var dom = editor.dom, selection = editor.selection;
-      var node, node2;
+      var node2;
       var getContentEditableFalseParent = function (node) {
         var root = editor.getBody();
         for (; node && node !== root; node = node.parentNode) {
@@ -12937,14 +13087,14 @@
         return;
       }
       editor.selection.scrollIntoView(marker);
-      parentEditableFalseElm = getContentEditableFalseParent(marker);
+      var parentEditableFalseElm = getContentEditableFalseParent(marker);
       if (parentEditableFalseElm) {
         dom.remove(marker);
         selection.select(parentEditableFalseElm);
         return;
       }
       var rng = dom.createRng();
-      node = marker.previousSibling;
+      var node = marker.previousSibling;
       if (node && node.nodeType === 3) {
         rng.setStart(node, node.nodeValue.length);
         if (!Env.ie) {
@@ -12966,7 +13116,7 @@
           return caretPos.toRange();
         }
       };
-      parentBlock = dom.getParent(marker, dom.isBlock);
+      var parentBlock = dom.getParent(marker, dom.isBlock);
       dom.remove(marker);
       if (parentBlock && dom.isEmpty(parentBlock)) {
         editor.$(parentBlock).empty();
@@ -12993,16 +13143,16 @@
       }
     };
     var insertHtmlAtCaret = function (editor, value, details) {
-      var parser, serializer, parentNode, rootNode, fragment, args;
-      var marker, rng, node, bookmarkHtml, merge;
+      var parentNode, rootNode, args;
+      var marker, rng, node;
       var selection = editor.selection, dom = editor.dom;
       if (/^ | $/.test(value)) {
         value = trimOrPadLeftRight(selection.getRng(), value);
       }
-      parser = editor.parser;
-      merge = details.merge;
-      serializer = Serializer({ validate: editor.settings.validate }, editor.schema);
-      bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
+      var parser = editor.parser;
+      var merge = details.merge;
+      var serializer = Serializer({ validate: shouldValidate(editor) }, editor.schema);
+      var bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>';
       args = {
         content: value,
         format: 'html',
@@ -13045,7 +13195,7 @@
         data: details.data,
         insert: true
       };
-      fragment = parser.parse(value, parserArgs);
+      var fragment = parser.parse(value, parserArgs);
       if (details.paste === true && isListFragment(editor.schema, fragment) && isParentBlockLi(dom, parentNode)) {
         rng = insertAtCaret(serializer, dom, editor.selection.getRng(), fragment);
         editor.selection.setRng(rng);
@@ -13100,21 +13250,30 @@
       editor.addVisual();
     };
 
-    var hasFocus = function (element) {
-      var doc = owner(element).dom();
-      return element.dom() === doc.activeElement;
+    var getDocument = function () {
+      return Element.fromDom(domGlobals.document);
     };
-    var active = function (_doc) {
-      var doc = _doc !== undefined ? _doc.dom() : domGlobals.document;
-      return Option.from(doc.activeElement).map(Element.fromDom);
+
+    var focus = function (element) {
+      return element.dom().focus();
+    };
+    var hasFocus = function (element) {
+      var root = getRootNode(element).dom();
+      return element.dom() === root.activeElement;
+    };
+    var active = function (root) {
+      if (root === void 0) {
+        root = getDocument();
+      }
+      return Option.from(root.dom().activeElement).map(Element.fromDom);
     };
     var search = function (element) {
-      return active(owner(element)).filter(function (e) {
+      return active(getRootNode(element)).filter(function (e) {
         return element.dom().contains(e.dom());
       });
     };
 
-    var create$3 = function (start, soffset, finish, foffset) {
+    var create$4 = function (start, soffset, finish, foffset) {
       return {
         start: constant(start),
         soffset: constant(soffset),
@@ -13122,7 +13281,7 @@
         foffset: constant(foffset)
       };
     };
-    var SimRange = { create: create$3 };
+    var SimRange = { create: create$4 };
 
     var adt = Adt.generate([
       { before: ['element'] },
@@ -13342,7 +13501,7 @@
       }
     };
     var isUIElement = function (editor, elm) {
-      var customSelector = editor ? editor.settings.custom_ui_selector : '';
+      var customSelector = getCustomUiSelector(editor);
       var parent = DOM$2.getParent(elm, function (elm) {
         return isEditorUIElement$1(elm) || (customSelector ? editor.dom.is(elm, customSelector) : false);
       });
@@ -13384,8 +13543,7 @@
       if (!documentFocusInHandler) {
         documentFocusInHandler = function (e) {
           var activeEditor = editorManager.activeEditor;
-          var target;
-          target = e.target;
+          var target = e.target;
           if (activeEditor && target.ownerDocument === domGlobals.document) {
             if (target !== domGlobals.document.body && !isUIElement(activeEditor, target) && editorManager.focusedEditor === activeEditor) {
               activeEditor.fire('blur', { focusedEditor: null });
@@ -13504,7 +13662,7 @@
     var activateEditor = function (editor) {
       return editor.editorManager.setActive(editor);
     };
-    var focus = function (editor, skipFocus) {
+    var focus$1 = function (editor, skipFocus) {
       if (editor.removed) {
         return;
       }
@@ -13602,7 +13760,7 @@
         forcedRootBlockName = getForcedRootBlock(editor);
         if (forcedRootBlockName && editor.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
           content = padd;
-          content = editor.dom.createHTML(forcedRootBlockName, editor.settings.forced_root_block_attrs, content);
+          content = editor.dom.createHTML(forcedRootBlockName, getForcedRootBlockAttrs(editor), content);
         } else if (!content) {
           content = '<br data-mce-bogus="1">';
         }
@@ -13773,7 +13931,6 @@
       }
     };
     var match = function (editor, name, vars, node) {
-      var startNode;
       if (node) {
         return matchParents(editor, node, name, vars);
       }
@@ -13781,7 +13938,7 @@
       if (matchParents(editor, node, name, vars)) {
         return true;
       }
-      startNode = editor.selection.getStart();
+      var startNode = editor.selection.getStart();
       if (startNode !== node) {
         if (matchParents(editor, startNode, name, vars)) {
           return true;
@@ -13957,7 +14114,7 @@
       var formatter = editor.formatter;
       var dom = editor.dom;
       var validFormats = filter(keys(formatter.get()), function (formatName) {
-        return formatName !== 'removeformat' && formatName !== name;
+        return formatName !== name && !contains$1(formatName, 'removeformat');
       });
       var matchedFormats = matchAllOnNode(editor, formatNode, validFormats);
       var uniqueFormats = filter(matchedFormats, function (fmtName) {
@@ -14099,7 +14256,7 @@
     };
     addPostProcessHook('pre', function (editor) {
       var rng = editor.selection.getRng();
-      var isPre, blocks;
+      var blocks;
       var hasPreSibling = function (pre) {
         return isPre(pre.previousSibling) && indexOf$1(blocks, pre.previousSibling) !== -1;
       };
@@ -14107,7 +14264,7 @@
         DomQuery(pre2).remove();
         DomQuery(pre1).append('<br><br>').append(pre2.childNodes);
       };
-      isPre = matchNodeNames(['pre']);
+      var isPre = matchNodeNames(['pre']);
       if (!rng.collapsed) {
         blocks = editor.selection.getSelectedBlocks();
         each$8(filter$4(filter$4(blocks, isPre), hasPreSibling), function (pre) {
@@ -14116,11 +14273,103 @@
       }
     });
 
-    var MCE_ATTR_RE = /^(src|href|style)$/;
     var each$9 = Tools.each;
+    var isElementNode = function (node) {
+      return isElement$1(node) && !isBookmarkNode$1(node) && !isCaretNode(node) && !isBogus(node);
+    };
+    var findElementSibling = function (node, siblingName) {
+      var sibling;
+      for (sibling = node; sibling; sibling = sibling[siblingName]) {
+        if (isText$1(sibling) && sibling.nodeValue.length !== 0) {
+          return node;
+        }
+        if (isElement$1(sibling) && !isBookmarkNode$1(sibling)) {
+          return sibling;
+        }
+      }
+      return node;
+    };
+    var mergeSiblingsNodes = function (dom, prev, next) {
+      var sibling, tmpSibling;
+      var elementUtils = new ElementUtils(dom);
+      if (prev && next) {
+        prev = findElementSibling(prev, 'previousSibling');
+        next = findElementSibling(next, 'nextSibling');
+        if (elementUtils.compare(prev, next)) {
+          for (sibling = prev.nextSibling; sibling && sibling !== next;) {
+            tmpSibling = sibling;
+            sibling = sibling.nextSibling;
+            prev.appendChild(tmpSibling);
+          }
+          dom.remove(next);
+          Tools.each(Tools.grep(next.childNodes), function (node) {
+            prev.appendChild(node);
+          });
+          return prev;
+        }
+      }
+      return next;
+    };
+    var mergeSiblings = function (dom, format, vars, node) {
+      if (node && format.merge_siblings !== false) {
+        var newNode = mergeSiblingsNodes(dom, getNonWhiteSpaceSibling(node), node);
+        mergeSiblingsNodes(dom, newNode, getNonWhiteSpaceSibling(newNode, true));
+      }
+    };
+    var clearChildStyles = function (dom, format, node) {
+      if (format.clear_child_styles) {
+        var selector = format.links ? '*:not(a)' : '*';
+        each$9(dom.select(selector, node), function (node) {
+          if (isElementNode(node)) {
+            each$9(format.styles, function (value, name) {
+              dom.setStyle(node, name, '');
+            });
+          }
+        });
+      }
+    };
+    var processChildElements = function (node, filter, process) {
+      each$9(node.childNodes, function (node) {
+        if (isElementNode(node)) {
+          if (filter(node)) {
+            process(node);
+          }
+          if (node.hasChildNodes()) {
+            processChildElements(node, filter, process);
+          }
+        }
+      });
+    };
+    var unwrapEmptySpan = function (dom, node) {
+      if (node.nodeName === 'SPAN' && dom.getAttribs(node).length === 0) {
+        dom.remove(node, true);
+      }
+    };
+    var hasStyle = function (dom, name) {
+      return function (node) {
+        return !!(node && getStyle(dom, node, name));
+      };
+    };
+    var applyStyle = function (dom, name, value) {
+      return function (node) {
+        dom.setStyle(node, name, value);
+        if (node.getAttribute('style') === '') {
+          node.removeAttribute('style');
+        }
+        unwrapEmptySpan(dom, node);
+      };
+    };
+
+    var removeResult = Adt.generate([
+      { keep: [] },
+      { rename: ['name'] },
+      { removed: [] }
+    ]);
+    var MCE_ATTR_RE = /^(src|href|style)$/;
+    var each$a = Tools.each;
     var isEq$2 = isEq;
-    var isTableCell$3 = function (node) {
-      return /^(TH|TD)$/.test(node.nodeName);
+    var isTableCellOrRow = function (node) {
+      return /^(TR|TH|TD)$/.test(node.nodeName);
     };
     var isChildOfInlineParent = function (dom, node, parent) {
       return dom.isChildOf(node, parent) && node !== parent && !dom.isBlock(parent);
@@ -14143,6 +14392,18 @@
         container = new TreeWalker(container, ed.getBody()).prev() || container;
       }
       return container;
+    };
+    var normalizeTableSelection = function (node, start) {
+      var prop = start ? 'firstChild' : 'lastChild';
+      if (isTableCellOrRow(node) && node[prop]) {
+        var childNode = node[prop];
+        if (node.nodeName === 'TR') {
+          return childNode[prop] || childNode;
+        } else {
+          return childNode;
+        }
+      }
+      return node;
     };
     var wrap$2 = function (dom, node, name, attrs) {
       var wrapper = dom.create(name, attrs);
@@ -14220,11 +14481,11 @@
       }
       dom.remove(node, true);
     };
-    var removeFormat = function (ed, format, vars, node, compareNode) {
+    var removeFormatInternal = function (ed, format, vars, node, compareNode) {
       var stylesModified;
       var dom = ed.dom;
       if (!matchName$1(dom, node, format) && !isColorFormatAndAnchor(node, format)) {
-        return false;
+        return removeResult.keep();
       }
       var elm = node;
       if (format.inline && format.remove === 'all' && isArray(format.preserve_attributes)) {
@@ -14236,12 +14497,11 @@
           return dom.setAttrib(elm, attr.name, attr.value);
         });
         if (attrsToPreserve.length > 0) {
-          ed.dom.rename(node, 'span');
-          return true;
+          return removeResult.rename('span');
         }
       }
       if (format.remove !== 'all') {
-        each$9(format.styles, function (value, name) {
+        each$a(format.styles, function (value, name) {
           value = normalizeStyleValue(dom, replaceVars(value, vars), name);
           if (typeof name === 'number') {
             name = value;
@@ -14256,7 +14516,7 @@
           elm.removeAttribute('style');
           elm.removeAttribute('data-mce-style');
         }
-        each$9(format.attributes, function (value, name) {
+        each$a(format.attributes, function (value, name) {
           var valueOut;
           value = replaceVars(value, vars);
           if (typeof name === 'number') {
@@ -14288,7 +14548,7 @@
             elm.removeAttribute(name);
           }
         });
-        each$9(format.classes, function (value) {
+        each$a(format.classes, function (value) {
           value = replaceVars(value, vars);
           if (!compareNode || dom.hasClass(compareNode, value)) {
             dom.removeClass(elm, value);
@@ -14298,14 +14558,21 @@
         for (var i = 0; i < attrs.length; i++) {
           var attrName = attrs[i].nodeName;
           if (attrName.indexOf('_') !== 0 && attrName.indexOf('data-') !== 0) {
-            return false;
+            return removeResult.keep();
           }
         }
       }
       if (format.remove !== 'none') {
         removeNode$1(ed, elm, format);
-        return true;
+        return removeResult.removed();
       }
+      return removeResult.keep();
+    };
+    var removeFormat = function (ed, format, vars, node, compareNode) {
+      return removeFormatInternal(ed, format, vars, node, compareNode).fold(never, function (newName) {
+        ed.dom.rename(node, newName);
+        return true;
+      }, always);
     };
     var findFormatRoot = function (editor, container, name, vars, similar) {
       var formatRoot;
@@ -14319,6 +14586,13 @@
       });
       return formatRoot;
     };
+    var removeFormatFromClone = function (editor, format, vars, clone) {
+      return removeFormatInternal(editor, format, vars, clone, clone).fold(constant(clone), function (newName) {
+        var fragment = editor.dom.createFragment();
+        fragment.appendChild(clone);
+        return editor.dom.rename(clone, newName);
+      }, constant(null));
+    };
     var wrapAndSplit = function (editor, formatList, formatRoot, container, target, split, format, vars) {
       var clone, lastClone, firstClone;
       var dom = editor.dom;
@@ -14327,8 +14601,8 @@
         for (var parent_1 = container.parentNode; parent_1 && parent_1 !== formatRootParent; parent_1 = parent_1.parentNode) {
           clone = dom.clone(parent_1, false);
           for (var i = 0; i < formatList.length; i++) {
-            if (removeFormat(editor, formatList[i], vars, clone, clone)) {
-              clone = 0;
+            clone = removeFormatFromClone(editor, formatList[i], vars, clone);
+            if (clone === null) {
               break;
             }
           }
@@ -14348,6 +14622,9 @@
         if (lastClone) {
           target.parentNode.insertBefore(lastClone, target);
           firstClone.appendChild(target);
+          if (format.inline) {
+            mergeSiblings(dom, format, vars, lastClone);
+          }
         }
       }
       return container;
@@ -14366,13 +14643,13 @@
         return isBookmarkNode$1(node) && isElement$1(node) && (node.id === '_start' || node.id === '_end');
       };
       var process = function (node) {
-        var children, lastContentEditable, hasContentEditableState;
+        var lastContentEditable, hasContentEditableState;
         if (isElement$1(node) && dom.getContentEditable(node)) {
           lastContentEditable = contentEditable;
           contentEditable = dom.getContentEditable(node) === 'true';
           hasContentEditableState = true;
         }
-        children = from$1(node.childNodes);
+        var children = from$1(node.childNodes);
         if (contentEditable && !hasContentEditableState) {
           for (var i = 0; i < formatList.length; i++) {
             if (removeFormat(ed, formatList[i], vars, node, node)) {
@@ -14405,23 +14682,14 @@
       };
       var removeRngStyle = function (rng) {
         var startContainer, endContainer;
-        var commonAncestorContainer = rng.commonAncestorContainer;
         var expandedRng = expandRng(ed, rng, formatList, true);
         if (format.split) {
           expandedRng = split$1(expandedRng);
           startContainer = getContainer(ed, expandedRng, true);
           endContainer = getContainer(ed, expandedRng);
           if (startContainer !== endContainer) {
-            if (/^(TR|TH|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {
-              if (startContainer.nodeName === 'TR') {
-                startContainer = startContainer.firstChild.firstChild || startContainer;
-              } else {
-                startContainer = startContainer.firstChild || startContainer;
-              }
-            }
-            if (commonAncestorContainer && /^T(HEAD|BODY|FOOT|R)$/.test(commonAncestorContainer.nodeName) && isTableCell$3(endContainer) && endContainer.firstChild) {
-              endContainer = endContainer.firstChild || endContainer;
-            }
+            startContainer = normalizeTableSelection(startContainer, true);
+            endContainer = normalizeTableSelection(endContainer, false);
             if (isChildOfInlineParent(dom, startContainer, endContainer)) {
               var marker = Option.from(startContainer.firstChild).getOr(startContainer);
               splitToFormatRoot(wrapWithSiblings(dom, marker, true, 'span', {
@@ -14526,74 +14794,7 @@
       }
     };
 
-    var each$a = Tools.each;
-    var isElementNode = function (node) {
-      return isElement$1(node) && !isBookmarkNode$1(node) && !isCaretNode(node) && !isBogus(node);
-    };
-    var findElementSibling = function (node, siblingName) {
-      var sibling;
-      for (sibling = node; sibling; sibling = sibling[siblingName]) {
-        if (isText$1(sibling) && sibling.nodeValue.length !== 0) {
-          return node;
-        }
-        if (isElement$1(sibling) && !isBookmarkNode$1(sibling)) {
-          return sibling;
-        }
-      }
-      return node;
-    };
-    var mergeSiblingsNodes = function (dom, prev, next) {
-      var sibling, tmpSibling;
-      var elementUtils = new ElementUtils(dom);
-      if (prev && next) {
-        prev = findElementSibling(prev, 'previousSibling');
-        next = findElementSibling(next, 'nextSibling');
-        if (elementUtils.compare(prev, next)) {
-          for (sibling = prev.nextSibling; sibling && sibling !== next;) {
-            tmpSibling = sibling;
-            sibling = sibling.nextSibling;
-            prev.appendChild(tmpSibling);
-          }
-          dom.remove(next);
-          Tools.each(Tools.grep(next.childNodes), function (node) {
-            prev.appendChild(node);
-          });
-          return prev;
-        }
-      }
-      return next;
-    };
-    var processChildElements = function (node, filter, process) {
-      each$a(node.childNodes, function (node) {
-        if (isElementNode(node)) {
-          if (filter(node)) {
-            process(node);
-          }
-          if (node.hasChildNodes()) {
-            processChildElements(node, filter, process);
-          }
-        }
-      });
-    };
-    var hasStyle = function (dom, name) {
-      return function (node) {
-        return !!(node && getStyle(dom, node, name));
-      };
-    };
-    var applyStyle = function (dom, name, value) {
-      return function (node) {
-        dom.setStyle(node, name, value);
-        if (node.getAttribute('style') === '') {
-          node.removeAttribute('style');
-        }
-        unwrapEmptySpan(dom, node);
-      };
-    };
-    var unwrapEmptySpan = function (dom, node) {
-      if (node.nodeName === 'SPAN' && dom.getAttribs(node).length === 0) {
-        dom.remove(node, true);
-      }
-    };
+    var each$b = Tools.each;
     var mergeTextDecorationsAndColor = function (dom, format, vars, node) {
       var processTextDecorationsAndColor = function (n) {
         if (n.nodeType === 1 && n.parentNode && n.parentNode.nodeType === 1) {
@@ -14621,27 +14822,9 @@
         dom.remove(dom.select(format.inline === 'sup' ? 'sub' : 'sup', node), true);
       }
     };
-    var mergeSiblings = function (dom, format, vars, node) {
-      if (node && format.merge_siblings !== false) {
-        node = mergeSiblingsNodes(dom, getNonWhiteSpaceSibling(node), node);
-        node = mergeSiblingsNodes(dom, node, getNonWhiteSpaceSibling(node, true));
-      }
-    };
-    var clearChildStyles = function (dom, format, node) {
-      if (format.clear_child_styles) {
-        var selector = format.links ? '*:not(a)' : '*';
-        each$a(dom.select(selector, node), function (node) {
-          if (isElementNode(node)) {
-            each$a(format.styles, function (value, name) {
-              dom.setStyle(node, name, '');
-            });
-          }
-        });
-      }
-    };
     var mergeWithChildren = function (editor, formatList, vars, node) {
-      each$a(formatList, function (format) {
-        each$a(editor.dom.select(format.inline, node), function (child) {
+      each$b(formatList, function (format) {
+        each$b(editor.dom.select(format.inline, node), function (child) {
           if (!isElementNode(child)) {
             return;
           }
@@ -14666,7 +14849,7 @@
       }
     };
 
-    var each$b = Tools.each;
+    var each$c = Tools.each;
     var isElementNode$1 = function (node) {
       return node && node.nodeType === 1 && !isBookmarkNode$1(node) && !isCaretNode(node) && !isBogus(node);
     };
@@ -14682,7 +14865,7 @@
           if (fmt.onformat) {
             fmt.onformat(elm, fmt, vars, node);
           }
-          each$b(fmt.styles, function (value, name) {
+          each$c(fmt.styles, function (value, name) {
             dom.setStyle(elm, name, replaceVars(value, vars));
           });
           if (fmt.styles) {
@@ -14691,10 +14874,10 @@
               dom.setAttrib(elm, 'data-mce-style', styleVal);
             }
           }
-          each$b(fmt.attributes, function (value, name) {
+          each$c(fmt.attributes, function (value, name) {
             dom.setAttrib(elm, name, replaceVars(value, vars));
           });
-          each$b(fmt.classes, function (value) {
+          each$c(fmt.classes, function (value) {
             value = replaceVars(value, vars);
             if (!dom.hasClass(elm, value)) {
               dom.addClass(elm, value);
@@ -14707,7 +14890,7 @@
         if (!format.selector) {
           return false;
         }
-        each$b(formatList, function (format) {
+        each$c(formatList, function (format) {
           if ('collapsed' in format && format.collapsed !== isCollapsed) {
             return;
           }
@@ -14721,9 +14904,9 @@
       };
       var applyRngStyle = function (dom, rng, bookmark, nodeSpecific) {
         var newWrappers = [];
-        var wrapName, wrapElm, contentEditable = true;
-        wrapName = format.inline || format.block;
-        wrapElm = dom.create(wrapName);
+        var contentEditable = true;
+        var wrapName = format.inline || format.block;
+        var wrapElm = dom.create(wrapName);
         setElementFormat(wrapElm);
         walk$1(dom, rng, function (nodes) {
           var currentWrapElm;
@@ -14771,31 +14954,30 @@
               currentWrapElm.appendChild(node);
             } else {
               currentWrapElm = 0;
-              each$b(Tools.grep(node.childNodes), process);
+              each$c(Tools.grep(node.childNodes), process);
               if (hasContentEditableState) {
                 contentEditable = lastContentEditable;
               }
               currentWrapElm = 0;
             }
           };
-          each$b(nodes, process);
+          each$c(nodes, process);
         });
         if (format.links === true) {
-          each$b(newWrappers, function (node) {
+          each$c(newWrappers, function (node) {
             var process = function (node) {
               if (node.nodeName === 'A') {
                 setElementFormat(node, format);
               }
-              each$b(Tools.grep(node.childNodes), process);
+              each$c(Tools.grep(node.childNodes), process);
             };
             process(node);
           });
         }
-        each$b(newWrappers, function (node) {
-          var childCount;
+        each$c(newWrappers, function (node) {
           var getChildCount = function (node) {
             var count = 0;
-            each$b(node.childNodes, function (node) {
+            each$c(node.childNodes, function (node) {
               if (!isEmptyTextNode(node) && !isBookmarkNode$1(node)) {
                 count++;
               }
@@ -14804,7 +14986,7 @@
           };
           var getChildElementNode = function (root) {
             var child = false;
-            each$b(root.childNodes, function (node) {
+            each$c(root.childNodes, function (node) {
               if (isElementNode$1(node)) {
                 child = node;
                 return false;
@@ -14813,8 +14995,8 @@
             return child;
           };
           var mergeStyles = function (node) {
-            var child, clone;
-            child = getChildElementNode(node);
+            var clone;
+            var child = getChildElementNode(node);
             if (child && !isBookmarkNode$1(child) && matchName(dom, child, format)) {
               clone = dom.clone(child, false);
               setElementFormat(clone);
@@ -14823,7 +15005,7 @@
             }
             return clone || node;
           };
-          childCount = getChildCount(node);
+          var childCount = getChildCount(node);
           if ((newWrappers.length > 1 || !dom.isBlock(node)) && childCount === 0) {
             dom.remove(node, true);
             return;
@@ -15042,9 +15224,14 @@
         return name(elm) === 'li' && hasAllContentsSelected(elm, rng);
       }).fold(constant([]), function (_li) {
         return findParentListContainer(parents).map(function (listCont) {
+          var listElm = Element.fromTag(name(listCont));
+          var listStyles = filter$1(getAllRaw(listCont), function (_style, name) {
+            return startsWith(name, 'list-style');
+          });
+          setAll$1(listElm, listStyles);
           return [
             Element.fromTag('li'),
-            Element.fromTag(name(listCont))
+            listElm
           ];
         }).getOr([]);
       });
@@ -15105,15 +15292,39 @@
       return selectedCells.length > 0 ? getTableFragment(rootNode, selectedCells) : getSelectionFragment(rootNode, ranges);
     };
 
+    var trimLeadingCollapsibleText = function (text) {
+      return text.replace(/^[ \f\n\r\t\v]+/, '');
+    };
+    var isCollapsibleWhitespace = function (text, index) {
+      return index >= 0 && index < text.length && isWhiteSpace$1(text.charAt(index));
+    };
+    var getInnerText = function (bin) {
+      var text = trim$3(bin.innerText);
+      return Env.browser.isIE() ? trimLeadingCollapsibleText(text) : text;
+    };
     var getTextContent = function (editor) {
       return Option.from(editor.selection.getRng()).map(function (rng) {
         var bin = editor.dom.add(editor.getBody(), 'div', {
           'data-mce-bogus': 'all',
           'style': 'overflow: hidden; opacity: 0;'
         }, rng.cloneContents());
-        var text = trim$3(bin.innerText);
+        var text = getInnerText(bin);
+        var nonRenderedText = trim$3(bin.textContent);
         editor.dom.remove(bin);
-        return text;
+        if (isCollapsibleWhitespace(nonRenderedText, 0) || isCollapsibleWhitespace(nonRenderedText, nonRenderedText.length - 1)) {
+          var parentBlock = editor.dom.getParent(rng.commonAncestorContainer, editor.dom.isBlock);
+          var parentBlockText = getInnerText(parentBlock);
+          var textIndex = parentBlockText.indexOf(text);
+          if (textIndex !== -1) {
+            var hasProceedingSpace = isCollapsibleWhitespace(parentBlockText, textIndex - 1);
+            var hasTrailingSpace = isCollapsibleWhitespace(parentBlockText, textIndex + text.length);
+            return (hasProceedingSpace ? ' ' : '') + text + (hasTrailingSpace ? ' ' : '');
+          } else {
+            return text;
+          }
+        } else {
+          return text;
+        }
       }).getOr('');
     };
     var getSerializedContent = function (editor, args) {
@@ -15281,9 +15492,9 @@
       return '';
     };
     var createFragment$1 = function (html) {
-      var frag, node, container;
-      container = domGlobals.document.createElement('div');
-      frag = domGlobals.document.createDocumentFragment();
+      var node;
+      var container = domGlobals.document.createElement('div');
+      var frag = domGlobals.document.createDocumentFragment();
       if (html) {
         container.innerHTML = html;
       }
@@ -15361,13 +15572,12 @@
       };
     };
     var createFromEditor = function (editor) {
-      var fragments, content, trimmedFragments;
-      fragments = read$2(editor.getBody());
-      trimmedFragments = bind(fragments, function (html) {
+      var fragments = read$2(editor.getBody());
+      var trimmedFragments = bind(fragments, function (html) {
         var trimmed = trimInternal(editor.serializer, html);
         return trimmed.length > 0 ? [trimmed] : [];
       });
-      content = trimmedFragments.join('');
+      var content = trimmedFragments.join('');
       return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
     };
     var applyToEditor = function (editor, level, before) {
@@ -15431,7 +15641,6 @@
       }
     };
     var addUndoLevel = function (editor, undoManager, index, locks, beforeBookmark, level, event) {
-      var settings = editor.settings;
       var currentLevel = createFromEditor(editor);
       level = level || {};
       level = Tools.extend(level, currentLevel);
@@ -15454,8 +15663,9 @@
           undoManager.data[index.get()].beforeBookmark = bm;
         });
       }
-      if (settings.custom_undo_redo_levels) {
-        if (undoManager.data.length > settings.custom_undo_redo_levels) {
+      var customUndoRedoLevels = getCustomUndoRedoLevels(editor);
+      if (customUndoRedoLevels) {
+        if (undoManager.data.length > customUndoRedoLevels) {
           for (var i = 0; i < undoManager.data.length - 1; i++) {
             undoManager.data[i] = undoManager.data[i + 1];
           }
@@ -16066,7 +16276,7 @@
       var defaultPhoneSettings = { menubar: false };
       return __assign(__assign(__assign({}, defaultTouchSettings), defaultMobileSettings), isPhone ? defaultPhoneSettings : {});
     };
-    var getExternalPlugins = function (overrideSettings, settings) {
+    var getExternalPlugins$1 = function (overrideSettings, settings) {
       var userDefinedExternalPlugins = settings.external_plugins ? settings.external_plugins : {};
       if (overrideSettings && overrideSettings.external_plugins) {
         return Tools.extend({}, overrideSettings.external_plugins, userDefinedExternalPlugins);
@@ -16094,7 +16304,7 @@
       var sectionResult = extractSections(['mobile'], deepMerge(defaultDeviceSettings, settings));
       var extendedSettings = Tools.extend(defaultSettings, defaultOverrideSettings, sectionResult.settings(), isOnMobile(isMobileDevice, sectionResult) ? getSection(sectionResult, 'mobile') : {}, {
         validate: true,
-        external_plugins: getExternalPlugins(defaultOverrideSettings, sectionResult.settings())
+        external_plugins: getExternalPlugins$1(defaultOverrideSettings, sectionResult.settings())
       });
       return processPlugins(isMobileDevice, sectionResult, defaultOverrideSettings, extendedSettings);
     };
@@ -16267,6 +16477,11 @@
           var notification = getImplementation().open(spec, function () {
             closeNotification(notification);
             reposition();
+            getTopNotification().fold(function () {
+              return editor.focus();
+            }, function (top) {
+              return focus(Element.fromDom(top.getEl()));
+            });
           });
           addNotification(notification);
           reposition();
@@ -16285,7 +16500,7 @@
       };
       var registerEvents = function (editor) {
         editor.on('SkinLoaded', function () {
-          var serviceMessage = editor.settings.service_message;
+          var serviceMessage = getServiceMessage(editor);
           if (serviceMessage) {
             open({
               text: serviceMessage,
@@ -16763,9 +16978,9 @@
       return null;
     };
     var findClosestIeRange = function (clientX, clientY, doc) {
-      var element, rng, rects;
-      element = doc.elementFromPoint(clientX, clientY);
-      rng = doc.body.createTextRange();
+      var rects;
+      var element = doc.elementFromPoint(clientX, clientY);
+      var rng = doc.body.createTextRange();
       if (!element || element.tagName === 'HTML') {
         element = doc.body;
       }
@@ -16845,14 +17060,14 @@
       return node || orig;
     };
     var getNode$1 = function (root, rng) {
-      var elm, startContainer, endContainer, startOffset, endOffset;
+      var elm, startContainer, endContainer;
       if (!rng) {
         return root;
       }
       startContainer = rng.startContainer;
       endContainer = rng.endContainer;
-      startOffset = rng.startOffset;
-      endOffset = rng.endOffset;
+      var startOffset = rng.startOffset;
+      var endOffset = rng.endOffset;
       elm = rng.commonAncestorContainer;
       if (!rng.collapsed) {
         if (startContainer === endContainer) {
@@ -16884,9 +17099,9 @@
       return elm;
     };
     var getSelectedBlocks = function (dom, rng, startElm, endElm) {
-      var node, root;
+      var node;
       var selectedBlocks = [];
-      root = dom.getRoot();
+      var root = dom.getRoot();
       startElm = dom.getParent(startElm || getStart$2(root, rng, rng.collapsed), dom.isBlock);
       endElm = dom.getParent(endElm || getEnd(root, rng, rng.collapsed), dom.isBlock);
       if (startElm && startElm !== root) {
@@ -16952,7 +17167,7 @@
     var isTable$3 = function (node) {
       return node && node.nodeName === 'TABLE';
     };
-    var isTableCell$4 = function (node) {
+    var isTableCell$3 = function (node) {
       return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
     };
     var isCeFalseCaretContainer = function (node, rootNode) {
@@ -17011,12 +17226,12 @@
     var normalizeEndPoint = function (dom, collapsed, start, rng) {
       var container, offset;
       var body = dom.getRoot();
-      var node, nonEmptyElementsMap;
-      var directionLeft, isAfterNode, normalized = false;
+      var node;
+      var directionLeft, normalized = false;
       container = rng[(start ? 'start' : 'end') + 'Container'];
       offset = rng[(start ? 'start' : 'end') + 'Offset'];
-      isAfterNode = isElement$1(container) && offset === container.childNodes.length;
-      nonEmptyElementsMap = dom.schema.getNonEmptyElements();
+      var isAfterNode = isElement$1(container) && offset === container.childNodes.length;
+      var nonEmptyElementsMap = dom.schema.getNonEmptyElements();
       directionLeft = start;
       if (isCaretContainer(container)) {
         return Option.none();
@@ -17024,7 +17239,7 @@
       if (isElement$1(container) && offset > container.childNodes.length - 1) {
         directionLeft = false;
       }
-      if (isDocument(container)) {
+      if (isDocument$1(container)) {
         container = body;
         offset = 0;
       }
@@ -17064,7 +17279,7 @@
                 normalized = true;
                 break;
               }
-              if (nonEmptyElementsMap[node.nodeName.toLowerCase()] && !isTableCell$4(node)) {
+              if (nonEmptyElementsMap[node.nodeName.toLowerCase()] && !isTableCell$3(node)) {
                 offset = dom.nodeIndex(node);
                 container = node.parentNode;
                 if (!directionLeft) {
@@ -17257,13 +17472,13 @@
     };
     var ControlSelection = function (selection, editor) {
       var dom = editor.dom, each = Tools.each;
-      var selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle;
+      var selectedElm, selectedElmGhost, resizeHelper, selectedHandle;
       var startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
       var width, height;
       var editableDoc = editor.getDoc(), rootDocument = domGlobals.document;
       var abs = Math.abs, round = Math.round, rootElement = editor.getBody();
       var startScrollWidth, startScrollHeight;
-      resizeHandles = {
+      var resizeHandles = {
         nw: [
           0,
           0,
@@ -17323,7 +17538,7 @@
         if (elm === editor.getBody()) {
           return false;
         }
-        return is(Element.fromDom(elm), selector);
+        return is$1(Element.fromDom(elm), selector);
       };
       var setGhostElmSize = function (ghostElm, width, height) {
         dom.setStyles(getResizeTarget(ghostElm), {
@@ -17416,20 +17631,19 @@
         editor.nodeChanged();
       };
       var showResizeRect = function (targetElm) {
-        var position, targetWidth, targetHeight, e, rect;
         hideResizeRect();
         unbindResizeHandleEvents();
-        position = dom.getPos(targetElm, rootElement);
-        selectedElmX = position.x;
-        selectedElmY = position.y;
-        rect = targetElm.getBoundingClientRect();
-        targetWidth = rect.width || rect.right - rect.left;
-        targetHeight = rect.height || rect.bottom - rect.top;
+        var position = dom.getPos(targetElm, rootElement);
+        var selectedElmX = position.x;
+        var selectedElmY = position.y;
+        var rect = targetElm.getBoundingClientRect();
+        var targetWidth = rect.width || rect.right - rect.left;
+        var targetHeight = rect.height || rect.bottom - rect.top;
         if (selectedElm !== targetElm) {
           selectedElm = targetElm;
           width = height = 0;
         }
-        e = editor.fire('ObjectSelected', { target: targetElm });
+        var e = editor.fire('ObjectSelected', { target: targetElm });
         if (isResizable(targetElm) && !e.isDefaultPrevented()) {
           each(resizeHandles, function (handle, name) {
             var handleElm;
@@ -17707,8 +17921,6 @@
       }
     };
     var Selection$1 = function (dom, win, serializer, editor) {
-      var bookmarkManager;
-      var controlSelection;
       var selectedRange;
       var explicitRange;
       var selectorChangedWithUnbind = SelectorChanged(dom, editor).selectorChangedWithUnbind;
@@ -17765,7 +17977,7 @@
         return win.getSelection ? win.getSelection() : win.document.selection;
       };
       var getRng$1 = function () {
-        var selection, rng, elm, doc;
+        var selection, rng, elm;
         var tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
           try {
             return sourceRange.compareBoundaryPoints(how, destinationRange);
@@ -17776,7 +17988,7 @@
         if (!win) {
           return null;
         }
-        doc = win.document;
+        var doc = win.document;
         if (typeof doc === 'undefined' || doc === null) {
           return null;
         }
@@ -17818,7 +18030,7 @@
         return rng;
       };
       var setRng = function (rng, forward) {
-        var sel, node, evt;
+        var node;
         if (!isValidRange(rng)) {
           return;
         }
@@ -17831,8 +18043,8 @@
           }
           return;
         }
-        sel = getSel();
-        evt = editor.fire('SetSelectionRange', {
+        var sel = getSel();
+        var evt = editor.fire('SetSelectionRange', {
           range: rng,
           forward: forward
         });
@@ -17880,14 +18092,13 @@
       };
       var isForward = function () {
         var sel = getSel();
-        var anchorRange, focusRange;
         if (!sel || !sel.anchorNode || !sel.focusNode) {
           return true;
         }
-        anchorRange = dom.createRng();
+        var anchorRange = dom.createRng();
         anchorRange.setStart(sel.anchorNode, sel.anchorOffset);
         anchorRange.collapse(true);
-        focusRange = dom.createRng();
+        var focusRange = dom.createRng();
         focusRange.setStart(sel.focusNode, sel.focusOffset);
         focusRange.collapse(true);
         return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
@@ -17967,8 +18178,8 @@
         getBoundingClientRect: getBoundingClientRect,
         destroy: destroy
       };
-      bookmarkManager = BookmarkManager$1(exports);
-      controlSelection = ControlSelection(exports, editor);
+      var bookmarkManager = BookmarkManager$1(exports);
+      var controlSelection = ControlSelection(exports, editor);
       exports.bookmarkManager = bookmarkManager;
       exports.controlSelection = controlSelection;
       return exports;
@@ -18052,9 +18263,9 @@
       });
     };
     var parseDataUri$1 = function (uri) {
-      var type, matches;
+      var type;
       var uriParts = decodeURIComponent(uri).split(',');
-      matches = /data:([^;]+)/.exec(uriParts[0]);
+      var matches = /data:([^;]+)/.exec(uriParts[0]);
       if (matches) {
         type = matches[1];
       }
@@ -18160,11 +18371,10 @@
     function ImageScanner(uploadStatus, blobCache) {
       var cachedPromises = {};
       var findAll = function (elm, predicate) {
-        var images;
         if (!predicate) {
           predicate = constant(true);
         }
-        images = filter(getAllImages(elm), function (img) {
+        var images = filter(getAllImages(elm), function (img) {
           var src = img.src;
           if (!Env.fileApi) {
             return false;
@@ -18244,17 +18454,34 @@
       return node && (blockElements[node.name] || node.name === 'br');
     };
 
-    var isInternalImageSource = function (src) {
-      return src === Env.transparentSrc;
+    var isBogusImage = function (img) {
+      return img.attr('data-mce-bogus');
+    };
+    var isInternalImageSource = function (img) {
+      return img.attr('src') === Env.transparentSrc || img.attr('data-mce-placeholder');
+    };
+    var isValidDataImg = function (img, settings) {
+      if (settings.images_dataimg_filter) {
+        var imgElem_1 = new domGlobals.Image();
+        imgElem_1.src = img.attr('src');
+        each$1(img.attributes.map, function (value, key) {
+          imgElem_1.setAttribute(key, value);
+        });
+        return settings.images_dataimg_filter(imgElem_1);
+      } else {
+        return true;
+      }
     };
     var registerBase64ImageFilter = function (parser, settings) {
       var blobCache = settings.blob_cache;
       var processImage = function (img) {
         var inputSrc = img.attr('src');
-        if (isInternalImageSource(inputSrc)) {
+        if (isInternalImageSource(img) || isBogusImage(img)) {
           return;
         }
-        parseDataUri(inputSrc).bind(function (_a) {
+        parseDataUri(inputSrc).filter(function () {
+          return isValidDataImg(img, settings);
+        }).bind(function (_a) {
           var type = _a.type, data = _a.data;
           return Option.from(blobCache.getByData(data, type)).orThunk(function () {
             return buildBlob(type, data).map(function (blob) {
@@ -18283,7 +18510,7 @@
           var blockElements = Tools.extend({}, schema.getBlockElements());
           var nonEmptyElements = schema.getNonEmptyElements();
           var parent, lastParent, prev, prevName;
-          var whiteSpaceElements = schema.getNonEmptyElements();
+          var whiteSpaceElements = schema.getWhiteSpaceElements();
           var elementRule, textNode;
           blockElements.body = 1;
           for (i = 0; i < l; i++) {
@@ -18432,7 +18659,7 @@
       registerBase64ImageFilter(parser, settings);
     };
 
-    var makeMap$4 = Tools.makeMap, each$c = Tools.each, explode$2 = Tools.explode, extend$2 = Tools.extend;
+    var makeMap$4 = Tools.makeMap, each$d = Tools.each, explode$2 = Tools.explode, extend$2 = Tools.extend;
     var DomParser = function (settings, schema) {
       if (schema === void 0) {
         schema = Schema();
@@ -18446,12 +18673,12 @@
       settings.root_name = settings.root_name || 'body';
       var fixInvalidChildren = function (nodes) {
         var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
-        var nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
-        nonSplitableElements = makeMap$4('tr,td,th,tbody,thead,tfoot,table');
-        nonEmptyElements = schema.getNonEmptyElements();
-        whitespaceElements = schema.getWhiteSpaceElements();
-        textBlockElements = schema.getTextBlockElements();
-        specialElements = schema.getSpecialElements();
+        var sibling, nextNode;
+        var nonSplitableElements = makeMap$4('tr,td,th,tbody,thead,tfoot,table');
+        var nonEmptyElements = schema.getNonEmptyElements();
+        var whitespaceElements = schema.getWhiteSpaceElements();
+        var textBlockElements = schema.getTextBlockElements();
+        var specialElements = schema.getSpecialElements();
         for (ni = 0; ni < nodes.length; ni++) {
           node = nodes[ni];
           if (!node.parent || node.fixed) {
@@ -18556,7 +18783,7 @@
         return node;
       };
       var addNodeFilter = function (name, callback) {
-        each$c(explode$2(name), function (name) {
+        each$d(explode$2(name), function (name) {
           var list = nodeFilters[name];
           if (!list) {
             nodeFilters[name] = list = [];
@@ -18577,7 +18804,7 @@
         return out;
       };
       var addAttributeFilter = function (name, callback) {
-        each$c(explode$2(name), function (name) {
+        each$d(explode$2(name), function (name) {
           var i;
           for (i = 0; i < attributeFilters.length; i++) {
             if (attributeFilters[i].name === name) {
@@ -18595,8 +18822,7 @@
         return [].concat(attributeFilters);
       };
       var parse = function (html, args) {
-        var parser, nodes, i, l, fi, fl, list, name;
-        var blockElements;
+        var nodes, i, l, fi, fl, list, name;
         var invalidChildren = [];
         var isInWhiteSpacePreservedElement;
         var node;
@@ -18612,7 +18838,7 @@
         args = args || {};
         matchedNodes = {};
         matchedAttributes = {};
-        blockElements = extend$2(makeMap$4('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+        var blockElements = extend$2(makeMap$4('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
         var nonEmptyElements = schema.getNonEmptyElements();
         var children = schema.children;
         var validate = settings.validate;
@@ -18708,8 +18934,9 @@
           }
           return output;
         };
-        parser = SaxParser$1({
+        var parser = SaxParser$1({
           validate: validate,
+          allow_html_data_urls: settings.allow_html_data_urls,
           allow_script_urls: settings.allow_script_urls,
           allow_conditional_comments: settings.allow_conditional_comments,
           preserve_cdata: settings.preserve_cdata,
@@ -18739,14 +18966,13 @@
             removeWhitespaceBefore(node);
           },
           doctype: function (text) {
-            var newNode;
-            newNode = node.append(createNode('#doctype', 10));
+            var newNode = node.append(createNode('#doctype', 10));
             newNode.value = text;
             removeWhitespaceBefore(node);
           },
           start: function (name, attrs, empty) {
-            var newNode, attrFiltersLen, elementRule, attrName, parent;
-            elementRule = validate ? schema.getElementRule(name) : {};
+            var newNode, attrFiltersLen, attrName, parent;
+            var elementRule = validate ? schema.getElementRule(name) : {};
             if (elementRule) {
               newNode = createNode(elementRule.outputName || name, 1);
               newNode.attributes = attrs;
@@ -18780,8 +19006,8 @@
             }
           },
           end: function (name) {
-            var textNode, elementRule, text, sibling, tempNode;
-            elementRule = validate ? schema.getElementRule(name) : {};
+            var textNode, text, sibling, tempNode;
+            var elementRule = validate ? schema.getElementRule(name) : {};
             if (elementRule) {
               if (blockElements[name]) {
                 if (!isInWhiteSpacePreservedElement) {
@@ -19048,13 +19274,12 @@
       });
     };
     var trimTrailingBr = function (rootNode) {
-      var brNode1, brNode2;
       var isBr = function (node) {
         return node && node.name === 'br';
       };
-      brNode1 = rootNode.lastChild;
+      var brNode1 = rootNode.lastChild;
       if (isBr(brNode1)) {
-        brNode2 = brNode1.prev;
+        var brNode2 = brNode1.prev;
         if (isBr(brNode2)) {
           brNode1.remove();
           brNode2.remove();
@@ -19063,10 +19288,10 @@
     };
 
     var preProcess = function (editor, node, args) {
-      var impl, doc, oldDoc;
+      var doc, oldDoc;
       var dom = editor.dom;
       node = node.cloneNode(true);
-      impl = domGlobals.document.implementation;
+      var impl = domGlobals.document.implementation;
       if (impl.createHTMLDocument) {
         doc = impl.createHTMLDocument('');
         Tools.each(node.nodeName === 'BODY' ? node.childNodes : [node], function (node) {
@@ -19193,8 +19418,7 @@
         return path2;
       };
       var defaultHandler = function (blobInfo, success, failure, progress) {
-        var xhr, formData;
-        xhr = new domGlobals.XMLHttpRequest();
+        var xhr = new domGlobals.XMLHttpRequest();
         xhr.open('POST', settings.url);
         xhr.withCredentials = settings.credentials;
         xhr.upload.onprogress = function (e) {
@@ -19204,19 +19428,18 @@
           failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
         };
         xhr.onload = function () {
-          var json;
           if (xhr.status < 200 || xhr.status >= 300) {
             failure('HTTP Error: ' + xhr.status);
             return;
           }
-          json = JSON.parse(xhr.responseText);
+          var json = JSON.parse(xhr.responseText);
           if (!json || typeof json.location !== 'string') {
             failure('Invalid JSON: ' + xhr.responseText);
             return;
           }
           success(pathJoin(settings.basePath, json.location));
         };
-        formData = new domGlobals.FormData();
+        var formData = new domGlobals.FormData();
         formData.append('file', blobInfo.blob(), blobInfo.filename());
         xhr.send(formData);
       };
@@ -19398,12 +19621,11 @@
         }
       };
       var toBlobInfo = function (o) {
-        var id, name;
         if (!o.blob || !o.base64) {
           throw new Error('blob and base64 representations of the image are required for BlobInfo to be created');
         }
-        id = o.id || uuid('blobid');
-        name = o.name || id;
+        var id = o.id || uuid('blobid');
+        var name = o.name || id;
         return {
           id: constant(id),
           name: constant(name),
@@ -19973,10 +20195,10 @@
           remove: 'all',
           split: true,
           deep: true,
-          onmatch: function () {
-            return true;
+          onmatch: function (node, _fmt, _itemName) {
+            return isElement$1(node) && node.hasAttribute('href');
           },
-          onformat: function (elm, fmt, vars) {
+          onformat: function (elm, _fmt, vars) {
             Tools.each(vars, function (value, key) {
               dom.setAttrib(elm, key, value);
             });
@@ -20070,7 +20292,7 @@
         return formats;
       };
       register(get$9(editor.dom));
-      register(editor.settings.formats);
+      register(getFormats(editor));
       return {
         get: get,
         has: has$1,
@@ -20079,7 +20301,7 @@
       };
     }
 
-    var each$d = Tools.each;
+    var each$e = Tools.each;
     var dom = DOMUtils$1.DOM;
     var parsedSelectorToHtml = function (ancestry, editor) {
       var elm, item, fragment;
@@ -20091,13 +20313,12 @@
         dom.setAttribs(elm, item.attrs);
       };
       var createElement = function (sItem) {
-        var elm;
         item = typeof sItem === 'string' ? {
           name: sItem,
           classes: [],
           attrs: {}
         } : sItem;
-        elm = dom.create(item.name);
+        var elm = dom.create(item.name);
         decorate(elm, item);
         return elm;
       };
@@ -20112,10 +20333,10 @@
         }
       };
       var wrapInHtml = function (elm, ancestry, siblings) {
-        var parent, parentCandidate, parentRequired;
+        var parent, parentCandidate;
         var ancestor = ancestry.length > 0 && ancestry[0];
         var ancestorName = ancestor && ancestor.name;
-        parentRequired = getRequiredParent(elm, ancestorName);
+        var parentRequired = getRequiredParent(elm, ancestorName);
         if (parentRequired) {
           if (ancestorName === parentRequired) {
             parentCandidate = ancestry[0];
@@ -20205,14 +20426,11 @@
       }).reverse();
     };
     var getCssText = function (editor, format) {
-      var name, previewFrag, previewElm, items;
-      var previewCss = '', parentFontSize, previewStyles;
-      previewStyles = editor.settings.preview_styles;
-      if (previewStyles === false) {
+      var name, previewFrag;
+      var previewCss = '', parentFontSize;
+      var previewStyles = getPreviewStyles(editor);
+      if (previewStyles === '') {
         return '';
-      }
-      if (typeof previewStyles !== 'string') {
-        previewStyles = 'font-family font-size font-weight font-style text-decoration ' + 'text-transform color background-color border border-radius outline text-shadow';
       }
       var removeVars = function (val) {
         return val.replace(/%(\w+)/g, '');
@@ -20225,13 +20443,15 @@
         format = format[0];
       }
       if ('preview' in format) {
-        previewStyles = format.preview;
-        if (previewStyles === false) {
+        var previewOpt = get(format, 'preview');
+        if (previewOpt.is(false)) {
           return '';
+        } else {
+          previewStyles = previewOpt.getOr(previewStyles);
         }
       }
       name = format.block || format.inline || 'span';
-      items = parseSelector(format.selector);
+      var items = parseSelector(format.selector);
       if (items.length) {
         if (!items[0].name) {
           items[0].name = name;
@@ -20241,20 +20461,20 @@
       } else {
         previewFrag = parsedSelectorToHtml([name], editor);
       }
-      previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
-      each$d(format.styles, function (value, name) {
+      var previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
+      each$e(format.styles, function (value, name) {
         value = removeVars(value);
         if (value) {
           dom.setStyle(previewElm, name, value);
         }
       });
-      each$d(format.attributes, function (value, name) {
+      each$e(format.attributes, function (value, name) {
         value = removeVars(value);
         if (value) {
           dom.setAttrib(previewElm, name, value);
         }
       });
-      each$d(format.classes, function (value) {
+      each$e(format.classes, function (value) {
         value = removeVars(value);
         if (!dom.hasClass(previewElm, value)) {
           dom.addClass(previewElm, value);
@@ -20268,7 +20488,7 @@
       editor.getBody().appendChild(previewFrag);
       parentFontSize = dom.getStyle(editor.getBody(), 'fontSize', true);
       parentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;
-      each$d(previewStyles.split(' '), function (name) {
+      each$e(previewStyles.split(' '), function (name) {
         var value = dom.getStyle(previewElm, name, true);
         if (name === 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
           value = dom.getStyle(editor.getBody(), name, true);
@@ -20366,15 +20586,15 @@
         undoManager.add();
       });
       editor.on('BeforeExecCommand', function (e) {
-        var cmd = e.command;
-        if (cmd !== 'Undo' && cmd !== 'Redo' && cmd !== 'mceRepaint') {
+        var cmd = e.command.toLowerCase();
+        if (cmd !== 'undo' && cmd !== 'redo' && cmd !== 'mcerepaint') {
           endTyping(undoManager, locks);
           undoManager.beforeChange();
         }
       });
       editor.on('ExecCommand', function (e) {
-        var cmd = e.command;
-        if (cmd !== 'Undo' && cmd !== 'Redo' && cmd !== 'mceRepaint') {
+        var cmd = e.command.toLowerCase();
+        if (cmd !== 'undo' && cmd !== 'redo' && cmd !== 'mcerepaint') {
           addNonTypingUndoLevel(e);
         }
       });
@@ -20438,8 +20658,11 @@
       var isInsertTextDataNull = function (event) {
         return event.inputType === 'insertText' && event.data === null;
       };
+      var isInsertFromPasteOrDrop = function (event) {
+        return event.inputType === 'insertFromPaste' || event.inputType === 'insertFromDrop';
+      };
       editor.on('input', function (e) {
-        if (e.inputType && (isInsertReplacementText(e) || isInsertTextDataNull(e))) {
+        if (e.inputType && (isInsertReplacementText(e) || isInsertTextDataNull(e) || isInsertFromPasteOrDrop(e))) {
           addNonTypingUndoLevel(e);
         }
       });
@@ -20588,11 +20811,6 @@
               return updatePlaceholder(e);
             });
           });
-          editor.on('remove', function () {
-            var body = editor.getBody();
-            dom.setAttrib(body, placeholderAttr, null);
-            dom.setAttrib(body, 'aria-placeholder', null);
-          });
         });
       }
     };
@@ -20691,24 +20909,21 @@
       var schema = editor.schema, blockElements = schema.getBlockElements();
       var node = selection.getStart();
       var rootNode = editor.getBody();
-      var rng;
-      var startContainer, startOffset, endContainer, endOffset, rootBlockNode;
-      var tempNode, wrapped, restoreSelection;
-      var rootNodeName;
+      var rootBlockNode, tempNode, wrapped;
       var forcedRootBlock = getForcedRootBlock(editor);
       if (!node || !isElement$1(node) || !forcedRootBlock) {
         return;
       }
-      rootNodeName = rootNode.nodeName.toLowerCase();
+      var rootNodeName = rootNode.nodeName.toLowerCase();
       if (!schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) || hasBlockParent(blockElements, rootNode, node)) {
         return;
       }
-      rng = selection.getRng();
-      startContainer = rng.startContainer;
-      startOffset = rng.startOffset;
-      endContainer = rng.endContainer;
-      endOffset = rng.endOffset;
-      restoreSelection = hasFocus$1(editor);
+      var rng = selection.getRng();
+      var startContainer = rng.startContainer;
+      var startOffset = rng.startOffset;
+      var endContainer = rng.endContainer;
+      var endOffset = rng.endOffset;
+      var restoreSelection = hasFocus$1(editor);
       node = rootNode.firstChild;
       while (node) {
         if (isValidTarget(blockElements, node)) {
@@ -20882,7 +21097,7 @@
     };
 
     var isInlineTarget = function (editor, elm) {
-      return is(Element.fromDom(elm), getInlineBoundarySelector(editor));
+      return is$1(Element.fromDom(elm), getInlineBoundarySelector(editor));
     };
     var isRtl$1 = function (element) {
       return DOMUtils$1.DOM.getStyle(element, 'direction', true) === 'rtl' || hasStrongRtl(element.textContent);
@@ -21068,9 +21283,6 @@
       rng.setEnd(pos.container(), pos.offset());
       editor.selection.setRng(rng);
     };
-    var isFeatureEnabled = function (editor) {
-      return editor.settings.inline_boundaries !== false;
-    };
     var setSelected = function (state, elm) {
       if (state) {
         elm.setAttribute('data-mce-selected', 'inline-boundary');
@@ -21124,19 +21336,19 @@
     };
     var move = function (editor, caret, forward) {
       return function () {
-        return isFeatureEnabled(editor) ? findLocation$1(editor, caret, forward).isSome() : false;
+        return isInlineBoundariesEnabled(editor) ? findLocation$1(editor, caret, forward).isSome() : false;
       };
     };
     var moveWord = function (forward, editor, _caret) {
       return function () {
-        return isFeatureEnabled(editor) ? moveByWord(forward, editor) : false;
+        return isInlineBoundariesEnabled(editor) ? moveByWord(forward, editor) : false;
       };
     };
     var setupSelectedState = function (editor) {
       var caret = Cell(null);
       var isInlineTarget$1 = curry(isInlineTarget, editor);
       editor.on('NodeChange', function (e) {
-        if (isFeatureEnabled(editor) && !(Env.browser.isIE() && e.initial)) {
+        if (isInlineBoundariesEnabled(editor) && !(Env.browser.isIE() && e.initial)) {
           toggleInlines(isInlineTarget$1, editor.dom, e.parents);
           safeRemoveCaretContainer(editor, caret);
           renderInsideInlineCaret(isInlineTarget$1, editor, caret, e.parents);
@@ -21146,264 +21358,6 @@
     };
     var moveNextWord = curry(moveWord, true);
     var movePrevWord = curry(moveWord, false);
-
-    var getNodeClientRects = function (node) {
-      var toArrayWithNode = function (clientRects) {
-        return map(clientRects, function (clientRect) {
-          clientRect = clone$1(clientRect);
-          clientRect.node = node;
-          return clientRect;
-        });
-      };
-      if (isElement$1(node)) {
-        return toArrayWithNode(node.getClientRects());
-      }
-      if (isText$1(node)) {
-        var rng = node.ownerDocument.createRange();
-        rng.setStart(node, 0);
-        rng.setEnd(node, node.data.length);
-        return toArrayWithNode(rng.getClientRects());
-      }
-    };
-    var getClientRects = function (node) {
-      return foldl(node, function (result, node) {
-        return result.concat(getNodeClientRects(node));
-      }, []);
-    };
-
-    var VDirection;
-    (function (VDirection) {
-      VDirection[VDirection['Up'] = -1] = 'Up';
-      VDirection[VDirection['Down'] = 1] = 'Down';
-    }(VDirection || (VDirection = {})));
-    var findUntil$1 = function (direction, root, predicateFn, node) {
-      while (node = findNode(node, direction, isEditableCaretCandidate, root)) {
-        if (predicateFn(node)) {
-          return;
-        }
-      }
-    };
-    var walkUntil = function (direction, isAboveFn, isBeflowFn, root, predicateFn, caretPosition) {
-      var line = 0, node;
-      var result = [];
-      var targetClientRect;
-      var add = function (node) {
-        var i, clientRect, clientRects;
-        clientRects = getClientRects([node]);
-        if (direction === -1) {
-          clientRects = clientRects.reverse();
-        }
-        for (i = 0; i < clientRects.length; i++) {
-          clientRect = clientRects[i];
-          if (isBeflowFn(clientRect, targetClientRect)) {
-            continue;
-          }
-          if (result.length > 0 && isAboveFn(clientRect, last$1(result))) {
-            line++;
-          }
-          clientRect.line = line;
-          if (predicateFn(clientRect)) {
-            return true;
-          }
-          result.push(clientRect);
-        }
-      };
-      targetClientRect = last$1(caretPosition.getClientRects());
-      if (!targetClientRect) {
-        return result;
-      }
-      node = caretPosition.getNode();
-      add(node);
-      findUntil$1(direction, root, add, node);
-      return result;
-    };
-    var aboveLineNumber = function (lineNumber, clientRect) {
-      return clientRect.line > lineNumber;
-    };
-    var isLineNumber = function (lineNumber, clientRect) {
-      return clientRect.line === lineNumber;
-    };
-    var upUntil = curry(walkUntil, VDirection.Up, isAbove, isBelow);
-    var downUntil = curry(walkUntil, VDirection.Down, isBelow, isAbove);
-    var positionsUntil = function (direction, root, predicateFn, node) {
-      var caretWalker = CaretWalker(root);
-      var walkFn, isBelowFn, isAboveFn, caretPosition;
-      var result = [];
-      var line = 0, clientRect, targetClientRect;
-      var getClientRect = function (caretPosition) {
-        if (direction === 1) {
-          return last$1(caretPosition.getClientRects());
-        }
-        return last$1(caretPosition.getClientRects());
-      };
-      if (direction === 1) {
-        walkFn = caretWalker.next;
-        isBelowFn = isBelow;
-        isAboveFn = isAbove;
-        caretPosition = CaretPosition$1.after(node);
-      } else {
-        walkFn = caretWalker.prev;
-        isBelowFn = isAbove;
-        isAboveFn = isBelow;
-        caretPosition = CaretPosition$1.before(node);
-      }
-      targetClientRect = getClientRect(caretPosition);
-      do {
-        if (!caretPosition.isVisible()) {
-          continue;
-        }
-        clientRect = getClientRect(caretPosition);
-        if (isAboveFn(clientRect, targetClientRect)) {
-          continue;
-        }
-        if (result.length > 0 && isBelowFn(clientRect, last$1(result))) {
-          line++;
-        }
-        clientRect = clone$1(clientRect);
-        clientRect.position = caretPosition;
-        clientRect.line = line;
-        if (predicateFn(clientRect)) {
-          return result;
-        }
-        result.push(clientRect);
-      } while (caretPosition = walkFn(caretPosition));
-      return result;
-    };
-    var isAboveLine = function (lineNumber) {
-      return function (clientRect) {
-        return aboveLineNumber(lineNumber, clientRect);
-      };
-    };
-    var isLine = function (lineNumber) {
-      return function (clientRect) {
-        return isLineNumber(lineNumber, clientRect);
-      };
-    };
-
-    var isContentEditableFalse$7 = isContentEditableFalse;
-    var findNode$1 = findNode;
-    var distanceToRectLeft = function (clientRect, clientX) {
-      return Math.abs(clientRect.left - clientX);
-    };
-    var distanceToRectRight = function (clientRect, clientX) {
-      return Math.abs(clientRect.right - clientX);
-    };
-    var isInside = function (clientX, clientRect) {
-      return clientX >= clientRect.left && clientX <= clientRect.right;
-    };
-    var findClosestClientRect = function (clientRects, clientX) {
-      return reduce(clientRects, function (oldClientRect, clientRect) {
-        var oldDistance, newDistance;
-        oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
-        newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
-        if (isInside(clientX, clientRect)) {
-          return clientRect;
-        }
-        if (isInside(clientX, oldClientRect)) {
-          return oldClientRect;
-        }
-        if (newDistance === oldDistance && isContentEditableFalse$7(clientRect.node)) {
-          return clientRect;
-        }
-        if (newDistance < oldDistance) {
-          return clientRect;
-        }
-        return oldClientRect;
-      });
-    };
-    var walkUntil$1 = function (direction, root, predicateFn, node) {
-      while (node = findNode$1(node, direction, isEditableCaretCandidate, root)) {
-        if (predicateFn(node)) {
-          return;
-        }
-      }
-    };
-    var findLineNodeRects = function (root, targetNodeRect) {
-      var clientRects = [];
-      var collect = function (checkPosFn, node) {
-        var lineRects;
-        lineRects = filter(getClientRects([node]), function (clientRect) {
-          return !checkPosFn(clientRect, targetNodeRect);
-        });
-        clientRects = clientRects.concat(lineRects);
-        return lineRects.length === 0;
-      };
-      clientRects.push(targetNodeRect);
-      walkUntil$1(VDirection.Up, root, curry(collect, isAbove), targetNodeRect.node);
-      walkUntil$1(VDirection.Down, root, curry(collect, isBelow), targetNodeRect.node);
-      return clientRects;
-    };
-    var getFakeCaretTargets = function (root) {
-      return filter(from$1(root.getElementsByTagName('*')), isFakeCaretTarget);
-    };
-    var caretInfo = function (clientRect, clientX) {
-      return {
-        node: clientRect.node,
-        before: distanceToRectLeft(clientRect, clientX) < distanceToRectRight(clientRect, clientX)
-      };
-    };
-    var closestCaret = function (root, clientX, clientY) {
-      var closestNodeRect;
-      var contentEditableFalseNodeRects = getClientRects(getFakeCaretTargets(root));
-      var targetNodeRects = filter(contentEditableFalseNodeRects, function (rect) {
-        return clientY >= rect.top && clientY <= rect.bottom;
-      });
-      closestNodeRect = findClosestClientRect(targetNodeRects, clientX);
-      if (closestNodeRect) {
-        closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect), clientX);
-        if (closestNodeRect && isFakeCaretTarget(closestNodeRect.node)) {
-          return caretInfo(closestNodeRect, clientX);
-        }
-      }
-      return null;
-    };
-
-    var isContentEditableTrue$3 = isContentEditableTrue;
-    var isContentEditableFalse$8 = isContentEditableFalse;
-    var showCaret = function (direction, editor, node, before, scrollIntoView) {
-      return editor._selectionOverrides.showCaret(direction, node, before, scrollIntoView);
-    };
-    var getNodeRange = function (node) {
-      var rng = node.ownerDocument.createRange();
-      rng.selectNode(node);
-      return rng;
-    };
-    var selectNode = function (editor, node) {
-      var e = editor.fire('BeforeObjectSelected', { target: node });
-      if (e.isDefaultPrevented()) {
-        return null;
-      }
-      return getNodeRange(node);
-    };
-    var renderCaretAtRange = function (editor, range, scrollIntoView) {
-      var normalizedRange = normalizeRange(1, editor.getBody(), range);
-      var caretPosition = CaretPosition$1.fromRangeStart(normalizedRange);
-      var caretPositionNode = caretPosition.getNode();
-      if (isContentEditableFalse$8(caretPositionNode)) {
-        return showCaret(1, editor, caretPositionNode, !caretPosition.isAtEnd(), false);
-      }
-      var caretPositionBeforeNode = caretPosition.getNode(true);
-      if (isContentEditableFalse$8(caretPositionBeforeNode)) {
-        return showCaret(1, editor, caretPositionBeforeNode, false, false);
-      }
-      var ceRoot = editor.dom.getParent(caretPosition.getNode(), function (node) {
-        return isContentEditableFalse$8(node) || isContentEditableTrue$3(node);
-      });
-      if (isContentEditableFalse$8(ceRoot)) {
-        return showCaret(1, editor, ceRoot, false, scrollIntoView);
-      }
-      return null;
-    };
-    var renderRangeCaret = function (editor, range, scrollIntoView) {
-      if (!range || !range.collapsed) {
-        return range;
-      }
-      var caretRange = renderCaretAtRange(editor, range, scrollIntoView);
-      if (caretRange) {
-        return caretRange;
-      }
-      return range;
-    };
 
     var BreakType;
     (function (BreakType) {
@@ -21517,6 +21471,264 @@
       }).getOr([]);
     };
 
+    var getNodeClientRects = function (node) {
+      var toArrayWithNode = function (clientRects) {
+        return map(clientRects, function (clientRect) {
+          clientRect = clone$2(clientRect);
+          clientRect.node = node;
+          return clientRect;
+        });
+      };
+      if (isElement$1(node)) {
+        return toArrayWithNode(node.getClientRects());
+      }
+      if (isText$1(node)) {
+        var rng = node.ownerDocument.createRange();
+        rng.setStart(node, 0);
+        rng.setEnd(node, node.data.length);
+        return toArrayWithNode(rng.getClientRects());
+      }
+    };
+    var getClientRects = function (nodes) {
+      return bind(nodes, getNodeClientRects);
+    };
+
+    var VDirection;
+    (function (VDirection) {
+      VDirection[VDirection['Up'] = -1] = 'Up';
+      VDirection[VDirection['Down'] = 1] = 'Down';
+    }(VDirection || (VDirection = {})));
+    var findUntil$1 = function (direction, root, predicateFn, node) {
+      while (node = findNode(node, direction, isEditableCaretCandidate, root)) {
+        if (predicateFn(node)) {
+          return;
+        }
+      }
+    };
+    var walkUntil = function (direction, isAboveFn, isBeflowFn, root, predicateFn, caretPosition) {
+      var line = 0;
+      var result = [];
+      var add = function (node) {
+        var i, clientRect, clientRects;
+        clientRects = getClientRects([node]);
+        if (direction === -1) {
+          clientRects = clientRects.reverse();
+        }
+        for (i = 0; i < clientRects.length; i++) {
+          clientRect = clientRects[i];
+          if (isBeflowFn(clientRect, targetClientRect)) {
+            continue;
+          }
+          if (result.length > 0 && isAboveFn(clientRect, last$1(result))) {
+            line++;
+          }
+          clientRect.line = line;
+          if (predicateFn(clientRect)) {
+            return true;
+          }
+          result.push(clientRect);
+        }
+      };
+      var targetClientRect = last$1(caretPosition.getClientRects());
+      if (!targetClientRect) {
+        return result;
+      }
+      var node = caretPosition.getNode();
+      add(node);
+      findUntil$1(direction, root, add, node);
+      return result;
+    };
+    var aboveLineNumber = function (lineNumber, clientRect) {
+      return clientRect.line > lineNumber;
+    };
+    var isLineNumber = function (lineNumber, clientRect) {
+      return clientRect.line === lineNumber;
+    };
+    var upUntil = curry(walkUntil, VDirection.Up, isAbove, isBelow);
+    var downUntil = curry(walkUntil, VDirection.Down, isBelow, isAbove);
+    var positionsUntil = function (direction, root, predicateFn, node) {
+      var caretWalker = CaretWalker(root);
+      var walkFn, isBelowFn, isAboveFn, caretPosition;
+      var result = [];
+      var line = 0, clientRect;
+      var getClientRect = function (caretPosition) {
+        if (direction === 1) {
+          return last$1(caretPosition.getClientRects());
+        }
+        return last$1(caretPosition.getClientRects());
+      };
+      if (direction === 1) {
+        walkFn = caretWalker.next;
+        isBelowFn = isBelow;
+        isAboveFn = isAbove;
+        caretPosition = CaretPosition$1.after(node);
+      } else {
+        walkFn = caretWalker.prev;
+        isBelowFn = isAbove;
+        isAboveFn = isBelow;
+        caretPosition = CaretPosition$1.before(node);
+      }
+      var targetClientRect = getClientRect(caretPosition);
+      do {
+        if (!caretPosition.isVisible()) {
+          continue;
+        }
+        clientRect = getClientRect(caretPosition);
+        if (isAboveFn(clientRect, targetClientRect)) {
+          continue;
+        }
+        if (result.length > 0 && isBelowFn(clientRect, last$1(result))) {
+          line++;
+        }
+        clientRect = clone$2(clientRect);
+        clientRect.position = caretPosition;
+        clientRect.line = line;
+        if (predicateFn(clientRect)) {
+          return result;
+        }
+        result.push(clientRect);
+      } while (caretPosition = walkFn(caretPosition));
+      return result;
+    };
+    var isAboveLine = function (lineNumber) {
+      return function (clientRect) {
+        return aboveLineNumber(lineNumber, clientRect);
+      };
+    };
+    var isLine = function (lineNumber) {
+      return function (clientRect) {
+        return isLineNumber(lineNumber, clientRect);
+      };
+    };
+
+    var isContentEditableFalse$7 = isContentEditableFalse;
+    var findNode$1 = findNode;
+    var distanceToRectLeft = function (clientRect, clientX) {
+      return Math.abs(clientRect.left - clientX);
+    };
+    var distanceToRectRight = function (clientRect, clientX) {
+      return Math.abs(clientRect.right - clientX);
+    };
+    var isInsideX = function (clientX, clientRect) {
+      return clientX >= clientRect.left && clientX <= clientRect.right;
+    };
+    var isInsideY = function (clientY, clientRect) {
+      return clientY >= clientRect.top && clientY <= clientRect.bottom;
+    };
+    var findClosestClientRect = function (clientRects, clientX) {
+      return reduce(clientRects, function (oldClientRect, clientRect) {
+        var oldDistance = Math.min(distanceToRectLeft(oldClientRect, clientX), distanceToRectRight(oldClientRect, clientX));
+        var newDistance = Math.min(distanceToRectLeft(clientRect, clientX), distanceToRectRight(clientRect, clientX));
+        if (isInsideX(clientX, clientRect)) {
+          return clientRect;
+        }
+        if (isInsideX(clientX, oldClientRect)) {
+          return oldClientRect;
+        }
+        if (newDistance === oldDistance && isContentEditableFalse$7(clientRect.node)) {
+          return clientRect;
+        }
+        if (newDistance < oldDistance) {
+          return clientRect;
+        }
+        return oldClientRect;
+      });
+    };
+    var walkUntil$1 = function (direction, root, predicateFn, startNode, includeChildren) {
+      var node = findNode$1(startNode, direction, isEditableCaretCandidate, root, !includeChildren);
+      do {
+        if (!node || predicateFn(node)) {
+          return;
+        }
+      } while (node = findNode$1(node, direction, isEditableCaretCandidate, root));
+    };
+    var findLineNodeRects = function (root, targetNodeRect, includeChildren) {
+      if (includeChildren === void 0) {
+        includeChildren = true;
+      }
+      var clientRects = [];
+      var collect = function (checkPosFn, node) {
+        var lineRects = filter(getClientRects([node]), function (clientRect) {
+          return !checkPosFn(clientRect, targetNodeRect);
+        });
+        clientRects = clientRects.concat(lineRects);
+        return lineRects.length === 0;
+      };
+      clientRects.push(targetNodeRect);
+      walkUntil$1(VDirection.Up, root, curry(collect, isAbove), targetNodeRect.node, includeChildren);
+      walkUntil$1(VDirection.Down, root, curry(collect, isBelow), targetNodeRect.node, includeChildren);
+      return clientRects;
+    };
+    var getFakeCaretTargets = function (root) {
+      return filter(from$1(root.getElementsByTagName('*')), isFakeCaretTarget);
+    };
+    var caretInfo = function (clientRect, clientX) {
+      return {
+        node: clientRect.node,
+        before: distanceToRectLeft(clientRect, clientX) < distanceToRectRight(clientRect, clientX)
+      };
+    };
+    var closestFakeCaret = function (root, clientX, clientY) {
+      var fakeTargetNodeRects = getClientRects(getFakeCaretTargets(root));
+      var targetNodeRects = filter(fakeTargetNodeRects, curry(isInsideY, clientY));
+      var closestNodeRect = findClosestClientRect(targetNodeRects, clientX);
+      if (closestNodeRect) {
+        var includeChildren = !isTable(closestNodeRect.node);
+        closestNodeRect = findClosestClientRect(findLineNodeRects(root, closestNodeRect, includeChildren), clientX);
+        if (closestNodeRect && isFakeCaretTarget(closestNodeRect.node)) {
+          return caretInfo(closestNodeRect, clientX);
+        }
+      }
+      return null;
+    };
+
+    var isContentEditableTrue$3 = isContentEditableTrue;
+    var isContentEditableFalse$8 = isContentEditableFalse;
+    var showCaret = function (direction, editor, node, before, scrollIntoView) {
+      return editor._selectionOverrides.showCaret(direction, node, before, scrollIntoView);
+    };
+    var getNodeRange = function (node) {
+      var rng = node.ownerDocument.createRange();
+      rng.selectNode(node);
+      return rng;
+    };
+    var selectNode = function (editor, node) {
+      var e = editor.fire('BeforeObjectSelected', { target: node });
+      if (e.isDefaultPrevented()) {
+        return null;
+      }
+      return getNodeRange(node);
+    };
+    var renderCaretAtRange = function (editor, range, scrollIntoView) {
+      var normalizedRange = normalizeRange(1, editor.getBody(), range);
+      var caretPosition = CaretPosition$1.fromRangeStart(normalizedRange);
+      var caretPositionNode = caretPosition.getNode();
+      if (isContentEditableFalse$8(caretPositionNode)) {
+        return showCaret(1, editor, caretPositionNode, !caretPosition.isAtEnd(), false);
+      }
+      var caretPositionBeforeNode = caretPosition.getNode(true);
+      if (isContentEditableFalse$8(caretPositionBeforeNode)) {
+        return showCaret(1, editor, caretPositionBeforeNode, false, false);
+      }
+      var ceRoot = editor.dom.getParent(caretPosition.getNode(), function (node) {
+        return isContentEditableFalse$8(node) || isContentEditableTrue$3(node);
+      });
+      if (isContentEditableFalse$8(ceRoot)) {
+        return showCaret(1, editor, ceRoot, false, scrollIntoView);
+      }
+      return null;
+    };
+    var renderRangeCaret = function (editor, range, scrollIntoView) {
+      if (!range || !range.collapsed) {
+        return range;
+      }
+      var caretRange = renderCaretAtRange(editor, range, scrollIntoView);
+      if (caretRange) {
+        return caretRange;
+      }
+      return range;
+    };
+
     var isContentEditableFalse$9 = isContentEditableFalse;
     var getSelectedNode$1 = getSelectedNode;
     var moveToCeFalseHorizontally = function (direction, editor, getNextPosFn, range) {
@@ -21555,14 +21767,12 @@
       return null;
     };
     var moveToCeFalseVertically = function (direction, editor, walkerFn, range) {
-      var caretPosition, linePositions, nextLinePositions;
-      var closestNextLineRect, caretClientRect, clientX;
-      var dist1, dist2, contentEditableFalseNode;
+      var closestNextLineRect, dist1, dist2, contentEditableFalseNode;
       contentEditableFalseNode = getSelectedNode$1(range);
-      caretPosition = getNormalizedRangeEndPoint(direction, editor.getBody(), range);
-      linePositions = walkerFn(editor.getBody(), isAboveLine(1), caretPosition);
-      nextLinePositions = filter(linePositions, isLine(1));
-      caretClientRect = last$1(caretPosition.getClientRects());
+      var caretPosition = getNormalizedRangeEndPoint(direction, editor.getBody(), range);
+      var linePositions = walkerFn(editor.getBody(), isAboveLine(1), caretPosition);
+      var nextLinePositions = filter(linePositions, isLine(1));
+      var caretClientRect = last$1(caretPosition.getClientRects());
       if (isBeforeContentEditableFalse(caretPosition) || isBeforeTable(caretPosition)) {
         contentEditableFalseNode = caretPosition.getNode();
       }
@@ -21572,7 +21782,7 @@
       if (!caretClientRect) {
         return null;
       }
-      clientX = caretClientRect.left;
+      var clientX = caretClientRect.left;
       closestNextLineRect = findClosestClientRect(nextLinePositions, clientX);
       if (closestNextLineRect) {
         if (isContentEditableFalse$9(closestNextLineRect.node)) {
@@ -21605,7 +21815,7 @@
       var caretWalker = CaretWalker(editor.getBody());
       var getNextVisualCaretPosition = curry(getVisualCaretPosition, caretWalker.next);
       var getPrevVisualCaretPosition = curry(getVisualCaretPosition, caretWalker.prev);
-      if (range.collapsed && editor.settings.forced_root_block) {
+      if (range.collapsed && hasForcedRootBlock(editor)) {
         pre = editor.dom.getParent(range.startContainer, 'PRE');
         if (!pre) {
           return;
@@ -21711,7 +21921,7 @@
     };
     var getCorners = function (getYAxisValue, tds) {
       return bind(tds, function (td) {
-        var rect = deflate(clone$1(td.getBoundingClientRect()), -1);
+        var rect = deflate(clone$2(td.getBoundingClientRect()), -1);
         return [
           {
             x: rect.left,
@@ -22565,9 +22775,6 @@
       return deleteCefBoundaryText(editor, forward);
     };
 
-    var isFeatureEnabled$1 = function (editor) {
-      return editor.settings.inline_boundaries !== false;
-    };
     var rangeFromPositions = function (from, to) {
       var range = domGlobals.document.createRange();
       range.setStart(from.container(), from.offset());
@@ -22644,7 +22851,7 @@
       });
     };
     var backspaceDelete$5 = function (editor, caret, forward) {
-      if (editor.selection.isCollapsed() && isFeatureEnabled$1(editor)) {
+      if (editor.selection.isCollapsed() && isInlineBoundariesEnabled(editor)) {
         var from = CaretPosition$1.fromRangeStart(editor.selection.getRng());
         return backspaceDeleteCollapsed(editor, caret, forward, from);
       }
@@ -22922,7 +23129,7 @@
       }
     };
     var moveToCaretPosition = function (editor, root) {
-      var node, rng, lastNode = root;
+      var node, lastNode = root;
       var dom = editor.dom;
       var moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
       if (!root) {
@@ -22934,7 +23141,7 @@
           root.insertBefore(dom.doc.createTextNode(nbsp), root.firstChild);
         }
       }
-      rng = dom.createRng();
+      var rng = dom.createRng();
       root.normalize();
       if (root.hasChildNodes()) {
         var walker = new TreeWalker(root, root);
@@ -23081,7 +23288,7 @@
     var isEmptyAnchor = function (dom, elm) {
       return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
     };
-    var isTableCell$5 = function (node) {
+    var isTableCell$4 = function (node) {
       return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
     };
     var emptyBlock = function (elm) {
@@ -23199,7 +23406,7 @@
       parentBlock = dom.getParent(container, dom.isBlock);
       if (!parentBlock || !canSplitBlock(dom, parentBlock)) {
         parentBlock = parentBlock || editableRoot;
-        if (parentBlock === editor.getBody() || isTableCell$5(parentBlock)) {
+        if (parentBlock === editor.getBody() || isTableCell$4(parentBlock)) {
           rootBlockName = parentBlock.nodeName.toLowerCase();
         } else {
           rootBlockName = parentBlock.parentNode.nodeName.toLowerCase();
@@ -23237,16 +23444,15 @@
       return container;
     };
     var addBrToBlockIfNeeded = function (dom, block) {
-      var lastChild;
       block.normalize();
-      lastChild = block.lastChild;
+      var lastChild = block.lastChild;
       if (!lastChild || /^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true))) {
         dom.add(block, 'br');
       }
     };
     var insert$1 = function (editor, evt) {
-      var tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
-      var newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
+      var tmpRng, container, offset, parentBlock;
+      var newBlock, fragment, containerBlock, parentBlockName, newBlockName, isAfterLastNodeInContainer;
       var dom = editor.dom;
       var schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
       var rng = editor.selection.getRng();
@@ -23315,7 +23521,7 @@
                 return false;
               }
             }
-          } else if (isText$1(node) && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
+          } else if (isText$1(node) && !isWhitespaceText(node.nodeValue)) {
             return false;
           }
           if (start) {
@@ -23346,7 +23552,7 @@
       container = rng.startContainer;
       offset = rng.startOffset;
       newBlockName = getForcedRootBlock(editor);
-      shiftKey = !!(evt && evt.shiftKey);
+      var shiftKey = !!(evt && evt.shiftKey);
       var ctrlKey = !!(evt && evt.ctrlKey);
       if (isElement$1(container) && container.hasChildNodes()) {
         isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
@@ -23357,7 +23563,7 @@
           offset = 0;
         }
       }
-      editableRoot = getEditableRoot$1(dom, container);
+      var editableRoot = getEditableRoot$1(dom, container);
       if (!editableRoot) {
         return;
       }
@@ -23367,7 +23573,7 @@
       parentBlock = dom.getParent(container, dom.isBlock);
       containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;
       parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : '';
-      containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : '';
+      var containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : '';
       if (containerBlockName === 'LI' && !ctrlKey) {
         parentBlock = containerBlock;
         containerBlock = containerBlock.parentNode;
@@ -23543,7 +23749,7 @@
 
     var matchesSelector = function (editor, selector) {
       return getParentBlock$2(editor).filter(function (parentBlock) {
-        return selector.length > 0 && is(Element.fromDom(parentBlock), selector);
+        return selector.length > 0 && is$1(Element.fromDom(parentBlock), selector);
       }).isSome();
     };
     var shouldInsertBr = function (editor) {
@@ -24002,9 +24208,8 @@
         var self = this;
         if (!('onselectionchange' in editor.getDoc())) {
           editor.on('NodeChange click mouseup keyup focus', function (e) {
-            var nativeRng, fakeRng;
-            nativeRng = editor.selection.getRng();
-            fakeRng = {
+            var nativeRng = editor.selection.getRng();
+            var fakeRng = {
               startContainer: nativeRng.startContainer,
               startOffset: nativeRng.startOffset,
               endContainer: nativeRng.endContainer,
@@ -24043,7 +24248,7 @@
       NodeChange.prototype.nodeChanged = function (args) {
         var selection = this.editor.selection;
         var node, parents, root;
-        if (this.editor.initialized && selection && !this.editor.settings.disable_nodechange && !this.editor.mode.isReadOnly()) {
+        if (this.editor.initialized && selection && !shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
           root = this.editor.getBody();
           node = selection.getStart(true) || root;
           if (node.ownerDocument !== this.editor.getDoc() || !this.editor.dom.isChildOf(node, root)) {
@@ -24063,8 +24268,8 @@
         }
       };
       NodeChange.prototype.isSameElementPath = function (startElm) {
-        var i, currentPath;
-        currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);
+        var i;
+        var currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);
         if (currentPath.length === this.lastPath.length) {
           for (i = currentPath.length; i >= 0; i--) {
             if (currentPath[i] !== this.lastPath[i]) {
@@ -24143,11 +24348,10 @@
     };
 
     var getAbsolutePosition = function (elm) {
-      var doc, docElem, win, clientRect;
-      clientRect = elm.getBoundingClientRect();
-      doc = elm.ownerDocument;
-      docElem = doc.documentElement;
-      win = doc.defaultView;
+      var clientRect = elm.getBoundingClientRect();
+      var doc = elm.ownerDocument;
+      var docElem = doc.documentElement;
+      var win = doc.defaultView;
       return {
         top: clientRect.top + win.pageYOffset - docElem.clientTop,
         left: clientRect.left + win.pageXOffset - docElem.clientLeft
@@ -24373,13 +24577,12 @@
     };
     var bindFakeDragEvents = function (editor) {
       var state = {};
-      var pageDom, dragStartHandler, dragHandler, dropHandler, dragEndHandler, rootDocument;
-      pageDom = DOMUtils$1.DOM;
-      rootDocument = domGlobals.document;
-      dragStartHandler = start$1(state, editor);
-      dragHandler = move$1(state, editor);
-      dropHandler = drop(state, editor);
-      dragEndHandler = stop(state, editor);
+      var pageDom = DOMUtils$1.DOM;
+      var rootDocument = domGlobals.document;
+      var dragStartHandler = start$1(state, editor);
+      var dragHandler = move$1(state, editor);
+      var dropHandler = drop(state, editor);
+      var dragEndHandler = stop(state, editor);
       editor.on('mousedown', dragStartHandler);
       editor.on('mousemove', dragHandler);
       editor.on('mouseup', dropHandler);
@@ -24398,9 +24601,50 @@
         }
       });
     };
+    var blockUnsupportedFileDrop = function (editor) {
+      var preventFileDrop = function (e) {
+        if (!e.defaultPrevented) {
+          var dataTransfer = e.dataTransfer;
+          if (dataTransfer && (contains(dataTransfer.types, 'Files') || dataTransfer.files.length > 0)) {
+            e.preventDefault();
+          }
+        }
+      };
+      var preventFileDropIfUIElement = function (e) {
+        if (isUIElement(editor, e.target)) {
+          preventFileDrop(e);
+        }
+      };
+      var setup = function () {
+        var pageDom = DOMUtils$1.DOM;
+        var dom = editor.dom;
+        var doc = domGlobals.document;
+        var editorRoot = editor.inline ? editor.getBody() : editor.getDoc();
+        var eventNames = [
+          'drop',
+          'dragover'
+        ];
+        each(eventNames, function (name) {
+          pageDom.bind(doc, name, preventFileDropIfUIElement);
+          dom.bind(editorRoot, name, preventFileDrop);
+        });
+        editor.on('remove', function () {
+          each(eventNames, function (name) {
+            pageDom.unbind(doc, name, preventFileDropIfUIElement);
+            dom.unbind(editorRoot, name, preventFileDrop);
+          });
+        });
+      };
+      editor.on('init', function () {
+        Delay.setEditorTimeout(editor, setup, 0);
+      });
+    };
     var init = function (editor) {
       bindFakeDragEvents(editor);
       blockIeDrop(editor);
+      if (shouldBlockUnsupportedDrop(editor)) {
+        blockUnsupportedFileDrop(editor);
+      }
     };
 
     var setup$k = function (editor) {
@@ -24462,8 +24706,7 @@
         if (scrollIntoView === void 0) {
           scrollIntoView = true;
         }
-        var e;
-        e = editor.fire('ShowCaret', {
+        var e = editor.fire('ShowCaret', {
           target: node,
           direction: direction,
           before: before
@@ -24491,8 +24734,7 @@
           }
         });
         editor.on('click', function (e) {
-          var contentEditableRoot;
-          contentEditableRoot = getContentEditableRoot$2(editor, e.target);
+          var contentEditableRoot = getContentEditableRoot$2(editor, e.target);
           if (contentEditableRoot) {
             if (isContentEditableFalse$b(contentEditableRoot)) {
               e.preventDefault();
@@ -24544,7 +24786,6 @@
         };
         handleTouchSelect(editor);
         editor.on('mousedown', function (e) {
-          var contentEditableRoot;
           var targetElm = e.target;
           if (targetElm !== rootNode && targetElm.nodeName !== 'HTML' && !editor.dom.isChildOf(targetElm, rootNode)) {
             return;
@@ -24552,7 +24793,7 @@
           if (isXYInContentArea(editor, e.clientX, e.clientY) === false) {
             return;
           }
-          contentEditableRoot = getContentEditableRoot$2(editor, targetElm);
+          var contentEditableRoot = getContentEditableRoot$2(editor, targetElm);
           if (contentEditableRoot) {
             if (isContentEditableFalse$b(contentEditableRoot)) {
               e.preventDefault();
@@ -24567,11 +24808,11 @@
           } else if (isFakeCaretTarget(targetElm) === false) {
             removeContentEditableSelection();
             hideFakeCaret();
-            var caretInfo = closestCaret(rootNode, e.clientX, e.clientY);
-            if (caretInfo) {
-              if (!hasBetterMouseTarget(e.target, caretInfo.node)) {
+            var fakeCaretInfo = closestFakeCaret(rootNode, e.clientX, e.clientY);
+            if (fakeCaretInfo) {
+              if (!hasBetterMouseTarget(e.target, fakeCaretInfo.node)) {
                 e.preventDefault();
-                var range = showCaret(1, caretInfo.node, caretInfo.before, false);
+                var range = showCaret(1, fakeCaretInfo.node, fakeCaretInfo.before, false);
                 editor.getBody().focus();
                 setRange(range);
               }
@@ -24673,7 +24914,7 @@
         var node;
         var $ = editor.$;
         var dom = editor.dom;
-        var $realSelectionContainer, sel, startContainer, startOffset, endOffset, e, caretPosition, targetClone, origTargetClone;
+        var $realSelectionContainer, startContainer, startOffset, caretPosition, targetClone, origTargetClone;
         if (!range) {
           return null;
         }
@@ -24701,7 +24942,7 @@
         }
         startContainer = range.startContainer;
         startOffset = range.startOffset;
-        endOffset = range.endOffset;
+        var endOffset = range.endOffset;
         if (startContainer.nodeType === 3 && startOffset === 0 && isContentEditableFalse$b(startContainer.parentNode)) {
           startContainer = startContainer.parentNode;
           startOffset = dom.nodeIndex(startContainer);
@@ -24717,7 +24958,7 @@
           return null;
         }
         targetClone = origTargetClone = node.cloneNode(true);
-        e = editor.fire('ObjectSelected', {
+        var e = editor.fire('ObjectSelected', {
           target: node,
           targetClone: targetClone
         });
@@ -24746,7 +24987,7 @@
         }
         $realSelectionContainer.css({ top: dom.getPos(node, editor.getBody()).y });
         $realSelectionContainer[0].focus();
-        sel = editor.selection.getSel();
+        var sel = editor.selection.getSel();
         sel.removeAllRanges();
         sel.addRange(range);
         var nodeElm = Element.fromDom(node);
@@ -24791,7 +25032,7 @@
 
     var Quirks = function (editor) {
       var each = Tools.each;
-      var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, settings = editor.settings, parser = editor.parser;
+      var BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, parser = editor.parser;
       var isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
       var mceInternalUrlPrefix = 'data:text/mce-internal,';
       var mceInternalDataType = isIE ? 'Text' : 'URL';
@@ -25000,14 +25241,14 @@
       };
       var removeBlockQuoteOnBackSpace = function () {
         editor.on('keydown', function (e) {
-          var rng, container, offset, root, parent;
+          var rng, parent;
           if (isDefaultPrevented(e) || e.keyCode !== VK.BACKSPACE) {
             return;
           }
           rng = selection.getRng();
-          container = rng.startContainer;
-          offset = rng.startOffset;
-          root = dom.getRoot();
+          var container = rng.startContainer;
+          var offset = rng.startOffset;
+          var root = dom.getRoot();
           parent = container;
           if (!rng.collapsed || offset !== 0) {
             return;
@@ -25028,11 +25269,11 @@
         var setOpts = function () {
           setEditorCommandState('StyleWithCSS', false);
           setEditorCommandState('enableInlineTableEditing', false);
-          if (!settings.object_resizing) {
+          if (!getObjectResizing(editor)) {
             setEditorCommandState('enableObjectResizing', false);
           }
         };
-        if (!settings.readonly) {
+        if (!isReadOnly(editor)) {
           editor.on('BeforeExecCommand mousedown', setOpts);
         }
       };
@@ -25059,7 +25300,7 @@
         });
       };
       var setDefaultBlockType = function () {
-        if (settings.forced_root_block) {
+        if (getForcedRootBlock(editor)) {
           editor.on('init', function () {
             setEditorCommandState('DefaultParagraphSeparator', getForcedRootBlock(editor));
           });
@@ -25165,11 +25406,10 @@
       var refreshContentEditable = function () {
       };
       var isHidden = function () {
-        var sel;
         if (!isGecko || editor.removed) {
           return false;
         }
-        sel = editor.selection.getSel();
+        var sel = editor.selection.getSel();
         return !sel || !sel.rangeCount || sel.rangeCount === 0;
       };
       removeBlockQuoteOnBackSpace();
@@ -25238,6 +25478,7 @@
       var blobCache = editor.editorUpload.blobCache;
       return removeUndefined({
         allow_conditional_comments: settings.allow_conditional_comments,
+        allow_html_data_urls: settings.allow_html_data_urls,
         allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
         allow_script_urls: settings.allow_script_urls,
         allow_unsafe_link_target: settings.allow_unsafe_link_target,
@@ -25252,7 +25493,8 @@
         inline_styles: settings.inline_styles,
         root_name: getRootName(editor),
         validate: true,
-        blob_cache: blobCache
+        blob_cache: blobCache,
+        images_dataimg_filter: settings.images_dataimg_filter
       });
     };
     var mkSerializerSettings = function (editor) {
@@ -25318,10 +25560,10 @@
         }
       });
       parser.addNodeFilter('script', function (nodes) {
-        var i = nodes.length, node, type;
+        var i = nodes.length;
         while (i--) {
-          node = nodes[i];
-          type = node.attr('type') || 'no/type';
+          var node = nodes[i];
+          var type = node.attr('type') || 'no/type';
           if (type.indexOf('mce-') !== 0) {
             node.attr('type', 'mce-' + type);
           }
@@ -25329,9 +25571,9 @@
       });
       if (editor.settings.preserve_cdata) {
         parser.addNodeFilter('#cdata', function (nodes) {
-          var i = nodes.length, node;
+          var i = nodes.length;
           while (i--) {
-            node = nodes[i];
+            var node = nodes[i];
             node.type = 8;
             node.name = '#comment';
             node.value = '[CDATA[' + editor.dom.encode(node.value) + ']]';
@@ -25339,10 +25581,10 @@
         });
       }
       parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes) {
-        var i = nodes.length, node;
+        var i = nodes.length;
         var nonEmptyElements = editor.schema.getNonEmptyElements();
         while (i--) {
-          node = nodes[i];
+          var node = nodes[i];
           if (node.isEmpty(nonEmptyElements) && node.getAll('br').length === 0) {
             node.append(new Node('br', 1)).shortEnded = true;
           }
@@ -25445,7 +25687,7 @@
     var initContentBody = function (editor, skipWrite) {
       var settings = editor.settings;
       var targetElm = editor.getElement();
-      var doc = editor.getDoc(), body;
+      var doc = editor.getDoc();
       if (!settings.inline) {
         editor.getElement().style.visibility = editor.orgVisibility;
       }
@@ -25455,19 +25697,13 @@
         doc.close();
       }
       if (editor.inline) {
-        editor.on('remove', function () {
-          var bodyEl = this.getBody();
-          DOM$4.removeClass(bodyEl, 'mce-content-body');
-          DOM$4.removeClass(bodyEl, 'mce-edit-focus');
-          DOM$4.setAttrib(bodyEl, 'contentEditable', null);
-        });
         DOM$4.addClass(targetElm, 'mce-content-body');
         editor.contentDocument = doc = domGlobals.document;
         editor.contentWindow = domGlobals.window;
         editor.bodyElement = targetElm;
         editor.contentAreaContainer = targetElm;
       }
-      body = editor.getBody();
+      var body = editor.getBody();
       body.disabled = true;
       editor.readonly = !!settings.readonly;
       if (!editor.readonly) {
@@ -25550,14 +25786,13 @@
       return iframe;
     };
     var getIframeHtml = function (editor) {
-      var bodyId, bodyClass, iframeHTML;
-      iframeHTML = getDocType(editor) + '<html><head>';
+      var iframeHTML = getDocType(editor) + '<html><head>';
       if (getDocumentBaseUrl(editor) !== editor.documentBaseUrl) {
         iframeHTML += '<base href="' + editor.documentBaseURI.getURI() + '" />';
       }
       iframeHTML += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-      bodyId = getBodyId(editor);
-      bodyClass = getBodyClass(editor);
+      var bodyId = getBodyId(editor);
+      var bodyClass = getBodyClass(editor);
       if (getContentSecurityPolicy(editor)) {
         iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + getContentSecurityPolicy(editor) + '" />';
       }
@@ -25620,7 +25855,7 @@
     };
     var initPlugins = function (editor) {
       var initializedPlugins = [];
-      Tools.each(editor.settings.plugins.split(/[ ,]/), function (name) {
+      Tools.each(getPlugins(editor).split(/[ ,]/), function (name) {
         initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
       });
     };
@@ -25635,7 +25870,7 @@
       });
     };
     var initTheme = function (editor) {
-      var theme = editor.settings.theme;
+      var theme = getTheme(editor);
       if (isString(theme)) {
         editor.settings.theme = trimLegacyPrefix(theme);
         var Theme = ThemeManager.get(theme);
@@ -25652,7 +25887,7 @@
     };
     var renderFromThemeFunc = function (editor) {
       var elm = editor.getElement();
-      var theme = editor.settings.theme;
+      var theme = getTheme(editor);
       var info = theme(editor, elm);
       if (info.editorContainer.nodeType) {
         info.editorContainer.id = info.editorContainer.id || editor.id + '_parent';
@@ -25681,9 +25916,9 @@
     var renderThemeUi = function (editor) {
       var elm = editor.getElement();
       editor.orgDisplay = elm.style.display;
-      if (isString(editor.settings.theme)) {
+      if (isString(getTheme(editor))) {
         return renderFromLoadedTheme(editor);
-      } else if (isFunction(editor.settings.theme)) {
+      } else if (isFunction(getTheme(editor))) {
         return renderFromThemeFunc(editor);
       } else {
         return renderThemeFalse(editor);
@@ -25719,10 +25954,10 @@
       }
     };
     var loadTheme = function (scriptLoader, editor, suffix, callback) {
-      var settings = editor.settings, theme = settings.theme;
+      var theme = getTheme(editor);
       if (isString(theme)) {
         if (!hasSkipLoadPrefix(theme) && !ThemeManager.urls.hasOwnProperty(theme)) {
-          var themeUrl = settings.theme_url;
+          var themeUrl = getThemeUrl(editor);
           if (themeUrl) {
             ThemeManager.load(theme, editor.documentBaseURI.toAbsolute(themeUrl));
           } else {
@@ -25770,17 +26005,14 @@
         });
       });
     };
-    var loadPlugins = function (editor, settings, suffix) {
-      if (isArray(settings.plugins)) {
-        settings.plugins = settings.plugins.join(' ');
-      }
-      Tools.each(settings.external_plugins, function (url, name) {
+    var loadPlugins = function (editor, suffix) {
+      Tools.each(getExternalPlugins(editor), function (url, name) {
         PluginManager.load(name, url, noop, undefined, function () {
           pluginLoadError(editor, url, name);
         });
-        settings.plugins += ' ' + name;
+        editor.settings.plugins += ' ' + name;
       });
-      Tools.each(settings.plugins.split(/[ ,]/), function (plugin) {
+      Tools.each(getPlugins(editor).split(/[ ,]/), function (plugin) {
         plugin = Tools.trim(plugin);
         if (plugin && !PluginManager.urls[plugin]) {
           if (hasSkipLoadPrefix(plugin)) {
@@ -25815,7 +26047,7 @@
       loadTheme(scriptLoader, editor, suffix, function () {
         loadLanguage(scriptLoader, editor);
         loadIcons(scriptLoader, editor, suffix);
-        loadPlugins(editor, editor.settings, suffix);
+        loadPlugins(editor, suffix);
         scriptLoader.loadQueue(function () {
           if (!editor.removed) {
             init$2(editor);
@@ -25827,8 +26059,14 @@
         });
       });
     };
+    var getStyleSheetLoader$1 = function (element, editor) {
+      return instance.forElement(element, {
+        contentCssCors: hasContentCssCors(editor),
+        referrerPolicy: getReferrerPolicy(editor)
+      });
+    };
     var render = function (editor) {
-      var settings = editor.settings, id = editor.id;
+      var id = editor.id;
       I18n.setCode(getLanguageCode(editor));
       var readyHandler = function () {
         DOM$7.unbind(domGlobals.window, 'ready', readyHandler);
@@ -25844,7 +26082,16 @@
       if (!Env.contentEditable) {
         return;
       }
-      if (!settings.inline) {
+      var element = Element.fromDom(editor.getElement());
+      var snapshot = clone(element);
+      editor.on('remove', function () {
+        eachr(element.dom().attributes, function (attr) {
+          return remove$1(element, attr.name);
+        });
+        setAll(element, snapshot);
+      });
+      editor.ui.styleSheetLoader = getStyleSheetLoader$1(element, editor);
+      if (!isInline$1(editor)) {
         editor.orgVisibility = editor.getElement().style.visibility;
         editor.getElement().style.visibility = 'hidden';
       } else {
@@ -25853,7 +26100,7 @@
       var form = editor.getElement().form || DOM$7.getParent(id, 'form');
       if (form) {
         editor.formElement = form;
-        if (settings.hidden_input && !isTextareaOrInput(editor.getElement())) {
+        if (hasHiddenInput(editor) && !isTextareaOrInput(editor.getElement())) {
           DOM$7.insertAfter(DOM$7.create('input', {
             type: 'hidden',
             name: id
@@ -25867,7 +26114,7 @@
         editor.on('reset', function () {
           editor.resetContent();
         });
-        if (settings.submit_patch && !form.submit.nodeType && !form.submit.length && !form._mceOldSubmit) {
+        if (shouldPatchSubmit(editor) && !form.submit.nodeType && !form.submit.length && !form._mceOldSubmit) {
           form._mceOldSubmit = form.submit;
           form.submit = function () {
             editor.editorManager.triggerSave();
@@ -25878,21 +26125,21 @@
       }
       editor.windowManager = WindowManager(editor);
       editor.notificationManager = NotificationManager(editor);
-      if (settings.encoding === 'xml') {
+      if (isEncodingXml(editor)) {
         editor.on('GetContent', function (e) {
           if (e.save) {
             e.content = DOM$7.encode(e.content);
           }
         });
       }
-      if (settings.add_form_submit_trigger) {
+      if (shouldAddFormSubmitTrigger(editor)) {
         editor.on('submit', function () {
           if (editor.initialized) {
             editor.save();
           }
         });
       }
-      if (settings.add_unload_trigger) {
+      if (shouldAddUnloadTrigger(editor)) {
         editor._beforeUnload = function () {
           if (editor.initialized && !editor.destroyed && !editor.isHidden()) {
             editor.save({
@@ -25906,73 +26153,6 @@
       }
       editor.editorManager.add(editor);
       loadScripts(editor, editor.suffix);
-    };
-
-    var processValue = function (value) {
-      var details;
-      if (typeof value !== 'string') {
-        details = Tools.extend({
-          paste: value.paste,
-          data: { paste: value.paste }
-        }, value);
-        return {
-          content: value.content,
-          details: details
-        };
-      }
-      return {
-        content: value,
-        details: {}
-      };
-    };
-    var insertAtCaret$1 = function (editor, value) {
-      var result = processValue(value);
-      insertContent(editor, result.content, result.details);
-    };
-
-    var nativeCommand = function (editor, command) {
-      editor.getDoc().execCommand(command, false, null);
-    };
-    var deleteCommand = function (editor) {
-      if (backspaceDelete$8(editor)) {
-        return;
-      } else if (backspaceDelete$3(editor, false)) {
-        return;
-      } else if (backspaceDelete$4(editor, false)) {
-        return;
-      } else if (backspaceDelete$5(editor, false)) {
-        return;
-      } else if (backspaceDelete$1(editor, false)) {
-        return;
-      } else if (backspaceDelete(editor)) {
-        return;
-      } else if (backspaceDelete$2(editor)) {
-        return;
-      } else if (backspaceDelete$6(editor, false)) {
-        return;
-      } else {
-        nativeCommand(editor, 'Delete');
-        paddEmptyBody(editor);
-      }
-    };
-    var forwardDeleteCommand = function (editor) {
-      if (backspaceDelete$3(editor, true)) {
-        return;
-      } else if (backspaceDelete$4(editor, true)) {
-        return;
-      } else if (backspaceDelete$5(editor, true)) {
-        return;
-      } else if (backspaceDelete$1(editor, true)) {
-        return;
-      } else if (backspaceDelete(editor)) {
-        return;
-      } else if (backspaceDelete$2(editor)) {
-        return;
-      } else if (backspaceDelete$6(editor, true)) {
-        return;
-      } else {
-        nativeCommand(editor, 'ForwardDelete');
-      }
     };
 
     var ensureIsRoot = function (isRoot) {
@@ -26111,7 +26291,74 @@
       });
     };
 
-    var each$e = Tools.each;
+    var processValue = function (value) {
+      var details;
+      if (typeof value !== 'string') {
+        details = Tools.extend({
+          paste: value.paste,
+          data: { paste: value.paste }
+        }, value);
+        return {
+          content: value.content,
+          details: details
+        };
+      }
+      return {
+        content: value,
+        details: {}
+      };
+    };
+    var insertAtCaret$1 = function (editor, value) {
+      var result = processValue(value);
+      insertContent(editor, result.content, result.details);
+    };
+
+    var nativeCommand = function (editor, command) {
+      editor.getDoc().execCommand(command, false, null);
+    };
+    var deleteCommand = function (editor) {
+      if (backspaceDelete$8(editor)) {
+        return;
+      } else if (backspaceDelete$3(editor, false)) {
+        return;
+      } else if (backspaceDelete$4(editor, false)) {
+        return;
+      } else if (backspaceDelete$5(editor, false)) {
+        return;
+      } else if (backspaceDelete$1(editor, false)) {
+        return;
+      } else if (backspaceDelete(editor)) {
+        return;
+      } else if (backspaceDelete$2(editor)) {
+        return;
+      } else if (backspaceDelete$6(editor, false)) {
+        return;
+      } else {
+        nativeCommand(editor, 'Delete');
+        paddEmptyBody(editor);
+      }
+    };
+    var forwardDeleteCommand = function (editor) {
+      if (backspaceDelete$3(editor, true)) {
+        return;
+      } else if (backspaceDelete$4(editor, true)) {
+        return;
+      } else if (backspaceDelete$5(editor, true)) {
+        return;
+      } else if (backspaceDelete$1(editor, true)) {
+        return;
+      } else if (backspaceDelete(editor)) {
+        return;
+      } else if (backspaceDelete$2(editor)) {
+        return;
+      } else if (backspaceDelete$6(editor, true)) {
+        return;
+      } else {
+        nativeCommand(editor, 'ForwardDelete');
+      }
+    };
+
+    var each$f = Tools.each;
     var map$3 = Tools.map, inArray$2 = Tools.inArray;
     var EditorCommands = function () {
       function EditorCommands(editor) {
@@ -26124,7 +26371,7 @@
         this.setupCommands(editor);
       }
       EditorCommands.prototype.execCommand = function (command, ui, value, args) {
-        var func, customCommand, state = false;
+        var func, state = false;
         var self = this;
         if (self.editor.removed) {
           return;
@@ -26142,7 +26389,7 @@
         if (args.isDefaultPrevented()) {
           return false;
         }
-        customCommand = command.toLowerCase();
+        var customCommand = command.toLowerCase();
         if (func = self.commands.exec[customCommand]) {
           func(customCommand, ui, value);
           self.editor.fire('ExecCommand', {
@@ -26152,7 +26399,7 @@
           });
           return true;
         }
-        each$e(this.editor.plugins, function (p) {
+        each$f(this.editor.plugins, function (p) {
           if (p.execCommand && p.execCommand(command, ui, value)) {
             self.editor.fire('ExecCommand', {
               command: command,
@@ -26220,8 +26467,8 @@
       EditorCommands.prototype.addCommands = function (commandList, type) {
         var self = this;
         type = type || 'exec';
-        each$e(commandList, function (callback, command) {
-          each$e(command.toLowerCase().split(','), function (command) {
+        each$f(commandList, function (callback, command) {
+          each$f(command.toLowerCase().split(','), function (command) {
             self.commands[type][command] = callback;
           });
         });
@@ -26329,7 +26576,7 @@
             if (align === 'full') {
               align = 'justify';
             }
-            each$e('left,center,right,justify'.split(','), function (name) {
+            each$f('left,center,right,justify'.split(','), function (name) {
               if (align !== name) {
                 editor.formatter.remove('align' + name);
               }
@@ -26339,9 +26586,9 @@
             }
           },
           'InsertUnorderedList,InsertOrderedList': function (command) {
-            var listElm, listParent;
+            var listParent;
             self.execNativeCommand(command);
-            listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
+            var listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
             if (listElm) {
               listParent = listElm.parentNode;
               if (/^(H[1-6]|P|ADDRESS|PRE)$/.test(listParent.nodeName)) {
@@ -26432,11 +26679,10 @@
             editor.execCommand('mceInsertContent', false, value.replace(/\{\$selection\}/g, editor.selection.getContent({ format: 'text' })));
           },
           'mceInsertLink': function (command, ui, value) {
-            var anchor;
             if (typeof value === 'string') {
               value = { href: value };
             }
-            anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
+            var anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
             value.href = value.href.replace(/ /g, '%20');
             if (!anchor || !value.href) {
               editor.formatter.remove('link');
@@ -26513,6 +26759,122 @@
       return EditorCommands;
     }();
 
+    var internalContentEditableAttr = 'data-mce-contenteditable';
+    var toggleClass = function (elm, cls, state) {
+      if (has$2(elm, cls) && state === false) {
+        remove$4(elm, cls);
+      } else if (state) {
+        add$3(elm, cls);
+      }
+    };
+    var setEditorCommandState = function (editor, cmd, state) {
+      try {
+        editor.getDoc().execCommand(cmd, false, state);
+      } catch (ex) {
+      }
+    };
+    var setContentEditable = function (elm, state) {
+      elm.dom().contentEditable = state ? 'true' : 'false';
+    };
+    var switchOffContentEditableTrue = function (elm) {
+      each(descendants$1(elm, '*[contenteditable="true"]'), function (elm) {
+        set(elm, internalContentEditableAttr, 'true');
+        setContentEditable(elm, false);
+      });
+    };
+    var switchOnContentEditableTrue = function (elm) {
+      each(descendants$1(elm, '*[' + internalContentEditableAttr + '="true"]'), function (elm) {
+        remove$1(elm, internalContentEditableAttr);
+        setContentEditable(elm, true);
+      });
+    };
+    var removeFakeSelection = function (editor) {
+      Option.from(editor.selection.getNode()).each(function (elm) {
+        elm.removeAttribute('data-mce-selected');
+      });
+    };
+    var restoreFakeSelection = function (editor) {
+      editor.selection.setRng(editor.selection.getRng());
+    };
+    var toggleReadOnly = function (editor, state) {
+      var body = Element.fromDom(editor.getBody());
+      toggleClass(body, 'mce-content-readonly', state);
+      if (state) {
+        editor.selection.controlSelection.hideResizeRect();
+        editor._selectionOverrides.hideFakeCaret();
+        removeFakeSelection(editor);
+        editor.readonly = true;
+        setContentEditable(body, false);
+        switchOffContentEditableTrue(body);
+      } else {
+        editor.readonly = false;
+        setContentEditable(body, true);
+        switchOnContentEditableTrue(body);
+        setEditorCommandState(editor, 'StyleWithCSS', false);
+        setEditorCommandState(editor, 'enableInlineTableEditing', false);
+        setEditorCommandState(editor, 'enableObjectResizing', false);
+        if (hasEditorOrUiFocus(editor)) {
+          editor.focus();
+        }
+        restoreFakeSelection(editor);
+        editor.nodeChanged();
+      }
+    };
+    var isReadOnly$1 = function (editor) {
+      return editor.readonly;
+    };
+    var registerFilters = function (editor) {
+      editor.parser.addAttributeFilter('contenteditable', function (nodes) {
+        if (isReadOnly$1(editor)) {
+          each(nodes, function (node) {
+            node.attr(internalContentEditableAttr, node.attr('contenteditable'));
+            node.attr('contenteditable', 'false');
+          });
+        }
+      });
+      editor.serializer.addAttributeFilter(internalContentEditableAttr, function (nodes) {
+        if (isReadOnly$1(editor)) {
+          each(nodes, function (node) {
+            node.attr('contenteditable', node.attr(internalContentEditableAttr));
+          });
+        }
+      });
+      editor.serializer.addTempAttr(internalContentEditableAttr);
+    };
+    var registerReadOnlyContentFilters = function (editor) {
+      if (editor.serializer) {
+        registerFilters(editor);
+      } else {
+        editor.on('PreInit', function () {
+          registerFilters(editor);
+        });
+      }
+    };
+    var isClickEvent = function (e) {
+      return e.type === 'click';
+    };
+    var isInAnchor = function (editor, target) {
+      return editor.dom.getParent(target, 'a') !== null;
+    };
+    var preventReadOnlyEvents = function (editor, e) {
+      var target = e.target;
+      if (isClickEvent(e) && !VK.metaKeyPressed(e) && isInAnchor(editor, target)) {
+        e.preventDefault();
+      }
+    };
+    var registerReadOnlySelectionBlockers = function (editor) {
+      editor.on('ShowCaret', function (e) {
+        if (isReadOnly$1(editor)) {
+          e.preventDefault();
+        }
+      });
+      editor.on('ObjectSelected', function (e) {
+        if (isReadOnly$1(editor)) {
+          e.preventDefault();
+        }
+      });
+    };
+
     var nativeEvents = Tools.makeMap('focus blur focusin focusout click dblclick mousedown mouseup mousemove mouseover beforepaste paste cut copy selectionchange ' + 'mouseout mouseenter mouseleave wheel keydown keypress keyup input beforeinput contextmenu dragstart dragend dragover ' + 'draggesture dragdrop drop drag submit ' + 'compositionstart compositionend compositionupdate touchstart touchmove touchend touchcancel', ' ');
     var EventDispatcher = function () {
       function EventDispatcher(settings) {
@@ -26525,7 +26887,6 @@
         return !!nativeEvents[name.toLowerCase()];
       };
       EventDispatcher.prototype.fire = function (name, args) {
-        var handlers, i, l, callback;
         name = name.toLowerCase();
         args = args || {};
         args.type = name;
@@ -26549,10 +26910,10 @@
         if (this.settings.beforeFire) {
           this.settings.beforeFire(args);
         }
-        handlers = this.bindings[name];
+        var handlers = this.bindings[name];
         if (handlers) {
-          for (i = 0, l = handlers.length; i < l; i++) {
-            callback = handlers[i];
+          for (var i = 0, l = handlers.length; i < l; i++) {
+            var callback = handlers[i];
             if (callback.once) {
               this.off(name, callback.func);
             }
@@ -26691,122 +27052,6 @@
       }
     };
 
-    var internalContentEditableAttr = 'data-mce-contenteditable';
-    var toggleClass = function (elm, cls, state) {
-      if (has$2(elm, cls) && state === false) {
-        remove$4(elm, cls);
-      } else if (state) {
-        add$3(elm, cls);
-      }
-    };
-    var setEditorCommandState = function (editor, cmd, state) {
-      try {
-        editor.getDoc().execCommand(cmd, false, state);
-      } catch (ex) {
-      }
-    };
-    var setContentEditable = function (elm, state) {
-      elm.dom().contentEditable = state ? 'true' : 'false';
-    };
-    var switchOffContentEditableTrue = function (elm) {
-      each(descendants$1(elm, '*[contenteditable="true"]'), function (elm) {
-        set(elm, internalContentEditableAttr, 'true');
-        setContentEditable(elm, false);
-      });
-    };
-    var switchOnContentEditableTrue = function (elm) {
-      each(descendants$1(elm, '*[' + internalContentEditableAttr + '="true"]'), function (elm) {
-        remove$1(elm, internalContentEditableAttr);
-        setContentEditable(elm, true);
-      });
-    };
-    var removeFakeSelection = function (editor) {
-      Option.from(editor.selection.getNode()).each(function (elm) {
-        elm.removeAttribute('data-mce-selected');
-      });
-    };
-    var restoreFakeSelection = function (editor) {
-      editor.selection.setRng(editor.selection.getRng());
-    };
-    var toggleReadOnly = function (editor, state) {
-      var body = Element.fromDom(editor.getBody());
-      toggleClass(body, 'mce-content-readonly', state);
-      if (state) {
-        editor.selection.controlSelection.hideResizeRect();
-        editor._selectionOverrides.hideFakeCaret();
-        removeFakeSelection(editor);
-        editor.readonly = true;
-        setContentEditable(body, false);
-        switchOffContentEditableTrue(body);
-      } else {
-        editor.readonly = false;
-        setContentEditable(body, true);
-        switchOnContentEditableTrue(body);
-        setEditorCommandState(editor, 'StyleWithCSS', false);
-        setEditorCommandState(editor, 'enableInlineTableEditing', false);
-        setEditorCommandState(editor, 'enableObjectResizing', false);
-        if (hasEditorOrUiFocus(editor)) {
-          editor.focus();
-        }
-        restoreFakeSelection(editor);
-        editor.nodeChanged();
-      }
-    };
-    var isReadOnly = function (editor) {
-      return editor.readonly;
-    };
-    var registerFilters = function (editor) {
-      editor.parser.addAttributeFilter('contenteditable', function (nodes) {
-        if (isReadOnly(editor)) {
-          each(nodes, function (node) {
-            node.attr(internalContentEditableAttr, node.attr('contenteditable'));
-            node.attr('contenteditable', 'false');
-          });
-        }
-      });
-      editor.serializer.addAttributeFilter(internalContentEditableAttr, function (nodes) {
-        if (isReadOnly(editor)) {
-          each(nodes, function (node) {
-            node.attr('contenteditable', node.attr(internalContentEditableAttr));
-          });
-        }
-      });
-      editor.serializer.addTempAttr(internalContentEditableAttr);
-    };
-    var registerReadOnlyContentFilters = function (editor) {
-      if (editor.serializer) {
-        registerFilters(editor);
-      } else {
-        editor.on('PreInit', function () {
-          registerFilters(editor);
-        });
-      }
-    };
-    var isClickEvent = function (e) {
-      return e.type === 'click';
-    };
-    var isInAnchor = function (editor, target) {
-      return editor.dom.getParent(target, 'a') !== null;
-    };
-    var preventReadOnlyEvents = function (editor, e) {
-      var target = e.target;
-      if (isClickEvent(e) && !VK.metaKeyPressed(e) && isInAnchor(editor, target)) {
-        e.preventDefault();
-      }
-    };
-    var registerReadOnlySelectionBlockers = function (editor) {
-      editor.on('ShowCaret', function (e) {
-        if (isReadOnly(editor)) {
-          e.preventDefault();
-        }
-      });
-      editor.on('ObjectSelected', function (e) {
-        if (isReadOnly(editor)) {
-          e.preventDefault();
-        }
-      });
-    };
-
     var DOM$8 = DOMUtils$1.DOM;
     var customEventRootDelegates;
     var getEventTarget = function (editor, eventName) {
@@ -26816,34 +27061,35 @@
       if (!editor.inline && /^mouse|touch|click|contextmenu|drop|dragover|dragend/.test(eventName)) {
         return editor.getDoc().documentElement;
       }
-      if (editor.settings.event_root) {
+      var eventRoot = getEventRoot(editor);
+      if (eventRoot) {
         if (!editor.eventRoot) {
-          editor.eventRoot = DOM$8.select(editor.settings.event_root)[0];
+          editor.eventRoot = DOM$8.select(eventRoot)[0];
         }
         return editor.eventRoot;
       }
       return editor.getBody();
     };
     var isListening = function (editor) {
-      return !editor.hidden && !isReadOnly(editor);
+      return !editor.hidden && !isReadOnly$1(editor);
     };
     var fireEvent = function (editor, eventName, e) {
       if (isListening(editor)) {
         editor.fire(eventName, e);
-      } else if (isReadOnly(editor)) {
+      } else if (isReadOnly$1(editor)) {
         preventReadOnlyEvents(editor, e);
       }
     };
     var bindEventDelegate = function (editor, eventName) {
-      var eventRootElm, delegate;
+      var delegate;
       if (!editor.delegates) {
         editor.delegates = {};
       }
       if (editor.delegates[eventName] || editor.removed) {
         return;
       }
-      eventRootElm = getEventTarget(editor, eventName);
-      if (editor.settings.event_root) {
+      var eventRootElm = getEventTarget(editor, eventName);
+      if (getEventRoot(editor)) {
         if (!customEventRootDelegates) {
           customEventRootDelegates = {};
           editor.editorManager.on('removeEditor', function () {
@@ -26980,7 +27226,7 @@
       }), _a));
     };
 
-    var create$4 = function (editor) {
+    var create$5 = function (editor) {
       var activeMode = Cell('design');
       var availableModes = Cell({
         design: {
@@ -26998,7 +27244,7 @@
       registerReadOnlySelectionBlockers(editor);
       return {
         isReadOnly: function () {
-          return isReadOnly(editor);
+          return isReadOnly$1(editor);
         },
         set: function (mode) {
           return setMode(editor, availableModes.get(), activeMode, mode);
@@ -27012,7 +27258,7 @@
       };
     };
 
-    var each$f = Tools.each, explode$3 = Tools.explode;
+    var each$g = Tools.each, explode$3 = Tools.explode;
     var keyCodeLookup = {
       f1: 112,
       f2: 113,
@@ -27036,7 +27282,7 @@
         var self = this;
         editor.on('keyup keypress keydown', function (e) {
           if ((self.hasModifier(e) || self.isFunctionKey(e)) && !e.isDefaultPrevented()) {
-            each$f(self.shortcuts, function (shortcut) {
+            each$g(self.shortcuts, function (shortcut) {
               if (self.matchShortcut(e, shortcut)) {
                 self.pendingPatterns = shortcut.subpatterns.slice(0);
                 if (e.type === 'keydown') {
@@ -27058,9 +27304,8 @@
       }
       Shortcuts.prototype.add = function (pattern, desc, cmdFunc, scope) {
         var self = this;
-        var cmd;
-        cmd = cmdFunc;
-        if (typeof cmdFunc === 'string') {
+        var cmd = cmdFunc;
+        if (typeof cmd === 'string') {
           cmdFunc = function () {
             self.editor.execCommand(cmd, false, null);
           };
@@ -27069,7 +27314,7 @@
             self.editor.execCommand(cmd[0], cmd[1], cmd[2]);
           };
         }
-        each$f(explode$3(Tools.trim(pattern)), function (pattern) {
+        each$g(explode$3(Tools.trim(pattern)), function (pattern) {
           var shortcut = self.createShortcut(pattern, desc, cmdFunc, scope);
           self.shortcuts[shortcut.id] = shortcut;
         });
@@ -27084,9 +27329,9 @@
         return false;
       };
       Shortcuts.prototype.parseShortcut = function (pattern) {
-        var id, key;
+        var key;
         var shortcut = {};
-        each$f(explode$3(pattern.toLowerCase(), '+'), function (value) {
+        each$g(explode$3(pattern.toLowerCase(), '+'), function (value) {
           if (value in modifierNames) {
             shortcut[value] = true;
           } else {
@@ -27098,7 +27343,7 @@
             }
           }
         });
-        id = [shortcut.keyCode];
+        var id = [shortcut.keyCode];
         for (key in modifierNames) {
           if (shortcut[key]) {
             id.push(key);
@@ -27126,8 +27371,7 @@
         return shortcut;
       };
       Shortcuts.prototype.createShortcut = function (pattern, desc, cmdFunc, scope) {
-        var shortcuts;
-        shortcuts = Tools.map(explode$3(pattern, '>'), this.parseShortcut);
+        var shortcuts = Tools.map(explode$3(pattern, '>'), this.parseShortcut);
         shortcuts[shortcuts.length - 1] = Tools.extend(shortcuts[shortcuts.length - 1], {
           func: cmdFunc,
           scope: scope || this.editor
@@ -27165,7 +27409,7 @@
       return Shortcuts;
     }();
 
-    var create$5 = function () {
+    var create$6 = function () {
       var buttons = {};
       var menuItems = {};
       var popups = {};
@@ -27211,7 +27455,7 @@
     };
 
     var registry = function () {
-      var bridge = create$5();
+      var bridge = create$6();
       return {
         addAutocompleter: bridge.addAutocompleter,
         addButton: bridge.addButton,
@@ -27231,7 +27475,7 @@
       };
     };
 
-    var each$g = Tools.each, trim$4 = Tools.trim;
+    var each$h = Tools.each, trim$4 = Tools.trim;
     var queryParts = 'source protocol authority userInfo user password host port relative path directory file query anchor'.split(' ');
     var DEFAULT_PORTS = {
       ftp: 21,
@@ -27264,7 +27508,7 @@
         }
         url = url.replace(/@@/g, '(mce_at)');
         var urlMatch = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*):?([^:@\/]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/.exec(url);
-        each$g(queryParts, function (v, i) {
+        each$h(queryParts, function (v, i) {
           var part = urlMatch[i];
           if (part) {
             part = part.replace(/\(mce_at\)/g, '@@');
@@ -27364,9 +27608,9 @@
         return false;
       };
       URI.prototype.toRelPath = function (base, path) {
-        var items, breakPoint = 0, out = '', i, l;
+        var breakPoint = 0, out = '', i, l;
         var normalizedBase = base.substring(0, base.lastIndexOf('/')).split('/');
-        items = path.split('/');
+        var items = path.split('/');
         if (normalizedBase.length >= items.length) {
           for (i = 0, l = normalizedBase.length; i < l; i++) {
             if (i >= items.length || normalizedBase[i] !== items[i]) {
@@ -27399,11 +27643,11 @@
         return out;
       };
       URI.prototype.toAbsPath = function (base, path) {
-        var i, nb = 0, o = [], tr, outPath;
-        tr = /\/$/.test(path) ? '/' : '';
+        var i, nb = 0, o = [], outPath;
+        var tr = /\/$/.test(path) ? '/' : '';
         var normalizedBase = base.split('/');
         var normalizedPath = path.split('/');
-        each$g(normalizedBase, function (k) {
+        each$h(normalizedBase, function (k) {
           if (k) {
             o.push(k);
           }
@@ -27477,7 +27721,7 @@
     }();
 
     var DOM$9 = DOMUtils$1.DOM;
-    var extend$3 = Tools.extend, each$h = Tools.each;
+    var extend$3 = Tools.extend, each$i = Tools.each;
     var resolve$3 = Tools.resolve;
     var ie$1 = Env.ie;
     var Editor = function () {
@@ -27516,9 +27760,12 @@
         if (this.settings.cache_suffix) {
           Env.cacheSuffix = this.settings.cache_suffix.replace(/^[\?\&]+/, '');
         }
-        this.ui = { registry: registry() };
+        this.ui = {
+          registry: registry(),
+          styleSheetLoader: undefined
+        };
         var self = this;
-        var modeInstance = create$4(self);
+        var modeInstance = create$5(self);
         this.mode = modeInstance;
         this.setMode = modeInstance.set;
         editorManager.fire('SetupEditor', { editor: this });
@@ -27534,7 +27781,7 @@
         render(this);
       };
       Editor.prototype.focus = function (skipFocus) {
-        focus(this, skipFocus);
+        focus$1(this, skipFocus);
       };
       Editor.prototype.hasFocus = function () {
         return hasFocus$1(this);
@@ -27682,7 +27929,7 @@
             elm.innerHTML = html;
           }
           if (form = DOM$9.getParent(self.id, 'form')) {
-            each$h(form.elements, function (elm) {
+            each$i(form.elements, function (elm) {
               if (elm.name === self.id) {
                 elm.value = html;
                 return false;
@@ -27795,7 +28042,7 @@
         if (self.hasVisual === undefined) {
           self.hasVisual = settings.visual;
         }
-        each$h(dom.select('table,a', elm), function (elm) {
+        each$i(dom.select('table,a', elm), function (elm) {
           var value;
           switch (elm.nodeName) {
           case 'TABLE':
@@ -27853,7 +28100,7 @@
     }();
 
     var DOM$a = DOMUtils$1.DOM;
-    var explode$4 = Tools.explode, each$i = Tools.each, extend$4 = Tools.extend;
+    var explode$4 = Tools.explode, each$j = Tools.each, extend$4 = Tools.extend;
     var instanceCounter = 0, boundGlobalEvents = false;
     var beforeUnloadDelegate;
     var legacyEditors = [];
@@ -27863,7 +28110,7 @@
     };
     var globalEventDelegate = function (e) {
       var type = e.type;
-      each$i(EditorManager.get(), function (editor) {
+      each$j(EditorManager.get(), function (editor) {
         switch (type) {
         case 'scroll':
           editor.fire('ScrollWindow', e);
@@ -27923,8 +28170,8 @@
       suffix: null,
       $: DomQuery,
       majorVersion: '5',
-      minorVersion: '3.1',
-      releaseDate: '2020-05-27',
+      minorVersion: '4.2',
+      releaseDate: '2020-08-17',
       editors: legacyEditors,
       i18n: I18n,
       activeEditor: null,
@@ -27975,12 +28222,11 @@
         setup$2(self);
       },
       overrideDefaults: function (defaultSettings) {
-        var baseUrl, suffix;
-        baseUrl = defaultSettings.base_url;
+        var baseUrl = defaultSettings.base_url;
         if (baseUrl) {
           this._setBaseUrl(baseUrl);
         }
-        suffix = defaultSettings.suffix;
+        var suffix = defaultSettings.suffix;
         if (defaultSettings.suffix) {
           this.suffix = suffix;
         }
@@ -27994,20 +28240,17 @@
       },
       init: function (settings) {
         var self = this;
-        var result, invalidInlineTargets;
-        invalidInlineTargets = Tools.makeMap('area base basefont br col frame hr img input isindex link meta param embed source wbr track ' + 'colgroup option table tbody tfoot thead tr th td script noscript style textarea video audio iframe object menu', ' ');
+        var result;
+        var invalidInlineTargets = Tools.makeMap('area base basefont br col frame hr img input isindex link meta param embed source wbr track ' + 'colgroup option table tbody tfoot thead tr th td script noscript style textarea video audio iframe object menu', ' ');
         var isInvalidInlineTarget = function (settings, elm) {
           return settings.inline && elm.tagName.toLowerCase() in invalidInlineTargets;
         };
         var createId = function (elm) {
           var id = elm.id;
           if (!id) {
-            id = elm.name;
-            if (id && !DOM$a.get(id)) {
-              id = elm.name;
-            } else {
-              id = DOM$a.uniqueId();
-            }
+            id = get(elm, 'name').filter(function (name) {
+              return !DOM$a.get(name);
+            }).getOrThunk(DOM$a.uniqueId);
             elm.setAttribute('id', id);
           }
           return id;
@@ -28023,7 +28266,7 @@
           return className.constructor === RegExp ? className.test(elm.className) : DOM$a.hasClass(elm, className);
         };
         var findTargets = function (settings) {
-          var l, targets = [];
+          var targets = [];
           if (Env.browser.isIE() && Env.browser.version.major < 11) {
             initError('TinyMCE does not support the browser you are using. For a list of supported' + ' browsers please see: https://www.tinymce.com/docs/get-started/system-requirements/');
             return [];
@@ -28032,7 +28275,7 @@
             return [];
           }
           if (settings.types) {
-            each$i(settings.types, function (type) {
+            each$j(settings.types, function (type) {
               targets = targets.concat(DOM$a.select(type.selector));
             });
             return targets;
@@ -28043,15 +28286,15 @@
           }
           switch (settings.mode) {
           case 'exact':
-            l = settings.elements || '';
+            var l = settings.elements || '';
             if (l.length > 0) {
-              each$i(explode$4(l), function (id) {
-                var elm;
-                if (elm = DOM$a.get(id)) {
+              each$j(explode$4(l), function (id) {
+                var elm = DOM$a.get(id);
+                if (elm) {
                   targets.push(elm);
                 } else {
-                  each$i(domGlobals.document.forms, function (f) {
-                    each$i(f.elements, function (e) {
+                  each$j(domGlobals.document.forms, function (f) {
+                    each$j(f.elements, function (e) {
                       if (e.name === id) {
                         id = 'mce_editor_' + instanceCounter++;
                         DOM$a.setAttrib(e, 'id', id);
@@ -28065,7 +28308,7 @@
             break;
           case 'textareas':
           case 'specific_textareas':
-            each$i(DOM$a.select('textarea'), function (elm) {
+            each$j(DOM$a.select('textarea'), function (elm) {
               if (settings.editor_deselector && hasClass(elm, settings.editor_deselector)) {
                 return;
               }
@@ -28099,7 +28342,7 @@
           execCallback('onpageload');
           targets = DomQuery.unique(findTargets(settings));
           if (settings.types) {
-            each$i(settings.types, function (type) {
+            each$j(settings.types, function (type) {
               Tools.each(targets, function (elm) {
                 if (DOM$a.is(elm, type.selector)) {
                   createEditor(createId(elm), extend$4({}, settings, type), elm);
@@ -28119,7 +28362,7 @@
           if (targets.length === 0) {
             provideResults([]);
           } else {
-            each$i(targets, function (elm) {
+            each$j(targets, function (elm) {
               if (isInvalidInlineTarget(settings, elm)) {
                 initError('Could not initialize inline editor on invalid inline target element', elm);
               } else {
@@ -28155,8 +28398,7 @@
       },
       add: function (editor) {
         var self = this;
-        var existingEditor;
-        existingEditor = legacyEditors[editor.id];
+        var existingEditor = legacyEditors[editor.id];
         if (existingEditor === editor) {
           return editor;
         }
@@ -28196,7 +28438,7 @@
           return;
         }
         if (isString(selector)) {
-          each$i(DOM$a.select(selector), function (elm) {
+          each$j(DOM$a.select(selector), function (elm) {
             editor = self.get(elm.id);
             if (editor) {
               self.remove(editor);
@@ -28249,7 +28491,7 @@
         return false;
       },
       triggerSave: function () {
-        each$i(editors, function (editor) {
+        each$j(editors, function (editor) {
           editor.save();
         });
       },
@@ -28343,7 +28585,7 @@
         reject: reject
       };
     };
-    var create$6 = function () {
+    var create$7 = function () {
       var tasks = {};
       var resultFns = {};
       var load = function (id, url) {
@@ -28377,17 +28619,16 @@
         add: add
       };
     };
-    var Resource = create$6();
+    var Resource = create$7();
 
     var min = Math.min, max = Math.max, round$1 = Math.round;
     var relativePosition = function (rect, targetRect, rel) {
-      var x, y, w, h, targetW, targetH;
-      x = targetRect.x;
-      y = targetRect.y;
-      w = rect.w;
-      h = rect.h;
-      targetW = targetRect.w;
-      targetH = targetRect.h;
+      var x = targetRect.x;
+      var y = targetRect.y;
+      var w = rect.w;
+      var h = rect.h;
+      var targetW = targetRect.w;
+      var targetH = targetRect.h;
       rel = (rel || '').split('');
       if (rel[0] === 'b') {
         y += targetH;
@@ -28413,7 +28654,7 @@
       if (rel[4] === 'c') {
         x -= round$1(w / 2);
       }
-      return create$7(x, y, w, h);
+      return create$8(x, y, w, h);
     };
     var findBestRelativePosition = function (rect, targetRect, constrainRect, rels) {
       var pos, i;
@@ -28426,31 +28667,29 @@
       return null;
     };
     var inflate = function (rect, w, h) {
-      return create$7(rect.x - w, rect.y - h, rect.w + w * 2, rect.h + h * 2);
+      return create$8(rect.x - w, rect.y - h, rect.w + w * 2, rect.h + h * 2);
     };
     var intersect = function (rect, cropRect) {
-      var x1, y1, x2, y2;
-      x1 = max(rect.x, cropRect.x);
-      y1 = max(rect.y, cropRect.y);
-      x2 = min(rect.x + rect.w, cropRect.x + cropRect.w);
-      y2 = min(rect.y + rect.h, cropRect.y + cropRect.h);
+      var x1 = max(rect.x, cropRect.x);
+      var y1 = max(rect.y, cropRect.y);
+      var x2 = min(rect.x + rect.w, cropRect.x + cropRect.w);
+      var y2 = min(rect.y + rect.h, cropRect.y + cropRect.h);
       if (x2 - x1 < 0 || y2 - y1 < 0) {
         return null;
       }
-      return create$7(x1, y1, x2 - x1, y2 - y1);
+      return create$8(x1, y1, x2 - x1, y2 - y1);
     };
     var clamp$1 = function (rect, clampRect, fixedSize) {
-      var underflowX1, underflowY1, overflowX2, overflowY2, x1, y1, x2, y2, cx2, cy2;
-      x1 = rect.x;
-      y1 = rect.y;
-      x2 = rect.x + rect.w;
-      y2 = rect.y + rect.h;
-      cx2 = clampRect.x + clampRect.w;
-      cy2 = clampRect.y + clampRect.h;
-      underflowX1 = max(0, clampRect.x - x1);
-      underflowY1 = max(0, clampRect.y - y1);
-      overflowX2 = max(0, x2 - cx2);
-      overflowY2 = max(0, y2 - cy2);
+      var x1 = rect.x;
+      var y1 = rect.y;
+      var x2 = rect.x + rect.w;
+      var y2 = rect.y + rect.h;
+      var cx2 = clampRect.x + clampRect.w;
+      var cy2 = clampRect.y + clampRect.h;
+      var underflowX1 = max(0, clampRect.x - x1);
+      var underflowY1 = max(0, clampRect.y - y1);
+      var overflowX2 = max(0, x2 - cx2);
+      var overflowY2 = max(0, y2 - cy2);
       x1 += underflowX1;
       y1 += underflowY1;
       if (fixedSize) {
@@ -28461,9 +28700,9 @@
       }
       x2 -= overflowX2;
       y2 -= overflowY2;
-      return create$7(x1, y1, x2 - x1, y2 - y1);
+      return create$8(x1, y1, x2 - x1, y2 - y1);
     };
-    var create$7 = function (x, y, w, h) {
+    var create$8 = function (x, y, w, h) {
       return {
         x: x,
         y: y,
@@ -28472,7 +28711,7 @@
       };
     };
     var fromClientRect = function (clientRect) {
-      return create$7(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
+      return create$8(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
     };
     var Rect = {
       inflate: inflate,
@@ -28480,18 +28719,17 @@
       findBestRelativePosition: findBestRelativePosition,
       intersect: intersect,
       clamp: clamp$1,
-      create: create$7,
+      create: create$8,
       fromClientRect: fromClientRect
     };
 
-    var each$j = Tools.each, extend$5 = Tools.extend;
+    var each$k = Tools.each, extend$5 = Tools.extend;
     var extendClass, initializing;
     var Class = function () {
     };
     Class.extend = extendClass = function (prop) {
       var self = this;
       var _super = self.prototype;
-      var prototype;
       var Class = function () {
         var i, mixins, mixin;
         var self = this;
@@ -28518,18 +28756,17 @@
         return function () {
           var self = this;
           var tmp = self._super;
-          var ret;
           self._super = _super[name];
-          ret = fn.apply(self, arguments);
+          var ret = fn.apply(self, arguments);
           self._super = tmp;
           return ret;
         };
       };
       initializing = true;
-      prototype = new self();
+      var prototype = new self();
       initializing = false;
       if (prop.Mixins) {
-        each$j(prop.Mixins, function (mixin) {
+        each$k(prop.Mixins, function (mixin) {
           for (var name_1 in mixin) {
             if (name_1 !== 'init') {
               prop[name_1] = mixin[name_1];
@@ -28541,12 +28778,12 @@
         }
       }
       if (prop.Methods) {
-        each$j(prop.Methods.split(','), function (name) {
+        each$k(prop.Methods.split(','), function (name) {
           prop[name] = dummy;
         });
       }
       if (prop.Properties) {
-        each$j(prop.Properties.split(','), function (name) {
+        each$k(prop.Properties.split(','), function (name) {
           var fieldName = '_' + name;
           prop[name] = function (value) {
             var self = this;
@@ -28559,7 +28796,7 @@
         });
       }
       if (prop.Statics) {
-        each$j(prop.Statics, function (func, name) {
+        each$k(prop.Statics, function (func, name) {
           Class[name] = func;
         });
       }
@@ -28584,15 +28821,15 @@
       var self = {};
       var r = 0, g = 0, b = 0;
       var rgb2hsv = function (r, g, b) {
-        var h, s, v, d, minRGB, maxRGB;
+        var h, s, v;
         h = 0;
         s = 0;
         v = 0;
         r = r / 255;
         g = g / 255;
         b = b / 255;
-        minRGB = min$1(r, min$1(g, b));
-        maxRGB = max$1(r, max$1(g, b));
+        var minRGB = min$1(r, min$1(g, b));
+        var maxRGB = max$1(r, max$1(g, b));
         if (minRGB === maxRGB) {
           v = minRGB;
           return {
@@ -28601,7 +28838,7 @@
             v: v * 100
           };
         }
-        d = r === minRGB ? g - b : b === minRGB ? r - g : b - r;
+        var d = r === minRGB ? g - b : b === minRGB ? r - g : b - r;
         h = r === minRGB ? 3 : b === minRGB ? 1 : 5;
         h = 60 * (h - d / (maxRGB - minRGB));
         s = (maxRGB - minRGB) / maxRGB;
@@ -28613,7 +28850,6 @@
         };
       };
       var hsvToRgb = function (hue, saturation, brightness) {
-        var side, chroma, x, match;
         hue = (parseInt(hue, 10) || 0) % 360;
         saturation = parseInt(saturation, 10) / 100;
         brightness = parseInt(brightness, 10) / 100;
@@ -28623,10 +28859,10 @@
           r = g = b = round$2(255 * brightness);
           return;
         }
-        side = hue / 60;
-        chroma = brightness * saturation;
-        x = chroma * (1 - Math.abs(side % 2 - 1));
-        match = brightness - chroma;
+        var side = hue / 60;
+        var chroma = brightness * saturation;
+        var x = chroma * (1 - Math.abs(side % 2 - 1));
+        var match = brightness - chroma;
         switch (Math.floor(side)) {
         case 0:
           r = chroma;
@@ -28853,7 +29089,7 @@
       return JSONRequest;
     }();
 
-    var create$8 = function () {
+    var create$9 = function () {
       return function () {
         var data = {};
         var keys = [];
@@ -28899,7 +29135,7 @@
       localStorage.setItem(test, test);
       localStorage.removeItem(test);
     } catch (e) {
-      localStorage = create$8();
+      localStorage = create$9();
     }
     var LocalStorage = localStorage;
 
@@ -28932,6 +29168,7 @@
         ScriptLoader: ScriptLoader,
         RangeUtils: RangeUtils$1,
         Serializer: Serializer$1,
+        StyleSheetLoader: StyleSheetLoader,
         ControlSelection: ControlSelection,
         BookmarkManager: BookmarkManager$1,
         Selection: Selection$1,
