@@ -134,11 +134,12 @@
     <script defer>
         function iframeMarketplaceCallback(){
             var iframe = document.querySelectorAll(".marketplaceUpdate");
+            var marketPlaceUrl = 'http://marketplace.test.melistechnology.fr/marketplace-update?modulelist=<?php echo $this->modules; ?>&&domain=<?php echo $this->domain?>&&scheme=<?php echo $this->scheme ?>';
             for (i = 0; i < iframe.length; i++) {
                 var content = iframe[i].contentWindow.document;
-                content.open();
-                content.write('<img src=\'http://marketplace.melisplatform.com/marketplace-update?modulelist=<?php echo $this->modules; ?>&&domain=<?php echo $this->domain?>&&scheme=<?php echo $this->scheme ?>\' />');
-                content.close();
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', marketPlaceUrl);
+                xhr.send();
             }
         }
         iframeMarketplaceCallback();
