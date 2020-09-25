@@ -462,7 +462,6 @@ return [
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
                                             'style' => 'width:0;',
                                             'disabled' => 'disabled'
                                         ]
