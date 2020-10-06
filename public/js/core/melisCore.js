@@ -298,10 +298,6 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard() {
-        // responsive, on 767px and below
-        /* if ( activeTabId === "id_meliscore_toolstree_section_dashboard" ) {
-            $("#sidebar-menu").trigger("click");
-        } */
         melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
     }
 

@@ -43,26 +43,29 @@ var loader = (function(window) {
         // added loader overlay on the page edition iframe container
         function addPageEditionLoading() {
             var $melisCms = $body.find("[data-meliskey='meliscms_page'].tab-pane.container-level-a");
-
                 $melisCms.each(function(i, v) {
                     var $this               = $(v),
                         $melisCmsID         = $("#"+$this.attr("id") ),
                         $iframeContainer    = $melisCmsID.find(".iframe-container"),
                         $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
+                        $melisIframe        = $melisTabEdition.find(".melis-iframe"),
                         $loader             = $melisTabEdition.find("#loader");
-                        
-                        // check if loader overlay is already present
-                        if ( $loader.length === 0 ) {
-                            $melisTabEdition.prepend(overlayLoader);
-                            melisCoreTool.addOverflowHidden();
-                        }
+
+                        $melisIframe.each(function() {
+                            var $this           = $(this),
+                                $iframeChildren = $this.contents().find("body").children();
+
+                                if ( $iframeChildren.length === 0 && $loader.length === 0 ) {
+                                    $melisTabEdition.prepend( overlayLoader );
+                                    melisCoreTool.addOverflowHidden();
+                                }
+                        });
                 });
         }
 
         // remove loader overlay on the page edition iframe container
         function removePageEditionLoading() {
             var $melisCms = $body.find("[data-meliskey='meliscms_page'].tab-pane.container-level-a");
-                
                 $melisCms.each(function(i, v) {
                     var $this               = $(v),
                         $melisCmsID         = $("#"+$this.attr("id") ),
@@ -77,7 +80,7 @@ var loader = (function(window) {
                             var $this           = $(this),
                                 $iframeChildren = $this.contents().find("body").children();
                               
-                                if ( $iframeChildren.length ) {
+                                if ( $iframeChildren.length > 0 ) {
                                     // remove loader
                                     $loader.remove();
 
@@ -91,12 +94,117 @@ var loader = (function(window) {
                 });
         }
 
+        // function addActivePageEditionLoading
+        function addActivePageEditionLoading(zoneId) {
+            var $melisCms           = $body.find("#"+zoneId+"[data-meliskey='meliscms_page'].tab-pane.container-level-a"),
+                $iframeContainer    = $melisCms.find(".iframe-container"),
+                $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
+                $melisIframe        = $melisTabEdition.find(".melis-iframe"),
+                melisIframeHeight   = $melisIframe.contents().find("body").height(),
+                $loader             = $melisTabEdition.find("#loader");
+
+                // check if loader is already present
+                if ( $loader.length === 0 ) {
+                    // loader
+                    $melisTabEdition.prepend( overlayLoader );
+                    melisCoreTool.addOverflowHidden();
+                }
+
+                // set .melis-iframe css height
+                $melisIframe.css("height", melisIframeHeight);
+        }
+
+        // function removeActivePageEditionLoading
+        function removeActivePageEditionLoading(zoneId) {
+            var $melisCms           = $body.find("#"+zoneId+"[data-meliskey='meliscms_page'].tab-pane.container-level-a"),
+                $iframeContainer    = $melisCms.find(".iframe-container"),
+                $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
+                $melisIframe        = $melisTabEdition.find(".melis-iframe"),
+                melisIframeHeight   = $melisIframe.contents().find("body").height(),
+                $iframeElements     = $melisIframe.contents().find("body").children(),
+                $loader             = $melisTabEdition.find("#loader");
+
+                // checks for the inside iframes elements
+                if ( $iframeElements.length > 0 ) {
+                    // remove loader
+                    $loader.remove();
+
+                    // remove overflow hidden
+                    melisCoreTool.removeOverflowHidden();
+                }
+
+                // set .melis-iframe css height
+                $melisIframe.css("height", melisIframeHeight);
+        }
+
+        // function checkInPageLoading
+        function checkPageLoading(zoneId) {
+            setTimeout(function() {
+                var setCmsBtnDisabledInterval = setInterval(function() {
+                    var $activeTabId        = $("#"+zoneId),
+                        $menuBarOptions     = $activeTabId.find(".menu-bar-options"),
+                        $cmsBtnDisabled     = $menuBarOptions.find(".btn-disabled"),
+                        $iframeContainer    = $activeTabId.find(".iframe-container"),
+                        $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
+                        $melisIframe        = $melisTabEdition.find(".melis-iframe");
+
+                        // check for .btn-disabled and iframe is found
+                        if ( $cmsBtnDisabled.length > 0 && $melisIframe.length > 0 ) {
+                            addPageEditionLoading();
+                        }
+                        else {
+                            removePageEditionLoading();
+
+                            clearInterval( setCmsBtnDisabledInterval );
+                        }
+                }, 500);
+            }, 3000);
+        }
+
+        // function checkClickEventPageLoading
+        function checkClickEventPageLoading(zoneId) {
+            setTimeout(function() {                     
+                var setCmsBtnDisabledInterval = setInterval(function() {
+                    var $activeTabId        = $("#"+zoneId),
+                        $menuBarOptions     = $activeTabId.find(".menu-bar-options"),
+                        $cmsBtnDisabled     = $menuBarOptions.find(".btn-disabled"),
+                        $iframeContainer    = $activeTabId.find(".iframe-container"),
+                        $melisTabEdition    = $iframeContainer.find(".meliscms-page-tab-edition"),
+                        $melisIframe        = $melisTabEdition.find(".melis-iframe");
+
+                        // check for .btn-disabled and iframe is found
+                        if ( $cmsBtnDisabled.length > 0 && $melisIframe.length > 0 ) {
+                            addActivePageEditionLoading(zoneId);
+                        }
+                        else {
+                            removeActivePageEditionLoading(zoneId);
+
+                            clearInterval( setCmsBtnDisabledInterval );
+                        }
+                }, 500);
+            }, 3000);
+        }
+
         init();
 
         return {
             init                                : init,
+
+            // #1
             addPageEditionLoading               : addPageEditionLoading,
             removePageEditionLoading            : removePageEditionLoading,
-            removeLoadingLeftMenuOnWindowLoad   : removeLoadingLeftMenuOnWindowLoad
+
+            // removing of loading overlay on left sidebar menu
+            removeLoadingLeftMenuOnWindowLoad   : removeLoadingLeftMenuOnWindowLoad,
+
+            // #2
+            addActivePageEditionLoading         : addActivePageEditionLoading,
+            removeActivePageEditionLoading      : removeActivePageEditionLoading,
+
+            // for opening tab contents melisHelper.tabOpen, calls #1 functions
+            checkPageLoading                    : checkPageLoading,
+
+            // for click events melisCms publishPage, calls #2 functions
+            checkClickEventPageLoading          : checkClickEventPageLoading
         };
 })(window);
