@@ -589,6 +589,7 @@ return [
                                                             'conf' => array(
                                                                 'id' => 'id_meliscore_logs_tool_export_modal_content',
                                                                 'melisKey' => 'meliscore_logs_tool_export_modal_content',
+                                                                'name' => 'tr_meliscore_logs_tool_export_modal_content'
                                                             ),
                                                             'forward' => array(
                                                                 'module' => 'MelisCore',
