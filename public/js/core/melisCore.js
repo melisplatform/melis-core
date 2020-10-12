@@ -322,20 +322,20 @@ var melisCore = (function(window){
     // SIDEBAR MENU CLICK (toggle), .toggle-sidebar
     function sidebarMenuClick() {
         // for the sidebar functionalities
-        var $melisLeftMenu 		= $("#id_meliscore_leftmenu"),
-            $melisContent 		= $("#content"),
-            $melisFooter 		= $("#id_meliscore_footer"),
-            $dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
-            sidebarOffsetLeft 	= $melisLeftMenu.position().left,
-            sidebarWidth 		= $melisLeftMenu.outerWidth(),
-            contentOffsetLeft 	= $melisContent.position().left,
-            contentWidth 		= $melisContent.outerWidth(),
-            melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
-            dbPluginMenuWidth 	= $dbPluginMenu.outerWidth(),
-            $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
-            gsi 				= $gs.find(".grid-stack-item").length,
-            minWidth 			= $gs.data("min-width"),
-            maxWidth 			= $gs.data("max-width");
+        var $melisLeftMenu      = $("#id_meliscore_leftmenu"),
+            $melisContent       = $("#content"),
+            $melisFooter        = $("#id_meliscore_footer"),
+            $dbPluginMenu       = $("#id_meliscore_center_dashboard_menu"),
+            sidebarOffsetLeft   = $melisLeftMenu.position().left,
+            sidebarWidth        = $melisLeftMenu.outerWidth(),
+            contentOffsetLeft   = $melisContent.position().left,
+            contentWidth        = $melisContent.outerWidth(),
+            melisLeftMenuWidth  = $melisLeftMenu.outerWidth(),
+            dbPluginMenuWidth   = $dbPluginMenu.outerWidth(),
+            $gs                 = $body.find("#"+activeTabId+" .grid-stack"),
+            gsi                 = $gs.find(".grid-stack-item").length,
+            minWidth            = $gs.data("min-width"),
+            maxWidth            = $gs.data("max-width");
 
             // prevent from having a scrollbar below
             $body.toggleClass("overflowHidden");
@@ -343,35 +343,31 @@ var melisCore = (function(window){
             /**
              * Dashboard .grid-stack. Check if plugins menu is open, adjust .gris-stack width accordingly
              */
-            // shown class added
-            $melisLeftMenu.toggleClass("shown");
-
+            // class shown added on 768px and above
             if ( melisCore.screenSize >= 768 ) {
-                if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
-                    if ( $melisLeftMenu.hasClass("shown") ) {
-                        if ( $dbPluginMenu.hasClass("shown") ) {
-                            $gs.animate({
-                                width: minWidth
-                            }, 3);
-                        }
-                        else {
-                            $gs.animate({
-                                width: maxWidth
-                            }, 3);
-                        }
-                    }
-                    else {
-                        if ( $dbPluginMenu.hasClass("shown") ) {
-                            $gs.animate({
-                                width: maxWidth + 50
-                            }, 3);
-                        }
-                        else {
-                            if ( melisCore.screenSize === 768 ) {
+                $melisLeftMenu.toggleClass("shown");
+
+                //if ( melisCore.screenSize >= 768 ) {
+                    if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                        if ( $melisLeftMenu.hasClass("shown") ) {
+                            if ( $dbPluginMenu.hasClass("shown") ) {
+                                $gs.animate({
+                                    width: minWidth
+                                }, 3);
+                            }
+                            else {
                                 $gs.animate({
                                     width: maxWidth
                                 }, 3);
                             }
+                        }
+                        else {
+                            if ( $dbPluginMenu.hasClass("shown") ) {
+                                $gs.animate({
+                                    width: maxWidth + 50
+                                }, 3);
+                            }
+                            // left sidebar menu and dashboard plugin menu not shown
                             else {
                                 $gs.animate({
                                     width: maxWidth + dbPluginMenuWidth + 50
@@ -379,7 +375,7 @@ var melisCore = (function(window){
                             }
                         }
                     }
-                }
+                //}
             }
 
             if ( sidebarOffsetLeft == 0 ) {
