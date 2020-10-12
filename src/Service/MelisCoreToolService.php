@@ -405,7 +405,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 $htmlContent = $this->getViewContent($leftValue);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $leftDom .= '<"' . $leftKey . '">';
-                    $jsSdomContentInit .= '$(".' . $leftKey . '").html(\'' . $this->replaceQuotes($htmlContent) . '\');';
+                    $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $leftKey . '").html(\'' . $this->replaceQuotes($htmlContent) . '\');';
                 } else {
                     $leftDom .= '<"' . $leftKey . '"' . $htmlContent . '>';
                     if ($htmlContent == 'f') {
@@ -419,7 +419,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 $htmlContent = $this->getViewContent($centerValue);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $centerDom .= '<"' . $centerKey . '">';
-                    $jsSdomContentInit .= '$(".' . $centerKey . '").html(\'' . $htmlContent . '\');';
+                    $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $centerKey . '").html(\'' . $htmlContent . '\');';
                 } else {
                     $centerDom .= '<"' . $centerKey . '"' . $htmlContent . '>';
                     if ($htmlContent == 'f') {
@@ -435,7 +435,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 $htmlContent = $this->replaceQuotes($htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $rightDom .= '<"' . $rightKey . '">';
-                    $jsSdomContentInit .= '$(".' . $rightKey . '").html(\'' . $htmlContent . '\');';
+                    $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $rightKey . '").html(\'' . $htmlContent . '\');';
                 } else {
                     $rightDom .= '<"' . $rightKey . '"' . $htmlContent . '>';
                     if ($htmlContent == 'f') {
