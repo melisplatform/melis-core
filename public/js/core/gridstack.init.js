@@ -38,7 +38,8 @@ var melisDashBoardDragnDrop = {
         this.dropWidget(this.melisWidgetHandle);
         this.dragStopWidget();
         this.resizeStopWidget();
-        //$("#disable-left-menu-overlay").hide();
+
+        this.checkDashboard();
     },
     cacheDom: function() {
         // jQuery DOM element
@@ -80,7 +81,7 @@ var melisDashBoardDragnDrop = {
 
         self.$gs.gridstack(options);
     },
-    // adjust grid w/h values
+    // adjust grid height values
     setAdjustGridMeasurements: function() {
         var self                        = this,
             // fix for https://mantis2.uat.melistechnology.fr/view.php?id=860
@@ -349,17 +350,18 @@ var melisDashBoardDragnDrop = {
     },
     // check current dashboard
     checkDashboard: function() {
-        var self            = this,
-            $pluginBtn      = $("#melisDashBoardPluginBtn"),
-            $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-            $activeTab      = $("#"+activeTabId),
-            $msg            = $activeTab.find(".melis-core-dashboard-msg"),
-            $gs             = $activeTab.find(".grid-stack"),
-            gsItems         = $gs.find(".grid-stack-item").length,
-            $tabArrowTop    = $("#tab-arrow-top");
-
-        var minWidth        = $gs.data("min-width"),
-            maxWidth        = $gs.data("max-width");
+        var self                = this,
+            $pluginBtn          = $("#melisDashBoardPluginBtn"),
+            $leftSidebarMenu    = $("#id_meliscore_leftmenu"),
+            $pluginBox          = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+            pluginBoxWidth      = $pluginBox.outerWidth(),
+            $activeTab          = $("#"+activeTabId),
+            $msg                = $activeTab.find(".melis-core-dashboard-msg"),
+            $gs                 = $activeTab.find(".grid-stack"),
+            gsItems             = $gs.find(".grid-stack-item").length,
+            $tabArrowTop        = $("#tab-arrow-top"),
+            minWidth            = $gs.data("min-width"),
+            maxWidth            = $gs.data("max-width");
 
             // count .grid-stack-item if found
             if ( gsItems > 0 ) {
@@ -383,15 +385,30 @@ var melisDashBoardDragnDrop = {
             
             // check plugin menu box
             if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
-                if ( $pluginBox.hasClass("shown") ) {
-                    $gs.animate({
-                        width: minWidth
-                    }, 3);
-                } 
+                if ( $leftSidebarMenu.hasClass("shown") ) {
+                    if ( $pluginBox.hasClass("shown") ) {
+                        $gs.animate({
+                            width: minWidth
+                        }, 3);
+                    } 
+                    else {
+                        $gs.animate({
+                            width: maxWidth
+                        }, 3);
+                    }
+                }
                 else {
-                    $gs.animate({
-                        width: maxWidth
-                    }, 3);
+                    if ( $pluginBox.hasClass("shown") ) {
+                        $gs.animate({
+                            width: maxWidth + 50
+                        }, 3);
+                    }
+                    // left sidebar menu and dashboard plugin menu not shown
+                    else {
+                        $gs.animate({
+                            width: maxWidth + pluginBoxWidth + 50
+                        }, 3);
+                    }
                 }
             }
     },
@@ -791,9 +808,6 @@ var melisDashBoardDragnDrop = {
         $pluginBtn      = $body.find("#melisDashBoardPluginBtn"),
         $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
         $gs             = $body.find("#"+activeTabId + " .grid-stack"),
-        /* boxWidth        = parseInt( $pluginBox.outerWidth() ),
-        gsWidth         = parseInt( $gs.outerWidth() ),
-        dWidth          = gsWidth - boxWidth, */
         $dbMsg          = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
         minWidth        = $gs.data("min-width"),
         maxWidth        = $gs.data("max-width");

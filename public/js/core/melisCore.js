@@ -339,35 +339,31 @@ var melisCore = (function(window){
             /**
              * Dashboard .grid-stack. Check if plugins menu is open, adjust .gris-stack width accordingly
              */
-            // shown class added
-            $melisLeftMenu.toggleClass("shown");
-
+            // class shown added on 768px and above
             if ( melisCore.screenSize >= 768 ) {
-                if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
-                    if ( $melisLeftMenu.hasClass("shown") ) {
-                        if ( $dbPluginMenu.hasClass("shown") ) {
-                            $gs.animate({
-                                width: minWidth
-                            }, 3);
-                        }
-                        else {
-                            $gs.animate({
-                                width: maxWidth
-                            }, 3);
-                        }
-                    }
-                    else {
-                        if ( $dbPluginMenu.hasClass("shown") ) {
-                            $gs.animate({
-                                width: maxWidth + 50
-                            }, 3);
-                        }
-                        else {
-                            if ( melisCore.screenSize === 768 ) {
+                $melisLeftMenu.toggleClass("shown");
+
+                //if ( melisCore.screenSize >= 768 ) {
+                    if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                        if ( $melisLeftMenu.hasClass("shown") ) {
+                            if ( $dbPluginMenu.hasClass("shown") ) {
+                                $gs.animate({
+                                    width: minWidth
+                                }, 3);
+                            }
+                            else {
                                 $gs.animate({
                                     width: maxWidth
                                 }, 3);
                             }
+                        }
+                        else {
+                            if ( $dbPluginMenu.hasClass("shown") ) {
+                                $gs.animate({
+                                    width: maxWidth + 50
+                                }, 3);
+                            }
+                            // left sidebar menu and dashboard plugin menu not shown
                             else {
                                 $gs.animate({
                                     width: maxWidth + dbPluginMenuWidth + 50
@@ -375,7 +371,7 @@ var melisCore = (function(window){
                             }
                         }
                     }
-                }
+                //}
             }
 
             if ( sidebarOffsetLeft == 0 ) {
@@ -414,9 +410,6 @@ var melisCore = (function(window){
             }, 1000);
     }
 
-    /* if ( typeof melisDashBoardDragnDrop === 'undefined' )
-        $("#disable-left-menu-overlay").show(); */
-
     // MAIN TAB MENU CLICK - run codes when a tab in the main tab menu is clicked
     function tabMenuClick() {
         var $this           = $(this),
@@ -438,7 +431,7 @@ var melisCore = (function(window){
             $this.closest("li").addClass("active").parents("li").addClass("active-parent on");
 
             // iframe height issue in pages
-            if ($.browser) {
+            if ( $.browser ) {
                 // Firefox bug issue temp fix
                 var iHeight;
                 setTimeout(function(){
@@ -446,13 +439,13 @@ var melisCore = (function(window){
                     $("#"+activeTabId+" .melis-iframe").height(iHeight);
                 }, 1);
             }
-            else{
+            else {
                 var iHeight = $("#"+activeTabId+" .melis-iframe").contents().find("html").height();
                 $("#"+activeTabId+" .melis-iframe").height( iHeight+20 );
             }
 
             // if in mobile hide 'PAGES' menu when clicking / opening a page
-            if(screenSize <= 767){ //if(screenSize <= 768)
+            if ( screenSize <= 767 ) { //if(screenSize <= 768)
                 $("#res-page-cont").trigger('click');
                 $("#res-page-cont i").removeClass("move-arrow");
 
