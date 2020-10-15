@@ -298,7 +298,9 @@ var melisCore = (function(window){
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
     function openDashboard() {
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"});
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"}, function() {
+            melisDashBoardDragnDrop.checkDashboard();
+        });
     }
 
     // REFRESH DASHBOARD ITEMS - refreshes the dashboard widgets
@@ -798,6 +800,8 @@ var melisCore = (function(window){
             melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
             pluginBoxWidth 		= $pluginBox.outerWidth();
 
+            console.log("$gs: ", $gs);
+
             // shown class toggled
             $pluginBox.toggleClass("shown");
 
@@ -976,7 +980,7 @@ var melisCore = (function(window){
                 $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
             }
 
-            if( screenSize <= 767 ){
+            if ( screenSize <= 767 ) {
                 tabDraggable("#melis-id-nav-bar-tabs", true);
                 $tabMenu.addClass("no-gutters");
             } else {
@@ -985,7 +989,7 @@ var melisCore = (function(window){
             }
 
             //check tabExpander() when window is resized
-            if( screenSize >= 768 ){
+            if ( screenSize >= 768 ) {
 
                 // put plugins back to its original container
                 $("#newplugin-cont ul.ul-cont > li").each(function(key, value){

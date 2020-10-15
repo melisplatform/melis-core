@@ -411,6 +411,13 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             }
+
+            // set data min width and max width, from setAdjustGridMeasurements() function
+            $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
+            $gs.attr("data-max-width", $gs.outerWidth());
+
+            // display .grid-stack width in pixels on document load
+            $gs.css("width", $gs.outerWidth());
     },
     // disables the plugin sidebar
     disablePlugSidebar: function() {
@@ -463,92 +470,102 @@ var melisDashBoardDragnDrop = {
     resizeStopWidget: function() {
         var self = this;
 
-        // grid stack stop widget resize
-        this.$gs.on('gsresizestop', function (event, elem) {
-            var $elem       = $(elem),
-                $node       = $elem.data('_gridstack_node'),
-                $items      = $node._grid.container[0].children,
-                elemWidth   = $elem.attr('data-gs-width'),
-                widthLimit  = 3;
+            // grid stack stop widget resize
+            self.$gs.on('gsresizestop', function (event, elem) {
+                var $elem           = $(elem),
+                    node            = $elem.data('_gridstack_node'),
+                    $items          = node._grid.container[0].children,
+                    elemWidth       = $elem.attr('data-gs-width'),
+                    classArray      = node.el[0].classList.value.split(/\s+/),
+                    currentClass    = '',
+                    widthLimit      = 3,
+                    // latest comments
+                    $cFilters       = $elem.find(".melis-cms-comments-dashboard-latest-comments .mccom-filters-tab .row .mccom-filter"),
+                    $sCont          = $cFilters.find(".form-group .select2-container"),
+                    $profileImg     = $elem.find(".melis-cms-comments-dashboard-latest-comments .column-comment-profile-img");
+                    
+                    // check if the resized dashboard plugin is melis-cms-comments-latest or prospects-statistics
+                    if ( $.inArray("melis-cms-comments-latest", classArray) !== -1 ) {
+                        currentClass = '.melis-cms-comments-latest';
+                    }
+                    else if ( $.inArray("prospects-statistics", classArray) !== -1 ) {
+                        currentClass = '.prospects-statistics';
+                    }
 
-                // grid-stack-item limits its smallest width to data-gs-width 3
-                if (elemWidth <= widthLimit) {
-                    $node.width = parseInt(widthLimit);
-                    $elem.attr('data-gs-width', widthLimit);
-                } else {
-                    $node.width = parseInt(elemWidth);
-                }
+                    if ( currentClass != '' && elemWidth <= widthLimit ) {
+                        node.width = widthLimit;
+                        $elem.attr("data-gs-width", node.width);
+                    }
 
-            // specific for Melis Cms Comments / Latest comments
-            var $cFilters = $elem.find(".melis-cms-comments-dashboard-latest-comments .mccom-filters-tab .row .mccom-filter"),
-                $sCont = $cFilters.find(".form-group .select2-container");
+                    // specific for Melis Cms Comments / Latest comments
+                    if ( $cFilters.length > 0 ) {
+                        // check if it belows data-gs-width 5 and it will be in full width
+                        if ( elemWidth < 5 ) { 
+                            $cFilters.css("width", "100%");
+                            $sCont.css("width", "100%");
+                        }
+                        else {
+                            $cFilters.removeAttr("style");
+                            $sCont.removeAttr("style");
+                        }
+                    }
 
-                if ($cFilters.length > 0) {
-                    if (elemWidth < 5) { // check if it belows data-gs-width 5 and it will be in full width
-                        $cFilters.css("width", "100%");
-                        $sCont.css("width", "100%");
+                    // check if it belows data-gs-width 3 for $profileImg
+                    if ( elemWidth <= 3 ) {
+                        $profileImg.css({
+                            'flex' : '0 0 12.3333333333%',
+                            'max-width' : '12.3333333333%'
+                        });
                     }
                     else {
-                        $cFilters.removeAttr("style");
-                        $sCont.removeAttr("style");
+                        $profileImg.css({
+                            'flex' : '0 0 8.3333333333%',
+                            'max-width' : '8.3333333333%'
+                        });
                     }
-                }
 
-            var $profileImg = $elem.find(".melis-cms-comments-dashboard-latest-comments .column-comment-profile-img");
-
-                if ( elemWidth <= 3 ) {
-                    $profileImg.css({
-                        'flex' : '0 0 12.3333333333%',
-                        'max-width' : '12.3333333333%'
-                    });
-                }
-                else {
-                    $profileImg.css({
-                        'flex' : '0 0 8.3333333333%',
-                        'max-width' : '8.3333333333%'
-                    });
-                }
-
-                // update size of widgets passes array of .grid-stack-items
-                self.serializeWidgetMap($items);
-        });
+                    // update size of widgets passes array of .grid-stack-items
+                    self.serializeWidgetMap($items);
+            });
     },
     // check for data-gs-width responsive below 5, Melis Cms Comments / Latest Comments
     latestCommentsPluginUIRes: function() {
         var $com = $('#' + activeTabId + ' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments");
 
-        $.each($com, function (i, v) {
-            var $this       = $(this),
-                gsWidth     = $this.closest(".grid-stack-item").data("gs-width"),
-                $filter     = $this.find(".mccom-filters-tab .row .mccom-filter"),
-                $select     = $filter.find(".form-group .select2-container"),
-                $profileImg = $this.find(".column-comment-profile-img");
+            $.each($com, function (i, v) {
+                var $this       = $(this),
+                    gsWidth     = $this.closest(".grid-stack-item").data("gs-width"),
+                    $filter     = $this.find(".mccom-filters-tab .row .mccom-filter"),
+                    $select     = $filter.find(".form-group .select2-container"),
+                    $profileImg = $this.find(".column-comment-profile-img");
 
-                if (gsWidth < 5) {
-                    $filter.removeAttr("width");
-                    $filter.attr("style", "width: 100%");
+                    if ( gsWidth < 5 ) {
+                        $filter.removeAttr("width");
+                        $filter.attr("style", "width: 100%");
+                        $filter.attr("style", "max-width: 100%");
 
-                    $select.removeAttr("width");
-                    $select.attr("style", "width: 100%");
-                }
-                else {
-                    $filter.removeAttr("style");
-                    $select.removeAttr("style");
-                }
+                        $select.removeAttr("width");
+                        $select.attr("style", "width: 100%");
+                        $select.attr("style", "max-width: 100%");
+                    }
+                    else {
+                        $filter.removeAttr("style");
+                        $select.removeAttr("style");
+                    }
 
-                if ( gsWidth <= 3 ) {
-                    $profileImg.css({
-                        'flex' : '0 0 12.3333333333%',
-                        'max-width' : '12.3333333333%'
-                    });
-                }
-                else {
-                    $profileImg.css({
-                        'flex' : '0 0 8.3333333333%',
-                        'max-width' : '8.3333333333%'
-                    });
-                }
-        });
+                    if ( gsWidth <= 3 ) {
+                        $profileImg.css({
+                            'flex' : '0 0 12.3333333333%',
+                            'max-width' : '12.3333333333%'
+                        });
+                    }
+                    else {
+                        $profileImg.css({
+                            'flex' : '0 0 8.3333333333%',
+                            'max-width' : '8.3333333333%'
+                        });
+                    }
+            });
     },
     // delete single widget/plugin in the dashboard
     deleteWidget: function(el) {
@@ -814,13 +831,6 @@ var melisDashBoardDragnDrop = {
 
         // init
         melisDashBoardDragnDrop.init();
-
-        // set data min width and max width, from setAdjustGridMeasurements() function
-        $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
-        $gs.attr("data-max-width", $gs.outerWidth());
-
-        // display .grid-stack width in pixels on document load
-        $gs.css("width", $gs.outerWidth());
 
         // check if any .grid-stack-item is found, hide $dbMsg
         if ( gsi > 0 ) {
