@@ -511,7 +511,7 @@ var melisCore = (function(window){
         });
 
         // detect if mobile / tablet
-        if( screenSize <= 767 ) {
+        if ( screenSize <= 767 ) {
             $("#newplugin-cont").toggleClass("show-menu");
         }
 
@@ -799,8 +799,6 @@ var melisCore = (function(window){
             $melisLeftMenu  	= $("#id_meliscore_leftmenu"),
             melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
             pluginBoxWidth 		= $pluginBox.outerWidth();
-
-            console.log("$gs: ", $gs);
 
             // shown class toggled
             $pluginBox.toggleClass("shown");
