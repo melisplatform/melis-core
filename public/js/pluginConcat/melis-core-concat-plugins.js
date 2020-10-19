@@ -4565,7 +4565,7 @@ var Holder = Holder || {};
                 '</div>' +
                 '<div class="calendar-table"></div>' +
                 '</div>' +
-                '<div class="ranges">' +
+                '<div class="ranges clearfix">' +
                 '<div class="range_inputs">' +
                 '<button class="cancelBtn" type="button" style="float:left;width:45%;"></button>' +
                 '<button class="applyBtn" disabled="disabled" type="button" style="float:right;width:45%;"></button> ' +
