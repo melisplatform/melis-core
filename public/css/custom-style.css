@@ -1297,6 +1297,9 @@ a[data-toggle="modal"]:focus {
   width: 100%;
 }
 @media (max-width: 767px) {
+	#melisDashBoardPluginBtn {
+		display: none;
+	}
   /* mobile nav-right click open second ul */
   #newplugin-cont ul > li > ul {
     position: relative;
