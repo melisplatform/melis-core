@@ -401,7 +401,7 @@ var melisHelper = (function(){
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback) {
         //Show the close(X) button on header
-        if ( melisKey !== 'meliscore_dashboard' ) {
+        if ( melisKey !== 'meliscore_dashboard' || zoneId !== 'id_meliscore_toolstree_section_dashboard' ) {
             $("#close-all-tab").show();
             $("#close-all-tab").closest("li").show();
         }
