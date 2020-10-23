@@ -17,8 +17,12 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
             url: 'melis/dashboard-plugin/MelisCoreDashboardBubbleNewsMelisPlugin/getNews',
         }).done(function (response) {
             if (response.count > 0) {
-                var button = '<button id="dashboard-bubble-news-back-btn" class="btn btn-inverse">View Melis News</button>';
-                $('#dashboard-bubble-news-back-btn-container').append(button);
+                var button = '<button id="dashboard-bubble-news-back-btn" class="btn btn-inverse">' + translations.tr_meliscore_dashboard_bubble_plugins_view_melis_news + '</button>';
+                if ($('#dashboard-bubble-news-back-btn-container').text().length == 0) {
+                    $('#dashboard-bubble-news-back-btn-container').append(button);
+                } else {
+                    $('#dashboard-bubble-news-back-btn-container').empty();
+                }
             }
 
             $('#melis-news-bubble-plugin-counter').text(response.count);
@@ -35,7 +39,7 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                     '<img src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="" width="50" height="115" style="float: left;width: 25%;cursor: pointer;">\n' +
                     '<div style="float: right;">\n' +
                     '<div class="float-right label label-default">' + value.newsDateFormated + '</div><br>\n' +
-                    '<button class="btn btn-info btn-xs dashboard-bubble-news-plugin-show-news" style="margin-top: 60px;margin-left: 8px">Read</button>\n' +
+                    '<button class="btn btn-info btn-xs dashboard-bubble-news-plugin-show-news" style="margin-top: 60px;margin-left: 8px">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</button>\n' +
                     '</div>\n' +
                     '<div style="float: left;width: 50%;padding-left: 10px;">\n' +
                     '<a href="#" class="text-info dashboard-bubble-news-plugin-show-news" style="word-break: break-all;">' + value.cnews_title + '</a>\n' +

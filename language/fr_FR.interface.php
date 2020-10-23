@@ -785,5 +785,21 @@ return [
     'tr_melis_core_composer_scrpts_executed' => 'Scripts de composer éxécutés',
     'tr_meliscore_logs_tool_modal_container' => 'Modal container',
     'tr_meliscore_logs_tool_log_type_form' => 'Formulaire',
-    'tr_meliscore_logs_tool_export_modal_content' => 'Modal contenu de l\'export'
+    'tr_meliscore_logs_tool_export_modal_content' => 'Modal contenu de l\'export',
+
+    // bubble plugins
+    'tr_meliscore_dashboard_bubble_plugins_hide' => 'Cacher',
+    'tr_meliscore_dashboard_bubble_plugins_show' => 'Afficher',
+    'tr_meliscore_dashboard_bubble_plugins_read' => 'Lire',
+    'tr_meliscore_dashboard_bubble_plugins_melis_news' => 'Actus Melis',
+    'tr_meliscore_dashboard_bubble_plugins_view_melis_news' => 'Voir les actus Melis',
+    'tr_meliscore_dashboard_bubble_plugins_updates' => 'Mises à jour',
+    'tr_meliscore_dashboard_bubble_plugins_view_updates' => 'Voir les MAJ',
+    'tr_meliscore_dashboard_bubble_plugins_updates_module' => 'Module',
+    'tr_meliscore_dashboard_bubble_plugins_updates_current_version' => 'Version actuelle',
+    'tr_meliscore_dashboard_bubble_plugins_updates_newest_version' => 'Dernière version',
+    'tr_meliscore_dashboard_bubble_plugins_notifications' => 'Notifications',
+    'tr_meliscore_dashboard_bubble_plugins_view_notifications' => 'Voir les notifications',
+    'tr_meliscore_dashboard_bubble_plugins_messages' => 'Messages',
+    'tr_meliscore_dashboard_bubble_plugins_view_messages' => 'Voir les messages',
 ];

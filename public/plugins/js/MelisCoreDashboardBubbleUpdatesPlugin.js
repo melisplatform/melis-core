@@ -8,7 +8,7 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
             url: 'melis/dashboard-plugin/MelisCoreDashboardBubbleUpdatesPlugin/getUpdates',
         }).done(function (response) {
             if (response.count > 0) {
-                var button = '<button id="dashboard-bubble-updates-back-btn" class="btn btn-default">View Updates</button>';
+                var button = '<button id="dashboard-bubble-updates-back-btn" class="btn btn-default">' + translations.tr_meliscore_dashboard_bubble_plugins_view_updates + '</button>';
                 $('#dashboard-bubble-updates-back-btn-container').append(button);
             }
 

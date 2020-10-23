@@ -11,7 +11,7 @@ var MelisCoreDashboardBubbleChatPlugin = {
             url: 'melis/dashboard-plugin/MelisCoreDashboardBubbleChatPlugin/getMessages',
         }).done(function (response) {
             if (response.count > 0) {
-                var button = '<button id="dashboard-bubble-chat-back-btn" class="btn btn-info">View Messages</button>';
+                var button = '<button id="dashboard-bubble-chat-back-btn" class="btn btn-info">' + translations.tr_meliscore_dashboard_bubble_plugins_view_messages + '</button>';
                 if ($('#dashboard-bubble-chat-back-btn-container').text().length == 0) {
                     $('#dashboard-bubble-chat-back-btn-container').append(button);
                 }
@@ -29,7 +29,7 @@ var MelisCoreDashboardBubbleChatPlugin = {
                     '<div class="float-right label label-default">2 days</div>\n' +
                     '<a href="#" class="text-info">' + value.usr_firstname + ' ' + value.usr_lastname + ' </a><em>wrote: </em>\n' +
                     '<p>' + value.msgr_msg_cont_message + '</p>\n' +
-                    '<button class="btn btn-info btn-xs dashboard-bubble-chat-read-more" data-senderid="' + value.msgr_msg_cont_sender_id + '">Read Message</button>\n' +
+                    '<button class="btn btn-info btn-xs dashboard-bubble-chat-read-more" data-senderid="' + value.msgr_msg_cont_sender_id + '">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</button>\n' +
                     '</div>\n' +
                     '</div>';
 
