@@ -60,8 +60,8 @@ var melisDashBoardDragnDrop = {
         this.$dashPluginBtn     = this.$dashPsBox.find(".melis-core-dashboard-filter-btn");
         this.$dashSnipsBox      = this.$dashPsBox.find(".melis-core-dashboard-plugin-snippets-box");
 
-        // strings
-        this.gsOptHandle        = ".grid-stack-item-content .widget-head:first"; // draggable handle selector
+        // draggable handle selector
+        this.gsOptHandle        = ".grid-stack-item-content .widget-head:first";
     },
     // set .grid-stack options
     gsSetOptions: function() {
@@ -151,59 +151,59 @@ var melisDashBoardDragnDrop = {
     },
     // drops a widget/plugin from dashboard's plugin sidebar
     dropWidget: function(widget) {
-        var self            = this,
-            $gridstack      = $("#" + activeTabId + " .tab-pane .grid-stack"),
-            gridstackData   = $gridstack.data("gridstack");
+        var self            = this;
+            /* $gridstack      = $("#" + activeTabId + " .tab-pane .grid-stack"),
+            gridstackData   = $gridstack.data("gridstack"); */
 
-        //var gridDrop = $(gridstack.container[0]).droppable({
-        //var gridDrop = gridstack.container.droppable({
-        $gridstack.droppable({
-            accept: widget,
-            tolerance: 'pointer',
-            drop: function (event, ui) {
+            //var gridDrop = $(gridstack.container[0]).droppable({
+            //var gridDrop = gridstack.container.droppable({
+            self.$gs.droppable({
+                accept: widget,
+                tolerance: 'pointer',
+                drop: function (event, ui) {
 
-                var dataString = new Array;
-                // create dashboard array
-                dataString.push({
-                    name: 'dashboard_id',
-                    value: activeTabId
-                });
-
-                // get plugin menu data
-                var pluginMenu = $(ui.helper[0]).find(".plugin-json-config").text();
-
-                // check plugin menu
-                if (pluginMenu) {
-
-                    // parse to JSON
-                    var pluginConfig = JSON.parse(pluginMenu);
-                    $.each(pluginConfig, function (index, value) {
-                        // push to dashboard array
-                        if ($.isArray(value) || typeof value == "object") {
-                            $.each(value, function (i, v) {
-                                if (i == "width" && v == "") {
-                                    v = 6;
-                                }
-                                if (i == "height" && v == "") {
-                                    v = 6;
-                                }
-                            });
-                            dataString.push({
-                                name: index,
-                                value: JSON.stringify(value)
-                            });
-                        } else {
-                            dataString.push({
-                                name: key,
-                                value: value
-                            });
-                        }
+                    var dataString = new Array;
+                    // create dashboard array
+                    dataString.push({
+                        name: 'dashboard_id',
+                        value: activeTabId
                     });
+
+                    // get plugin menu data
+                    var pluginMenu = $(ui.helper[0]).find(".plugin-json-config").text();
+
+                    // check plugin menu
+                    if (pluginMenu) {
+
+                        // parse to JSON
+                        var pluginConfig = JSON.parse(pluginMenu);
+                        $.each(pluginConfig, function (index, value) {
+                            // push to dashboard array
+                            if ($.isArray(value) || typeof value == "object") {
+                                $.each(value, function (i, v) {
+                                    if (i == "width" && v == "") {
+                                        v = 6;
+                                    }
+                                    if (i == "height" && v == "") {
+                                        v = 6;
+                                    }
+                                });
+                                dataString.push({
+                                    name: index,
+                                    value: JSON.stringify(value)
+                                });
+                            } else {
+                                dataString.push({
+                                    name: key,
+                                    value: value
+                                });
+                            }
+                        });
+                    }
+                    // addWidget passing dataString
+                    self.addWidget(dataString);
                 }
-                // addWidget passing dataString
-                self.addWidget(dataString);
-            }
-        });
+            });
     },
     // adding of plugins / disable droppable .gridstack while processing the plugin data
     addWidget: function(dataString) {
@@ -357,14 +357,14 @@ var melisDashBoardDragnDrop = {
             pluginBoxWidth      = $pluginBox.outerWidth(),
             $activeTab          = $("#"+activeTabId),
             $msg                = $activeTab.find(".melis-core-dashboard-msg"),
-            $gs                 = $activeTab.find(".grid-stack"),
-            gsItems             = $gs.find(".grid-stack-item").length,
+            $activeGS           = $activeTab.find(".grid-stack"),
+            activeGsItems       = $activeGS.find(".grid-stack-item").length,
             $tabArrowTop        = $("#tab-arrow-top"),
-            minWidth            = $gs.data("min-width"),
-            maxWidth            = $gs.data("max-width");
+            minWidth            = $activeGS.data("min-width"),
+            maxWidth            = $activeGS.data("max-width");
 
             // count .grid-stack-item if found
-            if ( gsItems > 0 ) {
+            if ( activeGsItems > 0 ) {
                 $pluginBox.removeClass("shown");
                 $msg.fadeOut();
             }
@@ -387,25 +387,25 @@ var melisDashBoardDragnDrop = {
             if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                 if ( $leftSidebarMenu.hasClass("shown") ) {
                     if ( $pluginBox.hasClass("shown") ) {
-                        $gs.animate({
+                        $activeGS.animate({
                             width: minWidth
                         }, 3);
                     } 
                     else {
-                        $gs.animate({
+                        $activeGS.animate({
                             width: maxWidth
                         }, 3);
                     }
                 }
                 else {
                     if ( $pluginBox.hasClass("shown") ) {
-                        $gs.animate({
+                        $activeGS.animate({
                             width: maxWidth + 50
                         }, 3);
                     }
                     // left sidebar menu and dashboard plugin menu not shown
                     else {
-                        $gs.animate({
+                        $activeGS.animate({
                             width: maxWidth + pluginBoxWidth + 50
                         }, 3);
                     }
@@ -413,11 +413,11 @@ var melisDashBoardDragnDrop = {
             }
 
             // set data min width and max width, from setAdjustGridMeasurements() function
-            $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
-            $gs.attr("data-max-width", $gs.outerWidth());
+            $activeGS.attr("data-min-width", $activeGS.outerWidth() - $pluginBox.outerWidth());
+            $activeGS.attr("data-max-width", $activeGS.outerWidth());
 
             // display .grid-stack width in pixels on document load
-            $gs.css("width", $gs.outerWidth());
+            $activeGS.css("width", $activeGS.outerWidth());
     },
     // disables the plugin sidebar
     disablePlugSidebar: function() {
