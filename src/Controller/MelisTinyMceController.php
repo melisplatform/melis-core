@@ -58,6 +58,15 @@ class MelisTinyMceController extends MelisAbstractActionController
                 $tinyMCEconfig['language'] = ($locale != 'en_EN') ? $locale : 'en';
 
                 if (!empty($options)) {
+
+                    // Parsing boolean values from posted string values
+                    $options = array_map(function($val){
+                        if (in_array($val, ["true", "false"]))
+                            return ($val == "true") ?? false;
+                        else
+                            return $val;
+                    }, $options);
+
                     // Merging Default TinyMCE configuration with Options from request
                     $tinyMCEconfig = array_merge($tinyMCEconfig, $options);
                 }
