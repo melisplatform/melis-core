@@ -19,6 +19,8 @@ use Laminas\View\Model\ViewModel;
  */
 class DashboardPluginsController extends MelisAbstractActionController
 {
+    public function renderDashboardPluginsHeaderAction() {}
+    public function renderDashboardBubblePluginsAction() {}
     /**
      * Render Dashboard Menu
      * 

@@ -518,6 +518,34 @@ return array(
                                 'icon' => 'fa-tachometer',
                                 'dashboard' => true
                             ),
+                            'interface' => [
+                                'meliscore_dashboard_header' => [
+                                    'conf' => [
+                                        'id' => 'id_meliscore_center_dashboard_header',
+                                        'melisKey' => 'meliscore_center_dashboard_header',
+                                        'name' => 'tr_meliscore_dashboard',
+                                        'rightsDisplay' => 'none'
+                                    ],
+                                    'forward' => [
+                                        'module' => 'MelisCore',
+                                        'controller' => 'DashboardPlugins',
+                                        'action' => 'render-dashboard-plugins-header',
+                                    ]
+                                ],
+                                'meliscore_dashboard_bubble_plugins' => [
+                                    'conf' => [
+                                        'id' => 'id_meliscore_dashboard_bubble_plugins',
+                                        'melisKey' => 'meliscore_dashboard_bubble_plugins',
+                                        'name' => 'tr_meliscore_dashboard',
+                                        'rightsDisplay' => 'none'
+                                    ],
+                                    'forward' => [
+                                        'module' => 'MelisCore',
+                                        'controller' => 'DashboardPlugins',
+                                        'action' => 'render-dashboard-bubble-plugins',
+                                    ]
+                                ],
+                            ]
                         ),
                     )
                 ),

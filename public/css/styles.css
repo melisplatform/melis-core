@@ -4472,3 +4472,15 @@ input#log_date_range{
 .select2-container.select2-container--default.select2-container--open {
     z-index: 1050;
 }
+
+.melis-dashboard-bubble-plugin {
+    z-index: 0 !important;
+}
+
+.dashboard-bubble-update-details {
+    cursor: pointer;
+}
+
+.dashboard-bubble-update-details:hover {
+    background: #fafafa;
+}
