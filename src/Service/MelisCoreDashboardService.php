@@ -51,7 +51,12 @@ class MelisCoreDashboardService extends MelisServiceManager
             $pluginLists = $configs['plugins']['meliscore']['interface']['melis_dashboardplugin']['interface']['melisdashboardplugin_section']['interface'];
         }
 
-        $showBubblePlugins = filter_var($_COOKIE['show_bubble_plugins'], FILTER_VALIDATE_BOOLEAN) ?? null;
+	    if (!empty($_COOKIE['show_bubble_plugins'])) {
+            $showBubblePlugins = filter_var($_COOKIE['show_bubble_plugins'], FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $showBubblePlugins = false;
+        }
+
         if ($showBubblePlugins) {
             foreach ($pluginLists as $plugin) {
                 if (!empty($plugin['datas']['is_bubble_plugin'])) {
