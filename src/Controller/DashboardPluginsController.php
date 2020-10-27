@@ -155,7 +155,7 @@ class DashboardPluginsController extends MelisAbstractActionController
     {
         // return plugin view
         $request = $this->getRequest();
-        $pluginConfigPost = get_object_vars($request->getPost());
+        $pluginConfigPost = $request->getPost()->toArray();
 
         /**
          * decode the string
