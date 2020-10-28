@@ -171,7 +171,7 @@
 		// TODO: see qunit.js extractStacktrace()
 		if (!cond) {
 			msg = msg ? ": " + msg : "";
-			// consoleApply("assert", [!!cond, msg]);
+			consoleApply("assert", [!!cond, msg]);
 			$.error("Fancytree assertion failed" + msg);
 		}
 	}
@@ -182,19 +182,20 @@
 		var i,
 			s,
 			fn = window.console ? window.console[method] : null;
-
-		if (fn) {
-			try {
-				fn.apply(window.console, args);
-			} catch (e) {
-				// IE 8?
-				s = "";
-				for (i = 0; i < args.length; i++) {
-					s += args[i];
+			if ( $.ui.fancytree.debugLevel == 1 ) {
+				if (fn) {
+					try {
+						fn.apply(window.console, args);
+					} catch (e) {
+						// IE 8?
+						s = "";
+						for (i = 0; i < args.length; i++) {
+							s += args[i];
+						}
+						fn(s);
+					}
 				}
-				fn(s);
 			}
-		}
 	}
 
 	/* support: IE8 Polyfil for Date.now() */
