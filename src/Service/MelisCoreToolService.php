@@ -706,12 +706,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
         $striptags = (int) $csvConfig['striptags'] == 1 ? true : false;
         $response = '';
+
         // check what file name to use when exporting
-        if ($this->_appConfig['export'] && $this->_appConfig['export']['csvFileName']) {
+        if (!empty($this->_appConfig['export']) && !empty($this->_appConfig['export']['csvFileName'])) {
             $csvFileName = $this->_appConfig['export']['csvFileName'];
         } else {
             $csvFileName = $csvConfig['defaultFileName'];
-
         }
 
         if ($data) {
