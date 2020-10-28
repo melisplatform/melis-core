@@ -165,7 +165,7 @@ class UserProfileController extends MelisAbstractActionController
         if($this->getRequest()->isPost())
         {
             //process the data from form
-            $postValues = get_object_vars($this->getRequest()->getPost());
+            $postValues = $this->getRequest()->getPost()->toArray();
             $postValues = $melisTool->sanitizePost($postValues);
             $postValues = $this->getRequest()->getPost();
             

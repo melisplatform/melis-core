@@ -297,7 +297,7 @@ class PlatformsController extends MelisAbstractActionController
 
         if($request->isPost()) {
             
-            $postValues = get_object_vars($this->getRequest()->getPost());
+            $postValues = $this->getRequest()->getPost()->toArray();
 
             $textMessage = 'tr_meliscore_tool_platform_prompts_new_failed';
             $logCode = 'CORE_PLATFORM_ADD';
