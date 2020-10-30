@@ -1080,6 +1080,18 @@ body #newplugin-cont.show-menu{
     margin: -13px 0 0 -13px;
     z-index: 9999;
 }
+.page-overlay-loader .loader-icon {
+    width: 300px;
+    height: 300px;
+    top: 30%;
+    left: 44%;
+}
+.page-overlay-loader .page-overlay-loader-text {
+    color: #fff;
+    position: absolute;
+    top: 57%;
+    left: 48.7%;
+}
 .overlay-loader .loader-icon.spinning-cog {
     -webkit-animation: spinning-cog 1.3s infinite ease;
     -moz-animation: spinning-cog 1.3s infinite ease;

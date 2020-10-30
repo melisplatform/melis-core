@@ -1,9 +1,12 @@
 var loader = (function(window) {
     // overlay loader .svg icon with spinning effect
-    var $body           = $("body"),
-        overlayLoader   = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>',
+    var $body               = $("body"),
+        // overlay-loader for common loading
+        overlayLoader       = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>',
+        // page-overlay-loader for melis cms page edition loading
+        pageOverlayLoader   = '<div id="loader" class="page-overlay-loader overlay-loader"><img class="loader-icon" src="/MelisCore/assets/images/page-loader.gif" data-page-loader="page-loader"><div class="page-overlay-loader-text">Preparing the page</div></div>',
         // window selector
-        $window         = $(window);
+        $window             = $(window);
 
         // initial function
         function init() {
@@ -56,7 +59,7 @@ var loader = (function(window) {
                                 $iframeChildren = $this.contents().find("body").children();
 
                                 if ( $iframeChildren.length === 0 && $loader.length === 0 ) {
-                                    $melisTabEdition.prepend( overlayLoader );
+                                    $melisTabEdition.prepend( pageOverlayLoader );
                                     melisCoreTool.addOverflowHidden();
                                 }
                         });
@@ -106,7 +109,7 @@ var loader = (function(window) {
                 // check if loader is already present
                 if ( $loader.length === 0 ) {
                     // loader
-                    $melisTabEdition.prepend( overlayLoader );
+                    $melisTabEdition.prepend( pageOverlayLoader );
                     melisCoreTool.addOverflowHidden();
                 }
 
