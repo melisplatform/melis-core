@@ -44,7 +44,7 @@ return array(
                     ),
                     'auth_cookies' => array(
                         'remember' => '+1 day',
-                        'expire' => '-1 day',
+                        'expire' => '1 day',
                     ),
                     'auto_logout' => array(
                         'after' => 86400, // 1 day
