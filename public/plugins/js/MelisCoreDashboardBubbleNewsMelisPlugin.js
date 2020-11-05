@@ -26,34 +26,48 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
             $('#melis-news-bubble-plugin-counter').text(response.count);
 
             $.each(response.data, function (key, value) {
-                var description = value.cnews_paragraph1.replace(/<([^ >]+)[^>]*>.*?<\/\1>|<[^\/]+\/>/ig, "");
-                var newsPageId = '91';
-                var domain = 'https://www.melistechnology.com';
-                var link = domain + '/news/id/' + newsPageId + '?newsId=' + value.cnews_id;
-                var img = domain + value.cnews_image1;
+                var description = value.cnews_paragraph1.replace(/<([^ >]+)[^>]*>.*?<\/\1>|<[^\/]+\/>/ig, ""),
+                    newsPageId  = '91',
+                    domain      = 'https://www.melistechnology.com',
+                    link        = domain + '/news/id/' + newsPageId + '?newsId=' + value.cnews_id,
+                    img         = domain + value.cnews_image1,
+                    title       = value.cnews_title,
+                    $newsLists  = $('#melis-news-bubble-plugin-news-list');
 
-                var news =  '<div class="media innerAll" style="padding: 15px;">\n' +
-                                '<div class="media-body" data-link="' + link + '">\n' +
-                                    '<div class="row">\n' +
-                                        '<div class="col-md-6" style="padding: 0;">\n' +
-                                            '<img class="img-fluid" src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="Placeholder image" />\n' +
-                                        '</div>\n' +
-                                        '<div class="col-md-6">\n' +
-                                            '<div class="row">\n' +
-                                                '<div class="col-md-12">\n' +
-                                                    '<div class="float-right label label-default">' + value.newsDateFormated + '</div>\n' +
-                                                '</div>\n' +
-                                            '</div>\n' +
-                                            '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news" style="word-break: break-all;">' + value.cnews_title + '</a>\n' +
-                                            '<p style="word-break: break-all;font-size: 11px;">' + description.substring(0, 40) + '...</p>\n' +
-                                            '<a href="#" class="btn btn-info btn-bubble-read-more btn-xs float-right dashboard-bubble-news-plugin-show-news">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</a>\n' +
-                                        '</div>\n' +
-                                    '</div>\n' +
-                                '</div>\n' +
-                            '</div>';
+                    // value.cnews_title.substring(0, 20)
+                var newsWithImage = '<div class="media innerAll">' +
+                                        '<div class="media-body" data-link="' + link + '">' +
+                                            '<div class="row">' +
+                                                '<div class="col-md-6">' +
+                                                    '<img class="img-fluid dashboard-bubble-news-img" src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="Placeholder image" />' +
+                                                '</div>' +
+                                                '<div class="col-md-6">' +
+                                                    '<div class="label label-default">' + value.newsDateFormated + '</div>' +
+                                                    '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news" title="' + value.cnews_title + '">' + ( ( title.length > 19 ) ? title.substring(0, 19) + '...' : title ) + '</a>' +
+                                                    '<p>' + description.substring(0, 40) + '...</p>' +
+                                                    '<a href="#" class="btn btn-info btn-bubble-read-more btn-xs float-right dashboard-bubble-news-plugin-show-news">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</a>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</div>';
 
-                $('#melis-news-bubble-plugin-news-list').append(news);
+                var newsNoImage =  '<div class="media innerAll newsNoImage">' +
+                                        '<div class="media-body" data-link="' + link + '">' +
+                                            '<div class="float-right label label-default">' + value.newsDateFormated + '</div>' +
+                                            '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news">' + ( ( title.length > 19 ) ? title.substring(0, 19) + '...' : title ) + '</a>' +
+                                            '<p>' + description.substring(0, 152) + '...</p>' +
+                                            '<a href="#" class="btn btn-info btn-bubble-read-more btn-xs float-right dashboard-bubble-news-plugin-show-news">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</a>' +
+                                        '</div>' +
+                                    '</div>';
+                if ( value.cnews_image1 !== '' ) {
+                    $newsLists.append( newsWithImage );
+                }
+                else {
+                    $newsLists.append( newsNoImage );
+                }
             });
+        }).fail(function(xhr, textStatus, errorThrown) {
+            alert( translations.tr_meliscore_error_message );
         });
     },
     showBackButton: function () {

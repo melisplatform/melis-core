@@ -1050,6 +1050,44 @@ a[data-toggle="modal"]:focus {
 .overflowHidden {
 	overflow-x: hidden;
 }
+/* dashboard news bubble */
+.melis-dashboard-bubble-plugin .back .widget .widget-head .btn-default {
+	padding: 1px 5px;
+	font-size: 12px;
+}
+#melis-news-bubble-plugin-news-list {
+	height: 165px;
+	overflow: hidden;
+	outline: none;
+}
+.melis-dashboard-bubble-plugin .media.innerAll {
+	padding: 15px;
+	height: 100%;
+}
+.melis-dashboard-bubble-plugin .media.innerAll .media-body .label-default {
+	background-color: #777;
+	color: #fff;
+	font-size: 75%;
+	padding: 0.15em 0.6em;
+}
+.melis-dashboard-bubble-plugin .media.innerAll .media-body .dashboard-bubble-news-img {
+	padding: 25px 0;
+}
+.melis-dashboard-bubble-plugin .media.innerAll .media-body p,
+.melis-dashboard-bubble-plugin .media.innerAll .media-body .heading-title {
+	word-break: break-all;
+}
+.melis-dashboard-bubble-plugin .media.innerAll .media-body .heading-title {
+	display: block;
+	padding: 6px 0 0;
+}
+.melis-dashboard-bubble-plugin .media.innerAll.newsNoImage .media-body .heading-title {
+	padding: 0;
+}
+.melis-dashboard-bubble-plugin .media.innerAll .media-body p {
+	/* font-size: 11px; */
+	margin-bottom: 12px;
+}
 /* Responsive media queries */
 @media (min-width: 991px) {
 	/* gdpr buttons */
