@@ -34,7 +34,6 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                     title       = value.cnews_title,
                     $newsLists  = $('#melis-news-bubble-plugin-news-list');
 
-                    // value.cnews_title.substring(0, 20)
                 var newsWithImage = '<div class="media innerAll">' +
                                         '<div class="media-body" data-link="' + link + '">' +
                                             '<div class="row">' +
@@ -43,7 +42,7 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                                                 '</div>' +
                                                 '<div class="col-md-6">' +
                                                     '<div class="label label-default">' + value.newsDateFormated + '</div>' +
-                                                    '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news" title="' + value.cnews_title + '">' + ( ( title.length > 19 ) ? title.substring(0, 19) + '...' : title ) + '</a>' +
+                                                    '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news" title="' + value.cnews_title + '">' + ( ( title.length > 18 ) ? title.substring(0, 18) + '...' : title ) + '</a>' +
                                                     '<p>' + description.substring(0, 40) + '...</p>' +
                                                     '<a href="#" class="btn btn-info btn-bubble-read-more btn-xs float-right dashboard-bubble-news-plugin-show-news">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</a>' +
                                                 '</div>' +
@@ -54,7 +53,7 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                 var newsNoImage =  '<div class="media innerAll newsNoImage">' +
                                         '<div class="media-body" data-link="' + link + '">' +
                                             '<div class="float-right label label-default">' + value.newsDateFormated + '</div>' +
-                                            '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news">' + ( ( title.length > 19 ) ? title.substring(0, 19) + '...' : title ) + '</a>' +
+                                            '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news">' + ( ( title.length > 18 ) ? title.substring(0, 18) + '...' : title ) + '</a>' +
                                             '<p>' + description.substring(0, 152) + '...</p>' +
                                             '<a href="#" class="btn btn-info btn-bubble-read-more btn-xs float-right dashboard-bubble-news-plugin-show-news">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</a>' +
                                         '</div>' +
