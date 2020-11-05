@@ -15,6 +15,7 @@ use Laminas\View\Model\ViewModel;
 
 class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplatingPlugin
 {
+    public const DASHBOARD_CONFIG = '/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section';
     public const NUM_OF_NEWS = 6;
 
     public function __construct()
@@ -38,26 +39,37 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
         $data = [];
         $countOfNews = 0;
 
+        // get url for api in config
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
+        $dashboardPlugins = $config->getItem(self::DASHBOARD_CONFIG);
+        $newsMelisConfig = $dashboardPlugins['interface']['MelisCoreDashboardBubbleNewsMelisPlugin'];
+        $url = $newsMelisConfig['datas']['url'];
+
+        // get news list
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'https://www.melistechnology.com/melis/api/hVrGO7mB9fhkTGfC/MelisCmsNews/service/MelisCmsNewsService/getNewsList');
-        curl_setopt($curl, CURLOPT_POSTFIELDS, [
-            'start' => 0
-        ]);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, ['start' => 0]);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
         $response = json_decode(curl_exec($curl), true)['response'];
         curl_close($curl);
 
         if (! empty($response)) {
             $countOfNews = count($response);
+            // we reverse the data to get the latest one
             $response = array_reverse($response);
-
             $count = count($response);
+            // we will only display a number of news and not all
             $data = array_splice($response, 0, self::NUM_OF_NEWS);
 
+            // add formated date to data
             foreach ($data as &$news) {
-                $news['newsDateFormated'] = date('d M Y', strtotime(($news['cnews_publish_date']) ? $news['cnews_publish_date'] : $news['cnews_creation_date']));
+                $news['newsDateFormated'] = date(
+                    'd M Y',
+                    strtotime(
+                        ($news['cnews_publish_date']) ? $news['cnews_publish_date'] : $news['cnews_creation_date']
+                    )
+                );
             }
         }
 

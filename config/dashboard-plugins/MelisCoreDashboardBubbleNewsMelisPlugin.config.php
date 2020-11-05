@@ -23,7 +23,8 @@ return array(
                                         'skip_plugin_container' => true,
                                         'dashboard_id' => '',
                                         'name' => 'bubblenewsmelisplugin',
-                                        'jscallback' => 'MelisCoreDashboardBubbleNewsMelisPlugin.init()'
+                                        'jscallback' => 'MelisCoreDashboardBubbleNewsMelisPlugin.init()',
+                                        'url' => 'https://www.melistechnology.com/melis/api/hVrGO7mB9fhkTGfC/MelisCmsNews/service/MelisCmsNewsService/getNewsList'
                                     ],
                                     'forward' => array(
                                         'module' => 'MelisCore',

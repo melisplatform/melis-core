@@ -9,6 +9,8 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                 cursorborderradius: "0",
                 cursorcolor: primaryColor
             });
+
+            $('body .melis-dashboard-bubble-news-melis-plugin .back .widget-scroll').find('.widget-body > div').show();
         });
     },
     getNews: function() {
@@ -29,20 +31,26 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                 var domain = 'https://www.melistechnology.com';
                 var link = domain + '/news/id/' + newsPageId + '?newsId=' + value.cnews_id;
                 var img = domain + value.cnews_image1;
-                var news = '<div class="media innerAll">\n' +
-                    '<i class="fa fa-chat fa-2x float-left disabled"></i>\n' +
-                    '<div class="media-body" data-link="' + link + '" style="margin: 0px;">\n' +
-                    '<img src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="" width="50" height="115" style="float: left;width: 25%;cursor: pointer;">\n' +
-                    '<div style="float: right;">\n' +
-                    '<div class="float-right label label-default">' + value.newsDateFormated + '</div><br>\n' +
-                    '<button class="btn btn-info btn-xs dashboard-bubble-news-plugin-show-news" style="margin-top: 60px;margin-left: 8px">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</button>\n' +
-                    '</div>\n' +
-                    '<div style="float: left;width: 50%;padding-left: 10px;">\n' +
-                    '<a href="#" class="text-info dashboard-bubble-news-plugin-show-news" style="word-break: break-all;">' + value.cnews_title + '</a>\n' +
-                    '<p style="word-break: break-all;font-size: 13px;margin-top: 10px;">' + description.substring(0, 40) + '...</p>\n' +
-                    '</div>\n' +
-                    '</div>\n' +
-                    '</div>';
+
+                var news =  '<div class="media innerAll" style="padding: 15px;">\n' +
+                                '<div class="media-body" data-link="' + link + '">\n' +
+                                    '<div class="row">\n' +
+                                        '<div class="col-md-6" style="padding: 0;">\n' +
+                                            '<img class="img-fluid" src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="Placeholder image" />\n' +
+                                        '</div>\n' +
+                                        '<div class="col-md-6">\n' +
+                                            '<div class="row">\n' +
+                                                '<div class="col-md-12">\n' +
+                                                    '<div class="float-right label label-default">' + value.newsDateFormated + '</div>\n' +
+                                                '</div>\n' +
+                                            '</div>\n' +
+                                            '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news" style="word-break: break-all;">' + value.cnews_title + '</a>\n' +
+                                            '<p style="word-break: break-all;font-size: 11px;">' + description.substring(0, 40) + '...</p>\n' +
+                                            '<a href="#" class="btn btn-info btn-bubble-read-more btn-xs float-right dashboard-bubble-news-plugin-show-news">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</a>\n' +
+                                        '</div>\n' +
+                                    '</div>\n' +
+                                '</div>\n' +
+                            '</div>';
 
                 $('#melis-news-bubble-plugin-news-list').append(news);
             });

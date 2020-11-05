@@ -16,6 +16,8 @@ use Laminas\Http\Client;
 
 class MelisCoreDashboardBubblePlugin extends MelisCoreDashboardTemplatingPlugin
 {
+    public const DASHBOARD_CONFIG = '/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section';
+
     public function __construct()
     {
         $this->pluginModule = 'meliscore';
@@ -34,15 +36,24 @@ class MelisCoreDashboardBubblePlugin extends MelisCoreDashboardTemplatingPlugin
         if ($showBubblePlugins) {
             // get the plugins listed in the config
             $config = $this->getServiceManager()->get('MelisCoreConfig');
-            $bubblePlugins = $config->getItem('/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section')['interface']['MelisCoreDashboardBubblePlugin']['datas']['plugins'];
+            $dashboardPlugins = $config->getItem(self::DASHBOARD_CONFIG);
+            $bubblePlugins = $dashboardPlugins['interface']['MelisCoreDashboardBubblePlugin']['datas']['plugins'];
+
             $pluginManager = $this->getServiceManager()->get('ControllerPluginManager');
             $viewRender = $this->getServiceManager()->get('ViewRenderer');
-            // render the plugins
 
+            // render the plugins
             foreach ($bubblePlugins as $pluginName) {
                 $plugin = $pluginManager->get($pluginName);
-                $pluginModel = $plugin->render();
+                $pluginModel = $plugin->render(
+                    ['datas' => [
+                        'skip_plugin_container' => true
+                    ]]
+                );
+
+                $html .= '<div class="col-md-3 col-sm-6">';
                 $html .= $viewRender->render($pluginModel);
+                $html .= '</div>';
             }
         }
 

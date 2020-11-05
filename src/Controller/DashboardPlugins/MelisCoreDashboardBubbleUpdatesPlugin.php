@@ -110,7 +110,7 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
                 'currentVersion' => $currentVersion,
             ];
 
-            if ((int) $status == 2) {
+            if ((int) $status == -1) {
                 $count++;
             }
         }

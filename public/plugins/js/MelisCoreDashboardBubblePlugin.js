@@ -33,7 +33,6 @@ var MelisCoreDashboardBubblePlugin = {
 
         // initialize scroll
         $('.melis-dashboard-bubble-plugin .back .widget-scroll').each(function() {
-            console.log($(this).attr('data-scroll-height'));
             $(this).find('.widget-body > div').height($(this).attr('data-scroll-height')).niceScroll({
                 cursorwidth: 3,
                 zindex: 2,
@@ -65,6 +64,10 @@ $(document).ready(function() {
 
     $body.on('click', '.melis-dashboard-bubble-plugin .front .btn', function () {
         $(this).closest('.panel-3d').addClass('panel-flip');
+
+        // fix bug where in the body will not be scrollable even if nice scroll was already initialized
+        console.log($(this).closest('.melis-dashboard-bubble-plugin').find('.back-container').length);
+        $(this).closest('.melis-dashboard-bubble-plugin').find('.back-container').getNiceScroll().onResize();
     });
 
     $body.on('click', '.melis-dashboard-bubble-plugin .back .btn', function () {

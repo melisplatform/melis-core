@@ -1,6 +1,15 @@
 var MelisCoreDashboardBubbleUpdatesPlugin = {
     init: function() {
         this.getUpdates();
+        this.waitForEl('#dashboard-bubble-updates-list div.media.innerAll', function () {
+            $('body .melis-dashboard-bubble-updates-plugin .back .widget-scroll').find('.widget-body > div').niceScroll({
+                cursorwidth: 3,
+                zindex: 2,
+                cursorborder: "none",
+                cursorborderradius: "0",
+                cursorcolor: primaryColor
+            });
+        });
     },
     getUpdates: function() {
         $.ajax({
@@ -15,7 +24,7 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
             $('#dashboard-bubble-updates-counter').text(response.count);
 
             $.each(response.data, function (key, value) {
-                if (value.status === 2) {
+                if (value.status === -1) {
                     var update = '<tr class="dashboard-bubble-update-details" data-packageid="' + value.packageId + '" data-packagename="' + value.module_name +'">\n' +
                         '<td class="center">' + value.module_name + '</td>\n' +
                         '<td class="center">' + value.currentVersion + '</td>\n' +
@@ -50,10 +59,6 @@ $(document).ready(function() {
     if (showBubblePlugins) {
         MelisCoreDashboardBubbleUpdatesPlugin.init();
     }
-
-    $('body .melis-dashboard-bubble-updates-plugin .back .widget-scroll').find('.widget-body > div').scroll(function(){
-        $('body .melis-dashboard-bubble-updates-plugin .back .widget-scroll').find('.widget-body > div').getNiceScroll().resize();
-    });
 
     $body.on('click', '.dashboard-bubble-update-details', function () {
         var packageId = $(this).data('packageid');

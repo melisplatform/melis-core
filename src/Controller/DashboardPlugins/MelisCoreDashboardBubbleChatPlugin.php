@@ -34,12 +34,15 @@ class MelisCoreDashboardBubbleChatPlugin extends MelisCoreDashboardTemplatingPlu
 
     public function getMessages()
     {
-        $msgService =  $this->getServiceManager()->get('MelisMessengerService');
-        $messages = $msgService->getNewMessage($this->getCurrentUserId());
         $convoCounter = 0;
         $tempUsers = [];
 
+        // get messages
+        $msgService =  $this->getServiceManager()->get('MelisMessengerService');
+        $messages = $msgService->getNewMessage($this->getCurrentUserId());
+
         foreach ($messages as $key => $val) {
+            // get conversation counter by unique users
             if (! in_array($val['msgr_msg_cont_sender_id'], $tempUsers)) {
                 $convoCounter++;
                 $tempUsers[] = $val['msgr_msg_cont_sender_id'];
@@ -52,6 +55,8 @@ class MelisCoreDashboardBubbleChatPlugin extends MelisCoreDashboardTemplatingPlu
         $tempUsers = [];
         $tempMessages = $messages;
         $messages = [];
+
+        // only get the latest message foreach unique user
         foreach ($tempMessages as $message) {
             if (! in_array($message['msgr_msg_cont_sender_id'], $tempUsers)) {
                 $messages[] = $message;
