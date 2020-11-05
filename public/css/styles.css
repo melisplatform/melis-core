@@ -4484,3 +4484,37 @@ input#log_date_range{
 .dashboard-bubble-update-details:hover {
     background: #fafafa;
 }
+
+.label {
+    display: inline;
+    padding: .2em 0.3em .3em;
+    font-size: 70%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+.btn-bubble-read-more {
+    background: none;
+    color: #466baf;
+    border-radius: 0;
+    border-color: #466baf;
+    padding: 5px 10px;
+}
+
+@media (min-width: 1199px) {
+    .spacing-x2 .widget, .spacing-x2 .filter-bar {
+        margin-bottom: 25px;
+    }
+    .spacing-x2.innerAll,
+    .spacing-x2 .innerAll,
+    .spacing-x2 .widget.widget-tabs-vertical .widget-body .tab-content,
+    .spacing-x2 .box-generic {
+        background-color: #fff;
+        padding: 25px;
+    }
+}
