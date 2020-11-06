@@ -380,7 +380,7 @@ class MelisAuthController extends MelisAbstractActionController
     {
         if (PHP_VERSION_ID < 70300) {
             // below php 7.3
-            setcookie('PHPSESSID', session_id(), 0, '/ ;samesite=strict');
+            // TODO
         } else {
             // set sesion cookie_samesite
             ini_set('session.cookie_samesite', 'Strict');
