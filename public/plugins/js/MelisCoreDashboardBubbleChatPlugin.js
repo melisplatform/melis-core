@@ -4,7 +4,8 @@ var MelisCoreDashboardBubbleChatPlugin = {
         this.getMessages();
     },
     getMessages: function() {
-        MelisCoreDashboardBubbleChatPluginInterval = setInterval(this.getMessages, 180000);
+        if (MelisCoreDashboardBubbleChatPluginInterval === '')
+            MelisCoreDashboardBubbleChatPluginInterval = setInterval(this.getMessages, 180000);
 
         $.ajax({
             type: 'POST',
@@ -12,16 +13,24 @@ var MelisCoreDashboardBubbleChatPlugin = {
         }).done(function (response) {
             if (response.count > 0) {
                 var button = '<button id="dashboard-bubble-chat-back-btn" class="btn btn-info">' + translations.tr_meliscore_dashboard_bubble_plugins_view_messages + '</button>';
-                if ($('#dashboard-bubble-chat-back-btn-container').text().length == 0) {
-                    $('#dashboard-bubble-chat-back-btn-container').append(button);
-                }
+                $('.dashboard-bubble-chat-back-btn-container').each(function(){
+                    $(this).empty();
+                    $(this).append(button);
+                });
             } else {
-                $('#dashboard-bubble-chat-back-btn-container').empty();
+                $('.dashboard-bubble-chat-back-btn-container').each(function(){
+                    $(this).empty();
+                });
             }
 
-            $('#dashboard-bubble-chat-plugin-counter').text(response.count);
+            $('.dashboard-bubble-chat-plugin-counter').each(function(){
+                $(this).text(response.count);
+            });
 
-            $('#dashboard-bubble-chat-plugin-list').empty();
+            $('.dashboard-bubble-chat-plugin-list').each(function(){
+                $(this).empty();
+            });
+
             $.each(response.data, function (key, value) {
                 var message = '<div class="media innerAll">\n' +
                     '<i class="fa fa-chat fa-2x float-left disabled"></i>\n' +
@@ -33,13 +42,11 @@ var MelisCoreDashboardBubbleChatPlugin = {
                     '</div>\n' +
                     '</div>';
 
-                $('#dashboard-bubble-chat-plugin-list').append(message);
+                $('.dashboard-bubble-chat-plugin-list').each(function(){
+                    $(this).append(message);
+                });
             });
         });
-    },
-    showBackButton: function() {
-        var button = '<button id="dashboard-bubble-chat-back-btn" class="btn btn-info">View Messages</button>';
-        $('#dashboard-bubble-chat-back-btn-container').append(button);
     }
 };
 

@@ -1,15 +1,6 @@
 var MelisCoreDashboardBubbleUpdatesPlugin = {
     init: function() {
         this.getUpdates();
-        this.waitForEl('#dashboard-bubble-updates-list div.media.innerAll', function () {
-            $('body .melis-dashboard-bubble-updates-plugin .back .widget-scroll').find('.widget-body > div').niceScroll({
-                cursorwidth: 3,
-                zindex: 2,
-                cursorborder: "none",
-                cursorborderradius: "0",
-                cursorcolor: primaryColor
-            });
-        });
     },
     getUpdates: function() {
         $.ajax({
@@ -18,10 +9,19 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
         }).done(function (response) {
             if (response.count > 0) {
                 var button = '<button id="dashboard-bubble-updates-back-btn" class="btn btn-default">' + translations.tr_meliscore_dashboard_bubble_plugins_view_updates + '</button>';
-                $('#dashboard-bubble-updates-back-btn-container').append(button);
+                $('.dashboard-bubble-updates-back-btn-container').each(function(){
+                    $(this).empty();
+                    $(this).append(button);
+                });
+            } else {
+                $('.dashboard-bubble-updates-back-btn-container').each(function(){
+                    $(this).empty();
+                });
             }
 
-            $('#dashboard-bubble-updates-counter').text(response.count);
+            $('.dashboard-bubble-updates-counter').each(function(){
+                $(this).text(response.count);
+            });
 
             $.each(response.data, function (key, value) {
                 if (value.status === -1) {
@@ -31,25 +31,13 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
                         '<td class="center">' + value.latestVersion + '</td>\n' +
                         '</tr>';
 
-                    $('#dashboard-bubble-updates-list').append(update);
+                    $('.dashboard-bubble-updates-list').each(function(){
+                        $(this).append(update);
+                    });
                 }
             })
         });
     },
-    showBackButton: function() {
-        var button = '<button id="dashboard-bubble-updates-back-btn" class="btn btn-default">View Updates</button>';
-        $('#dashboard-bubble-updates-back-btn-container').append(button);
-    },
-    waitForEl: function (selector, callback) {
-        var poller1 = setInterval(function(){
-            $jObject = $(selector);
-            if($jObject.length < 1){
-                return;
-            }
-            clearInterval(poller1);
-            callback($jObject)
-        },100);
-    }
 };
 
 $(document).ready(function() {

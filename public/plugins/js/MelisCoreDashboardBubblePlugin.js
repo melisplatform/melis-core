@@ -1,7 +1,5 @@
 var MelisCoreDashboardBubblePlugin = {
     init: function() {
-        console.log('bubble init');
-
         // disable animations on touch devices
         if (Modernizr.touch) {
             $('.melis-dashboard-bubble-plugin')
@@ -62,18 +60,20 @@ $(document).ready(function() {
     var $body = $('body');
     var MAX_COOKIE_AGE = 2147483647000;
 
+    // flipping the card
     $body.on('click', '.melis-dashboard-bubble-plugin .front .btn', function () {
         $(this).closest('.panel-3d').addClass('panel-flip');
 
         // fix bug where in the body will not be scrollable even if nice scroll was already initialized
-        console.log($(this).closest('.melis-dashboard-bubble-plugin').find('.back-container').length);
         $(this).closest('.melis-dashboard-bubble-plugin').find('.back-container').getNiceScroll().onResize();
     });
 
+    // flipping the card back to front
     $body.on('click', '.melis-dashboard-bubble-plugin .back .btn', function () {
         $(this).closest('.panel-3d').removeClass('panel-flip');
     });
 
+    // show plugins
     $body.on('click', '#btn-show-bubble-plugins', function () {
         updateCookie(true);
 
@@ -92,6 +92,7 @@ $(document).ready(function() {
         );
     });
 
+    // hide plugins
     $body.on('click', '#btn-hide-bubble-plugins', function () {
         updateCookie(false);
 

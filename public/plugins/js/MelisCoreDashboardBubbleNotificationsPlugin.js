@@ -4,7 +4,8 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
         this.getNotifications();
     },
     getNotifications: function() {
-        MelisCoreDashboardBubbleNotificationsPluginInterval = setInterval(this.getNotifications, 180000);
+        if (MelisCoreDashboardBubbleNotificationsPluginInterval === '')
+            MelisCoreDashboardBubbleNotificationsPluginInterval = setInterval(this.getNotifications, 180000);
 
         $.ajax({
             type: 'POST',
@@ -12,16 +13,24 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
         }).done(function (response) {
             if (response.count > 0) {
                 var button = '<button id="dashboard-bubble-notifications-back-btn" class="btn btn-success">' + translations.tr_meliscore_dashboard_bubble_plugins_view_notifications + '</button>';
-                if ($('#dashboard-bubble-notifications-back-btn-container').text().length == 0) {
-                    $('#dashboard-bubble-notifications-back-btn-container').append(button);
-                }
+                $('.dashboard-bubble-notifications-back-btn-container').each(function(){
+                    $(this).empty();
+                    $(this).append(button);
+                });
             } else {
-                $('#dashboard-bubble-notifications-back-btn-container').empty();
+                $('.dashboard-bubble-notifications-back-btn-container').each(function(){
+                    $(this).empty();
+                });
             }
 
-            $('#bubble-notification-plugin-counter').text(response.count);
+            $('.bubble-notification-plugin-counter').each(function(){
+                $(this).text(response.count);
+            });
 
-            $('#bubble-notifications-list').empty();
+            $('.bubble-notifications-list').each(function(){
+                $(this).empty();
+            });
+
             $.each(response.data, function (key, value) {
                 var notification = '<tr>\n' +
                     '<td class="center">' + value.date_trans + '</td>\n' +
@@ -29,13 +38,11 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
                     '<td class="center">' + value.message + '</td>\n' +
                     '</tr>';
 
-                $('#bubble-notifications-list').append(notification);
+                $('.bubble-notifications-list').each(function(){
+                    $(this).append(notification);
+                });
             });
         });
-    },
-    showBackButton: function() {
-        var button = '<button id="dashboard-bubble-notifications-back-btn" class="btn btn-success">View Notifications</button>';
-        $('#dashboard-bubble-notifications-back-btn-container').append(button);
     }
 };
 
