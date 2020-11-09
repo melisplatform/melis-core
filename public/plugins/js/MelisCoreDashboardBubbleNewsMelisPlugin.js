@@ -40,7 +40,7 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                                                 '<div class="col-md-6">' +
                                                     '<img class="img-fluid dashboard-bubble-news-img" src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="Placeholder image" />' +
                                                 '</div>' +
-                                                '<div class="col-md-6">' +
+                                                '<div class="col-md-6 pl-0">' +
                                                     '<div class="label label-default">' + value.newsDateFormated + '</div>' +
                                                     '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news" title="' + value.cnews_title + '">' + ( ( title.length > 18 ) ? title.substring(0, 18) + '...' : title ) + '</a>' +
                                                     '<p>' + description.substring(0, 40) + '...</p>' +
@@ -53,8 +53,8 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                 var newsNoImage =  '<div class="media innerAll newsNoImage">' +
                                         '<div class="media-body" data-link="' + link + '">' +
                                             '<div class="float-right label label-default">' + value.newsDateFormated + '</div>' +
-                                            '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news">' + ( ( title.length > 18 ) ? title.substring(0, 18) + '...' : title ) + '</a>' +
-                                            '<p>' + description.substring(0, 152) + '...</p>' +
+                                            '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news">' + ( ( title.length > 35 ) ? title.substring(0, 35) + '...' : title ) + '</a>' +
+                                            '<p>' + description.substring(0, 153) + '...</p>' +
                                             '<a href="#" class="btn btn-info btn-bubble-read-more btn-xs float-right dashboard-bubble-news-plugin-show-news">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</a>' +
                                         '</div>' +
                                     '</div>';
