@@ -1,4 +1,4 @@
-<div class="panel-3d melis-dashboard-bubble-plugin melis-dashboard-bubble-news-melis-plugin">
+<div class="panel-3d melis-dashboard-bubble-plugin melis-dashboard-bubble-news-melis-plugin .not-yet-initialized">
     <div class="front">
         <div class="widget text-center">
             <div class="widget-body padding-none">
@@ -7,11 +7,11 @@
                         <p class="lead text-white strong margin-none">
                             <i class="fa fa-list-alt"></i>
                             <br/>
-                            <span id="melis-news-bubble-plugin-counter">0</span>
+                            <span class="melis-news-bubble-plugin-counter">0</span>
                             <?= $this->translate('tr_meliscore_dashboard_bubble_plugins_melis_news') ?>
                         </p>
                     </div>
-                    <div id="dashboard-bubble-news-back-btn-container" class="innerAll" style="height: 85px;"></div>
+                    <div class="innerAll dashboard-bubble-news-back-btn-container" style="height: 85px;"></div>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
                 <h4 class="heading"><?= $this->translate('tr_meliscore_dashboard_bubble_plugins_melis_news') ?></h4>
             </div>
             <div class="widget-body padding-none">
-                <div id="melis-news-bubble-plugin-news-list" class="back-container"></div>
+                <div class="back-container melis-news-bubble-plugin-news-list"></div>
             </div>
         </div>
     </div>

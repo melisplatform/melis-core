@@ -5,9 +5,14 @@
             <div class="widget-body padding-none">
                 <div>
                     <div class="innerAll bg-success">
-                        <p class="lead strong margin-none text-white"><i class="fa fa-fw fa-bell"></i><br/><span id="bubble-notification-plugin-counter">0</span> <?= $this->translate('tr_meliscore_dashboard_bubble_plugins_notifications') ?></p>
+                        <p class="lead strong margin-none text-white">
+                            <i class="fa fa-fw fa-bell"></i>
+                            <br/>
+                            <span class="bubble-notification-plugin-counter">0</span>
+                            <?= $this->translate('tr_meliscore_dashboard_bubble_plugins_notifications') ?>
+                        </p>
                     </div>
-                    <div id="dashboard-bubble-notifications-back-btn-container" class="innerAll" style="height: 85px;"></div>
+                    <div class="innerAll dashboard-bubble-notifications-back-btn-container" style="height: 85px;"></div>
                 </div>
             </div>
         </div>
@@ -23,7 +28,7 @@
                 <div class="back-container">
                     <table class="table table-condensed">
                         <!-- Table body -->
-                        <tbody id="bubble-notifications-list"></tbody>
+                        <tbody class="bubble-notifications-list"></tbody>
                         <!-- // Table body END -->
                     </table>
                     <!-- // Table END -->
