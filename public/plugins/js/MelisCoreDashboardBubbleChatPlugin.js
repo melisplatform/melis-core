@@ -61,8 +61,8 @@ var MelisCoreDashboardBubbleChatPlugin = {
                 var message = '<div class="media innerAll">\n' +
                     '<div class="media-body">\n' +
                     '<div class="row">\n' +
-                    '<div class="col-md-8">\n' +
-                    '<a href="#" class="text-info">' + value.usr_firstname + ' ' + value.usr_lastname + ' </a><em>wrote: </em>\n' +
+                    '<div class="col-md-7">\n' +
+                    '<a href="#" class="text-info">' + value.usr_firstname + ' ' + value.usr_lastname + ' </a><em>' + translations.tr_meliscore_dashboard_bubble_plugins_wrote + ': </em>\n' +
                     '<p>' + ((value.msgr_msg_cont_message.length > 115) ? value.msgr_msg_cont_message.substring(0, 115) + '...' : value.msgr_msg_cont_message) + '</p>\n' +
                     '</div>\n' +
                     '<div class="col-md-2">\n' +
