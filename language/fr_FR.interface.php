@@ -802,4 +802,5 @@ return [
     'tr_meliscore_dashboard_bubble_plugins_view_notifications' => 'Voir les notifications',
     'tr_meliscore_dashboard_bubble_plugins_messages' => 'Messages',
     'tr_meliscore_dashboard_bubble_plugins_view_messages' => 'Voir les messages',
+    'tr_meliscore_dashboard_bubble_plugins_wrote' => 'a écrit',
 ];

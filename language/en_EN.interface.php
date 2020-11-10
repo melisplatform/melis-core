@@ -788,5 +788,6 @@ return [
     'tr_meliscore_dashboard_bubble_plugins_view_notifications' => 'View Notifications',
     'tr_meliscore_dashboard_bubble_plugins_messages' => 'Messages',
     'tr_meliscore_dashboard_bubble_plugins_view_messages' => 'View Messages',
+    'tr_meliscore_dashboard_bubble_plugins_wrote' => 'wrote',
     ];
 ?>
