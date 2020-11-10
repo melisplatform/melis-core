@@ -51,7 +51,7 @@ var MelisCoreDashboardBubbleChatPlugin = {
                 var message = '<div class="media innerAll">\n' +
                     '<i class="fa fa-chat fa-2x float-left disabled"></i>\n' +
                     '<div class="media-body">\n' +
-                    '<div class="float-right label label-default">2 days</div>\n' +
+                    '<div class="float-right label label-default">' + value.msgr_msg_cont_date + '</div>\n' +
                     '<a href="#" class="text-info">' + value.usr_firstname + ' ' + value.usr_lastname + ' </a><em>wrote: </em>\n' +
                     '<p>' + value.msgr_msg_cont_message + '</p>\n' +
                     '<button class="btn btn-info btn-xs dashboard-bubble-chat-read-more" data-senderid="' + value.msgr_msg_cont_sender_id + '">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</button>\n' +
