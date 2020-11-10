@@ -24,7 +24,22 @@ return array(
                                         'dashboard_id' => '',
                                         'name' => 'bubblenewsmelisplugin',
                                         'jscallback' => 'MelisCoreDashboardBubbleNewsMelisPlugin.init()',
-                                        'url' => 'https://www.melistechnology.com/melis/api/hVrGO7mB9fhkTGfC/MelisCmsNews/service/MelisCmsNewsService/getNewsList'
+                                        'url' => 'https://www.melistechnology.com/melis/api/hVrGO7mB9fhkTGfC/MelisCmsNews/service/MelisCmsNewsService/getNewsList',
+                                        'filter' => [
+                                            'status' => true,
+                                            'langId' => 1,
+                                            'dateMin' => '',
+                                            'dateMax' => '',
+                                            'publishDateMin' => '',
+                                            'publishDateMax' => '',
+                                            'unpublishFilter' => true,
+                                            'start' => 0,
+                                            'limit' => '',
+                                            'orderColumn' => 'cnews_publish_date',
+                                            'order' => 'DESC',
+                                            'siteId' => 2,
+                                            'search' => ''
+                                        ]
                                     ],
                                     'forward' => array(
                                         'module' => 'MelisCore',

@@ -48,7 +48,7 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
         // get news list
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, ['start' => 0]);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $newsMelisConfig['datas']['filter']);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = json_decode(curl_exec($curl), true)['response'];
@@ -56,8 +56,6 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
 
         if (! empty($response)) {
             $countOfNews = count($response);
-            // we reverse the data to get the latest one
-            $response = array_reverse($response);
             $count = count($response);
             // we will only display a number of news and not all
             $data = array_splice($response, 0, self::NUM_OF_NEWS);
