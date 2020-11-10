@@ -4518,3 +4518,7 @@ input#log_date_range{
         padding: 25px;
     }
 }
+
+.dashboard-bubble-news-plugin-show-news:hover {
+    cursor: pointer;
+}

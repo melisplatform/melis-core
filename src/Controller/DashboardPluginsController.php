@@ -20,7 +20,7 @@ use Laminas\View\Model\ViewModel;
 class DashboardPluginsController extends MelisAbstractActionController
 {
     public function renderDashboardPluginsHeaderAction() {}
-    public function renderDashboardBubblePluginsAction() {}
+
     /**
      * Render Dashboard Menu
      * 
@@ -336,5 +336,31 @@ class DashboardPluginsController extends MelisAbstractActionController
         }
 
         return $newPluginList;
+    }
+
+    public function renderDashboardBubblePluginsAction()
+    {
+        $showBubblePlugins = $this->getCookie();
+
+        $view = new ViewModel();
+        $view->showBubblePlugins = $showBubblePlugins;
+
+        return $view;
+    }
+
+    private function getCookie()
+    {
+        if (empty($_COOKIE['show_bubble_plugins'])) {
+            $this->makeCookie();
+            return true;
+        }
+
+        return (filter_var($_COOKIE['show_bubble_plugins'], FILTER_VALIDATE_BOOLEAN));
+    }
+
+    private function makeCookie()
+    {
+        // timeout is set to 2038-01-19 04:14:07 maximum time for 32bit php
+        \setcookie('show_bubble_plugins', 'true', 2147483647);
     }
 }

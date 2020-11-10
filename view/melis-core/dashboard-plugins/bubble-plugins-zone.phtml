@@ -1,13 +1,3 @@
-<div class="row" style="padding:0 11px 0 11px;">
-    <div class="col-12">
-        <?php if ($this->showBubblePlugins) : ?>
-            <button id="btn-hide-bubble-plugins" class="btn btn-info btn-regular pull-right" style="margin-top: 0;"><?= $this->translate('tr_meliscore_dashboard_bubble_plugins_hide') ?></button>
-        <?php else : ?>
-            <button id="btn-show-bubble-plugins" class="btn btn-info btn-regular btn-sm pull-right" style="margin-top: 0;"><?= $this->translate('tr_meliscore_dashboard_bubble_plugins_show') ?></button>
-        <?php endif; ?>
-    </div>
-</div>
-<br>
-<div id="dashboard-bubble-plugins-zone" class="row <?= (! $this->showBubblePlugins) ? 'hidden' : '' ?>" style="padding:0 10px 0 10px;">
+<div class="row">
     <?= $this->htmlPlugins ?>
 </div>

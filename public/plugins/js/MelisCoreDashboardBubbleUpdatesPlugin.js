@@ -1,5 +1,21 @@
 var MelisCoreDashboardBubbleUpdatesPlugin = {
     init: function() {
+        // initialize card
+        $('.melis-dashboard-bubble-updates-plugin[style=""]')
+            .addClass('flip-default')
+            .each(function(i){
+                var t = $(this);
+                setTimeout(function(){
+                    t.css('visibility', 'visible').addClass('animated fadeInLeft');
+                }, (i+1)*300);
+                setTimeout(function(){
+                    t.removeClass('flip-default fadeInLeft');
+                    setTimeout(function(){
+                        t.find('[class*="icon-"]').css('visibility', 'visible').addClass('animated fadeInDown');
+                    }, (i+1)*200);
+                }, (i+1)*800);
+            });
+
         this.getUpdates();
     },
     getUpdates: function() {

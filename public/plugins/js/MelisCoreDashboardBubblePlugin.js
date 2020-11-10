@@ -13,21 +13,21 @@ var MelisCoreDashboardBubblePlugin = {
         if (!$('html.csstransitions.csstransforms3d').length)
             return;
 
-        // flip
-        $('.melis-dashboard-bubble-plugin')
-            .addClass('flip-default')
-            .each(function(i){
-                var t = $(this);
-                setTimeout(function(){
-                    t.css('visibility', 'visible').addClass('animated fadeInLeft');
-                }, (i+1)*300);
-                setTimeout(function(){
-                    t.removeClass('flip-default fadeInLeft');
-                    setTimeout(function(){
-                        t.find('[class*="icon-"]').css('visibility', 'visible').addClass('animated fadeInDown');
-                    }, (i+1)*200);
-                }, (i+1)*800);
-            });
+        // initializing of cards are moved to the individual bubble plugins
+        // $('.melis-dashboard-bubble-plugin[style=""]')
+        //     .addClass('flip-default')
+        //     .each(function(i){
+        //         var t = $(this);
+        //         setTimeout(function(){
+        //             t.css('visibility', 'visible').addClass('animated fadeInLeft');
+        //         }, (i+1)*300);
+        //         setTimeout(function(){
+        //             t.removeClass('flip-default fadeInLeft');
+        //             setTimeout(function(){
+        //                 t.find('[class*="icon-"]').css('visibility', 'visible').addClass('animated fadeInDown');
+        //             }, (i+1)*200);
+        //         }, (i+1)*800);
+        //     });
 
         // initialize scroll
         $('.melis-dashboard-bubble-plugin .back .widget-scroll').each(function() {

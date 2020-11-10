@@ -1,5 +1,21 @@
 var MelisCoreDashboardBubbleNewsMelisPlugin = {
     init: function() {
+        // initialize card
+        $('.melis-dashboard-bubble-news-melis-plugin[style=""]')
+            .addClass('flip-default')
+            .each(function(i){
+                var t = $(this);
+                setTimeout(function(){
+                    t.css('visibility', 'visible').addClass('animated fadeInLeft');
+                }, (i+1)*300);
+                setTimeout(function(){
+                    t.removeClass('flip-default fadeInLeft');
+                    setTimeout(function(){
+                        t.find('[class*="icon-"]').css('visibility', 'visible').addClass('animated fadeInDown');
+                    }, (i+1)*200);
+                }, (i+1)*800);
+            });
+
         this.getNews();
     },
     getNews: function() {
@@ -40,7 +56,7 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                                         '<div class="media-body" data-link="' + link + '">' +
                                             '<div class="row">' +
                                                 '<div class="col-md-6">' +
-                                                    '<img class="img-fluid dashboard-bubble-news-img" src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="Placeholder image" />' +
+                                                    '<img class="img-fluid dashboard-bubble-news-img dashboard-bubble-news-plugin-show-news" src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="Placeholder image" />' +
                                                 '</div>' +
                                                 '<div class="col-md-6 pl-0">' +
                                                     '<div class="label label-default">' + value.newsDateFormated + '</div>' +
