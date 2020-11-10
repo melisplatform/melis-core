@@ -49,7 +49,7 @@ class MelisCoreDashboardBubbleChatPlugin extends MelisCoreDashboardTemplatingPlu
             }
 
             $messages[$key]['usr_image'] =  $this->getUserImage($messages[$key]['usr_image']);
-            $messages[$key]['msgr_msg_cont_date'] = date('d M Y', strtotime($messages[$key]['msgr_msg_cont_date']));
+            $messages[$key]['msgr_msg_cont_date'] = date('d M', strtotime($messages[$key]['msgr_msg_cont_date']));
         }
 
         $tempUsers = [];
