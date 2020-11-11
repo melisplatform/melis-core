@@ -1050,6 +1050,9 @@ a[data-toggle="modal"]:focus {
 .overflowHidden {
 	overflow-x: hidden;
 }
+.melis-core-dashboard-msg {
+	margin: 0 10px;
+}
 /* dashboard news bubble */
 .melis-dashboard-bubble-plugin.panel-flip .back .widget .widget-body .media .media-body {
 	margin-left: 0;
