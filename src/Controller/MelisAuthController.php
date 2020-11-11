@@ -307,7 +307,6 @@ class MelisAuthController extends MelisAbstractActionController
                                     $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, []);
 
                                     // set same site cookie in built in php cookie
-                                    $this->setSameSiteCookie();
                                     // check if the user clicked remember me button
                                     $rememberMe = (int) $request->getPost('remember');
                                     if ($rememberMe == 1) {
@@ -373,19 +372,6 @@ class MelisAuthController extends MelisAbstractActionController
         return new JsonModel($result);
     }
 
-    /**
-     * set cookie attribute SameSite
-     */
-    protected function setSameSiteCookie()
-    {
-        if (PHP_VERSION_ID < 70300) {
-            // below php 7.3
-            // TODO
-        } else {
-            // set sesion cookie_samesite
-            ini_set('session.cookie_samesite', 'Strict');
-        }
-    }
 
 
     /**

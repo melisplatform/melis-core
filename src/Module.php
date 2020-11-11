@@ -113,6 +113,14 @@ class Module
 
     public function initSession(MvcEvent $e)
     {
+        /**
+         * session.cookie_samesite is available only on PHP7.3 and up
+         */ 
+        if (PHP_VERSION_ID >= 70300) {
+            // set cookie attribute samesite
+            ini_set('session.cookie_samesite', 'Strict');
+        }
+
         $sm = $e->getApplication()->getServiceManager();
         $container = new Container('meliscore');
 
