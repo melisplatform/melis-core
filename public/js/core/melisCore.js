@@ -403,8 +403,8 @@ var melisCore = (function(window){
             // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
             setTimeout(function(){
                 var $f = $("#"+ activeTabId + " .melis-iframe");
-
-                if( $($f).length ) {
+                //console.log("$f: ", $f);
+                if( $f.length ) {
                     $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
                 }
                 // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----

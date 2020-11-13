@@ -2,9 +2,19 @@ var loader = (function(window) {
     // overlay loader .svg icon with spinning effect
     var $body               = $("body"),
         // overlay-loader for common loading
-        overlayLoader       = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>',
+        overlayLoader       =   '<div id="loader" class="overlay-loader">' +
+                                    '<img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12">' +
+                                '</div>',
         // page-overlay-loader for melis cms page edition loading
-        pageOverlayLoader   = '<div id="loader" class="page-overlay-loader overlay-loader"><img class="loader-icon" src="/MelisCore/assets/images/page-loader.gif" data-page-loader="page-loader"><div class="page-overlay-loader-text">Preparing the page</div></div>',
+        pageOverlayLoader   =   '<div id="loader" class="overlay-loader">' +
+                                    '<div class="page-overlay-loader">' +
+                                        '<img class="page-loader-icon" src="/MelisCore/assets/images/page-loader.gif" data-page-loader="page-loader">' +
+                                        '<div class="page-overlay-loader-text">' +
+                                            '<img class="loader-icon-cog spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12">' +
+                                            '<p>' + translations.tr_meliscore_page_edition_loader_text +'</p>' + 
+                                        '</div>' + 
+                                    '</div>' +
+                                '</div>';
         // window selector
         $window             = $(window);
 
