@@ -29,17 +29,16 @@ var melisDashBoardDragnDrop = {
     init: function() {
         this.cacheDom();
         this.gsSetOptions();
-        //this.bindEvents();
-        this.setAdjustGridMeasurements();
-
+        
         this.dragWidget();
-        //this.docuReady();
 
         this.dropWidget(this.melisWidgetHandle);
         this.dragStopWidget();
         this.resizeStopWidget();
 
+        this.setAdjustGridMeasurements();
         this.checkDashboard();
+        this.latestCommentsPluginUIRes();
     },
     cacheDom: function() {
         // jQuery DOM element
@@ -47,8 +46,10 @@ var melisDashBoardDragnDrop = {
         this.$document          = $(document);
         this.$window            = $(window);
         this.$gs                = this.$body.find(".grid-stack");
+        this.$activeGS          = this.$body.find("#"+activeTabId+" .grid-stack"),
         this.$gsItem            = this.$gs.find(".grid-stack-item").length;
         this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
+        this.$melisLeftMenu     = this.$body.find("#id_meliscore_leftmenu"),
         this.$pluginBox         = this.$body.find(".melis-core-dashboard-dnd-box");
         this.$pluginBtn         = this.$body.find("#melisDashBoardPluginBtn");
         this.$box               = this.$pluginBtn.closest(".melis-core-dashboard-dnd-box");
@@ -109,6 +110,13 @@ var melisDashBoardDragnDrop = {
                     self.$gs.css(mobileGsPluginCssHeight);
                 }
             }
+
+            // set data min width and max width, from setAdjustGridMeasurements() function
+            self.$activeGS.attr("data-min-width", self.$activeGS.outerWidth() - self.$melisLeftMenu.outerWidth());
+            self.$activeGS.attr("data-max-width", self.$activeGS.outerWidth());
+
+            // display .grid-stack width in pixels on document load
+            self.$activeGS.css("width", self.$activeGS.outerWidth());
     },
     // drags widget/plugin from dashboard's plugin sidebar
     dragWidget: function() {
@@ -350,74 +358,90 @@ var melisDashBoardDragnDrop = {
     },
     // check current dashboard
     checkDashboard: function() {
-        var self                = this,
-            $pluginBtn          = $("#melisDashBoardPluginBtn"),
-            $leftSidebarMenu    = $("#id_meliscore_leftmenu"),
-            $pluginBox          = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-            pluginBoxWidth      = $pluginBox.outerWidth(),
-            $activeTab          = $("#"+activeTabId),
-            $msg                = $activeTab.find(".melis-core-dashboard-msg"),
-            $activeGS           = $activeTab.find(".grid-stack"),
-            activeGsItems       = $activeGS.find(".grid-stack-item").length,
-            $tabArrowTop        = $("#tab-arrow-top"),
-            minWidth            = $activeGS.data("min-width"),
-            maxWidth            = $activeGS.data("max-width");
+        setTimeout(function() {
+            var self                    = this,
+                $pluginBtn              = $("#melisDashBoardPluginBtn"),
+                $melisLeftMenu          = $("#id_meliscore_leftmenu"),
+                melisLeftMenuWidth      = $melisLeftMenu.outerWidth(),
+                $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+                pluginBoxWidth          = $pluginBox.outerWidth(),
+                $activeTab              = $("#"+activeTabId),
+                $msg                    = $activeTab.find(".melis-core-dashboard-msg"),
+                $activeGS               = $activeTab.find(".grid-stack"),
+                activeGsItems           = $activeGS.find(".grid-stack-item").length,
+                $tabArrowTop            = $("#tab-arrow-top"),
+                minWidth                = isNaN( parseInt( $activeGS.attr("data-min-width") ) ) ? 1360 : 1372,
+                maxWidth                = isNaN( parseInt( $activeGS.attr("data-max-width") ) ) ? 1584 : 1596;
 
-            // count .grid-stack-item if found
-            if ( activeGsItems > 0 ) {
-                $pluginBox.removeClass("shown");
-                $msg.fadeOut();
-            }
-            else {
-                $pluginBox.addClass("shown");
-                $msg.fadeIn();
-
-                // tab arrow top on mobile view, 767px and below
-                if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
-                    if ( $pluginBox.hasClass("shown") ) {
-                        $tabArrowTop.addClass("hide-arrow");
-                    }
-                    else {
-                        $tabArrowTop.removeClass("hide-arrow");                    
-                    }
-                }
-            }
-            
-            // check plugin menu box
-            if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
-                if ( $leftSidebarMenu.hasClass("shown") ) {
-                    if ( $pluginBox.hasClass("shown") ) {
-                        $activeGS.animate({
-                            width: minWidth
-                        }, 3);
-                    } 
-                    else {
-                        $activeGS.animate({
-                            width: maxWidth
-                        }, 3);
-                    }
+                // count .grid-stack-item if found
+                if ( activeGsItems > 0 ) {
+                    $pluginBox.removeClass("shown");
+                    $msg.fadeOut();
                 }
                 else {
-                    if ( $pluginBox.hasClass("shown") ) {
-                        $activeGS.animate({
-                            width: maxWidth + 50
-                        }, 3);
-                    }
-                    // left sidebar menu and dashboard plugin menu not shown
-                    else {
-                        $activeGS.animate({
-                            width: maxWidth + pluginBoxWidth + 50
-                        }, 3);
+                    $pluginBox.addClass("shown");
+                    $msg.fadeIn();
+
+                    // tab arrow top on mobile view, 767px and below
+                    if ( $tabArrowTop.length && melisCore.screenSize <= 767 ) {
+                        if ( $pluginBox.hasClass("shown") ) {
+                            $tabArrowTop.addClass("hide-arrow");
+                        }
+                        else {
+                            $tabArrowTop.removeClass("hide-arrow");                    
+                        }
                     }
                 }
-            }
+                        
+                // check plugin menu box
+                if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                    if ( $melisLeftMenu.hasClass("shown") ) {
+                        if ( $pluginBox.hasClass("shown") ) {
+                            $activeGS.animate({
+                                width: minWidth
+                            }, 3);
 
-            // set data min width and max width, from setAdjustGridMeasurements() function
-            $activeGS.attr("data-min-width", $activeGS.outerWidth() - $pluginBox.outerWidth());
-            $activeGS.attr("data-max-width", $activeGS.outerWidth());
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() - pluginBoxWidth );
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
+                        } 
+                        else {
+                            $activeGS.animate({
+                                width: maxWidth
+                            }, 3);
+                            
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() - pluginBoxWidth);
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
+                        }
+                    }
+                    else {
+                        if ( $pluginBox.hasClass("shown") ) {
+                            $activeGS.animate({
+                                width: maxWidth + 50
+                            }, 3);
 
-            // display .grid-stack width in pixels on document load
-            $activeGS.css("width", $activeGS.outerWidth());
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() - pluginBoxWidth);
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
+                        }
+                        // left sidebar menu and dashboard plugin menu not shown
+                        else {
+                            $activeGS.animate({
+                                width: maxWidth + melisLeftMenuWidth
+                            }, 3);
+
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() + melisLeftMenuWidth);
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
+                        }
+                    }
+                }
+        }, 1000);
     },
     // disables the plugin sidebar
     disablePlugSidebar: function() {
@@ -528,7 +552,7 @@ var melisDashBoardDragnDrop = {
                     self.serializeWidgetMap($items);
             });
     },
-    // check for data-gs-width responsive below 5, Melis Cms Comments / Latest Comments
+    // check for data-gs-width responsive below 5, Melis Cms Comments / Latest Comments, added on init function
     latestCommentsPluginUIRes: function() {
         var $com = $('#' + activeTabId + ' .grid-stack .grid-stack-item').find(".melis-cms-comments-dashboard-latest-comments");
 
@@ -818,16 +842,16 @@ var melisDashBoardDragnDrop = {
     }
 };
 
-(function($) {   
+(function($) {
     var $body           = $("body"),
         $melisLeftMenu  = $("#id_meliscore_leftmenu"),      
         gsi             = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
         $pluginBtn      = $body.find("#melisDashBoardPluginBtn"),
         $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-        $gs             = $body.find("#"+activeTabId + " .grid-stack"),
+        $activeGS       = $body.find("#"+activeTabId + " .grid-stack"),
         $dbMsg          = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
-        minWidth        = $gs.data("min-width"),
-        maxWidth        = $gs.data("max-width");
+        minWidth        = $activeGS.data("min-width"),
+        maxWidth        = $activeGS.data("max-width");
 
         // init
         melisDashBoardDragnDrop.init();
@@ -840,19 +864,19 @@ var melisDashBoardDragnDrop = {
             $dbMsg.show();
         }
 
-        // .select2-container width 100% specific for latest comments plugin on document ready
-        melisDashBoardDragnDrop.latestCommentsPluginUIRes();
+        // .select2-container width 100% specific for latest comments plugin on document ready, added on init
+        //melisDashBoardDragnDrop.latestCommentsPluginUIRes();
 
         // animate to full width size of #grid1
         $body.on("click", "#dashboard-plugin-delete-all", function() {
-            $gs.animate({
+            $activeGS.animate({
                 width: minWidth
             }, 3);
         });
 
         // check if plugins menu is open, adjust .grid-stack width accordingly
         if ( $pluginBox.hasClass("shown") && gsi === 0 ) {
-            $gs.animate({
+            $activeGS.animate({
                 width: minWidth
             }, 3);
         }

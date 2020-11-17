@@ -321,19 +321,16 @@ var melisCore = (function(window){
     function sidebarMenuClick() {
         // for the sidebar functionalities
         var $melisLeftMenu 		= $("#id_meliscore_leftmenu"),
-            $melisContent 		= $("#content"),
             $melisFooter 		= $("#id_meliscore_footer"),
-            $dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
+            $pluginBox 		    = $("#id_meliscore_center_dashboard_menu"),
             sidebarOffsetLeft 	= $melisLeftMenu.position().left,
             sidebarWidth 		= $melisLeftMenu.outerWidth(),
-            contentOffsetLeft 	= $melisContent.position().left,
-            contentWidth 		= $melisContent.outerWidth(),
             melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
-            dbPluginMenuWidth 	= $dbPluginMenu.outerWidth(),
-            $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
-            gsi 				= $gs.find(".grid-stack-item").length,
-            minWidth 			= $gs.data("min-width"),
-            maxWidth 			= $gs.data("max-width");
+            pluginBoxWidth  	= $pluginBox.outerWidth(),
+            $activeGS 		    = $body.find("#"+activeTabId+" .grid-stack"),
+            gsWidth             = $activeGS.outerWidth(),
+            minWidth            = isNaN( parseInt( $activeGS.attr("data-min-width") ) ) ? 1360 : 1372,
+            maxWidth            = isNaN( parseInt( $activeGS.attr("data-max-width") ) ) ? 1584 : 1596;
 
             // prevent from having a scrollbar below
             $body.toggleClass("overflowHidden");
@@ -344,36 +341,54 @@ var melisCore = (function(window){
             // class shown added on 768px and above
             if ( melisCore.screenSize >= 768 ) {
                 $melisLeftMenu.toggleClass("shown");
+                
+                if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
+                    if ( $melisLeftMenu.hasClass("shown") ) {
+                        if ( $pluginBox.hasClass("shown") ) {
+                            $activeGS.animate({
+                                width: minWidth
+                            }, 3);
 
-                //if ( melisCore.screenSize >= 768 ) {
-                    if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
-                        if ( $melisLeftMenu.hasClass("shown") ) {
-                            if ( $dbPluginMenu.hasClass("shown") ) {
-                                $gs.animate({
-                                    width: minWidth
-                                }, 3);
-                            }
-                            else {
-                                $gs.animate({
-                                    width: maxWidth
-                                }, 3);
-                            }
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() );
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
                         }
                         else {
-                            if ( $dbPluginMenu.hasClass("shown") ) {
-                                $gs.animate({
-                                    width: maxWidth + 50
-                                }, 3);
-                            }
-                            // left sidebar menu and dashboard plugin menu not shown
-                            else {
-                                $gs.animate({
-                                    width: maxWidth + dbPluginMenuWidth + 50
-                                }, 3);
-                            }
+                            $activeGS.animate({
+                                width: maxWidth
+                            }, 3);
+                            
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() - pluginBoxWidth);
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
                         }
                     }
-                //}
+                    else {
+                        if ( $pluginBox.hasClass("shown") ) {
+                            $activeGS.animate({
+                                width: maxWidth + 50
+                            }, 3);
+
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() - pluginBoxWidth);
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
+                        }
+                        // left sidebar menu and dashboard plugin menu not shown
+                        else {
+                            $activeGS.animate({
+                                width: gsWidth + melisLeftMenuWidth
+                            }, 3)
+
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", gsWidth );
+                                $activeGS.attr("data-max-width", gsWidth + melisLeftMenuWidth );
+                            }, 500);
+                        }
+                    }
+                }
             }
 
             if ( sidebarOffsetLeft == 0 ) {
@@ -523,15 +538,10 @@ var melisCore = (function(window){
             }, 1);
         }
 
-        /* if ( screenSize >= 768 ) {
-            setTimeout(function() {
-                $("#melis-id-nav-bar-tabs").addClass("melis-id-nav-bar-tabs-notransition");
-            }, 1);
-
-            setTimeout(function() {
-                $("#melis-id-nav-bar-tabs").removeClass("melis-id-nav-bar-tabs-notransition");
-            }, 500);
-        } */
+        // check dashboard if melisDashBoardDragnDrop is defined
+        if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
+            melisDashBoardDragnDrop.checkDashboard();
+        }
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
@@ -792,13 +802,13 @@ var melisCore = (function(window){
 
     // this function is called from render-dashboard-plugins.phtml
     function showToggleDashboardPluginMenu() {
-        var $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
-            gsi 				= $gs.find(".grid-stack-item").length,
-            minWidth			= $gs.data("min-width"),
-            maxWidth			= $gs.data("max-width"),
+        var $activeGS 			= $("#"+activeTabId+" .grid-stack"),
+            minWidth            = isNaN( parseInt( $activeGS.attr("data-min-width") ) ) ? 1360 : 1372,
+            maxWidth            = isNaN( parseInt( $activeGS.attr("data-max-width") ) ) ? 1584 : 1596,
             $melisLeftMenu  	= $("#id_meliscore_leftmenu"),
             melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
-            pluginBoxWidth 		= $pluginBox.outerWidth();
+            pluginBoxWidth 		= $pluginBox.outerWidth(),
+            currentGsWidth      = $activeGS.outerWidth();
 
             // shown class toggled
             $pluginBox.toggleClass("shown");
@@ -814,59 +824,55 @@ var melisCore = (function(window){
             }
 
             // check if plugins menu is oepn, adjust .grid-stack width accordingly
-            if ( melisCore.screenSize >=768 ) {
+            if ( melisCore.screenSize >= 768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $pluginBox.hasClass("shown") ) {
                         if ( $melisLeftMenu.hasClass("shown") ) {
-                            $gs.animate({
+                            $activeGS.animate({
                                 width: minWidth
                             }, 3);
+
+                            // showToggleDashboardPluginMenu dashboard and left menu is shown
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() );
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
-                                $gs.animate({
-                                    width: maxWidth - pluginBoxWidth
-                                }, 3);    
-                            }
-                            else {
-                                $gs.animate({
-                                    width: maxWidth + 50
-                                }, 3);
-                            }
+                            $activeGS.animate({
+                                width: currentGsWidth - pluginBoxWidth
+                            }, 3);
+                            
+                            //showToggleDashboardPluginMenu only dashboard plugin menu is shown 768px and above.
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() - pluginBoxWidth);
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
                         }
                     }
                     else {
                         if ( $melisLeftMenu.hasClass("shown") ) {
-                            $gs.animate({
+                            $activeGS.animate({
                                 width: maxWidth
                             }, 3);
+
+                            // showToggleDashboardPluginMenu update gs min and max width + melisLeftMenuWidth
+                            setTimeout(function() {   
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() + melisLeftMenuWidth);
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500)
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
-                                $gs.animate({
-                                    width: maxWidth
-                                }, 3);
-                            }
-                            else {
-                                $gs.animate({
-                                    width: maxWidth + melisLeftMenuWidth
-                                }, 3);
-                            }
+                            $activeGS.animate({
+                                width: maxWidth + pluginBoxWidth + 50
+                            }, 3);
+
+                            // showToggleDashboardPluginMenu left side and dashboard plugin menu not shown
+                            setTimeout(function() {
+                                $activeGS.attr("data-min-width", $activeGS.outerWidth() - pluginBoxWidth);
+                                $activeGS.attr("data-max-width", $activeGS.outerWidth() );
+                            }, 500);
                         }
-                    }
-                }
-            }
-            else {
-                if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
-                    if ( $pluginBox.hasClass("shown") ) {
-                        $gs.animate({
-                            width: minWidth
-                        }, 3);
-                    } 
-                    else {
-                        $gs.animate({
-                            width: maxWidth
-                        }, 3);
                     }
                 }
             }
