@@ -569,9 +569,6 @@ ul.row {
 .sites-language .checkbox {
 	padding-left: 6px;
 }
-.melis-radio-box input:checked + .melis-radio-box-circle:after {
-	left: 51%;
-}
 /* utility classes */
 .hidden {
 	display: none !important;
@@ -1043,6 +1040,12 @@ a[data-toggle="modal"]:focus {
 .modal-open .tooltip.fade.bs-tooltip-auto[x-placement^="left"] .arrow,
 .modal-open .tooltip.fade.bs-tooltip-left .arrow {
 	right: 0 !important;
+}
+/* .grid-stack {
+	border: 1px dashed red;
+} */
+.overflowHidden {
+	overflow-x: hidden;
 }
 /* Responsive media queries */
 @media (min-width: 991px) {

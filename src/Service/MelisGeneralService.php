@@ -121,7 +121,7 @@ class MelisGeneralService extends MelisServiceManager implements EventManagerAwa
 
 			$parameters = $this->eventManager->prepareArgs($parameters);
 			$this->eventManager->trigger($eventName, $target, $parameters);
-			$parameters = get_object_vars($parameters);
+			$parameters = $parameters->getArrayCopy();
 		}
 
 		return $parameters;

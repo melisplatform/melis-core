@@ -127,7 +127,7 @@ class MelisFieldRow extends FormRow
             if (empty($switchOptions['label']) && $switchOptions['icon'])
                 $switchLabel = 'data-label-icon="glyphicon glyphicon-resize-horizontal"';
             else
-                $switchLabel = !empty($switchOptions['label']) ? 'data-label="'.$switchOptions['label'].'"' : 'data-label-icon="'. $switchOptions['icon'] .'"';
+                $switchLabel = !empty($switchOptions['label']) ? 'data-text-label="'.$switchOptions['label'].'"' : 'data-label-icon="'. $switchOptions['icon'] .'"';
 
             $lable = $element->getLabel();
             $element->setLabel("");
