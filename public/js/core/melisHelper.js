@@ -400,127 +400,122 @@ var melisHelper = (function(){
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback) {
         //Show the close(X) button on header
-        if(melisKey !== 'meliscore_dashboard'){
+        if ( melisKey !== 'meliscore_dashboard' ) {
             $("#close-all-tab").show();
             $("#close-all-tab").closest("li").show();
         }
         //check if the tab is already open and added to the main nav
         var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='"+ zoneId +"']");
 
-        if ( alreadyOpen.length < 1 ) {
-            var li = "<li data-tool-name='"+ title +"' data-tool-icon='"+ icon +"' data-tool-id='"+ zoneId +"' data-tool-meliskey='"+melisKey+"'>";
-            li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='" + zoneId + "' title='"+ title.replace(/'/g,"&apos;") +"'>";
-            li += "<i class='fa "+ icon +" fa-2x'></i><span class='navtab-pagename'>";
-            li += title + "</span></a>";
-            li += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
-            li += "</li>";
+            if ( alreadyOpen.length < 1 ) {
+                var li = "<li data-tool-name='"+ title +"' data-tool-icon='"+ icon +"' data-tool-id='"+ zoneId +"' data-tool-meliskey='"+melisKey+"'>";
+                li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='" + zoneId + "' title='"+ title.replace(/'/g,"&apos;") +"'>";
+                li += "<i class='fa "+ icon +" fa-2x'></i><span class='navtab-pagename'>";
+                li += title + "</span></a>";
+                li += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
+                li += "</li>";
 
-            // check if it has parent nav
-            if(navTabsGroup && navTabsGroup !== "undefined") {
-                var navParentGroup = $(".tab-element[data-id='"+navTabsGroup+"']");
+                // check if it has parent nav
+                if ( navTabsGroup && navTabsGroup !== "undefined" ) {
+                    var navParentGroup = $(".tab-element[data-id='"+navTabsGroup+"']");
+                        if ( $(navParentGroup).length > 0 ) {
+                            // find parent nav li
+                            var navBox = navParentGroup.closest("li");
 
-                if( $(navParentGroup).length > 0 ) {
-                    // find parent nav li
-                    var navBox = navParentGroup.closest("li");
+                            // find nav-group-dropdown that has the id of navTabsGroup
+                            var hasdropdown = $(navBox).find(".nav-group-dropdown");
 
-                    // find nav-group-dropdown that has the id of navTabsGroup
-                    var hasdropdown = $(navBox).find(".nav-group-dropdown");
+                            if ( $(hasdropdown).length ) {
+                                // check if menu are too many
+                                if( $(hasdropdown).first().height() > 350 ) {
+                                    $(hasdropdown).first().addClass("scroll");
+                                }
 
-                    if( $(hasdropdown).length ) {
-                        // check if menu are too many
-                        if( $(hasdropdown).first().height() > 350 ) {
-                            $(hasdropdown).first().addClass("scroll");
+                                // add li in the first nav-group-dropdown
+                                $(hasdropdown).first().append(li);
+
+                            } 
+                            else {
+                                // create a sub menu ul and append the li
+                                navBox.append("<ul class='nav-group-dropdown'></ul>");
+                                navBox.find(".nav-group-dropdown").append(li);
+                            }
+                        } 
+                        else {
+                            $("body #melis-id-nav-bar-tabs").append(li);
+
+                            /* if(navTabsGroup == "design_module") {
+                                var liTest = "<li>";
+                                liTest += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
+                                liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
+                                liTest += 'Design '+ title + "</span></a>";
+                                liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
+                                liTest += "</li>";
+                                $("body #melis-id-nav-bar-tabs").append(liTest);
+                            } else {
+                                // append the <li> to the menu
+                                $("body #melis-id-nav-bar-tabs").append(li);
+                            }*/
+
                         }
-
-                        // add li in the first nav-group-dropdown
-                        $(hasdropdown).first().append(li);
-
-                    } else {
-                        // create a sub menu ul and append the li
-                        navBox.append("<ul class='nav-group-dropdown'></ul>");
-                        navBox.find(".nav-group-dropdown").append(li);
-                    }
-                } else {
+                } 
+                else {
+                    // append the <li> to the menu melis-tabnext
                     $("body #melis-id-nav-bar-tabs").append(li);
-
-                    /* if(navTabsGroup == "design_module") {
-                        var liTest = "<li>";
-                        liTest += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
-                        liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
-                        liTest += 'Design '+ title + "</span></a>";
-                        liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
-                        liTest += "</li>";
-                        $("body #melis-id-nav-bar-tabs").append(liTest);
-                    } else {
-                        // append the <li> to the menu
-                        $("body #melis-id-nav-bar-tabs").append(li);
-                    }*/
-
-                }
-            } else {
-                // append the <li> to the menumelis-tabnext
-                $("body #melis-id-nav-bar-tabs").append(li);
-            }
-
-            checkSubMenu();
-
-            // [ Mobile ] when opening a page
-            if( melisCore.screenSize <= 767 ){
-                //var $tabArrowTop = $("#tab-arrow-top");
-
-                // check if there are no contents open
-                if( $navTabs.children("li").length > 0){
-                    $("#res-page-cont span b").remove();
                 }
 
-                // close sidebar after opening a page from it
-                $body.removeClass('sidebar-mini');
-                // hide sidebar footer when opening tab
-                $("#id_meliscore_footer").addClass('slide-left');
-                $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
+                checkSubMenu();
 
-                // slide up the dropdown menu
-                $("#melis-id-nav-bar-tabs").slideUp(300);
-                $("#res-page-cont i").removeClass("move-arrow");
+                // [ Mobile ] when opening a page
+                if ( melisCore.screenSize <= 767 ) {
+                    // check if there are no contents open
+                    if ( $navTabs.children("li").length > 0) {
+                        $("#res-page-cont span b").remove();
+                    }
 
-                /* if ( $tabArrowTop.length ) {
-                    $tabArrowTop.removeClass("hide-arrow");
-                } */
-            }
+                    // close sidebar after opening a page from it
+                    $body.removeClass('sidebar-mini');
+                    // hide sidebar footer when opening tab
+                    $("#id_meliscore_footer").addClass('slide-left');
+                    $("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr('style');
 
-            var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";
-            $('#melis-id-body-content-load').append(div);
-
-            //set active tab ID
-            activeTabId = zoneId;
-
-            //make the new tab active
-            tabSwitch(zoneId);
-
-            //load the page content
-            var fnCallback = null;
-
-            if ( callback !== undefined || callback !== null) {
-                fnCallback = callback;
-            }
-            
-            zoneReload(zoneId, melisKey, parameters, fnCallback);
-
-            // check if tabExpander(); needs to be activated or not
-            tabExpander.checkTE();
-
-            //focus the newly opened tab if tabExpander() is enabled
-            if( tabExpander.checkStatus() === 'enabled' ){
-                if(typeof navTabsGroup == "undefined" || typeof navTabsGroup == null) {
-                    $(".melis-tabnext").trigger("click");
+                    // slide up the dropdown menu
+                    $("#melis-id-nav-bar-tabs").slideUp(300);
+                    $("#res-page-cont i").removeClass("move-arrow");
                 }
-            }
 
-        }
-        else {
-            //make the new tab and content active instead of reloading
-            tabSwitch(zoneId);
-        }
+                var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";
+                    $('#melis-id-body-content-load').append(div);
+
+                    //set active tab ID
+                    activeTabId = zoneId;
+
+                    //make the new tab active
+                    tabSwitch(zoneId);
+
+                    //load the page content
+                    var fnCallback = null;
+
+                    if ( callback !== undefined || callback !== null) {
+                        fnCallback = callback;
+                    }
+                    
+                    zoneReload(zoneId, melisKey, parameters, fnCallback);
+
+                    // check if tabExpander(); needs to be activated or not
+                    tabExpander.checkTE();
+
+                    //focus the newly opened tab if tabExpander() is enabled
+                    if( tabExpander.checkStatus() === 'enabled' ){
+                        if(typeof navTabsGroup == "undefined" || typeof navTabsGroup == null) {
+                            $(".melis-tabnext").trigger("click");
+                        }
+                    }
+            }
+            else {
+                //make the new tab and content active instead of reloading
+                tabSwitch(zoneId);
+            }
     }
 
     // CHECK SUBMENU =================================================================================
@@ -550,100 +545,101 @@ var melisHelper = (function(){
 
     // ZONE RELOADING =================================================================================================================
     function zoneReload(zoneId, melisKey, parameters, callback) {
-        var datastring = { cpath: melisKey };
-        var $melisCmsPage = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane.active");
+        var datastring          = { cpath: melisKey },
+            $melisCmsPage       = $body.find("#"+activeTabId+"[data-meliskey='meliscms_page'].tab-pane"),
+            $iframeContainer    = $melisCmsPage.find(".iframe-container"),
+            $pageEdition        = $iframeContainer.find(".meliscms-page-tab-edition");
 
-        //add parameters value to datastring object if available
-        if ( parameters !== undefined ) {
-            $.each(parameters, function( index, value ) {
-                datastring[index] = value;
-            });
-        }
+            //add parameters value to datastring object if available
+            if ( parameters !== undefined ) {
+                $.each(parameters, function( index, value ) {
+                    datastring[index] = value;
+                });
+            }
 
-        // add the temp loader
-        var tempLoader = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
-        $("#"+zoneId).append(tempLoader);
-        
-        // add an inline css overflow: hidden
-        melisCoreTool.addOverflowHidden();
+            // add the temp loader
+            var tempLoader = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+            $("#"+zoneId).append(tempLoader);
+                
+                // add an inline css overflow: hidden
+                melisCoreTool.addOverflowHidden();
+ 
+                $.ajax({
+                    url         : '/melis/zoneview',
+                    data        : datastring,
+                    encode		: true,
+                    dataType	: "json"
+                }).done(function(data) {           
+                    // remove the inline style
+                    melisCoreTool.removeOverflowHidden();
 
-        $.ajax({
-            url         : '/melis/zoneview',
-            data        : datastring,
-            encode		: true,
-            dataType	: "json"
-        }).done(function(data) {           
-            // remove the inline style
-            melisCoreTool.removeOverflowHidden();
+                    setTimeout(function() {
+                        if ( data !== null ) {
+                            // hide the loader
+                            //$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+                            
+                            $("#"+zoneId).html(data.html).children().unwrap();
 
-            setTimeout(function() {
-                if ( data !== null ) {
-                    // hide the loader
-                    //$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
-                    
-                    $("#"+zoneId).html(data.html).children().unwrap();
+                            // set the current active tab based from 'activeTabId' value
+                            tabSwitch(activeTabId);
 
-                    // set the current active tab based from 'activeTabId' value
-                    tabSwitch(activeTabId);
+                            // set active the the 'Edition' tab and its 'Tab Content'
+                            $("#" + zoneId + " .nav-tabs li:first-child").addClass("active");
+                            $("#" + zoneId + " .tab-content > div:first-child").addClass("active");
 
-                    // set active the the 'Edition' tab and its 'Tab Content'
-                    $("#" + zoneId + " .nav-tabs li:first-child").addClass("active");
-                    $("#" + zoneId + " .tab-content > div:first-child").addClass("active");
+                            // --------------------------------------------------------------
+                            // Run callback scripts here | from app.interface
+                            // --------------------------------------------------------------
+                            var jsCallbacks = data.jsCallbacks;
 
-                    // --------------------------------------------------------------
-                    // Run callback scripts here | from app.interface
-                    // --------------------------------------------------------------
-                    var jsCallbacks = data.jsCallbacks;
+                            $.each( jsCallbacks, function( key, value ) {
 
-                    $.each( jsCallbacks, function( key, value ) {
+                                // check if there is more than 1 function in a single jsCallback from app.interface
+                                // example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
+                                var splitFunctions = value.split(" ");
 
-                        // check if there is more than 1 function in a single jsCallback from app.interface
-                        // example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
-                        var splitFunctions = value.split(" ");
-
-                        /*if( splitFunctions.length > 1){
-                            // run all the function extracted from a single jsCallback
-                            $.each( splitFunctions, function( key, value ) {
-                                value = value.slice(0, -3);
-                                executeCallbackFunction(value, window);
+                                /*if( splitFunctions.length > 1){
+                                    // run all the function extracted from a single jsCallback
+                                    $.each( splitFunctions, function( key, value ) {
+                                        value = value.slice(0, -3);
+                                        executeCallbackFunction(value, window);
+                                    });
+                                }
+                                else{
+                                    value = value.slice(0, -3);
+                                    executeCallbackFunction(value, window);
+                                }*/
+                                
+                                $.each( splitFunctions, function( key, value ) {
+                                    try {
+                                        eval(value);
+                                    }
+                                    catch(err) {
+                                        // console.log(err);
+                                    }
+                                });
                             });
                         }
-                        else{
-                            value = value.slice(0, -3);
-                            executeCallbackFunction(value, window);
-                        }*/
-                        
-                        $.each( splitFunctions, function( key, value ) {
-                            
-                            try {
-                                eval(value);
+                        else {
+                            $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
+                            $('#'+zoneId).remove();
+
+                            melisHelper.melisKoNotification( "Error Fetching data", "No result was retrieved while doing this operation.", "no error datas returned", '#000' );
+                        }
+                        if ( callback !== undefined || callback !== null) {
+                            if (callback) {
+                                callback();
                             }
-                            catch(err) {
-                                // console.log(err);
-                            }
-                        });
-                    });
-                }
-                else {
+                        }
+                    }, 300);
+                }).fail(function(xhr, textStatus, errorThrown) {
+                    //hide the loader
+                    //$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+                    alert( translations.tr_meliscore_error_message );
+
                     $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
                     $('#'+zoneId).remove();
-
-                    melisHelper.melisKoNotification( "Error Fetching data", "No result was retrieved while doing this operation.", "no error datas returned", '#000' );
-                }
-                if ( callback !== undefined || callback !== null) {
-                    if (callback) {
-                        callback();
-                    }
-                }
-            }, 300);
-        }).fail(function(xhr, textStatus, errorThrown) {
-            alert( translations.tr_meliscore_error_message );
-            //hide the loader
-            //$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
-
-            $('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
-            $('#'+zoneId).remove();
-        });
+                });
     }
 
     // Requesting flag set to false so this function will set state to ready

@@ -251,15 +251,19 @@ class MelisCoreModulesService extends MelisServiceManager
             $type = $package->type;
             $extra = $package->extra ?? [];
             $isMelisModule = true;
-            if (array_key_exists('melis-module', $extra)) {
-                $key = 'melis-module';
-                if (!$extra->$key)
-                    $isMelisModule = false;
-            }
 
-            /** @var CompletePackage $package */
-            return $type === 'melisplatform-module' &&
-                array_key_exists('module-name', $extra) && $isMelisModule;
+            if (!empty($extra)) {
+
+                if (property_exists($extra, 'melis-module')) {
+                    $key = 'melis-module';
+                    if (!$extra->$key)
+                        $isMelisModule = false;
+                }
+
+                /** @var CompletePackage $package */
+                return $type === 'melisplatform-module' &&
+                    property_exists($extra, 'module-name') && $isMelisModule;
+            }
         });
 
         $modules = array_map(function ($package) {
@@ -562,56 +566,11 @@ class MelisCoreModulesService extends MelisServiceManager
      * @return bool
      */
     public function createModuleLoader($pathToStore, $modules = [],
-                                       $topModules = ['melisdbdeploy', 'meliscomposerdeploy', 'meliscore'],
-                                       $bottomModules = ['MelisModuleConfig'])
+                                    $topModules = ['melisassetmanager', 'melisdbdeploy', 'meliscomposerdeploy', 'meliscore'],
+                                    $bottomModules = ['MelisModuleConfig'])
     {
-        $tmpFileName = 'melis.module.load.php.tmp';
-        $fileName = 'melis.module.load.php';
-        if ($this->checkDir($pathToStore)) {
-            $coreModules = $this->getCoreModules();
-            $topModules = array_reverse($topModules);
-            foreach ($topModules as $module) {
-                if (isset($coreModules[$module]) && $coreModules[$module]) {
-                    array_unshift($modules, $coreModules[$module]);
-                } else {
-                    array_unshift($modules, $module);
-                }
-            }
-
-            foreach ($bottomModules as $module) {
-                if (isset($coreModules[$module]) && $coreModules[$module]) {
-                    array_push($modules, $coreModules[$module]);
-                } else {
-                    array_push($modules, $module);
-                }
-            }
-
-            $config = new Config($modules, true);
-            $writer = new PhpArray();
-            $writer->setUseBracketArraySyntax(true);
-            $conf = $writer->toString($config);
-            $conf = preg_replace('/    \d+/u', '', $conf); // remove the number index
-            $conf = str_replace('=>', '', $conf); // remove the => characters.
-            file_put_contents($pathToStore . '/' . $tmpFileName, $conf);
-
-            if (file_exists($pathToStore . '/' . $tmpFileName)) {
-                // check if the array is not empty
-                $checkConfig = include($pathToStore . '/' . $tmpFileName);
-                if (count($checkConfig) > 1) {
-                    // delete the current module loader file
-                    unlink($pathToStore . '/' . $fileName);
-                    // rename the module loader tmp file into module.load.php
-                    rename($pathToStore . '/' . $tmpFileName, $pathToStore . '/' . $fileName);
-                    // Adding permission access
-                    chmod($pathToStore . '/' . $fileName, 0777);
-                    // if everything went well
-                    return true;
-                }
-            }
-
-        }
-
-        return false;
+        $moduleSrv = $this->getServiceManager()->get('MelisAssetManagerModulesService');
+        return $moduleSrv->createModuleLoader($pathToStore, $modules, $topModules, $bottomModules);
     }
 
     /**

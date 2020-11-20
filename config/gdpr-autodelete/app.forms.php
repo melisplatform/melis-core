@@ -259,12 +259,12 @@ return [
                                         'name' => 'mgdprc_email_conf_tags',
                                         'type' => "text",
                                         'options' => [
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_email_setup_tags',
                                             'tooltip' => "tr_melis_core_gdpr_autodelete_label_alert_email_tags tooltip",
                                             'not_editable' => true,
                                             'no_tags_text' => 'No tags available'
                                         ],
                                         'attributes' => [
-                                            'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_email_setup_tags',
                                             'class' => 'melis-multi-val-input',
                                             'style' => 'width:0;',
                                             'disabled' => 'disabled'
@@ -455,13 +455,13 @@ return [
                                         'name' => 'mgdpre_email_tags',
                                         'type' => "text",
                                         'options' => [
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
                                             'tooltip' => "tr_melis_core_gdpr_autodelete_label_alert_email_tags tooltip",
                                             'not_editable' => true,
                                             'no_tags_text' => 'No tags available'
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
                                             'style' => 'width:0;',
                                             'disabled' => 'disabled'
                                         ]
@@ -527,13 +527,13 @@ return [
                                         'name' => 'mgdpre_email_tags',
                                         'type' => "text",
                                         'options' => [
+                                            'label' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
                                             'tooltip' => "tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip",
                                             'not_editable' => true,
                                             'no_tags_text' => 'No tags available'
                                         ],
                                         'attributes' => [
                                             'class' => 'melis-multi-val-input',
-                                            'data-label-text' => 'tr_melis_core_gdpr_autodelete_label_alert_email_tags',
                                             'style' => 'width:0;',
                                             'disabled' => 'disabled'
                                         ]

@@ -53,7 +53,7 @@
 }
 .gdpr-auto-delete-multi-tabs .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
     color:#fff !important;
-    background-color:#e61c23;
+    background:#e61c23 !important;
 }
 .gdpr-auto-delete-multi-tabs .nav-pills .nav-link , .nav-pills .show>.nav-link {
     background-color:#eee;
@@ -61,7 +61,7 @@
 }
 .gdpr-auto-delete-multi-tabs .nav-pills .nav-link:hover {
     color:#fff !important;
-    background-color:#e61c23;
+    background:#e61c23 !important;
 }
 #cron-configuration a,
 #email-setup a{

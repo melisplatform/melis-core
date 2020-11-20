@@ -13,7 +13,7 @@ return array(
                 ),
                 'js' => array(
                     // Gridstack
-                    '/MelisCore/assets/components/library/jquery-ui-touch/jquery.ui.touch-punch.min.js',
+                    //'/MelisCore/assets/components/library/jquery-ui-touch/jquery.ui.touch-punch.min.js',
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.js',
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
 
