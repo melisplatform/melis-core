@@ -549,8 +549,9 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
         if($userApiData) {
             
             $apiStatus = $userApiData->msoa_status;
+            $userStatus = $userApiData->usr_status;
             // to validate the API key if it's Active or Inactvie
-            if($apiStatus){
+            if($apiStatus && $userStatus){
                 $config       = $this->getServiceManager()->get('MelisCoreConfig');
                 $microservice = $config->getItem('microservice');
              
@@ -570,6 +571,13 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
 
             }else{
                 $message = 'tr_meliscore_microservice_api_key_inactive';
+                if (!$userStatus) {
+                    $message = 'tr_meliscore_microservice_user_inactive';
+                }
+
+                if (!$apiStatus && !$userStatus) {
+                    $message = 'tr_meliscore_microservice_user_api_inactive';
+                }
 
                 echo "&nbsp;&nbsp;" .$translator->translate($message);
             }
