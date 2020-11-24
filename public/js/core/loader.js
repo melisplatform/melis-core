@@ -8,7 +8,7 @@ var loader = (function(window) {
         // page-overlay-loader for melis cms page edition loading
         pageOverlayLoader   =   '<div id="loader" class="overlay-loader">' +
                                     '<div class="page-overlay-loader">' +
-                                        '<img class="page-loader-icon" src="/MelisCore/assets/images/page-loader.gif" data-page-loader="page-loader">' +
+                                        '<img class="page-loader-icon img-fluid" src="/MelisCore/assets/images/page-loader.gif" data-page-loader="page-loader">' +
                                         '<div class="page-overlay-loader-text">' +
                                             '<img class="loader-icon-cog spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12">' +
                                             '<p>' + translations.tr_meliscore_page_edition_loader_text +'</p>' + 

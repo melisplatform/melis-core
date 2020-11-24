@@ -402,15 +402,16 @@ var melisCore = (function(window){
 
             // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
             setTimeout(function(){
-                var $f = $("#"+ activeTabId + " .melis-iframe");
-                //console.log("$f: ", $f);
-                if( $f.length ) {
-                    $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
-                }
-                // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-                if ( $("table.dataTable").length ) {
-                    $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
-                }
+                //var $f = $("#"+ activeTabId + " .melis-iframe");
+                    // check if melis-iframe is found
+                    /* if ( $f.length ) {
+                        $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
+                    } */
+
+                    // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
+                    if ( $("table.dataTable").length ) {
+                        $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+                    }
             }, 1000);
     }
 
