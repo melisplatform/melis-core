@@ -16,7 +16,8 @@ var loader = (function(window) {
                                     '</div>' +
                                 '</div>';
         // window selector
-        $window             = $(window);
+        $window             = $(window),
+        matches             = activeTabId.match(/\d+/g);
 
         // initial function
         function init() {
@@ -152,7 +153,8 @@ var loader = (function(window) {
 
         // function checkInPageLoading
         function checkPageLoading(zoneId) {
-            setTimeout(function() {
+            // setTimeout 3000 for melis-user-tabs
+            setTimeout(function() {              
                 var setCmsBtnDisabledInterval = setInterval(function() {
                     var $activeTabId        = $("#"+zoneId),
                         $menuBarOptions     = $activeTabId.find(".menu-bar-options"),
@@ -162,13 +164,16 @@ var loader = (function(window) {
                         $melisIframe        = $melisTabEdition.find(".melis-iframe");
 
                         // check for .btn-disabled and iframe is found
-                        if ( $cmsBtnDisabled.length > 0 && $melisIframe.length > 0 ) {
-                            addPageEditionLoading();
+                        if ( $cmsBtnDisabled.length > 0 ) {
+                            if ( $melisIframe.length > 0 ) {
+                                addPageEditionLoading();
+                            }
                         }
                         else {
-                            removePageEditionLoading();
-
-                            clearInterval( setCmsBtnDisabledInterval );
+                            if ( $melisIframe.length > 0 ) {
+                                removePageEditionLoading();
+                                clearInterval( setCmsBtnDisabledInterval );
+                            }
                         }
                 }, 500);
             }, 3000);

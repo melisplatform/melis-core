@@ -1130,23 +1130,23 @@ body #newplugin-cont.show-menu{
 /* For tablet */
 /* Landscape */
 @media only screen 
-  and (min-device-width: 768px) 
-  and (max-device-width: 1024px) 
-  and (orientation: landscape) 
-  and (-webkit-min-device-pixel-ratio: 1) {
-    .page-overlay-loader {
-        margin-top: 7rem;
-    }
+    and (min-device-width: 768px) 
+    and (max-device-width: 1024px) 
+    and (orientation: landscape) 
+    and (-webkit-min-device-pixel-ratio: 1) {
+        .page-overlay-loader {
+            margin-top: 7rem;
+        }
 }
 /* Portrait */
 @media only screen 
-  and (min-device-width: 768px) 
-  and (max-device-width: 1024px) 
-  and (orientation: portrait) 
-  and (-webkit-min-device-pixel-ratio: 1) {
-    .page-overlay-loader {
-        margin-top: 6rem;
-    }
+    and (min-device-width: 768px) 
+    and (max-device-width: 1024px) 
+    and (orientation: portrait) 
+    and (-webkit-min-device-pixel-ratio: 1) {
+        .page-overlay-loader {
+            margin-top: 6rem;
+        }
 }
 @media (max-width: 767px) {
     .iframe-container .widget.widget-tabs.widget-tabs-responsive > .widget-head ul.nav-tabs li {
@@ -1157,9 +1157,46 @@ body #newplugin-cont.show-menu{
     .iframe-container .widget.widget-tabs.widget-tabs-responsive > .widget-head ul.nav-tabs li a {
         border-bottom: 0;
     }
-    .page-overlay-loader {
-        margin-top: 4rem;
-    }
+    
+}
+/* 767px and 576px Portrait */
+@media only screen
+    and (min-device-width: 576px)
+    and (max-device-width: 767px)
+    and (orientation: portrait)
+    and (-webkit-min-device-pixel-ratio: 1) {
+        .page-overlay-loader {
+            margin-top: 4rem;
+            max-width: 500px;
+        }
+}
+/* 767px and 576px Landscape */
+@media only screen
+    and (min-device-width: 576px)
+    and (max-device-width: 767px)
+    and (orientation: landscape)
+    and (-webkit-min-device-pixel-ratio: 1) {
+        .page-overlay-loader {
+            margin-top: 0;
+            max-width: 350px;
+        }
+        .page-overlay-loader .page-overlay-loader-text {
+            margin-top: -3rem;
+        }
+}
+/* Mobile */
+@media only screen
+    and (min-device-width: 320px)
+    and (max-device-width: 576px)
+    and (orientation: landscape)
+    and (-webkit-min-device-pixel-ratio: 1) {
+        .page-overlay-loader {
+            margin-top: 0;
+            max-width: 350px;
+        }
+        .page-overlay-loader .page-overlay-loader-text {
+            margin-top: -3rem;
+        }
 }
 @media (max-width: 375px) {
     .page-overlay-loader .page-overlay-loader-text {
