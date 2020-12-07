@@ -630,7 +630,7 @@ var melisDashBoardDragnDrop = {
 
                     if ( pluginCount === 0 ) {
                         $dashboardMsg.show();
-                        $(self.$gs).css({
+                        self.$gs.css({
                             "height": "745px",
                             "min-height": "745px"
                         });
@@ -641,7 +641,7 @@ var melisDashBoardDragnDrop = {
                     }
                     else {
                         $dashboardMsg.hide();
-                        $(this.$gs).css({
+                        self.$gs.css({
                             "height": "840px",
                             "min-height": "840px"
                         });
