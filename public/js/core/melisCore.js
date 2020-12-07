@@ -342,7 +342,7 @@ var melisCore = (function(window){
             // shown class added
             $melisLeftMenu.toggleClass("shown");
 
-            if ( melisCore.screenSize >= 768 ) {
+            if ( screenSize >= 768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $melisLeftMenu.hasClass("shown") ) {
                         if ( $dbPluginMenu.hasClass("shown") ) {
@@ -363,7 +363,7 @@ var melisCore = (function(window){
                             }, 3);
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize === 768 ) {
                                 $gs.animate({
                                     width: maxWidth
                                 }, 3);
@@ -453,7 +453,7 @@ var melisCore = (function(window){
             }
 
             // if in mobile hide 'PAGES' menu when clicking / opening a page
-            if(screenSize <= 767){ //if(screenSize <= 768)
+            if ( screenSize <= 768 ) { //if(screenSize <= 768)
                 $("#res-page-cont").trigger('click');
                 $("#res-page-cont i").removeClass("move-arrow");
 
@@ -819,8 +819,8 @@ var melisCore = (function(window){
                 }
             }
 
-            // check if plugins menu is oepn, adjust .grid-stack width accordingly
-            if ( melisCore.screenSize >=768 ) {
+            // check if plugins menu is open, adjust .grid-stack width accordingly
+            if ( screenSize >=768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $pluginBox.hasClass("shown") ) {
                         if ( $melisLeftMenu.hasClass("shown") ) {
@@ -829,7 +829,7 @@ var melisCore = (function(window){
                             }, 3);
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize === 768 ) {
                                 $gs.animate({
                                     width: maxWidth - pluginBoxWidth
                                 }, 3);    
@@ -848,7 +848,7 @@ var melisCore = (function(window){
                             }, 3);
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize === 768 ) {
                                 $gs.animate({
                                     width: maxWidth
                                 }, 3);
