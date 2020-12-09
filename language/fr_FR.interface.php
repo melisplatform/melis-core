@@ -654,6 +654,7 @@ return [
     'tr_meliscore_microservice_generate_api_key' => 'Générer la clef API',
     'tr_meliscore_microservice_generate_api_key_ok' => 'Vous pouvez accéder aux microservices à cette URL :',
     'tr_meliscore_microservice_generateD_api_key' => 'API Key',
+    'tr_meliscore_microservice_form_error' => 'Form Error(s)',
 
     'tr_meliscore_microservice_title' => 'Liste des microservices existants sur la Platform',
     'tr_meliscore_microservice_sub_title' => 'Les paramètres de ce service doivent être POSTES. Le retour sera en JSON. Ce form s\'affichera pour test si aucune donnée n\'est postée.',

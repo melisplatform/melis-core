@@ -53,11 +53,12 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
              * check whether user's accessibility is still "active" or not
              */
             $isUserCanExec = (bool)$userApiData->msoa_status;
+            $isUserActive = (bool)$userApiData->usr_status;
 
             /**
              * If user's API option is still "active"
              */
-            if ($isUserCanExec) {
+            if ($isUserCanExec && $isUserActive) {
 
                 // check if the module in the route param exists
                 $moduleSvc = $this->getServiceManager()->get('ModulesService');
@@ -171,7 +172,12 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                                         $message = 'tr_meliscore_microservice_request_ok';
                                         $success = true;
                                     } else {
-                                        $errors = $form->getMessages();
+                                        return new JsonModel([
+                                            'success'  => $success,
+                                            'message'  => $translator->translate('tr_meliscore_microservice_form_error'),
+                                            'response' => $data,
+                                            'errors'   => $form->getMessages()
+                                        ]);
                                     }
                                 } else {
                                     $errors['invalid_post_parameters'] = (array) $post;
@@ -293,7 +299,18 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                 }
 
             }else{
-                $message = 'tr_meliscore_microservice_api_key_inactive';
+                if (!$isUserCanExec) {
+                    $message = 'tr_meliscore_microservice_api_key_inactive';
+                }
+
+                if (!$isUserActive) {
+                    $message = 'tr_meliscore_microservice_user_inactive';
+                }
+
+                if (!$isUserCanExec && !$isUserActive) {
+                    $message = 'tr_meliscore_microservice_user_api_inactive';
+                }
+
                 $hasError = true;
             }   
 
@@ -579,7 +596,10 @@ class MelisCoreMicroServiceController extends MelisAbstractActionController
                     $message = 'tr_meliscore_microservice_user_api_inactive';
                 }
 
-                echo "&nbsp;&nbsp;" .$translator->translate($message);
+                return new JsonModel([
+                    'success' => false,
+                    'message' => $translator->translate($message)
+                ]);
             }
          
         }
