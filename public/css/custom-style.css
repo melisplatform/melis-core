@@ -987,12 +987,7 @@ a[data-toggle="modal"]:focus {
 	text-decoration: none;
 }
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a,
-#modal-user-management
-	.widget.widget-tabs-double
-	> .widget-head
-	ul
-	li.active
-	a {
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a {
 	height: 40px;
 }
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li,
@@ -1155,6 +1150,9 @@ a[data-toggle="modal"]:focus {
 	}
 }
 @media (max-width: 767px) {
+	#melisDashBoardPluginBtn {
+		display: none;
+	}
 	/* mobile nav-right click open second ul */
 	#newplugin-cont ul > li > ul {
 		position: relative;
@@ -1377,6 +1375,7 @@ a[data-toggle="modal"]:focus {
 	.form-group span.select2-container {
 		width: 100% !important;
 	}
+	
 }
 @media (max-width: 500px) {
 	.gdpr-table-action-button {
@@ -1424,21 +1423,5 @@ a[data-toggle="modal"]:focus {
 	}
 	.flotchart-holder {
 		width: 226px;
-	}
-}
-@media (max-width: 767px) {
-	/* mobile nav-right click open second ul */
-	#newplugin-cont ul > li > ul {
-		position: relative;
-		top: 0;
-		width: 100%;
-	}
-	.ul-open {
-		display: block !important;
-	}
-}
-@media (min-width: 768px) and (max-width: 790px) {
-	.navbar.main .nav > li a.menu-icon {
-		padding: 0 11px;
 	}
 }

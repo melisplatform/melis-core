@@ -134,11 +134,13 @@ var dashboardNotify = (function() {
     function setCookie(value) {
         var defaultOptions = {
             path: '/',
+            samesite: 'Strict',
             expires: new Date(MAX_COOKIE_AGE).toUTCString()
         };
         var updatedCookie = encodeURIComponent("dashboard_notify") + "=" + encodeURIComponent(value);
             updatedCookie += "; " + "path" + "=" + defaultOptions.path;
             updatedCookie += "; " + "expires" + "=" + defaultOptions.expires;
+            updatedCookie += "; " + "samesite" + "=" + defaultOptions.samesite;
             document.cookie = updatedCookie;
     }
 

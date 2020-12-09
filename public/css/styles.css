@@ -3771,16 +3771,17 @@ div#modal-user-management div.widget {
 
 .melis-core-dashboard-plugin-snippets,
 .melis-core-dashboard-category-plugins {
-	position: relative;
-	padding: 15px 0 10px;
-	border-bottom: 1px solid #3e3e3e;
-	background: #2c2c2c;
-	text-align: center;
-	opacity: 0.4;
-	cursor: pointer;
-	transition: opacity 0.4s, background 0.4s;
-	-webkit-transition: opacity 0.4s, background 0.4s;
-	-moz-transition: opacity 0.4s, background 0.4s;
+    position: relative;
+    padding: 15px 0 10px;
+    /* border-bottom: 1px solid #3e3e3e; */
+    border-bottom: 0;
+    background: #2c2c2c;
+    text-align: center;
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.4s, background 0.4s;
+    -webkit-transition: opacity 0.4s, background 0.4s;
+    -moz-transition: opacity 0.4s, background 0.4s;
 }
 
 /* plugins image */
