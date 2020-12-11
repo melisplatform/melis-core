@@ -25,7 +25,7 @@ class MelisTinyMceController extends MelisAbstractActionController
         if ($request->isPost()) {
             $modulesSvc = $this->getServiceManager()->get('ModulesService');
             // Getting the Posted Values
-            $postValues = get_object_vars($request->getPost());
+            $postValues = $request->getPost()->toArray();
 
             $type = $postValues['type'];
             $selector = $postValues['selector'];
@@ -125,7 +125,7 @@ class MelisTinyMceController extends MelisAbstractActionController
 
         $modulesSvc = $this->getServiceManager()->get('ModulesService');
         // Getting the Posted Values
-        $postValues = get_object_vars($request->getPost());
+        $postValues = $request->getPost()->toArray();
 
         $type = $postValues['type'];
         $selector = $postValues['selector'];

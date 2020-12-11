@@ -197,7 +197,7 @@ class MelisCoreGdprAutoDeleteTabsController extends MelisAbstractActionControlle
         $dataFilteredCount = 0;
         if ($request->isPost()) {
             // post data
-            $post = $this->processPostData(get_object_vars($request->getPost()));
+            $post = $this->processPostData($request->getPost()->toArray());
             // get gdpr delete config data from service
             $data =   $this->getGdprAutoDeleteToolService()->getGdprDeleteEmailLogsData(
             // search key
@@ -468,7 +468,7 @@ class MelisCoreGdprAutoDeleteTabsController extends MelisAbstractActionControlle
         $response = [];
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $data = get_object_vars($request->getPost());
+            $data = $request->getPost()->toArray();
             if ($this->getGdprAutoDeleteToolService()->deleteEverything($data['configId'], $data['type'], $data['langId'])) {
                 $response['success'] = true;
             }

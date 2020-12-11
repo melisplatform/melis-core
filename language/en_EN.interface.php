@@ -342,6 +342,8 @@ return [
     'tr_meliscore_tool_platform_update_marketplace' => 'Allow updates from the marketplace',
     'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
     'tr_meliscore_common_allow' => 'Allow',
+    'tr_meliscore_tool_platform_invalid_platform_name' => 'The name of the platform can only contain letters and numbers, no spaces or special characters',
+
 
     // Language Tool Translations
     'tr_meliscore_tool_language' => 'Back-Office languages',
