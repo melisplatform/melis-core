@@ -404,8 +404,10 @@
             return Option.none();
           }
           return Option.from(global$1.map(templateList, function (template, index) {
+            console.log("open createTemplates Option.from templateList: ", templateList);
+            console.log("open createTemplates Option.from template: ", template);
             return {
-              selected: index === 0,
+              //selected: index === 0,
               text: template.title,
               value: {
                 url: template.url,
