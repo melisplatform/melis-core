@@ -342,7 +342,7 @@ var melisCore = (function(window){
             // shown class added
             $melisLeftMenu.toggleClass("shown");
 
-            if ( melisCore.screenSize >= 768 ) {
+            if ( screenSize >= 768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $melisLeftMenu.hasClass("shown") ) {
                         if ( $dbPluginMenu.hasClass("shown") ) {
@@ -363,7 +363,7 @@ var melisCore = (function(window){
                             }, 3);
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize === 768 ) {
                                 $gs.animate({
                                     width: maxWidth
                                 }, 3);
@@ -402,15 +402,16 @@ var melisCore = (function(window){
 
             // fix for the iframe height scrollbar issue when we open/close the sidebar. the timeout is for the sidebar transition
             setTimeout(function(){
-                var $f = $("#"+ activeTabId + " .melis-iframe");
+                //var $f = $("#"+ activeTabId + " .melis-iframe");
+                    // check if melis-iframe is found
+                    /* if ( $f.length ) {
+                        $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
+                    } */
 
-                if( $($f).length ) {
-                    $f[0].contentWindow.melisPluginEdition.calcFrameHeight();  //works
-                }
-                // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-                if ( $("table.dataTable").length ) {
-                    $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
-                }
+                    // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
+                    if ( $("table.dataTable").length ) {
+                        $("table.dataTable").DataTable().columns.adjust().responsive.recalc();
+                    }
             }, 1000);
     }
 
@@ -452,7 +453,7 @@ var melisCore = (function(window){
             }
 
             // if in mobile hide 'PAGES' menu when clicking / opening a page
-            if(screenSize <= 767){ //if(screenSize <= 768)
+            if ( screenSize <= 768 ) { //if(screenSize <= 768)
                 $("#res-page-cont").trigger('click');
                 $("#res-page-cont i").removeClass("move-arrow");
 
@@ -818,8 +819,8 @@ var melisCore = (function(window){
                 }
             }
 
-            // check if plugins menu is oepn, adjust .grid-stack width accordingly
-            if ( melisCore.screenSize >=768 ) {
+            // check if plugins menu is open, adjust .grid-stack width accordingly
+            if ( screenSize >=768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $pluginBox.hasClass("shown") ) {
                         if ( $melisLeftMenu.hasClass("shown") ) {
@@ -828,7 +829,7 @@ var melisCore = (function(window){
                             }, 3);
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize === 768 ) {
                                 $gs.animate({
                                     width: maxWidth - pluginBoxWidth
                                 }, 3);    
@@ -847,7 +848,7 @@ var melisCore = (function(window){
                             }, 3);
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize === 768 ) {
                                 $gs.animate({
                                     width: maxWidth
                                 }, 3);

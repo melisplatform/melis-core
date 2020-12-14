@@ -264,13 +264,16 @@ var melisCoreTool = (function (window) {
         }
     }
 
+    // used usually on page edition loading with smooth scroll to .melis-iframe
     function addOverflowHidden() {
-        $("html, body").animate(
-            { scrollTop: 0 }, 
-            0, function() {
-                $body.css("overflow", "hidden");
-            }
-        );
+        var $melisIframe = $("#"+activeTabId+ " .melis-iframe");
+
+            $("html, body").animate(
+                { scrollTop: ( $melisIframe.length > 0 ) ? $melisIframe.offset().top : 0 },
+                0, function() {
+                    $body.css("overflow", "hidden");
+                }
+            );
     }
 
     function removeOverflowHidden() {

@@ -569,9 +569,6 @@ ul.row {
 .sites-language .checkbox {
 	padding-left: 6px;
 }
-.melis-radio-box input:checked + .melis-radio-box-circle:after {
-	left: 51%;
-}
 /* utility classes */
 .hidden {
 	display: none !important;

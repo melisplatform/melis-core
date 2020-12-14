@@ -342,6 +342,8 @@ return [
     'tr_meliscore_tool_platform_update_marketplace' => 'Allow updates from the marketplace',
     'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
     'tr_meliscore_common_allow' => 'Allow',
+    'tr_meliscore_tool_platform_invalid_platform_name' => 'The name of the platform can only contain letters and numbers, no spaces or special characters',
+
 
     // Language Tool Translations
     'tr_meliscore_tool_language' => 'Back-Office languages',
@@ -771,6 +773,9 @@ return [
     'tr_melis_core_composer_scrpts_executed' => 'Composer scripts executed',
     'tr_meliscore_logs_tool_modal_container' => 'Modal container',
     'tr_meliscore_logs_tool_log_type_form' => 'Form',
-    'tr_meliscore_logs_tool_export_modal_content' => 'Export modal content'
+    'tr_meliscore_logs_tool_export_modal_content' => 'Export modal content',
+
+    // cms page iframe loader
+    'tr_meliscore_page_edition_loader_text' => 'Building the page',
     ];
 ?>

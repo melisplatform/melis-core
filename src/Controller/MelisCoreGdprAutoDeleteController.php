@@ -271,7 +271,7 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
             // set melis tool key
             $this->getTool()->setMelisToolKey('MelisCoreGdprAutoDelete', 'melis_core_gdpr_auto_delete');
             // post data
-            $post = $this->processPostData(get_object_vars($request->getPost()));
+            $post = $this->processPostData($request->getPost()->toArray());
 //            // get gdpr delete config data from service
             $data = $this->getGdprDeleteConfigTable()->getGdprDeleteConfigData(
             // search key
@@ -524,7 +524,7 @@ class MelisCoreGdprAutoDeleteController extends MelisAbstractActionController
         // save only when request is post
         if ($request->isPost()) {
             // sanitized url data
-            $postValues = get_object_vars($request->getPost());
+            $postValues = $request->getPost()->toArray();
             if (!empty($request->getFiles('mgdprc_email_conf_layout_logo')['tmp_name'])) {
                 $postValues['mgdprc_email_conf_layout_logo'] = $this->processFile($request->getFiles('mgdprc_email_conf_layout_logo'));
             }
