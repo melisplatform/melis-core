@@ -4522,3 +4522,13 @@ input#log_date_range{
 .dashboard-bubble-news-plugin-show-news:hover {
     cursor: pointer;
 }
+
+#content #id_meliscore_toolstree_section_dashboard .dashboard-page-head-container .page-title {
+    padding: 0;
+}
+
+#btn-hide-bubble-plugins,
+#btn-show-bubble-plugins {
+    margin-top: 0;
+    padding: .375rem 4rem;
+}
