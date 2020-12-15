@@ -179,7 +179,8 @@ class MelisTinyMceController extends MelisAbstractActionController
                             array_push($tinyTemplates,
                                 array(
                                     'title' => $entry,
-                                    'url' => "/" . $moduleName . '/' . self::MINI_TEMPLATES_FOLDER . '/' . $entry
+                                    'url' => "/" . $moduleName . '/' . self::MINI_TEMPLATES_FOLDER . '/' . $entry,
+                                    'img' => "/" . $moduleName . '/' . self::MINI_TEMPLATES_FOLDER . '/' . str_replace('phtml', 'png', $entry)
                                 )
                             );
                         }
