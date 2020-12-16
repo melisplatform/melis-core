@@ -190,6 +190,7 @@ class MelisTinyMceController extends MelisAbstractActionController
                 }
             }
         }
+        //print_r($tinyTemplates);die;
 
         return new JsonModel($tinyTemplates);
     }
