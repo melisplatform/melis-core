@@ -63,7 +63,7 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
             // add formated date to data
             foreach ($data as &$news) {
                 $news['newsDateFormated'] = date(
-                    'd M Y',
+                    'd-m-Y',
                     strtotime(
                         ($news['cnews_publish_date']) ? $news['cnews_publish_date'] : $news['cnews_creation_date']
                     )
