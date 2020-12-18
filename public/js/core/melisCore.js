@@ -818,20 +818,22 @@ var melisCore = (function(window){
                 }
             }
 
-            // check if plugins menu is oepn, adjust .grid-stack width accordingly
-            if ( melisCore.screenSize >=768 ) {
+            // check if plugins menu is open, adjust .grid-stack width accordingly
+            if ( screenSize >=768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $pluginBox.hasClass("shown") ) {
                         if ( $melisLeftMenu.hasClass("shown") ) {
                             $gs.animate({
                                 width: minWidth
                             }, 3);
+
+                            
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize === 768 ) {
                                 $gs.animate({
                                     width: maxWidth - pluginBoxWidth
-                                }, 3);    
+                                }, 3);
                             }
                             else {
                                 $gs.animate({
