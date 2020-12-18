@@ -796,7 +796,8 @@ var melisDashBoardDragnDrop = {
         dWidth          = gsWidth - boxWidth, */
         $dbMsg          = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
         minWidth        = $gs.data("min-width"),
-        maxWidth        = $gs.data("max-width");
+        maxWidth        = $gs.data("max-width"),
+        $bubblePlugin   = $("#bubble-plugin");
 
         // init
         melisDashBoardDragnDrop.init();
@@ -804,6 +805,13 @@ var melisDashBoardDragnDrop = {
         // set data min width and max width, from setAdjustGridMeasurements() function
         $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
         $gs.attr("data-max-width", $gs.outerWidth());
+
+        // bubble plugin, sets min and max widths
+        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
+        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
+
+        // display #bubble-plugin width
+        $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
 
         // display .grid-stack width in pixels on document load
         $gs.css("width", $gs.outerWidth());
