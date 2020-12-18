@@ -4526,6 +4526,8 @@ input#log_date_range{
 #btn-hide-bubble-plugins,
 #btn-show-bubble-plugins {
     margin-top: 0;
+    font-size: .6rem;
+    padding: .2rem .75rem;
 }
 
 .dashboard-page-head-container .innerAll {
@@ -4540,7 +4542,19 @@ input#log_date_range{
     padding: 0 15px;
 }
 
+.bubble-plugin-show-hide-button {
+    margin: -25px 0 25px;
+}
+
 #id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
     padding: 0;
     margin: 0 -5px;
+}
+
+#bubble-plugin {
+    -webkit-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
+    -moz-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
+    -ms-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
+    -o-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
+    transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
 }

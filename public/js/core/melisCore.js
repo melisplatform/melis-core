@@ -331,7 +331,11 @@ var melisCore = (function(window){
             $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
             gsi 				= $gs.find(".grid-stack-item").length,
             minWidth 			= $gs.data("min-width"),
-            maxWidth 			= $gs.data("max-width");
+            maxWidth 			= $gs.data("max-width"),
+            $bubblePlugin           = $("#bubble-plugin"),
+            bubblePluginWidth       = $bubblePlugin.outerWidth(),
+            bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
+            bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
 
             // prevent from having a scrollbar below
             $body.toggleClass("overflowHidden");
@@ -349,11 +353,23 @@ var melisCore = (function(window){
                             $gs.animate({
                                 width: minWidth
                             }, 3);
+                            
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: bubblePluginMinWidth
+                                }, 3);
+                            }
                         }
                         else {
                             $gs.animate({
                                 width: maxWidth
                             }, 3);
+
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: bubblePluginMaxWidth
+                                }, 3);
+                            }
                         }
                     }
                     else {
@@ -361,6 +377,12 @@ var melisCore = (function(window){
                             $gs.animate({
                                 width: maxWidth + 50
                             }, 3);
+
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: bubblePluginMaxWidth + 50
+                                }, 3);
+                            }
                         }
                         else {
                             if ( melisCore.screenSize === 768 ) {
@@ -371,6 +393,12 @@ var melisCore = (function(window){
                             else {
                                 $gs.animate({
                                     width: maxWidth + dbPluginMenuWidth + 50
+                                }, 3);
+                            }
+
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: bubblePluginMaxWidth + dbPluginMenuWidth + 50
                                 }, 3);
                             }
                         }
@@ -797,13 +825,17 @@ var melisCore = (function(window){
 
     // this function is called from render-dashboard-plugins.phtml
     function showToggleDashboardPluginMenu() {
-        var $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
-            gsi 				= $gs.find(".grid-stack-item").length,
-            minWidth			= $gs.data("min-width"),
-            maxWidth			= $gs.data("max-width"),
-            $melisLeftMenu  	= $("#id_meliscore_leftmenu"),
-            melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
-            pluginBoxWidth 		= $pluginBox.outerWidth();
+        var $gs 				    = $body.find("#"+activeTabId+" .grid-stack"),
+            gsi 				    = $gs.find(".grid-stack-item").length,
+            minWidth			    = $gs.data("min-width"),
+            maxWidth			    = $gs.data("max-width"),
+            $melisLeftMenu  	    = $("#id_meliscore_leftmenu"),
+            melisLeftMenuWidth 	    = $melisLeftMenu.outerWidth(),
+            pluginBoxWidth 		    = $pluginBox.outerWidth(),
+            $bubblePlugin           = $("#bubble-plugin"),
+            bubblePluginWidth       = $bubblePlugin.outerWidth(),
+            bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
+            bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
 
             // shown class toggled
             $pluginBox.toggleClass("shown");
@@ -827,10 +859,14 @@ var melisCore = (function(window){
                                 width: minWidth
                             }, 3);
 
-                            
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: bubblePluginMaxWidth - pluginBoxWidth
+                                }, 3);
+                            }
                         }
                         else {
-                            if ( screenSize === 768 ) {
+                            if ( screenSize == 768 ) {
                                 $gs.animate({
                                     width: maxWidth - pluginBoxWidth
                                 }, 3);
@@ -840,6 +876,12 @@ var melisCore = (function(window){
                                     width: maxWidth + 50
                                 }, 3);
                             }
+
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: bubblePluginMaxWidth + 50
+                                }, 3);
+                            }
                         }
                     }
                     else {
@@ -847,9 +889,15 @@ var melisCore = (function(window){
                             $gs.animate({
                                 width: maxWidth
                             }, 3);
+
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: bubblePluginMaxWidth
+                                }, 3);
+                            }
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize == 768 ) {
                                 $gs.animate({
                                     width: maxWidth
                                 }, 3);
@@ -857,6 +905,12 @@ var melisCore = (function(window){
                             else {
                                 $gs.animate({
                                     width: maxWidth + melisLeftMenuWidth
+                                }, 3);
+                            }
+
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: bubblePluginMaxWidth + melisLeftMenuWidth
                                 }, 3);
                             }
                         }
