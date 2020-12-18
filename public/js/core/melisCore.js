@@ -1040,34 +1040,6 @@ var melisCore = (function(window){
             $(this).find("ul").addClass("ul-open");
             $(this).siblings().find("ul").removeClass("ul-open");
         });
-    } else {
-        $(window).on("scroll", function() {
-            // sticky page actions
-			var sidebarStatus = $("body").hasClass("sidebar-mini"),
-                sidebarWidth = 0;
-
-            if ( !sidebarStatus ) {
-                sidebarWidth = $("#id_meliscore_leftmenu").outerWidth();
-            }
-
-            var activateFixed = $("#" + activeTabId + " div.page-title").outerHeight();
-    
-                if ( $(window).scrollTop() > activateFixed && screenSize > 1120 ) {
-                    $("#" + activeTabId + " .dashboard-page-head-container").css(
-                        "padding-top",
-                        "72px"
-                    );
-                    $("#" + activeTabId + " .dashboard-page-head-container > .innerAll").addClass("sticky-pageactions");
-                    $("#" + activeTabId + " .dashboard-page-head-container > .innerAll").css({
-                        width: $body.width() - sidebarWidth,
-                        left: sidebarWidth,
-                    });
-                } else {
-                    $("#" + activeTabId + " .dashboard-page-head-container").removeAttr("style");
-                    $("#" + activeTabId + " .dashboard-page-head-container > .innerAll").removeClass("sticky-pageactions");
-                    $("#" + activeTabId + " .dashboard-page-head-container > .innerAll").removeAttr("style");
-                }
-        });
     }
 
     // INITIALIZE ===================================================================================================================

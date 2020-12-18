@@ -4523,12 +4523,23 @@ input#log_date_range{
     cursor: pointer;
 }
 
-#content #id_meliscore_toolstree_section_dashboard .dashboard-page-head-container .page-title {
-    padding: 0;
-}
-
 #btn-hide-bubble-plugins,
 #btn-show-bubble-plugins {
     margin-top: 0;
-    padding: .375rem 4rem;
+}
+
+.dashboard-page-head-container .innerAll {
+    padding: 0 15px;
+}
+
+.melis-dashboard-bubble-news-melis-plugin .back .widget-head .btn {
+    border: 0;
+}
+
+#id_meliscore_dashboard_bubble_plugins .page-loaded .row {
+    padding: 0 15px;
+}
+
+#id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
+    padding: 0 10px;
 }
