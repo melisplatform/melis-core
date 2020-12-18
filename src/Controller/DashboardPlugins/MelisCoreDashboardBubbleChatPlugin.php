@@ -36,31 +36,35 @@ class MelisCoreDashboardBubbleChatPlugin extends MelisCoreDashboardTemplatingPlu
     {
         $convoCounter = 0;
         $tempUsers = [];
-
-        // get messages
-        $msgService =  $this->getServiceManager()->get('MelisMessengerService');
-        $messages = $msgService->getNewMessage($this->getCurrentUserId());
-
-        foreach ($messages as $key => $val) {
-            // get conversation counter by unique users
-            if (! in_array($val['msgr_msg_cont_sender_id'], $tempUsers)) {
-                $convoCounter++;
-                $tempUsers[] = $val['msgr_msg_cont_sender_id'];
-            }
-
-            $messages[$key]['usr_image'] =  $this->getUserImage($messages[$key]['usr_image']);
-            $messages[$key]['msgr_msg_cont_date'] = date('d M', strtotime($messages[$key]['msgr_msg_cont_date']));
-        }
-
-        $tempUsers = [];
-        $tempMessages = $messages;
         $messages = [];
 
-        // only get the latest message foreach unique user
-        foreach ($tempMessages as $message) {
-            if (! in_array($message['msgr_msg_cont_sender_id'], $tempUsers)) {
-                $messages[] = $message;
-                $tempUsers[] = $message['msgr_msg_cont_sender_id'];
+        if ($this->getServiceManager()->has('MelisMessengerService')) {
+
+            // get messages
+            $msgService = $this->getServiceManager()->get('MelisMessengerService');
+            $messages = $msgService->getNewMessage($this->getCurrentUserId());
+
+            foreach ($messages as $key => $val) {
+                // get conversation counter by unique users
+                if (!in_array($val['msgr_msg_cont_sender_id'], $tempUsers)) {
+                    $convoCounter++;
+                    $tempUsers[] = $val['msgr_msg_cont_sender_id'];
+                }
+
+                $messages[$key]['usr_image'] = $this->getUserImage($messages[$key]['usr_image']);
+                $messages[$key]['msgr_msg_cont_date'] = date('d M', strtotime($messages[$key]['msgr_msg_cont_date']));
+            }
+
+            $tempUsers = [];
+            $tempMessages = $messages;
+            $messages = [];
+
+            // only get the latest message foreach unique user
+            foreach ($tempMessages as $message) {
+                if (!in_array($message['msgr_msg_cont_sender_id'], $tempUsers)) {
+                    $messages[] = $message;
+                    $tempUsers[] = $message['msgr_msg_cont_sender_id'];
+                }
             }
         }
 
