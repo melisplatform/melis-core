@@ -818,20 +818,22 @@ var melisCore = (function(window){
                 }
             }
 
-            // check if plugins menu is oepn, adjust .grid-stack width accordingly
-            if ( melisCore.screenSize >=768 ) {
+            // check if plugins menu is open, adjust .grid-stack width accordingly
+            if ( screenSize >=768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $pluginBox.hasClass("shown") ) {
                         if ( $melisLeftMenu.hasClass("shown") ) {
                             $gs.animate({
                                 width: minWidth
                             }, 3);
+
+                            
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize === 768 ) {
                                 $gs.animate({
                                     width: maxWidth - pluginBoxWidth
-                                }, 3);    
+                                }, 3);
                             }
                             else {
                                 $gs.animate({
@@ -1039,34 +1041,6 @@ var melisCore = (function(window){
         $body.on("click", "#newplugin-cont .ul-cont li", function() {
             $(this).find("ul").addClass("ul-open");
             $(this).siblings().find("ul").removeClass("ul-open");
-        });
-    } else {
-        $(window).on("scroll", function() {
-            // sticky page actions
-			var sidebarStatus = $("body").hasClass("sidebar-mini"),
-                sidebarWidth = 0;
-
-            if ( !sidebarStatus ) {
-                sidebarWidth = $("#id_meliscore_leftmenu").outerWidth();
-            }
-
-            var activateFixed = $("#" + activeTabId + " div.page-title").outerHeight();
-    
-                if ( $(window).scrollTop() > activateFixed && screenSize > 1120 ) {
-                    $("#" + activeTabId + " .dashboard-page-head-container").css(
-                        "padding-top",
-                        "72px"
-                    );
-                    $("#" + activeTabId + " .dashboard-page-head-container > .innerAll").addClass("sticky-pageactions");
-                    $("#" + activeTabId + " .dashboard-page-head-container > .innerAll").css({
-                        width: $body.width() - sidebarWidth,
-                        left: sidebarWidth,
-                    });
-                } else {
-                    $("#" + activeTabId + " .dashboard-page-head-container").removeAttr("style");
-                    $("#" + activeTabId + " .dashboard-page-head-container > .innerAll").removeClass("sticky-pageactions");
-                    $("#" + activeTabId + " .dashboard-page-head-container > .innerAll").removeAttr("style");
-                }
         });
     }
 
