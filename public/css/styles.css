@@ -4587,3 +4587,17 @@ input#log_date_range {
 .select2-container.select2-container--default.select2-container--open {
 	z-index: 1050;
 }
+/* mini template tinymce custom plugin custom-css-class-dialog-panel */
+.tox .tox-dialog__body-content .tox-form.custom-css-class-dialog-panel {
+    display: block;
+}
+.tox-dialog__body-content .tox-form.custom-css-class-dialog-panel .tox-form__group:not(.tox-form__group--stretched) {
+    display: inline-block;
+    width: fit-content;
+    position: relative;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+}
+.tox .tox-form.custom-css-class-dialog-panel .tox-form__group--stretched {
+	height: 395px;
+}
