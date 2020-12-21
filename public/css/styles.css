@@ -4545,16 +4545,20 @@ input#log_date_range{
 #id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
     padding: 0;
     margin: 0 -5px;
+    height: 211px;
 }
 
-#bubble-plugin {
-    margin: -25px 0 0;
-
+#bubble-plugin,
+.melis-core-dashboard-msg {
     -webkit-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
     -moz-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
     -ms-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
     -o-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
     transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
+}
+
+#bubble-plugin {
+    margin: -25px 0 0;
 }
 
 #id_meliscore_dashboard_bubble_plugins.hide-flip-cards .page-loaded {
@@ -4571,4 +4575,9 @@ input#log_date_range{
     top: 72px;
     width: 100%;
     z-index: 100;
+}
+
+#id_meliscore_dashboard_bubble_plugins .melis-dashboard-bubble-news-melis-plugin .front .widget,
+#id_meliscore_dashboard_bubble_plugins .melis-dashboard-bubble-news-melis-plugin .back .widget {
+    margin-bottom: 0;
 }

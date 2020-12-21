@@ -831,10 +831,10 @@ var melisDashBoardDragnDrop = {
 
         // set data min width and max width, from setAdjustGridMeasurements() function
         $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
-        $gs.attr("data-max-width", $gs.outerWidth());
+        $gs.attr("data-max-width", $gs.outerWidth() );
 
         // display .grid-stack width in pixels on document load
-        $gs.css("width", $gs.outerWidth());
+        $gs.css("width", $gs.outerWidth() );
 
         // bubble plugin, sets min and max widths
         $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
@@ -857,6 +857,10 @@ var melisDashBoardDragnDrop = {
         }
         else {
             $dbMsg.show();
+
+            $dbMsg.animate({
+                width: minWidth
+            }, 3);
         }
 
         // .select2-container width 100% specific for latest comments plugin on document ready
