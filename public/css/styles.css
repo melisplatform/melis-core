@@ -4544,7 +4544,7 @@ input#log_date_range{
 
 #id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
     padding: 0;
-    margin: 0 -5px;
+    margin: 3px -15px 0;
     height: 211px;
 }
 
@@ -4559,6 +4559,7 @@ input#log_date_range{
 
 #bubble-plugin {
     margin: -25px 0 0;
+    overflow: hidden;
 }
 
 #id_meliscore_dashboard_bubble_plugins.hide-flip-cards .page-loaded {

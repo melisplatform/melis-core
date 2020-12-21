@@ -831,17 +831,17 @@ var melisDashBoardDragnDrop = {
 
         // set data min width and max width, from setAdjustGridMeasurements() function
         $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
-        $gs.attr("data-max-width", $gs.outerWidth() );
+        $gs.attr("data-max-width", $gs.outerWidth());
 
         // display .grid-stack width in pixels on document load
-        $gs.css("width", $gs.outerWidth() );
+        $gs.css("width", $gs.outerWidth());
 
         // bubble plugin, sets min and max widths
-        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
-        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
+        $bubblePlugin.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth() );
+        $bubblePlugin.attr("data-max-width", $gs.outerWidth() );
 
         // display #bubble-plugin width
-        $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+        $bubblePlugin.css("width", $gs.outerWidth() );
 
         // dbMsg, sets min and max widths
         $dbMsg.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth() );
@@ -857,10 +857,6 @@ var melisDashBoardDragnDrop = {
         }
         else {
             $dbMsg.show();
-
-            $dbMsg.animate({
-                width: minWidth
-            }, 3);
         }
 
         // .select2-container width 100% specific for latest comments plugin on document ready
@@ -873,22 +869,24 @@ var melisDashBoardDragnDrop = {
             }, 3);
         });
 
-        // check if plugins menu is open, adjust .grid-stack width accordingly
-        if ( $pluginBox.hasClass("shown") && gsi === 0 ) {
-            $gs.animate({
-                width: minWidth
-            }, 3);
-
-            $dbMsg.animate({
-                width: minWidth
-            }, 3);
-
-            if ( $bubblePlugin.length ) {
-                $bubblePlugin.animate({
-                    width: bubblePluginMinWidth
+        setTimeout(function() {
+            // check if plugins menu is open, adjust .grid-stack width accordingly
+            if ( $pluginBox.hasClass("shown") && gsi === 0 ) {
+                $gs.animate({
+                    width: minWidth
                 }, 3);
+
+                $dbMsg.animate({
+                    width: minWidth
+                }, 3);
+
+                if ( $bubblePlugin.length ) {
+                    $bubblePlugin.animate({
+                        width: bubblePluginMinWidth
+                    }, 3);
+                }
             }
-        }
+        }, 1000);
 
         /**
          * gridstack
