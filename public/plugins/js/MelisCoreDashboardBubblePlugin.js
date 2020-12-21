@@ -56,7 +56,7 @@ var MelisCoreDashboardBubblePlugin = {
     }
 };
 
-$(document).ready(function() {
+$(function() {
     var $body = $('body');
     var MAX_COOKIE_AGE = 2147483647000;
 
@@ -88,6 +88,8 @@ $(document).ready(function() {
                 MelisCoreDashboardBubbleUpdatesPlugin.init()
                 MelisCoreDashboardBubbleNotificationsPlugin.init()
                 MelisCoreDashboardBubbleChatPlugin.init()
+
+                $("#id_meliscore_dashboard_bubble_plugins").removeClass("hide-flip-cards");
             }
         );
     });
@@ -101,6 +103,9 @@ $(document).ready(function() {
             'meliscore_dashboard_bubble_plugins',
             {
                 show: false
+            },
+            function() {
+                $("#id_meliscore_dashboard_bubble_plugins").addClass("hide-flip-cards");
             }
         );
     });
@@ -110,5 +115,12 @@ $(document).ready(function() {
         updatedCookie += "; " + "path" + "=" + '/';
         updatedCookie += "; " + "expires" + "=" + new Date(MAX_COOKIE_AGE).toUTCString();
         document.cookie = updatedCookie;
+    }
+
+    if ( $("#btn-show-bubble-plugins").length ) {
+        $("#id_meliscore_dashboard_bubble_plugins").addClass("hide-flip-cards");
+    }
+    else {
+        $("#id_meliscore_dashboard_bubble_plugins").removeClass("hide-flip-cards");
     }
 });

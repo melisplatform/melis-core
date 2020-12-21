@@ -4542,19 +4542,33 @@ input#log_date_range{
     padding: 0 15px;
 }
 
-.bubble-plugin-show-hide-button {
-    margin: -25px 0 25px;
-}
-
 #id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
     padding: 0;
     margin: 0 -5px;
 }
 
 #bubble-plugin {
+    margin: -25px 0 0;
+
     -webkit-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
     -moz-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
     -ms-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
     -o-transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
     transition: left 0.3s, top 0.3s, height 0.3s, width 0.3s;
+}
+
+#id_meliscore_dashboard_bubble_plugins.hide-flip-cards .page-loaded {
+    padding: 0;
+    width: 100%;
+}
+
+#id_meliscore_dashboard_bubble_plugins .page-loaded {
+    padding-bottom: 0;
+}
+
+#id_meliscore_dashboard_bubble_plugins.hide-flip-cards .page-loaded #bubble-plugin {
+    position: fixed;
+    top: 72px;
+    width: 100%;
+    z-index: 100;
 }
