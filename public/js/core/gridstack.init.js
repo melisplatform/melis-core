@@ -836,9 +836,17 @@ var melisDashBoardDragnDrop = {
         // display .grid-stack width in pixels on document load
         $gs.css("width", $gs.outerWidth());
 
-        // bubble plugin, sets min and max widths
-        $bubblePlugin.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth() );
-        $bubblePlugin.attr("data-max-width", $gs.outerWidth() );
+        setTimeout(function() {
+            // bubble plugin, sets min and max widths
+            if ( $("#id_meliscore_center_dashboard_menu.shown").length > 0 ) {
+                $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );    
+            }
+            else {
+                $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() );
+            }
+        }, 1000);
+
+        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
 
         // display #bubble-plugin width
         $bubblePlugin.css("width", $gs.outerWidth() );
