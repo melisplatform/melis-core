@@ -53,62 +53,115 @@ var MelisCoreDashboardBubblePlugin = {
         });
 
         return showBubblePlugins;
+    },
+    addMinMaxWidth: function() {
+        setTimeout(function() {
+            var $body                   = $("body"),
+                $gs                     = $body.find("#"+activeTabId + " .grid-stack"),
+                gsi                     = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
+                minWidth                = $gs.data("min-width"),
+                maxWidth                = $gs.data("max-width"),
+                $pluginBtn              = $body.find("#melisDashBoardPluginBtn"),
+                $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+                $bubblePlugin           = $body.find("#bubble-plugin"),
+                bubblePluginWidth       = $bubblePlugin.outerWidth(),
+                bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
+                bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
+
+                // bubble plugin, sets min and max widths
+                $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
+                $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
+
+                // display #bubble-plugin width
+                $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+
+                // check if plugins menu is open, adjust .grid-stack width accordingly
+                /* console.log("1000 $pluginBox hasClass shown gsi bubblePlugin length: ", $pluginBox.hasClass("shown"))
+                console.log("gsi: ", gsi);
+                console.log("$bubble.length: ", $bubblePlugin.length ); */
+
+                if ( $pluginBox.hasClass("shown") && gsi === 0 && $bubblePlugin.length ) {
+                    /* console.log("inside if statement!!");
+                    console.log("bubblePluginMinWidth: ", bubblePluginMinWidth); */
+                    $bubblePlugin.animate({
+                        width: bubblePluginMinWidth
+                    }, 3);
+                }
+            }, 1000);
     }
 };
 
-$(document).ready(function() {
+$(function() {
     var $body = $('body');
     var MAX_COOKIE_AGE = 2147483647000;
 
-    // flipping the card
-    $body.on('click', '.melis-dashboard-bubble-plugin .front .btn', function () {
-        $(this).closest('.panel-3d').addClass('panel-flip');
+        //MelisCoreDashboardBubblePlugin.addMinMaxWidth();
 
-        // fix bug where in the body will not be scrollable even if nice scroll was already initialized
-        $(this).closest('.melis-dashboard-bubble-plugin').find('.back-container').getNiceScroll().onResize();
-    });
+        // flipping the card
+        $body.on('click', '.melis-dashboard-bubble-plugin .front .btn', function () {
+            $(this).closest('.panel-3d').addClass('panel-flip');
 
-    // flipping the card back to front
-    $body.on('click', '.melis-dashboard-bubble-plugin .back .btn', function () {
-        $(this).closest('.panel-3d').removeClass('panel-flip');
-    });
+            // fix bug where in the body will not be scrollable even if nice scroll was already initialized
+            $(this).closest('.melis-dashboard-bubble-plugin').find('.back-container').getNiceScroll().onResize();
+        });
 
-    // show plugins
-    $body.on('click', '#btn-show-bubble-plugins', function () {
-        updateCookie(true);
+        // flipping the card back to front
+        $body.on('click', '.melis-dashboard-bubble-plugin .back .btn', function () {
+            $(this).closest('.panel-3d').removeClass('panel-flip');
+        });
 
-        melisHelper.zoneReload(
-            'id_meliscore_dashboard_bubble_plugins',
-            'meliscore_dashboard_bubble_plugins',
-            {
-                show: true
-            }, function () {
-                MelisCoreDashboardBubblePlugin.init()
-                MelisCoreDashboardBubbleNewsMelisPlugin.init()
-                MelisCoreDashboardBubbleUpdatesPlugin.init()
-                MelisCoreDashboardBubbleNotificationsPlugin.init()
-                MelisCoreDashboardBubbleChatPlugin.init()
-            }
-        );
-    });
+        // show plugins
+        $body.on('click', '#btn-show-bubble-plugins', function () {
+            updateCookie(true);
 
-    // hide plugins
-    $body.on('click', '#btn-hide-bubble-plugins', function () {
-        updateCookie(false);
+            melisHelper.zoneReload(
+                'id_meliscore_dashboard_bubble_plugins',
+                'meliscore_dashboard_bubble_plugins',
+                {
+                    show: true
+                }, function () {
+                    MelisCoreDashboardBubblePlugin.init();
+                    MelisCoreDashboardBubbleNewsMelisPlugin.init();
+                    MelisCoreDashboardBubbleUpdatesPlugin.init();
+                    MelisCoreDashboardBubbleNotificationsPlugin.init();
+                    MelisCoreDashboardBubbleChatPlugin.init();
 
-        melisHelper.zoneReload(
-            'id_meliscore_dashboard_bubble_plugins',
-            'meliscore_dashboard_bubble_plugins',
-            {
-                show: false
-            }
-        );
-    });
+                    $("#id_meliscore_dashboard_bubble_plugins").removeClass("hide-flip-cards");
+                }
+            );
 
-    function updateCookie(value) {
-        var updatedCookie = encodeURIComponent("show_bubble_plugins") + "=" + encodeURIComponent(value);
-        updatedCookie += "; " + "path" + "=" + '/';
-        updatedCookie += "; " + "expires" + "=" + new Date(MAX_COOKIE_AGE).toUTCString();
-        document.cookie = updatedCookie;
-    }
+            MelisCoreDashboardBubblePlugin.addMinMaxWidth();
+        });
+
+        // hide plugins
+        $body.on('click', '#btn-hide-bubble-plugins', function () {
+            updateCookie(false);
+
+            melisHelper.zoneReload(
+                'id_meliscore_dashboard_bubble_plugins',
+                'meliscore_dashboard_bubble_plugins',
+                {
+                    show: false
+                },
+                function() {
+                    $("#id_meliscore_dashboard_bubble_plugins").addClass("hide-flip-cards");
+                }
+            );
+
+            MelisCoreDashboardBubblePlugin.addMinMaxWidth();
+        });
+
+        function updateCookie(value) {
+            var updatedCookie = encodeURIComponent("show_bubble_plugins") + "=" + encodeURIComponent(value);
+            updatedCookie += "; " + "path" + "=" + '/';
+            updatedCookie += "; " + "expires" + "=" + new Date(MAX_COOKIE_AGE).toUTCString();
+            document.cookie = updatedCookie;
+        }
+
+        if ( $("#btn-show-bubble-plugins").length ) {
+            $("#id_meliscore_dashboard_bubble_plugins").addClass("hide-flip-cards");
+        }
+        else {
+            $("#id_meliscore_dashboard_bubble_plugins").removeClass("hide-flip-cards");
+        }
 });
