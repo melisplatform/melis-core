@@ -405,9 +405,9 @@ var melisCore = (function(window){
                                     width: maxWidth
                                 }, 3);
 
-                                $dbMsg.animate({
+                                /* $dbMsg.animate({
                                     width: maxWidth
-                                }, 3);
+                                }, 3); */
                             }
                             else {
                                 $gs.animate({

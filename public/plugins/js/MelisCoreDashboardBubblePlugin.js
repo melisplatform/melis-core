@@ -56,43 +56,45 @@ var MelisCoreDashboardBubblePlugin = {
     },
     addMinMaxWidth: function() {
         var setBubblePluginInterval = setInterval(function() {
-            //setTimeout(function() {
-                var $body                   = $("body"),
-                    $gs                     = $body.find("#"+activeTabId + " .grid-stack"),
-                    gsi                     = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
-                    minWidth                = $gs.data("min-width"),
-                    maxWidth                = $gs.data("max-width"),
-                    $pluginBtn              = $body.find("#melisDashBoardPluginBtn"),
-                    $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-                    $bubblePlugin           = $body.find("#bubble-plugin"),
-                    bubblePluginWidth       = $bubblePlugin.outerWidth(),
-                    bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
-                    bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
+            var $body                   = $("body"),
+                $gs                     = $body.find("#"+activeTabId + " .grid-stack"),
+                gsi                     = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
+                minWidth                = $gs.data("min-width"),
+                maxWidth                = $gs.data("max-width"),
+                $pluginBtn              = $body.find("#melisDashBoardPluginBtn"),
+                $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+                $bubblePlugin           = $("#bubble-plugin"),
+                bubblePluginWidth       = $bubblePlugin.outerWidth(),
+                bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
+                bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
 
-                    // display #bubble-plugin width
-                    $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
-
-                    if ( $bubblePlugin.length > 0 ) {
+                if ( $bubblePlugin.length > 0 ) {
+                    
+                    if ( $("#id_meliscore_center_dashboard_menu.shown").length > 0 ) {
+                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
                         $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
 
-                        if ( $("#id_meliscore_center_dashboard_menu.shown").length > 0 ) {
-                            $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
+                        // display #bubble-plugin width
+                        $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
 
-                            $bubblePlugin.animate({
-                                width: minWidth
-                            }, 3);
-                        }
-                        else {
-                            $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() );
-
-                            $bubblePlugin.animate({
-                                width: maxWidth
-                            }, 3);
-                        }
-
-                        clearInterval( setBubblePluginInterval );
+                        $bubblePlugin.animate({
+                            width: $bubblePlugin.outerWidth() - $pluginBox.outerWidth()
+                        }, 3);
                     }
-            //}, 1000);
+                    else {
+                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() );
+                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
+
+                        // display #bubble-plugin width
+                        $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+
+                        $bubblePlugin.animate({
+                            width: $bubblePlugin.outerWidth()
+                        }, 3);
+                    }
+
+                    clearInterval( setBubblePluginInterval );
+                }
         }, 500);
     }
 };
@@ -131,11 +133,11 @@ $(function() {
                     MelisCoreDashboardBubbleChatPlugin.init();
 
                     $("#id_meliscore_dashboard_bubble_plugins").removeClass("hide-flip-cards");
+
+                    // checks min-width and max-width attribute for #bubble-plugin element
+                    MelisCoreDashboardBubblePlugin.addMinMaxWidth();
                 }
             );
-            
-            // checks min-width and max-width attribute for #bubble-plugin element
-            MelisCoreDashboardBubblePlugin.addMinMaxWidth();
         });
 
         // hide plugins
@@ -150,11 +152,11 @@ $(function() {
                 },
                 function() {
                     $("#id_meliscore_dashboard_bubble_plugins").addClass("hide-flip-cards");
+
+                    // checks min-width and max-width attribute for #bubble-plugin element
+                    MelisCoreDashboardBubblePlugin.addMinMaxWidth();
                 }
             );
-            
-            // checks min-width and max-width attribute for #bubble-plugin element
-            MelisCoreDashboardBubblePlugin.addMinMaxWidth();
         });
 
         function updateCookie(value) {
