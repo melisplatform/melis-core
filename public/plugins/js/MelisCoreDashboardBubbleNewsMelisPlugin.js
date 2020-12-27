@@ -55,10 +55,10 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                 var newsWithImage = '<div class="media innerAll">' +
                                         '<div class="media-body" data-link="' + link + '">' +
                                             '<div class="row">' +
-                                                '<div class="col-md-6">' +
+                                                '<div class="col-md-6 pl-0">' +
                                                     '<img class="img-fluid dashboard-bubble-news-img dashboard-bubble-news-plugin-show-news" src="' + img + '" class="dashboard-bubble-news-plugin-show-news" alt="Placeholder image" />' +
                                                 '</div>' +
-                                                '<div class="col-md-6 pl-0">' +
+                                                '<div class="col-md-6 pl-0 pr-0">' +
                                                     '<div class="label label-default">' + value.newsDateFormated + '</div>' +
                                                     '<a href="#" class="text-info heading-title dashboard-bubble-news-plugin-show-news" title="' + value.cnews_title + '">' + ( ( title.length > 18 ) ? title.substring(0, 18) + '...' : title ) + '</a>' +
                                                     '<p>' + description.substring(0, 40) + '...</p>' +
@@ -87,12 +87,12 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                 }
             });
         }).fail(function(xhr, textStatus, errorThrown) {
-
+            alert( translations.tr_meliscore_error_message );
         });
     }
 };
 
-$(document).ready(function() {
+$(function() {
     var $body = $('body');
     var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
 

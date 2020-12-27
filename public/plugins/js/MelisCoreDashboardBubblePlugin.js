@@ -69,7 +69,6 @@ var MelisCoreDashboardBubblePlugin = {
                 bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
 
                 if ( $bubblePlugin.length > 0 ) {
-                    
                     if ( $("#id_meliscore_center_dashboard_menu.shown").length > 0 ) {
                         $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
                         $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
@@ -78,7 +77,7 @@ var MelisCoreDashboardBubblePlugin = {
                         $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
 
                         $bubblePlugin.animate({
-                            width: $bubblePlugin.outerWidth() - $pluginBox.outerWidth()
+                            width: $bubblePlugin.outerWidth() - $pluginBox.outerWidth() //bubblePluginMinWidth
                         }, 3);
                     }
                     else {
@@ -89,7 +88,7 @@ var MelisCoreDashboardBubblePlugin = {
                         $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
 
                         $bubblePlugin.animate({
-                            width: $bubblePlugin.outerWidth()
+                            width: $bubblePlugin.outerWidth() //bubblePluginMaxWidth
                         }, 3);
                     }
 
@@ -100,8 +99,13 @@ var MelisCoreDashboardBubblePlugin = {
 };
 
 $(function() {
-    var $body = $('body');
-    var MAX_COOKIE_AGE = 2147483647000;
+    var $body                   = $('body'),
+        MAX_COOKIE_AGE          = 2147483647000,
+        $btnShowBtn             = $("#btn-show-bubble-plugins"),
+        $bubblePluginDashboard  = $("#id_meliscore_dashboard_bubble_plugins"),
+        hideFlipCardsClass      = "hide-flip-cards",
+        $bubblePluginWrapper    = $("#bubble-plugin"),
+        $dbMsg                  = $body.find(".melis-core-dashboard-msg");
 
         // flipping the card
         $body.on('click', '.melis-dashboard-bubble-plugin .front .btn', function () {
@@ -132,10 +136,13 @@ $(function() {
                     MelisCoreDashboardBubbleNotificationsPlugin.init();
                     MelisCoreDashboardBubbleChatPlugin.init();
 
-                    $("#id_meliscore_dashboard_bubble_plugins").removeClass("hide-flip-cards");
+                    //$bubblePluginDashboard.removeClass( hideFlipCardsClass );
 
                     // checks min-width and max-width attribute for #bubble-plugin element
                     MelisCoreDashboardBubblePlugin.addMinMaxWidth();
+
+                    // check dashboard message and grid-stack
+                    checkDashboardMsg();
                 }
             );
         });
@@ -151,10 +158,13 @@ $(function() {
                     show: false
                 },
                 function() {
-                    $("#id_meliscore_dashboard_bubble_plugins").addClass("hide-flip-cards");
+                    //$bubblePluginDashboard.addClass( hideFlipCardsClass );
 
                     // checks min-width and max-width attribute for #bubble-plugin element
                     MelisCoreDashboardBubblePlugin.addMinMaxWidth();
+
+                    // check dashboard message and grid-stack
+                    checkDashboardMsg();
                 }
             );
         });
@@ -166,10 +176,39 @@ $(function() {
             document.cookie = updatedCookie;
         }
 
-        if ( $("#btn-show-bubble-plugins").length ) {
-            $("#id_meliscore_dashboard_bubble_plugins").addClass("hide-flip-cards");
+        // check if #bubble-plugin wrapper is present and that dashboard message notification is found and is visible
+        function checkDashboardMsg() {
+            if ( $bubblePluginWrapper.length ) {    
+                if ( $dbMsg.length && $dbMsg.is(":visible") ) {
+                    if ( $dbMsg.closest(".melis-dashboard-plugins").find(".pt-0").length > 0 ) {
+                        $dbMsg.closest(".melis-dashboard-plugins").removeClass("pt-0");
+                    }
+                    else {
+                        $dbMsg.closest(".melis-dashboard-plugins").addClass("pt-0");
+                    }
+                }
+                else if ( melisDashBoardDragnDrop.countGsItems() > 0 ) {
+                    if ( $dbMsg.closest(".melis-dashboard-plugins").find(".pt-0").length > 0 ) {
+                        $dbMsg.closest(".melis-dashboard-plugins").removeClass("pt-0");
+                    }   
+                    else {
+                        $dbMsg.closest(".melis-dashboard-plugins").addClass("pt-0");
+                    }
+                }
+                // $bubblePluginWrapper.find(".bubble-plugin-flip-cards.hidden").length
+                /* else {
+                    if ( $bubblePluginWrapper.find(".bubble-plugin-flip-cards.hidden").length > 0 ) {
+                        if ( $dbMsg.closest(".melis-dashboard-plugins").find(".pt-0").length == 0 ) {
+                            $dbMsg.closest(".melis-dashboard-plugins").addClass("pt-0");
+                        }   
+                        else {
+                            $dbMsg.closest(".melis-dashboard-plugins").removeClass("pt-0");
+                        }
+                    }
+                } */
+            }
         }
-        else {
-            $("#id_meliscore_dashboard_bubble_plugins").removeClass("hide-flip-cards");
-        }
+
+        // check dashboard message and grid-stack function call on document ready
+        checkDashboardMsg();
 });

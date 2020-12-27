@@ -4530,10 +4530,6 @@ input#log_date_range{
     padding: .2rem .75rem;
 }
 
-#btn-show-bubble-plugins {
-    margin-right: -30px;
-}
-
 .dashboard-page-head-container .innerAll {
     padding: 0 15px;
 }
@@ -4549,7 +4545,7 @@ input#log_date_range{
 #id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
     padding: 0;
     margin: 3px -5px 0;
-    height: 211px;
+    height: 100%;
 }
 
 #bubble-plugin,
@@ -4567,8 +4563,14 @@ input#log_date_range{
 }
 
 #bubble-plugin {
-    margin: -25px 0 0;
+    margin: 0;
     overflow: hidden;
+}
+
+#bubble-plugin .bubble-plugin-show-hide-button {
+    display: block;
+    text-align: center;
+    margin-top: -1px;
 }
 
 #id_meliscore_dashboard_bubble_plugins.hide-flip-cards .page-loaded {
@@ -4578,16 +4580,16 @@ input#log_date_range{
 
 #id_meliscore_dashboard_bubble_plugins .page-loaded {
     padding-bottom: 0;
-}
-
-#id_meliscore_dashboard_bubble_plugins.hide-flip-cards .page-loaded #bubble-plugin {
-    position: fixed;
-    top: 72px;
-    width: 100%;
-    z-index: 100;
+    padding-top: 0;
 }
 
 #id_meliscore_dashboard_bubble_plugins .melis-dashboard-bubble-news-melis-plugin .front .widget,
 #id_meliscore_dashboard_bubble_plugins .melis-dashboard-bubble-news-melis-plugin .back .widget {
     margin-bottom: 0;
+}
+
+@media (min-width: 1200px) {
+    #id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
+        height: 212px;
+    }
 }

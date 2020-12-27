@@ -363,7 +363,7 @@ var melisCore = (function(window){
                             
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: bubblePluginMinWidth
+                                    width: minWidth
                                 }, 3);
                             }
                         }
@@ -400,14 +400,16 @@ var melisCore = (function(window){
                             }
                         }
                         else {
-                            if ( melisCore.screenSize === 768 ) {
+                            if ( screenSize == 768 ) {
                                 $gs.animate({
                                     width: maxWidth
                                 }, 3);
 
-                                /* $dbMsg.animate({
-                                    width: maxWidth
-                                }, 3); */
+                                if ( $bubblePlugin.length ) {
+                                    $bubblePlugin.animate({
+                                        width: bubblePluginMaxWidth
+                                    }, 3);
+                                }
                             }
                             else {
                                 $gs.animate({
