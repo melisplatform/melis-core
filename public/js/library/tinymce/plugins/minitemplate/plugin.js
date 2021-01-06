@@ -543,8 +543,8 @@
                 }
               ],
               onSubmit: onSubmit(templates),
-              onChange: onChange(templates),
-              onAction: onAction(templates)
+              //onChange: onChange(templates),
+              onAction: onAction(templates),
             };
           };
 
