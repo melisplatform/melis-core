@@ -586,6 +586,8 @@
                 preview: content
               };
 
+              console.log("minitemplate initialData: ", initialData);
+
               dialogApi.unblock();
               dialogApi.redial(dialogSpec(bodyItems, initialData));
               dialogApi.focus('minitemplate');
