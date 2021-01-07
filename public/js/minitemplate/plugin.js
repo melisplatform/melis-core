@@ -557,7 +557,7 @@
 
           getTemplateContent(templates[0]).then(function (previewHtml) {
             var content = getPreviewContent(editor, previewHtml);
-            var bodyItems = [{}];
+            var bodyItems = [];
               for ( var index = 0; index < templates.length; index++) {
                 var templateTitle     = templates[index].text,
                     trimTemplateTitle = templateTitle.replaceAll('-', ' ').split('.')[0],
@@ -569,6 +569,10 @@
                       text: trimTemplateTitle
                     });
               }
+
+              bodyItems.sort(function(a, b) {
+                return ( a.text > b.text ) ? 1 : -1;
+              });
 
               bodyItems.push({
                 label: 'Preview',
@@ -584,7 +588,7 @@
 
               dialogApi.unblock();
               dialogApi.redial(dialogSpec(bodyItems, initialData));
-              dialogApi.focus('template');
+              dialogApi.focus('minitemplate');
           });
         };
 
