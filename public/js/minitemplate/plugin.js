@@ -557,13 +557,13 @@
 
           getTemplateContent(templates[0]).then(function (previewHtml) {
             var content = getPreviewContent(editor, previewHtml);
-            var bodyItems = [];
+            var bodyItems = [{}];
               for ( var index = 0; index < templates.length; index++) {
                 var templateTitle     = templates[index].text,
                     trimTemplateTitle = templateTitle.replaceAll('-', ' ').split('.')[0],
                     capitalizeTitle   = trimTemplateTitle.charAt(0).toUpperCase() + trimTemplateTitle.slice(1);
 
-                    bodyItems.push({
+                    bodyItems.unshift({
                       type: 'button',
                       name: templateTitle,
                       text: trimTemplateTitle
