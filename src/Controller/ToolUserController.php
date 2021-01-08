@@ -656,6 +656,16 @@ class ToolUserController extends MelisAbstractActionController
                             if ($data['usr_id'] > 0) {
                                 $success = true;
                             }
+                            // bo email
+                            $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
+                            // Tags to be replace at email content with the corresponding value
+                            $tags = [
+                                'NAME' => $data['usr_firstname'] . ' ' . $data['usr_lastname'],
+                                'LOGIN' => $data['usr_login'],
+                                'EMAIL' => $data['usr_email'],
+                            ];
+                            // send email for account creation
+                            $melisEmailBO->sendBoEmailByCode('ACCOUNTCREATION', $tags, $data['usr_email'], $data['usr_login'], $data['usr_lang_id']);
                         }
                     } else {
                         $success = false;

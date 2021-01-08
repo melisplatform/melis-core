@@ -175,7 +175,8 @@ class EmailsManagementController extends MelisAbstractActionController
             // Get Email App
             $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $emailsConfig = $melisMelisCoreConfig->getItem('meliscore/emails/');
-
+            // remove smtp_config in table listing
+            unset($emailsConfig['smtp_config']); 
 
             $getData = $BOEmails->fetchAll();
             $tableData = $getData->toArray();

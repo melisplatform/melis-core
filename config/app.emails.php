@@ -11,6 +11,28 @@ return array(
                 )
             ),
             'emails' => array(
+                'smtp_config' => [
+                    /**
+                     * smtp configuration
+                     *  - port 
+                     *  - host 
+                     *  - name
+                     *  - connection_class
+                     *  - connection_config => (array) [ 'username' , 'password' , 'ssl' ] 
+                     */
+
+                    /*
+                     * gmail example
+                     */
+                    //'host' => 'smtp.gmail.com',
+                    //'port' => '587',
+                    //'connection_class' => 'login',
+                    //'connection_config' => [
+                    //  'username' => '',
+                    //  'password' => '',
+                    //  'ssl' => 'tls'
+                    //]
+                ],
                 'LOSTPASSWORD' => array(
                     'email_name' => 'Lost Password',
                     'layout' => 'melis-core/view/layout/layoutEmail.phtml',

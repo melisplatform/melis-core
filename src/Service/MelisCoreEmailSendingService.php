@@ -83,6 +83,51 @@ class MelisCoreEmailSendingService extends MelisServiceManager
             catch (\Exception $exception){
                 throw new \Exception($exception->getMessage());
             }
+        } else {
+            // check for smtp_config configuration
+            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/emails');
+            if (isset($config['smtp_config']) && ! empty($config['smtp_config'])) {
+                // get  smtp config
+                $smtpConfig = $config['smtp_config']; 
+                try{
+                    // Setup SMTP transport using LOGIN authentication
+                    $transport = new SmtpTransport();
+                    // add host and port
+                    $options = [
+                        'host' => $smtpConfig['host'] ?? null,
+                        'port' => $smtpConfig['port'],
+                    ];
+                    // add name
+                    if (isset($smtpConfig['name']) && $smtpConfig['name']) {
+                        $options['name'] =  $smtpConfig['name'];
+                    }
+                    
+                    // add connection class
+                    if (isset($smtpConfig['connection_class']) && $smtpConfig['connection_class']) {
+                        $options['connection_class'] =  $smtpConfig['connection_class'];
+                    }
+                    // add connection config
+                    if (isset($smtpConfig['connection_config']) && $smtpConfig['connection_config']) {
+                        $connectionConfig = $smtpConfig['connection_config'];
+                        $options['connection_config'] =  [
+                            // check for username
+                            'username' => $connectionConfig['username'] ?? null,
+                            // check for password
+                            'password' => $connectionConfig['password'] ?? null,
+                            // check for ssl
+                            'ssl' => $connectionConfig['ssl'] ?? null
+                        ];
+                    }
+
+                    // set smtp options
+                    $options = new SmtpOptions($options);
+                    // set transport options
+                    $transport->setOptions($options);
+                }
+                catch (\Exception $exception){
+                    throw new \Exception($exception->getMessage());
+                }
+            }
         }
 
 
