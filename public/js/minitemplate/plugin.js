@@ -581,16 +581,18 @@
                 sandboxed: false
               });
 
-              var initialData = {
-                template: templates[0].text,
-                preview: content
-              };
+              setTimeout(function() {
+                var initialData = {
+                  template: templates[0].text,
+                  preview: content
+                };
 
-              console.log("minitemplate initialData: ", initialData);
-
-              dialogApi.unblock();
-              dialogApi.redial(dialogSpec(bodyItems, initialData));
-              dialogApi.focus('minitemplate');
+                console.log("minitemplate initialData: ", initialData);
+            
+                dialogApi.unblock();
+                dialogApi.redial(dialogSpec(bodyItems, initialData));
+                dialogApi.focus('minitemplate');
+              }, 1000);
           });
         };
 
