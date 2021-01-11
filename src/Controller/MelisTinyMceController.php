@@ -162,7 +162,6 @@ class MelisTinyMceController extends MelisAbstractActionController
                  * get mini templates baesd from mini template manager service
                  */
                 $tinyTemplates = $this->getService('MelisCmsMiniTemplateGetterService')->getMiniTemplates($siteId);
-
             }
         }
 
