@@ -229,8 +229,6 @@ $(function() {
             var $content        = $("#content"),
                 $transitionAnim = $("#content.transition3ms");
 
-                console.log("$content: ", $content.length );
-                console.log("$transitionAnim.length: ", $transitionAnim.length );
                 if ( $transitionAnim.length ) {
                     $content.removeClass("transition3ms");
                 }
