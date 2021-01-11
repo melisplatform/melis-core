@@ -13,21 +13,21 @@ var MelisCoreDashboardBubblePlugin = {
         if (!$('html.csstransitions.csstransforms3d').length)
             return;
 
-        // initializing of cards are moved to the individual bubble plugins
-        // $('.melis-dashboard-bubble-plugin[style=""]')
-        //     .addClass('flip-default')
-        //     .each(function(i){
-        //         var t = $(this);
-        //         setTimeout(function(){
-        //             t.css('visibility', 'visible').addClass('animated fadeInLeft');
-        //         }, (i+1)*300);
-        //         setTimeout(function(){
-        //             t.removeClass('flip-default fadeInLeft');
-        //             setTimeout(function(){
-        //                 t.find('[class*="icon-"]').css('visibility', 'visible').addClass('animated fadeInDown');
-        //             }, (i+1)*200);
-        //         }, (i+1)*800);
-        //     });
+        /* // initializing of cards are moved to the individual bubble plugins
+        $('.melis-dashboard-bubble-plugin[style=""]')
+            .addClass('flip-default')
+            .each(function(i){
+                var t = $(this);
+                setTimeout(function(){
+                    t.css('visibility', 'visible').addClass('animated fadeInLeft');
+                }, (i+1)*300);
+                setTimeout(function(){
+                    t.removeClass('flip-default fadeInLeft');
+                    setTimeout(function(){
+                        t.find('[class*="icon-"]').css('visibility', 'visible').addClass('animated fadeInDown');
+                    }, (i+1)*200);
+                }, (i+1)*800);
+            }); */
 
         // initialize scroll
         $('.melis-dashboard-bubble-plugin .back .widget-scroll').each(function() {
@@ -101,10 +101,12 @@ var MelisCoreDashboardBubblePlugin = {
 $(function() {
     var $body                   = $('body'),
         MAX_COOKIE_AGE          = 2147483647000,
-        $btnShowBtn             = $("#btn-show-bubble-plugins"),
         $bubblePluginDashboard  = $("#id_meliscore_dashboard_bubble_plugins"),
         hideFlipCardsClass      = "hide-flip-cards",
         $bubblePluginWrapper    = $("#bubble-plugin"),
+        $bubbleShowButton       = $("#btn-show-bubble-plugins"),
+        $bubbleHideButton       = $("#btn-hide-bubble-plugins"),
+        $bubblePluginWrapMb20px = $("#bubble-plugin.mb-20px"),
         $dbMsg                  = $body.find(".melis-core-dashboard-msg");
 
         // flipping the card
@@ -143,6 +145,12 @@ $(function() {
 
                     // check dashboard message and grid-stack
                     checkDashboardMsg();
+                    
+                    // check hide or show button
+                    //checkIfHideOrShowButton();
+
+                    // delay adding of the class .transition3ms
+                    // delayTransitionAnimation();
                 }
             );
         });
@@ -165,6 +173,13 @@ $(function() {
 
                     // check dashboard message and grid-stack
                     checkDashboardMsg();
+
+                    // delay adding of the class .transition3ms
+                    //delayTransitionAnimation();
+
+                    if ( $("#bubble-plugin.mb-20px").length ) {
+                        $("#bubble-plugin").removeClass("mb-20px");
+                    }
                 }
             );
         });
@@ -209,6 +224,38 @@ $(function() {
             }
         }
 
+        // #content, .transition3ms
+        function delayTransitionAnimation() {
+            var $content        = $("#content"),
+                $transitionAnim = $("#content.transition3ms");
+
+                console.log("$content: ", $content.length );
+                console.log("$transitionAnim.length: ", $transitionAnim.length );
+                if ( $transitionAnim.length ) {
+                    $content.removeClass("transition3ms");
+                }
+                
+                /* var animation = setTimeout(function() {
+                    if ( ! $transitionAnim.length ) {
+                        $content.addClass("transition3ms");
+                        clearInterval( animation );
+                    }
+                }, 2000); */
+        }
+
+        // check for hide or show button is found
+        function checkIfHideOrShowButton() {
+            if ( $bubbleHideButton.length && $bubblePluginWrapper.hasClass("mb-20px") ) {
+                $bubblePluginWrapper.addClass("mb-20px");
+            }
+            else {
+                $bubblePluginWrapper.removeClass("mb-20px");
+            }
+        }
+
         // check dashboard message and grid-stack function call on document ready
         checkDashboardMsg();
+
+        // call to run function
+        checkIfHideOrShowButton();
 });

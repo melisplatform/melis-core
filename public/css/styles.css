@@ -4588,6 +4588,14 @@ input#log_date_range{
     margin-bottom: 0;
 }
 
+#melis-id-body-content-load {
+    background: #fff;
+}
+
+#bubble-plugin.mb-20px {
+    margin-bottom: 20px;
+}
+
 @media (min-width: 1200px) {
     #id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
         height: 212px;
