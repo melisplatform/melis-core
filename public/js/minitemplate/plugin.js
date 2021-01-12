@@ -580,14 +580,12 @@
                 name: 'preview',
                 sandboxed: false
               });
-
+              
               setTimeout(function() {
                 var initialData = {
                   template: templates[0].text,
                   preview: content
                 };
-
-                console.log("minitemplate initialData: ", initialData);
             
                 dialogApi.unblock();
                 dialogApi.redial(dialogSpec(bodyItems, initialData));
