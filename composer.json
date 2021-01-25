@@ -45,6 +45,7 @@
 		"laminas/laminas-mvc-i18n": "^1.1",
 		"laminas/laminas-db": "^2.11",
 		"laminas/laminas-authentication": "^2.7",
+		"laminas/laminas-servicemanager": "3.5.*",
 		"laminas/laminas-mail": "^2.11",
 		"laminas/laminas-mime": "^2.7",
 		"laminas/laminas-inputfilter": "^2.10",
