@@ -9,6 +9,7 @@
 
 namespace MelisCore\Controller\DashboardPlugins;
 
+use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
 use Laminas\View\Model\ViewModel;
@@ -38,6 +39,12 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
     public function getNews() {
         $data = [];
         $countOfNews = 0;
+        $container = new Container('meliscore');
+        $locale = $container['melis-lang-locale'];
+        $dateFormat = 'm-d-Y';
+
+        if ($locale === 'fr_FR')
+            $dateFormat = 'd-m-Y';
 
         // get url for api in config
         $config = $this->getServiceManager()->get('MelisCoreConfig');
@@ -63,7 +70,7 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
             // add formated date to data
             foreach ($data as &$news) {
                 $news['newsDateFormated'] = date(
-                    'd-m-Y',
+                    $dateFormat,
                     strtotime(
                         ($news['cnews_publish_date']) ? $news['cnews_publish_date'] : $news['cnews_creation_date']
                     )
