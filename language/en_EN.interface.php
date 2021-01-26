@@ -774,8 +774,8 @@ return [
     'tr_meliscore_logs_tool_export_modal_content' => 'Export modal content',
 
     // bubble plugins
-    'tr_meliscore_dashboard_bubble_plugins_hide' => 'Hide',
-    'tr_meliscore_dashboard_bubble_plugins_show' => 'Show',
+    'tr_meliscore_dashboard_bubble_plugins_hide' => 'Hide plugin info',
+    'tr_meliscore_dashboard_bubble_plugins_show' => 'Show plugin info',
     'tr_meliscore_dashboard_bubble_plugins_read' => 'Read',
     'tr_meliscore_dashboard_bubble_plugins_melis_news' => 'Melis News',
     'tr_meliscore_dashboard_bubble_plugins_view_melis_news' => 'View Melis News',
