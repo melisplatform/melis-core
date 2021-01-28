@@ -35,7 +35,6 @@
         'setup' => 'melisTinyMCE.tinyMceActionEvent',
         'init_instance_callback' => 'tinyMceCleaner'
 	];
-
 # For reference before implementing this fixed: http://mantis.melistechnology.fr/view.php?id=3675
 /* return array(
     'mode' => 'textareas',
