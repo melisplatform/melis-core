@@ -226,7 +226,6 @@ return array(
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
-                    //'/MelisCore/js/library/tinymce/plugins/minitemplate/plugin.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
 
