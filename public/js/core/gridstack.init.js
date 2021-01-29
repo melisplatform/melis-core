@@ -642,8 +642,8 @@ var melisDashBoardDragnDrop = {
                     else {
                         $dashboardMsg.hide();
                         self.$gs.css({
-                            "height": "840px",
-                            "min-height": "840px"
+                            "height": "776px",
+                            "min-height": "776px"
                         });
                     }
             }
