@@ -588,6 +588,8 @@
             
               dialogApi.unblock();
               dialogApi.redial(dialogSpec(bodyItems, initialData));
+              
+              //console.log('minitemplate templateList: ', templateList);
 
               for ( var index = 0; index < templateList.length; index++ ) {
                 var templateTitle     = templateList[index].text,
@@ -595,7 +597,9 @@
                     trimTemplateTitle = templateTitle.replaceAll('-', ' ').split('.')[0],
                     $button           = document.querySelector('button[title="'+ trimTemplateTitle +'"]');
 
-                    $button.innerHTML = $button.innerHTML + "<img src=" + imgSrc + " title=" + templateTitle + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />";
+                    $button.innerHTML = $button.innerHTML + "<img src=" + imgSrc + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />";
+
+                    $button.setAttribute("title", templateTitle+".phtml");
               }
 
               var $dialogBody         = document.querySelector(".tox-dialog__body-content"),
