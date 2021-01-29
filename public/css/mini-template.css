@@ -32,3 +32,6 @@
 #custom-body-mini-template .tox-form__group--stretched {
     height: 275px;
 }
+#mini-template-buttons .tox-button {
+    font-weight: normal;
+}
