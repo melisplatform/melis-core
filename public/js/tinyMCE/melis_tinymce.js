@@ -11,6 +11,10 @@ var melisTinyMCE = (function(){
             options     : options
         }
         
+        if (options.hasOwnProperty('templates')) {
+            options.templates = options.templates + "&type=" + type;
+        } 
+        
         $.ajax({
             type        : 'POST', 
             url         : '/melis/MelisCore/MelisTinyMce/getTinyMceConfig',
