@@ -1,0 +1,36 @@
+<?php
+    // prepare form
+    $this->formFilter->prepare();
+    $priorityPositinoInputs = [
+        'mgdprc_site_id',
+        'mgdprc_module_name',
+    ];
+?>
+<div id="add-edit-config-content" class="collapse show" aria-labelledby="add-edit-config" data-parent="#accordion-add-edit">
+<div class="add-edit-config-filters">
+    <div class="row">
+        <div class="col-md-6">
+            <?= $this->form()->openTag($this->formFilter) ?>
+            <div class="form-row">
+                <?php foreach ($priorityPositinoInputs as $elementName) {?>
+                    <?php foreach ($this->formFilter as $element => $options) {?>
+                        <?php if ( $elementName == $element ){?>
+                            <div class="form-group col-md-4">
+                                <?= $this->MelisFieldRow($this->formFilter->get($elementName)) ?>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+                <?php } ?>
+                <!-- for elements of the other modules -->
+                <?php foreach ($this->formFilter as $element => $options) {?>
+                    <?php if ( !in_array($element,$priorityPositinoInputs) ){?>
+                        <div class="form-group col-md-4">
+                            <?= $this->MelisFieldRow($this->formFilter->get($elementName)) ?>
+                        </div>
+                    <?php } ?>
+                <?php } ?>
+            </div>
+            <?= $this->form()->closeTag() ?>
+        </div>
+    </div>
+</div>

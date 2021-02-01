@@ -1,0 +1,70 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' style="padding: 0" class="gdpr-auto-delete-multi-tabs">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="nav flex-column nav-pills nav-gdpr-auto-delete-tabs" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <?php
+                        // plot configuration tab
+                        if (!empty($this->zoneconfig['interface'])) { ?>
+                            <?php if (isset($this->zoneconfig['interface']['meliscoregdpr_auto_delete_add_edit_config_tab_config'])) { ?>
+                                <a class="nav-link active"
+                                   id="id_meliscoregdpr_auto_delete_add_edit_config_tab_config_tab"
+                                   data-toggle="pill" href="#id_meliscoregdpr_auto_delete_add_edit_config_tab_config"
+                                   role="tab" aria-controls="id_meliscoregdpr_auto_delete_add_edit_config_tab_config"
+                                   aria-selected="true">Configuration <span class="fa fa-wrench fa-md float-right fa-lg" style="margin:3px 5px 0 0;"></span></a>
+                            <?php } ?>
+                        <?php }
+
+                        // special case for languages
+                        foreach ($this->melisCmsLang as $i => $data) { ?>
+                            <a class="nav-link alert-email-<?= strtolower($data['lang_cms_locale']) ?>" id="alert_emails_<?= strtolower($data['lang_cms_locale']) ?>_tab"
+                               data-toggle="pill" href="#alert_emails_<?= strtolower($data['lang_cms_locale']) ?>"
+                               role="tab" aria-controls="alert_emails_<?= strtolower($data['lang_cms_locale']) ?>"
+                               aria-selected="false"><div class="float-left"><?= $data['lang_cms_name'] ?></div> <img class='imgDisplay float-right' src="/MelisCore/images/lang/<?= $data['lang_cms_locale'] ?>.png" /><div class="clearfix"></div></a>
+                        <?php }
+                        ?>
+                        <?php
+                        $exludedInterface = [
+                            'meliscoregdpr_auto_delete_add_edit_config_tab_alert_emails',
+                            'meliscoregdpr_auto_delete_add_edit_config_tab_config'
+                        ];
+                        $interfaceNeedId = [
+                            'meliscoregdpr_auto_delete_add_edit_config_tab_logs'
+                        ];
+                        // for better ordering
+                        if (!empty($this->zoneconfig['interface'])) {
+                            foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) { ?>
+                                <?php if (!in_array($menuConfig['conf']['melisKey'], $exludedInterface)) { ?>
+                                    <a class="nav-link" id="<?= $menuConfig['conf']['id'] ?? null ?>_tab"
+                                       data-toggle="pill" href="#<?= $menuConfig['conf']['id'] ?? null ?>"
+                                       role="tab" aria-controls="<?= $menuConfig['conf']['id'] ?? null ?>"
+                                       aria-selected="false"><?= $menuConfig['conf']['name'] ?? null ?>
+                                    <span class="fa <?= $menuConfig['conf']['icon'] ?? null ?> float-right fa-lg" style="margin:3px 5px 0 0;"></span></a>
+                                <?php } ?>
+                            <?php }
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="tab-content" id="v-pills-tabContent">
+                        <?php
+                        if (!empty($this->zoneconfig['interface'])) {
+                            foreach ($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                                echo $this->$keyConfig;
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

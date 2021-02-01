@@ -9,15 +9,14 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Session\Container;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Session\Container;
 use MelisCore\Service\MelisCoreRightsService;
 /**
  * This class deals with the languages button in the header
  */
-class LanguageController extends AbstractActionController
+class LanguageController extends MelisAbstractActionController
 {
     const TOOL_INDEX = 'meliscore';
     const TOOL_KEY = 'meliscore_language_tool';
@@ -26,14 +25,14 @@ class LanguageController extends AbstractActionController
     /**
      * Shows language button in right corner of header
      *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function headerLanguageAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
-        $tableLang = $this->getServiceLocator()->get('MelisCoreTableLang');
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $tableLang = $this->getServiceManager()->get('MelisCoreTableLang');
+        $moduleSvc = $this->getServiceManager()->get('ModulesService');
         $datasLang = $tableLang->fetchAll();
 
         // Get the locale from session
@@ -61,7 +60,7 @@ class LanguageController extends AbstractActionController
     /**
      * Change the language
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function changeLanguageAction()
     {
@@ -72,9 +71,9 @@ class LanguageController extends AbstractActionController
         if (empty($langId) || !is_numeric($langId) || $langId <= 0)
             $success = false;
 
-        $melisLangTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisLangTable');
-        $melisUserTable = $this->serviceLocator->get('MelisCore\Model\Tables\MelisUserTable');
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $melisLangTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisLangTable');
+        $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         $datasLang = $melisLangTable->getEntryById($langId);
 
@@ -106,7 +105,7 @@ class LanguageController extends AbstractActionController
                 // Update user table
                 $datasUser = $melisUserTable->save(array('usr_lang_id' => $langId), $userId);
                 
-                $flashMsgSrv = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+                $flashMsgSrv = $this->getServiceManager()->get('MelisCoreFlashMessenger');
                 $flashMsgSrv->clearFlashMessage();
                 $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
             }
@@ -136,8 +135,8 @@ class LanguageController extends AbstractActionController
         $locale = $container['melis-lang-locale'];
 
 
-        $translator = $this->getServiceLocator()->get('translator');
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $translator = $this->getServiceManager()->get('translator');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
 
         // Set the headers of this route
         $response = $this->getResponse();
@@ -173,7 +172,7 @@ class LanguageController extends AbstractActionController
     /**
      * Creates translations for table actions in tools
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getDataTableTranslationsAction()
     {
@@ -181,7 +180,7 @@ class LanguageController extends AbstractActionController
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
 
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         $transData = array(
             'sEmptyTable' => $translator->translate('tr_meliscore_dt_sEmptyTable'),
@@ -215,7 +214,7 @@ class LanguageController extends AbstractActionController
     // FOR LANGUAGE TOOL
     public function renderToolLanguageContainerAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $noAccessPrompt = '';
 
@@ -234,9 +233,9 @@ class LanguageController extends AbstractActionController
     // HEADER SECTION
     public function renderToolLanguageHeaderAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
 
 
@@ -262,9 +261,9 @@ class LanguageController extends AbstractActionController
     // BODY SECTION
     public function renderToolLanguageContentAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
 
 
@@ -322,7 +321,7 @@ class LanguageController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
@@ -344,7 +343,7 @@ class LanguageController extends AbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
 
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
@@ -359,7 +358,7 @@ class LanguageController extends AbstractActionController
     public function renderToolLanguageModalAddContentAction()
     {
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
@@ -377,10 +376,10 @@ class LanguageController extends AbstractActionController
 
     public function getLanguagesAction()
     {
-        $langTable = $this->getServiceLocator()->get('MelisCoreTableLang');
-        $translator = $this->getServiceLocator()->get('translator');
+        $langTable = $this->getServiceManager()->get('MelisCoreTableLang');
+        $translator = $this->getServiceManager()->get('translator');
 
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
 
         $colId = array();
@@ -457,11 +456,11 @@ class LanguageController extends AbstractActionController
     {
         $response = array();
         $this->getEventManager()->trigger('meliscore_language_new_start', $this, $response);
-        $langTable = $this->getServiceLocator()->get('MelisCoreTableLang');
-        $translator = $this->getServiceLocator()->get('translator');
+        $langTable = $this->getServiceManager()->get('MelisCoreTableLang');
+        $translator = $this->getServiceManager()->get('translator');
 
 
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
         $id = null;
         $form = $melisTool->getForm('meliscore_tool_language_generic_form');
@@ -470,10 +469,10 @@ class LanguageController extends AbstractActionController
         $errors  = array();
         $textTitle = $melisTool->getTitle();
         $textMessage = 'tr_meliscore_tool_language_add_failed';
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
         if($this->getRequest()->isPost()) {
 
-            $postValues = get_object_vars($this->getRequest()->getPost());
+            $postValues = $this->getRequest()->getPost()->toArray();
             // sanitize values
             $postValues = $melisTool->sanitizePost($postValues);
             $form->setData($postValues);
@@ -507,7 +506,7 @@ class LanguageController extends AbstractActionController
                 $errors = $form->getMessages();
             }
 
-            $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+            $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_language_tool/forms/meliscore_tool_language_generic_form');
             $appConfigForm = $appConfigForm['elements'];
 
@@ -539,14 +538,14 @@ class LanguageController extends AbstractActionController
     {
         $response = array();
         $this->getEventManager()->trigger('meliscore_language_delete_start', $this, $response);
-        $translator = $this->getServiceLocator()->get('translator');
-        $langTable = $this->getServiceLocator()->get('MelisCoreTableLang');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceManager()->get('translator');
+        $langTable = $this->getServiceManager()->get('MelisCoreTableLang');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
 
         $textTitle = $melisTool->getTitle();
         $textMessage = 'tr_meliscore_tool_language_delete_failed';
-        $melisTranslation = $this->getServiceLocator()->get('MelisCoreTranslation');
+        $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
         $doNotDelete = array('en_EN.interface.php', 'en_EN.forms.php');
 
         $id = null;
@@ -581,9 +580,9 @@ class LanguageController extends AbstractActionController
     }
     public function getTranslationOfContentAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
 
 
@@ -600,7 +599,7 @@ class LanguageController extends AbstractActionController
     /**
      * This allows the selected language to get new translations from melisplatform
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function updateLanguageAction()
     {
@@ -612,12 +611,12 @@ class LanguageController extends AbstractActionController
         $textMessage = 'tr_meliscore_tool_language_update_failed';
 
         $this->getEventManager()->trigger('meliscore_language_update_start', $this, $response);
-        $translationSvc = $this->getServiceLocator()->get('MelisCoreTranslation');
-        $moduleSvc = $this->getServiceLocator()->get('ModulesService');
+        $translationSvc = $this->getServiceManager()->get('MelisCoreTranslation');
+        $moduleSvc = $this->getServiceManager()->get('ModulesService');
         $vendorModules = $moduleSvc->getVendorModules();
-        $melisCoreConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $directory = $melisCoreConfig->getItem('meliscore/datas/default/langauges/default_trans_dir');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $fullPathVendorModules = null;
         
         if($this->getRequest()->isPost()){
@@ -665,8 +664,8 @@ class LanguageController extends AbstractActionController
      */
     private function getWarningLogs()
     {
-        $melisTool  = $this->getServiceLocator()->get('MelisCoreTool');
-        $moduleSvc  = $this->getServiceLocator()->get('ModulesService');
+        $melisTool  = $this->getServiceManager()->get('MelisCoreTool');
+        $moduleSvc  = $this->getServiceManager()->get('ModulesService');
         $allModules = $moduleSvc->getAllModules();
         $excludeModules = ['MelisFront', 'MelisEngine', 'MelisInstaller', 'MelisAssetManager', 'MelisModuleConfig', 'MelisSites'];
         $modules    = [];
@@ -712,7 +711,7 @@ class LanguageController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
+        $hasAccess = $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }

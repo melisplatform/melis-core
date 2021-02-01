@@ -2,18 +2,47 @@
 
 namespace MelisCore\Service;
 
-use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Authentication\Adapter\DbTable as DbTableAuthAdapter;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Authentication\Storage\Session;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\ServiceManager\ServiceManager;
 
 class MelisCoreAuthService
     extends AuthenticationService
-    implements MelisCoreAuthServiceInterface, ServiceLocatorAwareInterface
+    implements MelisCoreAuthServiceInterface
 {
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @var Laminas\ServiceManager\ServiceManager $serviceManager
      */
-    public $serviceLocator;
+    protected $serviceManager;
+
+    /**
+     * @param ServiceManager $service
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $dbAdapter = $serviceManager->get(Adapter::class);
+        $dbTableAuthAdapter  = new DbTableAuthAdapter($dbAdapter);
+        $dbTableAuthAdapter->setTableName('melis_core_user')
+            ->setIdentityColumn('usr_login')
+            ->setCredentialColumn('usr_password');
+
+        $this->setAdapter($dbTableAuthAdapter);
+
+        $storage = new Session('Melis_Auth');
+        $this->setStorage($storage);
+
+        $this->serviceManager = $serviceManager;
+    }
+
+    /**
+     * @return Laminas\ServiceManager\ServiceManager
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
+    }
 
     /**
      * @return string
@@ -21,12 +50,12 @@ class MelisCoreAuthService
     public function getAuthRights()
     {
         /**
-         * @var \Zend\EventManager\EventManagerInterface $e
+         * @var \Laminas\EventManager\EventManagerInterface $e
          */
-        $e = $this->getServiceLocator()->get('Application')->getEventManager();
+        $e = $this->getServiceManager()->get('Application')->getEventManager();
         $e->trigger('melis_core_check_user_rights', $this);
 
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $user = $melisCoreAuth->getIdentity();
 
         $rightsXML = '';
@@ -40,26 +69,6 @@ class MelisCoreAuthService
         }
 
         return $rightsXML;
-    }
-
-    /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-
-        return $this;
     }
 
     /**
@@ -90,10 +99,10 @@ class MelisCoreAuthService
     protected function convertToNewRightsStructure()
     {
         /** @var \MelisCore\Service\MelisCoreRightsService $rights */
-        $rights = $this->getServiceLocator()->get('MelisCoreRights');
+        $rights = $this->getServiceManager()->get('MelisCoreRights');
 
         /** @var \MelisCore\Service\MelisCoreConfigService $config */
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $melisKeys = $config->getMelisKeys();
 
         /** @var \MelisCore\Service\MelisCore $melisCoreAuth */
@@ -264,7 +273,7 @@ class MelisCoreAuthService
         $rights = json_decode(json_encode($rights),1);
 
         /** @var \MelisCore\Service\MelisCoreRightsService $rightsSvc */
-        $rightsSvc = $this->getServiceLocator()->get('MelisCoreRights');
+        $rightsSvc = $this->getServiceManager()->get('MelisCoreRights');
         $nodesToCheck = $rightsSvc->getMelisKeyPaths();
         $nodesToCheck[] = 'id';
         $toolParentNode = $rightsSvc::MELIS_PLATFORM_TOOLS_PREFIX;

@@ -9,25 +9,22 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
-use Zend\Session\Container;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Session\Container;
 
-class MelisCorePluginsAdditionalListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCorePluginsAdditionalListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
-
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisMarketPlace',
-            array(
+            [
                 'melis_marketplace_product_do_start'
-            ),
+            ],
             function($e){
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $corePluginSvc = $sm->get('MelisCorePluginsService');
                 $pluginsTbl    = $corePluginSvc->pluginsTbl;
                 $params        = $e->getParams();
@@ -54,8 +51,7 @@ class MelisCorePluginsAdditionalListener extends MelisCoreGeneralListener implem
                     }
                 }
             },
-            -1000);
-
-        $this->listeners[] = $callBackHandler;
+            -1000
+        );
     }
 }

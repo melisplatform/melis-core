@@ -102,7 +102,9 @@ html .fc,
 	
 .fc-content {
 	clear: both;
-	zoom: 1; /* for IE7, gives accurate coordinates for [un]freezeContentHeight */
+	/* zoom: 1; */ /* for IE7, gives accurate coordinates for [un]freezeContentHeight */
+	transform: scale(1);
+	transform-origin: 0 0;
 	}
 	
 .fc-view {

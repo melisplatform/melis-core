@@ -2,26 +2,10 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Session\Container;
+use Laminas\Session\Container;
 
-class MelisCoreDispatchService implements MelisCoreDispatchServiceInterface, ServiceLocatorAwareInterface
+class MelisCoreDispatchService extends MelisServiceManager implements MelisCoreDispatchServiceInterface
 {	
-	public $serviceLocator;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl)
-	{
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator()
-	{
-		return $this->serviceLocator;
-	}
-	
-	
 	/**
 	 * Dispatch to a module/controller/action to get back a json result
 	 * With success/errors/datas returned

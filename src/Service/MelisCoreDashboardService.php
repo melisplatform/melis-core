@@ -2,23 +2,8 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-class MelisCoreDashboardService implements ServiceLocatorAwareInterface
+class MelisCoreDashboardService extends MelisServiceManager
 {
-	public $serviceLocator;
-	
-	public function setServiceLocator(ServiceLocatorInterface $sl)
-	{
-		$this->serviceLocator = $sl;
-		return $this;
-	}
-	
-	public function getServiceLocator()
-	{
-		return $this->serviceLocator;
-	}
-	
 	/**
 	 * This method return JsCallbacks of active plugins
 	 * 
@@ -28,8 +13,8 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	 */
 	public function getDashboardPluginsJsCallbackJsDatas($dashboardId)
 	{
-	    $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
-	    $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+	    $dashboardPluginsTbl = $this->getServiceManager()->get('MelisCoreDashboardsTable');
+	    $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 	    
 	    $userId = null;
 	    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
@@ -47,7 +32,7 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 
 	        if (!empty($plugins))
 	        {
-	            $configs = $this->getServiceLocator()->get('config');
+	            $configs = $this->getServiceManager()->get('config');
 	            $plugins = simplexml_load_string($plugins->d_content);
 	            
 	            if (!empty($plugins->plugin))
@@ -67,7 +52,7 @@ class MelisCoreDashboardService implements ServiceLocatorAwareInterface
 	{
 	    $plugins = array();
 	    
-	    $config = $this->getServiceLocator()->get('config');
+	    $config = $this->getServiceManager()->get('config');
 	    
 	    foreach ($config['plugins'] As $key => $val)
 	    {

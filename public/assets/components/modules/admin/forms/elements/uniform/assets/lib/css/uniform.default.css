@@ -479,7 +479,9 @@ Not advised to edit stuff below this line
   display: -moz-inline-box;
   display: inline-block;
   vertical-align: middle;
-  zoom: 1;
+  /* zoom: 1; */
+  transform: scale(1);
+	transform-origin: 0 0;
   *display: inline;
 }
 

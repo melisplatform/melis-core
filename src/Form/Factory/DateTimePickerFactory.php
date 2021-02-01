@@ -9,9 +9,8 @@
 
 namespace MelisCore\Form\Factory;
 
-use Zend\Form\Element\Text;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Psr\Container\ContainerInterface;
+use Laminas\Form\Element\Text;
 
 /**
  * MelisCore datetime field
@@ -21,9 +20,9 @@ use Zend\ServiceManager\FactoryInterface;
  * http://eonasdan.github.io/bootstrap-datetimepicker/
  */
 
-class DateTimePickerFactory extends Text implements FactoryInterface
+class DateTimePickerFactory extends Text
 {
-    public function createService(ServiceLocatorInterface $formElementManager)
+    public function __invoke(ContainerInterface $container, $requestedName)
     {
         $element = new Text;
         $element->setAttribute('meliscore-datetimepicker', true);

@@ -2,16 +2,17 @@
 
 namespace MelisCore\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\AbstractHelper;
 use MelisCore\Library\MelisAppConfig;
 
 class MelisCoreSectionIconsHelper extends AbstractHelper
 {
 	public $serviceManager;
 
-	public function __construct($sm)
+	public function setServiceManager(ServiceManager $serviceManager)
 	{
-		$this->serviceManager = $sm;
+		$this->serviceManager = $serviceManager;
 	}
 	
 	public function __invoke($marketPlaceSection)

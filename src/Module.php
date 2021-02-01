@@ -29,11 +29,11 @@ use MelisCore\Listener\MelisCoreToolUserAddNewUserListener;
 use MelisCore\Listener\MelisCoreToolUserUpdateUserListener;
 use MelisCore\Listener\MelisCoreUrlAccessCheckerListenner;
 use MelisCore\Listener\MelisCoreUserRecentLogsListener;
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\ModuleRouteListener;
-use Zend\Mvc\MvcEvent;
-use Zend\Session\Container;
-use Zend\Stdlib\ArrayUtils;
+use Laminas\ModuleManager\ModuleManager;
+use Laminas\Mvc\ModuleRouteListener;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Session\Container;
+use Laminas\Stdlib\ArrayUtils;
 
 /**
  * Class Module
@@ -42,7 +42,6 @@ use Zend\Stdlib\ArrayUtils;
  */
 class Module
 {
-
     public function onBootstrap(MvcEvent $e)
     {
         $this->initShowErrorsByconfig($e);
@@ -61,7 +60,6 @@ class Module
 
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
             $this->checkIdentity($e);
-
         });
 
         /** @var \MelisCore\Service\MelisCoreModulesService $moduleSvc */
@@ -69,24 +67,20 @@ class Module
         $moduleSvc->unloadModule('MelisInstaller');
 
         if (!$this->isInInstallMode($e)) {
-            $eventManager->attach(new MelisCoreGetRightsTreeViewListener());
-            $eventManager->attach(new MelisCoreToolUserAddNewUserListener());
-            $eventManager->attach(new MelisCoreToolUserUpdateUserListener());
-            $eventManager->attach(new MelisCoreFlashMessengerListener());
-            $eventManager->attach(new MelisCoreNewPlatformListener());
-            $eventManager->attach(new MelisCoreUserRecentLogsListener());
-
-            $eventManager->attach(new MelisCoreCheckUserRightsListener());
-            $eventManager->attach(new MelisCoreTinyMCEConfigurationListener());
-            $eventManager->attach(new MelisCoreMicroServiceRouteParamListener());
-
-            $eventManager->attach(new MelisCoreAuthSuccessListener());
-            $eventManager->attach(new MelisCorePhpWarningListener());
-
-            $eventManager->attach(new MelisCoreDashboardPluginRightsTreeViewListener());
-            $eventManager->attach(new MelisCoreUrlAccessCheckerListenner());
-
-            $eventManager->attach(new MelisCoreTableColumnDisplayListener());
+            (new MelisCoreFlashMessengerListener())->attach($eventManager);
+            (new MelisCoreGetRightsTreeViewListener())->attach($eventManager);
+            (new MelisCoreToolUserAddNewUserListener())->attach($eventManager);
+            (new MelisCoreToolUserUpdateUserListener())->attach($eventManager);
+            (new MelisCoreNewPlatformListener())->attach($eventManager);
+            (new MelisCoreUserRecentLogsListener())->attach($eventManager);
+            (new MelisCoreCheckUserRightsListener())->attach($eventManager);
+            (new MelisCoreTinyMCEConfigurationListener())->attach($eventManager);
+            (new MelisCoreMicroServiceRouteParamListener())->attach($eventManager);
+            (new MelisCoreAuthSuccessListener())->attach($eventManager);
+            (new MelisCorePhpWarningListener())->attach($eventManager);
+            (new MelisCoreDashboardPluginRightsTreeViewListener())->attach($eventManager);
+            (new MelisCoreUrlAccessCheckerListenner())->attach($eventManager);
+            (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
         }
     }
 
@@ -131,7 +125,7 @@ class Module
         $dbConfFile = 'config/autoload/platforms/' . $env . '.php';
         if (file_exists($dbConfFile)) {
             if (empty($container['melis-lang-locale'])) {
-                $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
+                $melisLangTable = $sm->get('MelisCoreTableLang');
                 $datasLang = $melisLangTable->getEntryByField('lang_locale', $locale)->current();
 
                 if ($datasLang) {
@@ -146,7 +140,6 @@ class Module
             $container['melis-lang-id'] = $langId;
             $container['melis-lang-locale'] = $locale;
         }
-
     }
 
     public function changePasswordPageLangOverride($e){
@@ -225,6 +218,7 @@ class Module
                 'forms',
                 'install',
                 'setup',
+                'gdpr.autodelete',
             ];
 
             $translationList = [];
@@ -281,6 +275,7 @@ class Module
             'melis-backoffice/get-platform-color-css',
             'melis-backoffice/reset-old-password',
             'melis-backoffice/webpack_builder',
+            'melis-backoffice/gdpr-autodelete-cron',
             'melis-backoffice/generate-password',
             'melis-backoffice/create-password',
             'melis-backoffice/renew-password',
@@ -361,6 +356,13 @@ class Module
             include __DIR__ . '/../config/setup/update.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
+            /*
+             * gdpr auto delete
+             */
+            include __DIR__ . '/../config/gdpr-autodelete/app.interface.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.tools.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.forms.php',
+            include __DIR__ . '/../config/gdpr-autodelete/app.smtp.form.php',
         ];
 
         foreach ($configFiles as $file) {
@@ -374,7 +376,7 @@ class Module
     public function getAutoloaderConfig()
     {
         return [
-            'Zend\Loader\StandardAutoloader' => [
+            'Laminas\Loader\StandardAutoloader' => [
                 'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ],

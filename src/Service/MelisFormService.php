@@ -2,35 +2,32 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Form\Factory as ZendFormFactory;
+use Laminas\Form\Factory as LaminasFormFactory;
+use Laminas\Hydrator\ArraySerializable;
+use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Form\MelisForm;
 
-class MelisFormService extends ZendFormFactory implements ServiceLocatorAwareInterface
+class MelisFormService extends LaminasFormFactory
 {
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @var Laminas\ServiceManager\ServiceManager $serviceManager
      */
-    public $serviceLocator;
+    protected $serviceManager;
 
     /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
+     * @param ServiceManager $service
      */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
+    public function setServiceManager(ServiceManager $service)
     {
-        $this->serviceLocator = $sl;
-        return $this;
+        $this->serviceManager = $service;
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
+     * @return Laminas\ServiceManager\ServiceManager
      */
-    public function getServiceLocator()
+    public function getServiceManager()
     {
-        return $this->serviceLocator;
+        return $this->serviceManager;
     }
 
     /**
@@ -41,9 +38,11 @@ class MelisFormService extends ZendFormFactory implements ServiceLocatorAwareInt
      */
     public function createForm($spec)
     {
-        if (! isset($spec['type'])) {
+        if (! isset($spec['type']))
             $spec['type'] = MelisForm::class;
-        }
+
+        if (!isset($spec['hydrator']))
+            $spec['hydrator'] = ArraySerializable::class;
 
         return $this->create($spec);
     }

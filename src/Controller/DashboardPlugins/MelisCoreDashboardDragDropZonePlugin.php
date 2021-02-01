@@ -10,7 +10,7 @@
 namespace MelisCore\Controller\DashboardPlugins;
 
 use MelisCore\Controller\DashboardPlugins\MelisCoreDashboardTemplatingPlugin;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 
 class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingPlugin
 {
@@ -23,17 +23,16 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
     /**
      * Render Dashboard plugin to Drag and Drop Zone
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function dragdropzone()
     {
-
-        $data = array();
+        $data = [];
         $view = new ViewModel();
         $view->setTemplate('melis-core/dashboard-plugin/dragdropzone');
         
-        $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
-        $viewRender = $this->getServiceLocator()->get('ViewRenderer');
+        $pluginManager = $this->getServiceManager()->get('ControllerPluginManager');
+        $viewRender = $this->getServiceManager()->get('ViewRenderer');
         $plugins = $this->getDashboardPlugins();
 
         $activePlugins = $this->getActivePlugins();
@@ -79,13 +78,13 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
     {
         $plugins = array();
         
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         $userAuthDatas =  $melisCoreAuth->getStorage()->read();
         $userId = (int) $userAuthDatas->usr_id;
         if (!empty($this->pluginConfig['dashboard_id']))
         {
             $dashboardId = $this->pluginConfig['dashboard_id'];
-            $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
+            $dashboardPluginsTbl = $this->getServiceManager()->get('MelisCoreDashboardsTable');
             $plugin = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->current();
             if (!empty($plugin->d_content))
             {
@@ -109,7 +108,7 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
             
             if (!empty($plugins['plugins']))
             {
-                $pluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
+                $pluginManager = $this->getServiceManager()->get('ControllerPluginManager');
                 
                 foreach ($plugins['plugins'] As $pluginName => $pluginIds)
                 {
@@ -145,11 +144,11 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
             
             $dashboardId = $plugins['dashboard_id'];
             
-            $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+            $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
             $userAuthDatas =  $melisCoreAuth->getStorage()->read();
             $userId = (int) $userAuthDatas->usr_id;
             
-            $dashboardPluginsTbl = $this->getServiceLocator()->get('MelisCoreDashboardsTable');
+            $dashboardPluginsTbl = $this->getServiceManager()->get('MelisCoreDashboardsTable');
             $pluginDbData = $dashboardPluginsTbl->getDashboardPlugins($dashboardId, $userId)->current();
             
             if (!empty($pluginDbData))
@@ -186,7 +185,7 @@ class MelisCoreDashboardDragDropZonePlugin extends MelisCoreDashboardTemplatingP
     {
         $activePlugins = array();
         
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $dashboardPlugins = $config->getItem('/meliscore/interface/melis_dashboardplugin/interface/melisdashboardplugin_section');
 
         if (isset($dashboardPlugins['interface']) && count($dashboardPlugins['interface'])) {

@@ -9,12 +9,11 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
 
-class MelisPhpUnitToolController extends AbstractActionController
+class MelisPhpUnitToolController extends MelisAbstractActionController
 {
 
     const TEST_FAILED = 'failed';
@@ -51,7 +50,7 @@ class MelisPhpUnitToolController extends AbstractActionController
     {
         $view = new ViewModel();
         $modules = $this->getAvailableModules();
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
 
         if (in_array('MelisModuleConfig', $modules)) {
             $tmp = [];
@@ -77,7 +76,7 @@ class MelisPhpUnitToolController extends AbstractActionController
             $modules = $tmp;
         }
 
-        $moduleSvc   = $this->getServiceLocator()->get('ModulesService');
+        $moduleSvc   = $this->getServiceManager()->get('ModulesService');
         $modulesInfo = $moduleSvc->getModulesAndVersions();
 
 
@@ -98,7 +97,7 @@ class MelisPhpUnitToolController extends AbstractActionController
         $availableModules = $this->getModuleSvc()->getAllModules();
         $modules = array();
 
-        $mm            = $this->getServiceLocator()->get('ModuleManager');
+        $mm            = $this->getServiceManager()->get('ModuleManager');
         $activeModules = array_keys($mm->getLoadedModules());
 
         foreach ($availableModules as $module) {
@@ -119,10 +118,10 @@ class MelisPhpUnitToolController extends AbstractActionController
      */
     protected function checkAllModule()
     {
-        $modSvc = $this->getServiceLocator()->get('ModulesService');
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $modSvc = $this->getServiceManager()->get('ModulesService');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $modules = $modSvc->getActiveModules(array('MelisDesign', 'MelisModuleConfig'));
-        $translate = $this->getServiceLocator()->get('translator');
+        $translate = $this->getServiceManager()->get('translator');
 
         $coreModulesArray = $modSvc->getCoreModules(['melisinstaller', 'melissites', 'melisassetmanager']);
         $coreModules = array();
@@ -202,8 +201,8 @@ class MelisPhpUnitToolController extends AbstractActionController
         $response = $this->koMessage('No tests found!');
         if ($request->isPost()) {
             $module = $request->getPost('module');
-            $config = $this->getServiceLocator()->get('MelisCoreConfig');
-            $modSvc = $this->getServiceLocator()->get('ModulesService');
+            $config = $this->getServiceManager()->get('MelisCoreConfig');
+            $modSvc = $this->getServiceManager()->get('ModulesService');
 
             if ($module) {
                 $results = '';
@@ -292,19 +291,19 @@ class MelisPhpUnitToolController extends AbstractActionController
 
     protected function getModuleSvc()
     {
-        $modulesSvc = $this->getServiceLocator()->get('ModulesService');
+        $modulesSvc = $this->getServiceManager()->get('ModulesService');
         return $modulesSvc;
     }
 
     protected function getPHPUnitTool()
     {
-        return $this->getServiceLocator()->get('MelisPhpUnitTool');
+        return $this->getServiceManager()->get('MelisPhpUnitTool');
     }
 
     protected function deactivateModule()
     {
-        $modSvc = $this->getServiceLocator()->get('ModulesService');
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $modSvc = $this->getServiceManager()->get('ModulesService');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $modules = $modSvc->getActiveModules(array('MelisDesign', 'MelisModuleConfig'));
 
 
@@ -383,7 +382,7 @@ class MelisPhpUnitToolController extends AbstractActionController
 
     protected function isActivated()
     {
-        $config = $this->getServiceLocator()->get('MelisCoreConfig');
+        $config = $this->getServiceManager()->get('MelisCoreConfig');
         $isActivated = $config->getItemPerPlatform('meliscore/datas');
         $isActivated = (bool) $isActivated['diagnostics']['active'];
 
@@ -397,7 +396,7 @@ class MelisPhpUnitToolController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
+        $hasAccess = $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }

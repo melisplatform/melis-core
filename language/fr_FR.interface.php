@@ -152,7 +152,7 @@ return [
     'tr_meliscore_tool_user_resend_password_email_msg' => 'Etes-vous sûr(e) de vouloir renvoyer l\'email de création de mot de passe ?',
     'tr_meliscore_tool_user_reset_rights' => 'Réinitialiser les droits',
     'tr_meliscore_tool_user_reset_rights_xs' => 'Réinitialiser',
-    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Êtes-vous sur de vouloir réinitialiser les droits de cet utilisateur ? <br>Cela empechera l\'accès à la plupart des fonctionnalités de la plateforme et vous devrez recréer des droits manuellement.',
+    'tr_meliscore_common_label_reset_rights_msg' => 'Êtes-vous sur de vouloir réinitialiser les droits de cet utilisateur ? <br>Cela empechera l\'accès à la plupart des fonctionnalités de la plateforme et vous devrez recréer des droits manuellement.',
 
     'tr_meliscore_forgot_password' => 'Mot de passe oublié',
     // Emails
@@ -783,4 +783,10 @@ return [
     'tr_melis_core_composer_scrpts_No scripts executed' => 'Aucun script éxécuté',
     'tr_melis_core_composer_scrpts_executing' => 'Exécution des scripts de composer',
     'tr_melis_core_composer_scrpts_executed' => 'Scripts de composer éxécutés',
+    'tr_meliscore_logs_tool_modal_container' => 'Modal container',
+    'tr_meliscore_logs_tool_log_type_form' => 'Formulaire',
+    'tr_meliscore_logs_tool_export_modal_content' => 'Modal contenu de l\'export',
+
+    // cms page iframe loader
+    'tr_meliscore_page_edition_loader_text' => 'Construction de la page',
 ];

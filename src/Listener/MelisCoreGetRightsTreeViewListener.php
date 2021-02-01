@@ -9,11 +9,9 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Session\Container;
-
-use MelisCore\Listener\MelisCoreGeneralListener;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Session\Container;
 
 /**
  * Listenner for getting rights of MelisCore
@@ -21,19 +19,18 @@ use MelisCore\Listener\MelisCoreGeneralListener;
  * - Tools
  * Rights are added to session to combine with other modules
  */
-class MelisCoreGetRightsTreeViewListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreGetRightsTreeViewListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
         // Listening to Tool User start
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
         	'MelisCore',
         	'meliscore_tooluser_getrightstreeview_start',
         	function($e){
 
-        		$sm = $e->getTarget()->getServiceLocator();
+        		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$container = new Container('meliscore');
 
 	        	$userId = $sm->get('request')->getQuery()->get('userId');
@@ -47,8 +44,7 @@ class MelisCoreGetRightsTreeViewListener extends MelisCoreGeneralListener implem
 	        	// Loading rights into session for further use
 	        	$container['action-tool-user-getrights-tmp'] = array_merge($container['action-tool-user-getrights-tmp'], $rightsCore);
         	},
-        100);
-
-        $this->listeners[] = $callBackHandler;
+        100
+        );
     }
 }

@@ -9,15 +9,14 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Session\Container;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Session\Container;
 use MelisCore\Service\MelisCoreRightsService;
 /**
  * Platform Tool
  */
-class PlatformsController extends AbstractActionController
+class PlatformsController extends MelisAbstractActionController
 {
     const TOOL_INDEX = 'meliscore';
     const TOOL_KEY = 'meliscore_platform_tool';
@@ -25,7 +24,7 @@ class PlatformsController extends AbstractActionController
     
     public function renderPlatformContainerAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $noAccessPrompt = '';
         
@@ -43,7 +42,7 @@ class PlatformsController extends AbstractActionController
     
     public function renderPlatformHeaderContainerAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $zoneConfig = $this->params()->fromRoute('zoneconfig', array());
 
@@ -66,9 +65,9 @@ class PlatformsController extends AbstractActionController
     
     public function renderPlatformContentAction()
     {
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
         
         
@@ -87,7 +86,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the Edit button inside the table content (Action column)
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentActionEditAction()
     {
@@ -101,7 +100,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the Delete button inside the table content (Action column)
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentActionDeleteAction()
     {
@@ -115,7 +114,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the refresh button placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentFiltersRefreshAction()
     {
@@ -124,7 +123,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the search button placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentFiltersSearchAction()
     {
@@ -133,7 +132,7 @@ class PlatformsController extends AbstractActionController
     
     /**
      * Renders to the limit button placed in the datatable
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformContentFiltersLimitAction()
     {
@@ -144,14 +143,14 @@ class PlatformsController extends AbstractActionController
      * Renders the Generic form of the Platform 
      * for creating new and updating new platform
      * 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderPlatformGenericFormAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
         
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
@@ -162,7 +161,7 @@ class PlatformsController extends AbstractActionController
         
         if ($plfId)
         {
-            $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
+            $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
             
             $platform = $platformTable->getEntryById($plfId)->current();
             
@@ -188,14 +187,14 @@ class PlatformsController extends AbstractActionController
     /**
      * This method return the list of core platform available
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getPlatformsAction()
     {
-        $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
-        $translator = $this->getServiceLocator()->get('translator');
+        $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+        $translator = $this->getServiceManager()->get('translator');
         
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
         
         $colId = array();
@@ -277,29 +276,29 @@ class PlatformsController extends AbstractActionController
      * This method saving the platform info
      * this include adding and updating platform
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function savePlatformAction() 
     {
-        $response = array();
-        $this->getEventManager()->trigger('meliscore_platform_save_start', $this, $response);
-        $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
-        $translator = $this->getServiceLocator()->get('translator');
-        
+        $this->getEventManager()->trigger('meliscore_platform_save_start', $this, []);
+        $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+        $translator = $this->getServiceManager()->get('translator');
+
         $request = $this->getRequest();
         $success = 0;
         $errors  = array();
         $textTitle = 'tr_meliscore_tool_platform_title';
         $textMessage = '';
         
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
         $id = 0;
         $form = $melisTool->getForm('meliscore_platform_generic_form');
+
         if($request->isPost()) {
             
-            $postValues = get_object_vars($this->getRequest()->getPost());
-            
+            $postValues = $this->getRequest()->getPost()->toArray();
+
             $textMessage = 'tr_meliscore_tool_platform_prompts_new_failed';
             $logCode = 'CORE_PLATFORM_ADD';
             if (!empty($postValues['plf_id']))
@@ -310,8 +309,8 @@ class PlatformsController extends AbstractActionController
             }
             
             $postValues = $melisTool->sanitizePost($postValues);
-            
-            $data = array();
+
+            $data = [];
             
             if (!empty($postValues['plf_id']) && !isset($postValues['plf_name']))
             {
@@ -321,7 +320,7 @@ class PlatformsController extends AbstractActionController
             elseif (!empty($postValues['plf_name']))
             {
                 $platform = $platformTable->getEntryByField('plf_name', $postValues['plf_name'])->current();
-                
+
                 if (!empty($platform))
                 {
                     $exist = false;
@@ -340,7 +339,7 @@ class PlatformsController extends AbstractActionController
                             $exist = true;
                         }
                     }
-                    
+
                     if ($exist)
                     {
                         $errors = array(
@@ -353,10 +352,11 @@ class PlatformsController extends AbstractActionController
                     }
                 }
             }
-                
+
             $form->setData($postValues);
-            
+
             if($form->isValid() && empty($errors)) {
+
                 $data = $form->getData();
                 $data['plf_update_marketplace'] = $data['plf_update_marketplace'] ?? 0;
 
@@ -364,14 +364,14 @@ class PlatformsController extends AbstractActionController
                 if ($id) {
                     $textMessage = 'tr_meliscore_tool_platform_prompts_edit_success';
                 }
-                
+
                 $id = $platformTable->save($data, $id);
                 $success = 1;
             } else  {
                 $errors = $form->getMessages();
             }
-            
-            $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+
+            $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $appConfigForm = $melisMelisCoreConfig->getItem('meliscore/tools/meliscore_platform_tool/forms/meliscore_platform_generic_form');
             $appConfigForm = $appConfigForm['elements'];
             
@@ -399,15 +399,15 @@ class PlatformsController extends AbstractActionController
     /**
      * Deletion of the platform
      * 
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function deletePlatformAction()
     {
         $response = array();
         $this->getEventManager()->trigger('meliscore_platform_delete_start', $this, $response);
-        $translator = $this->getServiceLocator()->get('translator');
-        $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $translator = $this->getServiceManager()->get('translator');
+        $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         $melisTool->setMelisToolKey(self::TOOL_INDEX, self::TOOL_KEY);
         
         $textTitle = 'tr_meliscore_tool_platform_title';
@@ -457,7 +457,7 @@ class PlatformsController extends AbstractActionController
         if($this->getRequest()->isPost())
         {
             $platformId = $this->getRequest()->getPost('id');
-            $platformTable = $this->getServiceLocator()->get('MelisCoreTablePlatform');
+            $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
 
             $platformData = $data;
             foreach($platformData as $roleKey => $roleValues) {
@@ -488,7 +488,7 @@ class PlatformsController extends AbstractActionController
      */
     private function hasAccess($key): bool
     {
-        $hasAccess = $this->getServiceLocator()->get('MelisCoreRights')->canAccess($key);
+        $hasAccess = $this->getServiceManager()->get('MelisCoreRights')->canAccess($key);
 
         return $hasAccess;
     }

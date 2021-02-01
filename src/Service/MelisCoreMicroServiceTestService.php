@@ -2,23 +2,8 @@
 
 namespace MelisCore\Service;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-class MelisCoreMicroServiceTestService implements ServiceLocatorAwareInterface
+class MelisCoreMicroServiceTestService extends MelisServiceManager
 {
-    public $serviceLocator;
-
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
 
     public function oneParam($fillMeIn)
     {

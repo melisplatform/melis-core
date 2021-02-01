@@ -82,27 +82,36 @@ var melisDashBoardDragnDrop = {
     },
     // adjust grid w/h values
     setAdjustGridMeasurements: function() {
-        var self = this;
-
-            // set data min width and max width
-            self.$gs.attr("data-min-width", self.$gs.outerWidth() - self.$pluginBox.outerWidth());
-            self.$gs.attr("data-max-width", self.$gs.outerWidth());
+        var self                        = this,
+            // fix for https://mantis2.uat.melistechnology.fr/view.php?id=860
+            desktopGsPluginCssHeight    = {"height": "872px", "min-height": "872px"},
+            desktopGsNoPluginCssHeight  = {"height": "745px", "min-height": "745px"},
+            mobileGsPluginCssHeight     = {"height" : "590px", "min-height" : "590px"},
+            mobileGsNoPluginCssHeight   = {"height" : "465px", "min-height" : "465px"};
 
             // adjust grid-stack height when dashboard msg element is found
-            if ( self.$dbMsg.length ) {
-                self.$gs.css({
-                    "height": "745px",
-                    "min-height": "745px"
-                });
-            } else {
-                self.$gs.css({
-                    "height": "840px",
-                    "min-height": "840px"
-                });
+            if ( self.countGsItems() === 0 ) {
+                // check for mobile responsive
+                if ( melisCore.screenSize > 576 && melisCore.screenSize <= 767 ) {
+                    self.$gs.css(desktopGsNoPluginCssHeight);
+                }
+                else if ( melisCore.screenSize <= 576 ) {
+                    self.$gs.css(mobileGsNoPluginCssHeight);
+                }
+            }
+            else {
+                // check for mobile responsive
+                if ( melisCore.screenSize > 576 && melisCore.screenSize <= 767 ) {
+                    self.$gs.css(desktopGsPluginCssHeight);                        
+                }
+                else if ( melisCore.screenSize <= 576 ) {
+                    self.$gs.css(mobileGsPluginCssHeight);
+                }
             }
     },
     // drags widget/plugin from dashboard's plugin sidebar
     dragWidget: function() {
+        var self = this;
         // set up draggable element / this.melisWidgetHandle / .grid-stack-item
         $(".melis-core-dashboard-plugin-filter-box .melis-core-dashboard-plugin-snippets").draggable({
             helper: 'clone',
@@ -130,27 +139,24 @@ var melisDashBoardDragnDrop = {
                     if ( pluginCount === 0 && ! dragArea.hasClass("melis-core-dashboard-plugin-snippets") ) {
                         // Show empty-dashboard message
                         $(dashboardMsg).show();
-                        $(this.$gs).css({
-                            "height": "745px",
-                            "min-height": "745px"
-                        });
+                        //self.setAdjustGridMeasurements();
                     } 
                     else {
                         $(dashboardMsg).hide();
-                        $(this.$gs).css({
-                            "height": "840px",
-                            "min-height": "840px"
-                        });
+                        //self.setAdjustGridMeasurements();
                     }
             }
         });
     },
     // drops a widget/plugin from dashboard's plugin sidebar
     dropWidget: function(widget) {
-        var self = this,
-            gridstack = $("#" + activeTabId + " .tab-pane .grid-stack").data("gridstack");
+        var self            = this,
+            $gridstack      = $("#" + activeTabId + " .tab-pane .grid-stack"),
+            gridstackData   = $gridstack.data("gridstack");
+
         //var gridDrop = $(gridstack.container[0]).droppable({
-        var gridDrop = gridstack.container.droppable({
+        //var gridDrop = gridstack.container.droppable({
+        $gridstack.droppable({
             accept: widget,
             tolerance: 'pointer',
             drop: function (event, ui) {
@@ -211,6 +217,11 @@ var melisDashBoardDragnDrop = {
         // loading effect
         $mcDashPlugSnippets.html(mcLoader);
 
+        // add a full width loading effect on mobile, https://mantis2.uat.melistechnology.fr/view.php?id=860
+        if ( melisCore.screenSize <= 767 && self.countGsItems() > 2 ) {
+            self.$gs.prepend(mcLoader);
+        }
+
         var gridstack = $("#" + activeTabId + " .tab-pane .grid-stack");
 
             // disable grid / droppable
@@ -236,6 +247,11 @@ var melisDashBoardDragnDrop = {
 
                     // remove clone widgets
                     grid.removeWidget($(widget).prev());
+
+                    // remove full width loading effect on mobile, fix for https://mantis2.uat.melistechnology.fr/view.php?id=860
+                    if ( melisCore.screenSize <= 767 ) {
+                        self.$gs.find(".overlay-loader").remove();
+                    }
 
                     // enable grid / droppable
                     gridstack.droppable("enable");
@@ -757,7 +773,7 @@ var melisDashBoardDragnDrop = {
     countGsItems: function() {
         var self = this;
 
-            return self.$gsItem;
+            return self.$gs.find(".grid-stack-item").length;
     },
     // get the current, active .grid-stack for multiple dashboards
     getCurrentGsWidth: function() {
@@ -769,20 +785,28 @@ var melisDashBoardDragnDrop = {
 };
 
 (function($) {   
-    var $body       = $("body"),
-        gsi         = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
-        $pluginBtn  = $body.find("#melisDashBoardPluginBtn"),
-        $pluginBox  = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-        $gs         = $body.find("#"+activeTabId + " .grid-stack"),
-        boxWidth    = parseInt( $pluginBox.outerWidth() ),
-        gsWidth     = parseInt( $gs.outerWidth() ),
-        dWidth      = gsWidth - boxWidth,
-        $dbMsg      = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
-        minWidth    = $gs.data("min-width"),
-        maxWidth    = $gs.data("max-width");
+    var $body           = $("body"),
+        $melisLeftMenu  = $("#id_meliscore_leftmenu"),      
+        gsi             = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
+        $pluginBtn      = $body.find("#melisDashBoardPluginBtn"),
+        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+        $gs             = $body.find("#"+activeTabId + " .grid-stack"),
+        /* boxWidth        = parseInt( $pluginBox.outerWidth() ),
+        gsWidth         = parseInt( $gs.outerWidth() ),
+        dWidth          = gsWidth - boxWidth, */
+        $dbMsg          = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
+        minWidth        = $gs.data("min-width"),
+        maxWidth        = $gs.data("max-width");
 
         // init
         melisDashBoardDragnDrop.init();
+
+        // set data min width and max width, from setAdjustGridMeasurements() function
+        $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
+        $gs.attr("data-max-width", $gs.outerWidth());
+
+        // display .grid-stack width in pixels on document load
+        $gs.css("width", $gs.outerWidth());
 
         // check if any .grid-stack-item is found, hide $dbMsg
         if ( gsi > 0 ) {
@@ -808,9 +832,6 @@ var melisDashBoardDragnDrop = {
                 width: minWidth
             }, 3);
         }
-
-        // display .grid-stack width in pixels on document load
-        $gs.css("width", $gs.width());
 
         /**
          * gridstack

@@ -12,17 +12,12 @@ use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\NullIO;
 use Composer\Package\CompletePackage;
-use Zend\Config\Config;
-use Zend\Config\Writer\PhpArray;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Config\Config;
+use Laminas\Config\Writer\PhpArray;
 
-class MelisCoreModulesService implements ServiceLocatorAwareInterface
+class MelisCoreModulesService extends MelisServiceManager
 {
     private const MELIS_SITES_FOLDER = 'MelisSites';
-
-    /** @var \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator */
-    public $serviceLocator;
 
     /**
      * @var Composer
@@ -39,13 +34,11 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     public function getModulesAndVersions($moduleName = null)
     {
         $tmpModules = [];
-        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
 
-        $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
-        $composer = (array) \Zend\Json\Json::decode(file_get_contents($composerFile));
-       
+        $melisComposer = new \MelisComposerDeploy\MelisComposer();
+        $melisInstalledPackages = $melisComposer->getInstalledPackages();
 
-        foreach ($composer as $package) {
+        foreach ($melisInstalledPackages as $package) {
             $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
             $module = null;
             if (isset($packageModuleName['module-name'])) {
@@ -110,12 +103,8 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
     public function getComposer()
     {
         if (is_null($this->composer)) {
-            // required by composer factory but not used to parse local repositories
-            if (!isset($_ENV['COMPOSER_HOME'])) {
-                putenv("COMPOSER_HOME=/tmp");
-            }
-            $factory = new Factory();
-            $this->setComposer($factory->createComposer(new NullIO()));
+            $composer = new \MelisComposerDeploy\MelisComposer();
+            $this->composer = $composer->getComposer();
         }
 
         return $this->composer;
@@ -254,28 +243,33 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      */
     public function getVendorModules()
     {
-        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
+        $melisComposer = new \MelisComposerDeploy\MelisComposer();
+        $melisInstalledPackages = $melisComposer->getInstalledPackages();
 
-        $packages = array_filter($repos->getPackages(), function ($package) {
-            /**
-             * These will exclude all the modules
-             * that are not zend module
-             */
-            $extra = $package->getExtra();
-            if(isset($extra['melis-module'])) {
-                $zendModule = ($extra['melis-module']) ? true : false;
-            } else {
-                $zendModule = true;
+        $packages = array_filter($melisInstalledPackages, function ($package) {
+
+            $type = $package->type;
+            $extra = $package->extra ?? [];
+            $isMelisModule = true;
+
+            if (!empty($extra)) {
+
+                if (property_exists($extra, 'melis-module')) {
+                    $key = 'melis-module';
+                    if (!$extra->$key)
+                        $isMelisModule = false;
+                }
+
+                /** @var CompletePackage $package */
+                return $type === 'melisplatform-module' &&
+                    property_exists($extra, 'module-name') && $isMelisModule;
             }
-
-            /** @var CompletePackage $package */
-            return $package->getType() === 'melisplatform-module' &&
-                array_key_exists('module-name', $extra) && $zendModule;
         });
 
         $modules = array_map(function ($package) {
+            $extra = (array) $package->extra;
             /** @var CompletePackage $package */
-            return $package->getExtra()['module-name'];
+            return $extra['module-name'];
         }, $packages);
 
         sort($modules);
@@ -381,7 +375,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
             if ($convertPackageNameToNamespace) {
                 $tmpDependencies = [];
-                $toolSvc = $this->getServiceLocator()->get('MelisCoreTool');
+                $toolSvc = $this->getServiceManager()->get('MelisCoreTool');
 
                 foreach ($dependencies as $dependency) {
                     $tmpDependencies[] = ucfirst($toolSvc->convertToNormalFunction($dependency));
@@ -454,53 +448,12 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
 
     public function getComposerModulePath($moduleName, $returnFullPath = true)
     {
-        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
-        $packages = $repos->getPackages();
-
-        if (!empty($packages)) {
-            foreach ($packages as $repo) {
-                if ($repo->getType() == 'melisplatform-module') {
-                    if (array_key_exists('module-name', $repo->getExtra())
-                        && $moduleName == $repo->getExtra()['module-name']) {
-                        foreach ($repo->getRequires() as $require) {
-                            $source = $require->getSource();
-
-                            if ($returnFullPath) {
-                                return $_SERVER['DOCUMENT_ROOT'] . '/../vendor/' . $source;
-                            } else {
-                                return '/vendor/' . $source;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return '';
+        $melisComposer = new \MelisComposerDeploy\MelisComposer();
+        return $melisComposer->getComposerModulePath($moduleName, $returnFullPath);
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $sl
-     *
-     * @return $this
-     */
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-
-        return $this;
-    }
-
-    /**
-     * Returns all the modules that has been loaded in zend
+     * Returns all the modules that has been loaded in laminas
      *
      * @param array $exclude
      *
@@ -508,7 +461,7 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      */
     public function getActiveModules($exclude = [])
     {
-        $mm = $this->getServiceLocator()->get('ModuleManager');
+        $mm = $this->getServiceManager()->get('ModuleManager');
         $loadedModules = array_keys($mm->getLoadedModules());
         $pluginModules = $this->getModulePlugins();
         $modules = [];
@@ -613,56 +566,11 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      * @return bool
      */
     public function createModuleLoader($pathToStore, $modules = [],
-                                       $topModules = ['melisdbdeploy', 'meliscomposerdeploy', 'meliscore'],
-                                       $bottomModules = ['MelisModuleConfig'])
+                                    $topModules = ['melisassetmanager', 'melisdbdeploy', 'meliscomposerdeploy', 'meliscore'],
+                                    $bottomModules = ['MelisModuleConfig'])
     {
-        $tmpFileName = 'melis.module.load.php.tmp';
-        $fileName = 'melis.module.load.php';
-        if ($this->checkDir($pathToStore)) {
-            $coreModules = $this->getCoreModules();
-            $topModules = array_reverse($topModules);
-            foreach ($topModules as $module) {
-                if (isset($coreModules[$module]) && $coreModules[$module]) {
-                    array_unshift($modules, $coreModules[$module]);
-                } else {
-                    array_unshift($modules, $module);
-                }
-
-            }
-
-            foreach ($bottomModules as $module) {
-                if (isset($coreModules[$module]) && $coreModules[$module]) {
-                    array_push($modules, $coreModules[$module]);
-                } else {
-                    array_push($modules, $module);
-                }
-            }
-
-            $config = new Config($modules, true);
-            $writer = new PhpArray();
-            $conf = $writer->toString($config);
-            $conf = preg_replace('/    \d+/u', '', $conf); // remove the number index
-            $conf = str_replace('=>', '', $conf); // remove the => characters.
-            file_put_contents($pathToStore . '/' . $tmpFileName, $conf);
-
-            if (file_exists($pathToStore . '/' . $tmpFileName)) {
-                // check if the array is not empty
-                $checkConfig = include($pathToStore . '/' . $tmpFileName);
-                if (count($checkConfig) > 1) {
-                    // delete the current module loader file
-                    unlink($pathToStore . '/' . $fileName);
-                    // rename the module loader tmp file into module.load.php
-                    rename($pathToStore . '/' . $tmpFileName, $pathToStore . '/' . $fileName);
-                    // Adding permission access
-                    chmod($pathToStore . '/' . $fileName, 0777);
-                    // if everything went well
-                    return true;
-                }
-            }
-
-        }
-
-        return false;
+        $moduleSrv = $this->getServiceManager()->get('MelisAssetManagerModulesService');
+        return $moduleSrv->createModuleLoader($pathToStore, $modules, $topModules, $bottomModules);
     }
 
     /**
@@ -736,14 +644,12 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
      */
     public function isSiteModule($module)
     {
-        $repos = $this->getComposer()->getRepositoryManager()->getLocalRepository();
-
-        $composerFile = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/composer/installed.json';
-        $composer = (array) \Zend\Json\Json::decode(file_get_contents($composerFile));
+        $melisComposer = new \MelisComposerDeploy\MelisComposer();
+        $packages = $melisComposer->getInstalledPackages();
 
         $repo = null;
 
-        foreach ($composer as $package) {
+        foreach ($packages as $package) {
             $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
 
             if (isset($packageModuleName['module-name']) && $packageModuleName['module-name'] == $module) {
@@ -752,10 +658,8 @@ class MelisCoreModulesService implements ServiceLocatorAwareInterface
             }
         }
 
-        if ($repo) {
-            if(isset($repo['melis-site'])) {
-                return (bool)$repo['melis-site'] ?? false;
-            }
+        if (isset($repo['melis-site'])) {
+            return (bool) $repo['melis-site'] ?? false;
         }
 
         return false;

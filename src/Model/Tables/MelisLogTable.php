@@ -9,15 +9,24 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisLogTable extends MelisGenericTable
 {
-	public function __construct(TableGateway $tableGateway)
-	{ 
-		parent::__construct($tableGateway);
-		$this->idField = 'log_id';
-	}
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_log';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'log_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 	
 	public function getLogList($typeId = null, $itemId = null, $userId = null, $dateCreationMin = null, $dateCreationMax = null, 
                                     $start = 0, $limit = null, $order = null, $search = null, $status = null)

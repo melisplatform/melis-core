@@ -9,7 +9,7 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 /**
  * @property int $plf_id
@@ -21,10 +21,18 @@ use Zend\Db\TableGateway\TableGateway;
  */
 class MelisPlatformTable extends MelisGenericTable
 {
-    public function __construct(TableGateway $tableGateway)
-    {
-        parent::__construct($tableGateway);
-        $this->idField = 'plf_id';
-    }
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_platform';
 
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'plf_id';
+
+    public function __construct()
+    {
+        $this->idField = self::PRIMARY_KEY;
+    }
 }

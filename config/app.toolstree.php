@@ -34,7 +34,7 @@ return [
                                     ),
                                     'interface' => array(
                                         // PhpUnit
-                                        'meliscore_tool_phpunit' => array(
+                                        /*'meliscore_tool_phpunit' => array(
                                             'conf' => array(
                                                 'id' => 'id_meliscore_tool_phpunit',
                                                 'name' => 'Diagnostic',
@@ -96,7 +96,7 @@ return [
                                                     ),
                                                 ),
                                             )
-                                        ),
+                                        ),*/
                                         // End PhpUnit
                                         // MODULE MANAGEMENT
                                         'meliscore_tool_user_module_management' => array(
@@ -589,6 +589,7 @@ return [
                                                             'conf' => array(
                                                                 'id' => 'id_meliscore_logs_tool_export_modal_content',
                                                                 'melisKey' => 'meliscore_logs_tool_export_modal_content',
+                                                                'name' => 'tr_meliscore_logs_tool_export_modal_content'
                                                             ),
                                                             'forward' => array(
                                                                 'module' => 'MelisCore',

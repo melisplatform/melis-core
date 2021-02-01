@@ -9,22 +9,24 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use MelisCore\Listener\MelisCoreGeneralListener;
-use Zend\Mvc\MvcEvent;
-use Zend\Session\Container;
-class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Session\Container;
+
+class MelisCoreCheckUserRightsListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     const INTERVAL_TO_UPDATE = 5;
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents    = $events->getSharedManager();
-        $callBackHandler = $sharedEvents->attach('*', MvcEvent::EVENT_DISPATCH,
+        $this->attachEventListener(
+            $events,
+            '*',
+            MvcEvent::EVENT_DISPATCH,
             function ($e) {
 
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 // update the session last check and interval
                 $container  = new Container('meliscore');
                 $userSvc    = $sm->get('MelisCoreAuth');
@@ -77,9 +79,8 @@ class MelisCoreCheckUserRightsListener extends MelisCoreGeneralListener implemen
                         }
                     }
                 }
-
-            }, -10000);
-
-        $this->listeners[] = $callBackHandler;
+            },
+            -10000
+        );
     }
 }

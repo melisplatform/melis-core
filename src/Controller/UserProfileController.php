@@ -10,22 +10,21 @@
 namespace MelisCore\Controller;
 
 use MelisCore\Service\MelisCoreRightsService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Session\Container;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Session\Container;
 
 /**
  * This class renders User Profile Management
  */
-class UserProfileController extends AbstractActionController
+class UserProfileController extends MelisAbstractActionController
 {
     
     const TOOL_KEY = 'meliscore_user_profile_management';
     
     /**
      * Function to render the user profile
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileAction()
     {
@@ -39,7 +38,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render user profile right side view
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileRightAction()
     {
@@ -53,7 +52,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render user profile tabs on right side view
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileTabsAction()
     {
@@ -67,7 +66,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render user profile left side view
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileLeftAction()
     {
@@ -100,7 +99,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to render user form
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function renderUserProfileFormAction()
     {
@@ -108,7 +107,7 @@ class UserProfileController extends AbstractActionController
         $melisKey = $this->getMelisKey();
         
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
@@ -129,7 +128,7 @@ class UserProfileController extends AbstractActionController
     
     /**
      * Function to update basic user information
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function updateUserInformationAction()
     {
@@ -143,21 +142,21 @@ class UserProfileController extends AbstractActionController
         $formErrors = array();
         $reloadPage = false;
         // translator
-        $translator = $this->getServiceLocator()->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
         // declare the Tool service that we will be using to completely create our tool.
-        $melisTool = $this->getServiceLocator()->get('MelisCoreTool');
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
         // tell the Tool what configuration in the app.tool.php that will be used.
         $melisTool->setMelisToolKey('meliscore', $this::TOOL_KEY);
         //get the user profile form
         $userUpdateForm = $melisTool->getForm('meliscore_user_profile_form');
         //prepare the users table
-        $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
         //prepare the image service
-        $imgService = $this->getServiceLocator()->get('MelisCoreImage');
+        $imgService = $this->getServiceManager()->get('MelisCoreImage');
         
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         
-        $melisMelisCoreConfig = $this->serviceLocator->get('MelisCoreConfig');
+        $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/meliscore_user_profile_management/forms/meliscore_user_profile_form','meliscore_user_profile_form');
 
         $appConfigForm = $appConfigForm['elements'];
@@ -166,7 +165,7 @@ class UserProfileController extends AbstractActionController
         if($this->getRequest()->isPost())
         {
             //process the data from form
-            $postValues = get_object_vars($this->getRequest()->getPost());
+            $postValues = $this->getRequest()->getPost()->toArray();
             $postValues = $melisTool->sanitizePost($postValues);
             $postValues = $this->getRequest()->getPost();
             
@@ -301,7 +300,7 @@ class UserProfileController extends AbstractActionController
     /**
      * Function to check the user profile whether to show it or not
      * depending if the session exist (it will show only if the user change his / her language)
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function checkUserSessionIfExistAction()
     {
@@ -427,7 +426,7 @@ class UserProfileController extends AbstractActionController
     }
     private function getLastUserInfo()
     {
-        $user = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $user = $this->getServiceManager()->get('MelisCoreTableUser');
         foreach($usersInfo AS $key=>$val)
         {
             if($encodeImg)
@@ -448,8 +447,8 @@ class UserProfileController extends AbstractActionController
      */
     private function getCurrentUserInfo($encodeImg = false)
     {
-        $user = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $role = $this->getServiceLocator()->get('MelisCoreTableUserRole');
+        $user = $this->getServiceManager()->get('MelisCoreTableUser');
+        $role = $this->getServiceManager()->get('MelisCoreTableUserRole');
         $usersInfo = $user->getEntryById($this->getCurrentUserId())->toArray();
         foreach($usersInfo AS $key=>$val)
         {
@@ -471,7 +470,7 @@ class UserProfileController extends AbstractActionController
     private function getCurrentUserId()
     {
         $userId = null;
-        $melisCoreAuth = $this->getServiceLocator()->get('MelisCoreAuth');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
         if($melisCoreAuth->hasIdentity()) {
             $userAuthDatas =  $melisCoreAuth->getStorage()->read();
             $userId = (int) $userAuthDatas->usr_id;

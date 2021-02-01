@@ -3,24 +3,9 @@
 namespace MelisCore\Service;
 
 use MelisCore\Model\Tables\MelisCreatePasswordTable;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements ServiceLocatorAwareInterface, MelisCoreCreatePasswordServiceInterface
+class MelisCoreCreatePasswordService extends MelisGeneralService implements MelisCoreCreatePasswordServiceInterface
 {
-    public $serviceLocator;
-    
-    public function setServiceLocator(ServiceLocatorInterface $sl)
-    {
-        $this->serviceLocator = $sl;
-        return $this;
-    }
-    
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
     /**
      * Adds new record for create password request
      * @param String $login
@@ -39,7 +24,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         // Service implementation start
 
         /** @var MelisCreatePasswordTable $table */
-        $table = $this->getServiceLocator()->get('MelisCreatePasswordTable');
+        $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
         $success = false;
         if(!$this->isDataExists($arrayParameters['login'])) {
             $table->save(array(
@@ -90,7 +75,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         // Service implementation start
 
         /** @var MelisCreatePasswordTable $table */
-        $table = $this->getServiceLocator()->get('MelisCreatePasswordTable');
+        $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
         $success = false;
         $hash = $this->generateHash();
 
@@ -112,7 +97,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
             ), 'mcp_login', $arrayParameters['login']);
         }
 
-        $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         $cfg = $melisConfig->getItem('meliscore/datas/'.getenv('MELIS_PLATFORM'));
 
@@ -152,7 +137,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
             $date = $data->mcp_date;
         }
 
-        $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $cfg = $melisConfig->getItem('meliscore/datas/default');
         $expiry = $cfg['pwd_request_expiry'];
         $isExpired = $date < date('Y-m-d H:i:s',strtotime('-'.$expiry.' minutes')) ? false : true;
@@ -271,7 +256,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
             $usr_login = $val->mcp_login;
         }
 
-        $usertbl = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $usertbl = $this->getServiceManager()->get('MelisCoreTableUser');
         $user = $usertbl->getEntryByField("usr_login",$usr_login)->current();
 
         // Service implementation end
@@ -299,7 +284,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         $arrayParameters = $this->sendEvent('meliscorecreatepassword_service_hash_exists_start', $arrayParameters);
 
         // Service implementation start
-        $usertbl = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $usertbl = $this->getServiceManager()->get('MelisCoreTableUser');
         $user = $usertbl->getEntryByField("usr_login",$username)->current();
 
         // Service implementation end
@@ -367,7 +352,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         $result = [];
 
         /** @var MelisCreatePasswordTable $table */
-        $table = $this->getServiceLocator()->get('MelisCreatePasswordTable');
+        $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
         $data = $table->getEntryByField('mcp_login', $arrayParameters['login']);
         
         if($data)
@@ -399,7 +384,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         $result = [];
 
         /** @var MelisCreatePasswordTable $table */
-        $table = $this->getServiceLocator()->get('MelisCoreTableUser');
+        $table = $this->getServiceManager()->get('MelisCoreTableUser');
         $data = $table->getEntryByField('usr_login', $arrayParameters['login'])->current();
 
         if($data)
@@ -436,7 +421,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         $result = [];
 
         /** @var MelisCreatePasswordTable $table */
-        $table = $this->getServiceLocator()->get('MelisCreatePasswordTable');
+        $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
         $data = $table->getEntryByField('mcp_hash', $arrayParameters['hash']);
         
         if($data)
@@ -462,8 +447,8 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
     protected function updatePassword($login, $newPass)
     {
         $success       = false;
-        $userTable     = $this->getServiceLocator()->get('MelisCoreTableUser');
-        $melisCoreAuth = $this->serviceLocator->get('MelisCoreAuth');
+        $userTable     = $this->getServiceManager()->get('MelisCoreTableUser');
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
 
         if($this->isDataExists($login))
         {
@@ -486,7 +471,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
     protected function deletePasswordRequestData($hash) 
     {
         /** @var MelisCreatePasswordTable $table */
-        $table = $this->getServiceLocator()->get('MelisCreatePasswordTable');
+        $table = $this->getServiceManager()->get('MelisCreatePasswordTable');
         $data = $this->getPasswordRequestData($hash);
         
         if($data)
@@ -513,7 +498,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
         $hash  = $datas['mcp_hash'];
         
         $configPath = 'meliscore/datas';
-        $melisConfig = $this->getServiceLocator()->get('MelisCoreConfig');
+        $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         
         $cfg = $melisConfig->getItem('meliscore/datas/'.getenv('MELIS_PLATFORM'));
         
@@ -534,7 +519,7 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
             $email_to = $email;
             
             // Fetching user language Id
-            $userTable = $this->getServiceLocator()->get('MelisCoreTableUser');
+            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
             $userData = $userTable->getDataByLoginAndEmail($login, $email);
             $userData = $userData->current();
             $langId = $userData->usr_lang_id;
@@ -548,11 +533,11 @@ class MelisCoreCreatePasswordService extends MelisCoreGeneralService implements 
             );
 
             /** @var MelisCoreBOEmailService $melisEmailBO */
-            $melisEmailBO = $this->getServiceLocator()->get('MelisCoreBOEmailService');
+            $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
             $emailResult = $melisEmailBO->sendBoEmailByCode('PASSWORDCREATION',  $tags, $email_to, $name_to, $langId);
             
             if ($emailResult){
-                $userTable     = $this->getServiceLocator()->get('MelisCoreTableUser');
+                $userTable     = $this->getServiceManager()->get('MelisCoreTableUser');
                 if($this->isDataExists($login))
                 {
                     $userTable->update(array(

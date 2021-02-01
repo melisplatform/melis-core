@@ -9,25 +9,22 @@
 
 namespace MelisCore\Listener;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Session\Container;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Session\Container;
 
-use MelisCore\Listener\MelisCoreGeneralListener;
-
-class MelisCoreToolUserAddNewUserListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreToolUserAddNewUserListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
 	
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-        
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
         	'MelisCore',
         	'meliscore_tooluser_savenew_start', 
         	function($e){
 
-        		$sm = $e->getTarget()->getServiceLocator();
+        		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$melisCoreDispatchService = $sm->get('MelisCoreDispatch');
         		$container = new Container('meliscore');
         		
@@ -62,8 +59,7 @@ class MelisCoreToolUserAddNewUserListener extends MelisCoreGeneralListener imple
                	if(!$success)
                     return;
         	},
-        100);
-        
-        $this->listeners[] = $callBackHandler;
+        100
+        );
     }
 }

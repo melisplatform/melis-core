@@ -4,10 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.0.1 (2019-02-21)
+ * Version: 5.3.1 (2020-05-27)
  */
 (function () {
-var save = (function () {
     'use strict';
 
     var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
@@ -25,11 +24,6 @@ var save = (function () {
     var hasOnCancelCallback = function (editor) {
       return !!editor.getParam('save_oncancelcallback');
     };
-    var Settings = {
-      enableWhenDirty: enableWhenDirty,
-      hasOnSaveCallback: hasOnSaveCallback,
-      hasOnCancelCallback: hasOnCancelCallback
-    };
 
     var displayErrorMessage = function (editor, message) {
       editor.notificationManager.open({
@@ -40,11 +34,11 @@ var save = (function () {
     var save = function (editor) {
       var formObj;
       formObj = global$1.DOM.getParent(editor.id, 'form');
-      if (Settings.enableWhenDirty(editor) && !editor.isDirty()) {
+      if (enableWhenDirty(editor) && !editor.isDirty()) {
         return;
       }
       editor.save();
-      if (Settings.hasOnSaveCallback(editor)) {
+      if (hasOnSaveCallback(editor)) {
         editor.execCallback('save_onsavecallback', editor);
         editor.nodeChanged();
         return;
@@ -65,37 +59,30 @@ var save = (function () {
     };
     var cancel = function (editor) {
       var h = global$2.trim(editor.startContent);
-      if (Settings.hasOnCancelCallback(editor)) {
+      if (hasOnCancelCallback(editor)) {
         editor.execCallback('save_oncancelcallback', editor);
         return;
       }
-      editor.setContent(h);
-      editor.undoManager.clear();
-      editor.nodeChanged();
-    };
-    var Actions = {
-      save: save,
-      cancel: cancel
+      editor.resetContent(h);
     };
 
     var register = function (editor) {
       editor.addCommand('mceSave', function () {
-        Actions.save(editor);
+        save(editor);
       });
       editor.addCommand('mceCancel', function () {
-        Actions.cancel(editor);
+        cancel(editor);
       });
     };
-    var Commands = { register: register };
 
     var stateToggle = function (editor) {
       return function (api) {
         var handler = function () {
-          api.setDisabled(Settings.enableWhenDirty(editor) && !editor.isDirty());
+          api.setDisabled(enableWhenDirty(editor) && !editor.isDirty());
         };
-        editor.on('nodeChange dirty', handler);
+        editor.on('NodeChange dirty', handler);
         return function () {
-          return editor.off('nodeChange dirty', handler);
+          return editor.off('NodeChange dirty', handler);
         };
       };
     };
@@ -120,16 +107,14 @@ var save = (function () {
       });
       editor.addShortcut('Meta+S', '', 'mceSave');
     };
-    var Buttons = { register: register$1 };
 
-    global.add('save', function (editor) {
-      Buttons.register(editor);
-      Commands.register(editor);
-    });
     function Plugin () {
+      global.add('save', function (editor) {
+        register$1(editor);
+        register(editor);
+      });
     }
 
-    return Plugin;
+    Plugin();
 
 }());
-})();

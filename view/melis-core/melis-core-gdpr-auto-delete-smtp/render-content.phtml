@@ -1,0 +1,35 @@
+<?php
+$id = '';
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id = ' id="' . $this->zoneconfig['conf']['id'] . '"';
+}
+?>
+
+<div <?= $id; ?> data-melisKey='<?= $this->melisKey ?>' style="overflow: hidden;">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="widget flex-row widget-inverse">
+                <div class="innerAll px2">
+                    <?php $this->smtpForm->prepare()?>
+                    <?= $this->form()->openTag($this->smtpForm) ?>
+                    <?= $this->melisFieldCollection($this->smtpForm) ?>
+                    <?= $this->form()->closeTag($this->smtpForm) ?>
+                    <div>
+                        <button class="btn btn-success float-right" id="save-smtp"><i class="fa fa-save"></i> <?= $this->translate('tr_meliscore_tool_gen_save') ?></button>
+                        <?php if ($this->hasConfig) { ?>
+                            <button class="btn btn-danger float-left" id="delete-smtp"><i class="fa fa-times"></i> <?= $this->translate('tr_smtp_form_mgdpr_smtp_delete_smtp_config_btn')?></button>
+                        <?php }?>
+                        <div class="clearfix"></div>
+                    </div>
+                    <?php
+                    if(!empty($this->zoneconfig['interface'])) {
+                        foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+                            echo $this->$keyConfig;
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

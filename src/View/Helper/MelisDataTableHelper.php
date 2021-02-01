@@ -2,16 +2,16 @@
 
 namespace MelisCore\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\AbstractHelper;
 
 class MelisDataTableHelper extends AbstractHelper
 {
-
     private $serviceManager;
 
-    public function __construct($sm)
+    public function setServiceManager(ServiceManager $serviceManager)
     {
-        $this->serviceManager = $sm;
+        $this->serviceManager = $serviceManager;
     }
 
     public function createTable($tableConfig)

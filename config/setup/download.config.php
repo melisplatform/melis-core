@@ -21,7 +21,7 @@ return [
                             'method' => 'POST',
                             'action' => '',
                         ],
-                        'hydrator' => 'Zend\Stdlib\Hydrator\ArraySerializable',
+                        'hydrator' => 'Laminas\Hydrator\ArraySerializable',
                         'elements' => [
                             [
                                 'spec' => [
@@ -134,7 +134,7 @@ return [
                                             'encoding' => 'UTF-8',
                                             'max' => 255,
                                             'messages' => [
-                                                \Zend\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_login_max',
+                                                \Laminas\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_login_max',
                                             ],
                                         ],
                                     ],
@@ -142,7 +142,7 @@ return [
                                         'name' => 'NotEmpty',
                                         'options' => [
                                             'messages' => [
-                                                \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_login_empty',
+                                                \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_login_empty',
                                             ],
                                         ],
                                     ],
@@ -150,7 +150,7 @@ return [
                                         'name' => 'regex', false,
                                         'options' => [
                                             'pattern' => '/^[A-Za-z][A-Za-z0-9]*$/',
-                                            'messages' => [\Zend\Validator\Regex::NOT_MATCH => 'tr_melis_installer_new_user_login_invalid'],
+                                            'messages' => [\Laminas\Validator\Regex::NOT_MATCH => 'tr_melis_installer_new_user_login_invalid'],
                                             'encoding' => 'UTF-8',
                                         ],
                                     ],
@@ -178,7 +178,7 @@ return [
                                         'name' => 'NotEmpty',
                                         'options' => [
                                             'messages' => [
-                                                \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_email_empty',
+                                                \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_email_empty',
                                             ],
                                         ],
                                     ],
@@ -209,7 +209,7 @@ return [
                                             'encoding' => 'UTF-8',
                                             'max' => 255,
                                             'messages' => [
-                                                \Zend\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_pass_max',
+                                                \Laminas\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_pass_max',
                                             ],
                                         ],
                                     ],
@@ -217,7 +217,7 @@ return [
                                         'name' => 'NotEmpty',
                                         'options' => [
                                             'messages' => [
-                                                \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_pass_empty',
+                                                \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_pass_empty',
                                             ],
                                         ],
                                     ],
@@ -248,7 +248,7 @@ return [
                                             'encoding' => 'UTF-8',
                                             'max' => 255,
                                             'messages' => [
-                                                \Zend\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_pass_max',
+                                                \Laminas\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_pass_max',
                                             ],
                                         ],
                                     ],
@@ -256,7 +256,7 @@ return [
                                         'name' => 'NotEmpty',
                                         'options' => [
                                             'messages' => [
-                                                \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_pass_empty',
+                                                \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_pass_empty',
                                             ],
                                         ],
                                     ],
@@ -265,7 +265,7 @@ return [
                                         'options' => [
                                             'token' => 'password',
                                             'messages' => [
-                                                \Zend\Validator\Identical::NOT_SAME => 'tr_melis_installer_new_user_pass_no_match',
+                                                \Laminas\Validator\Identical::NOT_SAME => 'tr_melis_installer_new_user_pass_no_match',
                                             ],
                                         ],
                                     ],
@@ -286,7 +286,7 @@ return [
                                             //'min'      => 1,
                                             'max' => 255,
                                             'messages' => [
-                                                \Zend\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_first_name_long',
+                                                \Laminas\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_first_name_long',
                                             ],
                                         ],
                                     ],
@@ -294,7 +294,7 @@ return [
                                         'name' => 'NotEmpty',
                                         'options' => [
                                             'messages' => [
-                                                \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_first_name_empty',
+                                                \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_first_name_empty',
                                             ],
                                         ],
                                     ],
@@ -315,7 +315,7 @@ return [
                                             //'min'      => 1,
                                             'max' => 255,
                                             'messages' => [
-                                                \Zend\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_last_name_long',
+                                                \Laminas\Validator\StringLength::TOO_LONG => 'tr_melis_installer_new_user_last_name_long',
                                             ],
                                         ],
                                     ],
@@ -323,7 +323,7 @@ return [
                                         'name' => 'NotEmpty',
                                         'options' => [
                                             'messages' => [
-                                                \Zend\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_last_name_empty',
+                                                \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_melis_installer_new_user_last_name_empty',
                                             ],
                                         ],
                                     ],

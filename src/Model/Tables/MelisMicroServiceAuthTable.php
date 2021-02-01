@@ -9,14 +9,23 @@
 
 namespace MelisCore\Model\Tables;
 
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\TableGateway\TableGateway;
 
 class MelisMicroServiceAuthTable extends MelisGenericTable
 {
-    public function __construct(TableGateway $tableGateway)
+    /**
+     * Model table
+     */
+    const TABLE = 'melis_core_microservice_auth';
+
+    /**
+     * Table primary key
+     */
+    const PRIMARY_KEY = 'msoa_id';
+
+    public function __construct()
     {
-        parent::__construct($tableGateway);
-        $this->idField = 'msoa_id';
+        $this->idField = self::PRIMARY_KEY;
     }
 
     public function getUserByApiKey($apiKey)

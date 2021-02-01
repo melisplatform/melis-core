@@ -9,27 +9,26 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Json\Json;
-use Zend\Session\Container;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Json\Json;
+use Laminas\Session\Container;
 
 /**
  * This class handles Melis CMS Flash Messenger
  */
-class MelisFlashMessengerController extends AbstractActionController
+class MelisFlashMessengerController extends MelisAbstractActionController
 { 
     
     /**
      * Renders the Flash Messenger view in Melis CMS 
-     * @return \Zend\View\Model\ViewModel
+     * @return \Laminas\View\Model\ViewModel
      */
     public function headerFlashMessengerAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
-        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
-         
+        $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
+        
         $view = new ViewModel();
         $view->melisKey = $melisKey;
         $view->flashMessages = $this->getflashMessageAction();
@@ -39,13 +38,13 @@ class MelisFlashMessengerController extends AbstractActionController
     public function setFlashMessageAction()
     {
         // translator service
-        $translator = $this->serviceLocator->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         // tool service
-        $tool = $this->getServiceLocator()->get('MelisCoretool');
+        $tool = $this->getServiceManager()->get('MelisCoretool');
 
         // flash messenger service
-        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+        $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
 
         $flashMessages = Json::decode($flashMessenger->getFlashMessengerMessages());
 
@@ -60,10 +59,10 @@ class MelisFlashMessengerController extends AbstractActionController
     }
     public function clearFlashMessageAction(){
         // translator service
-        $translator = $this->serviceLocator->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         // flash messenger service
-        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+        $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
 
         // clear flash message
         $flashMessenger->clearFlashMessage();
@@ -78,18 +77,18 @@ class MelisFlashMessengerController extends AbstractActionController
     
     /**
      * Returns the flash messages content
-     * @return \Zend\View\Model\JsonModel
+     * @return \Laminas\View\Model\JsonModel
      */
     public function getflashMessageAction()
     {
         // translator service
-        $translator = $this->serviceLocator->get('translator');
+        $translator = $this->getServiceManager()->get('translator');
 
         // tool service
-        $tool = $this->getServiceLocator()->get('MelisCoretool');
+        $tool = $this->getServiceManager()->get('MelisCoreTool');
         
         // flash messenger service
-        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+        $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
         
         $flashMessages = Json::decode($flashMessenger->getFlashMessengerMessages());
         
@@ -113,9 +112,9 @@ class MelisFlashMessengerController extends AbstractActionController
             }
         }
         
-    	return new JsonModel(array(
-    		'flashMessage' => $fmArray,
-    	));
+        return new JsonModel(array(
+            'flashMessage' => $fmArray,
+        ));
     }
     
     /**
@@ -123,21 +122,19 @@ class MelisFlashMessengerController extends AbstractActionController
      */
     public function logAction()
     {
-        $flashMessenger = $this->getServiceLocator()->get('MelisCoreFlashMessenger');
+        $flashMessenger = $this->getServiceManager()->get('MelisCoreFlashMessenger');
         
-        $success = $this->params()->fromRoute('success', $this->params()->fromQuery('success', ''));
-        $title   = $this->params()->fromRoute('textTitle', $this->params()->fromQuery('textTitle', ''));
-        $message = $this->params()->fromRoute('textMessage', $this->params()->fromQuery('textMessage', ''));
-        $typeCode = $this->params()->fromRoute('typeCode', $this->params()->fromQuery('typeCode', ''));
-        $itemId = $this->params()->fromRoute('itemId', $this->params()->fromQuery('itemId', ''));
-    
+        $success = $this->params()->fromRoute('success', $this->params()->fromQuery('success', $this->params()->fromRoute('success', $this->params()->fromQuery('success', ''))));
+        $title   = $this->params()->fromRoute('textTitle', $this->params()->fromQuery('textTitle', $this->params()->fromRoute('title', $this->params()->fromQuery('title', ''))));
+        $message = $this->params()->fromRoute('textMessage', $this->params()->fromQuery('textMessage', $this->params()->fromRoute('message', $this->params()->fromQuery('title', ''))));
+        $typeCode = $this->params()->fromRoute('typeCode', $this->params()->fromQuery('typeCode', $this->params()->fromRoute('typeCode', $this->params()->fromQuery('typeCode', ''))));
+        $itemId = $this->params()->fromRoute('itemId', $this->params()->fromQuery('itemId', $this->params()->fromRoute('itemId', $this->params()->fromQuery('itemId', ''))));
+
         $img = $success == 1 ? $flashMessenger::INFO : $flashMessenger::WARNING;
     
         $flashMessenger->addToFlashMessenger($title, $message, $img);
         
-        $logSrv = $this->getServiceLocator()->get('MelisCoreLogService');
+        $logSrv = $this->getServiceManager()->get('MelisCoreLogService');
         $logSrv->saveLog($title, $message, $success, $typeCode, $itemId);
     }
-
-
 }

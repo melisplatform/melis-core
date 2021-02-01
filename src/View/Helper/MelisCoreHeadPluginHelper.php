@@ -2,38 +2,38 @@
 
 namespace MelisCore\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Helper\AbstractHelper;
 use MelisCore\Library\MelisAppConfig;
 
 class MelisCoreHeadPluginHelper extends AbstractHelper
 {
 	public $serviceManager;
 
-	public function __construct($sm)
-	{
-		$this->serviceManager = $sm;
-	}
-	
-	public function __invoke($path = '/')
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+    }
+
+    public function __invoke($path = '/')
 	{
 		$melisAppConfig = $this->serviceManager->get('MelisCoreConfig');
 		
 		$appsConfig = $melisAppConfig->getItem($path);
-		if ($path != '/')
-	    {
+		if ($path != '/') {
 	        $path = substr($path, 1, strlen($path));
-	        $appsConfig = array($path => $appsConfig);
+	        $appsConfig = [$path => $appsConfig];
 	    }
 	    
-		$jsFiles = array();
-		$cssFiles = array();
+		$jsFiles = [];
+		$cssFiles = [];
 		foreach ($appsConfig as $keyPlugin => $appConfig)
 		{	
 			$jsFiles = array_merge($jsFiles, $melisAppConfig->getItem("/$keyPlugin/ressources/js"));
 			$cssFiles = array_merge($cssFiles, $melisAppConfig->getItem("/$keyPlugin/ressources/css"));
 		}
 		
-		return array('js' => $jsFiles,
-					 'css' => $cssFiles);
+		return ['js' => $jsFiles,
+					 'css' => $cssFiles];
 	}
 }

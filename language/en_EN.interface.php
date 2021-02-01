@@ -149,7 +149,7 @@ return [
     'tr_meliscore_tool_user_resend_password_email_msg' => 'Are you sure you want to resend the password creation email?',
     'tr_meliscore_tool_user_reset_rights' => 'Reset rights',
     'tr_meliscore_tool_user_reset_rights_xs' => 'Reset',
-    'tr_meliscmsnews_common_label_reset_rights_msg' => 'Are you sure to reset the rights of this user? <br>This will close access to most functionalities of the platform and you will have to set the new rights manually.',
+    'tr_meliscore_common_label_reset_rights_msg' => 'Are you sure to reset the rights of this user? <br>This will close access to most functionalities of the platform and you will have to set the new rights manually.',
 
     'tr_meliscore_forgot_password' => 'Forgot password',
     // Emails
@@ -342,6 +342,8 @@ return [
     'tr_meliscore_tool_platform_update_marketplace' => 'Allow updates from the marketplace',
     'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
     'tr_meliscore_common_allow' => 'Allow',
+    'tr_meliscore_tool_platform_invalid_platform_name' => 'The name of the platform can only contain letters and numbers, no spaces or special characters',
+
 
     // Language Tool Translations
     'tr_meliscore_tool_language' => 'Back-Office languages',
@@ -433,8 +435,9 @@ return [
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_from_email' => 'Sender email (From)',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to' => 'Reply To',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_reply_to tooltip' => 'Email to which the user will reply to (reply To)',
-    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])"></i>',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout' => 'Layout',
+    'tr_meliscore_emails_mngt_tool_general_properties_form_boe_tag_accepted_list' => 'Replacement tags accepted',
+    'tr_meliscore_emails_mngt_tool_boe_tag_accepted_list tooltip' => 'Each email allows to replace words (Tags) by a value. The list of accepted tags depends and changes according to each email. These tags can then be placed in the content of the email by writing their name between brackets (ex: [NAME])',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout tooltip' => 'Path to the physical file of the template of the email',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title' => 'Layout title',
     'tr_meliscore_emails_mngt_tool_general_properties_form_boe_content_layout_title tooltip' => 'Additional options if you wish to use the default emails',
@@ -768,5 +771,11 @@ return [
     'tr_melis_core_composer_scrpts_No scripts executed' => 'No scripts executed',
     'tr_melis_core_composer_scrpts_executing' => 'Executing composer scripts',
     'tr_melis_core_composer_scrpts_executed' => 'Composer scripts executed',
+    'tr_meliscore_logs_tool_modal_container' => 'Modal container',
+    'tr_meliscore_logs_tool_log_type_form' => 'Form',
+    'tr_meliscore_logs_tool_export_modal_content' => 'Export modal content',
+
+    // cms page iframe loader
+    'tr_meliscore_page_edition_loader_text' => 'Building the page',
     ];
 ?>

@@ -10,21 +10,20 @@
 namespace MelisCore\Listener;
 
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Session\Container;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\Session\Container;
 
-class MelisCoreDashboardPluginRightsTreeViewListener extends MelisCoreGeneralListener implements ListenerAggregateInterface
+class MelisCoreDashboardPluginRightsTreeViewListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $sharedEvents      = $events->getSharedManager();
-
-        $callBackHandler = $sharedEvents->attach(
+        $this->attachEventListener(
+            $events,
             'MelisCore',
             'meliscore_tooluser_getrightstreeview_start',
             function ($e) {
-                $sm = $e->getTarget()->getServiceLocator();
+                $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $container = new Container('meliscore');
 
                 // Add MelisDashboardPlugins right management rights management
@@ -39,8 +38,8 @@ class MelisCoreDashboardPluginRightsTreeViewListener extends MelisCoreGeneralLis
                 // Merge the DashboardPlugin rights with other ones (from Core or other modules)
                 $container['action-tool-user-getrights-tmp'] = array_merge($container['action-tool-user-getrights-tmp'], $rightsDashboard);
             },
-            100);
+            100
+        );
 
-        $this->listeners[] = $callBackHandler;
     }
 }

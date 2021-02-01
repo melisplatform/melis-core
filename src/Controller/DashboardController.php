@@ -9,29 +9,28 @@
 
 namespace MelisCore\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\Session\Container;
+use Laminas\View\Model\ViewModel;
+use Laminas\Session\Container;
 
 use MelisCore\Service\MelisCoreRightsService;
 
 /**
  * This class renders Melis CMS Dashboard
 */
-class DashboardController extends AbstractActionController
+class DashboardController extends MelisAbstractActionController
 {
 	/**
 	 * Shows the leftmenu dasboard entry point
 	 * 
-	 * @return \Zend\View\Model\ViewModel
+	 * @return \Laminas\View\Model\ViewModel
 	 */
-    public function leftmenuDashboardAction()
-    {
-    	$melisKey = $this->params()->fromRoute('melisKey', '');
-    	
-    	$view = new ViewModel();
-    	$view->melisKey = $melisKey;
-    	 
-    	return $view;
-    }
+	public function leftmenuDashboardAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
 }
