@@ -788,8 +788,8 @@ return [
     'tr_meliscore_logs_tool_export_modal_content' => 'Modal contenu de l\'export',
 
     // bubble plugins
-    'tr_meliscore_dashboard_bubble_plugins_hide' => 'Cacher',
-    'tr_meliscore_dashboard_bubble_plugins_show' => 'Afficher',
+    'tr_meliscore_dashboard_bubble_plugins_hide' => 'Cacher les plugins',
+    'tr_meliscore_dashboard_bubble_plugins_show' => 'Afficher les plugins',
     'tr_meliscore_dashboard_bubble_plugins_read' => 'Lire',
     'tr_meliscore_dashboard_bubble_plugins_melis_news' => 'Actus Melis',
     'tr_meliscore_dashboard_bubble_plugins_view_melis_news' => 'Voir les actus Melis',

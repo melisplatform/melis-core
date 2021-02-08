@@ -1089,6 +1089,7 @@ a[data-toggle="modal"]:focus {
 .melis-dashboard-bubble-plugin .media.innerAll .media-body p {
 	margin-bottom: 12px;
 }
+
 /* Responsive media queries */
 @media (min-width: 768px) and (max-width: 1200px) {
 	/* melis-news-bubble-plugin-news */
@@ -1127,7 +1128,7 @@ a[data-toggle="modal"]:focus {
 	.melis-dashboard-bubble-plugin .media.innerAll {
 		padding: 15px;
 		overflow: visible;
-		min-height: 165px;
+		min-height: 80px;
 	}
 	.res-action-container {
 		width: calc(100% - 274px);
