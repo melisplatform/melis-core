@@ -588,8 +588,6 @@
             
               dialogApi.unblock();
               dialogApi.redial(dialogSpec(bodyItems, initialData));
-              
-              //console.log('minitemplate templateList: ', templateList);
 
               for ( var index = 0; index < templateList.length; index++ ) {
                 var templateTitle     = templateList[index].text,

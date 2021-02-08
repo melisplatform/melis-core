@@ -35,3 +35,22 @@
 #mini-template-buttons .tox-button {
     font-weight: normal;
 }
+#mini-template-buttons h3 {
+    background-color: #f6f6f6;
+    color: #222f3e;
+    font-size: 14px;
+
+    padding-left: 1em;
+    padding-right: 0;
+}
+#mini-template-buttons h3.ui-accordion-header-active.ui-state-active {
+    background-color: #e61c23;
+    color: #fff;
+}
+/* #f6f6f6 #e61c23 */
+.other-category-buttons,
+.main-category-buttons {
+    min-height: 195px;
+    padding-right: 1em !important;
+    padding-left: 1em !important;
+}
