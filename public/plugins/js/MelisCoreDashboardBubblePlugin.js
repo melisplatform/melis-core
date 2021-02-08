@@ -57,16 +57,9 @@ var MelisCoreDashboardBubblePlugin = {
     addMinMaxWidth: function() {
         var setBubblePluginInterval = setInterval(function() {
             var $body                   = $("body"),
-                $gs                     = $body.find("#"+activeTabId + " .grid-stack"),
-                gsi                     = $("#"+activeTabId + " .grid-stack").find(".grid-stack-item").length,
-                minWidth                = $gs.data("min-width"),
-                maxWidth                = $gs.data("max-width"),
                 $pluginBtn              = $body.find("#melisDashBoardPluginBtn"),
                 $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-                $bubblePlugin           = $("#bubble-plugin"),
-                bubblePluginWidth       = $bubblePlugin.outerWidth(),
-                bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
-                bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
+                $bubblePlugin           = $("#bubble-plugin");
 
                 if ( $bubblePlugin.length > 0 ) {
                     if ( $("#id_meliscore_center_dashboard_menu.shown").length > 0 ) {
@@ -101,12 +94,9 @@ var MelisCoreDashboardBubblePlugin = {
 $(function() {
     var $body                   = $('body'),
         MAX_COOKIE_AGE          = 2147483647000,
-        $bubblePluginDashboard  = $("#id_meliscore_dashboard_bubble_plugins"),
-        hideFlipCardsClass      = "hide-flip-cards",
         $bubblePluginWrapper    = $("#bubble-plugin"),
         $bubbleShowButton       = $("#btn-show-bubble-plugins"),
         $bubbleHideButton       = $("#btn-hide-bubble-plugins"),
-        $bubblePluginWrapMb20px = $("#bubble-plugin.mb-20px"),
         $dbMsg                  = $body.find(".melis-core-dashboard-msg");
 
         // flipping the card
@@ -145,12 +135,6 @@ $(function() {
 
                     // check dashboard message and grid-stack
                     checkDashboardMsg();
-                    
-                    // check hide or show button
-                    //checkIfHideOrShowButton();
-
-                    // delay adding of the class .transition3ms
-                    // delayTransitionAnimation();
                 }
             );
         });
@@ -210,17 +194,6 @@ $(function() {
                         $dbMsg.closest(".melis-dashboard-plugins").addClass("pt-0");
                     }
                 }
-                // $bubblePluginWrapper.find(".bubble-plugin-flip-cards.hidden").length
-                /* else {
-                    if ( $bubblePluginWrapper.find(".bubble-plugin-flip-cards.hidden").length > 0 ) {
-                        if ( $dbMsg.closest(".melis-dashboard-plugins").find(".pt-0").length == 0 ) {
-                            $dbMsg.closest(".melis-dashboard-plugins").addClass("pt-0");
-                        }   
-                        else {
-                            $dbMsg.closest(".melis-dashboard-plugins").removeClass("pt-0");
-                        }
-                    }
-                } */
             }
         }
 
@@ -232,13 +205,6 @@ $(function() {
                 if ( $transitionAnim.length ) {
                     $content.removeClass("transition3ms");
                 }
-                
-                /* var animation = setTimeout(function() {
-                    if ( ! $transitionAnim.length ) {
-                        $content.addClass("transition3ms");
-                        clearInterval( animation );
-                    }
-                }, 2000); */
         }
 
         // check for hide or show button is found
