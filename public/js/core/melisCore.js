@@ -318,23 +318,23 @@ var melisCore = (function(window){
     // SIDEBAR MENU CLICK (toggle), .toggle-sidebar
     function sidebarMenuClick() {
         // for the sidebar functionalities
-        var $melisLeftMenu 		= $("#id_meliscore_leftmenu"),
-            $melisContent 		= $("#content"),
-            $melisFooter 		= $("#id_meliscore_footer"),
-            $dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
-            sidebarOffsetLeft 	= $melisLeftMenu.position().left,
-            sidebarWidth 		= $melisLeftMenu.outerWidth(),
-            contentOffsetLeft 	= $melisContent.position().left,
-            contentWidth 		= $melisContent.outerWidth(),
-            melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
-            dbPluginMenuWidth 	= $dbPluginMenu.outerWidth(),
-            $gs 				= $body.find("#"+activeTabId+" .grid-stack"),
+        var $melisLeftMenu 		    = $("#id_meliscore_leftmenu"),
+            $melisContent 		    = $("#content"),
+            $melisFooter 		    = $("#id_meliscore_footer"),
+            $dbPluginMenu 		    = $("#id_meliscore_center_dashboard_menu"),
+            sidebarOffsetLeft 	    = $melisLeftMenu.position().left,
+            sidebarWidth 		    = $melisLeftMenu.outerWidth(),
+            contentOffsetLeft 	    = $melisContent.position().left,
+            contentWidth 		    = $melisContent.outerWidth(),
+            melisLeftMenuWidth 	    = $melisLeftMenu.outerWidth(),
+            dbPluginMenuWidth 	    = $dbPluginMenu.outerWidth(),
+            $gs 				    = $body.find("#"+activeTabId+" .grid-stack"),
             $dbMsg                  = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
             dbMsgMinWidth           = $dbMsg.data("min-width"),
             dbMsgMaxWidth           = $dbMsg.data("max-width"),
-            gsi 				= $gs.find(".grid-stack-item").length,
-            minWidth 			= $gs.data("min-width"),
-            maxWidth 			= $gs.data("max-width"),
+            gsi 				    = $gs.find(".grid-stack-item").length,
+            minWidth 			    = $gs.data("min-width"),
+            maxWidth 			    = $gs.data("max-width"),
             $bubblePlugin           = $("#bubble-plugin"),
             bubblePluginWidth       = $bubblePlugin.outerWidth(),
             bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
@@ -349,7 +349,7 @@ var melisCore = (function(window){
             // shown class added
             $melisLeftMenu.toggleClass("shown");
 
-            if ( melisCore.screenSize >= 768 ) {
+            if ( screenSize >= 768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $melisLeftMenu.hasClass("shown") ) {
                         if ( $dbPluginMenu.hasClass("shown") ) {
@@ -385,23 +385,44 @@ var melisCore = (function(window){
                     }
                     else {
                         if ( $dbPluginMenu.hasClass("shown") ) {
-                            $gs.animate({
-                                width: maxWidth + 50
-                            }, 3);
-
-                            $dbMsg.animate({
-                                width: maxWidth + 50
-                            }, 3);
-
-                            if ( $bubblePlugin.length ) {
-                                $bubblePlugin.animate({
-                                    width: $bubblePlugin.outerWidth() + melisLeftMenuWidth
+                            if ( screenSize == 768 ) {
+                                $gs.animate({
+                                    width: $gs.outerWidth()
                                 }, 3);
+
+                                $dbMsg.animate({
+                                    width: $dbMsg.outerWidth()
+                                }, 3);
+
+                                if ( $bubblePlugin.length ) {
+                                    $bubblePlugin.animate({
+                                        width: $bubblePlugin.outerWidth()
+                                    }, 3);
+                                }
+                            }
+                            else {
+                                $gs.animate({
+                                    width: maxWidth + 50
+                                }, 3);
+
+                                $dbMsg.animate({
+                                    width: maxWidth + 50
+                                }, 3);
+
+                                if ( $bubblePlugin.length ) {
+                                    $bubblePlugin.animate({
+                                        width: $bubblePlugin.outerWidth() + melisLeftMenuWidth
+                                    }, 3);
+                                }
                             }
                         }
                         else {
                             if ( screenSize == 768 ) {
                                 $gs.animate({
+                                    width: maxWidth
+                                }, 3);
+
+                                $dbMsg.animate({
                                     width: maxWidth
                                 }, 3);
 
@@ -419,12 +440,12 @@ var melisCore = (function(window){
                                 $dbMsg.animate({
                                     width: maxWidth + dbPluginMenuWidth + 50
                                 }, 3);
-                            }
 
-                            if ( $bubblePlugin.length ) {
-                                $bubblePlugin.animate({
-                                    width: bubblePluginMaxWidth + dbPluginMenuWidth + 50
-                                }, 3);
+                                if ( $bubblePlugin.length ) {
+                                    $bubblePlugin.animate({
+                                        width: bubblePluginMaxWidth + dbPluginMenuWidth + 50
+                                    }, 3);
+                                }
                             }
                         }
                     }
@@ -879,7 +900,7 @@ var melisCore = (function(window){
             }
 
             // check if plugins menu is open, adjust .grid-stack width accordingly
-            if ( screenSize >=768 ) {
+            if ( screenSize >= 768 ) {
                 if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                     if ( $pluginBox.hasClass("shown") ) {
                         if ( $melisLeftMenu.hasClass("shown") ) {
@@ -982,6 +1003,10 @@ var melisCore = (function(window){
                         $dbMsg.animate({
                             width: minWidth
                         }, 3);
+
+                        $bubblePlugin.animate({
+                            width: minWidth
+                        }, 3);
                     } 
                     else {
                         $gs.animate({
@@ -989,6 +1014,10 @@ var melisCore = (function(window){
                         }, 3);
 
                         $dbMsg.animate({
+                            width: maxWidth
+                        }, 3);
+
+                        $bubblePlugin.animate({
                             width: maxWidth
                         }, 3);
                     }
