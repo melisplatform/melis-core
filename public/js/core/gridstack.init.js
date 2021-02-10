@@ -38,8 +38,8 @@ var melisDashBoardDragnDrop = {
         this.dropWidget(this.melisWidgetHandle);
         this.dragStopWidget();
         this.resizeStopWidget();
+
         this.checkDashboardElemWidths();
-        //$("#disable-left-menu-overlay").hide();
     },
     cacheDom: function() {
         // jQuery DOM element

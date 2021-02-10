@@ -57,32 +57,43 @@ var MelisCoreDashboardBubblePlugin = {
     addMinMaxWidth: function() {
         var setBubblePluginInterval = setInterval(function() {
             var $body                   = $("body"),
+                $melisLeftMenu 		    = $("#id_meliscore_leftmenu"),
+                melisLeftMenuWidth 	    = $melisLeftMenu.outerWidth(),
                 $pluginBtn              = $body.find("#melisDashBoardPluginBtn"),
                 $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-                $bubblePlugin           = $("#bubble-plugin");
+                pluginBoxWidth 		    = $pluginBox.outerWidth(),
+                $bubblePlugin           = $("#bubble-plugin"),
+                bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
+                bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
 
                 if ( $bubblePlugin.length > 0 ) {
-                    if ( $("#id_meliscore_center_dashboard_menu.shown").length > 0 ) {
-                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
-                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
-
+                    if ( ! $pluginBox.hasClass("shown") && ! $melisLeftMenu.hasClass("shown") ) {
+                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - ( pluginBoxWidth + melisLeftMenuWidth ) );
+                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() - melisLeftMenuWidth );
+    
                         // display #bubble-plugin width
                         $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
-
-                        $bubblePlugin.animate({
-                            width: $bubblePlugin.outerWidth() - $pluginBox.outerWidth() //bubblePluginMinWidth
-                        }, 3);
-                    }
-                    else {
-                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() );
-                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
-
+                    } 
+                    else if ( $pluginBox.hasClass("shown") && $melisLeftMenu.hasClass("shown") ) {
+                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - ( pluginBoxWidth + melisLeftMenuWidth ) );
+                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() - melisLeftMenuWidth );
+    
                         // display #bubble-plugin width
                         $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
-
-                        $bubblePlugin.animate({
-                            width: $bubblePlugin.outerWidth() //bubblePluginMaxWidth
-                        }, 3);
+                    } 
+                    else if ( ! $pluginBox.hasClass("shown") && $melisLeftMenu.hasClass("shown") ) {
+                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - pluginBoxWidth );
+                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
+    
+                        // display #bubble-plugin width
+                        $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+                    } 
+                    else if ( $pluginBox.hasClass("shown") && ! $melisLeftMenu.hasClass("shown") ) {
+                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - ( melisLeftMenuWidth + pluginBoxWidth ) );
+                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() - melisLeftMenuWidth );
+    
+                        // display #bubble-plugin width
+                        $bubblePlugin.css("width", $bubblePlugin.outerWidth() - pluginBoxWidth );
                     }
 
                     clearInterval( setBubblePluginInterval );
@@ -128,8 +139,6 @@ $(function() {
                     MelisCoreDashboardBubbleNotificationsPlugin.init();
                     MelisCoreDashboardBubbleChatPlugin.init();
 
-                    //$bubblePluginDashboard.removeClass( hideFlipCardsClass );
-
                     // checks min-width and max-width attribute for #bubble-plugin element
                     MelisCoreDashboardBubblePlugin.addMinMaxWidth();
 
@@ -149,9 +158,7 @@ $(function() {
                 {
                     show: false
                 },
-                function() {
-                    //$bubblePluginDashboard.addClass( hideFlipCardsClass );
-
+                function() {                 
                     // checks min-width and max-width attribute for #bubble-plugin element
                     MelisCoreDashboardBubblePlugin.addMinMaxWidth();
 

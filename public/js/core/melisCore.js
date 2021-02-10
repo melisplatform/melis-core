@@ -395,7 +395,7 @@ var melisCore = (function(window){
 
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: bubblePluginMaxWidth + 50
+                                    width: $bubblePlugin.outerWidth() + melisLeftMenuWidth
                                 }, 3);
                             }
                         }
@@ -891,6 +891,7 @@ var melisCore = (function(window){
                                 width: minWidth
                             }, 3);
 
+                            // $pluginBox.hasClass("shown") - true with, $melisLeftMenu.hasClass("shown") - true
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
                                     width: bubblePluginMaxWidth - pluginBoxWidth
@@ -917,9 +918,10 @@ var melisCore = (function(window){
                                 }, 3);
                             }
 
+                            // $pluginBox.hasClass("shown") - true, with no $melisLeftMenu shown
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: bubblePluginMaxWidth + 50
+                                    width: $bubblePlugin.outerWidth() - pluginBoxWidth
                                 }, 3);
                             }
                         }
@@ -959,10 +961,11 @@ var melisCore = (function(window){
                                     width: maxWidth + melisLeftMenuWidth
                                 }, 3);
                             }
-
+                                                       
+                            // $pluginBox.hasClass("shown") - false
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: bubblePluginMaxWidth + melisLeftMenuWidth
+                                    width: $bubblePlugin.outerWidth() + pluginBoxWidth
                                 }, 3);
                             }
                         }
