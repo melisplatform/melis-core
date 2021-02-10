@@ -75,11 +75,11 @@ var MelisCoreDashboardBubblePlugin = {
                         $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
                     } 
                     else if ( $pluginBox.hasClass("shown") && $melisLeftMenu.hasClass("shown") ) {
-                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - ( pluginBoxWidth + melisLeftMenuWidth ) );
-                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() - melisLeftMenuWidth );
+                        $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - ( melisLeftMenuWidth ) + 50 );
+                        $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
     
                         // display #bubble-plugin width
-                        $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+                        $bubblePlugin.css("width", $bubblePlugin.outerWidth() - ( melisLeftMenuWidth ) + 50 );
                     } 
                     else if ( ! $pluginBox.hasClass("shown") && $melisLeftMenu.hasClass("shown") ) {
                         $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - pluginBoxWidth );
