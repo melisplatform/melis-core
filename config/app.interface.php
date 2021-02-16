@@ -137,6 +137,18 @@ return array(
                  * d - days
                  */
                 'gdpr_auto_anonymized_time_format' => "d",
+
+                /**
+                 * scheme configuration to use in the url
+                 *  - override this in the MelisModuleConfig
+                 */
+                getenv('MELIS_PLATFORM') => [
+                    // host
+                    'host' => $_SERVER['HTTP_HOST'],
+                    // scheme
+                    'platform_scheme' => $_SERVER['REQUEST_SCHEME']
+                ]
+
             ),
             'ressources' => array(
                 'css' => array(

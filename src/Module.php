@@ -29,6 +29,7 @@ use MelisCore\Listener\MelisCoreToolUserAddNewUserListener;
 use MelisCore\Listener\MelisCoreToolUserUpdateUserListener;
 use MelisCore\Listener\MelisCoreUrlAccessCheckerListenner;
 use MelisCore\Listener\MelisCoreUserRecentLogsListener;
+use MelisCore\Listener\MelisCoreUrlPlatformSchemeListener;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
@@ -67,6 +68,8 @@ class Module
         $moduleSvc->unloadModule('MelisInstaller');
 
         if (!$this->isInInstallMode($e)) {
+            // url platform scheme redirector
+            (new MelisCoreUrlPlatformSchemeListener())->attach($eventManager);
             (new MelisCoreFlashMessengerListener())->attach($eventManager);
             (new MelisCoreGetRightsTreeViewListener())->attach($eventManager);
             (new MelisCoreToolUserAddNewUserListener())->attach($eventManager);
