@@ -808,7 +808,7 @@ return [
     'tr_meliscore_dashboard_bubble_plugins_view_notifications' => 'Voir les notifications',
     'tr_meliscore_dashboard_bubble_plugins_message' => 'Message',
     'tr_meliscore_dashboard_bubble_plugins_messages' => 'Messages',
-    'tr_meliscore_dashboard_bubble_plugins_view_message' => 'Voir les message',
+    'tr_meliscore_dashboard_bubble_plugins_view_message' => 'Voir les messages',
     'tr_meliscore_dashboard_bubble_plugins_view_messages' => 'Voir les messages',
     'tr_meliscore_dashboard_bubble_plugins_wrote' => 'a écrit',
 ];
