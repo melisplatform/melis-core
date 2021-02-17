@@ -23,8 +23,25 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
             type: 'POST',
             url: 'melis/dashboard-plugin/MelisCoreDashboardBubbleUpdatesPlugin/getUpdates',
         }).done(function (response) {
+            // plugin front text
+            var text = translations.tr_meliscore_dashboard_bubble_plugins_update;
+
+            if (response.count > 1) {
+                text = translations.tr_meliscore_dashboard_bubble_plugins_updates;
+            }
+
+            $('.dashboard-bubble-updates-text').empty();
+            $('.dashboard-bubble-updates-text').text(text);
+
+            // plugin front button text
             if (response.count > 0) {
-                var button = '<button id="dashboard-bubble-updates-back-btn" class="btn btn-default">' + translations.tr_meliscore_dashboard_bubble_plugins_view_updates + '</button>';
+                var buttonText = translations.tr_meliscore_dashboard_bubble_plugins_view_update;
+
+                if (response.count > 1) {
+                    buttonText = translations.tr_meliscore_dashboard_bubble_plugins_view_updates;
+                }
+
+                var button = '<button id="dashboard-bubble-updates-back-btn" class="btn btn-default">' + buttonText + '</button>';
                 $('.dashboard-bubble-updates-back-btn-container').each(function(){
                     $(this).empty();
                     $(this).append(button);
@@ -35,10 +52,12 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
                 });
             }
 
+            // plugin front counter
             $('.dashboard-bubble-updates-counter').each(function(){
                 $(this).text(response.count);
             });
 
+            // plugin back content/list
             $.each(response.data, function (key, value) {
                 if (value.status === -1) {
                     var update = '<tr class="dashboard-bubble-update-details" data-packageid="' + value.packageId + '" data-packagename="' + value.module_name +'">\n' +

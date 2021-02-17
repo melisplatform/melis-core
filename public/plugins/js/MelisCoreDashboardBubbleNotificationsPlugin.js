@@ -27,8 +27,25 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
             type: 'POST',
             url: 'melis/dashboard-plugin/MelisCoreDashboardBubbleNotificationsPlugin/getNotifications',
         }).done(function (response) {
+            // plugin front text
+            var text = translations.tr_meliscore_dashboard_bubble_plugins_notification;
+
+            if (response.count > 1) {
+                text = translations.tr_meliscore_dashboard_bubble_plugins_notifications;
+            }
+
+            $('.bubble-notification-plugin-text').empty();
+            $('.bubble-notification-plugin-text').append(text);
+
+            // plugin front button text
             if (response.count > 0) {
-                var button = '<button id="dashboard-bubble-notifications-back-btn" class="btn btn-success">' + translations.tr_meliscore_dashboard_bubble_plugins_view_notifications + '</button>';
+                var buttonText = translations.tr_meliscore_dashboard_bubble_plugins_view_notification;
+
+                if (response.count > 1) {
+                    buttonText = translations.tr_meliscore_dashboard_bubble_plugins_view_notifications;
+                }
+
+                var button = '<button id="dashboard-bubble-notifications-back-btn" class="btn btn-success">' + buttonText + '</button>';
                 $('.dashboard-bubble-notifications-back-btn-container').each(function(){
                     $(this).empty();
                     $(this).append(button);
@@ -39,10 +56,12 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
                 });
             }
 
+            // plugin front counter
             $('.bubble-notification-plugin-counter').each(function(){
                 $(this).text(response.count);
             });
 
+            // plugin back content/list
             $('.bubble-notifications-list').each(function(){
                 $(this).empty();
             });

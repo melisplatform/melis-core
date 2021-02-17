@@ -27,37 +27,46 @@ var MelisCoreDashboardBubbleChatPlugin = {
             type: 'POST',
             url: 'melis/dashboard-plugin/MelisCoreDashboardBubbleChatPlugin/getMessages',
         }).done(function (response) {
+            // plugin front text
+            var text = translations.tr_meliscore_dashboard_bubble_plugins_message;
+
+            if (response.count > 1) {
+                text = translations.tr_meliscore_dashboard_bubble_plugins_messages;
+            }
+
+            $('.dashboard-bubble-chat-plugin-text').empty();
+            $('.dashboard-bubble-chat-plugin-text').text(text);
+
+            // plugin front button text
             if (response.count > 0) {
-                var button = '<button id="dashboard-bubble-chat-back-btn" class="btn btn-info">' + translations.tr_meliscore_dashboard_bubble_plugins_view_messages + '</button>';
-                $('.dashboard-bubble-chat-back-btn-container').each(function(){
+                var buttonText = translations.tr_meliscore_dashboard_bubble_plugins_view_message;
+
+                if (response.count > 1) {
+                    buttonText = translations.tr_meliscore_dashboard_bubble_plugins_view_messages;
+                }
+
+                var button = '<button id="dashboard-bubble-chat-back-btn" class="btn btn-info">' + buttonText + '</button>';
+                $('.dashboard-bubble-chat-back-btn-container').each(function() {
                     $(this).empty();
                     $(this).append(button);
                 });
             } else {
-                $('.dashboard-bubble-chat-back-btn-container').each(function(){
+                $('.dashboard-bubble-chat-back-btn-container').each(function() {
                     $(this).empty();
                 });
             }
 
-            $('.dashboard-bubble-chat-plugin-counter').each(function(){
+            // plugin front counter
+            $('.dashboard-bubble-chat-plugin-counter').each(function() {
                 $(this).text(response.count);
             });
 
-            $('.dashboard-bubble-chat-plugin-list').each(function(){
+            // plugin back content/list
+            $('.dashboard-bubble-chat-plugin-list').each(function() {
                 $(this).empty();
             });
 
             $.each(response.data, function (key, value) {
-                // var message = '<div class="media innerAll">\n' +
-                //     '<i class="fa fa-chat fa-2x float-left disabled"></i>\n' +
-                //     '<div class="media-body">\n' +
-                //     '<div class="float-right label label-default">' + value.msgr_msg_cont_date + '</div>\n' +
-                //     '<a href="#" class="text-info">' + value.usr_firstname + ' ' + value.usr_lastname + ' </a><em>wrote: </em>\n' +
-                //     '<p>' + ((value.msgr_msg_cont_message.length > 130) ? value.msgr_msg_cont_message.substring(0, 130) + '...' : value.msgr_msg_cont_message) + '</p>\n' +
-                //     '<button class="btn btn-info btn-xs dashboard-bubble-chat-read-more" data-senderid="' + value.msgr_msg_cont_sender_id + '">' + translations.tr_meliscore_dashboard_bubble_plugins_read + '</button>\n' +
-                //     '</div>\n' +
-                //     '</div>';
-
                 var message = '<div class="media innerAll">\n' +
                     '<div class="media-body">\n' +
                     '<div class="row">\n' +
