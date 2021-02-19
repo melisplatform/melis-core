@@ -67,7 +67,7 @@
 }
 /* accordion header */
 #mini-template-buttons.ui-accordion .ui-accordion-content.site-category h3 {
-    padding-left: 2rem;
+    padding-left: 2.5rem;
 }
 .tox-button.hidden {
     display: none !important;
@@ -88,4 +88,8 @@
     left: 0.8rem !important;
     top: auto !important;
     margin-top: 3px !important;
+}
+.site-category .fa-arrow-circle-down,
+.site-category .fa-arrow-circle-right {
+    left: 1.5rem !important;
 }
