@@ -516,7 +516,19 @@
           };
         };
 
-        var openDialog = function (templates) {
+        var openDialog = function ( templates ) {
+          var entries = Object.entries(templates),
+              nearestTemplateIndex;
+
+              for ( var [index, valueStr] of entries) {
+                var url = valueStr.value.url;
+                    if ( ! url ) {
+                      //console.log('index of the next item url not undefined: ', parseInt( index ) + 1 );
+                      // nearest index after a category type which can be distinguished as url: undefined
+                      nearestTemplateIndex = parseInt( index ) + 1;
+                    }
+              }
+
           var selectBoxItems = createSelectBoxItems(templates);
           var dialogSpec = function (bodyItems, initialData) {
             return {
@@ -554,12 +566,14 @@
 
           dialogApi.block('Loading...');
 
-          getTemplateContent(templates[0]).then(function (previewHtml) {
+          getTemplateContent(templates[nearestTemplateIndex]).then(function (previewHtml) {
             var content = getPreviewContent(editor, previewHtml);
             var bodyItems = [];
 
-              for ( var index = 0; index < templates.length; index++) {
-                var templateTitle     = templates[index].text,
+              for ( var index = 0; index < templates.length; index++ ) {
+                var templateIndex     = templates[index],
+                    templateTitle     = templateIndex.text,
+                    url               = templateIndex.value.url,
                     trimTemplateTitle = templateTitle.replaceAll('-', ' ').split('.')[0];
                     //capitalizeTitle   = trimTemplateTitle.charAt(0).toUpperCase() + trimTemplateTitle.slice(1);
 
@@ -569,6 +583,7 @@
                       text: trimTemplateTitle
                     });
               }
+              // end for loop templates.length
 
               bodyItems.sort(function(a, b) {
                 return ( a.text > b.text ) ? 1 : -1;
@@ -582,46 +597,201 @@
               });
               
               var initialData = {
-                template: templates[0].text,
+                template: templates[nearestTemplateIndex].text,
                 preview: content
               };
             
               dialogApi.unblock();
               dialogApi.redial(dialogSpec(bodyItems, initialData));
 
+              // begin html customization and re-arrangements
               for ( var index = 0; index < templateList.length; index++ ) {
-                var templateTitle     = templateList[index].text,
-                    imgSrc            = templateList[index].imgSource,
-                    trimTemplateTitle = templateTitle.replaceAll('-', ' ').split('.')[0],
-                    $button           = document.querySelector('button[title="'+ trimTemplateTitle +'"]');
+                var templateIndex       = templateList[index],
+                    templateTitle       = templateIndex.text,
+                    imgSrc              = templateIndex.imgSource,
+                    trimTemplateTitle   = templateTitle.replaceAll('-', ' ').split('.')[0],
+                    type                = templateIndex.type,
+                    parent              = templateIndex.parent,
+                    id                  = templateIndex.id,
+                    module              = templateIndex.module,
+                    siteName            = templateIndex.site_name,
+                    $button             = $('button[title="' + trimTemplateTitle + '"]'), // for individuality
+                    $image              = ( imgSrc !== '' ) ? "<img src=" + imgSrc + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />" : "";
+                    
+                    if ( imgSrc !== undefined ) {
+                      $button.append( $image );
+                    }
 
-                    $button.innerHTML = $button.innerHTML + "<img src=" + imgSrc + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />";
-
-                    $button.setAttribute("title", templateTitle+".phtml");
+                    $button.attr({
+                      "title"           : templateTitle+".phtml",
+                      "data-id"         : id,
+                      "data-module"     : module,
+                      "data-parent"     : parent,
+                      "data-type"       : type,
+                      "data-site-name"  : siteName
+                    });
               }
+              // for loop templateList.length
 
-              var $dialogBody         = document.querySelector(".tox-dialog__body-content"),
-                  $dialogForm         = document.querySelector(".tox-dialog__body-content .tox-form"),
-                  $toxFormGroupFirst  = document.querySelector(".tox-dialog__body-content .tox-form .tox-form__group:first-child"),
-                  $toxFormGroup       = document.querySelectorAll(".tox-dialog__body-content .tox-form .tox-form__group:not(.tox-form__group--stretched)");
+              var $dialogBody             = $(".tox-dialog__body-content"),
+                  $dialogForm             = $dialogBody.find(".tox-form .tox-form__group:not(.tox-form__group--stretched)"),
+                  //$dialogForm             = $dialogBody.find(".tox-form"),
+                  meliskey                = window.parent.$("body").find("#melis-id-body-content-load > .tab-pane.active").data("meliskey"),
+                  $toxButton              = $dialogBody.find(".tox-button");
 
-                  $dialogBody.setAttribute("id", "custom-body-mini-template");
-              
-              var meliskey = jQuery(parent.$body).find("#melis-id-body-content-load > .tab-pane.active").data("meliskey");
+                  //$dialogBody.setAttribute("id", "custom-body-mini-template");
+                  $dialogBody.attr("id", "custom-body-mini-template");
 
                   if ( meliskey == "meliscms_page" ) {
                     // meliscms_page still generates .tox-form
-                    $dialogForm.setAttribute("id", "custom-body-mini-template-form");
+                    $dialogForm.attr("id", "custom-body-mini-template-form");
 
-                    // meliscms_page still generates .tox-form
-                    jQuery(".tox-dialog__body-content .tox-form .tox-form__group:not(.tox-form__group--stretched)").wrapAll( '<div id="mini-template-buttons" />' );
+                    $dialogForm.wrapAll( '<div id="mini-template-buttons" class="accordion" />' );
                   }
                   else {
                     // here not generating .tox-form
-                    jQuery(".tox-dialog__body-content button").wrapAll( '<div id="mini-template-buttons" />' );
+                    $toxButton.wrapAll( '<div id="mini-template-buttons" class="accordion" />' );
                   }
 
+                  // add custom html structure for category title and hide created button for category                
+                  // appending buttons to respective categories
+                  $.each( $toxButton, function(i, v) {
+                    var $accordWrapper  = $("#mini-template-buttons"),
+                        $siteCategory   = $(".site-category"),
+                        $otherCategory  = $("#other-category"),
+                        $elem           = $(v),
+                        title           = $elem.text(),
+                        id              = $elem.data("id"), // reference to data-parent
+                        parent          = $elem.data("parent"),
+                        type            = $elem.data("type"),
+                        siteName        = $elem.data("site-name"),
+                        siteHtml        = '',
+                        catHtml         = '',
+                        otherCatHtml    = '';
+
+                        // check if .site-category selector is not yet added
+                        if ( $siteCategory.length === 0 && siteName != '' && siteName != null ) {
+                          siteHtml = siteNameHtml( siteName, i );
+                          $accordWrapper.prepend( siteHtml );
+                        }
+                        
+                        // check for category
+                        if ( type == 'category' ) {
+                          var catId = $elem.data("id");
+                              catHtml = categoryHtml( title, catId, siteName, i );
+
+                              // hide button generated with type category
+                              $elem.addClass("hidden");
+
+                              // prepend the resulting html
+                              //if ( parent != '#' ) {
+                                $accordWrapper.prepend( catHtml );
+                              //}
+                        }
+                        
+                        // check if buttons should be inside a main category
+                        if ( type == 'mini-template' || type == 'category' && parent == '#' ) {
+                          if ( $otherCategory.length === 0 ) {
+                            otherCatHtml = otherCategoryHtml( 'Other Category', siteName );
+                            $accordWrapper.append( otherCatHtml );
+                          }
+
+                          // append button to #other-category
+                          //if ( meliskey == "meliscms_page" ) {
+                            // for meliscms_page or page edition
+                            //$accordWrapper.find("#other-category").append( $elem.prev(".tox-form__group") );  
+                          //}
+                          //else {
+                            // for other tools not generating .tox-form__group div wrapper element
+                            $accordWrapper.find("#other-category").append( $elem );
+                          //}
+                        }
+
+                        // check for the buttons with data-parent attribute not equal to #
+                        if ( parent != '#' ) {
+                          var $parent = $("#mini-template-buttons .tox-button:not([data-parent='#'])");
+                              // this button need to be appended to the right category based on data-parent value
+                              $.each( $parent, function(i, v) {
+                                var $mainCatButtons = $(".main-category-buttons"),
+                                    $elem           = $(v),
+                                    parent          = $elem.data("parent");
+
+                                    $.each( $mainCatButtons, function(i, v) {
+                                      var $el       = $(v),
+                                          dataCatId = $el.data("catid"),
+                                          $catId    = $(".main-category-buttons[data-catid='"+dataCatId+"']");
+
+                                          if ( dataCatId === parent ) {
+                                            //if ( meliskey == "meliscms_page" ) {
+                                              // for meliscms_page or page edition
+                                              //$catId.append( $elem.prev(".tox-form__group") );
+                                            //}
+                                            //else {
+                                              // for other tools not generating .tox-form__group div wrapper element
+                                              $catId.append( $elem );
+                                            //}
+                                          }
+                                    });
+                              });
+                        }
+                  });
+                
+                  // appending categories to respective $siteCategory based on data-site-name
+                  $.each( $(".common-category"), function(i, v) {
+                    var $siteCategory           = $(".site-category"),
+                        $commonCategoryElement  = $(v),
+                        commonCategorySiteName  = $commonCategoryElement.data("site-name");
+
+                        $.each( $siteCategory, function( i, v ) {
+                          var $siteCategoryElement  = $(v),
+                              siteCategoryId        = $siteCategoryElement.attr("id"),
+                              siteCategorySiteName  = $siteCategoryElement.data("site-name");
+
+                              if ( commonCategorySiteName === siteCategorySiteName ) {
+                                $("#"+siteCategoryId).append( $commonCategoryElement.prev("h3") );
+                                $("#"+siteCategoryId).append( $commonCategoryElement );
+                              }
+                        });
+                  });
+                
+              var icons = {
+                header: 'fa fa-arrow-circle-right',
+                activeHeader: 'fa fa-arrow-circle-down'
+              };
+
+              $(".accordion").accordion({
+                icons: icons,
+                autoHeight: true,
+                collapsible: true,
+                animate: 400
+              });
+
               dialogApi.focus('minitemplate');
+
+              function siteNameDashLowerCase( siteName ) {
+                return siteName.replace(/\s+/g, '-').toLowerCase();
+              }
+              
+              function siteNameHtml( siteName ) {
+                var sName = siteNameDashLowerCase( siteName );
+
+                    return '<h3>'+ siteName +'</h3>' +
+                          '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ sName +'"></div>';
+              }
+
+              function categoryHtml( categoryTitle, catId, siteName, index ) {
+                var sName = siteNameDashLowerCase( siteName );
+
+                    return '<h3>'+ categoryTitle +'</h3>' +
+                          '<div id="main-category-'+index+'" class="main-category-buttons common-category" data-site-name="'+ sName +'" data-catid="'+ catId +'"></div>';
+              }
+
+              function otherCategoryHtml( categoryTitle, siteName ) {
+                var sName = siteNameDashLowerCase( siteName );
+
+                    return '<h3>'+ categoryTitle +'</h3>' +
+                          '<div id="other-category" class="other-category-buttons common-category" data-site-name="'+ sName +'"></div>';
+              }
           });
         };
 
