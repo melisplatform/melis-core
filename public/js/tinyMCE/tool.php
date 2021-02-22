@@ -34,7 +34,13 @@
             /*
              * return templates with the given prefix only
              */
-            'prefix' => ''
+            'prefix' => '',
+
+            /*
+             * site id
+             */
+
+            'site_id' => ''
         ],
         'image_advtab' => true,
         'toolbar' => 'insertfile undo redo paste | formatselect | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media minitemplate | code',
