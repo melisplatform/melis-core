@@ -789,4 +789,28 @@ return [
 
     // cms page iframe loader
     'tr_meliscore_page_edition_loader_text' => 'Construction de la page',
+    // bubble plugins
+    'tr_meliscore_dashboard_bubble_plugins_hide' => 'Cacher la barre',
+    'tr_meliscore_dashboard_bubble_plugins_show' => 'Ouvrir la barre',
+    'tr_meliscore_dashboard_bubble_plugins_read' => 'Lire',
+    'tr_meliscore_dashboard_bubble_plugins_melis_news' => 'Actualité Melis Platform',
+    'tr_meliscore_dashboard_bubble_plugins_melis_news_plural' => 'Actualités Melis Platform',
+    'tr_meliscore_dashboard_bubble_plugins_view_melis_news' => 'Voir les actualité Melis Platform',
+    'tr_meliscore_dashboard_bubble_plugins_view_melis_news_plural' => 'Voir les actualités Melis Platform',
+    'tr_meliscore_dashboard_bubble_plugins_update' => 'Mise à jour',
+    'tr_meliscore_dashboard_bubble_plugins_updates' => 'Mises à jour',
+    'tr_meliscore_dashboard_bubble_plugins_view_update' => 'Voir les MAJ',
+    'tr_meliscore_dashboard_bubble_plugins_view_updates' => 'Voir les MAJ',
+    'tr_meliscore_dashboard_bubble_plugins_updates_module' => 'Module',
+    'tr_meliscore_dashboard_bubble_plugins_updates_current_version' => 'Version actuelle',
+    'tr_meliscore_dashboard_bubble_plugins_updates_newest_version' => 'Dernière version',
+    'tr_meliscore_dashboard_bubble_plugins_notification' => 'Notification',
+    'tr_meliscore_dashboard_bubble_plugins_notifications' => 'Notifications',
+    'tr_meliscore_dashboard_bubble_plugins_view_notification' => 'Voir les notification',
+    'tr_meliscore_dashboard_bubble_plugins_view_notifications' => 'Voir les notifications',
+    'tr_meliscore_dashboard_bubble_plugins_message' => 'Message',
+    'tr_meliscore_dashboard_bubble_plugins_messages' => 'Messages',
+    'tr_meliscore_dashboard_bubble_plugins_view_message' => 'Voir les messages',
+    'tr_meliscore_dashboard_bubble_plugins_view_messages' => 'Voir les messages',
+    'tr_meliscore_dashboard_bubble_plugins_wrote' => 'a écrit',
 ];

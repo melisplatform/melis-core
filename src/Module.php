@@ -359,6 +359,11 @@ class Module
             include __DIR__ . '/../config/setup/update.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubblePlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleNewsMelisPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleUpdatesPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleNotificationsPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleChatPlugin.config.php',
             /*
              * gdpr auto delete
              */
