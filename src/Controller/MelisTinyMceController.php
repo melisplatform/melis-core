@@ -155,19 +155,27 @@ class MelisTinyMceController extends MelisAbstractActionController
         // mini templates
         $tinyTemplates = [];
 
-        if (!empty($siteId)) {
+        // check if service is present
+        if ($this->getServiceManager()->has('MelisCmsMiniTemplateGetterService')) {
+            $service = $this->getServiceManager()->get('MelisCmsMiniTemplateGetterService');
+            // get prefix that was set in the config of tinyMCE
+            $config = $service->getTinyMCEByType($type);
+            $miniTemplatesConfig = $config['melis_minitemplates'] ?? null;
 
-            // check if service is present
-            if ($this->getServiceManager()->has('MelisCmsMiniTemplateGetterService')) {
+            /*
+             * get site_id first in the tinymce config if no site_id then check for the url
+             */
+            $siteId = $miniTemplatesConfig['site_id'] ? $miniTemplatesConfig['site_id'] : $siteId;
 
-                // get prefix that was set in the config of tinyMCE
-                $prefix = $this->getTinyMCEByType($type);
-                 
-                /**
-                 * get mini templates baesd from mini template manager service
-                 */
-                $tinyTemplates = $this->getService('MelisCmsMiniTemplateGetterService')->getMiniTemplates($siteId, $prefix);
-            }
+            /**
+             * check for the prefix
+             */
+            $prefix = $miniTemplatesConfig['prefix'] ?? null;
+
+            /**
+             * get mini templates baesd from mini template manager service
+             */
+            $tinyTemplates = $this->getService('MelisCmsMiniTemplateGetterService')->getMiniTemplates($siteId, $prefix);
         }
 
         return new JsonModel($tinyTemplates);
@@ -331,5 +339,7 @@ class MelisTinyMceController extends MelisAbstractActionController
 
         return $prefix;
     }
+
+    
 }
 
