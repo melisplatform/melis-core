@@ -1,5 +1,9 @@
 <div id="<?= $this->dashboardId ?>" data-melisKey="<?= $this->melisKey ?>"
      class="tab-pane container-level-a tab-panel-dashboard">
+    <!-- Renders the header -->
+    <?= $this->meliscore_dashboard_header; ?>
+    <!-- End header -->
+    <?= $this->meliscore_dashboard_bubble_plugins; ?>
     <div class="tab-pane page-loaded include-content-xhr full-width active innerAll spacing-x2 melis-dashboard-plugins">
         <div class="melis-core-dashboard-msg" style="display: none;" data-active-mods="<?= $this->activeMods; ?>">
             <div class="alert alert-info no-plugins" role="alert">
