@@ -79,6 +79,9 @@
 .tox-button.hidden {
     display: none !important;
 }
+.tox-button.active {
+    background-color: #ccc !important;
+}
 #mini-template-buttons > .tox-form__group {
     display: none !important;
     height: 0 !important;
