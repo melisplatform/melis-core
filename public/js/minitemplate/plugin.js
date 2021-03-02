@@ -475,8 +475,8 @@
           // api, click as details
           return function (api, click) {
             clickedButtonTemplateTitle = click.name;
-            
-            findTemplate(templates, clickedButtonTemplateTitle).each(function (t) {
+
+            findTemplate(templates, clickedButtonTemplateTitle).each(function (t) {                
               api.block('Loading...');
               getTemplateContent(t).then(function (previewHtml) {
                 var previewContent = getPreviewContent(editor, previewHtml);
@@ -520,12 +520,15 @@
           var entries = Object.entries(templates),
               nearestTemplateIndex;
 
-              for ( var [index, valueStr] of entries) {
+              for ( var [index, valueStr] of entries) {                 
                 var url = valueStr.value.url;
                     if ( ! url ) {
                       //console.log('index of the next item url not undefined: ', parseInt( index ) + 1 );
                       // nearest index after a category type which can be distinguished as url: undefined
                       nearestTemplateIndex = parseInt( index ) + 1;
+                    } 
+                    else {
+                      nearestTemplateIndex = index;
                     }
               }
 
@@ -765,6 +768,15 @@
                 collapsible: true,
                 animate: 400
               });
+
+              var $buttons = $('#mini-template-buttons .tox-button');
+                  $.each( $buttons, function(i, v) {
+                    var $elem = $(v);
+                        $elem.on("click", function() {
+                          var $this = $(this);
+                              $this.toggleClass("active").siblings().removeClass("active");
+                        });
+                  });
 
               dialogApi.focus('minitemplate');
 
