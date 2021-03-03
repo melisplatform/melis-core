@@ -150,6 +150,7 @@ class MelisTinyMceController extends MelisAbstractActionController
     {
         // get site id from the url
         $siteId = $this->params()->fromRoute('siteId', $this->params()->fromQuery('siteId', ''));
+        $prefix = $this->params()->fromRoute('prefix', $this->params()->fromQuery('prefix', ''));
         // tinyMCE type
         $type   = $this->params()->fromRoute('type', $this->params()->fromQuery('type', ''));
         // mini templates
@@ -158,20 +159,6 @@ class MelisTinyMceController extends MelisAbstractActionController
         // check if service is present
         if ($this->getServiceManager()->has('MelisCmsMiniTemplateGetterService')) {
             $service = $this->getServiceManager()->get('MelisCmsMiniTemplateGetterService');
-            // get prefix that was set in the config of tinyMCE
-            $config = $service->getTinyMCEByType($type);
-            $miniTemplatesConfig = $config['melis_minitemplates'] ?? null;
-
-            /*
-             * get site_id first in the tinymce config if no site_id then check for the url
-             */
-            $siteId = $miniTemplatesConfig['site_id'] ? $miniTemplatesConfig['site_id'] : $siteId;
-
-            /**
-             * check for the prefix
-             */
-            $prefix = $miniTemplatesConfig['prefix'] ?? null;
-
             /**
              * get mini templates baesd from mini template manager service
              */
