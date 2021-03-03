@@ -475,8 +475,8 @@
           // api, click as details
           return function (api, click) {
             clickedButtonTemplateTitle = click.name;
-            
-            findTemplate(templates, clickedButtonTemplateTitle).each(function (t) {
+
+            findTemplate(templates, clickedButtonTemplateTitle).each(function (t) {                
               api.block('Loading...');
               getTemplateContent(t).then(function (previewHtml) {
                 var previewContent = getPreviewContent(editor, previewHtml);
@@ -520,12 +520,15 @@
           var entries = Object.entries(templates),
               nearestTemplateIndex;
 
-              for ( var [index, valueStr] of entries) {
+              for ( var [index, valueStr] of entries) {                 
                 var url = valueStr.value.url;
                     if ( ! url ) {
                       //console.log('index of the next item url not undefined: ', parseInt( index ) + 1 );
                       // nearest index after a category type which can be distinguished as url: undefined
                       nearestTemplateIndex = parseInt( index ) + 1;
+                    } 
+                    else {
+                      nearestTemplateIndex = index;
                     }
               }
 
@@ -653,8 +656,10 @@
                     $toxButton.wrapAll( '<div id="mini-template-buttons" class="accordion" />' );
                   }
 
-                  // add custom html structure for category title and hide created button for category                
-                  // appending buttons to respective categories
+                  /** 
+                   * Add custom html structure for category title and hide created button for category                
+                   * appending buttons to respective categories
+                   */
                   $.each( $toxButton, function(i, v) {
                     var $accordWrapper  = $("#mini-template-buttons"),
                         $siteCategory   = $(".site-category"),
@@ -684,9 +689,7 @@
                               $elem.addClass("hidden");
 
                               // prepend the resulting html
-                              //if ( parent != '#' ) {
-                                $accordWrapper.prepend( catHtml );
-                              //}
+                              $accordWrapper.prepend( catHtml );
                         }
                         
                         // check if buttons should be inside a main category
@@ -712,26 +715,28 @@
                           var $parent = $("#mini-template-buttons .tox-button:not([data-parent='#'])");
                               // this button need to be appended to the right category based on data-parent value
                               $.each( $parent, function(i, v) {
-                                var $mainCatButtons = $(".main-category-buttons"),
-                                    $elem           = $(v),
-                                    parent          = $elem.data("parent");
+                                setTimeout(function() {
+                                  var $elem  = $(v),
+                                      $mainCatButtons = $(".main-category-buttons"),
+                                      parent = $elem.data("parent");
 
-                                    $.each( $mainCatButtons, function(i, v) {
-                                      var $el       = $(v),
-                                          dataCatId = $el.data("catid"),
-                                          $catId    = $(".main-category-buttons[data-catid='"+dataCatId+"']");
+                                      $.each( $mainCatButtons, function(i, v) {
+                                        var $el       = $(v),
+                                            dataCatId = $el.data("catid"),
+                                            $catId    = $(".main-category-buttons[data-catid='"+dataCatId+"']");
 
-                                          if ( dataCatId === parent ) {
-                                            //if ( meliskey == "meliscms_page" ) {
-                                              // for meliscms_page or page edition
-                                              //$catId.append( $elem.prev(".tox-form__group") );
-                                            //}
-                                            //else {
-                                              // for other tools not generating .tox-form__group div wrapper element
-                                              $catId.append( $elem );
-                                            //}
-                                          }
-                                    });
+                                            if ( dataCatId === parent ) {
+                                              //if ( meliskey == "meliscms_page" ) {
+                                                // for meliscms_page or page edition
+                                                //$catId.append( $elem.prev(".tox-form__group") );
+                                              //}
+                                              //else {
+                                                // for other tools not generating .tox-form__group div wrapper element
+                                                $catId.append( $elem );
+                                              //}
+                                            }
+                                      });
+                                }, 500);
                               });
                         }
                   });
@@ -765,6 +770,15 @@
                 collapsible: true,
                 animate: 400
               });
+
+              var $buttons = $('#mini-template-buttons .tox-button');
+                  $.each( $buttons, function(i, v) {
+                    var $elem = $(v);
+                        $elem.on("click", function() {
+                          var $this = $(this);
+                              $this.toggleClass("active").siblings().removeClass("active");
+                        });
+                  });
 
               dialogApi.focus('minitemplate');
 
