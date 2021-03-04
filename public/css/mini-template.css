@@ -1,5 +1,7 @@
 #custom-body-mini-template {
     display: block !important;
+    max-height: 525px;
+    overflow: hidden;
 }
 #custom-body-mini-template > * {
     margin-top: 0 !important;
@@ -22,18 +24,26 @@
 	margin-right: 0.5rem;
 }
 #mini-template-buttons {
-    height: 250px; 
+    /* height: 250px; */
+    /* For horizontal side by side display */
+    display: block;
+    max-height: 525px;
+    float: left;
+    width: 25%;
     overflow-y: scroll;
 }
 #custom-body-mini-template .tox-form__group--stretched {
-    /* height: 275px; */
-    min-height: 270px;
+    /* min-height: 270px; */
+    /* For horizontal side by side display */
+    height: 100%;
 }
 #custom-body-mini-template .tox-form__group--stretched .tox-navobj iframe {
     min-height: 253px;
 }
 #mini-template-buttons .tox-button {
     font-weight: normal;
+    white-space: normal;
+    /* word-break: break-all; */
 }
 #mini-template-buttons h3 {
     background: #f6f6f6;
