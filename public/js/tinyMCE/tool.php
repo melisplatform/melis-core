@@ -12,7 +12,7 @@
 		'branding' => false,
 		'inline' => false,
 		'menubar' => false,
-		'templates' => 'miniTemplates',
+		'templates' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
 		'forced_root_block' => '',
 		'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
 		'cleanup' => false,
