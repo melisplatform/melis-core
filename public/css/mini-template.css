@@ -38,7 +38,7 @@
 #custom-body-mini-template .tox-form__group--stretched {
     /* min-height: 270px; */
     /* For horizontal side by side display */
-    height: 100%;
+    height: 510px;
 }
 #custom-body-mini-template .tox-form__group--stretched .tox-navobj iframe {
     min-height: 253px;
