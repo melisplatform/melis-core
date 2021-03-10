@@ -117,6 +117,11 @@
 #custom-body-mini-template .tox-form .accordion .fa-arrow-circle-right {
     top: 0.25rem !important;
 }
+@media (min-width: 1024px) {
+    #custom-body-mini-template .tox-form__group--stretched {
+        height: 515px;
+    }
+}
 @media (max-width: 576px) {
     #mini-template-buttons {
         max-height: 225px;
