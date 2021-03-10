@@ -10,6 +10,9 @@
     position: relative;
     height: 100%;
 }
+#custom-body-mini-template .tox-form {
+    display: block;
+}
 #mini-template-buttons .tox-button,
 #mini-template-buttons .tox-form__group,
 #custom-body-mini-template .tox-form .tox-form__group:not(.tox-form__group--stretched),
@@ -65,7 +68,7 @@
     font-weight: normal;
 }
 /* #f6f6f6 #e61c23 */
-.other-category-buttons.ui-accordion-content,
+.other-category.ui-accordion-content,
 .main-category-buttons.ui-accordion-content {
     min-height: 195px;
     padding-right: 1em !important;
