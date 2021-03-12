@@ -6,7 +6,7 @@
  *
  * Version: 5.0.1 (2019-02-21)
  */
-(function () {
+ (function () {
   var minitemplate = (function () {
       'use strict';
 
@@ -656,156 +656,226 @@
                     $toxButton.wrapAll( '<div id="mini-template-buttons" class="accordion" />' );
                   }
 
-                  /** 
-                   * Add custom html structure for category title and hide created button for category                
-                   * appending buttons to respective categories
+                  /**
+                   * Appending of site category
+                   * Creating site category based on unique values from button's data-site-name
                    */
-                  $.each( $toxButton, function(i, v) {
-                    var $accordWrapper  = $("#mini-template-buttons"),
-                        $siteCategory   = $(".site-category"),
-                        $otherCategory  = $("#other-category"),
-                        $elem           = $(v),
-                        title           = $elem.text(),
-                        id              = $elem.data("id"), // reference to data-parent
-                        parent          = $elem.data("parent"),
-                        type            = $elem.data("type"),
-                        siteName        = $elem.data("site-name"),
-                        siteHtml        = '',
-                        catHtml         = '',
-                        otherCatHtml    = '';
+                  var uniqueSiteNames = getUniqueSiteNames( $toxButton );
 
-                        // check if .site-category selector is not yet added
-                        if ( $siteCategory.length === 0 && siteName != '' && siteName != null ) {
-                          siteHtml = siteNameHtml( siteName, i );
-                          $accordWrapper.prepend( siteHtml );
-                        }
-                        
-                        // check for category
-                        if ( type == 'category' ) {
-                          var catId = $elem.data("id");
-                              catHtml = categoryHtml( title, catId, siteName, i );
+                      // cycle through the unique site names for .site-category
+                      for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
+                        var $accordWrapper  = $("#mini-template-buttons"),
+                            siteName        = uniqueSiteNames[index],
+                            siteHtml        = '',
+                            otherCatHtml    = '';
 
-                              // hide button generated with type category
-                              $elem.addClass("hidden");
+                            // site category
+                            //if ( $siteCategory.length == 0 ) {
+                              siteHtml = siteNameHtml( siteName, index );
+                              $accordWrapper.prepend( siteHtml );
+                            //}
 
-                              // prepend the resulting html
-                              $accordWrapper.prepend( catHtml );
-                        }
-                        
-                        // check if buttons should be inside a main category
-                        if ( type == 'mini-template' || type == 'category' && parent == '#' ) {
-                          if ( $otherCategory.length === 0 ) {
-                            otherCatHtml = otherCategoryHtml( 'Other Category', siteName );
-                            $accordWrapper.append( otherCatHtml );
-                          }
+                            // other category
+                            //if ( $otherCategory.length == 0 ) {
+                              otherCatHtml = otherCategoryHtml( 'Other Category', siteName, index );
+                              $accordWrapper.append( otherCatHtml );
+                            //}      
+                      }
 
-                          // append button to #other-category
-                          //if ( meliskey == "meliscms_page" ) {
-                            // for meliscms_page or page edition
-                            //$accordWrapper.find("#other-category").append( $elem.prev(".tox-form__group") );  
-                          //}
-                          //else {
-                            // for other tools not generating .tox-form__group div wrapper element
-                            $accordWrapper.find("#other-category").append( $elem );
-                          //}
-                        }
+                      // $toxButton
+                      $.each( $toxButton, function(i, v) {
+                        var $accordWrapper  = $("#mini-template-buttons"),
+                            $otherCategory  = $(".other-category"),
+                            //$mainCategory   = $(".main-category"),
+                            $elem           = $(v),
+                            title           = $elem.text(),
+                            id              = $elem.data("id"), // reference to data-parent
+                            parent          = $elem.data("parent"),
+                            type            = $elem.data("type"),
+                            siteName        = $elem.data("site-name"), // site category
+                            catHtml         = '';
 
-                        // check for the buttons with data-parent attribute not equal to #
-                        if ( parent != '#' ) {
-                          var $parent = $("#mini-template-buttons .tox-button:not([data-parent='#'])");
-                              // this button need to be appended to the right category based on data-parent value
-                              $.each( $parent, function(i, v) {
+                            // check for category
+                            if ( type == 'category' ) {
+                              //var catId = $elem.data("id");
+
+                                  // index $toxButton
+                                  catHtml = categoryHtml( title, id, siteName, i );
+
+                                  // hide button generated with type category
+                                  $elem.addClass("hidden");
+
+                                  // prepend the resulting html
+                                  $accordWrapper.prepend( catHtml );
+                            }
+
+                            /**
+                             * Check if buttons should be inside a main category. 
+                             * If parent == '#' means it is under .other-category
+                             */
+                            if ( type == 'mini-template' || type == 'category' ) {
+                              // for .other category
+                              if ( parent == '#' ) {
+                                $.each( $otherCategory, function( i, v ) {
+                                  var $otherCategoryElem    = $(v),
+                                      buttonSiteName        = $elem.data("site-name"),
+                                      otherCategorySiteName = $otherCategoryElem.data("site-name");
+
+                                      if ( buttonSiteName === otherCategorySiteName ) {
+                                        $otherCategoryElem.append( $elem );
+                                      }
+                                });
+                              }
+                              // for .main-category
+                              else {
                                 setTimeout(function() {
-                                  var $elem  = $(v),
-                                      $mainCatButtons = $(".main-category-buttons"),
-                                      parent = $elem.data("parent");
+                                  var $mainCategory = $(".main-category");
+                                      $.each( $mainCategory, function( i, v ) {
+                                        var $mainCategoryElem = $(v),
+                                            mainCategoryId    = $mainCategoryElem.data("cat-id"), // data value
+                                            $mainCategoryId   = $(".main-category[data-cat-id='"+mainCategoryId+"']"); // jquery selector
 
-                                      $.each( $mainCatButtons, function(i, v) {
-                                        var $el       = $(v),
-                                            dataCatId = $el.data("catid"),
-                                            $catId    = $(".main-category-buttons[data-catid='"+dataCatId+"']");
-
-                                            if ( dataCatId === parent ) {
-                                              //if ( meliskey == "meliscms_page" ) {
-                                                // for meliscms_page or page edition
-                                                //$catId.append( $elem.prev(".tox-form__group") );
-                                              //}
-                                              //else {
-                                                // for other tools not generating .tox-form__group div wrapper element
-                                                $catId.append( $elem );
-                                              //}
+                                            if ( mainCategoryId === parent ) {
+                                              $mainCategoryId.append( $elem );
                                             }
                                       });
                                 }, 500);
-                              });
-                        }
-                  });
-                
-                  // appending categories to respective $siteCategory based on data-site-name
-                  $.each( $(".common-category"), function(i, v) {
-                    var $siteCategory           = $(".site-category"),
-                        $commonCategoryElement  = $(v),
-                        commonCategorySiteName  = $commonCategoryElement.data("site-name");
-
-                        $.each( $siteCategory, function( i, v ) {
-                          var $siteCategoryElement  = $(v),
-                              siteCategoryId        = $siteCategoryElement.attr("id"),
-                              siteCategorySiteName  = $siteCategoryElement.data("site-name");
-
-                              if ( commonCategorySiteName === siteCategorySiteName ) {
-                                $("#"+siteCategoryId).append( $commonCategoryElement.prev("h3") );
-                                $("#"+siteCategoryId).append( $commonCategoryElement );
                               }
-                        });
-                  });
-                
-              var icons = {
-                header: 'fa fa-arrow-circle-right',
-                activeHeader: 'fa fa-arrow-circle-down'
-              };
+                            }
+                      });
 
-              $(".accordion").accordion({
-                icons: icons,
-                autoHeight: true,
-                collapsible: true,
-                animate: 400
-              });
+                  var $commonCategory = $(".common-category");
 
-              var $buttons = $('#mini-template-buttons .tox-button');
-                  $.each( $buttons, function(i, v) {
-                    var $elem = $(v);
-                        $elem.on("click", function() {
-                          var $this = $(this);
-                              $this.toggleClass("active").siblings().removeClass("active");
-                        });
-                  });
+                      // appending categories to respective $siteCategory based on data-site-name
+                      $.each( $commonCategory, function(i, v) {
+                        var $siteCategory           = $(".site-category"),
+                            $commonCategoryElement  = $(v),
+                            commonCategorySiteName  = $commonCategoryElement.data("site-name");                          
+
+                            $.each( $siteCategory, function( i, v ) {
+                              var $siteCategoryElement  = $(v),
+                                  siteCategoryId        = $siteCategoryElement.attr("id"),
+                                  siteCategorySiteName  = $siteCategoryElement.data("site-name");
+
+                                  if ( commonCategorySiteName === siteCategorySiteName ) {
+                                    $siteCategoryElement.append( $commonCategoryElement.prev("h3") );
+                                    $siteCategoryElement.append( $commonCategoryElement );
+                                  }
+                            });
+                      });
 
               dialogApi.focus('minitemplate');
+
+              function getUniqueSiteNames( $elemArray ) {
+                var listArray = [], uniqueArray = [], counting = 0, found = false;
+                    $.each($elemArray, function(i, v) {
+                      var siteName = $(v).data("site-name");
+                        if ( $.inArray( siteName, listArray ) == -1 ) {
+                          listArray.push( siteName );
+                        }
+                    });
+
+                    for ( var x = 0; x < listArray.length; x++ ) {
+                      for ( var y = 0; y < uniqueArray.length; y++ ) {
+                        if ( listArray[x] == uniqueArray[y] ) {
+                          found = true;
+                        }
+                      }
+                      counting++;
+                      if ( counting == 1 && found == false ) {
+                        uniqueArray.push( listArray[x] );
+                      }
+                      found = false;
+                      counting = 0;
+                    }
+
+                    return uniqueArray;
+              }
 
               function siteNameDashLowerCase( siteName ) {
                 return siteName.replace(/\s+/g, '-').toLowerCase();
               }
               
-              function siteNameHtml( siteName ) {
-                var sName = siteNameDashLowerCase( siteName );
+              function siteNameHtml( siteName, index ) {
+                var sName = siteName; //siteNameDashLowerCase( siteName );
 
                     return '<h3>'+ siteName +'</h3>' +
                           '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ sName +'"></div>';
               }
 
               function categoryHtml( categoryTitle, catId, siteName, index ) {
-                var sName = siteNameDashLowerCase( siteName );
+                var sName = siteName; //siteNameDashLowerCase( siteName );
 
                     return '<h3>'+ categoryTitle +'</h3>' +
-                          '<div id="main-category-'+index+'" class="main-category-buttons common-category" data-site-name="'+ sName +'" data-catid="'+ catId +'"></div>';
+                          '<div id="main-category-'+index+'" class="main-category common-category" data-site-name="'+ sName +'" data-cat-id="'+ catId +'"></div>';
               }
 
-              function otherCategoryHtml( categoryTitle, siteName ) {
-                var sName = siteNameDashLowerCase( siteName );
+              function otherCategoryHtml( categoryTitle, siteName, index ) {
+                var sName = siteName; //siteNameDashLowerCase( siteName );
 
                     return '<h3>'+ categoryTitle +'</h3>' +
-                          '<div id="other-category" class="other-category-buttons common-category" data-site-name="'+ sName +'"></div>';
+                          '<div id="other-category-'+index+'" class="other-category common-category" data-site-name="'+ sName +'"></div>';
               }
+
+              var icons = {
+                header: 'fa fa-arrow-circle-right',
+                activeHeader: 'fa fa-arrow-circle-down'
+              };
+
+              $(".accordion").accordion({
+                animate: 400,
+                autoHeight: true,
+                collapsible: true,
+                icons: icons
+              });
+
+              var $buttons = $('#mini-template-buttons .tox-button');
+                  $.each( $buttons, function(i, v) {
+                    var $elem             = $(v),
+                        classesToRemoved  = ['ui-accordion-header', 'ui-corner-top', 'ui-state-default', 'ui-accordion-icons', 'ui-accordion-header-collapsed', 'ui-corner-all'], // j
+                        classesToAdd      = ['ui-accordion-content', 'ui-corner-bottom', 'ui-helper-reset', 'ui-widget-content'], // k
+                        classList         = $elem.attr('class').split(/\s+/); // i
+
+                        /**
+                         * Loop through the class lists and compare with classes to be removed
+                         */
+                       /*  for ( var i = 0; i < classList.length; i++ ) {
+                          for ( var j = 0; j < classesToRemoved.length; j++ ) {
+                            if ( classList[i] == classesToRemoved[j] ) {
+                              $elem.removeClass( classList[i] ); */
+                              /**
+                               * Replace with classes to add
+                               */
+                              /* for ( var k = 0; k < classesToAdd.length; k++ ) {
+                                $elem.addClass( classesToAdd[k] );
+                              } */
+                            /* }
+                          }
+                        } */
+
+                        /**
+                         * Remove this not needed element added by jquery ui accordion.
+                         * <span class="ui-accordion-header-icon ui-icon fa fa-arrow-circle-right"></span>
+                         */
+                        $elem.find(".fa-arrow-circle-right").remove();
+
+                        /**
+                         * Highlight the clicked button to determine from in active.
+                         */
+                        $elem.on("click", function(e) {
+                          var $this = $(this);
+
+                              $this.toggleClass("active").siblings().removeClass("active");
+
+                              /**
+                               * For the issue on displaying all available mini templates.
+                               * Some button when clicked it closes the accordion
+                               */
+                              if ( $this.hasClass( 'ui-accordion-header' ) ) {
+                                $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
+                              }
+                        });
+                  });
           });
         };
 
@@ -839,6 +909,8 @@
 
       global.add('minitemplate', function (editor) {
         tinymce.DOM.loadCSS("/MelisCore/css/mini-template.css");
+        /* tinymce.DOM.loadCSS("/MelisDemoCms/css/style.css");
+        tinymce.DOM.loadCSS("/MelisDemoCms/css/bootstrap.min.css"); */
 
         Buttons.register(editor);
         Commands.register(editor);

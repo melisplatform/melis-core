@@ -33,7 +33,8 @@
     max-height: 525px;
     float: left;
     width: 25%;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
+    overflow: auto;
 }
 #custom-body-mini-template .tox-form__group--stretched {
     /* min-height: 270px; */
@@ -46,7 +47,14 @@
 #mini-template-buttons .tox-button {
     font-weight: normal;
     white-space: normal;
+    height: auto !important;
     /* word-break: break-all; */
+}
+#mini-template-buttons .tox-button:not([data-parent="#"]) {
+    display: block !important;
+}
+#mini-template-buttons .tox-button .ui-accordion-header-icon {
+    display: none !important;
 }
 #mini-template-buttons h3 {
     background: #f6f6f6;
@@ -69,18 +77,16 @@
 }
 /* #f6f6f6 #e61c23 */
 .other-category.ui-accordion-content,
-.main-category-buttons.ui-accordion-content {
+.main-category.ui-accordion-content {
     min-height: 195px;
     padding-right: 1em !important;
     padding-left: 1em !important;
     height: auto !important;
 }
-.ui-accordion .ui-accordion-content.site-category {
-    border: 0;
-    padding-top: 0;
+.site-category.ui-accordion-content {
+    border: 0 !important;
+    padding: 0 !important;
     height: auto !important;
-    padding-left: 0;
-    padding-right: 0;
 }
 /* accordion header */
 .ui-accordion .ui-accordion-icons {
