@@ -612,21 +612,22 @@
                 var templateIndex       = templateList[index],
                     templateTitle       = templateIndex.text,
                     imgSrc              = templateIndex.imgSource,
-                    trimTemplateTitle   = templateTitle.replaceAll('-', ' ').split('.')[0],
+                    trimTemplateTitle1   = templateTitle.replaceAll('-', ' ').split('.')[0],
+                    trimTemplateTitle   = templateTitle.replaceAll('-', ' '),
                     type                = templateIndex.type,
                     parent              = templateIndex.parent,
                     id                  = templateIndex.id,
                     module              = templateIndex.module,
                     siteName            = templateIndex.site_name,
-                    $button             = $('button[title="' + trimTemplateTitle + '"]'), // for individuality
+                    $button             = $('button[title="'+trimTemplateTitle+'"]'), // for individuality
                     $image              = ( imgSrc !== '' ) ? "<img src=" + imgSrc + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />" : "";
-                    
-                    if ( imgSrc !== undefined ) {
+
+                    if ( imgSrc != '' ) {
                       $button.append( $image );
                     }
 
                     $button.attr({
-                      "title"           : templateTitle+".phtml",
+                      "title"           : templateTitle.toLowerCase(),
                       "data-id"         : id,
                       "data-module"     : module,
                       "data-parent"     : parent,
@@ -638,7 +639,6 @@
 
               var $dialogBody             = $(".tox-dialog__body-content"),
                   $dialogForm             = $dialogBody.find(".tox-form .tox-form__group:not(.tox-form__group--stretched)"),
-                  //$dialogForm             = $dialogBody.find(".tox-form"),
                   meliskey                = window.parent.$("body").find("#melis-id-body-content-load > .tab-pane.active").data("meliskey"),
                   $toxButton              = $dialogBody.find(".tox-button");
 
@@ -666,27 +666,27 @@
                       for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
                         var $accordWrapper  = $("#mini-template-buttons"),
                             siteName        = uniqueSiteNames[index],
+                            otherCategory   = translations.tr_meliscore_tinymce_mini_template,
                             siteHtml        = '',
                             otherCatHtml    = '';
 
                             // site category
-                            //if ( $siteCategory.length == 0 ) {
+                            if ( siteName != undefined ) {
                               siteHtml = siteNameHtml( siteName, index );
                               $accordWrapper.prepend( siteHtml );
-                            //}
-
+                            }
+                            
                             // other category
-                            //if ( $otherCategory.length == 0 ) {
-                              otherCatHtml = otherCategoryHtml( 'Other Category', siteName, index );
+                            if ( siteName != undefined ) {
+                              otherCatHtml = otherCategoryHtml( otherCategory, siteName, index );
                               $accordWrapper.append( otherCatHtml );
-                            //}      
+                            }
                       }
 
                       // $toxButton
                       $.each( $toxButton, function(i, v) {
                         var $accordWrapper  = $("#mini-template-buttons"),
                             $otherCategory  = $(".other-category"),
-                            //$mainCategory   = $(".main-category"),
                             $elem           = $(v),
                             title           = $elem.text(),
                             id              = $elem.data("id"), // reference to data-parent
@@ -720,7 +720,7 @@
                                   var $otherCategoryElem    = $(v),
                                       buttonSiteName        = $elem.data("site-name"),
                                       otherCategorySiteName = $otherCategoryElem.data("site-name");
-
+                                      
                                       if ( buttonSiteName === otherCategorySiteName ) {
                                         $otherCategoryElem.append( $elem );
                                       }
@@ -739,7 +739,7 @@
                                               $mainCategoryId.append( $elem );
                                             }
                                       });
-                                }, 500);
+                                }, 1000);
                               }
                             }
                       });
@@ -766,6 +766,12 @@
 
               dialogApi.focus('minitemplate');
 
+              function setAttributes(el, attrs) {
+                for ( var key in attrs ) {
+                  el.setAttribute(key, attrs[key]);
+                }
+              }
+
               function getUniqueSiteNames( $elemArray ) {
                 var listArray = [], uniqueArray = [], counting = 0, found = false;
                     $.each($elemArray, function(i, v) {
@@ -788,7 +794,7 @@
                       found = false;
                       counting = 0;
                     }
-
+                    
                     return uniqueArray;
               }
 
