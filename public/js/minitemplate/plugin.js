@@ -523,8 +523,7 @@
               for ( var [index, valueStr] of entries) {                 
                 var url = valueStr.value.url;
                     if ( ! url ) {
-                      //console.log('index of the next item url not undefined: ', parseInt( index ) + 1 );
-                      // nearest index after a category type which can be distinguished as url: undefined
+                      // nearest index after a category type which can be distinguished as url: undefined, index of the next item url not undefined
                       nearestTemplateIndex = parseInt( index ) + 1;
                     } 
                     else {
@@ -612,7 +611,7 @@
                 var templateIndex       = templateList[index],
                     templateTitle       = templateIndex.text,
                     imgSrc              = templateIndex.imgSource,
-                    trimTemplateTitle1   = templateTitle.replaceAll('-', ' ').split('.')[0],
+                    //trimTemplateTitle1   = templateTitle.replaceAll('-', ' ').split('.')[0],
                     trimTemplateTitle   = templateTitle.replaceAll('-', ' '),
                     type                = templateIndex.type,
                     parent              = templateIndex.parent,
@@ -637,10 +636,10 @@
               }
               // for loop templateList.length
 
-              var $dialogBody             = $(".tox-dialog__body-content"),
-                  $dialogForm             = $dialogBody.find(".tox-form .tox-form__group:not(.tox-form__group--stretched)"),
-                  meliskey                = window.parent.$("body").find("#melis-id-body-content-load > .tab-pane.active").data("meliskey"),
-                  $toxButton              = $dialogBody.find(".tox-button");
+              var $dialogBody            = $(".tox-dialog__body-content"),
+                  $dialogForm            = $dialogBody.find(".tox-form .tox-form__group:not(.tox-form__group--stretched)"),
+                  meliskey               = window.parent.$("body").find("#melis-id-body-content-load > .tab-pane.active").data("meliskey"),
+                  $toxButton             = $dialogBody.find(".tox-button");
 
                   //$dialogBody.setAttribute("id", "custom-body-mini-template");
                   $dialogBody.attr("id", "custom-body-mini-template");
@@ -661,7 +660,6 @@
                    * Creating site category based on unique values from button's data-site-name
                    */
                   var uniqueSiteNames = getUniqueSiteNames( $toxButton );
-
                       // cycle through the unique site names for .site-category
                       for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
                         var $accordWrapper  = $("#mini-template-buttons"),
@@ -671,16 +669,16 @@
                             otherCatHtml    = '';
 
                             // site category
-                            if ( siteName != undefined ) {
+                            //if ( siteName != undefined ) {
                               siteHtml = siteNameHtml( siteName, index );
                               $accordWrapper.prepend( siteHtml );
-                            }
+                            //}
                             
                             // other category
-                            if ( siteName != undefined ) {
+                            //if ( siteName != undefined ) {
                               otherCatHtml = otherCategoryHtml( otherCategory, siteName, index );
                               $accordWrapper.append( otherCatHtml );
-                            }
+                            //}
                       }
 
                       // $toxButton
@@ -697,16 +695,14 @@
 
                             // check for category
                             if ( type == 'category' ) {
-                              //var catId = $elem.data("id");
+                              // index $toxButton
+                              catHtml = categoryHtml( title, id, siteName, i );
 
-                                  // index $toxButton
-                                  catHtml = categoryHtml( title, id, siteName, i );
+                              // hide button generated with type category
+                              $elem.addClass("hidden");
 
-                                  // hide button generated with type category
-                                  $elem.addClass("hidden");
-
-                                  // prepend the resulting html
-                                  $accordWrapper.prepend( catHtml );
+                              // prepend the resulting html
+                              $accordWrapper.prepend( catHtml );
                             }
 
                             /**
@@ -739,7 +735,7 @@
                                               $mainCategoryId.append( $elem );
                                             }
                                       });
-                                }, 1000);
+                                }, 500);
                               }
                             }
                       });
