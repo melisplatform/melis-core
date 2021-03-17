@@ -453,6 +453,7 @@
         };
 
         var getTemplateContent = function (t) {
+          //console.log('open getTemplateContent t: ', t);
           return new global$3(function (resolve, reject) {
             if (t.value.url) {
               global$2.send({
@@ -478,6 +479,7 @@
 
             findTemplate(templates, clickedButtonTemplateTitle).each(function (t) {                
               api.block('Loading...');
+              
               getTemplateContent(t).then(function (previewHtml) {
                 var previewContent = getPreviewContent(editor, previewHtml);
                 api.setData({ preview: previewContent });
@@ -517,19 +519,19 @@
         };
 
         var openDialog = function ( templates ) {
-          var entries = Object.entries(templates),
-              nearestTemplateIndex;
+          //console.log('openDialog templates: ', templates);
+          var nearestTemplateIndex;
 
-              for ( var [index, valueStr] of entries) {                 
-                var url = valueStr.value.url;
-                    if ( ! url ) {
-                      // nearest index after a category type which can be distinguished as url: undefined, index of the next item url not undefined
-                      nearestTemplateIndex = parseInt( index ) + 1;
-                    } 
-                    else {
-                      nearestTemplateIndex = index;
-                    }
-              }
+          for ( var i = 0; i < templates.length; i++ ) {
+            var url = templates[i].value.url;
+                if ( url != undefined ) {
+                  nearestTemplateIndex = parseInt( i ) + 1;
+                  break;
+                }
+                else {
+                  nearestTemplateIndex = i;
+                }
+          }
 
           var selectBoxItems = createSelectBoxItems(templates);
           var dialogSpec = function (bodyItems, initialData) {
@@ -567,7 +569,6 @@
           }));
 
           dialogApi.block('Loading...');
-
           getTemplateContent(templates[nearestTemplateIndex]).then(function (previewHtml) {
             var content = getPreviewContent(editor, previewHtml);
             var bodyItems = [];
