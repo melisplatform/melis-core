@@ -30,13 +30,17 @@ class MelisCoreUrlPlatformSchemeListener extends MelisGeneralListener implements
                 $config = $configSvc->getItem('meliscore/datas/' . getenv('MELIS_PLATFORM'));
                 // check for platform_scheme config
 				if (isset($config['platform_scheme']) && $config['platform_scheme']) {
-					// check if current scheme is not the same as the set platform_scheme
-					if ($_SERVER['REQUEST_SCHEME'] != $config['platform_scheme']) {
-						// we redirect according to its config scheme
-						$url = $config['platform_scheme'] . "://" . $config['host'] . "/melis";
-						// redirect
-						$e->getTarget()->plugin('redirect')->toUrl($url);
-					}
+					// redirect only if not on https
+                    if (isset($_SERVER['HTTP_REFERER'])) {
+                        $scheme = explode(':', $_SERVER['HTTP_REFERER'])[0];
+                        // check if current scheme is not the same as the set platform_scheme
+                        if ($scheme != $config['platform_scheme']) {
+                            // we redirect according to its config scheme
+                            $url = $config['platform_scheme'] . "://" . $config['host'] . "/melis";
+                            // redirect
+                            $e->getTarget()->plugin('redirect')->toUrl($url);
+                        }
+                    }
 				}
             },
             -10000
