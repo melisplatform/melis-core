@@ -12,7 +12,7 @@ var melisTinyMCE = (function(){
         }
         
         if (options.hasOwnProperty('templates')) {
-            options.templates = options.templates + "&type=" + type;
+            options.templates = options.templates;
         } 
         
         $.ajax({

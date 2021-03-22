@@ -617,7 +617,9 @@ return [
     'tr_meliscore_tinymce_file_manager' => 'File Manager',
     'tr_meliscore_tinymce_insert_edit_link_toolbar_button_title' => 'Insert/edit link',
     'tr_meliscore_tinymce_insert_edit_link_dialog_title' => 'Insert/Edit Link',
-    'tr_meliscore_tinymce_mini_template' => 'Other Category',
+    'tr_meliscore_tinymce_mini_template_other_category' => 'Other Category',
+    'tr_meliscore_tinymce_mini_template_add_button_tooltip' => 'Insert Mini Template',
+    'tr_meliscore_tinymce_mini_template_add_menuitem_text' => 'Insert Mini Template...',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',
