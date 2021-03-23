@@ -511,6 +511,13 @@ var melisHelper = (function(){
                             $(".melis-tabnext").trigger("click");
                         }
                     }
+                    
+                    // check for meliscore_dashboard and melisDashBoardDragnDrop is defined
+                    if ( typeof melisDashBoardDragnDrop !== undefined && melisKey == 'meliscore_dashboard' ) {
+                        setTimeout(function() {
+                            melisDashBoardDragnDrop.checkDashboard();
+                        }, 2000);
+                    }
             }
             else {
                 //make the new tab and content active instead of reloading
