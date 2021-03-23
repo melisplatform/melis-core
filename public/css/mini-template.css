@@ -41,6 +41,9 @@
     /* For horizontal side by side display */
     height: 510px;
 }
+#custom-body-mini-template .tox-form__group--stretched label {
+    display: none;
+}
 #custom-body-mini-template .tox-form__group--stretched .tox-navobj iframe {
     min-height: 253px;
 }

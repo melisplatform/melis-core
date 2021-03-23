@@ -620,6 +620,7 @@ return [
     'tr_meliscore_tinymce_mini_template_other_category' => 'Other Category',
     'tr_meliscore_tinymce_mini_template_add_button_tooltip' => 'Insert Mini Template',
     'tr_meliscore_tinymce_mini_template_add_menuitem_text' => 'Insert Mini Template...',
+    'tr_meliscore_tinymce_mini_template_no_template_found' => 'No mini-template found in this category.',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',

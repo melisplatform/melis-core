@@ -534,7 +534,7 @@
           var selectBoxItems = createSelectBoxItems(templates);
           var dialogSpec = function (bodyItems, initialData) {
             return {
-              title: 'Insert Mini Template',
+              title: translations.tr_meliscore_tinymce_mini_template_add_button_tooltip,
               size: 'large',
               body: {
                 type: 'panel',
@@ -738,14 +738,39 @@
                             }
                       });
 
+                      /**
+                       * Appending categories to respective $siteCategory based on data-site-name
+                       */
                   var $commonCategory = $(".common-category");
 
-                      // appending categories to respective $siteCategory based on data-site-name
                       $.each( $commonCategory, function(i, v) {
                         var $siteCategory           = $(".site-category"),
                             $commonCategoryElement  = $(v),
-                            commonCategorySiteName  = $commonCategoryElement.data("site-name");                          
+                            commonCategorySiteName  = $commonCategoryElement.data("site-name"),
+                            commonCategoryById      = $commonCategoryElement.attr("id"),
+                            $commonCategoryById     = $("#"+commonCategoryById),
+                            $btnTemplate            = $commonCategoryById.find(".tox-button"),
+                            noMiniTemplateFoundMsg  = '<label class="no-mini-template-found">'+translations.tr_meliscore_tinymce_mini_template_no_template_found+'</label>';
 
+                            /**
+                             * Check if .common-category element is empty 
+                             * to add noMiniTemplateFoundMsg
+                             * */ 
+                            setTimeout(function() {
+                              if ( $commonCategoryElement.is(":empty") ) {
+                                $commonCategoryElement.append( noMiniTemplateFoundMsg );
+                              }
+                              else {
+                                if ( $btnTemplate.hasClass('hidden') && $btnTemplate.data("type") != 'mini-template' ) {
+                                  $commonCategoryElement.append( noMiniTemplateFoundMsg );
+                                }
+                              }
+                            }, 1000);
+                            
+                            /**
+                             * Check on $siteCategory to where particular
+                             * category to be appended
+                             * */ 
                             $.each( $siteCategory, function( i, v ) {
                               var $siteCategoryElement  = $(v),
                                   siteCategoryId        = $siteCategoryElement.attr("id"),
@@ -759,13 +784,12 @@
                       });
 
               dialogApi.focus('minitemplate');
-
-              /* function setAttributes(el, attrs) {
-                for ( var key in attrs ) {
-                  el.setAttribute(key, attrs[key]);
-                }
-              } */
-
+              
+              /**
+               * Returns a unique site names from an array.
+               * @param {*} $elemArray 
+               * @returns uniqueArray
+               */
               function getUniqueSiteNames( $elemArray ) {
                 var listArray = [], uniqueArray = [], counting = 0, found = false;
                     $.each($elemArray, function(i, v) {
@@ -792,34 +816,6 @@
                     return uniqueArray;
               }
 
-              // .data("parent") == #
-              /* function checkIfThereAreButtonsWithNoCategory( $elemArray ) {
-                var otherCategory = false;
-                  $.each( $elemArray, function(i, v) {
-                    // #
-                    var $elem             = $(v),
-                        parent            = $elem.data("parent"),
-                        siteName          = $elem.data("site-name"),
-                        siteCategoryId    = $elem.parent('.site-category').attr('id'),
-                        $siteCategory     = $("#"+siteCategoryId),
-                        $dataParentSharp  = $siteCategory.find("button[data-parent='#']"),
-                        $dataTypeNotCat   = $siteCategory.find("button[data-type='mini-template']");
-                        
-                        if ( siteName != '' && siteName != 'undefined' ) {
-                          if ( parent != '#' && parent != '' ) {
-                            console.log('otherCategory true!!!');
-                            otherCategory = true;
-                          }
-                          else {
-                            console.log('otherCategory false!!!');
-                            otherCategory = false;
-                          }
-                        }
-                  });
-
-                  return otherCategory;
-              } */
-
               function siteNameDashLowerCase( siteName ) {
                 return siteName.replace(/\s+/g, '-').toLowerCase();
               }
@@ -845,6 +841,9 @@
                           '<div id="other-category-'+index+'" class="other-category common-category" data-site-name="'+ sName +'"></div>';
               }
 
+              /**
+               * Turns lists of sites and categories into accordion
+               */
               var icons = {
                 header: 'fa fa-arrow-circle-right',
                 activeHeader: 'fa fa-arrow-circle-down'
@@ -857,6 +856,9 @@
                 icons: icons
               });
 
+              /**
+               * Highlight button when clicked
+               */
               var $buttons = $('#mini-template-buttons .tox-button');
                   $.each( $buttons, function(i, v) {
                     var $elem             = $(v),
