@@ -911,6 +911,26 @@
 
         var optTemplates = createTemplates();
             optTemplates.each(openDialog);
+
+        /**
+         * Insert link element for the css of mini templates
+         * so that it would display same as in the front end.
+         */
+        setTimeout(function() {
+          var $previewIframeHead = $("#custom-body-mini-template .tox-form__group--stretched .tox-navobj iframe").contents().find("head");
+          var cssUrl = ['/MelisDemoCms/css/style.css', '/MelisDemoCms/css/bootstrap.min.css'];
+
+              $.each( cssUrl, function(i) {
+                console.log("i: ", i);
+                var el        = document.createElement('link');
+                    el.href   = cssUrl[i];
+                    el.rel    = "stylesheet";
+                    el.media  = "screen";
+                    el.type   = "text/css";
+
+                    $previewIframeHead.append( el );
+              });
+        }, 1000);
       };
       // end of open
 
@@ -939,8 +959,8 @@
 
       global.add('minitemplate', function (editor) {
         tinymce.DOM.loadCSS("/MelisCore/css/mini-template.css");
-        /* tinymce.DOM.loadCSS("/MelisDemoCms/css/style.css");
-        tinymce.DOM.loadCSS("/MelisDemoCms/css/bootstrap.min.css"); */
+        //tinymce.DOM.loadCSS("/MelisDemoCms/css/style.css");
+        //tinymce.DOM.loadCSS("/MelisDemoCms/css/bootstrap.min.css");
 
         Buttons.register(editor);
         Commands.register(editor);
