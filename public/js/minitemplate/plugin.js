@@ -521,15 +521,15 @@
 
         var openDialog = function ( templates ) {
           var nearestTemplateIndex = 0;
-
+          //console.log('templates: ', templates);
           for ( var i = 0; i < templates.length; i++ ) {
             var url = templates[i].value.url;
-                if ( url != undefined ) {
-                  nearestTemplateIndex = parseInt( i ) + 1;
-                  break;
-                }
-                else {
+                //console.log('templates[i]: ', templates[i]);
+                if ( url != undefined && url.endsWith(".phtml") ) {
                   nearestTemplateIndex = i;
+
+                  //console.log('nearestTemplateIndex: ', nearestTemplateIndex);
+                  break;
                 }
           }
 
@@ -569,6 +569,7 @@
           }));
 
           dialogApi.block('Loading...');
+          //console.log('templates[nearestTemplateIndex]: ', templates[nearestTemplateIndex]);
           getTemplateContent(templates[nearestTemplateIndex]).then(function (previewHtml) {
             var content = getPreviewContent(editor, previewHtml);
             var bodyItems = [];
@@ -606,6 +607,7 @@
             
               dialogApi.unblock();
               dialogApi.redial(dialogSpec(bodyItems, initialData));
+              
               // begin html customization and re-arrangements
               for ( var index = 0; index < templateList.length; index++ ) {
                 var templateIndex       = templateList[index],
