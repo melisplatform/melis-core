@@ -396,7 +396,7 @@
 
       var global$3 = tinymce.util.Tools.resolve('tinymce.util.Promise');
 
-      var getPreviewContent = function (editor, html) {
+      var getPreviewContent = function (editor, html, cssMiniTemplates) {
         if (html.indexOf('<html>') === -1) {
           var contentCssLinks_1 = '';
           global$1.each(editor.contentCSS, function (url) {
@@ -483,6 +483,8 @@
                 var previewContent = getPreviewContent(editor, previewHtml);
                 api.setData({ preview: previewContent });
                 api.unblock();
+
+                //insertMelisDemoCmsMiniTemplateCss();
               });
             });
           };
@@ -907,7 +909,10 @@
                         });
                   });
           });
+
+          //insertMelisDemoCmsMiniTemplateCss();
         };
+        // openDialog
 
         var optTemplates = createTemplates();
             optTemplates.each(openDialog);
@@ -916,21 +921,26 @@
          * Insert link element for the css of mini templates
          * so that it would display same as in the front end.
          */
-        setTimeout(function() {
-          var $previewIframeHead = $("#custom-body-mini-template .tox-form__group--stretched .tox-navobj iframe").contents().find("head");
-          var cssUrl = ['/MelisDemoCms/css/style.css', '/MelisDemoCms/css/bootstrap.min.css'];
+        function insertMelisDemoCmsMiniTemplateCss() {
+          setTimeout(function() {
+            var $previewIframeHead = $("#custom-body-mini-template .tox-form__group--stretched .tox-navobj iframe").contents().find("head");
+            var cssUrl = [
+              '/MelisDemoCms/css/bootstrap.min.css',
+              '/MelisDemoCms/vendors/elagent/style.css',
+              '/MelisDemoCms/css/style.css'
+            ];
 
-              $.each( cssUrl, function(i) {
-                console.log("i: ", i);
-                var el        = document.createElement('link');
-                    el.href   = cssUrl[i];
-                    el.rel    = "stylesheet";
-                    el.media  = "screen";
-                    el.type   = "text/css";
+                $.each( cssUrl, function(i) {
+                  var el        = document.createElement('link');
+                      el.href   = cssUrl[i];
+                      el.rel    = "stylesheet";
+                      el.media  = "screen";
+                      el.type   = "text/css";
 
-                    $previewIframeHead.append( el );
-              });
-        }, 1000);
+                      $previewIframeHead.append( el );
+                });
+          }, 1000);
+        }
       };
       // end of open
 
