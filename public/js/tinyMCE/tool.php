@@ -28,7 +28,7 @@
            'insertdatetime media table minitemplate'
 		],
 		'external_plugins' => [
-			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js'
+			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js?v=20210325'
 		],
         'image_advtab' => true,
         'toolbar' => 'insertfile undo redo paste | formatselect | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media minitemplate | code',
