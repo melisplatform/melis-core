@@ -109,6 +109,12 @@ class MelisFieldRow extends FormRow
 
         }elseif ($element->hasAttribute('meliscore-tinymce-textarea')){
 
+            $siteId = $element->getOption('site_id');
+            $prefix = $element->getOption('prefix');
+            $templates = $element->getOption('templates');
+            if (! empty($templates)) {
+                $templates = "templates :\"" . $templates . "?siteId=" .$siteId . "&prefix=$prefix\",";
+            }
             $tinyceId = 'tinyce-textarea-'.uniqid();
             $attrib = $element->getAttributes();
             $element->setAttribute('id', $tinyceId);
@@ -117,7 +123,7 @@ class MelisFieldRow extends FormRow
                             '.parent::render($element).'
                             </div>';
             $formElement .= '<script type="text/javascript">';
-            $formElement .= 'melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\''.$tinyceId.'\']", {height: 200, relative_urls: false,  remove_script_host: false, convert_urls : false});';
+            $formElement .= 'melisTinyMCE.createTinyMCE("tool", "textarea[data-tinymce-id=\''.$tinyceId.'\']", {height: 200,' . $templates .' relative_urls: false,  remove_script_host: false, convert_urls : false});';
             $formElement .= '</script>';
 
         } elseif (!empty($element->getOption('switch_options'))){
