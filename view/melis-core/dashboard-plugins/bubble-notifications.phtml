@@ -1,0 +1,39 @@
+<div class="panel-3d melis-dashboard-bubble-plugin melis-dashboard-bubble-notifications-plugin" style="">
+    <div class="front">
+
+        <div class="widget text-center">
+            <div class="widget-body padding-none">
+                <div>
+                    <div class="innerAll bg-success">
+                        <p class="lead strong margin-none text-white">
+                            <i class="fa fa-fw fa-bell"></i>
+                            <br/>
+                            <span class="bubble-notification-plugin-counter">0</span>
+                            <span class="bubble-notification-plugin-text"><?= $this->translate('tr_meliscore_dashboard_bubble_plugins_notification') ?></span>
+                        </p>
+                    </div>
+                    <div class="innerAll dashboard-bubble-notifications-back-btn-container" style="height: 85px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="back">
+        <div class="widget widget-inverse widget-scroll" data-scroll-height="165px">
+            <div class="widget-head">
+                <button class="btn btn-xs btn-default float-right"><i class="fa fa-times"></i></button>
+                <h4 class="heading"><?= $this->translate('tr_meliscore_dashboard_bubble_plugins_notifications') ?></h4>
+            </div>
+            <div class="widget-body padding-none">
+                <div class="back-container">
+                    <table class="table table-condensed">
+                        <!-- Table body -->
+                        <tbody class="bubble-notifications-list"></tbody>
+                        <!-- // Table body END -->
+                    </table>
+                    <!-- // Table END -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

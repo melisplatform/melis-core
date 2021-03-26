@@ -777,6 +777,32 @@ return [
     'tr_melis_core_composer_scrpts_executed' => 'Composer scripts executed',
     'tr_meliscore_logs_tool_modal_container' => 'Modal container',
     'tr_meliscore_logs_tool_log_type_form' => 'Form',
-    'tr_meliscore_logs_tool_export_modal_content' => 'Export modal content'
-    ];
-?>
+    'tr_meliscore_logs_tool_export_modal_content' => 'Export modal content',
+
+    // cms page iframe loader
+    'tr_meliscore_page_edition_loader_text' => 'Building the page',
+    // bubble plugins
+    'tr_meliscore_dashboard_bubble_plugins_hide' => 'Hide the bar',
+    'tr_meliscore_dashboard_bubble_plugins_show' => 'Open the bar',
+    'tr_meliscore_dashboard_bubble_plugins_read' => 'Read',
+    'tr_meliscore_dashboard_bubble_plugins_melis_news' => 'Melis Platform News',
+    'tr_meliscore_dashboard_bubble_plugins_melis_news_plural' => 'Melis Platform News',
+    'tr_meliscore_dashboard_bubble_plugins_view_melis_news' => 'View Melis Platform News',
+    'tr_meliscore_dashboard_bubble_plugins_view_melis_news_plural' => 'View Melis Platform News',
+    'tr_meliscore_dashboard_bubble_plugins_update' => 'Update',
+    'tr_meliscore_dashboard_bubble_plugins_updates' => 'Updates',
+    'tr_meliscore_dashboard_bubble_plugins_view_update' => 'View Update',
+    'tr_meliscore_dashboard_bubble_plugins_view_updates' => 'View Updates',
+    'tr_meliscore_dashboard_bubble_plugins_updates_module' => 'Module',
+    'tr_meliscore_dashboard_bubble_plugins_updates_current_version' => 'Current Version',
+    'tr_meliscore_dashboard_bubble_plugins_updates_newest_version' => 'Newest Version',
+    'tr_meliscore_dashboard_bubble_plugins_notification' => 'Notification',
+    'tr_meliscore_dashboard_bubble_plugins_notifications' => 'Notifications',
+    'tr_meliscore_dashboard_bubble_plugins_view_notification' => 'View Notification',
+    'tr_meliscore_dashboard_bubble_plugins_view_notifications' => 'View Notifications',
+    'tr_meliscore_dashboard_bubble_plugins_message' => 'Message',
+    'tr_meliscore_dashboard_bubble_plugins_messages' => 'Messages',
+    'tr_meliscore_dashboard_bubble_plugins_view_message' => 'View Messages',
+    'tr_meliscore_dashboard_bubble_plugins_view_messages' => 'View Messages',
+    'tr_meliscore_dashboard_bubble_plugins_wrote' => 'wrote',
+];

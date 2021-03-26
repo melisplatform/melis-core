@@ -1,9 +1,23 @@
 var loader = (function(window) {
     // overlay loader .svg icon with spinning effect
-    var $body           = $("body"),
-        overlayLoader   = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>',
+    var $body               = $("body"),
+        // overlay-loader for common loading
+        overlayLoader       =   '<div id="loader" class="overlay-loader">' +
+                                    '<img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12">' +
+                                '</div>',
+        // page-overlay-loader for melis cms page edition loading
+        pageOverlayLoader   =   '<div id="loader" class="overlay-loader">' +
+                                    '<div class="page-overlay-loader">' +
+                                        '<img class="page-loader-icon img-fluid" src="/MelisCore/assets/images/page-loader.gif" data-page-loader="page-loader">' +
+                                        '<div class="page-overlay-loader-text">' +
+                                            '<img class="loader-icon-cog spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12">' +
+                                            '<p>' + translations.tr_meliscore_page_edition_loader_text +'</p>' + 
+                                        '</div>' + 
+                                    '</div>' +
+                                '</div>';
         // window selector
-        $window         = $(window);
+        $window             = $(window),
+        matches             = activeTabId.match(/\d+/g);
 
         // initial function
         function init() {
@@ -56,7 +70,7 @@ var loader = (function(window) {
                                 $iframeChildren = $this.contents().find("body").children();
 
                                 if ( $iframeChildren.length === 0 && $loader.length === 0 ) {
-                                    $melisTabEdition.prepend( overlayLoader );
+                                    $melisTabEdition.prepend( pageOverlayLoader );
                                     melisCoreTool.addOverflowHidden();
                                 }
                         });
@@ -106,7 +120,7 @@ var loader = (function(window) {
                 // check if loader is already present
                 if ( $loader.length === 0 ) {
                     // loader
-                    $melisTabEdition.prepend( overlayLoader );
+                    $melisTabEdition.prepend( pageOverlayLoader );
                     melisCoreTool.addOverflowHidden();
                 }
 
@@ -139,7 +153,8 @@ var loader = (function(window) {
 
         // function checkInPageLoading
         function checkPageLoading(zoneId) {
-            setTimeout(function() {
+            // setTimeout 3000 for melis-user-tabs
+            setTimeout(function() {              
                 var setCmsBtnDisabledInterval = setInterval(function() {
                     var $activeTabId        = $("#"+zoneId),
                         $menuBarOptions     = $activeTabId.find(".menu-bar-options"),
@@ -149,13 +164,16 @@ var loader = (function(window) {
                         $melisIframe        = $melisTabEdition.find(".melis-iframe");
 
                         // check for .btn-disabled and iframe is found
-                        if ( $cmsBtnDisabled.length > 0 && $melisIframe.length > 0 ) {
-                            addPageEditionLoading();
+                        if ( $cmsBtnDisabled.length > 0 ) {
+                            if ( $melisIframe.length > 0 ) {
+                                addPageEditionLoading();
+                            }
                         }
                         else {
-                            removePageEditionLoading();
-
-                            clearInterval( setCmsBtnDisabledInterval );
+                            if ( $melisIframe.length > 0 ) {
+                                removePageEditionLoading();
+                                clearInterval( setCmsBtnDisabledInterval );
+                            }
                         }
                 }, 500);
             }, 3000);
