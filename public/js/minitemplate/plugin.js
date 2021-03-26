@@ -484,7 +484,7 @@
                 api.setData({ preview: previewContent });
                 api.unblock();
 
-                //insertMelisDemoCmsMiniTemplateCss();
+                insertMelisDemoCmsMiniTemplateCss();
               });
             });
           };
@@ -521,14 +521,11 @@
 
         var openDialog = function ( templates ) {
           var nearestTemplateIndex = 0;
-          //console.log('templates: ', templates);
           for ( var i = 0; i < templates.length; i++ ) {
             var url = templates[i].value.url;
-                //console.log('templates[i]: ', templates[i]);
                 if ( url != undefined && url.endsWith(".phtml") ) {
                   nearestTemplateIndex = i;
 
-                  //console.log('nearestTemplateIndex: ', nearestTemplateIndex);
                   break;
                 }
           }
@@ -569,7 +566,6 @@
           }));
 
           dialogApi.block('Loading...');
-          //console.log('templates[nearestTemplateIndex]: ', templates[nearestTemplateIndex]);
           getTemplateContent(templates[nearestTemplateIndex]).then(function (previewHtml) {
             var content = getPreviewContent(editor, previewHtml);
             var bodyItems = [];
@@ -607,7 +603,7 @@
             
               dialogApi.unblock();
               dialogApi.redial(dialogSpec(bodyItems, initialData));
-              
+
               // begin html customization and re-arrangements
               for ( var index = 0; index < templateList.length; index++ ) {
                 var templateIndex       = templateList[index],
@@ -912,7 +908,7 @@
                   });
           });
 
-          //insertMelisDemoCmsMiniTemplateCss();
+          insertMelisDemoCmsMiniTemplateCss();
         };
         // openDialog
 
@@ -928,6 +924,7 @@
             var $previewIframeHead = $("#custom-body-mini-template .tox-form__group--stretched .tox-navobj iframe").contents().find("head");
             var cssUrl = [
               '/MelisDemoCms/css/bootstrap.min.css',
+              '/MelisDemoCms/vendors/themify-icon/themify-icons.css',
               '/MelisDemoCms/vendors/elagent/style.css',
               '/MelisDemoCms/css/style.css'
             ];
@@ -971,8 +968,6 @@
 
       global.add('minitemplate', function (editor) {
         tinymce.DOM.loadCSS("/MelisCore/css/mini-template.css");
-        //tinymce.DOM.loadCSS("/MelisDemoCms/css/style.css");
-        //tinymce.DOM.loadCSS("/MelisDemoCms/css/bootstrap.min.css");
 
         Buttons.register(editor);
         Commands.register(editor);

@@ -97,13 +97,12 @@ var melisTinyMCE = (function(){
         });
         
         editor.on("init", function() {
-            tinyMceDialogInitAddTreeViewBtn(editor);
-            //setFullWidthMiniTemplateDialog(editor);
+            tinyMceOpenDialog(editor);
         });
     }
 
-    // adding of add tree view button from dialog initialization
-    function tinyMceDialogInitAddTreeViewBtn(editor) {
+    // opening of tinymce dialog
+    function tinyMceOpenDialog(editor) {
         var $body = $("body");
 
             editor.windowManager.oldOpen = editor.windowManager.open;  // save for later
@@ -111,7 +110,8 @@ var melisTinyMCE = (function(){
                 var modal = this.oldOpen.apply(this, [t, r]);  // call original
                 var editLinkTitle = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
                 var insertMiniTemplateTitle = translations.tr_meliscore_tinymce_mini_template_add_button_tooltip;
-                
+
+                    // adding of add tree view button from dialog initialization
                     if ( t.title === editLinkTitle && typeof melisLinkTree != "undefined" ) {
                         $(".tox-form__controls-h-stack").append(
                             '<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
@@ -121,7 +121,8 @@ var melisTinyMCE = (function(){
                             melisLinkTree.createTreeModal();
                         });
                     }
-
+                    
+                    // resize dialog to full width on mini templates
                     if ( t.title === insertMiniTemplateTitle ) {
                         $(".tox-dialog").css("max-width", "100%");
                     }
