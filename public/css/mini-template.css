@@ -1,0 +1,143 @@
+#custom-body-mini-template {
+    display: block !important;
+    max-height: 525px;
+    overflow: hidden;
+}
+#custom-body-mini-template > * {
+    margin-top: 0 !important;
+}
+#custom-body-mini-template-form {
+    position: relative;
+    height: 100%;
+}
+#custom-body-mini-template .tox-form {
+    display: block;
+}
+#mini-template-buttons .tox-button,
+#mini-template-buttons .tox-form__group,
+#custom-body-mini-template .tox-form .tox-form__group:not(.tox-form__group--stretched),
+#custom-body-mini-template .tox-form .tox-form__group:not(.tox-form__group--stretched) > .tox-button,
+#custom-body-mini-template #custom-body-mini-template-form .tox-form__group:not(.tox-form__group--stretched),
+#custom-body-mini-template #custom-body-mini-template-form .tox-form__group:not(.tox-form__group--stretched) > .tox-button {
+    display: inline-block;
+
+    width: fit-content;
+    position: relative;
+    margin-bottom: 0.5rem;
+	margin-right: 0.5rem;
+}
+#mini-template-buttons {
+    /* height: 250px; */
+    /* For horizontal side by side display */
+    display: block;
+    max-height: 525px;
+    float: left;
+    width: 25%;
+    /* overflow-y: scroll; */
+    overflow: auto;
+}
+#custom-body-mini-template .tox-form__group--stretched {
+    /* min-height: 270px; */
+    /* For horizontal side by side display */
+    height: 510px;
+}
+#custom-body-mini-template .tox-form__group--stretched label {
+    display: none;
+}
+#custom-body-mini-template .tox-form__group--stretched .tox-navobj iframe {
+    min-height: 253px;
+}
+#mini-template-buttons .tox-button {
+    font-weight: normal;
+    white-space: normal;
+    height: auto !important;
+    /* word-break: break-all; */
+}
+#mini-template-buttons .tox-button:not([data-parent="#"]) {
+    display: block !important;
+}
+#mini-template-buttons .tox-button .ui-accordion-header-icon {
+    display: none !important;
+}
+#mini-template-buttons h3 {
+    background: #f6f6f6;
+    border: 0;
+    border-radius: 0;
+    color: #222f3e;
+    font-size: 14px;
+    font-weight: normal;
+
+    padding-right: 0;
+}
+#mini-template-buttons h3.ui-accordion-header:hover,
+#mini-template-buttons h3.ui-accordion-header-active.ui-state-active,
+#mini-template-buttons .site-category h3.ui-accordion-header-active.ui-state-active {
+    background: #e61c23;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    font-weight: normal;
+}
+/* #f6f6f6 #e61c23 */
+.other-category.ui-accordion-content,
+.main-category.ui-accordion-content {
+    min-height: 195px;
+    padding-right: 1em !important;
+    padding-left: 1em !important;
+    height: auto !important;
+}
+.site-category.ui-accordion-content {
+    border: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+}
+/* accordion header */
+.ui-accordion .ui-accordion-icons {
+    padding-left: 1.2rem;
+}
+#mini-template-buttons.ui-accordion .ui-accordion-content.site-category h3 {
+    padding-left: 1.5rem;
+}
+.tox-button.hidden {
+    display: none !important;
+}
+.tox-button.active {
+    background-color: #ccc !important;
+}
+#mini-template-buttons > .tox-form__group {
+    display: none !important;
+    height: 0 !important;
+}
+/* icons */
+#custom-body-mini-template .accordion .fa-arrow-circle-down,
+#custom-body-mini-template .accordion .fa-arrow-circle-right {
+    background-image: none !important;
+    font-family: 'FontAwesome' !important;
+    padding-right: 1rem !important;
+    text-indent: 0 !important;
+    overflow: auto !important;
+
+    left: 0.5rem !important;
+    top: 0.2rem !important;
+    margin-top: 0 !important;
+    position: relative !important;
+}
+#custom-body-mini-template .tox-form .accordion .fa-arrow-circle-down,
+#custom-body-mini-template .tox-form .accordion .fa-arrow-circle-right {
+    top: 0.25rem !important;
+}
+@media (min-width: 1024px) {
+    #custom-body-mini-template .tox-form__group--stretched {
+        height: 515px;
+    }
+}
+@media (max-width: 576px) {
+    #mini-template-buttons {
+        max-height: 225px;
+        float: none;
+        width: auto;
+    }
+    #custom-body-mini-template .tox-form__group--stretched {
+        max-height: 314px;
+    }
+}

@@ -261,28 +261,11 @@ class Module
         $routeMatch = $e->getRouteMatch();
         $matchedRouteName = $routeMatch->getMatchedRouteName();
 
-        $excludedRoutes = [
-            'melis-backoffice/login',
-            'melis-backoffice/authenticate',
-            'melis-backoffice/change-language',
-            'melis-backoffice/get-translations',
-            'melis-backoffice/lost-password',
-            'melis-backoffice/lost-password-request',
-            'melis-backoffice/reset-password',
-            'melis-backoffice/islogin',
-            'melis-backoffice/setup',
-            'melis-backoffice/application-MelisInstaller/default',
-            'melis-backoffice/MelisInstaller',
-            'melis-backoffice/microservice',
-            'melis-backoffice/microservice_list',
-            'melis-backoffice/get-platform-color-css',
-            'melis-backoffice/reset-old-password',
-            'melis-backoffice/webpack_builder',
-            'melis-backoffice/gdpr-autodelete-cron',
-            'melis-backoffice/generate-password',
-            'melis-backoffice/create-password',
-            'melis-backoffice/renew-password',
-        ];
+        /**
+         * get excluded routes
+         */
+        $excludedRoutes = $sm->get('MelisConfig')->getItem('/meliscore/datas/excluded_routes');
+ 
         if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli') {
             return true;
         }
@@ -371,6 +354,11 @@ class Module
             include __DIR__ . '/../config/gdpr-autodelete/app.tools.php',
             include __DIR__ . '/../config/gdpr-autodelete/app.forms.php',
             include __DIR__ . '/../config/gdpr-autodelete/app.smtp.form.php',
+            /*
+             * excluded routes
+             */
+            include __DIR__ . '/../config/excluded.routes.php'
+
         ];
 
         foreach ($configFiles as $file) {

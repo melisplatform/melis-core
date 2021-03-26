@@ -233,7 +233,7 @@ return array(
                     '/MelisCore/js/pluginConcat/melis-core-concat-fancytree.js',
 
                     // tinyMCE
-                    '/MelisCore/js/library/tinymce/tinymce.min.js?v=' . time(),
+                    '/MelisCore/js/library/tinymce/tinymce.js?v=' . time(),
                     '/MelisCore/js/library/tinymce/icons/default/icons.min.js',
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',

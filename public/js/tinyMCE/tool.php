@@ -12,7 +12,7 @@
 		'branding' => false,
 		'inline' => false,
 		'menubar' => false,
-		'templates' => 'miniTemplates',
+		'templates' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
 		'forced_root_block' => '',
 		'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
 		'cleanup' => false,
@@ -25,10 +25,14 @@
             //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
            'lists advlist autolink link paste image charmap preview anchor emoticons help hr nonbreaking',
            'searchreplace visualblocks code fullscreen',
-           'insertdatetime media table template'
+           'insertdatetime media table minitemplate'
 		],
+		'external_plugins' => [
+			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js?v=20210325',			
+		],
+		//'content_css' => ['/MelisDemoCms/css/bootstrap.min.css','/MelisDemoCms/vendors/elagent/style.css','/MelisDemoCms/css/style.css'],
         'image_advtab' => true,
-        'toolbar' => 'insertfile undo redo paste | formatselect | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media template | code',
+        'toolbar' => 'insertfile undo redo paste | formatselect | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media minitemplate | code',
         'setup' => 'melisTinyMCE.tinyMceActionEvent',
         'init_instance_callback' => 'tinyMceCleaner'
 	];

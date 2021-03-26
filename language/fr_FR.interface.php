@@ -633,6 +633,10 @@ return [
     'tr_meliscore_tinymce_file_manager' => 'File Manager',
     'tr_meliscore_tinymce_insert_edit_link_toolbar_button_title' => 'Insérer/modifier un lien',
     'tr_meliscore_tinymce_insert_edit_link_dialog_title' => 'Insérer/modifier un lien',
+    'tr_meliscore_tinymce_mini_template_other_category' => 'Autre catégorie',
+    'tr_meliscore_tinymce_mini_template_add_button_tooltip' => 'Insérer un mini modèle',
+    'tr_meliscore_tinymce_mini_template_add_menuitem_text' => 'Insérer un mini modèle...',
+    'tr_meliscore_tinymce_mini_template_no_template_found' => 'Pas de mini-template trouvé dans cette catégorie.',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',
