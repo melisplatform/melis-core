@@ -87,7 +87,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
         // request
         $request = $this->getRequest();
         if ($request->isPost()){
-            $params = get_object_vars($request->getPost());
+            $params = $request->getPost()->toArray();
             // set data for validation
             $form = $this->getGdprAutoDeleteSmtpForm();
             // remove filter if it s empty for updating to keep it's current password
@@ -141,7 +141,7 @@ class MelisCoreGdprAutoDeleteSmtpController extends MelisAbstractActionControlle
         // request
         $request = $this->getRequest();
         if ($request->isPost()){
-            $params = get_object_vars($request->getPost());
+            $params = $request->getPost()->toArray();
             if ($params['id']) {
                 $id = $params['id'];
                 $this->getGdprAutoDeleteSmtpTable()->deleteById($params['id']);

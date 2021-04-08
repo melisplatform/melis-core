@@ -29,6 +29,7 @@ use MelisCore\Listener\MelisCoreToolUserAddNewUserListener;
 use MelisCore\Listener\MelisCoreToolUserUpdateUserListener;
 use MelisCore\Listener\MelisCoreUrlAccessCheckerListenner;
 use MelisCore\Listener\MelisCoreUserRecentLogsListener;
+use MelisCore\Listener\MelisCoreUrlPlatformSchemeListener;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
@@ -67,6 +68,8 @@ class Module
         $moduleSvc->unloadModule('MelisInstaller');
 
         if (!$this->isInInstallMode($e)) {
+            // url platform scheme redirector
+            (new MelisCoreUrlPlatformSchemeListener())->attach($eventManager);
             (new MelisCoreFlashMessengerListener())->attach($eventManager);
             (new MelisCoreGetRightsTreeViewListener())->attach($eventManager);
             (new MelisCoreToolUserAddNewUserListener())->attach($eventManager);
@@ -266,28 +269,11 @@ class Module
         $routeMatch = $e->getRouteMatch();
         $matchedRouteName = $routeMatch->getMatchedRouteName();
 
-        $excludedRoutes = [
-            'melis-backoffice/login',
-            'melis-backoffice/authenticate',
-            'melis-backoffice/change-language',
-            'melis-backoffice/get-translations',
-            'melis-backoffice/lost-password',
-            'melis-backoffice/lost-password-request',
-            'melis-backoffice/reset-password',
-            'melis-backoffice/islogin',
-            'melis-backoffice/setup',
-            'melis-backoffice/application-MelisInstaller/default',
-            'melis-backoffice/MelisInstaller',
-            'melis-backoffice/microservice',
-            'melis-backoffice/microservice_list',
-            'melis-backoffice/get-platform-color-css',
-            'melis-backoffice/reset-old-password',
-            'melis-backoffice/webpack_builder',
-            'melis-backoffice/gdpr-autodelete-cron',
-            'melis-backoffice/generate-password',
-            'melis-backoffice/create-password',
-            'melis-backoffice/renew-password',
-        ];
+        /**
+         * get excluded routes
+         */
+        $excludedRoutes = $sm->get('MelisConfig')->getItem('/meliscore/datas/excluded_routes');
+ 
         if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli') {
             return true;
         }
@@ -364,6 +350,11 @@ class Module
             include __DIR__ . '/../config/setup/update.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardDragDropZonePlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardRecentUserActivityPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubblePlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleNewsMelisPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleUpdatesPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleNotificationsPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleChatPlugin.config.php',
             /*
              * gdpr auto delete
              */
@@ -371,6 +362,11 @@ class Module
             include __DIR__ . '/../config/gdpr-autodelete/app.tools.php',
             include __DIR__ . '/../config/gdpr-autodelete/app.forms.php',
             include __DIR__ . '/../config/gdpr-autodelete/app.smtp.form.php',
+            /*
+             * excluded routes
+             */
+            include __DIR__ . '/../config/excluded.routes.php'
+
         ];
 
         foreach ($configFiles as $file) {

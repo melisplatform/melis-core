@@ -25,7 +25,7 @@ class MelisTinyMceController extends MelisAbstractActionController
         if ($request->isPost()) {
             $modulesSvc = $this->getServiceManager()->get('ModulesService');
             // Getting the Posted Values
-            $postValues = get_object_vars($request->getPost());
+            $postValues = $request->getPost()->toArray();
 
             $type = $postValues['type'];
             $selector = $postValues['selector'];
@@ -58,6 +58,15 @@ class MelisTinyMceController extends MelisAbstractActionController
                 $tinyMCEconfig['language'] = ($locale != 'en_EN') ? $locale : 'en';
 
                 if (!empty($options)) {
+
+                    // Parsing boolean values from posted string values
+                    $options = array_map(function($val){
+                        if (in_array($val, ["true", "false"]))
+                            return ($val == "true") ?? false;
+                        else
+                            return $val;
+                    }, $options);
+
                     // Merging Default TinyMCE configuration with Options from request
                     $tinyMCEconfig = array_merge($tinyMCEconfig, $options);
                 }
@@ -116,7 +125,7 @@ class MelisTinyMceController extends MelisAbstractActionController
 
         $modulesSvc = $this->getServiceManager()->get('ModulesService');
         // Getting the Posted Values
-        $postValues = get_object_vars($request->getPost());
+        $postValues = $request->getPost()->toArray();
 
         $type = $postValues['type'];
         $selector = $postValues['selector'];
@@ -139,51 +148,79 @@ class MelisTinyMceController extends MelisAbstractActionController
      */
     public function getTinyTemplatesAction()
     {
+        // get site id from the url
         $siteId = $this->params()->fromRoute('siteId', $this->params()->fromQuery('siteId', ''));
+        $prefix = $this->params()->fromRoute('prefix', $this->params()->fromQuery('prefix', ''));
+        // tinyMCE type
+        $type   = $this->params()->fromRoute('type', $this->params()->fromQuery('type', ''));
+        // mini templates
         $tinyTemplates = [];
 
-        if (!empty($siteId)) {
-            /** @var \MelisEngine\Model\Tables\MelisTemplateTable $tplTable */
-            $tplTable = $this->getServiceManager()->get('MelisEngineTableTemplate');
-            $siteData = $tplTable->getData(null, $siteId, null, null, null, null, 1);
-            if (!empty($siteData)) {
-                $siteData = $siteData->toArray();
-                $siteData = reset($siteData);
-                $moduleName = $siteData['tpl_zf2_website_folder'];
-                $publicPath = '/public/' . self::MINI_TEMPLATES_FOLDER;
-
-                // Checking if the module path is vendor
-                $composerSrv = $this->getServiceManager()->get('ModulesService');
-                $path = $composerSrv->getComposerModulePath($moduleName);
-                if (!empty($path)) {
-                    $folderSite = $path . $publicPath;
-                } else {
-                    $folderSite = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites/' . $moduleName . $publicPath;
-                }
-
-                // List the mini-templates from the folder
-                if (is_dir($folderSite)) {
-                    if ($handle = opendir($folderSite)) {
-                        while (false !== ($entry = readdir($handle))) {
-                            if (is_dir($folderSite . '/' . $entry) || $entry == '.' || $entry == '..' || !$this->isImage($entry))
-                                continue;
-                            array_push($tinyTemplates,
-                                array(
-                                    'title' => $entry,
-                                    'url' => "/" . $moduleName . '/' . self::MINI_TEMPLATES_FOLDER . '/' . $entry
-                                )
-                            );
-                        }
-
-                        closedir($handle);
-                    }
-                }
-            }
+        // check if service is present
+        if ($this->getServiceManager()->has('MelisCmsMiniTemplateGetterService')) {
+            $service = $this->getServiceManager()->get('MelisCmsMiniTemplateGetterService');
+            /**
+             * get mini templates baesd from mini template manager service
+             */
+            $tinyTemplates = $this->getService('MelisCmsMiniTemplateGetterService')->getMiniTemplates($siteId, $prefix);
         }
 
         return new JsonModel($tinyTemplates);
     }
 
+     
+
+    /**
+     * get the mini templates by module dir (old method) edit since 2021-01-11
+     */
+    private function getMiniTemplates($siteId)
+    {
+        $tinyTemplates = [];
+        /** @var \MelisEngine\Model\Tables\MelisTemplateTable $tplTable */
+        $tplTable = $this->getServiceManager()->get('MelisEngineTableTemplate');
+        // get site data
+        $siteData = $tplTable->getData(null, $siteId, null, null, null, null, 1);
+        if (!empty($siteData)) {
+            $siteData = $siteData->toArray();
+            $siteData = reset($siteData);
+            $moduleName = $siteData['tpl_zf2_website_folder'];
+            $publicPath = '/public/' . self::MINI_TEMPLATES_FOLDER;
+
+            // Checking if the module path is vendor
+            $composerSrv = $this->getServiceManager()->get('ModulesService');
+            $path = $composerSrv->getComposerModulePath($moduleName);
+            if (!empty($path)) {
+                $folderSite = $path . $publicPath;
+            } else {
+                $folderSite = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites/' . $moduleName . $publicPath;
+            }
+
+            // List the mini-templates from the folder
+            if (is_dir($folderSite)) {
+                if ($handle = opendir($folderSite)) {
+                    while (false !== ($entry = readdir($handle))) {
+                        if (is_dir($folderSite . '/' . $entry) || $entry == '.' || $entry == '..' || !$this->isImage($entry))
+                            continue;
+                        array_push($tinyTemplates,
+                            array(
+                                'title' => $entry,
+                                'url' => "/" . $moduleName . '/' . self::MINI_TEMPLATES_FOLDER . '/' . $entry,
+                                'img' => "/" . $moduleName . '/' . self::MINI_TEMPLATES_FOLDER . '/' . str_replace('phtml', 'png', $entry)
+                            )
+                        );
+                    }
+
+                    closedir($handle);
+                }
+            }
+        }
+
+        return $tinyTemplates;
+    }
+
+    /**
+     * upload image
+     */
     public function uploadImageAction()
     {
         $appConfigForm = [
@@ -244,5 +281,52 @@ class MelisTinyMceController extends MelisAbstractActionController
         }
         return true;
     }
+
+    /**
+     * get a service
+     */
+    private function getService($serviceName)
+    {
+        return $this->getServiceManager()->get($serviceName);  
+    }
+
+    /**
+     * get tinyMCE configuration
+     */
+    private function getTinyMCEByType($type)
+    {
+        // prefix
+        $prefix = "";
+        // tinymce config
+        $configTinyMce = $this->getService('config')['tinyMCE'];
+        // config url path
+        $configDir = $configTinyMce[$type] ?? null;
+        // Getting the module name
+        $nameModuleTab = explode('/', $configDir);
+        // get module name
+        $nameModule = $nameModuleTab[0] ?? null;
+        // Getting the path of the Module
+        $path = $this->getService('ModulesService')->getModulePath($nameModule);
+        // Generating the directory of the requested TinyMCE configuration
+        $file  = $path . str_replace($nameModule, '', $configDir);
+        if (file_exists($file)) {
+            // include file
+            $config = include($file);
+            // for the melis_minitemplates configuration key
+            if (isset($config['melis_minitemplates']) && $config['melis_minitemplates']) {
+                // config
+                $miniTmpConfig = $config['melis_minitemplates'];
+                // prefix
+                if (isset($miniTmpConfig['prefix'])) {
+                    // set prefix
+                    $prefix = $miniTmpConfig['prefix']; 
+                }
+            }
+        }
+
+        return $prefix;
+    }
+
+    
 }
 

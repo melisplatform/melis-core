@@ -419,6 +419,11 @@ return [
         'invokables' => [
             'MelisCoreDashboardDragDropZonePlugin'          => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardDragDropZonePlugin::class,
             'MelisCoreDashboardRecentUserActivityPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardRecentUserActivityPlugin::class,
+            'MelisCoreDashboardBubblePlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubblePlugin::class,
+            'MelisCoreDashboardBubbleNewsMelisPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleNewsMelisPlugin::class,
+            'MelisCoreDashboardBubbleUpdatesPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleUpdatesPlugin::class,
+            'MelisCoreDashboardBubbleNotificationsPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleNotificationsPlugin::class,
+            'MelisCoreDashboardBubbleChatPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleChatPlugin::class,
         ]
     ],
     'validators' => [
@@ -456,6 +461,7 @@ return [
         'aliases' => [
             'MelisCoreHeadPlugin'           => \MelisCore\View\Helper\MelisCoreHeadPluginHelper::class,
             'MelisDashboardDragDropZone'    => \MelisCore\View\Helper\MelisDashboardDragDropZonePluginHelper::class,
+            'MelisCoreDashboardBubblePlugin' => \MelisCore\View\Helper\MelisDashboardBubblePluginsZoneHelper::class,
             'MelisDataTable'                => \MelisCore\View\Helper\MelisDataTableHelper::class,
             'getMelisSectionIcons'          => \MelisCore\View\Helper\MelisCoreSectionIconsHelper::class,
             'melisFieldCollection'          => 'MelisFieldCollection',
@@ -494,6 +500,11 @@ return [
             'melis-core/dashboard-plugin/no-plugin-interface'   => __DIR__ . '/../view/melis-core/dashboard-plugins/no-plugin-interface.phtml',
 
             'melis-core/dashboard-plugin/recent-user-activity'  => __DIR__ . '/../view/melis-core/dashboard-plugins/recent-user-activity.phtml',
+            'melis-core/dashboard-plugin/bubble-plugins-zone'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-plugins-zone.phtml',
+            'melis-core/dashboard-plugin/bubble-news-melis'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-news-melis.phtml',
+            'melis-core/dashboard-plugin/bubble-updates'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-updates.phtml',
+            'melis-core/dashboard-plugin/bubble-notifications'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-notifications.phtml',
+            'melis-core/dashboard-plugin/bubble-chat'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-chat.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',

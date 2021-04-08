@@ -19,6 +19,8 @@ use Laminas\View\Model\ViewModel;
  */
 class DashboardPluginsController extends MelisAbstractActionController
 {
+    public function renderDashboardPluginsHeaderAction() {}
+
     /**
      * Render Dashboard Menu
      * 
@@ -155,7 +157,7 @@ class DashboardPluginsController extends MelisAbstractActionController
     {
         // return plugin view
         $request = $this->getRequest();
-        $pluginConfigPost = get_object_vars($request->getPost());
+        $pluginConfigPost = $request->getPost()->toArray();
 
         /**
          * decode the string
@@ -215,7 +217,7 @@ class DashboardPluginsController extends MelisAbstractActionController
     {
         $success = 0;
         $request = $this->getRequest();
-        $post = $request->getPost();
+        $post = $request->getPost()->toArray();
         $result = array();
         try{
             /**
@@ -223,7 +225,7 @@ class DashboardPluginsController extends MelisAbstractActionController
              */
             $pluginManager = $this->getServiceManager()->get('ControllerPluginManager');
             $dragDropPlugin = $pluginManager->get('MelisCoreDashboardDragDropZonePlugin');
-            $success = $dragDropPlugin->savePlugins(get_object_vars($post));
+            $success = $dragDropPlugin->savePlugins($post);
             
             $result = array(
                 'success' => $success
@@ -334,5 +336,31 @@ class DashboardPluginsController extends MelisAbstractActionController
         }
 
         return $newPluginList;
+    }
+
+    public function renderDashboardBubblePluginsAction()
+    {
+        $showBubblePlugins = $this->getCookie();
+
+        $view = new ViewModel();
+        $view->showBubblePlugins = $showBubblePlugins;
+
+        return $view;
+    }
+
+    private function getCookie()
+    {
+        if (empty($_COOKIE['show_bubble_plugins'])) {
+            $this->makeCookie();
+            return true;
+        }
+
+        return (filter_var($_COOKIE['show_bubble_plugins'], FILTER_VALIDATE_BOOLEAN));
+    }
+
+    private function makeCookie()
+    {
+        // timeout is set to 2038-01-19 04:14:07 maximum time for 32bit php
+        \setcookie('show_bubble_plugins', 'true', 2147483647);
     }
 }
