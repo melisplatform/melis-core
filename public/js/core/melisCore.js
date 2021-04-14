@@ -320,17 +320,22 @@ var melisCore = (function(window){
     // SIDEBAR MENU CLICK (toggle), .toggle-sidebar
     function sidebarMenuClick() {
         // for the sidebar functionalities
-        var $melisLeftMenu 		= $("#id_meliscore_leftmenu"),
-            $melisFooter 		= $("#id_meliscore_footer"),
-            $pluginBox 		    = $("#id_meliscore_center_dashboard_menu"),
-            sidebarOffsetLeft 	= $melisLeftMenu.position().left,
-            sidebarWidth 		= $melisLeftMenu.outerWidth(),
-            melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
-            pluginBoxWidth  	= $pluginBox.outerWidth(),
-            $activeGS 		    = $body.find("#"+activeTabId+" .grid-stack"),
-            gsWidth             = $activeGS.outerWidth(),
-            minWidth            = isNaN( parseInt( $activeGS.attr("data-min-width") ) ) ? 1360 : 1372,
-            maxWidth            = isNaN( parseInt( $activeGS.attr("data-max-width") ) ) ? 1584 : 1596;
+        var $melisLeftMenu 		    = $("#id_meliscore_leftmenu"),
+            $melisFooter 		    = $("#id_meliscore_footer"),
+            $pluginBox 		        = $("#id_meliscore_center_dashboard_menu"),
+            $dbMsg                  = $("#"+activeTabId + " .melis-core-dashboard-msg"),
+            sidebarOffsetLeft 	    = $melisLeftMenu.position().left,
+            sidebarWidth 		    = $melisLeftMenu.outerWidth(),
+            melisLeftMenuWidth 	    = $melisLeftMenu.outerWidth(),
+            pluginBoxWidth  	    = $pluginBox.outerWidth(),
+            $activeGS 		        = $body.find("#"+activeTabId+" .grid-stack"),
+            gsWidth                 = $activeGS.outerWidth(),
+            minWidth                = isNaN( parseInt( $activeGS.attr("data-min-width") ) ) ? 1360 : 1372,
+            maxWidth                = isNaN( parseInt( $activeGS.attr("data-max-width") ) ) ? 1584 : 1596,
+            $bubblePlugin           = $("#bubble-plugin"),
+            bubblePluginWidth       = $bubblePlugin.outerWidth(),
+            bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
+            bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
 
             // prevent from having a scrollbar below
             $body.toggleClass("overflowHidden");
@@ -380,7 +385,7 @@ var melisCore = (function(window){
 
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: bubblePluginMaxWidth
+                                    width: maxWidth // bubblePluginMaxWidth
                                 }, 3);
                             }
                         }
@@ -398,12 +403,12 @@ var melisCore = (function(window){
                                 }, 500);
 
                                 $dbMsg.animate({
-                                    width: $dbMsg.outerWidth()
+                                    width: $activeGS.outerWidth() // $dbMsg.outerWidth()
                                 }, 3);
 
                                 if ( $bubblePlugin.length ) {
                                     $bubblePlugin.animate({
-                                        width: $bubblePlugin.outerWidth()
+                                        width: $activeGS.outerWidth() // $bubblePlugin.outerWidth()
                                     }, 3);
                                 }
                             }
@@ -423,7 +428,7 @@ var melisCore = (function(window){
 
                                 if ( $bubblePlugin.length ) {
                                     $bubblePlugin.animate({
-                                        width: $bubblePlugin.outerWidth() + melisLeftMenuWidth
+                                        width: maxWidth + 50 // $bubblePlugin.outerWidth() + melisLeftMenuWidth
                                     }, 3);
                                 }
                             }
@@ -445,13 +450,13 @@ var melisCore = (function(window){
 
                                 if ( $bubblePlugin.length ) {
                                     $bubblePlugin.animate({
-                                        width: bubblePluginMaxWidth
+                                        width: maxWidth // bubblePluginMaxWidth
                                     }, 3);
                                 }
                             }
                             else {
                                 $activeGS.animate({
-                                    width: maxWidth + dbPluginMenuWidth + 50
+                                    width: maxWidth + pluginBoxWidth + 50
                                 }, 3);
 
                                 setTimeout(function() {
@@ -460,12 +465,12 @@ var melisCore = (function(window){
                                 }, 500);
 
                                 $dbMsg.animate({
-                                    width: maxWidth + dbPluginMenuWidth + 50
+                                    width: maxWidth + pluginBoxWidth + 50
                                 }, 3);
 
                                 if ( $bubblePlugin.length ) {
                                     $bubblePlugin.animate({
-                                        width: bubblePluginMaxWidth + dbPluginMenuWidth + 50
+                                        width: maxWidth + pluginBoxWidth + 50 // bubblePluginMaxWidth + pluginBoxWidth + 50
                                     }, 3);
                                 }
                             }
@@ -492,7 +497,7 @@ var melisCore = (function(window){
             // check if activeTabId has a number. if it has then we assume its a page
             var matches = activeTabId.match(/\d+/g);
         
-            if ( matches != null && matches !== 'undefined' ) {
+            if ( matches != null && matches !== 'undefined' && matches !== undefined ) {
                 $("html, body").animate({scrollTop: jQuery(window).scrollTop()+1 },0);
             }
 
@@ -886,13 +891,22 @@ var melisCore = (function(window){
 
     // this function is called from render-dashboard-plugins.phtml
     function showToggleDashboardPluginMenu() {
-        var $activeGS 			= $("#"+activeTabId+" .grid-stack"),
-            minWidth            = isNaN( parseInt( $activeGS.attr("data-min-width") ) ) ? 1360 : 1372,
-            maxWidth            = isNaN( parseInt( $activeGS.attr("data-max-width") ) ) ? 1584 : 1596,
-            $melisLeftMenu  	= $("#id_meliscore_leftmenu"),
-            melisLeftMenuWidth 	= $melisLeftMenu.outerWidth(),
-            pluginBoxWidth 		= $pluginBox.outerWidth(),
-            currentGsWidth      = $activeGS.outerWidth();
+        var $activeGS 			    = $("#"+activeTabId+" .grid-stack"),
+            $dbMsg                  = $("#"+activeTabId + " .melis-core-dashboard-msg"),
+            minWidth                = isNaN( parseInt( $activeGS.attr("data-min-width") ) ) ? 1360 : 1372,
+            maxWidth                = isNaN( parseInt( $activeGS.attr("data-max-width") ) ) ? 1584 : 1596,
+            $melisLeftMenu  	    = $("#id_meliscore_leftmenu"),
+            melisLeftMenuWidth 	    = $melisLeftMenu.outerWidth(),
+            pluginBoxWidth 		    = $pluginBox.outerWidth(),
+            currentGsWidth          = $activeGS.outerWidth(),
+            $bubblePlugin           = $("#bubble-plugin"),
+            bubblePluginWidth       = $bubblePlugin.outerWidth(),
+            bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
+            bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
+          
+            /* if ( typeof melisDashBoardDragnDrop !== 'undefined' && melisDashBoardDragnDrop.countGsItems() === 0 ) {
+                $pluginBox.addClass('shown');
+            } */
 
             // shown class toggled
             $pluginBox.toggleClass("shown");
@@ -927,7 +941,7 @@ var melisCore = (function(window){
 
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: bubblePluginMaxWidth - pluginBoxWidth
+                                    width: minWidth //bubblePluginMaxWidth - pluginBoxWidth
                                 }, 3);
                             }
                         }
@@ -958,7 +972,7 @@ var melisCore = (function(window){
 
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: bubblePluginMaxWidth - pluginBoxWidth
+                                    width: maxWidth + 50 // bubblePluginMaxWidth - pluginBoxWidth
                                 }, 3);
                             }
                         }
@@ -981,7 +995,7 @@ var melisCore = (function(window){
 
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: bubblePluginMaxWidth
+                                    width: maxWidth // bubblePluginMaxWidth
                                 }, 3);
                             }
                         }
@@ -1007,7 +1021,7 @@ var melisCore = (function(window){
                                                     
                             if ( $bubblePlugin.length ) {
                                 $bubblePlugin.animate({
-                                    width: $bubblePlugin.outerWidth() + pluginBoxWidth
+                                    width: maxWidth + melisLeftMenuWidth // $bubblePlugin.outerWidth() + pluginBoxWidth
                                 }, 3);
                             }
                         }

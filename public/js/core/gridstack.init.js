@@ -347,9 +347,11 @@ var melisDashBoardDragnDrop = {
         var self                    = this,
             $pluginBtn              = $("#melisDashBoardPluginBtn"),
             $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+            pluginBoxWidth          = $pluginBox.outerWidth(),
             $activeTab              = $("#"+activeTabId),
             $dbMsg                  = $activeTab.find(".melis-core-dashboard-msg"),
             $gs                     = $activeTab.find(".grid-stack"),
+            gsWidth                 = $gs.outerWidth(),
             gsItems                 = $gs.find(".grid-stack-item").length,
             $tabArrowTop            = $("#tab-arrow-top"),
             minWidth                = $gs.data("min-width"),
@@ -360,6 +362,9 @@ var melisDashBoardDragnDrop = {
 
             // checks dashboard's elements widths
             self.checkDashboardElemWidths();
+
+            // shown class toggled
+            $pluginBox.toggleClass("shown");
 
             // count .grid-stack-item if found
             if ( gsItems > 0 ) {
@@ -380,21 +385,23 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             }
+
+            //melisCore.showToggleDashboardPluginMenu();
             
             // check plugin menu box
             if ( minWidth !== "undefined" && maxWidth !== "undefined" ) {
                 if ( $pluginBox.hasClass("shown") ) {
                     $gs.animate({
-                        width: minWidth
+                        width: maxWidth - pluginBoxWidth // gsWidth - pluginBoxWidth
                     }, 3);
 
                     $dbMsg.animate({
-                        width: minWidth
+                        width: maxWidth - pluginBoxWidth // gsWidth - pluginBoxWidth
                     }, 3);
 
                     if ( $bubblePlugin.length ) {
                         $bubblePlugin.animate({
-                            width: bubblePluginMinWidth
+                            width: maxWidth - pluginBoxWidth // gsWidth - pluginBoxWidth
                         }, 3);
                     }
                 } 
@@ -409,7 +416,7 @@ var melisDashBoardDragnDrop = {
 
                     if ( $bubblePlugin.length ) {
                         $bubblePlugin.animate({
-                            width: bubblePluginMaxWidth
+                            width: maxWidth // bubblePluginMaxWidth
                         }, 3);
                     }
                 }
@@ -625,18 +632,20 @@ var melisDashBoardDragnDrop = {
     deleteAllWidget: function(el) {
         var self = this;
 
-        var $grid       = $('#' + activeTabId + ' .grid-stack'),
-            gridData    = $grid.data('gridstack'),
-            gsNode      = $grid.find('.grid-stack-item').data('_gridstack_node'),
-            $gs         = $('#' + activeTabId).find('.grid-stack'),
-            $items      = $gs.find('.grid-stack-item'),
-            $btn        = $("#melisDashBoardPluginBtn"),
-            $box        = $btn.closest(".melis-core-dashboard-dnd-box"),
-            dWidth      = $gs.width() - $box.width(), // grid-stack width - plugin box width
-            nWidth      = $gs.width() + $box.width();
+        var $grid           = $('#' + activeTabId + ' .grid-stack'),
+            gridData        = $grid.data('gridstack'),
+            gsNode          = $grid.find('.grid-stack-item').data('_gridstack_node'),
+            $gs             = $('#' + activeTabId).find('.grid-stack'),
+            $dbMsg          = $("#"+activeTabId + " .melis-core-dashboard-msg"),
+            $items          = $gs.find('.grid-stack-item'),
+            $btn            = $("#melisDashBoardPluginBtn"),
+            $bubblePlugin   = $("#bubble-plugin"),
+            $box            = $btn.closest(".melis-core-dashboard-dnd-box"),
+            dWidth          = $gs.width() - $box.width(), // grid-stack width - plugin box width
+            nWidth          = $gs.width() + $box.width();
 
             // checks if there is a plugin available to delete
-            if ($items.length !== 0) {
+            if ( $items.length !== 0 ) {
 
                 var dataString = new Array;
 
@@ -672,54 +681,80 @@ var melisDashBoardDragnDrop = {
                                 }
                             }
 
+                            // hide plugin menu
+                            self.$pluginBox.removeClass("shown");
+
+                            // droppable / .gridstack to original width
+                            $gs.animate({
+                                width: nWidth
+                            }, 3);
+
+                            if ( $dbMsg.length ) {
+                                $dbMsg.animate({
+                                    width: nWidth
+                                }, 3);
+                            }
+
+                            if ( $bubblePlugin.length ) {
+                                $bubblePlugin.animate({
+                                    width: nWidth
+                                }, 3);
+                            }
+
+                            // plugins delete callback
+                            $('#' + activeTabId + ' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function (i, v) {
+                                var $this = $(this);
+
+                                    if (typeof $this.data('callback') !== "undefined") {
+                                        var callback = eval($this.data("callback"));
+                                        if (typeof callback === "function") {
+                                            callback($this.closest('.grid-stack-item'));
+                                        }
+                                    }
+                            });
+                    }
+                );
+            }
+            else {
+                melisCoreTool.closeDialog(
+                    translations.tr_meliscore_remove_all_plugins,
+                    translations.tr_meliscore_remove_dashboard_no_plugin_msg,
+                    function() {
+                        // hide plugin menu
+                        self.$pluginBox.removeClass("shown");
+
+                        // droppable / .gridstack to original width
+                        $gs.animate({
+                            width: dWidth
+                        }, 3);
+
+                        if ( $dbMsg.length ) {
+                            $dbMsg.animate({
+                                width: dWidth
+                            }, 3);
+                        }
+
+                        if ( $bubblePlugin.length ) {
+                            $bubblePlugin.animate({
+                                width: dWidth
+                            }, 3);
+                        }
+
+                        // plugins delete callback
+                        $('#' + activeTabId + ' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function (i, v) {
+                            var $this = $(this);
+
+                                if (typeof $this.data('callback') !== "undefined") {
+                                    var callback = eval($this.data("callback"));
+                                    if (typeof callback === "function") {
+                                        callback($this.closest('.grid-stack-item'));
+                                    }
+                                }
+                        });
                     }
                 );
 
-                // hide plugin menu
-                self.$pluginBox.removeClass("shown");
-
-                // droppable / .gridstack to original width
-                $gs.animate({
-                    width: nWidth
-                }, 3);
-
-                // plugins delete callback
-                $('#' + activeTabId + ' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function (i, v) {
-                    var $this = $(this);
-
-                        if (typeof $this.data('callback') !== "undefined") {
-                            var callback = eval($this.data("callback"));
-                            if (typeof callback === "function") {
-                                callback($this.closest('.grid-stack-item'));
-                            }
-                        }
-                });
-
-            } else {
-                melisCoreTool.closeDialog(
-                    translations.tr_meliscore_remove_all_plugins,
-                    translations.tr_meliscore_remove_dashboard_no_plugin_msg
-                );
-
-                // hide plugin menu
-                self.$pluginBox.removeClass("shown");
-
-                // droppable / .gridstack to original width
-                $gs.animate({
-                    width: nWidth
-                }, 3);
-
-                // plugins delete callback
-                $('#' + activeTabId + ' .grid-stack .grid-stack-item .dashboard-plugin-delete').each(function (i, v) {
-                    var $this = $(this);
-
-                        if (typeof $this.data('callback') !== "undefined") {
-                            var callback = eval($this.data("callback"));
-                            if (typeof callback === "function") {
-                                callback($this.closest('.grid-stack-item'));
-                            }
-                        }
-                });
+                
             }
     },
     // refresh a widget/plugin
@@ -899,9 +934,19 @@ var melisDashBoardDragnDrop = {
 
         // animate to full width size of #grid1
         $body.on("click", "#dashboard-plugin-delete-all", function() {
-            $activeGS.animate({
+            $gs.animate({
                 width: minWidth
             }, 3);
+
+            $dbMsg.animate({
+                width: minWidth
+            }, 3);
+
+            if ( $bubblePlugin.length ) {
+                $bubblePlugin.animate({
+                    width: minWidth // bubblePluginMinWidth
+                }, 3);
+            }
         });
 
         setTimeout(function() {
@@ -917,7 +962,7 @@ var melisDashBoardDragnDrop = {
 
                 if ( $bubblePlugin.length ) {
                     $bubblePlugin.animate({
-                        width: bubblePluginMinWidth
+                        width: minWidth // bubblePluginMinWidth
                     }, 3);
                 }
             }
