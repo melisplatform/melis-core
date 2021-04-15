@@ -210,6 +210,10 @@ body .navbar.main.navbar-primary {
     border-bottom: 1px solid <?= $secondaryColor; ?>;
 }
 
+/* Left sidebar menu */
+.sidebar.sidebar-inverse {
+    background: <?= $sidebarBGColor; ?>;
+}
 .sidebar.sidebar-inverse .user-profile ul li.active,
 .sidebar.sidebar-inverse .user-profile ul li.active:hover {
     border-color: <?= $primaryColor; ?>;
@@ -796,8 +800,13 @@ div.glyphicons-social.glyphicon-primary i:before {
 .open-page-from-lan-tab[data-opentab]:hover .site {
     color: <?= $primaryColor; ?>;
 }
+/* Login page */
 .login-page .navbar.main .nav.navbar-right {
     background: <?= $primaryColor; ?>;
+}
+.login-page .footer a:hover,
+.login-page .footer a {
+    color: <?= $loginLinkColor; ?>
 }
 /* =============== Secondary Color =============== */
 .reponsive-menu-tabs:hover span, .reponsive-menu-tabs:hover .fa {
