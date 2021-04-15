@@ -326,6 +326,38 @@ return array(
                                 ),
                             ),
                         ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_color_sidebar_bg_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_color_sidebar_bg',
+                                    'tooltip' => 'tr_meliscore_platform_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_color_sidebar_bg_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'color',
+                                ),
+                            ),
+                        ),
+                        array(
+                            'spec' => array(
+                                'name' => 'melis_core_platform_color_login_link_color',
+                                'type' => 'Text',
+                                'options' => array(
+                                    'label' => 'tr_meliscore_platform_color_login_link',
+                                    'tooltip' => 'tr_meliscore_platform_color_tooltip',
+                                ),
+                                'attributes' => array(
+                                    'id' => 'melis_core_platform_color_login_link_color',
+                                    'value' => '',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'color',
+                                ),
+                            ),
+                        ),
                     ),
                     'input_filter' => array(
                         'melis_core_platform_color_primary_color' => array(
@@ -348,6 +380,42 @@ return array(
                         ),
                         'melis_core_platform_color_secondary_color' => array(
                             'name'     => 'melis_core_platform_color_secondary_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex', false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_color_sidebar_bg_color' => array(
+                            'name'     => 'melis_core_platform_color_sidebar_bg_color',
+                            'required' => false,
+                            'validators' => array(
+                                array(
+                                    'name' => 'regex', false,
+                                    'options' => array(
+                                        'pattern' => '/#?([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/',
+                                        'messages' => array(\Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_platform_color_invalid_hex'),
+                                        'encoding' => 'UTF-8',
+                                    ),
+                                ),
+                            ),
+                            'filters'  => array(
+                                array('name' => 'StripTags'),
+                                array('name' => 'StringTrim'),
+                            ),
+                        ),
+                        'melis_core_platform_color_login_link_color' => array(
+                            'name'     => 'melis_core_platform_color_login_link_color',
                             'required' => false,
                             'validators' => array(
                                 array(
