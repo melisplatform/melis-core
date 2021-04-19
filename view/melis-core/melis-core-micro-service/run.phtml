@@ -1,3 +1,72 @@
+<style type="text/css">
+.microservice_container{
+	padding-left:20px;
+	padding-top:47px;
+	color:#686868;
+	font-family: "Open Sans'";
+}
+#microservice_form ul li{
+	list-style-type: none;
+}
+#microservice_form ul {
+	/* margin:0; */
+	padding: 0;
+	color: red;
+    font-size: .9em;
+    margin-bottom: 8px;
+    margin-top: 0px;
+}
+.microservice_container input,select{
+	/* text-indent: 5px; */
+	color:#000;
+	font-weight: 600;
+	display: block;
+	margin-bottom: 8px;
+	height: 30px;
+	border-radius: 3px;
+	border: 1px solid #a8a8a8;
+}
+select {
+	width: auto !important;
+}
+.microservice_container input::-webkit-input-placeholder {
+	color: #bcbcbc;
+}
+
+.microservice_container input:-moz-placeholder { /* Firefox 18- */
+	color: #bcbcbc;  
+}
+
+.microservice_container input::-moz-placeholder {  /* Firefox 19+ */
+	color: #bcbcbc;  
+}
+
+.microservice_container input:-ms-input-placeholder {  
+	color: #bcbcbc;  
+}
+
+fieldset#microservice_form {
+	border:none;
+	padding: 0;
+}
+fieldset {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+fieldset legend {
+	cursor: pointer;
+}
+h4 {
+	font-weight: 500;
+	font-size: 25px;
+	margin:0;
+}
+p {
+	margin-top:8px;
+	margin-bottom:10px;
+}
+</style>
+
 <div class="microservice_container">
 <!-- Method Name -->
 <h4><?= $this->methodName; ?></h4>
@@ -13,14 +82,24 @@ foreach($form->getElements() as $element => $attributes)  {
 	$label=$el->getLabel();
 	$attributes = $el->getAttributes();
 	if($attributes && isset($attributes['data-type'])) {
+		echo 'test';
 		$dataType = $this->translate($attributes['data-type']);
 		$form->get((string) $element)->setLabel($label.' ('.$dataType.')');
 	}
 }
 ;
 echo $this->form()->openTag($form);
-echo $this->melisFieldCollection($form);
-echo '<button type="submit" style=margin-left:50px>Submit</button>';
+$form->prepare();
+$form->add([
+	'name' => 'submit',
+	'attributes' => [
+		'type' => 'submit',
+		'value' => 'Submit',
+	],
+]);
+
+
+echo $this->formCollection($form);
 echo $this->form()->closeTag();
 
 ?>
@@ -30,59 +109,20 @@ echo $this->headTitle($this->translate('tr_meliscore_microservice_tab_title'));
 ?>
 
 
-<style type="text/css">
-.microservice_container{
-	padding-left:20px;
-	padding-top:47px;
-	color:#686868;
-	font-family: "Open Sans'";
-}
-#microservice_form ul li{
-	list-style-type: none;
-}
-#microservice_form ul {
-	margin:0;
-	padding: 0;
-}
-.microservice_container input,select{
-	text-indent: 5px;
-	color:#000;
-	font-weight: 600;
-	display: block;
-	margin-bottom: 8px;
-	height: 30px;
-	border-radius: 3px;
-    border: 1px solid #a8a8a8;
-}
-select {
-	width: auto !important;
-}
-.microservice_container input::-webkit-input-placeholder {
-   color: #bcbcbc;
-}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js" integrity="sha512-6ORWJX/LrnSjBzwefdNUyLCMTIsGoNP6NftMy2UAm1JBm6PRZCO1d7OHBStWpVFZLO+RerTvqX/Z9mBFfCJZ4A==" crossorigin="anonymous"></script>
+<script>
+	$(".microservice_container legend").on("click", function(){
 
-.microservice_container input:-moz-placeholder { /* Firefox 18- */
-   color: #bcbcbc;  
-}
+		var parentFieldset = $(this).parent("fieldset");
+		if (parentFieldset.length) {
 
-.microservice_container input::-moz-placeholder {  /* Firefox 19+ */
-   color: #bcbcbc;  
-}
+			var currentCount = parentFieldset.find("fieldset").length;
+			var template = parentFieldset.find("span[data-template]").data('template');
 
-.microservice_container input:-ms-input-placeholder {  
-   color: #bcbcbc;  
-}
-fieldset{
-	border:none;
-	padding: 0;
-}
-h4{
-	font-weight: 500;
-	font-size: 25px;
-	margin:0;
-}
-p{
-	margin-top:8px;
-	margin-bottom:10px;
-}
-</style>
+			if(template) {
+				template = template.replace(/__index__/g, currentCount);
+				parentFieldset.append(template);
+			}
+		}
+	})
+</script>
