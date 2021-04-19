@@ -866,7 +866,8 @@ div.glyphicons-social.glyphicon-primary i:before {
 .tooltip.fade.bs-tooltip-right .arrow::before {
     border-right-color: <?= $secondaryColor; ?> !important;
 }
-
+.bs-tooltip-auto[x-placement^="left"] .arrow::before,
+.bs-tooltip-left .arrow::before,
 .tooltip.fade.bs-tooltip-auto[x-placement^=left] .arrow::before, 
 .tooltip.fade.bs-tooltip-left .arrow::before {
     border-left-color: <?= $secondaryColor; ?> !important;

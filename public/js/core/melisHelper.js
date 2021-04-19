@@ -506,8 +506,8 @@ var melisHelper = (function(){
                     tabExpander.checkTE();
 
                     //focus the newly opened tab if tabExpander() is enabled
-                    if( tabExpander.checkStatus() === 'enabled' ){
-                        if(typeof navTabsGroup == "undefined" || typeof navTabsGroup == null) {
+                    if ( tabExpander.checkStatus() === 'enabled' ){
+                        if ( typeof navTabsGroup == "undefined" || typeof navTabsGroup == null ) {
                             $(".melis-tabnext").trigger("click");
                         }
                     }
@@ -518,6 +518,10 @@ var melisHelper = (function(){
                             melisDashBoardDragnDrop.checkDashboard();
                         }, 2000);
                     }
+                    
+                    // add a melis-design class on body tag when opening a melis-design page
+                    var bodyClass = 'melis-design';
+                        melisCoreTool.addBodyClass( bodyClass );
             }
             else {
                 //make the new tab and content active instead of reloading
