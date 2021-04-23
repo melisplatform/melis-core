@@ -83,7 +83,7 @@
         'tr_meliscore_platform_scheme_sidebar_header_logo_tooltip' => 'Change le logo en haut à gauche de la plateforme (taille: 30 x 30)',
         'tr_meliscore_platform_scheme_sidebar_header_title_tooltip' => 'Change le titre en haut à gauche de la plateforme',
         'tr_meliscore_platform_scheme_file_button' => 'Choisir une image',
-        'tr_melis_core_platform_color_sidebar_bg_color_tooltip' => 'Change the sidebar background color of the platform by typing the hexadecimal color code or by using the color picker',
-        'tr_melis_core_platform_color_login_link_color_tooltip' => 'Change the login link color of the platform by typing the hexadecimal color code or by using the color picker',
+        'tr_melis_core_platform_color_sidebar_bg_color_tooltip' => 'Change la couleur de fond du menu de gauche soit en saisissant le code hexadécimal soit en utilisant le sélecteur de couleur',
+        'tr_melis_core_platform_color_login_link_color_tooltip' => 'Change la couleur des liens Melis Technology et melis Platform dans le login soit en saisissant le code hexadécimal soit en utilisant le sélecteur de couleur',
     );
 ?>

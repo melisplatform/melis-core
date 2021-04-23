@@ -670,8 +670,8 @@ return [
     'tr_meliscore_platform_color_secondary' => 'Couleur secondaire',
     'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
     'tr_meliscore_platform_color_invalid_hex'   => 'Invalid HEX color, please choose a valid HEX color',
-    'tr_meliscore_platform_color_sidebar_bg'   => 'Sidebar background color',
-    'tr_meliscore_platform_color_login_link'   => 'Login link color',
+    'tr_meliscore_platform_color_sidebar_bg'   => 'Arrière plan menu de gauche',
+    'tr_meliscore_platform_color_login_link'   => 'Liens Melis sur le login',
 
     'tr_meliscore_platform_scheme_form_login_logo' => 'Logo login',
     'tr_meliscore_platform_scheme_form_login_background' => 'Arrière plan login',
