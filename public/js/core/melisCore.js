@@ -1184,7 +1184,9 @@ var melisCore = (function(window){
                 });
 
                 // check tabExpander();
-                tabExpander.checkTE();
+                if ( typeof tabExpander !== 'undefined' ) {
+                    tabExpander.checkTE();
+                }
 
                 //hide plugins & reset defaults
                 $("#newplugin-cont").removeClass("show-menu");
@@ -1199,8 +1201,10 @@ var melisCore = (function(window){
                 $("#content, #id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
 
                 // check tabExpander();
-                tabExpander.Disable();
-
+                if ( typeof tabExpander !== 'undefined' ) {
+                    tabExpander.Disable();
+                }
+                
                 // move plugins to another <div>
                 $("#id_meliscore_header .navbar-right > li").each(function(key, value){
                     $(this).children("a").append("<span class='title'>"+ $(this).data("title") +"</span>");
