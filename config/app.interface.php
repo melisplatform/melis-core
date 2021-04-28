@@ -228,6 +228,7 @@ return array(
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-dataTables.js',
+                    '/MelisCore/js/core/MelisDataTable.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-fancytree.js',
