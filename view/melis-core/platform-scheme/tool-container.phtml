@@ -187,11 +187,9 @@ if($headerTitleLen > 13) {
                 </div>
             </form>
             <script>
-                $(function() {
-                    $(".osta_color_code").colorpicker({format: 'hex', useAlpha: false});
-                    $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
-                    $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
-                });
+                $(".osta_color_code").colorpicker({format: 'hex', useAlpha: false});
+                $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+                $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
             </script>
         </div>
         <?php
