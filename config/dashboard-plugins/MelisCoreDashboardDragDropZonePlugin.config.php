@@ -26,7 +26,10 @@ return array(
                     //'/MelisCore/assets/components/plugins/enjoyhint/js/kinetic.min.js',
 
                     // page walkthrough
-                    '/MelisCore/js/core/dashboard-notify.js'
+                    '/MelisCore/js/core/dashboard-notify.js',
+
+                    // dashboard width collapse
+                    '/MelisCore/js/core/melisCoreDashboardWidth.js'
                 )
             ),
             'interface' => [

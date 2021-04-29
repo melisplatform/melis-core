@@ -349,7 +349,7 @@ var melisDashBoardDragnDrop = {
         var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
     },
     // check current dashboard
-    checkDashboard: function() {
+    /* checkDashboard: function() {
         var self                    = this,
             $pluginBtn              = $("#melisDashBoardPluginBtn"),
             $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
@@ -420,7 +420,7 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             }
-    },
+    }, */
     // disables the plugin sidebar
     disablePlugSidebar: function() {
         var self = this;
@@ -807,9 +807,9 @@ var melisDashBoardDragnDrop = {
             gsWidth =  $("#"+activeTabId).find(".grid-stack").outerWidth();
 
             return gsWidth;
-    },
+    }
     // checks dashboard's elements width adjustment
-    checkDashboardElemWidths: function() {
+    /* checkDashboardElemWidths: function() {
         var self                    = this,
             $body                   = $("body"),
             $pluginBtn              = $body.find("#melisDashBoardPluginBtn"),
@@ -859,7 +859,7 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             }
-    }
+    } */
 };
 
 (function($) {   
@@ -883,24 +883,24 @@ var melisDashBoardDragnDrop = {
         melisDashBoardDragnDrop.init();
 
         // check if any .grid-stack-item is found, hide $dbMsg
-        if ( gsi > 0 ) {
+        /* if ( gsi > 0 ) {
             $dbMsg.hide();
         }
         else {
             $dbMsg.show();
-        }
+        } */
 
         // .select2-container width 100% specific for latest comments plugin on document ready
         melisDashBoardDragnDrop.latestCommentsPluginUIRes();
 
         // animate to full width size of #grid1
-        $body.on("click", "#dashboard-plugin-delete-all", function() {
+        /* $body.on("click", "#dashboard-plugin-delete-all", function() {
             $gs.animate({
                 width: minWidth
             }, 3);
-        });
+        }); */
 
-        setTimeout(function() {
+        /* setTimeout(function() {
             // check if plugins menu is open, adjust .grid-stack width accordingly
             if ( $pluginBox.hasClass("shown") && gsi === 0 ) {
                 $gs.animate({
@@ -917,7 +917,7 @@ var melisDashBoardDragnDrop = {
                     }, 3);
                 }
             }
-        }, 1000);
+        }, 1000); */
 
         /**
          * gridstack
