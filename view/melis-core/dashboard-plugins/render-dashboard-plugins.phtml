@@ -23,7 +23,7 @@
                             waitForJquery(showDashboardPluginMenu);
 
                             function waitForJquery(method) {
-                                if (window.jQuery && typeof melisDashBoardDragnDrop !== "undefined") {
+                                if (window.jQuery && typeof melisCoreDashboardWidth !== "undefined") {
                                     method();
                                 } else {
                                     setTimeout(function () {
@@ -39,8 +39,8 @@
                             function showDashboardPluginMenu() {
                                 var $pluginMenu = $("body").find("#id_meliscore_center_dashboard_menu");
 
-                                    if ( $pluginMenu.length > 0 && typeof melisDashBoardDragnDrop !== "undefined" ) {
-                                        melisDashBoardDragnDrop.checkDashboard();
+                                    if ( $pluginMenu.length > 0 && typeof melisCoreDashboardWidth !== "undefined" ) {
+                                        melisCoreDashboardWidth.checkDashboard();
                                     }
                             }
                         }());

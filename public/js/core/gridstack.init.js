@@ -39,7 +39,7 @@ var melisDashBoardDragnDrop = {
         this.dragStopWidget();
         this.resizeStopWidget();
 
-        this.checkDashboardElemWidths();
+        //this.checkDashboardElemWidths();
     },
     cacheDom: function() {
         // jQuery DOM element
