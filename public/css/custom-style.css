@@ -1511,3 +1511,24 @@ a[data-toggle="modal"]:focus {
 		padding: 0 11px;
 	}
 }
+
+.bubble-news-date {
+	padding: 5px 10px 5px 10px !important;
+	white-space: nowrap;
+	font-size: 11px;
+	vertical-align: middle !important;
+}
+
+.bubble-news-title {
+	padding: 5px 0 5px 0 !important;
+	font-size: 11px;
+	line-height: 150% !important;
+	vertical-align: middle !important;
+}
+
+.bubble-news-text {
+	padding: 5px 0 5px 0 !important;
+	font-size: 11px;
+	line-height: 150% !important;
+	vertical-align: middle !important;
+}

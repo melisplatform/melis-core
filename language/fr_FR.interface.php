@@ -797,7 +797,7 @@ return [
     'tr_meliscore_dashboard_bubble_plugins_hide' => 'Cacher la barre',
     'tr_meliscore_dashboard_bubble_plugins_show' => 'Ouvrir la barre',
     'tr_meliscore_dashboard_bubble_plugins_read' => 'Lire',
-    'tr_meliscore_dashboard_bubble_plugins_melis_news' => 'Actualité Melis Platform',
+    'tr_meliscore_dashboard_bubble_plugins_melis_news' => 'Melis Platform News',
     'tr_meliscore_dashboard_bubble_plugins_melis_news_plural' => 'Actualités Melis Platform',
     'tr_meliscore_dashboard_bubble_plugins_view_melis_news' => 'Voir les actualité Melis Platform',
     'tr_meliscore_dashboard_bubble_plugins_view_melis_news_plural' => 'Voir les actualités Melis Platform',

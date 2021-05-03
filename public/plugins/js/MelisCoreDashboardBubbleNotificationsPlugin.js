@@ -68,9 +68,9 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
 
             $.each(response.data, function (key, value) {
                 var notification = '<tr>\n' +
-                    '<td class="center">' + value.date_trans + '</td>\n' +
-                    '<td class="center">' + value.title + '</td>\n' +
-                    '<td class="center">' + value.message + '</td>\n' +
+                    '<td class="center bubble-news-date">' + value.date_trans + '</td>\n' +
+                    '<td class="center bubble-news-title">' + value.title + '</td>\n' +
+                    '<td class="center bubble-news-text">' + value.message + '</td>\n' +
                     '</tr>';
 
                 $('.bubble-notifications-list').each(function(){
