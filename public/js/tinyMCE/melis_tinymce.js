@@ -18,40 +18,45 @@ var melisTinyMCE = (function() {
 		if (!type) type = "";
 		if (!selector) selector = "";
 		if (!options) options = null;
-		// DataString with the values need get the TinyMCE configuration
-		var dataString = $.extend(
-			{
-				type: type,
-				selector: selector,
-				// options: options,
-			},
-			options
-		);
 
-		if (options.hasOwnProperty("templates")) {
-			options.templates = options.templates;
-		}
+		// setTimeout: Saving our life in initializing multiple tinymce
+		setTimeout(() => {
+			// DataString with the values need get the TinyMCE configuration
+			var dataString = $.extend(
+				{
+					type: type,
+					selector: selector,
+					// options: options,
+				},
+				options
+			);
 
-		let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
-
-		let config = $.extend(tinyMceConfig, dataString);
-
-		if (typeof tinyMCE != "undefined") {
-			if (selector.length) {
-				try {
-					// removing selector that has been initialized before
-					// then we can re-init again
-					tinymce.remove(selector);
-				} catch (e) {}
+			if (options.hasOwnProperty("templates")) {
+				options.templates = options.templates;
 			}
-		}
 
-		if (config["file_picker_callback"]) {
-			config["file_picker_callback"] = eval(config["file_picker_callback"]);
-		}
+			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
 
-		// Initializing TinyMCE with the request Configurations
-		tinymce.init(config);
+			let config = $.extend(tinyMceConfig, dataString);
+
+			if (typeof tinyMCE != "undefined") {
+				if (selector.length) {
+					try {
+						// removing selector that has been initialized before
+						// then we can re-init again
+						tinyMCE.remove(selector);
+						// tinymce.DOM.remove(selector);
+					} catch (e) {}
+				}
+			}
+
+			if (config["file_picker_callback"]) {
+				config["file_picker_callback"] = eval(config["file_picker_callback"]);
+			}
+
+			// Initializing TinyMCE with the request Configurations
+			tinyMCE.init(config);
+		}, 1000);
 
 		$(document).on("focusin", function(e) {
 			if ($(e.target).closest(".tox-dialog").length) {
