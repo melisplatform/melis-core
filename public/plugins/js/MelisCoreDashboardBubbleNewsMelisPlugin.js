@@ -26,9 +26,9 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
             // plugin front text
             var text = translations.tr_meliscore_dashboard_bubble_plugins_melis_news;
 
-            if (response.count > 1) {
-                text = translations.tr_meliscore_dashboard_bubble_plugins_melis_news_plural;
-            }
+            // if (response.count > 1) {
+            //     text = translations.tr_meliscore_dashboard_bubble_plugins_melis_news_plural;
+            // }
 
             $('.melis-news-bubble-plugin-text').empty();
             $('.melis-news-bubble-plugin-text').append(text);
@@ -53,9 +53,9 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
             }
 
             // plugin front counter
-            $('.melis-news-bubble-plugin-counter').each(function(){
-               $(this).text(response.count);
-            });
+            // $('.melis-news-bubble-plugin-counter').each(function(){
+            //    $(this).text(response.count);
+            // });
 
             // plugin back content/list
             $('.melis-news-bubble-plugin-news-list').each(function(){
