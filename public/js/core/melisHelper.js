@@ -287,6 +287,7 @@ var melisHelper = (function(){
 
         //This is for not showing the close all tab button, data-id on .close-tab has changed to the current id_meliscore_toolstree_section_dashboard
         //if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab) { 
+        //console.log("melisHelper tabClose prevActiveTab: ", prevActiveTab);
         if(prevActiveTab == 'id_meliscore_toolstree_section_dashboard' && !nextActiveTab){
             $("#close-all-tab").hide();
             $("#close-all-tab").closest("li").hide(); // fix for double border left
@@ -400,7 +401,7 @@ var melisHelper = (function(){
     // TAB OPEN =====================================================================================================================
     function tabOpen(title, icon, zoneId, melisKey, parameters, navTabsGroup, callback) {
         //Show the close(X) button on header
-        if ( melisKey !== 'meliscore_dashboard' ) {
+        if ( melisKey !== 'meliscore_dashboard' || zoneId !== 'id_meliscore_toolstree_section_dashboard' ) {
             $("#close-all-tab").show();
             $("#close-all-tab").closest("li").show();
         }

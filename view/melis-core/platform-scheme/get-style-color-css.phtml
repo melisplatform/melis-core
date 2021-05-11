@@ -6,10 +6,14 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.grid-stack .grid-stack-placeholder>.placeholder-content,
 .client-contact-address .default-card>.card-header,
 .client-contact-address .panel-default>.panel-heading {
     background-color: <?= $primaryColor; ?> !important;
 }
+#btnDelImg,
+.cron-info-toggle,
+.progressContent .progress .text-danger,
 .contacts .innerLR .media .media-body .media-heading a,
 .contacts .innerLR .media a,
 .widget .innerAll.half.media .media-body .text-muted-dark a,
@@ -44,6 +48,11 @@
 .pager .next > a,
 .row-icons [class*="col"] i,
 .row-icons [class*="col"] i:before,
+.carouse-caption p a,
+.carouse-caption p a:hover,
+.tiny-slider .nav-tabs .nav-item .nav-link,
+.tiny-slider .nav-tabs .nav-item .nav-link.active,
+.tiny-slider .nav-tabs .nav-item .nav-link:hover,
 .forgot-password a,
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
@@ -54,6 +63,7 @@
     background-color: <?= $primaryColor; ?> !important;
     border-color: <?= $primaryColor; ?> !important;
 }
+.progress .progress-bar.progress-bar-danger,
 #mini-template-buttons h3.ui-accordion-header-active.ui-state-active,
 .commerce-dashboard-plugin-order-messages.answered .media-body.media-body-inline span.label.label-inverse,
 .workflow-modal-content .wmc-header,
