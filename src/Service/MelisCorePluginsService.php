@@ -3,6 +3,7 @@
 namespace MelisCore\Service;
 
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\Session\Container;
 
 class MelisCorePluginsService extends MelisGeneralService
 {
@@ -193,8 +194,13 @@ class MelisCorePluginsService extends MelisGeneralService
      * if no internet connection it returns null
      * @return array|mixed
      */
-    public function getPackagistCategories()
+    public function getPackagistCategories($reloadModules = false)
     {
+        $container = new Container('meliscore');
+
+        if (!empty($container['melis-packagist-categories']) && !$reloadModules)
+            return $container['melis-packagist-categories'];
+
         // get the marketplace sections for the modules
         $marketPlaceModuleCategories = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-group", true);
         // decode to make it an array
@@ -210,6 +216,8 @@ class MelisCorePluginsService extends MelisGeneralService
                 }
             }
         }
+
+        $container['melis-packagist-categories'] = $simplifiedModuleCategories;
 
         return $simplifiedModuleCategories;
     }
@@ -338,9 +346,15 @@ class MelisCorePluginsService extends MelisGeneralService
     /**
      * @param $pluginModuleName if set to true then it will base like (meliscms,meliscore,meliscmsslider) if not  then like(melis-cms,melis-core,melis-cms-slider)
      */
-    public function getMelisPublicModules($pluginModuleName = false,$dashboardPlugin = false)
+    public function getMelisPublicModules($pluginModuleName = false, $dashboardPlugin = false, $reloadModules = false)
     {
+        $container = new Container('meliscore');
+
+        if (!empty($container['melis-public-modules']) && !$reloadModules)
+            return $container['melis-public-modules'];
+
         $melisPublicModulesWithSection = @file_get_contents("http://marketplace.melisplatform.com/melis-packagist/get-package-list", true);
+
         $publicModules = [];
         if (! empty($melisPublicModulesWithSection)) {
             // json_decode to make it an arrays
@@ -364,6 +378,10 @@ class MelisCorePluginsService extends MelisGeneralService
                 ];
             }
         }
+
+        // Adding to Current user session
+        $container['melis-public-modules'] = $publicModules;
+
         return $publicModules;
     }
 }
