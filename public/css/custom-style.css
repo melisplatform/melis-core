@@ -1087,7 +1087,7 @@ a[data-toggle="modal"]:focus {
 	min-height: 74px;
 }
 #loader.overlay-loader {
-	background: rgba(0, 0, 0, 60%);
+	background: rgba(0, 0, 0, 0.60);
 }
 
 /* Responsive media queries */
