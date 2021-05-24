@@ -1,4 +1,5 @@
-<div class="grid-stack-item  grid-stack-animate"
+<?php $class = strtolower(explode('_', preg_replace('/(?<!^)([A-Z])/', '-\\1', $this->pluginConfig['plugin_id']))[0]); ?>
+<div class="grid-stack-item  grid-stack-animate <?= $class ?>"
      data-gs-id="<?php echo $this->pluginConfig['plugin_id']?>"
      data-gs-x="<?php echo $this->pluginConfig['datas']['x-axis']?>"
      data-gs-y="<?php echo $this->pluginConfig['datas']['y-axis']?>"

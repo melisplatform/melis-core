@@ -369,7 +369,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
      * @return string
      */
     public function getDataTableConfiguration($targetTable = null, $allowReInit = false,
-                                              $selectCheckbox = false, $tableOption = [], $type = '')
+                                            $selectCheckbox = false, $tableOption = [], $tableLangTrans = 'default')
     {
         $translator = $this->getServiceManager()->get('translator');
         $table = $this->_appConfig['table'];
@@ -448,12 +448,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             $tableSearchPlugin = '';
             if (!empty($searchInputClass)) {
                 $tableSearchPlugin = '$(\'.' . $searchInputClass . ' input[type="search"]\').unbind();
-                    	               $(\'.' . $searchInputClass . ' input[type="search"]\').typeWatch({
-                            				captureLength: 2,
-                            				callback: function(value) {
-                        	                ' . str_replace("#", "$", $tableId) . '.search(value).draw();   
-                            				}
-                            			});';
+                                    $(\'.' . $searchInputClass . ' input[type="search"]\').typeWatch({
+                                            captureLength: 2,
+                                            callback: function(value) {
+                                            ' . str_replace("#", "$", $tableId) . '.search(value).draw();   
+                                            }
+                                        });';
             }
 
 
@@ -501,10 +501,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                                     "data": null,
                                     "mRender": function (data, type, full) {
                                         return \'<div>' . $actionButtons . '</div>\';
-        						    },
-        						    "bSortable" : false,
-        						    "sClass" : \'dtActionCls\',
-        					    }';
+                                    },
+                                    "bSortable" : false,
+                                    "sClass" : \'dtActionCls\',
+                                }';
             }
             $jsonColumns .= ']';
 
@@ -515,7 +515,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 $reInitTable = '     
                 var dTable = $("' . $tableId . '").DataTable();
                 if(dTable !== undefined) {
-                       dTable.destroy();    
+                    dTable.destroy();    
                 }';
             }
             // select checkbox extension
@@ -524,16 +524,16 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             if ($selectCheckbox) {
                 $selectColDef = '{
                                 "targets": 0,                                   
-                                 "bSortable":false,                                 
-                                 "mRender": function (data, type, full, meta){
-                                     return `<div class="checkbox checkbox-single margin-none">
-                									<label class="checkbox-custom">
-                										<i class="fa fa-fw fa-square-o checked"></i>
-                										<input type="checkbox" checked="checked" name="id[]" value="` + $("<div/>").text(data).html() + `">
-                									</label>
-                								</div>  
+                                "bSortable":false,                                 
+                                "mRender": function (data, type, full, meta){
+                                    return `<div class="checkbox checkbox-single margin-none">
+                                                    <label class="checkbox-custom">
+                                                        <i class="fa fa-fw fa-square-o checked"></i>
+                                                        <input type="checkbox" checked="checked" name="id[]" value="` + $("<div/>").text(data).html() + `">
+                                                    </label>
+                                                </div>  
                                             `;
-                                 }
+                                }
                             },';
             }
 
@@ -609,11 +609,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 $finalTblOptionStr .= $key . ': ' . $val . ',' . PHP_EOL;
             }
 
-            $language = '"/melis/MelisCore/Language/getDataTableTranslations"';
-
-            if ($type) {
-                $language = '"/melis/MelisCommerce/MelisComOrderCheckout/getDataTableTranslations"';
-            }
+            // Table language translations
+            if (!$tableLangTrans)
+                $tableLangTrans = 'default';
+            $language = 'melisDataTable.tableLanguage.'.$tableLangTrans;
 
 
             //remove special characters in function name
@@ -639,58 +638,56 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                         ' . $ajaxCallBack . '
                     },
                     columns: ' . $jsonColumns . ',
-				    language: {
-                        url : ' . $language . ',
-                    },
+                    language: ' . $language . ',
                     sDom : \'' . $sDomStructure . '\',
                     bSort: true,
                     searchDelay: 1500,
-			        columnDefs: [
+                    columnDefs: [
                         ' . $columnsStylesStr . '  
                         ' . $unSortableColumnsStr . '
-					    ' . $selectColDef . '
-					    { responsivePriority: 1, targets: 0 },';
+                        ' . $selectColDef . '
+                        { responsivePriority: 1, targets: 0 },';
 
             if ($actionColumn != "") {
                 $dtJScript .= '{responsivePriority:2, targets: -1 },'; // make sure action column stays whenever the window is resized
             }
             $dtJScript .= $actionColumn . '
-				    ],
+                    ],
                 }).columns.adjust().responsive.recalc();
                 return ' . str_replace("#", "$", $tableId) . ';
             };
             var ' . str_replace("#", "$", $tableId) . ' = ' . $fnName . '();
-	        $("' . $tableId . '").on("init.dt", function(e, settings) {
-			    ' . $jsSdomContentInit . '
-		        ' . $tableSearchPlugin . '   
-	        });';
+            $("' . $tableId . '").on("init.dt", function(e, settings) {
+                ' . $jsSdomContentInit . '
+                ' . $tableSearchPlugin . '   
+            });';
         }
 
         return $dtJScript;
     }
 
     /**
-     * Quote correction for better execution in queries
-     *
-     * @param $text
-     *
-     * @return string
-     */
+        * Quote correction for better execution in queries
+        *
+        * @param $text
+        *
+        * @return string
+        */
     private function replaceQuotes($text)
     {
         return str_replace(["'", "’"], chr(92) . "'", $text);
     }
 
     /**
-     * Exports the data inside the data table in CSV
-     * @see \MelisCore\Service\MelisCoreToolServiceInterface::exportDataToCsv()
-     * @param $data
-     * @param null $fileName
-     *
-     * @param null $customSeparator
-     * @param null $customIsEnclosed
-     * @return string|HttpResponse
-     */
+        * Exports the data inside the data table in CSV
+        * @see \MelisCore\Service\MelisCoreToolServiceInterface::exportDataToCsv()
+        * @param $data
+        * @param null $fileName
+        *
+        * @param null $customSeparator
+        * @param null $customIsEnclosed
+        * @return string|HttpResponse
+        */
     public function exportDataToCsv($data, $fileName = null, $customSeparator = null, $customIsEnclosed = null)
     {
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
@@ -765,12 +762,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Replaces characters with accents into normal character
-     *
-     * @param string $str
-     *
-     * @return string
-     */
+        * Replaces characters with accents into normal character
+        *
+        * @param string $str
+        *
+        * @return string
+        */
     public function replaceAccents($str)
     {
         $newValue = '';
@@ -830,13 +827,13 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * PHP native str_split with unicode version
-     *
-     * @param string $str
-     * @param int $l
-     *
-     * @return array
-     */
+        * PHP native str_split with unicode version
+        *
+        * @param string $str
+        * @param int $l
+        *
+        * @return array
+        */
     private function stringSplitUnicode($str, $l = 0)
     {
         if ($l > 0) {
@@ -853,10 +850,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Returns the selected locale ID, if locale not found it will return 1 which is English
-     *
-     * @return int
-     */
+        * Returns the selected locale ID, if locale not found it will return 1 which is English
+        *
+        * @return int
+        */
     public function getCurrentLocaleID()
     {
         $langTable = $this->getServiceManager()->get('MelisCoreTableLang');
@@ -873,13 +870,13 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Returns the translated text based on the current locale
-     *
-     * @param string $translationKey
-     * @param array $args
-     *
-     * @return string
-     */
+        * Returns the translated text based on the current locale
+        *
+        * @param string $translationKey
+        * @param array $args
+        *
+        * @return string
+        */
     public function getTranslation($translationKey, $args = [])
     {
         $translator = $this->getServiceManager()->get('translator');
@@ -889,10 +886,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Returns the User ID of the logged-in user
-     *
-     * @return int
-     */
+        * Returns the User ID of the logged-in user
+        *
+        * @return int
+        */
     public function getCurrentUserId()
     {
         $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
@@ -905,13 +902,13 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Used to split array data and return the data you need
-     *
-     * @param string $prefix of the array data
-     * @param array $haystack
-     *
-     * @return array
-     */
+        * Used to split array data and return the data you need
+        *
+        * @param string $prefix of the array data
+        * @param array $haystack
+        *
+        * @return array
+        */
     public function splitData($prefix, $haystack = [])
     {
         $data = [];
@@ -927,14 +924,14 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * This function is the opposite of splitData, this function removes
-     * the data with prefix  provided in the parameter
-     *
-     * @param string $prefix
-     * @param array $haystack
-     *
-     * @return array
-     */
+        * This function is the opposite of splitData, this function removes
+        * the data with prefix  provided in the parameter
+        *
+        * @param string $prefix
+        * @param array $haystack
+        *
+        * @return array
+        */
     public function removeDataWithPrefix($prefix, $haystack = [])
     {
         $data = [];
@@ -952,13 +949,13 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Formats the date based on the current language
-     *
-     * @param string $date string value of the date
-     * @param string $time optional time format ie: h:i:s, leave blank to exclude time
-     *
-     * @return \DateTime
-     */
+        * Formats the date based on the current language
+        *
+        * @param string $date string value of the date
+        * @param string $time optional time format ie: h:i:s, leave blank to exclude time
+        *
+        * @return \DateTime
+        */
     public function dateFormatLocale($date, $time = '', $locale = null)
     {
         $container = new Container('meliscore');
@@ -977,13 +974,13 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * JS script needed for the date input group
-     *
-     * @param string $dateField the date input group id, ex: myDateField
-     * @param string $time the time format if needed, leave blank to exclude time
-     *
-     * @return string
-     */
+        * JS script needed for the date input group
+        *
+        * @param string $dateField the date input group id, ex: myDateField
+        * @param string $time the time format if needed, leave blank to exclude time
+        *
+        * @return string
+        */
     public function datePickerInit($dateField, $time = '')
     {
         $container = new Container('meliscore');
@@ -1002,7 +999,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                         $(function () {
                             $(".' . $dateField . '").datepicker({
                                     language: "' . $language . '",
-                            		format: "' . $format . '",
+                                    format: "' . $format . '",
                             });
                         });
                     </script>';
@@ -1011,12 +1008,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * formats the localized date to mysql datetime
-     *
-     * @param string $date , the date value to be formatted
-     *
-     * @return \DateTime
-     */
+        * formats the localized date to mysql datetime
+        *
+        * @param string $date , the date value to be formatted
+        *
+        * @return \DateTime
+        */
     public function localeDateToSql($date)
     {
         $container = new Container('meliscore');
@@ -1037,12 +1034,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * HTML Escaper
-     *
-     * @param $value
-     *
-     * @return string
-     */
+        * HTML Escaper
+        *
+        * @param $value
+        *
+        * @return string
+        */
     public function escapeHtml($value)
     {
         $escaper = new \Laminas\Escaper\Escaper('utf-8');
@@ -1052,15 +1049,15 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * This function sanitizes a single array and removes  a suspicious XSS value and SQL injection value
-     *
-     * @param $postArray
-     * @param array $exclude - if you want to exclude a certain value, then you must put the name of the value that you want to exclude
-     * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
-     * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
-     *
-     * @return array
-     */
+        * This function sanitizes a single array and removes  a suspicious XSS value and SQL injection value
+        *
+        * @param $postArray
+        * @param array $exclude - if you want to exclude a certain value, then you must put the name of the value that you want to exclude
+        * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
+        * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
+        *
+        * @return array
+        */
     public function sanitizePost($postArray, $exclude = [], $textOnly = false, $removeFunctions = true)
     {
         $post = [];
@@ -1085,14 +1082,14 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * This functions removes a suspicious XSS value and SQL injection value
-     *
-     * @param $input string|array - if the input is a string, it will sanitize the value, if the input is an array then it will call the sanitizeResursive function.
-     * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
-     * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
-     *
-     * @return array|mixed|string
-     */
+        * This functions removes a suspicious XSS value and SQL injection value
+        *
+        * @param $input string|array - if the input is a string, it will sanitize the value, if the input is an array then it will call the sanitizeResursive function.
+        * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
+        * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
+        *
+        * @return array|mixed|string
+        */
     public function sanitize($input, $textOnly = false, $removeFunctions = true)
     {
 
@@ -1117,16 +1114,16 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * This function accepts multi-dimensional array that will be recursively checked and sanitize it's value so that
-     * it will removes all suspicious XSS value and SQL injection value
-     *
-     * @param $arrayVal
-     * @param array $exclude - if you want to exclude a certain value, then you must put the name of the value that you want to exclude
-     * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
-     * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
-     *
-     * @return array
-     */
+        * This function accepts multi-dimensional array that will be recursively checked and sanitize it's value so that
+        * it will removes all suspicious XSS value and SQL injection value
+        *
+        * @param $arrayVal
+        * @param array $exclude - if you want to exclude a certain value, then you must put the name of the value that you want to exclude
+        * @param bool $textOnly - set to "true" if you want to remove all special characters and retain only alphanumeric characters.
+        * @param bool $removeFunctions - set to "false" if you don't want to remove function names that may lead to XSS injection
+        *
+        * @return array
+        */
     public function sanitizeRecursive($arrayVal, $exclude = [], $textOnly = false, $removeFunctions = true)
     {
         $array = [];
@@ -1148,12 +1145,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Maps through all array and converts objects into array if found
-     *
-     * @param $content
-     *
-     * @return array
-     */
+        * Maps through all array and converts objects into array if found
+        *
+        * @param $content
+        *
+        * @return array
+        */
     public function convertObjectToArray($content)
     {
 
@@ -1176,14 +1173,14 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * This returns a CSV file, this function must be used on return
-     * so it will return a CSV file
-     *
-     * @param $fileName
-     * @param $data
-     *
-     * @return HttpResponse
-     */
+        * This returns a CSV file, this function must be used on return
+        * so it will return a CSV file
+        *
+        * @param $fileName
+        * @param $data
+        *
+        * @return HttpResponse
+        */
     public function exportCsv($fileName, $data)
     {
         $response = new HttpResponse();
@@ -1233,12 +1230,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Import CSV via file
-     *
-     * @param $file
-     *
-     * @return array
-     */
+        * Import CSV via file
+        *
+        * @param $file
+        *
+        * @return array
+        */
     public function importCsv($file)
     {
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
@@ -1268,10 +1265,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Check if the platform has connected to internet
-     * 
-     * @return bool
-     */
+        * Check if the platform has connected to internet
+        * 
+        * @return bool
+        */
     public function isConnected()
     {
         $connected = @fsockopen("www.google.com", 80);
@@ -1287,28 +1284,28 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-     * Retrieve table configuration
-     */
+        * Retrieve table configuration
+        */
     public function getTableConfig()
     {
         return $this->_appConfig['table'];
     }
 
     /**
-     * Programmatically modify the table configuration during runtime
-     * to fit the module's needs
-     *
-     * @param array $tableConfig
-     */
+        * Programmatically modify the table configuration during runtime
+        * to fit the module's needs
+        *
+        * @param array $tableConfig
+        */
     public function setTableConfig(array $tableConfig = [])
     {
         $this->_appConfig['table'] = $tableConfig;
     }
 
     /**
-     * Detect if the user agent is mobile or not
-     * @return false|int
-     */
+        * Detect if the user agent is mobile or not
+        * @return false|int
+        */
     public function isMobileDevice()
     {
         return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);

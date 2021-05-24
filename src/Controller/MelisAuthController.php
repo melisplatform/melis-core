@@ -306,6 +306,7 @@ class MelisAuthController extends MelisAbstractActionController
                                     // Retrieving recent user logs on database
                                     $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, []);
 
+                                    // set same site cookie in built in php cookie
                                     // check if the user clicked remember me button
                                     $rememberMe = (int) $request->getPost('remember');
                                     if ($rememberMe == 1) {
@@ -371,6 +372,8 @@ class MelisAuthController extends MelisAbstractActionController
         return new JsonModel($result);
     }
 
+
+
     /**
      * Remember me function creation cookie
      *
@@ -383,9 +386,9 @@ class MelisAuthController extends MelisAbstractActionController
         $authCookieConfig = $melisCoreConfig->getItem('meliscore/datas/default/auth_cookies');
         $remember = $authCookieConfig['remember'];
 
-        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($remember));
-        $pass = new SetCookie('cookie2', $this->crypt($password), strtotime($remember));
-        $remember = new SetCookie('remember', 1, strtotime($remember));
+        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
+        $pass = new SetCookie('cookie2', $this->crypt($password), strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
+        $remember = new SetCookie('remember', 1, strtotime($remember), null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
 
         $this->getResponse()->getHeaders()->addHeader($user);
         $this->getResponse()->getHeaders()->addHeader($pass);
@@ -412,11 +415,11 @@ class MelisAuthController extends MelisAbstractActionController
     {
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $authCookieConfig = $melisCoreConfig->getItem('meliscore/datas/default/auth_cookies');
-        $expire = $authCookieConfig['expire'];
+        $expire = $authCookieConfig['remember'];
 
-
-        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($expire, time()));
-        $remember = new SetCookie('remember', 0, strtotime($expire, time()));
+        // include same site attribute
+        $user = new SetCookie('cookie1', $this->crypt($username), strtotime($expire, time()),null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
+        $remember = new SetCookie('remember', 0, strtotime($expire, time()),null, null, false, false, null, null , SetCookie::SAME_SITE_STRICT );
 
         $this->getResponse()->getHeaders()->addHeader($user);
         $this->getResponse()->getHeaders()->addHeader($remember);

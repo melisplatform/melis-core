@@ -44,7 +44,7 @@ return array(
                     ),
                     'auth_cookies' => array(
                         'remember' => '+1 day',
-                        'expire' => '-1 day',
+                        'expire' => '1 day',
                     ),
                     'auto_logout' => array(
                         'after' => 86400, // 1 day
@@ -228,6 +228,7 @@ return array(
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-dataTables.js',
+                    '/MelisCore/js/core/MelisDataTable.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-fancytree.js',
@@ -285,7 +286,7 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' =>  true,
+                    'use_build_assets' => true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 

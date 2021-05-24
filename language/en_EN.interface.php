@@ -654,6 +654,8 @@ return [
     'tr_meliscore_platform_color_secondary' => 'Secondary Color',
     'tr_meliscore_platform_color_tooltip'   => 'Hexadecimal color code',
     'tr_meliscore_platform_color_invalid_hex'   => 'Invalid HEX color, please choose a valid HEX color',
+    'tr_meliscore_platform_color_sidebar_bg'   => 'Left menu Background',
+    'tr_meliscore_platform_color_login_link'   => 'Melis links in login',
 
     'tr_meliscore_platform_scheme_form_login_logo' => 'Login logo',
     'tr_meliscore_platform_scheme_form_login_background' => 'Login background',

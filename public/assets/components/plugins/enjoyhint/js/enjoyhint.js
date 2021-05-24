@@ -345,7 +345,6 @@ var EnjoyHint = function (_options) {
     };
 
     that.runScript = function () {
-
         current_step = 0;
         options.onStart();
         stepAction();

@@ -2,12 +2,18 @@
     // use default colors if platform scheme table is empty
     $primaryColor   = $this->melis_core_platform_color_primary_color   ?: '#981a1f';
     $secondaryColor = $this->melis_core_platform_color_secondary_color ?: '#ad6565';
+    $sidebarBGColor = $this->melis_core_platform_color_sidebar_bg_color ?: '#373737';
+    $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.grid-stack .grid-stack-placeholder>.placeholder-content,
 .client-contact-address .default-card>.card-header,
 .client-contact-address .panel-default>.panel-heading {
     background-color: <?= $primaryColor; ?> !important;
 }
+#btnDelImg,
+.cron-info-toggle,
+.progressContent .progress .text-danger,
 .contacts .innerLR .media .media-body .media-heading a,
 .contacts .innerLR .media a,
 .widget .innerAll.half.media .media-body .text-muted-dark a,
@@ -42,6 +48,11 @@
 .pager .next > a,
 .row-icons [class*="col"] i,
 .row-icons [class*="col"] i:before,
+.carouse-caption p a,
+.carouse-caption p a:hover,
+.tiny-slider .nav-tabs .nav-item .nav-link,
+.tiny-slider .nav-tabs .nav-item .nav-link.active,
+.tiny-slider .nav-tabs .nav-item .nav-link:hover,
 .forgot-password a,
 .forgot-password a:hover {
     color: <?= $primaryColor; ?> !important;
@@ -52,6 +63,7 @@
     background-color: <?= $primaryColor; ?> !important;
     border-color: <?= $primaryColor; ?> !important;
 }
+.progress .progress-bar.progress-bar-danger,
 #mini-template-buttons h3.ui-accordion-header-active.ui-state-active,
 .commerce-dashboard-plugin-order-messages.answered .media-body.media-body-inline span.label.label-inverse,
 .workflow-modal-content .wmc-header,
@@ -97,7 +109,13 @@
 .tool_line-chart path {
     stroke: <?= $primaryColor; ?>;
 }
-
+small a:hover,
+small a,
+.carousel-caption a:hover,
+.carousel-caption a,
+.tiny-slider .nav-tabs > .nav-item .nav-link:hover,
+.tiny-slider .nav-tabs > .nav-item .nav-link.active,
+.tiny-slider .btn-clipboard,
 .melis-cms-google-analytics-refresh .btn:hover .fa,
 .tool_stats-table li,
 .tabsbar ul.order-checkout-steps li a i:before {
@@ -110,6 +128,8 @@
     background-color: <?= $primaryColor; ?> !important;
     color: #fff;
 }
+.tiny-slider .btn-clipboard:hover, 
+.tiny-slider .btn-clipboard:focus,
 .widget.widget-body-primary>.widget-body,
 .ColVis .ColVis_Button {
     background-color: <?= $primaryColor; ?>;
@@ -208,6 +228,10 @@ body .navbar.main.navbar-primary {
     border-bottom: 1px solid <?= $secondaryColor; ?>;
 }
 
+/* Left sidebar menu */
+.sidebar.sidebar-inverse {
+    background: <?= $sidebarBGColor; ?>;
+}
 .sidebar.sidebar-inverse .user-profile ul li.active,
 .sidebar.sidebar-inverse .user-profile ul li.active:hover {
     border-color: <?= $primaryColor; ?>;
@@ -783,7 +807,6 @@ div.glyphicons-social.glyphicon-primary i:before {
 .u-lists .fa {
     color: <?= $primaryColor; ?>;
 }
-.
 /* Language */
 .language-list .site i {
     color: <?= $primaryColor; ?>;
@@ -794,8 +817,13 @@ div.glyphicons-social.glyphicon-primary i:before {
 .open-page-from-lan-tab[data-opentab]:hover .site {
     color: <?= $primaryColor; ?>;
 }
+/* Login page */
 .login-page .navbar.main .nav.navbar-right {
     background: <?= $primaryColor; ?>;
+}
+.login-page .footer a:hover,
+.login-page .footer a {
+    color: <?= $loginLinkColor; ?>
 }
 /* =============== Secondary Color =============== */
 .reponsive-menu-tabs:hover span, .reponsive-menu-tabs:hover .fa {
@@ -856,7 +884,8 @@ div.glyphicons-social.glyphicon-primary i:before {
 .tooltip.fade.bs-tooltip-right .arrow::before {
     border-right-color: <?= $secondaryColor; ?> !important;
 }
-
+.bs-tooltip-auto[x-placement^="left"] .arrow::before,
+.bs-tooltip-left .arrow::before,
 .tooltip.fade.bs-tooltip-auto[x-placement^=left] .arrow::before, 
 .tooltip.fade.bs-tooltip-left .arrow::before {
     border-left-color: <?= $secondaryColor; ?> !important;

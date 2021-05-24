@@ -182,7 +182,7 @@ class LanguageController extends MelisAbstractActionController
 
         $translator = $this->getServiceManager()->get('translator');
 
-        $transData = array(
+        $transData['default'] = [
             'sEmptyTable' => $translator->translate('tr_meliscore_dt_sEmptyTable'),
             'sInfo' => $translator->translate('tr_meliscore_dt_sInfo'),
             'sInfoEmpty' => $translator->translate('tr_meliscore_dt_sInfoEmpty'),
@@ -194,19 +194,21 @@ class LanguageController extends MelisAbstractActionController
             'sProcessing' => $translator->translate('tr_meliscore_dt_sProcessing'),
             'sSearch' => $translator->translate('tr_meliscore_dt_sSearch'),
             'sZeroRecords' => $translator->translate('tr_meliscore_dt_sZeroRecords'),
-            'oPaginate' => array(
+            'oPaginate' => [
                 'sFirst' => $translator->translate('tr_meliscore_dt_sFirst'),
                 'sLast' => $translator->translate('tr_meliscore_dt_sLast'),
                 'sNext' => $translator->translate('tr_meliscore_dt_sNext'),
                 'sPrevious' => $translator->translate('tr_meliscore_dt_sPrevious'),
-            ),
-            'oAria' => array(
+            ],
+            'oAria' => [
                 'sSortAscending' => $translator->translate('tr_meliscore_dt_sSortAscending'),
                 'sSortDescending' => $translator->translate('tr_meliscore_dt_sSortDescending'),
-            ),
+            ],
+        ];
 
+        $transDataRes = $this->getEventManager()->trigger('meliscore_data_table_languages', $this, $transData);
 
-        );
+        $transData = ($transDataRes->last()) ?? $transData;
 
         return new JsonModel($transData);
     }

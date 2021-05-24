@@ -85,6 +85,8 @@
         'tr_meliscore_platform_scheme_sidebar_header_logo_tooltip' => 'Change the logo at the top left corner of the platform (size: 30 x 30)',
         'tr_meliscore_platform_scheme_sidebar_header_title_tooltip' => 'Change the title at the top left corner of the platform',
         'tr_meliscore_platform_scheme_file_button' => 'Select image',
+        'tr_melis_core_platform_color_sidebar_bg_color_tooltip' => 'Change the left menu background color either by typing the hexadecimal color code or by using the color picker',
+        'tr_melis_core_platform_color_login_link_color_tooltip' => 'Change the Melis Technology and Melis Platform links color in the login either by typing the hexadecimal color code or by using the color picker',
 
 	);
 ?>
