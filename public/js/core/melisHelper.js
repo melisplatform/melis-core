@@ -310,14 +310,10 @@ var melisHelper = (function() {
 
 	// SWITCH ACTIVE TABS =============================================================================================================
 	function tabSwitch(tabID) {
-		var $tabElement = $(
-				"#melis-id-nav-bar-tabs a.tab-element[data-id='" + tabID + "']"
-			),
+		var $tabElement = $("#melis-id-nav-bar-tabs a.tab-element[data-id='" + tabID + "']"),
 			subMenu = $tabElement.closest(".nav-group-dropdown"),
 			$navBarTabsLi = $("body #melis-id-nav-bar-tabs li"),
-			$navBarTabsLiCont = $(
-				"body #melis-id-nav-bar-tabs li, .container-level-a"
-			),
+			$navBarTabsLiCont = $("body #melis-id-nav-bar-tabs li, .container-level-a"),
 			$dndBox = $("body .melis-core-dashboard-dnd-box");
 
 		// update new activeTabId
@@ -523,105 +519,102 @@ var melisHelper = (function() {
 	}
 
 	// TAB OPEN =====================================================================================================================
-	function tabOpen(
-		title,
-		icon,
-		zoneId,
-		melisKey,
-		parameters,
-		navTabsGroup,
-		callback
-	) {
+	function tabOpen( title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback ) {
 		//Show the close(X) button on header
-		if (melisKey !== "meliscore_dashboard") {
+		if ( melisKey !== "meliscore_dashboard" ) {
 			$("#close-all-tab").show();
-			$("#close-all-tab")
-				.closest("li")
-				.show();
+			$("#close-all-tab").closest("li").show();
 		}
 		//check if the tab is already open and added to the main nav
-		var alreadyOpen = $(
-			"body #melis-id-nav-bar-tabs li a.tab-element[data-id='" + zoneId + "']"
-		);
+		var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='" + zoneId + "']");
 
-		if (alreadyOpen.length < 1) {
-			var li =
-				"<li data-tool-name='" +
-				title +
-				"' data-tool-icon='" +
-				icon +
-				"' data-tool-id='" +
-				zoneId +
-				"' data-tool-meliskey='" +
-				melisKey +
-				"'>";
-			li +=
-				"<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" +
-				zoneId +
-				"' data-id='" +
-				zoneId +
-				"' title='" +
-				title.replace(/'/g, "&apos;") +
-				"'>";
-			li +=
-				"<i class='fa " + icon + " fa-2x'></i><span class='navtab-pagename'>";
-			li += title + "</span></a>";
-			li +=
-				"<a class='close close-tab' data-id='" +
-				zoneId +
-				"'>" +
-				translations.tr_meliscore_notification_modal_Close +
-				"</a>";
-			li += "</li>";
+		if ( alreadyOpen.length < 1 ) {
+			var li = "<li data-tool-name='" + title + "' data-tool-icon='" + icon +"' data-tool-id='" + zoneId + "' data-tool-meliskey='" + melisKey + "' data-tool-main-menu='"+ mainMenu + "'>";
+				li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" + zoneId + "' data-id='" + zoneId + "' title='" + title.replace(/'/g, "&apos;") + "'>";
+				li += "<i class='fa " + icon + " fa-2x'></i><span class='navtab-pagename'>";
+				li += title + "</span></a>";
+				li += "<a class='close close-tab' data-id='" + zoneId + "'>" + translations.tr_meliscore_notification_modal_Close + "</a>";
+				li += "</li>";
+			
+			// check if the current nav tabs > 7 and create the main menu
+			var $navTabsLi = $navTabs.find("li");
+
+			// 7 as the dashboard is not included in the count as it is opened already but counted in a sense
+			/* if ( mainMenu && mainMenu !== "undefined" ) {
+				// 3 tabs for testing
+				if ( $navTabsLi.length === 2 ) {
+					// tab menu with the same data attribute
+					var $navMainMenuGroup 	= $navTabs.find("li[data-tool-main-menu='" + mainMenu + "']"),
+						$hasDropdown 		= $navTabs.find(".main-nav-group-dropdown");
+
+						// check if there already a main-nav-group-dropdown
+						if ( $hasDropdown.length ) {
+							// check if menu are to many
+							if ( $hasDropdown.first().height() > 350 ) {
+								$hasDropdown.first().addClass("scroll");
+							}
+
+							// add li in the first main-nav-group-dropdown
+							$hasDropdown.first().append(li);
+						}
+						else {
+							// create a sub menu ul and append the li
+							$navTabs.append("<ul class='main-nav-group-dropdown'></ul>");
+
+							// wrapWithMainMenu
+							melisCoreTabGrouping.wrapWithMainMenu( mainMenu, li );
+						}
+				}
+			} */
+
+			if ( mainMenu && mainMenu !== "undefined" ) {
+				melisCoreTabGrouping.wrapWithMainMenu( mainMenu, li );
+			}
 
 			// check if it has parent nav
-			if (navTabsGroup && navTabsGroup !== "undefined") {
+			if ( navTabsGroup && navTabsGroup !== "undefined" ) {
 				var navParentGroup = $(".tab-element[data-id='" + navTabsGroup + "']");
-				if ($(navParentGroup).length > 0) {
+				if ( $(navParentGroup).length > 0 ) {
 					// find parent nav li
 					var navBox = navParentGroup.closest("li");
 
 					// find nav-group-dropdown that has the id of navTabsGroup
 					var hasdropdown = $(navBox).find(".nav-group-dropdown");
 
-					if ($(hasdropdown).length) {
+					if ( $(hasdropdown).length ) {
 						// check if menu are too many
-						if (
-							$(hasdropdown)
-								.first()
-								.height() > 350
-						) {
-							$(hasdropdown)
-								.first()
-								.addClass("scroll");
+						if ( $(hasdropdown).first().height() > 350 ) {
+							$(hasdropdown).first().addClass("scroll");
 						}
 
 						// add li in the first nav-group-dropdown
-						$(hasdropdown)
-							.first()
-							.append(li);
-					} else {
+						$(hasdropdown).first().append(li);
+					} 
+					else {
 						// create a sub menu ul and append the li
 						navBox.append("<ul class='nav-group-dropdown'></ul>");
 						navBox.find(".nav-group-dropdown").append(li);
 					}
-				} else {
+				} 
+				else {
 					$("body #melis-id-nav-bar-tabs").append(li);
 
-					/* if(navTabsGroup == "design_module") {
-                                var liTest = "<li>";
-                                liTest += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
-                                liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
-                                liTest += 'Design '+ title + "</span></a>";
-                                liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
-                                liTest += "</li>";
-                                $("body #melis-id-nav-bar-tabs").append(liTest);
-                            } else {
-                                // append the <li> to the menu
-                                $("body #melis-id-nav-bar-tabs").append(li);
-                            }*/
+					/* if ( navTabsGroup == "design_module" ) {
+						var liTest = "<li>";
+						liTest += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
+						liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
+						liTest += 'Design '+ title + "</span></a>";
+						liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
+						liTest += "</li>";
+						$("body #melis-id-nav-bar-tabs").append(liTest);
+					} 
+					else {
+						// append the <li> to the menu
+						$("body #melis-id-nav-bar-tabs").append(li);
+					}*/
 				}
-			} else {
+			} 
+			else {
 				// append the <li> to the menu melis-tabnext
 				$("body #melis-id-nav-bar-tabs").append(li);
 			}
@@ -646,12 +639,8 @@ var melisHelper = (function() {
 				$("#res-page-cont i").removeClass("move-arrow");
 			}
 
-			var div =
-				"<div data-meliskey='" +
-				melisKey +
-				"' id='" +
-				zoneId +
-				"' class='tab-pane container-level-a'></div>";
+			var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";
+
 			$("#melis-id-body-content-load").append(div);
 
 			//set active tab ID
@@ -663,7 +652,7 @@ var melisHelper = (function() {
 			//load the page content
 			var fnCallback = null;
 
-			if (callback !== undefined || callback !== null) {
+			if ( callback !== undefined || callback !== null ) {
 				fnCallback = callback;
 			}
 
@@ -673,22 +662,20 @@ var melisHelper = (function() {
 			tabExpander.checkTE();
 
 			//focus the newly opened tab if tabExpander() is enabled
-			if (tabExpander.checkStatus() === "enabled") {
+			if ( tabExpander.checkStatus() === "enabled" ) {
 				if (typeof navTabsGroup == "undefined" || typeof navTabsGroup == null) {
 					$(".melis-tabnext").trigger("click");
 				}
 			}
 
 			// check for meliscore_dashboard and melisDashBoardDragnDrop is defined
-			if (
-				typeof melisDashBoardDragnDrop !== undefined &&
-				melisKey == "meliscore_dashboard"
-			) {
+			if ( typeof melisDashBoardDragnDrop !== undefined && melisKey == "meliscore_dashboard" ) {
 				setTimeout(function() {
 					melisDashBoardDragnDrop.checkDashboard();
 				}, 2000);
 			}
-		} else {
+		} 
+		else {
 			//make the new tab and content active instead of reloading
 			tabSwitch(zoneId);
 		}

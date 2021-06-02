@@ -291,9 +291,9 @@ var melisCore = (function(window){
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
-    function openTools(){
+    function openTools() {
         var data = $(this).data();
-        melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolParentMenu);
+        melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolParentMenu, data.mainMenu);
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar

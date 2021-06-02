@@ -37,27 +37,8 @@ var tabExpander = (function($, window){
         $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"}); // change hidden to initial because of dropdown
         $navTabs.css({"width": navUlContainer });
         
-        $(".melis-tabprev, .melis-tabnext").show();
+        //$(".melis-tabprev, .melis-tabnext").show();
 
-        // toggle overflow for dropdown
-        /* $("#melis-navtabs-container-inner").hover(
-            function() {
-                $(this).css("overflow", "visible");
-            }, function() {
-                $(this).css("overflow", "hidden");
-            }
-        ); */
-
-        /* $("#melis-id-nav-bar-tabs li").hover(
-            function() {
-                if ( $(this).find(".nav-group-dropdown") ) {
-                    $("#melis-navtabs-container-inner").css("overflow", "visible");
-                }
-                console.log("$(this): ", $(this) );
-            }, function() {
-                $("#melis-navtabs-container-inner").css("overflow", "hidden");
-            }
-        ); */
         var $navLi = $("#melis-id-nav-bar-tabs li");
             
             $navLi.on({
@@ -72,7 +53,7 @@ var tabExpander = (function($, window){
 		
 	// DISABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
 	function Disable(){
-		$(".melis-tabprev, .melis-tabnext").hide();
+		//$(".melis-tabprev, .melis-tabnext").hide();
         $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style")
 	}
     
