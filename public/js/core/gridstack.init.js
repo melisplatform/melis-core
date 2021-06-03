@@ -78,7 +78,7 @@ var melisDashBoardDragnDrop = {
             mobileGsPluginCssHeight     = {"height" : "590px", "min-height" : "590px"},
             mobileGsNoPluginCssHeight   = {"height" : "465px", "min-height" : "465px"},
             desktopGsNoPluginBubblePluginHiddenCssHeight = {"height": "790px", "min-height": "790px"},
-            desktopGsNoPluginBubblePluginShownCssHeight = {"height": "556px", "min-height": "556px"};
+            desktopGsNoPluginBubblePluginShownCssHeight = {"height": "640px", "min-height": "640px"};
 
             // adjust grid-stack height when dashboard msg element is found
             if ( self.countGsItems() === 0 ) {
@@ -629,14 +629,14 @@ var melisDashBoardDragnDrop = {
 
                         if ( self.$bubblePlugin.is(":hidden") ) {
                             self.$gs.css({
-                                "height": "745px",
-                                "min-height": "745px"
+                                "height": "790px",
+                                "min-height": "790px"
                             });
                         }
                         else {
                             self.$gs.css({
-                                "height": "556px",
-                                "min-height": "556px"
+                                "height": "640px",
+                                "min-height": "640px"
                             });
                         }
 
@@ -649,14 +649,14 @@ var melisDashBoardDragnDrop = {
 
                         if ( self.$bubblePlugin.is(":hidden") ) {
                             self.$gs.css({
-                                "height": "745px",
-                                "min-height": "745px"
+                                "height": "790px",
+                                "min-height": "790px"
                             });
                         }
                         else {
                             self.$gs.css({
-                                "height": "556px",
-                                "min-height": "556px"
+                                "height": "640px",
+                                "min-height": "640px"
                             });
                         }
                     }
@@ -710,14 +710,14 @@ var melisDashBoardDragnDrop = {
 
                                 if ( self.$bubblePlugin.is(":hidden") ) {
                                     self.$gs.css({
-                                        "height": "745px",
-                                        "min-height": "745px"
+                                        "height": "790px",
+                                        "min-height": "790px"
                                     });
                                 }
                                 else {
                                     self.$gs.css({
-                                        "height": "556px",
-                                        "min-height": "556px"
+                                        "height": "640px",
+                                        "min-height": "640px"
                                     });
                                 }
 
