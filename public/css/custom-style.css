@@ -46,6 +46,9 @@
 	padding: 0;
 	margin: 0;
 }
+.navbar.main .nav.navbar-right > li:hover > #module-status.dropdown-menu {
+	left: -12rem;
+}
 .navbar.main .nav.navbar-right .dropdown-menu li.active a {
 	background-color: #e61c23;
 	display: block;
