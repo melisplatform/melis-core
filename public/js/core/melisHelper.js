@@ -537,7 +537,6 @@ var melisHelper = (function() {
 				li += "</li>";
 			
 			// check if the current nav tabs > 7 and create the main menu
-			var $navTabsLi = $navTabs.find("li");
 
 			// 7 as the dashboard is not included in the count as it is opened already but counted in a sense
 			/* if ( mainMenu && mainMenu !== "undefined" ) {
