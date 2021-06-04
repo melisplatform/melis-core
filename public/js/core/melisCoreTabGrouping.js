@@ -55,35 +55,46 @@ var melisCoreTabGrouping = (function($, window) {
 
         function wrapWithMainMenu( menu, li ) {
             var menuText        = menu.toLowerCase(),
-                $navTabsLi      = $navTabs.find("li"),
-                $navMainMenu    = $navTabs.find("li[data-tool-main-menu='"+menu+"']"),
+                $navTabsLi      = $navTabs.find("li"),                
                 tabCount        = 0;
 
                 tabCount = tabCount + $navTabsLi.length;
 
+                console.log("$navTabsLi.length: ", $navTabsLi.length);
                 // console.log("$navMainMenu.length: ", $navMainMenu.length);
                 // console.log("tabCount: ", tabCount);
 
-                if ( tabCount === 3 ) {
-                    // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-                    melisHelper.tabOpen( menu, '', 'id'+menuText+'_main_menu_nav', menuText+'_main_menu_nav' );
-                    
-                    if ( $navMainMenu.length > 0 ) {
-                        var $navMainMenuGroup   = $navMainMenu.closest("li"),
+                if ( $navTabsLi.length >= 3 ) {
+                    //if ( $navMainMenu.length > 0 ) {
+                        var $navMainMenu        = $navTabs.find("li[data-tool-main-menu='"+menu+"']"),
+                            $navMainMenuGroup   = $navMainMenu.closest("li"),
                             $hasDropDown        = $navMainMenuGroup.find(".main-nav-group-dropdown");
+
+                            // console.log("$hasDropDown.length: ", $hasDropDown.length );
+                            console.log("$navMainMenu.length: ", $navMainMenu.length);
+
+                            // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                            melisHelper.tabOpen( menu, '', 'id'+menuText+'_main_menu_nav', menuText+'_main_menu_nav' );
 
                             if ( $hasDropDown.length ) {
                                 if ( $hasDropDown.first().height() > 350 ) {
                                     $hasDropDown.first().addClass("scroll");
                                 }
 
-                                $hasDropDown.frist().append(li);
+                                $.each( $navMainMenu, function(i, v) {
+                                    var $this = $(v);   
+                                        $navTabs.append( $this );
+                                });
                             }
                             else {
                                 $navMainMenuGroup.append("<ul class='main-nav-group-dropdown'></ul>");
-                                $navMainMenuGroup.find(".main-nav-group-dropdown").append(li);
                             }
-                    }
+
+                            $.each( $navMainMenu, function(i, v) {
+                                var $this = $(v);
+                                    $navMainMenuGroup.append( $this );
+                            });
+                    //}
                 }
 
                 /* $.each( $navMainMenu, function(i, v) {
