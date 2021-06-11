@@ -23,7 +23,7 @@ var melisCoreTabGrouping = (function($, window) {
         }
 
         // same functionality with tabExpander without the next and prev buttons
-        function enableTabsGrouping() {
+        /* function enableTabsGrouping() {
             //get the width in % of #melis-navtabs-container-inner based from #melis-navtabs-container-outer - 56px for the prevnext buttons
             var innerUlWidthPercent = 100 - ( (100 * 65) / $navTabsOuter.outerWidth() );
 
@@ -45,20 +45,20 @@ var melisCoreTabGrouping = (function($, window) {
                         $(this).closest("#melis-navtabs-container-inner").css("overflow", "hidden");
                     }
                 });
-        }
+        } */
 
         // back to the original tabs arrangements
-        function disableTabsGrouping() {
+        /* function disableTabsGrouping() {
             // $(".melis-tabprev, .melis-tabnext").hide();
             $("#melis-navtabs-container-outer, #melis-navtabs-container-inner, #plugins-container, #melis-id-nav-bar-tabs").removeAttr("style")
-        }
+        } */
 
+        // wrapping main menu
         function wrapWithMainMenu( menu, li ) {
             var menuText            = menu.toLowerCase(),
                 $navTabsLi          = $navTabs.find("li"),
-                $navMainMenu        = $navTabs.find("li[data-tool-main-menu='"+menu+"']"),
-                $navMainMenuGroup   = $navMainMenu.closest("li"),
-                $hasDropDown        = $navMainMenuGroup.find(".main-nav-group-dropdown"),
+                //$navMainMenu        = $navTabs.find("li[data-tool-main-menu='"+menu+"']"),
+                //$navMainMenuGroup   = $navMainMenu.closest("li"),
                 tabCount            = 0;
 
                 tabCount = tabCount + $navTabsLi.length;
@@ -68,10 +68,14 @@ var melisCoreTabGrouping = (function($, window) {
                 // console.log("tabCount: ", tabCount);
 
                 if ( $navTabsLi.length >= 3 ) {
-                    if ( $navMainMenu.length > 0 ) {
+                    var $navMainParentGroup = $(".tab-main-element[data-id='" + menu + "']");
+                    if ( $navMainParentGroup.length > 0 ) {
                         // console.log("$hasDropDown.length: ", $hasDropDown.length );
                         // console.log("$navMainMenu.length: ", $navMainMenu.length);
-                        console.log("$navMainMenuGroup.length: ", $navMainMenuGroup.length);
+                        console.log("$navMainParentGroup.length: ", $navMainParentGroup.length);
+
+                        var $mainNavBox = $navMainParentGroup.closest("li");
+                        var $hasDropDown = $navMainParentGroup.find(".main-nav-group-dropdown");
                         
                         // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
                         melisHelper.tabOpen( menu, '', 'id'+menuText+'_main_menu_nav', menuText+'_main_menu_nav' );
@@ -82,19 +86,20 @@ var melisCoreTabGrouping = (function($, window) {
                                 $hasDropDown.first().addClass("scroll");
                             }
 
-                            $.each( $navMainMenu, function(i, v) {
+                            /* $.each( $navMainMenu, function(i, v) {
                                 var $this = $(v);   
                                     $navTabs.append( $this );
-                            });
+                            }); */
                         }
                         else {
                             $navMainMenuGroup.append("<ul class='main-nav-group-dropdown'></ul>");
+                            $navMainMenuGroup.find(".main-nav-group-dropdown").append(li);
                         }
 
-                        $.each( $navMainMenu, function(i, v) {
+                        /* $.each( $navMainMenu, function(i, v) {
                             var $this = $(v);
                                 $navMainMenuGroup.append( $this );
-                        });
+                        }); */
                     }
                 }
 
@@ -115,10 +120,10 @@ var melisCoreTabGrouping = (function($, window) {
         init();
 
         // return objects
-        return {
+        /* return {
             wrapWithMainMenu : wrapWithMainMenu,
             enableTabsGrouping : enableTabsGrouping,
             disableTabsGrouping : disableTabsGrouping
-        };
+        }; */
 
 })(jQuery, window);

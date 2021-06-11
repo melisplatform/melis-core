@@ -22,9 +22,84 @@ var tabExpander = (function($, window){
     	return status;
     }
 
+    /**
+     * Returns a unique main menu from an array.
+     * @param {*} $elemArray 
+     * @returns uniqueArray
+     */
+    function getUniqueMainMenu( $elemArray ) {
+        var listArray = [], uniqueArray = [], counting = 0, found = false;
+
+            $.each($elemArray, function(i, v) {
+              var mainMenu = $(v).data("tool-main-menu");
+                
+                if ( mainMenu != null && mainMenu != 'undefined' && mainMenu != '' ) {
+
+                    // console.log("getUniqueMainMenu mainMenu: ", mainMenu);
+
+                    if ( $.inArray( mainMenu, listArray ) == -1 ) {
+                        listArray.push( mainMenu );
+                    }
+                }
+            });
+
+            for ( var x = 0; x < listArray.length; x++ ) {
+              for ( var y = 0; y < uniqueArray.length; y++ ) {
+                if ( listArray[x] == uniqueArray[y] ) {
+                  found = true;
+                }
+              }
+
+              counting++;
+
+              if ( counting == 1 && found == false ) {
+                uniqueArray.push( listArray[x] );
+              }
+
+              found = false;
+
+              counting = 0;
+            }
+            
+            return uniqueArray;
+    }
+
+    // check #melis-id-nav-bar-tabs
+    function checkNavBarTabs() {
+        var $navTabsLi = $navTabs.find("li");
+            //console.log("checkNavBarTabs() $navTabsLi.length: ", $navTabsLi.length );
+            if ( $navTabsLi.length > 7 ) {
+                var uniqueMainMenu = getUniqueMainMenu( $navTabsLi );
+                    // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                    for ( var index = 0; index < uniqueMainMenu.length; index++ ) {
+                        var mainMenu        = uniqueMainMenu[index],
+                            mainMenuLcase   = mainMenu.toLowerCase(),
+                            melisKey        = mainMenuLcase+'_tab_list_container',
+                            zoneId          = 'id_'+mainMenuLcase+'_tab_list_container',
+                            navTabsGroup    = zoneId;
+
+                            /* $.each($navTabsLi, function(i, v) {
+                                if ( i == 1 ) {
+                                    console.log('$(v).data(): ', $(v).data() );
+                                }
+                            }); */
+
+                            if ( mainMenu != null && mainMenu != 'undefined' ) {
+                                melisHelper.tabOpen( mainMenu, 'fa-tachometer', zoneId, melisKey, "", navTabsGroup, "main_menu_tab_list_container", function() {
+                                    var $navMain        = $(".main-nav-group-dropdown"),
+                                        $alreadyOpen    = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='id_"+mainMenuLcase+"_tab_list_container']");
+
+                                        if ( $alreadyOpen.length > 0 && $navMain.length == 0 ) {
+                                            $alreadyOpen.closest("li").append('<ul class="main-nav-group-dropdown nav-group-dropdown"></ul>');
+                                        }
+                                });
+                            }
+                    }
+            }
+    }       
+
 	// ENABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
-	function Enable(){
-			
+	function Enable() {
 	    //set the parent container width and right icons container
         $("#melis-navtabs-container-outer").css({"width": (tabContainerWidthPercent)+"%" });
         $("#plugins-container").css({"width": (rightMenuWidthPercent)+"%"});
@@ -37,7 +112,8 @@ var tabExpander = (function($, window){
         $("#melis-navtabs-container-inner").css({"width": (innerUlWidthPercent)+"%" , "overflow":"hidden"}); // change hidden to initial because of dropdown
         $navTabs.css({"width": navUlContainer });
         
-        //$(".melis-tabprev, .melis-tabnext").show();
+        // $(".melis-tabprev, .melis-tabnext").show();
+        checkNavBarTabs();
 
         var $navLi = $("#melis-id-nav-bar-tabs li");
             
@@ -59,7 +135,7 @@ var tabExpander = (function($, window){
     
     
 	// CHECK TO ACTIVATE tabExpander(); ---------------------------------------------------------------------------------------------
-	function checkTE(){
+	function checkTE() {
 
 		// CALCULATE ALL POSSIBLE WIDTH FOR THE LEFT, CENTER AND RIGHT MENUS
 	    
@@ -92,15 +168,15 @@ var tabExpander = (function($, window){
         });
         		
 		// determines if TE should be activated or not
-        if( navUlContainer > tabContainerWidthPx && screenSize  > 768 ){
+        if ( navUlContainer > tabContainerWidthPx && screenSize  > 768 ) {
         	Enable();
         	status = 'enabled';
-        } else if( navUlContainer < tabContainerWidthPx){
-			Disable();
+        } else if( navUlContainer < tabContainerWidthPx) {
+            Disable();
         } else if(status == 'disabled'){
-			Disable();
+            Disable();
 		} else {
-        	if(status === 'enabled'){
+        	if ( status === 'enabled' ) {
 				Enable();
         		/* Disable(); */
         	}
@@ -155,14 +231,14 @@ var tabExpander = (function($, window){
     }); 
     
 	// FOCUS TAB ON CLICK (new functionality)
-    function focusTab(){
+    /* function focusTab() {
     	
-    }
+    } */
 
     // CHECK tabExpander() WHEN WINDOW IS RESIZED
     $(window).on("resize", function(){
         //screenSize = jQuery(window).width();
-        if( screenSize >= 768 ){
+        if ( screenSize >= 768 ) {
         	checkTE();     
         }
     });
@@ -186,7 +262,7 @@ var tabExpander = (function($, window){
 		//key - access name outside                                 // value - name of function above
 		
 		checkTE						:						checkTE,
-		focusTab					:						focusTab,
+		//focusTab					:						focusTab,
 		Enable						:						Enable,
 		Disable						:						Disable,
 		checkStatus					:						checkStatus,

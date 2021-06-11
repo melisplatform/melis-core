@@ -1086,7 +1086,11 @@ a[data-toggle="modal"]:focus {
 	line-height: 24px;
 	min-height: 74px;
 }
-
+/* Grouping of tabs v2 */
+.parent-nav-group-dropdown {
+	display: block;
+	position: relative;
+}
 
 /* Responsive media queries */
 @media (min-width: 768px) and (max-width: 1200px) {

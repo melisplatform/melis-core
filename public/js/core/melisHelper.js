@@ -538,39 +538,42 @@ var melisHelper = (function() {
 			
 			// check if the current nav tabs > 7 and create the main menu
 
-			// 7 as the dashboard is not included in the count as it is opened already but counted in a sense
+			// 7 as the dashboard is not included in the count as it is opened already but counted, in a sense
+			/* console.log("mainMenu: ", mainMenu);
+			if ( mainMenu && mainMenu !== "undefined" ) {
+				var navParentGroup = $(".tab-element").closest("li[data-tool-main-menu='" + mainMenu + "']");
+
+				console.log("closest navParentGroup.length: ", navParentGroup.length);
+
+				if ( navParentGroup.length >= 7 ) {
+					// find parent nav li
+					//var navBox = navParentGroup.closest("li");
+
+					// find nav-group-dropdown that has the id of navTabsGroup
+					var hasdropdown = navParentGroup.find(".main-nav-group-dropdown");
+
+					if ( hasdropdown.length ) {
+						// check if menu are too many
+						if ( hasdropdown.first().height() > 350 ) {
+							hasdropdown.first().addClass("scroll");
+						}
+
+						// add li in the first nav-group-dropdown
+						hasdropdown.first().append(li);
+					} 
+					else {
+						// create a sub menu ul and append the li
+						navParentGroup.append("<ul class='main-nav-group-dropdown'></ul>");
+						navParentGroup.find(".main-nav-group-dropdown").append(li);
+					}
+				} 
+			}  */
+
 			/* if ( mainMenu && mainMenu !== "undefined" ) {
-				// 3 tabs for testing
-				if ( $navTabsLi.length === 2 ) {
-					// tab menu with the same data attribute
-					var $navMainMenuGroup 	= $navTabs.find("li[data-tool-main-menu='" + mainMenu + "']"),
-						$hasDropdown 		= $navTabs.find(".main-nav-group-dropdown");
-
-						// check if there already a main-nav-group-dropdown
-						if ( $hasDropdown.length ) {
-							// check if menu are to many
-							if ( $hasDropdown.first().height() > 350 ) {
-								$hasDropdown.first().addClass("scroll");
-							}
-
-							// add li in the first main-nav-group-dropdown
-							$hasDropdown.first().append(li);
-						}
-						else {
-							// create a sub menu ul and append the li
-							$navTabs.append("<ul class='main-nav-group-dropdown'></ul>");
-
-							// wrapWithMainMenu
-							melisCoreTabGrouping.wrapWithMainMenu( mainMenu, li );
-						}
-				}
+				melisCoreTabGrouping.wrapWithMainMenu( mainMenu, li );
 			} */
 
-			if ( mainMenu && mainMenu !== "undefined" ) {
-				melisCoreTabGrouping.wrapWithMainMenu( mainMenu, li );
-			}
-
-			// check if it has parent nav
+			// check if it has parent nav, title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
 			if ( navTabsGroup && navTabsGroup !== "undefined" ) {
 				var navParentGroup = $(".tab-element[data-id='" + navTabsGroup + "']");
 				if ( $(navParentGroup).length > 0 ) {
@@ -597,20 +600,6 @@ var melisHelper = (function() {
 				} 
 				else {
 					$("body #melis-id-nav-bar-tabs").append(li);
-
-					/* if ( navTabsGroup == "design_module" ) {
-						var liTest = "<li>";
-						liTest += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
-						liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
-						liTest += 'Design '+ title + "</span></a>";
-						liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
-						liTest += "</li>";
-						$("body #melis-id-nav-bar-tabs").append(liTest);
-					} 
-					else {
-						// append the <li> to the menu
-						$("body #melis-id-nav-bar-tabs").append(li);
-					}*/
 				}
 			} 
 			else {
