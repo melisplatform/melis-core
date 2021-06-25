@@ -183,8 +183,8 @@ class EmailsManagementController extends MelisAbstractActionController
             $tempTableData = array();
             for($ctr = 0; $ctr < count($tableData); $ctr++){
                 // apply text limits
-                foreach($tableData[$ctr] as $vKey => $vValue){
-                    $tableData[$ctr][$vKey] = $melisTool->escapeHtml($melisTool->limitedText($vValue,50));
+                foreach($tableData[$ctr] as $vKey => $vValue){           
+                    $tableData[$ctr][$vKey] = is_string($vValue)?$melisTool->escapeHtml($melisTool->limitedText($vValue,50)):$vValue;  
                 }
 
                 // Init indicator
