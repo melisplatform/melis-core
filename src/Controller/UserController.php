@@ -267,7 +267,7 @@ class UserController extends MelisAbstractActionController
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
         $translator = $this->getServiceManager()->get('translator');
 
-        $postValues = $request->getPost()->toArray();
+        $postValues = $this->getRequest()->getPost()->toArray();
         $rhash = $postValues['rhash'] ?? null;
         $melisLostPass = $this->getServiceManager()->get('MelisCoreLostPassword');
         $hashExists = false;
