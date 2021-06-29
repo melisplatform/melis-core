@@ -290,10 +290,49 @@ var melisCore = (function(window){
             }
     }
 
+    var counter = 1;
     // OPEN TOOLS - opens the tools from the sidebar
     function openTools() {
-        var data = $(this).data();
-        melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolParentMenu, data.mainMenu);
+        var data            = $(this).data(),
+            $navTabsLi      = $navTabs.children("li"),
+            title           = data.mainMenu,
+            icon            = 'fa-tachometer',
+            mainMenuText    = title.toLowerCase(), // mainMenu lowercase text
+            melisKey        = mainMenuText+'_tab_list_container',
+            zoneId          = 'id_'+mainMenuText+'_tab_list_container',
+            navTabsGroup    = zoneId,
+            $alreadyOpen    = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='" + navTabsGroup + "']");
+
+            counter = counter + 1;
+
+            /* console.log("openTools counter: ", counter);
+            console.log("$navTabsLi.length: ", $navTabsLi.length); */
+
+             /* , function() {
+                var $alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='" + navTabsGroup + "']");
+
+                    console.log("$alreadyOpen: ", $alreadyOpen);
+                    console.log("$alreadyOpen.length: ", $alreadyOpen.length);
+            }); */
+
+            //console.log("melisCore.js navTabsGroup: ", navTabsGroup);
+            //console.log("melisCore.js $alreadyOpen.length: ", $alreadyOpen.length);
+
+            if ( $navTabsLi.length >= 4 && $alreadyOpen.length === 0 ) {
+                //console.log("melisCore.js openTools true");
+
+                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                melisHelper.tabOpen( title, icon, zoneId, melisKey, '', navTabsGroup, data.mainMenu, function() {
+
+                });
+            }
+            else {
+                //console.log("data.toolId: ", data.toolId);
+                //console.log("data.toolParentMenu: ", data.toolParentMenu);
+                console.log("melisCore.js openTools false");
+                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolParentMenu, data.mainMenu);
+            }
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar

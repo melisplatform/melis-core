@@ -528,6 +528,8 @@ var melisHelper = (function() {
 		//check if the tab is already open and added to the main nav
 		var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='" + zoneId + "']");
 
+		//console.log("melisHelper.js tabOpen alreadyOpen.length < 1: ", alreadyOpen.length < 1 );
+		
 		if ( alreadyOpen.length < 1 ) {
 			var li = "<li data-tool-name='" + title + "' data-tool-icon='" + icon +"' data-tool-id='" + zoneId + "' data-tool-meliskey='" + melisKey + "' data-tool-main-menu='"+ mainMenu + "'>";
 				li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" + zoneId + "' data-id='" + zoneId + "' title='" + title.replace(/'/g, "&apos;") + "'>";
@@ -573,15 +575,28 @@ var melisHelper = (function() {
 				melisCoreTabGrouping.wrapWithMainMenu( mainMenu, li );
 			} */
 
+			/* if ( $navTabs.find("li").length > 7 ) {
+				console.log("navTabsGroup: ", navTabsGroup);
+			} */
+			
 			// check if it has parent nav, title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
 			if ( navTabsGroup && navTabsGroup !== "undefined" ) {
 				var navParentGroup = $(".tab-element[data-id='" + navTabsGroup + "']");
+				var navBox1 = navParentGroup.closest("li");
+				var hasdropdown1 = navBox1.find(".nav-group-dropdown");
+
+				console.log("navParentGroup.length: ", navTabsGroup.length);
+				console.log("$(hasdropdown1).length: ", $(hasdropdown1).length);
+
 				if ( $(navParentGroup).length > 0 ) {
 					// find parent nav li
 					var navBox = navParentGroup.closest("li");
 
 					// find nav-group-dropdown that has the id of navTabsGroup
 					var hasdropdown = $(navBox).find(".nav-group-dropdown");
+
+					console.log("melisHelper.js navParentGroup.length inside if stmt");
+					console.log("melisHelper.js navParentGroup.length inside if stmt hasdropdown.length: ", ( hasdropdown.length ) );
 
 					if ( $(hasdropdown).length ) {
 						// check if menu are too many

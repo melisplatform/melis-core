@@ -67,9 +67,14 @@ var tabExpander = (function($, window){
     // check #melis-id-nav-bar-tabs
     function checkNavBarTabs() {
         var $navTabsLi = $navTabs.find("li");
+            
             //console.log("checkNavBarTabs() $navTabsLi.length: ", $navTabsLi.length );
+
             if ( $navTabsLi.length > 7 ) {
                 var uniqueMainMenu = getUniqueMainMenu( $navTabsLi );
+
+                    //console.log("uniqueMainMenu: ", uniqueMainMenu );
+
                     // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
                     for ( var index = 0; index < uniqueMainMenu.length; index++ ) {
                         var mainMenu        = uniqueMainMenu[index],
@@ -85,14 +90,29 @@ var tabExpander = (function($, window){
                             }); */
 
                             if ( mainMenu != null && mainMenu != 'undefined' ) {
-                                melisHelper.tabOpen( mainMenu, 'fa-tachometer', zoneId, melisKey, "", navTabsGroup, "main_menu_tab_list_container", function() {
-                                    var $navMain        = $(".main-nav-group-dropdown"),
-                                        $alreadyOpen    = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='id_"+mainMenuLcase+"_tab_list_container']");
+                                console.log("mainMenu: ", mainMenu);
 
-                                        if ( $alreadyOpen.length > 0 && $navMain.length == 0 ) {
-                                            $alreadyOpen.closest("li").append('<ul class="main-nav-group-dropdown nav-group-dropdown"></ul>');
+                                melisHelper.tabOpen( mainMenu, 'fa-tachometer', zoneId, melisKey, "", navTabsGroup, "");
+
+                                var $alreadyOpen    = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='id_"+mainMenuLcase+"_tab_list_container']"),
+                                    $navBox         = $alreadyOpen.closest("li"),
+                                    $hasDropDown    = $navBox.find(".nav-group-dropdown");
+
+                                    //console.log("$alreadyOpen.length: ", $alreadyOpen.length );
+                                    
+                                    if ( $alreadyOpen.length > 0 ) {
+                                        console.log("$hasDropDown.length: ", $hasDropDown.length );
+                                        
+                                        melisHelper.tabOpen( mainMenu, 'fa-tachometer', zoneId, melisKey, "", navTabsGroup, "");
+
+                                        if ( $hasDropDown.length == 0 ) {
+                                            // create dropdown
+                                            $navBox.append('<ul class="main-nav-group-dropdown nav-group-dropdown"></ul>');
+
+                                            // insert li's with data-tool-main-menu inside the dropdown
+
                                         }
-                                });
+                                    }
                             }
                     }
             }
@@ -113,7 +133,7 @@ var tabExpander = (function($, window){
         $navTabs.css({"width": navUlContainer });
         
         // $(".melis-tabprev, .melis-tabnext").show();
-        checkNavBarTabs();
+        //checkNavBarTabs();
 
         var $navLi = $("#melis-id-nav-bar-tabs li");
             
