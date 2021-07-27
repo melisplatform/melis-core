@@ -1003,7 +1003,7 @@ var melisHelper = (function() {
 					{ responsivePriority: 1, targets: 0 },
 					{ responsivePriority: 2, targets: -1 },
 				],
-				language: melisDataTable.tableLanguage[langTrans],
+				language: window.melisDataTable.tableLanguage[langTrans],
 			};
 			// add ajax
 			if (requiredSettings.hasOwnProperty("ajaxUrl")) {
