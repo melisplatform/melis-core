@@ -35,16 +35,24 @@ class MelisDataTableHelper extends AbstractHelper
         foreach ($tableConfig['columns'] as $colName => $colAttr) {
             $columnName .= '<th>' . $colAttr['text'] . '</th>';
         }
+
         //add the action column
-        $columnName .= '<th>'.$translator->translate('tr_meliscore_global_action').'</th>';
+        if(!empty($tableConfig['actionButtons'])){
+            $columnName .= '<th>'.$translator->translate('tr_meliscore_global_action').'</th>';
+        }
+        
         //add column to header
         $thead .= $columnName;
         $thead .= "</tr></thead>";
 
-        // get filters view content
-        $tableConfig['filters'] = $this->getFiltersContent($tableConfig['filters']);
-        // get action button content
-        $tableConfig['actionButtons'] = $this->getActionButtonsContent($tableConfig['actionButtons']);
+        // get filters view content      
+        $tableConfig['filters'] = $this->getFiltersContent($tableConfig['filters']);       
+
+
+        // get action button content  
+        if(!empty($tableConfig['actionButtons'])){
+            $tableConfig['actionButtons'] = $this->getActionButtonsContent($tableConfig['actionButtons']);
+        }
 
         /**
          * Construct the table
