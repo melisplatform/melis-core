@@ -1005,7 +1005,14 @@ var melisHelper = (function() {
 				],
 				language: window.melisDataTable.tableLanguage[langTrans],				
 			};
-			// add ajax
+			
+
+			//merge here the data config with the default settings
+			if (requiredSettings.hasOwnProperty("data")) {
+				if(Object.keys(requiredSettings.data).length > 0) {					
+					settings = Object.assign(settings, requiredSettings.data);					
+				}							
+			}
 
 			var dataFunction = null;
 			if (requiredSettings.hasOwnProperty("dataFunction")) {
