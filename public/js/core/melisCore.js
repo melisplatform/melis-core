@@ -290,54 +290,65 @@ var melisCore = (function(window){
             }
     }
 
-    var counter = 1;
+    /**
+     * Returns a unique main menu from an array.
+     * @param {*} $elemArray 
+     * @returns uniqueArray
+     */
+     function getUniqueMainMenu( $elemArray ) {
+        var listArray = [], uniqueArray = [], counting = 0, found = false;
+
+            $.each($elemArray, function(i, v) {
+              var mainMenu = $(v).data("tool-main-menu");
+                
+                if ( mainMenu != null && mainMenu != 'undefined' && mainMenu != '' ) {
+
+                    // console.log("getUniqueMainMenu mainMenu: ", mainMenu);
+
+                    if ( $.inArray( mainMenu, listArray ) == -1 ) {
+                        listArray.push( mainMenu );
+                    }
+                }
+            });
+
+            for ( var x = 0; x < listArray.length; x++ ) {
+              for ( var y = 0; y < uniqueArray.length; y++ ) {
+                if ( listArray[x] == uniqueArray[y] ) {
+                  found = true;
+                }
+              }
+
+              counting++;
+
+              if ( counting == 1 && found == false ) {
+                uniqueArray.push( listArray[x] );
+              }
+
+              found = false;
+
+              counting = 0;
+            }
+            
+            return uniqueArray;
+    }
+
     // OPEN TOOLS - opens the tools from the sidebar
     function openTools() {
         var data            = $(this).data(),
-            $navTabsLi      = $navTabs.children("li"),
             title           = data.mainMenu,
-            icon            = 'fa-tachometer',
             mainMenuText    = title.toLowerCase(), // mainMenu lowercase text
             melisKey        = mainMenuText+'_tab_list_container',
             zoneId          = 'id_'+mainMenuText+'_tab_list_container',
-            navTabsGroup    = zoneId,
-            $alreadyOpen    = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='" + navTabsGroup + "']");
+            navTabsGroup    = zoneId;
 
-            counter = counter + 1;
-
-            /* console.log("openTools counter: ", counter);
-            console.log("$navTabsLi.length: ", $navTabsLi.length); */
-
-             /* , function() {
-                var $alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='" + navTabsGroup + "']");
-
-                    console.log("$alreadyOpen: ", $alreadyOpen);
-                    console.log("$alreadyOpen.length: ", $alreadyOpen.length);
-            }); */
-
-            //console.log("melisCore.js navTabsGroup: ", navTabsGroup);
-            //console.log("melisCore.js $alreadyOpen.length: ", $alreadyOpen.length);
-
-            if ( $navTabsLi.length >= 4 && $alreadyOpen.length === 0 ) {
-                //console.log("melisCore.js openTools true");
-
-                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-                melisHelper.tabOpen( title, icon, zoneId, melisKey, '', navTabsGroup, data.mainMenu, function() {
-
-                });
-            }
-            else {
-                //console.log("data.toolId: ", data.toolId);
-                //console.log("data.toolParentMenu: ", data.toolParentMenu);
-                console.log("melisCore.js openTools false");
-                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-                melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolParentMenu, data.mainMenu);
-            }
+            // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+            melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', navTabsGroup, data.mainMenu );
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
+    // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
     function openDashboard() {
-        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", {dashboardId : "id_meliscore_toolstree_section_dashboard"}, function() {
+        melisHelper.tabOpen( 'Dashboard', 'fa-dashboard',  "id_meliscore_toolstree_section_dashboard", "meliscore_dashboard", { dashboardId : "id_meliscore_toolstree_section_dashboard" }, "", "MelisCore", function() {
             melisDashBoardDragnDrop.checkDashboard();
         });
     }
@@ -645,31 +656,32 @@ var melisCore = (function(window){
     */
     function closedOpenTabs() {
         var listData = $("#melis-id-nav-bar-tabs li");
-        // loop all tab list
-        listData.each(function() {
-            var dataID =  $(this).attr('data-tool-id');
-            if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
-                melisHelper.tabClose(dataID);
+
+            // loop all tab list
+            listData.each(function() {
+                var dataID =  $(this).attr('data-tool-id');
+                    if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
+                        melisHelper.tabClose(dataID);
+                    }
+            });
+
+            // detect if mobile / tablet
+            if ( screenSize <= 767 ) {
+                $("#newplugin-cont").toggleClass("show-menu");
             }
-        });
 
-        // detect if mobile / tablet
-        if ( screenSize <= 767 ) {
-            $("#newplugin-cont").toggleClass("show-menu");
-        }
+            $("#close-all-tab").hide();
 
-        $("#close-all-tab").hide();
+            if ( screenSize >= 768 ) {
+                setTimeout(function() {
+                    $("#melis-id-nav-bar-tabs").css("left", "0");
+                }, 1);
+            }
 
-        if ( screenSize >= 768 ) {
-            setTimeout(function() {
-                $("#melis-id-nav-bar-tabs").css("left", "0");
-            }, 1);
-        }
-
-        // check dashboard if melisDashBoardDragnDrop is defined
-        if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
-            melisDashBoardDragnDrop.checkDashboard();
-        }
+            // check dashboard if melisDashBoardDragnDrop is defined
+            if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
+                melisDashBoardDragnDrop.checkDashboard();
+            }
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
@@ -784,14 +796,14 @@ var melisCore = (function(window){
     // ---=[ END ]=--- MULTI VALUE INPUT FILED JS --------------------------------------------------
 
     // detect IE8 and above, and edge
-    if (document.documentMode || /Edge/.test(navigator.userAgent)) {
+    if ( document.documentMode || /Edge/.test(navigator.userAgent) ) {
         // remove flickering issue on edge
         // $('html').css('overflow', 'hidden');
         // $body.css('overflow', 'auto');
         $("#id_meliscore_leftmenu").css("-webkit-transform", "translate3d(0px, 0px, 0px)");
     }
     var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
-    if(isIE11) {
+    if ( isIE11 ) {
         $('html').css('overflow', 'hidden');
         $body.css('overflow', 'auto');
     }
@@ -912,7 +924,7 @@ var melisCore = (function(window){
     $body.on("click", ".melis-dashboard-plugins-menu", function() {
         var data = $(this).data();
         //var dashName = data.dashName === 'MelisCore' ? 'Dashboard' : data.dashName;
-            melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId}, '', function() {
+            melisHelper.tabOpen( data.dashName, data.dashIcon, data.dashId, "meliscore_dashboard", {dashboardId : data.dashId}, '', '', function() {
                 // check dashboard if melisDashBoardDragnDrop is defined
                 if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
                     melisDashBoardDragnDrop.checkDashboard();

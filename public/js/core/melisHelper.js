@@ -359,163 +359,149 @@ var melisHelper = (function() {
 	}
 
 	// CLOSE TAB AND REMOVE ===========================================================================================================
-	function tabClose(ID, fromGroup) {
-		fromGroup = typeof fromGroup != "undefined" ? fromGroup : false;
+	function tabClose( ID, fromGroup ) {
+		var $this 				= $(this),
+			tabContentID 		= typeof ID === "string" ? ID : $this.data("id"),
+			$currentParent 		= $(".tabsbar a[data-id='" + tabContentID + "']").parent("li"),
+			$nextActiveTab 		= $currentParent.next("li").children().data("id"),
+			$prevActiveTab 		= $currentParent.prev("li").children().data("id"),
+			tabCount 			= $navTabs.children("li").length,
+			removedWidth 		= $currentParent.width(),
+			$closeAllTab 		= $("#close-all-tab"),
+			$currentGrandParent = $currentParent.parent().parent("li").find(".tab-element").data("id"),
+			$mainMenu 			= $(".main-menu"),
+			$dashboard 			= $this.closest('.nav-group-dropdown').parent('.main-menu').find('[data-tool-id="id_meliscore_toolstree_section_dashboard"]'),
+			$navMenus 			= $navTabs.find('.nav-group-dropdown > li');
 
-		/**
-		 * if there is no second parameter pass,
-		 * try to check manually if it is a
-		 * sub tab
-		 */
-		if (!fromGroup) {
-			if (
-				$(this)
-					.closest("ul")
-					.hasClass("nav-group-dropdown")
-			) {
-				fromGroup = true;
-			}
-		}
+			fromGroup = typeof fromGroup != "undefined" ? fromGroup : false;
 
-		var tabContentID = typeof ID === "string" ? ID : $(this).data("id");
-		var currentParent = $(".tabsbar a[data-id='" + tabContentID + "']").parent(
-			"li"
-		);
-		var nextActiveTab = currentParent
-			.next("li")
-			.children()
-			.data("id");
-		var prevActiveTab = currentParent
-			.prev("li")
-			.children()
-			.data("id");
-		var tabCount = $navTabs.children("li").length;
-		var removedWidth = currentParent.width();
-		var currentGrandParent = currentParent
-			.parent()
-			.parent("li")
-			.find(".tab-element")
-			.data("id");
-
-		//This is for not showing the close all tab button, data-id on .close-tab has changed to the current id_meliscore_toolstree_section_dashboard
-		//if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab) {
-		if (
-			prevActiveTab == "id_meliscore_toolstree_section_dashboard" &&
-			!nextActiveTab
-		) {
-			$("#close-all-tab").hide();
-			$("#close-all-tab")
-				.closest("li")
-				.hide(); // fix for double border left
-		}
-
-		var navBox = currentParent.closest(".scroll");
-		var hasdropdown = $(navBox).find(".nav-group-dropdown");
-
-		if (currentParent.hasClass("active-parent")) {
-			var tabMenuGroup = currentParent.find(".nav-group-dropdown");
-			tabMenuGroup.find("li a.tab-element").each(function() {
-				var tabeMenuDataID = $(this).data("id");
-				// remove the tabs corresponds to tab menu
-				$("#" + tabeMenuDataID).remove();
-			});
-
-			// when close tab menu switch the tab active
-			if (tabCount >= 1) {
-				if (activeTabId === tabContentID) {
-					tabSwitch(nextActiveTab);
-				} else {
-					tabSwitch(prevActiveTab);
+			/**
+			 * If there is no second parameter pass,
+			 * try to check manually if it is a
+			 * sub tab
+			 */
+			if ( !fromGroup ) {
+				if ( $this.closest("ul").hasClass("nav-group-dropdown") ) {
+					fromGroup = true;
 				}
 			}
-		}
 
-		if (currentParent.index() === 0) {
-			if (currentParent.siblings().length === 0) {
-				currentParent.parent(".nav-group-dropdown").remove();
+			// $dashboard.length
+			if ( $navMenus.length >= 7 ) {
+				tabExpander.appendNavMenusOnTabsBar();
+				$mainMenu.remove();
 			}
-			currentParent.remove();
-			$("#" + tabContentID).remove();
 
-			if (tabCount >= 1) {
-				if (activeTabId === tabContentID) {
-					// switch to grand parent li tab
-					tabSwitch(currentGrandParent);
+			/**
+			 * This is for not showing the close all tab button, data-id on .close-tab has changed
+			 * to the current id_meliscore_toolstree_section_dashboard
+			 * if(prevActiveTab == 'id_meliscore_dashboard' && !nextActiveTab) {
+			 * */
+			if ( $prevActiveTab == "id_meliscore_toolstree_section_dashboard" && ! $nextActiveTab ) {
+				$closeAllTab.hide();
+				$closeAllTab.closest("li").hide(); // fix for double border left
+			}
+
+			var $navBox 		= $currentParent.closest(".scroll"),
+				$hasdropdown 	= $navBox.find(".nav-group-dropdown");
+
+			if ( $currentParent.hasClass("active-parent") ) {
+				var $tabMenuGroup = $currentParent.find(".nav-group-dropdown");
+
+					$tabMenuGroup.find("li a.tab-element").each(function() {
+						var tabMenuDataID = $(this).data("id");
+
+							// remove the tabs corresponds to tab menu
+							$("#" + tabMenuDataID).remove();
+					});				
+
+					// when close tab menu switch the tab active
+					if ( tabCount >= 1 ) {
+						if ( activeTabId === tabContentID ) {
+							tabSwitch( $nextActiveTab );
+						} 
+						else {
+							tabSwitch( $prevActiveTab );
+						}
+					}
+			}
+
+			if ( $currentParent.index() === 0 ) {
+				//console.log("checking true!!");
+
+				if ( $currentParent.siblings().length === 0 ) {
+					$currentParent.parent(".nav-group-dropdown").remove();
+				}
+
+				$currentParent.remove();
+				$("#" + tabContentID).remove();
+
+				if ( tabCount >= 1 ) {
+					if ( activeTabId === tabContentID ) {
+						// switch to grand parent li tab
+						tabSwitch( $currentGrandParent );
+					}
+				}
+			} 
+			else {
+				$currentParent.remove();
+				$("#" + tabContentID).remove();
+
+				if ( tabCount >= 1 ) {
+					if ( activeTabId === tabContentID ) {
+						tabSwitch( $prevActiveTab );
+					}
 				}
 			}
-		} else {
-			currentParent.remove();
-			$("#" + tabContentID).remove();
 
-			if (tabCount >= 1) {
-				if (activeTabId === tabContentID) {
-					tabSwitch(prevActiveTab);
+			// check scroll class exists
+			if ( $navBox ) {
+				// check if menu are too many
+				if ( $navBox.height() < 400 ) {
+					$navBox.removeClass("scroll" );
 				}
 			}
-		}
 
-		// check scroll class exists
-		if (navBox) {
-			// check if menu are too many
-			if ($(navBox).height() < 400) {
-				$(navBox).removeClass("scroll");
+			// get the <ul> container width and disable the tabExpander
+			var navUlContainer = 1;
+				$("#id_meliscore_header #melis-id-nav-bar-tabs > li").each(function() {
+					navUlContainer += $(this).outerWidth();
+				});
+
+			if ( navUlContainer < $("#melis-navtabs-container-inner").width() ) {
+				tabExpander.checkTE();
+			} else {
+				var leftOffset = $navTabs.position().left;
+
+					if ( leftOffset === -1 ) {
+					} else if ( leftOffset !== 0 ) {
+						//check if removed tab is not from group(sub tab) to avoid moving the other tabs
+						if ( ! fromGroup ) {
+							$("#melis-id-nav-bar-tabs").animate({ left: leftOffset + removedWidth, }, 0 );
+						}
+					}
+					/*else if ( leftOffset === 0 ) {
+						$("#melis-id-nav-bar-tabs").animate({
+							left: leftOffset
+						}, 0);
+					}*/
 			}
-		}
 
-		// get the <ul> container width and disable the tabExpander
-		var navUlContainer = 1;
-		$("#id_meliscore_header #melis-id-nav-bar-tabs > li").each(function() {
-			navUlContainer += $(this).outerWidth();
-		});
+			checkSubMenu();
 
-		if (navUlContainer < $("#melis-navtabs-container-inner").width()) {
-			tabExpander.checkTE();
-		} else {
-			var leftOffset = $navTabs.position().left;
+			// [ Mobile ] when closing a page
+			if ( melisCore.screenSize <= 767 ) {
+				$("#res-page-cont").trigger("click");
 
-			if (leftOffset === -1) {
-			} else if (leftOffset !== 0) {
-				//check if removed tab is not from group(sub tab) to avoid moving the other tabs
-				if (!fromGroup) {
-					$("#melis-id-nav-bar-tabs").animate(
-						{
-							left: leftOffset + removedWidth,
-						},
-						0
-					);
+				// check if there are no contents open
+				if ( $navTabs.children("li").length === 0 ) {
+					var empty = "<strong>(" + translations.tr_meliscore_empty + ")</strong>";
+					$("#res-page-cont span").append(empty);
 				}
 			}
-			/*else if ( leftOffset === 0 ) {
-                $("#melis-id-nav-bar-tabs").animate({
-                    left: leftOffset
-                }, 0);
-            }*/
-		}
-		checkSubMenu();
 
-		// [ Mobile ] when closing a page
-		if (melisCore.screenSize <= 767) {
-			//var $tabArrowTop = $("#tab-arrow-top");
-
-			$("#res-page-cont").trigger("click");
-
-			// check if there are no contents open
-			if ($navTabs.children("li").length === 0) {
-				var empty =
-					"<strong>(" + translations.tr_meliscore_empty + ")</strong>";
-				$("#res-page-cont span").append(empty);
-			}
-
-			/* if ( $tabArrowTop.length ) {
-                    $tabArrowTop.removeClass("hide-arrow");
-                } */
-		}
-
-		// dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
-		$("table.dataTable")
-			.DataTable()
-			.columns.adjust()
-			.responsive.recalc();
+			// dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
+			$("table.dataTable").DataTable().columns.adjust().responsive.recalc();
 	}
 
 	// TAB OPEN =====================================================================================================================
@@ -525,171 +511,125 @@ var melisHelper = (function() {
 			$("#close-all-tab").show();
 			$("#close-all-tab").closest("li").show();
 		}
+		
 		//check if the tab is already open and added to the main nav
 		var alreadyOpen = $("body #melis-id-nav-bar-tabs li a.tab-element[data-id='" + zoneId + "']");
-
-		//console.log("melisHelper.js tabOpen alreadyOpen.length < 1: ", alreadyOpen.length < 1 );
+			// menuText 	= mainMenu.replace(/'/g, "&apos;").replace('/', "").replace(" ", "");
 		
-		if ( alreadyOpen.length < 1 ) {
-			var li = "<li data-tool-name='" + title + "' data-tool-icon='" + icon +"' data-tool-id='" + zoneId + "' data-tool-meliskey='" + melisKey + "' data-tool-main-menu='"+ mainMenu + "'>";
-				li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" + zoneId + "' data-id='" + zoneId + "' title='" + title.replace(/'/g, "&apos;") + "'>";
-				li += "<i class='fa " + icon + " fa-2x'></i><span class='navtab-pagename'>";
-				li += title + "</span></a>";
-				li += "<a class='close close-tab' data-id='" + zoneId + "'>" + translations.tr_meliscore_notification_modal_Close + "</a>";
-				li += "</li>";
-			
-			// check if the current nav tabs > 7 and create the main menu
+			if ( alreadyOpen.length < 1 ) {
+				var li = "<li data-tool-name='" + title + "' data-tool-icon='" + icon +"' data-tool-id='" + zoneId + "' data-tool-meliskey='" + melisKey + "' data-tool-main-menu='"+ mainMenu + "'>";
+					li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" + zoneId + "' data-id='" + zoneId + "' title='" + title.replace(/'/g, "&apos;") + "'>";
+					li += "<i class='fa " + icon + " fa-2x'></i><span class='navtab-pagename'>";
+					li += title + "</span></a>";
+					li += "<a class='close close-tab' data-id='" + zoneId + "'>" + translations.tr_meliscore_notification_modal_Close + "</a>";
+					li += "</li>";
+				
+				// check if it has parent nav, title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+				if ( navTabsGroup && navTabsGroup !== "undefined" ) {
+						var navParentGroup = $(".tab-element[data-id='" + navTabsGroup + "']");
 
-			// 7 as the dashboard is not included in the count as it is opened already but counted, in a sense
-			/* console.log("mainMenu: ", mainMenu);
-			if ( mainMenu && mainMenu !== "undefined" ) {
-				var navParentGroup = $(".tab-element").closest("li[data-tool-main-menu='" + mainMenu + "']");
+							if ( navParentGroup.length > 0 ) {
+								// find parent nav li
+								var navBox = navParentGroup.closest("li");
 
-				console.log("closest navParentGroup.length: ", navParentGroup.length);
+								// find nav-group-dropdown that has the id of navTabsGroup
+								var hasdropdown = navBox.find(".nav-group-dropdown");
 
-				if ( navParentGroup.length >= 7 ) {
-					// find parent nav li
-					//var navBox = navParentGroup.closest("li");
+								//console.log("melisHelper.js navParentGroup.length inside if stmt hasdropdown.length: ", hasdropdown.length );
 
-					// find nav-group-dropdown that has the id of navTabsGroup
-					var hasdropdown = navParentGroup.find(".main-nav-group-dropdown");
+								if ( hasdropdown.length ) {
+									// check if menu are too many
+									if ( hasdropdown.first().height() > 350 ) {
+										hasdropdown.first().addClass("scroll");
+									}
 
-					if ( hasdropdown.length ) {
-						// check if menu are too many
-						if ( hasdropdown.first().height() > 350 ) {
-							hasdropdown.first().addClass("scroll");
-						}
-
-						// add li in the first nav-group-dropdown
-						hasdropdown.first().append(li);
-					} 
-					else {
-						// create a sub menu ul and append the li
-						navParentGroup.append("<ul class='main-nav-group-dropdown'></ul>");
-						navParentGroup.find(".main-nav-group-dropdown").append(li);
-					}
-				} 
-			}  */
-
-			/* if ( mainMenu && mainMenu !== "undefined" ) {
-				melisCoreTabGrouping.wrapWithMainMenu( mainMenu, li );
-			} */
-
-			/* if ( $navTabs.find("li").length > 7 ) {
-				console.log("navTabsGroup: ", navTabsGroup);
-			} */
-			
-			// check if it has parent nav, title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-			if ( navTabsGroup && navTabsGroup !== "undefined" ) {
-				var navParentGroup = $(".tab-element[data-id='" + navTabsGroup + "']");
-				var navBox1 = navParentGroup.closest("li");
-				var hasdropdown1 = navBox1.find(".nav-group-dropdown");
-
-				console.log("navParentGroup.length: ", navTabsGroup.length);
-				console.log("$(hasdropdown1).length: ", $(hasdropdown1).length);
-
-				if ( $(navParentGroup).length > 0 ) {
-					// find parent nav li
-					var navBox = navParentGroup.closest("li");
-
-					// find nav-group-dropdown that has the id of navTabsGroup
-					var hasdropdown = $(navBox).find(".nav-group-dropdown");
-
-					console.log("melisHelper.js navParentGroup.length inside if stmt");
-					console.log("melisHelper.js navParentGroup.length inside if stmt hasdropdown.length: ", ( hasdropdown.length ) );
-
-					if ( $(hasdropdown).length ) {
-						// check if menu are too many
-						if ( $(hasdropdown).first().height() > 350 ) {
-							$(hasdropdown).first().addClass("scroll");
-						}
-
-						// add li in the first nav-group-dropdown
-						$(hasdropdown).first().append(li);
-					} 
-					else {
-						// create a sub menu ul and append the li
-						navBox.append("<ul class='nav-group-dropdown'></ul>");
-						navBox.find(".nav-group-dropdown").append(li);
-					}
+									// add li in the first nav-group-dropdown
+									hasdropdown.first().append(li);
+								} 
+								else {
+									// create a sub menu ul and append the li
+									navBox.append("<ul class='nav-group-dropdown'></ul>");
+									navBox.find(".nav-group-dropdown").append(li);
+								}
+							} 
+							else {
+								$("body #melis-id-nav-bar-tabs").append(li);
+							}
 				} 
 				else {
+					// append the <li> to the menu melis-tabnext
 					$("body #melis-id-nav-bar-tabs").append(li);
+				}
+
+				checkSubMenu();
+
+				// [ Mobile ] when opening a page
+				if (melisCore.screenSize <= 767) {
+					// check if there are no contents open
+					if ($navTabs.children("li").length > 0) {
+						$("#res-page-cont span b").remove();
+					}
+
+					// close sidebar after opening a page from it
+					$body.removeClass("sidebar-mini");
+					// hide sidebar footer when opening tab
+					$("#id_meliscore_footer").addClass("slide-left");
+					$("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
+
+					// slide up the dropdown menu
+					$("#melis-id-nav-bar-tabs").slideUp(300);
+					$("#res-page-cont i").removeClass("move-arrow");
+				}
+
+				var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";
+
+				$("#melis-id-body-content-load").append(div);
+
+				//set active tab ID
+				activeTabId = zoneId;
+
+				//make the new tab active
+				tabSwitch(zoneId);
+
+				//load the page content
+				var fnCallback = null;
+
+				if ( callback !== undefined || callback !== null ) {
+					fnCallback = callback;
+				}
+
+				zoneReload(zoneId, melisKey, parameters, fnCallback);
+
+				// check if tabExpander(); needs to be activated or not
+				tabExpander.checkTE();
+
+				//focus the newly opened tab if tabExpander() is enabled
+				if ( tabExpander.checkStatus() === "enabled" ) {
+					if (typeof navTabsGroup == "undefined" || typeof navTabsGroup == null) {
+						$(".melis-tabnext").trigger("click");
+					}
+				}
+
+				// check for meliscore_dashboard and melisDashBoardDragnDrop is defined
+				if ( typeof melisDashBoardDragnDrop !== undefined && melisKey == "meliscore_dashboard" ) {
+					setTimeout(function() {
+						melisDashBoardDragnDrop.checkDashboard();
+					}, 2000);
 				}
 			} 
 			else {
-				// append the <li> to the menu melis-tabnext
-				$("body #melis-id-nav-bar-tabs").append(li);
+				//make the new tab and content active instead of reloading
+				tabSwitch(zoneId);
 			}
-
-			checkSubMenu();
-
-			// [ Mobile ] when opening a page
-			if (melisCore.screenSize <= 767) {
-				// check if there are no contents open
-				if ($navTabs.children("li").length > 0) {
-					$("#res-page-cont span b").remove();
-				}
-
-				// close sidebar after opening a page from it
-				$body.removeClass("sidebar-mini");
-				// hide sidebar footer when opening tab
-				$("#id_meliscore_footer").addClass("slide-left");
-				$("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
-
-				// slide up the dropdown menu
-				$("#melis-id-nav-bar-tabs").slideUp(300);
-				$("#res-page-cont i").removeClass("move-arrow");
-			}
-
-			var div = "<div data-meliskey='" + melisKey + "' id='" + zoneId + "' class='tab-pane container-level-a'></div>";
-
-			$("#melis-id-body-content-load").append(div);
-
-			//set active tab ID
-			activeTabId = zoneId;
-
-			//make the new tab active
-			tabSwitch(zoneId);
-
-			//load the page content
-			var fnCallback = null;
-
-			if ( callback !== undefined || callback !== null ) {
-				fnCallback = callback;
-			}
-
-			zoneReload(zoneId, melisKey, parameters, fnCallback);
-
-			// check if tabExpander(); needs to be activated or not
-			tabExpander.checkTE();
-
-			//focus the newly opened tab if tabExpander() is enabled
-			if ( tabExpander.checkStatus() === "enabled" ) {
-				if (typeof navTabsGroup == "undefined" || typeof navTabsGroup == null) {
-					$(".melis-tabnext").trigger("click");
-				}
-			}
-
-			// check for meliscore_dashboard and melisDashBoardDragnDrop is defined
-			if ( typeof melisDashBoardDragnDrop !== undefined && melisKey == "meliscore_dashboard" ) {
-				setTimeout(function() {
-					melisDashBoardDragnDrop.checkDashboard();
-				}, 2000);
-			}
-		} 
-		else {
-			//make the new tab and content active instead of reloading
-			tabSwitch(zoneId);
-		}
 	}
 
 	// CHECK SUBMENU =================================================================================
 	function checkSubMenu() {
 		$("body #melis-id-nav-bar-tabs li").each(function() {
-			if ($(this).children("ul").length) {
+			if ( $(this).children("ul").length ) {
 				$(this).addClass("has-sub");
-			} else {
+			} 
+			else {
 				$(this).removeClass("has-sub");
 			}
 		});

@@ -4,6 +4,7 @@ var melisCoreTabGrouping = (function($, window) {
         $window                     = $(window),
         $melisOpenTools             = $(".sideMenu").find(".melis-opentools"),
 	    $navTabs                    = $("#melis-id-nav-bar-tabs"),
+        $coreDasboard               = $("#id_meliscore_leftmenu_dashboard"),
         $navTabsOuter               = $("#melis-navtabs-container-outer"),
         $pluginContainer            = $("#plugins-container"),
         $navTabsInner               = $("#melis-navtabs-container-inner"),
@@ -14,12 +15,21 @@ var melisCoreTabGrouping = (function($, window) {
 
         // functions / methods
         function init() {
-            $.each( $melisOpenTools, function(i, v) {
-                var $this           = $(v),
-                    main_menu_text  = $this.parents(".hasSubmenu").find("a > .toolstree-label").text();
+            var mainMenuText    = $("#meliscore_toolstree_section").find("a > .toolstree-label").text(),
+                $dashboardTab   = $("[data-tool-name='Dashboard']");
 
-                    $this.attr("data-main-menu", main_menu_text);
-            });
+                $.each( $melisOpenTools, function(i, v) {
+                    var $this           = $(v),
+                        main_menu_text  = $this.parents(".hasSubmenu").find("a > .toolstree-label").text();
+
+                        $this.attr("data-main-menu", main_menu_text);
+                });
+
+                // left menu
+                $coreDasboard.attr("data-main-menu", mainMenuText);
+                
+                // opened dashboard tab
+                $dashboardTab.attr("data-tool-main-menu", mainMenuText);
         }
 
         // same functionality with tabExpander without the next and prev buttons
