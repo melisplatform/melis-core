@@ -1039,14 +1039,17 @@ var melisHelper = (function() {
 						});
 						settings.columnDefs.push({
 							width: item.css.width,
-							targets: ctr,
+							targets: ctr,	
+							sClass: item.sClass						
 						});
+
 						ctr++;
 					});
 				}
 				// set datatable columns
 				settings.columns = tmpColumns;
 			}
+
 			if (requiredSettings.hasOwnProperty("filters")) {				  		
 				var preDefinedFilters = ["l", "f"];
 				var tableTop = '<"filter-bar"<"row"';
@@ -1144,7 +1147,7 @@ var melisHelper = (function() {
 						data: null,
 						width: "10%",
 						bSortable: false,
-						sClass: "dtActionCls",
+						sClass: "dtActionCls all",
 						mRender: function() {
 							return actionButtons;
 						},
