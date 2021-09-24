@@ -139,13 +139,13 @@ var loader = (function(window) {
                 $loader             = $melisTabEdition.find("#loader");
 
                 // checks for the inside iframes elements
-                if ( $iframeElements.length > 0 ) {
+                // if ( $iframeElements.length > 0 ) {
                     // remove loader
                     $loader.remove();
 
                     // remove overflow hidden
                     melisCoreTool.removeOverflowHidden();
-                }
+                // }
 
                 // set .melis-iframe css height
                 $melisIframe.css("height", melisIframeHeight);

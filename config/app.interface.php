@@ -228,7 +228,7 @@ return array(
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-dataTables.js',
-                    '/MelisCore/js/core/MelisDataTable.js',
+                    '/MelisCore/js/core/melisDataTable.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-fancytree.js',
@@ -292,12 +292,12 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css',
+                        '/MelisCore/build/css/bundle.css?v=2021090801',
 
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js',
+                        '/MelisCore/build/js/bundle.js?v=2021090801',
                     ]
                 ]
             ),
