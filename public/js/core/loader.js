@@ -123,6 +123,9 @@ var loader = (function(window) {
                     $melisTabEdition.prepend( pageOverlayLoader );
                     melisCoreTool.addOverflowHidden();
                 }
+                else {
+                    melisCoreTool.removeOverflowHidden();
+                }
 
                 // set .melis-iframe css height
                 $melisIframe.css("height", melisIframeHeight);
