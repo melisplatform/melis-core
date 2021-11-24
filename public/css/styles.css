@@ -2726,7 +2726,9 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 		overflow: hidden;
 	}
 	.navbar #melis-id-nav-bar-tabs > li li .navtab-pagename {
-		width: 170px;
+		/* grouping-tabs-v2
+		width: 170px; */
+		width: auto;
 	}
 	.navbar #melis-id-nav-bar-tabs > li:hover > a {
 		background: #fff;
@@ -3136,6 +3138,7 @@ div#modal-user-management div.widget {
 	-webkit-transform: translate3d(0, 0, 0);
 	-moz-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
+	/* top: 47px; */ /* grouping-tabs-v2 */
 	z-index: 100;
 }
 .tabsbar .nav-group-dropdown .nav-group-dropdown {
@@ -3198,6 +3201,7 @@ div#modal-user-management div.widget {
 .tabsbar .nav-group-dropdown.scroll {
 	overflow-x: hidden;
 	overflow-y: auto;
+	/* top: 47px; */ /* grouping-tabs-v2 */
 }
 .tabsbar .nav-group-dropdown.scroll .nav-group-dropdown {
 	position: relative;

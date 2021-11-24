@@ -333,16 +333,40 @@ var melisCore = (function(window){
     }
 
     // OPEN TOOLS - opens the tools from the sidebar
+    // .melis-dashboard-plugins-menu clicks on the icon for opening the per module dashboard
     function openTools() {
         var data            = $(this).data(),
             title           = data.mainMenu,
-            mainMenuText    = title.toLowerCase(), // mainMenu lowercase text
-            melisKey        = mainMenuText+'_tab_list_container',
-            zoneId          = 'id_'+mainMenuText+'_tab_list_container',
+            icon            = 'fa-tachometer',
+            mainMenuGroup   = title,
+            mainMenuText    = title.replace(' ', '').split('/')[0],
+            melisKey        = mainMenuText.toLowerCase()+'_tab_list_container',
+            zoneId          = 'id_'+mainMenuText.toLowerCase()+'_tab_list_container',
+            customTitle     = ( title === 'Custom / Projects' ) ? title.split('/')[0] : title,
+            commonTitle     = ( customTitle === 'Custom' ) ? customTitle : mainMenuText,
             navTabsGroup    = zoneId;
+        
+        var $navParentGroup = $(".tab-element[data-id='"+navTabsGroup+"']"),
+            $navMenus       = $navTabs.find("li").not(".main-menu, .sub-page-section-tab"), // .not(".sub-page-section-tab")
+            $subMenu        = $navMenus.find(".nav-group-dropdown > li"),
+            $subSubMenu     = $subMenu.find(".nav-group-dropdown > li");
 
-            // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-            melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', navTabsGroup, data.mainMenu );
+            // console.log("outside if openTools() $navMenus.length: ",  $navMenus.length);
+            /*  console.log("openTools() $navMenus.length > 7: ", $navMenus.length > 7 ); */
+            
+            // $navMenus.length > 7
+            if ( $navMenus.length > 7 ) {
+                console.log("true inside if openTools()");
+                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                tabExpander.openMainMenu( commonTitle, icon, zoneId, melisKey, navTabsGroup, mainMenuGroup );
+                // console.log("true inside if openTools() $navMenus.length: ",  $navMenus.length);
+            }
+            else {
+                console.log("false inside if openTools()");
+                // console.log("openTools() $navMenus.length [" + $navMenus.length + "]: data.toolMeliskey [" + data.toolMeliskey +"]");
+                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', navTabsGroup, data.mainMenu );
+            }
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar
@@ -655,15 +679,17 @@ var melisCore = (function(window){
     * This function will close all opened tabs
     */
     function closedOpenTabs() {
-        var listData = $("#melis-id-nav-bar-tabs li");
-
+        var $listData   = $("#melis-id-nav-bar-tabs li"),
+                    $db = $navTabs.find("[data-tool-id='id_meliscore_toolstree_section_dashboard']");
+            
             // loop all tab list
-            listData.each(function() {
-                var dataID =  $(this).attr('data-tool-id');
+            $listData.each(function() {
+                var dataID = $(this).attr('data-tool-id');
+                    
                     if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
                         melisHelper.tabClose(dataID);
                     }
-            });
+            });            
 
             // detect if mobile / tablet
             if ( screenSize <= 767 ) {
@@ -681,6 +707,12 @@ var melisCore = (function(window){
             // check dashboard if melisDashBoardDragnDrop is defined
             if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
                 melisDashBoardDragnDrop.checkDashboard();
+            }
+
+            // this can be tweaked on melisHelper.tabclose();
+            if ( $db.length ) {
+                $navTabs.append( $db );
+                melisHelper.tabSwitch('id_meliscore_toolstree_section_dashboard');
             }
     }
 
