@@ -541,13 +541,13 @@ class LogController extends MelisAbstractActionController
                 }
 
                 $rowData = array(
-                    'DT_RowId' => $melisTool->escapeHtml($logId),
-                    'log_id' => $melisTool->escapeHtml($logId),
-                    'log_title' => $melisTool->escapeHtml($translator->translate($log->log_title)),
-                    'log_message' => $melisTool->escapeHtml($translator->translate($log->log_message)),
+                    'DT_RowId' => !empty($logId)?$melisTool->escapeHtml($logId):null,
+                    'log_id' => !empty($logId)?$melisTool->escapeHtml($logId):null,
+                    'log_title' => !empty($log->log_title)?$melisTool->escapeHtml($translator->translate($log->log_title)):null,
+                    'log_message' => !empty($log->log_message)?$melisTool->escapeHtml($translator->translate($log->log_message)):null,
                     'log_type' => sprintf($logTypeBtn, $logType->logt_id, $logType->logt_code),
-                    'log_item_id' => $melisTool->escapeHtml($log->log_item_id),
-                    'log_user' => $melisTool->escapeHtml($userName),
+                    'log_item_id' => !empty($log->log_item_id)?$melisTool->escapeHtml($log->log_item_id):null,
+                    'log_user' => !empty($username)?$melisTool->escapeHtml($userName):null,
                     'log_date_added' => strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($log->log_date_added))
                 );
 
