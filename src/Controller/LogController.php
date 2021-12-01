@@ -547,9 +547,9 @@ class LogController extends MelisAbstractActionController
                     'log_message' => !empty($log->log_message)?$melisTool->escapeHtml($translator->translate($log->log_message)):null,
                     'log_type' => sprintf($logTypeBtn, $logType->logt_id, $logType->logt_code),
                     'log_item_id' => !empty($log->log_item_id)?$melisTool->escapeHtml($log->log_item_id):null,
-                    'log_user' => !empty($username)?$melisTool->escapeHtml($userName):null,
+                    'log_user' => !empty($userName)?$melisTool->escapeHtml($userName):null,
                     'log_date_added' => strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($log->log_date_added))
-                );
+                );               
 
                 if (strpos($melisTool->escapeHtml($translator->translate($log->log_message)), '[itemId]')) {
                     $rowData['log_message'] = str_replace(
