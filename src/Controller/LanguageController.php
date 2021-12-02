@@ -436,11 +436,14 @@ class LanguageController extends MelisAbstractActionController
                 // manually modify value of the desired row
                 // no specific row to be modified
 
-
                 // add DataTable RowID, this will be added in the <tr> tags in each rows
                 $tableData[$ctr]['DT_RowId'] = $tableData[$ctr]['lang_id'];
                 $tableData[$ctr]['DT_RowAttr'] = array('data-locale' => $tableData[$ctr]['lang_locale']);
 
+                //add lang_is_used column value
+                $container = new Container('meliscore');
+                $currentUsedlocale = $container['melis-lang-locale'];  
+                $tableData[$ctr]['lang_is_used'] = ($currentUsedlocale == $tableData[$ctr]['lang_locale'])? $translator->translate('tr_meliscore_tool_language_lang_locale_displayed'):'';
             }
 
         }

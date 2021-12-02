@@ -1492,6 +1492,11 @@ return [
                                 'css' => ['width' => '40%', 'padding-right' => '0'],
                                 'sortable' => true,
                             ],
+                            'lang_is_used' => [
+                                'text' => '',
+                                'css' => ['width' => '40%', 'padding-right' => '0'],
+                                'sortable' => true,
+                            ],
                         ],
                         'searchables' => [
                             'lang_id', 'lang_locale', 'lang_name'

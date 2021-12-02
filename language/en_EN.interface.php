@@ -376,6 +376,7 @@ return [
     'tr_meliscore_tool_language_lang_folder_not_readable' => '%s is not readable',
     'tr_meliscore_tool_language_lang_folder_not_writable' => '%s is not writable',
     'tr_meliscore_tool_language_lang_folder_not_exist' => '%s does not exist',
+    'tr_meliscore_tool_language_lang_locale_displayed' => 'Displayed',
 
     // Deleted User
     'tr_meliscore_user_deleted' => 'Deleted user',
