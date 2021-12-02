@@ -107,7 +107,7 @@ $(function() {
 });
 
 window.initLangBOJs = function () {
-    var btnApply = "<a class=\"btn btn-info btnLangApply\"  title='" + translations.tr_melis_core_common_apply_language + "'><i class=\"fa fa-check\" ></i></a> ";
+    var btnApply = "<a class=\"btn btn-info btnLangApply\"  title='" + translations.tr_melis_core_common_apply_language + "'><i class=\"fa fa-exchange\" ></i></a> ";
 		$('#tableLanguages td:nth-child(3):contains("en_EN")').siblings(':last').html(btnApply);
 
 		if ( melisLangId !== 'en_EN' ) {
