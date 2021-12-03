@@ -244,7 +244,7 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
         $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
         
         $cfg = $melisConfig->getItem('meliscore/datas/'.getenv('MELIS_PLATFORM'));
-        
+      
         if (empty($cfg))
             $cfg = $melisConfig->getItem('meliscore/datas/default');
         
@@ -254,7 +254,7 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
                 $isActive = true;
 
         //retrieve platform scheme and prepend to the reset password link
-        $scheme = !empty($cfg['platform_scheme'])?$cfg['platform_scheme']:$cfg['scheme'];
+        $scheme = !empty($cfg['platform_scheme'])?$cfg['platform_scheme']:(!empty($cfg['scheme'])?$cfg['scheme']:'');
         $url = $cfg['host'].'/melis/reset-password/'.$hash;
         $url = !empty($scheme)?(trim($scheme).'://'.$url):$url;
                     
