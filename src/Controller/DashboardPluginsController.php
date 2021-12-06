@@ -50,20 +50,34 @@ class DashboardPluginsController extends MelisAbstractActionController
 
                 if (is_array($plugin) && count($plugin) && $dashboardPluginsService->canAccess($pluginName)) {
                     if(!isset($plugin['datas']['skip_plugin_container'])) {
+                        $translationService = $this->getServiceManager()->get('MelisCoreTranslation');
                         $module = $plugin['forward']['module'];
                         $isNewPlugin = $plugin['datas']['is_new_plugin'] = true;
                         $name = $plugin['datas']['name'];
+                        $description = $plugin['datas']['description'];
+
+                        //if no translated value for the current locale, use the English translation instead
+                        if (substr(trim($name), 0, 3) == 'tr_') {                            
+                            $name = $translationService->getMessage($name);
+                        }
+
+                        if (substr(trim($description), 0, 3) == 'tr_') {
+                            $description = $translationService->getMessage($description);
+                        }                               
+
+                        //use the plugin name if translated value is null
+                        $name = !empty($name)?$name:$pluginName; 
                         $pluginRaw = json_encode($plugin);
                         $plugins[$module][$name] = [
                             'module' => $module,
                             'plugin' => $pluginName,
-                            'name' => !empty($plugin['datas']['name']) ? $plugin['datas']['name'] : $pluginName,
+                            'name' => $name,
                             'plugin_id' => !empty($plugin['datas']['plugin_id']) ? $plugin['datas']['plugin_id'] : '',
                             'x-axis' => !empty($plugin['datas']['x-axis']) ? $plugin['datas']['x-axis'] : '',
                             'y-axis' => !empty($plugin['datas']['y-axis']) ? $plugin['datas']['y-axis'] : '',
                             'width' => !empty($plugin['datas']['width']) ? $plugin['datas']['width'] : '',
                             'height' => !empty($plugin['datas']['height']) ? $plugin['datas']['height'] : '',
-                            'description' => !empty($plugin['datas']['description']) ? $plugin['datas']['description'] : '',
+                            'description' => !empty($description) ? $description : '',
                             'icon' => !empty($plugin['datas']['icon']) ? $plugin['datas']['icon'] : '',
                             'thumbnail' => !empty($plugin['datas']['thumbnail']) ? $plugin['datas']['thumbnail'] : '/MelisCore/plugins/images/default.jpg',
                             'is_new_plugin' => $isNewPlugin,
