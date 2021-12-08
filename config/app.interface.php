@@ -228,6 +228,7 @@ return array(
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-dataTables.js',
+                    '/MelisCore/js/core/melisDataTable.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-fancytree.js',
@@ -285,18 +286,18 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' =>  true,
+                    'use_build_assets' => true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css',
+                        '/MelisCore/build/css/bundle.css?v=2021090801',
 
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js',
+                        '/MelisCore/build/js/bundle.js?v=2021090801',
                     ]
                 ]
             ),

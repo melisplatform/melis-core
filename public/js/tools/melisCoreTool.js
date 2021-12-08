@@ -279,6 +279,22 @@ var melisCoreTool = (function (window) {
     function removeOverflowHidden() {
         $body.removeAttr("style");
     }
+
+    /**
+     * Inserts class in body tag
+     * @param {string} bodyClass string class added on body tag
+     */
+    function addBodyClass( bodyClass ) {
+        setTimeout(function() {
+            var $pageElements   = $("#melis-id-body-content-load .page-elements");
+                if ( $pageElements.length ) {
+                    $body.addClass( bodyClass );
+                }
+                else {
+                    $body.removeClass( bodyClass );
+                }
+        }, 2000);
+    }
     
     return {
         // modal
@@ -325,6 +341,9 @@ var melisCoreTool = (function (window) {
 
         // overflow: hidden body tag
         addOverflowHidden : addOverflowHidden,
-        removeOverflowHidden : removeOverflowHidden
+        removeOverflowHidden : removeOverflowHidden,
+
+        // adds a class on body tag
+        addBodyClass : addBodyClass
     }
 })(window);

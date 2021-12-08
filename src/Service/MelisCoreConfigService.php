@@ -203,7 +203,7 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
         return $appConfigForm;
     }
 
-    public function getItem($pathString = '', $prefix = '')
+    public function getItem($pathString = '', $prefix = '', $isTranslate = true)
     {
         $config = $this->getServiceManager()->get('config');
         if (!empty($config['plugins'])) {
@@ -226,7 +226,10 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
         $items = $this->getItemRec($pathTab, 0, $this->appConfig);
         $items = $this->addItemsLinkedByType($items, $pathString);
         $items = $this->setItemsDashboadForwardConfig($items);
-        $items = $this->translateAppConfig($items);
+        
+        if($isTranslate){
+            $items = $this->translateAppConfig($items);
+        }        
 
         if ($prefix != '') {
             $items = $this->prefixIdsKeysRec($items, $prefix);

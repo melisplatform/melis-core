@@ -12,3 +12,13 @@
 /*.tox-tinymce-aux {
     z-index: 1600;
 }*/
+/*
+ * Fix for this issue.
+ * There are 2 things:
+ * - I cannot replace an image from a mini template (instead it's adding the picture)
+ * - I cannot delete an image once added
+ * issue: https://mantis2.uat.melistechnology.fr/view.php?id=2151
+ */
+img {
+	display: unset !important;
+}
