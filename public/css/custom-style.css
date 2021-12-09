@@ -1089,6 +1089,7 @@ a[data-toggle="modal"]:focus {
 	line-height: 24px;
 	min-height: 74px;
 }
+#loadingZone.overlay-loader,
 .grid-stack-item > .overlay-loader,
 #loader.overlay-loader {
 	background: rgba(0, 0, 0, 0.60);
