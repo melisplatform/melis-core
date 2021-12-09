@@ -31,8 +31,9 @@ var melisDashBoardDragnDrop = {
         this.$body              = $("body");
         this.$document          = $(document);
         this.$window            = $(window);
+        this.$bubblePlugin      = this.$body.find("#bubble-plugin .bubble-plugin-flip-cards");
         this.$gs                = this.$body.find(".grid-stack");
-        this.$activeGS          = this.$body.find("#"+activeTabId+" .grid-stack"),
+        this.$activeGS          = this.$body.find("#"+activeTabId+" .grid-stack");
         this.$gsItem            = this.$gs.find(".grid-stack-item").length;
         this.$melisDBPlugins    = this.$body.find(".melis-dashboard-plugins");
         this.$melisLeftMenu     = this.$body.find("#id_meliscore_leftmenu"),
@@ -75,7 +76,9 @@ var melisDashBoardDragnDrop = {
             desktopGsPluginCssHeight    = {"height": "872px", "min-height": "872px"},
             desktopGsNoPluginCssHeight  = {"height": "745px", "min-height": "745px"},
             mobileGsPluginCssHeight     = {"height" : "590px", "min-height" : "590px"},
-            mobileGsNoPluginCssHeight   = {"height" : "465px", "min-height" : "465px"};
+            mobileGsNoPluginCssHeight   = {"height" : "465px", "min-height" : "465px"},
+            desktopGsNoPluginBubblePluginHiddenCssHeight = {"height": "790px", "min-height": "790px"},
+            desktopGsNoPluginBubblePluginShownCssHeight = {"height": "640px", "min-height": "640px"};
 
             // adjust grid-stack height when dashboard msg element is found
             if ( self.countGsItems() === 0 ) {
@@ -86,6 +89,14 @@ var melisDashBoardDragnDrop = {
                 else if ( melisCore.screenSize <= 576 ) {
                     self.$gs.css(mobileGsNoPluginCssHeight);
                 }
+                else {
+                    if ( self.$bubblePlugin.is(":hidden") ) {
+                        self.$gs.css(desktopGsNoPluginBubblePluginHiddenCssHeight);
+                    }
+                    else {
+                        self.$gs.css(desktopGsNoPluginBubblePluginShownCssHeight);
+                    }
+                }
             }
             else {
                 // check for mobile responsive
@@ -94,6 +105,14 @@ var melisDashBoardDragnDrop = {
                 }
                 else if ( melisCore.screenSize <= 576 ) {
                     self.$gs.css(mobileGsPluginCssHeight);
+                }
+                else {
+                    if ( self.$bubblePlugin.is(":hidden") ) {
+                        self.$gs.css(desktopGsNoPluginBubblePluginHiddenCssHeight);
+                    }
+                    else {
+                        self.$gs.css(desktopGsNoPluginBubblePluginShownCssHeight);
+                    }
                 }
             }
 
@@ -146,8 +165,6 @@ var melisDashBoardDragnDrop = {
     // drops a widget/plugin from dashboard's plugin sidebar
     dropWidget: function(widget) {
         var self            = this;
-            /* $gridstack      = $("#" + activeTabId + " .tab-pane .grid-stack"),
-            gridstackData   = $gridstack.data("gridstack"); */
 
             //var gridDrop = $(gridstack.container[0]).droppable({
             //var gridDrop = gridstack.container.droppable({
@@ -609,10 +626,19 @@ var melisDashBoardDragnDrop = {
 
                     if ( pluginCount === 0 ) {
                         $dashboardMsg.show();
-                        self.$gs.css({
-                            "height": "745px",
-                            "min-height": "745px"
-                        });
+
+                        if ( self.$bubblePlugin.is(":hidden") ) {
+                            self.$gs.css({
+                                "height": "790px",
+                                "min-height": "790px"
+                            });
+                        }
+                        else {
+                            self.$gs.css({
+                                "height": "640px",
+                                "min-height": "640px"
+                            });
+                        }
 
                         if ( ! self.$pluginBox.hasClass("shown") ) {
                             $("#melisDashBoardPluginBtn").trigger("click");
@@ -620,10 +646,19 @@ var melisDashBoardDragnDrop = {
                     }
                     else {
                         $dashboardMsg.hide();
-                        self.$gs.css({
-                            "height": "776px",
-                            "min-height": "776px"
-                        });
+
+                        if ( self.$bubblePlugin.is(":hidden") ) {
+                            self.$gs.css({
+                                "height": "790px",
+                                "min-height": "790px"
+                            });
+                        }
+                        else {
+                            self.$gs.css({
+                                "height": "640px",
+                                "min-height": "640px"
+                            });
+                        }
                     }
             }
         );
@@ -670,12 +705,22 @@ var melisDashBoardDragnDrop = {
 
                         // Show empty-dashboard message
                         var dashboardMsg = $("#"+activeTabId).find(melisDashBoardDragnDrop.melisDashboardMsg);
-                            if (dashboardMsg.length > 0) {
+                            if ( dashboardMsg.length > 0 ) {
                                 dashboardMsg.show();
-                                $(self.$gs).css({
-                                    "height": "745px",
-                                    "min-height": "745px"
-                                });
+
+                                if ( self.$bubblePlugin.is(":hidden") ) {
+                                    self.$gs.css({
+                                        "height": "790px",
+                                        "min-height": "790px"
+                                    });
+                                }
+                                else {
+                                    self.$gs.css({
+                                        "height": "640px",
+                                        "min-height": "640px"
+                                    });
+                                }
+
                                 if ( ! self.$pluginBox.hasClass("shown") ) {
                                     $("#melisDashBoardPluginBtn").trigger("click");
                                 }
@@ -809,9 +854,10 @@ var melisDashBoardDragnDrop = {
 
                         // add widget to dashboard default size 6 x 6
                         var widget = grid.addWidget(html, dashboardData.x, dashboardData.y, dashboardData.width, dashboardData.height);
+                        
                             // place in the last location
-                        // place in the last location
-                        $(widget).insertBefore($("div").find("[data-gs-id='" + nextElementId + "']"));
+                            $(widget).insertBefore($("div").find("[data-gs-id='" + nextElementId + "']"));
+
                             // assigning current plugin
                             self.setCurrentPlugin(widget);
 

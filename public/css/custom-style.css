@@ -46,6 +46,9 @@
 	padding: 0;
 	margin: 0;
 }
+.navbar.main .nav.navbar-right > li:hover > #module-status.dropdown-menu {
+	left: -12rem;
+}
 .navbar.main .nav.navbar-right .dropdown-menu li.active a {
 	background-color: #e61c23;
 	display: block;
@@ -1086,7 +1089,10 @@ a[data-toggle="modal"]:focus {
 	line-height: 24px;
 	min-height: 74px;
 }
-
+.grid-stack-item > .overlay-loader,
+#loader.overlay-loader {
+	background: rgba(0, 0, 0, 0.60);
+}
 
 /* Responsive media queries */
 @media (min-width: 768px) and (max-width: 1200px) {

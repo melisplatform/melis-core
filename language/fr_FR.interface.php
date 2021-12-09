@@ -637,6 +637,7 @@ return [
     'tr_meliscore_tinymce_mini_template_add_button_tooltip' => 'Insérer un mini modèle',
     'tr_meliscore_tinymce_mini_template_add_menuitem_text' => 'Insérer un mini modèle...',
     'tr_meliscore_tinymce_mini_template_no_template_found' => 'Pas de mini-template trouvé dans cette catégorie.',
+    'tr_meliscore_tinymce_site_tree_view_tooltip_text' => 'Vue arborescente du site',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',

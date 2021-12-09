@@ -621,6 +621,7 @@ return [
     'tr_meliscore_tinymce_mini_template_add_button_tooltip' => 'Insert Mini Template',
     'tr_meliscore_tinymce_mini_template_add_menuitem_text' => 'Insert Mini Template...',
     'tr_meliscore_tinymce_mini_template_no_template_found' => 'No mini-template found in this category.',
+    'tr_meliscore_tinymce_site_tree_view_tooltip_text' => 'Site tree view',
 
     // Microservice
     'tr_meliscore_microservice' => 'Microservice',
