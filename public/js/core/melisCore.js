@@ -334,8 +334,9 @@ var melisCore = (function(window){
 
     // OPEN TOOLS - opens the tools from the sidebar
     // .melis-dashboard-plugins-menu clicks on the icon for opening the per module dashboard
-    function openTools() {
-        var data            = $(this).data(),
+    function openTools() {      
+        var data            = $(this).data(); 
+        /* var data            = $(this).data(),
             title           = data.mainMenu,
             icon            = 'fa-tachometer',
             mainMenuGroup   = title,
@@ -349,24 +350,25 @@ var melisCore = (function(window){
         var $navParentGroup = $(".tab-element[data-id='"+navTabsGroup+"']"),
             $navMenus       = $navTabs.find("li").not(".main-menu, .sub-page-section-tab"), // .not(".sub-page-section-tab")
             $subMenu        = $navMenus.find(".nav-group-dropdown > li"),
-            $subSubMenu     = $subMenu.find(".nav-group-dropdown > li");
+            $subSubMenu     = $subMenu.find(".nav-group-dropdown > li"); */
 
-            // console.log("outside if openTools() $navMenus.length: ",  $navMenus.length);
-            /*  console.log("openTools() $navMenus.length > 7: ", $navMenus.length > 7 ); */
+            // console.log("openTools() outside if $navMenus.length: ",  $navMenus.length);
             
             // $navMenus.length > 7
-            if ( $navMenus.length > 7 ) {
+            /* if ( $navMenus.length > 7 ) {
                 console.log("true inside if openTools()");
+                
                 // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                // trigger openMainMenu() is done in tabExpander.js checkNavBarTabs()
                 tabExpander.openMainMenu( commonTitle, icon, zoneId, melisKey, navTabsGroup, mainMenuGroup );
-                // console.log("true inside if openTools() $navMenus.length: ",  $navMenus.length);
             }
             else {
-                console.log("false inside if openTools()");
+                console.log("false inside if openTools()"); */
+
                 // console.log("openTools() $navMenus.length [" + $navMenus.length + "]: data.toolMeliskey [" + data.toolMeliskey +"]");
                 // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-                melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', navTabsGroup, data.mainMenu );
-            }
+                melisHelper.tabOpen( data.toolName, data.toolIcon, data.toolId, data.toolMeliskey, '', data.toolId, data.mainMenu );
+            //}
     }
 
     // OPEN DASHBOARD - opens the dashboard from the sidebar

@@ -360,7 +360,7 @@ var melisHelper = (function() {
 
 	// CLOSE TAB AND REMOVE ===========================================================================================================
 	function tabClose( ID, fromGroup ) {
-		console.log("tabClose() !!!");
+		// console.log("tabClose() !!!");
 		var $this 				= $(this),
 			tabContentID 		= typeof ID === "string" ? ID : $this.data("id"),
 			$currentParent 		= $(".tabsbar a[data-id='" + tabContentID + "']").parent("li"),
@@ -371,8 +371,8 @@ var melisHelper = (function() {
 			$closeAllTab 		= $("#close-all-tab"),
 			$currentGrandParent = $currentParent.parent().parent("li").find(".tab-element").data("id"),
 			$mainMenu 			= $(".main-menu"),
-			$dashboard 			= $this.closest('.nav-group-dropdown').parent('.main-menu').find('[data-tool-id="id_meliscore_toolstree_section_dashboard"]'),
-			$navMenus 			= $navTabs.find('> .main-menu > .nav-group-dropdown li');
+			$dashboard 			= $this.closest('.nav-group-dropdown').parent('.main-menu').find('[data-tool-id="id_meliscore_toolstree_section_dashboard"]');
+			// $navMenus 			= $navTabs.find('> .main-menu > .nav-group-dropdown li');
 
 			fromGroup = typeof fromGroup != "undefined" ? fromGroup : false;
 
@@ -401,7 +401,7 @@ var melisHelper = (function() {
 			var $navBox 		= $currentParent.closest(".scroll"),
 				$hasdropdown 	= $navBox.find(".nav-group-dropdown");
 
-				// $currentParent = $(".tabsbar a[data-id='" + tabContentID + "']").parent("li"),
+				// $currentParent = $(".tabsbar a[data-id='" + tabContentID + "']").parent("li")
 				if ( $currentParent.hasClass("active-parent") ) {
 					var $tabMenuGroup = $currentParent.find(".nav-group-dropdown");
 
@@ -423,13 +423,87 @@ var melisHelper = (function() {
 						}
 				}
 				
-				console.log("$currentParent.index(): ", $currentParent.index());
+				// console.log("$currentParent.index(): ", $currentParent.index());
+
 				// $currentParent = $(".tabsbar a[data-id='" + tabContentID + "']").parent("li"),
 				if ( $currentParent.index() === 0 ) {
 					var $subTabsChildrenGroup 		= $currentParent.parent(".nav-group-dropdown"),
 						$subPageSectionTab 			= $subTabsChildrenGroup.closest(".sub-page-section-tab"),
 						$subTabsChildrenGroupLi 	= $subTabsChildrenGroup.find("li"),
 						$tabMainMenuGroup 			= $subPageSectionTab.closest(".nav-group-dropdown");
+
+						// console.log("$currentParent.siblings().length: ", $currentParent.siblings().length);
+
+						if ( $currentParent.siblings().length === 0 ) {
+							
+								// console.log("true $subTabsChildrenGroupLi.length: ", $subTabsChildrenGroupLi.length);
+
+								if ( $subTabsChildrenGroupLi.length ) {
+									// .not(".main-menu, .sub-page-section-tab")
+									// :not(.main-menu):not(.sub-page-section-tab)
+									var $navMenus 		= $navTabs.find("li").not(".main-menu, .sub-page-section-tab"),
+										$tabMainMenu 	= $navTabs.find(".main-menu");
+
+										/* console.log("$navMenus.length: ", $navMenus.length);
+										console.log("$tabMainMenu.length: ", $tabMainMenu.length);
+										console.log("$('.sub-page-section-tab').length: ", $('.sub-page-section-tab').length); */
+
+										// check the number of tabs if needs to be appended back to $navTabs
+										if ( $navMenus.length < 8 ) {
+											// console.log("true $navMenus.length: ", $navMenus.length);
+											// append tabs back on $navTabs
+											tabExpander.appendNavMenusOnTabsBar();
+
+											// remove main menus
+											$tabMainMenu.remove();
+
+											// removing the sub page section
+											$navTabs.find(".sub-page-section-tab").remove();
+
+											if ( tabCount > 1 ) {
+												$closeAllTab.show();
+											}
+										}
+										else {
+											// console.log("false $navMenus.length: ", $navMenus.length);
+
+											var thisDataId = $this.data("id");
+												$thisParentLi = $(".close-tab[data-id='" + thisDataId + "']").closest("li"),
+												$thisNavGroup = $thisParentLi.closest(".nav-group-dropdown");
+
+												if ( $thisParentLi.index() === 0 ) {
+													$thisParentLi.closest(".nav-group-dropdown").remove();
+												}
+
+												// remove the .nav-group-dropdown
+												$thisNavGroup.remove();
+
+												// console.log('$subTabsChildrenGroup.closest(".sub-page-section-tab").length: ', $subTabsChildrenGroup.closest(".sub-page-section-tab").length);
+												// removing the sub page section
+												if ( $thisNavGroup.closest(".sub-page-section-tab").length ) {
+													$thisNavGroup.closest(".sub-page-section-tab").remove();
+												}										
+										}
+										/* else {
+											console.log("false $navMenus.length: ", $navMenus.length);
+
+											var thisDataId = $this.data("id");
+												$thisParentLi = $(".close-tab[data-id='" + thisDataId + "']").closest("li");
+
+												console.log("$thisParentLi.index(): ", $thisParentLi.index());
+
+												if ( $thisParentLi.index() === 0 ) {
+													$thisParentLi.closest(".nav-group-dropdown").remove();
+												}
+										} */
+
+										// remove .sub-page-section-tab
+										//$subPageSectionTab.remove();
+
+										// remove sub tabs children .nav-group-dropdown
+										//$subTabsChildrenGroup.remove();
+								}
+						}
 
 						$currentParent.remove();
 						$("#" + tabContentID).remove();
@@ -440,113 +514,41 @@ var melisHelper = (function() {
 								tabSwitch( $currentGrandParent );
 							}
 						}
-
-						console.log("$currentParent.siblings().length: ", $currentParent.siblings().length);
-						if ( $currentParent.siblings().length === 0 ) {
-							var $navMenus 		= $navTabs.find("li:not(.main-menu):not(.sub-page-section-tab)"),
-								$tabMainMenu 	= $navTabs.find(".main-menu");
-
-								console.log("$subTabsChildrenGroupLi.length: ", $subTabsChildrenGroupLi.length);
-								if ( $subTabsChildrenGroupLi.index() === 0 ) {
-									// console.log("true $subTabsChildrenGroupLi.index() === 0");
-									// $tabMainMenu.closest("li").remove();
-
-									// console.log("$subPageSectionTab.length: ", $subPageSectionTab.length);
-
-									console.log("true $tabMainMenu.length: ", $tabMainMenu.length);
-									console.log("true $navMenus.length: ", $navMenus.length);
-
-									// check the number of tabs if needs to be appended back to $navTabs
-									if ( $navMenus.length < 8 ) {
-										// append tabs back on $navTabs
-										tabExpander.appendNavMenusOnTabsBar();
-
-										// remove main menus
-										$tabMainMenu.remove();
-
-										// removing the sub page section
-										$navTabs.find(".sub-page-section-tab").remove();
-									}
-
-									// remove .sub-page-section-tab
-									//$subPageSectionTab.remove();
-
-									// remove sub tabs children .nav-group-dropdown
-									//$subTabsChildrenGroup.remove();
-								}
-								else {
-
-								 /* var $this 				= $(this),
-										tabContentID 		= typeof ID === "string" ? ID : $this.data("id"),
-										$currentParent 		= $(".tabsbar a[data-id='" + tabContentID + "']").parent("li"),
-										$nextActiveTab 		= $currentParent.next("li").children().data("id"),
-										$prevActiveTab 		= $currentParent.prev("li").children().data("id"),
-										tabCount 			= $navTabs.children("li").length,
-										removedWidth 		= $currentParent.width(),
-										$closeAllTab 		= $("#close-all-tab"),
-										$currentGrandParent = $currentParent.parent().parent("li").find(".tab-element").data("id"),
-										$mainMenu 			= $(".main-menu"),
-										$dashboard 			= $this.closest('.nav-group-dropdown').parent('.main-menu').find('[data-tool-id="id_meliscore_toolstree_section_dashboard"]'),
-										$navMenus 			= $navTabs.find('> .main-menu > .nav-group-dropdown li'); */
-
-									console.log("false $subTabsChildrenGroupLi.index() != 0");
-									console.log("false $tabMainMenu.length: ", $tabMainMenu.length);
-									console.log("false $navMenus.length: ", $navMenus.length);
-
-									// $currentParent 		= $(".tabsbar a[data-id='" + tabContentID + "']").parent("li")
-									// if ( $currentParent.)
-
-									// remove .sub-page-section-tab
-									// $subPageSectionTab.remove();
-
-									// remove sub tabs children .nav-group-dropdown
-									// $subTabsChildrenGroup.remove();
-
-									// check the number of tabs if needs to be appended back to $navTabs
-									if ( $navMenus.length < 8 ) {
-										// append tabs back on $navTabs
-										tabExpander.appendNavMenusOnTabsBar();
-
-										// remove main menus
-										$tabMainMenu.remove();
-
-										// removing the sub page section
-										$navTabs.find(".sub-page-section-tab").remove();
-									}
-								}
-						}
 				} 
 				else {
 					setTimeout(function() {
-					var $navMenus 		= $navTabs.find("li:not(.main-menu):not(.sub-page-section-tab)"),
-						$tabMainMenu 	= $navTabs.find(".main-menu");
+						var $navMenus 		= $navTabs.find("li").not(".main-menu, .sub-page-section-tab"),
+							$tabMainMenu 	= $navTabs.find(".main-menu");
 
-						console.log("false $currentParent.index() !== 0");
-						console.log("$navMenus.length: ", $navMenus.length);
+							// console.log("false $currentParent.index() !== 0");
+							/* console.log("$navMenus.length: ", $navMenus.length); */
 
-						// check the number of tabs if needs to be appended back to $navTabs
-						if ( $navMenus.length < 8 ) {
-							// append tabs back on $navTabs
-							tabExpander.appendNavMenusOnTabsBar();
+							// check the number of tabs if needs to be appended back to $navTabs
+							if ( $navMenus.length < 8 ) {
+								// append tabs back on $navTabs
+								tabExpander.appendNavMenusOnTabsBar();
 
-							// remove main menus
-							$tabMainMenu.remove();
+								// remove main menus
+								$tabMainMenu.remove();
 
-							// removing the sub page section
-							$navTabs.find(".sub-page-section-tab").remove();
-						}
-						console.log("false $currentParent.index() !== 0 setTimeout!!!!");
+								// removing the sub page section
+								$navTabs.find(".sub-page-section-tab").remove();
+
+								if ( tabCount > 1 ) {
+									$closeAllTab.show();
+								}
+							}
 					}, 0);
 
-						$currentParent.remove();
-						$("#" + tabContentID).remove();
+					$currentParent.remove();
+					$("#" + tabContentID).remove();
 
-						// tabCount = $navTabs.children("li").length,
-						if ( tabCount >= 1 ) {
-							if ( activeTabId === tabContentID ) {
-								tabSwitch( $prevActiveTab );
-							}
+					// tabCount = $navTabs.children("li").length,
+					if ( tabCount >= 1 ) {
+						if ( activeTabId === tabContentID ) {
+							tabSwitch( $prevActiveTab );
 						}
+					}
 				}
 
 				// check scroll class exists
@@ -612,7 +614,8 @@ var melisHelper = (function() {
 			// menuText 	= mainMenu.replace(/'/g, "&apos;").replace('/', "").replace(" ", "");
 		
 			if ( alreadyOpen.length < 1 ) {
-				var menuData = ( mainMenu === 'Pages' ) ? ' data-tool-main-sub-menu="Pages"' : ' data-tool-main-menu="'+ mainMenu +'"';
+				// for melis cms pages
+				var menuData = ( mainMenu === 'Pages' ) ? ' data-tool-main-sub-menu="Pages" data-tool-main-menu="MelisCms"' : ' data-tool-main-menu="'+ mainMenu +'"';
 
 				var li = "<li data-tool-name='" + title + "' data-tool-icon='" + icon +"' data-tool-id='" + zoneId + "' data-tool-meliskey='" + melisKey + "'" + menuData + ">";
 					li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" + zoneId + "' data-id='" + zoneId + "' title='" + title.replace(/'/g, "&apos;") + "'>";

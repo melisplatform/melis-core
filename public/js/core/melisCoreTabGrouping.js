@@ -6,9 +6,15 @@ var melisCoreTabGrouping = (function($, window) {
     // variable declaration
 	var $melisOpenTools = $(".sideMenu").find(".melis-opentools"),
         $navTabs        = $("#melis-id-nav-bar-tabs"),
-        $coreDasboard   = $("#id_meliscore_leftmenu_dashboard");
+        $coreDasboard   = $("#id_meliscore_leftmenu_dashboard"),
+        //$siteTree       = $("#id-mod-menu-dynatree"),
+        //$sites          = $siteTree.find("[role='treeitem']"), // treeview site
+		//$sitePages      = $sites.find("[role='group'] [role='treeitem']"), // treeview site page
+        mainMenuText    = $("#meliscore_toolstree_section").find("a > .toolstree-label").text(),
+        $dashboardTab   = $("[data-tool-name='Dashboard']");
 
-        /* title           = 'Pages',
+        /* 
+        title           = 'Pages',
         icon            = 'fa-tachometer',
         zoneId          = 'id_meliscms_page_tab_list_container',
         melisKey        = 'meliscms_page_tab_list_container',
@@ -17,39 +23,105 @@ var melisCoreTabGrouping = (function($, window) {
 
         // functions / methods
         function init() {
-            var mainMenuText    = $("#meliscore_toolstree_section").find("a > .toolstree-label").text(),
-                $dashboardTab   = $("[data-tool-name='Dashboard']");
+            // left menu
+            $coreDasboard.attr("data-main-menu", mainMenuText);
+            
+            // opened dashboard tab
+            $dashboardTab.attr("data-tool-main-menu", mainMenuText); // $dashboardTab.attr("data-main-menu", mainMenuText);
 
-                // .melis-open-tools
+            // console.log("addDataSiteMenuAttribute() $melisOpenTools.length: ", $melisOpenTools.length);
+            // .melis-open-tools
+            if ( $melisOpenTools.length ) {
                 $.each( $melisOpenTools, function(i, v) {
                     var $menu           = $(v),
-                        main_menu_text  = $menu.parents(".hasSubmenu").find("a > .toolstree-label").text();
+                        mainMenuText    = $menu.parents(".hasSubmenu").find("a > .toolstree-label").text();
 
-                        $menu.attr("data-main-menu", main_menu_text);
+                        $menu.attr("data-main-menu", mainMenuText);
                 });
+            }
+        }
 
-                // left menu
-                $coreDasboard.attr("data-main-menu", mainMenuText);
-                
-                // opened dashboard tab
-                $dashboardTab.attr("data-tool-main-menu", mainMenuText);
+        // adds data menu attribute on the melis cms pages
+        function addDataSiteMenuAttribute() {
+            // console.log("addDataSiteMenuAttribute() !!!");
+            var $siteTree       = $("#id-mod-menu-dynatree"),
+                $sites          = $siteTree.find("[role='treeitem']"), // treeview site
+                $sitePages      = $sites.find("[role='group'] [role='treeitem']"); // treeview site page
+
+                // #id-mod-menu-dynatree, sites
+                if ( $sites.length ) {
+                    $.each( $sites, function(i, v) {
+                        var $site           = $(v),
+                            mainMenuAttr    = $site.attr("data-main-menu"),
+                            subMenuAttr     = $site.attr("data-main-sub-menu"),
+                            siteMenuText    = $site.parents(".hasSubmenu").find("a > .toolstree-label").text();
+
+                            if ( typeof mainMenuAttr == "undefined" || mainMenuAttr == false ) {
+                                $site.attr("data-main-menu", siteMenuText);
+                            }
+                           
+                            if ( typeof subMenuAttr == "undefined" || subMenuAttr == false ) {
+                                $site.attr("data-main-sub-menu", "Pages");
+                            }
+                    });
+                }
+
+                // console.log("$sitePages.length: ", $sitePages.length);
+
+                // #id-mod-menu-dynatree, site pages
+                /* if ( $sitePages.length ) {
+                    // console.log("addDataSiteMenuAttribute() addDataSitePagesMenuAttribute() $sitesPages.length");
+
+                    addDataSitePagesMenuAttribute( $sites );
+                } */
+        }
+
+        function addDataSitePagesMenuAttribute( $sites ) {
+            // console.log("addDataSitePagesMenuAttribute() !!!");
+            var $sitePages = $sites.find("[role='group'] [role='treeitem']"); // treeview site page
+
+                // site's pages
+                $.each( $sitePages, function(i, v) {
+                    var $page           = $(v),
+                        mainMenuAttr    = $page.attr("data-main-menu"),
+                        subMenuAttr     = $page.attr("data-main-sub-menu"),
+                        siteMenuText    = $page.parent("[role=group]").closest("[role=treeitem]").parents(".hasSubmenu").find("a > .toolstree-label").text();
+
+                        if ( typeof mainMenuAttr == "undefined" || mainMenuAttr == false ) {
+                            $page.attr("data-main-menu", siteMenuText);
+                        }
+
+                        if ( typeof subMenuAttr == "undefined" || subMenuAttr == false ) {
+                            $page.attr("data-main-sub-menu", "Pages");
+                        }
+
+                        console.log("addDataSitePagesMenuAttribute() siteMenuText: ", siteMenuText);
+                });
         }
 
         // opening the melis cms page itself
         function openFancytreePage( pageName, data ) {
-            // console.log("openFancytreePage() data: ", data);
-			// title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-			melisHelper.tabOpen( pageName, data.iconTab, data.melisData.item_zoneid, data.melisData.item_melisKey, { idPage: data.melisData.page_id }, 'id_meliscms_page_tab_list_container', 'Pages', function() {
+            var matches = pageName.match(/\d+/g);
 
-                // opening of page sub menu
-                openPageSubMenu();
+                /* if ( matches != null && matches !== 'undefined' && matches !== undefined ) {
 
-                // console.log("openFancytreePage melisKey: ", data.melisData.item_melisKey);
-                melisCms.pageTabOpenCallback(data.melisData.page_id);
+                } */
 
-                // show page loader, melis-core/public/js/loader.js
-                loader.addActivePageEditionLoading( data.melisData.item_zoneid );
-			});
+                // console.log("openFancytreePage() data.melisData: ", data.melisData);
+
+                // if ( pageName )
+
+                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                melisHelper.tabOpen( pageName, data.iconTab, data.melisData.item_zoneid, data.melisData.item_melisKey, { idPage: data.melisData.page_id }, 'id_meliscms_page_tab_list_container', 'Pages', function() {
+                    // opening of page sub menu
+                    openPageSubMenu();
+
+                    // console.log("openFancytreePage melisKey: ", data.melisData.item_melisKey);
+                    melisCms.pageTabOpenCallback(data.melisData.page_id);
+
+                    // show page loader, melis-core/public/js/loader.js
+                    loader.addActivePageEditionLoading( data.melisData.item_zoneid );
+                });
 		}
 
         // opening of page sub menu under MelisCms
@@ -71,6 +143,7 @@ var melisCoreTabGrouping = (function($, window) {
                     else {
                         // console.log("$navMenus.length: ", $navMenus.length);
                         if ( $navMenus.length > 7 ) {
+                            // These is where adding of MelisCms even if naka undefined sa data-main-menu attribute
                             // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
                             melisHelper.tabOpen('MelisCms', 'fa-tachometer', 'id_meliscms_tab_list_container', 'meliscms_tab_list_container', '', 'MelisCms');
                             // addPageSectionMenu();
@@ -93,7 +166,7 @@ var melisCoreTabGrouping = (function($, window) {
                 melisKey            = 'meliscms_page_tab_list_container',
                 navTabsGroup        = zoneId;
 
-            var li = "<li class='has-sub sub-page-section-tab' data-tool-name='" + title + "' data-tool-icon='" + icon +"' data-tool-id='" + zoneId + "' data-tool-meliskey='" + melisKey + "' data-tool-main-sub-menu='" + title + "'>";
+            var li = "<li class='has-sub sub-page-section-tab' data-tool-name='" + title + "' data-tool-icon='" + icon +"' data-tool-id='" + zoneId + "' data-tool-meliskey='" + melisKey + "' data-tool-main-sub-menu='" + title + "' data-tool-main-menu='MelisCms'>";
                 li += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" + zoneId + "' data-id='" + zoneId + "' title='" + title.replace(/'/g, "&apos;") + "'>";
                 li += "<i class='fa " + icon + " fa-2x'></i><span class='navtab-pagename'>";
                 li += title + "</span></a>";
@@ -179,6 +252,8 @@ var melisCoreTabGrouping = (function($, window) {
 
         return {
             openFancytreePage : openFancytreePage,
-            openPageSubMenu : openPageSubMenu
+            openPageSubMenu : openPageSubMenu,
+            addDataSiteMenuAttribute : addDataSiteMenuAttribute,
+            addDataSitePagesMenuAttribute : addDataSitePagesMenuAttribute
         };
 })(jQuery, window);

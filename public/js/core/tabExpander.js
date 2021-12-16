@@ -30,10 +30,9 @@ var tabExpander = (function($, window){
         var listArray = [], uniqueArray = [], counting = 0, found = false;
 
             $.each($elemArray, function(i, v) {
-                var mainMenu = $(v).data("tool-main-menu");
-                
+                var mainMenu = $(v).attr("data-tool-main-menu");
+                    // console.log("getUniqueMainMenu() mainMenu: ", mainMenu);
                     if ( mainMenu != null && mainMenu != 'undefined' && mainMenu != '' ) {
-
                         if ( $.inArray( mainMenu, listArray ) == -1 ) {
                             listArray.push( mainMenu );
                         }
@@ -89,9 +88,13 @@ var tabExpander = (function($, window){
 
     // append nav menus, $navTabsMenus li's, $navMenus li from $navParentGroup
     function appendNavMenus( $menus, $navMenus, navTabsGroup) {
+        /* console.log("appendNavMenus() $menus: ", $menus);
+        console.log("appendNavMenus() $navMenus: ", $navMenus); */
+
         /**
-         * Add the direct children tabs in the first .nav-group-down
+         * Add the direct children tabs in the first .nav-group-dropdown
          * Insert the nav li inside $navParentGroup tab
+         * All tab menus, $("#melis-id-nav-bar-tabs").find("li")
          */
         $.each( $menus, function(i, v) {
             //console.log("appendNavMenus $menus i: ", i);
@@ -110,14 +113,22 @@ var tabExpander = (function($, window){
                 ];
                
                 // console.log("melisKeys.includes( menuData.toolMeliskey ): ", melisKeys.includes( menuData.toolMeliskey ) );
-                // menuData.toolMeliskey !== 'meliscore_dashboard'
+
+                /** 
+                 * menuData.toolMeliskey !== 'meliscore_dashboard'
+                 * All main tab menus with .main-menu class, $("#melis-id-nav-bar-tabs").find(".main-menu")
+                 */
                 if ( ! melisKeys.includes( menuData.toolMeliskey ) ) {
                     $.each( $navMenus, function(i, v) {
                         var $navMenu    = $(v),
                             navMenuData = $navMenu.data();
-       
+
+                            /* console.log("navMenuData.toolMainMenu: ", navMenuData.toolMainMenu);
+                            console.log("menuData.toolMainMenu: ", menuData.toolMainMenu); */
+
                             // $navMenu.find(".nav-group-dropdown").append( $menu );
                             if ( navMenuData.toolMainMenu == menuData.toolMainMenu ) {
+                                // $navMenu.find(".nav-group-dropdown").append( $menu );
                                 $navMenu.find(" > .nav-group-dropdown").append( $menu );
                             }
                     });
@@ -126,13 +137,14 @@ var tabExpander = (function($, window){
 
         // set active the nav menu .main-menu
         // $navMenus.addClass("has-sub active-parent");
-        $navMenus.addClass("has-sub main-menu");
+        // $navMenus.addClass("has-sub main-menu");
     }
 
     // open main menu
     function openMainMenu( title, icon, zoneId, melisKey, navTabsGroup, mainMenuGroup, callback ) {
         // console.log("openMainMenu() navTabsGroup: ", navTabsGroup);
         // console.log("openMainMenu() mainMenuGroup: ", mainMenuGroup);
+
         // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
         melisHelper.tabOpen( title, icon, zoneId, melisKey, '', navTabsGroup, mainMenuGroup, function() {
             var $navParentGroup = $(".tab-element[data-id='" + navTabsGroup + "']"),
@@ -140,7 +152,7 @@ var tabExpander = (function($, window){
                 $navMenus       = $navParentGroup.closest("li"),
                 $hasdropdown    = $navMenus.find(".nav-group-dropdown");
 
-                // console.log("openMainMenu() melisKey: ", melisKey);
+                // console.log("openMainMenu() melisHelper.tabOpen() navTabsGroup: ", navTabsGroup);
                 
                 // check if parent group is found
                 if ( $navParentGroup.length ) {
@@ -156,53 +168,79 @@ var tabExpander = (function($, window){
                         // append nav menus, $navTabsMenus li's, $navMenus li from $navParentGroup
                         appendNavMenus( $navTabsMenus, $navMenus, navTabsGroup );
                     }
+
+                    // adding of class .main-menu
+                    // $navMenus.addClass("main-menu");
                 }
 
-                // adding of class main-menu
-                $navMenus.addClass("main-menu");
+                // console.log('openMainMenu() melisHelper.tabOpen() $navTabs.find("li[data-tool-meliskey=`meliscms_page``]").length: ', $navTabs.find("li[data-tool-meliskey='meliscms_page']").length);
+                
+                var $melisCmsPage   = $navTabs.find("li[data-tool-meliskey='meliscms_page']"),
+                    data            = $melisCmsPage.data();
 
-                // check if page sub menu section is to be opened
-                if ( $navTabs.find("li[data-tool-meliskey='meliscms_page']").length ) {
-                    melisCoreTabGrouping.openPageSubMenu();
-                }
+                    // console.log("data: ", data);
+                    // check if page sub menu section is to be opened
+                    if ( $melisCmsPage.length ) {
+                        // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                        melisCoreTabGrouping.openPageSubMenu();
+                        // melisCoreTabGrouping.openFancytreePage( data.toolName, data );
+                    }
 
                 // checks on sub menu to add a has-sub class
                 melisHelper.checkSubMenu();
         });
 
-        if ( callback && typeof callback === "function" ) {
-			callback();
-		}
+        // WORK ON THE ADDING OF .main-menu CLASS ONLY ON THE MAIN MENU TAB
+        // var $navTabMenus = $navTabs.find("> li");
+
+            // adding of class .main-menu
+            // $navTabMenus.addClass("main-menu");
+
+            // console.log("checkNavBarTabs() $navTabMenus.length: ", $navTabMenus.length);
+
+            if ( callback && typeof callback === "function" ) {
+                callback();
+            }
     }
 
-    // check #melis-id-nav-bar-tabs
+    // Check #melis-id-nav-bar-tabs
+    // Opening of per module dashboards $body.on("click", ".melis-dashboard-plugins-menu", function()
     function checkNavBarTabs() {
-        var $navTabsLi      = $("#melis-id-nav-bar-tabs > li"),
-            uniqueMainMenu  = getUniqueMainMenu( $navTabsLi );
+        setTimeout(function() {
+            var $navTabMenus    = $("#melis-id-nav-bar-tabs > li"), // $navTabs.find("li").not(".main-menu, .sub-page-section-tab"),
+                uniqueMainMenu  = getUniqueMainMenu( $navTabMenus );
+                
+                /* console.log("checkNavBarTabs() uniqueMainMenu: ", uniqueMainMenu);
+                console.log("checkNavBarTabs() $navTabMenus: ", $navTabMenus); */
+                // console.log("checkNavBarTabs() setTimeout 1000 $navTabMenus.data(): ", $navTabMenus.data() );
 
-            if ( $navTabsLi.length > 7 ) {
-                for ( var index = 0; index < uniqueMainMenu.length; index++ ) {
-                    var title           = uniqueMainMenu[index],
-                        icon            = 'fa-tachometer',
-                        mainMenuGroup   = title,
-                        mainMenuText    = title.replace(' ', '').split('/')[0], // replace('/', "").replaceAll(" ", "")
-                        melisKey        = mainMenuText.toLowerCase()+'_tab_list_container',
-                        zoneId          = 'id_'+mainMenuText.toLowerCase()+'_tab_list_container',
-                        customTitle     = ( title === 'Custom / Projects' ) ? title.split('/')[0] : title,
-                        commonTitle     = ( customTitle === 'Custom' ) ? customTitle : mainMenuText,
-                        navTabsGroup    = zoneId;
+                if ( $navTabMenus.length > 7 ) {
+                    for ( var index = 0; index < uniqueMainMenu.length; index++ ) {
+                        var title           = uniqueMainMenu[index];
+                            icon            = 'fa-tachometer',
+                            mainMenuGroup   = title,
+                            mainMenuText    = title.replace(' ', '').split('/')[0], // replace('/', "").replaceAll(" ", "")
+                            melisKey        = mainMenuText.toLowerCase()+'_tab_list_container',
+                            zoneId          = 'id_'+mainMenuText.toLowerCase()+'_tab_list_container',
+                            customTitle     = ( title === 'Custom / Projects' ) ? title.split('/')[0] : title,
+                            commonTitle     = ( customTitle === 'Custom' ) ? customTitle : mainMenuText,
+                            navTabsGroup    = zoneId;
 
-                        if ( commonTitle != null && commonTitle != 'undefined' ) {
-                            // console.log("checkNavBarTabs navTabsGroup: ", navTabsGroup);
-                            // open main menu and append the child menus
-                            // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-                            openMainMenu( commonTitle, icon, zoneId, melisKey, navTabsGroup, mainMenuGroup );
-                        }
+                            console.log("checkNavBarTabs(): ", uniqueMainMenu[index]);
+
+                            if ( commonTitle != null && commonTitle != 'undefined' ) {
+                                // console.log("checkNavBarTabs navTabsGroup: ", navTabsGroup);
+                                // open main menu and append the child menus
+                                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
+                                openMainMenu( commonTitle, icon, zoneId, melisKey, navTabsGroup, mainMenuGroup, function() {
+                                    var $navTabMenu = $("[data-tool-id='"+zoneId+"']");
+
+                                        $navTabMenu.addClass("main-menu");
+                                });
+                            }
+                    }
                 }
-            }
-            // else {
-                // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
-            // }
+        }, 0);
     }
 
 	// ENABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
