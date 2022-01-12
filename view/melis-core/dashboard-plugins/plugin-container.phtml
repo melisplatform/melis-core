@@ -13,7 +13,7 @@
                     	<a class="btn btn-default dashboard-plugin-delete" <?php echo !empty($this->deleteCallBack) ? 'data-callback="' . $this->deleteCallBack . '"' : '' ?>><i class="fa fa-trash"></i></a>
                         <a class="btn btn-default dashboard-plugin-refresh"><i class="fa fa-refresh"></i></a>
                     </div>
-                    <h3 class="heading"><i class="<?php echo $this->translate($this->pluginConfig['datas']['icon']); ?>"></i> <?php echo $this->translate($this->pluginConfig['datas']['name']); ?></h3>
+                    <h3 class="heading"><i class="<?php echo $this->translate($this->pluginConfig['datas']['icon']); ?>"></i> <?=!empty($this->pluginConfig['datas']['dashboard_title'])?$this->translate($this->pluginConfig['datas']['dashboard_title']):$this->translate($this->pluginConfig['datas']['name']); ?></h3>
                 </div>
                 <div class="widget-body padding-none">
                 	<?php echo $this->pluginView ?>

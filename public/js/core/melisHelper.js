@@ -1031,13 +1031,27 @@ var melisHelper = (function() {
 					{ responsivePriority: 1, targets: 0 },
 					{ responsivePriority: 2, targets: -1 },
 				],
-				language: melisDataTable.tableLanguage[langTrans],
+				language: window.melisDataTable.tableLanguage[langTrans],				
 			};
-			// add ajax
+			
+
+			//merge here the data config with the default settings
+			if (requiredSettings.hasOwnProperty("data")) {
+				if(Object.keys(requiredSettings.data).length > 0) {					
+					settings = Object.assign(settings, requiredSettings.data);					
+				}							
+			}
+
+			var dataFunction = null;
+			if (requiredSettings.hasOwnProperty("dataFunction")) {
+				dataFunction  = window[requiredSettings.dataFunction];
+			}
+
 			if (requiredSettings.hasOwnProperty("ajaxUrl")) {
 				settings.ajax = {
 					url: requiredSettings.ajaxUrl,
 					type: "POST",
+					data: dataFunction
 				};
 			}
 			// check for columns
@@ -1053,15 +1067,18 @@ var melisHelper = (function() {
 						});
 						settings.columnDefs.push({
 							width: item.css.width,
-							targets: ctr,
+							targets: ctr,	
+							sClass: item.sClass						
 						});
+
 						ctr++;
 					});
 				}
 				// set datatable columns
 				settings.columns = tmpColumns;
 			}
-			if (requiredSettings.hasOwnProperty("filters")) {
+
+			if (requiredSettings.hasOwnProperty("filters")) {				  		
 				var preDefinedFilters = ["l", "f"];
 				var tableTop = '<"filter-bar"<"row"';
 				var leftDom = '<"fb-dt-left col-xs-12 col-md-4"';
@@ -1070,8 +1087,8 @@ var melisHelper = (function() {
 				var tableBottom = '<"bottom" t<"pagination-cont"rip>>';
 				var jsSdomContentInit = [];
 
-				// left filter area
-				if (Object.keys(requiredSettings.filters.left).length > 0) {
+				// left filter area				
+				if (Object.keys(requiredSettings.filters.left).length > 0) {					
 					// loop all left filters
 					$.each(requiredSettings.filters.left, function(index, item) {
 						// check for predefined datatble content
@@ -1135,8 +1152,15 @@ var melisHelper = (function() {
 					">>>" +
 					tableBottom;
 			}
+
+			//check if no filters set, sDom should not be displayed
+			if(Object.keys(requiredSettings.filters.left).length == 0 && Object.keys(requiredSettings.filters.center).length == 0 
+				&& Object.keys(requiredSettings.filters.right).length == 0){				
+				settings.sDom = "";
+			}
+
 			// add action buttons
-			if (requiredSettings.hasOwnProperty("actionButtons")) {
+			if(requiredSettings.hasOwnProperty("actionButtons")) {
 				// check if it has elements
 				if (Object.keys(requiredSettings.actionButtons).length > 0) {
 					settings.columns.push({
@@ -1151,7 +1175,7 @@ var melisHelper = (function() {
 						data: null,
 						width: "10%",
 						bSortable: false,
-						sClass: "dtActionCls",
+						sClass: "dtActionCls all",
 						mRender: function() {
 							return actionButtons;
 						},
@@ -1164,6 +1188,7 @@ var melisHelper = (function() {
 				.DataTable(settings)
 				.columns.adjust()
 				.responsive.recalc();
+
 			//run callback function for addtional filters
 			target.on("init.dt", function() {
 				// get all filter function
