@@ -103,14 +103,6 @@ var melisCoreTabGrouping = (function($, window) {
         function openFancytreePage( pageName, data ) {
             var matches = pageName.match(/\d+/g);
 
-                /* if ( matches != null && matches !== 'undefined' && matches !== undefined ) {
-
-                } */
-
-                // console.log("openFancytreePage() data.melisData: ", data.melisData);
-
-                // if ( pageName )
-
                 // title, icon, zoneId, melisKey, parameters, navTabsGroup, mainMenu, callback
                 melisHelper.tabOpen( pageName, data.iconTab, data.melisData.item_zoneid, data.melisData.item_melisKey, { idPage: data.melisData.page_id }, 'id_meliscms_page_tab_list_container', 'Pages', function() {
                     // opening of page sub menu
