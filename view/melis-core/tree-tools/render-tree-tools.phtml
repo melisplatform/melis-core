@@ -39,12 +39,13 @@ $sections = [
     'melismarketplace_toolstree_section' => $this->melisOthersIcon(),
 ];
 
+$group = str_replace('_toolstree_section', null, $melisKey);
 ?>
 
 <?php
 if ($isParentTool && !empty($this->tools)):
     ?>
-    <li class="melis-opentools" data-tool-icon="<?= $tabIcon ?>" data-tool-name="<?= $tabName ?>" data-tool-id="<?= $targetId ?>" data-tool-meliskey="<?= $targetMelisKey ?>">
+    <li class="melis-opentools" data-tab-group="<?=$group?>" data-tool-icon="<?= $tabIcon ?>" data-tool-name="<?= $tabName ?>" data-tool-id="<?= $targetId ?>" data-tool-meliskey="<?= $targetMelisKey ?>">
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
             <a data-target="#<?= $id ?>_tools">
@@ -66,7 +67,7 @@ if ($isParentTool && !empty($this->tools)):
 <?php
 elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
     ?>
-    <li id="<?= $id; ?>" class="hasSubmenu <?= empty($this->tools) ? 'd-none' : null ?>" data-melisKey='<?= $melisKey; ?>'>
+    <li id="<?= $id; ?>" data-tab-group="<?=$group?>" class="hasSubmenu <?= empty($this->tools) ? 'd-none' : null ?>" data-melisKey='<?= $melisKey; ?>'>
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
             <a data-target="#<?= $id ?>_tools" data-toggle="collapse" class="collapsed">
@@ -97,7 +98,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                     <?php
                     if (!empty($sectionTool['toolsection_has_nav_child'])):
                         ?>
-                        <li class="hasSubmenu" data-meliskey="">
+                        <li class="hasSubmenu" data-meliskey="" data-tab-group="<?=$group?>">
                             <?php if(count($sectionTool['toolsection_children']) > 1) : ?>
                                 <a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
                                     <i class="fa <?= $sectionIcon; ?>"></i>
@@ -126,7 +127,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                                             $data_tool_meliskey = $tool['tool_melisKey'];
                                             ?>
                                             <?php if (isset($tool['toolsection_has_nav_child']) && (bool) $tool['toolsection_has_nav_child'] === true): ?>
-                                            <li class="hasSubmenu" data-meliskey="">
+                                            <li class="hasSubmenu" data-meliskey="" data-tab-group="<?= $group ?>">
                                                 <a data-target="#sub-load-<?= $keyTool; ?>" data-toggle="collapse" class="collapsed">
                                                     <i class="fa <?= $toolIcon; ?>"></i>
                                                     <span><?= $data_tool_name ?></span>
@@ -143,7 +144,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                                                         $data_tool_name = $childTool['tool_name'];
                                                         $data_tool_meliskey = $childTool['tool_melisKey'];
                                                         ?>
-                                                        <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
+                                                        <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tab-group="<?= $group ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
                                                             <a href="#">
                                                                 <i class="fa <?= $toolIcon ?>"></i>
                                                                 <span><?= $data_tool_name ?> </span>
@@ -154,7 +155,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                                                 </ul>
                                             </li>
                                         <?php else: ?>
-                                            <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
+                                            <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tab-group="<?= $group ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
                                                 <a href="#">
                                                     <i class="fa <?= $toolIcon ?>"></i>
                                                     <span><?= $data_tool_name ?> </span>
@@ -173,7 +174,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                         // if the tool doesn't have a child tool, display it's main tool
                         if (isset($sectionTool['toolsection_name'])):
                             ?>
-                            <li class="melis-opentools" data-tool-icon="<?= $sectionIcon ?>" data-tool-name="<?= $sectionTool['toolsection_name'] ?>"
+                            <li class="melis-opentools" data-tool-icon="<?= $sectionIcon ?>" data-tool-name="<?= $sectionTool['toolsection_name'] ?>" data-tab-group="<?= $group ?>" 
                                 data-tool-id="<?= $sectionTool['toolsection_id'] ?>" data-tool-meliskey="<?= $sectionTool['toolsection_meliskey'] ?>">
                                 <a data-target="#">
                                     <i class="fa <?= $sectionIcon; ?>"></i>
