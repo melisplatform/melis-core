@@ -95,7 +95,7 @@ var melisCoreTabGrouping = (function($, window) {
                             $page.attr("data-main-sub-menu", "Pages");
                         }
 
-                        console.log("addDataSitePagesMenuAttribute() siteMenuText: ", siteMenuText);
+                        // console.log("addDataSitePagesMenuAttribute() siteMenuText: ", siteMenuText);
                 });
         }
 
@@ -243,9 +243,9 @@ var melisCoreTabGrouping = (function($, window) {
         init();
 
         return {
-            openFancytreePage : openFancytreePage,
-            openPageSubMenu : openPageSubMenu,
-            addDataSiteMenuAttribute : addDataSiteMenuAttribute,
-            addDataSitePagesMenuAttribute : addDataSitePagesMenuAttribute
+            openFancytreePage               : openFancytreePage,
+            openPageSubMenu                 : openPageSubMenu,
+            addDataSiteMenuAttribute        : addDataSiteMenuAttribute,
+            addDataSitePagesMenuAttribute   : addDataSitePagesMenuAttribute
         };
 })(jQuery, window);
