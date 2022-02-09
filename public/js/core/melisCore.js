@@ -595,6 +595,7 @@ var melisCore = (function(window){
             /*
             * Check current dashboard and make necessary adjustments
             * like .grid-stack width in connection with plugin menu box
+            * $tabContent = $("#"+tabContentID+".tab-panel-dashboard")
             */
             if ( $tabContent.hasClass("active") && typeof melisDashBoardDragnDrop !== "undefined" ) {
                 melisDashBoardDragnDrop.checkDashboard();

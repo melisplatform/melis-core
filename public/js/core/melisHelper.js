@@ -351,7 +351,7 @@ var melisHelper = (function() {
 		$("#" + tabID).addClass("active");
 
 		// detect dashboard tab panel
-		if ($("#" + activeTabId).hasClass("tab-panel-dashboard")) {
+		if ( $("#" + activeTabId).hasClass("tab-panel-dashboard") ) {
 			// show dashboard plugin menu
 			$dndBox.fadeIn();
 			$dndBox.find(".show").fadeIn();

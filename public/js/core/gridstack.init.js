@@ -901,21 +901,22 @@ var melisDashBoardDragnDrop = {
             $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
             $gs                     = $body.find("#"+activeTabId + " .grid-stack"),      
             $dbMsg                  = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
-            $bubblePlugin           = $("#bubble-plugin");
+            $bubblePlugin           = $("#bubble-plugin"),
+            $leftMenuBox            = $("#id_meliscore_leftmenu");
 
             // set data min and max width, from setAdjustGridMeasurements() function
             $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
             $gs.attr("data-max-width", $gs.outerWidth());
 
             // display .grid-stack width in pixels on document load
-            $gs.css("width", $gs.outerWidth());
-
+            // $gs.css("width", self.getCurrentGsWidth() );
+            
             // set data min and max width for bubble plugin
             $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
             $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
 
             // display #bubble-plugin width
-            $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+            // $bubblePlugin.css("width", self.getCurrentGsWidth() );
 
             // dbMsg, sets min and max widths
             $dbMsg.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth() );
@@ -923,7 +924,20 @@ var melisDashBoardDragnDrop = {
 
             // display .dbMsg width in pixels on document load
             // $gs.outerWidth so that same width on .grid-stack
-            $dbMsg.css("width", $gs.outerWidth() );
+            // $dbMsg.css("width", self.getCurrentGsWidth() );
+            
+            setTimeout(function() {
+                if ( ! $leftMenuBox.hasClass("shown") && ! $pluginBox.hasClass("shown") ) {
+                    $gs.css("width", $gs.attr("data-max-width") );
+                    $bubblePlugin.css("width", $bubblePlugin.attr("data-max-width") );
+                    $dbMsg.css("width", $dbMsg.attr("data-max-width") );
+                }
+                else {
+                    $gs.css("width", $gs.outerWidth() );
+                    $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+                    $dbMsg.css("width", $gs.outerWidth() );
+                }   
+            }, 0);
 
             // add or remove .pt-0 for spacing between the #bubble-plugin and .grid-stack div elements
             if ( $bubblePlugin.length ) {    
