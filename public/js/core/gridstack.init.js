@@ -927,16 +927,23 @@ var melisDashBoardDragnDrop = {
             // $dbMsg.css("width", self.getCurrentGsWidth() );
             
             setTimeout(function() {
-                if ( ! $leftMenuBox.hasClass("shown") && ! $pluginBox.hasClass("shown") ) {
-                    $gs.css("width", $gs.attr("data-max-width") );
-                    $bubblePlugin.css("width", $bubblePlugin.attr("data-max-width") );
-                    $dbMsg.css("width", $dbMsg.attr("data-max-width") );
+                if ( melisCore.screenSize > 576 ) {
+                    if ( ! $leftMenuBox.hasClass("shown") && ! $pluginBox.hasClass("shown") ) {
+                        $gs.css("width", $gs.attr("data-max-width") );
+                        $bubblePlugin.css("width", $bubblePlugin.attr("data-max-width") );
+                        $dbMsg.css("width", $dbMsg.attr("data-max-width") );
+                    }
+                    else {
+                        $gs.css("width", $gs.outerWidth() );
+                        $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+                        $dbMsg.css("width", $gs.outerWidth() );
+                    }
                 }
                 else {
-                    $gs.css("width", $gs.outerWidth() );
-                    $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
-                    $dbMsg.css("width", $gs.outerWidth() );
-                }   
+                    $gs.css("width", "100%");
+                    $bubblePlugin.css("width", "100%");
+                    $dbMsg.css("width", "100%");
+                }
             }, 0);
 
             // add or remove .pt-0 for spacing between the #bubble-plugin and .grid-stack div elements
@@ -1012,18 +1019,25 @@ var melisDashBoardDragnDrop = {
         setTimeout(function() {
             // check if plugins menu is open, adjust .grid-stack width accordingly
             if ( $pluginBox.hasClass("shown") && gsi === 0 ) {
-                $gs.animate({
-                    width: minWidth
-                }, 3);
-
-                $dbMsg.animate({
-                    width: minWidth
-                }, 3);
-
-                if ( $bubblePlugin.length ) {
-                    $bubblePlugin.animate({
-                        width: minWidth // bubblePluginMinWidth
+                if ( melisCore.screenSize > 576 ) {
+                    $gs.animate({
+                        width: minWidth
                     }, 3);
+
+                    $dbMsg.animate({
+                        width: minWidth
+                    }, 3);
+
+                    if ( $bubblePlugin.length ) {
+                        $bubblePlugin.animate({
+                            width: minWidth // bubblePluginMinWidth
+                        }, 3);
+                    }
+                }
+                else {
+                    $gs.css("width", "100%");
+                    $dbMsg.css("width", "100%");
+                    $bubblePlugin.css("width", "100%");
                 }
             }
         }, 1000);

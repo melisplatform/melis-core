@@ -1222,9 +1222,6 @@ a[data-toggle="modal"]:focus {
 	}
 }
 @media (max-width: 767px) {
-	#melisDashBoardPluginBtn {
-		display: none;
-	}
 	/* melis-news-bubble-plugin-news */
 	.melis-news-bubble-plugin-news-list .media-body .row .col-md-6.pl-0 {
 		padding-left: 15px !important;
@@ -1390,10 +1387,6 @@ a[data-toggle="modal"]:focus {
 		padding-left: 0;
 		padding-right: 0;
 	}
-	/* melis-tipimail */
-	/* #content {
-    margin-top: 0 !important;
-  } */
 	.flotchart-holder {
 		width: 672px;
 	}
@@ -1424,6 +1417,19 @@ a[data-toggle="modal"]:focus {
 	}
 }
 @media (max-width: 576px) {
+	/**
+	 * Fix for: 0001001: Any dev - Mobile - Dashboard - plugin menu to hide
+	 * https://mantis2.uat.melistechnology.fr/view.php?id=1001
+	 * Related files and functions:
+	 * /public/js/core/dashboard-notify.js, runNotify()
+	 * /public/js/core/gridstack.init.js, 
+	 */
+	.melis-core-dashboard-dnd-box.shown,
+	#melisDashBoardPluginBtn {
+		display: none;
+	} 
+	/* End fix for: 0001001 */
+
 	/* calendar */
 	#calendar .fc-header-right,
 	#calendar .fc-header-space {
@@ -1451,7 +1457,6 @@ a[data-toggle="modal"]:focus {
 	.form-group span.select2-container {
 		width: 100% !important;
 	}
-	
 }
 @media (max-width: 500px) {
 	.gdpr-table-action-button {

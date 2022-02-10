@@ -111,7 +111,13 @@ var dashboardNotify = (function() {
 
     // run enjoy hint script
     function runNotify() {
-        eh.runScript();
+        /**
+         * Fix for: 0001001: Any dev - Mobile - Dashboard - plugin menu to hide
+         * https://mantis2.uat.melistechnology.fr/view.php?id=1001
+         * Only run on screen size greater than 576 not mobile phone.
+         */
+        if ( melisCore.screenSize > 576 )
+            eh.runScript();
     }
 
     // render function
