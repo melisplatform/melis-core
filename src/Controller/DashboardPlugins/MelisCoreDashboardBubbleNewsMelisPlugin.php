@@ -58,10 +58,11 @@ class MelisCoreDashboardBubbleNewsMelisPlugin extends MelisCoreDashboardTemplati
         curl_setopt($curl, CURLOPT_POSTFIELDS, $newsMelisConfig['datas']['filter']);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = json_decode(curl_exec($curl), true)['response'];
+        $response = json_decode(curl_exec($curl), true);
         curl_close($curl);
 
         if (! empty($response)) {
+            $response = $response['response'];
             $countOfNews = count($response);
             $count = count($response);
             // we will only display a number of news and not all
