@@ -372,8 +372,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                                             $selectCheckbox = false, $tableOption = [], $tableLangTrans = 'default')
     {
         $translator = $this->getServiceManager()->get('translator');
-        $table = $this->_appConfig['table'];
         $dtJScript = '';
+
+        if (empty($this->_appConfig))
+            return $dtJScript;
+
+        $table = $this->_appConfig['table'];
 
         if ($table) {
             $tableId = is_null($targetTable) ? $table['target'] : $targetTable;

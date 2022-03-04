@@ -103,7 +103,10 @@ class MelisDataTableHelper extends AbstractHelper
         if (!empty($config) && is_array($config)) {
             foreach ($config as $i => $handler) {
                 // set content
-                $config[$i] = $this->getViewContent($handler);
+
+                if (isset($handler['module']) && isset($handler['controller']) && isset($handler['action'])) {
+                    $config[$i] = $this->getViewContent($handler);
+                }                
             }
         }
 

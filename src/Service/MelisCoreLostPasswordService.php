@@ -253,7 +253,7 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
             if (!empty($cfg['emails']['active']))
                 $isActive = true;
             
-        $url = $cfg['host'].'/melis/reset-password/'.$hash;
+        $url = $cfg['platform_scheme'].'://'.$cfg['host'].'/melis/reset-password/'.$hash;
         
         if($isActive){
             // Tags to be replace at email content with the corresponding value
