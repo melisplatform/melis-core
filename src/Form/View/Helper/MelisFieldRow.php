@@ -78,7 +78,7 @@ class MelisFieldRow extends FormRow
         }
         
     
-
+        
         if ($this->getClass($element) == self::MELIS_TOGGLE_BUTTON_FACTORY){
 
             // recreate checkbox to render into a toggle button
@@ -367,11 +367,8 @@ class MelisFieldRow extends FormRow
                 $buttonTitle = $element->getAttribute('data-button-title');
 
             $formElement = '<div class="form-group">
-                                <label class ="d-flex flex-row justify-content-between" for="">'.$element->getLabel().'</label>
+                                <label class ="d-flex flex-row justify-content-between" for="'.$element->getName().'">'.$element->getLabel().'</label>
                                 <div class="input-group">';
-
-
-
 
             if ($type == true)
                 $formElement .='<span class="input-group-btn">
