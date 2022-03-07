@@ -55,9 +55,9 @@
 		"laminas/laminas-development-mode": "^3.2",
 		"symfony/service-contracts": "1.1.8",
 		"justinrainbow/json-schema": "^5.2.11",
-		"melisplatform/melis-asset-manager": "*",
-		"melisplatform/melis-composerdeploy": "*",
-		"melisplatform/melis-dbdeploy": "*"
+		"melisplatform/melis-asset-manager": "^4.0",
+		"melisplatform/melis-composerdeploy": "^4.0",
+		"melisplatform/melis-dbdeploy": "^4.0"
 	},
 	"autoload": {
 		"psr-4": {
