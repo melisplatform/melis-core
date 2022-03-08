@@ -69,16 +69,20 @@ var tabExpander = (function($, window){
             $.each( $tabs, function(i, v) {
                 var $tab    = $(this),
                     tabData = $tab.data();
+
+                    console.log("tabData.toolMeliskey !== 'meliscommerce_products_page': ", tabData.toolMeliskey !== 'meliscommerce_products_page');
+                    console.log("tabData.toolMeliskey !== 'id_meliscms_page_tab_list_container': ", tabData.toolMeliskey !== 'id_meliscms_page_tab_list_container');
+                    console.log("tabData.toolMeliskey !== 'meliscommerce_product_list_container': ", tabData.toolMeliskey !== 'meliscommerce_product_list_container');
                     
-                    console.log("disableTabGrouping() tabData.toolMeliskey: ", tabData.toolMeliskey);
-                    if ( tabData.toolMeliskey !== 'meliscommerce_products_page' || tabData.toolMeliskey !== 'id_meliscms_page_tab_list_container' || tabData.toolMeliskey !== 'meliscommerce_product_list_container' ) {
+                    // if ( tabData.toolMeliskey !== 'meliscommerce_products_page' || tabData.toolMeliskey !== 'id_meliscms_page_tab_list_container' || tabData.toolMeliskey !== 'meliscommerce_product_list_container' ) {
                         $navTabs.append( $tab );
-                    }
+                    // }
             });
 
             if ( $db.length ) {
                 // Dashboard tab
                 $navTabs.prepend( $db );
+
                 // Switch to active tab
                 melisHelper.tabSwitch('id_meliscore_toolstree_section_dashboard');
             }
@@ -242,6 +246,7 @@ var tabExpander = (function($, window){
 
 	// ENABLE tabExpander(); ---------------------------------------------------------------------------------------------------------
 	function Enable() {
+        var $navMenus = $navTabs.find("li:not(.main-menu):not(.sub-page-section-tab)");
 	    //set the parent container width and right icons container
         $("#melis-navtabs-container-outer").css({"width": (tabContainerWidthPercent)+"%" });
         $("#plugins-container").css({"width": (rightMenuWidthPercent)+"%"});
@@ -255,7 +260,9 @@ var tabExpander = (function($, window){
         $navTabs.css({"width": navUlContainer });
         
         // $(".melis-tabprev, .melis-tabnext").show();
-        enableTabGrouping();
+        if ( $navMenus.length > 7 ) {
+            enableTabGrouping();
+        }
 
         $("#melis-id-nav-bar-tabs li").hover(
             function() {

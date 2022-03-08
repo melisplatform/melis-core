@@ -422,27 +422,30 @@ var melisHelper = (function() {
 						}
 				}
 				
-				// console.log("$currentParent.index() === 0: ", $currentParent.index() === 0 );
+				console.log("$currentParent.index() === 0: ", $currentParent.index() === 0 );
 				// console.log("$currentParent.index(): ", $currentParent.index() );
 				// $currentParent = $(".tabsbar a[data-id='" + tabContentID + "']").parent("li"),
 				if ( $currentParent.index() === 0 ) {
-					
-					// console.log("$currentParent.siblings().length === 0: ", $currentParent.siblings().length === 0 );
+					console.log("$currentParent.siblings().length === 0: ", $currentParent.siblings().length === 0 );
 					/* console.log("$currentParent.siblings().length: ", $currentParent.siblings().length );
 					console.log("$currentParent: ", $currentParent ); */
 
 					if ( $currentParent.siblings().length === 0 ) {
-						
-							/* if ( ! fromGroup ) {
-								if ( $this.closest("ul").hasClass("nav-group-dropdown") ) {
-									fromGroup = true;
-								}
-							} */
-							/* console.log("$this.data('id'): ", $this.data('id'));
-							console.log('$currentParent.parent(".nav-group-dropdown").parent("li"): ', $currentParent.parent(".nav-group-dropdown").parent("li")); */
+						/* if ( ! fromGroup ) {
+							if ( $this.closest("ul").hasClass("nav-group-dropdown") ) {
+								fromGroup = true;
+							}
+						} */
+						/* console.log("$this.data('id'): ", $this.data('id'));
+						console.log('$currentParent.parent(".nav-group-dropdown").parent("li"): ', $currentParent.parent(".nav-group-dropdown").parent("li")); */
 
-							$currentParent.parent(".nav-group-dropdown").remove();
+						$currentParent.parent(".nav-group-dropdown").remove();
+
+						console.log("$this.closest('.nav-group-dropdown').parent('.sub-page-section-tab').length: ", $this.closest('.nav-group-dropdown').parent('.sub-page-section-tab').length);
+
+						if ( $this.closest('.nav-group-dropdown').parent('.sub-page-section-tab').length > 0 ) {
 							$navTabs.find(".sub-page-section-tab").remove();
+						}
 					}
 
 					// removing of the tab menu and tab content
@@ -456,7 +459,8 @@ var melisHelper = (function() {
 						}
 					}
 
-					checkTabMenus();
+					// pass clicked element
+					checkTabMenus( $this );
 				} 
 				else {
 					$currentParent.remove();
@@ -469,7 +473,8 @@ var melisHelper = (function() {
 						}
 					}
 
-					checkTabMenus();
+					// pass clicked element
+					checkTabMenus( $this );
 				}
 
 				// check scroll class exists
@@ -643,28 +648,29 @@ var melisHelper = (function() {
 	}
 
 	// Check number of tab menus
-	function checkTabMenus() {
-		// console.log("checkTabMenus()!!!");
-
+	function checkTabMenus( $el ) {
 		var $navMenus 		= $navTabs.find("li:not(.main-menu):not(.sub-page-section-tab)"),
 			$tabMainMenu 	= $navTabs.find(".main-menu"),
 			tabCount 		= $navTabs.children("li").length,
 			$closeAllTab 	= $("#close-all-tab");
 
 			// console.log("$navMenus.length: ", $navMenus.length);
+			console.log("checkTabMenus()!!! $tabMainMenu.length: ", $tabMainMenu.length);
 			/** 
 			 * Check the number of tabs if needs to be appended back to $navTabs
 			 * Checking if tabExpander.js Enable() function
 			 * If tab menu container width and tabExpander to be enabled - tab groupings v2
 			 */
-			if ( $navMenus.length < 8 ) {
-
+			if ( $navMenus.length < 8 && $tabMainMenu.length !== 0 ) {
 				// append tabs back on $navTabs
 				tabExpander.disableTabGrouping();
 
 				// remove page section tab
-				if ( $navTabs.find(".sub-page-section-tab").length > 0 ) {
+				/* if ( $navTabs.find(".sub-page-section-tab").length > 0 ) {
 					$navTabs.find(".sub-page-section-tab").remove();
+				} */
+				if ( $el.closest('.nav-group-dropdown').parent('.sub-page-section-tab').length > 0 ) {
+					$el.closest('.nav-group-dropdown').parent('.sub-page-section-tab').remove();
 				}
 
 				// remove main menus
@@ -676,7 +682,7 @@ var melisHelper = (function() {
 				}
 
 				// check tabExpander
-				tabExpander.checkTE();
+				// tabExpander.checkTE();
 			}
 	}
 
