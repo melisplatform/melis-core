@@ -1507,19 +1507,19 @@ a[data-toggle="modal"]:focus {
  * Dashboard Plugin Creator - Multi Tabs
  */
 /* .nav-tabs .nav-item .glyphicons  */
-.widget .widget-head {
+.grid-stack-item-content .widget .widget-head {
 	height: auto;
 	line-height: 100%;
 }
-.widget.widget-tabs > .widget-head ul {
+.grid-stack-item-content .widget.widget-tabs > .widget-head ul {
 	height: auto;
 	margin-bottom: -1px;
 }
-.widget.widget-tabs > .widget-head ul li {
+.grid-stack-item-content .widget.widget-tabs > .widget-head ul li {
 	height: auto;
 	line-height: 100%;
 }
-.widget.widget-tabs > .widget-head ul li a.glyphicons {
+.grid-stack-item-content .widget.widget-tabs > .widget-head ul li a.glyphicons {
 	text-align: center;
 	display: block;
 	margin: 0 auto;
@@ -1528,7 +1528,7 @@ a[data-toggle="modal"]:focus {
 	position: relative;	
 	padding: 0;
 }
-.widget.widget-tabs > .widget-head ul li a.glyphicons i::before {
+.grid-stack-item-content .widget.widget-tabs > .widget-head ul li a.glyphicons i::before {
 	position: relative;
 	left: auto;
 	top: 0.5rem;
