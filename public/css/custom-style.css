@@ -1506,3 +1506,38 @@ a[data-toggle="modal"]:focus {
 		width: 226px;
 	}
 }
+/**
+ * Fix for: 0002190: Dashboard - Plugin display - display issue
+ * https://mantis2.uat.melistechnology.fr/view.php?id=2190
+ * Dashboard Plugin Creator - Multi Tabs
+ */
+/* .nav-tabs .nav-item .glyphicons  */
+.grid-stack-item-content .widget .widget-head {
+	height: auto;
+	line-height: 100%;
+}
+.grid-stack-item-content .widget.widget-tabs > .widget-head ul {
+	height: auto;
+	margin-bottom: -1px;
+}
+.grid-stack-item-content .widget.widget-tabs > .widget-head ul li {
+	height: auto;
+	line-height: 100%;
+}
+.grid-stack-item-content .widget.widget-tabs > .widget-head ul li a.glyphicons {
+	text-align: center;
+	display: block;
+	margin: 0 auto;
+	width: 40px;
+	height:  40px;
+	position: relative;	
+	padding: 0;
+}
+.grid-stack-item-content .widget.widget-tabs > .widget-head ul li a.glyphicons i::before {
+	position: relative;
+	left: auto;
+	top: 0.5rem;
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+}
