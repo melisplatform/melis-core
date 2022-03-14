@@ -972,6 +972,26 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-color: <?= $secondaryColor; ?>;
 }
 
+/* Cms page action buttons */
+.dropdown-menu span.fa,
+#melis-id-body-content-load .fa.fa-color-red::before,
+#melis-id-body-content-load .menubar > li a.btn-default:hover {
+    color: <?= $primaryColor; ?>;
+}
+
+#id_meliscmslinkcheck_launch_form .cb-cont .cbmask-inner.cb-active {
+    background-color: <?= $primaryColor; ?>;
+}
+
+#id_meliscmslinkcheck_launch_form .cb-cont .cbmask-outer {
+    border-color: <?= $primaryColor; ?>;
+}
+
+#id_meliscmslinkcheck_launch_form #follow-radio label > input[type="radio"]:checked + ::before {
+    background: radial-gradient(<?= $primaryColor; ?> 0,<?= $primaryColor; ?> 40%,transparent 50%,transparent);
+    border-color: <?= $primaryColor; ?>;
+}
+
 #id_melismessenger_tool_header_messages:hover a .fa-comment {
     color: <?= $primaryColor; ?>;
 }
