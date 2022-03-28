@@ -1536,3 +1536,17 @@ a[data-toggle="modal"]:focus {
 	margin: 0 auto;
 	text-align: center;
 }
+/*
+ * Fix for: 0002805: BO > Translation tool > pb to show text on lower resolutions (JIRA AL-746)
+ * https://mantis2.uat.melistechnology.fr/view.php?id=2805
+ */
+.iframe-container .tab-content table.dataTable tbody td.dtActionCls {
+    text-align: right;
+    white-space: nowrap;
+}
+.iframe-container .tab-content table.dataTable.nowrap td, 
+.iframe-container .tab-content table.dataTable.nowrap th {
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
