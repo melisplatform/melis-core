@@ -17,7 +17,7 @@ class MelisFieldRow extends FormRow
     const MELIS_TEXT_WITH_BUTTON      = 'MelisTextButton';
     const MELIS_MSGR_MSG_BOX          = 'melis-messenger-msg-box';
 
-    public function render(ElementInterface $element, $labelPosition = null)
+    public function render(ElementInterface $element, ?string $labelPosition = null): string
     {
         $translator = $this->getTranslator();
 

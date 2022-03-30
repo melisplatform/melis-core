@@ -36,7 +36,7 @@ class MelisFormService extends LaminasFormFactory
      * @param  array $spec
      * @return ElementInterface
      */
-    public function createForm($spec)
+    public function createForm(array $spec): \Laminas\Form\FormInterface
     {
         if (! isset($spec['type']))
             $spec['type'] = MelisForm::class;
