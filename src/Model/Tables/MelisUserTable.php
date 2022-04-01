@@ -12,7 +12,7 @@ namespace MelisCore\Model\Tables;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\Sql\Where;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Hydrator\ObjectProperty;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use MelisCore\Model\Hydrator\MelisUser;
 
 class MelisUserTable extends MelisGenericTable
@@ -37,7 +37,7 @@ class MelisUserTable extends MelisGenericTable
      */
     public function hydratingResultSet()
     {
-        return $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), new MelisUser());
+        return $hydratingResultSet = new HydratingResultSet(new ObjectPropertyHydrator(), new MelisUser());
     }
 
 	public function getUserOrderByName()

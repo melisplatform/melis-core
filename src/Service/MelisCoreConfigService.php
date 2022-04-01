@@ -209,7 +209,7 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
     /*this will parse to string the checked and unchecked values of the checkbox field*/
     /**
      * @param $element  
-     * @return Form Element
+     * @return array
      */
     public function parseCheckboxCheckUncheckedValues($element)
     {        
