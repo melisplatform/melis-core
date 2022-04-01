@@ -31,10 +31,16 @@
 
                             			<?php foreach ($languages As $key => $val):?>
                                             <?php
+
                                                 $locale = explode('_',$val['lang_locale']);
-                                                $locale[0] = strtolower($locale[0]);
-                                                $locale[1] = strtoupper($locale[1]);
-                                                $locale = implode("_",$locale);
+
+                                                if (count($locale) > 1) {                                                   
+                                                    $locale[0] = strtolower($locale[0]);
+                                                    $locale[1] = strtoupper($locale[1]);
+                                                    $locale = implode("_",$locale);
+                                                } else {                                                   
+                                                    $locale = strtolower($val['lang_locale']);
+                                                }                                               
                                             ?>
                                     		<li class="">
                                     			<a class="clearfix" data-toggle="tab" href="#<?php echo $key?>-log-type-details" aria-expanded="false">
@@ -44,7 +50,7 @@
                                                     </span>
                                     			</a>
                                     		</li>
-                                		<?php endforeach;?>
+                                		<?php endforeach; ?>
                                		</ul>
                                 </div>
                             </div>
@@ -78,7 +84,7 @@
                                             	echo $this->form()->closeTag(); 
                                             ?>
             							</div>
-        							<?php endforeach;?>
+        							<?php endforeach; ?>
 								</div>
 							</div>
                         </div>

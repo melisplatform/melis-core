@@ -955,7 +955,7 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
      * @param $emailFrom
      * @param $emailFromName
      * @param $emailTo
-     * @param null $emailToName
+     * @param $emailToName
      * @param $replyTo
      * @param $subject
      * @param $messageHtml
@@ -965,7 +965,7 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
         $emailFrom,
         $emailFromName,
         $emailTo,
-        $emailToName = null,
+        $emailToName,
         $replyTo,
         $subject,
         $messageHtml,
