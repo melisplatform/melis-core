@@ -518,7 +518,9 @@ class EmailsManagementController extends MelisAbstractActionController
             }
 
             // Binding Datas to the General Properties Form
+            if (!empty($emailsDatas)) {
             $generalPropertiesForm->bind($emailsDatas);
+            }
 
             $emailsDetailsData = array();
 
