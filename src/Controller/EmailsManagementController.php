@@ -224,7 +224,7 @@ class EmailsManagementController extends MelisAbstractActionController
             // Sorting Array
             // Database Data with Data from App.emails will place at the top/first of the array
             usort($tempTableData, function($a, $b) {
-                return $a['boe_indicator'] < $b['boe_indicator'];
+                return $a['boe_indicator'] <=> $b['boe_indicator'];
             });
 
             $tempEmailsConfig = array();
