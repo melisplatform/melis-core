@@ -529,9 +529,10 @@ class EmailsManagementController extends MelisAbstractActionController
                 $emailsDetailsData = array();
                 $melisBOEmailsDetails = $this->getServiceManager()->get('MelisCoreTableBOEmailsDetails');
                 foreach ($coreLangResult As $key => $val){
+                    if (!empty($emailsDatas)) {
                     $emailsDetailsDatasResult = $melisBOEmailsDetails->getEmailDetailsByEmailId($emailsDatas->boe_id,$coreLangResult[$key]['lang_id']);
                     $emailsDetailsDatas = $emailsDetailsDatasResult->current();
-
+                    }
                     $tempemailsDetailsData = array();
                     $hasEmailsDetails = FALSE;
                     if (!empty($emailsDetailsDatas)){
@@ -607,7 +608,8 @@ class EmailsManagementController extends MelisAbstractActionController
             }
 
             // Get Layout file's status
-            $view->layout = $this->getLayoutFileStatus($generalPropertiesForm->get('boe_content_layout')->getValue());
+            $boeContentLayout = $generalPropertiesForm->get('boe_content_layout')->getValue() ?? '';           
+            $view->layout = $this->getLayoutFileStatus($boeContentLayout);
         }
 
         // Get Cms Platform ID form from  App Tool
