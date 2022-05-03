@@ -24,7 +24,7 @@ class MelisCoreEmailSendingService extends MelisServiceManager
      * @param null $transportConfig
      * @throws \Exception
      */
-	public function sendEmail($emailFrom, $fromName, $emailTo, $toName = '', $replyTo = null, $subject, $message_html, $message_text = null, $transportConfig = null) {
+	public function sendEmail($emailFrom, $fromName, $emailTo, $toName, $replyTo, $subject, $message_html, $message_text = null, $transportConfig = null) {
 
 	    $html = new MimePart($message_html);
 	    $html->type = 'text/html';
