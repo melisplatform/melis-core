@@ -9,6 +9,8 @@
 
 namespace MelisCore\Controller;
 
+use Laminas\Authentication\Adapter\DbTable;
+use Laminas\Db\Adapter\Adapter;
 use MelisCore\Service\MelisCoreCreatePasswordService;
 use Laminas\Http\Header\SetCookie;
 use Laminas\Session\Container;
@@ -153,8 +155,24 @@ class MelisAuthController extends MelisAbstractActionController
             // Validate datas
             if ($loginForm->isValid()) {
                 // check if the user exists
-                $userData = $userTable->getEntryByField('usr_login', $postValues['usr_login']);
-                $userData = $userData->current();
+                //try using user email
+                if(filter_var($postValues['usr_login'], FILTER_VALIDATE_EMAIL)){
+                    $userData = $userTable->getEntryByField('usr_email', $postValues['usr_login'])->current();
+                    /**
+                     *  If user use his/her email to login, we update the adapter identity column to email
+                     */
+                    if(!empty($userData)) {
+                        $dbAdapter = $this->getServiceManager()->get(Adapter::class);
+                        $dbTableAuthAdapter = new DbTable($dbAdapter);
+                        $dbTableAuthAdapter->setTableName('melis_core_user')
+                            ->setIdentityColumn('usr_email')
+                            ->setCredentialColumn('usr_password');
+
+                        $melisCoreAuth->setAdapter($dbTableAuthAdapter);
+                    }
+                }else {//try user login
+                    $userData = $userTable->getEntryByField('usr_login', $postValues['usr_login'])->current();
+                }
 
                 if (!empty($userData)) {
 

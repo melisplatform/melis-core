@@ -1,6 +1,6 @@
 <?php 
 	return array(  
-		'tr_meliscore_login_form_Login' => 'Login',
+		'tr_meliscore_login_form_Login' => 'Login / Email',
         'tr_meliscore_login_form_Password' => 'Mot de passe',
         'tr_meliscore_login_form_submittext_Connect' => 'Connexion',
         'tr_meliscore_login_header_Logout' => 'Déconnexion',
