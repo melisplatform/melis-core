@@ -100,5 +100,10 @@ return [
 
     // error messages 
     'tr_melis_core_gdpr_auto_delete_config_anonymization_days_lower' => 'L\'anonymization doit être située après les alertes',
-    'tr_melis_core_gdpr_auto_delete_config_second_alert_below' => 'Il devrait y avoir au moins 7 jours entre la 1ère alerte et l\'anonymisation'
+    'tr_melis_core_gdpr_auto_delete_config_second_alert_below' => 'Il devrait y avoir au moins 7 jours entre la 1ère alerte et l\'anonymisation',
+    'tr_melis_core_gdpr_auto_delete_no_email_content' => 'Pas de contenu d\'email pour la langue correspondante',
+    'tr_melis_core_gdpr_auto_delete_technical_issue' => 'Erreur technique',
+    'tr_melis_core_gdpr_auto_delete_tags_not_filled' => 'Tous les tags ne sont pas remplis',
+    'tr_melis_core_gdpr_auto_delete_lang_unavailable' => 'langue de l\'email non disponible',
+    'tr_melis_core_gdpr_auto_delete_email_cannot_be_sent' => 'l\'email ne peut être envoyé',
 ];
