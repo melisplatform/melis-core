@@ -147,4 +147,19 @@ class MelisUserTable extends MelisGenericTable
 
         return $resultSet;
     }
+
+    /**
+     * @param $email
+     * @param null $userId
+     * @return mixed
+     */
+    public function checkUserEmailIfExist($email, $userId)
+    {
+        $select = $this->tableGateway->getSql()->select();
+
+        $select->where("usr_email = '$email'");
+        $select->where("usr_id != '$userId'");
+
+        return $this->tableGateway->selectWith($select);
+    }
 }
