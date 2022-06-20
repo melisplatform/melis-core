@@ -74,9 +74,18 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         $hasFormOrderCfg = $melisConfig->getOrderFormsConfig($formKey);
         if ($hasFormOrderCfg) {
             $formConfig = $melisConfig->getFormMergedAndOrdered($formConfig, $formKey);
-        } else {
+        } else {           
+
             // use the original order of the form
-            $formConfig = $this->_appConfig['forms'][$formKey];
+            $formConfig = $this->_appConfig['forms'][$formKey];            
+            
+            /*for the laminas form v3 compatibility*/
+            if ($formConfig['elements']) {
+                foreach ($formConfig['elements'] as &$formElement) {
+                    $formElement = $melisConfig->parseCheckboxCheckUncheckedValues($formElement);
+                }
+                unset($formElement);
+            }
         }
 
         /** @var \MelisCore\Service\MelisFormService $factory */
@@ -90,6 +99,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
         return $form;
     }
+
 
     /**
      * Returns the melis tool key configuration text
@@ -1046,9 +1056,11 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         */
     public function escapeHtml($value)
     {
-        $escaper = new \Laminas\Escaper\Escaper('utf-8');
-        $value = $escaper->escapeHtml($value);
-
+        if (!empty($value)) {
+            $escaper = new \Laminas\Escaper\Escaper('utf-8');
+            $value = $escaper->escapeHtml($value);
+        }
+        
         return $value;
     }
 

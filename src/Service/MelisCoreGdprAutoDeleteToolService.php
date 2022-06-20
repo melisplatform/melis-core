@@ -304,7 +304,7 @@ class MelisCoreGdprAutoDeleteToolService extends MelisGeneralService
      * @param $formConfigPath
      * @return array
      */
-    private function formatErrorMessage($errors = [],$formConfigPath)
+    private function formatErrorMessage($errors, $formConfigPath)
     {
         /** @var MelisCoreConfigService $config */
         $config = $this->getServiceManager()->get('MelisCoreConfig');

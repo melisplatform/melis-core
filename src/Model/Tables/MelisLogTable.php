@@ -59,13 +59,14 @@ class MelisLogTable extends MelisGenericTable
 	        $select->where('melis_core_log.log_user_id ='.$userId);
 	    }
 	    
-	    if (!is_null($dateCreationMin)){
-            $select->where('melis_core_log.log_date_added >= "'.$dateCreationMin.' 1:01:01"');
+	    if (!is_null($dateCreationMin)) {
+	    	$select->where(new \Laminas\Db\Sql\Predicate\Expression('DATE(melis_core_log.log_date_added) >= ?', $dateCreationMin));	  
         }
         
-        if (!is_null($dateCreationMax)){
-            $select->where('melis_core_log.log_date_added <= "'.$dateCreationMax.' 24:60:60"');
+        if (!is_null($dateCreationMax)) {
+        	$select->where(new \Laminas\Db\Sql\Predicate\Expression('DATE(melis_core_log.log_date_added) <= ?', $dateCreationMax));  
         }
+
 	    
 	    if(!is_null($search))
 	    {

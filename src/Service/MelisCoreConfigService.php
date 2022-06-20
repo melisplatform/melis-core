@@ -104,6 +104,8 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
                     // find the element in original config
                     foreach ($elements as $keyElement => $element) {
                         if ($element['spec']['name'] == $orderElement['spec']['name']) {
+                            /*for the laminas form v3 compatibility*/
+                            $element = $this->parseCheckboxCheckUncheckedValues($element);
                             array_push($elementsReordered, $element);
 
                             // delete all elements with this name, we have the last one already
@@ -125,11 +127,12 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
 
             // We add items at the end that are in the config but not present in the custom order
             // and avoid those present more than once
-            foreach ($elements as $keyElement => $element) {
+            foreach ($elements as $keyElement => $element) {               
+                
                 if (!in_array($element['spec']['name'], $elementsFound)) {
+                    /*for the laminas form v3 compatibility*/
+                    $element = $this->parseCheckboxCheckUncheckedValues($element);
                     array_push($oldElementsReordered, $element);
-
-
                     array_push($elementsFound, $element['spec']['name']);
                 } else {
                     continue;
@@ -201,6 +204,24 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
 
 
         return $appConfigForm;
+    }
+
+    /*this will parse to string the checked and unchecked values of the checkbox field*/
+    /**
+     * @param $element  
+     * @return array
+     */
+    public function parseCheckboxCheckUncheckedValues($element)
+    {        
+        if (isset($element['spec']['options']['checked_value'])) {
+            $element['spec']['options']['checked_value'] = (string) $element['spec']['options']['checked_value'];
+        }
+
+        if (isset($element['spec']['options']['unchecked_value'])) {
+            $element['spec']['options']['unchecked_value'] = (string) $element['spec']['options']['unchecked_value'];
+        }            
+        
+        return $element;
     }
 
     public function getItem($pathString = '', $prefix = '', $isTranslate = true)

@@ -224,7 +224,7 @@ class EmailsManagementController extends MelisAbstractActionController
             // Sorting Array
             // Database Data with Data from App.emails will place at the top/first of the array
             usort($tempTableData, function($a, $b) {
-                return $a['boe_indicator'] < $b['boe_indicator'];
+                return $a['boe_indicator'] <=> $b['boe_indicator'];
             });
 
             $tempEmailsConfig = array();
@@ -518,7 +518,9 @@ class EmailsManagementController extends MelisAbstractActionController
             }
 
             // Binding Datas to the General Properties Form
+            if (!empty($emailsDatas)) {
             $generalPropertiesForm->bind($emailsDatas);
+            }
 
             $emailsDetailsData = array();
 
@@ -527,9 +529,10 @@ class EmailsManagementController extends MelisAbstractActionController
                 $emailsDetailsData = array();
                 $melisBOEmailsDetails = $this->getServiceManager()->get('MelisCoreTableBOEmailsDetails');
                 foreach ($coreLangResult As $key => $val){
+                    if (!empty($emailsDatas)) {
                     $emailsDetailsDatasResult = $melisBOEmailsDetails->getEmailDetailsByEmailId($emailsDatas->boe_id,$coreLangResult[$key]['lang_id']);
                     $emailsDetailsDatas = $emailsDetailsDatasResult->current();
-
+                    }
                     $tempemailsDetailsData = array();
                     $hasEmailsDetails = FALSE;
                     if (!empty($emailsDetailsDatas)){
@@ -605,7 +608,8 @@ class EmailsManagementController extends MelisAbstractActionController
             }
 
             // Get Layout file's status
-            $view->layout = $this->getLayoutFileStatus($generalPropertiesForm->get('boe_content_layout')->getValue());
+            $boeContentLayout = $generalPropertiesForm->get('boe_content_layout')->getValue() ?? '';           
+            $view->layout = $this->getLayoutFileStatus($boeContentLayout);
         }
 
         // Get Cms Platform ID form from  App Tool

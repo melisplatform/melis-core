@@ -5,7 +5,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\Mvc\Service\ServiceManagerConfig;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Hydrator\ObjectProperty;
+use Laminas\Hydrator\ObjectPropertyHydrator;
 use Laminas\Db\Adapter\Adapter;
 class ServiceManagerGrabber extends PHPUnit_Framework_TestCase
 {
@@ -54,7 +54,7 @@ class ServiceManagerGrabber extends PHPUnit_Framework_TestCase
             if(is_array($db) && !empty($db)) {
                 $config = new \Laminas\Config\Config($db);
                 $adapter = new Adapter($config->db->toArray());
-                $hydratingResultSet = new HydratingResultSet(new ObjectProperty(), $model);
+                $hydratingResultSet = new HydratingResultSet(new ObjectPropertyHydrator(), $model);
                 $tableGateway = new TableGateway($table, $adapter, null, $hydratingResultSet);
                 return $tableGateway;
             }

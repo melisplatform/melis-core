@@ -113,6 +113,7 @@ return [
     'tr_meliscore_tool_usrcd_last_login_date' => 'Date',
     'tr_meliscore_tool_usrcd_last_connection_time' => 'Temps de connexion',
     'tr_meliscore_tool_user_col_remove_picture' => "Retirer photo",
+    'tr_meliscore_tool_user_email_exist' => "Email existe déjà.",
 
     //USER PROFILE MANAGEMENT
     'tr_meliscore_user_status_inactive' => 'Inactif',
