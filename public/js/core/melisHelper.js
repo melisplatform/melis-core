@@ -1032,15 +1032,20 @@ var melisHelper = (function() {
 				var tmpDefColumns = [];
 				if (Object.keys(requiredSettings.columns).length > 0) {
 					var ctr = 0;
+					var isColumnSortable = true;
 					// loop all columns
 					$.each(requiredSettings.columns, function(index, item) {
 						tmpColumns.push({
 							data: index,
 						});
+						if (item.sortable == false) {
+							isColumnSortable = false;
+						}
 						settings.columnDefs.push({
 							width: item.css.width,
 							targets: ctr,	
-							sClass: item.sClass						
+							sClass: item.sClass,
+							bSortable: isColumnSortable					
 						});
 
 						ctr++;
