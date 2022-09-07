@@ -44,7 +44,7 @@ class MelisForm extends Form implements EventManagerAwareInterface
      *
      * @return bool|\Laminas\EventManager\ResponseCollection
      */
-    public  function isValid($triggerEvent = null, $params = [])
+    public  function isValid($triggerEvent = null, $params = []): bool
     {
         $data = null;
         $isValid = parent::isValid();

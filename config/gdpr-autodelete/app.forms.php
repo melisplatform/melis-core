@@ -14,7 +14,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ),
-                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -59,7 +59,7 @@ return [
                                 'method' => 'POST',
                                 'action' => '',
                             ),
-                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -208,7 +208,7 @@ return [
                                 'action' => '',
                                 'enctype' => 'multipart/form-data'
                             ),
-                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -448,7 +448,7 @@ return [
                                 'action' => '',
                                 'class' => 'melisgdprautodelete_add_edit_email_setup_form'
                             ),
-                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
                             'elements' => [
                                 [
                                     'spec' => [
@@ -520,7 +520,7 @@ return [
                                 'action' => '',
                                 'class' => 'melisgdprautodelete_add_edit_alert_email_delete'
                             ],
-                            'hydrator' => 'Laminas\Hydrator\ArraySerializable',
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
                             'elements' => [
                                 [
                                     'spec' => [

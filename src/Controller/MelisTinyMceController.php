@@ -318,7 +318,7 @@ class MelisTinyMceController extends MelisAbstractActionController
     public function uploadImageAction()
     {
         $appConfigForm = [
-            'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+            'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
             'elements' => [
                 [
                     'spec' => [

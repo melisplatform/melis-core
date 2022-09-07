@@ -27,7 +27,7 @@ class MelisGeneralService extends MelisServiceManager implements EventManagerAwa
 	/**
 	 * @param EventManagerInterface $eventManager
 	 */
-	public function setEventManager(EventManagerInterface $eventManager)
+	public function setEventManager(EventManagerInterface $eventManager): void
 	{
 		$this->eventManager = $eventManager;
 	}

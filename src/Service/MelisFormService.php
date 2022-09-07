@@ -3,7 +3,7 @@
 namespace MelisCore\Service;
 
 use Laminas\Form\Factory as LaminasFormFactory;
-use Laminas\Hydrator\ArraySerializable;
+use Laminas\Hydrator\ArraySerializableHydrator;
 use Laminas\ServiceManager\ServiceManager;
 use MelisCore\Form\MelisForm;
 
@@ -36,13 +36,13 @@ class MelisFormService extends LaminasFormFactory
      * @param  array $spec
      * @return ElementInterface
      */
-    public function createForm($spec)
+    public function createForm(array $spec): \Laminas\Form\FormInterface
     {
         if (! isset($spec['type']))
             $spec['type'] = MelisForm::class;
 
         if (!isset($spec['hydrator']))
-            $spec['hydrator'] = ArraySerializable::class;
+            $spec['hydrator'] = ArraySerializableHydrator::class;
 
         return $this->create($spec);
     }

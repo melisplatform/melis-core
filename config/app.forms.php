@@ -11,7 +11,7 @@ return array(
 						'method' => 'POST',
 						//'action' => '/melis/MelisCore/MelisAuth/authenticate',
 					),
-					'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+					'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
 					'elements' => array(  
 						array(
 							'spec' => array(
@@ -74,7 +74,7 @@ return array(
 			            'novalidate' => 'novalidate',
 			            //'action' => '/melis/lost-password-request',
 			        ),
-			        'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+			        'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
 			        'elements' => array(
 			            array(
 			                'spec' => array(
@@ -129,7 +129,7 @@ return array(
 			            'method' => 'POST',
 			            'novalidate' => 'novalidate',
 			        ),
-			        'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+			        'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
 			        'elements' => array(
 			            array(
 			                'spec' => array(
@@ -183,7 +183,7 @@ return array(
                         'method' => 'POST',
                         'novalidate' => 'novalidate',
                     ),
-                    'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
                     'elements' => array(
                         array(
                             'spec' => array(
@@ -237,7 +237,7 @@ return array(
                         'method' => 'POST',
                         'novalidate' => 'novalidate',
                     ),
-                    'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
                     'elements' => array(
                         array(
                             'spec' => array(
@@ -292,7 +292,7 @@ return array(
 						'class' => 'd-md-flex flex-row justify-content-between row',
                         'method' => 'POST',
                     ),
-                    'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+                    'hydrator'  => 'Laminas\Hydrator\ArraySerializableHydrator',
                     'elements' => array(
                         array(
                             'spec' => array(

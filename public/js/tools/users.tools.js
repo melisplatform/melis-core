@@ -446,7 +446,7 @@ var toolUserManagement = {
             melisCoreTool.pending("#btnEdit");
             melisCoreTool.processing();
 
-            $btnUserEdit.removeAttr("data-toggle");
+            // $btnUserEdit.removeAttr("data-toggle");
 
             $.ajax({
                 type: 'POST',

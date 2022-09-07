@@ -630,6 +630,8 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
         $response = [
             'hasError' => false
         ];
+        //get translator service
+        $translator = $this->getServiceManager()->get('translator');
         // check config key is present
         // for module that doesnt required email
         if (isset($emailOptions['config']['email']) && !empty($emailOptions['config']['email'])) {
@@ -681,23 +683,23 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
                                 $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, null, true);
                             } else {
                                 // save error log
-                                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, "Technical issue", false);
+                                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, $translator->translate('tr_melis_core_gdpr_auto_delete_technical_issue'), false);
                             }
                         } else {
                             // set has error true
                             $response['hasError'] = true;
                             // logs not all tags are filled
-                            $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Not all tags are filled', false);
+                            $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, $translator->translate('tr_melis_core_gdpr_auto_delete_tags_not_filled'), false);
                         }
                     } else {
                         // logs no content of email
-                        $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'No email content provided in asked language', false);
+                        $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, $translator->translate('tr_melis_core_gdpr_auto_delete_no_email_content'), false);
                     }
                 } else {
                     // set has error true
                     $response['hasError'] = true;
                     // logs lang key is missing
-                    $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Unavailability of language email', false);
+                    $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, $translator->translate('tr_melis_core_gdpr_auto_delete_lang_unavailable'), false);
                 }
             }
 
@@ -708,8 +710,8 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
                 $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, null, true);
             } else {
                 //$response['hasError'] = true;
-                // logs lang key is missing
-                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, 'Email cannot be sent', false);
+                // logs email cannot be sent
+                $this->saveGdprAutoDeleteLogs($emailSetupConfig, $email, $type, $first, $translator->translate('tr_melis_core_gdpr_auto_delete_email_cannot_be_sent'), false);
 
             }
         }
@@ -955,7 +957,7 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
      * @param $emailFrom
      * @param $emailFromName
      * @param $emailTo
-     * @param null $emailToName
+     * @param $emailToName
      * @param $replyTo
      * @param $subject
      * @param $messageHtml
@@ -965,7 +967,7 @@ class MelisCoreGdprAutoDeleteService extends MelisGeneralService
         $emailFrom,
         $emailFromName,
         $emailTo,
-        $emailToName = null,
+        $emailToName,
         $replyTo,
         $subject,
         $messageHtml,
