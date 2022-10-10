@@ -123,11 +123,7 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         set_time_limit(0);
         foreach($moduleFolders as $module) {
             if(file_exists($module.'/language')) {
-                foreach($transFiles as $file) {
-                    if(file_exists($module.'/language/'.$file)) {
-                        $tmpTrans[] = include($module.'/language/'.$file);
-                    }
-                }
+                
                 // get the directory
                 $iterator = new \RecursiveDirectoryIterator($module . "/language", \RecursiveDirectoryIterator::SKIP_DOTS);
                 $files = new \RecursiveIteratorIterator($iterator,\RecursiveIteratorIterator::CHILD_FIRST);
@@ -143,6 +139,12 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
                     }
                 }
 
+                //transferred so that we can make sure that the given locale will be prioritized in returning the translation value
+                foreach ($transFiles as $file) {
+                    if (file_exists($module.'/language/'.$file)) {
+                        $tmpTrans[] = include($module.'/language/'.$file);
+                    }
+                } 
             }
         }
 
