@@ -101,10 +101,16 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
     }
 
-    public function getTranslatedMessageByLocale($locale = 'en_EN')
+    /**
+     * Returns the translated message of the given locale
+     * @param string $locale
+     * @param array $moduleArr - the modules to check for, if empty, all installed modules will be checked
+     * @return array
+     */
+    public function getTranslatedMessageByLocale($locale = 'en_EN', $moduleArr = [])
     {
         $modulesSvc = $this->getServiceManager()->get('ModulesService');
-        $modules = $modulesSvc->getAllModules();
+        $modules = $moduleArr ?: $modulesSvc->getAllModules();
 
         $moduleFolders = array();
         foreach ($modules as $module)
@@ -161,13 +167,13 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
     }
 
-    public function getMessage($translationKey, $locale = 'en_EN')
+    public function getMessage($translationKey, $locale = 'en_EN', $moduleArr = [])
     {
         if (empty($translationKey)){
             return null;
         }
 
-        $getAllTransMsg = $this->getTranslatedMessageByLocale($locale);
+        $getAllTransMsg = $this->getTranslatedMessageByLocale($locale, $moduleArr);
 
         foreach($getAllTransMsg as $transKey => $transMsg) {
             if($translationKey == $transKey)
