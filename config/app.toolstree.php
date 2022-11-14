@@ -992,6 +992,23 @@ return [
                             ),
                             'interface' => []
                         ],
+                        'meliscrm_toolstree_section' => [
+                            'conf' => [
+                                'id' => 'meliscrm_toolstree_section',
+                                'melisKey' => 'meliscrm_toolstree_section',
+                                'name' => 'MelisCRM',
+                                'icon' => '',
+                                'rights_checkbox_disable' => false,
+                            ],
+                            'forward' => array(
+                                'module' => 'MelisCore',
+                                'controller' => 'TreeTools',
+                                'action' => 'render-tree-tools',
+                                'jscallback' => '',
+                                'jsdatas' => array()
+                            ),
+                            'interface' => []
+                        ],
                         'melisothers_toolstree_section' => [
                             'conf' => [
                                 'id' => 'melisothers_toolstree_section',

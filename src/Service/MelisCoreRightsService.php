@@ -12,6 +12,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
     const MELISCMS_PREFIX_TOOLS = 'meliscms_toolstree_section';
     const MELISMARKETING_PREFIX_TOOLS = 'melismarketing_toolstree_section';
     const MELISCOMMERCE_PREFIX_TOOLS = 'meliscommerce_toolstree_section';
+    const MELISCRM_PREFIX_TOOLS = 'meliscrm_toolstree_section';
     const MELISOTHERS_PREFIX_TOOLS = 'melisothers_toolstree_section';
     const MELISCUSTOM_PREFIX_TOOLS = 'meliscustom_toolstree_section';
     const MELISMARKETPLACE_PREFIX_TOOLS = 'melismarketplace_toolstree_section';
@@ -668,6 +669,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
             self::MELISMARKETPLACE_PREFIX_TOOLS,
+            self::MELISCRM_PREFIX_TOOLS
         ];
     }
 
@@ -684,7 +686,7 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             self::MELISOTHERS_PREFIX_TOOLS,
             self::MELISCUSTOM_PREFIX_TOOLS,
             self::MELISMARKETPLACE_PREFIX_TOOLS,
-
+            self::MELISCRM_PREFIX_TOOLS
         ];
     }
 

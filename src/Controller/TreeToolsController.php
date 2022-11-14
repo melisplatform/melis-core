@@ -265,6 +265,7 @@ class TreeToolsController extends MelisAbstractActionController
             'melismarketplace_toolstree_section',
             'melisdashboardplugin_section',
             'meliscore_footer',
+            'meliscrm_toolstree_section'
         ];
     }
 
