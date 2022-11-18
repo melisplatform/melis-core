@@ -996,7 +996,7 @@ return [
                             'conf' => [
                                 'id' => 'meliscrm_toolstree_section',
                                 'melisKey' => 'meliscrm_toolstree_section',
-                                'name' => 'MelisCRM',
+                                'name' => 'MelisCrm',
                                 'icon' => '',
                                 'rights_checkbox_disable' => false,
                             ],
