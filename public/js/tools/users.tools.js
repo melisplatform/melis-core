@@ -365,6 +365,11 @@ var toolUserManagement = {
                             $("#" + $this.attr('id')).val(data.user[name]);
                             $toolUserMgntTmp.val(data.user['usr_id']);
                             $editUserId.html(data.user['usr_id']);
+
+                            if($this.attr("id") == "id_usr_tags") {
+                                $("#idusermanagement input[name=usr_tags]").tagsinput('removeAll');
+                                $("#idusermanagement input[name=usr_tags]").tagsinput('add', data.user[name]);
+                            }
                     });
 
                     // Switching the Admin switch plugin

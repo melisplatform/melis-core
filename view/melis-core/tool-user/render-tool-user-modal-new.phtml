@@ -31,3 +31,12 @@
         ), 'dismiss');
     echo $this->form()->closeTag();
 ?>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        //initialize input tags
+        $("#idnewusermanagement input[name=usr_tags]").tagsinput({
+            allowDuplicates: false
+        });
+    });
+</script>

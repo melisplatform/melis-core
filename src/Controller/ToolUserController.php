@@ -818,6 +818,7 @@ class ToolUserController extends MelisAbstractActionController
                     $data['usr_status'] = $userVal->usr_status;
                     $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
                     $data['usr_role_id'] = $userVal->usr_role_id;
+                    $data['usr_tags'] = $userVal->usr_tags;
                 }
 
                 $success = true;

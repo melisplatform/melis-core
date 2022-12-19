@@ -394,6 +394,20 @@ return [
                                         ],
                                     ],
                                 ],
+                                [
+                                    'spec' => [
+                                        'name' => 'usr_tags',
+                                        'type' => 'MelisText',
+                                        'options' => [
+                                            'label' => 'Tags',
+                                            'tooltip' => '',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_n_usr_tags',
+                                            'required' => false,
+                                        ],
+                                    ],
+                                ],
                             ], // end elements
                             'input_filter' => [
                                 'usr_login' => [
@@ -879,6 +893,20 @@ return [
                                             'onchange' => 'toolUserManagement.imagePreview("#profile-image", this);',
                                             'class' => 'filestyle',
                                             'data-buttonText' => 'Select Image',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'usr_tags',
+                                        'type' => 'MelisText',
+                                        'options' => [
+                                            'label' => 'Tags',
+                                            'tooltip' => '',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_usr_tags',
+                                            'required' => false,
                                         ],
                                     ],
                                 ],
