@@ -1006,6 +1006,17 @@ var melisHelper = (function() {
 				language: window.melisDataTable.tableLanguage[langTrans],				
 			};
 			
+			//set callback function
+			if (requiredSettings.hasOwnProperty("ajaxCallback")) {
+				if(Object.keys(requiredSettings.ajaxCallback).length > 0) {									
+					settings.fnDrawCallback = function(oSettings) {	
+						var callbacks = requiredSettings.ajaxCallback.split(";").filter(item => item);					
+						$.each(callbacks,function(i) {	
+						    window[callbacks[i].replace('()','').replace(';','')]();
+						});						
+					};					
+				}							
+			}
 
 			//merge here the data config with the default settings
 			if (requiredSettings.hasOwnProperty("data")) {
