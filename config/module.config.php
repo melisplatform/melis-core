@@ -505,6 +505,8 @@ return [
             'melis-core/dashboard-plugin/bubble-updates'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-updates.phtml',
             'melis-core/dashboard-plugin/bubble-notifications'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-notifications.phtml',
             'melis-core/dashboard-plugin/bubble-chat'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-chat.phtml',
+
+            'melis-core/dashboard-plugin/noformtemplate'   => __DIR__ . '/../view/melis-core/dashboard-plugins/noformtemplate.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',

@@ -160,9 +160,10 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin
         $this->pluginConfig = ArrayUtils::merge($pluginConfig, $this->updatesPluginConfig);
 
         $this->getPluginValueFromDb();
-        $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadDbXmlToPluginConfig());
-        $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadGetDataPluginConfig());
-        $this->pluginConfig = $this->updateFrontConfig($this->pluginConfig, $this->loadPostDataPluginConfig());
+        $this->pluginConfig['datas'] = $this->updateFrontConfig($this->pluginConfig['datas'], $this->loadDbXmlToPluginConfig());
+        $this->pluginConfig['datas'] = $this->updateFrontConfig($this->pluginConfig['datas'], $this->loadGetDataPluginConfig());
+        $this->pluginConfig['datas'] = $this->updateFrontConfig($this->pluginConfig['datas'], $this->loadPostDataPluginConfig());
+
         // Generate pluginId if needed
         if ($generatePluginId)
         {
@@ -393,5 +394,63 @@ abstract class MelisCoreDashboardTemplatingPlugin extends AbstractPlugin
         }
         
         return $final;
+    }
+
+    // Creates the plugin parameter form, override this function in your plugin
+    // in order to show a specific form. Default shows nothing
+    public function createOptionsForms()
+    {
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('melis-core/dashboard-plugin/noformtemplate');
+
+        $viewRender = $this->getServiceManager()->get('ViewRenderer');
+        $html = $viewRender->render($viewModel);
+
+        return [
+            [
+                'name' => $this->getServiceManager()->get('translator')->translate('tr_meliscore_dashboard_plugin_common_tab_properties'),
+                'icon' => 'fa fa-cog',
+                'html' => $html,
+                'empty' => true
+            ]
+        ];
+    }
+
+        /**
+     * This setter can be used to set a hardcoded config if not given through render function
+     *
+     * @param array $updatesConfig
+     */
+    public function setUpdatesPluginConfig($updatesConfig)
+    {
+        $this->updatesPluginConfig = $updatesConfig;
+    }
+
+
+    /**
+     * Returns the data to populate the form inside the modals when invoked
+     * @return array|bool|null
+     */
+    public function getFormData()
+    {
+        // formats the configuration into single array, in order to fill-out the forms with the current pluginFrontConfig value
+        $configData  = function($arr, $data, $configData){
+            foreach($arr as $key => $items) {
+                if(is_array($items)) {
+                    foreach($items as $childKey => $childItems) {
+                        if(!is_array($childItems)) {
+                            $data[$childKey] = $childItems;
+                        }
+                    }
+                    $configData($items, $data, $configData);
+                }
+                else {
+                    $data[$key] = $items;
+                }
+            }
+            return $data;
+        };
+
+        return $configData($this->pluginConfig['datas'], [], $configData);
     }
 }

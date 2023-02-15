@@ -809,4 +809,11 @@ return [
     'tr_meliscore_dashboard_bubble_plugins_view_message' => 'View Messages',
     'tr_meliscore_dashboard_bubble_plugins_view_messages' => 'View Messages',
     'tr_meliscore_dashboard_bubble_plugins_wrote' => 'wrote',
+
+    'tr_meliscore_dashboard_plugin_common_tab_properties' => 'Properties',
+    'tr_meliscore_dashboard_plugin_common_no_param' => 'No parameters to edit',
+
+    'tr_meliscore_generate_error_No module or plugin or idpage parameters' => 'No module/pluginName/dashboardId parameters',
+    'tr_meliscore_generate_error_Plugin config not found' => 'Plugin config not found',
+    'tr_meliscore_generate_error_Plugin cant be created' => 'Plugin can\'t be created',
 ];
