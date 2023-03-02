@@ -517,7 +517,8 @@ ul.row {
 }
 /* dashboard gridstack delete and refresh buttons on plugins */
 .dashboard-plugin-refresh,
-.dashboard-plugin-delete {
+.dashboard-plugin-delete,
+.dashboard-plugin-properties {
 	padding: 1px 5px;
 	font-size: 12px;
 }
