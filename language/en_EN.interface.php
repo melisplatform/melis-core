@@ -816,4 +816,7 @@ return [
     'tr_meliscore_generate_error_No module or plugin or idpage parameters' => 'No module/pluginName/dashboardId parameters',
     'tr_meliscore_generate_error_Plugin config not found' => 'Plugin config not found',
     'tr_meliscore_generate_error_Plugin cant be created' => 'Plugin can\'t be created',
+
+    'tr_meliscore_plugins_modal_cancel' => 'Cancel',
+    'tr_meliscore_plugins_modal_apply' => 'Apply',
 ];
