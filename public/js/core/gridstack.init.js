@@ -957,12 +957,45 @@ var melisDashBoardDragnDrop = {
         var pluginConfig = $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-json-config').text();
         pluginConfig = JSON.parse(pluginConfig);
 
+        /**
+         * This will store data if field is multi select,
+         * make sure multi_select_fields key is present in your
+         * plugin config under datas
+         *
+         * Example: multi_select_fields => ['mutli_select_field_name' => []]
+         *
+         * @type {Array}
+         */
+        var arrDatas = [];
+        $.each(datastring, function(i, val){
+            if (~val.name.indexOf("[]")){
+                var fieldName = val.name.replace("[]","");
+                if(!Array.isArray(arrDatas[fieldName])){
+                    arrDatas[fieldName] = [];
+                }
+                arrDatas[fieldName].push(val.value);
+            }
+        });
+
         // override config from plugin to the ones that we get from the modal form
         $.each(pluginConfig.datas, function (index, value) {
             var field = datastring.find(input => input.name == index);
-            
+
             if (typeof field != 'undefined') {
                 pluginConfig.datas[field.name] = field.value;
+            }
+            else{
+                //try to get data from multi select datas
+                if(index in arrDatas){
+                    pluginConfig.datas[index] = arrDatas[index];
+                }else{//check if fields is in multi select fields to assign its default data
+                    if(pluginConfig.datas['multi_select_fields'] != undefined) {
+                        if (index in pluginConfig.datas['multi_select_fields']) {
+                            //set its default data
+                            pluginConfig.datas[index] = pluginConfig.datas['multi_select_fields'][index];
+                        }
+                    }
+                }
             }
         });
 
