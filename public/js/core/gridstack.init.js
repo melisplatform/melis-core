@@ -286,7 +286,7 @@ var melisDashBoardDragnDrop = {
             });
     },
     // serializing plugins / re-enable dropppable .gridstack after serializing
-    serializeWidgetMap: function(items) {
+    serializeWidgetMap: function(items, cb) {
         var self = this;
 
         var dataString = new Array;
@@ -352,12 +352,16 @@ var melisDashBoardDragnDrop = {
         });
 
         // save widgets to db
-        self.saveDBWidgets(dataString);
+        self.saveDBWidgets(dataString, cb);
     },
     // save dashboard widgets/plugins
-    saveDBWidgets: function(dataString) {
+    saveDBWidgets: function(dataString, cb) {
         // save the lists of widgets on the dashboard to db
-        var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+        if(cb != undefined) {
+            var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString, cb);
+        }else{
+            var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+        }
     },
     // check current dashboard
     checkDashboard: function() {
@@ -940,11 +944,12 @@ var melisDashBoardDragnDrop = {
                 self.updateDashboardPluginConfig(pluginId, datastring);
                 // save dashboard plugins
                 var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
-                self.serializeWidgetMap(grid.container[0].children);
+                self.serializeWidgetMap(grid.container[0].children, function(){
+                    // refresh widget
+                    $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-refresh').click();
+                });
                 // close modal
                 $('#id_meliscore_dashboard_plugin_modal_container').modal('hide');
-                // refresh widget
-                $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-refresh').click();
             } else {
                 dashboardPluginHelpepr.melisMultiKoNotification(data.errors);
             }
