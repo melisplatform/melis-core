@@ -14,10 +14,10 @@ var loader = (function(window) {
                                             '<p>' + translations.tr_meliscore_page_edition_loader_text +'</p>' + 
                                         '</div>' + 
                                     '</div>' +
-                                '</div>';
+                                '</div>',
         // window selector
-        $window             = $(window),
-        matches             = activeTabId.match(/\d+/g);
+        $window             = $(window);
+        // matches             = activeTabId.match(/\d+/g);
 
         // initial function
         function init() {
