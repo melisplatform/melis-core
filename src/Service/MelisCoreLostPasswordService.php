@@ -200,7 +200,8 @@ class MelisCoreLostPasswordService extends MelisServiceManager implements MelisC
         if($this->isDataExists($login)) 
         {
             $userTable->update(array(
-                'usr_password' => $melisCoreAuth->encryptPassword($newPass)
+                'usr_password' => $melisCoreAuth->encryptPassword($newPass),
+                'usr_last_pass_update_date' => date('Y-m-d H:i:s')
             ),'usr_login', $login);
             
             $success = true;

@@ -11,7 +11,8 @@ namespace MelisCore\Controller;
 
 use Laminas\View\Model\ViewModel;
 use Laminas\Session\Container;
-
+use Laminas\Config\Factory;
+use Laminas\View\Model\JsonModel;
 use MelisCore\Service\MelisCoreRightsService;
 
 /**
@@ -19,12 +20,7 @@ use MelisCore\Service\MelisCoreRightsService;
 */
 class MelisCoreOtherConfigController extends MelisAbstractActionController
 {
-	/**
-	 * Shows the leftmenu dasboard entry point
-	 * 
-	 * @return \Laminas\View\Model\ViewModel
-	 */
-	public function leftmenuDashboardAction()
+	public function renderOtherConfigContainerAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
 		
@@ -32,5 +28,84 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		$view->melisKey = $melisKey;
 		
 		return $view;
+	}
+
+	public function renderOtherConfigHeaderAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
+
+	public function renderOtherConfigContentAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
+
+	public function renderOtherConfigContentTabsCoreContainerAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
+	
+	public function renderOtherConfigHeaderLeftAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
+
+	public function renderOtherConfigHeaderTitleAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
+
+	public function renderOtherConfigHeaderRightAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
+
+	public function renderOtherConfigHeaderRightSaveAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
+
+	public function saveOtherConfigAction()
+	{
+		$data = $this->getRequest()->getPost()->toArray();
+
+		$response = $this->getEventManager()->trigger('meliscore_save_other_config', $this, $data);
+
+		return new JsonModel($response[0]);
 	}
 }

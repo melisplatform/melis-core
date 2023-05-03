@@ -819,4 +819,20 @@ return [
 
     'tr_meliscore_plugins_modal_cancel' => 'Cancel',
     'tr_meliscore_plugins_modal_apply' => 'Apply',
+
+    'tr_meliscore_tool_other_config' => 'Other Config',
+    'tr_meliscore_tool_other_config_header_title' => 'Other Configurations',
+    'tr_meliscore_tool_other_config_header_description' => 'Here you can configure additional options for each module of the platform',
+    'tr_meliscore_tool_other_config_content_tabs_user_login' => 'Core',
+    'tr_meliscore_tool_other_config_content_tabs_core_header' => 'Login',
+    'tr_meliscore_tool_other_config_content_tabs_core_subheader' => 'Password validity lifetime',
+    'tr_meliscore_tool_other_config_password_validity_lifetime' => 'Password lifetime (in days)',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status' => 'Activate the password lifetime option',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_active' => 'Yes',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_inactive' => 'No',
+    'tr_meliscore_tool_other_config_header_right_save' => 'Save',
+    'tr_meliscore_tool_other_config_label_password_validity_lifetime' => 'Password lifetime',
+    'tr_meliscore_tool_other_config_create_success' => 'Item created successfully',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_must_not_be_empty' => 'The input is required and cannot be empty',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric' => 'The input must be numeric',
 ];

@@ -153,6 +153,60 @@ $(function() {
                 );
         });
 
+        $("body").on("click", "#saveOtherConfig", function(){
+            var btn = $(this);
+
+            dataString = $('#password-settings-form').serializeArray();
+
+            $("body").find('#password-settings-form .make-switch div').each(function () {
+                var $this       = $(this),
+                    field       = $this.find('input').attr('name'),
+                    status      = $this.hasClass('switch-on'),
+                    saveStatus  = (status) ? 1 : 0;
+
+                if (! saveStatus) {
+                    dataString.push({name: field, value: saveStatus});
+                }
+            });
+
+            var form = $('form#password-settings-form');
+
+            form.unbind("submit");
+    
+            form.on("submit", function(e) {
+                e.preventDefault();
+    
+                btn.attr('disabled', true);
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/melis/MelisCore/MelisCoreOtherConfig/saveOtherConfig',
+                    data: dataString,
+                    dataType: 'json',
+                }).done(function (data) {
+                    if (data.success){
+                        // Notifications
+                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+    
+                        // // Reload List
+                        // melisHelper.zoneReload("id_song_content", "song_content");
+    
+                        // melisHelper.tabClose(id+"_id_song_properties_tool");
+                    }else{
+                        melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                        // melisHelper.highlightMultiErrors(data.success, data.errors, "#"+id+"_id_song_properties_content");
+                    }
+    
+                    btn.attr('disabled', false);
+    
+                }).fail(function () {
+                    alert(translations.tr_meliscore_error_message);
+                });
+            });
+    
+            form.submit();
+        });
+
         function setModuleSwitchState(state)
         {
             $('div[data-module-name]').bootstrapSwitch('setState', state);

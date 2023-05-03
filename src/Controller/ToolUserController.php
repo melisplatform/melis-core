@@ -1269,6 +1269,9 @@ class ToolUserController extends MelisAbstractActionController
                                             $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION', $tags, $email_to, $name_to, $langId);
 
                                             $newPass = $melisCoreAuth->encryptPassword($password);
+                                            $datas['usr_id'] = $userId;
+                                            $datas['usr_password'] = $newPass;
+
                                             if (empty($errors)) {
                                                 $success = true;
                                             }

@@ -193,7 +193,7 @@ class MelisAuthController extends MelisAbstractActionController
                     // @var $needReset - Flag if user need's to use the forgot password link
                     $needReset = false;
                     // @var $isPassExpired - Flag if user need's to renew password
-//                    $isPassExpired = false;
+                    $isPassExpired = false;
 
                     // if the user password in the user table is on MD5
                     if (preg_match($md5Regex, $userData->usr_password)) {
@@ -254,20 +254,36 @@ class MelisAuthController extends MelisAbstractActionController
                             if ($melisCoreAuth->isPasswordCorrect($password, $userPassword)) {
                                 // this will be used in setCredential method
                                 $password = $userPassword;
+                                $passwordHistory = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService');
+                                $userLastPasswordUpdatedDate = $passwordHistory->getLastPasswordUpdatedDate($userData->usr_id)[0]['uph_password_updated_date'];
 
+                                $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
+
+                                if (file_exists($file)) {
+                                    $configFactory =  new \Laminas\Config\Factory();
+                                    $config = $configFactory->fromFile($file);
+
+                                    $passwordValidityLifetime = $config['password_validity_lifetime'];
+                                    $passwordExpiryDate = date('Y-m-d H:i:s', strtotime($userLastPasswordUpdatedDate . '+' . $passwordValidityLifetime . ' days'));
+                                    $currentDate = date('Y-m-d H:i:s');
+
+                                    if (strtotime($currentDate) > strtotime($passwordExpiryDate)) {
+                                        $isPassExpired = true;
+                                    }
+                                }
+                                
 //                                $userLastPassUpdate = $userData->usr_last_pass_update_date;
 //                                $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
 //                                $cfg = $melisConfig->getItem('meliscore/datas/default');
 //                                $expiry = $cfg['pwd_expiry'];
 //                                $isPassExpired = $userLastPassUpdate >= date('Y-m-d H:i:s',strtotime('-'.$expiry.' hours')) ? false : true;
-
                             }
                         }
                     }
 
                     // If user is active
                     if ($userData->usr_status == self::USER_ACTIVE) {
-//                        if(!$isPassExpired) {
+                        if(!$isPassExpired) {
                             if (!$needReset) {
                                 $melisCoreAuth->getAdapter()->setIdentity($postValues['usr_login'])
                                     ->setCredential($password);
@@ -349,18 +365,18 @@ class MelisAuthController extends MelisAbstractActionController
                                     'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
                                 ];
                             }
-//                        } else {
-//                            /** @var MelisCoreCreatePasswordService $melisCreatePwdSvc */
-//                            $melisCreatePwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
-//                            $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login,$userData->usr_email);
-//
-//                            $result = [
-//                                'success' => false,
-//                                'password_expired' => true,
-//                                'renew_pass_url' => $url,
-//                                'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
-//                            ];
-//                        }
+                        } else {
+                           /** @var MelisCoreCreatePasswordService $melisCreatePwdSvc */
+                           $melisCreatePwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
+                           $url = $melisCreatePwdSvc->createExpiredPasswordRequest($userData->usr_login,$userData->usr_email);
+
+                           $result = [
+                               'success' => false,
+                               'password_expired' => true,
+                               'renew_pass_url' => $url,
+                               'errors' => ['empty' => $translator->translate('tr_meliscore_login_password_enc_update')],
+                           ];
+                        }
                     } else {
                         $result = [
                             'success' => false,

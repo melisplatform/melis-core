@@ -30,6 +30,8 @@ use MelisCore\Listener\MelisCoreToolUserUpdateUserListener;
 use MelisCore\Listener\MelisCoreUrlAccessCheckerListenner;
 use MelisCore\Listener\MelisCoreUserRecentLogsListener;
 use MelisCore\Listener\MelisCoreUrlPlatformSchemeListener;
+use MelisCore\Listener\MelisCoreOtherConfigListener;
+use MelisCore\Listener\MelisCoreUpdatePasswordHistoryListener;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
@@ -69,6 +71,9 @@ class Module
 
         if (!$this->isInInstallMode($e)) {
             // url platform scheme redirector
+
+            (new MelisCoreOtherConfigListener())->attach($eventManager);
+            (new MelisCoreUpdatePasswordHistoryListener())->attach($eventManager);
             (new MelisCoreUrlPlatformSchemeListener())->attach($eventManager);
             (new MelisCoreFlashMessengerListener())->attach($eventManager);
             (new MelisCoreGetRightsTreeViewListener())->attach($eventManager);
@@ -342,6 +347,7 @@ class Module
             include __DIR__ . '/../config/app.interface.php',
             include __DIR__ . '/../config/app.toolstree.php',
             include __DIR__ . '/../config/app.forms.php',
+            include __DIR__ . '/../config/app.login.php',
             include __DIR__ . '/../config/app.tools.php',
             include __DIR__ . '/../config/app.emails.php',
             include __DIR__ . '/../config/diagnostic.config.php',

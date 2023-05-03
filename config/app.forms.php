@@ -4,6 +4,82 @@ return array(
 	'plugins' => array(
 		'meliscore' => array(
 			'forms' => array(
+                'meliscore_other_config_password_form' => [
+                    'attributes' => [
+                        'name' => 'otherConfigForm',
+                        'id' => 'password-settings-form',
+                        'method' => 'POST',
+                        'action' => '',
+                    ],
+                    'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                    'elements' => [
+                        [
+                            'spec' => [
+                                'name' => 'password_validity_status',
+                                'type' => 'Select',
+                                'options' => [
+                                    'label' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status',
+                                    'checked_value' => '1',
+                                    'unchecked_value' => '0',                                                                                                                                                                                   
+                                    'switchOptions' => array(
+                                        'label-on' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status_active',
+                                        'label-off' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status_inactive',
+                                        'label' => "<i class='glyphicon glyphicon-resize-horizontal'></i>",
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ],
+                                'attributes' => [                                  
+                                    'class' => 'form-control',                                 
+                                    'id' => 'password_validity_status'
+                                ],
+                            ],
+                        ], 
+                        [
+                            'spec' => [
+                                'name' => 'password_validity_lifetime',
+                                'type' => 'MelisText',
+                                'options' => [
+                                    'label' => 'tr_meliscore_tool_other_config_password_validity_lifetime',
+                                    'class' => 'd-flex flex-row justify-content-between',
+                                ],
+                                'attributes' => [                                  
+                                    'class' => 'form-control',                                 
+                                    'id' => 'password_validity_lifetime'
+                                ],
+                            ],
+                        ],
+                    ],
+                    'input_filter' => [
+                        'password_validity_lifetime' => [
+                            'name'     => 'password_validity_lifetime',
+                            'required' => true,
+                            'validators' => [
+                                [
+                                    'name' => 'NotEmpty',
+                                    'options' => [
+                                        'messages' => [
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_other_config_password_validity_lifetime_must_not_be_empty',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'name' => 'Regex',
+                                    'options' => [
+                                        'pattern' => '/^[0-9]+$/',
+                                        'messages' => [
+                                            \Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric'
+                                        ],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ]
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                    ],
+                ],
 				'meliscore_login' => array(
 					'attributes' => array(
 						'name' => 'meliscore_login',
