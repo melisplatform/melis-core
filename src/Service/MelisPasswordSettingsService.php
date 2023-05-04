@@ -45,9 +45,11 @@ class MelisPasswordSettingsService extends MelisComGeneralService
                 $success = 1;
                 $textMessage = $translator->translate('tr_meliscore_tool_other_config_create_success');
                 
+
                 $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
 
                 if (file_exists($file)) {
+                    chmod($file, 0777);
                     $configFactory = new \Laminas\Config\Factory();
                     $configFactory->toFile($file, $passwordSettingsData);
                 }
