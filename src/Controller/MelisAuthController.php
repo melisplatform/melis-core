@@ -263,7 +263,7 @@ class MelisAuthController extends MelisAbstractActionController
                                     $configFactory =  new \Laminas\Config\Factory();
                                     $config = $configFactory->fromFile($file);
 
-                                    if (isset($config['password_validity_lifetime'])) {
+                                    if (!empty($config['password_validity_status']) && !empty($config['password_validity_lifetime'])) {
                                         $passwordValidityLifetime = $config['password_validity_lifetime'];
                                         $passwordExpiryDate = date('Y-m-d H:i:s', strtotime($userLastPasswordUpdatedDate . '+' . $passwordValidityLifetime . ' days'));
                                         $currentDate = date('Y-m-d H:i:s');
