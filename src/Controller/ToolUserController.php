@@ -1249,31 +1249,75 @@ class ToolUserController extends MelisAbstractActionController
                                     if ($passValidator->isValid($password)) {
                                         // password and confirm password matching
                                         if ($password == $confirmPass) {
-                                            $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
+                                            $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
+                                            $configFactory =  new \Laminas\Config\Factory();
+                                            $config = $configFactory->fromFile($file);
+                                            
+                                            if ($config['password_duplicate_status'] == 1) {
+                                                if ($this->getServiceManager()->get('MelisCoreAuth')->isPasswordDuplicate($userId, $password, $config['password_duplicate_lifetime'])) {                                    
+                                                    $errors['usr_password'] = [
+                                                        'invalidPassword' => sprintf(
+                                                            $translator->translate('tr_meliscore_tool_other_config_password_duplicate_has_been_used_previously'), 
+                                                            $config['password_duplicate_lifetime']),
+                                                        'label' => 'Password',
+                                                    ];
 
-                                            // Fetching user language Id
-                                            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
-                                            $userDataResult = $userTable->getEntryById($userId);
-                                            $userDatas = $userDataResult->current();
+                                                    $success = false;
+                                                } else {
+                                                    $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
 
-                                            // Tags to be replace at email content with the corresponding value
-                                            $tags = [
-                                                'NAME' => $userDatas->usr_firstname . ' ' . $userDatas->usr_lastname,
-                                                'PASSWORD' => $password,
-                                            ];
+                                                    // Fetching user language Id
+                                                    $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+                                                    $userDataResult = $userTable->getEntryById($userId);
+                                                    $userDatas = $userDataResult->current();
 
-                                            $email_to = $userDatas->usr_email;
-                                            $name_to = $userDatas->usr_login;
-                                            $langId = $userDatas->usr_lang_id;
+                                                    // Tags to be replace at email content with the corresponding value
+                                                    $tags = [
+                                                        'NAME' => $userDatas->usr_firstname . ' ' . $userDatas->usr_lastname,
+                                                        'PASSWORD' => $password,
+                                                    ];
 
-                                            $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION', $tags, $email_to, $name_to, $langId);
+                                                    $email_to = $userDatas->usr_email;
+                                                    $name_to = $userDatas->usr_login;
+                                                    $langId = $userDatas->usr_lang_id;
 
-                                            $newPass = $melisCoreAuth->encryptPassword($password);
-                                            $datas['usr_id'] = $userId;
-                                            $datas['usr_password'] = $newPass;
+                                                    $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION', $tags, $email_to, $name_to, $langId);
 
-                                            if (empty($errors)) {
-                                                $success = true;
+                                                    $newPass = $melisCoreAuth->encryptPassword($password);
+                                                    $datas['usr_id'] = $userId;
+                                                    $datas['usr_password'] = $newPass;
+                                                    
+                                                    if (empty($errors)) {
+                                                        $success = true;
+                                                    }
+                                                }
+                                            } else {
+                                                $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
+
+                                                // Fetching user language Id
+                                                $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+                                                $userDataResult = $userTable->getEntryById($userId);
+                                                $userDatas = $userDataResult->current();
+
+                                                // Tags to be replace at email content with the corresponding value
+                                                $tags = [
+                                                    'NAME' => $userDatas->usr_firstname . ' ' . $userDatas->usr_lastname,
+                                                    'PASSWORD' => $password,
+                                                ];
+
+                                                $email_to = $userDatas->usr_email;
+                                                $name_to = $userDatas->usr_login;
+                                                $langId = $userDatas->usr_lang_id;
+
+                                                $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION', $tags, $email_to, $name_to, $langId);
+
+                                                $newPass = $melisCoreAuth->encryptPassword($password);
+                                                $datas['usr_id'] = $userId;
+                                                $datas['usr_password'] = $newPass;
+
+                                                if (empty($errors)) {
+                                                    $success = true;
+                                                }                                                
                                             }
                                         } else {
                                             $success = false;

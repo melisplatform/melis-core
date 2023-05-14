@@ -31,4 +31,11 @@ class MelisUpdatePasswordHistoryService extends MelisComGeneralService
 
         return $passwordHistoryTable->getLastPasswordUpdatedDate($userId)->toArray();
     }
+
+    public function getUserPasswordHistory($userId, $duplicateLifetime)
+    {
+        $passwordHistoryTable = $this->getServiceManager()->get('MelisUserPasswordHistoryTable');
+
+        return $passwordHistoryTable->getUserPasswordHistory($userId, $duplicateLifetime)->toArray();
+    }
 }

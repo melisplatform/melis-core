@@ -206,7 +206,6 @@ class MelisAuthController extends MelisAbstractActionController
                     } else {
                         // check if the user password in user table is already in the new password encryption algorithm
                         if (strlen($userData->usr_password) != 60) {
-
                             // get the 'use_mcrypt' config
                             $useMcrypt = $melisMelisCoreConfig->getItem('/meliscore/datas/default/accounts')['use_mcrypt'];
                             // encrypt the password to new encryption
@@ -336,6 +335,14 @@ class MelisAuthController extends MelisAbstractActionController
                                         $userTable->save([
                                             'usr_password' => $newPassword,
                                         ], $userData->usr_id);
+
+                                        $response = [];
+                                        $response['success'] = true;
+                                        $response['datas']['usr_id'] = $userData->usr_id;
+                                        $response['datas']['usr_password'] = $newPassword;
+
+                                        $this->getEventManager()->trigger('meliscore_update_password_history', $this, $response);
+                                        $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, []);
                                     }
 
                                     // Retrieving recent user logs on database

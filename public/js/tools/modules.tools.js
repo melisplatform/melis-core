@@ -154,34 +154,37 @@ $(function() {
         });
 
         $("body").on("click", "#saveOtherConfig", function(){
+            // merge data from all forms
+            let mergedData = $('form').map(function() {
+                return $(this).serializeArray();
+            }).get().flat();
+
             var btn = $(this);
 
-            dataString = $('#password-settings-form').serializeArray();
-
-            $("body").find('#password-settings-form .make-switch div').each(function () {
+            $("body").find('form .make-switch div').each(function () {
                 var $this       = $(this),
                     field       = $this.find('input').attr('name'),
                     status      = $this.hasClass('switch-on'),
                     saveStatus  = (status) ? 1 : 0;
 
                 if (! saveStatus) {
-                    dataString.push({name: field, value: saveStatus});
+                    mergedData.push({name: field, value: saveStatus});
                 }
             });
 
-            var form = $('form#password-settings-form');
+            var form = $('form#password-validity-form');
 
             form.unbind("submit");
     
             form.on("submit", function(e) {
                 e.preventDefault();
-    
+
                 btn.attr('disabled', true);
                 
                 $.ajax({
                     type: 'POST',
                     url: '/melis/MelisCore/MelisCoreOtherConfig/saveOtherConfig',
-                    data: dataString,
+                    data: mergedData,
                     dataType: 'json',
                 }).done(function (data) {
                     if (data.success){
@@ -189,10 +192,8 @@ $(function() {
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
     
                         // // Reload List
-                        // melisHelper.zoneReload("id_song_content", "song_content");
-    
-                        // melisHelper.tabClose(id+"_id_song_properties_tool");
-                    }else{
+                        melisHelper.zoneReload("id_meliscore_tool_other_config", "meliscore_tool_other_config");    
+                    } else{
                         melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
                         // melisHelper.highlightMultiErrors(data.success, data.errors, "#"+id+"_id_song_properties_content");
                     }

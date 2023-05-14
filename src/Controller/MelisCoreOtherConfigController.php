@@ -102,10 +102,23 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 
 	public function saveOtherConfigAction()
 	{
+		$translator = $this->getServiceManager()->get('translator');
+
 		$data = $this->getRequest()->getPost()->toArray();
 
-		$response = $this->getEventManager()->trigger('meliscore_save_other_config', $this, $data);
+		$response = [];
+		$response['success'] = 1;
+		$response['textTitle'] = $translator->translate('tr_meliscore_tool_other_config');
+		$response['textMessage'] = $translator->translate('tr_meliscore_tool_other_config_create_success');
 
-		return new JsonModel($response[0]);
+		$result = $this->getEventManager()->trigger('meliscore_save_other_config', $this, $data)[0];
+
+		if (!empty($result['errors'])) {
+			$response['success'] = 0;
+			$response['textMessage'] = $translator->translate('tr_meliscore_tool_other_config_unable_to_save');
+			$response['errors'] = $result['errors'];
+		}
+
+		return new JsonModel($response);
 	}
 }

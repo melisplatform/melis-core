@@ -18,13 +18,8 @@ class MelisPasswordSettingsService extends MelisComGeneralService
     {
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         $arrayParameters = $this->sendEvent('password_settings_service_save_item_start', $arrayParameters);
-        
-        if ($passwordSettingsData) {
-            $success = '';
-            $textTitle = 'Other config';
-            $textMessage = '';
-            $errors = [];
 
+        if ($arrayParameters['passwordSettingsData']) {
             $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
             $formElements = $this->getServiceManager()->get('FormElementManager');
             $translator = $this->getServiceManager()->get('translator');
@@ -32,47 +27,60 @@ class MelisPasswordSettingsService extends MelisComGeneralService
             $factory = new \Laminas\Form\Factory();
             $factory->setFormElementManager($formElements);
 
-            $appConfigForm = $melisCoreConfig->getItem('meliscore/forms/meliscore_other_config_password_form');
-            $passwordForm = $factory->createForm($appConfigForm);
+            $passwordValidityConfigForm = $melisCoreConfig->getItem('meliscore/forms/meliscore_other_config_password_validity_form');
+            $passwordValidityForm = $factory->createForm($passwordValidityConfigForm);
             
-            if (empty($passwordSettingsData['password_validity_status'])) {
-                $passwordForm->getInputFilter()->remove('password_validity_lifetime');
+            $passwordDuplicateConfigForm = $melisCoreConfig->getItem('meliscore/forms/meliscore_other_config_password_duplicate_form');
+            $passwordDuplicateForm = $factory->createForm($passwordDuplicateConfigForm);
+            
+            // remove form validation for password validity lifetime if password validity status is 0
+            if (empty($arrayParameters['passwordSettingsData']['password_validity_status'])) {
+                $passwordValidityForm->getInputFilter()->remove('password_validity_lifetime');
+            }
+
+             // remove form validation for password duplicate lifetime if password duplicate status is 0
+            if (empty($arrayParameters['passwordSettingsData']['password_duplicate_status'])) {
+                $passwordDuplicateForm->getInputFilter()->remove('password_duplicate_lifetime');
             }
             
-            $passwordForm->setData($passwordSettingsData);
+            $passwordValidityForm->setData($arrayParameters['passwordSettingsData']);
+            $passwordDuplicateForm->setData($arrayParameters['passwordSettingsData']);
 
-            if ($passwordForm->isValid()) {
-                $success = 1;
-                $textMessage = $translator->translate('tr_meliscore_tool_other_config_create_success');
-                
+            $passwordValidityFormErrors = [];
+            $passwordDuplicateFormErrors = [];
 
+            if (!$passwordValidityForm->isValid()) {
+                $passwordValidityFormErrors = $passwordValidityForm->getMessages();
+
+                foreach ($passwordValidityFormErrors as $keyError => $valueError){
+                    $passwordValidityFormErrors[$keyError]['label'] = $translator->translate('tr_meliscore_tool_other_config_label_' . $keyError);
+                }
+            }
+
+            if (!$passwordDuplicateForm->isValid()) {
+                $passwordDuplicateFormErrors = $passwordDuplicateForm->getMessages();
+
+                foreach ($passwordDuplicateFormErrors as $keyError => $valueError){
+                    $passwordDuplicateFormErrors[$keyError]['label'] = $translator->translate('tr_meliscore_tool_other_config_label_' . $keyError);
+                }
+            }
+
+            if (!empty($passwordValidityFormErrors) || !empty($passwordDuplicateFormErrors)) {
+                $mergedErrors = array_merge($passwordValidityFormErrors, $passwordDuplicateFormErrors);
+                $arrayParameters['success'] = 0;
+                $arrayParameters['errors'] = $mergedErrors;
+            } else {
                 $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
 
-                if (file_exists($file)) {
-                    chmod($file, 0777);
-                    $configFactory = new \Laminas\Config\Factory();
-                    $configFactory->toFile($file, $passwordSettingsData);
-                }
-            } else {
-                $success = 0;
-                $textMessage = 'Unable to save';
-                $errors = $passwordForm->getMessages();
-
-                foreach ($errors as $keyError => $valueError){
-                    $errors[$keyError]['label'] = $translator->translate('tr_meliscore_tool_other_config_label_' . $keyError);
-                }
+                chmod($file, 0777);
+                $configFactory = new \Laminas\Config\Factory();
+                $configFactory->toFile($file, $arrayParameters['passwordSettingsData']);
+                $arrayParameters['success'] = 1;
             }
         }
-
-        $arrayParameters['result'] = [
-            'success' => $success,
-            'textTitle' => $textTitle,
-            'textMessage' => $textMessage,
-            'errors' => $errors
-        ];
-
+        
         $arrayParameters = $this->sendEvent('password_settings_service_save_item_end', $arrayParameters);
 
-        return $arrayParameters['result'];
+        return $arrayParameters;
     }
 }

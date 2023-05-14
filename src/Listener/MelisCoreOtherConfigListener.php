@@ -27,10 +27,21 @@ class MelisCoreOtherConfigListener extends MelisGeneralListener implements Liste
         	'meliscore_save_other_config', 
         	function($event){
                 $params = $event->getParams();
+                
+                $passwordSettings = [];
+                $passwordSettings['password_validity_status'] = $params['password_validity_status'] ?? '';
+                $passwordSettings['password_validity_lifetime'] = $params['password_validity_lifetime'] ?? '';
+                $passwordSettings['password_duplicate_status'] = $params['password_duplicate_status'] ?? '';
+                $passwordSettings['password_duplicate_lifetime'] = $params['password_duplicate_lifetime'] ?? '';
                 $passwordSettingsService =  $event->getTarget()->getEvent()->getApplication()->getServiceManager()->get('MelisPasswordSettingsService');
-		        $result = $passwordSettingsService->saveItem($params);
-
-                return $result;
+                $result = $passwordSettingsService->saveItem($passwordSettings);
+                
+                if (!$result['success']) {
+                    $response = [];
+                    $response['errors'] = $result['errors'];
+                    
+                    return $response;
+                }
         	},
         );
     }

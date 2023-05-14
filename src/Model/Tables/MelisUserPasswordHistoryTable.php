@@ -34,16 +34,6 @@ class MelisUserPasswordHistoryTable extends MelisGenericTable
 
     public function getLastPasswordUpdatedDate($userId)
 	{
-		// $select = $this->tableGateway->getSql()->select();
-		
-		// $select->columns(['uph_password_updated_date']);
-        // $select->where(['uph_user_id' => $userId])->current();
-	
-		// $resultSet = $this->tableGateway->selectWith($select);
-	
-		// return $resultSet;
-
-
         $select = $this->tableGateway->getSql()->select();
         $select->columns(['uph_password_updated_date']);
         $select->where(['uph_user_id' => $userId]);
@@ -54,4 +44,21 @@ class MelisUserPasswordHistoryTable extends MelisGenericTable
         
         return $resultSet;
 	}
+
+    public function getUserPasswordHistory($userId, $duplicateLifetime)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->columns(['uph_password_updated_date', 'uph_password']);
+        
+        $select->where([
+            'uph_user_id' => $userId, 
+            'uph_password_updated_date >= DATE_SUB(NOW(), INTERVAL ' . $duplicateLifetime . ' DAY)'
+        ]);
+
+        $select->order('uph_password_updated_date DESC');
+        
+        $resultSet = $this->tableGateway->selectWith($select);
+        
+        return $resultSet;
+    }
 }

@@ -4,10 +4,10 @@ return array(
 	'plugins' => array(
 		'meliscore' => array(
 			'forms' => array(
-                'meliscore_other_config_password_form' => [
+                'meliscore_other_config_password_validity_form' => [
                     'attributes' => [
                         'name' => 'otherConfigForm',
-                        'id' => 'password-settings-form',
+                        'id' => 'password-validity-form',
                         'method' => 'POST',
                         'action' => '',
                     ],
@@ -52,6 +52,82 @@ return array(
                     'input_filter' => [
                         'password_validity_lifetime' => [
                             'name'     => 'password_validity_lifetime',
+                            'required' => true,
+                            'validators' => [
+                                [
+                                    'name' => 'NotEmpty',
+                                    'options' => [
+                                        'messages' => [
+                                            \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_other_config_password_validity_lifetime_must_not_be_empty',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'name' => 'Regex',
+                                    'options' => [
+                                        'pattern' => '/^[0-9]+$/',
+                                        'messages' => [
+                                            \Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric'
+                                        ],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ]
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                    ],
+                ],
+                'meliscore_other_config_password_duplicate_form' => [
+                    'attributes' => [
+                        'name' => 'otherConfigForm',
+                        'id' => 'password-duplicate-form',
+                        'method' => 'POST',
+                        'action' => '',
+                    ],
+                    'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                    'elements' => [
+                        [
+                            'spec' => [
+                                'name' => 'password_duplicate_status',
+                                'type' => 'Select',
+                                'options' => [
+                                    'label' => 'tr_meliscore_tool_other_config_password_validity_duplicate_status',
+                                    'checked_value' => '1',
+                                    'unchecked_value' => '0',                                                                                                                                                                                   
+                                    'switchOptions' => array(
+                                        'label-on' => 'tr_meliscore_tool_other_config_password_validity_duplicate_status_active',
+                                        'label-off' => 'tr_meliscore_tool_other_config_password_validity_duplicate_status_inactive',
+                                        'label' => "<i class='glyphicon glyphicon-resize-horizontal'></i>",
+                                    ),
+                                    'disable_inarray_validator' => true,
+                                ],
+                                'attributes' => [                                  
+                                    'class' => 'form-control',                                 
+                                    'id' => 'password_duplicate_status'
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'password_duplicate_lifetime',
+                                'type' => 'MelisText',
+                                'options' => [
+                                    'label' => 'tr_meliscore_tool_other_config_password_duplicate_lifetime',
+                                    'class' => 'd-flex flex-row justify-content-between',
+                                ],
+                                'attributes' => [                                  
+                                    'class' => 'form-control',                                 
+                                    'id' => 'password_duplicate_lifetime'
+                                ],
+                            ],
+                        ],
+                    ],
+                    'input_filter' => [
+                        'password_duplicate_lifetime' => [
+                            'name'     => 'password_duplicate_lifetime',
                             'required' => true,
                             'validators' => [
                                 [

@@ -742,28 +742,28 @@ return [
                                                                 'action' => 'render-user-login-tabs-main',
                                                             ],
                                                             'interface' => [
-                                                                'meliscore_tool_other_config_content_tabs_core_header' => [
+                                                                'meliscore_tool_other_config_content_tabs_password_validity_header' => [
                                                                     'conf' => [
-                                                                        'id' => 'id_meliscore_tool_other_config_content_tabs_core_header',
-                                                                        'name' => 'tr_meliscore_tool_other_config_content_tabs_core_header',
-                                                                        'melisKey' => 'meliscore_tool_other_config_content_tabs_core_header',
+                                                                        'id' => 'id_meliscore_tool_other_config_content_tabs_password_validity_header',
+                                                                        'name' => 'tr_meliscore_tool_other_config_content_tabs_password_validity_header',
+                                                                        'melisKey' => 'meliscore_tool_other_config_content_tabs_password_validity_header',
                                                                     ],
                                                                     'forward' => [
                                                                         'module' => 'MelisCore',
                                                                         'controller' => 'User',
-                                                                        'action' => 'render-tabs-core-header',
+                                                                        'action' => 'renderTabsUserPasswordHeader',
                                                                     ]
                                                                 ],
-                                                                'meliscore_tool_other_config_content_tabs_core_content' => [
+                                                                'meliscore_tool_other_config_content_tabs_password_validity_content' => [
                                                                     'conf' => [
-                                                                        'id' => 'id_meliscore_tool_other_config_content_tabs_core_content',
-                                                                        'name' => 'tr_meliscore_tool_other_config_content_tabs_core_content',
-                                                                        'melisKey' => 'meliscore_tool_other_config_content_tabs_core_content',
+                                                                        'id' => 'id_meliscore_tool_other_config_content_tabs_password_validity_content',
+                                                                        'name' => 'tr_meliscore_tool_other_config_content_tabs_password_validity_content',
+                                                                        'melisKey' => 'meliscore_tool_other_config_content_tabs_password_validity_content',
                                                                     ],
                                                                     'forward' => [
                                                                         'module' => 'MelisCore',
                                                                         'controller' => 'User',
-                                                                        'action' => 'render-tabs-core-content',
+                                                                        'action' => 'renderTabsUserPasswordContent',
                                                                     ]
                                                                 ],
                                                             ]
