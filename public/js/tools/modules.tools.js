@@ -192,7 +192,15 @@ $(function() {
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
     
                         // // Reload List
-                        melisHelper.zoneReload("id_meliscore_tool_other_config", "meliscore_tool_other_config");    
+                        // melisHelper.zoneReload("id_meliscore_tool_other_config", "meliscore_tool_other_config");    
+                        melisHelper.tabClose("id_meliscore_tool_other_config");
+                        
+                        melisHelper.tabOpen(
+                            translations.tr_meliscore_tool_other_config, 
+                            'fa fa-cube fa-2x', 
+                            'id_meliscore_tool_other_config', 
+                            'meliscore_tool_other_config'
+                        );
                     } else{
                         melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
                         // melisHelper.highlightMultiErrors(data.success, data.errors, "#"+id+"_id_song_properties_content");
