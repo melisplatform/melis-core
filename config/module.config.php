@@ -431,8 +431,11 @@ return [
         ]
     ],
     'validators' => [
+        'factories' => [
+            'MelisPasswordValidatorWithConfig' => \MelisCore\Validator\Factory\MelisPasswordValidatorWithConfigFactory::class,
+        ],
         'invokables' => [
-            'MelisPasswordValidator' => \MelisCore\Validator\MelisPasswordValidator::class
+            'MelisPasswordValidator' => \MelisCore\Validator\MelisPasswordValidator::class,
         ],
     ],
     'form_elements' => [

@@ -158,7 +158,7 @@ $(function() {
             let mergedData = $('form').map(function() {
                 return $(this).serializeArray();
             }).get().flat();
-
+            
             var btn = $(this);
 
             $("body").find('form .make-switch div').each(function () {
@@ -194,7 +194,7 @@ $(function() {
                         // // Reload List
                         // melisHelper.zoneReload("id_meliscore_tool_other_config", "meliscore_tool_other_config");    
                         melisHelper.tabClose("id_meliscore_tool_other_config");
-                        
+
                         melisHelper.tabOpen(
                             translations.tr_meliscore_tool_other_config, 
                             'fa fa-cube fa-2x', 

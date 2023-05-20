@@ -33,6 +33,11 @@ class MelisCoreOtherConfigListener extends MelisGeneralListener implements Liste
                 $passwordSettings['password_validity_lifetime'] = $params['password_validity_lifetime'] ?? '';
                 $passwordSettings['password_duplicate_status'] = $params['password_duplicate_status'] ?? '';
                 $passwordSettings['password_duplicate_lifetime'] = $params['password_duplicate_lifetime'] ?? '';
+                $passwordSettings['password_complexity_number_of_characters'] = $params['password_complexity_number_of_characters'] ?? '';
+                $passwordSettings['password_complexity_use_special_characters'] = $params['password_complexity_use_special_characters'] ?? '';
+                $passwordSettings['password_complexity_use_lower_case'] = $params['password_complexity_use_lower_case'] ?? '';
+                $passwordSettings['password_complexity_use_upper_case'] = $params['password_complexity_use_upper_case'] ?? '';
+                $passwordSettings['password_complexity_use_digit'] = $params['password_complexity_use_digit'] ?? '';
                 $passwordSettingsService =  $event->getTarget()->getEvent()->getApplication()->getServiceManager()->get('MelisPasswordSettingsService');
                 $result = $passwordSettingsService->saveItem($passwordSettings);
                 

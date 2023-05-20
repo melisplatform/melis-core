@@ -94,12 +94,12 @@ return array(
                                 'name' => 'password_duplicate_status',
                                 'type' => 'Select',
                                 'options' => [
-                                    'label' => 'tr_meliscore_tool_other_config_password_validity_duplicate_status',
+                                    'label' => 'tr_meliscore_tool_other_config_password_duplicate_status',
                                     'checked_value' => '1',
                                     'unchecked_value' => '0',                                                                                                                                                                                   
                                     'switchOptions' => array(
-                                        'label-on' => 'tr_meliscore_tool_other_config_password_validity_duplicate_status_active',
-                                        'label-off' => 'tr_meliscore_tool_other_config_password_validity_duplicate_status_inactive',
+                                        'label-on' => 'tr_meliscore_tool_other_config_password_duplicate_status_active',
+                                        'label-off' => 'tr_meliscore_tool_other_config_password_duplicate_status_inactive',
                                         'label' => "<i class='glyphicon glyphicon-resize-horizontal'></i>",
                                     ),
                                     'disable_inarray_validator' => true,
@@ -138,6 +138,117 @@ return array(
                                         ],
                                     ],
                                 ],
+                                [
+                                    'name' => 'Regex',
+                                    'options' => [
+                                        'pattern' => '/^[0-9]+$/',
+                                        'messages' => [
+                                            \Laminas\Validator\Regex::NOT_MATCH => 'tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric'
+                                        ],
+                                        'encoding' => 'UTF-8',
+                                    ],
+                                ]
+                            ],
+                            'filters'  => [
+                                ['name' => 'StripTags'],
+                                ['name' => 'StringTrim'],
+                            ],
+                        ],
+                    ],
+                ],
+                'meliscore_other_config_password_complexity_form' => [
+                    'attributes' => [
+                        'name' => 'otherConfigForm',
+                        'id' => 'password-complexity-form',
+                        'method' => 'POST',
+                        'action' => '',
+                    ],
+                    'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                    'elements' => [
+                        [
+                            'spec' => [
+                                'name' => 'password_complexity_number_of_characters',
+                                'type' => 'MelisText',
+                                'options' => [   
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_number_of_characters',
+                                    'class' => 'd-flex flex-row justify-content-between',
+                                ],
+                                'attributes' => [                                  
+                                    'class' => 'form-control',                                 
+                                    'id' => 'password_complexity_number_of_characters'
+                                ],
+                            ],
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'password_complexity_use_special_characters',
+                                'type' => 'Checkbox',
+                                'options' => [
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_special_characters'
+                                ],
+                                'attributes' => [
+                                    'class' => 'form-control text-center',
+                                    'id' => 'password_complexity_use_special_characters',
+                                    'style' => "cursor:pointer;width:20px;height:20px;margin:0 auto;"
+                                ]
+                            ]
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'password_complexity_use_lower_case',
+                                'type' => 'Checkbox',
+                                'options' => [
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_lower_case'
+                                ],
+                                'attributes' => [
+                                    'class' => 'form-control text-center',
+                                    'id' => 'password_complexity_use_lower_case',
+                                    'style' => "cursor:pointer;width:20px;height:20px;margin:0 auto;"
+                                ]
+                            ]
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'password_complexity_use_upper_case',
+                                'type' => 'Checkbox',
+                                'options' => [
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_upper_case'
+                                ],
+                                'attributes' => [
+                                    'class' => 'form-control text-center',
+                                    'id' => 'password_complexity_use_upper_case',
+                                    'style' => "cursor:pointer;width:20px;height:20px;margin:0 auto;"
+                                ]
+                            ]
+                        ],
+                        [
+                            'spec' => [
+                                'name' => 'password_complexity_use_digit',
+                                'type' => 'Checkbox',
+                                'options' => [
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_digit'
+                                ],
+                                'attributes' => [
+                                    'class' => 'form-control text-center',
+                                    'id' => 'password_complexity_use_digit',
+                                    'style' => "cursor:pointer;width:20px;height:20px;margin:0 auto;"
+                                ]
+                            ]
+                        ],
+                    ],
+                    'input_filter' => [
+                        'password_complexity_number_of_characters' => [
+                            'name'     => 'password_complexity_number_of_characters',
+                            // 'required' => true,
+                            'validators' => [
+                                // [
+                                //     'name' => 'NotEmpty',
+                                //     'options' => [
+                                //         'messages' => [
+                                //             \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_other_config_password_validity_lifetime_must_not_be_empty',
+                                //         ],
+                                //     ],
+                                // ],
                                 [
                                     'name' => 'Regex',
                                     'options' => [

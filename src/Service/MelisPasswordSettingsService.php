@@ -32,6 +32,9 @@ class MelisPasswordSettingsService extends MelisComGeneralService
             
             $passwordDuplicateConfigForm = $melisCoreConfig->getItem('meliscore/forms/meliscore_other_config_password_duplicate_form');
             $passwordDuplicateForm = $factory->createForm($passwordDuplicateConfigForm);
+
+            $passwordComplexityConfigForm = $melisCoreConfig->getItem('meliscore/forms/meliscore_other_config_password_complexity_form');
+            $passwordComplexityForm = $factory->createForm($passwordComplexityConfigForm);
             
             // remove form validation for password validity lifetime if password validity status is 0
             if (empty($arrayParameters['passwordSettingsData']['password_validity_status'])) {
@@ -45,9 +48,11 @@ class MelisPasswordSettingsService extends MelisComGeneralService
             
             $passwordValidityForm->setData($arrayParameters['passwordSettingsData']);
             $passwordDuplicateForm->setData($arrayParameters['passwordSettingsData']);
+            $passwordComplexityForm->setData($arrayParameters['passwordSettingsData']);
 
             $passwordValidityFormErrors = [];
             $passwordDuplicateFormErrors = [];
+            $passwordComplexityFormErrors = [];
 
             if (!$passwordValidityForm->isValid()) {
                 $passwordValidityFormErrors = $passwordValidityForm->getMessages();
@@ -65,8 +70,16 @@ class MelisPasswordSettingsService extends MelisComGeneralService
                 }
             }
 
-            if (!empty($passwordValidityFormErrors) || !empty($passwordDuplicateFormErrors)) {
-                $mergedErrors = array_merge($passwordValidityFormErrors, $passwordDuplicateFormErrors);
+            if (!$passwordComplexityForm->isValid()) {
+                $passwordComplexityFormErrors = $passwordComplexityForm->getMessages();
+
+                foreach ($passwordComplexityFormErrors as $keyError => $valueError){
+                    $passwordComplexityFormErrors[$keyError]['label'] = $translator->translate('tr_meliscore_tool_other_config_label_' . $keyError);
+                }
+            }
+
+            if (!empty($passwordValidityFormErrors) || !empty($passwordDuplicateFormErrors) || !empty($passwordComplexityFormErrors)) {
+                $mergedErrors = array_merge($passwordValidityFormErrors, $passwordDuplicateFormErrors, $passwordComplexityFormErrors);
                 $arrayParameters['success'] = 0;
                 $arrayParameters['errors'] = $mergedErrors;
             } else {
@@ -75,7 +88,7 @@ class MelisPasswordSettingsService extends MelisComGeneralService
                 chmod($file, 0777);
                 $configFactory = new \Laminas\Config\Factory();
                 $configFactory->toFile($file, $arrayParameters['passwordSettingsData']);
-                opcache_reset();
+                // opcache_reset();
                 $arrayParameters['success'] = 1;
             }
         }
