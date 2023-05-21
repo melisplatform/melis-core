@@ -88,7 +88,7 @@ class MelisPasswordSettingsService extends MelisComGeneralService
                 chmod($file, 0777);
                 $configFactory = new \Laminas\Config\Factory();
                 $configFactory->toFile($file, $arrayParameters['passwordSettingsData']);
-                // opcache_reset();
+                opcache_reset();
                 $arrayParameters['success'] = 1;
             }
         }
