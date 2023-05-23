@@ -192,7 +192,7 @@ return [
 
     // Create Password Email
     'tr_meliscore_renew_password_page_header' => 'Mot de passe expiré',
-    'tr_meliscore_renew_password_page_msg' => 'Votre mot de passe a expiré. Veuillez renouveler votre mot de passe.',
+    'tr_meliscore_renew_password_page_msg' => 'Votre mot de passe a expiré. Il doit être changé tous les %u jour(s).',
     'tr_meliscore_renew_password_button' => 'renouveler le mot de passe',
         
     // error

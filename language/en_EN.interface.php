@@ -190,7 +190,7 @@ return [
 
     // Create Password Email
     'tr_meliscore_renew_password_page_header' => 'Password Expired',
-    'tr_meliscore_renew_password_page_msg' => 'Your password has been expired. You are requested to renew your password.',
+    'tr_meliscore_renew_password_page_msg' => 'Your password has expired. You are required to change your password every %u day(s).',
     'tr_meliscore_renew_password_button' => 'Renew Password',
 
     // error

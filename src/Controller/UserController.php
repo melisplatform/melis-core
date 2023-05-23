@@ -676,10 +676,12 @@ class UserController extends MelisAbstractActionController
             }// end confirm if link is valid
         }
 
+        $config = $this->getServiceManager()->get('config');
 
         $view->setVariable('meliscore_renewpass', $forgotForm);
         $view->setVariable('formFactory', $factory);
         $view->setVariable('formConfig', $appConfigForm);
+        $view->setVariable('passwordValidityLifetime', $config['password_validity_lifetime']);
         $view->hashExists = $hashExists;
         $view->message = $translator->translate($textMessage);
         $view->success = $success;
