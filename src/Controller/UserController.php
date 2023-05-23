@@ -906,8 +906,7 @@ class UserController extends MelisAbstractActionController
 		$file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
 
         if (file_exists($file)) {
-            $configFactory =  new \Laminas\Config\Factory();
-            $config = $configFactory->fromFile($file);
+            $config = $this->getServiceManager()->get('config');
         }
 
         $passwordValidityData = new MelisResultSet();

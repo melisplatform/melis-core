@@ -260,7 +260,7 @@ class MelisAuthController extends MelisAbstractActionController
 
                                 if (file_exists($file)) {
                                     $configFactory =  new \Laminas\Config\Factory();
-                                    $config = $configFactory->fromFile($file);
+                                    $config = $this->getServiceManager()->get('config');
 
                                     if (!empty($config['password_validity_status']) && !empty($config['password_validity_lifetime'])) {
                                         $passwordValidityLifetime = $config['password_validity_lifetime'];
