@@ -862,4 +862,9 @@ return [
     'tr_meliscore_tool_other_config_password_config_file_permission_config' => '<b>/config/app.login.php</b> - This file is responsible for the config of the user password',
     'tr_meliscore_tool_other_config_password_config_file_permission_module' => '<b>/module</b> - The directory where the created modules are saved',
 
+    'tr_meliscore_tool_other_config_password_characters_length' => 'Password needs to be at least %min% characters long',
+    'tr_meliscore_tool_other_config_password_lower_case' => 'Password needs to contain at least one (1) lower case',
+    'tr_meliscore_tool_other_config_password_digit_character' => 'Password must contain at least one digit character',
+    'tr_meliscore_tool_other_config_password_upper_case' => 'Password needs to contain at least one (1) UPPER CASE',
+    'tr_meliscore_tool_other_config_password_special_character' => 'Password needs to contain 1 special character, ex: @#$%',
 ];
