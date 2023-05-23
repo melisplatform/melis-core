@@ -311,7 +311,7 @@ class UserController extends MelisAbstractActionController
                 $user = $userTable->getEntryByField('usr_login', $login)->current();
                 $userId = $user->usr_id;
 
-                $config = $this->getServiceManager()->get('config');
+                $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
                 if ($config['password_duplicate_status'] == 1) {
                     if ($this->getServiceManager()->get('MelisCoreAuth')->isPasswordDuplicate($userId, $password, $config['password_duplicate_lifetime'])) {                                    
@@ -676,7 +676,7 @@ class UserController extends MelisAbstractActionController
             }// end confirm if link is valid
         }
 
-        $config = $this->getServiceManager()->get('config');
+        $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
         $view->setVariable('meliscore_renewpass', $forgotForm);
         $view->setVariable('formFactory', $factory);
@@ -748,7 +748,7 @@ class UserController extends MelisAbstractActionController
                     $user = $userTable->getEntryByField('usr_login', $login)->current();
                     $userId = $user->usr_id;
 
-                    $config = $this->getServiceManager()->get('config');
+                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
                     if ($config['password_duplicate_status'] == 1) {
                         if ($this->getServiceManager()->get('MelisCoreAuth')->isPasswordDuplicate($userId, $password, $config['password_duplicate_lifetime'])) {                                    
@@ -908,7 +908,8 @@ class UserController extends MelisAbstractActionController
 		$file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
 
         if (file_exists($file)) {
-            $config = $this->getServiceManager()->get('config');
+            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+
         }
 
         $passwordValidityData = new MelisResultSet();

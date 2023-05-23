@@ -76,7 +76,7 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
     
     public function config($name)
     {
-        return $this->getServiceManager()->get('config')[$name] ?? null;
+        return $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login')[$name] ?? null;
     }
 
     public function auth()

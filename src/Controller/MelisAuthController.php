@@ -259,8 +259,7 @@ class MelisAuthController extends MelisAbstractActionController
                                 $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
 
                                 if (file_exists($file)) {
-                                    $configFactory =  new \Laminas\Config\Factory();
-                                    $config = $this->getServiceManager()->get('config');
+                                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
                                     if (!empty($config['password_validity_status']) && !empty($config['password_validity_lifetime'])) {
                                         $passwordValidityLifetime = $config['password_validity_lifetime'];

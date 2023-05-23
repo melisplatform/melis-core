@@ -1253,7 +1253,7 @@ class ToolUserController extends MelisAbstractActionController
                                 $user = $userTable->getEntryByField('usr_login', $userInfo['usr_login'])->current();
                                 $userId = $user->usr_id;
 
-                                $config = $this->getServiceManager()->get('config');
+                                $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
                                 if ($config['password_duplicate_status'] == 1) {
                                     if ($this->getServiceManager()->get('MelisCoreAuth')->isPasswordDuplicate($userId, $password, $config['password_duplicate_lifetime'])) {                                    
