@@ -286,7 +286,7 @@ var melisDashBoardDragnDrop = {
             });
     },
     // serializing plugins / re-enable dropppable .gridstack after serializing
-    serializeWidgetMap: function(items) {
+    serializeWidgetMap: function(items, cb) {
         var self = this;
 
         var dataString = new Array;
@@ -352,12 +352,16 @@ var melisDashBoardDragnDrop = {
         });
 
         // save widgets to db
-        self.saveDBWidgets(dataString);
+        self.saveDBWidgets(dataString, cb);
     },
     // save dashboard widgets/plugins
-    saveDBWidgets: function(dataString) {
+    saveDBWidgets: function(dataString, cb) {
         // save the lists of widgets on the dashboard to db
-        var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+        if(cb != undefined) {
+            var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString, cb);
+        }else{
+            var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+        }
     },
     // check current dashboard
     checkDashboard: function() {
@@ -940,11 +944,12 @@ var melisDashBoardDragnDrop = {
                 self.updateDashboardPluginConfig(pluginId, datastring);
                 // save dashboard plugins
                 var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
-                self.serializeWidgetMap(grid.container[0].children);
+                self.serializeWidgetMap(grid.container[0].children, function(){
+                    // refresh widget
+                    $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-refresh').click();
+                });
                 // close modal
                 $('#id_meliscore_dashboard_plugin_modal_container').modal('hide');
-                // refresh widget
-                $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-refresh').click();
             } else {
                 dashboardPluginHelpepr.melisMultiKoNotification(data.errors);
             }
@@ -957,12 +962,45 @@ var melisDashBoardDragnDrop = {
         var pluginConfig = $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-json-config').text();
         pluginConfig = JSON.parse(pluginConfig);
 
+        /**
+         * This will store data if field is multi select,
+         * make sure multi_select_fields key is present in your
+         * plugin config under datas
+         *
+         * Example: multi_select_fields => ['mutli_select_field_name' => []]
+         *
+         * @type {Array}
+         */
+        var arrDatas = [];
+        $.each(datastring, function(i, val){
+            if (~val.name.indexOf("[]")){
+                var fieldName = val.name.replace("[]","");
+                if(!Array.isArray(arrDatas[fieldName])){
+                    arrDatas[fieldName] = [];
+                }
+                arrDatas[fieldName].push(val.value);
+            }
+        });
+
         // override config from plugin to the ones that we get from the modal form
         $.each(pluginConfig.datas, function (index, value) {
             var field = datastring.find(input => input.name == index);
-            
+
             if (typeof field != 'undefined') {
                 pluginConfig.datas[field.name] = field.value;
+            }
+            else{
+                //try to get data from multi select datas
+                if(index in arrDatas){
+                    pluginConfig.datas[index] = arrDatas[index];
+                }else{//check if fields is in multi select fields to assign its default data
+                    if(pluginConfig.datas['multi_select_fields'] != undefined) {
+                        if (index in pluginConfig.datas['multi_select_fields']) {
+                            //set its default data
+                            pluginConfig.datas[index] = pluginConfig.datas['multi_select_fields'][index];
+                        }
+                    }
+                }
             }
         });
 

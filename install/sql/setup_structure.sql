@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS `melis_core_lang` (
   `lang_name` VARCHAR(45) NULL,
   PRIMARY KEY (`lang_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'Languages available';
 
 
@@ -37,7 +36,6 @@ CREATE TABLE IF NOT EXISTS `melis_core_platform` (
   `plf_update_marketplace` VARCHAR(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`plf_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'Defines environement used for the project';
 
 
@@ -52,8 +50,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_user_role` (
   `urole_rights` TEXT NULL DEFAULT NULL,
   `urole_creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`urole_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -79,7 +76,6 @@ CREATE TABLE IF NOT EXISTS `melis_core_user` (
   `usr_is_online` TINYINT(1) NULL DEFAULT 0,
   PRIMARY KEY (`usr_id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
 COMMENT = 'Melis users';
 
 
@@ -103,8 +99,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_bo_emails` (
   `boe_last_edit_date` DATETIME NOT NULL,
   `boe_last_user_id` INT(11) NOT NULL,
   PRIMARY KEY (`boe_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -120,8 +115,7 @@ CREATE TABLE IF NOT EXISTS `melis_core_bo_emails_details` (
   `boed_html` LONGTEXT NOT NULL,
   `boed_text` TEXT NOT NULL,
   PRIMARY KEY (`boed_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
