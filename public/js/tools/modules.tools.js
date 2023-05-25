@@ -163,7 +163,7 @@ $(function() {
           
         $("body").on("click", "#saveOtherConfig", function(){
             // merge data from all forms
-            let mergedData = $('.other-config-tool').map(function() {
+            let mergedData = $('#id_meliscore_tool_other_config form').map(function() {
                 return $(this).serializeArray();
             }).get().flat();
             

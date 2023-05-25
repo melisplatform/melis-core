@@ -8,7 +8,6 @@ return array(
                     'attributes' => [
                         'name' => 'otherConfigForm',
                         'id' => 'password-validity-form',
-                        'class' => 'other-config-tool',
                         'method' => 'POST',
                         'action' => '',
                     ],
@@ -85,7 +84,6 @@ return array(
                     'attributes' => [
                         'name' => 'otherConfigForm',
                         'id' => 'password-duplicate-form',
-                        'class' => 'other-config-tool',
                         'method' => 'POST',
                         'action' => '',
                     ],
@@ -162,7 +160,6 @@ return array(
                     'attributes' => [
                         'name' => 'otherConfigForm',
                         'id' => 'password-complexity-form',
-                        'class' => 'other-config-tool',
                         'method' => 'POST',
                         'action' => '',
                     ],
