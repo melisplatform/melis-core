@@ -8,6 +8,7 @@ return array(
                     'attributes' => [
                         'name' => 'otherConfigForm',
                         'id' => 'password-validity-form',
+                        'class' => 'other-config-tool',
                         'method' => 'POST',
                         'action' => '',
                     ],
@@ -84,6 +85,7 @@ return array(
                     'attributes' => [
                         'name' => 'otherConfigForm',
                         'id' => 'password-duplicate-form',
+                        'class' => 'other-config-tool',
                         'method' => 'POST',
                         'action' => '',
                     ],
@@ -160,6 +162,7 @@ return array(
                     'attributes' => [
                         'name' => 'otherConfigForm',
                         'id' => 'password-complexity-form',
+                        'class' => 'other-config-tool',
                         'method' => 'POST',
                         'action' => '',
                     ],
@@ -184,7 +187,10 @@ return array(
                                 'name' => 'password_complexity_use_special_characters',
                                 'type' => 'Checkbox',
                                 'options' => [
-                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_special_characters'
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_special_characters',
+                                    'checked_value' => '1',
+                                    'unchecked_value' => '0',
+                                    'disable_inarray_validator' => true,
                                 ],
                                 'attributes' => [
                                     'class' => 'form-control text-center',
@@ -198,7 +204,10 @@ return array(
                                 'name' => 'password_complexity_use_lower_case',
                                 'type' => 'Checkbox',
                                 'options' => [
-                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_lower_case'
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_lower_case',
+                                    'checked_value' => '1',
+                                    'unchecked_value' => '0',
+                                    'disable_inarray_validator' => true,
                                 ],
                                 'attributes' => [
                                     'class' => 'form-control text-center',
@@ -212,7 +221,10 @@ return array(
                                 'name' => 'password_complexity_use_upper_case',
                                 'type' => 'Checkbox',
                                 'options' => [
-                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_upper_case'
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_upper_case',
+                                    'checked_value' => '1',
+                                    'unchecked_value' => '0',
+                                    'disable_inarray_validator' => true,
                                 ],
                                 'attributes' => [
                                     'class' => 'form-control text-center',
@@ -226,7 +238,10 @@ return array(
                                 'name' => 'password_complexity_use_digit',
                                 'type' => 'Checkbox',
                                 'options' => [
-                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_digit'
+                                    'label' => 'tr_meliscore_tool_other_config_password_complexity_digit',
+                                    'checked_value' => '1',
+                                    'unchecked_value' => '0',
+                                    'disable_inarray_validator' => true,
                                 ],
                                 'attributes' => [
                                     'class' => 'form-control text-center',
@@ -239,16 +254,8 @@ return array(
                     'input_filter' => [
                         'password_complexity_number_of_characters' => [
                             'name'     => 'password_complexity_number_of_characters',
-                            // 'required' => true,
+                            'required' => false,
                             'validators' => [
-                                // [
-                                //     'name' => 'NotEmpty',
-                                //     'options' => [
-                                //         'messages' => [
-                                //             \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_tool_other_config_password_validity_lifetime_must_not_be_empty',
-                                //         ],
-                                //     ],
-                                // ],
                                 [
                                     'name' => 'Regex',
                                     'options' => [
@@ -264,6 +271,22 @@ return array(
                                 ['name' => 'StripTags'],
                                 ['name' => 'StringTrim'],
                             ],
+                        ],
+                        'password_complexity_use_special_characters' => [
+                            'name' => 'password_complexity_use_special_characters',
+                            'required' => false,
+                        ],
+                        'password_complexity_use_lower_case' => [
+                            'name' => 'password_complexity_use_lower_case',
+                            'required' => false,
+                        ],
+                        'password_complexity_use_upper_case' => [
+                            'name' => 'password_complexity_use_upper_case',
+                            'required' => false,
+                        ],
+                        'password_complexity_use_digit' => [
+                            'name' => 'password_complexity_use_digit',
+                            'required' => false,
                         ],
                     ],
                 ],

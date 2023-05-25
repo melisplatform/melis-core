@@ -153,9 +153,17 @@ $(function() {
                 );
         });
 
+        $body.on("click", ".password-complexity[type='checkbox']", function() {
+            if ($(this).is(':checked')) {
+                $(this).val(1);
+            } else {
+                $(this).val(0);
+            }
+        });
+          
         $("body").on("click", "#saveOtherConfig", function(){
             // merge data from all forms
-            let mergedData = $('form').map(function() {
+            let mergedData = $('.other-config-tool').map(function() {
                 return $(this).serializeArray();
             }).get().flat();
             

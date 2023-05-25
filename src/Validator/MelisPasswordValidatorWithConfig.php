@@ -50,29 +50,6 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
     {
         return $this->serviceManager;
     }
-
-    /**
-     * Returns the min option
-     *
-     * @return int
-     */
-    public function getMin()
-    {
-        return $this->options['min'];
-    }
-    
-    /**
-     * Sets the min option
-     *
-     * @param  int $min
-     * @throws Exception\InvalidArgumentException
-     * @return StringLength Provides a fluent interface
-     */
-    public function setMin($min)
-    {
-        $this->options['min'] = max(0, (int) $min);
-        return $this;
-    }
     
     public function config($name)
     {
@@ -99,15 +76,15 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
 
             if (strlen($password) < $minimumNumberOfCharacters) {
                 $this->options['min'] = $minimumNumberOfCharacters;
+                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_too_short'), self::TOO_SHORT);
                 $this->error(self::TOO_SHORT);
-                $this->setMessage($this->translator()->translate('tr_meliscore_tool_other_config_password_characters_length'), self::TOO_SHORT);
                 $isValid = false;
             }
         }
         
         if (!empty($this->config('password_complexity_use_lower_case'))) {
             if (!preg_match('/[a-z]/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_tool_other_config_password_lower_case'), self::NO_LOWER);
+                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_lower'), self::NO_LOWER);
                 $this->error(self::NO_LOWER);
                 $isValid = false;
             }
@@ -115,7 +92,7 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
         
         if (!empty($this->config('password_complexity_use_digit'))) {
             if (!preg_match('/\d/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_tool_other_config_password_digit_character'), self::NO_DIGIT);
+                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_digit'), self::NO_DIGIT);
                 $this->error(self::NO_DIGIT);
                 $isValid = false;
             }
@@ -123,7 +100,7 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
 
         if (!empty($this->config('password_complexity_use_upper_case'))) {
             if (!preg_match('/[A-Z]/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_tool_other_config_password_upper_case'), self::NO_UPPER);
+                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_upper'), self::NO_UPPER);
                 $this->error(self::NO_UPPER);
                 $isValid = false;
             }
@@ -131,7 +108,7 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
 
         if (!empty($this->config('password_complexity_use_special_characters'))) {
             if (!preg_match('/[\p{P}\p{S}]/u', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_tool_other_config_password_special_character'), self::NO_SPECIAL_CHARACTER);
+                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_special_character'), self::NO_SPECIAL_CHARACTER);
                 $this->error(self::NO_SPECIAL_CHARACTER);
                 $isValid = false;
             }

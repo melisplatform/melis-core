@@ -10,9 +10,8 @@
 namespace MelisCore\Service;
 
 use MelisCore\Service\MelisGeneralService;
-use MelisCommerce\Service\MelisComGeneralService;
 
-class MelisPasswordSettingsService extends MelisComGeneralService
+class MelisPasswordSettingsService extends MelisGeneralService
 {
     public function saveItem($passwordSettingsData, $id = null)
     {

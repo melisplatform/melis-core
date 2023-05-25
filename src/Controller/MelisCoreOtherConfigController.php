@@ -103,14 +103,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 	public function saveOtherConfigAction()
 	{
 		$translator = $this->getServiceManager()->get('translator');
-
 		$data = $this->getRequest()->getPost()->toArray();
-
 		$response = [];
 		$response['success'] = 1;
 		$response['textTitle'] = $translator->translate('tr_meliscore_tool_other_config');
 		$response['textMessage'] = $translator->translate('tr_meliscore_tool_other_config_create_success');
-
 		$result = $this->getEventManager()->trigger('meliscore_save_other_config', $this, $data)[0];
 
 		if (!empty($result['errors'])) {

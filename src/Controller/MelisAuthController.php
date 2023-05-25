@@ -341,7 +341,6 @@ class MelisAuthController extends MelisAbstractActionController
                                         $response['datas']['usr_password'] = $newPassword;
 
                                         $this->getEventManager()->trigger('meliscore_update_password_history', $this, $response);
-                                        $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, []);
                                     }
 
                                     // Retrieving recent user logs on database

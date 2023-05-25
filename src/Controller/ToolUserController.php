@@ -1255,6 +1255,8 @@ class ToolUserController extends MelisAbstractActionController
 
                                 $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
+                                $passwordDuplicateCheckSuccessful = true;
+
                                 if ($config['password_duplicate_status'] == 1) {
                                     if ($this->getServiceManager()->get('MelisCoreAuth')->isPasswordDuplicate($userId, $password, $config['password_duplicate_lifetime'])) {                                    
                                         $textMessage = sprintf(
@@ -1270,45 +1272,11 @@ class ToolUserController extends MelisAbstractActionController
                                         ];
 
                                         $success = false;
-                                    } else {
-                                        if ($passValidator->isValid($password)) {
-                                            $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
-            
-                                            // Fetching user language Id
-                                            $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
-                                            $userDataResult = $userTable->getEntryById($userId);
-                                            $userDatas = $userDataResult->current();
-            
-                                            // Tags to be replace at email content with the corresponding value
-                                            $tags = [
-                                                'NAME' => $userDatas->usr_firstname . ' ' . $userDatas->usr_lastname,
-                                                'PASSWORD' => $password,
-                                            ];
-            
-                                            $email_to = $userDatas->usr_email;
-                                            $name_to = $userDatas->usr_login;
-                                            $langId = $userDatas->usr_lang_id;
-            
-                                            $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION', $tags, $email_to, $name_to, $langId);
-            
-                                            $newPass = $melisCoreAuth->encryptPassword($password);
-                                            $datas['usr_id'] = $userId;
-                                            $datas['usr_password'] = $newPass;
-            
-                                            if (empty($errors)) {
-                                                $success = true;
-                                            }
-                                        } else {
-                                            $errorMessages = $passValidator->getMessages();
-                                            $success = false;
-            
-                                            $errors['usr_password'] = [
-                                                'invalidPassword' => implode("<br>", $errorMessages),
-                                                'label' => 'Password',
-                                            ];
-                                        }
+                                        $passwordDuplicateCheckSuccessful = false;
                                     }
-                                } else {
+                                } 
+
+                                if ($passwordDuplicateCheckSuccessful) {
                                     if ($passValidator->isValid($password)) {
                                         $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
         
@@ -1345,7 +1313,7 @@ class ToolUserController extends MelisAbstractActionController
                                             'label' => 'Password',
                                         ];
                                     }
-                                }
+                                } 
                             } else {
                                 $errors['usr_password'] = [        
                                     'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
@@ -1354,113 +1322,6 @@ class ToolUserController extends MelisAbstractActionController
 
                                 $success = false;
                             }
-                            
-
-                            // if (strlen($password) >= 8) {
-                            //     if (strlen($confirmPass) >= 8) {
-                            //         $passValidator = new MelisPasswordValidator();
-                            //         if ($passValidator->isValid($password)) {
-                            //             // password and confirm password matching
-                            //             if ($password == $confirmPass) {
-                            //                 $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
-                            //                 $configFactory =  new \Laminas\Config\Factory();
-                            //                 $config = $configFactory->fromFile($file);
-                                            
-                            //                 if ($config['password_duplicate_status'] == 1) {
-                            //                     if ($this->getServiceManager()->get('MelisCoreAuth')->isPasswordDuplicate($userId, $password, $config['password_duplicate_lifetime'])) {                                    
-                            //                         $errors['usr_password'] = [
-                            //                             'invalidPassword' => sprintf(
-                            //                                 $translator->translate('tr_meliscore_tool_other_config_password_duplicate_has_been_used_previously'), 
-                            //                                 $config['password_duplicate_lifetime']),
-                            //                             'label' => 'Password',
-                            //                         ];
-
-                            //                         $success = false;
-                            //                     } else {
-                            //                         $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
-
-                            //                         // Fetching user language Id
-                            //                         $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
-                            //                         $userDataResult = $userTable->getEntryById($userId);
-                            //                         $userDatas = $userDataResult->current();
-
-                            //                         // Tags to be replace at email content with the corresponding value
-                            //                         $tags = [
-                            //                             'NAME' => $userDatas->usr_firstname . ' ' . $userDatas->usr_lastname,
-                            //                             'PASSWORD' => $password,
-                            //                         ];
-
-                            //                         $email_to = $userDatas->usr_email;
-                            //                         $name_to = $userDatas->usr_login;
-                            //                         $langId = $userDatas->usr_lang_id;
-
-                            //                         $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION', $tags, $email_to, $name_to, $langId);
-
-                            //                         $newPass = $melisCoreAuth->encryptPassword($password);
-                            //                         $datas['usr_id'] = $userId;
-                            //                         $datas['usr_password'] = $newPass;
-                                                    
-                            //                         if (empty($errors)) {
-                            //                             $success = true;
-                            //                         }
-                            //                     }
-                            //                 } else {
-                            //                     $melisEmailBO = $this->getServiceManager()->get('MelisCoreBOEmailService');
-
-                            //                     // Fetching user language Id
-                            //                     $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
-                            //                     $userDataResult = $userTable->getEntryById($userId);
-                            //                     $userDatas = $userDataResult->current();
-
-                            //                     // Tags to be replace at email content with the corresponding value
-                            //                     $tags = [
-                            //                         'NAME' => $userDatas->usr_firstname . ' ' . $userDatas->usr_lastname,
-                            //                         'PASSWORD' => $password,
-                            //                     ];
-
-                            //                     $email_to = $userDatas->usr_email;
-                            //                     $name_to = $userDatas->usr_login;
-                            //                     $langId = $userDatas->usr_lang_id;
-
-                            //                     $melisEmailBO->sendBoEmailByCode('PASSWORDMODIFICATION', $tags, $email_to, $name_to, $langId);
-
-                            //                     $newPass = $melisCoreAuth->encryptPassword($password);
-                            //                     $datas['usr_id'] = $userId;
-                            //                     $datas['usr_password'] = $newPass;
-
-                            //                     if (empty($errors)) {
-                            //                         $success = true;
-                            //                     }                                                
-                            //                 }
-                            //             } else {
-                            //                 $success = false;
-                            //                 $errors['usr_password'] = [
-                            //                     'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
-                            //                     'label' => 'Password',
-                            //                 ];
-                            //                 $errors['usr_confirm_password'] = [
-                            //                     'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_not_match'),
-                            //                     'label' => 'Password',
-                            //                 ];
-                            //             } // password and confirm password matching
-                            //         } else {
-                            //             $errors['usr_password'] = [
-                            //                 'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_regex_not_match'),
-                            //                 'label' => 'Password',
-                            //             ];
-                            //         } // password regex validator
-                            //     } else {
-                            //         $errors['usr_confirm_password'] = [
-                            //             'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_confirm_password_error_low'),
-                            //             'label' => 'Password',
-                            //         ];
-                            //     }// end confirm password length
-                            // } else {
-                            //     $errors['usr_password'] = [
-                            //         'invalidPassword' => $translator->translate('tr_meliscore_tool_user_usr_password_error_low'),
-                            //         'label' => 'Password',
-                            //     ];
-                            // }// end password length
                         } else {
                             // update without touching the password
                             $success = true;
