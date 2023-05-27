@@ -169,7 +169,7 @@ $(function() {
             
             var btn = $(this);
 
-            $("body").find('form .make-switch div').each(function () {
+            $("body").find('#id_meliscore_tool_other_config form .make-switch div').each(function () {
                 var $this       = $(this),
                     field       = $this.find('input').attr('name'),
                     status      = $this.hasClass('switch-on'),

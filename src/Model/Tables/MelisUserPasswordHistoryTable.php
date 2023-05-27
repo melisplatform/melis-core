@@ -32,6 +32,12 @@ class MelisUserPasswordHistoryTable extends MelisGenericTable
         $this->idField = self::PRIMARY_KEY;
     }
 
+    /**
+     * Retrieves the last password updated date for a given user.
+     *
+     * @param int $userId The ID of the user.
+     * @return HydratingResultSet The result set containing the last password updated date.
+     */
     public function getLastPasswordUpdatedDate($userId)
 	{
         $select = $this->tableGateway->getSql()->select();
@@ -45,6 +51,13 @@ class MelisUserPasswordHistoryTable extends MelisGenericTable
         return $resultSet;
 	}
 
+    /**
+     * Retrieves the password history for a user within a specified duplicate lifetime.
+     *
+     * @param int $userId The ID of the user.
+     * @param int $duplicateLifetime The duplicate password lifetime (in days).
+     * @return HydratingResultSet The result set containing the user password history.
+     */
     public function getUserPasswordHistory($userId, $duplicateLifetime)
     {
         $select = $this->tableGateway->getSql()->select();

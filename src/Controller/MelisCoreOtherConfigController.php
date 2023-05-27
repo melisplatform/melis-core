@@ -20,6 +20,11 @@ use MelisCore\Service\MelisCoreRightsService;
 */
 class MelisCoreOtherConfigController extends MelisAbstractActionController
 {
+	/**
+	 * Renders the Melis CMS Dashboard container for other configuration.
+	 *
+	 * @return ViewModel The view model for rendering the container.
+	 */
 	public function renderOtherConfigContainerAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -30,6 +35,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		return $view;
 	}
 
+	/**
+	 * Renders the header for the other configuration section.
+	 *
+	 * @return ViewModel The view model for rendering the header.
+	 */
 	public function renderOtherConfigHeaderAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -40,6 +50,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		return $view;
 	}
 
+	/**
+	 * Renders the content for the other configuration section.
+	 *
+	 * @return ViewModel The view model for rendering the content.
+	 */
 	public function renderOtherConfigContentAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -50,6 +65,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		return $view;
 	}
 
+	/**
+	 * Renders the container for the core tab in the other configuration content section.
+	 *
+	 * @return ViewModel The view model for rendering the container.
+	 */
 	public function renderOtherConfigContentTabsCoreContainerAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -60,6 +80,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		return $view;
 	}
 	
+	/**
+	 * Renders the left section of the header in the other configuration section.
+	 *
+	 * @return ViewModel The view model for rendering the left section of the header.
+	 */
 	public function renderOtherConfigHeaderLeftAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -70,6 +95,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		return $view;
 	}
 
+	/**
+	 * Renders the title section of the header in the other configuration section.
+	 *
+	 * @return ViewModel The view model for rendering the title section of the header.
+	 */
 	public function renderOtherConfigHeaderTitleAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -80,6 +110,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		return $view;
 	}
 
+	/**
+	 * Renders the right section of the header in the other configuration section.
+	 *
+	 * @return ViewModel The view model for rendering the right section of the header.
+	 */
 	public function renderOtherConfigHeaderRightAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -90,6 +125,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		return $view;
 	}
 
+	/**
+	 * Renders the save button in the right section of the header in the other configuration section.
+	 *
+	 * @return ViewModel The view model for rendering the save button.
+	 */
 	public function renderOtherConfigHeaderRightSaveAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -100,6 +140,11 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		return $view;
 	}
 
+	/**
+	 * Saves the other configuration data.
+	 *
+	 * @return JsonModel The JSON response containing the success status and messages.
+	 */
 	public function saveOtherConfigAction()
 	{
 		$translator = $this->getServiceManager()->get('translator');

@@ -10,10 +10,15 @@
 namespace MelisCore\Service;
 
 use MelisCore\Service\MelisGeneralService;
-use MelisCommerce\Service\MelisComGeneralService;
 
-class MelisUpdatePasswordHistoryService extends MelisComGeneralService
+class MelisUpdatePasswordHistoryService extends MelisGeneralService
 {
+    /**
+     * Saves a user's password to the password history.
+     *
+     * @param int $userId The ID of the user.
+     * @param string $password The password to be saved.
+     */
     public function saveItem($userId, $password)
     {
         $passwordHistoryTable = $this->getServiceManager()->get('MelisUserPasswordHistoryTable');
@@ -25,6 +30,12 @@ class MelisUpdatePasswordHistoryService extends MelisComGeneralService
         ]);
     }
 
+    /**
+     * Retrieves the last password updated date for a user.
+     *
+     * @param int $userId The ID of the user.
+     * @return array Returns an array containing the last password updated date.
+     */
     public function getLastPasswordUpdatedDate($userId)
     {
         $passwordHistoryTable = $this->getServiceManager()->get('MelisUserPasswordHistoryTable');
@@ -32,6 +43,13 @@ class MelisUpdatePasswordHistoryService extends MelisComGeneralService
         return $passwordHistoryTable->getLastPasswordUpdatedDate($userId)->toArray();
     }
 
+    /**
+     * Retrieves the password history for a user.
+     *
+     * @param int $userId The ID of the user.
+     * @param int $duplicateLifetime The duplicate password lifetime (in days).
+     * @return array Returns an array containing the user's password history.
+     */
     public function getUserPasswordHistory($userId, $duplicateLifetime)
     {
         $passwordHistoryTable = $this->getServiceManager()->get('MelisUserPasswordHistoryTable');

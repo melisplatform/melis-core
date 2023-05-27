@@ -12,8 +12,14 @@ namespace MelisCore\Service;
 use MelisCore\Service\MelisGeneralService;
 
 class MelisPasswordSettingsService extends MelisGeneralService
-{
-    public function saveItem($passwordSettingsData, $id = null)
+{   
+    /**
+     * Saves an item with password settings.
+     *
+     * @param array $passwordSettingsData The password settings data to be saved.
+     * @return array Returns an array with the updated parameters.
+     */
+    public function saveItem($passwordSettingsData)
     {
         $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
         $arrayParameters = $this->sendEvent('password_settings_service_save_item_start', $arrayParameters);
@@ -98,7 +104,12 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 ];
 
                 $configFactory->toFile($file, $config);
-                opcache_reset();
+
+                // check if opcache zend_extension is installed/enabled in server
+                if (function_exists('opcache_reset')) {
+                    opcache_reset();
+                }
+
                 $arrayParameters['success'] = 1;
             }
         }

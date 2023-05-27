@@ -734,6 +734,11 @@ class UserController extends MelisAbstractActionController
         return new JsonModel($data);
     }
 
+    /**
+     * Renders the header for the user password configuration tab.
+     *
+     * @return ViewModel The view model for rendering the header.
+     */
     public function renderTabsUserPasswordHeaderAction()
 	{
 		$melisKey = $this->params()->fromRoute('melisKey', '');
@@ -744,6 +749,11 @@ class UserController extends MelisAbstractActionController
 		return $view;
 	}
 
+    /**
+     * Renders the content for the user password configuration tab.
+     *
+     * @return ViewModel The view model for rendering the content.
+     */
     public function renderTabsUserPasswordContentAction()
 	{
 		$melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
@@ -856,6 +866,11 @@ class UserController extends MelisAbstractActionController
         return $schemeData;
     }
 
+    /**
+     * Renders the main tab for user password configuration.
+     *
+     * @return ViewModel The view model for rendering the main tab.
+     */
     public function renderUserLoginTabsMainAction()
     {
         $filePermissionErrors = [];
