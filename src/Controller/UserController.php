@@ -896,7 +896,10 @@ class UserController extends MelisAbstractActionController
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $view->melisKey = $melisKey;
 
+        // check if file permission errors exists
         $view->filePermissionErrors = (!empty($filePermissionErrors)) ? $filePermissionErrors : [];
+
+        // check if missing libraries errors exists
         $view->missingLibrariesErrors = (!empty($missingLibrariesErrors)) ? $missingLibrariesErrors : [];
 
         return $view;
