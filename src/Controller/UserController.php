@@ -874,6 +874,7 @@ class UserController extends MelisAbstractActionController
     public function renderUserLoginTabsMainAction()
     {
         $filePermissionErrors = [];
+        $missingLibrariesErrors = [];
 
         $module = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core';
         $configFile = $module . '/config/app.login.php';
@@ -886,13 +887,17 @@ class UserController extends MelisAbstractActionController
             $filePermissionErrors[] = 'tr_meliscore_tool_other_config_password_config_file_permission_config';
         }
 
+        // check if opcache zend_extension is installed/enabled in server
+        if (!function_exists('opcache_reset')) {
+            $missingLibrariesErrors[] = 'tr_meliscore_tool_other_config_password_config_enable_opcache_reset';
+        }
+
         $view = new ViewModel();
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $view->melisKey = $melisKey;
 
-        if (!empty($filePermissionErrors)) {
-            $view->filePermissionErrors = $filePermissionErrors;
-        }
+        $view->filePermissionErrors = (!empty($filePermissionErrors)) ? $filePermissionErrors : [];
+        $view->missingLibrariesErrors = (!empty($missingLibrariesErrors)) ? $missingLibrariesErrors : [];
 
         return $view;
     }

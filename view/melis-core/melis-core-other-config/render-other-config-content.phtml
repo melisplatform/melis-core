@@ -2,7 +2,7 @@
 $id = '';
 $newsId = empty($this->newsId) ? 0 : (int)$this->newsId;
 if (!empty($this->zoneconfig['conf']['id'])) {
-    $id .= $newsId . '_' . $this->zoneconfig['conf']['id'];
+    $id .= $this->zoneconfig['conf']['id'];
 }
 
 $zoneConfigInterface = $this->zoneconfig['interface'];

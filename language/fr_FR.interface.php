@@ -874,4 +874,6 @@ return [
     'tr_meliscore_tool_other_config_password_config_file_permission_message' => 'Veuillez autoriser l\'écriture dans les répertoires suivants ou contacter un administrateur si le problème persiste.',
     'tr_meliscore_tool_other_config_password_config_file_permission_config' => '<b>/config/app.login.php</b> - Ce document est responsable de la configuration du mot de passe utilisateur',
     'tr_meliscore_tool_other_config_password_config_file_permission_module' => '<b>/module</b> - Le répertoire oú les modules sont enregistrés',
+    'tr_meliscore_tool_other_config_password_config_missing_libraries_title' => 'Librairies manquantes',
+    'tr_meliscore_tool_other_config_password_config_enable_opcache_reset' => "<b>opcache</b> - Merci d'activer ou d'installer l'extension sur le serveur",
 ];
