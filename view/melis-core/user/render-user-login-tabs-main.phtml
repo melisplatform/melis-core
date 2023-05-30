@@ -6,8 +6,8 @@
     }
    
 ?>
-<div class="tab-pane " id="<?php echo $id?>" data-melisKey="<?= $this->melisKey;?>">
-	<?php if (empty($filePermissionErrors) && empty($missingLibrariesErrors)) : ?>
+<div class="tab-pane " id="<?php echo $id?>" data-melisKey="<?= $this->melisKey;?>">				
+	<?php if (empty($filePermissionErrors)) : ?>
     	<?php 
 			if (!empty($this->zoneconfig['interface'])) {
 				foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
@@ -16,27 +16,13 @@
 			}
 		?>
 	<?php else: ?>
-		<?php if (!empty($filePermissionErrors)) : ?>
-			<div class="alert alert-warning">
-				<h3><?php echo $this->translate('tr_meliscore_tool_other_config_password_config_file_permission_title') ?></h3>
-				<p><?php echo $this->translate('tr_meliscore_tool_other_config_password_config_file_permission_message') ?></p>
-				<br>
-
-				<?php foreach ($filePermissionErrors as $error) : ?>
-					<p style="display: list-item;list-style-type: disc;list-style-position: inside;"><?php echo $this->translate($error) ?></p>
-				<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
-
-		<?php if (!empty($missingLibrariesErrors)) : ?>
-			<div class="alert alert-warning">
-				<h3><?php echo $this->translate('tr_meliscore_tool_other_config_password_config_missing_libraries_title') ?></h3>
-				<br>
-
-				<?php foreach ($missingLibrariesErrors as $error) : ?>
-					<p style="display: list-item;list-style-type: disc;list-style-position: inside;"><?php echo $this->translate($error) ?></p>
-				<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
+		<div class="alert alert-warning">
+			<h3><?php echo $this->translate('tr_meliscore_tool_other_config_password_config_file_permission_title') ?></h3>
+			<p><?php echo $this->translate('tr_meliscore_tool_other_config_password_config_file_permission_message') ?></p>
+			<br>
+			<?php foreach ($filePermissionErrors as $error) : ?>
+				<p style="display: list-item;list-style-type: disc;list-style-position: inside;"><?php echo $this->translate($error) ?></p>
+			<?php endforeach ?>
+		</div>
     <?php endif; ?>
 </div>
