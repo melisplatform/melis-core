@@ -151,14 +151,17 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 		$data = $this->getRequest()->getPost()->toArray();
 		$response = [];
 		$response['success'] = 1;
+		$response['errors'] = [];
 		$response['textTitle'] = $translator->translate('tr_meliscore_tool_other_config');
 		$response['textMessage'] = $translator->translate('tr_meliscore_tool_other_config_create_success');
-		$result = $this->getEventManager()->trigger('meliscore_save_other_config', $this, $data)[0];
+		$result = $this->getEventManager()->trigger('meliscore_save_other_config', $this, $data);
 
-		if (!empty($result['errors'])) {
-			$response['success'] = 0;
-			$response['textMessage'] = $translator->translate('tr_meliscore_tool_other_config_unable_to_save');
-			$response['errors'] = $result['errors'];
+		foreach ($result as $res) {
+			if ($res && !empty($res['errors'])) {
+				$response['success'] = 0;
+				$response['textMessage'] = $translator->translate('tr_meliscore_tool_other_config_unable_to_save');
+				$response['errors'] = array_merge($result['errors'], $res['errors']);
+			}
 		}
 
 		return new JsonModel($response);
