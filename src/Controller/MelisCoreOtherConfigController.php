@@ -160,10 +160,10 @@ class MelisCoreOtherConfigController extends MelisAbstractActionController
 			if ($res && !empty($res['errors'])) {
 				$response['success'] = 0;
 				$response['textMessage'] = $translator->translate('tr_meliscore_tool_other_config_unable_to_save');
-				$response['errors'] = array_merge($result['errors'], $res['errors']);
+				$response['errors'] = array_merge($response['errors'], $res['errors']);
 			}
 		}
-
+		
 		return new JsonModel($response);
 	}
 }

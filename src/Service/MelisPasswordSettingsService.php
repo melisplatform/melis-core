@@ -43,12 +43,52 @@ class MelisPasswordSettingsService extends MelisGeneralService
             
             // remove form validation for password validity lifetime if password validity status is 0
             if (empty($arrayParameters['passwordSettingsData']['password_validity_status'])) {
-                $passwordValidityForm->getInputFilter()->remove('password_validity_lifetime');
+                $inputFilter = $passwordValidityForm->getInputFilter();
+                
+                $inputFilter->remove('password_validity_lifetime');
+
+                // Add a new validation rule for 'password_validity_lifetime' field
+                $inputFilter->add([
+                    'name'       => 'password_validity_lifetime',
+                    'required'   => false,
+                    'validators' => [
+                        [
+                            'name'    => 'Regex',
+                            'options' => [
+                                'pattern' => '/^[0-9]+$/',
+                                'messages' => [
+                                    \Laminas\Validator\Regex::NOT_MATCH => $translator->translate('tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric')
+                                ],
+                                'encoding' => 'UTF-8',
+                            ],
+                        ],
+                    ],
+                ]);
             }
 
              // remove form validation for password duplicate lifetime if password duplicate status is 0
             if (empty($arrayParameters['passwordSettingsData']['password_duplicate_status'])) {
-                $passwordDuplicateForm->getInputFilter()->remove('password_duplicate_lifetime');
+                $inputFilter = $passwordDuplicateForm->getInputFilter();
+                
+                $inputFilter->remove('password_duplicate_lifetime');
+
+                // Add a new validation rule for 'password_validity_lifetime' field
+                $inputFilter->add([
+                    'name'       => 'password_duplicate_lifetime',
+                    'required'   => false,
+                    'validators' => [
+                        [
+                            'name'    => 'Regex',
+                            'options' => [
+                                'pattern' => '/^[0-9]+$/',
+                                'messages' => [
+                                    \Laminas\Validator\Regex::NOT_MATCH => $translator->translate('tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric')
+                                ],
+                                'encoding' => 'UTF-8',
+                            ],
+                        ],
+                    ],
+                ]);
             }
             
             $passwordValidityForm->setData($arrayParameters['passwordSettingsData']);
