@@ -91,6 +91,16 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 ]);
             }
             
+            // if password duplicate field is empty then use default value to populate
+            if (empty($arrayParameters['passwordSettingsData']['password_duplicate_lifetime'])) {
+                $arrayParameters['passwordSettingsData']['password_duplicate_lifetime'] = 183;
+            }
+
+            // if number of characters field is empty then use default value to populate
+            if (empty($arrayParameters['passwordSettingsData']['password_complexity_number_of_characters'])) {
+                $arrayParameters['passwordSettingsData']['password_complexity_number_of_characters'] = 8;
+            }
+
             $passwordValidityForm->setData($arrayParameters['passwordSettingsData']);
             $passwordDuplicateForm->setData($arrayParameters['passwordSettingsData']);
             $passwordComplexityForm->setData($arrayParameters['passwordSettingsData']);
