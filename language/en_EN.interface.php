@@ -829,7 +829,9 @@ return [
 
     'tr_meliscore_tool_other_config_password_validity_header' => 'Password validity lifetime',
     'tr_meliscore_tool_other_config_password_validity_lifetime' => 'Password lifetime (in days)',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_tooltip' => 'Specify the duration (in days) for the password validity lifetime. The password validity lifetime option button must be activated for this to take effect.',
     'tr_meliscore_tool_other_config_password_validity_lifetime_status' => 'Activate the password lifetime option',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_tooltip' => 'Activate or deactivate the password validity lifetime option.',
     'tr_meliscore_tool_other_config_password_validity_lifetime_status_active' => 'Yes',
     'tr_meliscore_tool_other_config_password_validity_lifetime_status_inactive' => 'No',
     'tr_meliscore_tool_other_config_password_validity_lifetime_must_not_be_empty' => 'The input is required and cannot be empty',
@@ -837,7 +839,9 @@ return [
 
     'tr_meliscore_tool_other_config_password_duplicate_header' => 'Password duplicates',    
     'tr_meliscore_tool_other_config_password_duplicate_lifetime' => 'Number of days password is considered a duplicate',
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime_tooltip' => 'Specify the duration (in days) for the password to be considered a duplicate. The password duplicate checker button must be activated for this to take effect.',
     'tr_meliscore_tool_other_config_password_duplicate_status' => 'Activate the password duplicate checker',
+    'tr_meliscore_tool_other_config_password_duplicate_status_tooltip' => 'Activate or deactivate the password duplicate checker.',
     'tr_meliscore_tool_other_config_password_duplicate_status_active' => 'Yes',
     'tr_meliscore_tool_other_config_password_duplicate_status_inactive' => 'No',
     'tr_meliscore_tool_other_config_password_duplicate_lifetime_must_not_be_empty' => 'The input is required and cannot be empty',
@@ -846,6 +850,7 @@ return [
 
     'tr_meliscore_tool_other_config_password_complexity_header' => 'Password complexity',
     'tr_meliscore_tool_other_config_password_complexity_number_of_characters' => 'Number of characters',
+    'tr_meliscore_tool_other_config_password_complexity_number_of_characters_tooltip' => 'Specify the minimum number of characters required for a password.',
     'tr_meliscore_tool_other_config_password_complexity_special_characters' => 'Force use of special character',
     'tr_meliscore_tool_other_config_password_complexity_lower_case' => 'Force use of one lower case',
     'tr_meliscore_tool_other_config_password_complexity_upper_case' => 'Force use of one UPPER CASE',

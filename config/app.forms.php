@@ -18,6 +18,7 @@ return array(
                                 'name' => 'password_validity_status',
                                 'type' => 'Select',
                                 'options' => [
+                                    'tooltip' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status_tooltip',
                                     'label' => 'tr_meliscore_tool_other_config_password_validity_lifetime_status',
                                     'checked_value' => '1',
                                     'unchecked_value' => '0',                                                                                                                                                                                   
@@ -39,6 +40,7 @@ return array(
                                 'name' => 'password_validity_lifetime',
                                 'type' => 'MelisText',
                                 'options' => [
+                                    'tooltip' => 'tr_meliscore_tool_other_config_password_validity_lifetime_tooltip',
                                     'label' => 'tr_meliscore_tool_other_config_password_validity_lifetime',
                                     'class' => 'd-flex flex-row justify-content-between',
                                 ],
@@ -94,6 +96,7 @@ return array(
                                 'name' => 'password_duplicate_status',
                                 'type' => 'Select',
                                 'options' => [
+                                    'tooltip' => 'tr_meliscore_tool_other_config_password_duplicate_status_tooltip',
                                     'label' => 'tr_meliscore_tool_other_config_password_duplicate_status',
                                     'checked_value' => '1',
                                     'unchecked_value' => '0',                                                                                                                                                                                   
@@ -115,6 +118,7 @@ return array(
                                 'name' => 'password_duplicate_lifetime',
                                 'type' => 'MelisText',
                                 'options' => [
+                                    'tooltip' => 'tr_meliscore_tool_other_config_password_duplicate_lifetime_tooltip',
                                     'label' => 'tr_meliscore_tool_other_config_password_duplicate_lifetime',
                                     'class' => 'd-flex flex-row justify-content-between',
                                 ],
@@ -169,7 +173,8 @@ return array(
                             'spec' => [
                                 'name' => 'password_complexity_number_of_characters',
                                 'type' => 'MelisText',
-                                'options' => [   
+                                'options' => [
+                                    'tooltip' => 'Specify the minimum number of characters required for a password.',  
                                     'label' => 'tr_meliscore_tool_other_config_password_complexity_number_of_characters',
                                     'class' => 'd-flex flex-row justify-content-between',
                                 ],
