@@ -299,5 +299,35 @@ class MelisCoreAuthService
         return $isToolParentNodeExists && $isToolChildExistsAndComplete;
     }
 
+    public function isPasswordDuplicate($userId, $newPassword, $passwordDuplicateLifetime)
+    {
+        $passwordResult = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService')
+                            ->getUserPasswordHistory($userId, $passwordDuplicateLifetime);
 
+        if (!empty($passwordResult)) {
+            $oldPasswords = [];
+
+            foreach ($passwordResult as $password) {
+                $oldPasswords[$password['uph_password_updated_date']] = $password['uph_password'];
+            }
+
+            foreach ($oldPasswords as $passwordCreatedDate => $oldPassword) {
+                // check if new password is the same as that of an old password
+                if (password_verify($newPassword, $oldPassword)) {
+                    $passwordCreatedTime = strtotime($passwordCreatedDate);
+                    $currentTime = time();
+                    $timeDifference = $currentTime - $passwordCreatedTime;
+                    $timeDifferenceInDays = floor($timeDifference / (60 * 60 * 24));
+
+                    if ($timeDifferenceInDays <= $passwordDuplicateLifetime) {
+                        // if the new password was created within the specified duplicate lifetime (e.g. 5 days)
+                        // for an old password then then new password is a duplicate
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }

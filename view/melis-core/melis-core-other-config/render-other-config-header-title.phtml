@@ -1,0 +1,9 @@
+<?php
+    $id = '';
+    if (!empty($this->zoneconfig['conf']['id'])) {
+        $id = ' id="'. $this->zoneconfig['conf']['id'] . '"';
+	}
+?>
+
+<h1 class="content-heading"><?= $this->translate('tr_meliscore_tool_other_config_header_title'); ?></h1>
+<p><?= $this->translate('tr_meliscore_tool_other_config_header_description'); ?></p>

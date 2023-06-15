@@ -51,6 +51,14 @@ return array(
     'tr_meliscore_tool_user_usr_password_regex_not_match' => 'Your password should be 8 characters or more with at least a small letter and a number',
     'tr_meliscore_tool_user_usr_password_error_low' => 'Password should be greater than or equal to 8 characters',
 
+    'tr_meliscore_other_config_password_too_short' => 'Password needs to be at least %min% characters long',
+    'tr_meliscore_other_config_password_no_digit' => 'Password must contain at least one digit character',
+    'tr_meliscore_other_config_password_no_lower' => 'Password needs to contain at least one (1) lower case',
+    'tr_meliscore_other_config_password_no_upper' => 'Password needs to contain at least one (1) UPPER CASE',
+    'tr_meliscore_other_config_password_no_special_character' => 'Password needs to contain 1 special character, ex: @#$%',
+    'tr_meliscore_other_config_password_no_match' => 'The two passwords don\'t match',
+    'tr_meliscore_other_config_password_duplicate' => 'The password has been used in the past %u% days, please choose another.',
+
     'tr_meliscore_tool_user_usr_confirm_password_error_empty' => 'Please confirm your password',
     'tr_meliscore_tool_user_usr_confirm_password_error_long'  => 'Password confirmation too long, it should be less than 255 characters',
     'tr_meliscore_tool_user_usr_confirm_password_error_low' => 'Password should be greater than or equal to 8 characters',

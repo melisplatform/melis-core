@@ -165,7 +165,7 @@ return [
                                                 'jscallback' => '',
                                                 'jsdatas' => array()
                                             ),
-                                            'interface' => array(
+                                            'interface' => array(   
                                                 'meliscore_tool_platform_header' => array(
                                                     'conf' => array(
                                                         'id' => 'meliscore_tool_platform_header',
@@ -247,7 +247,7 @@ return [
                                                 'jscallback' => '',
                                                 'jsdatas' => array()
                                             ),
-                                            'interface' => array(
+                                            'interface' => array(   
                                                 'meliscore_tool_language_header' => array(
                                                     'conf' => array(
                                                         'id' => 'id_meliscore_tool_language_header',
@@ -634,7 +634,156 @@ return [
                                                     ),
                                                 )
                                             )*/
-                                        )
+                                        ),
+
+                                        // tool other configuration start
+                                        'meliscore_tool_other_config' => [
+                                            'conf' => [
+                                                'id' => 'id_meliscore_tool_other_config',
+                                                'name' => 'tr_meliscore_tool_other_config',
+                                                'melisKey' => 'meliscore_tool_other_config',
+                                            ],
+                                            'forward' => [
+                                                'module' => 'MelisCore',
+                                                'controller' => 'MelisCoreOtherConfig',
+                                                'action' => 'renderOtherConfigContainer',
+                                            ],
+                                            'interface' => [
+                                                'meliscore_tool_other_config_header' => [
+                                                    'conf' => [
+                                                        'id' => 'id_meliscore_tool_other_config_header',
+                                                        'name' => 'tr_meliscore_tool_other_config_header',
+                                                        'melisKey' => 'meliscore_tool_other_config_header',
+                                                    ],
+                                                    'forward' => [
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'MelisCoreOtherConfig',
+                                                        'action' => 'renderOtherConfigHeader',
+                                                        'jscallback' => '',
+                                                    ],
+                                                    'interface' => [
+                                                        'meliscore_tool_other_config_header_left' => [
+                                                            'conf' => [
+                                                                'id' => 'id_meliscore_tool_other_config_header_left',
+                                                                'name' => 'tr_meliscore_tool_other_config_header_left',
+                                                                'melisKey' => 'meliscore_tool_other_config_header_left',
+                                                            ],
+                                                            'forward' => [
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreOtherConfig',
+                                                                'action' => 'renderOtherConfigHeaderLeft',
+                                                            ],
+                                                            'interface' => [
+                                                                'meliscore_tool_other_config_header_title' => [
+                                                                    'conf' => [
+                                                                        'id' => 'id_meliscore_tool_other_config_header_title',
+                                                                        'name' => 'tr_meliscore_tool_other_config_header_title',
+                                                                        'melisKey' => 'meliscore_tool_other_config_header_title',
+                                                                    ],
+                                                                    'forward' => [
+                                                                        'module' => 'MelisCore',
+                                                                        'controller' => 'MelisCoreOtherConfig',
+                                                                        'action' => 'renderOtherConfigHeaderTitle',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                        'meliscore_tool_other_config_header_right' => [
+                                                            'conf' => [
+                                                                'id' => 'id_meliscore_tool_other_config_header_right',
+                                                                'name' => 'tr_meliscore_tool_other_config_header_right',
+                                                                'melisKey' => 'meliscore_tool_other_config_header_right',
+                                                            ],
+                                                            'forward' => [
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'MelisCoreOtherConfig',
+                                                                'action' => 'renderOtherConfigHeaderRight',
+                                                            ],
+                                                            'interface' => [
+                                                                'meliscore_tool_other_config_header_right_save' => [
+                                                                    'conf' => [
+                                                                        'id' => 'id_meliscore_tool_other_config_header_right_save',
+                                                                        'name' => 'tr_meliscore_tool_other_config_header_right_save',
+                                                                        'melisKey' => 'meliscore_tool_other_config_header_right_save',
+                                                                    ],
+                                                                    'forward' => [
+                                                                        'module' => 'MelisCore',
+                                                                        'controller' => 'MelisCoreOtherConfig',
+                                                                        'action' => 'renderOtherConfigHeaderRightSave',
+                                                                    ],
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                                'meliscore_tool_other_config_content' => [
+                                                    'conf' => [
+                                                        'id' => 'id_meliscore_tool_other_config_content',
+                                                        'name' => 'tr_meliscore_tool_other_config_content',
+                                                        'melisKey' => 'meliscore_tool_other_config_content',
+                                                    ],
+                                                    'forward' => [
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'MelisCoreOtherConfig',
+                                                        'action' => 'renderOtherConfigContent',
+                                                        'jscallback' => '',
+                                                    ],
+                                                    'interface' => [
+                                                        'meliscore_tool_other_config_content_tabs_user_login' => [
+                                                            'conf' => [
+                                                                'id' => 'id_meliscore_tool_other_config_content_tabs_user_login',
+                                                                'melisKey' => 'tr_meliscore_tool_other_config_content_tabs_user_login',
+                                                                'name' => 'tr_meliscore_tool_other_config_content_tabs_user_login',
+                                                                'icon' => 'glyphicons address_book',
+                                                            ],
+                                                            'forward' => [
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'User',
+                                                                'action' => 'render-user-login-tabs-main',
+                                                            ],
+                                                            'interface' => [
+                                                                'meliscore_tool_other_config_content_tabs_password_validity_header' => [
+                                                                    'conf' => [
+                                                                        'id' => 'id_meliscore_tool_other_config_content_tabs_password_validity_header',
+                                                                        'name' => 'tr_meliscore_tool_other_config_content_tabs_password_validity_header',
+                                                                        'melisKey' => 'meliscore_tool_other_config_content_tabs_password_validity_header',
+                                                                    ],
+                                                                    'forward' => [
+                                                                        'module' => 'MelisCore',
+                                                                        'controller' => 'User',
+                                                                        'action' => 'renderTabsUserPasswordHeader',
+                                                                    ]
+                                                                ],
+                                                                'meliscore_tool_other_config_content_tabs_password_validity_content' => [
+                                                                    'conf' => [
+                                                                        'id' => 'id_meliscore_tool_other_config_content_tabs_password_validity_content',
+                                                                        'name' => 'tr_meliscore_tool_other_config_content_tabs_password_validity_content',
+                                                                        'melisKey' => 'meliscore_tool_other_config_content_tabs_password_validity_content',
+                                                                    ],
+                                                                    'forward' => [
+                                                                        'module' => 'MelisCore',
+                                                                        'controller' => 'User',
+                                                                        'action' => 'renderTabsUserPasswordContent',
+                                                                    ]
+                                                                ],
+                                                            ]
+                                                        ],
+                                                    ]
+                                                ],
+                                            ]
+                                            // 'interface' => array(
+                                            //     'meliscore_tool_platform_scheme_tool_content' => array(
+                                            //         'conf' => array(
+                                            //             'id' => 'id_meliscore_tool_platform_scheme_tool_content',
+                                            //             'name' => 'tr_meliscore_platform_color',
+                                            //             'melisKey' => 'meliscore_tool_platform_color_tool_content',
+                                            //             'icon' => 'fa fa-fw icon-paint-palette',
+                                            //             'rights_checkbox_disable' => false,
+                                            //         ),
+                                            //     )
+                                            // )
+                                        ]
+                                        // tool other configuration end
                                     ),
                                 ),
                                 'meliscore_tool_admin_section' => array(

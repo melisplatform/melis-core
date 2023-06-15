@@ -190,7 +190,7 @@ return [
 
     // Create Password Email
     'tr_meliscore_renew_password_page_header' => 'Password Expired',
-    'tr_meliscore_renew_password_page_msg' => 'Your password has been expired. You are requested to renew your password.',
+    'tr_meliscore_renew_password_page_msg' => 'Your password has expired. You are required to change your password every %u day(s).',
     'tr_meliscore_renew_password_button' => 'Renew Password',
 
     // error
@@ -819,4 +819,51 @@ return [
 
     'tr_meliscore_plugins_modal_cancel' => 'Cancel',
     'tr_meliscore_plugins_modal_apply' => 'Apply',
+
+    'tr_meliscore_tool_other_config' => 'Other Config',
+    'tr_meliscore_tool_other_config_unable_to_save' => 'Unable to save',
+    'tr_meliscore_tool_other_config_header_title' => 'Other Configurations',
+    'tr_meliscore_tool_other_config_header_description' => 'Here you can configure additional options for each module of the platform',
+    'tr_meliscore_tool_other_config_content_tabs_user_login' => 'Core',
+    'tr_meliscore_tool_other_config_content_tabs_password_validity_header' => 'Login',
+
+    'tr_meliscore_tool_other_config_password_validity_header' => 'Password validity lifetime',
+    'tr_meliscore_tool_other_config_password_validity_lifetime' => 'Password lifetime (in days)',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_tooltip' => 'Specify the duration (in days) for the password validity lifetime. The password validity lifetime option button must be activated for this to take effect.',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status' => 'Activate the password lifetime option',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_tooltip' => 'Activate or deactivate the password validity lifetime option.',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_active' => 'Yes',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_inactive' => 'No',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_must_not_be_empty' => 'The input is required and cannot be empty',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric' => 'The input must be numeric',
+
+    'tr_meliscore_tool_other_config_password_duplicate_header' => 'Password duplicates',    
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime' => 'Number of days password is considered a duplicate',
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime_tooltip' => 'Specify the duration (in days) for the password to be considered a duplicate. The password duplicate checker button must be activated for this to take effect.',
+    'tr_meliscore_tool_other_config_password_duplicate_status' => 'Activate the password duplicate checker',
+    'tr_meliscore_tool_other_config_password_duplicate_status_tooltip' => 'Activate or deactivate the password duplicate checker.',
+    'tr_meliscore_tool_other_config_password_duplicate_status_active' => 'Yes',
+    'tr_meliscore_tool_other_config_password_duplicate_status_inactive' => 'No',
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime_must_not_be_empty' => 'The input is required and cannot be empty',
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime_must_be_numeric' => 'The input must be numerics',
+    'tr_meliscore_tool_other_config_password_duplicate_has_been_used_previously' => 'The password has been used in the past %u days, please choose another.',
+
+    'tr_meliscore_tool_other_config_password_complexity_header' => 'Password complexity',
+    'tr_meliscore_tool_other_config_password_complexity_number_of_characters' => 'Number of characters',
+    'tr_meliscore_tool_other_config_password_complexity_number_of_characters_tooltip' => 'Specify the minimum number of characters required for a password.',
+    'tr_meliscore_tool_other_config_password_complexity_special_characters' => 'Force use of special character',
+    'tr_meliscore_tool_other_config_password_complexity_lower_case' => 'Force use of one lower case',
+    'tr_meliscore_tool_other_config_password_complexity_upper_case' => 'Force use of one UPPER CASE',
+    'tr_meliscore_tool_other_config_password_complexity_digit' => 'Force use of one digit',
+    'tr_meliscore_tool_other_config_password_complexity_number_of_characters_must_be_numeric' => 'The input must be numeric',
+
+    'tr_meliscore_tool_other_config_header_right_save' => 'Save',
+    'tr_meliscore_tool_other_config_label_password_validity_lifetime' => 'Password lifetime',
+    'tr_meliscore_tool_other_config_create_success' => 'Item created successfully',
+    'tr_meliscore_tool_other_config_label_password_duplicate_lifetime' => 'Password duplicate number of days',
+    'tr_meliscore_tool_other_config_label_password_complexity_number_of_characters' => 'Number of characters',
+    'tr_meliscore_tool_other_config_password_config_file_permission_title' => 'File permission denied',
+    'tr_meliscore_tool_other_config_password_config_file_permission_message' => 'Please give the rights to write in the following directories or contact the administrator if the problem persists',
+    'tr_meliscore_tool_other_config_password_config_file_permission_config' => '<b>/config/app.login.php</b> - This file is responsible for the config of the user password',
+    'tr_meliscore_tool_other_config_password_config_file_permission_module' => '<b>/module</b> - The directory where the created modules are saved',
 ];

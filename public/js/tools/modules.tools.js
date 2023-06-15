@@ -153,6 +153,77 @@ $(function() {
                 );
         });
 
+        $body.on("click", ".password-complexity[type='checkbox']", function() {
+            if ($(this).is(':checked')) {
+                $(this).val(1);
+            } else {
+                $(this).val(0);
+            }
+        });
+          
+        $("body").on("click", "#saveOtherConfig", function(){
+            // merge data from all forms
+            let mergedData = $('#id_meliscore_tool_other_config form').map(function() {
+                return $(this).serializeArray();
+            }).get().flat();
+            
+            var btn = $(this);
+
+            $("body").find('#id_meliscore_tool_other_config form .make-switch div').each(function () {
+                var $this       = $(this),
+                    field       = $this.find('input').attr('name'),
+                    status      = $this.hasClass('switch-on'),
+                    saveStatus  = (status) ? 1 : 0;
+
+                if (! saveStatus) {
+                    mergedData.push({name: field, value: saveStatus});
+                }
+            });
+
+            var form = $('form#password-validity-form');
+
+            form.unbind("submit");
+    
+            form.on("submit", function(e) {
+                e.preventDefault();
+
+                btn.attr('disabled', true);
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/melis/MelisCore/MelisCoreOtherConfig/saveOtherConfig',
+                    data: mergedData,
+                    dataType: 'json',
+                }).done(function (data) {
+                    if (data.success){
+                        // Notifications
+                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+    
+                        // // Reload List
+                        // melisHelper.zoneReload("id_meliscore_tool_other_config", "meliscore_tool_other_config");    
+                        melisHelper.tabClose("id_meliscore_tool_other_config");
+
+                        melisHelper.tabOpen(
+                            translations.tr_meliscore_tool_other_config, 
+                            'fa fa-cube fa-2x', 
+                            'id_meliscore_tool_other_config', 
+                            'meliscore_tool_other_config'
+                        );
+                    } else{
+                        melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                        // melisHelper.highlightMultiErrors(data.success, data.errors, "#"+id+"_id_song_properties_content");
+                    }
+    
+                    btn.attr('disabled', false);
+    
+                }).fail(function () {
+                    alert(translations.tr_meliscore_error_message);
+                });
+            });
+    
+            form.submit();
+        });
+
         function setModuleSwitchState(state)
         {
             $('div[data-module-name]').bootstrapSwitch('setState', state);

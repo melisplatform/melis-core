@@ -192,7 +192,7 @@ return [
 
     // Create Password Email
     'tr_meliscore_renew_password_page_header' => 'Mot de passe expiré',
-    'tr_meliscore_renew_password_page_msg' => 'Votre mot de passe a expiré. Veuillez renouveler votre mot de passe.',
+    'tr_meliscore_renew_password_page_msg' => 'Votre mot de passe a expiré. Il doit être changé tous les %u jour(s).',
     'tr_meliscore_renew_password_button' => 'renouveler le mot de passe',
         
     // error
@@ -831,4 +831,52 @@ return [
 
     'tr_meliscore_plugins_modal_cancel' => 'Annuler',
     'tr_meliscore_plugins_modal_apply' => 'Appliquer',
+
+    'tr_meliscore_tool_other_config' => 'Autre Config',
+    'tr_meliscore_tool_other_config_unable_to_save' => 'Impossible d\'enregistrer',
+    'tr_meliscore_tool_other_config_header_title' => 'Autres Configurations',
+    'tr_meliscore_tool_other_config_header_description' => 'Vous pouvez configurer ici des options supplémentaires pour chaque module de la plateforme.',
+    'tr_meliscore_tool_other_config_content_tabs_user_login' => 'Core',
+    'tr_meliscore_tool_other_config_content_tabs_password_validity_header' => 'Se Connecter',
+
+    'tr_meliscore_tool_other_config_password_validity_header' => 'Durée de validité du mot de passe',
+    'tr_meliscore_tool_other_config_password_validity_lifetime' => 'Validité (en jours)',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_tooltip' => 'Spécifiez la durée de validité (en jours) du mot de passe. L\'option de durée de validité du mot de passe doit être activée pour que cette donnée soit prise en compte.',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status' => 'Activer l\'option de durée de validité du mot de passe',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_tooltip' => 'Activer ou désactiver l\'option de durée de validité du mot de passe.',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_active' => 'Oui',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_status_inactive' => 'Non',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_must_not_be_empty' => 'La saisie est requise et ne peut être vide',
+    'tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric' => 'La saisie doit être un chiffre',
+
+    'tr_meliscore_tool_other_config_password_duplicate_header' => 'Mots de passe identiques',
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime' => 'Nombre de jours pendants lesquels le mot de passe est considéré comme identique',
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime_tooltip' => 'Spécifiez la durée (en jours) pendant laquelle un mot de passe est considéré comme identique. L\'option de vérification de mot de passe identique doit être activée pour que cette donnée soit prise en compte.',
+    'tr_meliscore_tool_other_config_password_duplicate_status' => 'Activer l\'option de mot de passe identique',
+    'tr_meliscore_tool_other_config_password_duplicate_status_tooltip' => 'Activer ou désactiver l\'option de vérification de mot de passe identique.',
+    'tr_meliscore_tool_other_config_password_duplicate_status_active' => 'Oui',
+    'tr_meliscore_tool_other_config_password_duplicate_status_inactive' => 'Non',
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime_must_not_be_empty' => 'La saisie est requise et ne peut être vide',
+    'tr_meliscore_tool_other_config_password_duplicate_lifetime_must_be_numeric' => 'La saisie doit être un nombre entier',
+    'tr_meliscore_tool_other_config_password_duplicate_has_been_used_previously' => 'Votre mot de passe a été utilisé dans les %u derniers jours. Veuiller en choisir un autre.',
+
+    
+    'tr_meliscore_tool_other_config_password_complexity_header' => 'Complexité du mot de passe',
+    'tr_meliscore_tool_other_config_password_complexity_number_of_characters' => 'Nombre de caractères',
+    'tr_meliscore_tool_other_config_password_complexity_number_of_characters_tooltip' => 'Spécifiez le nombre de caractères minimums requis pour un mot de passe.',
+    'tr_meliscore_tool_other_config_password_complexity_special_characters' => 'Forcer l\'utilisation de caractères spéciaux. Ex: !@#$',
+    'tr_meliscore_tool_other_config_password_complexity_lower_case' => 'Forcer l\'utilisation d\'au moins une lettre minuscule',
+    'tr_meliscore_tool_other_config_password_complexity_upper_case' => 'Forcer l\'utilisation d\'au moins une lettre MAJUSCULE',
+    'tr_meliscore_tool_other_config_password_complexity_digit' => 'Forcer l\'utilisation d\'au moins un chiffre',
+    'tr_meliscore_tool_other_config_password_complexity_number_of_characters_must_be_numeric' => 'La saisie doit être un chiffre',
+
+    'tr_meliscore_tool_other_config_header_right_save' => 'Enregistrer',
+    'tr_meliscore_tool_other_config_label_password_validity_lifetime' => 'Durée de validité du mot de passe',
+    'tr_meliscore_tool_other_config_create_success' => 'Objet créé avec succès',
+    'tr_meliscore_tool_other_config_label_password_duplicate_lifetime' => 'Nombre de jours du mot de passe identique',
+    'tr_meliscore_tool_other_config_label_password_complexity_number_of_characters' => 'Nombre de caractères',
+    'tr_meliscore_tool_other_config_password_config_file_permission_title' => 'Accès au fichier refusé',
+    'tr_meliscore_tool_other_config_password_config_file_permission_message' => 'Veuillez autoriser l\'écriture dans les répertoires suivants ou contacter un administrateur si le problème persiste.',
+    'tr_meliscore_tool_other_config_password_config_file_permission_config' => '<b>/config/app.login.php</b> - Ce document est responsable de la configuration du mot de passe utilisateur',
+    'tr_meliscore_tool_other_config_password_config_file_permission_module' => '<b>/module</b> - Le répertoire oú les modules sont enregistrés',
 ];
