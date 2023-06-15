@@ -160,7 +160,18 @@ $(function() {
                 $(this).val(0);
             }
         });
-          
+        
+        $("body").on(
+            "click",
+            "#id_meliscore_tool_other_config input[type=checkbox]",
+            function() {
+                $(this)
+                    .parent()
+                    .find(".cbmask-inner")
+                    .toggleClass("cb-active");
+            }
+        );
+
         $("body").on("click", "#saveOtherConfig", function(){
             // merge data from all forms
             let mergedData = $('#id_meliscore_tool_other_config form').map(function() {
