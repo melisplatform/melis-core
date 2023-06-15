@@ -1,0 +1,42 @@
+<?php
+$id = '';
+$newsId = empty($this->newsId) ? 0 : (int)$this->newsId;
+if (!empty($this->zoneconfig['conf']['id'])) {
+    $id .= $this->zoneconfig['conf']['id'];
+}
+
+$zoneConfigInterface = $this->zoneconfig['interface'];
+
+?>
+<div id="<?= $id ?>" data-melisKey="<?= $this->melisKey; ?>" class="widget widget-tabs widget-tabs-double-2 widget-tabs-responsive">
+    <div class="widget-head nav">
+        <ul class="tabs-label nav-tabs">
+            <?php
+            if (!empty($zoneConfigInterface)) {
+                foreach ($zoneConfigInterface as $keyConfig => $menuConfig) {
+                    $tabId = $menuConfig['conf']['id'];
+                    $tabIcon = $menuConfig['conf']['icon'];
+                    $tabName = $menuConfig['conf']['name'];
+
+                    $li = '<li>
+                            <a class="' . $tabIcon . '" data-toggle="tab" href="#' . $tabId . '" aria-expanded="true">
+                            		<i></i>
+                            		<span>' . $this->translate($tabName) . '</span>
+                            	</a>
+                            </li>';
+                    echo $li;
+                }
+            }
+            ?>
+        </ul>
+    </div>
+</div>
+<div class="tab-content innerAll spacing-x2">
+    <?php
+    if (!empty($zoneConfigInterface)) {
+        foreach ($zoneConfigInterface as $keyConfig => $menuConfig) {
+            echo $this->$keyConfig . ' ';
+        }
+    }
+    ?>
+</div>

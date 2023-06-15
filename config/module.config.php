@@ -350,6 +350,8 @@ return [
             'MelisCoreDashboardPluginsService'      => \MelisCore\Service\MelisCoreDashboardPluginsRightsService::class,
             'MelisCoreGdprAutoDeleteService'        => \MelisCore\Service\MelisCoreGdprAutoDeleteService::class,
             'MelisCoreGdprAutoDeleteToolService'    => \MelisCore\Service\MelisCoreGdprAutoDeleteToolService::class,
+            'MelisPasswordSettingsService'          => \MelisCore\Service\MelisPasswordSettingsService::class,
+            'MelisUpdatePasswordHistoryService'     => \MelisCore\Service\MelisUpdatePasswordHistoryService::class,
 
             // Model
             'MelisCoreTableLang'                    => \MelisCore\Model\Tables\MelisLangTable::class,
@@ -373,6 +375,7 @@ return [
             'MelisGdprDeleteEmailsSent'             => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSentTable::class,
             'MelisGdprDeleteEmailsTable'            => \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::class,
             'MelisGdprDeleteEmailsSmtp'             => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable::class,
+            'MelisUserPasswordHistoryTable'         => \MelisCore\Model\Tables\MelisUserPasswordHistoryTable::class,
         ],
         'abstract_factories' => [
             /**
@@ -413,6 +416,7 @@ return [
             'MelisCore\Controller\MelisCoreGdprAutoDelete'      => \MelisCore\Controller\MelisCoreGdprAutoDeleteController::class,
             'MelisCore\Controller\MelisCoreGdprAutoDeleteTabs'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteTabsController::class,
             'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtp'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteSmtpController::class,
+            'MelisCore\Controller\MelisCoreOtherConfig'         => \MelisCore\Controller\MelisCoreOtherConfigController::class,
         ],
     ],
     'controller_plugins' => [
@@ -427,8 +431,11 @@ return [
         ]
     ],
     'validators' => [
+        'factories' => [
+            'MelisPasswordValidatorWithConfig' => \MelisCore\Validator\Factory\MelisPasswordValidatorWithConfigFactory::class,
+        ],
         'invokables' => [
-            'MelisPasswordValidator' => \MelisCore\Validator\MelisPasswordValidator::class
+            'MelisPasswordValidator' => \MelisCore\Validator\MelisPasswordValidator::class,
         ],
     ],
     'form_elements' => [
