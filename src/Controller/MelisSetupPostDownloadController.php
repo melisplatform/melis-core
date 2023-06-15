@@ -185,7 +185,9 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
                     // Dashboard
 //                    $this->generateDashboardPlugins($userId);
 
-
+                    // save to password history service
+                    $passwordHistService = $this->getServiceManager()->get('MelisUpdatePasswordHistoryService');
+                    $passwordHistService->saveItem($userId, $password);
                     $success = true;
                     $message = 'tr_install_setup_message_ok';
 
