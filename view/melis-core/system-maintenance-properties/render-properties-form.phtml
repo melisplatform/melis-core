@@ -1,0 +1,7 @@
+<?php
+    $form = $this->form;
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    echo $this->melisFieldCollection($form);
+    echo $this->form()->closeTag();
+?>

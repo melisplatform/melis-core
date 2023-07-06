@@ -1,0 +1,33 @@
+<?php
+    $id = $this->zoneconfig['conf']['id'];
+    $melisKey = $this->zoneconfig['conf']['melisKey'];
+?>
+<div id="<?php echo $id ?>" data-melisKey="<?php echo $melisKey; ?>">
+    <div class="innerAll spacing-x2">
+        <?php
+            $this->melisGenericTable()->setTable(array(
+                'id' => 'systemmaintenanceTableContent',
+                'class' => 'table table-striped table-primary dt-responsive nowrap',
+                'cellspacing' => '0',
+                'width' => '100%',
+            ));
+
+            $columns = array();
+            $columnStyle = array();
+            foreach($this->tableColumns as $columnText)
+            {
+                $columns[] = $columnText['text'];
+                // $this->MelisGenericTable()->setData('-');
+
+            }
+            // set table columns
+            $this->MelisGenericTable()->setColumns($columns);
+
+            echo $this->melisGenericTable()->renderTable();
+        ?>
+
+        <script>
+            <?php echo $this->toolTable; ?>
+        </script>
+    </div>
+</div>

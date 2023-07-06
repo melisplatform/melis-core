@@ -1018,6 +1018,35 @@ return array(
             'conf' => array(
                 'rightsDisplay' => 'none',
             ),
-        )
+        ),
+        'systemmaintenance' => [
+            'conf' => [
+                'id' => '',
+                'name' => 'tr_systemmaintenance_tool_name',
+                'rightsDisplay' => 'none',
+            ],
+            'ressources' => [
+                'js' => [
+                    '/melis-core/js/tools/system-maintenance.js'
+                ],
+                'css' => [],
+                /**
+                 * the "build" configuration compiles all assets into one file to make
+                 * lesser requests
+                 */
+                'build' => [
+                    // configuration to override "use_build_assets" configuration, if you want to use the normal assets for this module.
+                    'disable_bundle' => true,
+                    // lists of assets that will be loaded in the layout
+                    'css' => [
+                        '/melis-core/build/css/bundle.css',
+                    ],
+                    'js' => [
+                        '/melis-core/build/js/bundle.js',
+                    ]
+                ]
+            ],
+            'datas' => [],
+        ]
     )
 );

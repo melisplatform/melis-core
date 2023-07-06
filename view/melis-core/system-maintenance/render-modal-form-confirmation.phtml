@@ -1,0 +1,24 @@
+<div class="modal-content" id="<?php echo $this->zoneconfig['conf']['id'] ?>">
+    <div class="modal-body padding-none">
+        <div class="wizard">
+            <div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
+                <div class="widget-head">
+                    <ul class="nav nav-tabs">
+                     
+                    </ul>
+                </div>
+                <div class="widget-body innerAll inner-2x">
+                    <div class="tab-content">
+                    <?php  $status = $status == 0 ? 'tr_systemmaintenance_deactivate' : 'tr_systemmaintenance_activate' ?>
+                        <p><?php echo $this->translate($status); ?></p>
+                        <hr />
+                        <div align="right">
+                            <a data-dismiss="modal" class="btn btn-danger pull-left close-btnSaveSystemmaintenanceConfirm"><i class="fa fa-times"></i> <?php echo $this->translate('tr_systemmaintenance_common_button_close')?></a>
+                            <a class="btn btn-success btnSaveSystemmaintenanceConfirm" data-id="<?php echo $this->id ?>"><i class="fa fa-save"></i>  <?php echo $this->translate('tr_systemmaintenance_common_button_confirmation_yes'); ?></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

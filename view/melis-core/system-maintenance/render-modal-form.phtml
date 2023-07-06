@@ -1,0 +1,58 @@
+<div class="modal-content" id="<?php echo $this->zoneconfig['conf']['id'] ?>">
+    <div class="modal-body padding-none">
+        <div class="wizard">
+            <div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
+                <div class="widget-head">
+                    <ul class="nav nav-tabs">
+                        <?php
+                        $ctr = 0;
+                        foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+
+                            $active = ($ctr++) ? '' : 'active';
+
+                            $tabId = $this->id . '_' . $menuConfig['conf']['id'];
+                            $tabIcon = !empty($menuConfig['conf']['icon']) ? $menuConfig['conf']['icon'] : 'pencil';
+                            $tabName = $menuConfig['conf']['name'];
+
+
+                            if ($tabName == 'tr_systemmaintenance_properties')
+                                $tabName = ($this->id) ? 'tr_systemmaintenance_properties' : 'tr_systemmaintenance_add_item';
+
+                            if ($menuConfig['conf']['id'] == 'id_systemmaintenance_properties_form') {
+                                $tabName = ($this->id != 'add') ? 'tr_systemmaintenance_properties' : 'tr_systemmaintenance_common_add_item';
+                                $tabIcon = ($this->id != 'add') ? 'pencil' : 'plus';
+                            }
+
+                            echo '<li class="'.$active.'"><a href="#'.$tabId.'" class="glyphicons '.$tabIcon.'" data-toggle="tab" aria-expanded="true"><i></i> '.$this->translate($tabName) .'</a></li>';
+                        }
+                        ?>
+                    </ul>
+                </div>
+                <div class="widget-body innerAll inner-2x">
+                    <div class="tab-content">
+                        <?php
+                        $ctr = 0;
+                        foreach($this->zoneconfig['interface'] as $keyConfig => $menuConfig) {
+
+                            $tabId = $this->id . '_' . $menuConfig['conf']['id'];
+
+                            $active = ($ctr++) ? '' : 'active';
+                            echo '<div class="tab-pane '.$active.'" id="'.$tabId.'">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                '. $this->$keyConfig .'
+                                            </div>
+                                        </div>
+                                    </div>';
+                        }
+                        ?>
+                        <div align="right">
+                            <a data-dismiss="modal" class="btn btn-danger pull-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_systemmaintenance_common_button_close')?></a>
+                            <a class="btn btn-success btnSaveSystemmaintenance" data-id="<?php echo $this->id ?>"><i class="fa fa-save"></i>  <?php echo $this->translate('tr_systemmaintenance_common_button_save'); ?></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

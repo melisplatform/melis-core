@@ -56,6 +56,26 @@ class Module
         $this->initSession($e);
         $this->createTranslations($e);
 
+        $sm = $e->getApplication()->getServiceManager();
+        $routeMatch = $sm->get('router')->match($sm->get('request'));
+        $isBackOffice = false;
+        if (!empty($routeMatch)){
+            $routeName = $routeMatch->getMatchedRouteName();
+            $module = explode('/', $routeName);
+
+            if (!empty($module[0]))
+                if ($module[0] == 'melis-backoffice'){
+                    $isBackOffice = true;
+                    // attach listeners for Melis
+                    (new \Systemmaintenance\Listener\SavePropertiesListener())->attach($eventManager);
+                    (new \Systemmaintenance\Listener\DeleteListener())->attach($eventManager);
+                }
+        }
+        
+        if(!$isBackOffice) {
+            (new \Systemmaintenance\Listener\MaintenanceListener())->attach($eventManager);
+        }
+
         $eventManager->getSharedManager()->attach(__NAMESPACE__,
             MvcEvent::EVENT_DISPATCH, function ($e) {
                 $e->getTarget()->layout('layout/layoutCore');
@@ -371,7 +391,10 @@ class Module
             /*
              * excluded routes
              */
-            include __DIR__ . '/../config/excluded.routes.php'
+            include __DIR__ . '/../config/excluded.routes.php',
+
+            // system maintenance
+            include __DIR__ . '/config/app.page-cache.php',
 
         ];
 

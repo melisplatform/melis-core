@@ -1,0 +1,17 @@
+<?php
+    $id = $this->zoneconfig['conf']['id'];
+    $melisKey = $this->zoneconfig['conf']['melisKey'];
+?>
+<div id="<?php echo $id ?>" data-melisKey="<?php echo $melisKey; ?>">
+    <div class="me-heading bg-white border-bottom" id="id_meliscore_tool_user_header" data-meliskey="meliscore_tool_user_header">
+        <div class="row">
+            <div class="me-hl col-xs-8 col-sm-8 col-md-8">
+                <h1 class="content-heading"><?php echo $this->translate('tr_systemmaintenance_title')?></h1>
+                <?php if ($this->translate('tr_systemmaintenance_desc') != 'tr_systemmaintenance_desc') {?>
+                    <p><?= $this->translate('tr_systemmaintenance_desc'); ?></p>
+                <?php } ?>
+            </div>
+
+        </div>
+    </div>
+</div>

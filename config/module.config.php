@@ -352,6 +352,7 @@ return [
             'MelisCoreGdprAutoDeleteToolService'    => \MelisCore\Service\MelisCoreGdprAutoDeleteToolService::class,
             'MelisPasswordSettingsService'          => \MelisCore\Service\MelisPasswordSettingsService::class,
             'MelisUpdatePasswordHistoryService'     => \MelisCore\Service\MelisUpdatePasswordHistoryService::class,
+            'SystemmaintenanceService'              => \MelisCore\Service\SystemmaintenanceService::class,
 
             // Model
             'MelisCoreTableLang'                    => \MelisCore\Model\Tables\MelisLangTable::class,
@@ -376,6 +377,10 @@ return [
             'MelisGdprDeleteEmailsTable'            => \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::class,
             'MelisGdprDeleteEmailsSmtp'             => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable::class,
             'MelisUserPasswordHistoryTable'         => \MelisCore\Model\Tables\MelisUserPasswordHistoryTable::class,
+
+            // table
+            'SystemmaintenanceTable'                => \MelisCore\Model\Tables\SystemmaintenanceTable::class
+
         ],
         'abstract_factories' => [
             /**
@@ -417,6 +422,8 @@ return [
             'MelisCore\Controller\MelisCoreGdprAutoDeleteTabs'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteTabsController::class,
             'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtp'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteSmtpController::class,
             'MelisCore\Controller\MelisCoreOtherConfig'         => \MelisCore\Controller\MelisCoreOtherConfigController::class,
+            'MelisCore\Controller\SystemMaintenanceController'  => \MelisCore\Controller\SystemMaintenanceController::class,
+            'MelisCore\Controller\SystemMaintenancePropertiesController' => \MelisCore\Controlle\SystemMaintenancePropertiesController::class,
         ],
     ],
     'controller_plugins' => [
