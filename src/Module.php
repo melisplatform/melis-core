@@ -67,13 +67,13 @@ class Module
                 if ($module[0] == 'melis-backoffice'){
                     $isBackOffice = true;
                     // attach listeners for Melis
-                    (new \Systemmaintenance\Listener\SavePropertiesListener())->attach($eventManager);
-                    (new \Systemmaintenance\Listener\DeleteListener())->attach($eventManager);
+                    (new \MelisCore\Listener\SystemMaintenanceDeleteListener())->attach($eventManager);
+                    (new \MelisCore\Listener\DeleteListener())->attach($eventManager);
                 }
         }
         
         if(!$isBackOffice) {
-            (new \Systemmaintenance\Listener\MaintenanceListener())->attach($eventManager);
+            (new \MelisCore\Listener\MelisCoreMaintenanceListener())->attach($eventManager);
         }
 
         $eventManager->getSharedManager()->attach(__NAMESPACE__,
@@ -394,7 +394,7 @@ class Module
             include __DIR__ . '/../config/excluded.routes.php',
 
             // system maintenance
-            include __DIR__ . '/config/app.page-cache.php',
+            include __DIR__ . '/../config/app.page-cache.php',
 
         ];
 

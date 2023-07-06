@@ -39,8 +39,8 @@ return [
                                                 'icon' => 'fa fa-puzzle-piece',
                                             ],
                                             'forward' => [
-                                                'module' => 'Systemmaintenance',
-                                                'controller' => 'List',
+                                                'module' => 'melis-core',
+                                                'controller' => 'SystemMaintenance',
                                                 'action' => 'render-tool',
                                                 'jscallback' => '',
                                                 'jsdatas' => []
@@ -53,8 +53,8 @@ return [
                                                         'name' => 'tr_systemmaintenance_header',
                                                     ],
                                                     'forward' => [
-                                                        'module' => 'Systemmaintenance',
-                                                        'controller' => 'List',
+                                                        'module' => 'melis-core',
+                                                        'controller' => 'SystemMaintenance',
                                                         'action' => 'render-tool-header',
                                                         'jscallback' => '',
                                                         'jsdatas' => []
@@ -67,8 +67,8 @@ return [
                                                         'name' => 'tr_systemmaintenance_content',
                                                     ],
                                                     'forward' => [
-                                                        'module' => 'Systemmaintenance',
-                                                        'controller' => 'List',
+                                                        'module' => 'melis-core',
+                                                        'controller' => 'SystemMaintenance',
                                                         'action' => 'render-tool-content',
                                                         'jscallback' => '',
                                                         'jsdatas' => []
@@ -81,8 +81,8 @@ return [
                                                                 'name' => 'tr_systemmaintenance_modal',
                                                             ],
                                                             'forward' => [
-                                                                'module' => 'Systemmaintenance',
-                                                                'controller' => 'List',
+                                                                'module' => 'melis-core',
+                                                                'controller' => 'SystemMaintenance',
                                                                 'action' => 'render-modal-form',
                                                                 'jscallback' => '',
                                                                 'jsdatas' => []
@@ -96,8 +96,8 @@ return [
                                                                         'icon' => 'cogwheel'
                                                                     ],
                                                                     'forward' => [
-                                                                        'module' => 'Systemmaintenance',
-                                                                        'controller' => 'Properties',
+                                                                        'module' => 'melis-core',
+                                                                        'controller' => 'SystemMaintenanceProperties',
                                                                         'action' => 'render-properties-form',
                                                                         'jscallback' => '',
                                                                         'jsdatas' => []
@@ -110,8 +110,8 @@ return [
                                                                                 'name' => 'tr_systemmaintenance_modal_confirmation',
                                                                             ],
                                                                             'forward' => [
-                                                                                'module' => 'Systemmaintenance',
-                                                                                'controller' => 'List',
+                                                                                'module' => 'melis-core',
+                                                                                'controller' => 'SystemMaintenance',
                                                                                 'action' => 'render-modal-form-confirmation',
                                                                                 'jscallback' => '',
                                                                                 'jsdatas' => []

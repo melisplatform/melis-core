@@ -352,7 +352,7 @@ return [
             'MelisCoreGdprAutoDeleteToolService'    => \MelisCore\Service\MelisCoreGdprAutoDeleteToolService::class,
             'MelisPasswordSettingsService'          => \MelisCore\Service\MelisPasswordSettingsService::class,
             'MelisUpdatePasswordHistoryService'     => \MelisCore\Service\MelisUpdatePasswordHistoryService::class,
-            'SystemmaintenanceService'              => \MelisCore\Service\SystemmaintenanceService::class,
+            'SystemmaintenanceService'              => \MelisCore\Service\MelisCoreSystemMaintenanceService::class,
 
             // Model
             'MelisCoreTableLang'                    => \MelisCore\Model\Tables\MelisLangTable::class,
@@ -379,7 +379,7 @@ return [
             'MelisUserPasswordHistoryTable'         => \MelisCore\Model\Tables\MelisUserPasswordHistoryTable::class,
 
             // table
-            'SystemmaintenanceTable'                => \MelisCore\Model\Tables\SystemmaintenanceTable::class
+            'SystemmaintenanceTable'                => \MelisCore\Model\Tables\MelisSystemMaintenance::class
 
         ],
         'abstract_factories' => [
@@ -422,8 +422,8 @@ return [
             'MelisCore\Controller\MelisCoreGdprAutoDeleteTabs'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteTabsController::class,
             'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtp'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteSmtpController::class,
             'MelisCore\Controller\MelisCoreOtherConfig'         => \MelisCore\Controller\MelisCoreOtherConfigController::class,
-            'MelisCore\Controller\SystemMaintenanceController'  => \MelisCore\Controller\SystemMaintenanceController::class,
-            'MelisCore\Controller\SystemMaintenancePropertiesController' => \MelisCore\Controlle\SystemMaintenancePropertiesController::class,
+            'MelisCore\Controller\SystemMaintenance'            => \MelisCore\Controller\SystemMaintenanceController::class,
+            'MelisCore\Controller\SystemMaintenanceProperties'  => \MelisCore\Controlle\SystemMaintenancePropertiesController::class,
         ],
     ],
     'controller_plugins' => [
