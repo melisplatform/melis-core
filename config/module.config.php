@@ -521,6 +521,23 @@ return [
             'melis-core/dashboard-plugin/bubble-chat'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-chat.phtml',
 
             'melis-core/dashboard-plugin/noformtemplate'   => __DIR__ . '/../view/melis-core/dashboard-plugins/noformtemplate.phtml',
+
+            // system maintenance views
+            'melis-core/system-maintenance/render-modal-form-confirmation' => __DIR__ . '/../views/melis-core/system-maintenance/render-modal-form-confirmation.phtml',
+            'melis-core/system-maintenance/render-modal-form'              => __DIR__ . '/../views/melis-core/system-maintenance/render-modal-form.phtml',
+            'melis-core/system-maintenance/render-table-action-delete'     => __DIR__ . '/../views/melis-core/system-maintenance/render-table-action-delete.phtml',
+            'melis-core/system-maintenance/render-table-action-edit'       => __DIR__ . '/../views/melis-core/system-maintenance/render-table-action-edit.phtml',
+            'melis-core/system-maintenance/render-table-action-switch'     => __DIR__ . '/../views/melis-core/system-maintenance/render-table-action-switch.phtml',
+            'melis-core/system-maintenance/render-table-action-test-link'  => __DIR__ . '/../views/melis-core/system-maintenance/render-table-action-test-link.phtml',
+            'melis-core/system-maintenance/render-table-filter-limit'      => __DIR__ . '/../views/melis-core/system-maintenance/render-table-filter-limit.phtml',
+            'melis-core/system-maintenance/render-table-filter-refresh'    => __DIR__ . '/../views/melis-core/system-maintenance/render-table-filter-refresh.phtml',
+            'melis-core/system-maintenance/render-table-filter-search'     => __DIR__ . '/../views/melis-core/system-maintenance/render-table-filter-search.phtml',
+            'melis-core/system-maintenance/render-tool-content'            => __DIR__ . '/../views/melis-core/system-maintenance/render-tool-content.phtml',
+            'melis-core/system-maintenance/render-tool-header'             => __DIR__ . '/../views/melis-core/system-maintenance/render-tool-header.phtml',
+            'melis-core/system-maintenance/render-tool'                    => __DIR__ . '/../views/melis-core/system-maintenance/render-tool.phtml',
+            'melis-core/system-maintenance-properties/render-properties-form'  => __DIR__ . '/../views/melis-core/system-maintenance-properties/render-properties-form.phtml',
+
+
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
