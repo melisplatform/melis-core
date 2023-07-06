@@ -67,8 +67,8 @@ class Module
                 if ($module[0] == 'melis-backoffice'){
                     $isBackOffice = true;
                     // attach listeners for Melis
+                    (new \MelisCore\Listener\SystemMaintenanceSaveListener())->attach($eventManager);
                     (new \MelisCore\Listener\SystemMaintenanceDeleteListener())->attach($eventManager);
-                    (new \MelisCore\Listener\DeleteListener())->attach($eventManager);
                 }
         }
         

@@ -13,7 +13,7 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use MelisCore\Listener\MelisGeneralListener;
 
-class DeleteListener extends MelisGeneralListener implements ListenerAggregateInterface
+class SystemMaintenanceDeleteListener extends MelisGeneralListener implements ListenerAggregateInterface
 {
     public function attach(EventManagerInterface $events, $priority = 1)
     {
