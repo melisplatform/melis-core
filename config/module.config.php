@@ -447,7 +447,7 @@ return [
             'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtp'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteSmtpController::class,
             'MelisCore\Controller\MelisCoreOtherConfig'         => \MelisCore\Controller\MelisCoreOtherConfigController::class,
             'MelisCore\Controller\SystemMaintenance'            => \MelisCore\Controller\SystemMaintenanceController::class,
-            'MelisCore\Controller\SystemMaintenanceProperties'  => \MelisCore\Controlle\SystemMaintenancePropertiesController::class,
+            'MelisCore\Controller\SystemMaintenanceProperties'  => \MelisCore\Controller\SystemMaintenancePropertiesController::class,
         ],
     ],
     'controller_plugins' => [
