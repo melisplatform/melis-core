@@ -14,7 +14,7 @@ return [
                     'table' => [
                         // table ID
                         'target' => '#tableToolSystemmaintenance',
-                        'ajaxUrl' => '/melis/SystemMaintenance/getList',
+                        'ajaxUrl' => '/melis/MelisCore/SystemMaintenance/getList',
                         'dataFunction' => '',
                         'ajaxCallback' => 'initSwitch()',
                         'filters' => [
