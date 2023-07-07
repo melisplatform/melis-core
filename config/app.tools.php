@@ -4,150 +4,149 @@ return [
     'plugins' => [
         'meliscore' => [
             'tools' => [
-                'systemmaintenance' => [
-                    'tools' => [
-                        'systemmaintenance_tools' => [
-                            'conf' => [
-                                'title' => 'tr_systemmaintenance_templates',
-                                'id' => 'id_systemmaintenance_templates',
+                // 'systemmaintenance' => [
+                //     'tools' => [
+                'systemmaintenance_tools' => [
+                    'conf' => [
+                        'title' => 'tr_systemmaintenance_templates',
+                        'id' => 'id_systemmaintenance_templates',
+                    ],
+                    'table' => [
+                        // table ID
+                        'target' => '#tableToolSystemmaintenance',
+                        'ajaxUrl' => '/melis/melis-core/SystemMaintenance/getList',
+                        'dataFunction' => '',
+                        'ajaxCallback' => 'initSwitch()',
+                        'filters' => [
+                            'left' => [
+                                'systemmaintenance-tbl-filter-limit' => [
+                                    'module' => 'melis-core',
+                                    'controller' => 'SystemMaintenance',
+                                    'action' => 'render-table-filter-limit',
+                                ],
                             ],
-                            'table' => [
-                                // table ID
-                                'target' => '#tableToolSystemmaintenance',
-                                'ajaxUrl' => '/melis/melis-core/SystemMaintenance/getList',
-                                'dataFunction' => '',
-                                'ajaxCallback' => 'initSwitch()',
-                                'filters' => [
-                                    'left' => [
-                                        'systemmaintenance-tbl-filter-limit' => [
-                                            'module' => 'melis-core',
-                                            'controller' => 'SystemMaintenance',
-                                            'action' => 'render-table-filter-limit',
-                                        ],
-                                    ],
-                                    'center' => [
-                                        'systemmaintenance-tbl-filter-search' => [
-                                            'module' => 'melis-core',
-                                            'controller' => 'SystemMaintenance',
-                                            'action' => 'render-table-filter-search',
-                                        ],
-                                    ],
-                                    'right' => [
-                                        'systemmaintenance-tbl-filter-refresh' => [
-                                            'module' => 'melis-core',
-                                            'controller' => 'SystemMaintenance',
-                                            'action' => 'render-table-filter-refresh',
-                                        ],
-                                    ],
+                            'center' => [
+                                'systemmaintenance-tbl-filter-search' => [
+                                    'module' => 'melis-core',
+                                    'controller' => 'SystemMaintenance',
+                                    'action' => 'render-table-filter-search',
                                 ],
-                                'columns' => [
-                                    'site_id' => array(
-                                        'text' => 'tr_meliscms_tool_site_col_site_id',
-                                        'css' => array('width' => '1%', 'padding-right' => '0'),
-                                        'sortable' => true,
-        
-                                    ),
-                                    'site_label' => array(
-                                        'text' => 'Site',
-                                        'css' => array('width' => '20%', 'padding-right' => '0'),
-                                        'sortable' => true,
-                                    ),
-                                    'maintenance_url' => array(
-                                        'text' => 'Maintenance URL',
-                                        'css' => array('width' => '30%', 'padding-right' => '0'),
-                                        'sortable' => true,
-                                    ),
-                                    'status' => array(
-                                        'text' => 'status',
-                                        'css' => array('width' => '20%', 'padding-right' => '0'),
-                                        'sortable' => true,
-                                        
-                                    ),
-                                ],
-                                // define what columns can be used in searching
-                                'searchables' => [
-                                    'site_id',
-                                    'site_name',
-                                ],
-                                'actionButtons' => [
-                                    'testLink' => [
-                                        'module' => 'melis-core',
-                                        'controller' => 'SystemMaintenance',
-                                        'action' => 'render-table-action-test-link',
-                                    ],
-                                    'switch' => [
-                                            'module' => 'melis-core',
-                                            'controller' => 'SystemMaintenance',
-                                            'action' => 'render-table-action-switch',
-                                    ],
-                                    'edit' => [
-                                        'module' => 'melis-core',
-                                        'controller' => 'SystemMaintenance',
-                                        'action' => 'render-table-action-edit',
-                                    ],
-                                    
-                                ]
                             ],
-                            'forms' => [
-                                'systemmaintenance_property_form' => [
-                                    'attributes' => [
-                                        'name' => 'systemmaintenanceForm',
-                                        'id' => 'systemmaintenanceForm',
-                                        'method' => 'POST',
-                                        'action' => '',
-                                    ],
-                                    'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
-                                    'elements' => [
-                                        [
-                                            'spec' => [
-                                                'name' => 'site_id',
-                                                'type' => 'hidden',
-                                                'options' => [
-                                                    'label' => 'tr_systemmaintenance_site_id',
-                                                    'tooltip' => 'tr_systemmaintenance_site_id_tooltip',
-                                                ],
-                                                'attributes' => [
-                                                    'id' => 'site_id',
-                                                    'class' => 'form-control',
-                                                    'required' => false,
-                                                ],
-                                            ],
-                                        ],
-                                        [
-                                            'spec' => [
-                                                'name' => 'maintenance_url',
-                                                'type' => 'MelisText',
-                                                'options' => [
-                                                    'label' => 'tr_systemmaintenance_site_label',
-                                                    'tooltip' => 'tr_systemmaintenance_site_label_tooltip',
-                                                    'button' => 'fa fa-sitemap',
-                                                    'button-id' => 'destinationPageIdFindPageTree',
-                                                ],
-                                                'attributes' => [
-                                                    'id' => 'maintenance_url',
-                                                    'class' => 'form-control',
-                                                    'required' => false,
-                                                    
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                    'input_filter' => [
-                                        'maintenance_url' => [
-                                            'name'     => 'maintenance_url',
-                                            'required' => false,
-                                            'filters'  => [
-                                                ['name' => 'StripTags'],
-                                                ['name' => 'StringTrim'],
-                                            ],
-                                        ],
-                                    ]
+                            'right' => [
+                                'systemmaintenance-tbl-filter-refresh' => [
+                                    'module' => 'melis-core',
+                                    'controller' => 'SystemMaintenance',
+                                    'action' => 'render-table-filter-refresh',
                                 ],
-        
-                            ]
+                            ],
+                        ],
+                        'columns' => [
+                            'site_id' => array(
+                                'text' => 'tr_meliscms_tool_site_col_site_id',
+                                'css' => array('width' => '1%', 'padding-right' => '0'),
+                                'sortable' => true,
+
+                            ),
+                            'site_label' => array(
+                                'text' => 'Site',
+                                'css' => array('width' => '20%', 'padding-right' => '0'),
+                                'sortable' => true,
+                            ),
+                            'maintenance_url' => array(
+                                'text' => 'Maintenance URL',
+                                'css' => array('width' => '30%', 'padding-right' => '0'),
+                                'sortable' => true,
+                            ),
+                            'status' => array(
+                                'text' => 'status',
+                                'css' => array('width' => '20%', 'padding-right' => '0'),
+                                'sortable' => true,
+                                
+                            ),
+                        ],
+                        // define what columns can be used in searching
+                        'searchables' => [
+                            'site_id',
+                            'site_name',
+                        ],
+                        'actionButtons' => [
+                            'testLink' => [
+                                'module' => 'melis-core',
+                                'controller' => 'SystemMaintenance',
+                                'action' => 'render-table-action-test-link',
+                            ],
+                            'switch' => [
+                                    'module' => 'melis-core',
+                                    'controller' => 'SystemMaintenance',
+                                    'action' => 'render-table-action-switch',
+                            ],
+                            'edit' => [
+                                'module' => 'melis-core',
+                                'controller' => 'SystemMaintenance',
+                                'action' => 'render-table-action-edit',
+                            ],
+                            
                         ]
+                    ],
+                    'forms' => [
+                        'systemmaintenance_property_form' => [
+                            'attributes' => [
+                                'name' => 'systemmaintenanceForm',
+                                'id' => 'systemmaintenanceForm',
+                                'method' => 'POST',
+                                'action' => '',
+                            ],
+                            'hydrator'  => 'Laminas\Hydrator\ArraySerializable',
+                            'elements' => [
+                                [
+                                    'spec' => [
+                                        'name' => 'site_id',
+                                        'type' => 'hidden',
+                                        'options' => [
+                                            'label' => 'tr_systemmaintenance_site_id',
+                                            'tooltip' => 'tr_systemmaintenance_site_id_tooltip',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'site_id',
+                                            'class' => 'form-control',
+                                            'required' => false,
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'maintenance_url',
+                                        'type' => 'MelisText',
+                                        'options' => [
+                                            'label' => 'tr_systemmaintenance_site_label',
+                                            'tooltip' => 'tr_systemmaintenance_site_label_tooltip',
+                                            'button' => 'fa fa-sitemap',
+                                            'button-id' => 'destinationPageIdFindPageTree',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'maintenance_url',
+                                            'class' => 'form-control',
+                                            'required' => false,
+                                            
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'input_filter' => [
+                                'maintenance_url' => [
+                                    'name'     => 'maintenance_url',
+                                    'required' => false,
+                                    'filters'  => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim'],
+                                    ],
+                                ],
+                            ]
+                        ],
                     ]
                 ],
+                //     ]
+                // ],
                 'melisModuleDiagnostics' => [
                     'conf' => [
                         // user rights exclusions
