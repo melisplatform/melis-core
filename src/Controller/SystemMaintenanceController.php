@@ -38,7 +38,7 @@ class SystemMaintenanceController extends MelisAbstractActionController
         $view = new ViewModel();
 
         $melisTool = $this->getServiceManager()->get('MelisCoreTool');
-        $melisTool->setMelisToolKey('systemmaintenance', 'systemmaintenance_tools');
+        $melisTool->setMelisToolKey('meliscore', 'systemmaintenance_tools');
 
         $columns = $melisTool->getColumns();
         $translator = $this->getServiceManager()->get('translator');
