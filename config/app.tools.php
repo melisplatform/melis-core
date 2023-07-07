@@ -14,27 +14,27 @@ return [
                     'table' => [
                         // table ID
                         'target' => '#tableToolSystemmaintenance',
-                        'ajaxUrl' => '/melis/melis-core/SystemMaintenance/getList',
+                        'ajaxUrl' => '/melis/SystemMaintenance/getList',
                         'dataFunction' => '',
                         'ajaxCallback' => 'initSwitch()',
                         'filters' => [
                             'left' => [
                                 'systemmaintenance-tbl-filter-limit' => [
-                                    'module' => 'melis-core',
+                                    'module' => 'MelisCore',
                                     'controller' => 'SystemMaintenance',
                                     'action' => 'render-table-filter-limit',
                                 ],
                             ],
                             'center' => [
                                 'systemmaintenance-tbl-filter-search' => [
-                                    'module' => 'melis-core',
+                                    'module' => 'MelisCore',
                                     'controller' => 'SystemMaintenance',
                                     'action' => 'render-table-filter-search',
                                 ],
                             ],
                             'right' => [
                                 'systemmaintenance-tbl-filter-refresh' => [
-                                    'module' => 'melis-core',
+                                    'module' => 'MelisCore',
                                     'controller' => 'SystemMaintenance',
                                     'action' => 'render-table-filter-refresh',
                                 ],
@@ -71,17 +71,17 @@ return [
                         ],
                         'actionButtons' => [
                             'testLink' => [
-                                'module' => 'melis-core',
+                                'module' => 'MelisCore',
                                 'controller' => 'SystemMaintenance',
                                 'action' => 'render-table-action-test-link',
                             ],
                             'switch' => [
-                                    'module' => 'melis-core',
+                                    'module' => 'MelisCore',
                                     'controller' => 'SystemMaintenance',
                                     'action' => 'render-table-action-switch',
                             ],
                             'edit' => [
-                                'module' => 'melis-core',
+                                'module' => 'MelisCore',
                                 'controller' => 'SystemMaintenance',
                                 'action' => 'render-table-action-edit',
                             ],

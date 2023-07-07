@@ -39,7 +39,7 @@ return [
                                                 'icon' => 'fa fa-puzzle-piece',
                                             ],
                                             'forward' => [
-                                                'module' => 'melis-core',
+                                                'module' => 'MelisCore',
                                                 'controller' => 'SystemMaintenance',
                                                 'action' => 'render-tool',
                                                 'jscallback' => '',
@@ -53,7 +53,7 @@ return [
                                                         'name' => 'tr_systemmaintenance_header',
                                                     ],
                                                     'forward' => [
-                                                        'module' => 'melis-core',
+                                                        'module' => 'MelisCore',
                                                         'controller' => 'SystemMaintenance',
                                                         'action' => 'render-tool-header',
                                                         'jscallback' => '',
@@ -67,7 +67,7 @@ return [
                                                         'name' => 'tr_systemmaintenance_content',
                                                     ],
                                                     'forward' => [
-                                                        'module' => 'melis-core',
+                                                        'module' => 'MelisCore',
                                                         'controller' => 'SystemMaintenance',
                                                         'action' => 'render-tool-content',
                                                         'jscallback' => '',
@@ -81,7 +81,7 @@ return [
                                                                 'name' => 'tr_systemmaintenance_modal',
                                                             ],
                                                             'forward' => [
-                                                                'module' => 'melis-core',
+                                                                'module' => 'MelisCore',
                                                                 'controller' => 'SystemMaintenance',
                                                                 'action' => 'render-modal-form',
                                                                 'jscallback' => '',
@@ -96,7 +96,7 @@ return [
                                                                         'icon' => 'cogwheel'
                                                                     ],
                                                                     'forward' => [
-                                                                        'module' => 'melis-core',
+                                                                        'module' => 'MelisCore',
                                                                         'controller' => 'SystemMaintenanceProperties',
                                                                         'action' => 'render-properties-form',
                                                                         'jscallback' => '',
@@ -110,7 +110,7 @@ return [
                                                                                 'name' => 'tr_systemmaintenance_modal_confirmation',
                                                                             ],
                                                                             'forward' => [
-                                                                                'module' => 'melis-core',
+                                                                                'module' => 'MelisCore',
                                                                                 'controller' => 'SystemMaintenance',
                                                                                 'action' => 'render-modal-form-confirmation',
                                                                                 'jscallback' => '',
