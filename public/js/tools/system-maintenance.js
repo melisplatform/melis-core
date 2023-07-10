@@ -28,7 +28,7 @@ $(function(){
 
             $.ajax({
                 type: 'POST',
-                url: '/melis/Systemmaintenance/Properties/save',
+                url: '/melis/MelisCore/SystemMaintenanceProperties/save',
                 data: formData,
                 cache: false,
                 contentType: false,
@@ -72,7 +72,7 @@ $(function(){
             function(data) {
                 $.ajax({
                     type        : 'GET',
-                    url         : '/melis/Systemmaintenance/List/deleteItem?id='+id,
+                    url         : '/melis/MelisCore/SystemMaintenance/deleteItem?id='+id,
                     dataType    : 'json',
                     encode		: true,
                     success		: function(data){
@@ -107,7 +107,7 @@ $(function(){
 
             $("#id_systemmaintenance_modal_confirmation_container").modal("hide");
             $.ajax({
-                url:'/melis/Systemmaintenance/Properties/saveStatus',
+                url:'/melis/MelisCore/SystemMaintenanceProperties/saveStatus',
                 method: 'POST', 
                 data:{
                     switchStatus:val,
@@ -164,7 +164,7 @@ $(function(){
 const initSwitch = () => {
     let siteData = [];
     $.ajax({
-        url:'/melis/Systemmaintenance/List/getSiteStatus',
+        url:'/melis/MelisCore/SystemMaintenance/getSiteStatus',
         method:'GET',
         dataType:'json',
         async:false,
