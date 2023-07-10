@@ -147,6 +147,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                 if(file_exists($json_file)) {
                     $currentData = file_get_contents($json_file);
                     $currentData = json_decode($currentData);
+                    if(count($currentData) >= 1) {
                         foreach($currentData as $key => $data) {
                             if($data->site_id == $formData['site_id']) {
 
@@ -159,6 +160,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                                 }
                             }
                         }   
+                    }
                     if(!$isExists && !empty($formData['maintenance_url'])) {
                         $currentData[] = $formData;
                     }
@@ -207,7 +209,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
     private function getForm()
     {
         $melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
-        $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('systemmaintenance/tools/systemmaintenance_tools/forms/systemmaintenance_property_form', 'systemmaintenance_property_form');
+        $appConfigForm = $melisCoreConfig->getFormMergedAndOrdered('meliscore/tools/systemmaintenance_tools/forms/systemmaintenance_property_form', 'systemmaintenance_property_form');
 
         // Factoring Systemmaintenance event and pass to view
         $factory = new \Laminas\Form\Factory();

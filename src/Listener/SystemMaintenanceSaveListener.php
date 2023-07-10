@@ -21,7 +21,7 @@ class SystemMaintenanceSaveListener extends MelisGeneralListener implements List
     {
         $this->attachEventListener(
             $events,
-            'Systemmaintenance',
+            'MelisCore',
             'systemmaintenance_properties_save_start',
             function($e){
 
@@ -33,7 +33,7 @@ class SystemMaintenanceSaveListener extends MelisGeneralListener implements List
 
 
 
-                $container = new Container('systemmaintenance');
+                $container = new Container('MelisCore');
                 $container['systemmaintenance-save-action'] = $result;
 
             }
