@@ -172,6 +172,9 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                             ->get('SystemmaintenanceService')
                             ->clearPageCache();
                     }
+                } else {
+                    $formData['is_maintenance_mode'] = "0";
+                    file_put_contents($json_file,json_encode([$formData]));
                 }
 
             } 
