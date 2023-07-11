@@ -37,7 +37,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                         if($currentData[$key]->site_id == $id) {
                         $rowData['site_id'] = $id;
                         $rowData['maintenance_url'] = $currentData[$key]->maintenance_url;
-                        // $rowData['is_maintenance_mode'] = $currentData[$key]->is_maintenance_mode;
+                        $rowData['is_maintenance_mode'] = $currentData[$key]->is_maintenance_mode;
                     }
                 }
             }     
@@ -72,7 +72,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
             $this->getEventManager()->trigger('systemmaintenance_properties_save_start', $this, $request);
 
             // Result stored on session
-            $container = new Container('systemmaintenance');
+            $container = new Container('MelisCore');
             $saveResult = $container['systemmaintenance-save-action'];
 
             if (!empty($saveResult['errors']))
@@ -122,14 +122,12 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
 
         $request = $this->getRequest();
         $formData = $request->getPost()->toArray();
-        
         if(is_numeric($formData['maintenance_url'])) {
             $melisTree = $this->serviceManager->get('MelisEngineTree');
             $link =  $melisTree->getPageLink($formData['maintenance_url'], true);
             $formData['maintenance_url'] = $link;
 
         }
-
         $systemmaintenanceForm = $this->getForm();
         $systemmaintenanceForm->setData($formData);
 
@@ -162,6 +160,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                         }   
                     }
                     if(!$isExists && !empty($formData['maintenance_url'])) {
+                        $formData['is_maintenance_mode'] = "0";
                         $currentData[] = $formData;
                     }
                     $json_data = json_encode($currentData);
