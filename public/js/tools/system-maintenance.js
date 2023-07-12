@@ -17,11 +17,8 @@ $(function(){
         form.on("submit", function(e) {
 
             e.preventDefault();
-
             btn.attr('disabled', true);
-
             var formData = new FormData(this);
-
             formData.append('site_id', id);
 
 
