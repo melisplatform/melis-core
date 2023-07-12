@@ -204,5 +204,5 @@ const initSwitch = () => {
     });
 
     $(".systemmaintenance-action-switch").bootstrapSwitch();
-    
+    console.log("Wins testing");
 }
