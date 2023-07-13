@@ -282,7 +282,7 @@ return array(
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
-                    '/melis-core/js/tools/system-maintenance.js',
+                    '/MelisCore/js/tools/system-maintenance.js',
 
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',

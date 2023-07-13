@@ -68,6 +68,11 @@ class MelisCoreMaintenanceListener extends MelisGeneralListener implements Liste
                             $currentSiteURL = parse_url($currentSite);
                             $maintenanceURL = parse_url($data->maintenance_url);
                             $response = $e->getResponse();
+                            if(!isset($maintenanceURL['scheme'])) {
+                                $maintenanceURL['scheme'] = str_replace('://','',$protocol);
+                                $maintenanceURL['host'] = $maintenanceURL['path'];
+                                unset($maintenanceURL['path']);
+                            }
                             if($currentSiteURL['host'] == $maintenanceURL['host']) {
                                 $query = http_build_query(array_merge($_GET,['maintenance_mode'=>1]));
                                 $path = isset($maintenanceURL['path']) ? $maintenanceURL['path'] : '';
