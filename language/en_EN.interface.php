@@ -899,12 +899,12 @@ return [
 		'tr_systemmaintenance_page_id' => 'Page ID',
 		'tr_systemmaintenance_active' => 'Active',
 		'tr_systemmaintenance_inactive' => 'Inactive',
-		'tr_systemmaintenance_common_button_confirmation_yes' => 'Yes, Confirm!',
+		'tr_systemmaintenance_common_button_confirmation_yes' => 'Yes',
 		'tr_systemmaintenance_text_title_maintenance' => 'Maintenance Mode',
 		'tr_systemmaintenance_text_message_maintenace' => 'Maintenance status has been updated',
-		'tr_systemmaintenance_common_table_test_link_button' => 'Button to test the maintenance link',
+		'tr_systemmaintenance_common_table_test_link_button' => 'Test of the maintenance page link',
 		'tr_systemmaintenance_activate' => 'Are you sure you want to activate the maintenance mode?',
 		'tr_systemmaintenance_deactivate' => 'Are you sure you want to deactivate the maintenance mode?',
-
+        'tr_systemmaintenance_save_success' => 'Maintenance Mode Settings saved successfully',
 
 ];
