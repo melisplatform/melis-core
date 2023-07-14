@@ -142,7 +142,10 @@ $(function(){
         var selected = $("#find-page-dynatree ul li .fancytree-active .fancytree-title").text();
         var pageId = selected.match(/\d+/g);
         if(pageId != null || pageId != undefined || pageId.length >= 1) {
-            $("#maintenance_url").attr('value',pageId[0]);
+
+            $("#maintenance_url").val(pageId[0]);
+
+
         }
         return false;
     });

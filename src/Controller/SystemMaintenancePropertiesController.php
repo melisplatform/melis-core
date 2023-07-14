@@ -145,6 +145,8 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                 ];
         
                 return new JsonModel($result);
+            } else {
+                unset($errors['maintenance_url']);
             }
             
             $link =  $melisTree->getPageLink($formData['maintenance_url'], true);
