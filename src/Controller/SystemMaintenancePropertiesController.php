@@ -250,6 +250,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                         }
                     }
                 }
+                // dd($currentData);
 
                 $json_data = json_encode($currentData);
                 file_put_contents($file,$json_data);

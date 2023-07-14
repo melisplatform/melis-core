@@ -42,7 +42,7 @@ return [
                         ],
                         'columns' => [
                             'site_id' => array(
-                                'text' => 'tr_meliscms_tool_site_col_site_id',
+                                'text' => 'ID',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
                                 'sortable' => true,
 

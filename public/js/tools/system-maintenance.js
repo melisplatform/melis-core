@@ -101,7 +101,7 @@ $(function(){
 
        
         $("body").one("click", ".btnSaveSystemmaintenanceConfirm", function(event){
-
+            event.stopImmediatePropagation();
             $("#id_systemmaintenance_modal_confirmation_container").modal("hide");
             $.ajax({
                 url:'/melis/MelisCore/SystemMaintenanceProperties/saveStatus',
@@ -116,8 +116,6 @@ $(function(){
                         melisHelper.createModal("id_systemmaintenance_modal", "systemmaintenance_modal", false, {id : siteId}, modalUrl);
                     }
                     melisHelper.melisOkNotification(response.textTitle, response.textMessage);
-
-
                 },
                 error: function(error) {
                     console.error('Error reading JSON file:', error);
@@ -169,6 +167,7 @@ const initSwitch = () => {
             if(res.length > 0) {
                 siteData = res;
             }
+
         },
         error: function(error) {
             console.log(error);
@@ -178,28 +177,33 @@ const initSwitch = () => {
 
 
         $("body #systemmaintenanceTableContent tbody tr").each((index,element) => {
-            $(element).find("td:eq(2)").text(site['maintenance_url']);
-            $(element).find("td:eq(4) div .testLink").attr('href',site['maintenance_url']);
-            $(element).find("td:eq(3)").html(`
-                
-                <div id="" class="ml-2 mt-1 make-switch has-witch systemmaintenance-action-switch"
-                data-on-label="` + translations.tr_systemmaintenance_common_activate + `"
-                data-off-label="`+ translations.tr_systemmaintenance_common_deactivate + `"
-                data-text-label="`+ translations.tr_meliscore_tool_user_col_status +`">
-                <input type="checkbox" class="system_maintenance_site_status"  />
-                </div>
-
-            `);
+            if((index+1) == site['site_id']) {
+                $(element).find("td:eq(2)").text(site['maintenance_url']);
+                $(element).find("td:eq(4) div .testLink").attr('href',site['maintenance_url']);
+                $(element).find("td:eq(3)").html(`
+                    
+                    <div id="" class="ml-2 mt-1 make-switch has-witch systemmaintenance-action-switch"
+                    data-on-label="` + translations.tr_systemmaintenance_common_activate + `"
+                    data-off-label="`+ translations.tr_systemmaintenance_common_deactivate + `"
+                    data-text-label="`+ translations.tr_meliscore_tool_user_col_status +`">
+                    <input type="checkbox" class="system_maintenance_site_status"  />
+                    </div>
+    
+                `);
+            }
         });
 
-        console.log($("body .systemmaintenance-action-switch .system_maintenance_site_status").length);
         let status = site['is_maintenance_mode'] == 1 ? true : false;
         $("body .systemmaintenance-action-switch .system_maintenance_site_status").each((index,element) => {
-            $(element).prop('checked',status);
-            $(element).text(status);    
+            if((index+1) == site['site_id']) {
+
+                $(element).prop('checked',status);
+                $(element).text(status);   
+            }
         });
+        
     });
 
     $(".systemmaintenance-action-switch").bootstrapSwitch();
-    console.log("Wins testing");
+
 }
