@@ -13,6 +13,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Laminas\Session\Container;
 use MelisCore\Controller\MelisAbstractActionController;
+use MelisEngine\Model\MelisPage;
 
 class SystemMaintenancePropertiesController extends MelisAbstractActionController
 {
@@ -119,6 +120,10 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
             return false;
         }
         return true;
+        // $melisPage = $this->getServiceManager()->get('MelisEngineTablePagePublished');
+
+
+        // dd($melisPage->getPublishedSitePagesById($pageId)->current());
     }
 
     public function savePropertiesAction()
