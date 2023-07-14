@@ -906,5 +906,5 @@ return [
 		'tr_systemmaintenance_activate' => 'Are you sure you want to activate the maintenance mode?',
 		'tr_systemmaintenance_deactivate' => 'Are you sure you want to deactivate the maintenance mode?',
         'tr_systemmaintenance_save_success' => 'Maintenance Mode Settings saved successfully',
-
+        'tr_systemmaintenance_error_doesnt_exist' => 'The maintenance page URL is not published, to activate the maintenance mode please publish the page first or change the URL'
 ];

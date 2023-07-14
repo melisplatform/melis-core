@@ -915,4 +915,6 @@ return [
 		'tr_systemmaintenance_activate' => 'Etes-vous sûr de vouloir activer le mode maitenance ?',
 		'tr_systemmaintenance_deactivate' => 'Etes-vous sûr de vouloir désactiver le mode maitenance ?',
         'tr_systemmaintenance_save_success' => 'Paramètres du mode maintenance enregistrés avec succès',
+        'tr_systemmaintenance_error_doesnt_exist' => 'L\'URL de la page de maintenance n\'est pas publiée, pour activer le mode maintenance veuillez d\'abord publier la page ou saisir une autre URL'
+
 ];

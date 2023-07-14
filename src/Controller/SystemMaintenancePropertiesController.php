@@ -111,6 +111,16 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
         return new JsonModel($response);
     }
 
+    private function verifyPageExists($pageId) {
+        $melisPage = $this->getServiceManager()->get('MelisEnginePage');
+        $datasPageRes = $melisPage->getDatasPage($pageId);
+        $datasPageTreeRes = $datasPageRes->getMelisPageTree();
+        if(is_null($datasPageTreeRes)){
+            return false;
+        }
+        return true;
+    }
+
     public function savePropertiesAction()
     {
         $id = null;
@@ -119,18 +129,30 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
         $errors = [];
 
         $translator = $this->getServiceManager()->get('translator');
+        $systemmaintenanceForm = $this->getForm();
 
         $request = $this->getRequest();
         $formData = $request->getPost()->toArray();
         if(is_numeric($formData['maintenance_url'])) {
             $melisTree = $this->serviceManager->get('MelisEngineTree');
+            if(!$this->verifyPageExists($formData['maintenance_url'])) {
+                $errors = $systemmaintenanceForm->getMessages();
+                $errors['maintenance_url'] = ["label" => "Maintenance URL","error" => $translator->translate("tr_systemmaintenance_error_doesnt_exist")];
+                $result = [
+                    'success' => $success,
+                    'errors' => $errors,
+                    'data' => ['id' => $id],
+                ];
+        
+                return new JsonModel($result);
+            }
+            
             $link =  $melisTree->getPageLink($formData['maintenance_url'], true);
             $formData['maintenance_url'] = $link;
 
         }
-        $systemmaintenanceForm = $this->getForm();
         $systemmaintenanceForm->setData($formData);
-
+        
         if ($systemmaintenanceForm->isValid()){
 
             $formData = $systemmaintenanceForm->getData();
