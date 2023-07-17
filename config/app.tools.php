@@ -44,7 +44,7 @@ return [
                             'site_id' => array(
                                 'text' => 'ID',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
-                                'sortable' => false,
+                                'sortable' => true,
 
                             ),
                             'site_label' => array(

@@ -116,6 +116,7 @@ $(function(){
                         melisHelper.createModal("id_systemmaintenance_modal", "systemmaintenance_modal", false, {id : siteId}, modalUrl);
                     }
                     melisHelper.melisOkNotification(response.textTitle, response.textMessage);
+                    val = null;
                 },
                 error: function(error) {
                     console.error('Error reading JSON file:', error);
