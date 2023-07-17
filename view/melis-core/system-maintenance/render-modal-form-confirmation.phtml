@@ -1,24 +1,36 @@
+<style>
+.type-warning {
+    color: white;
+    background-color: #f99319!important
+}
+</style>
 <div class="modal-content" id="<?php echo $this->zoneconfig['conf']['id'] ?>">
-    <div class="modal-body padding-none">
-        <div class="wizard">
-            <div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
-                <div class="widget-head">
-                    <ul class="nav nav-tabs">
-                     
-                    </ul>
-                </div>
-                <div class="widget-body innerAll inner-2x">
-                    <div class="tab-content">
-                    <?php  $status = $status == 0 ? 'tr_systemmaintenance_deactivate' : 'tr_systemmaintenance_activate' ?>
+    <div class="modal-header type-warning">
+        <div class="bootstrap-dialog-header">
+            <div class="bootstrap-dialog-close-button">
+                <button class="close" aria-label="close">×</button>
+            </div>
+            <div class="bootstrap-dialog-title" id="c5618cdb-0ce1-4449-9dc4-667a0cedada9_title">
+
+                <?php echo $status == 0 ?  $this->translate('tr_systemmaintenance_inactive') :  $this->translate('tr_systemmaintenance_active'); ?> the maintenance mode ?
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+    <?php  $status = $status == 0 ? 'tr_systemmaintenance_deactivate' : 'tr_systemmaintenance_activate' ?>
+
                         <p><?php echo $this->translate($status); ?></p>
-                        <hr />
                         <div align="right">
                             <a data-dismiss="modal" class="btn btn-danger pull-left close-btnSaveSystemmaintenanceConfirm"><i class="fa fa-times"></i> <?php echo $this->translate('tr_systemmaintenance_common_button_close')?></a>
                             <a class="btn btn-success btnSaveSystemmaintenanceConfirm" data-id="<?php echo $this->id ?>"><i class="fa fa-save"></i>  <?php echo $this->translate('tr_systemmaintenance_common_button_confirmation_yes'); ?></a>
                         </div>
-                    </div>
-                </div>
+    </div>
+    <!-- <div class="modal-footer">
+        <div class="bootstrap-dialog-footer">
+            <div class="bootstrap-dialog-footer-buttons">
+                <button class="btn btn-danger pull-left" id="6a9589a9-4945-4461-8bdc-ae7144351630">No</button>
+                <button class="btn btn-success" id="2e3a6bf7-911c-4f7e-a75a-9fab6db2d0d7">Yes</button>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>

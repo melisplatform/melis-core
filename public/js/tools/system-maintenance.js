@@ -128,7 +128,14 @@ $(function(){
         /*  When this element is clicked, it will execute the
         function that reloads the content of the "id_systemmaintenance_content" zone with the
         "systemmaintenance_content" template. */
-        $("body").one("click",".close-btnSaveSystemmaintenanceConfirm",() => {
+        $("body").one("click",".close-btnSaveSystemmaintenanceConfirm",(e) => {
+            e.stopImmediatePropagation();
+            melisHelper.zoneReload("id_systemmaintenance_content", "systemmaintenance_content");
+        });
+
+        $("body").one("click",".close",(e) => {
+            e.stopImmediatePropagation();
+            $("#id_systemmaintenance_modal_confirmation_container").modal("hide");
             melisHelper.zoneReload("id_systemmaintenance_content", "systemmaintenance_content");
         });
     });
