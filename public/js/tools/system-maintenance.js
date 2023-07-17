@@ -167,6 +167,26 @@ $(function(){
  * elements based on the data, and initializes the Bootstrap Switch plugin.
  */
 const initSwitch = () => {
+
+    function sortTable(columnIndex) {
+        var $table = $('#systemmaintenanceTableContent');
+        var $tbody = $table.find('tbody');
+        var $rows = $tbody.find('tr').get();
+
+        $rows.sort(function(a, b) {
+            var aValue = $(a).find('td').eq(columnIndex).text();
+            var bValue = $(b).find('td').eq(columnIndex).text();
+
+            return aValue.localeCompare(bValue);
+        });
+
+        $tbody.empty();
+
+        $.each($rows, function(index, row) {
+            $tbody.append(row);
+        });
+    }
+
     let siteData = [];
     $.ajax({
         url:'/melis/MelisCore/SystemMaintenance/getSiteStatus',
@@ -236,4 +256,10 @@ const initSwitch = () => {
 
     $(".systemmaintenance-action-switch").bootstrapSwitch();
 
+    $("body #systemmaintenanceTableContent thead tr th").one('click',function(e) {
+        e.stopPropagation();
+        console.log($(this).index());
+        // sortTable($(this).index());
+
+    });
 }

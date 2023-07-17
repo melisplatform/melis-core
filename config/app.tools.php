@@ -44,23 +44,23 @@ return [
                             'site_id' => array(
                                 'text' => 'ID',
                                 'css' => array('width' => '1%', 'padding-right' => '0'),
-                                'sortable' => true,
+                                'sortable' => false,
 
                             ),
                             'site_label' => array(
                                 'text' => 'Site',
                                 'css' => array('width' => '20%', 'padding-right' => '0'),
-                                'sortable' => true,
+                                'sortable' => false,
                             ),
                             'maintenance_url' => array(
                                 'text' => 'Maintenance URL',
                                 'css' => array('width' => '30%', 'padding-right' => '0'),
-                                'sortable' => true,
+                                'sortable' => false,
                             ),
                             'status' => array(
                                 'text' => 'status',
                                 'css' => array('width' => '20%', 'padding-right' => '0'),
-                                'sortable' => true,
+                                'sortable' => false,
                                 
                             ),
                         ],

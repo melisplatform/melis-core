@@ -69,6 +69,7 @@ class SystemMaintenanceController extends MelisAbstractActionController
             $colId = array_keys($melisTool->getColumns());
 
             $sortOrder = $this->getRequest()->getPost('order');
+            $sortOrder[0]['dir'] = "asc";
             $sortOrder = $sortOrder[0]['dir'];
 
             $selCol = $this->getRequest()->getPost('order');
