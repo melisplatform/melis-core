@@ -116,14 +116,10 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
         $melisPage = $this->getServiceManager()->get('MelisEnginePage');
         $datasPageRes = $melisPage->getDatasPage($pageId);
         $datasPageTreeRes = $datasPageRes->getMelisPageTree();
-        if(is_null($datasPageTreeRes)){
+        if(is_null($datasPageTreeRes) || $datasPageTreeRes->page_status == 0){
             return false;
         }
         return true;
-        // $melisPage = $this->getServiceManager()->get('MelisEngineTablePagePublished');
-
-
-        // dd($melisPage->getPublishedSitePagesById($pageId)->current());
     }
 
     public function savePropertiesAction()
