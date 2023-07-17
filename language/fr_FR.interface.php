@@ -903,6 +903,7 @@ return [
 		'tr_systemmaintenance_content' => 'Contenu',
 		'tr_systemmaintenance_modal' => 'Modal',
 		'tr_systemmaintenance_site_id' => 'ID',
+        'tr_systemmaintenance_site_label' => 'URL de maintenance',
 		'tr_systemmaintenance_maintenance_url' => 'URL de maintenance',
 		'tr_systemmaintenance_maintenance_url_label_tooltip' => 'Saisissez ou sélectionnez l\'url de maintenance',
 		'tr_systemmaintenance_page_id' => 'ID page',
