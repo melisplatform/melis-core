@@ -176,11 +176,28 @@ const initSwitch = () => {
             console.log(error);
         }
     });
+
+    var sort = "ascending";
+    $("body #systemmaintenanceTableContent thead tr th").each((i,e) => {
+        let isAriaSort = $(e).attr('aria-sort');
+        if(isAriaSort !== undefined) {
+            sort = $(e).attr('aria-sort');
+        }
+    });
+
+
     siteData.forEach((site,i) => {
-
-
+        let iCounter = 0;
         $("body #systemmaintenanceTableContent tbody tr").each((index,element) => {
+            // iCounter = index+iCouInter;
+            // if(sort == "descending") {
+            //         iCounter = siteData.length - 1;
+            // } 
+
             if((index+1) == site['site_id']) {
+                // if(sort == "descending") {
+                //     iCounter += 1
+                // }
                 $(element).find("td:eq(2)").text(site['maintenance_url']);
                 $(element).find("td:eq(4) div .testLink").attr('href',site['maintenance_url']);
                 $(element).find("td:eq(3)").html(`
@@ -194,6 +211,7 @@ const initSwitch = () => {
     
                 `);
             }
+
         });
 
         let status = site['is_maintenance_mode'] == 1 ? true : false;
@@ -204,8 +222,10 @@ const initSwitch = () => {
                 $(element).text(status);   
             }
         });
+
         
     });
+
 
     $(".systemmaintenance-action-switch").bootstrapSwitch();
 
