@@ -18,8 +18,8 @@ use MelisCore\Controller\MelisAbstractActionController;
 class SystemMaintenanceController extends MelisAbstractActionController
 {
 
-    const TOOL_INDEX = 'meliscms';
-    const TOOL_KEY = 'meliscms_tool_sites';
+    const TOOL_INDEX = 'meliscore';
+    const TOOL_KEY = 'systemmaintenance_tools';
 
     public function renderToolAction()
     {
