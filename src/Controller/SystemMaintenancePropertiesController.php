@@ -116,7 +116,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
         $melisPage = $this->getServiceManager()->get('MelisEnginePage');
         $datasPageRes = $melisPage->getDatasPage($pageId);
         $datasPageTreeRes = $datasPageRes->getMelisPageTree();
-        if(is_null($datasPageTreeRes) || $datasPageTreeRes->page_status == 0){
+        if(is_null($datasPageTreeRes)){
             return false;
         }
         return true;
@@ -262,14 +262,28 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
         return $form;
     }
 
+    private function PageIdExtractor($string) {
+        $pattern = "/\/id\/(\d+)/";
+        preg_match($pattern, $string, $matches);
 
+        if (isset($matches[1])) {
+            $id = $matches[1];
+            return $id;
+        } 
+    }
     public function saveStatusAction()
     {
         $json_data = [];
         $isJsonFileExists = false;
+        $systemmaintenanceForm = $this->getForm();
+        $success = 0;
+        $errors = [];
+        $id = null;
+        $translator = $this->getServiceManager()->get('translator');
+
         if($this->getRequest()->isPost()) {
             $siteId = $this->getRequest()->getPost('siteId');
-
+            $currentHost = $_SERVER['HTTP_HOST'];
             $file = getcwd()."/data/maintenance-503/maintenance.json";
             $data = null;
             if(file_exists($file)) {
@@ -278,7 +292,30 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                 $currentData = json_decode($data);
                 foreach($currentData as $key => $site) {
                     if($site->site_id == $siteId) {
+                        $maintenance_host = parse_url($site->maintenance_url);
+                        if(isset($maintenance_host['host']) && $maintenance_host['host'] == $currentHost) {
+                            if(isset($maintenance_host['path'])) {
+                                $pageID = $this->PageIdExtractor($maintenance_host['path']);
+                                $melisPage = $this->getServiceManager()->get('MelisEnginePage');
+                                $datasPageRes = $melisPage->getDatasPage($pageID);
+                                $datasPageTreeRes = $datasPageRes->getMelisPageTree();
+                                if($datasPageTreeRes->page_status == 0){
+                                    $errors = $systemmaintenanceForm->getMessages();
+                                    $errors['maintenance_url'] = ["label" => "Maintenance URL","errors" => $translator->translate("tr_systemmaintenance_error_doesnt_exist")];
+                                    $result = [
+                                        'success' => $success,
+                                        'errors' => $errors,
+                                        'textTitle' => $translator->translate("tr_systemmaintenance_unable_to_save"),
+                                        'textMessage' => ""
 
+                                    ];
+                                    return new JsonModel($result);
+                                } else {
+                                    unset($errors['maintenance_url']);
+                                }
+                                
+                            }
+                        }
                         $status = $this->getRequest()->getPost('switchStatus');
                         $currentData[$key]->is_maintenance_mode = $status;
 
@@ -291,7 +328,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                     }
                 }
                 // dd($currentData);
-
+                $success = 1;
                 $json_data = json_encode($currentData);
                 file_put_contents($file,$json_data);
             
@@ -299,11 +336,10 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
         }
 
         return new JsonModel([
-            'success' => true,
-            'textTitle' => 'tr_systemmaintenance_text_title_maintenance',
-            'textMessage' => 'tr_systemmaintenance_text_message_maintenace', 
-            'data'=>$json_data,
-            'json_exists' => $isJsonFileExists
+            'success' => $success,
+            'errors' => $errors, 
+            'textTitle' => $translator->translate("tr_systemmaintenance_text_title_maintenance"),
+            'textMessage' => $translator->translate("tr_systemmaintenance_text_message_maintenace"),
         ]);
     }
 }

@@ -111,12 +111,32 @@ $(function(){
                     siteId:siteId
                 },
                 dataType: 'json',
-                success: function(response) {
-                    if(response.data == null || response.data == '[]' || response.json_exists === false) {
-                        melisHelper.createModal("id_systemmaintenance_modal", "systemmaintenance_modal", false, {id : siteId}, modalUrl);
+                success: function(data) {
+               
+
+                    // if(response.data == null || response.data == '[]' || response.json_exists === false) {
+                    //     melisHelper.createModal("id_systemmaintenance_modal", "systemmaintenance_modal", false, {id : siteId}, modalUrl);
+                    //     melisHelper.melisOkNotification(response.textTitle, response.textMessage);
+
+                    // } else {
+                    //     melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                    //     melisHelper.highlightMultiErrors(data.success, data.errors, "#id_systemmaintenance_modal");
+                    // }
+
+                    if(data.success){
+                        // Notifications
+                        melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+    
+                        $("#id_systemmaintenance_modal_container").modal("hide");
+                        melisHelper.zoneReload("id_systemmaintenance_content", "systemmaintenance_content");
+                    }else{
+                        melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                        melisHelper.highlightMultiErrors(data.success, data.errors, "#id_systemmaintenance_modal");
                     }
-                    melisHelper.melisOkNotification(response.textTitle, response.textMessage);
+                    
+
                     val = null;
+
                 },
                 error: function(error) {
                     console.error('Error reading JSON file:', error);
@@ -168,6 +188,17 @@ $(document).on('click', function(event) {
     }
 });
 
+$(document).on('click', function(event) {
+    var $modal = $('.melis-modaloverlay');
+    if ($modal.is(':visible') && !$(event.target).closest('.modal-dialog').length) {
+        $modal.hide();
+        melisHelper.zoneReload("id_systemmaintenance_content", "systemmaintenance_content");
+    }
+});
+
+$(document).on("click",".modal-content .btn-block",function() {
+    melisHelper.zoneReload("id_systemmaintenance_content", "systemmaintenance_content");
+});
 /**
  * The `initSwitch` function retrieves site data from an API, updates the status of switches and table
  * elements based on the data, and initializes the Bootstrap Switch plugin.
