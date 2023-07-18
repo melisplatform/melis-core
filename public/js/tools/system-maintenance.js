@@ -161,13 +161,23 @@ $(function(){
 
 });
 
-
+$(document).on('click', function(event) {
+    var $modal = $('#id_systemmaintenance_modal_confirmation_container');
+    if ($modal.is(':visible') && !$(event.target).closest('.modal-dialog').length) {
+        melisHelper.zoneReload("id_systemmaintenance_content", "systemmaintenance_content");
+    }
+});
 
 /**
  * The `initSwitch` function retrieves site data from an API, updates the status of switches and table
  * elements based on the data, and initializes the Bootstrap Switch plugin.
  */
 const initSwitch = () => {
+
+    $('body #melis-modals-container #id_systemmaintenance_modal_confirmation_container').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
 
     function sortTable(columnIndex) {
         var $table = $('#systemmaintenanceTableContent');
