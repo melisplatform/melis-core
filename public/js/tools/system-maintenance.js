@@ -189,7 +189,7 @@ $(document).on('click', function(event) {
 });
 
 $(document).on('click', function(event) {
-    var $modal = $('.melis-modaloverlay');
+    var $modal = $('.melis-modals-container');
     if ($modal.is(':visible') && !$(event.target).closest('.modal-dialog').length) {
         $modal.hide();
         melisHelper.zoneReload("id_systemmaintenance_content", "systemmaintenance_content");
@@ -210,24 +210,7 @@ const initSwitch = () => {
         keyboard: false
     });
 
-    function sortTable(columnIndex) {
-        var $table = $('#systemmaintenanceTableContent');
-        var $tbody = $table.find('tbody');
-        var $rows = $tbody.find('tr').get();
-
-        $rows.sort(function(a, b) {
-            var aValue = $(a).find('td').eq(columnIndex).text();
-            var bValue = $(b).find('td').eq(columnIndex).text();
-
-            return aValue.localeCompare(bValue);
-        });
-
-        $tbody.empty();
-
-        $.each($rows, function(index, row) {
-            $tbody.append(row);
-        });
-    }
+  
 
     let siteData = [];
     $.ajax({
@@ -256,17 +239,9 @@ const initSwitch = () => {
 
 
     siteData.forEach((site,i) => {
-        let iCounter = 0;
         $("body #systemmaintenanceTableContent tbody tr").each((index,element) => {
-            // iCounter = index+iCouInter;
-            // if(sort == "descending") {
-            //         iCounter = siteData.length - 1;
-            // } 
 
             if((index+1) == site['site_id']) {
-                // if(sort == "descending") {
-                //     iCounter += 1
-                // }
                 $(element).find("td:eq(2)").text(site['maintenance_url']);
                 $(element).find("td:eq(4) div .testLink").attr('href',site['maintenance_url']);
                 $(element).find("td:eq(3)").html(`
@@ -298,10 +273,4 @@ const initSwitch = () => {
 
     $(".systemmaintenance-action-switch").bootstrapSwitch();
 
-    $("body #systemmaintenanceTableContent thead tr th").one('click',function(e) {
-        e.stopPropagation();
-        console.log($(this).index());
-        // sortTable($(this).index());
-
-    });
 }

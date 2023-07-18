@@ -135,7 +135,6 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
         $request = $this->getRequest();
         $formData = $request->getPost()->toArray();
         if(is_numeric($formData['maintenance_url'])) {
-            $formData['pageID'] = $formData['maintenance_url'];
 
             $melisTree = $this->serviceManager->get('MelisEngineTree');
             if(!$this->verifyPageExists($formData['maintenance_url'])) {
@@ -157,18 +156,7 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
 
         $systemmaintenanceForm->setData($formData);
         if ($systemmaintenanceForm->isValid()){
-            $pageID = null;
-            if(isset($formData['pageID']) &&is_numeric($formData['pageID'])) {
-                $pageID = $formData['pageID'];
-            }
-
             $formData = $systemmaintenanceForm->getData();
-            if(is_null($pageID)) {
-                unset($formData['pageID']);
-            } else {    
-                $formData['pageID'] = $pageID;
-            }
-
             $dirPath = getcwd().'/data/maintenance-503/';
             if(!is_dir($dirPath)) {
                 mkdir($dirPath, 0777, true);
@@ -189,11 +177,6 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                                 } else {
                                     $currentData[$key]->maintenance_url = $formData['maintenance_url'];
                                     $currentData[$key]->is_maintenance_mode = 0;//$formData['is_maintenance_mode'];
-                                    if(is_null($pageID) && isset($currentData[$key]->page_id)) {
-                                        unset($currentData[$key]->page_id);
-                                    } else {
-                                        $currentData[$key]->page_id = $pageID;
-                                    }
                                     $isExists = true;
                                 }
                             }
@@ -305,8 +288,8 @@ class SystemMaintenancePropertiesController extends MelisAbstractActionControlle
                                     $result = [
                                         'success' => $success,
                                         'errors' => $errors,
-                                        'textTitle' => $translator->translate("tr_systemmaintenance_unable_to_save"),
-                                        'textMessage' => ""
+                                        'textTitle' => $translator->translate("tr_systemmaintenance_title"),
+                                        'textMessage' => $translator->translate("tr_systemmaintenance_unable_to_save")
 
                                     ];
                                     return new JsonModel($result);
