@@ -253,5 +253,14 @@ class SystemMaintenanceController extends MelisAbstractActionController
 
     }
 
+    public function renderSystemMaintenanceTabsMainAction()
+    {
+
+        $view = new ViewModel();
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        $view->melisKey = $melisKey;
+        return $view;
+    }
+
 
 }

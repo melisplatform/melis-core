@@ -23,110 +23,7 @@ return [
                                 'jsdatas' => array()
                             ),
                             'interface' => [
-                                'systemmaintenance_conf' => [
-                                    'conf' => [
-                                        'id' => 'id_systemmaintenance_leftmenu',
-                                        'melisKey' => 'systemmaintenance_leftmenu',
-                                        'name' => 'tr_systemmaintenance_title',
-                                        'icon' => 'fa fa-puzzle-piece',
-                                    ],
-                                    'interface' => [
-                                        'systemmaintenance_tool' => [
-                                            'conf' => [
-                                                'id' => 'id_systemmaintenance_tool',
-                                                'melisKey' => 'systemmaintenance_tool',
-                                                'name' => 'tr_systemmaintenance_title',
-                                                'icon' => 'fa fa-puzzle-piece',
-                                            ],
-                                            'forward' => [
-                                                'module' => 'MelisCore',
-                                                'controller' => 'SystemMaintenance',
-                                                'action' => 'render-tool',
-                                                'jscallback' => '',
-                                                'jsdatas' => []
-                                            ],
-                                            'interface' => [
-                                                'systemmaintenance_header' => [
-                                                    'conf' => [
-                                                        'id' => 'id_systemmaintenance_header',
-                                                        'melisKey' => 'systemmaintenance_header',
-                                                        'name' => 'tr_systemmaintenance_header',
-                                                    ],
-                                                    'forward' => [
-                                                        'module' => 'MelisCore',
-                                                        'controller' => 'SystemMaintenance',
-                                                        'action' => 'render-tool-header',
-                                                        'jscallback' => '',
-                                                        'jsdatas' => []
-                                                    ],
-                                                ],
-                                                'systemmaintenance_content' => [
-                                                    'conf' => [
-                                                        'id' => 'id_systemmaintenance_content',
-                                                        'melisKey' => 'systemmaintenance_content',
-                                                        'name' => 'tr_systemmaintenance_content',
-                                                    ],
-                                                    'forward' => [
-                                                        'module' => 'MelisCore',
-                                                        'controller' => 'SystemMaintenance',
-                                                        'action' => 'render-tool-content',
-                                                        'jscallback' => '',
-                                                        'jsdatas' => []
-                                                    ],
-                                                    'interface' => [
-                                                        'systemmaintenance_modal' => [
-                                                            'conf' => [
-                                                                'id' => 'id_systemmaintenance_modal',
-                                                                'melisKey' => 'systemmaintenance_modal',
-                                                                'name' => 'tr_systemmaintenance_modal',
-                                                            ],
-                                                            'forward' => [
-                                                                'module' => 'MelisCore',
-                                                                'controller' => 'SystemMaintenance',
-                                                                'action' => 'render-modal-form',
-                                                                'jscallback' => '',
-                                                                'jsdatas' => []
-                                                            ],
-                                                            'interface' => [
-                                                                'systemmaintenance_properties_form' => [
-                                                                    'conf' => [
-                                                                        'id' => 'id_systemmaintenance_properties_form',
-                                                                        'melisKey' => 'systemmaintenance_properties_form',
-                                                                        'name' => 'tr_systemmaintenance_properties',
-                                                                        'icon' => 'cogwheel'
-                                                                    ],
-                                                                    'forward' => [
-                                                                        'module' => 'MelisCore',
-                                                                        'controller' => 'SystemMaintenanceProperties',
-                                                                        'action' => 'render-properties-form',
-                                                                        'jscallback' => '',
-                                                                        'jsdatas' => []
-                                                                    ],
-                                                                    'interface' => [
-                                                                        'systemmaintenance_modal' => [
-                                                                            'conf' => [
-                                                                                'id' => 'id_systemmaintenance_modal_confirmation',
-                                                                                'melisKey' => 'systemmaintenance_modal_confirmation',
-                                                                                'name' => 'tr_systemmaintenance_modal_confirmation',
-                                                                            ],
-                                                                            'forward' => [
-                                                                                'module' => 'MelisCore',
-                                                                                'controller' => 'SystemMaintenance',
-                                                                                'action' => 'render-modal-form-confirmation',
-                                                                                'jscallback' => '',
-                                                                                'jsdatas' => []
-                                                                            ],
-                                                                        ]
-                                                                    ]
-                                                                ],
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ],
+                              
                                 'meliscore_tool_system_config' => array(
                                     'conf' => array(
                                         'id' => 'id_meliscore_tool_system_config',
@@ -870,6 +767,115 @@ return [
                                                                         'action' => 'renderTabsUserPasswordContent',
                                                                     ]
                                                                 ],
+                                                            ]
+                                                        ],
+                                                        'systemmaintenance_conf' => [
+                                                            'conf' => [
+                                                                'id' => 'id_systemmaintenance_leftmenu',
+                                                                'melisKey' => 'systemmaintenance_leftmenu',
+                                                                'name' => 'tr_systemmaintenance_title',
+                                                                'icon' => 'glyphicons wrench',
+                                                            ],
+                                                            'forward' => [
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'SystemMaintenance',
+                                                                'action' => 'render-system-maintenance-tabs-main',
+                                                            ],
+                                                            'interface' => [
+                                                                'systemmaintenance_tool' => [
+                                                                    'conf' => [
+                                                                        'id' => 'id_systemmaintenance_tool',
+                                                                        'melisKey' => 'systemmaintenance_tool',
+                                                                        'name' => 'tr_systemmaintenance_title',
+                                                                        'icon' => 'fa fa-puzzle-piece',
+                                                                    ],
+                                                                    'forward' => [
+                                                                        'module' => 'MelisCore',
+                                                                        'controller' => 'SystemMaintenance',
+                                                                        'action' => 'render-tool',
+                                                                        'jscallback' => '',
+                                                                        'jsdatas' => []
+                                                                    ],
+                                                                    'interface' => [
+                                                                        // 'systemmaintenance_header' => [
+                                                                        //     'conf' => [
+                                                                        //         'id' => 'id_systemmaintenance_header',
+                                                                        //         'melisKey' => 'systemmaintenance_header',
+                                                                        //         'name' => 'tr_systemmaintenance_header',
+                                                                        //     ],
+                                                                        //     'forward' => [
+                                                                        //         'module' => 'MelisCore',
+                                                                        //         'controller' => 'SystemMaintenance',
+                                                                        //         'action' => 'render-tool-header',
+                                                                        //         'jscallback' => '',
+                                                                        //         'jsdatas' => []
+                                                                        //     ],
+                                                                        // ],
+                                                                        'systemmaintenance_content' => [
+                                                                            'conf' => [
+                                                                                'id' => 'id_systemmaintenance_content',
+                                                                                'melisKey' => 'systemmaintenance_content',
+                                                                                'name' => 'tr_systemmaintenance_content',
+                                                                            ],
+                                                                            'forward' => [
+                                                                                'module' => 'MelisCore',
+                                                                                'controller' => 'SystemMaintenance',
+                                                                                'action' => 'render-tool-content',
+                                                                                'jscallback' => '',
+                                                                                'jsdatas' => []
+                                                                            ],
+                                                                            'interface' => [
+                                                                                'systemmaintenance_modal' => [
+                                                                                    'conf' => [
+                                                                                        'id' => 'id_systemmaintenance_modal',
+                                                                                        'melisKey' => 'systemmaintenance_modal',
+                                                                                        'name' => 'tr_systemmaintenance_modal',
+                                                                                    ],
+                                                                                    'forward' => [
+                                                                                        'module' => 'MelisCore',
+                                                                                        'controller' => 'SystemMaintenance',
+                                                                                        'action' => 'render-modal-form',
+                                                                                        'jscallback' => '',
+                                                                                        'jsdatas' => []
+                                                                                    ],
+                                                                                    'interface' => [
+                                                                                        'systemmaintenance_properties_form' => [
+                                                                                            'conf' => [
+                                                                                                'id' => 'id_systemmaintenance_properties_form',
+                                                                                                'melisKey' => 'systemmaintenance_properties_form',
+                                                                                                'name' => 'tr_systemmaintenance_properties',
+                                                                                                'icon' => 'cogwheel'
+                                                                                            ],
+                                                                                            'forward' => [
+                                                                                                'module' => 'MelisCore',
+                                                                                                'controller' => 'SystemMaintenanceProperties',
+                                                                                                'action' => 'render-properties-form',
+                                                                                                'jscallback' => '',
+                                                                                                'jsdatas' => []
+                                                                                            ],
+                                                                                            'interface' => [
+                                                                                                'systemmaintenance_modal' => [
+                                                                                                    'conf' => [
+                                                                                                        'id' => 'id_systemmaintenance_modal_confirmation',
+                                                                                                        'melisKey' => 'systemmaintenance_modal_confirmation',
+                                                                                                        'name' => 'tr_systemmaintenance_modal_confirmation',
+                                                                                                    ],
+                                                                                                    'forward' => [
+                                                                                                        'module' => 'MelisCore',
+                                                                                                        'controller' => 'SystemMaintenance',
+                                                                                                        'action' => 'render-modal-form-confirmation',
+                                                                                                        'jscallback' => '',
+                                                                                                        'jsdatas' => []
+                                                                                                    ],
+                                                                                                ]
+                                                                                            ]
+                                                                                        ],
+                                                                                    ]
+                                                                                ]
+                                                                            ]
+                                                                        ]
+                                                                    ]
+                                                                ]
                                                             ]
                                                         ],
                                                     ]
