@@ -201,7 +201,7 @@ $(document).on("click",".modal-content .btn-block",function() {
 });
 
 
-$("body").on("keydown","[aria-controls='systemmaintenanceTableContent']",function(e) {
+$("body").on("input","[aria-controls='systemmaintenanceTableContent']",function(e) {
     e.stopImmediatePropagation();
     var value = $(this).val().toLowerCase();
     $('#systemmaintenanceTableContent tbody tr').each(function() {
