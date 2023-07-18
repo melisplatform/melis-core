@@ -199,6 +199,17 @@ $(document).on('click', function(event) {
 $(document).on("click",".modal-content .btn-block",function() {
     melisHelper.zoneReload("id_systemmaintenance_content", "systemmaintenance_content");
 });
+
+
+$("body").on("keydown","[aria-controls='systemmaintenanceTableContent']",function(e) {
+    e.stopImmediatePropagation();
+    var value = $(this).val().toLowerCase();
+    $('#systemmaintenanceTableContent tbody tr').each(function() {
+        var rowText = $(this).text().toLowerCase();
+        $(this).toggle(rowText.indexOf(value) > -1);
+    });
+});
+
 /**
  * The `initSwitch` function retrieves site data from an API, updates the status of switches and table
  * elements based on the data, and initializes the Bootstrap Switch plugin.

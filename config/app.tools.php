@@ -66,8 +66,8 @@ return [
                         ],
                         // define what columns can be used in searching
                         'searchables' => [
-                            'site_id',
-                            'site_name',
+                            // 'site_id',
+                            // 'site_name',
                         ],
                         'actionButtons' => [
                             'testLink' => [
