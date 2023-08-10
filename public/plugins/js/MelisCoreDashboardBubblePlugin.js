@@ -10,7 +10,7 @@ var MelisCoreDashboardBubblePlugin = {
         }
 
         // disable animations if browser doesn't support css transitions & 3d transforms
-        if (!$('html.csstransitions.csstransforms3d').length)
+        if ( !$('html.csstransitions.csstransforms3d').length )
             return;
 
         /* // initializing of cards are moved to the individual bubble plugins
@@ -40,7 +40,7 @@ var MelisCoreDashboardBubblePlugin = {
             });
         });
     },
-    showBubblePlugins: function () {
+    showBubblePlugins: function() {
         var cookies = document.cookie.split(';');
         var showBubblePlugins = false;
         $.each(cookies, function(key, cookie) {

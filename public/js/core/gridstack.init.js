@@ -67,7 +67,11 @@ var melisDashBoardDragnDrop = {
             handle: this.gsOptHandle
         }
 
-        self.$gs.gridstack(options);
+        // self.$gs.gridstack(options);
+        self.$gs.each(function(i, v) {
+            var $this = $(this);
+                $this.gridstack(options);
+        });
     },
     // adjust grid height values
     setAdjustGridMeasurements: function() {
