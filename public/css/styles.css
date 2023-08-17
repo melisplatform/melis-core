@@ -4841,3 +4841,34 @@ input#log_date_range {
 		height: 212px;
 	}
 }
+
+/* for the Other Config login type of lock */
+
+#login-lock-form #form-display-radio .form-control{
+    width:15px!important;
+}
+#login-lock-form #form-display-radio label{
+    font-weight: 600 !important;
+}
+#login-lock-form #form-display-radio label > input[type="radio"] {
+  display: none;
+}
+
+#login-lock-form #form-display-radio label > input[type="radio"] + *::before {
+  content: "";
+  display: inline-block;
+  vertical-align: bottom;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.3rem;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 0.1rem;
+  border-color: gray;
+  padding: 5px;
+}
+
+#login-lock-form #form-display-radio label > input[type="radio"]:checked + *::before {
+  background: radial-gradient(#e61c23 0%, #e61c23 40%, transparent 50%, transparent);
+  border-color: #e61c23;
+}

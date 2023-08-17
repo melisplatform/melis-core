@@ -22,6 +22,9 @@ return array(
     'tr_meliscore_login_errors_Empty datas' => 'Empty datas',
     'tr_meliscore_login_auth_Successful authentication' => 'Successful authentication',
     'tr_meliscore_login_auth_Failed authentication' => 'Failed authentication',
+    'tr_meliscore_login_auth_failed_too_many_failed_attempts' => 'Failed authentication. Careful, your account will be locked after too many failed attempts.',
+    'tr_meliscore_login_auth_account_is_locked_using_admin_option' => 'You reached the maximum amount of failed login attempts. Your account is now locked. Kindly contact an administrator for assistance at %s',
+    'tr_meliscore_login_auth_account_is_locked_using_timer_option' => 'You reached the maximum amount of failed login attempts. Your account is now locked for %d days, %d hours and %d minutes.You may contact an administrator for assistance to unlock it faster.',
     'tr_meliscore_login_auth_failed_inactive' => 'Unable to login, inactive user',
     'tr_meliscore_login_pass_placeholder' => '(Do not fill in to keep the current password)',
 

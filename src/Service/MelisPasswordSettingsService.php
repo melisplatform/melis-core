@@ -32,6 +32,9 @@ class MelisPasswordSettingsService extends MelisGeneralService
             $factory = new \Laminas\Form\Factory();
             $factory->setFormElementManager($formElements);
 
+            $loginAccountLockConfigForm = $melisCoreConfig->getItem('meliscore/forms/meliscore_other_config_login_account_lock_form');
+            $loginAccountLockForm = $factory->createForm($loginAccountLockConfigForm);
+
             $passwordValidityConfigForm = $melisCoreConfig->getItem('meliscore/forms/meliscore_other_config_password_validity_form');
             $passwordValidityForm = $factory->createForm($passwordValidityConfigForm);
             
@@ -40,6 +43,108 @@ class MelisPasswordSettingsService extends MelisGeneralService
 
             $passwordComplexityConfigForm = $melisCoreConfig->getItem('meliscore/forms/meliscore_other_config_password_complexity_form');
             $passwordComplexityForm = $factory->createForm($passwordComplexityConfigForm);
+            
+            // remove form validation for type of lock duration in days if login type of lock selected is admin
+            if ($arrayParameters['passwordSettingsData']['login_account_type_of_lock'] == 'admin') {
+                $inputFilter = $loginAccountLockForm->getInputFilter();
+                
+                $inputFilter->remove('login_account_duration_days');
+                $inputFilter->remove('login_account_duration_hours');
+                $inputFilter->remove('login_account_duration_minutes');
+
+                // Add this numeric validation rule for 'login_account_duration_days' field
+                $inputFilter->add([
+                    'name'       => 'login_account_duration_days',
+                    'required'   => false,
+                    'validators' => [
+                        [
+                            'name'    => 'Regex',
+                            'options' => [
+                                'pattern' => '/^[0-9]+$/',
+                                'messages' => [
+                                    \Laminas\Validator\Regex::NOT_MATCH => $translator->translate('tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric')
+                                ],
+                                'encoding' => 'UTF-8',
+                            ],
+                        ],
+                    ],
+                ]);
+
+                // Add this numeric validation rule for 'login_account_duration_hours' field
+                $inputFilter->add([
+                    'name'       => 'login_account_duration_hours',
+                    'required'   => false,
+                    'validators' => [
+                        [
+                            'name'    => 'Regex',
+                            'options' => [
+                                'pattern' => '/^[0-9]+$/',
+                                'messages' => [
+                                    \Laminas\Validator\Regex::NOT_MATCH => $translator->translate('tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric')
+                                ],
+                                'encoding' => 'UTF-8',
+                            ],
+                        ],
+                    ],
+                ]);
+
+                // Add this numeric validation rule for 'login_account_duration_minutes' field
+                $inputFilter->add([
+                    'name'       => 'login_account_duration_minutes',
+                    'required'   => false,
+                    'validators' => [
+                        [
+                            'name'    => 'Regex',
+                            'options' => [
+                                'pattern' => '/^[0-9]+$/',
+                                'messages' => [
+                                    \Laminas\Validator\Regex::NOT_MATCH => $translator->translate('tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric')
+                                ],
+                                'encoding' => 'UTF-8',
+                            ],
+                        ],
+                    ],
+                ]);
+            }
+
+            // if type of lock is timer then add filter that checks if either days or hours or minutes 
+            // has value then the validation for the others can be removed
+            if ($arrayParameters['passwordSettingsData']['login_account_type_of_lock'] == 'timer') {
+                $durationInDays = $arrayParameters['passwordSettingsData']['login_account_duration_days'];
+                $durationInHours = $arrayParameters['passwordSettingsData']['login_account_duration_hours'];
+                $durationInMinutes = $arrayParameters['passwordSettingsData']['login_account_duration_minutes'];
+                $inputFilter = $loginAccountLockForm->getInputFilter();
+                
+                if (!empty($durationInDays)) { 
+                    if (filter_var($durationInHours, FILTER_VALIDATE_INT) || empty($durationInHours)) {
+                        $inputFilter->remove('login_account_duration_hours');
+                    }
+                    
+                    if (filter_var($durationInMinutes, FILTER_VALIDATE_INT) || empty($durationInMinutes)) {
+                        $inputFilter->remove('login_account_duration_minutes');
+                    }
+                }
+
+                if (!empty($durationInHours)) {
+                    if (filter_var($durationInDays, FILTER_VALIDATE_INT) || empty($durationInDays)) {
+                        $inputFilter->remove('login_account_duration_days');
+                    }
+                    
+                    if (filter_var($durationInMinutes, FILTER_VALIDATE_INT) || empty($durationInMinutes)) {
+                        $inputFilter->remove('login_account_duration_minutes');
+                    }
+                }
+
+                if (!empty($durationInMinutes)) {
+                    if (filter_var($durationInDays, FILTER_VALIDATE_INT) || empty($durationInDays)) {
+                        $inputFilter->remove('login_account_duration_days');
+                    }
+                    
+                    if (filter_var($durationInHours, FILTER_VALIDATE_INT) || empty($durationInHours)) {
+                        $inputFilter->remove('login_account_duration_hours');
+                    }
+                }
+            }
             
             // remove form validation for password validity lifetime if password validity status is 0
             if (empty($arrayParameters['passwordSettingsData']['password_validity_status'])) {
@@ -66,7 +171,32 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 ]);
             }
 
-             // remove form validation for password duplicate lifetime if password duplicate status is 0
+            // remove form validation for number of attempts before account is locked if login account lock status is 0
+             if (empty($arrayParameters['passwordSettingsData']['login_account_lock_status'])) {
+                $inputFilter = $loginAccountLockForm->getInputFilter();
+                
+                $inputFilter->remove('login_account_lock_number_of_attempts');
+
+                // Add a new validation rule for 'number of attempts before account is locked' field
+                $inputFilter->add([
+                    'name'       => 'login_account_lock_number_of_attempts',
+                    'required'   => false,
+                    'validators' => [
+                        [
+                            'name'    => 'Regex',
+                            'options' => [
+                                'pattern' => '/^[0-9]+$/',
+                                'messages' => [
+                                    \Laminas\Validator\Regex::NOT_MATCH => $translator->translate('tr_meliscore_tool_other_config_password_validity_lifetime_must_be_numeric')
+                                ],
+                                'encoding' => 'UTF-8',
+                            ],
+                        ],
+                    ],
+                ]);
+            }
+
+            // remove form validation for password duplicate lifetime if password duplicate status is 0
             if (empty($arrayParameters['passwordSettingsData']['password_duplicate_status'])) {
                 $inputFilter = $passwordDuplicateForm->getInputFilter();
                 
@@ -101,13 +231,23 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 $arrayParameters['passwordSettingsData']['password_complexity_number_of_characters'] = 8;
             }
 
+            $loginAccountLockForm->setData($arrayParameters['passwordSettingsData']);
             $passwordValidityForm->setData($arrayParameters['passwordSettingsData']);
             $passwordDuplicateForm->setData($arrayParameters['passwordSettingsData']);
             $passwordComplexityForm->setData($arrayParameters['passwordSettingsData']);
 
+            $loginAccountLockFormErrors = [];
             $passwordValidityFormErrors = [];
             $passwordDuplicateFormErrors = [];
             $passwordComplexityFormErrors = [];
+
+            if (!$loginAccountLockForm->isValid()) {
+                $loginAccountLockFormErrors = $loginAccountLockForm->getMessages();
+
+                foreach ($loginAccountLockFormErrors as $keyError => $valueError){
+                    $loginAccountLockFormErrors[$keyError]['label'] = $translator->translate('tr_meliscore_tool_other_config_label_' . $keyError);
+                }
+            }
 
             if (!$passwordValidityForm->isValid()) {
                 $passwordValidityFormErrors = $passwordValidityForm->getMessages();
@@ -133,8 +273,8 @@ class MelisPasswordSettingsService extends MelisGeneralService
                 }
             }
 
-            if (!empty($passwordValidityFormErrors) || !empty($passwordDuplicateFormErrors) || !empty($passwordComplexityFormErrors)) {
-                $mergedErrors = array_merge($passwordValidityFormErrors, $passwordDuplicateFormErrors, $passwordComplexityFormErrors);
+            if (!empty($passwordValidityFormErrors) || !empty($passwordDuplicateFormErrors) || !empty($passwordComplexityFormErrors) || !empty($loginAccountLockFormErrors)) {
+                $mergedErrors = array_merge($passwordValidityFormErrors, $passwordDuplicateFormErrors, $passwordComplexityFormErrors, $loginAccountLockFormErrors);
                 $arrayParameters['success'] = 0;
                 $arrayParameters['errors'] = $mergedErrors;
             } else {

@@ -23,7 +23,6 @@ class MelisCoreToolUserUpdateUserListener extends MelisGeneralListener implement
         	'MelisCore',
         	'meliscore_tooluser_save_start', 
         	function($e){
-
         		$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
         		$melisCoreDispatchService = $sm->get('MelisCoreDispatch');
         		$container = new Container('meliscore');

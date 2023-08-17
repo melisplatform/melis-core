@@ -291,7 +291,7 @@ return array(
                  * lesser requests
                  */
                 'build' => [
-                    // 'disable_bundle' => true,
+                    'disable_bundle' => false,
                     // set to "true" if you want to use the build assets
                     'use_build_assets' => true,
                     // path to where the build CSS and JS are located
@@ -638,6 +638,7 @@ return array(
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/core/login.js',
                     '/MelisCore/js/core/melispasswordservice.js',
+                    '/MelisCore/js/core/melisHelper.js',
                 ),
             ),
             'conf' => array(

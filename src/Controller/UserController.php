@@ -762,6 +762,9 @@ class UserController extends MelisAbstractActionController
         $formElements = $this->getServiceManager()->get('FormElementManager');
         $factory->setFormElementManager($formElements);
 
+        $loginAccountLockConfigForm = $melisCoreConfig->getFormMergedAndOrdered('meliscore/forms/meliscore_other_config_login_account_lock_form', 'meliscore_other_config_login_account_lock_form');
+        $loginAccountLockForm = $factory->createForm($loginAccountLockConfigForm);
+
         $passwordValidityConfigForm = $melisCoreConfig->getFormMergedAndOrdered('meliscore/forms/meliscore_other_config_password_validity_form', 'meliscore_other_config_password_validity_form');
         $passwordValidityForm = $factory->createForm($passwordValidityConfigForm);
 
@@ -776,6 +779,36 @@ class UserController extends MelisAbstractActionController
         if (file_exists($file)) {
             $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
+        }
+
+        $loginAccountLockData = new MelisResultSet();
+
+        if (isset($config['login_account_lock_status'])) {
+            $loginAccountLockData->login_account_lock_status = $config['login_account_lock_status'];
+        }
+        
+        if (isset($config['login_account_admin_email'])) {
+            $loginAccountLockData->login_account_admin_email = $config['login_account_admin_email'];
+        }
+
+        if (isset($config['login_account_lock_number_of_attempts'])) {
+            $loginAccountLockData->login_account_lock_number_of_attempts = $config['login_account_lock_number_of_attempts'];
+        }
+
+        if (isset($config['login_account_type_of_lock'])) {
+            $loginAccountLockData->login_account_type_of_lock = $config['login_account_type_of_lock'];
+        }
+
+        if (isset($config['login_account_duration_days'])) {
+            $loginAccountLockData->login_account_duration_days = $config['login_account_duration_days'];
+        }
+
+        if (isset($config['login_account_duration_hours'])) {
+            $loginAccountLockData->login_account_duration_hours = $config['login_account_duration_hours'];
+        }
+
+        if (isset($config['login_account_duration_minutes'])) {
+            $loginAccountLockData->login_account_duration_minutes = $config['login_account_duration_minutes'];
         }
 
         $passwordValidityData = new MelisResultSet();
@@ -820,14 +853,15 @@ class UserController extends MelisAbstractActionController
             $passwordComplexityData->password_complexity_use_digit = $config['password_complexity_use_digit'];
         }
         
+        $loginAccountLockForm->bind($loginAccountLockData);
         $passwordValidityForm->bind($passwordValidityData);
         $passwordDuplicateForm->bind($passwordDuplicateData);
         $passwordComplexityForm->bind($passwordComplexityData);
 
 		$melisKey = $this->params()->fromRoute('melisKey', '');
-		
 		$view = new ViewModel();
 		$view->melisKey = $melisKey;
+		$view->loginAccountLockForm = $loginAccountLockForm;
 		$view->passwordValidityForm = $passwordValidityForm;
 		$view->passwordDuplicateForm = $passwordDuplicateForm;
 		$view->passwordComplexityForm = $passwordComplexityForm;

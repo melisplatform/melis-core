@@ -147,4 +147,12 @@ class MelisCoreUserService extends MelisServiceManager implements MelisCoreUserS
 
         return $data;
     }
+
+    public function getUserLastLoggedInDate($userId)
+    {
+        $table = $this->getServiceManager()->get('MelisCoreTableUser');
+        $data = $table->getLastLoggedInDate($userId)->toArray();
+
+        return $data[0]['usr_last_login_date'];
+    }
 }

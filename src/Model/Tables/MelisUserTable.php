@@ -64,6 +64,20 @@ class MelisUserTable extends MelisGenericTable
 	
 		return $resultSet;
 	}
+
+    public function getLastLoggedInDate($userId)
+	{
+		$select = $this->tableGateway->getSql()->select();
+		$select->columns(['usr_last_login_date']);
+		$select->where('usr_id', $userId);
+		$select->where->isNotNull('usr_last_login_date');
+		$select->order('usr_last_login_date DESC');
+		$select->limit(1);
+	
+		$resultSet = $this->tableGateway->selectWith($select);
+	
+		return $resultSet;
+	}
 	
 
 	public function getDataByLoginAndEmail($login, $email)

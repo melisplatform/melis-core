@@ -22,6 +22,9 @@ return array(
     'tr_meliscore_login_errors_Empty datas' => 'Données vides',
     'tr_meliscore_login_auth_Successful authentication' => 'Authentification réussie',
     'tr_meliscore_login_auth_Failed authentication' => 'Echec de l\'authentification',
+    'tr_meliscore_login_auth_failed_too_many_failed_attempts' => 'Echec de l\'authentification. Attention, votre compte sera verrouillé après de nombreux échecs.',
+    'tr_meliscore_login_auth_account_is_locked_using_admin_option' => 'You reached the maximum amount of failed login attempts. Your account is now locked. Kindly contact an administrator for assistance at [email of site admin]',
+    'tr_meliscore_login_auth_account_is_locked_using_timer_option' => 'You reached the maximum amount of failed login attempts. Your account is now locked for %d days, %d hours and %d minutes.You may contact an administrator for assistance to unlock it faster.',
     'tr_meliscore_login_auth_failed_inactive' => 'Unable to login, inactive user',
     'tr_meliscore_login_pass_placeholder' => '(Ne pas remplir pour conserver le mot de passe actuel)',
 

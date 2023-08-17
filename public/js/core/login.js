@@ -15,7 +15,6 @@ $(function() {
                 window.location.replace("/melis");
             }
             else{
-
                 var errorTxt = "";
                 $.each(data.errors, function(i,v) {
                     errorTxt = v;
@@ -30,8 +29,35 @@ $(function() {
                 else {
                     melisCoreTool.alertDanger('#loginprompt', translations.tr_meliscore_common_error+"!", errorTxt);
                 }
-                $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
 
+                if (data.accountLocked) {
+                    let icon = "<div style='text-align: center;'><a href='#' class='glyphicons lock'><i></i></a></div>";
+
+                    if (data.accountLockType == 'admin') {
+                        let translation = translations.tr_meliscore_login_auth_account_is_locked_using_admin_option;
+
+                        if (data.accountLockAdminEmail) {
+                            melisHelper.melisKoNotification(icon, translation.replace('%s', data.accountLockAdminEmail), []);
+                        }
+                    } else if (data.accountLockType == 'timer') {
+                        let days = data.accountLockDurationInDays;
+                        let hours = data.accountLockDurationInHours;
+                        let minutes = data.accountLockDurationInMinutes;
+                        let translation = translations.tr_meliscore_login_auth_account_is_locked_using_timer_option;
+
+                        if (hours !== null) {
+                            let message = translation.replace('%d', days).replace('%d', hours).replace('%d', minutes);
+                            melisHelper.melisKoNotification(icon, message, []);
+                        } else {
+                            let message = translation.replace('%d', days).replace('%d', minutes);
+                            melisHelper.melisKoNotification(icon, message, []);
+                        }
+
+                        $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
+                        melisHelper.melisKoNotification(icon, message, []);
+                    }
+                }
+                $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");    
             }
         }).fail(function() {
             $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
