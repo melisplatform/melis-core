@@ -4872,3 +4872,9 @@ input#log_date_range {
   background: radial-gradient(#e61c23 0%, #e61c23 40%, transparent 50%, transparent);
   border-color: #e61c23;
 }
+
+.glyphicons.lock i::before {
+    font: 64px/1em 'Glyphicons Regular';
+	color: #e61c23;
+}
+

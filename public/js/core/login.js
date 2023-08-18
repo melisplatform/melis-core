@@ -40,18 +40,39 @@ $(function() {
                             melisHelper.melisKoNotification(icon, translation.replace('%s', data.accountLockAdminEmail), []);
                         }
                     } else if (data.accountLockType == 'timer') {
+                        let message = '';
                         let days = data.accountLockDurationInDays;
                         let hours = data.accountLockDurationInHours;
                         let minutes = data.accountLockDurationInMinutes;
-                        let translation = translations.tr_meliscore_login_auth_account_is_locked_using_timer_option;
+                        let daysString = translations.tr_meliscore_login_locked_in_days_message;
+                        let hoursString = translations.tr_meliscore_login_locked_in_hours_message;
+                        let minutesString = translations.tr_meliscore_login_locked_in_minutes_message;
+                        let durationString = '<b>';
+                        let components = [];
 
-                        if (hours !== null) {
-                            let message = translation.replace('%d', days).replace('%d', hours).replace('%d', minutes);
-                            melisHelper.melisKoNotification(icon, message, []);
-                        } else {
-                            let message = translation.replace('%d', days).replace('%d', minutes);
-                            melisHelper.melisKoNotification(icon, message, []);
+                        if (days > 0) {
+                            components.push(daysString.replace('%d', days));
                         }
+                        
+                        if (hours > 0) {
+                            components.push(hoursString.replace('%d', hours));
+                        }
+
+                        if (minutes > 0) {
+                            components.push(minutesString.replace('%d', minutes));
+                        }
+
+                        if (components.length === 1) {
+                            durationString += components[0] + "</b>.";
+                        } else {
+                            durationString += components.join(', ') + "</b>.";
+                        }
+
+                        let firstSentence = '<h4 style="text-align: center;">' + translations.tr_meliscore_login_maximum_amount_of_failed_login_attempts_message + '</h4>';
+                        let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_message + durationString + '</p>';
+                        let thirdSentence = '<p style="text-align: center;"><i>' + translations.tr_meliscore_login_contact_an_administrator_for_assistance_message + '</i></p>';
+                        message = firstSentence + secondSentence + thirdSentence;
+                        melisHelper.melisKoNotification(icon, message, []);
 
                         $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
                         melisHelper.melisKoNotification(icon, message, []);
