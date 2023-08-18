@@ -32,15 +32,17 @@ $(function() {
 
                 if (data.accountLocked) {
                     let icon = "<div style='text-align: center;'><a href='#' class='glyphicons lock'><i></i></a></div>";
+                    let message = '';
+                    let adminEmail = data.accountLockAdminEmail;
+                    let firstSentence = '<h4 style="margin-top: 10px; margin-bottom: 15px; text-align: center;">' + translations.tr_meliscore_login_maximum_amount_of_failed_login_attempts_message + '</h4>';
+                    let thirdSentence = '<p style="text-align: center;"><i>' + translations.tr_meliscore_login_contact_an_administrator_for_assistance_message.replace('%s', '<b>' + adminEmail + '</b>') + '</i></p>';
 
                     if (data.accountLockType == 'admin') {
-                        let translation = translations.tr_meliscore_login_auth_account_is_locked_using_admin_option;
-
-                        if (data.accountLockAdminEmail) {
-                            melisHelper.melisKoNotification(icon, translation.replace('%s', data.accountLockAdminEmail), []);
-                        }
+                        let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_message + '</p>';
+                        message = firstSentence + secondSentence + thirdSentence;
+                        melisHelper.melisKoNotification(icon, message, []);
+                        $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
                     } else if (data.accountLockType == 'timer') {
-                        let message = '';
                         let days = data.accountLockDurationInDays;
                         let hours = data.accountLockDurationInHours;
                         let minutes = data.accountLockDurationInMinutes;
@@ -68,14 +70,10 @@ $(function() {
                             durationString += components.join(', ') + "</b>.";
                         }
 
-                        let firstSentence = '<h4 style="text-align: center;">' + translations.tr_meliscore_login_maximum_amount_of_failed_login_attempts_message + '</h4>';
-                        let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_message + durationString + '</p>';
-                        let thirdSentence = '<p style="text-align: center;"><i>' + translations.tr_meliscore_login_contact_an_administrator_for_assistance_message + '</i></p>';
+                        let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_for_duration_message + durationString + '</p>';
                         message = firstSentence + secondSentence + thirdSentence;
                         melisHelper.melisKoNotification(icon, message, []);
-
                         $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
-                        melisHelper.melisKoNotification(icon, message, []);
                     }
                 }
                 $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");    
