@@ -252,9 +252,8 @@ class MelisCoreLogService  extends MelisGeneralService
 	        $userId = (int) $userAuthDatas->usr_id;
 	    }
 
-		// temporary solution. need to refactor this
 		if (in_array($arrayParameters['typeCode'], ['WRONG_LOGIN_CREDENTIALS', 'ACCOUNT_LOCKED', 'ACCOUNT_UNLOCKED'])) {
-			$userId = $itemId;
+			$userId = $arrayParameters['itemId'];
 		}
 
 	    // Checking if the Typecode exist, else this will save as new TypeCode entry

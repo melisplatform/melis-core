@@ -276,22 +276,15 @@ class MelisAuthController extends MelisAbstractActionController
                                         }
                                     }
                                 }
-                                
-//                                $userLastPassUpdate = $userData->usr_last_pass_update_date;
-//                                $melisConfig = $this->getServiceManager()->get('MelisCoreConfig');
-//                                $cfg = $melisConfig->getItem('meliscore/datas/default');
-//                                $expiry = $cfg['pwd_expiry'];
-//                                $isPassExpired = $userLastPassUpdate >= date('Y-m-d H:i:s',strtotime('-'.$expiry.' hours')) ? false : true;
                             }
                         }
                     }
 
-                    // refactor this
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php')) {
                         $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
-                        // check first if user account has been deactivated and also check if login account lock option is true and if lock type selected is timer
-                        // if it is the case, then check if duration for the login lock has lapsed
+                        // check first if login account lock option is true and if user account has been deactivated and also if lock type selected is timer
+                        // if it is the case, check if duration for the login lock has lapsed, if it has then user account gets reactivated
                         if (isset($config['login_account_lock_status']) 
                             && !empty($config['login_account_lock_status']) 
                             && $config['login_account_type_of_lock'] == 'timer'
@@ -304,7 +297,6 @@ class MelisAuthController extends MelisAbstractActionController
                                 $days = (int) $config['login_account_duration_days']; 
                                 $hours = (int) $config['login_account_duration_hours']; 
                                 $minutes = (int) $config['login_account_duration_minutes'];
-                                // Convert days and hours to the desired values
                                 $days += floor($hours / 24);
                                 $hours %= 24;
 
@@ -318,8 +310,8 @@ class MelisAuthController extends MelisAbstractActionController
                                 if ($currentDateTime > $accountWillUnlockDateTime) {
                                     $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
                                     // activate user's status
-                                    $melisUserTable->save(['usr_status' => 1], $userData->usr_id);
-                                    $userData->usr_status = 1;
+                                    $userData->usr_status = self::USER_ACTIVE;
+                                    $melisUserTable->save(['usr_status' => $userData->usr_status], $userData->usr_id);
                                     $result = [
                                         'success' => false,
                                         'errors' => ['empty' => $translator->translate('tr_meliscore_login_auth_failed_too_many_failed_attempts')],
@@ -453,7 +445,7 @@ class MelisAuthController extends MelisAbstractActionController
                                             $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
                                             
                                             // deactivate user's status
-                                            $melisUserTable->save(['usr_status' => 0], $userData->usr_id);
+                                            $melisUserTable->save(['usr_status' => self::USER_INACTIVE], $userData->usr_id);
                                             $result['textTitle'] = 'Account locked';
                                             $result['textMessage'] = 'Account locked';
                                             $result['accountLocked'] = true;
@@ -524,7 +516,7 @@ class MelisAuthController extends MelisAbstractActionController
                                 $melisUserTable = $this->getServiceManager()->get('MelisCore\Model\Tables\MelisUserTable');
 
                                 // deactivate user's status
-                                $melisUserTable->save(['usr_status' => 0], $userData->usr_id);
+                                $melisUserTable->save(['usr_status' => self::USER_INACTIVE], $userData->usr_id);
                                 $result['accountLocked'] = true;
                                 $result['accountLockType'] = $config['login_account_type_of_lock'];
                                 $result['accountLockAdminEmail'] = $config['login_account_admin_email'];
