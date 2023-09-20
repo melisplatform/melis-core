@@ -18,7 +18,8 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                             }, (i+1)*200);
                         }, (i+1)*800);
                     });
-
+                
+                console.log("MelisCoreDashboardBubbleNewsMelisPlugin.init() -> this.getNews()");
                 this.getNews();
             //}
     },
@@ -109,6 +110,8 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
                         $(this).append(newsNoImage);
                     });
                 }
+                
+                console.log("MelisCoreDashboardBubbleNewsMelisPlugin.getNews() response.data: ", response.data);
             });
         }).fail(function(xhr, textStatus, errorThrown) {
             alert( translations.tr_meliscore_error_message );
@@ -121,7 +124,9 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
 $(function() {
     var $body = $('body');
     var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
+    
     console.log("showBubblePlugins: ", showBubblePlugins);
+
     if (showBubblePlugins) {
         MelisCoreDashboardBubbleNewsMelisPlugin.init();
     }

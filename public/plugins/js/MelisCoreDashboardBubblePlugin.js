@@ -43,6 +43,7 @@ var MelisCoreDashboardBubblePlugin = {
     showBubblePlugins: function() {
         var cookies = document.cookie.split(';');
         var showBubblePlugins = false;
+        console.log("MelisCoreDashboardBubblePlugin.showBubblePlugins() cookies: ", cookies);
         $.each(cookies, function(key, cookie) {
             if (cookie.indexOf('show_bubble_plugins') >= 0) {
                 var value = cookie.split('=');
