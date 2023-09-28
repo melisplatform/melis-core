@@ -314,7 +314,7 @@ return array(
                         'id' => 'id_meliscore_header',
                         'melisKey' => 'meliscore_header',
                         'name' => 'tr_meliscore_header',
-                        'rightsDisplay' => 'none',
+                        // 'rightsDisplay' => 'none',
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
