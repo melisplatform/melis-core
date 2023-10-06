@@ -112,6 +112,7 @@
 
       var createTemplateList = function (editorSettings, callback) {
         return function () {
+          console.log("createTemplateList editorSettings: ", editorSettings);
           var templateList = Settings.getTemplates(editorSettings);
           if (typeof templateList === 'function') {
             templateList(callback);

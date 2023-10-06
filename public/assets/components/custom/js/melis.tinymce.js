@@ -71,7 +71,7 @@ var MelisTinymce = (function (window) {
             textarea: {
                 inline: true,
                 plugins: [
-                    "link code"
+                    "link", "code"
                 ],
                 menu: {
                     edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'}
@@ -79,16 +79,15 @@ var MelisTinymce = (function (window) {
                 menubar: "edit tools",
                 toolbar: "undo redo link unlink code",
                 statusbar: true,
-                forced_root_block: "",
+                forced_root_block: "div",
                 force_p_newlines: false
             },
             html: {
                 inline: true,
                 plugins: [
-                    //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
-                    "advlist autolink lists link image charmap print preview anchor",
-                    "searchreplace visualblocks code fullscreen",
-                    "insertdatetime media table paste"
+                    "advlist", "autolink", "lists", "link", "image", "charmap", "preview", "anchor",
+                    "searchreplace", "visualblocks", "code", "fullscreen",
+                    "insertdatetime", "media", "table"
                 ],
                 toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
                 menu: {
@@ -104,16 +103,15 @@ var MelisTinymce = (function (window) {
                 },
                 menubar: "edit insert view format table tools",
                 statusbar: true,
-                forced_root_block: "",
+                forced_root_block: "div",
                 force_p_newlines: false
             },
             media: {
                 inline: true,
                 plugins: [
-                    //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
-                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
-                    "save table directionality emoticons template paste code moxiemanager paste"
+                    "advlist", "autolink", "link", "image", "lists", "charmap", "preview", "anchor", "pagebreak", "spellchecker",
+                    "searchreplace", "wordcount", "visualblocks", "visualchars", "code", "fullscreen", "insertdatetime", "nonbreaking",
+                    "save", "table", "directionality", "emoticons", "template", "code", "moxiemanager"
                 ],
                 menu: {
                     edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
@@ -123,7 +121,7 @@ var MelisTinymce = (function (window) {
                 menubar: "edit insert view",
                 toolbar: "insertfile undo redo link image media | code",
                 statusbar: true,
-                forced_root_block: "",
+                forced_root_block: "div",
                 force_p_newlines: false
             }
         }

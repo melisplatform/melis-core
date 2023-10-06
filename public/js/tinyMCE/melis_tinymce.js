@@ -15,6 +15,7 @@ var melisTinyMCE = (function() {
 
 	// This method will initialize an editor after requesting the TinyMCE configuration
 	function createTinyMCE(type, selector, options) {
+		console.log("melis_tinymce.js createTinyMCE!!!");
 		if (!type) type = "";
 		if (!selector) selector = "";
 		if (!options) options = null;
@@ -54,6 +55,14 @@ var melisTinyMCE = (function() {
 				config["file_picker_callback"] = eval(config["file_picker_callback"]);
 			}
 
+			if (config["setup"]) {
+				config["setup"] = eval(config["setup"]);
+			}
+
+			if (config["init_instance_callback"]) {
+				config["init_instance_callback"] = eval(config["init_instance_callback"]);
+			}
+
 			// Initializing TinyMCE with the request Configurations
 			tinyMCE.init(config);
 		}, 1000);
@@ -66,6 +75,7 @@ var melisTinyMCE = (function() {
 	}
 
 	filePickerCallback = function(cb, value, meta) {
+		console.log("filePickerCallback!!!");
 		var input = document.createElement("input");
 		input.setAttribute("type", "file");
 		input.setAttribute("accept", "image/*");
@@ -107,6 +117,7 @@ var melisTinyMCE = (function() {
 
 	// TinyMCE  action event
 	function tinyMceActionEvent(editor) {
+		console.log("tinyMceActionEvent(editor)!!!");
 		editor.on("change", function() {
 			// Any changes will sync to the selector (Ex. textarea)
 			// tinymce.triggerSave();
@@ -122,40 +133,40 @@ var melisTinyMCE = (function() {
 	function tinyMceOpenDialog(editor) {
 		var $body = $("body");
 
-		editor.windowManager.oldOpen = editor.windowManager.open; // save for later
-		editor.windowManager.open = function(t, r) {
-			// replace with our own function
-			var modal = this.oldOpen.apply(this, [t, r]); // call original
-			var editLinkTitle =
-				translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
-			var insertMiniTemplateTitle =
-				translations.tr_meliscore_tinymce_mini_template_add_button_tooltip;
+			editor.windowManager.oldOpen = editor.windowManager.open; // save for later
+			editor.windowManager.open = function(t, r) {
+				// replace with our own function
+				var modal = this.oldOpen.apply(this, [t, r]); // call original
+				var editLinkTitle =
+					translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
+				var insertMiniTemplateTitle =
+					translations.tr_meliscore_tinymce_mini_template_add_button_tooltip;
 
-			// adding of add tree view button from dialog initialization
-			if (t.title === editLinkTitle && typeof melisLinkTree != "undefined") {
-				$(".tox-form__controls-h-stack").append(
-					'<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
-				);
+				// adding of add tree view button from dialog initialization
+				if (t.title === editLinkTitle && typeof melisLinkTree != "undefined") {
+					$(".tox-form__controls-h-stack").append(
+						'<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
+					);
 
-				$body.on("click", "#mce-link-tree", function() {
-					melisLinkTree.createTreeModal();
-				});
-			}
+					$body.on("click", "#mce-link-tree", function() {
+						melisLinkTree.createTreeModal();
+					});
+				}
 
-			// resize dialog to full width on mini templates
-			if (t.title === insertMiniTemplateTitle) {
-				$(".tox-dialog").css("max-width", "100%");
-			}
+				// resize dialog to full width on mini templates
+				if (t.title === insertMiniTemplateTitle) {
+					$(".tox-dialog").css("max-width", "100%");
+				}
 
-			var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
+				var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
 
-			if ($dialog.length) {
-				// window.parent.melisCms.modalPopUp(); // in melisCms.js but not used
-				modalPopUp();
-			}
+				if ($dialog.length) {
+					// window.parent.melisCms.modalPopUp(); // in melisCms.js but not used
+					modalPopUp();
+				}
 
-			return modal; // Template plugin is dependent on this return value
-		};
+				return modal; // Template plugin is dependent on this return value
+			};
 	}
 
 	// Stating zone to loading
