@@ -109,7 +109,7 @@ var MelisTinymce = (function (window) {
             media: {
                 inline: true,
                 plugins: [
-                    "advlist", "autolink", "link", "image", "lists", "charmap", "preview", "anchor", "pagebreak", "spellchecker",
+                    "advlist", "autolink", "link", "image", "lists", "charmap", "preview", "anchor", "pagebreak",
                     "searchreplace", "wordcount", "visualblocks", "visualchars", "code", "fullscreen", "insertdatetime", "nonbreaking",
                     "save", "table", "directionality", "emoticons", "template", "code", "moxiemanager"
                 ],
