@@ -91,4 +91,64 @@ class MelisLogTable extends MelisGenericTable
 	    $resultSet = $this->tableGateway->selectWith($select);
 	    return $resultSet;
 	}
+
+	public function getFailedLoginAttempts($logTypeId, $userId, $date)
+	{
+		$select = $this->getTableGateway()->getSql()->select();
+		
+		if (!empty($logTypeId) && !empty($userId) && !empty($date)) {
+			$select->columns(['count' => new \Laminas\Db\Sql\Expression('COUNT(*)')])
+				   ->where('log_type_id = ' . $logTypeId)
+				   ->where('log_user_id = ' . $userId)
+				   ->where('log_date_added >= "' . $date . '"');
+		}
+		
+		$resultSet = $this->getTableGateway()->selectWith($select);
+		
+		if (!is_null($resultSet)) {
+			return $resultSet->toArray()[0]['count'];
+		}
+	}
+
+	public function getDateAccountWasLocked($logTypeId, $userId)
+	{
+		$select = $this->getTableGateway()->getSql()->select();
+		
+		if (!empty($logTypeId) && !empty($userId)) {
+			$select->columns(['log_date_added'])
+				   ->where('log_type_id = ' . $logTypeId)
+				   ->where('log_user_id = ' . $userId)
+				   ->order('log_id DESC')
+				   ->limit(1);		
+		}
+		
+		$resultSet = $this->getTableGateway()->selectWith($select);
+		
+		if (!empty($resultSet->toArray())) {
+			return $resultSet->toArray()[0]['log_date_added'];
+		}
+
+		return null;
+	}
+
+	public function getDateAccountWasUnlocked($logTypeId, $userId)
+	{
+		$select = $this->getTableGateway()->getSql()->select();
+		
+		if (!empty($logTypeId) && !empty($userId)) {
+			$select->columns(['log_date_added'])
+				   ->where('log_type_id = ' . $logTypeId)
+				   ->where('log_user_id = ' . $userId)
+				   ->order('log_id DESC')
+				   ->limit(1);		
+		}
+		
+		$resultSet = $this->getTableGateway()->selectWith($select);
+		
+		if (!empty($resultSet->toArray())) {
+			return $resultSet->toArray()[0]['log_date_added'];
+		}
+
+		return null;
+	}
 }

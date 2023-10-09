@@ -20,6 +20,9 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
 
     const OLD_MELISCMS_TOOLSTREE = 'meliscms_toolstree';
 
+    const MELISCORE_PREFIX_INTERFACE_GROUP_NAME_EXCLUSION = 'Exclusion';
+    const MELISCORE_PREFIX_INTERFACE_GROUP_NAME_MODULE = 'Module';
+
     /** @var array */
     private $tools = [];
     /** @var string|null - cache holder for section parents */
@@ -373,6 +376,16 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
             }
         }
 
+        /**
+         * This will check if what group should we display the interface
+         *
+         * if rightsDisplayGroup is empty or not specify, it will display on each group
+         */
+        if(isset($configInterface['conf']['user_rights_interface_group'])){//if it set, check which group should we allowed to display it
+            if($configInterface['conf']['user_rights_interface_group'] != self::MELISCORE_PREFIX_INTERFACE_GROUP_NAME_EXCLUSION)
+                return null;
+        }
+
         $selectedInterface = $melisCoreUser->isItemRightChecked($userXml, self::MELISCORE_PREFIX_INTERFACE, $keyInterface);
         $keyPrefixed = self::MELISCORE_PREFIX_INTERFACE . '_' . $keyInterface;
 
@@ -470,6 +483,16 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                 // first level, sections
                 $appCtr = 0;
                 foreach ($appsConfig['interface'] as $appKey => $appSection) {
+                    /**
+                     * This will check if what group should we display the interface
+                     *
+                     * if rights_display_group is empty or not specify, it will display on each group
+                     */
+                    if(isset($appSection['conf']['user_rights_interface_group'])){//if it set, check which group should we allowed to display it
+                        if($appSection['conf']['user_rights_interface_group'] != self::MELISCORE_PREFIX_INTERFACE_GROUP_NAME_MODULE)
+                            continue;
+                    }
+
                     $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $appKey);
                     $tools[$idx]['children'][$appCtr] = [
                         'key' => $appKey,
@@ -487,6 +510,16 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                     $appToolCtr = 0;
                     if (isset($appSection['interface'])) {
                         foreach ($appSection['interface'] as $toolKey => $toolName) {
+                            /**
+                             * This will check if what group should we display the interface
+                             *
+                             * if rights_display_group is empty or not specify, it will display on each group
+                             */
+                            if(isset($toolName['conf']['user_rights_interface_group'])){//if it set, check which group should we allowed to display it
+                                if($toolName['conf']['user_rights_interface_group'] != self::MELISCORE_PREFIX_INTERFACE_GROUP_NAME_MODULE)
+                                    continue;
+                            }
+
                             $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELIS_PLATFORM_TOOLS_PREFIX, $toolKey);
                             $icon = $toolName['conf']['icon'] ?? null;
 

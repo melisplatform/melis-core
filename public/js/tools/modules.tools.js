@@ -177,7 +177,7 @@ $(function() {
             let mergedData = $('#id_meliscore_tool_other_config form').map(function() {
                 return $(this).serializeArray();
             }).get().flat();
-            
+
             var btn = $(this);
 
             $("body").find('#id_meliscore_tool_other_config form .make-switch div').each(function () {
