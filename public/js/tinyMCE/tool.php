@@ -12,7 +12,7 @@
 		'branding' => false,
 		'inline' => false,
 		'menubar' => false,
-		'templates' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
+		// 'templates' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
 		'forced_root_block' => 'div',
 		// 'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
 		'cleanup' => false,
@@ -23,13 +23,13 @@
         'images_upload_url' => '/melis/MelisCore/MelisTinyMce/uploadImage',
 		'plugins' => [
            'lists', 'advlist', 'autolink', 'link', 'image', 'charmap', 'preview', 'anchor', 'help', 'nonbreaking', 
-		   'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 'table', 'minitemplate'
+		   'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 'table'// 'minitemplate'
 		],
-		'external_plugins' => [
-			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js?v=20210325',			
-		],
+		/* 'external_plugins' => [
+			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js?v=20210325',
+		], */
         'image_advtab' => true,
-        'toolbar' => 'insertfile undo redo | formatselect | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media minitemplate | code',
+        'toolbar' => 'insertfile undo redo | formatselect | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code',
 		'deprecation_warnings' => false,
         'setup' => 'melisTinyMCE.tinyMceActionEvent',
         'init_instance_callback' => 'tinyMceCleaner' // melis-core/public/js/tinyMCE/tinymce_cleaner.js
@@ -44,7 +44,7 @@
 	'branding' => false,
 	'inline' => false,
 	'menubar' => false,
-	'forced_root_block' => '',
+	'forced_root_block' => 'div',
 	'cleanup' => false,
 	'verify_html' => false,
     'paste_auto_cleanup_on_paste' => true,
