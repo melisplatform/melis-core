@@ -71,49 +71,78 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
         $this->setValue($password);
         $isValid = true;
 
+        if (!empty($this->config('password_complexity_use_lower_case'))) {
+            if (!preg_match('/[a-z]/', $password)) {
+                $isValid = false;
+
+                $this->displayAllPasswordComplexityErrorMessages();
+            }
+        }
+        
+        if (!empty($this->config('password_complexity_use_upper_case'))) {
+            if (!preg_match('/[A-Z]/', $password)) {
+                $isValid = false;
+
+                $this->displayAllPasswordComplexityErrorMessages();
+            }
+        }
+
         if (!empty($this->config('password_complexity_number_of_characters'))) {
             $minimumNumberOfCharacters = $this->config('password_complexity_number_of_characters');
 
             if (strlen($password) < $minimumNumberOfCharacters) {
-                $this->options['min'] = $minimumNumberOfCharacters;
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_too_short'), self::TOO_SHORT);
-                $this->error(self::TOO_SHORT);
                 $isValid = false;
-            }
-        }
-        
-        if (!empty($this->config('password_complexity_use_lower_case'))) {
-            if (!preg_match('/[a-z]/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_lower'), self::NO_LOWER);
-                $this->error(self::NO_LOWER);
-                $isValid = false;
-            }
-        }
-        
-        if (!empty($this->config('password_complexity_use_digit'))) {
-            if (!preg_match('/\d/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_digit'), self::NO_DIGIT);
-                $this->error(self::NO_DIGIT);
-                $isValid = false;
+
+                $this->displayAllPasswordComplexityErrorMessages();
             }
         }
 
-        if (!empty($this->config('password_complexity_use_upper_case'))) {
-            if (!preg_match('/[A-Z]/', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_upper'), self::NO_UPPER);
-                $this->error(self::NO_UPPER);
+        if (!empty($this->config('password_complexity_use_digit'))) {
+            if (!preg_match('/\d/', $password)) {
                 $isValid = false;
+
+                $this->displayAllPasswordComplexityErrorMessages();
             }
         }
 
         if (!empty($this->config('password_complexity_use_special_characters'))) {
             if (!preg_match('/[\p{P}\p{S}]/u', $password)) {
-                $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_special_character'), self::NO_SPECIAL_CHARACTER);
-                $this->error(self::NO_SPECIAL_CHARACTER);
                 $isValid = false;
+
+                $this->displayAllPasswordComplexityErrorMessages();
             }
         }
 
         return $isValid;
+    }
+
+    private function displayAllPasswordComplexityErrorMessages(): void
+    {
+        if (!empty($this->config('password_complexity_use_lower_case'))) {
+            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_lower'), self::NO_LOWER);
+            $this->error(self::NO_LOWER);
+        }
+
+        if (!empty($this->config('password_complexity_use_upper_case'))) {
+            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_upper'), self::NO_UPPER);
+            $this->error(self::NO_UPPER);
+        }
+
+        if (!empty($this->config('password_complexity_number_of_characters'))) {
+            $minimumNumberOfCharacters = $this->config('password_complexity_number_of_characters');
+            $this->options['min'] = $minimumNumberOfCharacters;
+            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_too_short'), self::TOO_SHORT);
+            $this->error(self::TOO_SHORT);
+        }
+
+        if (!empty($this->config('password_complexity_use_digit'))) {
+            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_digit'), self::NO_DIGIT);
+            $this->error(self::NO_DIGIT);
+        }
+
+        if (!empty($this->config('password_complexity_use_special_characters'))) {
+            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_special_character'), self::NO_SPECIAL_CHARACTER);
+            $this->error(self::NO_SPECIAL_CHARACTER);
+        }
     }
 }
