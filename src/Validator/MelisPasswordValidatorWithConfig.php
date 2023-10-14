@@ -12,6 +12,8 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
     const NO_DIGIT  = 'digit';
     const NO_UPPER  = 'upper';
     const NO_SPECIAL_CHARACTER = 'special_character';
+    const ICON_SUCCESS = "&#x2705;";
+    const ICON_FAIL = "&#10060;";
     
     protected $serviceManager;
 
@@ -31,7 +33,7 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
     );
     
     protected $options = array(
-        'min'      => 8,       // Default/Minimum length
+        'min' => 8,       // Default/Minimum length
     );
 
     public function __construct($options = array())
@@ -70,79 +72,96 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
     {
         $this->setValue($password);
         $isValid = true;
+        $data = [];
 
         if (!empty($this->config('password_complexity_use_lower_case'))) {
             if (!preg_match('/[a-z]/', $password)) {
                 $isValid = false;
-
-                $this->displayAllPasswordComplexityErrorMessages();
+                $icon = SELF::ICON_FAIL;
+            } else {
+                $icon = SELF::ICON_SUCCESS;
             }
+
+            $data[] = [
+                'sentence' => 'tr_meliscore_other_config_password_no_lower',
+                'reference' => self::NO_LOWER,
+                'icon' => $icon,
+            ];
         }
         
         if (!empty($this->config('password_complexity_use_upper_case'))) {
             if (!preg_match('/[A-Z]/', $password)) {
                 $isValid = false;
-
-                $this->displayAllPasswordComplexityErrorMessages();
+                $icon = SELF::ICON_FAIL;
+            } else {
+                $icon = SELF::ICON_SUCCESS;
             }
-        }
 
-        if (!empty($this->config('password_complexity_number_of_characters'))) {
-            $minimumNumberOfCharacters = $this->config('password_complexity_number_of_characters');
-
-            if (strlen($password) < $minimumNumberOfCharacters) {
-                $isValid = false;
-
-                $this->displayAllPasswordComplexityErrorMessages();
-            }
-        }
-
-        if (!empty($this->config('password_complexity_use_digit'))) {
-            if (!preg_match('/\d/', $password)) {
-                $isValid = false;
-
-                $this->displayAllPasswordComplexityErrorMessages();
-            }
-        }
-
-        if (!empty($this->config('password_complexity_use_special_characters'))) {
-            if (!preg_match('/[\p{P}\p{S}]/u', $password)) {
-                $isValid = false;
-
-                $this->displayAllPasswordComplexityErrorMessages();
-            }
-        }
-
-        return $isValid;
-    }
-
-    private function displayAllPasswordComplexityErrorMessages(): void
-    {
-        if (!empty($this->config('password_complexity_use_lower_case'))) {
-            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_lower'), self::NO_LOWER);
-            $this->error(self::NO_LOWER);
-        }
-
-        if (!empty($this->config('password_complexity_use_upper_case'))) {
-            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_upper'), self::NO_UPPER);
-            $this->error(self::NO_UPPER);
+            $data[] = [
+                'sentence' => 'tr_meliscore_other_config_password_no_upper',
+                'reference' => self::NO_UPPER,
+                'icon' => $icon,
+            ];
         }
 
         if (!empty($this->config('password_complexity_number_of_characters'))) {
             $minimumNumberOfCharacters = $this->config('password_complexity_number_of_characters');
             $this->options['min'] = $minimumNumberOfCharacters;
-            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_too_short'), self::TOO_SHORT);
-            $this->error(self::TOO_SHORT);
+
+            if (strlen($password) < $minimumNumberOfCharacters) {
+                $isValid = false;
+                $icon = SELF::ICON_FAIL;
+            } else {
+                $icon = SELF::ICON_SUCCESS;
+            }
+
+            $data[] = [
+                'sentence' => 'tr_meliscore_other_config_password_too_short',
+                'reference' => self::TOO_SHORT,
+                'icon' => $icon,
+            ];
         }
 
         if (!empty($this->config('password_complexity_use_digit'))) {
-            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_digit'), self::NO_DIGIT);
-            $this->error(self::NO_DIGIT);
+            if (!preg_match('/\d/', $password)) {
+                $isValid = false;
+                $icon = SELF::ICON_FAIL;
+            } else {
+                $icon = SELF::ICON_SUCCESS;
+            }
+
+            $data[] = [
+                'sentence' => 'tr_meliscore_other_config_password_no_digit',
+                'reference' => self::NO_DIGIT,
+                'icon' => $icon,
+            ];
         }
 
         if (!empty($this->config('password_complexity_use_special_characters'))) {
-            $this->setMessage($this->translator()->translate('tr_meliscore_other_config_password_no_special_character'), self::NO_SPECIAL_CHARACTER);
-            $this->error(self::NO_SPECIAL_CHARACTER);
+            if (!preg_match('/[\p{P}\p{S}]/u', $password)) {
+                $isValid = false;
+                $icon = SELF::ICON_FAIL;
+            } else {
+                $icon = SELF::ICON_SUCCESS;
+            }
+
+            $data[] = [
+                'sentence' => 'tr_meliscore_other_config_password_no_special_character',
+                'reference' => self::NO_SPECIAL_CHARACTER,
+                'icon' => $icon,
+            ];
+        }
+
+        $this->displayAllPasswordComplexityErrorMessages($data);
+
+        return $isValid;
+    }
+
+    private function displayAllPasswordComplexityErrorMessages(array $messages): void
+    {
+        foreach ($messages as $key => $message) {
+            $this->setMessage($this->translator()->translate($message['sentence']) . ' ' . $message['icon'], $message['reference']);
+            $this->error($message['reference']);
         }
     }
 }
