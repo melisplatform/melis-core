@@ -33,7 +33,7 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
     );
     
     protected $options = array(
-        'min' => 8,       // Default/Minimum length
+        'min' => 8, // Default/Minimum length
     );
 
     public function __construct($options = array())
@@ -160,7 +160,7 @@ class MelisPasswordValidatorWithConfig extends AbstractValidator
     private function displayAllPasswordComplexityErrorMessages(array $messages): void
     {
         foreach ($messages as $key => $message) {
-            $this->setMessage($this->translator()->translate($message['sentence']) . ' ' . $message['icon'], $message['reference']);
+            $this->setMessage($message['icon'] . ' ' . $this->translator()->translate($message['sentence']), $message['reference']);
             $this->error($message['reference']);
         }
     }

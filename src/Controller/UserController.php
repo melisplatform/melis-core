@@ -333,14 +333,13 @@ class UserController extends MelisAbstractActionController
                         $success = true;
                     } else {
                         $errorMessages = $passValidator->getMessages();
-                        
-                        $textMessage = "<ul>";
+
+                        $textMessage = '<br>';
                         
                         foreach ($errorMessages as $message) {
-                            $textMessage .= "<li>" . $message . "</li>";
+                            $textMessage .= $message . "<br>";
                         }
                         
-                        $textMessage .= "</ul>";
                         $success = false;
                     }
                 }
@@ -693,14 +692,13 @@ class UserController extends MelisAbstractActionController
                             $success = true;
                         } else {
                             $errorMessages = $passValidator->getMessages();
-                            
-                            $textMessage = "<ul>";
-                            
+
+                            $textMessage = '<br>';
+                        
                             foreach ($errorMessages as $message) {
-                                $textMessage .= "<li>" . $message . "</li>";
+                                $textMessage .= $message . "<br>";
                             }
                             
-                            $textMessage .= "</ul>";
                             $success = false;
                         }
                     }
