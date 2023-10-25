@@ -158,6 +158,10 @@ var melisCore = (function(window){
         });
     }
 
+    $body.on("click", "a", function(e) {
+        if ( $(this).attr("href") === "#" ) e.preventDefault();
+    });
+
     $body.on("click", "#btnResetRights", function(){
 
         melisCoreTool.pending("#btnResetRights");

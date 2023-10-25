@@ -1632,45 +1632,59 @@ a[data-toggle="modal"]:focus {
 }
 
 .widget-melis-tabprev {
+display: none;
+float: left;
+cursor: pointer;
+-webkit-transition: all 0.4s ease-in-out;
+-moz-transition: all 0.4s ease-in-out;
+-ms-transition: all 0.4s ease-in-out;
+-o-transition: all 0.4s ease-in-out;
+transition: all 0.4s ease-in-out;
+}
+.widget-melis-tabprev .fa {
+	padding: 9px 10px;
+	color: #fff;
+}
+.widget-melis-tabnext {
 	display: none;
-	float: left;
+	float: right;
 	cursor: pointer;
 	-webkit-transition: all 0.4s ease-in-out;
 	-moz-transition: all 0.4s ease-in-out;
 	-ms-transition: all 0.4s ease-in-out;
 	-o-transition: all 0.4s ease-in-out;
 	transition: all 0.4s ease-in-out;
-  }
-  .widget-melis-tabprev .fa {
-	  padding: 9px 10px;
-	  color: #fff;
-  }
-  .widget-melis-tabnext {
-	  display: none;
-	  float: right;
-	  cursor: pointer;
-	  -webkit-transition: all 0.4s ease-in-out;
-	  -moz-transition: all 0.4s ease-in-out;
-	  -ms-transition: all 0.4s ease-in-out;
-	  -o-transition: all 0.4s ease-in-out;
-	  transition: all 0.4s ease-in-out;
-  }
-  .widget-melis-tabnext .fa {
-	  padding: 9px 10px;
-	  color: #fff;
-  }
-  .widget-melis-tabprev:hover,
-  .widget-melis-tabnext:hover {
-	  background: #fff;
-  }
-  .widget-melis-tabprev:hover .fa,
-  .widget-melis-tabnext:hover .fa {
-	  color: #e61c23;
-  }
-  .widget-melis-tabprev.active {
-	  display: inline-block;
-  }
-  
-  .widget-melis-tabnext.active {
-	  display: inline-block;
-  }
+}
+.widget-melis-tabnext .fa {
+	padding: 9px 10px;
+	color: #fff;
+}
+.widget-melis-tabprev:hover,
+.widget-melis-tabnext:hover {
+	background: #fff;
+}
+.widget-melis-tabprev:hover .fa,
+.widget-melis-tabnext:hover .fa {
+	color: #e61c23;
+}
+.widget-melis-tabprev.active {
+	display: inline-block;
+}
+
+.widget-melis-tabnext.active {
+	display: inline-block;
+}
+/**
+ * Custom button in tinymce Insert/Edit Link dialog box
+ */
+#mce-link-tree {
+	width: 34px;
+	height: 34px;
+}
+#mce-link-tree i {
+	font-family: FontAwesome;
+    position: relative;
+    font-size: 16px;
+    display: block;
+    text-align: center;
+}

@@ -32,9 +32,12 @@ var melisTinyMCE = (function() {
 				options
 			);
 
-			if (options.hasOwnProperty("templates")) {
+			/* if (options.hasOwnProperty("templates")) {
 				options.templates = options.templates;
-			}
+			} */
+
+			/* console.log("options.hasOwnProperty('templates'): ", options.hasOwnProperty("templates"));
+			console.log("options.templates: ", options.templates); */
 
 			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
 
@@ -117,55 +120,131 @@ var melisTinyMCE = (function() {
 
 	// TinyMCE  action event
 	function tinyMceActionEvent(editor) {
-		console.log("tinyMceActionEvent(editor)!!!");
+		
+		// console.log("editor settings language: ", editor.settings.language);
 		editor.on("change", function() {
 			// Any changes will sync to the selector (Ex. textarea)
 			// tinymce.triggerSave();
 			editor.save();
 		});
 
-		editor.on("init", function() {
+		/* editor.on("init", function() {
 			tinyMceOpenDialog(editor);
+		}); */
+
+		// for Insert/Edit Link
+		editor.on("ExecCommand", function(e) {
+			console.log("e.command: ", e.command);
+
+			// if the command refers to link dialog opening
+			if ( e.command === "mceLink" ) {
+				// wait for DOM to update
+				setTimeout(function() {
+					const $dialogBody 		= document.querySelector(".tox-dialog__body-content"),
+					 	  $browseUrl 		= $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
+
+						// creates new custom button and set attributes
+						let $customButton = document.createElement("button");
+
+							$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
+							$customButton.classList.add("mce-btn", "mce-open");
+
+							window.parent.melisCoreTool.setMultipleAttributes($customButton, { 
+								"title" : "Site tree view",
+								"id"	: "mce-link-tree",
+								"style" : "width: 34px; height: 34px;"
+							});
+
+							// scroll to view dialog box
+							modalPopUp();
+
+							// insert the new button after browse URL button
+							$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
+
+							// event handler of new button
+							$customButton.onclick = function() {
+								// show modal for #id_meliscms_find_page_tree
+								melisLinkTree.createTreeModal();
+
+								let $modalTree = document.getElementById("id_meliscms_find_page_tree");
+									console.log("$modalTree !== null: ", $modalTree !== null);
+									if ( $modalTree !== null ) {
+										let $modalTreeCancel 	= $modalTree.querySelector(".btn-danger"),
+											$modalTreeInsert 	= $modalTree.querySelector(".btn-success");
+
+											$modalTreeCancel.onclick = function() {
+												// scroll to view dialog box
+												modalPopUp();
+
+												console.log("$modalTreeCancel clicked!!!");
+											};
+
+											$modalTreeInsert.onclick = function() {
+												// scroll to view dialog box
+												modalPopUp();
+
+												console.log("$modalTreeInsert clicked!!!");
+											};
+									}
+							};						
+				}, 1);
+			}
 		});
 	}
 
 	// opening of tinymce dialog
 	function tinyMceOpenDialog(editor) {
+		//console.log("tinyMceOpenDialog(editor): ", editor);
 		var $body = $("body");
 
+			//console.log("editor.windowManager: ", editor.windowManager);
+
 			editor.windowManager.oldOpen = editor.windowManager.open; // save for later
+
 			editor.windowManager.open = function(t, r) {
-				// replace with our own function
-				var modal = this.oldOpen.apply(this, [t, r]); // call original
 				var editLinkTitle =
 					translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
 				var insertMiniTemplateTitle =
 					translations.tr_meliscore_tinymce_mini_template_add_button_tooltip;
 
-				// adding of add tree view button from dialog initialization
-				if (t.title === editLinkTitle && typeof melisLinkTree != "undefined") {
-					$(".tox-form__controls-h-stack").append(
-						'<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
-					);
+					// console.log("r: ", r);
 
-					$body.on("click", "#mce-link-tree", function() {
-						melisLinkTree.createTreeModal();
-					});
-				}
+					console.log("modal, t.title: ", t.title);
+					//console.log("editLinkTitle: ", editLinkTitle);
 
-				// resize dialog to full width on mini templates
-				if (t.title === insertMiniTemplateTitle) {
-					$(".tox-dialog").css("max-width", "100%");
-				}
+					console.log("typeof melisLinkTree != undefined: ", typeof melisLinkTree != "undefined");
+					// adding of add tree view button from dialog initialization
+					if (t.title === editLinkTitle && typeof melisLinkTree != "undefined") {
+						$(".tox-form__controls-h-stack").append(
+							'<button title="Site tree view" id="mce-link-tree" class="mce-btn mce-open" style="width: 34px; height: 34px;"><i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i></button>'
+						);
 
-				var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
+						$body.on("click", "#mce-link-tree", function() {
+							melisLinkTree.createTreeModal();
+						});
+					}
 
-				if ($dialog.length) {
-					// window.parent.melisCms.modalPopUp(); // in melisCms.js but not used
-					modalPopUp();
-				}
+					// replace with our own function
+					var modal = this.oldOpen.apply(this, [t, r]); // call original
+				
+					// resize dialog to full width on mini templates
+					if (t.title === insertMiniTemplateTitle) {
+						$(".tox-dialog").css("max-width", "100%");
+					}
 
-				return modal; // Template plugin is dependent on this return value
+					//var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
+
+					//if ($dialog.length) {
+						// window.parent.melisCms.modalPopUp(); 
+						modalPopUp(); // in melisCms.js but not used
+					//}
+
+					// console.log("editor.windowManager.open function modal: ", modal);
+					// console.log("editor.windowManager.open this.oldOpen.apply: ", this.oldOpen(this, [t, r]));
+
+					return modal; // Template plugin is dependent on this return value
+					//return editor.windowManager.open;
+					//return this;
 			};
 	}
 
@@ -188,39 +267,40 @@ var melisTinyMCE = (function() {
 
 	// modal pop up tinymce melis-core
 	function modalPopUp() {
+		console.log("modalPopUp()!!!");
 		// OPENING THE POPUP
-		var $body = $("body"),
-			$mcePopUp = $body.find(".tox-tinymce-aux"), // #mce-modal-block [.tox-tinymce-aux]
-			$dialog = $body.find(".tox-dialog"),
-			$iframe = window.parent.$(".melis-iframe");
+		var $body 		= $("body"),
+			$mcePopUp 	= $body.find(".tox-tinymce-aux"), // #mce-modal-block [.tox-tinymce-aux]
+			$dialog 	= $body.find(".tox-dialog"),
+			$iframe 	= window.parent.$(".melis-iframe");
 
-		if ($mcePopUp.length) {
-			if ($iframe.length) {
-				// iframe height
-				var iframeHeight = $(window).height(),
-					// iframe offset
-					$iframeOffset = $iframe.position().top,
-					// dialog box height .mce-window [.dialog]
-					dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
+			if ($mcePopUp.length) {
+				if ($iframe.length) {
+					// iframe height
+					var iframeHeight = $(window).height(),
+						// iframe offset
+						$iframeOffset = $iframe.position().top,
+						// dialog box height .mce-window [.dialog]
+						dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
 
-				parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
-			} else {
-				var bodyHeight = window.parent.$("body").height(),
-					dialogHeight = $dialog.outerHeight();
+					parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
+				} else {
+					var bodyHeight = window.parent.$("body").height(),
+						dialogHeight = $dialog.outerHeight();
 
-				parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
-			}
-
-			// CLOSING THE POPUP
-			var timeOut = setInterval(function() {
-				if (!$dialog.is(":visible")) {
-					window.parent
-						.$("body")
-						.animate({ scrollTop: parent.scrollOffsetTinyMCE() }, 200);
-					clearTimeout(timeOut);
+					parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
 				}
-			}, 300);
-		}
+
+				// CLOSING THE POPUP
+				var timeOut = setInterval(function() {
+					if (!$dialog.is(":visible")) {
+						window.parent
+							.$("body")
+							.animate({ scrollTop: parent.scrollOffsetTinyMCE() }, 200);
+						clearTimeout(timeOut);
+					}
+				}, 300);
+			}
 	}
 
 	function addMelisCss() {

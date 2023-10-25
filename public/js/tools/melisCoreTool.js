@@ -295,6 +295,15 @@ var melisCoreTool = (function (window) {
                 }
         }, 2000);
     }
+
+    /**
+     * set multiple attributes on element
+     */
+    function setMultipleAttributes(elem, elemAttributes) {
+        for ( let i in elemAttributes ) {
+            elem.setAttribute(i, elemAttributes[i]);
+        }
+    }
     
     return {
         // modal
@@ -344,6 +353,8 @@ var melisCoreTool = (function (window) {
         removeOverflowHidden : removeOverflowHidden,
 
         // adds a class on body tag
-        addBodyClass : addBodyClass
+        addBodyClass : addBodyClass,
+
+        setMultipleAttributes : setMultipleAttributes
     }
 })(window);

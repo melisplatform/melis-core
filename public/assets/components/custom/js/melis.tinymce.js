@@ -111,7 +111,7 @@ var MelisTinymce = (function (window) {
                 plugins: [
                     "advlist", "autolink", "link", "image", "lists", "charmap", "preview", "anchor", "pagebreak",
                     "searchreplace", "wordcount", "visualblocks", "visualchars", "code", "fullscreen", "insertdatetime", "nonbreaking",
-                    "save", "table", "directionality", "emoticons", "code", "moxiemanager"
+                    "save", "table", "directionality", "emoticons", "code"//"moxiemanager"
                 ],
                 menu: {
                     edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
