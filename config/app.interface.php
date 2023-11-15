@@ -676,7 +676,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -749,7 +749,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -825,7 +825,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -899,7 +899,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -973,7 +973,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
