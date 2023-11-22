@@ -1,5 +1,4 @@
 function tinyMceCleaner(editor) {
-	console.log("tinymce_cleaner.js tinyMceCleaner!!!");
 	editor.serializer.addNodeFilter('script,style', function(nodes, name) {
 		var i = nodes.length, node, value, type;
 

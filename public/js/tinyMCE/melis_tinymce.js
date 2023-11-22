@@ -15,7 +15,7 @@ var melisTinyMCE = (function() {
 
 	// This method will initialize an editor after requesting the TinyMCE configuration
 	function createTinyMCE(type, selector, options) {
-		console.log("melis_tinymce.js createTinyMCE!!!");
+		// console.log("melis_tinymce.js createTinyMCE!!!");
 		if (!type) type = "";
 		if (!selector) selector = "";
 		if (!options) options = null;
@@ -120,7 +120,6 @@ var melisTinyMCE = (function() {
 
 	// TinyMCE  action event
 	function tinyMceActionEvent(editor) {
-		
 		// console.log("editor settings language: ", editor.settings.language);
 		editor.on("change", function() {
 			// Any changes will sync to the selector (Ex. textarea)
@@ -134,59 +133,45 @@ var melisTinyMCE = (function() {
 
 		// for Insert/Edit Link
 		editor.on("ExecCommand", function(e) {
-			console.log("e.command: ", e.command);
+			// console.log("tinyMceActionEvent e.command mceLink: ", e.command);
 
 			// if the command refers to link dialog opening
 			if ( e.command === "mceLink" ) {
 				// wait for DOM to update
 				setTimeout(function() {
-					const $dialogBody 		= document.querySelector(".tox-dialog__body-content"),
-					 	  $browseUrl 		= $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
+					const $dialogBody = document.querySelector(".tox-dialog__body-content"),
+					 	  $browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
 
-						// creates new custom button and set attributes
-						let $customButton = document.createElement("button");
+					// creates new custom button and set attributes
+					let $customButton = document.createElement("button");
 
-							$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
-							$customButton.classList.add("mce-btn", "mce-open");
+						$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
+						$customButton.classList.add("mce-btn", "mce-open");
 
-							window.parent.melisCoreTool.setMultipleAttributes($customButton, { 
-								"title" : "Site tree view",
-								"id"	: "mce-link-tree",
-								"style" : "width: 34px; height: 34px;"
-							});
+						setMultipleAttributes($customButton, { 
+							"title" : "Site tree view",
+							"id"	: "mce-link-tree",
+							"style" : "width: 34px; height: 34px;"
+						});
 
-							// scroll to view dialog box
-							modalPopUp();
+						// scroll to view dialog box
+						modalPopUp();
 
-							// insert the new button after browse URL button
-							$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
+						// insert the new button after browse URL button
+						$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
 
-							// event handler of new button
-							$customButton.onclick = function() {
-								// show modal for #id_meliscms_find_page_tree
-								melisLinkTree.createTreeModal();
-
-								let $modalTree = document.getElementById("id_meliscms_find_page_tree");
-									console.log("$modalTree !== null: ", $modalTree !== null);
-									if ( $modalTree !== null ) {
-										let $modalTreeCancel 	= $modalTree.querySelector(".btn-danger"),
-											$modalTreeInsert 	= $modalTree.querySelector(".btn-success");
-
-											$modalTreeCancel.onclick = function() {
-												// scroll to view dialog box
-												modalPopUp();
-
-												console.log("$modalTreeCancel clicked!!!");
-											};
-
-											$modalTreeInsert.onclick = function() {
-												// scroll to view dialog box
-												modalPopUp();
-
-												console.log("$modalTreeInsert clicked!!!");
-											};
-									}
-							};						
+						// event handler of new button
+						$customButton.onclick = function() {
+							// show modal for #id_meliscms_find_page_tree
+							melisLinkTree.createTreeModal();
+						};
+				}, 1);
+			}
+			else {
+				// console.log("insert/edit image e.command: ", e.command);
+				setTimeout(function() {
+					// scroll to view dialog box
+					modalPopUp();
 				}, 1);
 			}
 		});
@@ -209,10 +194,10 @@ var melisTinyMCE = (function() {
 
 					// console.log("r: ", r);
 
-					console.log("modal, t.title: ", t.title);
+					//console.log("modal, t.title: ", t.title);
 					//console.log("editLinkTitle: ", editLinkTitle);
 
-					console.log("typeof melisLinkTree != undefined: ", typeof melisLinkTree != "undefined");
+					//console.log("typeof melisLinkTree != undefined: ", typeof melisLinkTree != "undefined");
 					// adding of add tree view button from dialog initialization
 					if (t.title === editLinkTitle && typeof melisLinkTree != "undefined") {
 						$(".tox-form__controls-h-stack").append(
@@ -265,17 +250,29 @@ var melisTinyMCE = (function() {
 		}
 	}
 
+	/**
+     * set multiple attributes on element
+     */
+    function setMultipleAttributes(elem, elemAttributes) {
+        for ( let i in elemAttributes ) {
+            elem.setAttribute(i, elemAttributes[i]);
+        }
+    }
+
 	// modal pop up tinymce melis-core
 	function modalPopUp() {
-		console.log("modalPopUp()!!!");
+		// console.log("Log Output ~ file: melis_tinymce.js:257 ~ modalPopUp ~ modalPopUp()");
 		// OPENING THE POPUP
 		var $body 		= $("body"),
 			$mcePopUp 	= $body.find(".tox-tinymce-aux"), // #mce-modal-block [.tox-tinymce-aux]
 			$dialog 	= $body.find(".tox-dialog"),
 			$iframe 	= window.parent.$(".melis-iframe");
 
-			if ($mcePopUp.length) {
-				if ($iframe.length) {
+			//console.log("Log Output ~ file: melis_tinymce.js:267 ~ modalPopUp ~ $mcePopUp.length:", $mcePopUp.length);
+		//var tinymceDialog = setInterval(function() {
+			if ( $mcePopUp.length ) {
+				//console.log("Log Output ~ file: melis_tinymce.js:276 ~ //tinymceDialog ~ $iframe.length:", $iframe.length);
+				if ( $iframe.length ) {
 					// iframe height
 					var iframeHeight = $(window).height(),
 						// iframe offset
@@ -300,7 +297,10 @@ var melisTinyMCE = (function() {
 						clearTimeout(timeOut);
 					}
 				}, 300);
+
+				//clearInterval(tinymceDialog);
 			}
+		//}, 500);
 	}
 
 	function addMelisCss() {
@@ -312,6 +312,34 @@ var melisTinyMCE = (function() {
 		document.head.appendChild(el);
 	}
 
+	function scrollToViewIframeTinyMCE(dialogHeight, iframeHeight) {
+		// window scroll offset
+		var windowOffset 	= $(window).scrollTop(),
+			$iframe 		= $(".melis-iframe"),
+			$dialog 		= $iframe.contents().find(".tox-dialog");
+
+			if ( dialogHeight && iframeHeight ) {
+				/* console.log("Log Output ~ file: melis_tinymce.js:312 ~ scrollToViewIframeTinyMCE ~ iframeHeight:", iframeHeight);
+				console.log("Log Output ~ file: melis_tinymce.js:312 ~ scrollToViewIframeTinyMCE ~ dialogHeight:", dialogHeight); */
+				
+				setTimeout(function() {
+					var scrollTop = iframeHeight / 2 - dialogHeight;
+						//console.log("Log Output ~ file: melis_tinymce.js:316 ~ setTimeout ~ scrollTop:", scrollTop);
+						// $dialog.offset().top
+						$iframe.contents().find("html, body").animate({ scrollTop: dialogHeight }, 300, function() {
+							$iframe.contents().find("html, body").addClass("animated");
+						});
+						//console.log("Log Output ~ file: melis_tinymce.js:322 ~ scrollToViewIframeTinyMCE setTimeout 2000 $iframe.contents ~ $dialog.offset().top:", $dialog.offset().top);
+
+						//console.log("windowOffset: ", windowOffset);
+						// console.log("Log Output ~ file: melis_tinymce.js:316 ~ scrollToViewIframeTinyMCE ~ setTimeout 1000 $iframe.contents().find('html, body').length:", $iframe.contents().find("html, body").length);
+				}, 2000);
+					
+			} else {
+				return windowOffset;
+			}
+	}
+
 	// Function that accessible using melisTinyMCE
 	return {
 		tinyMceConfigs: tinyMceConfigs,
@@ -320,19 +348,55 @@ var melisTinyMCE = (function() {
 		tinyMceActionEvent: tinyMceActionEvent,
 		modalPopUp: modalPopUp,
 		addMelisCss: addMelisCss,
+		setMultipleAttributes: setMultipleAttributes,
+		modalPopUp: modalPopUp,
+		scrollToViewIframeTinyMCE: scrollToViewIframeTinyMCE
 	};
 })();
 
-(function() {
-	// adding Melis TinyMCE CSS
-	melisTinyMCE.addMelisCss();
-	// custom modal TinyMCE
-	//melisTinyMCE.modalPopUp();
-	if (window.self === window.top) {
-		// This only calls when in top/parent window
-		melisTinyMCE.getTinyMceConfig();
-	}
-})();
+(function($) {
+	var $body = $("body");
+		// adding Melis TinyMCE CSS
+		melisTinyMCE.addMelisCss();
+		// custom modal TinyMCE
+		//melisTinyMCE.modalPopUp();
+		if (window.self === window.top) {
+			// This only calls when in top/parent window
+			melisTinyMCE.getTinyMceConfig();
+		}
+
+		// scroll to view tinymce dialog box, melis-cms find page tree
+		$body.on("click", "#id_meliscms_find_page_tree .footer-modal button", function() {
+			var $iframe 	= $(".melis-iframe"),
+				$mcePopUp 	= $iframe.contents().find(".tox-tinymce-aux"),
+				$dialog 	= $iframe.contents().find(".tox-dialog");
+
+				// console.log("$iframe.contents().find('.tox-tinymce-aux').length: ", $iframe.contents().find(".tox-tinymce-aux").length );
+				if ( $mcePopUp.length ) {
+					if ( $iframe.length ) {
+						/* console.log("$iframe.length: ", $iframe.length);
+						console.log("$dialog.length: ", $dialog.length); */
+						// iframe height
+						//var iframeHeight = $(window).height(),
+						var iframeHeight = $iframe.height(),
+							// iframe offset
+							$iframeOffset = $iframe.position().top,
+							// dialog box height .mce-window [.dialog]
+							dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
+
+							melisTinyMCE.scrollToViewIframeTinyMCE(dialogHeight, iframeHeight);
+							
+							//console.log("Log Output ~ file: melis_tinymce.js:348 ~ $body.on ~ scrollToViewIframeTinyMCE dialogHeight, iframeHeight:", dialogHeight, iframeHeight);
+					} else {
+						var bodyHeight 		= $body.height(),
+							dialogHeight 	= $dialog.outerHeight();
+
+							melisTinyMCE.scrollToViewIframeTinyMCE(dialogHeight, bodyHeight);
+					}
+				}
+				// melisTinyMCE.modalPopUp();
+		});
+})(jQuery);
 
 function tinyMceCleaner(editor) {
 	editor.serializer.addNodeFilter("script,style", function(nodes, name) {
