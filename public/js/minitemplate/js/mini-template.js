@@ -41,6 +41,37 @@
             return uniqueArray;
     }
 
+    // unique main category
+    function getUniqueCategoryText( $elemArray ) {
+        var listArray = [], uniqueArray = [], counting = 0, found = false;
+            $.each($elemArray, function(i, v) {
+                var dType = $(v).data("type");
+                    
+                    if ( dType === 'category' ) {
+                        var dCategoryText = $(v).attr("title");
+                            if ( $.inArray( dCategoryText, listArray ) == -1 ) {
+                                listArray.push( dCategoryText );
+                            }
+                    }
+            });
+
+            for ( var x = 0; x < listArray.length; x++ ) {
+              for ( var y = 0; y < uniqueArray.length; y++ ) {
+                if ( listArray[x] == uniqueArray[y] ) {
+                  found = true;
+                }
+              }
+              counting++;
+              if ( counting == 1 && found == false ) {
+                uniqueArray.push( listArray[x] );
+              }
+              found = false;
+              counting = 0;
+            }
+            
+            return uniqueArray;
+    }
+
     // ajax
     function processAjax() {
         $.ajax({
@@ -58,22 +89,22 @@
         });
     }
 
-    function siteNameHtml(siteName, index) {
+    function siteNameHtml( siteName, index ) {
         return '<h3>'+ siteName +'</h3>' +
-                '<div id="site-category-'+index+'" class="site-category" data-site-name="'+ siteName +'"></div>';
+                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'"></div>';
     }
 
-    function mainCategoryHtml( categoryText, categoryId, siteName, index ) {
-        return '<h3>'+ categoryText +'</h3>' +
-                '<div id="main-category-'+index+'" class="main-category common-category" data-site-name="'+ siteName +'" data-cat-id="'+ categoryId +'"></div>';
+    function mainCategoryHtml( mainCategoryText, mainCategorySiteName, index ) {
+        return '<h3>'+ mainCategoryText +'</h3>' +
+                '<div id="main-category-'+index+'" class="main-category common-category" data-site-name="'+ mainCategorySiteName +'"></div>'; // data-cat-id="'+ categoryId +'
       }
 
-    function otherCategoryHtml( otherCategory, siteName ) {
+    function otherCategoryHtml( otherCategory, otherCategorySiteName, index ) {
         return '<h3>'+ otherCategory +'</h3>' +
-                '<div id="other-category" class="other-category common-category accordion" data-site-name="'+ siteName +'"></div>';
+                '<div id="other-category-'+index+'" class="other-category common-category" data-site-name="'+ otherCategorySiteName +'"></div>';
     }
 
-    function appendOtherCategoryToSiteCategory( $miniTemplateButtons, siteName ) {
+    function appendOtherCategoryToSiteCategory( $miniTemplateButtons ) {
         var $accordion              = $("#accordion-mini-template"),
             $siteCategory           = $(".site-category"),
             siteCategorySiteName    = $siteCategory.data('site-name');
@@ -83,61 +114,59 @@
 
                 // occurrences of # for .other-category, 
                 $miniTemplateButtons.each(function(i, v) {
-                    let $button = $(v);
-                        dParent = $button.data('parent'),
-                        dCategory = $button.data('type');
+                    let $button     = $(v);
+                        dParent     = $button.data('parent'),
+                        dCategory   = $button.data('type');
 
                         if ( dParent === '#' ) {
                             countHashOccurrence++;
                         }
 
+                        //console.log("appendOtherCategoryToSiteCategory() $miniTemplateButtons.each() dCategory: ", dCategory);
                         if ( dCategory === 'category' ) {
                             countCategoryOccurrence++;
                         }
                 });
 
-                console.log("countHashOccurrence: ", countHashOccurrence);
+                //console.log("countHashOccurrence: ", countHashOccurrence);
                 // .other-category
                 if ( countHashOccurrence ) {
-                    var otherCategory   = 'Other Category', // translations.tr_meliscore_tinymce_mini_template_other_category,
-                        otherCatHtml    = '';
+                    var uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
+                    for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
+                        var otherCategorySiteName   = uniqueSiteNames[index],
+                            otherCategory           = 'Other Category', // translations.tr_meliscore_tinymce_mini_template_other_category,
+                            otherCatHtml            = '';
 
-                        otherCatHtml = otherCategoryHtml( otherCategory, siteName );
+                            otherCatHtml = otherCategoryHtml( otherCategory, otherCategorySiteName, index );
 
-                        var $otherCategory          = $('.other-category'),
-                            otherCategorySiteName   = $otherCategory.data('site-name');
-
-                            console.log("siteCategorySiteName === otherCategorySiteName: ", siteCategorySiteName === otherCategorySiteName );
-                            console.log("siteCategorySiteName: ", siteCategorySiteName);
-                            console.log("otherCategorySiteName: ", otherCategorySiteName);
                             // append .other-category to the right .site-category
                             if ( siteCategorySiteName === otherCategorySiteName ) {
                                 $accordion.find('.site-category').append( otherCatHtml );
                             }
+                    }
                 }
-                console.log("countCategoryOccurrence: ", countCategoryOccurrence);
+
+                //console.log("countCategoryOccurrence: ", countCategoryOccurrence);
                 // .main-category
                 if ( countCategoryOccurrence ) {
-                    $miniTemplateButtons.each(function(i, v) {
-                        var $button     = $(v),
-                            dType       = $button.data('type'),
-                            mainCatHtml = '';
+                    var uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
+                        for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
+                            var mainCategorySiteName    = uniqueSiteNames[index],
+                                mainCatHtml             = '';
 
-                            if ( dType === 'category' ) {
-                                var categoryText        = $button.attr('title'),
-                                    categoryId          = $button.data('id');
+                                var uniqueMainCategoryText = getUniqueCategoryText( $miniTemplateButtons );
+                                    for ( var j = 0; j < uniqueMainCategoryText.length; j++ ) {
+                                        var mainCategoryText = uniqueMainCategoryText[j];
 
-                                    // categoryId, refer to comment {template lists} template.id
-                                    mainCatHtml = mainCategoryHtml( categoryText, categoryId, siteName, i );
+                                            // categoryId, refer to comment {template lists} template.id
+                                            mainCatHtml = mainCategoryHtml( mainCategoryText, mainCategorySiteName, j );
 
-                                    var $mainCategory           = $('.main-category'),
-                                        mainCategorySiteName    = $mainCategory.data('site-name');
-
-                                        if ( siteCategorySiteName === mainCategorySiteName ) {
-                                            $accordion.find('.site-category').append( mainCatHtml );
-                                        }
-                            }
-                    });
+                                            // append .other-category to the right .site-category
+                                            if ( siteCategorySiteName === mainCategorySiteName ) {
+                                                $accordion.find('.site-category').append( mainCatHtml );
+                                            }
+                                    }
+                        }
                 }
     }
 
@@ -154,10 +183,7 @@
                     if ( siteName != 'undefined' ) {
                         siteHtml = siteNameHtml( siteName, index );
                         $accordion.prepend( siteHtml );
-                    }
-                    
-                    // .main-category, .other-category
-                    appendOtherCategoryToSiteCategory( $miniTemplateButtons, siteName );
+                    }      
             }
     }
 
@@ -175,13 +201,14 @@
                     dModule         = template.module,
                     dSiteName       = template.site_name,
                     dImageSource    = template.imgSource,
-                    dUrl            = template.url;
+                    dUrl            = template.url,
+                    buttons         = '';
 
                 var trimDText       = dText.replaceAll("-", " "); // $button = $("button[title='"+trimDText+"']")
 
                     // mini-template buttons
                     if ( dType === 'mini-template' ) {
-                        var $buttons = $("<button />", {
+                        buttons = $("<button />", {
                             "title"           : trimDText,
                             "id"              : 'btn_'+i,
                             "class"           : 'mini-template-button', // d-none
@@ -192,27 +219,25 @@
                             "data-site-name"  : dSiteName,
                             "data-url"        : dUrl
                         });
-
-                        if ( dImageSource != '' ) {
-                            var $image  = "<img src=" + dImageSource + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />";
-
-                                $buttons.append( $image );
-                        }
-
-                        /* const words = trimDText.toLowerCase().split(" ");
-                        //console.log("before words: ", words);
-                        for ( let i = 0; i < words.length; i++ ) {
-                            words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-
-                            if ( i != words.length)
-                                words[i].concat(" ");
-                                // words[i] = words[i] + " ";
-                        } */
-                        
-                        $buttons.prepend( "<span>" + trimDText + "</span>");
+                    }
+                    
+                    // category
+                    if ( dType === 'category' ) {
+                        buttons = $("<button />", {
+                            "title"             : trimDText,
+                            "class"             : 'mini-template-button category d-none',
+                            "data-type"         : dType,
+                            "data-site-name"    : dSiteName
+                        });
                     }
 
-                    $accordion.append( $buttons );
+                    if ( dImageSource != '' ) {
+                        var $image  = "<img src=" + dImageSource + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />";
+
+                            buttons.append( $image );
+                    }                    
+                    buttons.prepend( "<span>" + trimDText + "</span>");
+                    $accordion.append( buttons );
             }
 
             /**
@@ -223,6 +248,9 @@
 
                 // .site-category
                 createSiteCategory( $miniTemplateButtons );
+                
+                // .main-category, .other-category
+                appendOtherCategoryToSiteCategory( $miniTemplateButtons );
 
                 // re-arranging the mini template buttons to its own category based on data attributes
                 $.each( $miniTemplateButtons, function(i, v) {
@@ -233,58 +261,44 @@
                         type            = $btn.data("type"),
                         siteName        = $btn.data("site-name"),
                         $otherCategory  = $(".other-category"),
-                        $mainCategory   = $(".main-category"),
-                        catHtml         = '';
-
-                        //console.log("type: ", type);
-                        // check for category, adding of category html elements
-                        //if ( type == 'category' ) {
-                            // catHtml = categoryHtml( title, id, siteName, i );
-
-                            // hide button generated with type category
-                            // $btn.addClass("hidden"); // no more as when type: category no longer created as button
-
-                            // prepend the resulting html
-                            //$accordion.prepend( catHtml );
-                        //}
+                        $mainCategory   = $(".main-category");
 
                         /**
                          * Check if mini-template should be inside a main category or
                          * If parent == '#' means it is under .other-category
                          */
-                        if ( type == 'mini-template' ) {
-                            // .other-category
-                            if ( parent == "#" ) {
-                                /* var otherCategory = 'Other Category', // translations.tr_meliscore_tinymce_mini_template_other_category,
-                                    otherCatHtml  = '';
-
-                                    otherCatHtml = otherCategoryHtml( otherCategory, siteName, i );
-                                    $accordion.append( otherCatHtml );
-
-                                    console.log("$otherCategory.length: ", $otherCategory.length); */
-
-                                    $.each($otherCategory, function(i, v) {
-                                        var $otherCategoryElement = $(v),
-                                            otherCategorySiteName = $otherCategoryElement.data("site-name");
-
-                                            if ( siteName === otherCategorySiteName ) {
-                                                $accordion.append( $btn );
-                                            }
-                                    });
+                        //console.log("appendAccordion() type: ", type);
+                        //if ( type === 'mini-template' ) {
+                            //console.log("appendAccordion() parent: ", parent);
+                            if ( parent === '#' ) {
+                                // .other-category
+                                $.each($otherCategory, function(i, v) {
+                                    var $otherCategoryElement = $(v),
+                                        otherCategorySiteName = $otherCategoryElement.data("site-name");
+                                        
+                                        if ( siteName === otherCategorySiteName ) {
+                                            $accordion.find('.other-category').append( $btn );
+                                        }
+                                });
                             }
-                        }
-                        // for .main-category
-                        else {
-                            $.each($mainCategory, function(i, v) {
-                                var $mainCategoryElement = $(v),
-                                    mainCategoryId = $mainCategoryElement.data("cat-id"), // data attribute value
-                                    $mainCategoryId = $(".main-category[data-cat-id='"+mainCategoryId+"']"); // jQuery selector
-
-                                    if ( mainCategoryId === parent ) {
-                                        $mainCategoryId.append( $btn );
-                                    }
-                            });
-                        }
+                            else {
+                                // for .main-category
+                                $.each($mainCategory, function(i, v) {
+                                    var $mainCategoryElement = $(v),
+                                        mainCategorySiteName = $mainCategoryElement.data('site-name');
+                                        /* mainCategoryId = $mainCategoryElement.data("cat-id"), // data attribute value
+                                        $mainCategoryId = $(".main-category[data-cat-id='"+mainCategoryId+"']"); // jQuery selector */
+    
+                                        /* if ( mainCategoryId === parent ) {
+                                            $mainCategoryId.append( $btn );
+                                        } */
+                                        // console.log('appendAccordion() siteName === mainCategorySiteName: ', siteName === mainCategorySiteName);
+                                        if ( siteName === mainCategorySiteName ) {
+                                            $accordion.find('.main-category').append( $btn );
+                                        }
+                                });
+                            }
+                        //}
                 });
 
                 /**
