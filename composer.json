@@ -54,7 +54,7 @@
 		"laminas/laminas-developer-tools": "^2.8",
 		"laminas/laminas-development-mode": "^3.12",
 		"symfony/service-contracts": "3.4.0",
-		"psr/container": "2.0.2",
+		"psr/container": "1.1.1",
 		"justinrainbow/json-schema": "^5.2.13",
 		"melisplatform/melis-asset-manager": "*",
 		"melisplatform/melis-composerdeploy": "*",
