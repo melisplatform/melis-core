@@ -1,0 +1,108 @@
+/* .accordion dl dt {cursor: pointer; padding: 0.5em; color: #fff; transition-duration: 1s; transition-property: background; background: rgba(132,109,77,1); border-bottom: 1px solid #fff;}
+.accordion dl dd {display: none; height: auto; margin-left: 0; padding: 1em; }
+.accordion-nested {margin: -1em; }
+.accordion-nested dl {width: 100%; margin-left: 0; }
+.accordion-nested dl dt {background: rgba(132,109,77,.8)}
+.accordion-nested .accordion-nested dl dt {background: rgba(132,109,76,.6)}
+.accordion-nested .accordion-nested .accordion-nested dl dt {background: rgba(132,109,77,.4)}
+.accordion-nested .accordion-nested .accordion-nested .accordion-nested dl dt {background: rgba(132,109,77,.2)} */
+#template-container {
+    width: 100%;
+    overflow: hidden;
+}
+#template-container .row:first-child {
+    height: inherit;
+}
+#template-container .modal-footer {
+    width: 100%;
+}
+#accordion-mini-template {
+    height: 480px;
+    overflow: auto;
+}
+#accordion-mini-template .site-category {
+    padding: 0;
+}
+#accordion-mini-template .main-category,
+#accordion-mini-template .other-category {
+    overflow: hidden;
+}
+.mini-template-button {
+    display: block;
+    background-color: #f0f0f0;
+    border: 0;
+    color: #222f3e;
+    width: 100%;
+    position: relative;
+    margin-bottom: 0.5rem;
+	margin-right: 0.5rem;
+    padding: 4px 16px;
+
+    font-weight: normal;
+    white-space: normal;
+    height: auto !important;
+    /* word-break: break-all; */
+}
+.mini-template-button:hover {
+    background-color: #e3e3e3;
+    border: none;
+    border-radius: 0;
+    font-weight: normal;
+}
+.accordion h3 {
+    background: #f6f6f6;
+    border: 0;
+    border-radius: 0;
+    color: #222f3e;
+    font-size: 14px;
+    font-weight: normal;
+
+    padding-right: 0;
+}
+.accordion h3:hover {
+    background: #e61c23;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    font-weight: normal;
+}
+/* #f6f6f6 #e61c23 */
+.other-category.ui-accordion-content,
+.main-category.ui-accordion-content {
+    background: #fff;
+    border: 0;
+    min-height: 195px;
+    padding-right: 1em !important;
+    padding-left: 1em !important;
+    height: auto !important;
+}
+.site-category.ui-accordion-content {
+    border: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+}
+/* accordion header */
+.ui-accordion .ui-accordion-icons {
+    padding-left: 1.2rem;
+}
+.ui-accordion .ui-accordion-content.site-category h3 {
+    padding-left: 1.5rem;
+}
+#insert-btn {
+    background-color: #3498db;
+    border-color: transparent;
+    color: #fff;
+}
+#insert-btn:hover {
+    background-color: #217dbb;
+    box-shadow: none;
+}
+#close-btn {
+    background-color: #f0f0f0;
+    border-color: transparent;
+    color: #222f3e;
+}
+#close-btn:hover {
+    background-color: #e3e3e3;
+    box-shadow: none;
+}
