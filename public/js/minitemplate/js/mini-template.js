@@ -170,7 +170,10 @@
                 }
     }
 
+<<<<<<< HEAD
     // create category section
+=======
+>>>>>>> update/tinymce6.7.0
     function createSiteCategory( $miniTemplateButtons ) {
         var $accordion      = $("#accordion-mini-template"),
             uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
@@ -188,6 +191,7 @@
             }
     }
 
+<<<<<<< HEAD
     // highlight effect on buttons
     function highlightButtons( $miniTemplateButtons ) {
         $.each( $miniTemplateButtons, function(i, v) {
@@ -238,6 +242,8 @@
         });
     }
 
+=======
+>>>>>>> update/tinymce6.7.0
     // accordion
     function appendAccordion(data) {
         var $accordion = $("#accordion-mini-template");
@@ -318,6 +324,7 @@
                          * Check if mini-template should be inside a main category or
                          * If parent == '#' means it is under .other-category
                          */
+<<<<<<< HEAD
                         if ( parent === '#' ) {
                             // .other-category
                             $.each($otherCategory, function(i, v) {
@@ -370,6 +377,84 @@
                                 }
                         });
                 });
+=======
+                        //console.log("appendAccordion() type: ", type);
+                        //if ( type === 'mini-template' ) {
+                            //console.log("appendAccordion() parent: ", parent);
+                            if ( parent === '#' ) {
+                                // .other-category
+                                $.each($otherCategory, function(i, v) {
+                                    var $otherCategoryElement = $(v),
+                                        otherCategorySiteName = $otherCategoryElement.data("site-name");
+                                        
+                                        if ( siteName === otherCategorySiteName ) {
+                                            $accordion.find('.other-category').append( $btn );
+                                        }
+                                });
+                            }
+                            else {
+                                // for .main-category
+                                $.each($mainCategory, function(i, v) {
+                                    var $mainCategoryElement = $(v),
+                                        mainCategorySiteName = $mainCategoryElement.data('site-name');
+                                        /* mainCategoryId = $mainCategoryElement.data("cat-id"), // data attribute value
+                                        $mainCategoryId = $(".main-category[data-cat-id='"+mainCategoryId+"']"); // jQuery selector */
+    
+                                        /* if ( mainCategoryId === parent ) {
+                                            $mainCategoryId.append( $btn );
+                                        } */
+                                        // console.log('appendAccordion() siteName === mainCategorySiteName: ', siteName === mainCategorySiteName);
+                                        if ( siteName === mainCategorySiteName ) {
+                                            $accordion.find('.main-category').append( $btn );
+                                        }
+                                });
+                            }
+                        //}
+                });
+
+                /**
+                 * Appending categories to respective $siteCategory based on data-site-name
+                 */
+                /* var $commonCategory = $(".common-category");
+                $.each( $commonCategory, function(i, v) {
+                    var $siteCategory           = $(".site-category"),
+                        $commonCategoryElement  = $(v),
+                        commonCategorySiteName  = $commonCategoryElement.data("site-name"),
+                        commonCategoryById      = $commonCategoryElement.attr("id"),
+                        $commonCategoryById     = $("#"+commonCategoryById),
+                        $btnTemplate            = $commonCategoryById.find(".mini-template-button"),
+                        noMiniTemplateFoundMsg  = '<label class="no-mini-template-found">No mini template found.</label>'; //translations.tr_meliscore_tinymce_mini_template_no_template_found */
+
+                        /**
+                         * Check if .common-category element is empty 
+                         * to add noMiniTemplateFoundMsg
+                         * */ 
+                        //setTimeout(function() {
+                            /* if ( $commonCategoryElement.is(":empty") ) {
+                                $commonCategoryElement.append( noMiniTemplateFoundMsg );
+                            }
+                            
+                            if ( $btnTemplate.hasClass('hidden') && $btnTemplate.data("type") != 'mini-template' ) {
+                                $commonCategoryElement.append( noMiniTemplateFoundMsg );
+                            } */
+                        //}, 1000);
+                        
+                        /**
+                         * Check on $siteCategory to where particular
+                         * category to be appended
+                         * */ 
+                        /* $.each( $siteCategory, function( i, v ) {
+                            var $siteCategoryElement  = $(v),
+                                siteCategoryId        = $siteCategoryElement.attr("id"),
+                                siteCategorySiteName  = $siteCategoryElement.data("site-name");
+
+                                if ( commonCategorySiteName === siteCategorySiteName ) {
+                                    $siteCategoryElement.append( $commonCategoryElement.prev("h3") );
+                                    $siteCategoryElement.append( $commonCategoryElement );
+                                }
+                        });
+                }); */
+>>>>>>> update/tinymce6.7.0
 
                 /**
                  * Turns lists of sites and categories into accordion
@@ -385,11 +470,14 @@
                     collapsible: true,
                     icons: icons
                 });
+<<<<<<< HEAD
 
                 $(".accordion").niceScroll({cursorcolor:"#CB4040", cursorborder: "#CB4040"});
 
                 // hightlight buttons
                 highlightButtons($miniTemplateButtons);
+=======
+>>>>>>> update/tinymce6.7.0
     }
 
     // Insert html content mini template into tinymce editor

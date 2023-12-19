@@ -7,7 +7,7 @@
  * Version: 5.0.1 (2019-02-21)
  */
  (function () {
-  var minitemplate = (function () {
+  var minitemplate = (function() {
       'use strict';
 
       var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
@@ -112,6 +112,7 @@
 
       var createTemplateList = function (editorSettings, callback) {
         return function () {
+          console.log("createTemplateList editorSettings: ", editorSettings);
           var templateList = Settings.getTemplates(editorSettings);
           if (typeof templateList === 'function') {
             templateList(callback);
@@ -633,7 +634,6 @@
                     });
               }
               // for loop templateList.length
-
               var $dialogBody            = $(".tox-dialog__body-content"),
                   $dialogForm            = $dialogBody.find(".tox-form .tox-form__group:not(.tox-form__group--stretched)"),
                   meliskey               = window.parent.$("body").find("#melis-id-body-content-load > .tab-pane.active").data("meliskey"),
@@ -704,7 +704,7 @@
                             }
 
                             /**
-                             * Check if buttons should be inside a main category. 
+                             * Check if buttons should be inside a .main category. 
                              * If parent == '#' means it is under .other-category
                              */
                             if ( type == 'mini-template' || type == 'category' ) {

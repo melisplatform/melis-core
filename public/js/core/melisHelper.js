@@ -757,7 +757,10 @@ var melisHelper = (function() {
 					if (data !== null) {
 						// hide the loader
 						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
-
+						/* console.log("zoneId: ", zoneId);
+						console.log("data.html: ", data.html);
+						console.log("data: ", data); */
+						
 						$("#" + zoneId)
 							.html(data.html)
 							.children()
