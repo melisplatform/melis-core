@@ -19,6 +19,8 @@ use Laminas\Mvc\Router\Http\Segment;
  */
 class MelisCoreUrlAccessCheckerListenner implements ListenerAggregateInterface
 {
+    public $listeners = [];
+
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         $callBackHandler = $events->attach(
