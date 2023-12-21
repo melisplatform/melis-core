@@ -165,18 +165,20 @@ class MelisModuleManager
     public static function sanitize($input, $skip = [], $textOnly = false, $removeFunctions = true)
     {
         if(!is_array($input)) {
-            if(true === $removeFunctions) {
-                $input   = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
-            }
+            if(!empty($input)) {
+                if (true === $removeFunctions) {
+                    $input = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
+                }
 
-            $invalidValues = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
-            $allowableTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u>';
-            $input         = str_replace($invalidValues, '', $input);
-            $input         = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
-            $input         = strip_tags(trim($input), $allowableTags);
+                $invalidValues = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
+                $allowableTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u>';
+                $input = str_replace($invalidValues, '', $input);
+                $input = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
+                $input = strip_tags(trim($input), $allowableTags);
 
-            if($textOnly) {
-                $input   = str_replace(['<', '>', "'", '"'], '', $input);
+                if ($textOnly) {
+                    $input = str_replace(['<', '>', "'", '"'], '', $input);
+                }
             }
 
             return $input;
