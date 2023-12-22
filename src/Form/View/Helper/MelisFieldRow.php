@@ -19,6 +19,7 @@ class MelisFieldRow extends FormRow
 
     public function render(ElementInterface $element, ?string $labelPosition = null): string
     {
+        $formElement = '';
         $translator = $this->getTranslator();
 
         if (empty($element->getAttribute('id'))){
@@ -261,34 +262,37 @@ class MelisFieldRow extends FormRow
             $multiValElement .= $tagItems . $liInput . $ulEnd;
             $formElement = '<div class="form-group">' . $multiValElement . '</div>';
 
-        }elseif (strpos($element->getAttribute('class'), self::MELIS_DRAGGABLE_INPUT)){
+        }elseif (!empty($element->getAttribute('class'))){
+            if(strpos($element->getAttribute('class'), self::MELIS_DRAGGABLE_INPUT)) {
+                $isDraggable = $element->getAttribute('data-draggable');
 
-            $isDraggable = $element->getAttribute('data-draggable');
-
-            if ($isDraggable){
-                $element->setLabel('');
-                $formElement = '<div class="input-group melis-draggable-input">
-                                '.parent::render($element, $labelPosition).'
-                                <span class="input-group-addon bg-primary"><i class="fa fa-arrows fa-lg" aria-hidden="true"></i></span>
-                            </div>';
+                if ($isDraggable) {
+                    $element->setLabel('');
+                    $formElement = '<div class="input-group melis-draggable-input">
+                                    ' . parent::render($element, $labelPosition) . '
+                                    <span class="input-group-addon bg-primary"><i class="fa fa-arrows fa-lg" aria-hidden="true"></i></span>
+                                </div>';
+                } else {
+                    $formElement = '<div class="form-group">' . parent::render($element, $labelPosition) . '</div>';
+                }
             }else{
-                $formElement = '<div class="form-group">'. parent::render($element, $labelPosition).'</div>';
+                $formElement = '<div class="form-group">' . parent::render($element, $labelPosition) . '</div>';
             }
-
-        }elseif (strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE)){
-            
-            $label = $element->getLabel();
-            $element->setLabel('');
-            $attrib = $element->getAttributes();
-            $formElement = '<div class="form-group">
-                            <label for="'.$element->getName().'" class="'.$element->getOption('class').'">'.$label.'</label>
-                                <div class="input-group date '.$attrib['dateId'].'">
-                                '.parent::render($element).'
+        }elseif (!empty($element->getAttribute('class'))){
+            if(strpos($element->getAttribute('class'), self::MELIS_COMMERCE_DATE)) {
+                $label = $element->getLabel();
+                $element->setLabel('');
+                $attrib = $element->getAttributes();
+                $formElement = '<div class="form-group">
+                            <label for="' . $element->getName() . '" class="' . $element->getOption('class') . '">' . $label . '</label>
+                                <div class="input-group date ' . $attrib['dateId'] . '">
+                                ' . parent::render($element) . '
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
                             </div>';
+            }
 
         }elseif ($element->hasAttribute('meliscore-datetimepicker')){
 
@@ -394,18 +398,18 @@ class MelisFieldRow extends FormRow
             $formElement .= '</div>
                             </div>';
 
-        }elseif(strpos($element->getAttribute('class'), self::MELIS_MSGR_MSG_BOX)){
-
-            $element->setLabel('');
-            $formElement = '<div class="row msg-chat-no-padding">
+        }elseif(!empty($element->getAttribute('class'))){
+            if(strpos($element->getAttribute('class'), self::MELIS_MSGR_MSG_BOX)) {
+                $element->setLabel('');
+                $formElement = '<div class="row msg-chat-no-padding">
                                 <div class="col-lg-11 col-md-10 col-sm-11">
-                                    '.parent::render($element).'
+                                    ' . parent::render($element) . '
                                 </div>    
                                 <div class="col-lg-1 col-md-2 col-sm-1">
                                     <button id="btn-send-message" type="submit" class="btn btn-primary"><i class="fa fa-paper-plane fa-2x"></i></button>
                                 </div>
                             </div>';
-
+            }
         }elseif ($element->getOption('form_type') == 'form-horizontal'){
 
             $formElement = '<div id="' . $element->getAttribute('id') . '" class="form-group">
