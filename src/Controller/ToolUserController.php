@@ -794,6 +794,8 @@ class ToolUserController extends MelisAbstractActionController
         $userSvc = $this->getServiceManager()->get('MelisCoreUser');
         $translation = $this->getServiceManager()->get('translator');
 
+        $formatter = new \IntlDateFormatter($locale, \IntlDateFormatter::LONG, \IntlDateFormatter::NONE);
+
         if($this->getRequest()->isPost())
         {
             $id = (int) $this->getRequest()->getPost('id');
@@ -819,7 +821,7 @@ class ToolUserController extends MelisAbstractActionController
                     $data['usr_admin'] = $userVal->usr_admin;
                     $data['usr_image'] = $image;
                     $data['usr_status'] = $userVal->usr_status;
-                    $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
+                    $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : $formatter->format(strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
                     $data['usr_role_id'] = $userVal->usr_role_id;
                     $data['usr_tags'] = $userVal->usr_tags;
                 }
@@ -1622,6 +1624,8 @@ class ToolUserController extends MelisAbstractActionController
         $tableData = array();
         $draw = 0;
 
+        $formatter = new \IntlDateFormatter($locale, \IntlDateFormatter::LONG, \IntlDateFormatter::NONE);
+
         if($request->isPost()) {
 
             $post    = $request->getPost()->toArray();
@@ -1648,7 +1652,7 @@ class ToolUserController extends MelisAbstractActionController
                     $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue, 80);
                 }
 
-                $loginDate = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usrcd_last_login_date']));
+                $loginDate = $formatter->format(strtotime($tableData[$ctr]['usrcd_last_login_date']));
                 $loginDate = explode(' ' , $loginDate)[0];
 
                 $connectionTime = $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date']) == '-' ? '0' :
