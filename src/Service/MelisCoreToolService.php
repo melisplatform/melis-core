@@ -746,8 +746,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 foreach ($dataValue as $key => $value) {
 
                     if ($striptags) {
-                        $value = html_entity_decode($value);
-                        $value = strip_tags($value);
+                        if(!empty($value)) {
+                            $value = html_entity_decode($value);
+                            $value = strip_tags($value);
+                        }
                     } else {
                         if (is_int($value)) {
                             $value = (string) $value;
@@ -844,26 +846,28 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-        * PHP native str_split with unicode version
-        *
-        * @param string $str
-        * @param int $l
-        *
-        * @return array
-        */
+     * PHP native str_split with unicode version
+     *
+     * @param $str
+     * @param int $l
+     * @return array|false|string[]
+     */
     private function stringSplitUnicode($str, $l = 0)
     {
-        if ($l > 0) {
-            $ret = [];
-            $len = mb_strlen($str, "UTF-8");
-            for ($i = 0; $i < $len; $i += $l) {
-                $ret[] = mb_substr($str, $i, $l, "UTF-8");
+        if(!empty($str)) {
+            if ($l > 0) {
+                $ret = [];
+                $len = mb_strlen($str, "UTF-8");
+                for ($i = 0; $i < $len; $i += $l) {
+                    $ret[] = mb_substr($str, $i, $l, "UTF-8");
+                }
+
+                return $ret;
             }
 
-            return $ret;
+            return preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
         }
-
-        return preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
+        return [];
     }
 
     /**
