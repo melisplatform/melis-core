@@ -356,7 +356,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     public function limitedText($text, $limit = self::TEXT_LIMIT)
     {
         $postString = '...';
-        $strCount = strlen($text);
+        $strCount = 0;
+        if(!empty($text))
+            $strCount = strlen($text);
+
         $sLimitedText = $text;
 
         if ($strCount > $limit) {

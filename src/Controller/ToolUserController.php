@@ -1384,9 +1384,10 @@ class ToolUserController extends MelisAbstractActionController
                                 $userSession->usr_image = $data['usr_image'];
                                 $userSession->usr_password = $savedPassword;
 
+                                $image = !empty($userSession->usr_image) ? base64_encode($userSession->usr_image) : null;
                                 $datas = [
                                     'isMyInfo' => 1,
-                                    'loadProfile' => 'data:image/jpeg;base64,' . base64_encode($userSession->usr_image),
+                                    'loadProfile' => 'data:image/jpeg;base64,' . $image,
                                 ];
                             }
                             // free up memory
