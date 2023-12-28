@@ -1,3 +1,22 @@
+@import '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css';
+@import '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css';
+@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css';
+@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css';
+@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css';
+@import url(//fonts.googleapis.com/css?family=Roboto:400,300,700);
+@import url(//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+@import '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css';
+@import '/MelisCore/assets/components/library/animate/animate.min.css';
+@import '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/lib/css/bootstrap-switch.css';
+@import '/MelisCore/assets/components/modules/admin/forms/elements/uniform/assets/lib/css/uniform.default.css';
+@import '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/lib/css/jquery.gritter.css';
+@import '/MelisCore/assets/components/modules/admin/forms/editors/wysihtml5/assets/lib/css/bootstrap-wysihtml5-0.0.2.css';
+@import '/MelisCore/assets/components/modules/admin/forms/elements/jasny-fileupload/assets/css/fileupload.css';
+@import '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-select/assets/lib/css/bootstrap-select.css';
+@import '/MelisCore/assets/components/modules/admin/forms/elements/select2/assets/lib/css/select2.css';
+@import '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css';
+@import '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css';
+@import '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css';
 html {
     -webkit-font-smoothing: antialiased !important;
     height: 100%
@@ -4875,19 +4894,19 @@ html.csstransitions.csstransforms3d .panel-3d.panel-flip .back {
     text-decoration: none
 }
 
-.bwizard-steps.clickable li:not (.active) {
+.bwizard-steps.clickable li:not(.active) {
     cursor: pointer
 }
 
-.bwizard-steps.clickable li:hover:not (.active) {
+.bwizard-steps.clickable li:hover:not(.active) {
     background: #ccc
 }
 
-.bwizard-steps.clickable li:hover:not (.active):after {
+.bwizard-steps.clickable li:hover:not(.active):after {
     border-left-color: #ccc
 }
 
-.bwizard-steps.clickable li:hover:not (.active) a {
+.bwizard-steps.clickable li:hover:not(.active) a {
     color: #08c
 }
 
@@ -6194,25 +6213,6 @@ body {
     }
 }
 
-@import '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css';
-@import '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css';
-@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css';
-@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css';
-@import '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css';
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700);
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
-@import '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css';
-@import '/MelisCore/assets/components/library/animate/animate.min.css';
-@import '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-switch/assets/lib/css/bootstrap-switch.css';
-@import '/MelisCore/assets/components/modules/admin/forms/elements/uniform/assets/lib/css/uniform.default.css';
-@import '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/lib/css/jquery.gritter.css';
-@import '/MelisCore/assets/components/modules/admin/forms/editors/wysihtml5/assets/lib/css/bootstrap-wysihtml5-0.0.2.css';
-@import '/MelisCore/assets/components/modules/admin/forms/elements/jasny-fileupload/assets/css/fileupload.css';
-@import '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-select/assets/lib/css/bootstrap-select.css';
-@import '/MelisCore/assets/components/modules/admin/forms/elements/select2/assets/lib/css/select2.css';
-@import '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css';
-@import '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/css/bootstrap-timepicker.css';
-@import '/MelisCore/assets/components/modules/admin/forms/elements/colorpicker-farbtastic/assets/css/farbtastic.css';
 html {
     -webkit-font-smoothing: antialiased !important;
     height: 100%
@@ -11078,19 +11078,19 @@ html.csstransitions.csstransforms3d .panel-3d.panel-flip .back {
     text-decoration: none
 }
 
-.bwizard-steps.clickable li:not (.active) {
+.bwizard-steps.clickable li:not(.active) {
     cursor: pointer
 }
 
-.bwizard-steps.clickable li:hover:not (.active) {
+.bwizard-steps.clickable li:hover:not(.active) {
     background: #ccc
 }
 
-.bwizard-steps.clickable li:hover:not (.active):after {
+.bwizard-steps.clickable li:hover:not(.active):after {
     border-left-color: #ccc
 }
 
-.bwizard-steps.clickable li:hover:not (.active) a {
+.bwizard-steps.clickable li:hover:not(.active) a {
     color: #08c
 }
 

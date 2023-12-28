@@ -1,15 +1,5 @@
 (function($) {
     // https://codepen.io/Elodieb/pen/OJyLxXm
-
-    // return the selected mini template through select dropdown
-    function getSelectedMiniTemplate() {
-        var $selectedAccordion = $('.accordion dt');
-
-            $selectedAccordion.on("click", function() {
-                return $(this).data("url");
-            });
-    }
-
     /**
      * Returns a unique site names from an array.
      * @param {*} $elemArray 
@@ -97,7 +87,7 @@
     function mainCategoryHtml( mainCategoryText, mainCategorySiteName, index ) {
         return '<h3>'+ mainCategoryText +'</h3>' +
                 '<div id="main-category-'+index+'" class="main-category common-category" data-site-name="'+ mainCategorySiteName +'"></div>'; // data-cat-id="'+ categoryId +'
-      }
+    }
 
     function otherCategoryHtml( otherCategory, otherCategorySiteName, index ) {
         return '<h3>'+ otherCategory +'</h3>' +
@@ -236,6 +226,80 @@
                               }
                         });
         });
+    }
+
+    // get the selected mini template
+    function getSelectedMiniTemplate( $miniTemplateButtons ) {
+        setTimeout(function() {
+            var $siteCategory   = $("#accordion-mini-template > .site-category"),
+                $commonCategory = $("#accordion-mini-template > .common-category");
+                //templateHtml    = '';
+               
+                // preview mini template at first load without clicking of buttons
+                if ( $siteCategory.length > 1 ) {
+                    if ( $commonCategory.hasClass(".ui-accordion-content-active") ) {
+                        var $commonCategoryButton   = $("#accordion-mini-template > .common-category.ui-accordion-content-active .mini-template-button:first-child"),
+                            commonCategoryDataUrl   = $commonCategoryButton.data("url");
+                            
+                            previewMiniTemplate( commonCategoryDataUrl );
+                    }
+                }
+                else {
+                    var $siteCategoryButton = $("#accordion-mini-template > .site-category.ui-accordion-content-active .mini-template-button:first-child"),
+                        siteCategoryDataUrl = $siteCategoryButton.data("url");
+
+                        previewMiniTemplate( siteCategoryDataUrl );
+                }
+                
+                $.each($miniTemplateButtons, function(i, v) {
+                    var $btn = $(v);
+                        $btn.on("click", function() {
+                            previewMiniTemplate( $(this).data("url") );
+                        });
+                });
+
+                //templateHtml = $("#preview-mini-template iframe").contents().find("body")[0].innerHTML;
+                
+                //return templateHtml;
+        }, 1000);
+    }
+
+    // displays mini template in iframe
+    function previewMiniTemplate(url) {
+        var $preview    = $("#preview-mini-template"),
+            $prevIframe = $preview.find(".preview-iframe");
+
+            if ( $prevIframe.length ) {
+                $prevIframe.attr("src", url);
+
+                insertMelisDemoCmsMiniTemplateCss();
+            }
+    }
+
+    // insertion of melis-demo-cms mini template css in iframe head
+    function insertMelisDemoCmsMiniTemplateCss() {
+        setTimeout(function() {
+            var $iframeHead = $("#preview-mini-template iframe").contents().find("head"),
+                cssUrl      = [
+                    '/MelisDemoCms/css/bootstrap.min.css',
+                    '/MelisDemoCms/vendors/themify-icon/themify-icons.css',
+                    '/MelisDemoCms/vendors/elagent/style.css',
+                    '/MelisDemoCms/css/style.css'
+                ];
+
+                if ( $iframeHead.length ) {
+                    $.each( cssUrl, function(i, v) {
+                        var el = document.createElement("link");
+
+                            el.href     = cssUrl[i];
+                            el.rel      = "stylesheet";
+                            el.media    = "screen";
+                            el.type     = "text/css";
+
+                            $iframeHead.append( el );
+                    });
+                }
+        }, 1000);
     }
 
     // accordion
@@ -390,15 +454,30 @@
 
                 // hightlight buttons
                 highlightButtons($miniTemplateButtons);
+
+                // get selected mini template form .mini-template-button
+                getSelectedMiniTemplate($miniTemplateButtons);
     }
 
     // Insert html content mini template into tinymce editor
-    function run() {
-        var tinymceData = getSelectedMiniTemplate();
-            if ( tinymceData ) {
-                parent.tinymce.activeEditor.insertContent(tinymceData);
+    function insertMiniTemplate() {
+        var miniTemplate = $("#preview-mini-template iframe").contents().find("body")[0].innerHTML;
+            if ( miniTemplate ) {
+                parent.tinymce.activeEditor.insertContent(miniTemplate);
             }
             parent.tinymce.activeEditor.windowManager.close();
+    }
+
+    // initialize
+    function initIframe() {
+        var $iframe = $("#preview-mini-template iframe");
+
+            console.log("initFrame() setTimeout 500 $iframe.length: ", $iframe.length);
+
+            // insertion of melis-demo-cms mini template css in iframe head
+            if ( $iframe.length ) {
+                insertMelisDemoCmsMiniTemplateCss();
+            }
     }
 
     /**
@@ -418,11 +497,16 @@
                 processAjax();    
             //}, 1000);
 
-            $("#insert-btn").on("click", run);
+            $("#insert-btn").on("click", insertMiniTemplate);
 
             $("#close-btn").on("click", function() {
                 parent.tinymce.activeEditor.windowManager.close();
             });
         });
+
+        // init iframe header resources
+        /* setTimeout(function() {
+            initIframe();
+        }, 500); */
     });
 }(jQuery));
