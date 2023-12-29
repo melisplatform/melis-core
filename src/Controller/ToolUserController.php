@@ -806,7 +806,7 @@ class ToolUserController extends MelisAbstractActionController
                 foreach($userTable->getEntryById($id) as $userVal)
                 {
                     $connectionTime = $userSvc->getUserSessionTime( (int) $userVal->usr_id, $userVal->usr_last_login_date) == '-' ?
-                        strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date)) :
+                        date($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date)) :
                         $userSvc->getUserSessionTime( (int) $userVal->usr_id, $userVal->usr_last_login_date);
 
                     $connectionTime = $connectionTime ? $translation->translate('tr_meliscore_date_for') . $connectionTime : null;

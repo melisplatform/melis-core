@@ -185,11 +185,11 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         $dFormat = '';
         switch($locale) {
             case 'fr_FR':
-                $dFormat = '%d/%m/%Y %H:%M:%S';
+                $dFormat = 'd/m/Y H:i:s';
                 break;
             case 'en_EN':
             default:
-                $dFormat = '%m/%d/%Y %H:%M:%S';
+                $dFormat = 'm/d/Y H:i:s';
                 break;
         }
 
