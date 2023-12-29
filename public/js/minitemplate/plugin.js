@@ -22,7 +22,8 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
-          dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
+          //dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
+          dialogApi = tinymce.activeEditor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
 
@@ -39,7 +40,8 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
-          dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
+          //dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
+          dialogApi = tinymce.activeEditor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
           
