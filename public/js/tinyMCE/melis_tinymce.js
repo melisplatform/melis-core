@@ -15,7 +15,6 @@ var melisTinyMCE = (function() {
 
 	// This method will initialize an editor after requesting the TinyMCE configuration
 	function createTinyMCE(type, selector, options) {
-		// console.log("melis_tinymce.js createTinyMCE!!!");
 		if (!type) type = "";
 		if (!selector) selector = "";
 		if (!options) options = null;
@@ -35,9 +34,6 @@ var melisTinyMCE = (function() {
 			/* if (options.hasOwnProperty("templates")) {
 				options.templates = options.templates;
 			} */
-
-			/* console.log("options.hasOwnProperty('templates'): ", options.hasOwnProperty("templates"));
-			console.log("options.templates: ", options.templates); */
 
 			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
 
@@ -78,49 +74,47 @@ var melisTinyMCE = (function() {
 	}
 
 	filePickerCallback = function(cb, value, meta) {
-		console.log("filePickerCallback!!!");
 		var input = document.createElement("input");
-		input.setAttribute("type", "file");
-		input.setAttribute("accept", "image/*");
 
-		/*
-            Note: In modern browsers input[type="file"] is functional without
-            even adding it to the DOM, but that might not be the case in some older
-            or quirky browsers like IE, so you might want to add it to the DOM
-            just in case, and visually hide it. And do not forget do remove it
-            once you do not need it anymore.
-            */
+			input.setAttribute("type", "file");
+			input.setAttribute("accept", "image/*");
 
-		input.onchange = function() {
-			var file = this.files[0],
-				reader = new FileReader();
+			/*
+				Note: In modern browsers input[type="file"] is functional without
+				even adding it to the DOM, but that might not be the case in some older
+				or quirky browsers like IE, so you might want to add it to the DOM
+				just in case, and visually hide it. And do not forget do remove it
+				once you do not need it anymore.
+			*/
+			input.onchange = function() {
+				var file = this.files[0],
+					reader = new FileReader();
 
-			reader.onload = function() {
-				/*
-                        Note: Now we need to register the blob in TinyMCEs image blob
-                        registry. In the next release this part hopefully won't be
-                        necessary, as we are looking to handle it internally.
-                        */
-				var id = "blobid" + new Date().getTime(),
-					blobCache = tinymce.activeEditor.editorUpload.blobCache,
-					base64 = reader.result.split(",")[1],
-					blobInfo = blobCache.create(id, file, base64);
+				reader.onload = function() {
+					/*
+						Note: Now we need to register the blob in TinyMCEs image blob
+						registry. In the next release this part hopefully won't be
+						necessary, as we are looking to handle it internally.
+					*/
+					var id = "blobid" + new Date().getTime(),
+						blobCache = tinymce.activeEditor.editorUpload.blobCache,
+						base64 = reader.result.split(",")[1],
+						blobInfo = blobCache.create(id, file, base64);
 
-				blobCache.add(blobInfo);
+					blobCache.add(blobInfo);
 
-				/* call the callback and populate the Title field with the file name */
-				cb(blobInfo.blobUri(), { title: file.name });
+					/* call the callback and populate the Title field with the file name */
+					cb(blobInfo.blobUri(), { title: file.name });
+				};
+
+				reader.readAsDataURL(file);
 			};
 
-			reader.readAsDataURL(file);
-		};
-
-		input.click();
+			input.click();
 	};
 
 	// TinyMCE  action event
 	function tinyMceActionEvent(editor) {
-		// console.log("editor settings language: ", editor.settings.language);
 		editor.on("change", function() {
 			// Any changes will sync to the selector (Ex. textarea)
 			// tinymce.triggerSave();
@@ -131,10 +125,14 @@ var melisTinyMCE = (function() {
 			tinyMceOpenDialog(editor);
 		}); */
 
+		editor.on("blur", function() {
+			// hides the toolbar that appears under the toolbar overflow icon
+			$(".tox-toolbar__primary .tox-toolbar__group .tox-tbtn--enabled").trigger("click");
+		});
+
 		// for Insert/Edit Link
 		editor.on("ExecCommand", function(e) {
-			// console.log("tinyMceActionEvent e.command mceLink: ", e.command);
-
+			console.log("e.command", e.command);
 			// if the command refers to link dialog opening
 			if ( e.command === "mceLink" ) {
 				// wait for DOM to update
@@ -154,9 +152,6 @@ var melisTinyMCE = (function() {
 							"style" : "width: 34px; height: 34px;"
 						});
 
-						// scroll to view dialog box
-						modalPopUp();
-
 						// insert the new button after browse URL button
 						$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
 
@@ -165,10 +160,12 @@ var melisTinyMCE = (function() {
 							// show modal for #id_meliscms_find_page_tree
 							melisLinkTree.createTreeModal();
 						};
+
+						// scroll to view dialog box
+						modalPopUp();
 				}, 1);
 			}
 			else {
-				// console.log("insert/edit image e.command: ", e.command);
 				setTimeout(function() {
 					// scroll to view dialog box
 					modalPopUp();
@@ -179,10 +176,7 @@ var melisTinyMCE = (function() {
 
 	// opening of tinymce dialog
 	function tinyMceOpenDialog(editor) {
-		//console.log("tinyMceOpenDialog(editor): ", editor);
 		var $body = $("body");
-
-			//console.log("editor.windowManager: ", editor.windowManager);
 
 			editor.windowManager.oldOpen = editor.windowManager.open; // save for later
 
@@ -192,12 +186,6 @@ var melisTinyMCE = (function() {
 				var insertMiniTemplateTitle =
 					translations.tr_meliscore_tinymce_mini_template_add_button_tooltip;
 
-					// console.log("r: ", r);
-
-					//console.log("modal, t.title: ", t.title);
-					//console.log("editLinkTitle: ", editLinkTitle);
-
-					//console.log("typeof melisLinkTree != undefined: ", typeof melisLinkTree != "undefined");
 					// adding of add tree view button from dialog initialization
 					if (t.title === editLinkTitle && typeof melisLinkTree != "undefined") {
 						$(".tox-form__controls-h-stack").append(
@@ -223,9 +211,6 @@ var melisTinyMCE = (function() {
 						// window.parent.melisCms.modalPopUp(); 
 						modalPopUp(); // in melisCms.js but not used
 					//}
-
-					// console.log("editor.windowManager.open function modal: ", modal);
-					// console.log("editor.windowManager.open this.oldOpen.apply: ", this.oldOpen(this, [t, r]));
 
 					return modal; // Template plugin is dependent on this return value
 					//return editor.windowManager.open;
@@ -261,17 +246,15 @@ var melisTinyMCE = (function() {
 
 	// modal pop up tinymce melis-core
 	function modalPopUp() {
-		// console.log("Log Output ~ file: melis_tinymce.js:257 ~ modalPopUp ~ modalPopUp()");
 		// OPENING THE POPUP
 		var $body 		= $("body"),
 			$mcePopUp 	= $body.find(".tox-tinymce-aux"), // #mce-modal-block [.tox-tinymce-aux]
 			$dialog 	= $body.find(".tox-dialog"),
 			$iframe 	= window.parent.$(".melis-iframe");
 
-			//console.log("Log Output ~ file: melis_tinymce.js:267 ~ modalPopUp ~ $mcePopUp.length:", $mcePopUp.length);
 		//var tinymceDialog = setInterval(function() {
 			if ( $mcePopUp.length ) {
-				//console.log("Log Output ~ file: melis_tinymce.js:276 ~ //tinymceDialog ~ $iframe.length:", $iframe.length);
+
 				if ( $iframe.length ) {
 					// iframe height
 					var iframeHeight = $(window).height(),
@@ -312,33 +295,25 @@ var melisTinyMCE = (function() {
 		document.head.appendChild(el);
 	}
 
-	function scrollToViewIframeTinyMCE(dialogHeight, iframeHeight) {
+	// for reference, came from melisCms.js, scrollToViewTinyMCE()
+	/* function scrollToViewIframeTinyMCE(dialogHeight, iframeHeight) {
 		// window scroll offset
 		var windowOffset 	= $(window).scrollTop(),
 			$iframe 		= $(".melis-iframe"),
 			$dialog 		= $iframe.contents().find(".tox-dialog");
 
-			if ( dialogHeight && iframeHeight ) {
-				/* console.log("Log Output ~ file: melis_tinymce.js:312 ~ scrollToViewIframeTinyMCE ~ iframeHeight:", iframeHeight);
-				console.log("Log Output ~ file: melis_tinymce.js:312 ~ scrollToViewIframeTinyMCE ~ dialogHeight:", dialogHeight); */
-				
+			if ( dialogHeight && iframeHeight ) {		
 				setTimeout(function() {
-					var scrollTop = iframeHeight / 2 - dialogHeight;
-						//console.log("Log Output ~ file: melis_tinymce.js:316 ~ setTimeout ~ scrollTop:", scrollTop);
-						// $dialog.offset().top
+					var scrollTopOffset = iframeHeight / 2 - dialogHeight;
 						$iframe.contents().find("html, body").animate({ scrollTop: dialogHeight }, 300, function() {
 							$iframe.contents().find("html, body").addClass("animated");
 						});
-						//console.log("Log Output ~ file: melis_tinymce.js:322 ~ scrollToViewIframeTinyMCE setTimeout 2000 $iframe.contents ~ $dialog.offset().top:", $dialog.offset().top);
-
-						//console.log("windowOffset: ", windowOffset);
-						// console.log("Log Output ~ file: melis_tinymce.js:316 ~ scrollToViewIframeTinyMCE ~ setTimeout 1000 $iframe.contents().find('html, body').length:", $iframe.contents().find("html, body").length);
 				}, 2000);
 					
 			} else {
 				return windowOffset;
 			}
-	}
+	} */
 
 	// Function that accessible using melisTinyMCE
 	return {
@@ -350,7 +325,7 @@ var melisTinyMCE = (function() {
 		addMelisCss: addMelisCss,
 		setMultipleAttributes: setMultipleAttributes,
 		modalPopUp: modalPopUp,
-		scrollToViewIframeTinyMCE: scrollToViewIframeTinyMCE
+		//scrollToViewIframeTinyMCE: scrollToViewIframeTinyMCE
 	};
 })();
 
@@ -371,12 +346,8 @@ var melisTinyMCE = (function() {
 				$mcePopUp 	= $iframe.contents().find(".tox-tinymce-aux"),
 				$dialog 	= $iframe.contents().find(".tox-dialog");
 
-				// console.log("$iframe.contents().find('.tox-tinymce-aux').length: ", $iframe.contents().find(".tox-tinymce-aux").length );
 				if ( $mcePopUp.length ) {
 					if ( $iframe.length ) {
-						/* console.log("$iframe.length: ", $iframe.length);
-						console.log("$dialog.length: ", $dialog.length); */
-						// iframe height
 						//var iframeHeight = $(window).height(),
 						var iframeHeight = $iframe.height(),
 							// iframe offset
@@ -384,9 +355,7 @@ var melisTinyMCE = (function() {
 							// dialog box height .mce-window [.dialog]
 							dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
 
-							melisTinyMCE.scrollToViewIframeTinyMCE(dialogHeight, iframeHeight);
-							
-							//console.log("Log Output ~ file: melis_tinymce.js:348 ~ $body.on ~ scrollToViewIframeTinyMCE dialogHeight, iframeHeight:", dialogHeight, iframeHeight);
+							melisTinyMCE.scrollToViewIframeTinyMCE(dialogHeight, iframeHeight);							
 					} else {
 						var bodyHeight 		= $body.height(),
 							dialogHeight 	= $dialog.outerHeight();

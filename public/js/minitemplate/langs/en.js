@@ -1,4 +1,5 @@
 tinymce.addI18n('en', {
-    'Cancel' : 'Cancel',
-    'Insert' : 'Insert'
+    'Other Category'    : 'Other Category',
+    'Cancel'            : 'Cancel',
+    'Insert'            : 'Insert'
 });

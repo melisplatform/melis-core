@@ -1,5 +1,4 @@
 (function($) {
-    // https://codepen.io/Elodieb/pen/OJyLxXm
     /**
      * Returns a unique site names from an array.
      * @param {*} $elemArray 
@@ -112,19 +111,17 @@
                             countHashOccurrence++;
                         }
 
-                        //console.log("appendOtherCategoryToSiteCategory() $miniTemplateButtons.each() dCategory: ", dCategory);
                         if ( dCategory === 'category' ) {
                             countCategoryOccurrence++;
                         }
                 });
 
-                //console.log("countHashOccurrence: ", countHashOccurrence);
                 // .other-category
                 if ( countHashOccurrence ) {
                     var uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
                     for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
                         var otherCategorySiteName   = uniqueSiteNames[index],
-                            otherCategory           = 'Other Category', // translations.tr_meliscore_tinymce_mini_template_other_category,
+                            otherCategory           = parent.tinymce.util.I18n.translate("Other Category"), // translations.tr_meliscore_tinymce_mini_template_other_category,
                             otherCatHtml            = '';
 
                             otherCatHtml = otherCategoryHtml( otherCategory, otherCategorySiteName, index );
@@ -136,7 +133,6 @@
                     }
                 }
 
-                //console.log("countCategoryOccurrence: ", countCategoryOccurrence);
                 // .main-category
                 if ( countCategoryOccurrence ) {
                     var uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
@@ -398,13 +394,7 @@
                             $.each($mainCategory, function(i, v) {
                                 var $mainCategoryElement = $(v),
                                     mainCategorySiteName = $mainCategoryElement.data('site-name');
-                                    /* mainCategoryId = $mainCategoryElement.data("cat-id"), // data attribute value
-                                    $mainCategoryId = $(".main-category[data-cat-id='"+mainCategoryId+"']"); // jQuery selector */
-
-                                    /* if ( mainCategoryId === parent ) {
-                                        $mainCategoryId.append( $btn );
-                                    } */
-                                    // console.log('appendAccordion() siteName === mainCategorySiteName: ', siteName === mainCategorySiteName);
+                                    
                                     if ( siteName === mainCategorySiteName ) {
                                         $accordion.find('.main-category').append( $btn );
                                     }
@@ -471,8 +461,6 @@
     // initialize
     function initIframe() {
         var $iframe = $("#preview-mini-template iframe");
-
-            console.log("initFrame() setTimeout 500 $iframe.length: ", $iframe.length);
 
             // insertion of melis-demo-cms mini template css in iframe head
             if ( $iframe.length ) {
