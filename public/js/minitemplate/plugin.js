@@ -4,14 +4,14 @@
     
     tinymce.PluginManager.requireLangPack("minitemplate");
     tinymce.PluginManager.add("minitemplate", function(editor, url) {
-     
+      console.log("minitemplate editor url: ", url);
       tinymce.DOM.loadCSS("/MelisCore/css/mini-template.css");
       // Used to store a reference to the dialog when we have opened it
       var dialogApi = false;
 
       var _urlDialogConfig = {
         title: 'Mini Template',
-        url: url + '/mini-template.html',
+        url: 'mini-template.html',
         width: 1600,
         height: 600
       };
@@ -22,8 +22,8 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
-          //dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
-          dialogApi = tinymce.activeEditor.windowManager.openUrl(_urlDialogConfig);
+          dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
+          //dialogApi = tinymce.activeEditor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
 
@@ -40,8 +40,8 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
-          //dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
-          dialogApi = tinymce.activeEditor.windowManager.openUrl(_urlDialogConfig);
+          dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
+          //dialogApi = tinymce.activeEditor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
           
