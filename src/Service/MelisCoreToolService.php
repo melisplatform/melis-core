@@ -1117,17 +1117,19 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     {
 
         if (!is_array($input)) {
-            if ($removeFunctions) {
-                $input = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
-            }
-            $badVals = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
-            $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u><em>';
-            $input = str_replace($badVals, '', $input);
-            $input = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
-            $input = strip_tags(trim($input), $allowedTags);
+            if(!empty($input)) {
+                if ($removeFunctions) {
+                    $input = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
+                }
+                $badVals = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
+                $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u><em>';
+                $input = str_replace($badVals, '', $input);
+                $input = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
+                $input = strip_tags(trim($input), $allowedTags);
 
-            if ($textOnly) {
-                $input = str_replace(['<', '>', "'", '"'], '', $input);
+                if ($textOnly) {
+                    $input = str_replace(['<', '>', "'", '"'], '', $input);
+                }
             }
         } else {
             return $this->sanitizeRecursive($input, [], $textOnly, $removeFunctions);
