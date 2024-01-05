@@ -8,12 +8,12 @@
 
 namespace MelisCore\Factory;
 
-use Interop\Container\ContainerInterface;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Db\Adapter\AdapterAbstractServiceFactory;
+use Psr\Container\ContainerInterface;
 
 /**
  * This Abstract factory targeting only Melis Services
