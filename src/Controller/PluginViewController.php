@@ -86,7 +86,7 @@ class PluginViewController extends MelisAbstractActionController
         if ($isXmlHttpRequest) {
             $appconfigpath = $this->getRequest()->getQuery('cpath');
             if(!empty($appconfigpath)) {
-                $lastKey = explode('/', $appconfigpath ?? '');
+                $lastKey = explode('/', $appconfigpath);
                 $keyView = $lastKey[count($lastKey) - 1];
             }
         }
