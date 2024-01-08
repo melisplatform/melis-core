@@ -268,11 +268,13 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
     public function isParentOf($itemId, $parentId)
     {
         $path = $this->getMelisKeyData($itemId);
-        $paths = explode('/', $path);
-
-        if (count($paths) > 0) {
-            if (in_array($parentId, $paths)) {
-                return true;
+        if(!empty($path)) {
+            $paths = explode('/', $path);
+    
+            if (count($paths) > 0) {
+                if (in_array($parentId, $paths)) {
+                    return true;
+                }
             }
         }
 
@@ -392,7 +394,7 @@ class MelisCoreConfigService extends MelisServiceManager implements MelisCoreCon
                 $children = $this->translateAppConfig($value);
                 $final[$key] = $children;
             } else {
-                if (substr($value, 0, 3) == 'tr_') {
+                if (is_string($value) && substr($value, 0, 3) == 'tr_') {
                     $value = $translator->translate($value);
                 }
                 $final[$key] = $value;
