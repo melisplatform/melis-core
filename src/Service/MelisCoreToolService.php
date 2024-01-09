@@ -1043,11 +1043,11 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             case 'fr_FR':
                 //converts dd/mm/yyyy to yyyy-mm-dd
                 $date = str_replace('/', '-', $date);
-                $date = !empty(strtotime($date)) ? date("Y-m-d", strtotime($date)) : null;
+                $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
                 break;
             default:
                 //converts mm/dd/yyyy to yyyy-mm-dd
-                $date = !empty(strtotime($date)) ? date("Y-m-d", strtotime($date)) : null;
+                $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
                 break;
         }
 
@@ -1334,5 +1334,24 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     public function isMobileDevice()
     {
         return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+    }
+
+    /**
+     * @param string $s
+     * @return string
+     */
+    function iso8859_1ToUtf8(string $s): string {
+        $s .= $s;
+        $len = \strlen($s);
+
+        for ($i = $len >> 1, $j = 0; $i < $len; ++$i, ++$j) {
+            switch (true) {
+                case $s[$i] < "\x80": $s[$j] = $s[$i]; break;
+                case $s[$i] < "\xC0": $s[$j] = "\xC2"; $s[++$j] = $s[$i]; break;
+                default: $s[$j] = "\xC3"; $s[++$j] = \chr(\ord($s[$i]) - 64); break;
+            }
+        }
+
+        return substr($s, 0, $j);
     }
 }
