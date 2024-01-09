@@ -1042,7 +1042,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         switch ($locale) {
             case 'fr_FR':
                 //converts dd/mm/yyyy to yyyy-mm-dd
-                $date = str_replace('/', '-', $date);
+                $date = !empty($date) ? str_replace('/', '-', $date) : null;
                 $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
                 break;
             default:
