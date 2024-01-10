@@ -238,8 +238,11 @@ return array(
 
                     // tinyMCE
                     '/MelisCore/js/library/tinymce/tinymce.js?v=' . time(),
+                    //'/MelisCore/js/library/tinymce/jquery.tinymce.min.js',
                     '/MelisCore/js/library/tinymce/icons/default/icons.min.js',
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
+                    /* '/MelisCore/js/library/tinymce/models/dom/model.js',
+                    '/MelisCore/js/library/tinymce/themes/silver/theme.js', */
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
 
@@ -293,7 +296,7 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => false,
+                    'use_build_assets' => true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
