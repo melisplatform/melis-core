@@ -1340,7 +1340,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
      * @param string $s
      * @return string
      */
-    function iso8859_1ToUtf8(string $s): string {
+    public function iso8859_1ToUtf8(string $s): string {
         $s .= $s;
         $len = \strlen($s);
 
@@ -1353,5 +1353,32 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         }
 
         return substr($s, 0, $j);
+    }
+
+    /**
+     * @param $dateTime
+     * @param null $dateType
+     * @param null $timeType
+     * @param null $timezone
+     * @param null $calendar
+     * @param null $pattern
+     * @return string
+     */
+    public function formatDate($dateTime, $dateType = null, $timeType = null, $timezone = null, $calendar = null, $pattern = null)
+    {
+        if(!empty($dateTime)) {
+            $container = new Container('meliscore');
+            $locale = $container['melis-lang-locale'];
+
+            if (empty($dateType))
+                $dateType = \IntlDateFormatter::LONG;
+
+            if (empty($timeType))
+                $timeType = \IntlDateFormatter::MEDIUM;
+
+            $formatter = new \IntlDateFormatter($locale, $dateType, $timeType, $timezone, $calendar, $pattern);
+            return $formatter->format($dateTime);
+        }
+        return null;
     }
 }
