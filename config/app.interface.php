@@ -91,8 +91,8 @@ return array(
                             'php_cli' => '/usr/local/bin/php',
                             'phpunit' => '/usr/local/bin/phpunit',
                             /**
-                             * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
-                             */
+                         * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
+                         */
                         ),
                     ),
                     'langauges' => array(
@@ -299,12 +299,12 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css?v=2021090801',
+                        '/MelisCore/build/css/bundle.css?v=2023090801',
 
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js?v=2021090801',
+                        '/MelisCore/build/js/bundle.js?v=2023090801',
                     ]
                 ]
             ),
