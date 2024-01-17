@@ -362,6 +362,106 @@ class DashboardPluginsController extends MelisAbstractActionController
         return $view;
     }
 
+    public function renderDashboardPluginModalAction()
+    {
+        $translator = $this->getServiceManager()->get('translator');
+        $parameters = $this->getRequest()->getQuery('parameters', array());
+
+        $dashboardId = (!empty($parameters['dashboardId'])) ? $parameters['dashboardId'] : '';
+        $pluginName = (!empty($parameters['pluginName'])) ? $parameters['pluginName'] : '';
+        $pluginId = (!empty($parameters['pluginId'])) ? $parameters['pluginId'] : 1;
+        $pluginModule = (!empty($parameters['pluginId'])) ? $parameters['pluginModule'] : 1;
+        $pluginHardcodedConfig = (!empty($parameters['pluginFrontConfig'])) ? $parameters['pluginFrontConfig'] : [];
+
+        $errors = '';
+        $tag = '';
+        $tabs = array();
+
+        if (empty($pluginModule) || empty($pluginName) || empty($dashboardId)) {
+            $errors = $translator->translate('tr_meliscore_generate_error_No module or plugin or idpage parameters');
+        }
+        
+        if (empty($errors)) {
+            try {
+                $pluginHardcodedConfig['dashboard_id'] = $dashboardId;
+                $pluginHardcodedConfig['plugin_id'] = $pluginId;
+                $melisPlugin = $this->getServiceManager()->get('ControllerPluginManager')->get($pluginName);
+                $melisPlugin->setUpdatesPluginConfig($pluginHardcodedConfig);
+                $melisPlugin->getPluginConfig();
+                $tabs = $melisPlugin->createOptionsForms();
+            } catch (\Exception $e) {
+                $errors = $translator->translate('tr_meliscore_generate_error_Plugin cant be created');
+            }
+        }
+
+        if ($errors != '' || count($tabs) == 0) {
+            $tabs[] = array('tabName' => 'Error', 'html' => $errors);
+        }
+
+        $view = new ViewModel();
+        $view->setTerminal(true);
+        $view->dashboardId = $dashboardId;
+        $view->pluginId = $pluginId;
+        $view->pluginName = $pluginName;
+        $view->pluginModule = $pluginModule;
+        $view->tabs = $tabs;
+        return $view;
+    }
+
+    public function validateDashboardPluginModalAction()
+    {
+        $translator = $this->getServiceManager()->get('translator');
+        $parameters = $this->getRequest()->getPost()->toArray();
+
+        $dashboardId = (!empty($parameters['dashboardId'])) ? $parameters['dashboardId'] : '';
+        $pluginName = (!empty($parameters['pluginName'])) ? $parameters['pluginName'] : '';
+        $pluginId = (!empty($parameters['pluginId'])) ? $parameters['pluginId'] : 1;
+        $pluginModule = (!empty($parameters['pluginId'])) ? $parameters['pluginModule'] : 1;
+
+        $errors = '';
+        $tag = '';
+        $tabs = array();
+
+        if (empty($pluginModule) || empty($pluginName) || empty($dashboardId)) {
+            $errors = $translator->translate('tr_meliscore_generate_error_No module or plugin or idpage parameters');
+        }
+
+        if (empty($errors)) {
+            try {
+                $pluginHardcodedConfig['dashboard_id'] = $dashboardId;
+                $melisPlugin = $this->getServiceManager()->get('ControllerPluginManager')->get($pluginName);
+                $melisPlugin->setUpdatesPluginConfig($pluginHardcodedConfig);
+                $melisPlugin->getPluginConfig();
+                $errorsTabs = $melisPlugin->createOptionsForms();
+            } catch (\Exception $e) {
+                $errors = $translator->translate('tr_meliscore_generate_error_Plugin cant be created');
+            }
+        }
+
+        $success = 1;
+        $finalErrors = array();
+
+        if ($errors != '') {
+            $success = 0;
+            $finalErrors = array('general' => $errors);
+        }
+
+        foreach ($errorsTabs as $response) {
+            if (!$response['success']) {
+                $success = 0;
+            }
+        }
+
+        $finalErrors = $errorsTabs;
+
+        $result = [
+            'success' => $success,
+            'errors' => $finalErrors,
+        ];
+
+        return new JsonModel($result);
+    }
+
     private function getCookie()
     {
         if (empty($_COOKIE['show_bubble_plugins'])) {

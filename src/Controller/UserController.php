@@ -12,6 +12,9 @@ use MelisCore\Service\MelisCoreCreatePasswordService;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Laminas\Session\Container;
+use Laminas\Form\Factory;
+use MelisCore\Model\Hydrator\MelisResultSet;
+
 
 
 /**
@@ -214,9 +217,10 @@ class UserController extends MelisAbstractActionController
                             // password and confirm password matching
                             if($password == $confirmPass)
                             {
-                                $melisLostPass->processUpdatePassword($rhash, $password);
+                                $melisLostPass->processUpdatePassword($rhash, $password);   
                                 $textMessage = "tr_meliscore_user_password_change_succes";
                                 $success = 1;
+
                                 header( "location:/melis/login");
                             }
                             else
@@ -262,6 +266,8 @@ class UserController extends MelisAbstractActionController
      */
     public function resetOldPasswordAction()
     {
+        $this->getEventManager()->trigger('meliscore_user_reset_old_password_start', $this, []);
+
         $pathAppConfigForm = '/meliscore/forms/meliscore_resetpass';
         $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
@@ -273,7 +279,7 @@ class UserController extends MelisAbstractActionController
         $melisLostPass = $this->getServiceManager()->get('MelisCoreLostPassword');
         $hashExists = false;
         $textMessage = '';
-        $success = 0;
+        $success = false;
         $login = '';
         $data = array();
         if($melisLostPass->hashExists($rhash)) {
@@ -291,52 +297,76 @@ class UserController extends MelisAbstractActionController
         $this->getServiceManager()->get('ViewHelperManager')->get('HeadTitle')->set($translator->translate('tr_meliscore_reset_password_header') . ' - ');
 
         $view = new ViewModel();
+
         if($this->getRequest()->isPost())
         {
             $password = $this->getRequest()->getPost('usr_pass');
             $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
-            $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig(['serviceManager' => $this->getServiceManager()]);
 
-            if(strlen($password) >= 8) {
-                // if(strlen($confirmPass) >= 8) {
-                    //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
-                    $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
-                    if($passValidator->isValid($password))
-                    {
-                        // password and confirm password matching
-                        if($password == $confirmPass)
-                        {
-                            $melisLostPass->processUpdatePassword($rhash, $password);
-                            $textMessage = "tr_meliscore_user_password_change_succes";
-                            $success = 1;
-                        }
-                        else
-                        {
-                            $success = 0;
-                            $textMessage = 'tr_meliscore_tool_user_usr_password_not_match';
-                        } // password and confirm password matching
+            // password and confirm password matching
+            if ($password == $confirmPass) {
+                $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+                $user = $userTable->getEntryByField('usr_login', $login)->current();
+                $userId = $user->usr_id;
+
+                $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+
+                $passwordDuplicateCheckSuccessful = true;
+
+                if ($config['password_duplicate_status'] == 1) {
+                    if ($this->getServiceManager()->get('MelisCoreAuth')->isPasswordDuplicate($userId, $password, $config['password_duplicate_lifetime'])) {                                    
+                        $textMessage = sprintf(
+                            $translator->translate('tr_meliscore_tool_other_config_password_duplicate_has_been_used_previously'), 
+                            $config['password_duplicate_lifetime']
+                        );
+
+                        $success = false;
+                        $passwordDuplicateCheckSuccessful = false;
                     }
-                    else {
-                        $success = 0;
-                        $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
-                    } // password regex validator
-                // }
-                // else {
-                //     $success = 0;
-                //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
-                // }// end confirm password length
+                }
+
+                if ($passwordDuplicateCheckSuccessful) {
+                    if ($passValidator->isValid($password)) {
+                        $melisLostPass->processUpdatePassword($rhash, $password);
+                        $textMessage = "tr_meliscore_user_password_change_succes";
+                        $success = true;
+                    } else {
+                        $errorMessages = $passValidator->getMessages();
+                        
+                        $textMessage = "<ul>";
+                        
+                        foreach ($errorMessages as $message) {
+                            $textMessage .= "<li>" . $message . "</li>";
+                        }
+                        
+                        $textMessage .= "</ul>";
+                        $success = false;
+                    }
+                }
+            } else {
+                $textMessage = 'tr_meliscore_tool_user_usr_password_not_match';
+                $success = false;
             }
-            else {
-                $success = 0;
-                $textMessage = 'tr_meliscore_tool_user_usr_password_error_low';
-            }// end password length
         }
 
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+        $user = $userTable->getEntryByField('usr_login', $login)->current();
+        $userId = $user->usr_id;
+        $password = $user->usr_password;
+
+        $response = [];
+        $response['success'] = $success;
+        $response['datas']['usr_id'] = $userId;
+        $response['datas']['usr_password'] = $password;
+        
+        $this->getEventManager()->trigger('meliscore_user_reset_old_password_end', $this, $response);
 
         $data = [
             'success' => $success,
             'message' => $translator->translate($textMessage)
         ];
+        
         return new JsonModel($data);
     }
 
@@ -569,10 +599,12 @@ class UserController extends MelisAbstractActionController
             }// end confirm if link is valid
         }
 
+        $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
 
         $view->setVariable('meliscore_renewpass', $forgotForm);
         $view->setVariable('formFactory', $factory);
         $view->setVariable('formConfig', $appConfigForm);
+        $view->setVariable('passwordValidityLifetime', $config['password_validity_lifetime']);
         $view->hashExists = $hashExists;
         $view->message = $translator->translate($textMessage);
         $view->success = $success;
@@ -592,6 +624,8 @@ class UserController extends MelisAbstractActionController
      */
     public function createPasswordAction()
     {
+        $this->getEventManager()->trigger('meliscore_user_create_password_start', $this, []);
+
         $pathAppConfigForm = '/meliscore/forms/meliscore_generatepass';
         $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         $appConfigForm = $melisMelisCoreConfig->getItem($pathAppConfigForm);
@@ -603,7 +637,7 @@ class UserController extends MelisAbstractActionController
         $melisCreatePwdSvc = $this->getServiceManager()->get('MelisCoreCreatePassword');
         $hashExists = false;
         $textMessage = '';
-        $success = 0;
+        $success = false;
         $login = '';
         $data = array();
         if($melisCreatePwdSvc->hashExists($rhash)) {
@@ -628,42 +662,71 @@ class UserController extends MelisAbstractActionController
         {
             $password = $this->getRequest()->getPost('usr_pass');
             $confirmPass = $this->getRequest()->getPost('usr_pass_confirm');
-            $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
-
+            $passValidator = new \MelisCore\Validator\MelisPasswordValidatorWithConfig(['serviceManager' => $this->getServiceManager()]);
+            
             if($isRequestNotExpired && $isUserExist) {
-                if (strlen($password) >= 8) {
-                    // if (strlen($confirmPass) >= 8) {
-                        //$passValidator = new \Laminas\Validator\Regex(array('pattern' => '/^(?=.*?[0-9])(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^\w\s]).{8,}$/'));
-                        $passValidator = new \MelisCore\Validator\MelisPasswordValidator();
+                if ($password == $confirmPass) {
+                    $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+                    $user = $userTable->getEntryByField('usr_login', $login)->current();
+                    $userId = $user->usr_id;
+
+                    $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+
+                    $passwordDuplicateCheckSuccessful = true;
+
+                    if ($config['password_duplicate_status'] == 1) {
+                        if ($this->getServiceManager()->get('MelisCoreAuth')->isPasswordDuplicate($userId, $password, $config['password_duplicate_lifetime'])) {                                    
+                            $textMessage = sprintf(
+                                $translator->translate('tr_meliscore_tool_other_config_password_duplicate_has_been_used_previously'), 
+                                $config['password_duplicate_lifetime']
+                            );
+    
+                            $success = false;
+                            $passwordDuplicateCheckSuccessful = false;
+                        }
+                    } 
+
+                    if ($passwordDuplicateCheckSuccessful) {
                         if ($passValidator->isValid($password)) {
-                            // password and confirm password matching
-                            if ($password == $confirmPass) {
-                                $melisCreatePwdSvc->processUpdatePassword($rhash, $password);
-                                $textMessage = "tr_meliscore_user_password_change_succes";
-                                $success = 1;
-                            } else {
-                                $success = 0;
-                                $textMessage = 'tr_meliscore_tool_user_usr_password_not_match';
-                            } // password and confirm password matching
+                            $melisCreatePwdSvc->processUpdatePassword($rhash, $password);
+                            $textMessage = "tr_meliscore_user_password_change_succes";
+                            $success = true;
                         } else {
-                            $success = 0;
-                            $textMessage = 'tr_meliscore_tool_user_usr_password_regex_not_match';
-                        } // password regex validator
-                    // } else {
-                    //     $success = 0;
-                    //     $textMessage = 'tr_meliscore_tool_user_usr_confirm_password_error_low';
-                    // }// end confirm password length
+                            $errorMessages = $passValidator->getMessages();
+                            
+                            $textMessage = "<ul>";
+                            
+                            foreach ($errorMessages as $message) {
+                                $textMessage .= "<li>" . $message . "</li>";
+                            }
+                            
+                            $textMessage .= "</ul>";
+                            $success = false;
+                        }
+                    }
                 } else {
-                    $success = 0;
-                    $textMessage = 'tr_meliscore_tool_user_usr_password_error_low';
-                }// end password length
+                    $textMessage = 'tr_meliscore_tool_user_usr_password_not_match';
+                    $success = false;
+                }
             }
             else {
-                $success = 0;
+                $success = false;
                 $textMessage = 'tr_meliscore_tool_user_password_request_invalid';
             }// end confirm if link is valid
         }
+        
+        $userTable = $this->getServiceManager()->get('MelisCoreTableUser');
+        $user = $userTable->getEntryByField('usr_login', $login)->current();
+        $userId = $user->usr_id;
+        $password = $user->usr_password;
 
+        $response = [];
+        $response['success'] = $success;
+        $response['datas']['usr_id'] = $userId;
+        $response['datas']['usr_password'] = $password;
+
+        $this->getEventManager()->trigger('meliscore_user_create_password_end', $this, $response);
+        
         $data = [
             'success' => $success,
             'message' => $translator->translate($textMessage)
@@ -671,6 +734,141 @@ class UserController extends MelisAbstractActionController
         return new JsonModel($data);
     }
 
+    /**
+     * Renders the header for the user password configuration tab.
+     *
+     * @return ViewModel The view model for rendering the header.
+     */
+    public function renderTabsUserPasswordHeaderAction()
+	{
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		
+		return $view;
+	}
+
+    /**
+     * Renders the content for the user password configuration tab.
+     *
+     * @return ViewModel The view model for rendering the content.
+     */
+    public function renderTabsUserPasswordContentAction()
+	{
+		$melisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+		
+        $factory = new Factory();
+        $formElements = $this->getServiceManager()->get('FormElementManager');
+        $factory->setFormElementManager($formElements);
+
+        $loginAccountLockConfigForm = $melisCoreConfig->getFormMergedAndOrdered('meliscore/forms/meliscore_other_config_login_account_lock_form', 'meliscore_other_config_login_account_lock_form');
+        $loginAccountLockForm = $factory->createForm($loginAccountLockConfigForm);
+
+        $passwordValidityConfigForm = $melisCoreConfig->getFormMergedAndOrdered('meliscore/forms/meliscore_other_config_password_validity_form', 'meliscore_other_config_password_validity_form');
+        $passwordValidityForm = $factory->createForm($passwordValidityConfigForm);
+
+        $passwordDuplicateConfigForm = $melisCoreConfig->getFormMergedAndOrdered('meliscore/forms/meliscore_other_config_password_duplicate_form', 'meliscore_other_config_password_duplicate_form');
+        $passwordDuplicateForm = $factory->createForm($passwordDuplicateConfigForm);
+
+        $passwordComplexityConfigForm = $melisCoreConfig->getFormMergedAndOrdered('meliscore/forms/meliscore_other_config_password_complexity_form', 'meliscore_other_config_password_complexity_form');
+        $passwordComplexityForm = $factory->createForm($passwordComplexityConfigForm);
+        
+		$file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
+
+        if (file_exists($file)) {
+            $config = $this->getServiceManager()->get('MelisCoreConfig')->getItem('meliscore/datas/login');
+
+        }
+
+        $loginAccountLockData = new MelisResultSet();
+
+        if (isset($config['login_account_lock_status'])) {
+            $loginAccountLockData->login_account_lock_status = $config['login_account_lock_status'];
+        }
+        
+        if (isset($config['login_account_admin_email'])) {
+            $loginAccountLockData->login_account_admin_email = $config['login_account_admin_email'];
+        }
+
+        if (isset($config['login_account_lock_number_of_attempts'])) {
+            $loginAccountLockData->login_account_lock_number_of_attempts = $config['login_account_lock_number_of_attempts'];
+        }
+
+        if (isset($config['login_account_type_of_lock'])) {
+            $loginAccountLockData->login_account_type_of_lock = $config['login_account_type_of_lock'];
+        }
+
+        if (isset($config['login_account_duration_days'])) {
+            $loginAccountLockData->login_account_duration_days = $config['login_account_duration_days'];
+        }
+
+        if (isset($config['login_account_duration_hours'])) {
+            $loginAccountLockData->login_account_duration_hours = $config['login_account_duration_hours'];
+        }
+
+        if (isset($config['login_account_duration_minutes'])) {
+            $loginAccountLockData->login_account_duration_minutes = $config['login_account_duration_minutes'];
+        }
+
+        $passwordValidityData = new MelisResultSet();
+
+        if (isset($config['password_validity_status'])) {
+            $passwordValidityData->password_validity_status = $config['password_validity_status'];
+        }
+
+        if (isset($config['password_duplicate_lifetime'])) {
+            $passwordValidityData->password_validity_lifetime = $config['password_validity_lifetime'];
+        }
+
+        $passwordDuplicateData = new MelisResultSet();
+
+        if (isset($config['password_duplicate_status'])) {
+            $passwordDuplicateData->password_duplicate_status = $config['password_duplicate_status'];
+        }
+
+        if (isset($config['password_duplicate_lifetime'])) {
+            $passwordDuplicateData->password_duplicate_lifetime = $config['password_duplicate_lifetime'];
+        }
+
+        $passwordComplexityData = new MelisResultSet();
+
+        if (isset($config['password_complexity_number_of_characters'])) {
+            $passwordComplexityData->password_complexity_number_of_characters = $config['password_complexity_number_of_characters'];
+        }
+
+        if (isset($config['password_complexity_use_special_characters'])) {
+            $passwordComplexityData->password_complexity_use_special_characters = $config['password_complexity_use_special_characters'];
+        }
+
+        if (isset($config['password_complexity_use_lower_case'])) {
+            $passwordComplexityData->password_complexity_use_lower_case = $config['password_complexity_use_lower_case'];
+        }
+
+        if (isset($config['password_complexity_use_upper_case'])) {
+            $passwordComplexityData->password_complexity_use_upper_case = $config['password_complexity_use_upper_case'];
+        }
+
+        if (isset($config['password_complexity_use_digit'])) {
+            $passwordComplexityData->password_complexity_use_digit = $config['password_complexity_use_digit'];
+        }
+        
+        $loginAccountLockForm->bind($loginAccountLockData);
+        $passwordValidityForm->bind($passwordValidityData);
+        $passwordDuplicateForm->bind($passwordDuplicateData);
+        $passwordComplexityForm->bind($passwordComplexityData);
+
+		$melisKey = $this->params()->fromRoute('melisKey', '');
+		$view = new ViewModel();
+		$view->melisKey = $melisKey;
+		$view->loginAccountLockForm = $loginAccountLockForm;
+		$view->passwordValidityForm = $passwordValidityForm;
+		$view->passwordDuplicateForm = $passwordDuplicateForm;
+		$view->passwordComplexityForm = $passwordComplexityForm;
+        
+		return $view;
+	}
+    
     protected function recoverHashAction() {
         $hash = $this->params()->fromRoute('rhash', $this->params()->fromQuery('rhash',''));
         $this->_hash = $hash;
@@ -702,5 +900,34 @@ class UserController extends MelisAbstractActionController
         return $schemeData;
     }
 
+    /**
+     * Renders the main tab for user password configuration.
+     *
+     * @return ViewModel The view model for rendering the main tab.
+     */
+    public function renderUserLoginTabsMainAction()
+    {
+        $filePermissionErrors = [];
 
+        $module = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core';
+        $configFile = $module . '/config/app.login.php';
+        
+        if (!is_writable($module)) {
+            $filePermissionErrors[] = 'tr_meliscore_tool_other_config_password_config_file_permission_module';
+        }
+
+        if (!is_writable($configFile)) {
+            $filePermissionErrors[] = 'tr_meliscore_tool_other_config_password_config_file_permission_config';
+        }
+
+        $view = new ViewModel();
+        $melisKey = $this->params()->fromRoute('melisKey', '');
+        $view->melisKey = $melisKey;
+
+        if (!empty($filePermissionErrors)) {
+            $view->filePermissionErrors = $filePermissionErrors;
+        }
+
+        return $view;
+    }
 }

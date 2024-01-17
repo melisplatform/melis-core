@@ -286,7 +286,7 @@ var melisDashBoardDragnDrop = {
             });
     },
     // serializing plugins / re-enable dropppable .gridstack after serializing
-    serializeWidgetMap: function(items) {
+    serializeWidgetMap: function(items, cb) {
         var self = this;
 
         var dataString = new Array;
@@ -352,12 +352,16 @@ var melisDashBoardDragnDrop = {
         });
 
         // save widgets to db
-        self.saveDBWidgets(dataString);
+        self.saveDBWidgets(dataString, cb);
     },
     // save dashboard widgets/plugins
-    saveDBWidgets: function(dataString) {
+    saveDBWidgets: function(dataString, cb) {
         // save the lists of widgets on the dashboard to db
-        var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+        if(cb != undefined) {
+            var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString, cb);
+        }else{
+            var saveDashboardLists = $.post("/melis/MelisCore/DashboardPlugins/saveDashboardPlugins", dataString);
+        }
     },
     // check current dashboard
     checkDashboard: function() {
@@ -870,6 +874,139 @@ var melisDashBoardDragnDrop = {
                     });
             }
     },
+    // open properties modal for the dashboard plugin
+    createDashboardPluginModal: function (el) {
+        var $this = $(el);
+        var gridStackItem = $this.closest('.grid-stack-item');
+        var pluginId = gridStackItem.attr('data-gs-id');
+        var pluginName = gridStackItem.attr('data-gs-name');
+        var pluginModule = gridStackItem.attr('data-gs-module');
+
+        // initialation of local variable
+        zoneId = 'id_meliscms_plugin_modal_interface';
+        melisKey = 'meliscms_plugin_modal_interface';
+        modalUrl = '/melis/MelisCore/DashboardPlugins/renderDashboardPluginModal';
+
+        var modalParams = {
+            dashboardId : activeTabId,
+            pluginName: pluginName,
+            pluginId : pluginId,
+            pluginModule : pluginModule,
+        };
+
+        // requesitng to create modal and display after
+        window.parent.melisHelper.createModal(zoneId, melisKey, false, modalParams, modalUrl, function() {});
+    },
+    dashboardPluginModalSubmit: function (el) {
+        var self = this;
+        // var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
+        // self.serializeWidgetMap(grid.container[0].children);
+
+        // Assign in function for bug issue in closing and opening tabs
+        var $this = $(el);
+        var melisPluginDashboardId = $this.closest("#id_meliscore_dashboard_plugin_modal_container").data("melis-plugin-dashboard-id");
+        var pluginModule = $this.closest("#id_meliscore_dashboard_plugin_modal_container").data("melis-plugin-module");
+        var pluginName = $this.closest("#id_meliscore_dashboard_plugin_modal_container").data("melis-plugin-name");
+        var pluginId = $this.closest("#id_meliscore_dashboard_plugin_modal_container").data("melis-plugin-id");
+        var dataString = $this.closest('.modal-content').find("form");
+
+        // Construct data string
+        var datastring = dataString.serializeArray();
+
+        //add to datastring the unchecked checkbox fields
+        $this.closest('.modal-content').find("form input:checkbox").each(function(){
+            if (!this.checked) {
+                datastring.push({name: this.name, value: 0});
+            }                
+        });
+
+        datastring.push({name: "dashboardId", value: melisPluginDashboardId});
+        datastring.push({name: "pluginModule", value: pluginModule});
+        datastring.push({name: "pluginName", value: pluginName});
+        datastring.push({name: "pluginId", value: pluginId});
+
+        try {
+            self.validateDashboardPluginModal(pluginId, datastring);
+        } catch (e) {
+            console.log(e);
+        }
+    },
+    validateDashboardPluginModal: function (pluginId, datastring) {
+        var self = this;
+        $.ajax({
+            type: 'POST',
+            url: "/melis/MelisCore/DashboardPlugins/validateDashboardPluginModal?validate",
+            data: datastring,
+            dataType: 'json'
+        }).done(function(data) {
+            if (data.success) {
+                // update config for saving
+                self.updateDashboardPluginConfig(pluginId, datastring);
+                // save dashboard plugins
+                var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
+                self.serializeWidgetMap(grid.container[0].children, function(){
+                    // refresh widget
+                    $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-refresh').click();
+                });
+                // close modal
+                $('#id_meliscore_dashboard_plugin_modal_container').modal('hide');
+            } else {
+                dashboardPluginHelpepr.melisMultiKoNotification(data.errors);
+            }
+        }).fail(function(xhr, textStatus, errorThrown) {
+            alert( translations.tr_meliscore_error_message );
+        });
+    },
+    updateDashboardPluginConfig: function (pluginId, datastring) {
+        // get plugin config that is saved in the dom
+        var pluginConfig = $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-json-config').text();
+        pluginConfig = JSON.parse(pluginConfig);
+
+        /**
+         * This will store data if field is multi select,
+         * make sure multi_select_fields key is present in your
+         * plugin config under datas
+         *
+         * Example: multi_select_fields => ['mutli_select_field_name' => []]
+         *
+         * @type {Array}
+         */
+        var arrDatas = [];
+        $.each(datastring, function(i, val){
+            if (~val.name.indexOf("[]")){
+                var fieldName = val.name.replace("[]","");
+                if(!Array.isArray(arrDatas[fieldName])){
+                    arrDatas[fieldName] = [];
+                }
+                arrDatas[fieldName].push(val.value);
+            }
+        });
+
+        // override config from plugin to the ones that we get from the modal form
+        $.each(pluginConfig.datas, function (index, value) {
+            var field = datastring.find(input => input.name == index);
+
+            if (typeof field != 'undefined') {
+                pluginConfig.datas[field.name] = field.value;
+            }
+            else{
+                //try to get data from multi select datas
+                if(index in arrDatas){
+                    pluginConfig.datas[index] = arrDatas[index];
+                }else{//check if fields is in multi select fields to assign its default data
+                    if(pluginConfig.datas['multi_select_fields'] != undefined) {
+                        if (index in pluginConfig.datas['multi_select_fields']) {
+                            //set its default data
+                            pluginConfig.datas[index] = pluginConfig.datas['multi_select_fields'][index];
+                        }
+                    }
+                }
+            }
+        });
+
+        // update plugin config in dom
+        $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-json-config').text(JSON.stringify(pluginConfig));
+    },
     // set current widget/plugin
     setCurrentPlugin: function(widget) {
         // set current plugin
@@ -1057,4 +1194,91 @@ var melisDashBoardDragnDrop = {
         $body.on("click", ".dashboard-plugin-refresh", function() {
             melisDashBoardDragnDrop.refreshWidget($(this));
         });
+
+        $body.on("click", ".dashboard-plugin-properties", function() {
+            melisDashBoardDragnDrop.createDashboardPluginModal($(this));
+        });
+
+        $body.on("click", "#dashboard-plugin-properties-save", function() {
+            melisDashBoardDragnDrop.dashboardPluginModalSubmit($(this));
+        });
 })(jQuery);
+
+var dashboardPluginHelpepr = (function($, window) {
+    var $body = window.parent.$("body");
+        /**
+         * KO NOTIFICATION for Multiple Form
+         */
+        function melisMultiKoNotification(errors, closeByButtonOnly) {
+            if (!closeByButtonOnly) closeByButtonOnly = true;
+
+            var closeByButtonOnly   = ( closeByButtonOnly !== true ) ?  'overlay-hideonclick' : '',
+                errorTexts          = '<div class="row">';
+
+                // remove red color for correctly inputted fields
+                $body.find("#id_meliscore_dashboard_plugin_modal .form-group label").css("color", "inherit");
+
+                $.each(errors, function(idx, errorData) {
+                    if ( errorData['success'] === false ) {
+                        errorTexts += '<h3>'+ (errorData['name']) +'</h3>';
+                        if (errorData['message'] != "") {
+                            errorTexts +='<h4>'+ (errorData['message']) +'</h4>';
+                        }
+ 
+                        // Highlighting errors fields
+                        highlightMultiErrors(errorData['success'], errorData['errors']);
+
+                        $.each( errorData['errors'], function( key, error ) {
+                            if ( key !== 'label' ) {
+                                errorTexts += '<div class="col-xs-12 col-sm-5">';
+                                errorTexts += '  <b>'+ (( error['label'] == undefined ) ? ((error['label']== undefined) ? key : errors['label'] ) : error['label'] ) +'</b>';
+                                errorTexts += '</div>';
+                                errorTexts += '<div class="col-xs-12 col-sm-7">';
+                                errorTexts += ' <div class="modal-error-container">';
+                                // catch error level of object
+                                try {
+                                    $.each( error, function( key, value ) {
+                                        if(key !== 'label' && key !== 'form'){
+                                            $errMsg = '';
+                                            if(value instanceof Object){
+                                                $errMsg = value[0];
+                                            }else{
+                                                $errMsg = value;
+                                            }
+                                            if($errMsg != '') {
+                                                errorTexts += '<span class="tets error-list"><i class="fa fa-circle"></i>'+ $errMsg + '</span><br/>';
+                                            }
+                                        }
+                                    });
+                                } catch(e) {
+                                    if(key !== 'label' && key !== 'form') {
+                                        errorTexts +=  '<span class="hoy error-list"><i class="fa fa-circle"></i>'+ error + '</span>';
+                                    }
+                                }
+                            }
+                            errorTexts += '</div></div>';
+                        });
+                    }
+                });
+
+                errorTexts += '</div>';
+                var div = '<div class="melis-modaloverlay '+ closeByButtonOnly +'"></div>';
+                    div += '<div class="melis-modal-cont KOnotif page-edition-multi-ko">  <div class="modal-content error">'+ errorTexts +' <span class="btn btn-block btn-primary">' + translations.tr_meliscore_notification_modal_Close +'</span></div> </div>';
+
+                $body.append(div);
+        }
+
+        function highlightMultiErrors(success, errors){
+            // if all form fields are error color them red
+            if ( !success ) {
+                $.each( errors, function( key, error ) {
+                    $body.find("#id_meliscore_dashboard_plugin_modal .form-control[name='"+key +"']").parents(".form-group").find("label").css("color","red");
+                });
+            }
+        }
+
+    return {
+        melisMultiKoNotification : melisMultiKoNotification
+    }
+
+})(jQuery, window);

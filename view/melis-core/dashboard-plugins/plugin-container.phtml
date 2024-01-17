@@ -1,6 +1,8 @@
 <?php $class = strtolower(explode('_', preg_replace('/(?<!^)([A-Z])/', '-\\1', $this->pluginConfig['plugin_id']))[0]); ?>
 <div class="grid-stack-item  grid-stack-animate <?= $class ?>"
      data-gs-id="<?php echo $this->pluginConfig['plugin_id']?>"
+     data-gs-name="<?php echo $this->pluginConfig['conf']['name']?>"
+     data-gs-module="<?php echo strTolower($this->pluginConfig['forward']['module']) ?>"
      data-gs-x="<?php echo $this->pluginConfig['datas']['x-axis']?>"
      data-gs-y="<?php echo $this->pluginConfig['datas']['y-axis']?>"
      data-gs-width="<?php echo $this->pluginConfig['datas']['width']?>"
@@ -10,6 +12,7 @@
             <div class="widget-parent">
                 <div class="widget-head">
                     <div class="btn-group float-right btn-group-xs">
+                    	<a class="btn btn-default dashboard-plugin-properties"><i class="fa fa-cog"></i></a>
                     	<a class="btn btn-default dashboard-plugin-delete" <?php echo !empty($this->deleteCallBack) ? 'data-callback="' . $this->deleteCallBack . '"' : '' ?>><i class="fa fa-trash"></i></a>
                         <a class="btn btn-default dashboard-plugin-refresh"><i class="fa fa-refresh"></i></a>
                     </div>

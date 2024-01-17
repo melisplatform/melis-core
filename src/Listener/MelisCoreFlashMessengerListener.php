@@ -46,7 +46,8 @@ class MelisCoreFlashMessengerListener extends MelisGeneralListener implements Li
             'melis_core_platform_scheme_save_end',
             'melis_core_platform_scheme_reset_end',
             'meliscore_tooluser_resend_password_create_email_end',
-            'meliscore_gdpr_auto_delete'
+            'meliscore_gdpr_auto_delete',
+            'meliscore_login_attempt_end',
         ];
 
         $priority = -1000;

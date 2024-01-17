@@ -394,6 +394,20 @@ return [
                                         ],
                                     ],
                                 ],
+                                [
+                                    'spec' => [
+                                        'name' => 'usr_tags',
+                                        'type' => 'MelisText',
+                                        'options' => [
+                                            'label' => 'Tags',
+                                            'tooltip' => '',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_n_usr_tags',
+                                            'required' => false,
+                                        ],
+                                    ],
+                                ],
                             ], // end elements
                             'input_filter' => [
                                 'usr_login' => [
@@ -510,15 +524,29 @@ return [
                                                 ],
                                             ],
                                         ],
+                                        // [
+                                        //     'name' => '\MelisCore\Validator\MelisPasswordValidator',
+                                        //     'break_chain_on_failure' => true,
+                                        //     'options' => [
+                                        //         'min' => 8,
+                                        //         'messages' => [
+                                        //             \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                        //             \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                        //             \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                        //         ],
+                                        //     ],
+                                        // ],
                                         [
-                                            'name' => '\MelisCore\Validator\MelisPasswordValidator',
+                                            'name' => 'MelisPasswordValidatorWithConfig',
                                             'break_chain_on_failure' => true,
                                             'options' => [
                                                 'min' => 8,
                                                 'messages' => [
-                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
-                                                    \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
-                                                    \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::TOO_SHORT => 'tr_meliscore_other_config_password_too_short',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::NO_DIGIT => 'tr_meliscore_other_config_password_no_digit',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::NO_LOWER => 'tr_meliscore_other_config_password_no_lower',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::NO_UPPER => 'tr_meliscore_other_config_password_no_upper',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::NO_SPECIAL_CHARACTER => 'tr_meliscore_other_config_password_no_special_character',
                                                 ],
                                             ],
                                         ],
@@ -552,13 +580,15 @@ return [
                                             ],
                                         ],
                                         [
-                                            'name' => '\MelisCore\Validator\MelisPasswordValidator',
+                                            'name' => 'MelisPasswordValidatorWithConfig',
                                             'options' => [
                                                 'min' => 8,
                                                 'messages' => [
-                                                    \MelisCore\Validator\MelisPasswordValidator::TOO_SHORT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
-                                                    \MelisCore\Validator\MelisPasswordValidator::NO_DIGIT => 'tr_meliscore_tool_user_usr_password_regex_not_match',
-                                                    \MelisCore\Validator\MelisPasswordValidator::NO_LOWER => 'tr_meliscore_tool_user_usr_password_regex_not_match',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::TOO_SHORT => 'tr_meliscore_other_config_password_too_short',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::NO_DIGIT => 'tr_meliscore_other_config_password_no_digit',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::NO_LOWER => 'tr_meliscore_other_config_password_no_lower',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::NO_UPPER => 'tr_meliscore_other_config_password_no_upper',
+                                                    \MelisCore\Validator\MelisPasswordValidatorWithConfig::NO_SPECIAL_CHARACTER => 'tr_meliscore_other_config_password_no_special_character',
                                                 ],
                                             ],
                                         ],
@@ -879,6 +909,20 @@ return [
                                             'onchange' => 'toolUserManagement.imagePreview("#profile-image", this);',
                                             'class' => 'filestyle',
                                             'data-buttonText' => 'Select Image',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'usr_tags',
+                                        'type' => 'MelisText',
+                                        'options' => [
+                                            'label' => 'Tags',
+                                            'tooltip' => '',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'id_usr_tags',
+                                            'required' => false,
                                         ],
                                     ],
                                 ],

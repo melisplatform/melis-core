@@ -16,8 +16,8 @@ var loader = (function(window) {
                                     '</div>' +
                                 '</div>',
         // window selector
-        $window             = $(window),
-        matches             = activeTabId.match(/\d+/g);
+        $window             = $(window);
+        // matches             = activeTabId.match(/\d+/g);
 
         // initial function
         function init() {

@@ -207,6 +207,9 @@ return array(
                     // Plugins Move css group
                     '/MelisCore/css/plugin.group.css',
 
+                    //Bootstrap tags
+                    '/MelisCore/css/bootstrap-tagsinput.css',
+
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
                     // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
@@ -258,6 +261,10 @@ return array(
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
                     //'/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/js/bootstrap-timerpicker.js',
                     '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
+
+                    //Bootstrap tags
+                    '/MelisCore/js/library/bootstrap-tags/bootstrap-tagsinput.js',
+                    '/MelisCore/js/library/bootstrap-tags/typeahead.bundle.js',
 
                     '/MelisCore/js/core/melisCore.js',
                     '/MelisCore/js/core/tabExpander.js',
@@ -631,6 +638,7 @@ return array(
                     '/MelisCore/js/tools/melisCoreTool.js',
                     '/MelisCore/js/core/login.js',
                     '/MelisCore/js/core/melispasswordservice.js',
+                    '/MelisCore/js/core/melisHelper.js',
                 ),
             ),
             'conf' => array(
@@ -668,7 +676,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -741,7 +749,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -817,7 +825,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -891,7 +899,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),
@@ -965,7 +973,7 @@ return array(
                                 'controller' => 'Language',
                                 'action' => 'headerLanguage',
                                 'jscallback' => '',
-                                'jsdatas' => array('variable2' => 'titi')
+                                'jsdatas' => array()
                             ),
                         ),
                     ),

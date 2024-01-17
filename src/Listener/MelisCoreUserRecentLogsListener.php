@@ -21,7 +21,6 @@ class MelisCoreUserRecentLogsListener extends MelisGeneralListener implements Li
 			'MelisCore',
 			'meliscore_get_recent_user_logs',
 			function($e){
-				
 				$sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
 				
 				// Get Cureent User ID

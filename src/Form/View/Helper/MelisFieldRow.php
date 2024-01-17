@@ -310,10 +310,12 @@ class MelisFieldRow extends FormRow
             if ($element->hasAttribute('melis-datepicker')){
                 $defaultFormat = 'YYYY-MM-DD';
             }
+            $locale = 'en';
             $elemOption = $element->getOptions();
             $dateFormat = (!empty($element->getOption('format'))) ? $element->getOption('format') : $defaultFormat;
+            $locale = (!empty($element->getOption('locale'))) ? $element->getOption('locale') : $locale;
             $formElement .= '<script type="text/javascript">';
-            $formElement .= '$("#'.$datePickerId.'").datetimepicker({format: "'.$dateFormat.'"});';
+            $formElement .= '$("#'.$datePickerId.'").datetimepicker({locale: "'.$locale.'", format: "'.$dateFormat.'"});';
             $formElement .= '</script>';
 
         }elseif ($element->getAttribute('class') == self::MELIS_COLOR_PICKER){
