@@ -236,7 +236,9 @@ class MelisFieldRow extends FormRow
             $label = '<label for="tags" class="d-flex flex-row justify-content-between"><div class="label-text">' . $label . '</div>' . $multiValTooltip . '</label>';
             $element->setLabel("");
 
-            $getTags = explode(',', $dataTags);
+            $getTags = [];
+            !empty($dataTags) && $getTags = explode(',', $dataTags);
+
             $ulStart = '<ul class="multi-value-input clearfix" ' . ($notEditable ? "style=\"cursor:not-allowed\"" : null) . '>';
             $ulEnd = '</ul>';
             if ($notEditable) {
