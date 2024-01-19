@@ -574,7 +574,7 @@ class LogController extends MelisAbstractActionController
                 for ($i = 0; $i < sizeof($tableData); $i++) {
                     //loop through each field to get its text, and check if has contain the $search value
                     foreach ($colId as $key => $val) {
-                        if (strpos(strtolower($tableData[$i][$val]), strtolower($search)) !== false) {
+                        if (!empty($tableData[$i][$val]) && strpos(strtolower($tableData[$i][$val]), strtolower($search)) !== false) {
                             //if found push the data
                             array_push($a, $tableData[$i]);
                             break;
