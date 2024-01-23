@@ -110,7 +110,12 @@ class ToolUserController extends MelisAbstractActionController
     public function renderToolUserContentFiltersStatusAction()
     {
         $translator = $this->getServiceManager()->get('translator');
-        $opts = ['tr_meliscore_all' => 'ALL','tr_meliscore_user_status_active' => 'ACTIVE', 'tr_meliscore_user_status_inactive' => 'INACTIVE', 'tr_meliscore_user_status_pending' => 'PENDING'];
+        $opts = [
+            'tr_meliscore_all' => 'ALL',
+            'tr_meliscore_user_status_active' => 'ACTIVE', 
+            'tr_meliscore_user_status_inactive' => 'INACTIVE', 
+            // 'tr_meliscore_user_status_pending' => 'PENDING'
+        ];
         $options = "";
 
         foreach ($opts as $key => $val){

@@ -35,7 +35,12 @@ return [
                                     'module' => 'MelisCore',
                                     'controller' => 'ToolUser',
                                     'action' => 'render-tool-user-content-filters-limit'
-                                ]
+                                ],
+                                'tooluser-status' => [
+                                    'module' => 'MelisCore',
+                                    'controller' => 'ToolUser',
+                                    'action' => 'render-tool-user-content-filters-status'
+                                ],
                             ],
                             'center' => [
                                 'tooluser-search' => [
