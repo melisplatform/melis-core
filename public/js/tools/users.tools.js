@@ -234,7 +234,6 @@ $(document).ready(function () {
         });
 
         $("body").on("change", "select[name=tableToolUserManagement_status]", function () {
-            console.log("triggered");
             var tableId = $(this).parents().eq(6).find('table').attr('id');
             $("#" + tableId).DataTable().ajax.reload();
         });
