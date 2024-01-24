@@ -232,11 +232,6 @@ $(document).ready(function () {
                     melisCoreTool.exportData( '/melis/MelisCore/ToolUser/exportToCsv?filter=' + searched );
                 }
         });
-
-        $("body").on("change", "select[name=tableToolUserManagement_status]", function () {
-            var tableId = $(this).parents().eq(6).find('table').attr('id');
-            $("#" + tableId).DataTable().ajax.reload();
-        });
 });
 
 // call the empty rights data and put it inside the new user treeview
