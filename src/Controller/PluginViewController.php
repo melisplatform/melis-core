@@ -122,7 +122,7 @@ class PluginViewController extends MelisAbstractActionController
          * Generate the views recursively
          * and add the corresponding appConfig part to make it accessible in the view
          */
-        $zoneView = $this->generateRec($keyView, $appconfigpath, $datasParameters);
+        $zoneView = $this->generateRec($keyView, $appconfigpath, $datasParameters, $jsCallBacks);
         $zoneView->setVariable('zoneconfig', $appsConfig);
         $zoneView->setVariable('parameters', $datasParameters);
         $zoneView->setVariable('keyInterface', $keyView);
@@ -134,6 +134,7 @@ class PluginViewController extends MelisAbstractActionController
         if (!empty($zoneView->getVariable('jsCallBacks')) && is_array($zoneView->getVariable('jsCallBacks')))
         {
             $jsCallBacks = ArrayUtils::merge($zoneView->getVariable('jsCallBacks'), $jsCallBacks);
+            $jsCallBacks = array_unique($jsCallBacks);
         }
         $zoneView->setVariable('jsCallBacks', $jsCallBacks);
 
@@ -218,7 +219,7 @@ class PluginViewController extends MelisAbstractActionController
      *
      * @return \Laminas\View\Model\ViewModel
      */
-    public function generateRec($key, $fullKey, $recDatas = [])
+    public function generateRec($key, $fullKey, $recDatas = [], &$jsCB)
     {
 
         $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
@@ -390,7 +391,7 @@ class PluginViewController extends MelisAbstractActionController
                  */
                 foreach ($itemConfig['interface'] as $keyInterface => $valueInterface) {
                     $subKey = $fullKey . '/interface/' . $keyInterface;
-                    $subView = $this->generateRec($keyInterface, $subKey, $recDatas);
+                    $subView = $this->generateRec($keyInterface, $subKey, $recDatas, $jsCB);
 
                     if (!empty($subView)) {
                         $norights = $subView->getVariable('norights');
@@ -410,8 +411,11 @@ class PluginViewController extends MelisAbstractActionController
             {
                 $melisDashboardSrv = $this->getServiceManager()->get('MelisCoreDashboardService');
                 list($jsCallBacks, $datasCallback) = $melisDashboardSrv->getDashboardPluginsJsCallbackJsDatas($itemConfig['conf']['id']);
-                
-                $view->setVariable('jsCallBacks', $jsCallBacks);
+
+                //to include all js callbacks
+                $jsCB = array_merge($jsCB, $jsCallBacks);
+
+                $view->setVariable('jsCallBacks', $jsCB);
                 $view->setVariable('datasCallback', $datasCallback);
 
 
