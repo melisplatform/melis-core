@@ -22,7 +22,7 @@
         'images_upload_url' => '/melis/MelisCore/MelisTinyMce/uploadImage',
 		'plugins' => [
            'lists', 'advlist', 'autolink', 'link', 'image', 'charmap', 'preview', 'anchor', 'help', 'nonbreaking',
-		   'searchreplace', 'visualblocks', 'code', 'insertdatetime', 'media', 'table', 'minitemplate' // 'fullscreen',
+		   'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 'table', 'minitemplate' 
 		],
 		'external_plugins' => [
 			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js' //?v=20210325
