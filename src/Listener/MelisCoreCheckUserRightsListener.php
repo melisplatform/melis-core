@@ -31,9 +31,12 @@ class MelisCoreCheckUserRightsListener extends MelisGeneralListener implements L
                 $container  = new Container('meliscore');
                 $userSvc    = $sm->get('MelisCoreAuth');
                 $user       = $userSvc->getIdentity();
-                $lastUpdate = new \DateTime(date('H:i:s', strtotime($container->melis_user_session_last_update)));
-                $timeNow    = new \DateTime(date("H:i:s"));
-                $difference = $lastUpdate->diff($timeNow)->i;
+                $difference = 0;
+                if(!empty($container->melis_user_session_last_update)) {
+                    $lastUpdate = new \DateTime(date('H:i:s', strtotime($container->melis_user_session_last_update)));
+                    $timeNow = new \DateTime(date("H:i:s"));
+                    $difference = $lastUpdate->diff($timeNow)->i;
+                }
 
                 // checks the user accessibility in every 5 minutes
                 if($difference >= self::INTERVAL_TO_UPDATE) {

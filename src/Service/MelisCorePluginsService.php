@@ -361,16 +361,16 @@ class MelisCorePluginsService extends MelisGeneralService
             $melisPublicModulesWithSection = json_decode($melisPublicModulesWithSection);
             foreach ($melisPublicModulesWithSection as $idx => $moduleInfo) {
                 // remove 'melisplatform/' word
-                $packageName = str_replace('melisplatform/',null,$moduleInfo->packageName);
+                $packageName = str_replace('melisplatform/','',$moduleInfo->packageName);
                 /*
                  * special case for plugin config of module name
                  */
                 if ($pluginModuleName) {
                     // remove dashes
-                    $packageName = str_replace('-',null,$packageName);
+                    $packageName = str_replace('-','',$packageName);
                 }
                 if ($dashboardPlugin) {
-                    $packageName = str_replace('-',null,implode('-', array_map('ucfirst', explode('-', $packageName))));
+                    $packageName = str_replace('-','',implode('-', array_map('ucfirst', explode('-', $packageName))));
                 }
 
                 $publicModules[$packageName] = [

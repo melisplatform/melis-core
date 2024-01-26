@@ -794,6 +794,8 @@ class ToolUserController extends MelisAbstractActionController
         $userSvc = $this->getServiceManager()->get('MelisCoreUser');
         $translation = $this->getServiceManager()->get('translator');
 
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
+
         if($this->getRequest()->isPost())
         {
             $id = (int) $this->getRequest()->getPost('id');
@@ -804,7 +806,7 @@ class ToolUserController extends MelisAbstractActionController
                 foreach($userTable->getEntryById($id) as $userVal)
                 {
                     $connectionTime = $userSvc->getUserSessionTime( (int) $userVal->usr_id, $userVal->usr_last_login_date) == '-' ?
-                        strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date)) :
+                        date($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date)) :
                         $userSvc->getUserSessionTime( (int) $userVal->usr_id, $userVal->usr_last_login_date);
 
                     $connectionTime = $connectionTime ? $translation->translate('tr_meliscore_date_for') . $connectionTime : null;
@@ -819,7 +821,7 @@ class ToolUserController extends MelisAbstractActionController
                     $data['usr_admin'] = $userVal->usr_admin;
                     $data['usr_image'] = $image;
                     $data['usr_status'] = $userVal->usr_status;
-                    $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
+                    $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : $melisTool->formatDate(strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
                     $data['usr_role_id'] = $userVal->usr_role_id;
                     $data['usr_tags'] = $userVal->usr_tags;
                 }
@@ -961,7 +963,7 @@ class ToolUserController extends MelisAbstractActionController
                 $tableData[$ctr]['usr_status'] = '<span class="'.$status.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_is_online'] = '<span class="'.$online.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_image'] = '<img src="'.$image . '" width="24" height="24" alt="profile image" title="Profile picture of '.$tableData[$ctr]['usr_firstname'].'"/>';
-                $tableData[$ctr]['usr_last_login_date'] = ($tableData[$ctr]['usr_last_login_date']) ? strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usr_last_login_date'])) : '';
+                $tableData[$ctr]['usr_last_login_date'] = ($tableData[$ctr]['usr_last_login_date']) ? $melisTool->formatDate(strtotime($tableData[$ctr]['usr_last_login_date']), null, \IntlDateFormatter::NONE) : '';
                 $tableData[$ctr]['usr_email'] = $melisTool->limitedText($tableData[$ctr]['usr_email'], 35);
                 // remove critical details
                 unset($tableData[$ctr]['usr_password']);
@@ -1380,9 +1382,10 @@ class ToolUserController extends MelisAbstractActionController
                                 $userSession->usr_image = $data['usr_image'];
                                 $userSession->usr_password = $savedPassword;
 
+                                $image = !empty($userSession->usr_image) ? base64_encode($userSession->usr_image) : null;
                                 $datas = [
                                     'isMyInfo' => 1,
-                                    'loadProfile' => 'data:image/jpeg;base64,' . base64_encode($userSession->usr_image),
+                                    'loadProfile' => 'data:image/jpeg;base64,' . $image,
                                 ];
                             }
                             // free up memory
@@ -1646,7 +1649,7 @@ class ToolUserController extends MelisAbstractActionController
                     $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue, 80);
                 }
 
-                $loginDate = strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($tableData[$ctr]['usrcd_last_login_date']));
+                $loginDate = $melisTool->formatDate(strtotime($tableData[$ctr]['usrcd_last_login_date']), null, \IntlDateFormatter::SHORT);
                 $loginDate = explode(' ' , $loginDate)[0];
 
                 $connectionTime = $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date']) == '-' ? '0' :
