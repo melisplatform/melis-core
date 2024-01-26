@@ -68,7 +68,7 @@
 			},
 			select: function(event, data) {
 				if ( data.node.isSelected() === true ) {
-					$(data.node.span).find('.fancytree-title').css("color",data.node.data.melisData.colorSelected );
+					$(data.node.span).find('.fancytree-title').css("color", data.node.data.melisData.colorSelected );
 					$(data.node.span).find('.fancytree-checkbox').removeClass("fa-square-o").addClass("fa-check-square-o").css("color",data.node.data.melisData.colorSelected );
 				}
 				else{
@@ -105,6 +105,23 @@
 						}
 					}
 				});  
+			},
+			click: function(event, data) {
+				var node 		= data.node,
+					$span 		= $(data.node.span),
+					targetType 	= data.targetType;
+
+					/**
+					 * evo/user-mngt-rights
+					 */
+					//$(data.node.span).parents("ul").addClass("fancytree-parent-item");
+					//$(".fancytree-parent-item li[aria-expanded='true'] > .fancytree-has-children .fancytree-title").css("color", data.node.data.melisData.colorSelected);
+
+					if ( targetType === 'checkbox' ) {
+						console.log("rightsFancytreeInit.js click data: ", data);
+						$span.parents("ul").addClass("fancytree-parent-item");
+						$(".fancytree-parent-item li[aria-expanded='true'] > .fancytree-has-children .fancytree-title").css("color", data.node.data.melisData.colorSelected);
+					}
 			}
 		});
 	}
@@ -116,4 +133,6 @@
 		cursorcolor: primaryColor,
 		autohidemode: false
 	});
+
+
 })(jQuery);

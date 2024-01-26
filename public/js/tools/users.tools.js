@@ -30,7 +30,7 @@ window.setUserDateConnection = function (d) {
 };
 
 // action buttons
-$(document).ready(function () {
+$(function () {
     var $body = $("body");
 
         //image preveiew
@@ -214,7 +214,7 @@ $(document).ready(function () {
                 toolUserManagement.deleteUser(id);
         });
 
-        $("body").on("click", '.btnUserRegenerateLink', function() {
+        $body.on("click", '.btnUserRegenerateLink', function() {
             var id = $(this).parents("tr").attr("id");
             toolUserManagement.resendPasswordCreateEmail(id);
         });
@@ -233,10 +233,9 @@ $(document).ready(function () {
                 }
         });
 
-        $("body").on("change", "select[name=tableToolUserManagement_status]", function () {
-            console.log("triggered");
+        $body.on("change", "select[name=tableToolUserManagement_status]", function () {
             var tableId = $(this).parents().eq(6).find('table').attr('id');
-            $("#" + tableId).DataTable().ajax.reload();
+                $("#" + tableId).DataTable().ajax.reload();
         });
 });
 
