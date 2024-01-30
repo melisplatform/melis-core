@@ -37,6 +37,7 @@
 		"ext-openssl": "*",
 		"ext-pdo_mysql": "*",
 		"composer/composer": "2.6.6",
+		"symfony/finder": "^6.4",
 		"laminas/laminas-mvc": "^3.7",
 		"laminas/laminas-i18n": "^2.24",
 		"laminas/laminas-session": "^2.17",
