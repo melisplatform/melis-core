@@ -280,7 +280,12 @@ class MelisPasswordSettingsService extends MelisGeneralService
             } else {
                 $file = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/melis-core/config/app.login.php';
 
-                chmod($file, 0777);
+                if(PHP_OS_FAMILY === 'Linux' && DIRECTORY_SEPARATOR == '/') {
+                    shell_exec('sudo chmod 0777 '.$file);
+                } else {
+                    chmod($file, 0777);
+                }
+
                 $configFactory = new \Laminas\Config\Factory();
 
                 $config = [
