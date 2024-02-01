@@ -22,15 +22,18 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
-          console.log("addButton  editor.windowManager.openUrl _urlDialogConfig.url: ", _urlDialogConfig.url);
           dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
-          //dialogApi = tinymce.activeEditor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
 
           setTimeout(function() {
             dialogApi.unblock();
           }, 2000);
+
+          var $body = $("body"),
+              $dialog = $body.find(".tox-dialog");
+
+              melisTinyMCE.modalPopUp( $dialog);
         }
       });
 
@@ -41,15 +44,18 @@
         tooltip: 'Mini Template',
         title: 'Mini Template',
         onAction: () => {
-          console.log("addMenuItem  editor.windowManager.openUrl _urlDialogConfig.url: ", _urlDialogConfig.url);
           dialogApi = editor.windowManager.openUrl(_urlDialogConfig);
-          //dialogApi = tinymce.activeEditor.windowManager.openUrl(_urlDialogConfig);
 
           dialogApi.block('Loading...');
           
           setTimeout(function() {
             dialogApi.unblock();
           }, 2000);
+
+          var $body = $("body"),
+              $dialog = $body.find(".tox-dialog");
+
+              melisTinyMCE.modalPopUp( $dialog);
         }
       });
 

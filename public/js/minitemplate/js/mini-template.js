@@ -182,45 +182,45 @@
                 classesToAdd        = ['ui-accordion-content', 'ui-corner-bottom', 'ui-helper-reset', 'ui-widget-content'], // k
                 classList           = $btn.attr('class').split(/\s+/); // i
 
+                /**
+                 * Loop through the class lists and compare with classes to be removed
+                 */
+                /*  for ( var i = 0; i < classList.length; i++ ) {
+                    for ( var j = 0; j < classesToRemoved.length; j++ ) {
+                    if ( classList[i] == classesToRemoved[j] ) {
+                        $elem.removeClass( classList[i] ); */
                         /**
-                         * Loop through the class lists and compare with classes to be removed
+                         * Replace with classes to add
                          */
-                       /*  for ( var i = 0; i < classList.length; i++ ) {
-                          for ( var j = 0; j < classesToRemoved.length; j++ ) {
-                            if ( classList[i] == classesToRemoved[j] ) {
-                              $elem.removeClass( classList[i] ); */
-                              /**
-                               * Replace with classes to add
-                               */
-                              /* for ( var k = 0; k < classesToAdd.length; k++ ) {
-                                $elem.addClass( classesToAdd[k] );
-                              } */
-                            /* }
-                          }
+                        /* for ( var k = 0; k < classesToAdd.length; k++ ) {
+                        $elem.addClass( classesToAdd[k] );
                         } */
+                    /* }
+                    }
+                } */
+
+                /**
+                 * Remove this not needed element added by jquery ui accordion.
+                 * <span class="ui-accordion-header-icon ui-icon fa fa-arrow-circle-right"></span>
+                 */
+                $btn.find(".fa-arrow-circle-right").remove();
+
+                /**
+                 * Highlight the clicked button to determine from in active.
+                 */
+                $btn.on("click", function(e) {
+                    var $this = $(this);
+
+                        $this.toggleClass("active").siblings().removeClass("active");
 
                         /**
-                         * Remove this not needed element added by jquery ui accordion.
-                         * <span class="ui-accordion-header-icon ui-icon fa fa-arrow-circle-right"></span>
+                         * For the issue on displaying all available mini templates.
+                         * Some button when clicked it closes the accordion
                          */
-                        $btn.find(".fa-arrow-circle-right").remove();
-
-                        /**
-                         * Highlight the clicked button to determine from in active.
-                         */
-                        $btn.on("click", function(e) {
-                          var $this = $(this);
-
-                              $this.toggleClass("active").siblings().removeClass("active");
-
-                              /**
-                               * For the issue on displaying all available mini templates.
-                               * Some button when clicked it closes the accordion
-                               */
-                              if ( $this.hasClass( 'ui-accordion-header' ) ) {
-                                $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
-                              }
-                        });
+                        if ( $this.hasClass( 'ui-accordion-header' ) ) {
+                        $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
+                        }
+                });
         });
     }
 

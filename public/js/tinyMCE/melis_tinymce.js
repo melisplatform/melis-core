@@ -121,8 +121,8 @@ var melisTinyMCE = (function() {
 			editor.save();
 		});
 
-		/* editor.on("init", function() {
-			tinyMceOpenDialog(editor);
+		/* editor.on("init", function(e) {
+			//tinyMceOpenDialog(editor);
 		}); */
 
 		editor.on("blur", function() {
@@ -132,45 +132,57 @@ var melisTinyMCE = (function() {
 
 		// for Insert/Edit Link
 		editor.on("ExecCommand", function(e) {
-			console.log("e.command", e.command);
-			// if the command refers to link dialog opening
-			if ( e.command === "mceLink" ) {
-				// wait for DOM to update
-				setTimeout(function() {
-					const $dialogBody = document.querySelector(".tox-dialog__body-content"),
-					 	  $browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
+			var $body = $("body");
 
-					// creates new custom button and set attributes
-					let $customButton = document.createElement("button");
+				console.log("e.command", e.command);
+				// if the command refers to link dialog opening
+				if ( e.command === "mceLink" ) {
+					// wait for DOM to update
+					setTimeout(function() {
+						const $dialogBody = document.querySelector(".tox-dialog__body-content"),
+							  $browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
 
-						$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
-						$customButton.classList.add("mce-btn", "mce-open");
+						// creates new custom button and set attributes
+						let $customButton = document.createElement("button");
 
-						setMultipleAttributes($customButton, { 
-							"title" : "Site tree view",
-							"id"	: "mce-link-tree",
-							"style" : "width: 34px; height: 34px;"
-						});
+							$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
+							$customButton.classList.add("mce-btn", "mce-open");
 
-						// insert the new button after browse URL button
-						$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
+							setMultipleAttributes($customButton, { 
+								"title" : "Site tree view",
+								"id"	: "mce-link-tree",
+								"style" : "width: 34px; height: 34px;"
+							});
 
-						// event handler of new button
-						$customButton.onclick = function() {
-							// show modal for #id_meliscms_find_page_tree
-							melisLinkTree.createTreeModal();
-						};
+							// insert the new button after browse URL button
+							$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
 
-						// scroll to view dialog box
-						modalPopUp();
-				}, 1);
-			}
-			else {
-				setTimeout(function() {
+							// event handler of new button
+							$customButton.onclick = function() {
+								// show modal for #id_meliscms_find_page_tree
+								melisLinkTree.createTreeModal();
+							};
+							
+							// scroll to view dialog box
+							var $dialog = $body.find(".tox-dialog");
+								modalPopUp( $dialog );
+					}, 1);
+				}
+				else if ( e.command === "mceInsertFile" ) {
+					// scroll to view moxman container
+					setTimeout(function() {	
+						var $moxContainer = $body.find(".moxman-container");
+							modalPopUp( $moxContainer );
+					}, 500);
+					console.log("mceInsertFile setTimeout 500");
+				}
+				else {
 					// scroll to view dialog box
-					modalPopUp();
-				}, 1);
-			}
+					setTimeout(function() {
+						var $dialog = $body.find(".tox-dialog");
+							modalPopUp( $dialog );
+					}, 1);
+				}
 		});
 	}
 
@@ -245,45 +257,40 @@ var melisTinyMCE = (function() {
     }
 
 	// modal pop up tinymce melis-core
-	function modalPopUp() {
+	function modalPopUp( $element ) {
 		// OPENING THE POPUP
-		var $body 		= $("body"),
+		/* var $body 		= $("body"),
 			$mcePopUp 	= $body.find(".tox-tinymce-aux"), // #mce-modal-block [.tox-tinymce-aux]
-			$dialog 	= $body.find(".tox-dialog"),
-			$iframe 	= window.parent.$(".melis-iframe");
-
-		//var tinymceDialog = setInterval(function() {
-			if ( $mcePopUp.length ) {
-
+			$dialog 	= $body.find(".tox-dialog"), */
+		var	$iframe 	= window.parent.$(".melis-iframe");
+			console.log("$element.length: ", $element.length);
+			if ( $element.length ) {
 				if ( $iframe.length ) {
 					// iframe height
-					var iframeHeight = $(window).height(),
+					var iframeHeight 	= $(window).height(),
 						// iframe offset
-						$iframeOffset = $iframe.position().top,
+						$iframeOffset 	= $iframe.position().top,
 						// dialog box height .mce-window [.dialog]
-						dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
+						dialogHeight 	= $element.outerHeight() - $iframeOffset * 10;
 
-					parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
+						parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
 				} else {
-					var bodyHeight = window.parent.$("body").height(),
-						dialogHeight = $dialog.outerHeight();
+					var bodyHeight 		= window.parent.$("body").height(),
+						dialogHeight 	= $element.outerHeight();
 
-					parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
+						parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
 				}
 
 				// CLOSING THE POPUP
 				var timeOut = setInterval(function() {
-					if (!$dialog.is(":visible")) {
+					if ( !$element.is(":visible") ) {
 						window.parent
 							.$("body")
 							.animate({ scrollTop: parent.scrollOffsetTinyMCE() }, 200);
 						clearTimeout(timeOut);
 					}
 				}, 300);
-
-				//clearInterval(tinymceDialog);
 			}
-		//}, 500);
 	}
 
 	function addMelisCss() {
@@ -296,7 +303,7 @@ var melisTinyMCE = (function() {
 	}
 
 	// for reference, came from melisCms.js, scrollToViewTinyMCE()
-	/* function scrollToViewIframeTinyMCE(dialogHeight, iframeHeight) {
+	function scrollToViewIframeTinyMCE(dialogHeight, iframeHeight) {
 		// window scroll offset
 		var windowOffset 	= $(window).scrollTop(),
 			$iframe 		= $(".melis-iframe"),
@@ -313,7 +320,7 @@ var melisTinyMCE = (function() {
 			} else {
 				return windowOffset;
 			}
-	} */
+	}
 
 	// Function that accessible using melisTinyMCE
 	return {
@@ -324,8 +331,7 @@ var melisTinyMCE = (function() {
 		modalPopUp: modalPopUp,
 		addMelisCss: addMelisCss,
 		setMultipleAttributes: setMultipleAttributes,
-		modalPopUp: modalPopUp,
-		//scrollToViewIframeTinyMCE: scrollToViewIframeTinyMCE
+		scrollToViewIframeTinyMCE: scrollToViewIframeTinyMCE
 	};
 })();
 
@@ -368,6 +374,7 @@ var melisTinyMCE = (function() {
 })(jQuery);
 
 function tinyMceCleaner(editor) {
+	//console.log("melis_tinymce.js tinyMceCleaner()");
 	editor.serializer.addNodeFilter("script,style", function(nodes, name) {
 		var i = nodes.length,
 			node,
