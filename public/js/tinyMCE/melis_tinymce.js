@@ -132,56 +132,54 @@ var melisTinyMCE = (function() {
 
 		// for Insert/Edit Link
 		editor.on("ExecCommand", function(e) {
-			var $body = $("body");
-
+			var $body 	= $("body");
 				console.log("e.command", e.command);
-				// if the command refers to link dialog opening
-				if ( e.command === "mceLink" ) {
-					// wait for DOM to update
-					setTimeout(function() {
-						const $dialogBody = document.querySelector(".tox-dialog__body-content"),
-							  $browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
+				switch(e.command) {
+					case "mceLink":
+						// wait for DOM to update
+						setTimeout(function() {
+							const $dialogBody = document.querySelector(".tox-dialog__body-content"),
+								$browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
 
-						// creates new custom button and set attributes
-						let $customButton = document.createElement("button");
+							// creates new custom button and set attributes
+							let $customButton = document.createElement("button");
 
-							$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
-							$customButton.classList.add("mce-btn", "mce-open");
+								$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
+								$customButton.classList.add("mce-btn", "mce-open");
 
-							setMultipleAttributes($customButton, { 
-								"title" : "Site tree view",
-								"id"	: "mce-link-tree",
-								"style" : "width: 34px; height: 34px;"
-							});
+								setMultipleAttributes($customButton, { 
+									"title" : "Site tree view",
+									"id"	: "mce-link-tree",
+									"style" : "width: 34px; height: 34px;"
+								});
 
-							// insert the new button after browse URL button
-							$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
+								// insert the new button after browse URL button
+								$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
 
-							// event handler of new button
-							$customButton.onclick = function() {
-								// show modal for #id_meliscms_find_page_tree
-								melisLinkTree.createTreeModal();
-							};
-							
-							// scroll to view dialog box
+								// event handler of new button
+								$customButton.onclick = function() {
+									// show modal for #id_meliscms_find_page_tree
+									melisLinkTree.createTreeModal();
+								};
+								
+								// scroll to view dialog box
+								var $dialog = $body.find(".tox-dialog");
+									modalPopUp( $dialog );
+						}, 1);
+						break;
+					case "mceInsertFile":
+						// scroll to view moxman container
+						setTimeout(function() {	
+							var $moxContainer = $body.find(".moxman-container");
+								modalPopUp( $moxContainer );
+						}, 1000);
+						break;
+					default:
+						// scroll to view dialog box
+						setTimeout(function() {
 							var $dialog = $body.find(".tox-dialog");
 								modalPopUp( $dialog );
-					}, 1);
-				}
-				else if ( e.command === "mceInsertFile" ) {
-					// scroll to view moxman container
-					setTimeout(function() {	
-						var $moxContainer = $body.find(".moxman-container");
-							modalPopUp( $moxContainer );
-					}, 500);
-					console.log("mceInsertFile setTimeout 500");
-				}
-				else {
-					// scroll to view dialog box
-					setTimeout(function() {
-						var $dialog = $body.find(".tox-dialog");
-							modalPopUp( $dialog );
-					}, 1);
+						}, 1);
 				}
 		});
 	}
@@ -259,11 +257,8 @@ var melisTinyMCE = (function() {
 	// modal pop up tinymce melis-core
 	function modalPopUp( $element ) {
 		// OPENING THE POPUP
-		/* var $body 		= $("body"),
-			$mcePopUp 	= $body.find(".tox-tinymce-aux"), // #mce-modal-block [.tox-tinymce-aux]
-			$dialog 	= $body.find(".tox-dialog"), */
 		var	$iframe 	= window.parent.$(".melis-iframe");
-			console.log("$element.length: ", $element.length);
+			//console.log("$element.length: ", $element.length);
 			if ( $element.length ) {
 				if ( $iframe.length ) {
 					// iframe height
