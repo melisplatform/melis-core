@@ -794,7 +794,7 @@ class ToolUserController extends MelisAbstractActionController
         $userSvc = $this->getServiceManager()->get('MelisCoreUser');
         $translation = $this->getServiceManager()->get('translator');
 
-        $formatter = new \IntlDateFormatter($locale, \IntlDateFormatter::LONG, \IntlDateFormatter::NONE);
+        $melisTool = $this->getServiceManager()->get('MelisCoreTool');
 
         if($this->getRequest()->isPost())
         {
@@ -821,7 +821,7 @@ class ToolUserController extends MelisAbstractActionController
                     $data['usr_admin'] = $userVal->usr_admin;
                     $data['usr_image'] = $image;
                     $data['usr_status'] = $userVal->usr_status;
-                    $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : $formatter->format(strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
+                    $data['usr_last_login_date'] = is_null($userVal->usr_last_login_date) ? '-' : $melisTool->formatDate(strtotime($userVal->usr_last_login_date))  . ' ' . $connectionTime;
                     $data['usr_role_id'] = $userVal->usr_role_id;
                     $data['usr_tags'] = $userVal->usr_tags;
                 }
@@ -855,8 +855,6 @@ class ToolUserController extends MelisAbstractActionController
         $dataCount = 0;
         $draw = 0;
         $tableData = array();
-
-        $formatter = new \IntlDateFormatter($locale, \IntlDateFormatter::LONG, \IntlDateFormatter::NONE);
 
         if($this->getRequest()->isPost())
         {
@@ -965,7 +963,7 @@ class ToolUserController extends MelisAbstractActionController
                 $tableData[$ctr]['usr_status'] = '<span class="'.$status.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_is_online'] = '<span class="'.$online.'"><i class="fa fa-fw fa-circle"></i></span>';
                 $tableData[$ctr]['usr_image'] = '<img src="'.$image . '" width="24" height="24" alt="profile image" title="Profile picture of '.$tableData[$ctr]['usr_firstname'].'"/>';
-                $tableData[$ctr]['usr_last_login_date'] = ($tableData[$ctr]['usr_last_login_date']) ? $formatter->format(strtotime($tableData[$ctr]['usr_last_login_date'])) : '';
+                $tableData[$ctr]['usr_last_login_date'] = ($tableData[$ctr]['usr_last_login_date']) ? $melisTool->formatDate(strtotime($tableData[$ctr]['usr_last_login_date']), null, \IntlDateFormatter::NONE) : '';
                 $tableData[$ctr]['usr_email'] = $melisTool->limitedText($tableData[$ctr]['usr_email'], 35);
                 // remove critical details
                 unset($tableData[$ctr]['usr_password']);
@@ -1625,8 +1623,6 @@ class ToolUserController extends MelisAbstractActionController
         $tableData = array();
         $draw = 0;
 
-        $formatter = new \IntlDateFormatter($locale, \IntlDateFormatter::LONG, \IntlDateFormatter::NONE);
-
         if($request->isPost()) {
 
             $post    = $request->getPost()->toArray();
@@ -1653,7 +1649,7 @@ class ToolUserController extends MelisAbstractActionController
                     $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue, 80);
                 }
 
-                $loginDate = $formatter->format(strtotime($tableData[$ctr]['usrcd_last_login_date']));
+                $loginDate = $melisTool->formatDate(strtotime($tableData[$ctr]['usrcd_last_login_date']), null, \IntlDateFormatter::SHORT);
                 $loginDate = explode(' ' , $loginDate)[0];
 
                 $connectionTime = $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date']) == '-' ? '0' :

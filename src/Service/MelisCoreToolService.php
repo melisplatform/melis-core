@@ -1042,12 +1042,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         switch ($locale) {
             case 'fr_FR':
                 //converts dd/mm/yyyy to yyyy-mm-dd
-                $date = str_replace('/', '-', $date);
-                $date = !empty(strtotime($date)) ? date("Y-m-d", strtotime($date)) : null;
+                $date = !empty($date) ? str_replace('/', '-', $date) : null;
+                $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
                 break;
             default:
                 //converts mm/dd/yyyy to yyyy-mm-dd
-                $date = !empty(strtotime($date)) ? date("Y-m-d", strtotime($date)) : null;
+                $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
                 break;
         }
 
@@ -1117,17 +1117,19 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     {
 
         if (!is_array($input)) {
-            if ($removeFunctions) {
-                $input = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
-            }
-            $badVals = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
-            $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u><em>';
-            $input = str_replace($badVals, '', $input);
-            $input = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
-            $input = strip_tags(trim($input), $allowedTags);
+            if(!empty($input)) {
+                if ($removeFunctions) {
+                    $input = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
+                }
+                $badVals = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
+                $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u><em>';
+                $input = str_replace($badVals, '', $input);
+                $input = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
+                $input = strip_tags(trim($input), $allowedTags);
 
-            if ($textOnly) {
-                $input = str_replace(['<', '>', "'", '"'], '', $input);
+                if ($textOnly) {
+                    $input = str_replace(['<', '>', "'", '"'], '', $input);
+                }
             }
         } else {
             return $this->sanitizeRecursive($input, [], $textOnly, $removeFunctions);
@@ -1332,5 +1334,51 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     public function isMobileDevice()
     {
         return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+    }
+
+    /**
+     * @param string $s
+     * @return string
+     */
+    public function iso8859_1ToUtf8(string $s): string {
+        $s .= $s;
+        $len = \strlen($s);
+
+        for ($i = $len >> 1, $j = 0; $i < $len; ++$i, ++$j) {
+            switch (true) {
+                case $s[$i] < "\x80": $s[$j] = $s[$i]; break;
+                case $s[$i] < "\xC0": $s[$j] = "\xC2"; $s[++$j] = $s[$i]; break;
+                default: $s[$j] = "\xC3"; $s[++$j] = \chr(\ord($s[$i]) - 64); break;
+            }
+        }
+
+        return substr($s, 0, $j);
+    }
+
+    /**
+     * @param $dateTime
+     * @param null $dateType
+     * @param null $timeType
+     * @param null $timezone
+     * @param null $calendar
+     * @param null $pattern
+     * @return string
+     */
+    public function formatDate($dateTime, $dateType = null, $timeType = null, $timezone = null, $calendar = null, $pattern = null)
+    {
+        if(!empty($dateTime)) {
+            $container = new Container('meliscore');
+            $locale = $container['melis-lang-locale'];
+
+            if (empty($dateType))
+                $dateType = \IntlDateFormatter::LONG;
+
+            if (empty($timeType))
+                $timeType = \IntlDateFormatter::MEDIUM;
+
+            $formatter = new \IntlDateFormatter($locale, $dateType, $timeType, $timezone, $calendar, $pattern);
+            return $formatter->format($dateTime);
+        }
+        return null;
     }
 }

@@ -121,12 +121,10 @@ class Module
 
     public function initSession(MvcEvent $e)
     {
-        /**
-         * session.cookie_samesite is available only on PHP7.3 and up
-         */ 
-        if (PHP_VERSION_ID >= 70300) {
-            // set cookie attribute samesite
+        // set cookie attribute samesite
+        if (session_status() == PHP_SESSION_NONE) {
             ini_set('session.cookie_samesite', 'Strict');
+            session_start();
         }
 
         $sm = $e->getApplication()->getServiceManager();
