@@ -43,7 +43,7 @@
 		"laminas/laminas-form": "^3.17",
 		"laminas/laminas-hydrator": "^4.15",
 		"laminas/laminas-mvc-i18n": "^1.8",
-		"laminas/laminas-db": "^2.18",
+		"laminas/laminas-db": "^2.19",
 		"laminas/laminas-authentication": "^2.16",
 		"laminas/laminas-servicemanager": "3.22.1",
 		"laminas/laminas-mail": "^2.25",
