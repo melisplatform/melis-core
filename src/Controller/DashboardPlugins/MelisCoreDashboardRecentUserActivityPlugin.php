@@ -62,7 +62,7 @@ class MelisCoreDashboardRecentUserActivityPlugin extends MelisCoreDashboardTempl
         if ($users) {
             $users = $users->toArray();
             foreach ($users as $keyUser => $user)
-                $users[$keyUser]['usr_last_login_date'] = strftime($melisTranslation->getDateFormatByLocate($this->locale), strtotime($user['usr_last_login_date']));
+                $users[$keyUser]['usr_last_login_date'] = date($melisTranslation->getDateFormatByLocate($this->locale), strtotime($user['usr_last_login_date']));
         }
         
         $view = new ViewModel();

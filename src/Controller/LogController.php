@@ -548,7 +548,7 @@ class LogController extends MelisAbstractActionController
                     'log_type' => sprintf($logTypeBtn, $logType->logt_id, $logType->logt_code),
                     'log_item_id' => $melisTool->escapeHtml($log->log_item_id),
                     'log_user' => $melisTool->escapeHtml($userName),
-                    'log_date_added' => strftime($melisTranslation->getDateFormatByLocate($locale), strtotime($log->log_date_added))
+                    'log_date_added' => date($melisTranslation->getDateFormatByLocate($locale), strtotime($log->log_date_added))
                 );
 
                 if (strpos($melisTool->escapeHtml($translator->translate($log->log_message)), '[itemId]')) {
@@ -574,7 +574,7 @@ class LogController extends MelisAbstractActionController
                 for ($i = 0; $i < sizeof($tableData); $i++) {
                     //loop through each field to get its text, and check if has contain the $search value
                     foreach ($colId as $key => $val) {
-                        if (strpos(strtolower($tableData[$i][$val]), strtolower($search)) !== false) {
+                        if (!empty($tableData[$i][$val]) && strpos(strtolower($tableData[$i][$val]), strtolower($search)) !== false) {
                             //if found push the data
                             array_push($a, $tableData[$i]);
                             break;

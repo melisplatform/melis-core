@@ -101,10 +101,16 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
     }
 
-    public function getTranslatedMessageByLocale($locale = 'en_EN')
+    /**
+     * Returns the translated message of the given locale
+     * @param string $locale
+     * @param array $moduleArr - the modules to check for, if empty, all installed modules will be checked
+     * @return array
+     */
+    public function getTranslatedMessageByLocale($locale = 'en_EN', $moduleArr = [])
     {
         $modulesSvc = $this->getServiceManager()->get('ModulesService');
-        $modules = $modulesSvc->getAllModules();
+        $modules = $moduleArr ?: $modulesSvc->getAllModules();
 
         $moduleFolders = array();
         foreach ($modules as $module)
@@ -123,11 +129,7 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         set_time_limit(0);
         foreach($moduleFolders as $module) {
             if(file_exists($module.'/language')) {
-                foreach($transFiles as $file) {
-                    if(file_exists($module.'/language/'.$file)) {
-                        $tmpTrans[] = include($module.'/language/'.$file);
-                    }
-                }
+                
                 // get the directory
                 $iterator = new \RecursiveDirectoryIterator($module . "/language", \RecursiveDirectoryIterator::SKIP_DOTS);
                 $files = new \RecursiveIteratorIterator($iterator,\RecursiveIteratorIterator::CHILD_FIRST);
@@ -143,10 +145,16 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
                     }
                 }
 
+                //transferred so that we can make sure that the given locale will be prioritized in returning the translation value
+                foreach ($transFiles as $file) {
+                    if (file_exists($module.'/language/'.$file)) {
+                        $tmpTrans[] = include($module.'/language/'.$file);
+                    }
+                } 
             }
         }
 
-        if($tmpTrans) {
+        if ($tmpTrans) {
             foreach($tmpTrans as $tmpIdx => $transKey) {
                 foreach($transKey as $key => $value) {
                     $transMessages[$key] = $value;
@@ -159,13 +167,13 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
 
     }
 
-    public function getMessage($translationKey, $locale = 'en_EN')
+    public function getMessage($translationKey, $locale = 'en_EN', $moduleArr = [])
     {
         if (empty($translationKey)){
             return null;
         }
 
-        $getAllTransMsg = $this->getTranslatedMessageByLocale($locale);
+        $getAllTransMsg = $this->getTranslatedMessageByLocale($locale, $moduleArr);
 
         foreach($getAllTransMsg as $transKey => $transMsg) {
             if($translationKey == $transKey)
@@ -185,11 +193,11 @@ class MelisCoreTranslationService extends Translator implements MelisCoreTransla
         $dFormat = '';
         switch($locale) {
             case 'fr_FR':
-                $dFormat = '%d/%m/%Y %H:%M:%S';
+                $dFormat = 'd/m/Y H:i:s';
                 break;
             case 'en_EN':
             default:
-                $dFormat = '%m/%d/%Y %H:%M:%S';
+                $dFormat = 'm/d/Y H:i:s';
                 break;
         }
 

@@ -4878,3 +4878,54 @@ input#log_date_range {
 	color: #e61c23;
 }
 
+
+/*
+ * Datepicker issue on DateField
+ * Calendar on dropdown
+ */
+ .datepicker-dropdown {
+	width: 267px;
+}
+.datepicker-dropdown .datepicker-years span.year,
+.datepicker-dropdown .datepicker-months span.month,
+.datepicker-block .datepicker-years span.year,
+.datepicker-block .datepicker-months span.month {
+	display: block;
+	width: 23%;
+	height: 54px;
+	line-height: 54px;
+	float: left;
+	margin: 1%;
+	cursor: pointer;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+.datepicker-dropdown .datepicker-years span.year:hover,
+.datepicker-dropdown .datepicker-months span.month:hover,
+.datepicker-block .datepicker-years span.year:hover,
+.datepicker-block .datepicker-months span.month:hover {
+	background: #eee;
+}
+.datepicker-dropdown .datepicker-years span.year.active,
+.datepicker-dropdown .datepicker-months span.month.active,
+.datepicker-block .datepicker-years span.year.active,
+.datepicker-block .datepicker-months span.month.active {
+	color: #fff;
+	padding: 0 4px;
+}
+.datepicker-dropdown table thead tr th.next:hover,
+.datepicker-dropdown table thead tr th.prev:hover,
+.datepicker-dropdown table thead tr th.datepicker-switch:hover,
+.datepicker-block table thead tr th.next:hover,
+.datepicker-block table thead tr th.prev:hover,
+.datepicker-block table thead tr th.datepicker-switch:hover {
+	background: #eee;
+	cursor: pointer;
+}
+
+.datepicker-dropdown table tbody tr td.day:hover {
+	background: #eee;
+	cursor: pointer;
+}
+/* end Datepicker issue on DateField */

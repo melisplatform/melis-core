@@ -121,12 +121,10 @@ class Module
 
     public function initSession(MvcEvent $e)
     {
-        /**
-         * session.cookie_samesite is available only on PHP7.3 and up
-         */ 
-        if (PHP_VERSION_ID >= 70300) {
-            // set cookie attribute samesite
+        // set cookie attribute samesite
+        if (session_status() == PHP_SESSION_NONE) {
             ini_set('session.cookie_samesite', 'Strict');
+            session_start();
         }
 
         $sm = $e->getApplication()->getServiceManager();
@@ -162,59 +160,58 @@ class Module
         // AssetManager, we don't want listener to be executed if it's not a php code
         $uri = $_SERVER['REQUEST_URI'];
 
-
-
         $route = isset(explode('/',$uri)[2]) ? explode('/',$uri)[2] : null;
         $rhash = isset(explode('/',$uri)[3]) ? explode('/',$uri)[3] : null;
         $sm = $e->getApplication()->getServiceManager();
 
-        if(strpos($route,"change-language") !== false){
-            $container = new Container('meliscore');
-            $container['melis-lang-changed'] = true;
-        }
-        else
-            if($route == "generate-password" || $route == "renew-password" || $route == "reset-password"){
-                /** @var MelisCoreCreatePasswordService $melisCreatePass */
-                $melisCreatePass = $sm->get('MelisCoreCreatePassword');
-
-                $melisLostPass = $sm->get('MelisCoreLostPassword');
-                $usr = $route != "reset-password" ? $melisCreatePass->getUserByHash($rhash) : $melisLostPass->getUserByHash($rhash);
-
+        if(!empty($route)) {
+            if (strpos($route, "change-language") !== false) {
                 $container = new Container('meliscore');
-                $isLangChanged = $container['melis-lang-changed'];
-                if($usr && !$isLangChanged){
-                    $usrLang = isset($usr->usr_lang_id) ? $usr->usr_lang_id : null;
+                $container['melis-lang-changed'] = true;
+            } else {
+                if ($route == "generate-password" || $route == "renew-password" || $route == "reset-password") {
+                    /** @var MelisCoreCreatePasswordService $melisCreatePass */
+                    $melisCreatePass = $sm->get('MelisCoreCreatePassword');
 
-                    $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
-                    $melisUserTable = $sm->get('MelisCore\Model\Tables\MelisUserTable');
-                    $melisCoreAuth = $sm->get('MelisCoreAuth');
+                    $melisLostPass = $sm->get('MelisCoreLostPassword');
+                    $usr = $route != "reset-password" ? $melisCreatePass->getUserByHash($rhash) : $melisLostPass->getUserByHash($rhash);
 
-                    $datasLang = $melisLangTable->getEntryById($usrLang);
+                    $container = new Container('meliscore');
+                    $isLangChanged = $container['melis-lang-changed'];
+                    if ($usr && !$isLangChanged) {
+                        $usrLang = isset($usr->usr_lang_id) ? $usr->usr_lang_id : null;
+
+                        $melisLangTable = $sm->get('MelisCore\Model\Tables\MelisLangTable');
+                        $melisUserTable = $sm->get('MelisCore\Model\Tables\MelisUserTable');
+                        $melisCoreAuth = $sm->get('MelisCoreAuth');
+
+                        $datasLang = $melisLangTable->getEntryById($usrLang);
 
 
-                    // If the language was found and then exists
-                    if (!empty($datasLang))
-                    {
-                        $datasLang = $datasLang->current();
+                        // If the language was found and then exists
+                        if (!empty($datasLang)) {
+                            $datasLang = $datasLang->current();
 
-                        // Update session locale for melis BO
-                        $container = new Container('meliscore');
-                        $container['melis-lang-id'] = $usrLang;
-                        $container['melis-lang-locale'] = isset($datasLang->lang_locale) ? $datasLang->lang_locale : "EN_en";
-                        $container['melis-login-lang-locale'] = isset($datasLang->lang_locale) ? $datasLang->lang_locale : "EN_en";
+                            // Update session locale for melis BO
+                            $container = new Container('meliscore');
+                            $container['melis-lang-id'] = $usrLang;
+                            $container['melis-lang-locale'] = isset($datasLang->lang_locale) ? $datasLang->lang_locale : "EN_en";
+                            $container['melis-login-lang-locale'] = isset($datasLang->lang_locale) ? $datasLang->lang_locale : "EN_en";
 
-                        // Get user id from session auth
-                        $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-                        if(!isset($userAuthDatas->usr_lang_id))
-                            $userAuthDatas  = (object) array("usr_lang_id" => '');
+                            // Get user id from session auth
+                            $userAuthDatas = $melisCoreAuth->getStorage()->read();
+                            if (!isset($userAuthDatas->usr_lang_id))
+                                $userAuthDatas = (object)array("usr_lang_id" => '');
 
-                        // Update auth user session
-                        $userAuthDatas->usr_lang_id = $usrLang;
+                            // Update auth user session
+                            $userAuthDatas->usr_lang_id = $usrLang;
+                        }
                     }
+                    $container = new Container('meliscore');
+                    $container['melis-lang-changed'] = false;
                 }
-                $container = new Container('meliscore');
-                $container['melis-lang-changed'] = false;
             }
+        }
     }
 
     public function createTranslations($e, $locale = 'en_EN')
