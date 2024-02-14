@@ -721,6 +721,7 @@ var melisHelper = (function() {
 
 	// ZONE RELOADING =================================================================================================================
 	function zoneReload(zoneId, melisKey, parameters, callback) {
+		//console.log("zoneId: ", zoneId);
 		var datastring = { cpath: melisKey },
 			$melisCmsPage = $body.find(
 				"#" + activeTabId + "[data-meliskey='meliscms_page'].tab-pane"

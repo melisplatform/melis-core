@@ -275,7 +275,8 @@
     // insertion of melis-demo-cms mini template css in iframe head
     function insertMelisDemoCmsMiniTemplateCss() {
         setTimeout(function() {
-            var $iframeHead = $("#preview-mini-template iframe").contents().find("head"),
+            var $previewIframeHead = $("#preview-mini-template iframe").contents().find("head"),
+                $activeEditorIframe = $(parent.tinymce.activeEditor).contents().find("head"), // possible inserting of melis-demo-cms cssUrl inside active editor iframe
                 cssUrl      = [
                     '/MelisDemoCms/css/bootstrap.min.css',
                     '/MelisDemoCms/vendors/themify-icon/themify-icons.css',
@@ -283,7 +284,7 @@
                     '/MelisDemoCms/css/style.css'
                 ];
 
-                if ( $iframeHead.length ) {
+                if ( $previewIframeHead.length ) {
                     $.each( cssUrl, function(i, v) {
                         var el = document.createElement("link");
 
@@ -292,7 +293,7 @@
                             el.media    = "screen";
                             el.type     = "text/css";
 
-                            $iframeHead.append( el );
+                            $previewIframeHead.append( el );
                     });
                 }
         }, 1000);
@@ -459,14 +460,14 @@
     }
 
     // initialize
-    function initIframe() {
+    /* function initIframe() {
         var $iframe = $("#preview-mini-template iframe");
 
             // insertion of melis-demo-cms mini template css in iframe head
             if ( $iframe.length ) {
                 insertMelisDemoCmsMiniTemplateCss();
             }
-    }
+    } */
 
     /**
      * Init template with mustach
