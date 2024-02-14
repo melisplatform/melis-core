@@ -124,7 +124,7 @@ class PluginViewController extends MelisAbstractActionController
          * Generate the views recursively
          * and add the corresponding appConfig part to make it accessible in the view
          */
-        $zoneView = $this->generateRec($keyView, $appconfigpath, $datasParameters, $jsCallBacks);
+        $zoneView = $this->generateRec($keyView, $appconfigpath, $jsCallBacks, $datasParameters);
         $zoneView->setVariable('zoneconfig', $appsConfig);
         $zoneView->setVariable('parameters', $datasParameters);
         $zoneView->setVariable('keyInterface', $keyView);
@@ -221,7 +221,7 @@ class PluginViewController extends MelisAbstractActionController
      *
      * @return \Laminas\View\Model\ViewModel
      */
-    public function generateRec($key, $fullKey, $recDatas = [], &$jsCB)
+    public function generateRec($key, $fullKey, &$jsCB, $recDatas = [])
     {
 
         $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
@@ -393,7 +393,7 @@ class PluginViewController extends MelisAbstractActionController
                  */
                 foreach ($itemConfig['interface'] as $keyInterface => $valueInterface) {
                     $subKey = $fullKey . '/interface/' . $keyInterface;
-                    $subView = $this->generateRec($keyInterface, $subKey, $recDatas, $jsCB);
+                    $subView = $this->generateRec($keyInterface, $subKey, $jsCB, $recDatas);
 
                     if (!empty($subView)) {
                         $norights = $subView->getVariable('norights');
@@ -411,8 +411,9 @@ class PluginViewController extends MelisAbstractActionController
             
             if (isset($itemConfig['conf']['dashboard']) && $itemConfig['conf']['dashboard'])
             {
+                $dashId = $this->getRequest()->getQuery('dashboardId', $itemConfig['conf']['id']);
                 $melisDashboardSrv = $this->getServiceManager()->get('MelisCoreDashboardService');
-                list($jsCallBacks, $datasCallback) = $melisDashboardSrv->getDashboardPluginsJsCallbackJsDatas($itemConfig['conf']['id']);
+                list($jsCallBacks, $datasCallback) = $melisDashboardSrv->getDashboardPluginsJsCallbackJsDatas($dashId);
 
                 //to include all js callbacks
                 $jsCB = array_merge($jsCB, $jsCallBacks);
