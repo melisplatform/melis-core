@@ -1007,6 +1007,16 @@ var melisHelper = (function() {
 				language: window.melisDataTable.tableLanguage[langTrans],				
 			};
 			
+			if (requiredSettings.hasOwnProperty("ajaxCallback")) {
+				if(Object.keys(requiredSettings.ajaxCallback).length > 0) {									
+					settings.fnDrawCallback = function(oSettings) {	
+						var callbacks = requiredSettings.ajaxCallback.split(";").filter(item => item);					
+						$.each(callbacks,function(i) {	
+						    window[callbacks[i].replace('()','').replace(';','')]();
+						});						
+					};					
+				}							
+			}
 
 			//merge here the data config with the default settings
 			if (requiredSettings.hasOwnProperty("data")) {
@@ -1033,15 +1043,20 @@ var melisHelper = (function() {
 				var tmpDefColumns = [];
 				if (Object.keys(requiredSettings.columns).length > 0) {
 					var ctr = 0;
+					var isColumnSortable = true;
 					// loop all columns
 					$.each(requiredSettings.columns, function(index, item) {
 						tmpColumns.push({
 							data: index,
 						});
+						if (item.sortable == false) {
+							isColumnSortable = false;
+						}
 						settings.columnDefs.push({
 							width: item.css.width,
 							targets: ctr,	
-							sClass: item.sClass						
+							sClass: item.sClass,
+							bSortable: isColumnSortable					
 						});
 
 						ctr++;

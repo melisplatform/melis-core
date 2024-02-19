@@ -57,9 +57,9 @@
 		"symfony/service-contracts": "2.5.0",
 		"psr/container": "1.1.1",
 		"justinrainbow/json-schema": "^5.2.13",
-		"melisplatform/melis-asset-manager": "*",
-		"melisplatform/melis-composerdeploy": "*",
-		"melisplatform/melis-dbdeploy": "*"
+		"melisplatform/melis-asset-manager": "^5.1",
+		"melisplatform/melis-composerdeploy": "^5.1",
+		"melisplatform/melis-dbdeploy": "^5.1"
 	},
 	"autoload": {
 		"psr-4": {
