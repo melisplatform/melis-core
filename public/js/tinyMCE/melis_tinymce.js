@@ -31,9 +31,9 @@ var melisTinyMCE = (function() {
 				options
 			);
 
-			/* if (options.hasOwnProperty("templates")) {
-				options.templates = options.templates;
-			} */
+			if ( options.hasOwnProperty("mini_templates_url") ) {
+				options.mini_templates_url = options.mini_templates_url;
+			}
 
 			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
 
@@ -290,11 +290,13 @@ var melisTinyMCE = (function() {
 
 	function addMelisCss() {
 		var el = document.createElement("link");
-		el.href = "/MelisCore/css/melis_tinymce.css";
-		el.rel = "stylesheet";
-		el.media = "screen";
-		el.type = "text/css";
-		document.head.appendChild(el);
+
+			el.href 	= "/MelisCore/css/melis_tinymce.css";
+			el.rel 		= "stylesheet";
+			el.media 	= "screen";
+			el.type 	= "text/css";
+
+			document.head.appendChild(el);
 	}
 
 	// for reference, came from melisCms.js, scrollToViewTinyMCE()

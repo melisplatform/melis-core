@@ -125,20 +125,22 @@
 }
 /* dialog - footer buttons */
 #insert-btn {
-    background-color: #3498db;
-    border-color: transparent;
+    background-color: #006ce7;
+    border-color: #006ce7;
     color: #fff;
 }
 #insert-btn:hover {
-    background-color: #217dbb;
+    background-color: #0060ce;
+    border-color: #0060ce;
     box-shadow: none;
 }
 #close-btn {
     background-color: #f0f0f0;
-    border-color: transparent;
+    border-color: #f0f0f0;
     color: #222f3e;
 }
 #close-btn:hover {
     background-color: #e3e3e3;
+    border-color: #e3e3e3;
     box-shadow: none;
 }

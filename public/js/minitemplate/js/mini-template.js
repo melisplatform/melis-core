@@ -65,7 +65,7 @@
     function processAjax() {
         $.ajax({
             type: 'GET',
-            url: '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
+            url: parent.tinymce.activeEditor.options.get('mini_templates_url'),
             dataType: 'json',
             cache: false
         }).done(function(data) {
