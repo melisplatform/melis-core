@@ -185,9 +185,6 @@ var melisTinyMCE = (function() {
 								if ( $dialog.length ) {
 									modalPopUp( $dialog );
 								}
-								else {
-									console.log("e.command is invalid");
-								}
 						}, 1);
 				}
 		});
