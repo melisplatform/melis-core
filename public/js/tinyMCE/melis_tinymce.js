@@ -164,21 +164,30 @@ var melisTinyMCE = (function() {
 								
 								// scroll to view dialog box
 								var $dialog = $body.find(".tox-dialog");
-									modalPopUp( $dialog );
+									if ( $dialog.length ) {
+										modalPopUp( $dialog );
+									}
 						}, 1);
 						break;
 					case "mceInsertFile":
 						// scroll to view moxman container
 						setTimeout(function() {	
 							var $moxContainer = $body.find(".moxman-container");
-								modalPopUp( $moxContainer );
+								if ( $moxContainer.length ) {
+									modalPopUp( $moxContainer );
+								}
 						}, 1000);
 						break;
 					default:
 						// scroll to view dialog box
 						setTimeout(function() {
 							var $dialog = $body.find(".tox-dialog");
-								modalPopUp( $dialog );
+								if ( $dialog.length ) {
+									modalPopUp( $dialog );
+								}
+								else {
+									console.log("e.command is invalid");
+								}
 						}, 1);
 				}
 		});
