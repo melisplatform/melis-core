@@ -133,7 +133,7 @@ var melisTinyMCE = (function() {
 		// for Insert/Edit Link
 		editor.on("ExecCommand", function(e) {
 			var $body 	= $("body");
-				//console.log("e.command", e.command);
+				console.log("e.command", e.command);
 				switch(e.command) {
 					case "mceLink":
 						// wait for DOM to update
