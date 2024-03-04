@@ -67,7 +67,7 @@ var melisTinyMCE = (function() {
 		}, 1000);
 
 		$(document).on("focusin", function(e) {
-			if ($(e.target).closest(".tox-dialog").length) {
+			if ($(e.target).closest(".tox-dialog, .tox-tinymce, .tox-tinymce-aux, .moxman-window").length) {
 				e.stopImmediatePropagation();
 			}
 		});
@@ -125,13 +125,18 @@ var melisTinyMCE = (function() {
 			//tinyMceOpenDialog(editor);
 		}); */
 
-		editor.on("blur", function() {
-			// hides the toolbar that appears under the toolbar overflow icon
-			$(".tox-toolbar__primary .tox-toolbar__group .tox-tbtn--enabled").trigger("click");
+		editor.on("blur, focus", function(e) {
+			let $tinymceToolbarReveal = $(".tox-toolbar__primary .tox-toolbar__group .tox-tbtn--enabled");
+				// hides the toolbar that appears under the toolbar overflow icon
+				$.each($tinymceToolbarReveal, function(i, v) {
+					$(v).trigger("click");
+				});
 		});
 
+		//editor.on("focusout", melisCore.removeTinymceToolbar);
+
 		// for Insert/Edit Link
-		editor.on("ExecCommand", function(e) {
+		editor.on("execCommand", function(e) {
 			var $body 	= $("body");
 				//console.log("e.command", e.command);
 				switch(e.command) {

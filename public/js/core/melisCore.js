@@ -1086,6 +1086,20 @@ var melisCore = (function(window){
             $tabConOuter.removeClass("hide-res-menus");
     });
 
+    $body.on("click", ".footer-modal button", removeTinymceToolbar);
+
+    $body.on("hide.bs.modal", ".modal", removeTinymceToolbar);
+
+    // closes the active tinymce toolbar on bootstrap dialog
+    function removeTinymceToolbar() {
+        let $tinymceAux         = $(".tox-tinymce-aux"),
+            $tinymceToolbar     = $tinymceAux.find(".tox-toolbar__overflow");
+
+            $.each($tinymceToolbar, function(i, v) {
+                $(v).remove();
+            });
+    }
+
     function showPlugLists() {
         if($(this).hasClass("active")) {
             $(this).removeClass("active")
@@ -1283,6 +1297,7 @@ var melisCore = (function(window){
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
         showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu, // update on this js file, since dashboard notification
-        paginateDataTables                              :           paginateDataTables
-    };
+        paginateDataTables                              :           paginateDataTables,
+        removeTinymceToolbar                            :           removeTinymceToolbar
+    }
 })(window);
