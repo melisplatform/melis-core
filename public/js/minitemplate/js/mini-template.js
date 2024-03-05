@@ -268,33 +268,68 @@
             if ( $prevIframe.length ) {
                 $prevIframe.attr("src", url);
 
-                insertMelisDemoCmsMiniTemplateCss();
+                // melis-demo-cms or melis-demo-commerce
+                insertDemoMiniTemplateCss();
             }
     }
 
     // insertion of melis-demo-cms mini template css in iframe head
-    function insertMelisDemoCmsMiniTemplateCss() {
+    function insertDemoMiniTemplateCss() {
         setTimeout(function() {
-            var $previewIframeHead = $("#preview-mini-template iframe").contents().find("head"),
-                $activeEditorIframe = $(parent.tinymce.activeEditor).contents().find("head"), // possible inserting of melis-demo-cms cssUrl inside active editor iframe
-                cssUrl      = [
+            // https://mantis2.uat.melistechnology.fr/view.php?id=6103, detect if melis-demo-cms or melis-demo-commerce css files will be inserted on the preview iframe
+            var $previewIframe      = $("#preview-mini-template iframe"),
+                $previewIframeHead  = $previewIframe.contents().find("head"),
+                $previewIframeSrc   = $previewIframe.attr("src"),
+                // possible inserting of melis-demo-cms cssUrl inside active tinymce editor iframe
+                $activeEditorIframe = $(parent.tinymce.activeEditor).contents().find("head"),
+                cssUrl              = [[
                     '/MelisDemoCms/css/bootstrap.min.css',
                     '/MelisDemoCms/vendors/themify-icon/themify-icons.css',
                     '/MelisDemoCms/vendors/elagent/style.css',
                     '/MelisDemoCms/css/style.css'
-                ];
+                ], [
+                    '/MelisDemoCommerce/js/vendor/modernizr-2.8.3.min.js',
+                    '/MelisDemoCommerce/css/bootstrap.min.css',
+                    '/MelisDemoCommerce/css/core.css',
+                    '/MelisDemoCommerce/css/shortcode/shortcodes.css',
+                    '/MelisDemoCommerce/css/owl.carousel.css',
+                    '/MelisDemoCommerce/css/owl.theme.default.css',
+                    '/MelisDemoCommerce/css/owl.theme.green.min.css',
+                    '/MelisDemoCommerce/css/style.css',
+                    '/MelisDemoCommerce/css/responsive.css',
+                    '/MelisDemoCommerce/css/animate.css',
+                    '/MelisDemoCommerce/css/custom.css',
+                    '/MelisDemoCommerce/css/skin/skin-default.css'
+                ]];
 
                 if ( $previewIframeHead.length ) {
-                    $.each( cssUrl, function(i, v) {
-                        var el = document.createElement("link");
+                    let previewModuleText   = $previewIframeSrc.split("\\")[1],
+                        moduleUrl           = '';
 
-                            el.href     = cssUrl[i];
-                            el.rel      = "stylesheet";
-                            el.media    = "screen";
-                            el.type     = "text/css";
+                        switch(previewModuleText) {
+                            case "MelisDemoCms":
+                                moduleUrl = cssUrl[0];
+                                break;
+                            case "MelisDemoCommerce":
+                                moduleUrl = cssUrl[1];
+                                break;
+                            default:
+                                console.log("Invalid cass, css url or files not enumerated. Refer to melis-core minitemplate/js/mini-template.js line: 277");
+                        }
 
-                            $previewIframeHead.append( el );
-                    });
+                        $.each( moduleUrl, function(i, v) {
+                            var el = document.createElement("link");
+
+                                el.href     = moduleUrl[i];
+                                el.rel      = "stylesheet";
+                                el.media    = "screen";
+                                el.type     = "text/css";
+
+                                $previewIframeHead.append( el );
+                        });
+
+                        console.log("previewModuleText: ", previewModuleText);
+                        console.log("moduleUrl: ", moduleUrl);
                 }
         }, 1000);
     }
@@ -482,9 +517,7 @@
         $.get("view/content-section.html", function(template) {
             $("#template-container").append(Mustache.render(template, data));
 
-            //setTimeout(function() {
-                processAjax();    
-            //}, 1000);
+            processAjax();
 
             $("#insert-btn").on("click", insertMiniTemplate);
 
@@ -492,10 +525,5 @@
                 parent.tinymce.activeEditor.windowManager.close();
             });
         });
-
-        // init iframe header resources
-        /* setTimeout(function() {
-            initIframe();
-        }, 500); */
     });
 }(jQuery));

@@ -66,8 +66,9 @@ var melisTinyMCE = (function() {
 			tinyMCE.init(config);
 		}, 1000);
 
+		// .tox-tinymce, .tox-tinymce-aux, .moxman-window
 		$(document).on("focusin", function(e) {
-			if ($(e.target).closest(".tox-dialog, .tox-tinymce, .tox-tinymce-aux, .moxman-window").length) {
+			if ($(e.target).closest(".tox-dialog").length) {
 				e.stopImmediatePropagation();
 			}
 		});
@@ -125,6 +126,7 @@ var melisTinyMCE = (function() {
 			//tinyMceOpenDialog(editor);
 		}); */
 
+		// focus
 		editor.on("blur, focus", function(e) {
 			let $tinymceToolbarReveal = $(".tox-toolbar__primary .tox-toolbar__group .tox-tbtn--enabled");
 				// hides the toolbar that appears under the toolbar overflow icon
@@ -143,7 +145,7 @@ var melisTinyMCE = (function() {
 					case "mceLink":
 						// wait for DOM to update
 						setTimeout(function() {
-							const $dialogBody = document.querySelector(".tox-dialog__body-content"),
+							let $dialogBody = document.querySelector(".tox-dialog__body-content"),
 								$browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
 
 							// creates new custom button and set attributes
