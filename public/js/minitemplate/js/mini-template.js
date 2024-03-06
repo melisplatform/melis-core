@@ -309,9 +309,10 @@
                         previewModuleText = $previewIframeSrc.split("\\")[1];
                         console.log('previewModuleText == "": ', previewModuleText == "" );
                         console.log('previewModuleText == "undefined": ', previewModuleText == "undefined");
+                        console.log('typeof previewModuleText == undefined: ', typeof previewModuleText == undefined);
                         // back slash used on melis-demo-cms, previewModuleText != '' && previewModuleText !== 'undefined'
                         // forward slash used on melis-demo-commerce
-                        if ( previewModuleText == "" && previewModuleText == "undefined" ) {
+                        if ( previewModuleText == "" || previewModuleText == "undefined" || typeof previewModuleText == undefined ) {
                             previewModuleText = $previewIframeSrc.split("/")[1];
                         }
 
