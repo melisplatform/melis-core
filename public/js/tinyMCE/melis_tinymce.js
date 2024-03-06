@@ -66,7 +66,7 @@ var melisTinyMCE = (function() {
 			tinyMCE.init(config);
 		}, 1000);
 
-		// .tox-tinymce, .tox-tinymce-aux, .moxman-window
+		// .tox-tinymce, .tox-tinymce-aux, .moxman-window, for tinymce within bootstrap modal
 		$(document).on("focusin", function(e) {
 			if ($(e.target).closest(".tox-dialog").length) {
 				e.stopImmediatePropagation();
@@ -126,74 +126,73 @@ var melisTinyMCE = (function() {
 			//tinyMceOpenDialog(editor);
 		}); */
 
-		// focus
-		editor.on("blur, focus", function(e) {
+		// focus, blur
+		/* editor.on("focus", function(e) {
 			let $tinymceToolbarReveal = $(".tox-toolbar__primary .tox-toolbar__group .tox-tbtn--enabled");
 				// hides the toolbar that appears under the toolbar overflow icon
 				$.each($tinymceToolbarReveal, function(i, v) {
 					$(v).trigger("click");
 				});
-		});
+		}); */
 
 		//editor.on("focusout", melisCore.removeTinymceToolbar);
 
 		// for Insert/Edit Link
-		editor.on("execCommand", function(e) {
+		editor.on("ExecCommand", function(e) {
 			var $body 	= $("body");
 				//console.log("e.command", e.command);
-				switch(e.command) {
-					case "mceLink":
-						// wait for DOM to update
-						setTimeout(function() {
-							let $dialogBody = document.querySelector(".tox-dialog__body-content"),
-								$browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
+				if ( e.command === "mceLink" ) {
+					// wait for DOM to update
+					setTimeout(function() {
+						let $dialogBody = document.querySelector(".tox-dialog__body-content"),
+							$browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
 
-							// creates new custom button and set attributes
-							let $customButton = document.createElement("button");
+						// creates new custom button and set attributes
+						let $customButton = document.createElement("button");
 
-								$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
-								$customButton.classList.add("mce-btn", "mce-open");
+							$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
+							$customButton.classList.add("mce-btn", "mce-open");
 
-								setMultipleAttributes($customButton, { 
-									"title" : "Site tree view",
-									"id"	: "mce-link-tree",
-									"style" : "width: 34px; height: 34px;"
-								});
+							setMultipleAttributes($customButton, { 
+								"title" : "Site tree view",
+								"id"	: "mce-link-tree",
+								"style" : "width: 34px; height: 34px;"
+							});
 
-								// insert the new button after browse URL button
-								$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
+							// insert the new button after browse URL button
+							$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
 
-								// event handler of new button
-								$customButton.onclick = function() {
-									// show modal for #id_meliscms_find_page_tree
-									melisLinkTree.createTreeModal();
-								};
-								
-								// scroll to view dialog box
-								var $dialog = $body.find(".tox-dialog");
-									if ( $dialog.length ) {
-										modalPopUp( $dialog );
-									}
-						}, 1);
-						break;
-					case "mceInsertFile":
-						// scroll to view moxman container
-						setTimeout(function() {	
-							// .moxman-floatpanel
-							var $moxContainer = $body.find(".moxman-container");
-								if ( $moxContainer.length ) {
-									modalPopUp( $moxContainer );
-								}
-						}, 1000);
-						break;
-					default:
-						// scroll to view dialog box
-						setTimeout(function() {
+							// event handler of new button
+							$customButton.onclick = function() {
+								// show modal for #id_meliscms_find_page_tree
+								melisLinkTree.createTreeModal();
+							};
+							
+							// scroll to view dialog box
 							var $dialog = $body.find(".tox-dialog");
 								if ( $dialog.length ) {
-									modalPopUp( $dialog );
+									modalPopUp();
 								}
-						}, 1);
+					}, 1);
+				} 
+				else if ( e.command === "mceInsertFile" ) {
+					// scroll to view moxman container
+					setTimeout(function() {	
+						// .moxman-floatpanel
+						var $moxContainer = $body.find(".moxman-container");
+							if ( $moxContainer.length ) {
+								modalPopUp();
+							}
+					}, 1000);
+				}
+				else {
+					// scroll to view dialog box
+					setTimeout(function() {
+						var $dialog = $body.find(".tox-dialog");
+							if ( $dialog.length ) {
+								modalPopUp();
+							}
+					}, 1);
 				}
 		});
 	}
@@ -269,30 +268,48 @@ var melisTinyMCE = (function() {
     }
 
 	// modal pop up tinymce melis-core
-	function modalPopUp( $element ) {
+	function modalPopUp() {
 		// OPENING THE POPUP
-		var	$iframe 	= window.parent.$(".melis-iframe");
-			//console.log("$element.length: ", $element.length);
-			if ( $element.length ) {
+		var $body           = $("body"),
+			$mcePopUp       = $body.find(".tox-tinymce-aux"), // #mce-modal-block [.tox-tinymce-aux]
+			$dialog         = $body.find(".tox-dialog"),
+			$moxContainer   = $body.find(".moxman-container"), // moxiemanager, Media Library
+			$iframe         = window.parent.$(".melis-iframe"),
+			dialogHeight;
+
+			if ( $mcePopUp.length ) {
 				if ( $iframe.length ) {
 					// iframe height
 					var iframeHeight 	= $(window).height(),
 						// iframe offset
-						$iframeOffset 	= $iframe.position().top,
+						$iframeOffset 	= $iframe.position().top;
+
 						// dialog box height .mce-window [.dialog]
-						dialogHeight 	= $element.outerHeight() - $iframeOffset * 10;
+						if ( $dialog.length ) {
+							dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
+						}
+						else {
+							dialogHeight = $moxContainer.outerHeight() - $iframeOffset * 10;
+						}
 
 						parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
 				} else {
-					var bodyHeight 		= window.parent.$("body").height(),
-						dialogHeight 	= $element.outerHeight();
+					var bodyHeight = window.parent.$("body").height();
+
+						if ( $dialog.length ) {
+							dialogHeight = $dialog.outerHeight();
+						}
+						else {
+							dialogHeight = $moxContainer.outerHeight() - $iframeOffset * 10;
+						}
 
 						parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
 				}
 
 				// CLOSING THE POPUP
 				var timeOut = setInterval(function() {
-					if ( !$element.is(":visible") ) {
+					// || !$moxContainer.is(":visible"), for moxiemanager, Media Library
+					if ( !$dialog.is(":visible") ) {
 						window.parent
 							.$("body")
 							.animate({ scrollTop: parent.scrollOffsetTinyMCE() }, 200);

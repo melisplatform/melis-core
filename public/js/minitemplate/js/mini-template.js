@@ -279,7 +279,6 @@
             // https://mantis2.uat.melistechnology.fr/view.php?id=6103, detect if melis-demo-cms or melis-demo-commerce css files will be inserted on the preview iframe
             var $previewIframe      = $("#preview-mini-template iframe"),
                 $previewIframeHead  = $previewIframe.contents().find("head"),
-                $previewIframeSrc   = $previewIframe.attr("src"),
                 // possible inserting of melis-demo-cms cssUrl inside active tinymce editor iframe
                 $activeEditorIframe = $(parent.tinymce.activeEditor).contents().find("head"),
                 cssUrl              = [[
@@ -302,8 +301,9 @@
                     '/MelisDemoCommerce/css/skin/skin-default.css'
                 ]];
 
-                if ( $previewIframeHead.length ) {
-                    let previewModuleText   = $previewIframeSrc.split("\\")[1],
+                if ( $previewIframe.length ) {
+                    let $previewIframeSrc   = $previewIframe.attr("src"),
+                        previewModuleText   = $previewIframeSrc.split("\\")[1],
                         moduleUrl           = '';
 
                         switch(previewModuleText) {
@@ -314,7 +314,7 @@
                                 moduleUrl = cssUrl[1];
                                 break;
                             default:
-                                console.log("Invalid cass, css url or files not enumerated. Refer to melis-core minitemplate/js/mini-template.js line: 277");
+                                console.log("Invalid css url or files not enumerated. Refer to melis-core minitemplate/js/mini-template.js line: 277");
                         }
 
                         $.each( moduleUrl, function(i, v) {

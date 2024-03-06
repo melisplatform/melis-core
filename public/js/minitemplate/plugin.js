@@ -30,10 +30,11 @@
             dialogApi.unblock();
           }, 2000);
 
-          var $body = $("body"),
+          /* var $body = $("body"),
               $dialog = $body.find(".tox-dialog");
-
-              melisTinyMCE.modalPopUp( $dialog);
+              if ( $dialog.length ) {
+                melisTinyMCE.modalPopUp();
+              } */
         }
       });
 
