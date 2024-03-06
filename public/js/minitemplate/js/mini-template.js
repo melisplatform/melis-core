@@ -307,7 +307,8 @@
                         moduleUrl           = '';
                         
                         previewModuleText = $previewIframeSrc.split("\\")[1];
-                        console.log('previewModuleText == "" && previewModuleText == "undefined": ', previewModuleText == "" && previewModuleText == "undefined" );
+                        console.log('previewModuleText == "": ', previewModuleText == "" );
+                        console.log('previewModuleText == "undefined": ', previewModuleText == "undefined");
                         // back slash used on melis-demo-cms, previewModuleText != '' && previewModuleText !== 'undefined'
                         // forward slash used on melis-demo-commerce
                         if ( previewModuleText == "" && previewModuleText == "undefined" ) {
