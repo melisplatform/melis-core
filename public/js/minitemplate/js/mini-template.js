@@ -308,16 +308,6 @@
                         
                         previewModuleText = $previewIframeSrc.split("\\")[1] ? $previewIframeSrc.split("\\")[1] : $previewIframeSrc.split("/")[1];
 
-                        console.log('previewModuleText: ', previewModuleText );
-                        /* console.log('previewModuleText == "undefined": ', previewModuleText == "undefined");
-                        console.log('typeof previewModuleText == undefined: ', typeof previewModuleText == undefined); */
-
-                        // back slash used on melis-demo-cms, previewModuleText != '' && previewModuleText !== 'undefined'
-                        // forward slash used on melis-demo-commerce
-                        /* if ( previewModuleText == "" || previewModuleText == "undefined" || typeof previewModuleText == undefined ) {
-                            previewModuleText = $previewIframeSrc.split("/")[1];
-                        } */
-
                         switch(previewModuleText) {
                             case "MelisDemoCms":
                                 moduleUrl = cssUrl[0];
@@ -339,9 +329,6 @@
 
                                 $previewIframeHead.append( el );
                         });
-
-                        //console.log("previewModuleText: ", previewModuleText);
-                        console.log("moduleUrl: ", moduleUrl);
                 }
         }, 1000);
     }
