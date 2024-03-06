@@ -308,12 +308,9 @@
                         
                         previewModuleText = $previewIframeSrc.split("\\")[1];
 
-                        if ( previewModuleText !== "" && previewModuleText !== "undefined" ) {
-                            // back slash used on melis-demo-cms, previewModuleText != '' && previewModuleText !== 'undefined'
-                            previewModuleText;
-                        }
-                        else {
-                            // forward slash used on melis-demo-commerce
+                        // back slash used on melis-demo-cms, previewModuleText != '' && previewModuleText !== 'undefined'
+                        // forward slash used on melis-demo-commerce
+                        if ( previewModuleText == "" && previewModuleText == "undefined" ) {
                             previewModuleText = $previewIframeSrc.split("/")[1];
                         }
 
