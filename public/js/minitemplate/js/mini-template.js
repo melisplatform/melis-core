@@ -306,7 +306,7 @@
                         previewModuleText   = '',
                         moduleUrl           = '';
                         
-                        previewModuleText = $previewIframeSrc.split("\\")[1] ? previewModuleText : $previewIframeSrc.split("/")[1];
+                        previewModuleText = $previewIframeSrc.split("\\")[1] ? $previewIframeSrc.split("\\")[1] : $previewIframeSrc.split("/")[1];
 
                         console.log('previewModuleText: ', previewModuleText );
                         /* console.log('previewModuleText == "undefined": ', previewModuleText == "undefined");
