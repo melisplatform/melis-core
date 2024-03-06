@@ -303,8 +303,19 @@
 
                 if ( $previewIframe.length ) {
                     let $previewIframeSrc   = $previewIframe.attr("src"),
-                        previewModuleText   = $previewIframeSrc.split("\\")[1],
+                        previewModuleText   = '',
                         moduleUrl           = '';
+                        
+                        previewModuleText = $previewIframeSrc.split("\\")[1];
+
+                        if ( previewModuleText !== "" && previewModuleText !== "undefined" ) {
+                            // back slash used on melis-demo-cms, previewModuleText != '' && previewModuleText !== 'undefined'
+                            previewModuleText;
+                        }
+                        else {
+                            // forward slash used on melis-demo-commerce
+                            previewModuleText = $previewIframeSrc.split("/")[1];
+                        }
 
                         switch(previewModuleText) {
                             case "MelisDemoCms":
@@ -314,7 +325,7 @@
                                 moduleUrl = cssUrl[1];
                                 break;
                             default:
-                                console.log("Invalid css url or files not enumerated. Refer to melis-core minitemplate/js/mini-template.js line: 277");
+                                console.log("Invalid css url or files not enumerated");
                         }
 
                         $.each( moduleUrl, function(i, v) {
