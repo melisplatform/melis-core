@@ -1092,8 +1092,11 @@ var melisCore = (function(window){
     // modal is hidden
     $body.on("hide.bs.modal", ".modal", removeTinymceToolbar);
 
+    // tab clicked close
+    $body.on("click", '#close-all-tab, .close-tab', removeTinymceToolbar);
+
     // tab is hidden
-    $body.on("hide.bs.tab", '#close-all-tab, .close-tab', removeTinymceToolbar);
+    $body.on("hidden.bs.tab", 'a[data-toggle="tab"]', removeTinymceToolbar);
 
     // closes the active tinymce toolbar on bootstrap dialog
     function removeTinymceToolbar() {

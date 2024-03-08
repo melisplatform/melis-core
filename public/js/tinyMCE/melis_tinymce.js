@@ -173,7 +173,7 @@ var melisTinyMCE = (function() {
 								if ( $dialog.length ) {
 									modalPopUp();
 								}
-					}, 1);
+					}, 100);
 				} 
 				else if ( e.command === "mceInsertFile" ) {
 					// scroll to view moxman container
@@ -192,7 +192,7 @@ var melisTinyMCE = (function() {
 							if ( $dialog.length ) {
 								modalPopUp();
 							}
-					}, 1);
+					}, 100);
 				}
 		});
 	}
