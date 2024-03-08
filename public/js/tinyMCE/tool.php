@@ -13,6 +13,7 @@
 		'menubar' => false,
 		'mini_templates_url' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
 		'forced_root_block' => 'p',
+		'image_uploadtab' => false,
 		//'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
 		'cleanup' => false,
 		'verify_html' => false,

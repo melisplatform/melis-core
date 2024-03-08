@@ -183,7 +183,7 @@ var melisTinyMCE = (function() {
 							if ( $moxContainer.length ) {
 								modalPopUp();
 							}
-					}, 500); // 500
+					}, 1000);
 				}
 				else {
 					// scroll to view dialog box

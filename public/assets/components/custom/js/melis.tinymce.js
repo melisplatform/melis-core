@@ -79,7 +79,8 @@ var MelisTinymce = (function (window) {
                 menubar: "edit tools",
                 toolbar: "undo redo link unlink code",
                 statusbar: true,
-                forced_root_block: "div",
+                forced_root_block: "p",
+                image_uploadtab: false,
                 force_p_newlines: false
             },
             html: {
@@ -103,7 +104,8 @@ var MelisTinymce = (function (window) {
                 },
                 menubar: "edit insert view format table tools",
                 statusbar: true,
-                forced_root_block: "div",
+                forced_root_block: "p",
+                image_uploadtab: false,
                 force_p_newlines: false
             },
             media: {
@@ -121,7 +123,8 @@ var MelisTinymce = (function (window) {
                 menubar: "edit insert view",
                 toolbar: "insertfile undo redo link image media | code",
                 statusbar: true,
-                forced_root_block: "div",
+                forced_root_block: "p",
+                image_uploadtab: false,
                 force_p_newlines: false
             }
         }
