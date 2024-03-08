@@ -1095,16 +1095,26 @@ var melisCore = (function(window){
     // tab clicked close
     $body.on("click", '#close-all-tab, .close-tab', removeTinymceToolbar);
 
-    // tab is hidden
+    // switch on other tab
     $body.on("hidden.bs.tab", 'a[data-toggle="tab"]', removeTinymceToolbar);
+
+    // click on main tab
+    $body.on("click", 'a[data-toggle="tab"]', removeTinymceToolbar);
 
     // closes the active tinymce toolbar on bootstrap dialog
     function removeTinymceToolbar() {
-        let $tinymceAux         = $(".tox-tinymce-aux"),
-            $tinymceToolbar     = $tinymceAux.find(".tox-toolbar__overflow");
+        let $tinymceAux             = $(".tox-tinymce-aux"),
+            $tinymceToolbar         = $tinymceAux.find(".tox-toolbar__overflow"),
+            $tinymceToolbarReveal   = $(".tox-toolbar__primary .tox-toolbar__group .tox-tbtn--enabled");
 
+            // the actual tinymce hide/reveal additional toolbar
             $.each($tinymceToolbar, function(i, v) {
                 $(v).remove();
+            });
+        
+            // hide/reveal additional tinymce toolbar item button
+            $.each($tinymceToolbarReveal, function(i, v) {
+                $(v).trigger("click");
             });
     }
 
