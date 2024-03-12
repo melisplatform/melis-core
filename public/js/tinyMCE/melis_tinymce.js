@@ -30,13 +30,13 @@ var melisTinyMCE = (function() {
 				},
 				options
 			);
-
+			
 			if ( options.hasOwnProperty("mini_templates_url") ) {
 				options.mini_templates_url = options.mini_templates_url;
 			}
 
 			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
-
+			
 			let config = $.extend(tinyMceConfig, dataString);
 
 			if (typeof tinyMCE != "undefined") {
@@ -140,7 +140,6 @@ var melisTinyMCE = (function() {
 		// for Insert/Edit Link
 		editor.on("ExecCommand", function(e) {
 			var $body 	= $("body");
-				//console.log("e.command", e.command);
 				if ( e.command === "mceLink" ) {
 					// wait for DOM to update
 					setTimeout(function() {
@@ -173,7 +172,7 @@ var melisTinyMCE = (function() {
 								if ( $dialog.length ) {
 									modalPopUp();
 								}
-					}, 100);
+					}, 1);
 				} 
 				else if ( e.command === "mceInsertFile" ) {
 					// scroll to view moxman container
@@ -192,7 +191,7 @@ var melisTinyMCE = (function() {
 							if ( $dialog.length ) {
 								modalPopUp();
 							}
-					}, 100);
+					}, 1);
 				}
 		});
 	}
@@ -402,7 +401,6 @@ var melisTinyMCE = (function() {
 })(jQuery);
 
 function tinyMceCleaner(editor) {
-	//console.log("melis_tinymce.js tinyMceCleaner()");
 	editor.serializer.addNodeFilter("script,style", function(nodes, name) {
 		var i = nodes.length,
 			node,

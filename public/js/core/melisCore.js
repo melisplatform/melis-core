@@ -1086,20 +1086,14 @@ var melisCore = (function(window){
             $tabConOuter.removeClass("hide-res-menus");
     });
 
-    // footer modal buttons
-    $body.on("click", ".footer-modal button", removeTinymceToolbar);
+    // footer modal buttons, tab clicked close, click/switch on main tab nav
+    $body.on("click", '.footer-modal button, a[data-toggle="tab"], #close-all-tab, .close-tab', removeTinymceToolbar);
 
     // modal is hidden
     $body.on("hide.bs.modal", ".modal", removeTinymceToolbar);
 
-    // tab clicked close
-    $body.on("click", '#close-all-tab, .close-tab', removeTinymceToolbar);
-
     // switch on other tab
     $body.on("hidden.bs.tab", 'a[data-toggle="tab"]', removeTinymceToolbar);
-
-    // click on main tab
-    $body.on("click", 'a[data-toggle="tab"]', removeTinymceToolbar);
 
     // closes the active tinymce toolbar on bootstrap dialog
     function removeTinymceToolbar() {
