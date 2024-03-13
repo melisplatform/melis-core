@@ -1087,13 +1087,14 @@ var melisCore = (function(window){
     });
 
     // footer modal buttons, tab clicked close, click/switch on main tab nav
-    $body.on("click", '.footer-modal button, a[data-toggle="tab"], #close-all-tab, .close-tab', removeTinymceToolbar);
+    $body.on("click", '.footer-modal button, #close-all-tab, .close-tab', removeTinymceToolbar);
 
     // modal is hidden
     $body.on("hide.bs.modal", ".modal", removeTinymceToolbar);
 
-    // switch on other tab
-    $body.on("hidden.bs.tab", 'a[data-toggle="tab"]', removeTinymceToolbar);
+    // switch on other tab 
+    // this set up unlike $body.on data-toggle to avoid re-trigger of insert/edit links dialog box open up once anchor tag pre-selected from within tinymce editor
+    $(`a[data-toggle="tab"]`).on("hidden.bs.tab", removeTinymceToolbar);
 
     // closes the active tinymce toolbar on bootstrap dialog
     function removeTinymceToolbar() {

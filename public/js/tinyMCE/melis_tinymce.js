@@ -126,17 +126,6 @@ var melisTinyMCE = (function() {
 			//tinyMceOpenDialog(editor);
 		}); */
 
-		// focus, blur
-		/* editor.on("focus", function(e) {
-			let $tinymceToolbarReveal = $(".tox-toolbar__primary .tox-toolbar__group .tox-tbtn--enabled");
-				// hides the toolbar that appears under the toolbar overflow icon
-				$.each($tinymceToolbarReveal, function(i, v) {
-					$(v).trigger("click");
-				});
-		}); */
-
-		//editor.on("focusout", melisCore.removeTinymceToolbar);
-
 		// for Insert/Edit Link
 		editor.on("ExecCommand", function(e) {
 			var $body 	= $("body");
@@ -282,7 +271,7 @@ var melisTinyMCE = (function() {
 					var iframeHeight 	= $(window).height(),
 						// iframe offset
 						$iframeOffset 	= $iframe.position().top;
-
+						
 						// dialog box height .mce-window [.dialog]
 						if ( $dialog.length ) {
 							dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
@@ -291,10 +280,11 @@ var melisTinyMCE = (function() {
 							dialogHeight = $moxContainer.outerHeight() - $iframeOffset * 10;
 						}
 
+						//console.log("melisCms.scrollToViewTinyMCE(): ", melisCms.scrollToViewTinyMCE());
 						parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
 				} else {
 					var bodyHeight = window.parent.$("body").height();
-
+					
 						if ( $dialog.length ) {
 							dialogHeight = $dialog.outerHeight();
 						}
@@ -302,6 +292,7 @@ var melisTinyMCE = (function() {
 							dialogHeight = $moxContainer.outerHeight() - $iframeOffset * 10;
 						}
 
+						//console.log("melisCms.scrollToViewTinyMCE(): ", melisCms.scrollToViewTinyMCE());
 						parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
 				}
 
