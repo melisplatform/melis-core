@@ -30,7 +30,7 @@ var melisTinyMCE = (function() {
 				},
 				options
 			);
-			
+
 			if ( options.hasOwnProperty("mini_templates_url") ) {
 				options.mini_templates_url = options.mini_templates_url;
 			}
@@ -397,20 +397,6 @@ var melisTinyMCE = (function() {
 					}
 				}
 				// melisTinyMCE.modalPopUp();
-		});
-
-		/* Fixes issue: https://mantis2.uat.melistechnology.fr/view.php?id=4906
-		 * Added back the default toolbar option on createTinyMCE .editme on .close-tab #close-all-tab
-		 */
-	let activeTab = $("#melis-id-nav-bar-tabs").find('li.active').children("a").data("id");
-		defaultOption = {
-			toolbar: 'insertfile undo redo | blocks | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | minitemplate code',
-		}
-
-		$body.on("click", ".melis-opentools", function() {
-			if ( activeTab != "id_meliscommerce_categories_page" || activeTab != "id_melis_cms_categories_v2" ) {
-				melisTinyMCE.createTinyMCE("tool", ".editme", defaultOption);
-			}
 		});
 })(jQuery);
 
