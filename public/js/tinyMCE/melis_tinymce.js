@@ -5,7 +5,7 @@ var melisTinyMCE = (function() {
 		$.ajax({
 			type: "GET",
 			url: "/melis/MelisCore/MelisTinyMce/preloadTinyMceConfig",
-			encode: true,
+			encode: true
 		}).done(function(data) {
 			$.each(data, ($type, $config) => {
 				tinyMceConfigs[$type] = $config;
@@ -31,43 +31,98 @@ var melisTinyMCE = (function() {
 				options
 			);
 
-			if ( options.hasOwnProperty("mini_templates_url") ) {
-				options.mini_templates_url = options.mini_templates_url;
-			}
+				if (options.hasOwnProperty("mini_templates_url")) {
+					options.mini_templates_url = options.mini_templates_url;
+				}
 
 			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
-			
 			let config = $.extend(tinyMceConfig, dataString);
 
-			if (typeof tinyMCE != "undefined") {
-				if (selector.length) {
-					try {
-						// removing selector that has been initialized before
-						// then we can re-init again
-						tinyMCE.remove(selector);
-						// tinymce.DOM.remove(selector);
-					} catch (e) {}
+				if (typeof tinyMCE != "undefined") {
+					if (selector.length) {
+						try {
+							// removing selector that has been initialized before
+							// then we can re-init again
+							tinyMCE.remove(selector);
+							// tinymce.DOM.remove(selector);
+						} catch (e) {}
+					}
 				}
-			}
 
-			if (config["file_picker_callback"]) {
-				config["file_picker_callback"] = eval(config["file_picker_callback"]);
-			}
+				//console.log(`outside typeof config["setup"] {string}: `, typeof config["setup"]);
+				if ( config["setup"] ) {
+					var setupCb = config["setup"];
+						
+						config["setup"] = eval(config["setup"]);
+						//console.log(`inside typeof setup: `, typeof setup);
+				}
 
-			if (config["setup"]) {
-				config["setup"] = eval(config["setup"]);
-			}
+				//console.log(`outside typeof config["init_instance_callback"] {string}: `, typeof config["init_instance_callback"]);
+				if (config["init_instance_callback"]) {
+					var initInstanceCb = config["init_instance_callback"];
 
-			if (config["init_instance_callback"]) {
-				config["init_instance_callback"] = eval(config["init_instance_callback"]);
-			}
+						config["init_instance_callback"] = eval(config["init_instance_callback"]);
+						//console.log(`inside typeof initInstance: `, typeof initInstance);
+				}
 
-			// Initializing TinyMCE with the request Configurations
-			tinyMCE.init(config);
+				/* console.log("================================================================");
+				console.log(`outside typeof config["file_picker_callback"] {string}: `, typeof config["file_picker_callback"]); */
+				if ( config["file_picker_callback"] ) {
+					var filePickerCb = config["file_picker_callback"];
+
+						config["file_picker_callback"] = eval( config["file_picker_callback"] );
+
+						//console.log(`inside typeof filePickerCb {string}: `, typeof filePickerCb );
+				}
+
+				//console.log("config: ", config);
+
+				// Initializing TinyMCE with the request Configurations
+				tinyMCE.init(config);
+
+				// defaulting function callbacks to string, as eval is excecuted and it will be stored now as a function
+				// window.parent.melisTinyMCE.tinyMceConfigs[type].setup = setup;
+				var afterConfigs = window.parent.melisTinyMCE.tinyMceConfigs[type];
+					
+					//console.log("afterConfigs: ", afterConfigs);
+
+					if ( typeof setupCb === 'string' ) {
+						afterConfigs.setup = setupCb;
+
+						//console.log(`typeof afterConfigs.setup: `, typeof afterConfigs.setup);
+					}
+					
+					if ( typeof initInstanceCb === 'string' ) {
+						afterConfigs.init_instance_callback = initInstanceCb;
+
+						//console.log(`typeof afterConfigs.init_instance_callback: `, typeof afterConfigs.init_instance_callback);
+					}
+
+					/* console.log(`outside typeof filePickerCb: `, typeof filePickerCb);
+					console.log(`outside filePickerCb: `, filePickerCb); */
+					if ( typeof filePickerCb === 'function' ) {
+						afterConfigs.file_picker_callback = filePickerCb.name;
+						afterConfigs.file_picker_callback = eval(filePickerCb.name);
+						//console.log(`typeof afterConfigs.file_picker_callback: `, typeof afterConfigs.file_picker_callback);
+					}
+
+					/* window.parent.$body.on("click", window.parent.$body.find(".melis-publishpage"), function() {
+						afterConfigs.file_picker_callback = window.parent.melisTinyMCE.filePickerCallback.name;
+					}); */
+					
+					/* console.log("=========================================================");
+					console.log(`afterConfigs typeof filePickerCb: `, typeof filePickerCb );
+					if ( typeof filePickerCb === 'string' || typeof filePickerCb === 'function' ) {
+						//afterConfigs.file_picker_callback = config["file_picker_callback"];
+						//afterConfigs.file_picker_callback = filePickerCb;
+						afterConfigs.file_picker_callback = eval(filePickerCb);
+						
+						console.log(`typeof afterConfigs.file_picker_callback: `, typeof afterConfigs.file_picker_callback);
+					} */
 		}, 1000);
 
-		// .tox-tinymce, .tox-tinymce-aux, .moxman-window, for tinymce within bootstrap modal
 		$(document).on("focusin", function(e) {
+			//console.log("melis_tinymce.js document focusin");
 			if ($(e.target).closest(".tox-dialog").length) {
 				e.stopImmediatePropagation();
 			}
@@ -75,11 +130,11 @@ var melisTinyMCE = (function() {
 	}
 
 	filePickerCallback = function(cb, value, meta) {
+		//console.log("filePickerCallback() !!!");
 		var input = document.createElement("input");
 
 			input.setAttribute("type", "file");
 			input.setAttribute("accept", "image/*");
-
 			/*
 				Note: In modern browsers input[type="file"] is functional without
 				even adding it to the DOM, but that might not be the case in some older
@@ -91,111 +146,123 @@ var melisTinyMCE = (function() {
 				var file = this.files[0],
 					reader = new FileReader();
 
-				reader.onload = function() {
-					/*
-						Note: Now we need to register the blob in TinyMCEs image blob
-						registry. In the next release this part hopefully won't be
-						necessary, as we are looking to handle it internally.
-					*/
-					var id = "blobid" + new Date().getTime(),
-						blobCache = tinymce.activeEditor.editorUpload.blobCache,
-						base64 = reader.result.split(",")[1],
-						blobInfo = blobCache.create(id, file, base64);
+					reader.onload = function() {
+						/*
+							Note: Now we need to register the blob in TinyMCEs image blob
+							registry. In the next release this part hopefully won't be
+							necessary, as we are looking to handle it internally.
+						*/
+						var id = "blobid" + new Date().getTime(),
+							blobCache = tinymce.activeEditor.editorUpload.blobCache,
+							base64 = reader.result.split(",")[1],
+							blobInfo = blobCache.create(id, file, base64);
 
-					blobCache.add(blobInfo);
+						blobCache.add(blobInfo);
 
-					/* call the callback and populate the Title field with the file name */
-					cb(blobInfo.blobUri(), { title: file.name });
-				};
+						/* call the callback and populate the Title field with the file name */
+						cb(blobInfo.blobUri(), { title: file.name });
+					};
 
-				reader.readAsDataURL(file);
+					reader.readAsDataURL(file);
 			};
 
 			input.click();
 	};
 
-	// TinyMCE  action event
+	// TinyMCE action event
 	function tinyMceActionEvent(editor) {
+		//console.log("tinyMceActionEvent() editor: ", editor);
 		editor.on("change", function() {
 			// Any changes will sync to the selector (Ex. textarea)
 			// tinymce.triggerSave();
 			editor.save();
 		});
 
-		/* editor.on("init", function(e) {
+		editor.on("init", function(e) {
 			//tinyMceOpenDialog(editor);
-		}); */
 
-		// for Insert/Edit Link
-		editor.on("ExecCommand", function(e) {
-			var $body 	= $("body");
-				if ( e.command === "mceLink" ) {
-					// wait for DOM to update
-					setTimeout(function() {
-						let $dialogBody = document.querySelector(".tox-dialog__body-content"),
-							$browseUrl  = $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
+			// for Insert/Edit Link and other e.command
+			editor.on("ExecCommand", function(e) {
+				var $body = $("body");
+					//console.log("editor.on init editor.on ExecCommand [outside editor.on init] e.command: ", e.command);
+					if ( e.command === "mceLink" ) {
+						// wait for DOM to update
+						setTimeout(function() {
+							let $dialogTitle 	= document.querySelector(".tox-dialog__title"),
+								$dialogBody 	= document.querySelector(".tox-dialog__body-content"),
+								$browseUrl  	= $dialogBody.querySelector(".tox-form__controls-h-stack .tox-browse-url");						  
 
-						// creates new custom button and set attributes
-						let $customButton = document.createElement("button");
+							// creates new custom button and set attributes
+							let $customButton = document.createElement("button");
 
-							$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
-							$customButton.classList.add("mce-btn", "mce-open");
+								$customButton.innerHTML = '<i class="icon icon-sitemap fa fa-sitemap" style="font-family: FontAwesome; position: relative; font-size: 16px; display: block; text-align: center;"></i>';
+								//$customButton.classList.add("mce-btn", "mce-open");
 
-							setMultipleAttributes($customButton, { 
-								"title" : "Site tree view",
-								"id"	: "mce-link-tree",
-								"style" : "width: 34px; height: 34px;"
-							});
+								setMultipleAttributes($customButton, { 
+									"title" : "Site tree view",
+									"id"	: "mce-link-tree",
+									"style" : "width: 34px; height: 34px;",
+									"class" : "mce-btn mce-open"
+								});
 
-							// insert the new button after browse URL button
-							$browseUrl.parentNode.insertBefore($customButton, $browseUrl.nextElementSibling);
+								// insert the new button after browse URL button
+								$browseUrl.parentNode.insertBefore( $customButton, $browseUrl.nextElementSibling );
 
-							// event handler of new button
-							$customButton.onclick = function() {
-								// show modal for #id_meliscms_find_page_tree
-								melisLinkTree.createTreeModal();
-							};
-							
-							// scroll to view dialog box
+								// event handler of new button
+								$customButton.onclick = function() {
+									// show modal for #id_meliscms_find_page_tree
+									melisLinkTree.createTreeModal();
+								};
+
+								/* $browseUrl.onclick = function() {
+									console.log("inside ExecCommand");
+									window.parent.melisTinyMCE.filePickerCallback();
+								}; */
+								
+								// scroll to view dialog box
+								var $dialog = $body.find(".tox-dialog");
+									if ( $dialog.length ) {
+										modalPopUp();
+									}
+						}, 100);
+					} 
+					else if ( e.command === "mceInsertFile" ) {
+						// scroll to view moxman container
+						setTimeout(function() {	
+							// .moxman-floatpanel
+							var $moxContainer = $body.find(".moxman-container");
+								if ( $moxContainer.length ) {
+									modalPopUp();
+								}
+						}, 1000);
+					}
+					else {
+						// scroll to view dialog box
+						setTimeout(function() {
 							var $dialog = $body.find(".tox-dialog");
 								if ( $dialog.length ) {
 									modalPopUp();
 								}
-					}, 1);
-				} 
-				else if ( e.command === "mceInsertFile" ) {
-					// scroll to view moxman container
-					setTimeout(function() {	
-						// .moxman-floatpanel
-						var $moxContainer = $body.find(".moxman-container");
-							if ( $moxContainer.length ) {
-								modalPopUp();
-							}
-					}, 1000);
-				}
-				else {
-					// scroll to view dialog box
-					setTimeout(function() {
-						var $dialog = $body.find(".tox-dialog");
-							if ( $dialog.length ) {
-								modalPopUp();
-							}
-					}, 1);
-				}
+						}, 100);
+					}
+			});
 		});
 	}
 
 	// opening of tinymce dialog
 	function tinyMceOpenDialog(editor) {
+		//console.log("tinyMceOpenDialog!!!");
 		var $body = $("body");
-
 			editor.windowManager.oldOpen = editor.windowManager.open; // save for later
-
 			editor.windowManager.open = function(t, r) {
-				var editLinkTitle =
-					translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
-				var insertMiniTemplateTitle =
-					translations.tr_meliscore_tinymce_mini_template_add_button_tooltip;
+				// replace with our own function
+				var modal = this.oldOpen.apply(this, [t, r]); // call original
+				var editLinkTitle = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
+				var insertMiniTemplateTitle = translations.tr_meliscore_tinymce_mini_template_add_button_tooltip;
+
+					/* console.log("t.title: ", t.title);
+					console.log("editLinkTitle: ", editLinkTitle);
+					console.log("typeof melisLinkTree: ", typeof melisLinkTree); */
 
 					// adding of add tree view button from dialog initialization
 					if (t.title === editLinkTitle && typeof melisLinkTree != "undefined") {
@@ -208,24 +275,21 @@ var melisTinyMCE = (function() {
 						});
 					}
 
-					// replace with our own function
-					var modal = this.oldOpen.apply(this, [t, r]); // call original
-				
 					// resize dialog to full width on mini templates
 					if (t.title === insertMiniTemplateTitle) {
 						$(".tox-dialog").css("max-width", "100%");
 					}
 
-					//var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
+					//console.log(`$(".tox-form__controls-h-stack").length: `, $(".tox-form__controls-h-stack") );
 
-					//if ($dialog.length) {
-						// window.parent.melisCms.modalPopUp(); 
-						modalPopUp(); // in melisCms.js but not used
-					//}
+				var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
+
+					if ( $dialog.length ) {
+						// window.parent.melisCms.modalPopUp(); // in melisCms.js but not used
+						modalPopUp();
+					}
 
 					return modal; // Template plugin is dependent on this return value
-					//return editor.windowManager.open;
-					//return this;
 			};
 	}
 
@@ -392,6 +456,7 @@ var melisTinyMCE = (function() {
 })(jQuery);
 
 function tinyMceCleaner(editor) {
+	//console.log("melis_tinymce.js tinyMceCleaner()");
 	editor.serializer.addNodeFilter("script,style", function(nodes, name) {
 		var i = nodes.length,
 			node,

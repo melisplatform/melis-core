@@ -1086,33 +1086,6 @@ var melisCore = (function(window){
             $tabConOuter.removeClass("hide-res-menus");
     });
 
-    // footer modal buttons, tab clicked close, click/switch on main tab nav
-    $body.on("click", '.footer-modal button, #close-all-tab, .close-tab', removeTinymceToolbar);
-
-    // modal is hidden
-    $body.on("hide.bs.modal", ".modal", removeTinymceToolbar);
-
-    // switch on other tab 
-    // this set up unlike $body.on data-toggle to avoid re-trigger of insert/edit links dialog box open up once anchor tag pre-selected from within tinymce editor
-    $(`a[data-toggle="tab"]`).on("hidden.bs.tab", removeTinymceToolbar);
-
-    // closes the active tinymce toolbar on bootstrap dialog
-    function removeTinymceToolbar() {
-        let $tinymceAux             = $(".tox-tinymce-aux"),
-            $tinymceToolbar         = $tinymceAux.find(".tox-toolbar__overflow"),
-            $tinymceToolbarReveal   = $(".tox-toolbar__primary .tox-toolbar__group .tox-tbtn--enabled");
-
-            // the actual tinymce hide/reveal additional toolbar
-            $.each($tinymceToolbar, function(i, v) {
-                $(v).remove();
-            });
-        
-            // hide/reveal additional tinymce toolbar item button
-            $.each($tinymceToolbarReveal, function(i, v) {
-                $(v).trigger("click");
-            });
-    }
-
     function showPlugLists() {
         if($(this).hasClass("active")) {
             $(this).removeClass("active")
@@ -1311,6 +1284,6 @@ var melisCore = (function(window){
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
         showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu, // update on this js file, since dashboard notification
         paginateDataTables                              :           paginateDataTables,
-        removeTinymceToolbar                            :           removeTinymceToolbar
+        //removeTinymceToggleToolbarDrawer              :           removeTinymceToggleToolbarDrawer
     }
 })(window);

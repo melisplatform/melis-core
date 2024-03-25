@@ -31,10 +31,11 @@
         'image_advtab' => true,
 		// formatselect = blocks
         'toolbar' => 'insertfile undo redo | blocks | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | minitemplate code',
+		'toolbar_mode' => 'sliding',
 		'deprecation_warnings' => false,
 		'promotion' => false,
         'setup' => 'melisTinyMCE.tinyMceActionEvent',
-        'init_instance_callback' => 'tinyMceCleaner' // melis-core/public/js/tinyMCE/tinymce_cleaner.js
+        'init_instance_callback' => 'tinyMceCleaner'
 	];
 
 # For reference before implementing this fixed: http://mantis.melistechnology.fr/view.php?id=3675

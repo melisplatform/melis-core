@@ -1,4 +1,5 @@
-function tinyMceCleaner(editor) {
+tinyMceCleaner = function(editor) {
+	//console.log("tinymce_cleaner.js tinyMceCleaner() reference function!!");
 	editor.serializer.addNodeFilter('script,style', function(nodes, name) {
 		var i = nodes.length, node, value, type;
 
@@ -17,4 +18,8 @@ function tinyMceCleaner(editor) {
 			}
 		}
 	});
-}
+	/* console.log("tinymce_cleaner.js inside tinyMceCleaner()");
+	editor.on("ExecCommand", function(e) {
+		console.log("tinymce_cleaner.js tinyMceCleaner() editor.on ExecCommand e: ", e);
+	}); */
+};
