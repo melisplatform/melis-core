@@ -36,7 +36,6 @@ var melisTinyMCE = (function() {
 				}
 
 			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
-				console.log({tinyMceConfig});
 
 			let config = $.extend(tinyMceConfig, dataString);
 			
@@ -56,13 +55,6 @@ var melisTinyMCE = (function() {
 						config["setup"] = eval(config["setup"]);
 				}
 
-				/* if ( config.setup ) {
-					var setupCb = config.setup;
-						config.setup = eval( config.setup );
-
-						//console.log(`inside config.setup: `, config.setup);
-				} */
-
 				if (config["init_instance_callback"]) {
 					var initInstanceCb = config["init_instance_callback"];
 						config["init_instance_callback"] = eval(config["init_instance_callback"]);
@@ -72,9 +64,7 @@ var melisTinyMCE = (function() {
 					var filePickerCb = config["file_picker_callback"];
 						config["file_picker_callback"] = eval( config["file_picker_callback"] );
 				}
-
-				console.log(`config: `, config);
-				
+			
 				// Initializing TinyMCE with the request Configurations
 				tinyMCE.init(config);
 
@@ -86,8 +76,6 @@ var melisTinyMCE = (function() {
 						//afterConfigs.setup = setupCb;
 						//afterConfigs.setup = afterConfigs.setup;
 						afterConfigs.setup = 'melisTinyMCE.tinyMceActionEvent';
-
-						console.log(`afterConfigs.setup: `, afterConfigs.setup );
 					}
 
 					if ( typeof initInstanceCb === 'string' ) {
@@ -165,7 +153,7 @@ var melisTinyMCE = (function() {
 			// for Insert/Edit Link and other e.command
 			editor.on("ExecCommand", function(e) {
 				var $body = $("body");
-					console.log("editor.on ExecCommand e.command: ", e.command);
+					//console.log("editor.on ExecCommand e.command: ", e.command);
 					if ( e.command === "mceLink" ) {
 						// wait for DOM to update
 						setTimeout(function() {
