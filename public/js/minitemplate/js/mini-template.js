@@ -76,9 +76,9 @@
                     appendAccordion(data);
                 }, 1000);
             })
-            /* .fail(function(xhr, textStatus, errorThrown) {
+            .fail(function(xhr, textStatus, errorThrown) {
                 alert( translations.tr_meliscore_error_message );
-            }); */
+            });
     }
 
     function siteNameHtml( siteName, index ) {

@@ -380,13 +380,13 @@ var melisTinyMCE = (function() {
 			melisTinyMCE.getTinyMceConfig();
 		}
 
-		// scroll to view tinymce dialog box, melis-cms find page tree
+		// scroll to view tinymce dialog box, melis-cms find page tree, site tree view modal
 		$body.on("click", "#id_meliscms_find_page_tree .footer-modal button", function() {
 			var $iframe 	= $(".melis-iframe"),
 				$mcePopUp 	= $iframe.contents().find(".tox-tinymce-aux"),
 				$dialog 	= $iframe.contents().find(".tox-dialog");
 
-				if ( $mcePopUp.length ) {
+				/* if ( $mcePopUp.length ) {
 					if ( $iframe.length ) {
 						//var iframeHeight = $(window).height(),
 						var iframeHeight = $iframe.height(),
@@ -402,8 +402,8 @@ var melisTinyMCE = (function() {
 
 							melisTinyMCE.scrollToViewIframeTinyMCE(dialogHeight, bodyHeight);
 					}
-				}
-				// melisTinyMCE.modalPopUp();
+				} */
+				melisTinyMCE.modalPopUp();
 		});
 })(jQuery);
 
