@@ -30,11 +30,11 @@
             dialogApi.unblock();
           }, 2000);
 
-          /* var $body = $("body"),
+          var $body = $("body"),
               $dialog = $body.find(".tox-dialog");
               if ( $dialog.length ) {
                 melisTinyMCE.modalPopUp();
-              } */
+              }
         }
       });
 
@@ -53,18 +53,18 @@
             dialogApi.unblock();
           }, 2000);
 
-          /* var $body = $("body"),
+          var $body = $("body"),
               $dialog = $body.find(".tox-dialog");
 
-              melisTinyMCE.modalPopUp( $dialog); */
+              melisTinyMCE.modalPopUp( $dialog);
         }
       });
 
       // Register the additional tinymce custom option
-      /* editor.options.register('mini_templates_url', {
+      editor.options.register('mini_templates_url', {
         processor: 'string',
         default: '/melis/MelisCore/MelisTinyMce/getTinyTemplates'
-      }); */
+      });
 
       // Return details to be displayed in TinyMCE's "Help" plugin, optional
       return {

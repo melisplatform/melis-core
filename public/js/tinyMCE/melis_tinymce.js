@@ -36,8 +36,10 @@ var melisTinyMCE = (function() {
 				}
 
 			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
-			let config = $.extend(tinyMceConfig, dataString);
+				console.log({tinyMceConfig});
 
+			let config = $.extend(tinyMceConfig, dataString);
+			
 				if (typeof tinyMCE != "undefined") {
 					if (selector.length) {
 						try {
@@ -48,81 +50,61 @@ var melisTinyMCE = (function() {
 						} catch (e) {}
 					}
 				}
-
-				//console.log(`outside typeof config["setup"] {string}: `, typeof config["setup"]);
+				
 				if ( config["setup"] ) {
 					var setupCb = config["setup"];
-						
 						config["setup"] = eval(config["setup"]);
-						//console.log(`inside typeof setup: `, typeof setup);
 				}
 
-				//console.log(`outside typeof config["init_instance_callback"] {string}: `, typeof config["init_instance_callback"]);
+				/* if ( config.setup ) {
+					var setupCb = config.setup;
+						config.setup = eval( config.setup );
+
+						//console.log(`inside config.setup: `, config.setup);
+				} */
+
 				if (config["init_instance_callback"]) {
 					var initInstanceCb = config["init_instance_callback"];
-
 						config["init_instance_callback"] = eval(config["init_instance_callback"]);
-						//console.log(`inside typeof initInstance: `, typeof initInstance);
 				}
 
-				/* console.log("================================================================");
-				console.log(`outside typeof config["file_picker_callback"] {string}: `, typeof config["file_picker_callback"]); */
 				if ( config["file_picker_callback"] ) {
 					var filePickerCb = config["file_picker_callback"];
-
 						config["file_picker_callback"] = eval( config["file_picker_callback"] );
-
-						//console.log(`inside typeof filePickerCb {string}: `, typeof filePickerCb );
 				}
 
-				//console.log("config: ", config);
-
+				console.log(`config: `, config);
+				
 				// Initializing TinyMCE with the request Configurations
 				tinyMCE.init(config);
 
-				// defaulting function callbacks to string, as eval is excecuted and it will be stored now as a function
+				// defaulting function callbacks to string except for .file_picker_callback needs to be a function
 				// window.parent.melisTinyMCE.tinyMceConfigs[type].setup = setup;
 				var afterConfigs = window.parent.melisTinyMCE.tinyMceConfigs[type];
 					
-					//console.log("afterConfigs: ", afterConfigs);
-
 					if ( typeof setupCb === 'string' ) {
-						afterConfigs.setup = setupCb;
+						//afterConfigs.setup = setupCb;
+						//afterConfigs.setup = afterConfigs.setup;
+						afterConfigs.setup = 'melisTinyMCE.tinyMceActionEvent';
 
-						//console.log(`typeof afterConfigs.setup: `, typeof afterConfigs.setup);
+						console.log(`afterConfigs.setup: `, afterConfigs.setup );
 					}
-					
+
 					if ( typeof initInstanceCb === 'string' ) {
 						afterConfigs.init_instance_callback = initInstanceCb;
-
-						//console.log(`typeof afterConfigs.init_instance_callback: `, typeof afterConfigs.init_instance_callback);
 					}
 
-					/* console.log(`outside typeof filePickerCb: `, typeof filePickerCb);
-					console.log(`outside filePickerCb: `, filePickerCb); */
 					if ( typeof filePickerCb === 'function' ) {
 						afterConfigs.file_picker_callback = filePickerCb.name;
-						afterConfigs.file_picker_callback = eval(filePickerCb.name);
-						//console.log(`typeof afterConfigs.file_picker_callback: `, typeof afterConfigs.file_picker_callback);
+						afterConfigs.file_picker_callback = eval(afterConfigs.file_picker_callback);
 					}
 
 					/* window.parent.$body.on("click", window.parent.$body.find(".melis-publishpage"), function() {
 						afterConfigs.file_picker_callback = window.parent.melisTinyMCE.filePickerCallback.name;
 					}); */
-					
-					/* console.log("=========================================================");
-					console.log(`afterConfigs typeof filePickerCb: `, typeof filePickerCb );
-					if ( typeof filePickerCb === 'string' || typeof filePickerCb === 'function' ) {
-						//afterConfigs.file_picker_callback = config["file_picker_callback"];
-						//afterConfigs.file_picker_callback = filePickerCb;
-						afterConfigs.file_picker_callback = eval(filePickerCb);
-						
-						console.log(`typeof afterConfigs.file_picker_callback: `, typeof afterConfigs.file_picker_callback);
-					} */
 		}, 1000);
 
 		$(document).on("focusin", function(e) {
-			//console.log("melis_tinymce.js document focusin");
 			if ($(e.target).closest(".tox-dialog").length) {
 				e.stopImmediatePropagation();
 			}
@@ -130,7 +112,6 @@ var melisTinyMCE = (function() {
 	}
 
 	filePickerCallback = function(cb, value, meta) {
-		//console.log("filePickerCallback() !!!");
 		var input = document.createElement("input");
 
 			input.setAttribute("type", "file");
@@ -171,7 +152,7 @@ var melisTinyMCE = (function() {
 
 	// TinyMCE action event
 	function tinyMceActionEvent(editor) {
-		//console.log("tinyMceActionEvent() editor: ", editor);
+		//console.log(`tinyMceActionEvent() editor: `, editor);
 		editor.on("change", function() {
 			// Any changes will sync to the selector (Ex. textarea)
 			// tinymce.triggerSave();
@@ -184,7 +165,7 @@ var melisTinyMCE = (function() {
 			// for Insert/Edit Link and other e.command
 			editor.on("ExecCommand", function(e) {
 				var $body = $("body");
-					//console.log("editor.on init editor.on ExecCommand [outside editor.on init] e.command: ", e.command);
+					console.log("editor.on ExecCommand e.command: ", e.command);
 					if ( e.command === "mceLink" ) {
 						// wait for DOM to update
 						setTimeout(function() {
@@ -213,11 +194,6 @@ var melisTinyMCE = (function() {
 									// show modal for #id_meliscms_find_page_tree
 									melisLinkTree.createTreeModal();
 								};
-
-								/* $browseUrl.onclick = function() {
-									console.log("inside ExecCommand");
-									window.parent.melisTinyMCE.filePickerCallback();
-								}; */
 								
 								// scroll to view dialog box
 								var $dialog = $body.find(".tox-dialog");
@@ -251,7 +227,6 @@ var melisTinyMCE = (function() {
 
 	// opening of tinymce dialog
 	function tinyMceOpenDialog(editor) {
-		//console.log("tinyMceOpenDialog!!!");
 		var $body = $("body");
 			editor.windowManager.oldOpen = editor.windowManager.open; // save for later
 			editor.windowManager.open = function(t, r) {
@@ -259,10 +234,6 @@ var melisTinyMCE = (function() {
 				var modal = this.oldOpen.apply(this, [t, r]); // call original
 				var editLinkTitle = translations.tr_meliscore_tinymce_insert_edit_link_dialog_title;
 				var insertMiniTemplateTitle = translations.tr_meliscore_tinymce_mini_template_add_button_tooltip;
-
-					/* console.log("t.title: ", t.title);
-					console.log("editLinkTitle: ", editLinkTitle);
-					console.log("typeof melisLinkTree: ", typeof melisLinkTree); */
 
 					// adding of add tree view button from dialog initialization
 					if (t.title === editLinkTitle && typeof melisLinkTree != "undefined") {
@@ -280,12 +251,9 @@ var melisTinyMCE = (function() {
 						$(".tox-dialog").css("max-width", "100%");
 					}
 
-					//console.log(`$(".tox-form__controls-h-stack").length: `, $(".tox-form__controls-h-stack") );
-
 				var $dialog = $(".tox-dialog__header").closest(".tox-dialog");
 
 					if ( $dialog.length ) {
-						// window.parent.melisCms.modalPopUp(); // in melisCms.js but not used
 						modalPopUp();
 					}
 
@@ -343,8 +311,6 @@ var melisTinyMCE = (function() {
 						else {
 							dialogHeight = $moxContainer.outerHeight() - $iframeOffset * 10;
 						}
-
-						//console.log("melisCms.scrollToViewTinyMCE(): ", melisCms.scrollToViewTinyMCE());
 						parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);
 				} else {
 					var bodyHeight = window.parent.$("body").height();
@@ -355,8 +321,6 @@ var melisTinyMCE = (function() {
 						else {
 							dialogHeight = $moxContainer.outerHeight() - $iframeOffset * 10;
 						}
-
-						//console.log("melisCms.scrollToViewTinyMCE(): ", melisCms.scrollToViewTinyMCE());
 						parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
 				}
 
@@ -456,7 +420,6 @@ var melisTinyMCE = (function() {
 })(jQuery);
 
 function tinyMceCleaner(editor) {
-	//console.log("melis_tinymce.js tinyMceCleaner()");
 	editor.serializer.addNodeFilter("script,style", function(nodes, name) {
 		var i = nodes.length,
 			node,
