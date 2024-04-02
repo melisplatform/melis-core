@@ -9,6 +9,7 @@
 
 namespace MelisCore\Model\Hydrator;
 
+#[\AllowDynamicProperties]
 class MelisResultSet
 {
     public function getArrayCopy()

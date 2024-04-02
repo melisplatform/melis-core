@@ -356,7 +356,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     public function limitedText($text, $limit = self::TEXT_LIMIT)
     {
         $postString = '...';
-        $strCount = strlen($text);
+        $strCount = 0;
+        if(!empty($text))
+            $strCount = strlen($text);
+
         $sLimitedText = $text;
 
         if ($strCount > $limit) {
@@ -743,8 +746,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 foreach ($dataValue as $key => $value) {
 
                     if ($striptags) {
-                        $value = html_entity_decode($value);
-                        $value = strip_tags($value);
+                        if(!empty($value)) {
+                            $value = html_entity_decode($value);
+                            $value = strip_tags($value);
+                        }
                     } else {
                         if (is_int($value)) {
                             $value = (string) $value;
@@ -841,26 +846,28 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     }
 
     /**
-        * PHP native str_split with unicode version
-        *
-        * @param string $str
-        * @param int $l
-        *
-        * @return array
-        */
+     * PHP native str_split with unicode version
+     *
+     * @param $str
+     * @param int $l
+     * @return array|false|string[]
+     */
     private function stringSplitUnicode($str, $l = 0)
     {
-        if ($l > 0) {
-            $ret = [];
-            $len = mb_strlen($str, "UTF-8");
-            for ($i = 0; $i < $len; $i += $l) {
-                $ret[] = mb_substr($str, $i, $l, "UTF-8");
+        if(!empty($str)) {
+            if ($l > 0) {
+                $ret = [];
+                $len = mb_strlen($str, "UTF-8");
+                for ($i = 0; $i < $len; $i += $l) {
+                    $ret[] = mb_substr($str, $i, $l, "UTF-8");
+                }
+
+                return $ret;
             }
 
-            return $ret;
+            return preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
         }
-
-        return preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
+        return [];
     }
 
     /**
@@ -1035,12 +1042,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         switch ($locale) {
             case 'fr_FR':
                 //converts dd/mm/yyyy to yyyy-mm-dd
-                $date = str_replace('/', '-', $date);
-                $date = !empty(strtotime($date)) ? date("Y-m-d", strtotime($date)) : null;
+                $date = !empty($date) ? str_replace('/', '-', $date) : null;
+                $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
                 break;
             default:
                 //converts mm/dd/yyyy to yyyy-mm-dd
-                $date = !empty(strtotime($date)) ? date("Y-m-d", strtotime($date)) : null;
+                $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
                 break;
         }
 
@@ -1110,17 +1117,19 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     {
 
         if (!is_array($input)) {
-            if ($removeFunctions) {
-                $input = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
-            }
-            $badVals = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
-            $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u><em>';
-            $input = str_replace($badVals, '', $input);
-            $input = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
-            $input = strip_tags(trim($input), $allowedTags);
+            if(!empty($input)) {
+                if ($removeFunctions) {
+                    $input = preg_replace('/[a-zA-Z][a-zA-Z0-9_]+(\()+([a-zA-Z0-9_\-$,\s\"]?)+(\))(\;?)/', '', $input);
+                }
+                $badVals = ['exec', '\\', '&amp;', '&#', '0x', '<script>', '</script>', '">', "'>"];
+                $allowedTags = '<p><br><img><label><input><textarea><div><span><a><strong><i><u><em>';
+                $input = str_replace($badVals, '', $input);
+                $input = preg_replace('/%[a-zA-Z0-9]{2}/', '', $input);
+                $input = strip_tags(trim($input), $allowedTags);
 
-            if ($textOnly) {
-                $input = str_replace(['<', '>', "'", '"'], '', $input);
+                if ($textOnly) {
+                    $input = str_replace(['<', '>', "'", '"'], '', $input);
+                }
             }
         } else {
             return $this->sanitizeRecursive($input, [], $textOnly, $removeFunctions);
@@ -1325,5 +1334,51 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     public function isMobileDevice()
     {
         return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+    }
+
+    /**
+     * @param string $s
+     * @return string
+     */
+    public function iso8859_1ToUtf8(string $s): string {
+        $s .= $s;
+        $len = \strlen($s);
+
+        for ($i = $len >> 1, $j = 0; $i < $len; ++$i, ++$j) {
+            switch (true) {
+                case $s[$i] < "\x80": $s[$j] = $s[$i]; break;
+                case $s[$i] < "\xC0": $s[$j] = "\xC2"; $s[++$j] = $s[$i]; break;
+                default: $s[$j] = "\xC3"; $s[++$j] = \chr(\ord($s[$i]) - 64); break;
+            }
+        }
+
+        return substr($s, 0, $j);
+    }
+
+    /**
+     * @param $dateTime
+     * @param null $dateType
+     * @param null $timeType
+     * @param null $timezone
+     * @param null $calendar
+     * @param null $pattern
+     * @return string
+     */
+    public function formatDate($dateTime, $dateType = null, $timeType = null, $timezone = null, $calendar = null, $pattern = null)
+    {
+        if(!empty($dateTime)) {
+            $container = new Container('meliscore');
+            $locale = $container['melis-lang-locale'];
+
+            if (empty($dateType))
+                $dateType = \IntlDateFormatter::LONG;
+
+            if (empty($timeType))
+                $timeType = \IntlDateFormatter::MEDIUM;
+
+            $formatter = new \IntlDateFormatter($locale, $dateType, $timeType, $timezone, $calendar, $pattern);
+            return $formatter->format($dateTime);
+        }
+        return null;
     }
 }

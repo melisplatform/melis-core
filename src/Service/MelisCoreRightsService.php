@@ -75,8 +75,9 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
 
         // Interface case is opposite, we list items where the user is not allowed
         if ($sectionId == self::MELISCORE_PREFIX_INTERFACE) {
+            if(!empty($rightsObj->$sectionId->id)) {
                 foreach ($rightsObj->$sectionId->id as $interfaceId) {
-                    $interfaceId = (string) $interfaceId;
+                    $interfaceId = (string)$interfaceId;
                     $nonPath = rtrim($interfaceId, '/');
 
                     if ($interfaceId == $itemId ||
@@ -87,16 +88,17 @@ class MelisCoreRightsService extends MelisServiceManager implements MelisCoreRig
                     }
 
                     // explode to search for the exact key
-                    $segments = explode('/',$interfaceId);
-                    if (! empty($segments)) {
+                    $segments = explode('/', $interfaceId);
+                    if (!empty($segments)) {
                         // get the total size minus -1 to get it's last value
-                        $tmpId = count($segments) -1;
+                        $tmpId = count($segments) - 1;
                         // compare , if equal the the key is excluded
                         if ($segments[$tmpId] == $itemId) {
                             return false;
                         }
                     }
                 }
+            }
             return true;
         }
 

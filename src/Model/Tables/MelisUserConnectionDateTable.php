@@ -42,14 +42,13 @@ class MelisUserConnectionDateTable extends MelisGenericTable
              }
          }
 
-         $date   = date('Y-m-d H:i:s', strtotime($lastLoginDate));
-
          if(!is_null($userId)) {
              $userId = (int) $userId;
              $select->where->equalTo('usrcd_usr_login', $userId);
          }
 
          if(!is_null($lastLoginDate)) {
+             $date   = date('Y-m-d H:i:s', strtotime($lastLoginDate));
              $select->where->and->equalTo('usrcd_last_login_date', $date);
          }
 
