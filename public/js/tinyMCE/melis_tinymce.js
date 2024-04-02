@@ -336,26 +336,6 @@ var melisTinyMCE = (function() {
 			document.head.appendChild(el);
 	}
 
-	// for reference, came from melisCms.js, scrollToViewTinyMCE()
-	function scrollToViewIframeTinyMCE(dialogHeight, iframeHeight) {
-		// window scroll offset
-		var windowOffset 	= $(window).scrollTop(),
-			$iframe 		= $(".melis-iframe"),
-			$dialog 		= $iframe.contents().find(".tox-dialog");
-
-			if ( dialogHeight && iframeHeight ) {		
-				setTimeout(function() {
-					var scrollTopOffset = iframeHeight / 2 - dialogHeight;
-						$iframe.contents().find("html, body").animate({ scrollTop: dialogHeight }, 300, function() {
-							$iframe.contents().find("html, body").addClass("animated");
-						});
-				}, 2000);
-					
-			} else {
-				return windowOffset;
-			}
-	}
-
 	// Function that accessible using melisTinyMCE
 	return {
 		tinyMceConfigs: tinyMceConfigs,
@@ -364,11 +344,10 @@ var melisTinyMCE = (function() {
 		tinyMceActionEvent: tinyMceActionEvent,
 		modalPopUp: modalPopUp,
 		addMelisCss: addMelisCss,
-		setMultipleAttributes: setMultipleAttributes,
-		scrollToViewIframeTinyMCE: scrollToViewIframeTinyMCE
+		setMultipleAttributes: setMultipleAttributes
 	};
 })();
-
+// This whole file is not the one inside the page edition iframe
 (function($) {
 	var $body = $("body");
 		// adding Melis TinyMCE CSS
@@ -385,8 +364,8 @@ var melisTinyMCE = (function() {
 			var $iframe 	= $(".melis-iframe"),
 				$mcePopUp 	= $iframe.contents().find(".tox-tinymce-aux"),
 				$dialog 	= $iframe.contents().find(".tox-dialog");
-
-				/* if ( $mcePopUp.length ) {
+				
+				if ( $mcePopUp.length ) {
 					if ( $iframe.length ) {
 						//var iframeHeight = $(window).height(),
 						var iframeHeight = $iframe.height(),
@@ -395,15 +374,16 @@ var melisTinyMCE = (function() {
 							// dialog box height .mce-window [.dialog]
 							dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
 
-							melisTinyMCE.scrollToViewIframeTinyMCE(dialogHeight, iframeHeight);							
+							//scrollToViewTinyMCE
+							parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);							
 					} else {
 						var bodyHeight 		= $body.height(),
 							dialogHeight 	= $dialog.outerHeight();
 
-							melisTinyMCE.scrollToViewIframeTinyMCE(dialogHeight, bodyHeight);
+							//scrollToViewTinyMCE
+							parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
 					}
-				} */
-				melisTinyMCE.modalPopUp();
+				}
 		});
 })(jQuery);
 

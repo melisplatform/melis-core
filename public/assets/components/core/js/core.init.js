@@ -6,7 +6,7 @@ if (window.location != window.parent.location)
 {
 
 
-    window.onunload = function(){};
+    //window.onunload = function(){};
 
     $.expr[':'].scrollable = function( elem ) 
     {
