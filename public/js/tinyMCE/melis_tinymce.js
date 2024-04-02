@@ -361,29 +361,31 @@ var melisTinyMCE = (function() {
 
 		// scroll to view tinymce dialog box, melis-cms find page tree, site tree view modal
 		$body.on("click", "#id_meliscms_find_page_tree .footer-modal button", function() {
-			var $iframe 	= $(".melis-iframe"),
-				$mcePopUp 	= $iframe.contents().find(".tox-tinymce-aux"),
-				$dialog 	= $iframe.contents().find(".tox-dialog");
-				
-				if ( $mcePopUp.length ) {
-					if ( $iframe.length ) {
-						//var iframeHeight = $(window).height(),
-						var iframeHeight = $iframe.height(),
-							// iframe offset
-							$iframeOffset = $iframe.position().top,
-							// dialog box height .mce-window [.dialog]
-							dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
+			setTimeout(function() {
+				var $iframe 	= $(".melis-iframe"),
+					$mcePopUp 	= $iframe.contents().find(".tox-tinymce-aux"),
+					$dialog 	= $iframe.contents().find(".tox-dialog");
+					
+					if ( $mcePopUp.length ) {
+						if ( $iframe.length ) {
+							//var iframeHeight = $(window).height(),
+							var iframeHeight = $iframe.height(),
+								// iframe offset
+								$iframeOffset = $iframe.position().top,
+								// dialog box height .mce-window [.dialog]
+								dialogHeight = $dialog.outerHeight() - $iframeOffset * 10;
 
-							//scrollToViewTinyMCE
-							parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);							
-					} else {
-						var bodyHeight 		= $body.height(),
-							dialogHeight 	= $dialog.outerHeight();
+								//scrollToViewTinyMCE
+								parent.scrollToViewTinyMCE(dialogHeight, iframeHeight);							
+						} else {
+							var bodyHeight 		= $body.height(),
+								dialogHeight 	= $dialog.outerHeight();
 
-							//scrollToViewTinyMCE
-							parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
+								//scrollToViewTinyMCE
+								parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
+						}
 					}
-				}
+			}, 50);
 		});
 })(jQuery);
 
