@@ -385,7 +385,7 @@ var melisTinyMCE = (function() {
 								parent.scrollToViewTinyMCE(dialogHeight, bodyHeight);
 						}
 					}
-			}, 50);
+			}, 100);
 		});
 })(jQuery);
 
