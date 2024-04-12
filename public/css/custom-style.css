@@ -1684,3 +1684,14 @@ transition: all 0.4s ease-in-out;
 #rights-fancytree .fancytree-container li .fancytree-title.color-highlight {
 	color: rgba(153, 201, 117, 0.7) !important;
 }
+#mce-link-tree {
+	width: 34px;
+	height: 34px;
+}
+#mce-link-tree i {
+	font-family: FontAwesome;
+    position: relative;
+    font-size: 16px;
+    display: block;
+    text-align: center;
+}

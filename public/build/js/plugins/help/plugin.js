@@ -1,249 +1,312 @@
 /**
- * Copyright (c) Tiny Technologies, Inc. All rights reserved.
- * Licensed under the LGPL or a commercial license.
- * For LGPL see License.txt in the project root for license information.
- * For commercial licenses see https://www.tiny.cloud/
- *
- * Version: 5.0.1 (2019-02-21)
+ * TinyMCE version 6.7.0 (2023-08-30)
  */
+
 (function () {
-var help = (function () {
     'use strict';
 
-    var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
+    const Cell = initial => {
+      let value = initial;
+      const get = () => {
+        return value;
+      };
+      const set = v => {
+        value = v;
+      };
+      return {
+        get,
+        set
+      };
+    };
 
-    var constant = function (value) {
-      return function () {
+    var global$4 = tinymce.util.Tools.resolve('tinymce.PluginManager');
+
+    let unique = 0;
+    const generate = prefix => {
+      const date = new Date();
+      const time = date.getTime();
+      const random = Math.floor(Math.random() * 1000000000);
+      unique++;
+      return prefix + '_' + random + unique + String(time);
+    };
+
+    const get$1 = customTabs => {
+      const addTab = spec => {
+        var _a;
+        const name = (_a = spec.name) !== null && _a !== void 0 ? _a : generate('tab-name');
+        const currentCustomTabs = customTabs.get();
+        currentCustomTabs[name] = spec;
+        customTabs.set(currentCustomTabs);
+      };
+      return { addTab };
+    };
+
+    const register$2 = (editor, dialogOpener) => {
+      editor.addCommand('mceHelp', dialogOpener);
+    };
+
+    const option = name => editor => editor.options.get(name);
+    const register$1 = editor => {
+      const registerOption = editor.options.register;
+      registerOption('help_tabs', { processor: 'array' });
+    };
+    const getHelpTabs = option('help_tabs');
+    const getForcedPlugins = option('forced_plugins');
+
+    const register = (editor, dialogOpener) => {
+      editor.ui.registry.addButton('help', {
+        icon: 'help',
+        tooltip: 'Help',
+        onAction: dialogOpener
+      });
+      editor.ui.registry.addMenuItem('help', {
+        text: 'Help',
+        icon: 'help',
+        shortcut: 'Alt+0',
+        onAction: dialogOpener
+      });
+    };
+
+    const hasProto = (v, constructor, predicate) => {
+      var _a;
+      if (predicate(v, constructor.prototype)) {
+        return true;
+      } else {
+        return ((_a = v.constructor) === null || _a === void 0 ? void 0 : _a.name) === constructor.name;
+      }
+    };
+    const typeOf = x => {
+      const t = typeof x;
+      if (x === null) {
+        return 'null';
+      } else if (t === 'object' && Array.isArray(x)) {
+        return 'array';
+      } else if (t === 'object' && hasProto(x, String, (o, proto) => proto.isPrototypeOf(o))) {
+        return 'string';
+      } else {
+        return t;
+      }
+    };
+    const isType = type => value => typeOf(value) === type;
+    const isSimpleType = type => value => typeof value === type;
+    const eq = t => a => t === a;
+    const isString = isType('string');
+    const isUndefined = eq(undefined);
+    const isNullable = a => a === null || a === undefined;
+    const isNonNullable = a => !isNullable(a);
+    const isFunction = isSimpleType('function');
+
+    const constant = value => {
+      return () => {
         return value;
       };
     };
-    function curry(fn) {
-      var initialArgs = [];
-      for (var _i = 1; _i < arguments.length; _i++) {
-        initialArgs[_i - 1] = arguments[_i];
+    const never = constant(false);
+
+    class Optional {
+      constructor(tag, value) {
+        this.tag = tag;
+        this.value = value;
       }
-      return function () {
-        var restArgs = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          restArgs[_i] = arguments[_i];
+      static some(value) {
+        return new Optional(true, value);
+      }
+      static none() {
+        return Optional.singletonNone;
+      }
+      fold(onNone, onSome) {
+        if (this.tag) {
+          return onSome(this.value);
+        } else {
+          return onNone();
         }
-        var all = initialArgs.concat(restArgs);
-        return fn.apply(null, all);
-      };
+      }
+      isSome() {
+        return this.tag;
+      }
+      isNone() {
+        return !this.tag;
+      }
+      map(mapper) {
+        if (this.tag) {
+          return Optional.some(mapper(this.value));
+        } else {
+          return Optional.none();
+        }
+      }
+      bind(binder) {
+        if (this.tag) {
+          return binder(this.value);
+        } else {
+          return Optional.none();
+        }
+      }
+      exists(predicate) {
+        return this.tag && predicate(this.value);
+      }
+      forall(predicate) {
+        return !this.tag || predicate(this.value);
+      }
+      filter(predicate) {
+        if (!this.tag || predicate(this.value)) {
+          return this;
+        } else {
+          return Optional.none();
+        }
+      }
+      getOr(replacement) {
+        return this.tag ? this.value : replacement;
+      }
+      or(replacement) {
+        return this.tag ? this : replacement;
+      }
+      getOrThunk(thunk) {
+        return this.tag ? this.value : thunk();
+      }
+      orThunk(thunk) {
+        return this.tag ? this : thunk();
+      }
+      getOrDie(message) {
+        if (!this.tag) {
+          throw new Error(message !== null && message !== void 0 ? message : 'Called getOrDie on None');
+        } else {
+          return this.value;
+        }
+      }
+      static from(value) {
+        return isNonNullable(value) ? Optional.some(value) : Optional.none();
+      }
+      getOrNull() {
+        return this.tag ? this.value : null;
+      }
+      getOrUndefined() {
+        return this.value;
+      }
+      each(worker) {
+        if (this.tag) {
+          worker(this.value);
+        }
+      }
+      toArray() {
+        return this.tag ? [this.value] : [];
+      }
+      toString() {
+        return this.tag ? `some(${ this.value })` : 'none()';
+      }
     }
-    var not = function (f) {
-      return function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-          args[_i] = arguments[_i];
-        }
-        return !f.apply(null, args);
-      };
-    };
-    var never = constant(false);
-    var always = constant(true);
+    Optional.singletonNone = new Optional(false);
 
-    var never$1 = never;
-    var always$1 = always;
-    var none = function () {
-      return NONE;
-    };
-    var NONE = function () {
-      var eq = function (o) {
-        return o.isNone();
-      };
-      var call = function (thunk) {
-        return thunk();
-      };
-      var id = function (n) {
-        return n;
-      };
-      var noop = function () {
-      };
-      var nul = function () {
-        return null;
-      };
-      var undef = function () {
-        return undefined;
-      };
-      var me = {
-        fold: function (n, s) {
-          return n();
-        },
-        is: never$1,
-        isSome: never$1,
-        isNone: always$1,
-        getOr: id,
-        getOrThunk: call,
-        getOrDie: function (msg) {
-          throw new Error(msg || 'error: getOrDie called on none.');
-        },
-        getOrNull: nul,
-        getOrUndefined: undef,
-        or: id,
-        orThunk: call,
-        map: none,
-        ap: none,
-        each: noop,
-        bind: none,
-        flatten: none,
-        exists: never$1,
-        forall: always$1,
-        filter: none,
-        equals: eq,
-        equals_: eq,
-        toArray: function () {
-          return [];
-        },
-        toString: constant('none()')
-      };
-      if (Object.freeze)
-        Object.freeze(me);
-      return me;
-    }();
-    var some = function (a) {
-      var constant_a = function () {
-        return a;
-      };
-      var self = function () {
-        return me;
-      };
-      var map = function (f) {
-        return some(f(a));
-      };
-      var bind = function (f) {
-        return f(a);
-      };
-      var me = {
-        fold: function (n, s) {
-          return s(a);
-        },
-        is: function (v) {
-          return a === v;
-        },
-        isSome: always$1,
-        isNone: never$1,
-        getOr: constant_a,
-        getOrThunk: constant_a,
-        getOrDie: constant_a,
-        getOrNull: constant_a,
-        getOrUndefined: constant_a,
-        or: self,
-        orThunk: self,
-        map: map,
-        ap: function (optfab) {
-          return optfab.fold(none, function (fab) {
-            return some(fab(a));
-          });
-        },
-        each: function (f) {
-          f(a);
-        },
-        bind: bind,
-        flatten: constant_a,
-        exists: bind,
-        forall: bind,
-        filter: function (f) {
-          return f(a) ? me : NONE;
-        },
-        equals: function (o) {
-          return o.is(a);
-        },
-        equals_: function (o, elementEq) {
-          return o.fold(never$1, function (b) {
-            return elementEq(a, b);
-          });
-        },
-        toArray: function () {
-          return [a];
-        },
-        toString: function () {
-          return 'some(' + a + ')';
-        }
-      };
-      return me;
-    };
-    var from = function (value) {
-      return value === null || value === undefined ? NONE : some(value);
-    };
-    var Option = {
-      some: some,
-      none: none,
-      from: from
-    };
-
-    var typeOf = function (x) {
-      if (x === null)
-        return 'null';
-      var t = typeof x;
-      if (t === 'object' && Array.prototype.isPrototypeOf(x))
-        return 'array';
-      if (t === 'object' && String.prototype.isPrototypeOf(x))
-        return 'string';
-      return t;
-    };
-    var isType = function (type) {
-      return function (value) {
-        return typeOf(value) === type;
-      };
-    };
-    var isFunction = isType('function');
-
-    var rawIndexOf = function () {
-      var pIndexOf = Array.prototype.indexOf;
-      var fastIndex = function (xs, x) {
-        return pIndexOf.call(xs, x);
-      };
-      var slowIndex = function (xs, x) {
-        return slowIndexOf(xs, x);
-      };
-      return pIndexOf === undefined ? slowIndex : fastIndex;
-    }();
-    var contains = function (xs, x) {
-      return rawIndexOf(xs, x) > -1;
-    };
-    var map = function (xs, f) {
-      var len = xs.length;
-      var r = new Array(len);
-      for (var i = 0; i < len; i++) {
-        var x = xs[i];
-        r[i] = f(x, i, xs);
+    const nativeSlice = Array.prototype.slice;
+    const nativeIndexOf = Array.prototype.indexOf;
+    const rawIndexOf = (ts, t) => nativeIndexOf.call(ts, t);
+    const contains = (xs, x) => rawIndexOf(xs, x) > -1;
+    const map = (xs, f) => {
+      const len = xs.length;
+      const r = new Array(len);
+      for (let i = 0; i < len; i++) {
+        const x = xs[i];
+        r[i] = f(x, i);
       }
       return r;
     };
-    var filter = function (xs, pred) {
-      var r = [];
-      for (var i = 0, len = xs.length; i < len; i++) {
-        var x = xs[i];
-        if (pred(x, i, xs)) {
+    const filter = (xs, pred) => {
+      const r = [];
+      for (let i = 0, len = xs.length; i < len; i++) {
+        const x = xs[i];
+        if (pred(x, i)) {
           r.push(x);
         }
       }
       return r;
     };
-    var find = function (xs, pred) {
-      for (var i = 0, len = xs.length; i < len; i++) {
-        var x = xs[i];
-        if (pred(x, i, xs)) {
-          return Option.some(x);
+    const findUntil = (xs, pred, until) => {
+      for (let i = 0, len = xs.length; i < len; i++) {
+        const x = xs[i];
+        if (pred(x, i)) {
+          return Optional.some(x);
+        } else if (until(x, i)) {
+          break;
         }
       }
-      return Option.none();
+      return Optional.none();
     };
-    var slowIndexOf = function (xs, x) {
-      for (var i = 0, len = xs.length; i < len; ++i) {
-        if (xs[i] === x) {
-          return i;
-        }
-      }
-      return -1;
+    const find = (xs, pred) => {
+      return findUntil(xs, pred, never);
     };
-    var slice = Array.prototype.slice;
-    var from$1 = isFunction(Array.from) ? Array.from : function (x) {
-      return slice.call(x);
+    const sort = (xs, comparator) => {
+      const copy = nativeSlice.call(xs, 0);
+      copy.sort(comparator);
+      return copy;
     };
 
-    var shortcuts = [
+    const keys = Object.keys;
+    const hasOwnProperty = Object.hasOwnProperty;
+    const get = (obj, key) => {
+      return has(obj, key) ? Optional.from(obj[key]) : Optional.none();
+    };
+    const has = (obj, key) => hasOwnProperty.call(obj, key);
+
+    const cat = arr => {
+      const r = [];
+      const push = x => {
+        r.push(x);
+      };
+      for (let i = 0; i < arr.length; i++) {
+        arr[i].each(push);
+      }
+      return r;
+    };
+
+    var global$3 = tinymce.util.Tools.resolve('tinymce.Resource');
+
+    var global$2 = tinymce.util.Tools.resolve('tinymce.util.I18n');
+
+    const pLoadHtmlByLangCode = (baseUrl, langCode) => global$3.load(`tinymce.html-i18n.help-keynav.${ langCode }`, `${ baseUrl }/js/i18n/keynav/${ langCode }.js`);
+    const pLoadI18nHtml = baseUrl => pLoadHtmlByLangCode(baseUrl, global$2.getCode()).catch(() => pLoadHtmlByLangCode(baseUrl, 'en'));
+    const initI18nLoad = (editor, baseUrl) => {
+      editor.on('init', () => {
+        pLoadI18nHtml(baseUrl);
+      });
+    };
+
+    const pTab = async pluginUrl => {
+      const body = {
+        type: 'htmlpanel',
+        presets: 'document',
+        html: await pLoadI18nHtml(pluginUrl)
+      };
+      return {
+        name: 'keyboardnav',
+        title: 'Keyboard Navigation',
+        items: [body]
+      };
+    };
+
+    var global$1 = tinymce.util.Tools.resolve('tinymce.Env');
+
+    const convertText = source => {
+      const isMac = global$1.os.isMacOS() || global$1.os.isiOS();
+      const mac = {
+        alt: '&#x2325;',
+        ctrl: '&#x2303;',
+        shift: '&#x21E7;',
+        meta: '&#x2318;',
+        access: '&#x2303;&#x2325;'
+      };
+      const other = {
+        meta: 'Ctrl ',
+        access: 'Shift + Alt '
+      };
+      const replace = isMac ? mac : other;
+      const shortcut = source.split('+');
+      const updated = map(shortcut, segment => {
+        const search = segment.toLowerCase().trim();
+        return has(replace, search) ? replace[search] : segment;
+      });
+      return isMac ? updated.join('').replace(/\s/, '') : updated.join('+');
+    };
+
+    const shortcuts = [
       {
         shortcuts: ['Meta + B'],
         action: 'Bold'
@@ -273,27 +336,27 @@ var help = (function () {
       },
       {
         shortcuts: ['Access + 1'],
-        action: 'Header 1'
+        action: 'Heading 1'
       },
       {
         shortcuts: ['Access + 2'],
-        action: 'Header 2'
+        action: 'Heading 2'
       },
       {
         shortcuts: ['Access + 3'],
-        action: 'Header 3'
+        action: 'Heading 3'
       },
       {
         shortcuts: ['Access + 4'],
-        action: 'Header 4'
+        action: 'Heading 4'
       },
       {
         shortcuts: ['Access + 5'],
-        action: 'Header 5'
+        action: 'Heading 5'
       },
       {
         shortcuts: ['Access + 6'],
-        action: 'Header 6'
+        action: 'Heading 6'
       },
       {
         shortcuts: ['Access + 7'],
@@ -348,47 +411,16 @@ var help = (function () {
         action: 'Switch to or from fullscreen mode'
       }
     ];
-    var KeyboardShortcuts = { shortcuts: shortcuts };
 
-    var keys = Object.keys;
-    var hasOwnProperty = Object.hasOwnProperty;
-    var has = function (obj, key) {
-      return hasOwnProperty.call(obj, key);
-    };
-
-    var global$1 = tinymce.util.Tools.resolve('tinymce.Env');
-
-    var convertText = function (source) {
-      var mac = {
-        alt: '&#x2325;',
-        ctrl: '&#x2303;',
-        shift: '&#x21E7;',
-        meta: '&#x2318;',
-        access: '&#x2303;&#x2325;'
-      };
-      var other = {
-        meta: 'Ctrl ',
-        access: 'Shift + Alt '
-      };
-      var replace = global$1.mac ? mac : other;
-      var shortcut = source.split('+');
-      var updated = map(shortcut, function (segment) {
-        var search = segment.toLowerCase().trim();
-        return has(replace, search) ? replace[search] : segment;
-      });
-      return global$1.mac ? updated.join('').replace(/\s/, '') : updated.join('+');
-    };
-    var ConvertShortcut = { convertText: convertText };
-
-    var tab = function () {
-      var shortcutList = map(KeyboardShortcuts.shortcuts, function (shortcut) {
-        var shortcutText = map(shortcut.shortcuts, ConvertShortcut.convertText).join(' or ');
+    const tab$2 = () => {
+      const shortcutList = map(shortcuts, shortcut => {
+        const shortcutText = map(shortcut.shortcuts, convertText).join(' or ');
         return [
           shortcut.action,
           shortcutText
         ];
       });
-      var tablePanel = {
+      const tablePanel = {
         type: 'table',
         header: [
           'Action',
@@ -397,26 +429,17 @@ var help = (function () {
         cells: shortcutList
       };
       return {
+        name: 'shortcuts',
         title: 'Handy Shortcuts',
         items: [tablePanel]
       };
     };
-    var KeyboardShortcutsTab = { tab: tab };
 
-    var supplant = function (str, obj) {
-      var isStringOrNumber = function (a) {
-        var t = typeof a;
-        return t === 'string' || t === 'number';
-      };
-      return str.replace(/\$\{([^{}]*)\}/g, function (fullMatch, key) {
-        var value = obj[key];
-        return isStringOrNumber(value) ? value.toString() : fullMatch;
-      });
-    };
-
-    var global$2 = tinymce.util.Tools.resolve('tinymce.util.I18n');
-
-    var urls = [
+    const urls = map([
+      {
+        key: 'accordion',
+        name: 'Accordion'
+      },
       {
         key: 'advlist',
         name: 'Advanced List'
@@ -436,10 +459,6 @@ var help = (function () {
       {
         key: 'autosave',
         name: 'Autosave'
-      },
-      {
-        key: 'bbcode',
-        name: 'BBCode'
       },
       {
         key: 'charmap',
@@ -466,10 +485,6 @@ var help = (function () {
         name: 'Emoticons'
       },
       {
-        key: 'fullpage',
-        name: 'Full Page'
-      },
-      {
         key: 'fullscreen',
         name: 'Full Screen'
       },
@@ -478,16 +493,8 @@ var help = (function () {
         name: 'Help'
       },
       {
-        key: 'hr',
-        name: 'Horizontal Rule'
-      },
-      {
         key: 'image',
         name: 'Image'
-      },
-      {
-        key: 'imagetools',
-        name: 'Image Tools'
       },
       {
         key: 'importcss',
@@ -496,10 +503,6 @@ var help = (function () {
       {
         key: 'insertdatetime',
         name: 'Insert Date/Time'
-      },
-      {
-        key: 'legacyoutput',
-        name: 'Legacy Output'
       },
       {
         key: 'link',
@@ -518,24 +521,16 @@ var help = (function () {
         name: 'Nonbreaking'
       },
       {
-        key: 'noneditable',
-        name: 'Noneditable'
-      },
-      {
         key: 'pagebreak',
         name: 'Page Break'
-      },
-      {
-        key: 'paste',
-        name: 'Paste'
       },
       {
         key: 'preview',
         name: 'Preview'
       },
       {
-        key: 'print',
-        name: 'Print'
+        key: 'quickbars',
+        name: 'Quick Toolbars'
       },
       {
         key: 'save',
@@ -544,14 +539,6 @@ var help = (function () {
       {
         key: 'searchreplace',
         name: 'Search and Replace'
-      },
-      {
-        key: 'spellchecker',
-        name: 'Spell Checker'
-      },
-      {
-        key: 'tabfocus',
-        name: 'Tab Focus'
       },
       {
         key: 'table',
@@ -566,14 +553,6 @@ var help = (function () {
         name: 'Text Color'
       },
       {
-        key: 'textpattern',
-        name: 'Text Pattern'
-      },
-      {
-        key: 'toc',
-        name: 'Table of Contents'
-      },
-      {
         key: 'visualblocks',
         name: 'Visual Blocks'
       },
@@ -586,161 +565,309 @@ var help = (function () {
         name: 'Word Count'
       },
       {
-        key: 'advcode',
-        name: 'Advanced Code Editor*'
-      },
-      {
-        key: 'formatpainter',
-        name: 'Format Painter*'
-      },
-      {
-        key: 'powerpaste',
-        name: 'PowerPaste*'
-      },
-      {
-        key: 'tinydrive',
-        name: 'Tiny Drive*'
-      },
-      {
-        key: 'tinymcespellchecker',
-        name: 'Spell Checker Pro*'
-      },
-      {
         key: 'a11ychecker',
-        name: 'Accessibility Checker*'
+        name: 'Accessibility Checker',
+        type: 'premium'
       },
       {
-        key: 'linkchecker',
-        name: 'Link Checker*'
+        key: 'advcode',
+        name: 'Advanced Code Editor',
+        type: 'premium'
       },
       {
-        key: 'mentions',
-        name: 'Mentions*'
+        key: 'advtable',
+        name: 'Advanced Tables',
+        type: 'premium'
+      },
+      {
+        key: 'advtemplate',
+        name: 'Advanced Templates',
+        type: 'premium',
+        slug: 'advanced-templates'
+      },
+      {
+        key: 'ai',
+        name: 'AI Assistant',
+        type: 'premium'
+      },
+      {
+        key: 'casechange',
+        name: 'Case Change',
+        type: 'premium'
+      },
+      {
+        key: 'checklist',
+        name: 'Checklist',
+        type: 'premium'
+      },
+      {
+        key: 'editimage',
+        name: 'Enhanced Image Editing',
+        type: 'premium'
+      },
+      {
+        key: 'footnotes',
+        name: 'Footnotes',
+        type: 'premium'
+      },
+      {
+        key: 'typography',
+        name: 'Advanced Typography',
+        type: 'premium',
+        slug: 'advanced-typography'
       },
       {
         key: 'mediaembed',
-        name: 'Enhanced Media Embed*'
+        name: 'Enhanced Media Embed',
+        type: 'premium',
+        slug: 'introduction-to-mediaembed'
+      },
+      {
+        key: 'export',
+        name: 'Export',
+        type: 'premium'
+      },
+      {
+        key: 'formatpainter',
+        name: 'Format Painter',
+        type: 'premium'
+      },
+      {
+        key: 'inlinecss',
+        name: 'Inline CSS',
+        type: 'premium',
+        slug: 'inline-css'
+      },
+      {
+        key: 'linkchecker',
+        name: 'Link Checker',
+        type: 'premium'
+      },
+      {
+        key: 'mentions',
+        name: 'Mentions',
+        type: 'premium'
+      },
+      {
+        key: 'mergetags',
+        name: 'Merge Tags',
+        type: 'premium'
+      },
+      {
+        key: 'pageembed',
+        name: 'Page Embed',
+        type: 'premium'
+      },
+      {
+        key: 'permanentpen',
+        name: 'Permanent Pen',
+        type: 'premium'
+      },
+      {
+        key: 'powerpaste',
+        name: 'PowerPaste',
+        type: 'premium',
+        slug: 'introduction-to-powerpaste'
+      },
+      {
+        key: 'rtc',
+        name: 'Real-Time Collaboration',
+        type: 'premium',
+        slug: 'rtc-introduction'
+      },
+      {
+        key: 'tinymcespellchecker',
+        name: 'Spell Checker Pro',
+        type: 'premium',
+        slug: 'introduction-to-tiny-spellchecker'
+      },
+      {
+        key: 'autocorrect',
+        name: 'Spelling Autocorrect',
+        type: 'premium'
+      },
+      {
+        key: 'tableofcontents',
+        name: 'Table of Contents',
+        type: 'premium'
+      },
+      {
+        key: 'tinycomments',
+        name: 'Tiny Comments',
+        type: 'premium',
+        slug: 'introduction-to-tiny-comments'
+      },
+      {
+        key: 'tinydrive',
+        name: 'Tiny Drive',
+        type: 'premium',
+        slug: 'tinydrive-introduction'
       }
-    ];
-    var PluginUrls = { urls: urls };
+    ], item => ({
+      ...item,
+      type: item.type || 'opensource',
+      slug: item.slug || item.key
+    }));
 
-    var tab$1 = function (editor) {
-      var availablePlugins = function () {
-        var premiumPlugins = [
-          'Accessibility Checker',
-          'Advanced Code Editor',
-          'Tiny Comments',
-          'Tiny Drive',
-          'Enhanced Media Embed',
-          'Format Painter',
-          'Link Checker',
-          'Mentions',
-          'MoxieManager',
-          'PowerPaste',
-          'Spell Checker Pro'
-        ];
-        var premiumPluginList = map(premiumPlugins, function (plugin) {
-          return '<li>' + global$2.translate(plugin) + '</li>';
-        }).join('');
-        return '<div data-mce-tabstop="1" tabindex="-1">' + '<p><b>' + global$2.translate('Premium plugins:') + '</b></p>' + '<ul>' + premiumPluginList + '<li style="list-style: none; margin-top: 1em;"><a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">' + global$2.translate('Learn more...') + '</a></li>' + '</ul>' + '</div>';
-      };
-      var makeLink = curry(supplant, '<a href="${url}" target="_blank" rel="noopener">${name}</a>');
-      var maybeUrlize = function (editor, key) {
-        return find(PluginUrls.urls, function (x) {
-          return x.key === key;
-        }).fold(function () {
-          var getMetadata = editor.plugins[key].getMetadata;
-          return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
-        }, function (x) {
-          return makeLink({
-            name: x.name,
-            url: 'https://www.tiny.cloud/docs/plugins/' + x.key
-          });
+    const tab$1 = editor => {
+      const availablePlugins = () => {
+        const premiumPlugins = filter(urls, ({type}) => {
+          return type === 'premium';
         });
+        const sortedPremiumPlugins = sort(map(premiumPlugins, p => p.name), (s1, s2) => s1.localeCompare(s2));
+        const premiumPluginList = map(sortedPremiumPlugins, pluginName => `<li>${ pluginName }</li>`).join('');
+        return '<div>' + '<p><b>' + global$2.translate('Premium plugins:') + '</b></p>' + '<ul>' + premiumPluginList + '<li class="tox-help__more-link" ">' + '<a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" rel="noopener" target="_blank"' + ' data-alloy-tabstop="true" tabindex="-1">' + global$2.translate('Learn more...') + '</a></li>' + '</ul>' + '</div>';
       };
-      var getPluginKeys = function (editor) {
-        var keys$1 = keys(editor.plugins);
-        return editor.settings.forced_plugins === undefined ? keys$1 : filter(keys$1, not(curry(contains, editor.settings.forced_plugins)));
+      const makeLink = p => `<a data-alloy-tabstop="true" tabindex="-1" href="${ p.url }" target="_blank" rel="noopener">${ p.name }</a>`;
+      const identifyUnknownPlugin = (editor, key) => {
+        const getMetadata = editor.plugins[key].getMetadata;
+        if (isFunction(getMetadata)) {
+          const metadata = getMetadata();
+          return {
+            name: metadata.name,
+            html: makeLink(metadata)
+          };
+        } else {
+          return {
+            name: key,
+            html: key
+          };
+        }
       };
-      var pluginLister = function (editor) {
-        var pluginKeys = getPluginKeys(editor);
-        var pluginLis = map(pluginKeys, function (key) {
-          return '<li>' + maybeUrlize(editor, key) + '</li>';
+      const getPluginData = (editor, key) => find(urls, x => {
+        return x.key === key;
+      }).fold(() => {
+        return identifyUnknownPlugin(editor, key);
+      }, x => {
+        const name = x.type === 'premium' ? `${ x.name }*` : x.name;
+        const html = makeLink({
+          name,
+          url: `https://www.tiny.cloud/docs/tinymce/6/${ x.slug }/`
         });
-        var count = pluginLis.length;
-        var pluginsString = pluginLis.join('');
-        var html = '<p><b>' + global$2.translate([
+        return {
+          name,
+          html
+        };
+      });
+      const getPluginKeys = editor => {
+        const keys$1 = keys(editor.plugins);
+        const forcedPlugins = getForcedPlugins(editor);
+        return isUndefined(forcedPlugins) ? keys$1 : filter(keys$1, k => !contains(forcedPlugins, k));
+      };
+      const pluginLister = editor => {
+        const pluginKeys = getPluginKeys(editor);
+        const sortedPluginData = sort(map(pluginKeys, k => getPluginData(editor, k)), (pd1, pd2) => pd1.name.localeCompare(pd2.name));
+        const pluginLis = map(sortedPluginData, key => {
+          return '<li>' + key.html + '</li>';
+        });
+        const count = pluginLis.length;
+        const pluginsString = pluginLis.join('');
+        const html = '<p><b>' + global$2.translate([
           'Plugins installed ({0}):',
           count
         ]) + '</b></p>' + '<ul>' + pluginsString + '</ul>';
         return html;
       };
-      var installedPlugins = function (editor) {
+      const installedPlugins = editor => {
         if (editor == null) {
           return '';
         }
-        return '<div data-mce-tabstop="1" tabindex="-1">' + pluginLister(editor) + '</div>';
+        return '<div>' + pluginLister(editor) + '</div>';
       };
-      var htmlPanel = {
+      const htmlPanel = {
         type: 'htmlpanel',
+        presets: 'document',
         html: [
           installedPlugins(editor),
           availablePlugins()
         ].join('')
       };
       return {
+        name: 'plugins',
         title: 'Plugins',
         items: [htmlPanel]
       };
     };
-    var PluginsTab = { tab: tab$1 };
 
-    var global$3 = tinymce.util.Tools.resolve('tinymce.EditorManager');
+    var global = tinymce.util.Tools.resolve('tinymce.EditorManager');
 
-    var defaultPanel = function () {
-      var getVersion = function (major, minor) {
-        return major.indexOf('@') === 0 ? 'X.X.X' : major + '.' + minor;
-      };
-      var version = getVersion(global$3.majorVersion, global$3.minorVersion);
-      var changeLogLink = '<a href="https://www.tinymce.com/docs/changelog/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" target="_blank">TinyMCE ' + version + '</a>';
-      var htmlPanel = {
+    const tab = () => {
+      const getVersion = (major, minor) => major.indexOf('@') === 0 ? 'X.X.X' : major + '.' + minor;
+      const version = getVersion(global.majorVersion, global.minorVersion);
+      const changeLogLink = '<a data-alloy-tabstop="true" tabindex="-1" href="https://www.tiny.cloud/docs/tinymce/6/changelog/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" rel="noopener" target="_blank">TinyMCE ' + version + '</a>';
+      const htmlPanel = {
         type: 'htmlpanel',
         html: '<p>' + global$2.translate([
           'You are using {0}',
           changeLogLink
-        ]) + '</p>'
+        ]) + '</p>',
+        presets: 'document'
       };
-      return htmlPanel;
-    };
-    var VersionPanel = { defaultPanel: defaultPanel };
-
-    var getVersionPanel = function (editor) {
-      return editor.getParam('help_version', VersionPanel.defaultPanel, 'function')();
-    };
-    var Settings = { getVersionPanel: getVersionPanel };
-
-    var tab$2 = function (editor) {
       return {
+        name: 'versions',
         title: 'Version',
-        items: [Settings.getVersionPanel(editor)]
+        items: [htmlPanel]
       };
     };
-    var VersionTab = { tab: tab$2 };
 
-    var opener = function (editor) {
-      return function () {
-        var body = {
+    const parseHelpTabsSetting = (tabsFromSettings, tabs) => {
+      const newTabs = {};
+      const names = map(tabsFromSettings, t => {
+        var _a;
+        if (isString(t)) {
+          if (has(tabs, t)) {
+            newTabs[t] = tabs[t];
+          }
+          return t;
+        } else {
+          const name = (_a = t.name) !== null && _a !== void 0 ? _a : generate('tab-name');
+          newTabs[name] = t;
+          return name;
+        }
+      });
+      return {
+        tabs: newTabs,
+        names
+      };
+    };
+    const getNamesFromTabs = tabs => {
+      const names = keys(tabs);
+      const idx = names.indexOf('versions');
+      if (idx !== -1) {
+        names.splice(idx, 1);
+        names.push('versions');
+      }
+      return {
+        tabs,
+        names
+      };
+    };
+    const pParseCustomTabs = async (editor, customTabs, pluginUrl) => {
+      const shortcuts = tab$2();
+      const nav = await pTab(pluginUrl);
+      const plugins = tab$1(editor);
+      const versions = tab();
+      const tabs = {
+        [shortcuts.name]: shortcuts,
+        [nav.name]: nav,
+        [plugins.name]: plugins,
+        [versions.name]: versions,
+        ...customTabs.get()
+      };
+      return Optional.from(getHelpTabs(editor)).fold(() => getNamesFromTabs(tabs), tabsFromSettings => parseHelpTabsSetting(tabsFromSettings, tabs));
+    };
+    const init = (editor, customTabs, pluginUrl) => () => {
+      pParseCustomTabs(editor, customTabs, pluginUrl).then(({tabs, names}) => {
+        const foundTabs = map(names, name => get(tabs, name));
+        const dialogTabs = cat(foundTabs);
+        const body = {
           type: 'tabpanel',
-          tabs: [
-            KeyboardShortcutsTab.tab(),
-            PluginsTab.tab(editor),
-            VersionTab.tab(editor)
-          ]
+          tabs: dialogTabs
         };
         editor.windowManager.open({
           title: 'Help',
           size: 'medium',
-          body: body,
+          body,
           buttons: [{
               type: 'cancel',
               name: 'close',
@@ -749,39 +876,23 @@ var help = (function () {
             }],
           initialData: {}
         });
-      };
-    };
-    var Dialog = { opener: opener };
-
-    var register = function (editor) {
-      editor.addCommand('mceHelp', Dialog.opener(editor));
-    };
-    var Commands = { register: register };
-
-    var register$1 = function (editor) {
-      editor.ui.registry.addButton('help', {
-        icon: 'help',
-        tooltip: 'Help',
-        onAction: Dialog.opener(editor)
-      });
-      editor.ui.registry.addMenuItem('help', {
-        text: 'Help',
-        icon: 'help',
-        shortcut: 'Alt+0',
-        onAction: Dialog.opener(editor)
       });
     };
-    var Buttons = { register: register$1 };
 
-    global.add('help', function (editor) {
-      Buttons.register(editor);
-      Commands.register(editor);
-      editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
-    });
-    function Plugin () {
-    }
+    var Plugin = () => {
+      global$4.add('help', (editor, pluginUrl) => {
+        const customTabs = Cell({});
+        const api = get$1(customTabs);
+        register$1(editor);
+        const dialogOpener = init(editor, customTabs, pluginUrl);
+        register(editor, dialogOpener);
+        register$2(editor, dialogOpener);
+        editor.shortcuts.add('Alt+0', 'Open help dialog', 'mceHelp');
+        initI18nLoad(editor, pluginUrl);
+        return api;
+      });
+    };
 
-    return Plugin;
+    Plugin();
 
-}());
 })();

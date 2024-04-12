@@ -158,6 +158,10 @@ var melisCore = (function(window){
         });
     }
 
+    $body.on("click", "a", function(e) {
+        if ( $(this).attr("href") === "#" ) e.preventDefault();
+    });
+
     $body.on("click", "#btnResetRights", function(){
 
         melisCoreTool.pending("#btnResetRights");
@@ -1279,6 +1283,7 @@ var melisCore = (function(window){
         closedOpenTabs                                  :           closedOpenTabs,
         loadCustomCheckboxElement                       :           loadCustomCheckboxElement,
         showToggleDashboardPluginMenu                   :           showToggleDashboardPluginMenu, // update on this js file, since dashboard notification
-        paginateDataTables                              :           paginateDataTables
-    };
+        paginateDataTables                              :           paginateDataTables,
+        //removeTinymceToggleToolbarDrawer              :           removeTinymceToggleToolbarDrawer
+    }
 })(window);

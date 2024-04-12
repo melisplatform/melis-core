@@ -721,6 +721,7 @@ var melisHelper = (function() {
 
 	// ZONE RELOADING =================================================================================================================
 	function zoneReload(zoneId, melisKey, parameters, callback) {
+		//console.log("zoneId: ", zoneId);
 		var datastring = { cpath: melisKey },
 			$melisCmsPage = $body.find(
 				"#" + activeTabId + "[data-meliskey='meliscms_page'].tab-pane"
@@ -749,89 +750,89 @@ var melisHelper = (function() {
 			encode: true,
 			dataType: "json",
 		})
-			.done(function(data) {
-				// remove the inline style
-				melisCoreTool.removeOverflowHidden();
+		.done(function(data) {
+			// remove the inline style
+			melisCoreTool.removeOverflowHidden();
 
-				setTimeout(function() {
-					if (data !== null) {
-						// hide the loader
-						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+			setTimeout(function() {
+				if (data !== null) {
+					// hide the loader
+					//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+					
+					$("#" + zoneId)
+						.html(data.html)
+						.children()
+						.unwrap();
 
-						$("#" + zoneId)
-							.html(data.html)
-							.children()
-							.unwrap();
+					// set the current active tab based from 'activeTabId' value
+					tabSwitch(activeTabId);
 
-						// set the current active tab based from 'activeTabId' value
-						tabSwitch(activeTabId);
+					// set active the the 'Edition' tab and its 'Tab Content'
+					$("#" + zoneId + " .nav-tabs li:first-child").addClass("active");
+					$("#" + zoneId + " .tab-content > div:first-child").addClass(
+						"active"
+					);
 
-						// set active the the 'Edition' tab and its 'Tab Content'
-						$("#" + zoneId + " .nav-tabs li:first-child").addClass("active");
-						$("#" + zoneId + " .tab-content > div:first-child").addClass(
-							"active"
-						);
+					// --------------------------------------------------------------
+					// Run callback scripts here | from app.interface
+					// --------------------------------------------------------------
+					var jsCallbacks = data.jsCallbacks;
 
-						// --------------------------------------------------------------
-						// Run callback scripts here | from app.interface
-						// --------------------------------------------------------------
-						var jsCallbacks = data.jsCallbacks;
+					$.each(jsCallbacks, function(key, value) {
+						// check if there is more than 1 function in a single jsCallback from app.interface
+						// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
+						var splitFunctions = value.split(" ");
 
-						$.each(jsCallbacks, function(key, value) {
-							// check if there is more than 1 function in a single jsCallback from app.interface
-							// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
-							var splitFunctions = value.split(" ");
+						/*if( splitFunctions.length > 1){
+								// run all the function extracted from a single jsCallback
+								$.each( splitFunctions, function( key, value ) {
+									value = value.slice(0, -3);
+									executeCallbackFunction(value, window);
+								});
+							}
+							else{
+								value = value.slice(0, -3);
+								executeCallbackFunction(value, window);
+							}*/
 
-							/*if( splitFunctions.length > 1){
-                                    // run all the function extracted from a single jsCallback
-                                    $.each( splitFunctions, function( key, value ) {
-                                        value = value.slice(0, -3);
-                                        executeCallbackFunction(value, window);
-                                    });
-                                }
-                                else{
-                                    value = value.slice(0, -3);
-                                    executeCallbackFunction(value, window);
-                                }*/
-
-							$.each(splitFunctions, function(key, value) {
-								try {
-									eval(value);
-								} catch (err) {
-									// console.log(err);
-								}
-							});
+						$.each(splitFunctions, function(key, value) {
+							try {
+								eval(value);
+							} catch (err) {
+								// console.log(err);
+							}
 						});
-					} else {
-						$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
-							.parent("li")
-							.remove();
-						$("#" + zoneId).remove();
+					});
+				} else {
+					$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
+						.parent("li")
+						.remove();
+					$("#" + zoneId).remove();
 
-						melisHelper.melisKoNotification(
-							"Error Fetching data",
-							"No result was retrieved while doing this operation.",
-							"no error datas returned",
-							"#000"
-						);
+					melisHelper.melisKoNotification(
+						"Error Fetching data",
+						"No result was retrieved while doing this operation.",
+						"no error datas returned",
+						"#000"
+					);
+				}
+				if (callback !== undefined || callback !== null) {
+					if (callback) {
+						callback();
 					}
-					if (callback !== undefined || callback !== null) {
-						if (callback) {
-							callback();
-						}
-					}
-				}, 300);
-			})
-			.fail(function(xhr, textStatus, errorThrown) {
-				//hide the loader
-				//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
-				alert(translations.tr_meliscore_error_message);
+				}
+			}, 300);
+		})
+		.fail(function(xhr, textStatus, errorThrown) {
+			//hide the loader
+			//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+			alert(translations.tr_meliscore_error_message);
 
-				$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
-					.parent("li")
-					.remove();
-				$("#" + zoneId).remove();
-			});
+			$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
+				.parent("li")
+				.remove();
+			$("#" + zoneId).remove();
+		});
 	}
 
 	// Requesting flag set to false so this function will set state to ready

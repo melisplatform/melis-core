@@ -1,0 +1,146 @@
+#template-container {
+    width: 100%;
+    overflow: hidden;
+}
+#template-container .row:first-child {
+    height: inherit;
+}
+#template-container .modal-footer {
+    width: 100%;
+}
+#accordion-mini-template {
+    height: 480px;
+    overflow: auto;
+}
+#accordion-mini-template .site-category {
+    padding: 0;
+}
+#accordion-mini-template .main-category,
+#accordion-mini-template .other-category {
+    overflow: hidden;
+}
+.mini-template-button {
+    display: block;
+    background-color: #f0f0f0;
+    border: 0;
+    color: #222f3e;
+    width: 100%;
+    position: relative;
+    margin-bottom: 0.5rem;
+	margin-right: 0.5rem;
+    padding: 4px 16px;
+
+    font-weight: normal;
+    white-space: normal;
+    height: auto !important;
+    /* word-break: break-all; */
+}
+.mini-template-button:hover {
+    background-color: #e3e3e3;
+    border: none;
+    border-radius: 0;
+    font-weight: normal;
+}
+.mini-template-button:focus,
+.mini-template-button:hover {
+    outline: none;
+}
+/* accordion */
+#accordion-mini-template .ui-accordion-header { /* accordion h3 */
+    background: #f6f6f6;
+    border: 0;
+    border-radius: 0;
+    color: #222f3e;
+    font-size: 14px;
+    font-weight: normal;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+
+    padding-right: 0;
+}
+#accordion-mini-template .ui-accordion-header:hover {
+    background: #e61c23;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    font-weight: normal;
+}
+#accordion-mini-template .ui-accordion-header:hover,
+#accordion-mini-template .ui-accordion-header-active.ui-state-active,
+#accordion-mini-template .site-category h3.ui-accordion-header-active.ui-state-active {
+    background: #e61c23;
+    border: none;
+    border-radius: 0;
+    color: #fff;
+    font-weight: normal;
+}
+#accordion-mini-template.ui-accordion .ui-accordion-content.site-category h3 {
+    padding-left: 1.5rem;
+}
+#accordion-mini-template .fa-arrow-circle-down, 
+#accordion-mini-template .fa-arrow-circle-right {
+    background-image: none !important;
+    font-family: 'FontAwesome' !important;
+    padding-right: 1rem !important;
+    text-indent: 0 !important;
+    overflow: auto !important;
+    left: 0.5rem !important;
+    top: 0.2rem !important;
+    margin-top: 0 !important;
+    position: relative !important;
+
+    width: auto;
+    height: auto;
+}
+#accordion-mini-template .ui-accordion-content {
+    background: #fff;
+}
+#accordion-mini-template .mini-template-button span {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+}
+/* #f6f6f6 #e61c23 */
+.other-category.ui-accordion-content,
+.main-category.ui-accordion-content {
+    min-height: 195px;
+    padding-right: 1em !important;
+    padding-left: 1em !important;
+    height: auto !important;
+}
+.site-category.ui-accordion-content {
+    border: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+}
+/* accordion header */
+.ui-accordion .ui-accordion-icons {
+    padding-left: 0.5rem;
+}
+.ui-accordion .ui-accordion-content.site-category h3 {
+    padding-left: 1.5rem;
+}
+#preview-mini-template {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+/* dialog - footer buttons */
+#insert-btn {
+    background-color: #006ce7;
+    border-color: #006ce7;
+    color: #fff;
+}
+#insert-btn:hover {
+    background-color: #0060ce;
+    border-color: #0060ce;
+    box-shadow: none;
+}
+#close-btn {
+    background-color: #f0f0f0;
+    border-color: #f0f0f0;
+    color: #222f3e;
+}
+#close-btn:hover {
+    background-color: #e3e3e3;
+    border-color: #e3e3e3;
+    box-shadow: none;
+}

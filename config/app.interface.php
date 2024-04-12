@@ -91,8 +91,8 @@ return array(
                             'php_cli' => '/usr/local/bin/php',
                             'phpunit' => '/usr/local/bin/phpunit',
                             /**
-                             * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
-                             */
+                         * NOTE: CURRENTLY WORKING ON PHPUnit 5.7.21
+                         */
                         ),
                     ),
                     'langauges' => array(
@@ -238,8 +238,11 @@ return array(
 
                     // tinyMCE
                     '/MelisCore/js/library/tinymce/tinymce.js?v=' . time(),
+                    //'/MelisCore/js/library/tinymce/jquery.tinymce.min.js',
                     '/MelisCore/js/library/tinymce/icons/default/icons.min.js',
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
+                    /* '/MelisCore/js/library/tinymce/models/dom/model.js',
+                    '/MelisCore/js/library/tinymce/themes/silver/theme.js', */
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
 
@@ -299,12 +302,12 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css?v=2021090801',
+                        '/MelisCore/build/css/bundle.css?v=2023090801',
 
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js?v=2021090801',
+                        '/MelisCore/build/js/bundle.js?v=2023090801',
                     ]
                 ]
             ),

@@ -1,20 +1,20 @@
 <?php
 	return [
-        'branding' => false,
 		'relative_urls' => false,
-	    'mode' => 'textareas',
+	    //'mode' => 'textareas',
 	    'selector' => 'tool-editable-selector',
 		'language' => 'en',
 		'mobile' => [
-			'theme' => 'silver',
+			//'theme' => 'silver',
 			'height' => 300
 		],
 		'branding' => false,
 		'inline' => false,
 		'menubar' => false,
-		'templates' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
-		'forced_root_block' => '',
-		'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
+		'mini_templates_url' => '/melis/MelisCore/MelisTinyMce/getTinyTemplates',
+		'forced_root_block' => 'p',
+		'image_uploadtab' => false,
+		//'paste_word_valid_elements'=> "p,b,strong,i,em,h1,h2,h3,h4",
 		'cleanup' => false,
 		'verify_html' => false,
 	    'paste_auto_cleanup_on_paste' => true,
@@ -22,17 +22,18 @@
         'file_picker_callback' => 'filePickerCallback',
         'images_upload_url' => '/melis/MelisCore/MelisTinyMce/uploadImage',
 		'plugins' => [
-            //[contextmenu, textcolor, colorpicker] this plugin is already built in the core editor as of TinyMCE v. 5
-           'lists advlist autolink link paste image charmap preview anchor help hr nonbreaking',
-           'searchreplace visualblocks code fullscreen',
-           'insertdatetime media table minitemplate'
+           'lists', 'advlist', 'autolink', 'link', 'image', 'charmap', 'preview', 'anchor', 'help', 'nonbreaking',
+		   'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 'table', 'minitemplate' 
 		],
 		'external_plugins' => [
-			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js?v=20210325',			
+			'minitemplate' => '/MelisCore/js/minitemplate/plugin.min.js?v=20230214'
 		],
-		//'content_css' => ['/MelisDemoCms/css/bootstrap.min.css','/MelisDemoCms/vendors/elagent/style.css','/MelisDemoCms/css/style.css'],
         'image_advtab' => true,
-        'toolbar' => 'insertfile undo redo paste | formatselect | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media minitemplate | code',
+		// formatselect = blocks
+        'toolbar' => 'insertfile undo redo | blocks | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | minitemplate code',
+		'toolbar_mode' => 'sliding',
+		'deprecation_warnings' => false,
+		'promotion' => false,
         'setup' => 'melisTinyMCE.tinyMceActionEvent',
         'init_instance_callback' => 'tinyMceCleaner'
 	];
@@ -46,7 +47,7 @@
 	'branding' => false,
 	'inline' => false,
 	'menubar' => false,
-	'forced_root_block' => '',
+	'forced_root_block' => 'div',
 	'cleanup' => false,
 	'verify_html' => false,
     'paste_auto_cleanup_on_paste' => true,
