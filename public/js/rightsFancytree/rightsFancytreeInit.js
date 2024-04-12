@@ -1,5 +1,5 @@
 (function($){
-	window.initRightsTree = function(trees, url){
+	window.initRightsTree = function(trees, url) {
 		$(trees).fancytree({
 			checkbox: true,
 			selectMode: 2,
@@ -32,7 +32,7 @@
 					$(data.node.span).find('.fancytree-title').css("color","#686868" );
 				}
 			},
-			loadChildren: function(event, data){
+			loadChildren: function(event, data) {
 				userRightsData = [ { "treeStatus" : [] }];
 				
 				var tree = $(trees).fancytree('getTree');
@@ -64,16 +64,88 @@
 								} 
 							}
 						}
-					});	        	  
+					});
 			},
 			select: function(event, data) {
 				if ( data.node.isSelected() === true ) {
 					$(data.node.span).find('.fancytree-title').css("color", data.node.data.melisData.colorSelected );
 					$(data.node.span).find('.fancytree-checkbox').removeClass("fa-square-o").addClass("fa-check-square-o").css("color",data.node.data.melisData.colorSelected );
+
+					$(data.node.span).parents("ul").prev(".fancytree-expanded").addClass("fancytree-has-children-selected");
+
+					// check if there are child nodes selected and highlight the direct parents node title color
+					if ( $(data.node.span).closest("ul").find("li span.fancytree-selected").length === 0 ) {
+						$(data.node.span).parents("ul").prev(".fancytree-expanded").not(".fancytree-selected").find(".fancytree-title").css({
+							"color": data.node.data.melisData.colorSelected,
+							"opacity": 1
+						});
+					}
+					else {
+						$(data.node.span).parents("ul").prev(".fancytree-expanded").not(".fancytree-selected").find(".fancytree-title").css({
+							"color": data.node.data.melisData.colorSelected,
+							"opacity": 0.7
+						});
+					}
+
+					// select on parent node
+					if ( $(data.node.span).closest(".fancytree-has-children.fancytree-selected").length ) {
+						if ( $(data.node.span).closest(".fancytree-has-children.fancytree-selected").next("ul").find(".fancytree-selected").length ) {
+							$(data.node.span).closest(".fancytree-has-children.fancytree-selected").find(".fancytree-title").css({
+								"color": data.node.data.melisData.colorSelected,
+								"opacity": 1
+							});
+						}
+					}
 				}
-				else{
+				// uncheck/deselect node
+				else {
 					$(data.node.span).find('.fancytree-title').css("color","#686868" );
 					$(data.node.span).find('.fancytree-checkbox').removeClass("fa-check-square-o").addClass("fa-square-o").css("color","#686868" );
+
+					// uncheck/deselect the child node and highlight the direct parents node title color
+					if ( $(data.node.span).closest("ul").find("li span.fancytree-selected").length === 0 ) {
+						$(data.node.span).parents("ul").prev(".fancytree-expanded").not(".fancytree-selected").find(".fancytree-title").css({
+							"color": "#686868",
+							"opacity": 1
+						});
+					}
+					else {
+						// .fancytree-has-children-selected
+						$(data.node.span).parents("ul").prev(".fancytree-expanded").not(".fancytree-selected, .fancytree-has-children-selected").find(".fancytree-title").css({
+							"color": "#686868",
+							"opacity": 1
+						});
+					}
+
+					// uncheck/deselect the parent node and highlight its title color accordingly
+					if ( $(data.node.span).closest(".fancytree-has-children.fancytree-selected").length === 0 ) {
+						if ( $(data.node.span).closest(".fancytree-has-children").next("ul").find(".fancytree-selected").length ) {
+							$(data.node.span).closest(".fancytree-has-children").find(".fancytree-title").css({
+								"color": data.node.data.melisData.colorSelected,
+								"opacity": 0.7
+							});
+						}
+						else {
+							$(data.node.span).closest(".fancytree-has-children").find(".fancytree-title").css({
+								"color": "#686868",
+								"opacity": 1
+							});
+						}
+					}
+				}
+
+				// checks for any child node selected from a parent node that is selected
+				if ( $(".fancytree-selected.fancytree-has-children").find("ul li .fancytree-selected").length === 0 ) {
+					$(".fancytree-selected").parents("ul").prev(".fancytree-expanded.fancytree-has-children").find(".fancytree-title").css({
+						"color": data.node.data.melisData.colorSelected,
+						"opacity": 1
+					})
+				}
+				else {
+					$(".fancytree-selected").parents("ul").prev(".fancytree-expanded.fancytree-has-children").find(".fancytree-title").css({
+						"color": data.node.data.melisData.colorSelected,
+						"opacity": 0.7
+					})
 				}
 				
 				// reset the values of the array everytime a node is checked or unchecked to update values
@@ -91,7 +163,7 @@
 					
 					// get the parent list of each node 
 					var parents = $.map( node.getParentList(false, true), function(node){
-							return node.key;
+						return node.key;
 					});
 					
 					// get the topmost parent (top level parent)
@@ -105,27 +177,10 @@
 						}
 					}
 				});  
-			},
-			click: function(event, data) {
-				var node 		= data.node,
-					$span 		= $(data.node.span),
-					targetType 	= data.targetType;
-
-					/**
-					 * evo/user-mngt-rights
-					 */
-					//$(data.node.span).parents("ul").addClass("fancytree-parent-item");
-					//$(".fancytree-parent-item li[aria-expanded='true'] > .fancytree-has-children .fancytree-title").css("color", data.node.data.melisData.colorSelected);
-
-					if ( targetType === 'checkbox' ) {
-						console.log("rightsFancytreeInit.js click data: ", data);
-						$span.parents("ul").addClass("fancytree-parent-item");
-						$(".fancytree-parent-item li[aria-expanded='true'] > .fancytree-has-children .fancytree-title").css("color", data.node.data.melisData.colorSelected);
-					}
 			}
 		});
 	}
-
+	
 	$('#rights-fancytree').niceScroll({
 		zindex: 1000,
 		cursorborder: "none",
@@ -133,6 +188,4 @@
 		cursorcolor: primaryColor,
 		autohidemode: false
 	});
-
-
 })(jQuery);

@@ -1677,6 +1677,10 @@ transition: all 0.4s ease-in-out;
 /**
  * evo/user-mngt-rights
  */
-#ui-id-1.fancytree-parent-item li .fancytree-has-children .fancytree-title {
-	color: #e75f5f;
+#rights-fancytree .fancytree-container li:first-child .fancytree-title.color-highlight {
+	/* color: #cb4040; */
+	color: rgba(203, 64, 64, 0.7) !important;
+}
+#rights-fancytree .fancytree-container li .fancytree-title.color-highlight {
+	color: rgba(153, 201, 117, 0.7) !important;
 }
