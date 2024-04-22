@@ -175,68 +175,68 @@ var melisHelper = (function() {
 	function initDateRangePicker(selector, callBackFunction) {
 		setTimeout(function() {
 			var target = $(selector);
-			target.addClass("dt-date-range-picker");
-			target.html(
-				"" +
-					translations.tr_meliscore_datepicker_select_date +
-					' <i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span></span> <span class="caret"></span>'
-			);
+				target.addClass("dt-date-range-picker");
+				target.html(
+					"" +
+						translations.tr_meliscore_datepicker_select_date +
+						' <i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span></span> <span class="caret"></span>'
+				);
 
-			var sToday = translations.tr_meliscore_datepicker_today,
-				sYesterday = translations.tr_meliscore_datepicker_yesterday,
-				sLast7Days = translations.tr_meliscore_datepicker_last_7_days,
-				sLast30Days = translations.tr_meliscore_datepicker_last_30_days,
-				sThisMonth = translations.tr_meliscore_datepicker_this_month,
-				sLastMonth = translations.tr_meliscore_datepicker_last_month;
+				var sToday = translations.tr_meliscore_datepicker_today,
+					sYesterday = translations.tr_meliscore_datepicker_yesterday,
+					sLast7Days = translations.tr_meliscore_datepicker_last_7_days,
+					sLast30Days = translations.tr_meliscore_datepicker_last_30_days,
+					sThisMonth = translations.tr_meliscore_datepicker_this_month,
+					sLastMonth = translations.tr_meliscore_datepicker_last_month;
 
-			var rangeStringParam = {};
+				var rangeStringParam = {};
 
-			rangeStringParam[sToday] = [moment(), moment()];
-			rangeStringParam[sYesterday] = [
-				moment().subtract(1, "days"),
-				moment().subtract(1, "days"),
-			];
-			rangeStringParam[sLast7Days] = [moment().subtract(6, "days"), moment()];
-			rangeStringParam[sLast30Days] = [moment().subtract(29, "days"), moment()];
-			rangeStringParam[sThisMonth] = [
-				moment().startOf("month"),
-				moment().endOf("month"),
-			];
-			rangeStringParam[sLastMonth] = [
-				moment()
-					.subtract(1, "month")
-					.startOf("month"),
-				moment()
-					.subtract(1, "month")
-					.endOf("month"),
-			];
+				rangeStringParam[sToday] = [moment(), moment()];
+				rangeStringParam[sYesterday] = [
+					moment().subtract(1, "days"),
+					moment().subtract(1, "days"),
+				];
+				rangeStringParam[sLast7Days] = [moment().subtract(6, "days"), moment()];
+				rangeStringParam[sLast30Days] = [moment().subtract(29, "days"), moment()];
+				rangeStringParam[sThisMonth] = [
+					moment().startOf("month"),
+					moment().endOf("month"),
+				];
+				rangeStringParam[sLastMonth] = [
+					moment()
+						.subtract(1, "month")
+						.startOf("month"),
+					moment()
+						.subtract(1, "month")
+						.endOf("month"),
+				];
 
-			target.daterangepicker(
-				{
-					startDate: moment().subtract(1, "month"), //moment().subtract(10, 'years')
-					endDate: moment(),
-					locale: {
-						format: melisDateFormat,
-						applyLabel: translations.tr_meliscore_datepicker_apply,
-						cancelLabel: translations.tr_meliscore_datepicker_cancel,
-						customRangeLabel: translations.tr_meliscore_datepicker_custom_range,
+				target.daterangepicker(
+					{
+						startDate: moment().subtract(1, "month"), //moment().subtract(10, 'years')
+						endDate: moment(),
+						locale: {
+							format: melisDateFormat,
+							applyLabel: translations.tr_meliscore_datepicker_apply,
+							cancelLabel: translations.tr_meliscore_datepicker_cancel,
+							customRangeLabel: translations.tr_meliscore_datepicker_custom_range,
+						},
+						ranges: rangeStringParam,
 					},
-					ranges: rangeStringParam,
-				},
-				function(start, end) {
-					target
-						.find("span")
-						.html(
-							start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY")
-						);
-				}
-			);
+					function(start, end) {
+						target
+							.find("span")
+							.html(
+								start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY")
+							);
+					}
+				);
 
-			target.on("apply.daterangepicker", function(ev, picker) {
-				if (callBackFunction !== undefined) {
-					callBackFunction(ev, picker);
-				}
-			});
+				target.on("apply.daterangepicker", function(ev, picker) {
+					if (callBackFunction !== undefined) {
+						callBackFunction(ev, picker);
+					}
+				});
 		}, 1000);
 	}
 

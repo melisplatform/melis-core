@@ -25,15 +25,6 @@ var melisCoreTool = (function (window) {
             type: BootstrapDialog.TYPE_WARNING,
             closable: true,
             cssClass: "confirm-modal-header",
-            onshown: function() {
-                var $footerBtns = $(".modal-footer");
-                    if ( $footerBtns.find(".btn").length ) {
-                        /* $footerBtns.find(".btn:first-child").addClass("btn-danger pull-left").removeClass("btn-default");
-                        $footerBtns.find(".btn").addClass("btn-success").removeClass("btn-default"); */
-                        $footerBtns.find(".btn:first-child").addClass("btn-danger pull-left").removeClass("btn-secondary");
-                        $footerBtns.find(".btn").addClass("btn-success").removeClass("btn-secondary");
-                    }
-            },
             buttons: [{
                 label: textNo, //translations.tr_meliscore_common_no
                 cssClass: 'btn-danger pull-left',
@@ -56,7 +47,19 @@ var melisCoreTool = (function (window) {
                    
                     dialog.close();
                 }
-            }]
+            }],
+            onshown: function() {
+                var $footerBtns = $(".modal-footer");
+                    if ( $footerBtns.find(".btn").length ) {
+                        setTimeout(function() {
+                            if ( $footerBtns.find(".btn:first-child").hasClass("btn-success") ) {
+                                $footerBtns.find(".btn:first-child").removeClass("btn-success");
+                            }
+                        }, 500);
+                        $footerBtns.find(".btn:first-child").addClass("btn-danger pull-left").removeClass("btn-secondary btn-default");
+                        $footerBtns.find(".btn").addClass("btn-success").removeClass("btn-secondary btn-default");
+                    }
+            }
         });
     }
 

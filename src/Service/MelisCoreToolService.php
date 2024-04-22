@@ -510,7 +510,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             }
 
             if (!empty($actionButtons)) {
-                $jsonColumns .= '{"data":"actions"}';
+                // $jsonColumns .= '{"data":"actions"}; commented, generates warning, https://datatables.net/tn/4
+                $jsonColumns .= '{"data":null}';
 
                 // Preparing the Table Action column Buttons
                 $actionColumn = '{

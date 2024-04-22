@@ -38,7 +38,7 @@ $(function() {
 
 	submitEmailProperties  = function(form, codename){
 
-        form.unbind("submit");
+        form.off("submit");
 
         form.on("submit", function(e){
             e.preventDefault();
@@ -97,7 +97,7 @@ $(function() {
             });
         });
 
-        form.submit();
+        form.trigger("submit");
     }
 	
 	$body.on("click", ".btnMelisCoreEmailMngtDelete", function(){

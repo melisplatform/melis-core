@@ -865,6 +865,13 @@ td.dataTables_empty {
 	background: none;
 	border-color: transparent;
 }
+.modal .modal-footer {
+	justify-content: space-between;
+}
+.gritter-close {
+	font-size: 0;
+	text-indent: -99999px;
+}
 .btnLangUpdate i.fa.fa-download {
 	color: #72af46;
 }

@@ -4946,3 +4946,39 @@ input#log_date_range {
 	cursor: pointer;
 }
 /* end Datepicker issue on DateField */
+
+/* jQuery Migration */
+.daterangepicker {
+	display: none;
+}
+.drp-buttons .cancelBtn {
+	background: none !important;
+    color: #bd362f !important;
+	border-color: #bd362f !important;
+}
+.drp-buttons .cancelBtn:hover {
+    background: #bd362f !important;
+    border-color: #bd362f !important;
+    color: #fff !important;
+}
+.drp-buttons .applyBtn {
+	background: none !important;
+	border-color: #72af46 !important;
+    color: #72af46 !important;
+}
+.drp-buttons .applyBtn:hover {
+	background: #72af46 !important;
+    border-color: #72af46 !important;
+    color: #fff !important;
+}
+.daterangepicker .ranges li {
+	font-size: 13px !important;
+	border-bottom: 1px solid #e5e5e5 !important;
+}
+.daterangepicker .ranges li.active,
+.daterangepicker .ranges li:hover {
+    background: #e61c23 !important;
+    border: 1px solid #e61c23;
+	color: #fff;
+}
+/* end jQuery Migration */
