@@ -190,7 +190,7 @@ var melisDashBoardDragnDrop = {
                         var pluginConfig = JSON.parse(pluginMenu);
                         $.each(pluginConfig, function (index, value) {
                             // push to dashboard array
-                            if ($.isArray(value) || typeof value == "object") {
+                            if (Array.isArray(value) || typeof value == "object") {
                                 $.each(value, function (i, v) {
                                     if (i == "width" && v == "") {
                                         v = 6;
@@ -317,7 +317,7 @@ var melisDashBoardDragnDrop = {
                         var pluginName = pluginConfig["conf"]["name"];
 
                         // push to dashboard array
-                        if ($.isArray(value) || typeof value == "object") {
+                        if (Array.isArray(value) || typeof value == "object") {
                             if (index == "datas") {
                                 $.each(value, function (i, v) {
                                     // here modify x y w h of the plugin
@@ -825,7 +825,7 @@ var melisDashBoardDragnDrop = {
             if ( dataTxt ) {
                 var pluginConfig = JSON.parse(dataTxt);
                     $.each(pluginConfig, function (index, value) {
-                        if ($.isArray(value) || typeof value == "object") {
+                        if (Array.isArray(value) || typeof value == "object") {
                             dataString.push({
                                 name: index,
                                 value: JSON.stringify(value)
@@ -946,7 +946,7 @@ var melisDashBoardDragnDrop = {
                 var grid = $('#' + activeTabId + ' .grid-stack').data('gridstack');
                 self.serializeWidgetMap(grid.container[0].children, function(){
                     // refresh widget
-                    $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-refresh').click();
+                    $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-refresh').trigger("click");
                 });
                 // close modal
                 $('#id_meliscore_dashboard_plugin_modal_container').modal('hide');

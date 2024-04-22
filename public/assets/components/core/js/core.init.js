@@ -8,8 +8,8 @@ if (window.location != window.parent.location)
 
     //window.onunload = function(){};
 
-    $.expr[':'].scrollable = function( elem ) 
-    {
+    //$.expr[':'].scrollable = function( elem ) 
+    $.expr.pseudos.scrollable = function(elem) {
       var scrollable = false,
           props = [ '', '-x', '-y' ],
           re = /^(?:auto|scroll)$/i,
@@ -82,8 +82,7 @@ if (window.location != window.parent.location)
     $('[data-toggle="popover"]').popover();
     
     // print
-    $('[data-toggle="print"]').click(function(e)
-    {
+    $('[data-toggle="print"]').on("click", function(e) {
         e.preventDefault();
         window.print();
     });
@@ -96,8 +95,7 @@ if (window.location != window.parent.location)
         prettyPrint();
     
     // show/hide toggle buttons
-    $('[data-toggle="hide"]').click(function()
-    {
+    $('[data-toggle="hide"]').on("click", function() {
         if ($(this).is('.bootboxTarget'))
             bootbox.alert($($(this).attr('data-target')).html());
         else {
@@ -108,7 +106,7 @@ if (window.location != window.parent.location)
     });
 
     /* added div.collapse below */
-/*    $('body ul.collapse, body div.collapse')
+    /* $('body ul.collapse, body div.collapse')
    .on('show.bs.collapse', function(e)
    {
        e.stopPropagation();
@@ -273,8 +271,7 @@ if (window.location != window.parent.location)
         });
     }
     
-    $(window).on('load', function()
-    {
+    $(window).on('load', function() {
         if ($(window).width() < 992) 
             $('.hasNiceScroll').getNiceScroll().stop();
 
@@ -286,10 +283,9 @@ if (window.location != window.parent.location)
         if (typeof animations == 'undefined' && typeof $.fn.niceScroll !== 'undefined')
             $('.hasNiceScroll, #menu_kis, #menu').getNiceScroll().show().resize();
 
-        if (typeof Holder != 'undefined')
-        {
-            Holder.add_theme("dark", {background:"#424242", foreground:"#aaa", size:9}).run();
-            Holder.add_theme("white", {background:"#fff", foreground:"#c9c9c9", size:9}).run();
+        if (typeof Holder != 'undefined') {
+            Holder.addTheme("dark", {background:"#424242", foreground:"#aaa", size:9}).run();
+            Holder.addTheme("white", {background:"#fff", foreground:"#c9c9c9", size:9}).run();
         }
     });
     

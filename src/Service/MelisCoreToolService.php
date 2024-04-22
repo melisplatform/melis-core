@@ -464,7 +464,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             $tableSearchPlugin = '';
             if (!empty($searchInputClass)) {
-                $tableSearchPlugin = '$(\'.' . $searchInputClass . ' input[type="search"]\').unbind();
+                $tableSearchPlugin = '$(\'.' . $searchInputClass . ' input[type="search"]\').off();
                                     $(\'.' . $searchInputClass . ' input[type="search"]\').typeWatch({
                                             captureLength: 2,
                                             callback: function(value) {

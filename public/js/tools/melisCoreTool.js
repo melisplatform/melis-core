@@ -25,6 +25,15 @@ var melisCoreTool = (function (window) {
             type: BootstrapDialog.TYPE_WARNING,
             closable: true,
             cssClass: "confirm-modal-header",
+            onshown: function() {
+                var $footerBtns = $(".modal-footer");
+                    if ( $footerBtns.find(".btn").length ) {
+                        /* $footerBtns.find(".btn:first-child").addClass("btn-danger pull-left").removeClass("btn-default");
+                        $footerBtns.find(".btn").addClass("btn-success").removeClass("btn-default"); */
+                        $footerBtns.find(".btn:first-child").addClass("btn-danger pull-left").removeClass("btn-secondary");
+                        $footerBtns.find(".btn").addClass("btn-success").removeClass("btn-secondary");
+                    }
+            },
             buttons: [{
                 label: textNo, //translations.tr_meliscore_common_no
                 cssClass: 'btn-danger pull-left',
@@ -33,6 +42,7 @@ var melisCoreTool = (function (window) {
                     if (callBackOnNo !== null && typeof (callBackOnNo) === 'function') {
                         callBackOnNo();
                     }
+                   
                     dialog.close();
                 }
             }, {
@@ -43,6 +53,7 @@ var melisCoreTool = (function (window) {
                     if (callBackOnYes !== null && typeof (callBackOnYes) === 'function') {
                         callBackOnYes();
                     }
+                   
                     dialog.close();
                 }
             }]
@@ -214,7 +225,8 @@ var melisCoreTool = (function (window) {
     function done(targetButton) {
         // hide the overlay and enable the button
         $("body div.melis-modal-overlay").remove();
-        $(targetButton).removeAttr('disabled');
+        //$(targetButton).removeAttr('disabled');
+        $(targetButton).prop('disabled', false);
     }
 
     // date

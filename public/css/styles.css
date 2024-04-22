@@ -201,7 +201,12 @@ body {
 	background: #fff;
 }
 .login-page .login .main-login-page.placeholder {
+	display: block;
 	font-size: 12px !important;
+	cursor: unset;
+	background-color: transparent;
+	opacity: 1;
+	margin: 0 auto;
 }
 .login-page .business-logo-container {
 	display: inline-block;
@@ -219,6 +224,18 @@ body {
 }
 .login-page .login .placeholder i {
 	margin: 60px 0 60px;
+}
+
+.login-page .login form label {
+	margin-bottom: 0.5rem;
+}
+
+.login-page h4 {
+	font-size: 21px;
+}
+
+#id_meliscore_login_footer .copy.footer {
+	font-size: 14px;
 }
 
 .spacing-x2.innerAll,

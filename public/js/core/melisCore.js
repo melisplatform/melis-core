@@ -53,7 +53,7 @@ var melisCore = (function(window){
     }
 
     // REQUEST LOST PASSWORD
-    $('#idformmeliscoreforgot').submit(function(event) {
+    $('#idformmeliscoreforgot').on("submit", function(event) {
         var datastring = $("#idformmeliscoreforgot").serialize();
 
         $.ajax({
@@ -237,7 +237,7 @@ var melisCore = (function(window){
         });
     }
 
-    $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
+    $body.find("#id_meliscore_header_flash_messenger").on("mouseleave", function () {
         if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden") === false )
             $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
     });
@@ -816,7 +816,7 @@ var melisCore = (function(window){
     // BIND & DELEGATE EVENTS =================================================================================================================
 
     // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
-    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch).filter(":first").click();
+    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch).filter(":first").trigger("click");
 
     // toggle plugin menu in mobile
     $body.on("click", "#plugin-menu", function(){
@@ -869,7 +869,8 @@ var melisCore = (function(window){
         },
     });
 
-    $(".melis-core-dashboard-plugin-snippets").hover(function() {
+    // .hover, change to .on("mouseenter")
+    $(".melis-core-dashboard-plugin-snippets").on("mouseenter", function() {
         var $this = $(this);
             $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
     });
