@@ -398,6 +398,13 @@ return array(
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
+                    'cache' => [
+                        'activated' => true,
+                        'name' => 'meliscore_leftmenu',
+                        'add' => [
+                            'userId', 'sessionId'
+                        ]
+                    ],
                     'interface' => array(
                         'meliscore_leftmenu_identity' =>  array(
                             'conf' => array(
@@ -585,6 +592,13 @@ return array(
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
+                    'cache' => [
+                        'activated' => true,
+                        'name' => 'meliscore_dashboard_menu',
+                        'add' => [
+                            'userId', 'sessionId'
+                        ]
+                    ],
                 ),
                 'melis_dashboardplugin' => array(
                     'conf' => array(

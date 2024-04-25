@@ -1386,6 +1386,7 @@ class ToolUserController extends MelisAbstractActionController
                                 $datas = [
                                     'isMyInfo' => 1,
                                     'loadProfile' => 'data:image/jpeg;base64,' . $image,
+                                    'usr_id' => $userId
                                 ];
                             }
                             // free up memory

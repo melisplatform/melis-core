@@ -10,6 +10,7 @@
 namespace MelisCore;
 
 use MelisCore\Listener\MelisChangeLangOnCreatePassListener;
+use MelisCore\Listener\MelisCoreClearCacheListenerListener;
 use MelisCore\Listener\MelisCoreDashboardPluginRightsTreeViewListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
@@ -89,6 +90,7 @@ class Module
             (new MelisCoreDashboardPluginRightsTreeViewListener())->attach($eventManager);
             (new MelisCoreUrlAccessCheckerListenner())->attach($eventManager);
             (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
+            (new MelisCoreClearCacheListenerListener())->attach($eventManager);
         }
     }
 
