@@ -335,44 +335,49 @@ class PluginViewController extends MelisAbstractActionController
                  * Check if cache is active
                  */
                 if($itemConfig['cache']['activated']){
-                    $cacheActivated = true;
                     // Get Current User ID
                     $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
                     $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-                    $userId = (int) $userAuthDatas->usr_id;
                     /**
-                     * Make user id is not empty
+                     * Make sure there's a session for user
                      */
-                    if(!empty($userId)) {
+                    if(!empty($userAuthDatas)) {
+                        $userId = (int)$userAuthDatas->usr_id;
                         /**
-                         * Construct cache key and concatinate
-                         * additional parameters on it
+                         * Make user id is not empty
                          */
-                        $cacheKey = $itemConfig['cache']['name'];
-                        $paramToAdd = $itemConfig['cache']['add'];
-                        if (!empty($paramToAdd)) {
-                            foreach ($paramToAdd as $key => $val) {
-                                if ($val == 'userId') {
-                                    $cacheKey .= '_' . $userId;
+                        if (!empty($userId)) {
+                            $cacheActivated = true;
+                            /**
+                             * Construct cache key and concatinate
+                             * additional parameters on it
+                             */
+                            $cacheKey = $itemConfig['cache']['name'];
+                            $paramToAdd = $itemConfig['cache']['add'];
+                            if (!empty($paramToAdd)) {
+                                foreach ($paramToAdd as $key => $val) {
+                                    if ($val == 'userId') {
+                                        $cacheKey .= '_' . $userId;
+                                    }
                                 }
                             }
-                        }
-                        /**
-                         * Get cache based on cache key
-                         */
-                        $results = $melisCoreCacheSystem->getCacheByKey($cacheKey, self::cacheConfig);
-                        if (!empty($results)) {
-                            $this->isFromCache = true;
                             /**
-                             * Generate new view model to return
-                             * the cached html
+                             * Get cache based on cache key
                              */
-                            $newView = new ViewModel();
-                            $newView->setVariables([
-                                'cache' => $results
-                            ]);
-                            $newView->setTemplate('layout/cache');
-                            return $newView;
+                            $results = $melisCoreCacheSystem->getCacheByKey($cacheKey, self::cacheConfig);
+                            if (!empty($results)) {
+                                $this->isFromCache = true;
+                                /**
+                                 * Generate new view model to return
+                                 * the cached html
+                                 */
+                                $newView = new ViewModel();
+                                $newView->setVariables([
+                                    'cache' => $results
+                                ]);
+                                $newView->setTemplate('layout/cache');
+                                return $newView;
+                            }
                         }
                     }
                 }
