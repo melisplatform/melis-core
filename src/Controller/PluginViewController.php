@@ -232,7 +232,6 @@ class PluginViewController extends MelisAbstractActionController
      */
     public function generateRec($key, $fullKey, &$jsCB, $recDatas = [])
     {
-
         $melisAppConfig = $this->getServiceManager()->get('MelisCoreConfig');
 
         /**
@@ -368,7 +367,8 @@ class PluginViewController extends MelisAbstractActionController
                              * Generate new view model to return
                              * the cached html
                              */
-                            $newView = new ViewModel([
+                            $newView = new ViewModel();
+                            $newView->setVariables([
                                 'cache' => $results
                             ]);
                             $newView->setTemplate('layout/cache');
