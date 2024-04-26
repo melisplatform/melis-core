@@ -307,7 +307,8 @@ return array(
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js?v=2023090801',
+                        //'/MelisCore/build/js/bundle.js?v=2023090801',
+                        '/MelisCore/build/js/bundle.js?v=' . date('YmdHis'),
                     ]
                 ]
             ),
