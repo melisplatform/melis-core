@@ -56,7 +56,7 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
                     }
                 }
             },
-            101
+            200
         );
     }
 }
