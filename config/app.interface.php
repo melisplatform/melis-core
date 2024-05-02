@@ -402,7 +402,7 @@ return array(
                         'activated' => true,
                         'name' => 'meliscore_leftmenu',
                         'add' => [
-                            'userId', 'sessionId'
+                            'userId'
                         ]
                     ],
                     'interface' => array(
@@ -548,6 +548,13 @@ return array(
                                 'icon' => 'fa-tachometer',
                                 'dashboard' => true
                             ),
+                            'cache' => [
+                                'activated' => true,
+                                'name' => 'meliscore_dashboard_plugins',
+                                'add' => [
+                                    'userId'
+                                ]
+                            ],
                             'interface' => [
                                 'meliscore_dashboard_header' => [
                                     'conf' => [
@@ -596,7 +603,7 @@ return array(
                         'activated' => true,
                         'name' => 'meliscore_dashboard_menu',
                         'add' => [
-                            'userId', 'sessionId'
+                            'userId'
                         ]
                     ],
                 ),

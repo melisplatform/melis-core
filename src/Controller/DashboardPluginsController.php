@@ -244,6 +244,8 @@ class DashboardPluginsController extends MelisAbstractActionController
             $result = array(
                 'success' => $success
             );
+
+            $this->getEventManager()->trigger('meliscore_save_dashboard_plugin_end', $this, $result);
             
         }catch (\Exception $e){
             $result = array(
