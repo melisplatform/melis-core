@@ -1026,7 +1026,7 @@ var melisDashBoardDragnDrop = {
     // get the current, active .grid-stack for multiple dashboards
     getCurrentGsWidth: function() {
         var self    = this,
-            gsWidth =  $("#"+activeTabId).find(".grid-stack").outerWidth();
+            gsWidth = $("#"+activeTabId).find(".grid-stack").outerWidth();
 
             return gsWidth;
     },
@@ -1038,7 +1038,7 @@ var melisDashBoardDragnDrop = {
             $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
             $gs                     = $body.find("#"+activeTabId + " .grid-stack"),      
             $dbMsg                  = $body.find("#"+activeTabId + " .melis-core-dashboard-msg"),
-            $bubblePlugin           = $("#bubble-plugin");
+            $bubblePlugin           = $body.find("#"+activeTabId + " .bubble-plugin");
 
             // set data min and max width, from setAdjustGridMeasurements() function
             $gs.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth());
@@ -1048,11 +1048,11 @@ var melisDashBoardDragnDrop = {
             $gs.css("width", $gs.outerWidth());
 
             // set data min and max width for bubble plugin
-            $bubblePlugin.attr("data-min-width", $bubblePlugin.outerWidth() - $pluginBox.outerWidth() );
-            $bubblePlugin.attr("data-max-width", $bubblePlugin.outerWidth() );
+            $bubblePlugin.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth() );
+            $bubblePlugin.attr("data-max-width", $gs.outerWidth() );
 
             // display #bubble-plugin width
-            $bubblePlugin.css("width", $bubblePlugin.outerWidth() );
+            $bubblePlugin.css("width", $gs.outerWidth() );
 
             // dbMsg, sets min and max widths
             $dbMsg.attr("data-min-width", $gs.outerWidth() - $pluginBox.outerWidth() );

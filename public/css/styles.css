@@ -4929,3 +4929,7 @@ input#log_date_range {
 	cursor: pointer;
 }
 /* end Datepicker issue on DateField */
+/* dashboard gridstack issue on scaled monitor */
+@-ms-viewport{
+	width: device-width;
+}

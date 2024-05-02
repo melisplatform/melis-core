@@ -287,7 +287,7 @@ return array(
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
-                    '/MelisCore/js/core/loader.js'
+                    '/MelisCore/js/core/loader.js',
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
@@ -296,7 +296,7 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => true,
+                    'use_build_assets' => false,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
