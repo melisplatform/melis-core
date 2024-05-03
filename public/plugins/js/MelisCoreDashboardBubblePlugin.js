@@ -132,11 +132,13 @@ $(function() {
             $(this).closest('.panel-3d').removeClass('panel-flip');
         });
 
+        let num = 0;
         // show plugins
         $body.on('click', '#btn-show-bubble-plugins', function () {
-            var $this = $(this);
+            var $this = $(this),
+                $bp = $body.find(".bubble-plugin");
                 updateCookie(true);
-
+                
                 melisHelper.zoneReload(
                     'id_meliscore_dashboard_bubble_plugins',
                     'meliscore_dashboard_bubble_plugins',
@@ -156,6 +158,21 @@ $(function() {
 
                         // check dashboard message and grid-stack
                         checkDashboardMsg();
+                        
+                        /* var bpLoop = setInterval(function() {
+                            var bpId = $body.find(".bubble-plugin").attr("id") +"-"+num++;
+
+                                console.log(`$this.closest(".bubble-plugin").length: `, $this.closest(".bubble-plugin").length );
+                                if ( $this.closest(".bubble-plugin").length ) {
+                                    $this.closest(".bubble-plugin").attr("id", "");
+                                    //$bp.prop("id", bpId);
+                                    
+                                    console.log(`prop bpId: `, bpId );
+                                    console.log({num});
+
+                                    clearInterval( bpLoop );
+                                }
+                        }, 10000); */
                     }
                 );
         });
@@ -186,6 +203,8 @@ $(function() {
                         if ( $("#bubble-plugin.mb-20px").length ) {
                             $("#bubble-plugin").removeClass("mb-20px");
                         }
+
+
                     }
                 );
         });

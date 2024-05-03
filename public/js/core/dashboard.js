@@ -16,7 +16,8 @@ var dashboard = (function() {
 	var $body 				= $("body"),
 		$activeTabId 		= $("#"+activeTabId),
 		$gs 				= $activeTabId.find(".grid-stack"),
-		$bp 				= $activeTabId.find(".bubble-plugin"),//$("#"+activeTabId + " .bubble-plugin"),
+		$bp 				= $activeTabId.find(".bubble-plugin"), //$("#"+activeTabId + " .bubble-plugin"),
+		//$bp					= $("#bubble-plugin"),
 		$lm 				= $("#id_meliscore_leftmenu"),
 		$lmBtn 				= $("#side-menu"),
 		$tabArrowTop    	= $("#tab-arrow-top"), // show main tabs on small screen devices
@@ -197,6 +198,7 @@ var dashboard = (function() {
 					//console.log(`767 $el[0].id: `, $el[0].id);
 					// dashboard menu button clicked
 					if ( $el[0].id === "melisDashBoardPluginBtn" ) {
+						//console.log({$bp});
 						// toggle class .shown
 						$dbPluginMenu.toggleClass("shown");
 
@@ -218,9 +220,26 @@ var dashboard = (function() {
 
 								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 								
-								if ( $bp.length ) {
+								//if ( $bp.length ) {
 									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
-								}
+								//}
+
+								//$bp.css("width", bpWidth - dbpmWidth);
+
+								/* console.log({currentGsWidth});
+								console.log({bpWidth});
+								console.log({dbpmWidth});
+								console.log(`$bp.outerWidth(): `, $bp.outerWidth() );
+
+								if ( currentGsWidth == bpWidth ) {
+									$bp.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+
+									console.log(`currentGsWidth == bpWidth: `, currentGsWidth == bpWidth );
+									console.log({currentGsWidth});
+									console.log({bpWidth});
+									console.log({dbpmWidth});
+									console.log(`$bp.outerWidth(): `, $bp.outerWidth() );
+								} */
 							}
 						}
 						// db menu not clicked, off
@@ -231,8 +250,15 @@ var dashboard = (function() {
 							$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 							
 							if ( $bp.length ) {
-								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								$bp.animate({ width: bpWidth - dbpmWidth }, animationDuration);
 							}
+
+							$bp.css("width", bpWidth - dbpmWidth);
+
+							/* console.log({currentGsWidth});
+							console.log({bpWidth});
+							console.log({dbpmWidth});
+							console.log(`$bp.outerWidth(): `, $bp.outerWidth() ); */
 						}
 					}
 				}
