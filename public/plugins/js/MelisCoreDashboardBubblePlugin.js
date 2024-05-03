@@ -78,15 +78,13 @@ var MelisCoreDashboardBubblePlugin = {
                         } 
                         else if ( $dbPluginMenu.hasClass("shown") && $lm.hasClass("shown") ) {
                             //console.log(`bubble plugin, plugin box shown, melis left menu shown`);
-                            
-                            $bp.attr("data-min-width", $bp.outerWidth() - lmWidth );
+                            $bp.attr("data-min-width", $bp.outerWidth() - lmWidth + 50 );
                             $bp.attr("data-max-width", $bp.outerWidth() );
 
-                            $bp.css("width", $bp.outerWidth() - lmWidth );
+                            $bp.css("width", $bp.outerWidth() - lmWidth + 50);
                         } 
                         else if ( ! $dbPluginMenu.hasClass("shown") && $lm.hasClass("shown") ) {
                             //console.log(`bubble plugin, plugin box not shown, melis left menu shown`);
-                            
                             $bp.attr("data-min-width", $bp.outerWidth() - dbpmWidth );
                             $bp.attr("data-max-width", $bp.outerWidth() );
 
@@ -146,7 +144,7 @@ $(function() {
                     MelisCoreDashboardBubbleChatPlugin.init();
 
                     // checks min-width and max-width attribute for #bubble-plugin element
-                    //MelisCoreDashboardBubblePlugin.addMinMaxWidth();
+                    MelisCoreDashboardBubblePlugin.addMinMaxWidth();
 
                     // check dashboard message and grid-stack
                     checkDashboardMsg();
@@ -166,7 +164,7 @@ $(function() {
                 },
                 function() {                 
                     // checks min-width and max-width attribute for #bubble-plugin element
-                    //MelisCoreDashboardBubblePlugin.addMinMaxWidth();
+                    MelisCoreDashboardBubblePlugin.addMinMaxWidth();
 
                     // check dashboard message and grid-stack
                     checkDashboardMsg();
