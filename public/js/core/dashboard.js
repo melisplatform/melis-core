@@ -160,7 +160,6 @@ var dashboard = (function() {
 							}
 							else {
 								//console.log(`768 lm not shown, dbPluginMenu not shown`);
-
 								// if .grid-stack width is below .bubble-plugin width
 								if ( bpWidth == currentGsWidth ) {
 									$gs.animate({ width: bpWidth + lmWidth }, animationDuration);
@@ -222,7 +221,7 @@ var dashboard = (function() {
 							$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 							
 							if ( $bp.length ) {
-								$bp.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 							}
 						}
 					}
