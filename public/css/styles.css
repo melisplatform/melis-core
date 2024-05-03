@@ -4836,11 +4836,11 @@ input#log_date_range {
 	margin-bottom: 20px;
 }
 
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
 	#id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
 		height: 212px;
 	}
-}
+} */
 
 /* for the Other Config login type of lock */
 
@@ -4932,4 +4932,9 @@ input#log_date_range {
 /* dashboard gridstack issue on scaled monitor */
 @-ms-viewport{
 	width: device-width;
+}
+@media (min-width: 768px) {
+    #content {
+        margin-left: 274px;
+    }
 }

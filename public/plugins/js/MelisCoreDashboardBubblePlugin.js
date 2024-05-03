@@ -69,19 +69,19 @@ var MelisCoreDashboardBubblePlugin = {
                 /* bubblePluginMinWidth    = isNaN( parseInt( $bp.attr("data-min-width") ) ) ? 1360 : 1372,
                 bubblePluginMaxWidth    = isNaN( parseInt( $bp.attr("data-max-width") ) ) ? 1584 : 1596; */
 
-                console.log(`attr $bp.length: `, $bp.length );
+                //console.log(`attr $bp.length: `, $bp.length );
 
                 if ( $bp.length ) {
                     //setTimeout(function() {
                         if ( ! $dbPluginMenu.hasClass("shown") && ! $lm.hasClass("shown") ) {
-                            console.log(`bubble plugin, plugin box not shown, melis left menu not shown`);
+                            //console.log(`bubble plugin, plugin box not shown, melis left menu not shown`);
                             $bp.attr("data-min-width", $bp.outerWidth() - (dbpmWidth + lmWidth) );
                             $bp.attr("data-max-width", $bp.outerWidth() - lmWidth);
 
                             $bp.css("width", $bp.outerWidth() );
                         } 
                         else if ( $dbPluginMenu.hasClass("shown") && $lm.hasClass("shown") ) {
-                            console.log(`bubble plugin, plugin box shown, melis left menu shown`);
+                            //console.log(`bubble plugin, plugin box shown, melis left menu shown`);
                             
                             $bp.attr("data-min-width", $bp.outerWidth() - lmWidth );
                             $bp.attr("data-max-width", $bp.outerWidth() );
@@ -89,7 +89,7 @@ var MelisCoreDashboardBubblePlugin = {
                             $bp.css("width", $bp.outerWidth() - lmWidth );
                         } 
                         else if ( ! $dbPluginMenu.hasClass("shown") && $lm.hasClass("shown") ) {
-                            console.log(`bubble plugin, plugin box not shown, melis left menu shown`);
+                            //console.log(`bubble plugin, plugin box not shown, melis left menu shown`);
                             
                             $bp.attr("data-min-width", $bp.outerWidth() - dbpmWidth );
                             $bp.attr("data-max-width", $bp.outerWidth() );
@@ -97,7 +97,7 @@ var MelisCoreDashboardBubblePlugin = {
                             $bp.css("width", $bp.outerWidth() );
                         } 
                         else if ( $dbPluginMenu.hasClass("shown") && ! $lm.hasClass("shown") ) {
-                            console.log(`bubble plugin, plugin box shown, melis left menu not shown`);
+                            //console.log(`bubble plugin, plugin box shown, melis left menu not shown`);
                             $bp.attr("data-min-width", $bp.outerWidth() - (lmWidth + dbpmWidth) );
                             $bp.attr("data-max-width", $bp.outerWidth() - lmWidth );
 

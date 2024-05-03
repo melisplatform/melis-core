@@ -42,7 +42,7 @@ var dashboard = (function() {
 			var currentGsWidth = $gs.outerWidth();
 				// check screenSize for responsive, desktop
 				if ( melisCore.screenSize >= 768 ) {
-					console.log(`768 $el[0].id: `, $el[0].id);
+					//console.log(`768 $el[0].id: `, $el[0].id);
 					// dashboard menu button clicked
 					if ( $el[0].id === "melisDashBoardPluginBtn" ) {
 						// toggle class .shown
@@ -51,34 +51,30 @@ var dashboard = (function() {
 						// dashboard plugin menu button clicked, on
 						if ( $dbPluginMenu.hasClass("shown") )	{
 							if ( $lm.hasClass("shown") ) {
-								console.log(`768 dbPluginMenu shown, lm shown`);
-								//$gs.animate({ width: minWidth }, animationDuration);
+								//console.log(`768 dbPluginMenu shown, lm shown`);
 								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 
-								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration); // minWidth
+								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 								
 								if ( $bp.length ) {
-									$bp.animate({ width: currentGsWidth - dbpmWidth}, animationDuration); // minWidth
+									$bp.animate({ width: currentGsWidth - dbpmWidth}, animationDuration);
 								}
 							}
 							else {
-								console.log(`768 dbPluginMenu shown, lm not shown`);
-								//$gs.animate({ width: minWidth + lmWidth }, animationDuration);
-								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration); // gsWidth
+								//console.log(`768 dbPluginMenu shown, lm not shown`);
+								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 
-								// $dbMsg.animate({ width: minWidth + lmWidth }, animationDuration);
-								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration); // gsWidth
+								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 								
 								if ( $bp.length ) {
-									//$bp.animate({ width: minWidth + lmWidth }, animationDuration);
-									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration); // gsWidth
+									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 								}
 							}
 						}
 						// db menu not shown, off
 						else {
 							if ( $lm.hasClass("shown") ) {
-								console.log(`768 dbPluginMenu not shown, lm shown`);
+								////console.log(`768 dbPluginMenu not shown, lm shown`);
 
 								$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 								
@@ -89,7 +85,7 @@ var dashboard = (function() {
 								}
 							}
 							else {
-								console.log(`768 dbPluginMenu not shown, lm not shown`);
+								////console.log(`768 dbPluginMenu not shown, lm not shown`);
 								$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 
 								$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
@@ -103,20 +99,43 @@ var dashboard = (function() {
 					// left menu button is clicked, sidebarMenuClicked
 					else if ( $el[0].id === "sidebar-menu" ) {
 						$lm.toggleClass("shown");
-						console.log(`768 $lm.hasClass("shown"): `, $lm.hasClass("shown") );
+						//console.log(`768 $lm.hasClass("shown"): `, $lm.hasClass("shown") );
 						if ( $lm.hasClass("shown") ) {
 							if ( $dbPluginMenu.hasClass("shown") ) {
-								console.log(`768 lm shown, dbPluginMenu shown`);
-								$gs.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+								//console.log(`768 lm shown, dbPluginMenu shown`);
+								// if .grid-stack width is below .bubble-plugin width
+								if ( currentGsWidth != bpWidth ) {
+									$gs.animate({ width: bpWidth - dbpmWidth }, animationDuration);
 
-								$dbMsg.animate({ width: currentGsWidth - lmWidth }, animationDuration);
-								
-								if ( $bp.length ) {
-									$bp.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+									$dbMsg.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+									}
+								}
+								else {
+									$gs.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+
+									$dbMsg.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+									}
 								}
 							}
 							else {
-								console.log(`768 lm shown, dbPluginMenu not shown`);
+								//console.log(`768 lm shown, dbPluginMenu not shown`);
+								// if .grid-stack width is below .bubble-plugin width
+								//console.log(`currentGsWidth != bpWidth: `, currentGsWidth != bpWidth);
+								if ( currentGsWidth != bpWidth ) {
+									$gs.animate({ width: bpWidth - lmWidth }, animationDuration);
+
+									$dbMsg.animate({ width: bpWidth - lmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: bpWidth - lmWidth }, animationDuration);
+									}
+								}
 								$gs.animate({ width: currentGsWidth - lmWidth }, animationDuration);
 
 								$dbMsg.animate({ width: currentGsWidth - lmWidth }, animationDuration);
@@ -129,7 +148,7 @@ var dashboard = (function() {
 						// false
 						else {
 							if ( $dbPluginMenu.hasClass("shown") ) {
-								console.log(`768 lm not shown, dbPluginMenu shown`);
+								//console.log(`768 lm not shown, dbPluginMenu shown`);
 								$gs.animate({ width: currentGsWidth + lmWidth }, animationDuration);
 
 								$dbMsg.animate({ width: currentGsWidth + lmWidth }, animationDuration);
@@ -139,13 +158,35 @@ var dashboard = (function() {
 								}
 							}
 							else {
-								console.log(`768 lm not shown, dbPluginMenu not shown`);
-								$gs.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+								//console.log(`768 lm not shown, dbPluginMenu not shown`);
+								//console.log(`bpWidth == currentGsWidth: `, bpWidth == currentGsWidth);
+								//console.log("bpWidth: " + bpWidth + " currentDsWidth: " + currentGsWidth);
+								// if .grid-stack width is below .bubble-plugin width
+								if ( bpWidth == currentGsWidth ) {
+									//console.log(`=======INSIDE=======`);
+									//console.log(`bpWidth + lmWidth: `, bpWidth + lmWidth );
+									//console.log(`bpWidth: `, bpWidth);
+									//console.log(`lmWidth: `, lmWidth);
+									//console.log(`currentGsWidth: `, currentGsWidth);
+									//console.log(`$bp.outerWidth(): `, $bp.outerWidth());
+									$gs.animate({ width: bpWidth + lmWidth }, animationDuration);
 
-								$dbMsg.animate({ width: currentGsWidth + lmWidth }, animationDuration);
-								
-								if ( $bp.length ) {
-									$bp.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+									$dbMsg.animate({ width: bpWidth + lmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: $bp.outerWidth() + lmWidth }, animationDuration);
+										
+										//console.log(`$bp.outerWidth() + lmWidth: `, $bp.outerWidth() + lmWidth );
+									}
+								}
+								else {
+									$gs.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+
+									$dbMsg.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+									}
 								}
 							}
 						}
@@ -153,7 +194,7 @@ var dashboard = (function() {
 				}
 				// considered mobile width
 				else {
-					console.log(`767 $el[0].id: `, $el[0].id);
+					//console.log(`767 $el[0].id: `, $el[0].id);
 					// dashboard menu button clicked
 					if ( $el[0].id === "melisDashBoardPluginBtn" ) {
 						// toggle class .shown
@@ -162,7 +203,7 @@ var dashboard = (function() {
 						// dashboard plugin menu button clicked, on
 						if ( $dbPluginMenu.hasClass("shown") )	{
 							if ( $lm.hasClass("shown") ) {
-								console.log(`767 dbPluginMenu shown, lm shown`);
+								//console.log(`767 dbPluginMenu shown, lm shown`);
 								$gs.animate({ width: minWidth }, animationDuration);
 
 								$dbMsg.animate({ width: minWidth }, animationDuration);
@@ -172,7 +213,7 @@ var dashboard = (function() {
 								}
 							}
 							else {
-								console.log(`767 dbPluginMenu shown, lm not shown`);
+								//console.log(`767 dbPluginMenu shown, lm not shown`);
 								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 
 								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
@@ -184,7 +225,7 @@ var dashboard = (function() {
 						}
 						// db menu not clicked, off
 						else {
-							console.log(`767 dbPluginMenu not shown, lm not shown`);
+							//console.log(`767 dbPluginMenu not shown, lm not shown`);
 							$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 
 							$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
