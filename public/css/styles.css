@@ -4938,3 +4938,13 @@ input#log_date_range {
         margin-left: 274px;
     }
 }
+.btn-info.btn-regular {
+	background: #466baf;
+	border-color: #466baf;
+	color: #fff;
+}
+.btn-info.btn-regular:hover, 
+.btn-info.btn-regular:focus {
+    background: none;
+    color: #466baf;
+}
