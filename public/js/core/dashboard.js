@@ -209,7 +209,7 @@ var dashboard = (function() {
 								$dbMsg.animate({ width: minWidth }, animationDuration);
 								
 								if ( $bp.length ) {
-									$bp.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+									$bp.animate({ width: minWidth }, animationDuration);
 								}
 							}
 							else {
@@ -219,7 +219,7 @@ var dashboard = (function() {
 								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 								
 								if ( $bp.length ) {
-									$bp.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
 								}
 							}
 						}
@@ -231,7 +231,7 @@ var dashboard = (function() {
 							$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 							
 							if ( $bp.length ) {
-								$bp.animate({ width: bpWidth + dbpmWidth }, animationDuration);
+								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 							}
 						}
 					}
