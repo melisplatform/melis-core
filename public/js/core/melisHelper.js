@@ -822,11 +822,27 @@ var melisHelper = (function() {
 					}
 				}
 
-                //this will reload all cached dashboard plugins only in cache mode
+                //this will reload all cached dashboard plugins
 				if ($("#" + zoneId).length > 0) {
 					$.each($("#" + zoneId + " .grid-stack-item"), function () {
 						$(this).find(".dashboard-plugin-refresh").trigger("click");
 					});
+
+					// if(zoneId == 'id_melismarketing_toolstree_section_dashboard'){
+					// 	if($("#"+zoneId).hasClass("active")){
+						//find active dashboard end with _toolstree_section_dashboard
+						if($("[id$=_toolstree_section_dashboard]").hasClass("active")){
+							//update bubble plugins
+                            var bubble = MelisCoreDashboardBubblePlugin.showBubblePlugins();
+                            if(bubble == true){
+                                $("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").removeClass("hidden");
+                                $("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css('visibility', 'visible');
+							}else{
+                                $("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").addClass("hidden");
+                                $("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css('visibility', 'hidden');
+							}
+						}
+					// }
 				}
 			}, 300);
 		})
