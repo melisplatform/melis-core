@@ -96,8 +96,8 @@ var gdprAutoDelete = {
         $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content").removeClass('d-none');
         melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config_content', { configId : configId , siteId : siteId, moduleName : module }, function () {
             $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config_content").removeClass('d-none');
-            $("#mgdprc_site_id").removeAttr('disabled');
-            $("#mgdprc_module_name").removeAttr('disabled');
+            $("#mgdprc_site_id").prop('disabled', false);
+            $("#mgdprc_module_name").prop('disabled', false);
 
             var configId = $("#mgdprc_id").val();
             var headingTitle = $("#add-edit-main-heading");
@@ -110,7 +110,7 @@ var gdprAutoDelete = {
             }
             // for save button
             if (typeof(configId) !== "undefined") {
-                $("#saveAutoDeleteConfigurations").removeAttr('disabled');
+                $("#saveAutoDeleteConfigurations").prop("disabled", false);
             }
         });
     },

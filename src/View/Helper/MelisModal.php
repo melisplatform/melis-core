@@ -86,11 +86,11 @@ class MelisModal extends AbstractHelper
             {
                 if($this->_defaultTab == $loopCtr)
                 {
-                    $this->_tabs .= '<li '.$active.'><a href="#'.$values['id'].'" class="'.$values['class'].'" data-toggle="tab"><i></i><span class="strong">'.$values['tab-header'].'</span>'.$values['tab-text'].'</a></li>';
+                    $this->_tabs .= '<li '.$active.'><a href="#'.$values['id'].'" class="'.$values['class'].'" data-bs-toggle="tab"><i></i><span class="strong">'.$values['tab-header'].'</span>'.$values['tab-text'].'</a></li>';
                 }
                 else 
                 {
-                    $this->_tabs .= '<li><a href="#'.$values['id'].'" class="'.$values['class'].'" data-toggle="tab"><i></i><span class="strong">'.$values['tab-header'].'</span>'.$values['tab-text'].'</a></li>';
+                    $this->_tabs .= '<li><a href="#'.$values['id'].'" class="'.$values['class'].'" data-bs-toggle="tab"><i></i><span class="strong">'.$values['tab-header'].'</span>'.$values['tab-text'].'</a></li>';
                 }
                 $loopCtr++;
             }
@@ -108,7 +108,7 @@ class MelisModal extends AbstractHelper
             
             foreach($tab as $attrib => $values)
             {
-                $this->_tabs .= '<li><a href="#'.$values['id'].'" class="'.$values['class'].'" data-toggle="tab"><i></i><span class="strong">'.$values['tab-header'].'</span>'.$values['tab-text'].'</a></li>';
+                $this->_tabs .= '<li><a href="#'.$values['id'].'" class="'.$values['class'].'" data-bs-toggle="tab"><i></i><span class="strong">'.$values['tab-header'].'</span>'.$values['tab-text'].'</a></li>';
             }
             $this->setContent($tab);
         }
@@ -242,7 +242,7 @@ class MelisModal extends AbstractHelper
         if($this->_hasCloseButton) {
             $closeButton = '
             <div class="modal-footer center margin-none">
-            	<a href="#" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</a>
+            	<a href="#" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times"></i> Close</a>
             </div>';
         }
 

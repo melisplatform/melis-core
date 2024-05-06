@@ -115,6 +115,7 @@
 }
 .navbar.main .nav > li a.menu-icon {
 	display: block;
+	text-decoration: none;
 }
 .navbar #melis-id-nav-bar-tabs > li {
 	position: relative;
@@ -171,9 +172,6 @@
 .module-display-heading ul {
 	margin-bottom: 0;
 	padding-left: 20px;
-}
-#img-user-link {
-	margin-right: 1rem;
 }
 .melis-svg-icon .melis-icon {
 	vertical-align: baseline;
@@ -916,7 +914,7 @@ td.dataTables_empty {
 	color: #fff !important;
 }
 
-a[data-toggle="modal"]:focus {
+a[data-bs-toggle="modal"]:focus {
 	text-decoration: none;
 }
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a,
@@ -994,7 +992,7 @@ a[data-toggle="modal"]:focus {
 	margin-top: 3px;
 	margin-left: 5px;
 }
-a[data-toggle="modal"]:focus {
+a[data-bs-toggle="modal"]:focus {
 	text-decoration: none;
 }
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a,
@@ -1694,4 +1692,48 @@ transition: all 0.4s ease-in-out;
     font-size: 16px;
     display: block;
     text-align: center;
+}
+
+/* jQuery 3.7.1 migration */
+.input-group.colorpicker-component {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+}
+.input-group.colorpicker-component .input-group-text {
+	background-color: transparent;
+}
+.footer a,
+.footer a:hover {
+	text-decoration: none;
+}
+#img-user-link {
+	display: inline-block;
+	margin-right: 1rem;
+}
+#id_meliscore_leftmenu_identity .media-body {
+	display: inline-block;
+}
+#meliscore_left_menu_profile_pic {
+	position: relative;
+	top: -8px;
+}
+#user-name-link {
+	text-decoration: none;
+}
+.btn-info.btn-regular {
+	background: #466baf;
+	border-color: #466baf;
+	color: #fff;
+}
+.btn-info.btn-regular:hover, 
+.btn-info.btn-regular:focus {
+    background: none;
+    color: #466baf;
+}
+.table-primary thead th {
+	background-color: #e61c23;
+}
+.switch-all-noti .icon-cont .fa-info-circle {
+	margin-right: -1rem;
 }

@@ -244,7 +244,7 @@
                 title = this.options.title !== undefined ? this.options.title : this.options.noneSelectedText;
             }
 
-            this.$button.attr('title', $.trim(title));
+            this.$button.attr('title', title.trim());
             this.$newElement.find('.filter-option').html(title);
         },
 
@@ -736,7 +736,7 @@
 
                 $items.each(function() {
                     if ($(this).parent().is(':not(.disabled)')) {
-                        if ($.trim($(this).text().toLowerCase()).substring(0,1) == keyCodeMap[e.keyCode]) {
+                        if ($(this).text().toLowerCase().trim().substring(0,1) == keyCodeMap[e.keyCode]) {
                             keyIndex.push($(this).parent().index());
                         }
                     }
@@ -746,7 +746,7 @@
                 count++;
                 $(document).data('keycount',count);
 
-                prevKey = $.trim($(':focus').text().toLowerCase()).substring(0,1);
+                prevKey = $(':focus').text().toLowerCase().trim().substring(0,1);
 
                 if (prevKey != keyCodeMap[e.keyCode]) {
                     count = 1;

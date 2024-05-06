@@ -73,7 +73,7 @@
       });
     });
     // --- Initialize first Dynatree -------------------------------------------
-    $('#' + MELIS.plugins.tabs.levelB.idLevelB + ' li > a').bind('click', function() {
+    $('#' + MELIS.plugins.tabs.levelB.idLevelB + ' li > a').on('click', function() {
       //console.log($(this).data('option'));
       $('#' + MELIS.plugins.tabs.levelA.idLevelA + ' li').attr('data-currentOption', $(this).data('option'))
     });

@@ -511,7 +511,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             if (!empty($actionButtons)) {
                 // $jsonColumns .= '{"data":"actions"}; commented, generates warning, https://datatables.net/tn/4
-                $jsonColumns .= '{"data":null}';
+                $jsonColumns .= '{"data": null}';
 
                 // Preparing the Table Action column Buttons
                 $actionColumn = '{
@@ -632,9 +632,9 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 $tableLangTrans = 'default';
             $language = 'melisDataTable.tableLanguage.'.$tableLangTrans;
 
-
             //remove special characters in function name
             $fnName = preg_replace('/\W/', '', $fnName);
+            
             // simulate javascript code function here
             $dtJScript = 'window.' . $fnName . ' = function() {
                 ' . $reInitTable . '

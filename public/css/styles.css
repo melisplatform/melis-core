@@ -148,6 +148,9 @@ ________________________________________________________________________________
 	color: #000000;
 	text-indent: 0;
 }
+.navbar.main.navbar-primary .nav > li a.close:before {
+	color: #555;
+}
 
 .navbar.main.navbar-primary .nav > li:hover > a.close {
 	display: block;
@@ -369,14 +372,14 @@ body {
 	margin-bottom: 40px;
 	-webkit-overflow-scrolling: touch;
 }
-.sidebar > .sidebarMenuWrapper ul ul li > a[data-toggle="collapse"]:after {
+.sidebar > .sidebarMenuWrapper ul ul li > a[data-bs-toggle="collapse"]:after {
 	top: 10px;
 }
 .sidebar
 	> .sidebarMenuWrapper
 	ul
 	li.active.hasSubmenu
-	> a.second-lvl[data-toggle="collapse"]:after {
+	> a.second-lvl[data-bs-toggle="collapse"]:after {
 	top: 16px;
 }
 .sidebar > .sidebarMenuWrapper > ul .secondlvl-container li a {
@@ -387,7 +390,7 @@ body {
 	> .sidebarMenuWrapper
 	> ul
 	li.active-menu.hasSubmenu
-	> a[data-toggle="collapse"] {
+	> a[data-bs-toggle="collapse"] {
 	background-color: #e61c23;
 }
 .sidebar.sidebar-inverse
@@ -395,7 +398,7 @@ body {
 	> ul
 	ul
 	li.active-menu.hasSubmenu
-	> a[data-toggle="collapse"] {
+	> a[data-bs-toggle="collapse"] {
 	background: #3a3a3a;
 }
 .sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu {
@@ -463,7 +466,7 @@ body {
 	> .sidebarMenuWrapper
 	ul
 	li.active-menu.hasSubmenu
-	> a[data-toggle="collapse"]:after {
+	> a[data-bs-toggle="collapse"]:after {
 	content: "\f16f";
 	top: 21px;
 }
@@ -472,7 +475,7 @@ body {
 	ul
 	li.active-menu
 	li.active-menu.hasSubmenu
-	> a[data-toggle="collapse"]:after {
+	> a[data-bs-toggle="collapse"]:after {
 	top: 16px;
 }
 
@@ -2529,7 +2532,7 @@ p.modal-text-info {
 	text-align: justify;
 	text-justify: inter-word;
 }
-
+div.dt-container div.dataTables_length select.new_filter,
 div.dataTables_wrapper div.dataTables_length select.new_filter {
 	width: 180px;
 	display: inline-block;
@@ -2748,6 +2751,7 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 	.navbar #melis-id-nav-bar-tabs > li:hover > a {
 		background: #fff;
 		color: #e61c23 !important;
+		text-decoration: none;
 	}
 
 	.navbar #melis-id-nav-bar-tabs > li:hover > a > i {
@@ -4978,7 +4982,7 @@ input#log_date_range {
 .daterangepicker .ranges li.active,
 .daterangepicker .ranges li:hover {
     background: #e61c23 !important;
-    border: 1px solid #e61c23;
+    border: 1px solid #e61c23 !important;
 	color: #fff;
 }
 /* end jQuery Migration */

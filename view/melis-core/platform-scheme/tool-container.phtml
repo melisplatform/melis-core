@@ -73,7 +73,12 @@ if($headerTitleLen > 13) {
                         <label for="" class="d-flex flex-row justify-content-between"><div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($tooltips[$element->getName()]); ?>"></i></label>
                         <div class="input-group colorpicker-component osta_color_code colorpicker-element">
                             <?= $this->formRow($element->setLabel("")); ?>
-                            <span class="input-group-addon"><i style="background-color: <?=  $element->getValue(); ?>;"></i></span>
+                            <!-- <span class="input-group-addon"> -->
+                            <span class="input-group-append">
+                                <span class="input-group-text colorpicker-input-addon">
+                                    <i style="background-color: <?=  $element->getValue(); ?>;"></i>
+                                </span>
+                            </span> 
                         </div>
                     </div>
                 </div>    
@@ -187,9 +192,11 @@ if($headerTitleLen > 13) {
                 </div>
             </form>
             <script>
-                $(".osta_color_code").colorpicker({format: 'hex', useAlpha: false});
-                $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
-                $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+                $(function() {
+                    $(".osta_color_code").colorpicker({format: 'hex', useAlpha: false});
+                    $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+                    $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+                });
             </script>
         </div>
         <?php

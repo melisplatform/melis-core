@@ -23,8 +23,7 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 	getUpdates: function() {
 		$.ajax({
 			type: "POST",
-			url:
-				"/melis/dashboard-plugin/MelisCoreDashboardBubbleUpdatesPlugin/getUpdates",
+			url: "/melis/dashboard-plugin/MelisCoreDashboardBubbleUpdatesPlugin/getUpdates"
 		}).done(function(response) {
 			// plugin front text
 			var text = translations.tr_meliscore_dashboard_bubble_plugins_update;
@@ -94,10 +93,9 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 	},
 };
 
-$(document).ready(function() {
+$(function() {
 	var $body = $("body");
 	var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
-
 	if (showBubblePlugins) {
 		MelisCoreDashboardBubbleUpdatesPlugin.init();
 	}

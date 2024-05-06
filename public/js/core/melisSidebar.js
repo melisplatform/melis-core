@@ -49,7 +49,7 @@
 			var a = $('#menu > div > div > ul > li.hasSubmenu.active > ul').not(this);
     
 			a
-			.removeClass('in').addClass('collapse').removeAttr('style')
+			.removeClass('in').addClass('collapse').prop('style', null)
 			.closest('.hasSubmenu.active').removeClass('active');
 		}
 	}); */

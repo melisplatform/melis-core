@@ -529,8 +529,8 @@ var melisDashBoardDragnDrop = {
                             $sCont.css("width", "100%");
                         }
                         else {
-                            $cFilters.removeAttr("style");
-                            $sCont.removeAttr("style");
+                            $cFilters.prop("style", null);
+                            $sCont.prop("style", null);
                         }
                     }
 
@@ -564,17 +564,17 @@ var melisDashBoardDragnDrop = {
                     $profileImg = $this.find(".column-comment-profile-img");
 
                     if ( gsWidth < 5 ) {
-                        $filter.removeAttr("width");
+                        $filter.prop("width", null);
                         $filter.attr("style", "width: 100%");
                         $filter.attr("style", "max-width: 100%");
 
-                        $select.removeAttr("width");
+                        $select.prop("width", null);
                         $select.attr("style", "width: 100%");
                         $select.attr("style", "max-width: 100%");
                     }
                     else {
-                        $filter.removeAttr("style");
-                        $select.removeAttr("style");
+                        $filter.prop("style", null);
+                        $select.prop("style", null);
                     }
 
                     if ( gsWidth <= 3 ) {

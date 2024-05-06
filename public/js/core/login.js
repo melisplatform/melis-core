@@ -1,7 +1,7 @@
 $(function() {
 	
 	// LOGIN 
-    $('form#idformmeliscorelogin').submit(function(event) {
+    $('form#idformmeliscorelogin').on("submit", function(event) {
         var datastring = $("form#idformmeliscorelogin").serialize();
         $(this).find("input").attr("disabled", "disabled");
         $.ajax({
@@ -41,7 +41,7 @@ $(function() {
                         let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_message + '</p>';
                         message = firstSentence + secondSentence + thirdSentence;
                         melisHelper.melisKoNotification(icon, message, []);
-                        $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
+                        $("form#idformmeliscorelogin").find("input").prop("disabled", false);
                     } else if (data.accountLockType == 'timer') {
                         let days = data.accountLockDurationInDays;
                         let hours = data.accountLockDurationInHours;
@@ -73,13 +73,13 @@ $(function() {
                         let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_for_duration_message + durationString + '</p>';
                         message = firstSentence + secondSentence + thirdSentence;
                         melisHelper.melisKoNotification(icon, message, []);
-                        $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
+                        $("form#idformmeliscorelogin").find("input").prop("disabled", false);
                     }
                 }
-                $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");    
+                $("form#idformmeliscorelogin").find("input").prop("disabled", false);
             }
         }).fail(function() {
-            $("form#idformmeliscorelogin").find("input").removeAttr("disabled", "disabled");
+            $("form#idformmeliscorelogin").find("input").prop("disabled", false);
             
             alert( translations.tr_meliscore_error_message );
         });

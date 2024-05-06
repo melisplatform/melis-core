@@ -13,7 +13,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                     <div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
                         <div class="widget-head">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#" class="glyphicons pencil" data-toggle="tab" aria-expanded="true"><i></i> <?=$this->translate('tr_melis_core_gdpr_autodelete_label_modal_tab_heading')?></a></li>
+                                <li class="active"><a href="#" class="glyphicons pencil" data-bs-toggle="tab" aria-expanded="true"><i></i> <?=$this->translate('tr_melis_core_gdpr_autodelete_label_modal_tab_heading')?></a></li>
                             </ul>
                         </div>
                         <div class="widget-body innerAll inner-2x">
@@ -23,7 +23,7 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                                     <p class="text-info">0 1 * * * wget <?= $this->scheme ?>://<?= $this->host ?>/melis/gdprautodelete</p>
                                     <p><?= $this->translate('tr_melis_core_gdpr_autodelete_label_modal_tab_text2')?></p>
                                     <div class="footer-modal d-flex flex-row justify-content-between">
-                                        <button data-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
+                                        <button data-bs-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
                                     </div>
                                 </div>
                             </div>

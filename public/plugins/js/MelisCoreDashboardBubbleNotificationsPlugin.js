@@ -81,10 +81,10 @@ var MelisCoreDashboardBubbleNotificationsPlugin = {
     }
 };
 
-$(document).ready(function() {
+$(function() {
     var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
 
-    if (showBubblePlugins) {
-        MelisCoreDashboardBubbleNotificationsPlugin.init();
-    }
+        if (showBubblePlugins) {
+            MelisCoreDashboardBubbleNotificationsPlugin.init();
+        }
 });

@@ -173,7 +173,7 @@ return array(
 
                     // Data Tables
                     //'/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables.min.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables-2.0.4.min.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables-2.0.6.min.css',
 
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
@@ -184,19 +184,19 @@ return array(
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/b4-glyphicons/css/bootstrap-glyphicons.css',
                     '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
                     '/MelisCore/assets/components/library/animate/animate.min.css',
                     '/MelisCore/assets/components/modules/admin/tables/responsive/assets/lib/css/footable.core.min.css',
 
                     // datetimepicker
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/css/bootstrap-datetimepicker.min.css',
-
+                    //daterangepicker
                     '/MelisCore/assets/components/plugins/daterangepicker/css/daterangepicker.css',
 
                     // admin
                     '/MelisCore/assets/css/admin/module.admin.page.form_elements.min.css',
                     '/MelisCore/assets/css/admin/module.admin.page.tables_responsive.min.css',
-
 
                     // Melis Admin
                     '/MelisCore/assets/css/admin/module.admin.page.core.min.css',
@@ -204,7 +204,7 @@ return array(
                     // Bootstrap Dialog
                     '/MelisCore/css/bootstrap-dialog.min.css',
 
-                    // Plugins Move css group
+                    // Plugins Move css group, select2 and bootstrap-colorpicker
                     '/MelisCore/css/plugin.group.css',
 
                     //Bootstrap tags
@@ -605,6 +605,8 @@ return array(
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
+                    '/MelisCore/assets/components/library/icons/glyphicons/b4-glyphicons/css/bootstrap-glyphicons.css',
+
                     '/MelisCore/assets/components/library/icons/pictoicons/css/picto.css',
                     '/MelisCore/assets/components/library/animate/animate.min.css',
 

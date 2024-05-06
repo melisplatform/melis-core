@@ -161,7 +161,7 @@ $(function() {
             }
         });
         
-        $("body").on(
+        $body.on(
             "click",
             "#id_meliscore_tool_other_config input[type=checkbox]",
             function() {
@@ -172,7 +172,7 @@ $(function() {
             }
         );
 
-        $("body").on("click", "#saveOtherConfig", function(){
+        $body.on("click", "#saveOtherConfig", function(){
             // merge data from all forms
             let mergedData = $('#id_meliscore_tool_other_config form').map(function() {
                 return $(this).serializeArray();
@@ -180,7 +180,7 @@ $(function() {
 
             var btn = $(this);
 
-            $("body").find('#id_meliscore_tool_other_config form .make-switch div').each(function () {
+            $body.find('#id_meliscore_tool_other_config form .make-switch div').each(function () {
                 var $this       = $(this),
                     field       = $this.find('input').attr('name'),
                     status      = $this.hasClass('switch-on'),
@@ -193,7 +193,7 @@ $(function() {
 
             var form = $('form#password-validity-form');
 
-            form.unbind("submit");
+            form.off("submit");
     
             form.on("submit", function(e) {
                 e.preventDefault();
@@ -232,23 +232,20 @@ $(function() {
                 });
             });
     
-            form.submit();
+            form.trigger("submit");
         });
 
-        function setModuleSwitchState(state)
-        {
+        function setModuleSwitchState(state) {
             $('div[data-module-name]').bootstrapSwitch('setState', state);
         }
 
-        function getModuleState(moduleName)
-        {
+        function getModuleState(moduleName) {
             var value = $('div[data-module-name="'+moduleName+'"]').bootstrapSwitch('isActive');
 
             return value;
         }
 
-        function switchButtonWithoutEvent(moduleName, status)
-        {
+        function switchButtonWithoutEvent(moduleName, status) {
             $('div[data-module-name="'+moduleName+'"]').find("div.switch-animate").removeClass("switch-on switch-off").addClass("switch-"+status);
         }
 });

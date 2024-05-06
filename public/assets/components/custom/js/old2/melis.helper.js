@@ -243,7 +243,7 @@ var MelisHelper = (function (window) {
             //MelisHelper.log(items);
         },
         initOptions: function () {
-            $("#" + MELIS.plugins.tabs.levelB.idLevelB + " li").bind("click", function () {
+            $("#" + MELIS.plugins.tabs.levelB.idLevelB + " li").on("click", function () {
                 var entry = $(this).attr('data-option');
                 MELIS.active_option = entry;
                 $('#' + MELIS.plugins.tabs.levelA.idLevelA + " li#" + MelisHelper.getIdLevelACurrent()).attr('data-option', entry);

@@ -23,11 +23,11 @@ var melisCore = (function(window){
         $tabConInner    = $("#melis-navtabs-container-inner"),
         $tabArrowTop    = $("#tab-arrow-top"),
         $pluginBtn      = $("#melisDashBoardPluginBtn"),
-        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
+        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box");
         // fixes conlict between jquery ui and bootstrap same function name .tooltip()
-        jqeBsTooltip    = $.fn.tooltip.noConflict();
+        //jqeBsTooltip    = $.fn.tooltip.noConflict();
 
-    $.fn.tlp = jqeBsTooltip;
+        //$.fn.tlp = jqeBsTooltip;
 
     // MAIN FUNCTIONS =================================================================================================================
 
@@ -567,9 +567,9 @@ var melisCore = (function(window){
             }
 
             // scroll top every time we click a tab to RESET the scrollbars and return page actions to original position
-            $("#"+ activeTabId + " .page-head-container").removeAttr("style");
+            $("#"+ activeTabId + " .page-head-container").prop("style", null);
             $("#"+ activeTabId + " .page-head-container > .innerAll").removeClass('sticky-pageactions');
-            $("#"+ activeTabId + " .page-head-container > .innerAll").removeAttr("style");
+            $("#"+ activeTabId + " .page-head-container > .innerAll").prop("style", null);
             $('html, body').animate({scrollTop:0},0);
 
             // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
@@ -685,7 +685,7 @@ var melisCore = (function(window){
 
     // focus the tag box when we click
     $body.on("click", ".multi-value-input", function(){
-        $(this).find(".tag-creator input").focus();
+        $(this).find(".tag-creator input").trigger("focus");
     });
 
     // remove a specific tag
@@ -741,7 +741,7 @@ var melisCore = (function(window){
     // add a specific tag. triggered by a comma (,)
     $body.on("keyup", ".multi-value-input .tag-creator input", function(event){
         if(event.keyCode == 188) {
-            $(this).val('').focus();
+            $(this).val('').trigger("focus");
             commaHandler = false;
         }
     });
@@ -820,7 +820,7 @@ var melisCore = (function(window){
 
     // toggle plugin menu in mobile
     $body.on("click", "#plugin-menu", function(){
-        $("#id_meliscore_leftmenu").removeAttr('style');
+        $("#id_meliscore_leftmenu").prop('style', null);
         $("#id_meliscore_footer").addClass('slide-left');
 
         $("#newplugin-cont").toggleClass("show-menu");
@@ -1203,7 +1203,7 @@ var melisCore = (function(window){
                 $body.removeClass("sidebar-mini");
 
                 // reset layout and remove styles
-                $("#content, #id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
+                $("#content, #id_meliscore_leftmenu, #id_meliscore_footer").prop("style", null);
 
                 // check tabExpander();
                 if ( typeof tabExpander !== 'undefined' ) {

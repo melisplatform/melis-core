@@ -47,7 +47,7 @@ if ($isParentTool && !empty($this->tools)):
     <li class="melis-opentools" data-tool-icon="<?= $tabIcon ?>" data-tool-name="<?= $tabName ?>" data-tool-id="<?= $targetId ?>" data-tool-meliskey="<?= $targetMelisKey ?>">
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
-            <a data-target="#<?= $id ?>_tools">
+            <a data-bs-target="#<?= $id ?>_tools">
                 <div class="melis-svg-icon float-left  melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $name ?>" data-dash-id="id_<?php echo $melisKey ?>_dashboard">
                     <?= $sections[$melisKey] ?>
                 </div>
@@ -57,7 +57,7 @@ if ($isParentTool && !empty($this->tools)):
         <?php
         else:
             ?>
-            <a data-target="#<?= $id; ?>_tools">
+            <a data-bs-target="#<?= $id; ?>_tools">
                 <i class="<?= $parentIcon ?>"></i>
                 <span><?= $name; ?></span>
             </a>
@@ -69,7 +69,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
     <li id="<?= $id; ?>" class="hasSubmenu <?= empty($this->tools) ? 'd-none' : null ?>" data-melisKey='<?= $melisKey; ?>'>
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
-            <a data-target="#<?= $id ?>_tools" data-toggle="collapse" class="collapsed">
+            <a data-bs-target="#<?= $id ?>_tools" data-bs-toggle="collapse" class="collapsed">
                 <div class="melis-svg-icon float-left  melis-dashboard-plugins-menu" data-dash-icon="fa-tachometer" data-dash-name="<?php echo $name ?>" data-dash-id="id_<?php echo $melisKey ?>_dashboard">
                     <?= $sections[$melisKey] ?>
                 </div>
@@ -79,7 +79,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
         <?php
         else:
             ?>
-            <a data-target="#<?= $id; ?>_tools" data-toggle="collapse" class="collapsed">
+            <a data-bs-target="#<?= $id; ?>_tools" data-bs-toggle="collapse" class="collapsed">
                 <i class="<?= $parentIcon ?>"></i>
                 <span><?= $name; ?></span>
             </a>
@@ -99,7 +99,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                         ?>
                         <li class="hasSubmenu" data-meliskey="">
                             <?php if(count($sectionTool['toolsection_children']) > 1) : ?>
-                                <a data-target="#sub-load-<?= $keySection; ?>" data-toggle="collapse" class="collapsed">
+                                <a data-bs-target="#sub-load-<?= $keySection; ?>" data-bs-toggle="collapse" class="collapsed">
                                     <i class="fa <?= $sectionIcon; ?>"></i>
                                     <span><?= $sectionTool['toolsection_name']; ?></span>
                                 </a>
@@ -127,7 +127,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                                             ?>
                                             <?php if (isset($tool['toolsection_has_nav_child']) && (bool) $tool['toolsection_has_nav_child'] === true): ?>
                                             <li class="hasSubmenu" data-meliskey="">
-                                                <a data-target="#sub-load-<?= $keyTool; ?>" data-toggle="collapse" class="collapsed">
+                                                <a data-bs-target="#sub-load-<?= $keyTool; ?>" data-bs-toggle="collapse" class="collapsed">
                                                     <i class="fa <?= $toolIcon; ?>"></i>
                                                     <span><?= $data_tool_name ?></span>
                                                 </a>
@@ -175,7 +175,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                             ?>
                             <li class="melis-opentools" data-tool-icon="<?= $sectionIcon ?>" data-tool-name="<?= $sectionTool['toolsection_name'] ?>"
                                 data-tool-id="<?= $sectionTool['toolsection_id'] ?>" data-tool-meliskey="<?= $sectionTool['toolsection_meliskey'] ?>">
-                                <a data-target="#">
+                                <a data-bs-target="#">
                                     <i class="fa <?= $sectionIcon; ?>"></i>
                                     <span><?= $sectionTool['toolsection_name']; ?></span>
                                 </a>

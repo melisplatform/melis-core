@@ -258,7 +258,6 @@ window.initRetrieveUser = function(data, tblSettings) {
 };
 
 var toolUserManagement = {
-
     table: function () {
         return "#tableToolUserManagement";
     },
@@ -451,7 +450,7 @@ var toolUserManagement = {
             melisCoreTool.pending("#btnEdit");
             melisCoreTool.processing();
 
-            // $btnUserEdit.removeAttr("data-toggle");
+            // $btnUserEdit.prop("data-toggle", null);
 
             $.ajax({
                 type: 'POST',

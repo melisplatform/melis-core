@@ -154,7 +154,8 @@ var melisCoreTool = (function (window) {
 
     function isTableEmpty(table) {
         var matches = null,
-            findNum = $("div[class='dataTables_info'][id='" + table + "_info']").html(),
+            //findNum = $("div[class='dataTables_info'][id='" + table + "_info']").html(),
+            findNum = $("[id='" + table + "_info']").html(),
             isEmpty = true;
             
             matches = findNum.match(/\d+/g);
@@ -228,7 +229,6 @@ var melisCoreTool = (function (window) {
     function done(targetButton) {
         // hide the overlay and enable the button
         $("body div.melis-modal-overlay").remove();
-        //$(targetButton).removeAttr('disabled');
         $(targetButton).prop('disabled', false);
     }
 
@@ -292,7 +292,7 @@ var melisCoreTool = (function (window) {
     }
 
     function removeOverflowHidden() {
-        $body.removeAttr("style");
+        $body.prop("style", null);
     }
 
     /**

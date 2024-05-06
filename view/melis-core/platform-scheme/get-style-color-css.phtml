@@ -6,6 +6,22 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.table-primary thead th {
+    background-color: <?= $primaryColor; ?> !important;
+}
+.daterangepicker .ranges li.active,
+.daterangepicker .ranges li:hover {
+    background: <?= $primaryColor; ?> !important;
+    border: 1px solid <?= $primaryColor; ?> !important;
+}
+.drp-buttons .cancelBtn {
+    color: <?= $primaryColor; ?> !important;
+	border-color: <?= $primaryColor; ?> !important;
+}
+.drp-buttons .cancelBtn:hover {
+    background: <?= $primaryColor; ?> !important;
+    border-color: <?= $primaryColor; ?> !important;
+}
 .grid-stack .grid-stack-placeholder>.placeholder-content,
 .client-contact-address .default-card>.card-header,
 .client-contact-address .panel-default>.panel-heading {
@@ -242,7 +258,7 @@ body .navbar.main.navbar-primary {
     background: <?= $primaryColor; ?>;
 }
 
-.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-toggle="collapse"] {
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-bs-toggle="collapse"] {
     background-color: <?= $primaryColor; ?>;
 }
 

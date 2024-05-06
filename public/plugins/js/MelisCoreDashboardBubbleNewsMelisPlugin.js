@@ -114,7 +114,7 @@ var MelisCoreDashboardBubbleNewsMelisPlugin = {
 $(function() {
     var $body = $('body');
     var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
-
+    
     if (showBubblePlugins) {
         MelisCoreDashboardBubbleNewsMelisPlugin.init();
     }

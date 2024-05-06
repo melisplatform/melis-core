@@ -1,14 +1,14 @@
 <div class="product-text-tab-container">
 	<ul class="nav-tabs product-text-tab">
 		<li class="active">
-			<a class="clearfix" data-toggle="tab" href="#<?php echo $this->codename ?>_general_properties" aria-expanded="true">
+			<a class="clearfix" data-bs-toggle="tab" href="#<?php echo $this->codename ?>_general_properties" aria-expanded="true">
 				<span><?php echo $this->translate('tr_meliscore_tool_emails_mngt_general_properties')?></span>
 			</a>
 		</li>
 		<?php 
 		    for ($i = 0; $i<count($this->coreLangDatas); $i++){
     		    echo '<li class="">
-            			<a class="clearfix" data-toggle="tab" href="#'.$this->codename.'_'.$this->coreLangDatas[$i]['lang_locale'].'" aria-expanded="false">
+            			<a class="clearfix" data-bs-toggle="tab" href="#'.$this->codename.'_'.$this->coreLangDatas[$i]['lang_locale'].'" aria-expanded="false">
             				<span>'.$this->coreLangDatas[$i]['lang_name'].'</span>
             			</a>
             		</li>';

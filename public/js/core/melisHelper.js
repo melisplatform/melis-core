@@ -556,11 +556,11 @@ var melisHelper = (function() {
 				melisKey +
 				"'>";
 			li +=
-				"<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" +
+				"<a data-bs-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" +
 				zoneId +
 				"' data-id='" +
 				zoneId +
-				"' title='" +
+				"' data-bs-title='" +
 				title.replace(/'/g, "&apos;") +
 				"'>";
 			li +=
@@ -610,7 +610,7 @@ var melisHelper = (function() {
 
 					/* if(navTabsGroup == "design_module") {
                                 var liTest = "<li>";
-                                liTest += "<a data-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
+                                liTest += "<a data-bs-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
                                 liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
                                 liTest += 'Design '+ title + "</span></a>";
                                 liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
@@ -639,7 +639,7 @@ var melisHelper = (function() {
 				$body.removeClass("sidebar-mini");
 				// hide sidebar footer when opening tab
 				$("#id_meliscore_footer").addClass("slide-left");
-				$("#id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
+				$("#id_meliscore_leftmenu, #id_meliscore_footer").prop("style", null);
 
 				// slide up the dropdown menu
 				$("#melis-id-nav-bar-tabs").slideUp(300);
@@ -1192,7 +1192,7 @@ var melisHelper = (function() {
 					.siblings(".filter-bar")
 					.find('.search input[type="search"]');
 				// unbind
-				searchField.unbind();
+				searchField.off();
 				// for better logic trigger search when there are 2 or more characters
 				searchField.typeWatch({
 					captureLength: 2,

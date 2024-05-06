@@ -18,7 +18,7 @@ $(function() {
             });
         }
         $body.on("click", "#savePlatformScheme", function() {
-            $("form#melis_core_platform_scheme_images").submit();
+            $("form#melis_core_platform_scheme_images").trigger("submit");
         });
 
         $body.on("click", "#resetPlatformScheme", function() {

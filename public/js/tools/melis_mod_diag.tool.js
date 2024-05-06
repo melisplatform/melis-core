@@ -80,7 +80,7 @@
 			$(btn).addClass("btn-info");
 
 			setTimeout(function() {
-				$(".btn-run-module-test").removeAttr("disabled");
+				$(".btn-run-module-test").prop("disabled", false);
 			}, 1000);
 			
 		}
