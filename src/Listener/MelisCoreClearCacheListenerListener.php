@@ -73,7 +73,7 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
                     $userSession = $melisCoreAuth->getStorage()->read();
                     if(!empty($userSession->usr_id)){//we delete only cache by this user
                         $coreCacheService = $sm->get('MelisCoreCacheSystemService');
-                        $coreCacheService->deleteCacheByPrefix('meliscore_dashboard_plugins_'.$userSession->usr_id, PluginViewController::cacheConfig);
+                        $coreCacheService->deleteCacheByPrefix('*meliscore_dashboard_plugins_'.$userSession->usr_id, PluginViewController::cacheConfig);
                     }
                 }
             },

@@ -348,11 +348,21 @@ class PluginViewController extends MelisAbstractActionController
                          */
                         if (!empty($userId)) {
                             $cacheActivated = true;
+                            $cacheKey = $itemConfig['cache']['name'];
+
+                            //so we can differentiate the dashboards, if its null means we are in core(default one)
+                            $dashboardId  = $this->getRequest()->getQuery('dashboardId') ?? null;
+                            if($cacheKey == 'meliscore_dashboard_plugins'){//for dashboard only
+                                if(!empty($dashboardId)) {
+                                    $dashboardId = explode('_', $dashboardId);
+                                    $cacheKey = $dashboardId[1].'_'.$cacheKey;
+                                }
+                            }
                             /**
                              * Construct cache key and concatinate
                              * additional parameters on it
                              */
-                            $cacheKey = $itemConfig['cache']['name'];
+                            $cacheName = $cacheKey;
                             $paramToAdd = $itemConfig['cache']['add'];
                             if (!empty($paramToAdd)) {
                                 foreach ($paramToAdd as $key => $val) {
@@ -373,7 +383,8 @@ class PluginViewController extends MelisAbstractActionController
                                  */
                                 $newView = new ViewModel();
                                 $newView->setVariables([
-                                    'cache' => $results
+                                    'cache' => $results,
+                                    'cacheName' => $cacheName.'_cache'
                                 ]);
                                 $newView->setTemplate('layout/cache');
                                 return $newView;

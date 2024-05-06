@@ -821,6 +821,13 @@ var melisHelper = (function() {
 						callback();
 					}
 				}
+
+                //this will reload all cached dashboard plugins only in cache mode
+				if ($("#" + zoneId).length > 0) {
+					$.each($("#" + zoneId + " .grid-stack-item"), function () {
+						$(this).find(".dashboard-plugin-refresh").trigger("click");
+					});
+				}
 			}, 300);
 		})
 		.fail(function(xhr, textStatus, errorThrown) {
