@@ -4877,7 +4877,7 @@ input#log_date_range {
  * https://mantis2.uat.melistechnology.fr/view.php?id=6287
  * Add specific selector class or id for exclusivity
  */
-.melis-modal-cont .modal-content h3 a .glyphicons.lock i::before {
+.melis-modal-cont .modal-content h3 a.glyphicons.lock i::before {
     font: 64px/1em 'Glyphicons Regular';
 	color: #e61c23;
 }
