@@ -837,6 +837,10 @@ var melisHelper = (function() {
                             if(bubble == true){
                                 $("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").removeClass("hidden");
                                 $("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css('visibility', 'visible');
+
+                                MelisCoreDashboardBubbleNewsMelisPlugin.getNews();
+                                MelisCoreDashboardBubbleNotificationsPlugin.getNotifications();
+                                MelisCoreDashboardBubbleUpdatesPlugin.getUpdates();
 							}else{
                                 $("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").addClass("hidden");
                                 $("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css('visibility', 'hidden');
