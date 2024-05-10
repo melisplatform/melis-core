@@ -252,7 +252,7 @@ var melisHelper = (function() {
 				var attribTooltip = "";
 				if (typeof $(this).data("tooltip") != "undefined") {
 					attribTooltip =
-						'<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' +
+						'<i class="fa fa-info-circle fa-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-original-title="' +
 						$(this).data("tooltip") +
 						'"></i>';
 				}
@@ -546,7 +546,7 @@ var melisHelper = (function() {
 
 		if (alreadyOpen.length < 1) {
 			var li =
-				"<li data-tool-name='" +
+				"<li class='nav-item' data-tool-name='" +
 				title +
 				"' data-tool-icon='" +
 				icon +
@@ -554,13 +554,13 @@ var melisHelper = (function() {
 				zoneId +
 				"' data-tool-meliskey='" +
 				melisKey +
-				"'>";
+				"' role='presentation'>";
 			li +=
-				"<a data-bs-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#" +
+				"<a data-bs-toggle='tab' class='nav-link dropdown-toggle menu-icon tab-element' data-bs-target='#"+zoneId+"' href='#" +
 				zoneId +
 				"' data-id='" +
 				zoneId +
-				"' data-bs-title='" +
+				"' title='" +
 				title.replace(/'/g, "&apos;") +
 				"'>";
 			li +=
@@ -609,17 +609,17 @@ var melisHelper = (function() {
 					$("body #melis-id-nav-bar-tabs").append(li);
 
 					/* if(navTabsGroup == "design_module") {
-                                var liTest = "<li>";
-                                liTest += "<a data-bs-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
-                                liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
-                                liTest += 'Design '+ title + "</span></a>";
-                                liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
-                                liTest += "</li>";
-                                $("body #melis-id-nav-bar-tabs").append(liTest);
-                            } else {
-                                // append the <li> to the menu
-                                $("body #melis-id-nav-bar-tabs").append(li);
-                            }*/
+						var liTest = "<li>";
+						liTest += "<a data-bs-toggle='tab' class='dropdown-toggle menu-icon tab-element' href='#"+ zoneId + "' data-id='design_module'>";
+						liTest += "<i class='fa  fa-paint-brush fa-2x'></i><span class='navtab-pagename'>";
+						liTest += 'Design '+ title + "</span></a>";
+						liTest += "<a class='close close-tab' data-id='" + zoneId + "'>"+ translations.tr_meliscore_notification_modal_Close +"</a>";
+						liTest += "</li>";
+						$("body #melis-id-nav-bar-tabs").append(liTest);
+					} else {
+						// append the <li> to the menu
+						$("body #melis-id-nav-bar-tabs").append(li);
+					}*/
 				}
 			} else {
 				// append the <li> to the menu melis-tabnext

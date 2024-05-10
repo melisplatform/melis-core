@@ -46,7 +46,7 @@ class MelisFieldRow extends FormRow
             
             $element->setLabelOptions(['disable_html_escape' => true]);
         
-            $openTool = '<i class="fa fa-wrench fa-lg melis-opentools m-dnd-tool-open" data-toggle="tooltip" data-placement="left" title="" data-original-title="'.$toolConfig['tooltip'].'"
+            $openTool = '<i class="fa fa-wrench fa-lg melis-opentools m-dnd-tool-open" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="'.$toolConfig['tooltip'].'"
                 data-tool-icon="'.$toolConfig['tool_icon'].'"
                 data-tool-name="'.$toolConfig['tool_name'].'"
                 data-tool-id="'.$toolConfig['tool_id'].'"
@@ -72,7 +72,7 @@ class MelisFieldRow extends FormRow
                 if (!is_null($openTool)) {
                     $label = '<div class="label-text">' . $firstLabel . '</div>';
                 }
-                $label = $label . "<div class='slider-open-tooltip'>". $openTool .'<i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i></div>';
+                $label = $label . "<div class='slider-open-tooltip'>". $openTool .'<i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="' . $element->getOption('tooltip') . '"></i></div>';
                 
                 $element->setLabel($label);
             }
@@ -226,7 +226,7 @@ class MelisFieldRow extends FormRow
             // text for no available tags
             $textNoTags = $element->getOption('no_tags_text');
 
-            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" data-placement="left" title="" data-original-title="' . $element->getOption('tooltip') . '"></i>';
+            $multiValTooltip = empty($element->getOption('tooltip')) ? '' : '<i class="fa fa-info-circle fa-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="' . $element->getOption('tooltip') . '"></i>';
 
             $label = $element->getLabel();
             if (!empty($element->getOption('label'))) {

@@ -144,9 +144,6 @@
 	padding-left: 0;
 	padding-right: 0;
 }
-/* #main #content {
-  width: 100%;
-} */
 /* #melis-navtabs / contents */
 .dataTables_wrapper .bottom {
 	display: block;
@@ -759,11 +756,6 @@ fieldset[disabled] .btn {
 	font-size: 0;
 	text-indent: -99999px;
 }
-/* #content */
-/* #content {
-  margin-left: 274px;
-  overflow-x: hidden;
-} */
 a:focus,
 a:hover {
 	text-decoration: underline;
@@ -814,9 +806,9 @@ td.dataTables_empty {
 	display: none;
 }
 /* dashboard plugins btn-default active bg */
-.btn-group label.btn.btn-default.btn-sm.active {
+/* .btn-group label.btn.btn-default.btn-sm.active {
 	background-color: #e7e7e7;
-}
+} */
 .body-overflow-hidden {
 	overflow: hidden;
 }
@@ -1731,9 +1723,125 @@ transition: all 0.4s ease-in-out;
     background: none;
     color: #466baf;
 }
+/* table.table.dataTable>:not(caption)>*>*, */
 .table-primary thead th {
 	background-color: #e61c23;
 }
 .switch-all-noti .icon-cont .fa-info-circle {
 	margin-right: -1rem;
+}
+/*
+ * buttons no text underline
+ */
+.btn-danger:hover,
+.btn-success:hover {
+	text-decoration: none;
+}
+/*
+ * tooltip
+ */
+.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: #ad6565;
+}
+.tooltip {
+	--bs-tooltip-font-size: 0.765625rem;
+}
+.tooltip.show {
+	z-index: 99999;
+}
+/*
+ * dataTable
+ */
+.table-primary {
+	--bs-table-bg: #fafafa;
+	--bs-table-striped-bg: #fff;
+}
+.table-primary tbody tr:nth-child(odd) td,
+.table-primary tbody tr:nth-child(odd) th {
+	background: #fff;
+}
+.table-primary tbody tr:nth-child(even) td,
+.table-primary tbody tr:nth-child(even) th {
+	background: #fafafa;
+}
+.dt-container .dt-processing {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 200px;
+	margin-left: -100px;
+	margin-top: -26px;
+	text-align: center;
+	padding: 1em 0;
+
+	background: #fff;
+    border: 1px solid rgba(0, 0, 0, .125);
+    color: #686868;
+}
+.dt-processing > div {
+    display: none;
+}
+.dt-paging-button.page-item.active .page-link:hover,
+.dt-paging-button.page-item .page-link:hover {
+	color: #fff;
+	text-decoration: none;
+}
+/* 
+ * modal ko and multi ko notification 
+ */
+.modal {
+	z-index: 10001 !important;
+}
+.modal-content {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .3rem;
+    outline: 0;
+}
+.modal .modal-content,
+.tooltabmodal .modal-content {
+	border-width: 0;
+}
+.bootstrap-dialog-header {
+	justify-content: space-between;
+    display: flex;
+    width: 100%;
+}
+.bootstrap-dialog-close-button .btn-close {
+	--bs-btn-close-color: #fff;
+}
+/* inside body .nav-tabs */
+.product-text-tab li {
+	width: 100%;
+}
+body {
+	--bs-body-font-size: 0.875rem;
+}
+a[data-bs-toggle="tab"] {
+	text-decoration: none;
+}
+.btn {
+	--bs-btn-font-size: .875rem;
+}
+.custom-accordion-heading a {
+	text-decoration: none;
+}
+.add-edit-config-filters .form-row {
+	padding-left: 0;
+	padding-right: 0;
+}
+.gdpr-auto-delete-multi-tabs .nav-pills .nav-link {
+	text-decoration: none;
 }

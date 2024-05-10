@@ -63,18 +63,22 @@ if (window.location != window.parent.location)
         
         // $('#content .modal').appendTo('body');
         
-        // tooltips
-        $('body').tooltip({ 
-            selector: '.fa-info-circle[data-toggle="tooltip"]',
-            delay: 0
-        });
+        // tooltips, [data-bs-toggle="tooltip"]
+        /* $(`[data-bs-toggle="tooltip"]`).tooltip({ 
+            selector: '.fa-info-circle',
+            delay: {
+                show: 500,
+                hide: 0
+            }
+        }); */
         /* delay: {
             show: 500,
             hide: 0
         } */
+
         // popovers, data-toggle="popover"
-        if ( $('[data-toggle="popover"]').length )
-            $('[data-toggle="popover"]').popover();
+        /* if ( $('[data-toggle="popover"]').length )
+            $('[data-toggle="popover"]').popover(); */
         
         // print
         $('[data-toggle="print"]').on("click", function(e) {
@@ -299,3 +303,18 @@ if (window.location != window.parent.location)
         }
         enableSidebarScroll(); */
 })(jQuery, window);
+
+document.addEventListener("DOMContentLoaded", function (event) {
+    (function() {
+        var $body = $("body");
+
+            $body.tooltip({ selector: '[data-bs-toggle=tooltip]' });
+
+            //$('[data-bs-toggle="tooltip"]').tooltip();
+
+            /* var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            }); */
+    })();
+});

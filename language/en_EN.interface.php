@@ -79,7 +79,7 @@ return [
     'tr_meliscore_tool_user_col_id' => 'ID',
     'tr_meliscore_tool_user_col_id tooltip' => 'Identifier of the user',
     'tr_meliscore_tool_user_col_status' => 'Status',
-    'tr_meliscore_tool_user_col_power tooltip' => '<i class="fa fa-power-off" data-toggle="tooltip" data-placement="left" title="" data-original-title="Green for online, red for offline"></i>',
+    'tr_meliscore_tool_user_col_power tooltip' => '<i class="fa fa-power-off" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Green for online, red for offline"></i>',
     'tr_meliscore_tool_user_col_status tooltip' => 'Choice of the status of the user account',
     'tr_meliscore_back_to_login_page' => 'Go back to login page',
     'tr_meliscore_tool_user_col_username' => 'Login',

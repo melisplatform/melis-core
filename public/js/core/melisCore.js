@@ -870,9 +870,14 @@ var melisCore = (function(window){
     });
 
     // .hover, change to .on("mouseenter")
-    $(".melis-core-dashboard-plugin-snippets").on("mouseenter", function() {
+    $(".melis-core-dashboard-plugin-snippets")
+    .on("mouseenter", function() {
         var $this = $(this);
             $this.children(".melis-dashboard-plugin-tooltip").fadeIn();
+    })
+    .on("mouseleave", function() {
+        var $this = $(this);
+            $this.children(".melis-dashboard-plugin-tooltip").fadeOut();
     });
 
     $body.on("click", ".melis-dashboard-plugins-menu", function() {

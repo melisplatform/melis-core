@@ -65,7 +65,7 @@ $headerExclusions = array(
                         <i class="fa fa-angle-down"></i>
                     </span>
                 </div>
-                <ul class="nav nav-tabs navbar-nav tabsbar" id="melis-id-nav-bar-tabs">
+                <ul class="nav nav-tabs navbar-nav tabsbar" id="melis-id-nav-bar-tabs" role=tablist>
                     <?php 
                         if (!empty($this->appsConfigCenter['interface']))
                         {
@@ -84,7 +84,7 @@ $headerExclusions = array(
                                     $zoneId = $menuConfig['conf']['id'];
                                 if (!empty($menuConfig['conf']) && !empty($menuConfig['conf']['melisKey']))
                                     $melisKey = $menuConfig['conf']['melisKey'];
-                                echo '<li class="" data-tool-name="'.$tabname.'" data-tool-icon="'.$icon.'" data-tool-id="'.$zoneId.'" data-tool-meliskey="'.$melisKey.'"><a data-bs-toggle="tab" class="dropdown-toggle menu-icon tab-element" href="#'. $menuConfig['conf']['id'] .'" data-id="'. $menuConfig['conf']['id'] .'"><i class="fa ' . $icon . ' fa-2x"></i><span class="navtab-pagename">' . $tabname . '</span></a><a class="close close-tab"  data-id="'. $menuConfig['conf']['id'] .'">Close</a></li>';
+                                echo '<li class="nav-item" data-tool-name="'.$tabname.'" data-tool-icon="'.$icon.'" data-tool-id="'.$zoneId.'" data-tool-meliskey="'.$melisKey.'" role="presentation"><a data-bs-toggle="tab" class="nav-link dropdown-toggle menu-icon tab-element" data-bs-target="#'. $menuConfig['conf']['id'] .'" href="#'. $menuConfig['conf']['id'] .'" data-id="'. $menuConfig['conf']['id'] .'" role="tab"><i class="fa ' . $icon . ' fa-2x"></i><span class="navtab-pagename">' . $tabname . '</span></a><a class="close close-tab"  data-id="'. $menuConfig['conf']['id'] .'">Close</a></li>';
                             }
                         } 
                     ?>

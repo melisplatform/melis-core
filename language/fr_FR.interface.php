@@ -82,7 +82,7 @@ return [
     'tr_meliscore_tool_user_col_id' => 'ID',
     'tr_meliscore_tool_user_col_id tooltip' => 'Identifiant de l&#39;utilisateur',
     'tr_meliscore_tool_user_col_status' => 'Statut',
-    'tr_meliscore_tool_user_col_power tooltip' => '<div data-toggle="tooltip" data-placement="left" title="" data-original-title="Vert pour connecté, rouge pour déconnecté" data-container="body"><i class="fa fa-power-off"></i></div>',
+    'tr_meliscore_tool_user_col_power tooltip' => '<div data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="Vert pour connecté, rouge pour déconnecté" data-container="body"><i class="fa fa-power-off"></i></div>',
     'tr_meliscore_tool_user_col_status tooltip' => 'Choix du statut du compte de l&#39;utilisateur',
     'tr_meliscore_back_to_login_page' => 'Retourner à la page de login',
     'tr_meliscore_tool_user_col_username' => 'Login',

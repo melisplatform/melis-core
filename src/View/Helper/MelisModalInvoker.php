@@ -11,8 +11,8 @@ class MelisModalInvoker extends AbstractHelper
 {
     protected $_button = '';
     
-    const MELIS_MODAL_INVOKER_DISMISS = 'data-dismiss';
-    const MELIS_MODAL_INVOKER_INVOKE  = 'data-toggle';
+    const MELIS_MODAL_INVOKER_DISMISS = 'data-bs-dismiss';
+    const MELIS_MODAL_INVOKER_INVOKE  = 'data-bs-toggle';
     
     /**
      * Renders an anchored link element that will target a modal to invoke<br/>

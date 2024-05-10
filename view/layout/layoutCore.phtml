@@ -108,20 +108,16 @@
 
     </script>
 
-    <!-- Login page backgroun <style> -->
+    <!-- Login page background <style> -->
     <?php
-    echo '
-                 <style>
-    
-    	     	 body.login-page{
-    	     	    background: url(' . $loginBackground . ') fixed no-repeat;
-    	     	    background-size: cover;
-    	     	    height: 100%;
-    	     	 }
-    
-                 </style>';
+    echo '<style>
+            body.login-page {
+                background: url(' . $loginBackground . ') fixed no-repeat;
+                background-size: cover;
+                height: 100%;
+            }
+        </style>';
     ?>
-
 </head>
 <body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? '' : null ?>>
     <?= $this->content; ?>

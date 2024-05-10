@@ -6,6 +6,10 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: <?= $secondaryColor; ?>;
+}
 .table-primary thead th {
     background-color: <?= $primaryColor; ?> !important;
 }

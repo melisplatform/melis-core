@@ -16,7 +16,9 @@
 			<div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
                 <div class="widget-head">
                 	<ul class="nav nav-tabs">
-                		<li class="active"><a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="glyphicons pencil" data-bs-toggle="tab" aria-expanded="true"><i></i> <?php echo $this->translate('Log Type') ?></a></li>
+                		<li class="nav-item active">
+							<a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="nav-item glyphicons pencil" data-bs-toggle="tab" data-bs-target="#<?php echo $this->zoneconfig['conf']['id'] ?>" aria-expanded="true"><i></i> <?php echo $this->translate('Log Type') ?></a>
+						</li>
             		</ul>
         		</div>
         		<div class="widget-body innerAll inner-2x">
@@ -27,8 +29,7 @@
                         	</div>
                         	<div class="col-12 col-md-4">
                         		<div class="product-text-tab-container">
-                        			<ul class="nav-tabs product-text-tab">
-
+                        			<ul class="nav nav-tabs product-text-tab">
                             			<?php foreach ($languages As $key => $val):?>
                                             <?php
 
@@ -42,8 +43,8 @@
                                                     $locale = strtolower($val['lang_locale']);
                                                 }                                               
                                             ?>
-                                    		<li class="">
-                                    			<a class="clearfix" data-bs-toggle="tab" href="#<?php echo $key?>-log-type-details" aria-expanded="false">
+                                    		<li class="nav-item">
+                                    			<a class="nav-link clearfix" data-bs-toggle="tab" data-bs-target="#<?php echo $key?>-log-type-details" href="#<?php echo $key?>-log-type-details" aria-expanded="false">
                                     				<span><?php echo $val['lang_name']?></span>
                                                     <span class="float-right">
                                                         <img src="/MelisCore/images/lang/<?= $locale?>.png" class="imgDisplay float-right" onerror="javascript:this.src='MelisCore/images/lang/default.png'" />
