@@ -1695,6 +1695,9 @@ transition: all 0.4s ease-in-out;
 .input-group.colorpicker-component .input-group-text {
 	background-color: transparent;
 }
+.colorpicker-input-addon {
+	padding: 9px 12px;
+}
 .footer a,
 .footer a:hover {
 	text-decoration: none;

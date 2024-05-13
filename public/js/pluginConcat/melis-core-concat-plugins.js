@@ -19194,4 +19194,3 @@ module.exports = exports.default;
 /***/ })
 /******/ ]);
 });
-//# sourceMappingURL=bootstrap-colorpicker.js.map

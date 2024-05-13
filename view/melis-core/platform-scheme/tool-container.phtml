@@ -194,7 +194,7 @@ if($headerTitleLen > 13) {
             <script>
                 $(function() {
                     //$(".osta_color_code").colorpicker({format: 'hex',useAlpha: false});
-                    $(".osta_color_code").colorpicker();
+                    $(".osta_color_code").colorpicker({ popover: false });
                     $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
                     $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
                 });
