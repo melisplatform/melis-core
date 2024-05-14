@@ -43,16 +43,16 @@ var MelisCoreDashboardBubblePlugin = {
     showBubblePlugins: function () {
         var cookies = document.cookie.split(';');
         var showBubblePlugins = false;
-        $.each(cookies, function(key, cookie) {
-            if (cookie.indexOf('show_bubble_plugins') >= 0) {
-                var value = cookie.split('=');
-                if (value[1] === 'true') {
-                    showBubblePlugins = true;
+            $.each(cookies, function(key, cookie) {
+                if (cookie.indexOf('show_bubble_plugins') >= 0) {
+                    var value = cookie.split('=');
+                    if (value[1] === 'true') {
+                        showBubblePlugins = true;
+                    }
                 }
-            }
-        });
+            });
 
-        return showBubblePlugins;
+            return showBubblePlugins;
     },
     addMinMaxWidth: function() {
         var setBubblePluginInterval = setInterval(function() {

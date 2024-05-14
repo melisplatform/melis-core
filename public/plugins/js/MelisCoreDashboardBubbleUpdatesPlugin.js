@@ -89,46 +89,49 @@ var MelisCoreDashboardBubbleUpdatesPlugin = {
 					});
 				}
 			});
-		});
+		})
+		.fail(function(xhr, textStatus, errorThrown) {
+            alert( translations.tr_meliscore_error_message );
+        });
 	},
 };
 
 $(function() {
 	var $body = $("body");
 	var showBubblePlugins = MelisCoreDashboardBubblePlugin.showBubblePlugins();
-	if (showBubblePlugins) {
-		MelisCoreDashboardBubbleUpdatesPlugin.init();
-	}
+		if (showBubblePlugins) {
+			MelisCoreDashboardBubbleUpdatesPlugin.init();
+		}
 
-	$body.on("click", ".dashboard-bubble-update-details", function() {
-		var packageId = $(this).data("packageid");
-		var packageTitle = $(this).data("packagename");
+		$body.on("click", ".dashboard-bubble-update-details", function() {
+			var packageId = $(this).data("packageid");
+			var packageTitle = $(this).data("packagename");
 
-		melisHelper.tabOpen(
-			translations.tr_market_place,
-			"fa-shopping-cart",
-			"id_melis_market_place_tool_display",
-			"melis_market_place_tool_display"
-		);
-
-		var alreadyOpen = $(
-			"body #melis-id-nav-bar-tabs li a.tab-element[data-id='id_melis_market_place_tool_display']"
-		);
-		var checkTab = setInterval(function() {
-			if (alreadyOpen.length) {
 				melisHelper.tabOpen(
-					packageTitle,
+					translations.tr_market_place,
 					"fa-shopping-cart",
-					packageId + "_id_melis_market_place_tool_package_display",
-					"melis_market_place_tool_package_display",
-					{
-						packageId: packageId,
-					},
-					"id_melis_market_place_tool_display"
+					"id_melis_market_place_tool_display",
+					"melis_market_place_tool_display"
 				);
 
-				clearInterval(checkTab);
-			}
-		}, 500);
-	});
+				var alreadyOpen = $(
+					"body #melis-id-nav-bar-tabs li a.tab-element[data-id='id_melis_market_place_tool_display']"
+				);
+					var checkTab = setInterval(function() {
+						if (alreadyOpen.length) {
+							melisHelper.tabOpen(
+								packageTitle,
+								"fa-shopping-cart",
+								packageId + "_id_melis_market_place_tool_package_display",
+								"melis_market_place_tool_package_display",
+								{
+									packageId: packageId,
+								},
+								"id_melis_market_place_tool_display"
+							);
+
+							clearInterval(checkTab);
+						}
+					}, 500);
+		});
 });

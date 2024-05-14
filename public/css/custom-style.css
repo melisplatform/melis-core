@@ -1687,6 +1687,12 @@ transition: all 0.4s ease-in-out;
 }
 
 /* jQuery 3.7.1 migration */
+.float-left {
+	float: left;
+}
+.float-right {
+	float: right;
+}
 .input-group.colorpicker-component {
 	display: flex;
 	justify-content: space-between;
@@ -1757,8 +1763,13 @@ transition: all 0.4s ease-in-out;
  * dataTable
  */
 .table-primary {
-	--bs-table-bg: #fafafa;
+	/* --bs-table-bg: #fafafa;
+	--bs-table-striped-bg: #fff; */
+	--bs-table-bg: #fff;
 	--bs-table-striped-bg: #fff;
+}
+table.table.dataTable.table-striped>tbody>tr:nth-of-type(2n+1)>* {
+	box-shadow: none;
 }
 .table-primary tbody tr:nth-child(odd) td,
 .table-primary tbody tr:nth-child(odd) th {
@@ -1767,6 +1778,13 @@ transition: all 0.4s ease-in-out;
 .table-primary tbody tr:nth-child(even) td,
 .table-primary tbody tr:nth-child(even) th {
 	background: #fafafa;
+}
+.table-primary tbody tr:nth-child(2n) td, 
+.table-primary tbody tr:nth-child(2n) th {
+	background: #fafafa;
+}
+.table-striped>tbody>tr {
+	border-bottom: 0;
 }
 .dt-container .dt-processing {
 	position: absolute;

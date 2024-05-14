@@ -6,23 +6,23 @@ return array(
                 'css' => array(
                     // Gridstack
                     '/MelisCore/assets/components/plugins/gridstack/css/gridstack.css',
+                    //'/MelisCore/assets/components/plugins/gridstack/gridstack-10.1.2/css/gridstack.min.css',
 
                     // display notify / page walkthrough
                     '/MelisCore/assets/components/plugins/enjoyhint/css/enjoyhint.css'
-                    //'/MelisCore/assets/components/plugins/enjoyhint/css/jquery.enjoyhint.css'
                 ),
                 'js' => array(
-                    // Gridstack
                     //'/MelisCore/assets/components/library/jquery-ui-touch/jquery.ui.touch-punch.min.js',
+                    
+                    // Gridstack
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.js',
                     '/MelisCore/assets/components/plugins/gridstack/js/gridstack.jQueryUI.js',
+                    //'/MelisCore/assets/components/plugins/gridstack/gridstack-10.1.2/js/gridstack-all.min.js',
 
                     '/MelisCore/js/core/gridstack.init.js',
 
                     // display notify / page walkthrough
                     '/MelisCore/assets/components/plugins/enjoyhint/js/enjoyhint.js',
-                    //'/MelisCore/assets/components/plugins/enjoyhint/js/jquery.enjoyhint.js',
-                    //'/MelisCore/assets/components/plugins/enjoyhint/js/kinetic.min.js',
 
                     // page walkthrough
                     '/MelisCore/js/core/dashboard-notify.js'
