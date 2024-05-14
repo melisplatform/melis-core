@@ -39,12 +39,12 @@
         });
       }, 100);
     };
-    $(window).resize(function() {
+    $(window).on("resize", function() {
       resizeIframe();
     });
     //$().alert('close');
     window.initConextMenu = function() {
-      $('.context').contextmenu({
+      $('.context').on("contextmenu", {
         target: '#context-menu',
         before: function(e, context) {
           // execute code before context menu if shown

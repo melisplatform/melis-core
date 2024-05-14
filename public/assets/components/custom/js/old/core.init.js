@@ -45,7 +45,7 @@ _canLog = MELIS.plugins.tree.debug;
         resizeIframeFn();
       }, 100);
     };
-    $(window).resize(function() {
+    $(window).on("resize", function() {
       resizeIframe();
     });
 

@@ -742,7 +742,7 @@ var melisHelper = (function() {
 		$("#" + zoneId).append(tempLoader);
 
 		// add an inline css overflow: hidden
-		melisCoreTool.addOverflowHidden();
+		//melisCoreTool.addOverflowHidden();
 
 		$.ajax({
 			url: "/melis/zoneview",
@@ -752,7 +752,7 @@ var melisHelper = (function() {
 		})
 		.done(function(data) {
 			// remove the inline style
-			melisCoreTool.removeOverflowHidden();
+			//melisCoreTool.removeOverflowHidden();
 
 			setTimeout(function() {
 				if (data !== null) {
@@ -838,15 +838,7 @@ var melisHelper = (function() {
 	// Requesting flag set to false so this function will set state to ready
 	var createModalRequestingFlag = false;
 	// CREATE MODAL =================================================================================================================
-	function createModal(
-		zoneId,
-		melisKey,
-		hasCloseBtn,
-		parameters,
-		modalUrl,
-		callback,
-		modalBackDrop
-	) {
+	function createModal(zoneId,melisKey,hasCloseBtn,parameters,modalUrl,callback,modalBackDrop) {
 		// declaring parameters variable for old / cross browser compatability
 		if (typeof modalUrl === "undefined") modalUrl = null;
 		if (typeof callback === "undefined") callback = null;
@@ -873,41 +865,40 @@ var melisHelper = (function() {
 				data: datastring,
 				encode: true,
 			})
-				.done(function(data) {
-					// Requesting flag set to false so this function will set state to ready
-					createModalRequestingFlag = false;
+			.done(function(data) {
+				// Requesting flag set to false so this function will set state to ready
+				createModalRequestingFlag = false;
 
-					$("#melis-modals-container").append(data);
-					var modalID = $(data)
-						.find(".modal")
-						.attr("id");
+				$("#melis-modals-container").append(data);
+
+				var modalID = $(data).find(".modal").attr("id");
+
 					melisHelper.zoneReload(zoneId, melisKey, parameters);
 
-					$("#" + modalID).modal({
+					const $modal = new bootstrap.Modal('#'+modalID, {
 						show: true,
 						keyboard: false,
-						backdrop: modalBackDrop,
+						backdrop: modalBackDrop
 					});
 
-					if (
-						typeof callback !== "undefined" &&
-						typeof callback === "function"
-					) {
+					$modal.show();
+
+					if ( typeof callback !== "undefined" && typeof callback === "function") {
 						callback();
 					}
-				})
-				.fail(function(xhr, textStatus, errorThrown) {
-					alert(
-						"ERROR !! Status = " +
-							textStatus +
-							"\n Error = " +
-							errorThrown +
-							"\n xhr = " +
-							xhr.statusText
-					);
-					// Requesting flag set to false so this function will set state to ready
-					createModalRequestingFlag = true;
-				});
+			})
+			.fail(function(xhr, textStatus, errorThrown) {
+				alert(
+					"ERROR !! Status = " +
+						textStatus +
+						"\n Error = " +
+						errorThrown +
+						"\n xhr = " +
+						xhr.statusText
+				);
+				// Requesting flag set to false so this function will set state to ready
+				createModalRequestingFlag = true;
+			});
 		}
 	}
 
