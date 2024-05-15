@@ -279,6 +279,9 @@ return [
     'tr_meliscore_module_management_modules' => 'Modules',
     'tr_meliscore_module_management_modules_description' => 'Activate or deactivate here the modules of the platform. Drag and drop the modules to adjust the order.',
     'tr_meliscore_module_management_modules_save' => 'Save',
+    'tr_meliscore_module_management_modules_bundle' => 'Bundle',
+    'tr_meliscore_module_management_modules_bundle_failed' => 'Error occurred while bundling assets',
+    'tr_meliscore_module_management_modules_bundle_success' => 'Assets bundled successfully',
     'tr_meliscore_module_management_header' => 'Header content',
     'tr_meliscore_module_management_content' => 'Content',
     'tr_meliscore_module_management_prompt_confirm' => 'Are you sure you want to apply this settings?',
@@ -344,6 +347,8 @@ return [
     'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Check to allow updates from the marketplace or uncheck to disallow them',
     'tr_meliscore_common_allow' => 'Allow',
     'tr_meliscore_tool_platform_invalid_platform_name' => 'The name of the platform can only contain letters and numbers, no spaces or special characters',
+    'tr_meliscore_tool_platform_activate_cache' => 'Allow cache on this platform',
+    'tr_meliscore_tool_platform_activate_cache tooltip' => 'Check to allow cache on this platform',
 
 
     // Language Tool Translations

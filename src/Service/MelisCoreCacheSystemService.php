@@ -9,11 +9,6 @@
 
 namespace MelisCore\Service;
 
-use MelisCore\Service\MelisServiceManager;
-use MelisEngine\Model\MelisPage;
-use Laminas\Filter\HtmlEntities;
-use Laminas\Cache\StorageFactory;
-
 class MelisCoreCacheSystemService extends MelisServiceManager
 {
 	/**

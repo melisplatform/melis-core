@@ -330,64 +330,75 @@ class PluginViewController extends MelisAbstractActionController
             $cacheActivated = false;
             $cacheKey = null;
             $melisCoreCacheSystem = $this->getServiceManager()->get('MelisCoreCacheSystemService');
+            $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+            $platformSettings = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
             if(isset($itemConfig['cache'])){
                 /**
-                 * Check if cache is active
+                 * make sure cache is active on this platform
                  */
-                if($itemConfig['cache']['activated']){
-                    // Get Current User ID
-                    $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
-                    $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-                    /**
-                     * Make sure there's a session for user
-                     */
-                    if(!empty($userAuthDatas)) {
-                        $userId = (int)$userAuthDatas->usr_id;
+                if(!empty($platformSettings)) {
+                    if ($platformSettings->plf_activate_cache) {
                         /**
-                         * Make user id is not empty
+                         * Check if cache is active
                          */
-                        if (!empty($userId)) {
-                            $cacheActivated = true;
-                            $cacheKey = $itemConfig['cache']['name'];
-
-                            //so we can differentiate the dashboards, if its null means we are in core(default one)
-                            $dashboardId  = $this->getRequest()->getQuery('dashboardId') ?? null;
-                            if($cacheKey == 'meliscore_dashboard_plugins'){//for dashboard only
-                                if(!empty($dashboardId)) {
-                                    $dashboardId = explode('_', $dashboardId);
-                                    $cacheKey = $dashboardId[1].'_'.$cacheKey;
-                                }
-                            }
+                        if($itemConfig['cache']['activated']){
+                            // Get Current User ID
+                            $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+                            $userAuthDatas = $melisCoreAuth->getStorage()->read();
                             /**
-                             * Construct cache key and concatinate
-                             * additional parameters on it
+                             * Make sure there's a session for user
                              */
-                            $cacheName = $cacheKey;
-                            $paramToAdd = $itemConfig['cache']['add'];
-                            if (!empty($paramToAdd)) {
-                                foreach ($paramToAdd as $key => $val) {
-                                    if ($val == 'userId') {
-                                        $cacheKey .= '_' . $userId;
+                            if (!empty($userAuthDatas)) {
+                                $userId = (int)$userAuthDatas->usr_id;
+                                /**
+                                 * Make user id is not empty
+                                 */
+                                if (!empty($userId)) {
+                                    $cacheActivated = true;
+                                    $cacheKey = $itemConfig['cache']['name'];
+
+                                    //so we can differentiate the dashboards, if its null means we are in core(default one)
+                                    $dashboardId = $this->getRequest()->getQuery('dashboardId') ?? null;
+                                    if ($cacheKey == 'meliscore_dashboard_plugins') {//for dashboard only
+                                        if (!empty($dashboardId)) {
+                                            $dashboardId = explode('_', $dashboardId);
+                                            $cacheKey = $dashboardId[1] . '_' . $cacheKey;
+                                        }
+                                    }
+                                    /**
+                                     * Construct cache key and concatinate
+                                     * additional parameters on it
+                                     */
+                                    $cacheName = $cacheKey;
+                                    $paramToAdd = $itemConfig['cache']['add'];
+                                    if (!empty($paramToAdd)) {
+                                        foreach ($paramToAdd as $key => $val) {
+                                            if ($val == 'userId') {
+                                                $cacheKey .= '_' . $userId;
+                                            }
+                                        }
+                                    }
+                                    /**
+                                     * Get cache based on cache key
+                                     */
+                                    if ($this->getServiceManager()->has(self::cacheConfig)) {//make sure cache service is present
+                                        $results = $melisCoreCacheSystem->getCacheByKey($cacheKey, self::cacheConfig);
+                                        if (!empty($results)) {
+                                            $this->isFromCache = true;
+                                            /**
+                                             * Generate new view model to return
+                                             * the cached html
+                                             */
+                                            $newView = new ViewModel();
+                                            $newView->setVariables([
+                                                'cache' => $results,
+                                                'cacheName' => $cacheName . '_cache'
+                                            ]);
+                                            $newView->setTemplate('layout/cache');
+                                            return $newView;
+                                        }
                                     }
                                 }
-                            }
-                            /**
-                             * Get cache based on cache key
-                             */
-                            $results = $melisCoreCacheSystem->getCacheByKey($cacheKey, self::cacheConfig);
-                            if (!empty($results)) {
-                                $this->isFromCache = true;
-                                /**
-                                 * Generate new view model to return
-                                 * the cached html
-                                 */
-                                $newView = new ViewModel();
-                                $newView->setVariables([
-                                    'cache' => $results,
-                                    'cacheName' => $cacheName.'_cache'
-                                ]);
-                                $newView->setTemplate('layout/cache');
-                                return $newView;
                             }
                         }
                     }
@@ -499,16 +510,23 @@ class PluginViewController extends MelisAbstractActionController
 
                 $view->setVariable('jsCallBacks', $jsCB);
                 $view->setVariable('datasCallback', $datasCallback);
-
-
             }
 
             $view->setVariable('keyInterface', $key);
             /**
-             * Check if cache is active and save it
+             * make sure cache is active on this platform
              */
-            if($cacheActivated) {
-                $melisCoreCacheSystem->setCacheByKey($cacheKey, self::cacheConfig, $this->renderViewRec($view));
+            if(!empty($platformSettings)) {
+                if ($platformSettings->plf_activate_cache) {
+                    /**
+                     * Check if cache is active and save it
+                     */
+                    if ($cacheActivated) {
+                        if ($this->getServiceManager()->has(self::cacheConfig)) {//make sure cache service is present
+                            $melisCoreCacheSystem->setCacheByKey($cacheKey, self::cacheConfig, $this->renderViewRec($view));
+                        }
+                    }
+                }
             }
 
             return $view;
