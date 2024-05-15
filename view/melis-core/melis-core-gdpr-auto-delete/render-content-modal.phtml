@@ -13,7 +13,10 @@ if (!empty($this->zoneconfig['conf']['id'])) {
                     <div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
                         <div class="widget-head">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#" class="glyphicons pencil" data-bs-toggle="tab" aria-expanded="true"><i></i> <?=$this->translate('tr_melis_core_gdpr_autodelete_label_modal_tab_heading')?></a></li>
+                                <li class="active">
+                                    <!-- data-bs-toggle="tab", commented no href value for equivalent tab-content tab-pane id -->
+                                    <a href="#" class="glyphicons pencil" aria-expanded="true"><i></i> <?=$this->translate('tr_melis_core_gdpr_autodelete_label_modal_tab_heading')?></a>
+                                </li>
                             </ul>
                         </div>
                         <div class="widget-body innerAll inner-2x">
