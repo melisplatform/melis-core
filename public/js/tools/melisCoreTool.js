@@ -283,14 +283,14 @@ var melisCoreTool = (function (window) {
     function addOverflowHidden() {
         var $melisIframe = $("#"+activeTabId+ " .melis-iframe");
 
-            if ( $melisIframe.length ) {
+            //if ( $melisIframe.length ) {
                 $("html, body").animate(
                     { scrollTop: ( $melisIframe.length > 0 ) ? $melisIframe.offset().top : 0 },
                     0, function() {
                         $body.css("overflow", "hidden");
                     }
                 );
-            }
+            //}
     }
 
     function removeOverflowHidden() {

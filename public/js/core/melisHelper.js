@@ -742,7 +742,7 @@ var melisHelper = (function() {
 		$("#" + zoneId).append(tempLoader);
 
 		// add an inline css overflow: hidden
-		//melisCoreTool.addOverflowHidden();
+		melisCoreTool.addOverflowHidden();
 
 		$.ajax({
 			url: "/melis/zoneview",
@@ -752,7 +752,7 @@ var melisHelper = (function() {
 		})
 		.done(function(data) {
 			// remove the inline style
-			//melisCoreTool.removeOverflowHidden();
+			melisCoreTool.removeOverflowHidden();
 
 			setTimeout(function() {
 				if (data !== null) {
