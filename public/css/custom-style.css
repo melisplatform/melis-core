@@ -1867,3 +1867,6 @@ a[data-bs-toggle="tab"] {
 .gdpr-auto-delete-multi-tabs .nav-pills .nav-link {
 	text-decoration: none;
 }
+#newsList_wrapper .dataTables_length {
+	width: 100%;
+}
