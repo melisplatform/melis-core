@@ -235,6 +235,35 @@ $(function() {
             form.submit();
         });
 
+    /**
+     * Bundle all assets
+     */
+    $body.on("click", "#btnModulesBundle", function(){
+            var _this = $(this);
+            $.ajax({
+                type: 'POST',
+                url: '/melis/MelisCore/Modules/bundle',
+                data: {},
+                dataType: 'json',
+                beforeSend: function(){
+                    _this.attr('disabled', true);
+                }
+            }).done(function (data) {
+                if (data.success){
+                    // Notifications
+                    melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                } else{
+                    melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
+                }
+
+                _this.attr('disabled', false);
+
+            }).fail(function () {
+                alert(translations.tr_meliscore_error_message);
+            });
+        });
+
+
         function setModuleSwitchState(state)
         {
             $('div[data-module-name]').bootstrapSwitch('setState', state);

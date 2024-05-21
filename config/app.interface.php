@@ -302,12 +302,12 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css?v='.time(),
+                        '/MelisCore/build/css/bundle.css',
 
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js?v='.time(),
+                        '/MelisCore/build/js/bundle.js',
                     ]
                 ]
             ),
