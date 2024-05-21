@@ -751,13 +751,13 @@ var melisHelper = (function() {
 			dataType: "json",
 		})
 		.done(function(data) {
-			// remove the inline style
-			melisCoreTool.removeOverflowHidden();
-
 			setTimeout(function() {
 				if (data !== null) {
 					// hide the loader
 					//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+
+					// remove the inline style
+					melisCoreTool.removeOverflowHidden();
 					
 					$("#" + zoneId)
 						.html(data.html)

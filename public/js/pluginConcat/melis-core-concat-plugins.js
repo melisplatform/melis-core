@@ -11350,7 +11350,7 @@ $.removeCookie = function (key, options) {
       else
         $.error('Method ' + method + ' does not exist!');
     };
-  }(jQuery);
+}(jQuery);
 
 /* bootstrap-switch.init.js */
 (function($){
