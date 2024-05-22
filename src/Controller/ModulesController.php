@@ -17,6 +17,7 @@ use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
 use MelisCalendar\Service\MelisCalendarService;
 use MatthiasMullie\Minify;
+use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
 
 /**
  * Module Management Tool
@@ -347,6 +348,11 @@ class ModulesController extends MelisAbstractActionController
                      */
                     $this->combineAssets($cssAssets, $type);
                 }
+
+                /**
+                 * Lets bundle the login assets
+                 */
+                $this->bundleLoginAssets();
             }
 
             $success = true;
@@ -361,6 +367,48 @@ class ModulesController extends MelisAbstractActionController
             'success' => $success,
             'errors' => []
         ));
+    }
+
+    /**
+     * Function to bundle all login page assets
+     */
+    private function bundleLoginAssets()
+    {
+        $plugin = new MelisCoreHeadPluginHelper();
+        $plugin->setServiceManager($this->getServiceManager());
+        $assets = $plugin->__invoke('/meliscore_login');
+
+        if(!empty($assets)){
+            foreach($assets as $type => $files){
+                $vendorFileHolder = [];
+                $moduleFileHolder = [];
+                $moduleFileHolderAlreadyBundled = [];
+                /**
+                 * We will separate all the already bundle file
+                 * and for those who are in vendor and in module
+                 * so we can re bundle the assets inside module folder in case
+                 * its not yet bundled
+                 */
+                $this->segregateFiles($files, $moduleFileHolder, $vendorFileHolder, $moduleFileHolderAlreadyBundled);
+                /**
+                 * Lets minify all unminified files from module folder
+                 */
+                $arrayPaths = [];
+                if($type == 'css')
+                    $this->minifyCss($moduleFileHolder, $arrayPaths);
+                elseif($type == 'js')
+                    $this->minifyJs($moduleFileHolder, $arrayPaths);
+
+                /**
+                 * We merge all bundled files
+                 */
+                $cssAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
+                /**
+                 * Combine all
+                 */
+                $this->combineAssets($cssAssets, $type, 'bundle-all-login');
+            }
+        }
     }
 
     /**
@@ -414,8 +462,9 @@ class ModulesController extends MelisAbstractActionController
     /**
      * @param $array
      * @param $type
+     * @param string $fileName
      */
-    private function combineAssets($array, $type)
+    private function combineAssets($array, $type, $fileName = 'bundle-all')
     {
         if(!empty($array)){
             $jsString = '';
@@ -429,7 +478,7 @@ class ModulesController extends MelisAbstractActionController
             }
 
             $path = $this->createDIR($type);
-            $file = @fopen($path.'/bundle-all.'.$type, 'w+');
+            $file = @fopen($path.'/'.$fileName.'.'.$type, 'w+');
             @fwrite($file, $jsString);
             @fclose($file);
         }

@@ -17,7 +17,7 @@
     $bundle = $this->layout()->bundle;
 
     if ($this->layout()->isLogin) {
-        $bundle = $this->MelisCoreHeadPlugin('/meliscore_login');
+        $bundle = $this->MelisCoreHeadPlugin('/meliscore_login', true);
     }
 
     echo $this->doctype();
