@@ -1875,3 +1875,6 @@ body {
 	overflow-y: auto !important;
     overflow-x: hidden !important;
 }
+/* .melis-dragdropzone.no-content {
+    background: rgba(230, 28, 35, 0.3);
+} */

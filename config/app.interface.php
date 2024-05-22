@@ -301,13 +301,13 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        //'/MelisCore/build/css/bundle.css?v=2023090801',
-                        '/MelisCore/build/css/bundle.css?v='.date('YmdHis')
+                        '/MelisCore/build/css/bundle.css?v=05222024',
+                        //'/MelisCore/build/css/bundle.css?v='.date('YmdHis')
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        //'/MelisCore/build/js/bundle.js?v=2023090801',
-                        '/MelisCore/build/js/bundle.js?v='.date('YmdHis')
+                        '/MelisCore/build/js/bundle.js?v=05222024',
+                        //'/MelisCore/build/js/bundle.js?v='.date('YmdHis')
                     ]
                 ]
             ),
