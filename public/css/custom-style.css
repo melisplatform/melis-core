@@ -1870,3 +1870,8 @@ a[data-bs-toggle="tab"] {
 #newsList_wrapper .dataTables_length {
 	width: 100%;
 }
+/* Fix for closing of modal */
+body {
+	overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
