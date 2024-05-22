@@ -13,6 +13,7 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
+use MelisCore\Controller\ModulesController;
 use MelisCore\Controller\PluginViewController;
 
 class MelisCoreClearCacheListenerListener extends MelisGeneralListener implements ListenerAggregateInterface
@@ -33,6 +34,12 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
                 if($params['success']){
                     $coreCacheService = $sm->get('MelisCoreCacheSystemService');
                     $coreCacheService->deleteCacheByPrefix('*', PluginViewController::cacheConfig);
+
+                    /**
+                     * remove bundle-all files inside public/bundles-generated folder
+                     */
+                    $path = $_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME;
+                    $this->deleteFiles($path);
                 }
             },
             -1000
@@ -79,5 +86,23 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
             },
             -1000
         );
+    }
+
+    /**
+     * @param $path
+     */
+    private function deleteFiles($path)
+    {
+        $bundleFiles = glob($path.'/*');
+        foreach($bundleFiles as $file){
+            if(is_dir($file)){
+                //set folder rights to 777
+                chmod($file.'/', 0777);
+                //iterate again
+                $this->deleteFiles($file);
+            }else {
+                unlink($file); // delete file
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace MelisCore\View\Helper;
 
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\View\Helper\AbstractHelper;
+use MelisCore\Controller\ModulesController;
 use MelisCore\Library\MelisAppConfig;
 
 class MelisCoreHeadPluginHelper extends AbstractHelper
@@ -45,14 +46,14 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
                 /**
                  * check if bundle for login is available
                  */
-                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/bundles-generated/css/bundle-all-login.css')) {
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css')) {
                     $cssFiles = [];
-                    $cssFiles[] = '/bundles-generated/css/bundle-all-login.css?v='.time();
+                    $cssFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css?v='.time();
                 }
 
-                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/bundles-generated/js/bundle-all-login.js')) {
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js')) {
                     $jsFiles = [];
-                    $jsFiles[] = '/bundles-generated/js/bundle-all-login.js?v='.time();
+                    $jsFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js?v='.time();
                 }
             }
         }

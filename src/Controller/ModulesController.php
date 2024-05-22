@@ -24,8 +24,7 @@ use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
  */
 class ModulesController extends MelisAbstractActionController
 {
-
-    private $bundleFolderName = 'bundles-generated';
+    const BUNDLE_FOLDER_NAME = 'bundles-generated';
 
     const MODULE_LOADER_FILE = 'config/melis.module.load.php';
     private $exclude_modules = array(
@@ -502,7 +501,7 @@ class ModulesController extends MelisAbstractActionController
                 $path = $this->createDIR('js');
                 $path = $path.'/bundle-'.$moduleName.'.js';
                 $jsMinifier->minify($path);
-                $arrayPaths[] = '/'.$this->bundleFolderName.'/js/bundle-'.$moduleName.'.js';
+                $arrayPaths[] = '/'.self::BUNDLE_FOLDER_NAME.'/js/bundle-'.$moduleName.'.js';
             }
         }
     }
@@ -529,7 +528,7 @@ class ModulesController extends MelisAbstractActionController
                 $path = $this->createDIR('css');
                 $path = $path.'/bundle-'.$moduleName.'.css';
                 $cssMinifier->minify($path);
-                $arrayPaths[] = '/'.$this->bundleFolderName.'/css/bundle-'.$moduleName.'.css';
+                $arrayPaths[] = '/'.self::BUNDLE_FOLDER_NAME.'/css/bundle-'.$moduleName.'.css';
             }
         }
     }
@@ -591,10 +590,10 @@ class ModulesController extends MelisAbstractActionController
      */
     private function createDIR($name)
     {
-        $path = $_SERVER['DOCUMENT_ROOT'].'/'.$this->bundleFolderName.'/'.$name;
+        $path = $_SERVER['DOCUMENT_ROOT'].'/'.self::BUNDLE_FOLDER_NAME.'/'.$name;
 
-        if(!file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$this->bundleFolderName.'/'))
-            mkdir($_SERVER['DOCUMENT_ROOT'].'/'.$this->bundleFolderName, 0777);
+        if(!file_exists($_SERVER['DOCUMENT_ROOT'].'/'.self::BUNDLE_FOLDER_NAME.'/'))
+            mkdir($_SERVER['DOCUMENT_ROOT'].'/'.self::BUNDLE_FOLDER_NAME, 0777);
 
         if(!file_exists($path))
             mkdir($path, 0777);
