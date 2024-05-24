@@ -352,6 +352,14 @@ class ModulesController extends MelisAbstractActionController
                  * Lets bundle the login assets
                  */
                 $this->bundleLoginAssets();
+
+                //save bundle cache time
+                $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+                $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
+
+                if(!empty($platformData)){
+                    $platformTable->save(['plf_bundle_cache_time' => time()], $platformData->plf_id);
+                }
             }
 
             $success = true;
