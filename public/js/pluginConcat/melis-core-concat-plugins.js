@@ -12993,7 +12993,7 @@ $(function(){
 /*!
 
 Holder - client side image placeholders
-Version 2.9.9+jl7z
+Version 2.9.9
 © 2021 Ivan Malopinsky - https://imsky.co
 
 Site:     http://holderjs.com

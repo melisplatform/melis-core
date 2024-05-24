@@ -277,8 +277,17 @@ if (window.location != window.parent.location)
                 $('.hasNiceScroll, #menu_kis, #menu').getNiceScroll().show().resize();
 
             if (typeof Holder != 'undefined') {
-                Holder.addTheme("dark", {background:"#424242", foreground:"#aaa", size:9}).run();
-                Holder.addTheme("white", {background:"#fff", foreground:"#c9c9c9", size:9}).run();
+                Holder.addTheme("dark", {
+                    bg: "#424242",
+                    fg: "#aaa",
+                    size: 9
+                });
+
+                Holder.addTheme("dark", {
+                    bg: "#fff",
+                    fg: "#c9c9c9",
+                    size: 9
+                });
             }
         });
         
