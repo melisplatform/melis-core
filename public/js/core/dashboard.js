@@ -227,7 +227,7 @@ var dashboard = (function() {
 					}
 				}
 
-            if($(this).closest(".melis-core-dashboard-dnd-box").hasClass("shown")){
+            if($($el).closest(".melis-core-dashboard-dnd-box").hasClass("shown")){
                 $.ajax({
                     type: 'GET',
                     url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
