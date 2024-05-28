@@ -20,13 +20,13 @@ var dashboard = (function() {
 		$lm 				= $("#id_meliscore_leftmenu"),
 		$lmBtn 				= $("#side-menu"),
 		$tabArrowTop    	= $("#tab-arrow-top"), // show main tabs on small screen devices
-		$dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
+		//$dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
 		$dbPluginMenuBtn 	= $("#melisDashBoardPluginBtn");
 
 	// dashboard specific selectors and data values
 	var $dbMsg 				= $activeTabId.find(".melis-core-dashboard-msg"),
 		lmWidth 			= $lm.outerWidth(),
-		dbpmWidth 			= $dbPluginMenu.outerWidth(),
+		//dbpmWidth 			= $dbPluginMenu.outerWidth(),
 		dbMsgWidth 			= $dbMsg.outerWidth(),
 		animationDuration   = 50,
 		minWidth 			= parseInt( $gs.attr("data-min-width") ),
@@ -40,7 +40,9 @@ var dashboard = (function() {
 			var currentGsWidth 	= $gs.outerWidth(),
 				$bpWrapper 		= $("#id_meliscore_dashboard_bubble_plugins"),
 				$bp 			= $bpWrapper.find(".tab-pane .bubble-plugin"),
-				bpWidth 		= $bp.outerWidth();
+				bpWidth 		= $bp.outerWidth(),
+				$dbPluginMenu 	= $("#id_meliscore_center_dashboard_menu"),
+				dbpmWidth 		= $dbPluginMenu.outerWidth();
 
 				// check screenSize for responsive, desktop
 				if ( melisCore.screenSize >= 768 ) {
