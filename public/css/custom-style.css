@@ -1223,9 +1223,9 @@ a[data-toggle="modal"]:focus {
 	}
 }
 @media (max-width: 767px) {
-	#melisDashBoardPluginBtn {
+	/* #melisDashBoardPluginBtn {
 		display: none;
-	}
+	} */
 	/* melis-news-bubble-plugin-news */
 	.melis-news-bubble-plugin-news-list .media-body .row .col-md-6.pl-0 {
 		padding-left: 15px !important;
