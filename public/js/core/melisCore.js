@@ -1062,6 +1062,22 @@ var melisCore = (function(window){
                     }
                 }
             }
+
+        if($(this).closest(".melis-core-dashboard-dnd-box").hasClass("shown")){
+            $.ajax({
+                type: 'GET',
+                url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
+                beforeSend: function(){
+                    loader.addLoadingDashboardPluginMenu();
+                }
+            }).done(function(data){
+                $("#dashboardMenuContent").html(data.view);
+                setTimeout(function(){
+                    melisDashBoardDragnDrop.init(false);
+                }, 100);
+                loader.removeLoadingDashboardPluginMenu();
+            });
+        }
     }
 
     // responsive menu functionalities

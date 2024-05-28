@@ -516,6 +516,8 @@ return [
             'melis-core/dashboard-plugin/bubble-chat'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-chat.phtml',
 
             'melis-core/dashboard-plugin/noformtemplate'   => __DIR__ . '/../view/melis-core/dashboard-plugins/noformtemplate.phtml',
+
+            'melis-core/dashboard-plugin/dashboard-menu-content'   => __DIR__ . '/../view/melis-core/dashboard-plugins/dashboard-menu-content.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',

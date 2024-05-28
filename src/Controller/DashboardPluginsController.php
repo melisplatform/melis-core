@@ -29,7 +29,48 @@ class DashboardPluginsController extends MelisAbstractActionController
     public function dashboardMenuAction()
     {
         $melisKey = $this->params()->fromRoute('melisKey', '');
+        // melis plugin service
+        $pluginSvc = $this->getServiceManager()->get('MelisCorePluginsService');
+        // check for new  or manually installed plugins and saved in db
+        $pluginSvc->checkDashboardPlugins();
+        // put section of dashboard plugins
+        // get the latest plugin installed
+        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
+        // for new plugin notifications
+        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
+
+        $view = new ViewModel();
+        $view->melisKey = $melisKey;
+        $view->latestPluginInstalled = $latesPlugin;
+        $view->newPluginNotification = $pluginMenuHandler;
         
+        return $view;
+    }
+
+
+    /**
+     * Render Dashboard Menu Content
+     *
+     * @return \Laminas\View\Model\ViewModel
+     */
+    public function dashboardMenuContentAction()
+    {
+
+        /**
+         * Check if cache exist
+         */
+        // Get Current User ID
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $userAuthDatas = $melisCoreAuth->getStorage()->read();
+        $melisCoreCacheSystem = $this->getServiceManager()->get('MelisCoreCacheSystemService');
+        $cacheKey = 'meliscore_dashboard_menu_content_'.(int)$userAuthDatas->usr_id;
+        $results = $melisCoreCacheSystem->getCacheByKey($cacheKey, PluginViewController::cacheConfig);
+        if (!empty($results)) {
+            return new JsonModel([
+                'view' => $results
+            ]);
+        }
+
         $plugins = [];
         /** @var \MelisCore\Service\MelisCoreConfigService $config */
         $config = $this->getServiceManager()->get('MelisCoreConfig');
@@ -57,16 +98,16 @@ class DashboardPluginsController extends MelisAbstractActionController
                         $description = $plugin['datas']['description'];
 
                         //if no translated value for the current locale, use the English translation instead
-                        if (substr(trim($name), 0, 3) == 'tr_') {                            
+                        if (substr(trim($name), 0, 3) == 'tr_') {
                             $name = $translationService->getMessage($name);
                         }
 
                         if (substr(trim($description), 0, 3) == 'tr_') {
                             $description = $translationService->getMessage($description);
-                        }                               
+                        }
 
                         //use the plugin name if translated value is null
-                        $name = !empty($name)?$name:$pluginName; 
+                        $name = !empty($name)?$name:$pluginName;
                         $pluginRaw = json_encode($plugin);
                         $plugins[$module][$name] = [
                             'module' => $module,
@@ -90,25 +131,37 @@ class DashboardPluginsController extends MelisAbstractActionController
             }
         }
         // melis plugin service
-        $pluginSvc = $this->getServiceManager()->get('MelisCorePluginsService');
+//        $pluginSvc = $this->getServiceManager()->get('MelisCorePluginsService');
         // check for new  or manually installed plugins and saved in db
-        $pluginSvc->checkDashboardPlugins();
+//        $pluginSvc->checkDashboardPlugins();
         // put section of dashboard plugins
         $plugins = $this->putSectionOnPlugins($plugins);
         // organized plugins or put them into their respective sections
         $plugins = array_filter($this->organizedPluginsBySection($plugins));
         // get the latest plugin installed
-        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
+//        $latesPlugin = $pluginSvc->getLatestPlugin($pluginSvc::DASHBOARD_PLUGIN_TYPE);
         // for new plugin notifications
-        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
+//        $pluginMenuHandler = $pluginSvc->getNewPluginMenuHandlerNotifDuration();
 
         $view = new ViewModel();
-        $view->setVariable('plugins', $plugins);
-        $view->melisKey = $melisKey;
-        $view->latestPluginInstalled = $latesPlugin;
-        $view->newPluginNotification = $pluginMenuHandler;
-        
-        return $view;
+        $view->setTemplate('melis-core/dashboard-plugin/dashboard-menu-content')->setVariables([
+            'plugins' => $plugins
+        ]);
+//        $view->setVariable('plugins', $plugins);
+//        $view->melisKey = $melisKey;
+//        $view->latestPluginInstalled = $latesPlugin;
+//        $view->newPluginNotification = $pluginMenuHandler;
+
+//        return $view;
+
+        $renderer       = $this->getServiceManager()->get('ViewRenderer');
+        $renderedView = $renderer->render($view);
+
+        $melisCoreCacheSystem->setCacheByKey($cacheKey, PluginViewController::cacheConfig, $renderedView);
+
+        return new JsonModel([
+            'view' => $renderedView
+        ]);
     }
     
     /**

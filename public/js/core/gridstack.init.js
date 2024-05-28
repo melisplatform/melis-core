@@ -11,7 +11,9 @@ var melisDashBoardDragnDrop = {
 
     melisDashboardMsg: '.melis-core-dashboard-msg',
 
-    init: function() {
+    init: function(togglePluginBox) {
+        togglePluginBox = togglePluginBox == undefined ? true : false;
+
         this.cacheDom();
         this.gsSetOptions();
         
@@ -22,7 +24,7 @@ var melisDashBoardDragnDrop = {
         this.resizeStopWidget();
 
         this.setAdjustGridMeasurements();
-        this.checkDashboard();
+        this.checkDashboard(togglePluginBox);
         this.latestCommentsPluginUIRes();
         this.checkDashboardElemWidths();
     },
@@ -364,7 +366,9 @@ var melisDashBoardDragnDrop = {
         }
     },
     // check current dashboard
-    checkDashboard: function() {
+    checkDashboard: function(togglePluginBox) {
+        togglePluginBox = togglePluginBox == undefined ? true : false;
+
         var self                    = this,
             $pluginBtn              = $("#melisDashBoardPluginBtn"),
             $pluginBox              = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
@@ -385,15 +389,21 @@ var melisDashBoardDragnDrop = {
             self.checkDashboardElemWidths();
 
             // shown class toggled
-            $pluginBox.toggleClass("shown");
+            if(togglePluginBox) {
+                $pluginBox.toggleClass("shown");
+            }
 
             // count .grid-stack-item if found
             if ( gsItems > 0 ) {
-                $pluginBox.removeClass("shown");
+                if(togglePluginBox) {
+                    $pluginBox.removeClass("shown");
+                }
                 $dbMsg.fadeOut();
             }
             else {
-                $pluginBox.addClass("shown");
+                if(togglePluginBox) {
+                    $pluginBox.addClass("shown");
+                }
                 $dbMsg.fadeIn();
 
                 // tab arrow top on mobile view, 767px and below
