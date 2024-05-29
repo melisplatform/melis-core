@@ -129,17 +129,17 @@
     <!-- modals container -->
     <div id="melis-modals-container"></div>
     <script defer>
-        function iframeMarketplaceCallback(){
-            var iframe = document.querySelectorAll(".marketplaceUpdate");
-            var marketPlaceUrl = 'http://marketplace.melisplatform.com/marketplace-update?modulelist=<?php echo $this->modules; ?>&&domain=<?php echo $this->domain?>&&scheme=<?php echo $this->scheme ?>';
-            for (i = 0; i < iframe.length; i++) {
-                var content = iframe[i].contentWindow.document;
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', marketPlaceUrl);
-                xhr.send();
-            }
-        }
-        iframeMarketplaceCallback();
+//        function iframeMarketplaceCallback(){
+//            var iframe = document.querySelectorAll(".marketplaceUpdate");
+//            var marketPlaceUrl = 'http://marketplace.melisplatform.com/marketplace-update?modulelist=<?php //echo $this->modules; ?>//&&domain=<?php //echo $this->domain?>//&&scheme=<?php //echo $this->scheme ?>//';
+//            for (i = 0; i < iframe.length; i++) {
+//                var content = iframe[i].contentWindow.document;
+//                var xhr = new XMLHttpRequest();
+//                xhr.open('GET', marketPlaceUrl);
+//                xhr.send();
+//            }
+//        }
+//        iframeMarketplaceCallback();
     </script>
 </body>
 </html>
