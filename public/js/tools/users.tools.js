@@ -494,6 +494,8 @@ var toolUserManagement = {
                             //reload the dashboard plugins menu to update the plugin rights
                             melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
                                 melisDashBoardDragnDrop.dragWidget();
+                                //remove dashboard plugin menu indicator if its loaded already
+                                $(".melis-core-dashboard-dnd-box").removeClass("hasCached");
                             });
                         }
                 }

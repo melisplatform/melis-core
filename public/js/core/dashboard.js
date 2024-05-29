@@ -230,19 +230,22 @@ var dashboard = (function() {
 				}
 
             if($($el).closest(".melis-core-dashboard-dnd-box").hasClass("shown")){
-                $.ajax({
-                    type: 'GET',
-                    url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
-                    beforeSend: function(){
-                        loader.addLoadingDashboardPluginMenu();
-                    }
-                }).done(function(data){
-                    $("#dashboardMenuContent").html(data.view);
-                    setTimeout(function(){
-                        melisDashBoardDragnDrop.init(false);
-                    }, 100);
-                    loader.removeLoadingDashboardPluginMenu();
-                });
+				if(!$($el).closest(".melis-core-dashboard-dnd-box").hasClass("hasCached")) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
+                        beforeSend: function () {
+                            loader.addLoadingDashboardPluginMenu();
+                        }
+                    }).done(function (data) {
+                        $("#dashboardMenuContent").html(data.view);
+                        setTimeout(function () {
+                            melisDashBoardDragnDrop.init(false);
+                            $($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached");
+                        }, 100);
+                        loader.removeLoadingDashboardPluginMenu();
+                    });
+                }
             }
 		}
 
