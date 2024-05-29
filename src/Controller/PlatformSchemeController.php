@@ -304,6 +304,13 @@ class PlatformSchemeController extends MelisAbstractActionController
                                         file_put_contents($assetsFolder.'schemes.css', $content);
                                     }
 
+                                    //generate scheme file time
+                                    $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+                                    $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
+                                    if(!empty($platformData)){
+                                        $platformTable->save(['plf_scheme_file_time' => time()], $platformData->plf_id);
+                                    }
+
                                     $success = 1;
                                     $textMessage = 'tr_meliscore_platform_scheme_save_ok';
                                 }
