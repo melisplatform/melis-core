@@ -43,17 +43,22 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
              * check if we are in login page
              */
             if ($path == 'meliscore_login') {
+                $platformTable = $this->serviceManager->get('MelisCoreTablePlatform');
+                $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
+                $time = '';
+                if(!empty($platformData))
+                    $time = '?v='.$platformData->plf_bundle_cache_time;
                 /**
                  * check if bundle for login is available
                  */
                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css')) {
                     $cssFiles = [];
-                    $cssFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css?v='.time();
+                    $cssFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css'.$time;
                 }
 
                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js')) {
                     $jsFiles = [];
-                    $jsFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js?v='.time();
+                    $jsFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js'.$time;
                 }
             }
         }

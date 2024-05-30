@@ -9,6 +9,7 @@
 
 namespace MelisCore;
 
+use Laminas\ModuleManager\ModuleEvent;
 use MelisCore\Listener\MelisChangeLangOnCreatePassListener;
 use MelisCore\Listener\MelisCoreClearCacheListenerListener;
 use MelisCore\Listener\MelisCoreDashboardPluginRightsTreeViewListener;
@@ -38,6 +39,7 @@ use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
 use Laminas\Stdlib\ArrayUtils;
+use MelisCore\Listener\MelisGenerateBundleListener;
 
 /**
  * Class Module
@@ -333,10 +335,12 @@ class Module
 
         }, 100);
 
-
         $events = $mm->getEventManager();
 
+        $events->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, [new MelisGenerateBundleListener(), 'onLoadModulesPost']);
     }
+
+
 
     public function getConfig()
     {
