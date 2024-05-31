@@ -1813,8 +1813,8 @@ table.table.dataTable.table-striped>tbody>tr:nth-of-type(2n+1)>* {
  * modal ko and multi ko notification 
  * .modal, z-index: 10001 !important; but issue on melis-design modals
  */
-.modal {
-	z-index: 10001;
+.modal.bootstrap-dialog {
+	z-index: 10001 !important;
 }
 .modal-content {
     position: relative;
