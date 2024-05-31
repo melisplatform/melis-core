@@ -363,6 +363,9 @@ body {
 .limit {
 	color: rgb(255, 0, 0);
 }
+.filter-bar .limit .dt-length label {
+	color: #686868;
+}
 .melis-seo-desc {
 	resize: none;
 }

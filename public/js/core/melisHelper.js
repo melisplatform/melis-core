@@ -875,7 +875,8 @@ var melisHelper = (function() {
 
 					melisHelper.zoneReload(zoneId, melisKey, parameters);
 
-					const $modal = new bootstrap.Modal('#'+modalID, {
+					//const $modal = new bootstrap.Modal('#'+modalID, {
+					const $modal = bootstrap.Modal.getOrCreateInstance('#'+modalID, {
 						show: true,
 						keyboard: false,
 						backdrop: modalBackDrop

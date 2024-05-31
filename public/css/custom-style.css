@@ -1880,3 +1880,6 @@ body {
 .pw-show-ask:hover {
 	text-decoration: none;
 }
+.modal .btn {
+	font-size: 0.875rem;
+}
