@@ -1883,3 +1883,19 @@ body {
 .modal .btn {
 	font-size: 0.875rem;
 }
+.dt-paging .pagination .dt-paging-button .page-link:visited,
+.dt-paging .pagination .dt-paging-button .page-link:focus,
+.dt-paging .pagination .dt-paging-button .page-link:active {
+	color: #fff;
+	text-decoration: none;
+}
+.dt-paging .pagination .dt-paging-button .page-link:hover,
+.dt-paging .pagination {
+	--bs-pagination-font-size: 0.875rem;
+}
+.pagination>li.primary>a:focus,
+.pagination>li>a:hover,
+.pagination>li.primary>a {
+	color: #fff;
+	text-decoration: none;
+}

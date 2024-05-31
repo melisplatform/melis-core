@@ -643,6 +643,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                     ' . $finalTblOptionStr . '
                     responsive:true,
                     processing: true,
+                    pagingType: "simple_numbers",
                     lengthMenu: [ [5, 10, 25, 50], [5, 10, 25, 50] ],
                     ajax: {
                         url: "' . $ajaxUrl . '",
