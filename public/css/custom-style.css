@@ -1896,6 +1896,5 @@ body {
 .pagination>li.primary>a:focus,
 .pagination>li>a:hover,
 .pagination>li.primary>a {
-	color: #fff;
 	text-decoration: none;
 }
