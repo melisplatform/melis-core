@@ -1876,3 +1876,7 @@ body {
 	overflow-y: auto !important;
     overflow-x: hidden !important;
 }
+/* jQuery migration */
+.pw-show-ask:hover {
+	text-decoration: none;
+}
