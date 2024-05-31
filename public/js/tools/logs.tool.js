@@ -179,7 +179,7 @@ function exportData(url) {
     var downloadLink = document.createElement("a");
 		downloadLink.href = url;
 		document.body.appendChild(downloadLink);
-		downloadLink.trigger("click");
+		downloadLink.click();
 		document.body.removeChild(downloadLink);
     	if ( $("#btn-export-logs-cancel").length > 0 ) $("#btn-export-logs-cancel").trigger("click");
 }
