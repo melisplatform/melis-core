@@ -1811,9 +1811,10 @@ table.table.dataTable.table-striped>tbody>tr:nth-of-type(2n+1)>* {
 }
 /* 
  * modal ko and multi ko notification 
+ * .modal, z-index: 10001 !important; but issue on melis-design modals
  */
 .modal {
-	z-index: 10001 !important;
+	z-index: 10001;
 }
 .modal-content {
     position: relative;
@@ -1854,8 +1855,8 @@ body {
 a[data-bs-toggle="tab"] {
 	text-decoration: none;
 }
-.btn {
-	--bs-btn-font-size: .875rem;
+.me-heading .btn {
+	font-size: .875rem;
 }
 .custom-accordion-heading a {
 	text-decoration: none;

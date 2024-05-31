@@ -298,7 +298,7 @@
 		 * @param callback
 		 */
 		_call: function(callback) {
-			if ( callback && $.isFunction(callback) ) {
+			if ( callback && typeof callback === "function" ) {
 				callback.apply(this, Array.prototype.slice.call(arguments, 1));
 			}
 		},

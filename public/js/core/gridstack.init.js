@@ -69,9 +69,6 @@ var melisDashBoardDragnDrop = {
         }
 
         self.$gs.gridstack(options);
-        /* var $grid = GridStack.init(options);
-
-        console.log({$grid}); */
     },
     // adjust grid height values
     setAdjustGridMeasurements: function() {
@@ -745,10 +742,6 @@ var melisDashBoardDragnDrop = {
             bubblePluginMinWidth    = $bubblePlugin.data("min-width"),
             bubblePluginMaxWidth    = $bubblePlugin.data("max-width");
 
-            /* console.log(`checkDashboard() $gs.data("min-width"): `, $gs.data("min-width") );
-            console.log(`checkDashboard() $gs.attr("data-min-width"): `, $gs.attr("data-min-width") );
-            console.log(`checkDashboard() typeof $gs.attr("data-min-width"): `, typeof $gs.attr("data-min-width") ); */
-
             // checks dashboard's elements widths
             self.checkDashboardElemWidths();
 
@@ -1029,7 +1022,6 @@ var melisDashBoardDragnDrop = {
             $activeGs = $("#"+activeTabId+" .grid-stack");
 
             if ( ! this.isEmpty( $activeGs ) ) {
-                console.log(`countGsItems() Not empty!!`);
                 if ( $activeGs.find(".grid-stack-item").length )
                     count = $activeGs.find(".grid-stack-item").length;           
             }
@@ -1045,7 +1037,7 @@ var melisDashBoardDragnDrop = {
     },
     // check if gs is empty
     isEmpty: function(el) {
-        return !String.prototype.trim(el.html());
+        return !el.html().trim();
     },
     // checks dashboard's elements width adjustment
     checkDashboardElemWidths: function() {

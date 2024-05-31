@@ -224,7 +224,7 @@ return array(
                     '/melis/get-translations',
                     // jquery-ui is in melis-core-concat-plugins.js
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
-                    '/MelisCore/assets/components/library/jquery/jquery-migrate.min.js',
+                    //'/MelisCore/assets/components/library/jquery/jquery-migrate.min.js',
 
                     // Concat plugins
                     '/MelisCore/js/pluginConcat/melis-core-concat-plugins.js',
@@ -302,12 +302,10 @@ return array(
                     // lists of assets that will be loaded in the layout
                     'css' => [
                         '/MelisCore/build/css/bundle.css?v=05222024',
-                        //'/MelisCore/build/css/bundle.css?v='.date('YmdHis')
                     ],
                     'js' => [
                         '/melis/get-translations',
                         '/MelisCore/build/js/bundle.js?v=05222024',
-                        //'/MelisCore/build/js/bundle.js?v='.date('YmdHis')
                     ]
                 ]
             ),

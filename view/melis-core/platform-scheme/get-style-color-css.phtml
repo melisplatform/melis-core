@@ -31,6 +31,8 @@
 .client-contact-address .panel-default>.panel-heading {
     background-color: <?= $primaryColor; ?> !important;
 }
+.accordion-button:not(.collapsed),
+.accordion-button,
 #btnDelImg,
 .cron-info-toggle,
 .progressContent .progress .text-danger,
@@ -266,8 +268,15 @@ body .navbar.main.navbar-primary {
 }
 
 /* Widgets */
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons,
+.widget.widget-tabs-double .widget-head ul li a.glyphicons:hover, 
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons:hover, 
+.widget.widget-tabs-double.widget-regular .widget-head ul li.active a i:before,
+.widget.widget-tabs-double.widget-regular .widget-head ul li.active a,
 .modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons,
 .modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons i:before,
+.widget.widget-tabs .widget-head ul li.active a.glyphicons,
+.widget.widget-tabs .widget-head ul li.active a.glyphicons i:before
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons i:before {
     color: <?= $primaryColor; ?>;
@@ -889,9 +898,19 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-left-color: <?= $secondaryColor; ?>;
 }
 
+.bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-bottom-color: <?= $secondaryColor; ?> !important;
+}
+
 .tooltip.fade.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
 .tooltip.fade.bs-tooltip-bottom .arrow::before {
     border-bottom-color: <?= $secondaryColor; ?> !important;
+}
+
+.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-top-color: <?= $secondaryColor; ?> !important;
 }
 
 .tooltip.fade.bs-tooltip-auto[x-placement^=top] .arrow::before,
@@ -899,10 +918,21 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-top-color: <?= $secondaryColor; ?> !important;
 }
 
+.bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before, 
+.bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: <?= $secondaryColor; ?> !important;
+}
+
 .tooltip.fade.bs-tooltip-auto[x-placement^=right] .arrow::before, 
 .tooltip.fade.bs-tooltip-right .arrow::before {
     border-right-color: <?= $secondaryColor; ?> !important;
 }
+
+.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: <?= $secondaryColor; ?> !important;
+}
+
 .bs-tooltip-auto[x-placement^="left"] .arrow::before,
 .bs-tooltip-left .arrow::before,
 .tooltip.fade.bs-tooltip-auto[x-placement^=left] .arrow::before, 
