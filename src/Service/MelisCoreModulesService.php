@@ -905,15 +905,24 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function replaceURL($css, $filePath)
     {
-
         $moduleName = 'MelisCore';
+        $postPath = '';
         if(!empty($filePath)) {
             $filePath = explode('/', $filePath);
-            $moduleName = $filePath[1] ?? 'MelisCore';
+            $moduleName = $filePath[1];
+            /**
+             * Check if file is from vendor
+             */
+            $assetManagerService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
+            $modulePath = $assetManagerService->getModulePath($filePath[1], false);
+            $moduleFilePart = explode('/', $modulePath);
+            if($moduleFilePart[1] == 'vendor'){
+                $postPath = 'build/';
+            }
         }
 
-//        $domain = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
-        $path = '/'.$moduleName.'/build/';
+        $path = '/'.$moduleName.'/'.$postPath;
+
         // Clear out the line breaks
         $content = str_replace('<br />', '', $css);
 
