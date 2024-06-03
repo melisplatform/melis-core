@@ -1898,3 +1898,11 @@ body {
 .pagination>li.primary>a {
 	text-decoration: none;
 }
+select {
+	appearance: menulist !important;
+	-webkit-appearance: menulist !important;
+	-moz-webkit-appearance: menulist !important;
+}
+.dt-length .form-select {
+	--bs-form-select-bg-img: none;
+}
