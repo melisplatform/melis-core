@@ -826,8 +826,13 @@ class MelisCoreModulesService extends MelisServiceManager
             foreach($array as $key => $val){
                 $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]" . $val;
                 $cleanString = file_get_contents($url);
-                if($type == 'css')
+                if($type == 'css') {
                     $cleanString = $this->replaceURL($cleanString, $val);
+                }elseif($type == 'js'){//make sure it ends with `;` to avoid problem on combining
+                    if(!str_ends_with($cleanString, ';')){
+                        $cleanString .= ';';
+                    }
+                }
 
                 $jsString .= $cleanString;
             }
