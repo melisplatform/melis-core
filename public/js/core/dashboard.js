@@ -229,6 +229,9 @@ var dashboard = (function() {
 					}
 				}
 
+            /**
+             * This will request a plugin menu content
+             */
             if($($el).closest(".melis-core-dashboard-dnd-box").hasClass("shown")){
 				if(!$($el).closest(".melis-core-dashboard-dnd-box").hasClass("hasCached")) {
                     $.ajax({
@@ -240,7 +243,7 @@ var dashboard = (function() {
                     }).done(function (data) {
                         $("#dashboardMenuContent").html(data.view);
                         setTimeout(function () {
-                            melisDashBoardDragnDrop.init(false);
+                            melisDashBoardDragnDrop.init();
                             $($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached");
                         }, 100);
                         loader.removeLoadingDashboardPluginMenu();

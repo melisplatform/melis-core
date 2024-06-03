@@ -452,6 +452,45 @@ var melisDashBoardDragnDrop = {
                     }
                 }
             }
+
+
+        if ( gsItems <= 0 ) {
+            if(togglePluginBox) {
+                /**
+                 * This will request a plugin menu content
+                 */
+                if($($pluginBox).hasClass("shown")){
+                    if(!$($pluginBox).hasClass("hasCached")) {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
+                            beforeSend: function () {
+                                loader.addLoadingDashboardPluginMenu();
+                            }
+                        }).done(function (data) {
+                            $("#dashboardMenuContent").html(data.view);
+                            setTimeout(function () {
+                                /**
+                                 * call this function to make the drag n drop menus draggable again
+                                 */
+                                melisDashBoardDragnDrop.cacheDom();
+                                melisDashBoardDragnDrop.gsSetOptions();
+                                melisDashBoardDragnDrop.dragWidget();
+                                melisDashBoardDragnDrop.dropWidget(melisDashBoardDragnDrop.melisWidgetHandle);
+                                melisDashBoardDragnDrop.dragStopWidget();
+                                melisDashBoardDragnDrop.resizeStopWidget();
+                                melisDashBoardDragnDrop.setAdjustGridMeasurements();
+                                melisDashBoardDragnDrop.latestCommentsPluginUIRes();
+                                melisDashBoardDragnDrop.checkDashboardElemWidths();
+                                //set indicator whether we load already the cached data
+                                $($pluginBox).addClass("hasCached");
+                            }, 100);
+                            loader.removeLoadingDashboardPluginMenu();
+                        });
+                    }
+                }
+            }
+        }
     },
     // disables the plugin sidebar
     disablePlugSidebar: function() {
