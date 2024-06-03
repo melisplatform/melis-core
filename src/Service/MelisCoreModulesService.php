@@ -791,7 +791,10 @@ class MelisCoreModulesService extends MelisServiceManager
                 if(!empty($moduleFilePart)){
                     if($moduleFilePart[1] == 'module'){//in module
                         //check if bundle is enable
-                        $appsConfig = $melisAppConfig->getItem(strtolower(end($moduleFilePart)));
+                        $appsConfig = $melisAppConfig->getItem(end($moduleFilePart));
+                        if(empty($appsConfig))
+                            $appsConfig = $melisAppConfig->getItem(strtolower(end($moduleFilePart)));
+
                         if(!empty($appsConfig)){
                             if(isset($appsConfig['ressources']['build']['disable_bundle'])){
                                 if(!$appsConfig['ressources']['build']['disable_bundle']){
