@@ -1915,3 +1915,6 @@ select {
 label {
 	margin-bottom: 0.5rem;
 }
+.melis-dashboard-bubble-plugin .btn {
+	font-size: 0.875rem;
+}

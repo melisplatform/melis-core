@@ -556,7 +556,7 @@ var melisHelper = (function() {
 				melisKey +
 				"' role='presentation'>";
 			li +=
-				"<a data-bs-toggle='tab' class='nav-link dropdown-toggle menu-icon tab-element' data-bs-target='#"+zoneId+"' href='#" +
+				"<a data-bs-toggle='tab' class='nav-link dropdown-toggle menu-icon tab-element' href='#" +
 				zoneId +
 				"' data-id='" +
 				zoneId +
