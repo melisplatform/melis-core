@@ -2884,7 +2884,8 @@ div.dataTables_wrapper div.dataTables_length select.new_filter {
 
 	/* tools - header modal - sorting */
 	.melisToolContainer .filter-bar .form-group {
-		margin: 5px 0;
+		/* margin: 5px 0; */
+		margin: 0 0 5px;
 		float: none;
 	}
 	.melisToolContainer .filter-bar .form-group:last-child a {

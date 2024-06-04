@@ -1906,3 +1906,6 @@ select {
 .dt-length .form-select {
 	--bs-form-select-bg-img: none;
 }
+.melisCmsPageHistoricSelectAction {
+	width: auto;
+}
