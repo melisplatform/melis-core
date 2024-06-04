@@ -1909,3 +1909,9 @@ select {
 .melisCmsPageHistoricSelectAction {
 	width: auto;
 }
+.form-control {
+	font-size: 0.875rem;
+}
+label {
+	margin-bottom: 0.5rem;
+}
