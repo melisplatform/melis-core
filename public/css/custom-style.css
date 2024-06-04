@@ -1886,7 +1886,7 @@ body {
 .dt-paging .pagination .dt-paging-button .page-link:visited,
 .dt-paging .pagination .dt-paging-button .page-link:focus,
 .dt-paging .pagination .dt-paging-button .page-link:active {
-	color: #fff;
+	/* color: #fff; */
 	text-decoration: none;
 }
 .dt-paging .pagination .dt-paging-button .page-link:hover,

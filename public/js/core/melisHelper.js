@@ -983,6 +983,7 @@ var melisHelper = (function() {
 				searching: true,
 				// ordering of the table default [column,direction]
 				order: [[0, "desc"]],
+				pagingType: 'simple_numbers',
 				responsive: true,
 				processing: true,
 				lengthMenu: [
