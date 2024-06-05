@@ -1921,3 +1921,7 @@ label {
 .product-text-tab-content form .input-group .form-control {
 	width: 1%;
 }
+.dataTable thead tr th,
+.dataTable thead tr th.dt-type-numeric {
+	text-align: left;
+}
