@@ -1909,6 +1909,7 @@ select {
 .melisCmsPageHistoricSelectAction {
 	width: auto;
 }
+.accountContactLink,
 .form-control {
 	font-size: 0.875rem;
 }
