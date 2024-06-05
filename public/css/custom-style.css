@@ -1918,3 +1918,6 @@ label {
 .melis-dashboard-bubble-plugin .btn {
 	font-size: 0.875rem;
 }
+.product-text-tab-content form .input-group .form-control {
+	width: 1%;
+}
