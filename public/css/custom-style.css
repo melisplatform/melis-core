@@ -1925,3 +1925,7 @@ label {
 .dataTable thead tr th.dt-type-numeric {
 	text-align: left;
 }
+.card-body,
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+	color: #686868;
+}
