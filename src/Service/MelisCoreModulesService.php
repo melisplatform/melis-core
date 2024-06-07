@@ -828,7 +828,7 @@ class MelisCoreModulesService extends MelisServiceManager
             $jsString = '';
             foreach($array as $key => $val){
                 $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]" . $val;
-                $cleanString = file_get_contents($url);
+                $cleanString = $this->getFileContent($url, false);//file_get_contents($url);
                 if($type == 'css') {
                     $cleanString = $this->replaceURL($cleanString, $val);
                 }elseif($type == 'js'){//make sure it ends with `;` to avoid problem on combining
@@ -859,7 +859,7 @@ class MelisCoreModulesService extends MelisServiceManager
                 $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
                 foreach($jsFiles as $key => $js) {
                     $url = $hostName . $js;
-                    $jsMinifier->add($this->removeComments($url));
+                    $jsMinifier->add($this->getFileContent($url));
                 }
                 $path = $this->createDIR('js');
                 $path = $path.'/bundle-'.$moduleName.'.js';
@@ -885,7 +885,7 @@ class MelisCoreModulesService extends MelisServiceManager
                     /**
                      * This will replace all url inside css to put the correct url
                      */
-                    $fileContent = $this->replaceURL($this->removeComments($url), $css);
+                    $fileContent = $this->replaceURL($this->getFileContent($url), $css);
                     $cssMinifier->add($fileContent);
                 }
                 $path = $this->createDIR('css');
@@ -945,16 +945,27 @@ class MelisCoreModulesService extends MelisServiceManager
 
 
     /**
-     * Remove comments from the file
-     * to make it will be minified
-     *
      * @param $fileStr
-     * @return string|string[]|null
+     * @param bool $removeComments
+     * @return bool|mixed|string
      */
-    private function removeComments($fileStr)
+    private function getFileContent($fileStr, $removeComments = true)
     {
-        $fileStr = file_get_contents($fileStr);
-        $text = preg_replace('!/\*.*?\*/!s', '', $fileStr);
+        if(function_exists('curl_version')) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $fileStr);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            $text = curl_exec($ch);
+            curl_close($ch);
+        }else{
+            $text = file_get_contents($fileStr);
+        }
+
+        if($removeComments)
+            $text = preg_replace('!/\*.*?\*/!s', '', $text);
+
         return $text;
     }
 
