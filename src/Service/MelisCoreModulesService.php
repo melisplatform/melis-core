@@ -853,10 +853,9 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function minifyJs($array, &$arrayPaths)
     {
-        $jsMinifier = new Minify\JS();
         if(!empty($array)){
-
             foreach($array as $moduleName => $jsFiles){
+                $jsMinifier = new Minify\JS();
                 $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
                 foreach($jsFiles as $key => $js) {
                     $url = $hostName . $js;
@@ -876,10 +875,10 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function minifyCss($array, &$arrayPaths)
     {
-        $cssMinifier = new Minify\CSS();
         if(!empty($array)){
 
             foreach($array as $moduleName => $cssFiles){
+                $cssMinifier = new Minify\CSS();
                 $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
                 foreach($cssFiles as $key => $css) {
                     $url = $hostName . $css;
