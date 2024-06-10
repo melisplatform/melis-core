@@ -108,6 +108,10 @@ class LanguageController extends MelisAbstractActionController
                 $flashMsgSrv = $this->getServiceManager()->get('MelisCoreFlashMessenger');
                 $flashMsgSrv->clearFlashMessage();
                 $this->getEventManager()->trigger('meliscore_get_recent_user_logs', $this, array());
+
+                //clear cache when changing language
+                $coreCacheService = $this->getServiceManager()->get('MelisCoreCacheSystemService');
+                $coreCacheService->deleteCacheByPrefix('*', PluginViewController::cacheConfig);
             }
         }
         else
