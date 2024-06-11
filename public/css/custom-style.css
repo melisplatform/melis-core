@@ -1933,3 +1933,12 @@ label {
 .tokens-container .placeholder {
 	background-color: transparent;
 }
+.btnUpdateUser:focus,
+.btnUpdateUser:active,
+.btnUpdateUser:hover,
+.btnUpdateUser {
+	text-decoration: none;
+}
+#orderCheckoutCountries {
+	width: auto !important;
+}

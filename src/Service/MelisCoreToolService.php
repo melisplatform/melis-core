@@ -510,7 +510,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             }
 
             if (!empty($actionButtons)) {
-                // $jsonColumns .= '{"data":"actions"}; commented, generates warning, https://datatables.net/tn/4
+                //$jsonColumns .= '{"data":"actions"}'; commented, generates warning, https://datatables.net/tn/4
                 $jsonColumns .= '{"data": null}';
 
                 // Preparing the Table Action column Buttons
@@ -678,7 +678,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             var ' . str_replace("#", "$", $tableId) . ' = ' . $fnName . '();
             $("' . $tableId . '").on("init.dt", function(e, settings) {
                 ' . $jsSdomContentInit . '
-                ' . $tableSearchPlugin . '   
+                ' . $tableSearchPlugin . '
             });';
         }
 
