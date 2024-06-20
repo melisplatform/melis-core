@@ -222,7 +222,7 @@ var loader = (function(window) {
             }
         }
 
-        // adding of loader overlay on left menu
+        // adding of loader overlay on melis cms plugin menu
         function addLoadingCmsPluginMenu(pageId) {
             var $melisCms           = $body.find("#"+pageId+"[data-meliskey='meliscms_page']"),
                 $melisIframe        = $melisCms.find(".melis-iframe"),
@@ -233,7 +233,7 @@ var loader = (function(window) {
                 }
         }
 
-        // remove loader overlay on left menu on window load
+        // remove loader overlay on melis cms plugin menu
         function removeLoadingCmsPluginMenu(pageId) {
             var $melisCms           = $body.find("#"+pageId+"[data-meliskey='meliscms_page']"),
                 $melisIframe        = $melisCms.find(".melis-iframe"),
