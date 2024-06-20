@@ -222,6 +222,30 @@ var loader = (function(window) {
             }
         }
 
+    // adding of loader overlay on left menu
+    function addLoadingCmsPluginMenu() {
+        var zoneId              = activeTabId.split("_")[0],
+            $melisCms           = $body.find("#"+zoneId+"_id_meliscms_page[data-meliskey='meliscms_page']"),
+            $melisIframe        = $melisCms.find(".melis-iframe"),
+            $dashMenu           = $melisIframe.find("#cmsPluginsMenuLoader");
+
+        if ( $dashMenu.length > 0 ) {
+            $dashMenu.prepend(overlayLoader);
+        }
+    }
+
+    // remove loader overlay on left menu on window load
+    function removeLoadingCmsPluginMenu() {
+        var zoneId              = activeTabId.split("_")[0],
+            $melisCms           = $body.find("#"+zoneId+"_id_meliscms_page[data-meliskey='meliscms_page']"),
+            $melisIframe        = $melisCms.find(".melis-iframe"),
+            $dashMenu           = $melisIframe.find("#cmsPluginsMenuLoader");
+
+        if ( $dashMenu.length > 0 ) {
+            $dashMenu.remove();
+        }
+    }
+
         init();
 
         return {
@@ -246,6 +270,10 @@ var loader = (function(window) {
 
             //for dashboard plugins menu
             addLoadingDashboardPluginMenu       : addLoadingDashboardPluginMenu,
-            removeLoadingDashboardPluginMenu    : removeLoadingDashboardPluginMenu
+            removeLoadingDashboardPluginMenu    : removeLoadingDashboardPluginMenu,
+
+            //for cms plugins menu
+            addLoadingCmsPluginMenu             : addLoadingCmsPluginMenu,
+            removeLoadingCmsPluginMenu          : removeLoadingCmsPluginMenu
         };
 })(window);
