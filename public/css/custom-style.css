@@ -352,6 +352,9 @@ a:not([href]).btn-danger:hover {
 .input-group-btn {
 	display: table-cell;
 }
+.pageSelect .form-control {
+	width: 100% !important;
+}
 .input-group .form-control {
 	width: 100%;
 }

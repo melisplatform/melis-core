@@ -295,17 +295,17 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => true,
+                    'use_build_assets' => false,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css?v=05222024',
+                        '/MelisCore/build/css/bundle.css?v=06102024',
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js?v=05222024',
+                        '/MelisCore/build/js/bundle.js?v=06102024',
                     ]
                 ]
             ),
