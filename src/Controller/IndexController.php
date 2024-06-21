@@ -36,10 +36,18 @@ class IndexController extends MelisAbstractActionController
         $schemeSvc  = $this->getServiceManager()->get('MelisCorePlatformSchemeService');
         $schemeData = $schemeSvc->getCurrentScheme();
 
+        //scheme file time
+        $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
+        $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
+        $time = '';
+        if(!empty($platformData))
+            $time = $platformData->plf_scheme_file_time;
+
         $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets();
 
         $this->layout()->setVariable('schemes', $schemeData);
         $this->layout()->setVariable('bundle', $bundleAsset);
+        $this->layout()->setVariable('schemeTime', $time);
 
         return $view;
     }

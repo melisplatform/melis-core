@@ -6,25 +6,8 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
-.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before, 
-.bs-tooltip-start .tooltip-arrow::before {
-    border-left-color: <?= $secondaryColor; ?>;
-}
-.table-primary thead th {
-    background-color: <?= $primaryColor; ?> !important;
-}
-.daterangepicker .ranges li.active,
-.daterangepicker .ranges li:hover {
-    background: <?= $primaryColor; ?> !important;
-    border: 1px solid <?= $primaryColor; ?> !important;
-}
-.drp-buttons .cancelBtn {
+.melis-modal-cont .modal-content h3 a .glyphicons.lock i::before {
     color: <?= $primaryColor; ?> !important;
-	border-color: <?= $primaryColor; ?> !important;
-}
-.drp-buttons .cancelBtn:hover {
-    background: <?= $primaryColor; ?> !important;
-    border-color: <?= $primaryColor; ?> !important;
 }
 .grid-stack .grid-stack-placeholder>.placeholder-content,
 .client-contact-address .default-card>.card-header,

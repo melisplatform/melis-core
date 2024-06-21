@@ -12,10 +12,14 @@
 			<p><?= $this->translate('tr_meliscore_module_management_modules_description'); ?></p>
 		</div>
   		<div class="me-hr col-12 col-md-3">
-  			<a id="btnModulesSave" class="btn btn-success" title="save settings">
-  				<i class="fa fa-save"></i>
-      			<?= $this->translate('tr_meliscore_module_management_modules_save'); ?>
-   			</a>
+  			<button id="btnModulesBundle" class="btn btn-info">
+  				<i class="fa fa-compress"></i>
+      			<?= $this->translate('tr_meliscore_module_management_modules_bundle'); ?>
+   			</button>
+            <a id="btnModulesSave" class="btn btn-success" title="save settings">
+                <i class="fa fa-save"></i>
+                <?= $this->translate('tr_meliscore_module_management_modules_save'); ?>
+            </a>
   		
 			<?php 
 			if(!empty($this->zoneconfig['interface'])) {

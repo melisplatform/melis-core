@@ -207,6 +207,22 @@ var loader = (function(window) {
             }, 3000);
         }
 
+        // adding of loader overlay on left menu
+        function addLoadingDashboardPluginMenu() {
+            var $dashMenu = $("#dashboardPluginsMenuLoader");
+            if ( $dashMenu.length > 0 ) {
+                $dashMenu.prepend(overlayLoader);
+            }
+        }
+
+        // remove loader overlay on left menu on window load
+        function removeLoadingDashboardPluginMenu() {
+            var $loader = $("#dashboardPluginsMenuLoader #loader");
+            if ( $loader.length > 0 ) {
+                $loader.remove();
+            }
+        }
+
         init();
 
         return {
@@ -227,6 +243,10 @@ var loader = (function(window) {
             checkPageLoading                    : checkPageLoading,
 
             // for click events melisCms publishPage, calls #2 functions
-            checkClickEventPageLoading          : checkClickEventPageLoading
+            checkClickEventPageLoading          : checkClickEventPageLoading,
+
+            //for dashboard plugins menu
+            addLoadingDashboardPluginMenu       : addLoadingDashboardPluginMenu,
+            removeLoadingDashboardPluginMenu    : removeLoadingDashboardPluginMenu
         };
 })(window);

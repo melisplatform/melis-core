@@ -809,23 +809,45 @@ var melisHelper = (function() {
 							"#000"
 						);
 					}
-					if (callback !== undefined || callback !== null) {
-						if (callback) {
-							callback();
-						}
+
+					//this will reload all cached dashboard plugins
+					if ($("#" + zoneId).length > 0) {
+						$.each($("#" + zoneId + " .grid-stack-item"), function () {
+							$(this).find(".dashboard-plugin-refresh").trigger("click");
+						});
+
+						// if(zoneId == 'id_melismarketing_toolstree_section_dashboard'){
+						// 	if($("#"+zoneId).hasClass("active")){
+							//find active dashboard end with _toolstree_section_dashboard
+							if($("[id$=_toolstree_section_dashboard]").hasClass("active")){
+								//update bubble plugins
+								var bubble = MelisCoreDashboardBubblePlugin.showBubblePlugins();
+								if(bubble == true){
+									$("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").removeClass("hidden");
+									$("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css('visibility', 'visible');
+
+									MelisCoreDashboardBubbleNewsMelisPlugin.getNews();
+									MelisCoreDashboardBubbleNotificationsPlugin.getNotifications();
+									MelisCoreDashboardBubbleUpdatesPlugin.getUpdates();
+								}else{
+									$("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").addClass("hidden");
+									$("#"+zoneId+".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css('visibility', 'hidden');
+								}
+							}
+						// }
 					}
 				}, 300);
-			})
-			.fail(function(xhr, textStatus, errorThrown) {
-				//hide the loader
-				//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
-				alert(translations.tr_meliscore_error_message);
+		})
+		.fail(function(xhr, textStatus, errorThrown) {
+			//hide the loader
+			//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+			alert(translations.tr_meliscore_error_message);
 
-				$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
-					.parent("li")
-					.remove();
-				$("#" + zoneId).remove();
-			});
+			$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
+				.parent("li")
+				.remove();
+			$("#" + zoneId).remove();
+		});
 	}
 
 	// Requesting flag set to false so this function will set state to ready

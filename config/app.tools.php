@@ -1324,6 +1324,11 @@ return [
                                 'css' => ['width' => '10%'],
                                 'sortable' => true,
                             ],
+                            'plf_activate_cache' => [
+                                'text' => 'Cache',
+                                'css' => ['width' => '10%'],
+                                'sortable' => true,
+                            ],
                             'plf_name' => [
                                 'text' => 'tr_meliscore_tool_platform_forms_name',
                                 'css' => ['width' => '79%'],
@@ -1413,6 +1418,32 @@ return [
                                         ],
                                     ],
                                 ],
+                                [
+                                    'spec' => [
+                                        'name' => 'plf_activate_cache',
+                                        'type' => 'Select',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_tool_platform_activate_cache',
+                                            'tooltip' => 'tr_meliscore_tool_platform_activate_cache tooltip',
+                                            'switchOptions' => [
+                                                'label' => 'tr_meliscore_common_status',
+                                                'label-on' => 'tr_meliscore_common_yes',
+                                                'label-off' => 'tr_meliscore_common_nope',
+                                                'icon' => "glyphicon glyphicon-resize-horizontal",
+                                            ],
+                                            'value_options' => [
+                                                'on' => 'on',
+                                            ],
+                                            'disable_inarray_validator' => true
+                                        ],
+                                        'disable_inarray_validator' => true,
+                                        'attributes' => [
+                                            'id' => 'plf_activate_cache',
+                                            'value' => 1,
+                                            'required' => false
+                                        ],
+                                    ],
+                                ],
                             ],
                             'input_filter' => [
                                 'plf_id' => [
@@ -1474,6 +1505,14 @@ return [
                                 ],
                                 'plf_update_marketplace' => [
                                     'name' => 'plf_update_marketplace',
+                                    'required' => false,
+                                    'filters' => [
+                                        ['name' => 'StripTags'],
+                                        ['name' => 'StringTrim'],
+                                    ],
+                                ],
+                                'plf_activate_cache' => [
+                                    'name' => 'plf_activate_cache',
                                     'required' => false,
                                     'filters' => [
                                         ['name' => 'StripTags'],

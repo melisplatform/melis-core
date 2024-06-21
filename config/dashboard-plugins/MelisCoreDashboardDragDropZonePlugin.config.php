@@ -8,7 +8,6 @@ return array(
                     '/MelisCore/assets/components/plugins/gridstack/css/gridstack.css',
                     //'/MelisCore/assets/components/plugins/gridstack/gridstack-10.1.2/css/gridstack.min.css',
 
-                    // display notify / page walkthrough
                     '/MelisCore/assets/components/plugins/enjoyhint/css/enjoyhint.css'
                 ),
                 'js' => array(
@@ -21,8 +20,12 @@ return array(
 
                     '/MelisCore/js/core/gridstack.init.js',
 
-                    // display notify / page walkthrough
+                    // page walkthrough
+                    //'/MelisCore/assets/components/plugins/enjoyhint/js/lodash.min.js',
                     '/MelisCore/assets/components/plugins/enjoyhint/js/enjoyhint.js',
+
+                    // dashboard manipulation functionalities, .gridstack
+                    '/MelisCore/js/core/dashboard.js',
 
                     // page walkthrough
                     '/MelisCore/js/core/dashboard-notify.js'

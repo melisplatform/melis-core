@@ -286,7 +286,7 @@ return array(
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
-                    '/MelisCore/js/core/loader.js'
+                    '/MelisCore/js/core/loader.js',
                 ),
                 /**
                  * the "build" configuration compiles all assets into one file to make
@@ -301,11 +301,11 @@ return array(
 
                     // lists of assets that will be loaded in the layout
                     'css' => [
-                        '/MelisCore/build/css/bundle.css?v=06102024',
+                        '/MelisCore/build/css/bundle.css',
                     ],
                     'js' => [
                         '/melis/get-translations',
-                        '/MelisCore/build/js/bundle.js?v=06102024',
+                        '/MelisCore/build/js/bundle.js',
                     ]
                 ]
             ),
@@ -396,6 +396,13 @@ return array(
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
+                    'cache' => [
+                        'activated' => true,
+                        'name' => 'meliscore_leftmenu',
+                        'add' => [
+                            'userId'
+                        ]
+                    ],
                     'interface' => array(
                         'meliscore_leftmenu_identity' =>  array(
                             'conf' => array(
@@ -539,6 +546,13 @@ return array(
                                 'icon' => 'fa-tachometer',
                                 'dashboard' => true
                             ),
+                            'cache' => [
+                                'activated' => true,
+                                'name' => 'meliscore_dashboard_plugins',
+                                'add' => [
+                                    'userId'
+                                ]
+                            ],
                             'interface' => [
                                 'meliscore_dashboard_header' => [
                                     'conf' => [
@@ -583,6 +597,13 @@ return array(
                         'jscallback' => '',
                         'jsdatas' => array()
                     ),
+                    'cache' => [
+                        'activated' => true,
+                        'name' => 'meliscore_dashboard_menu',
+                        'add' => [
+                            'userId'
+                        ]
+                    ],
                 ),
                 'melis_dashboardplugin' => array(
                     'conf' => array(

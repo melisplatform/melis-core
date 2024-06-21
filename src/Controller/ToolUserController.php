@@ -1368,6 +1368,9 @@ class ToolUserController extends MelisAbstractActionController
                             }
 
                             $userTable->save($data, $userId);
+
+                            $isMyInfo = false;
+                            $loadProfile = null;
                             // check if you are updating your own info
                             $userSession = $melisCoreAuth->getStorage()->read();
                             if ($data['usr_login'] == $userSession->usr_login) {
@@ -1383,11 +1386,15 @@ class ToolUserController extends MelisAbstractActionController
                                 $userSession->usr_password = $savedPassword;
 
                                 $image = !empty($userSession->usr_image) ? base64_encode($userSession->usr_image) : null;
-                                $datas = [
-                                    'isMyInfo' => 1,
-                                    'loadProfile' => 'data:image/jpeg;base64,' . $image,
-                                ];
+                                $isMyInfo = true;
+                                $loadProfile = 'data:image/jpeg;base64,' . $image;
                             }
+                            $datas = [
+                                'isMyInfo' => $isMyInfo,
+                                'loadProfile' => $loadProfile,
+                                'usr_id' => $userId
+                            ];
+
                             // free up memory
                             unset($data);
                         }

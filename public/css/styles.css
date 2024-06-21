@@ -4860,11 +4860,11 @@ input#log_date_range {
 	margin-bottom: 20px;
 }
 
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
 	#id_meliscore_dashboard_bubble_plugins .bubble-plugin-flip-cards {
 		height: 212px;
 	}
-}
+} */
 
 /* for the Other Config login type of lock */
 
@@ -4896,12 +4896,15 @@ input#log_date_range {
   background: radial-gradient(#e61c23 0%, #e61c23 40%, transparent 50%, transparent);
   border-color: #e61c23;
 }
-
-.glyphicons.lock i::before {
+/*
+ * Issue on Icons:
+ * https://mantis2.uat.melistechnology.fr/view.php?id=6287
+ * Add specific selector class or id for exclusivity
+ */
+.melis-modal-cont .modal-content h3 a.glyphicons.lock i::before {
     font: 64px/1em 'Glyphicons Regular';
 	color: #e61c23;
 }
-
 
 /*
  * Datepicker issue on DateField
@@ -4953,6 +4956,7 @@ input#log_date_range {
 	cursor: pointer;
 }
 /* end Datepicker issue on DateField */
+<<<<<<< HEAD
 
 /* jQuery Migration */
 .daterangepicker {
@@ -4989,3 +4993,24 @@ input#log_date_range {
 	color: #fff;
 }
 /* end jQuery Migration */
+=======
+/* dashboard gridstack issue on scaled monitor */
+@-ms-viewport{
+	width: device-width;
+}
+@media (min-width: 768px) {
+    #content {
+        margin-left: 274px;
+    }
+}
+.btn-info.btn-regular {
+	background: #466baf;
+	border-color: #466baf;
+	color: #fff;
+}
+.btn-info.btn-regular:hover, 
+.btn-info.btn-regular:focus {
+    background: none;
+    color: #466baf;
+}
+>>>>>>> develop

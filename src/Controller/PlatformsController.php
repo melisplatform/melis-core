@@ -258,7 +258,15 @@ class PlatformsController extends MelisAbstractActionController
                 if (getenv('MELIS_PLATFORM') == $tableData[$ctr]['plf_name']){
                     $tableData[$ctr]['DT_RowClass'] = 'noPlatformDeleteBtn';
                 }
-                
+                //check if cache is active
+                // Updating marketplace status
+                $isCacheActive = '<i class="fa fa-fw fa-circle text-success"></i>';
+                if (!$tableData[$ctr]['plf_activate_cache'])
+                {
+                    $isCacheActive = '<i class="fa fa-fw fa-circle text-danger"></i>';
+                }
+                $tableData[$ctr]['plf_activate_cache'] = $isCacheActive;
+
                 // add DataTable RowID, this will be added in the <tr> tags in each rows
                 $tableData[$ctr]['DT_RowId'] = $tableData[$ctr]['plf_id'];
             }
@@ -359,6 +367,7 @@ class PlatformsController extends MelisAbstractActionController
 
                 $data = $form->getData();
                 $data['plf_update_marketplace'] = $data['plf_update_marketplace'] ?? 0;
+                $data['plf_activate_cache'] = $data['plf_activate_cache'] ?? 0;
 
                 $textMessage = 'tr_meliscore_tool_platform_prompts_new_success';
                 if ($id) {

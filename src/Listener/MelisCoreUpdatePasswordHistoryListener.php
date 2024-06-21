@@ -42,7 +42,7 @@ class MelisCoreUpdatePasswordHistoryListener extends MelisGeneralListener implem
                         $event->getTarget()->getEvent()->getApplication()->getServiceManager()->get('MelisUpdatePasswordHistoryService')->saveItem($userId, $password);
                     }
                 }
-        	},
+        	}
         );
     }
 }

@@ -11118,6 +11118,15 @@ if (!Function.prototype.bind) {
                     }, (i+1)*200);
                 }, (i+1)*800);
             });
+
+            /**
+             * This will refresh all dashboard plugins only if its in cache
+             */
+            if ($("#id_meliscore_toolstree_section_dashboard").length > 0) {
+                $.each($("#id_meliscore_toolstree_section_dashboard .grid-stack-item"), function () {
+                    $(this).find(".dashboard-plugin-refresh").trigger("click");
+                });
+            }
     });
 
 })(jQuery);

@@ -281,6 +281,9 @@ return [
     'tr_meliscore_module_management_modules' => 'Modules',
     'tr_meliscore_module_management_modules_description' => 'Activez ou désactivez ici les modules de la plateforme. Glissez-déposez les modules pour ajuster l&#39;ordre.',
     'tr_meliscore_module_management_modules_save' => 'Sauvegarder',
+    'tr_meliscore_module_management_modules_bundle' => 'Bundle',
+    'tr_meliscore_module_management_modules_bundle_failed' => 'Error occurred while bundling assets',
+    'tr_meliscore_module_management_modules_bundle_success' => 'Assets bundled successfully',
     'tr_meliscore_module_management_header' => 'Contenu du header',
     'tr_meliscore_module_management_content' => 'Contenu',
     'tr_meliscore_module_management_prompt_confirm' => 'Êtes-vous sûr de vouloir appliquer ces paramètres ?',
@@ -361,6 +364,8 @@ return [
     'tr_meliscore_tool_platform_update_marketplace tooltip' => 'Cocher pour autoriser les mises à jour du marketplace ou décocher pour les bloquer',
     'tr_meliscore_common_allow' => 'Autoriser',
     'tr_meliscore_tool_platform_invalid_platform_name' => 'Le nom de la plateforme ne peut contenir que des lettres et numéros, aucun espace ou caractère spécial',
+    'tr_meliscore_tool_platform_activate_cache' => 'Allow cache on this platform',
+    'tr_meliscore_tool_platform_activate_cache tooltip' => 'Check to allow cache on this platform',
 
     // Language Tool Translations
     'tr_meliscore_tool_language' => 'Langages du back-office',

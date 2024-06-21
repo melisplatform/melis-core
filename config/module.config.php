@@ -352,6 +352,7 @@ return [
             'MelisCoreGdprAutoDeleteToolService'    => \MelisCore\Service\MelisCoreGdprAutoDeleteToolService::class,
             'MelisPasswordSettingsService'          => \MelisCore\Service\MelisPasswordSettingsService::class,
             'MelisUpdatePasswordHistoryService'     => \MelisCore\Service\MelisUpdatePasswordHistoryService::class,
+            'MelisCoreCacheSystemService'           => \MelisCore\Service\MelisCoreCacheSystemService::class,
 
             // Model
             'MelisCoreTableLang'                    => \MelisCore\Model\Tables\MelisLangTable::class,
@@ -494,6 +495,7 @@ return [
             'layout/layoutCore'                     => __DIR__ . '/../view/layout/layoutCore.phtml',
             'layout/layoutBlank'                    => __DIR__ . '/../view/layout/layoutBlank.phtml',
             'layout/layout'                         => __DIR__ . '/../view/layout/layoutBlank.phtml',
+            'layout/cache'                          => __DIR__ . '/../view/layout/layoutCache.phtml',
             'melis-core/index/index'                => __DIR__ . '/../view/melis-core/index/index.phtml',
             'melis-core/plugin-view/generate'       => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
             'error/404'                             => __DIR__ . '/../view/error/404.phtml',
@@ -514,6 +516,8 @@ return [
             'melis-core/dashboard-plugin/bubble-chat'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-chat.phtml',
 
             'melis-core/dashboard-plugin/noformtemplate'   => __DIR__ . '/../view/melis-core/dashboard-plugins/noformtemplate.phtml',
+
+            'melis-core/dashboard-plugin/dashboard-menu-content'   => __DIR__ . '/../view/melis-core/dashboard-plugins/dashboard-menu-content.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
@@ -526,4 +530,30 @@ return [
     'tinyMCE' => [
         'tool' => 'MelisCore/public/js/tinyMCE/tool.php',
     ],
+    'caches' => [
+        'meliscore_platform_cache' => [
+            'active' => true, // activate or deactivate Melis Cache for this conf
+            'adapter' => \Laminas\Cache\Storage\Adapter\Filesystem::class,
+            'options' => [
+                'ttl' => 0,//60 * 60 * 24, // 24hrs
+                'namespace' => \MelisCore\Controller\PluginViewController::cacheConfig,
+                'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
+            ],
+            'plugins' => [
+                [
+                    'name' => 'exception_handler',
+                    'options' => [
+                        'throw_exceptions' => true
+                    ],
+                ],
+                [
+                    'name' => 'Serializer'
+                ]
+            ],
+            'ttls' => [
+                // add a specific ttl for a specific cache key (found via regexp]
+                // 'my_cache_key' => 60,
+            ]
+        ],
+    ]
 ];

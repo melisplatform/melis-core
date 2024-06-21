@@ -17,7 +17,7 @@
     $bundle = $this->layout()->bundle;
 
     if ($this->layout()->isLogin) {
-        $bundle = $this->MelisCoreHeadPlugin('/meliscore_login');
+        $bundle = $this->MelisCoreHeadPlugin('/meliscore_login', true);
     }
 
     echo $this->doctype();
@@ -81,9 +81,12 @@
             $this->headScript()->appendFile($this->basePath($jsFile));
         }
     }
+    $schemeTime = '';
+    if(!empty($this->schemeTime))
+        $schemeTime = '?v='.$this->schemeTime;
     ?>
 
-    <link href="/assets/css/schemes.css?<?= time(); ?>" media="screen" rel="stylesheet" type="text/css">
+    <link href="/assets/css/schemes.css<?= $schemeTime; ?>" media="screen" rel="stylesheet" type="text/css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -125,17 +128,17 @@
     <!-- modals container -->
     <div id="melis-modals-container"></div>
     <script defer>
-        function iframeMarketplaceCallback(){
-            var iframe = document.querySelectorAll(".marketplaceUpdate");
-            var marketPlaceUrl = 'http://marketplace.melisplatform.com/marketplace-update?modulelist=<?php echo $this->modules; ?>&&domain=<?php echo $this->domain?>&&scheme=<?php echo $this->scheme ?>';
-            for (i = 0; i < iframe.length; i++) {
-                var content = iframe[i].contentWindow.document;
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', marketPlaceUrl);
-                xhr.send();
-            }
-        }
-        iframeMarketplaceCallback();
+//        function iframeMarketplaceCallback(){
+//            var iframe = document.querySelectorAll(".marketplaceUpdate");
+//            var marketPlaceUrl = 'http://marketplace.melisplatform.com/marketplace-update?modulelist=<?php //echo $this->modules; ?>//&&domain=<?php //echo $this->domain?>//&&scheme=<?php //echo $this->scheme ?>//';
+//            for (i = 0; i < iframe.length; i++) {
+//                var content = iframe[i].contentWindow.document;
+//                var xhr = new XMLHttpRequest();
+//                xhr.open('GET', marketPlaceUrl);
+//                xhr.send();
+//            }
+//        }
+//        iframeMarketplaceCallback();
     </script>
 </body>
 </html>
