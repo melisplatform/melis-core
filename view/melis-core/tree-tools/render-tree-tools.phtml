@@ -54,9 +54,7 @@ if ($isParentTool && !empty($this->tools)):
                 <span class="toolstree-label"><?= $name; ?></span>
                 <div class="clearfix"></div>
             </a>
-        <?php
-        else:
-            ?>
+        <?php else: ?>
             <a data-bs-target="#<?= $id; ?>_tools">
                 <i class="<?= $parentIcon ?>"></i>
                 <span><?= $name; ?></span>
@@ -76,9 +74,7 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                 <span class="toolstree-label"><?= $name; ?></span>
                 <div class="clearfix"></div>
             </a>
-        <?php
-        else:
-            ?>
+        <?php else: ?>
             <a data-bs-target="#<?= $id; ?>_tools" data-bs-toggle="collapse" class="collapsed">
                 <i class="<?= $parentIcon ?>"></i>
                 <span><?= $name; ?></span>
