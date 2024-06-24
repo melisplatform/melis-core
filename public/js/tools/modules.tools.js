@@ -252,6 +252,8 @@ $(function() {
                 if (data.success){
                     // Notifications
                     melisHelper.melisOkNotification(data.textTitle, data.textMessage);
+                    //reload platform
+                    setTimeout(function() {window.location.reload(true); }, 1000);
                 } else{
                     melisHelper.melisKoNotification(data.textTitle, data.textMessage, data.errors);
                 }
