@@ -147,8 +147,21 @@ return array(
                     'host' => $_SERVER['HTTP_HOST'],
                     // scheme
                     'platform_scheme' => $_SERVER['REQUEST_SCHEME']
-                ]
+                ],
+                /**
+                 * Used to copy necessary file to
+                 * main public/bundles-generated folder
+                 */
+                'bundle_all_needed_files' => [
+                    //will be put inside css folder
+                    'css' => [
+                        '/build/css/loading.gif'
+                    ],
+                    //will be put inside js folder
+                    'js' => [
 
+                    ]
+                ]
             ),
             'ressources' => array(
                 'css' => array(
