@@ -42,7 +42,7 @@ class MelisCoreModulesService extends MelisServiceManager
         $melisInstalledPackages = $melisComposer->getInstalledPackages();
 
         foreach ($melisInstalledPackages as $package) {
-            $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
+            $packageModuleName = isset($package->extra) ? (array)$package->extra : null;
             $module = null;
             if (isset($packageModuleName['module-name'])) {
                 $module = $packageModuleName['module-name'];
@@ -149,7 +149,7 @@ class MelisCoreModulesService extends MelisServiceManager
                 continue;
             }
 
-            if (!is_file( $modulePath . "Module.php")) {
+            if (!is_file($modulePath . "Module.php")) {
                 /** Module.php file was not found - remove module from the list */
                 unset($modules[$moduleIndex]);
             }
@@ -270,7 +270,7 @@ class MelisCoreModulesService extends MelisServiceManager
         });
 
         $modules = array_map(function ($package) {
-            $extra = (array) $package->extra;
+            $extra = (array)$package->extra;
             /** @var CompletePackage $package */
             return $extra['module-name'];
         }, $packages);
@@ -434,15 +434,16 @@ class MelisCoreModulesService extends MelisServiceManager
      * @param bool $returnFullPath
      * @return string
      */
-    public function getUserSitePath($siteName, $returnFullPath = true){
+    public function getUserSitePath($siteName, $returnFullPath = true)
+    {
         $path = '';
         $melisSitesPath = $_SERVER['DOCUMENT_ROOT'] . '/../module/MelisSites';
 
-        if ($this->checkDir($melisSitesPath .DIRECTORY_SEPARATOR. $siteName)) {
+        if ($this->checkDir($melisSitesPath . DIRECTORY_SEPARATOR . $siteName)) {
             if (!$returnFullPath) {
-                $path = '/MelisSites/'.$siteName;
+                $path = '/MelisSites/' . $siteName;
             } else {
-                $path = $melisSitesPath.'/'.$siteName;
+                $path = $melisSitesPath . '/' . $siteName;
             }
         }
 
@@ -569,8 +570,8 @@ class MelisCoreModulesService extends MelisServiceManager
      * @return bool
      */
     public function createModuleLoader($pathToStore, $modules = [],
-                                    $topModules = ['melisassetmanager', 'melisdbdeploy', 'meliscomposerdeploy', 'meliscore'],
-                                    $bottomModules = ['MelisModuleConfig'])
+                                       $topModules = ['melisassetmanager', 'melisdbdeploy', 'meliscomposerdeploy', 'meliscore'],
+                                       $bottomModules = ['MelisModuleConfig'])
     {
         $moduleSrv = $this->getServiceManager()->get('MelisAssetManagerModulesService');
         return $moduleSrv->createModuleLoader($pathToStore, $modules, $topModules, $bottomModules);
@@ -653,16 +654,16 @@ class MelisCoreModulesService extends MelisServiceManager
         $repo = null;
 
         foreach ($packages as $package) {
-            $packageModuleName = isset($package->extra) ? (array) $package->extra : null;
+            $packageModuleName = isset($package->extra) ? (array)$package->extra : null;
 
             if (isset($packageModuleName['module-name']) && $packageModuleName['module-name'] == $module) {
-                $repo = (array) $package->extra;
+                $repo = (array)$package->extra;
                 break;
             }
         }
 
         if (isset($repo['melis-site'])) {
-            return (bool) $repo['melis-site'] ?? false;
+            return (bool)$repo['melis-site'] ?? false;
         }
 
         return false;
@@ -678,8 +679,8 @@ class MelisCoreModulesService extends MelisServiceManager
         $webPack = $this->getServiceManager()->get('MelisAssetManagerWebPack');
         $assets = $webPack->getAssets(false);
 
-        if(!empty($assets)){
-            foreach($assets as $type => $files){
+        if (!empty($assets)) {
+            foreach ($assets as $type => $files) {
                 $vendorFileHolder = [];
                 $moduleFileHolder = [];
                 $moduleFileHolderAlreadyBundled = [];
@@ -694,9 +695,9 @@ class MelisCoreModulesService extends MelisServiceManager
                  * Lets minify all unminified files from module folder
                  */
                 $arrayPaths = [];
-                if($type == 'css')
+                if ($type == 'css')
                     $this->minifyCss($moduleFileHolder, $arrayPaths);
-                elseif($type == 'js')
+                elseif ($type == 'js')
                     $this->minifyJs($moduleFileHolder, $arrayPaths);
 
                 /**
@@ -714,11 +715,16 @@ class MelisCoreModulesService extends MelisServiceManager
              */
             $this->bundleLoginAssets();
 
+            /**
+             * Copy needed assets
+             */
+            $this->copyNeededAssets();
+
             //save bundle cache time
             $platformTable = $this->getServiceManager()->get('MelisCoreTablePlatform');
             $platformData = $platformTable->getEntryByField('plf_name', getenv('MELIS_PLATFORM'))->current();
 
-            if(!empty($platformData)){
+            if (!empty($platformData)) {
                 $platformTable->save(['plf_bundle_cache_time' => time()], $platformData->plf_id);
             }
         }
@@ -733,8 +739,8 @@ class MelisCoreModulesService extends MelisServiceManager
         $plugin->setServiceManager($this->getServiceManager());
         $assets = $plugin->__invoke('/meliscore_login');
 
-        if(!empty($assets)){
-            foreach($assets as $type => $files){
+        if (!empty($assets)) {
+            foreach ($assets as $type => $files) {
                 $vendorFileHolder = [];
                 $moduleFileHolder = [];
                 $moduleFileHolderAlreadyBundled = [];
@@ -749,9 +755,9 @@ class MelisCoreModulesService extends MelisServiceManager
                  * Lets minify all unminified files from module folder
                  */
                 $arrayPaths = [];
-                if($type == 'css')
+                if ($type == 'css')
                     $this->minifyCss($moduleFileHolder, $arrayPaths);
-                elseif($type == 'js')
+                elseif ($type == 'js')
                     $this->minifyJs($moduleFileHolder, $arrayPaths);
 
                 /**
@@ -786,32 +792,32 @@ class MelisCoreModulesService extends MelisServiceManager
         foreach ($assets as $key => $val) {
             $filePath = explode('/', $val);
             $modulePath = $assetManagerService->getModulePath($filePath[1], false);
-            if(!empty($modulePath)){
+            if (!empty($modulePath)) {
                 $moduleFilePart = explode('/', $modulePath);
-                if(!empty($moduleFilePart)){
-                    if($moduleFilePart[1] == 'module'){//in module
+                if (!empty($moduleFilePart)) {
+                    if ($moduleFilePart[1] == 'module') {//in module
                         //check if bundle is enable
                         $appsConfig = $melisAppConfig->getItem(end($moduleFilePart));
-                        if(empty($appsConfig))
+                        if (empty($appsConfig))
                             $appsConfig = $melisAppConfig->getItem(strtolower(end($moduleFilePart)));
 
-                        if(!empty($appsConfig)){
-                            if(isset($appsConfig['ressources']['build']['disable_bundle'])){
-                                if(!$appsConfig['ressources']['build']['disable_bundle']){
+                        if (!empty($appsConfig)) {
+                            if (isset($appsConfig['ressources']['build']['disable_bundle'])) {
+                                if (!$appsConfig['ressources']['build']['disable_bundle']) {
                                     $moduleFileHolderAlreadyBundled[] = $val;
-                                }else{
+                                } else {
                                     $moduleFileHolder[end($moduleFilePart)][] = $val;
                                 }
-                            }else{
+                            } else {
                                 $moduleFileHolder[end($moduleFilePart)][] = $val;
                             }
                         }
-                    }else{//in vendor
+                    } else {//in vendor
                         $vendorFileHolder[] = $val;
                     }
                 }
-            }else{//for special url like get-translations
-                if(!empty($val))
+            } else {//for special url like get-translations
+                if (!empty($val))
                     $vendorFileHolder[] = $val;
             }
         }
@@ -824,15 +830,15 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function combineAssets($array, $type, $fileName = 'bundle-all')
     {
-        if(!empty($array)){
+        if (!empty($array)) {
             $jsString = '';
-            foreach($array as $key => $val){
+            foreach ($array as $key => $val) {
                 $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]" . $val;
                 $cleanString = $this->getFileContent($url, false);//file_get_contents($url);
-                if($type == 'css') {
+                if ($type == 'css') {
                     $cleanString = $this->replaceURL($cleanString, $val);
-                }elseif($type == 'js'){//make sure it ends with `;` to avoid problem on combining
-                    if(!str_ends_with($cleanString, ';')){
+                } elseif ($type == 'js') {//make sure it ends with `;` to avoid problem on combining
+                    if (!str_ends_with($cleanString, ';')) {
                         $cleanString .= ';';
                     }
                 }
@@ -841,7 +847,7 @@ class MelisCoreModulesService extends MelisServiceManager
             }
 
             $path = $this->createDIR($type);
-            $file = @fopen($path.'/'.$fileName.'.'.$type, 'w+');
+            $file = @fopen($path . '/' . $fileName . '.' . $type, 'w+');
             @fwrite($file, $jsString);
             @fclose($file);
         }
@@ -853,18 +859,18 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function minifyJs($array, &$arrayPaths)
     {
-        if(!empty($array)){
-            foreach($array as $moduleName => $jsFiles){
+        if (!empty($array)) {
+            foreach ($array as $moduleName => $jsFiles) {
                 $jsMinifier = new Minify\JS();
                 $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
-                foreach($jsFiles as $key => $js) {
+                foreach ($jsFiles as $key => $js) {
                     $url = $hostName . $js;
                     $jsMinifier->add($this->getFileContent($url));
                 }
                 $path = $this->createDIR('js');
-                $path = $path.'/bundle-'.$moduleName.'.js';
+                $path = $path . '/bundle-' . $moduleName . '.js';
                 $jsMinifier->minify($path);
-                $arrayPaths[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-'.$moduleName.'.js';
+                $arrayPaths[] = '/' . ModulesController::BUNDLE_FOLDER_NAME . '/js/bundle-' . $moduleName . '.js';
             }
         }
     }
@@ -875,12 +881,12 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function minifyCss($array, &$arrayPaths)
     {
-        if(!empty($array)){
+        if (!empty($array)) {
 
-            foreach($array as $moduleName => $cssFiles){
+            foreach ($array as $moduleName => $cssFiles) {
                 $cssMinifier = new Minify\CSS();
                 $hostName = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
-                foreach($cssFiles as $key => $css) {
+                foreach ($cssFiles as $key => $css) {
                     $url = $hostName . $css;
                     /**
                      * This will replace all url inside css to put the correct url
@@ -889,9 +895,9 @@ class MelisCoreModulesService extends MelisServiceManager
                     $cssMinifier->add($fileContent);
                 }
                 $path = $this->createDIR('css');
-                $path = $path.'/bundle-'.$moduleName.'.css';
+                $path = $path . '/bundle-' . $moduleName . '.css';
                 $cssMinifier->minify($path);
-                $arrayPaths[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-'.$moduleName.'.css';
+                $arrayPaths[] = '/' . ModulesController::BUNDLE_FOLDER_NAME . '/css/bundle-' . $moduleName . '.css';
             }
         }
     }
@@ -906,7 +912,7 @@ class MelisCoreModulesService extends MelisServiceManager
     {
         $moduleName = 'MelisCore';
         $postPath = 'build/';
-        if(!empty($filePath)) {
+        if (!empty($filePath)) {
             $filePath = explode('/', $filePath);
             $moduleName = $filePath[1] ?? 'MelisCore';
             /**
@@ -914,7 +920,7 @@ class MelisCoreModulesService extends MelisServiceManager
              */
             $assetManagerService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
             $modulePath = $assetManagerService->getModulePath($filePath[1], false);
-            if(!empty($modulePath)) {
+            if (!empty($modulePath)) {
                 $moduleFilePart = explode('/', $modulePath);
                 if ($moduleFilePart[1] == 'module') {
                     $postPath = '';
@@ -922,7 +928,7 @@ class MelisCoreModulesService extends MelisServiceManager
             }
         }
 
-        $path = '/'.$moduleName.'/'.$postPath;
+        $path = '/' . $moduleName . '/' . $postPath;
 
         // Clear out the line breaks
         $content = str_replace('<br />', '', $css);
@@ -935,7 +941,7 @@ class MelisCoreModulesService extends MelisServiceManager
 //        $content = preg_replace('/(?:\'|\")/', '', $content);
 
         // Replaces repeating ../ patterns
-        $content = preg_replace('/(?:\.\.\/)+(.*?\))/', $path.'$1', $content);
+        $content = preg_replace('/(?:\.\.\/)+(.*?\))/', $path . '$1', $content);
 
         // Prepend the path to lines that do not have a "//" anywhere
 //        $content = preg_replace('/(url\((?!.*\/\/))/i', '$1'.$path, $content);
@@ -943,6 +949,64 @@ class MelisCoreModulesService extends MelisServiceManager
         return $content;
     }
 
+    /**
+     * This function copy necessary files
+     */
+    private function copyNeededAssets()
+    {
+        $moduleService = $this->getServiceManager()->get('MelisAssetManagerModulesService');
+        $activeModules = $moduleService->getMelisActiveModules();
+
+        $config = $this->getServiceManager()->get('config');
+        foreach ($activeModules as $moduleName) {
+            $loweredModuleName = strtolower($moduleName);
+            $camelCaseModuleName = $this->camelToDash($moduleName);
+
+            $neededFiles = $config['plugins'][$loweredModuleName]['datas']['bundle_all_needed_files'] ?? [];
+            if (!empty($neededFiles)) {
+                foreach ($neededFiles as $type => $file) {
+                    $this->copyFile($file, $type, $camelCaseModuleName);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $fileNeeded
+     * @param $type
+     * @param $moduleName
+     */
+    private function copyFile($fileNeeded, $type, $moduleName)
+    {
+        $path = $_SERVER['DOCUMENT_ROOT'] . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
+        $dir = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/';
+
+        foreach($fileNeeded as $key => $file){
+            $files = explode('/', $file);
+            $fileName = end($files);
+
+            $completFilePath = $moduleName.'/public'.$file;
+
+            //make sure file does not exist yet in destination
+            if(!file_exists($path.'/'.$fileName)){
+                //make sure file source exist
+                if(file_exists($dir.$completFilePath)){
+                    if(!is_writable($dir.$completFilePath))
+                        chmod($dir.$completFilePath, 0777);
+
+                    copy($dir.$completFilePath, $path.'/'.$fileName);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $camelCase
+     * @return string
+     */
+    private function camelToDash($camelCase) {
+        return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $camelCase));
+    }
 
     /**
      * @param $fileStr
