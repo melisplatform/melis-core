@@ -226,30 +226,34 @@ var dashboard = (function() {
 								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 							}
 						}
+
+
 					}
 				}
 
-            /**
-             * This will request a plugin menu content
-             */
-            if($($el).closest(".melis-core-dashboard-dnd-box").hasClass("shown")){
-				if(!$($el).closest(".melis-core-dashboard-dnd-box").hasClass("hasCached")) {
-                    $.ajax({
-                        type: 'GET',
-                        url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
-                        beforeSend: function () {
-                            loader.addLoadingDashboardPluginMenu();
-                        }
-                    }).done(function (data) {
-                        $("#dashboardMenuContent").html(data.view);
-                        setTimeout(function () {
-                            melisDashBoardDragnDrop.init();
-                            $($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached");
-                        }, 100);
-                        loader.removeLoadingDashboardPluginMenu();
-                    });
-                }
-            }
+				/**
+				 * This will request a plugin menu content
+				 */
+				if( $($el).closest(".melis-core-dashboard-dnd-box").hasClass("shown") ) {
+					if( !$($el).closest(".melis-core-dashboard-dnd-box").hasClass("hasCached") ) {
+						$.ajax({
+							type: 'GET',
+							url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
+							beforeSend: function () {
+								loader.addLoadingDashboardPluginMenu();
+							}
+						}).done(function (data) {
+							$("#dashboardMenuContent").html(data.view);
+
+							setTimeout(function () {
+								melisDashBoardDragnDrop.init();
+								$($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached");
+							}, 100);
+
+							loader.removeLoadingDashboardPluginMenu();
+						});
+					}
+				}
 		}
 
 		// BIND & DELEGATE EVENTS ===========================================================================

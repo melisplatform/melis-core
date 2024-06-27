@@ -1945,3 +1945,57 @@ label {
 #orderCheckoutCountries {
 	width: auto !important;
 }
+/* Mobile Responsive */
+@media (max-width: 1128px) {
+	#btnModulesBundle,
+	#btnModulesSave {
+		min-width: 5.625rem;
+	}
+	#id_meliscore_tool_user_module_management .me-heading .btn.btn-success {
+		margin-right: 0;
+		margin-top: 0.625rem;
+	}
+}
+/* 767px and below */
+@media (max-width: 767px) {
+	#newplugin-cont ul li a {
+		text-decoration: none;
+	}
+	#id_meliscore_tool_user_module_management .me-heading .btn.btn-success {
+		margin-right: 0;
+		margin-top: 0;
+		margin-left: 0.625rem;
+	}
+	#btnModulesBundle {
+		margin: 0;
+	}
+	table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:first-child:before {
+		background-color: transparent !important;
+	}
+	.melis-dashboard-plugin-creator-steps-content .multi {
+		max-width: 38% !important;
+	}
+	.melis-templating-plugin-creator-steps-content .padding-left-0 {
+		padding-right: 0;
+		border-radius: 0;
+	}
+	.melis-templating-plugin-creator-steps li {
+		border-left: 0;
+	}
+	.widget .widget-body.list ul li {
+		height: auto;
+		min-height: 39px;
+		padding-right: 0;
+	}
+	.melis-toolcreator-steps-table-list ul li > span {
+		position: relative;
+		display: block;
+		text-wrap: nowrap;
+	}
+	.melis-toolcreator-steps-table-list ul li > span i {
+		display: inline-block;
+	}
+	.melis-toolcreator-steps-table-list ul li > span span.text {
+		display: inline-block;
+	}
+}
