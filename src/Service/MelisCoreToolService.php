@@ -420,6 +420,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             // render the buttons in the left section of the filter bar
             foreach ($left as $leftKey => $leftValue) {
                 $htmlContent = $this->getViewContent($leftValue);
+                // making html in single line
+                $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $leftDom .= '<"' . $leftKey . '">';
                     $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $leftKey . '").html(\'' . $this->replaceQuotes($htmlContent) . '\');';
@@ -434,6 +436,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             // render the buttons in the center section of the filter bar
             foreach ($center as $centerKey => $centerValue) {
                 $htmlContent = $this->getViewContent($centerValue);
+                // making html in single line
+                $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $centerDom .= '<"' . $centerKey . '">';
                     $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $centerKey . '").html(\'' . $htmlContent . '\');';
@@ -450,6 +454,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             foreach ($right as $rightKey => $rightValue) {
                 $htmlContent = $this->getViewContent($rightValue);
                 $htmlContent = $this->replaceQuotes($htmlContent);
+                // making html in single line
+                $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $rightDom .= '<"' . $rightKey . '">';
                     $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $rightKey . '").html(\'' . $htmlContent . '\');';
