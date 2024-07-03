@@ -14,6 +14,7 @@ use Composer\IO\NullIO;
 use Composer\Package\CompletePackage;
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
+use Laminas\Session\Container;
 use MelisCore\Controller\ModulesController;
 use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
 use MatthiasMullie\Minify;
@@ -763,11 +764,11 @@ class MelisCoreModulesService extends MelisServiceManager
                 /**
                  * We merge all bundled files
                  */
-                $cssAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
+                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
                 /**
                  * Combine all
                  */
-                $this->combineAssets($cssAssets, $type, 'bundle-all-login');
+                $this->combineAssets($allAssets, $type, 'bundle-all-login');
             }
         }
     }
@@ -831,7 +832,7 @@ class MelisCoreModulesService extends MelisServiceManager
     private function combineAssets($array, $type, $fileName = 'bundle-all')
     {
         if (!empty($array)) {
-            $jsString = '';
+            $contentString = '';
             foreach ($array as $key => $val) {
                 $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]" . $val;
                 $cleanString = $this->getFileContent($url, false);//file_get_contents($url);
@@ -843,12 +844,12 @@ class MelisCoreModulesService extends MelisServiceManager
                     }
                 }
 
-                $jsString .= $cleanString;
+                $contentString .= $cleanString;
             }
 
             $path = $this->createDIR($type);
             $file = @fopen($path . '/' . $fileName . '.' . $type, 'w+');
-            @fwrite($file, $jsString);
+            @fwrite($file, $contentString);
             @fclose($file);
         }
     }
@@ -1015,7 +1016,13 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function getFileContent($fileStr, $removeComments = true)
     {
+        $container = new Container('meliscore');
+        $locale = $container['melis-lang-locale'];
         if(function_exists('curl_version')) {
+
+            if(str_contains($fileStr, '/get-translations'))
+                $fileStr .= '?locale='.$locale;
+
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_URL, $fileStr);
