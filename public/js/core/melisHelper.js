@@ -1075,7 +1075,6 @@ var melisHelper = (function () {
 					});
 				}
 
-				console.log(tmpColumns);
 				// set datatable columns
 				settings.columns = tmpColumns;
 			}
