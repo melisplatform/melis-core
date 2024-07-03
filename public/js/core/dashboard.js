@@ -225,6 +225,14 @@ var dashboard = (function() {
 							if ( $bp.length ) {
 								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
 							}
+
+							var $tabArrowTop = $(".tab-arrow-top");
+								if ( $tabArrowTop.length ) {
+									$tabArrowTop.removeClass("hide-arrow");
+								}
+								else {
+									$tabArrowTop.addClass("hide-arrow");
+								}
 						}
 
 

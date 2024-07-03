@@ -7193,7 +7193,176 @@ if (!Function.prototype.bind) {
  *  jquery.ui.widget.js
  *  jquery.ui.mouse.js
  */
-!function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.off({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
+(function ($) {
+
+    // Detect touch support
+    $touch = 'ontouchend' in document;
+  
+    // Ignore browsers without touch support
+    if (!$touch) {
+      return;
+    }
+  
+    var mouseProto = $.ui.mouse.prototype,
+        _mouseInit = mouseProto._mouseInit,
+        _mouseDestroy = mouseProto._mouseDestroy,
+        touchHandled;
+  
+    /**
+     * Simulate a mouse event based on a corresponding touch event
+     * @param {Object} event A touch event
+     * @param {String} simulatedType The corresponding mouse event
+     */
+    function simulateMouseEvent (event, simulatedType) {
+  
+      // Ignore multi-touch events
+      if (event.originalEvent.touches.length > 1) {
+        return;
+      }
+  
+      event.preventDefault();
+  
+      var touch = event.originalEvent.changedTouches[0],
+          simulatedEvent = document.createEvent('MouseEvents');
+      
+      // Initialize the simulated mouse event using the touch event's coordinates
+      simulatedEvent.createEvent(
+        simulatedType,    // type
+        true,             // bubbles                    
+        true,             // cancelable                 
+        window,           // view                       
+        1,                // detail                     
+        touch.screenX,    // screenX                    
+        touch.screenY,    // screenY                    
+        touch.clientX,    // clientX                    
+        touch.clientY,    // clientY                    
+        false,            // ctrlKey                    
+        false,            // altKey                     
+        false,            // shiftKey                   
+        false,            // metaKey                    
+        0,                // button                     
+        null              // relatedTarget              
+      );
+  
+      // Dispatch the simulated event to the target element
+      event.target.dispatchEvent(simulatedEvent);
+    }
+  
+    /**
+     * Handle the jQuery UI widget's touchstart events
+     * @param {Object} event The widget element's touchstart event
+     */
+    mouseProto._touchStart = function (event) {
+  
+      var self = this;
+  
+      // Ignore the event if another widget is already being handled
+      if (touchHandled || !self._mouseCapture(event.originalEvent.changedTouches[0])) {
+        return;
+      }
+  
+      // Set the flag to prevent other widgets from inheriting the touch event
+      touchHandled = true;
+  
+      // Track movement to determine if interaction was a click
+      self._touchMoved = false;
+  
+      // Simulate the mouseover event
+      simulateMouseEvent(event, 'mouseover');
+  
+      // Simulate the mousemove event
+      simulateMouseEvent(event, 'mousemove');
+  
+      // Simulate the mousedown event
+      simulateMouseEvent(event, 'mousedown');
+    };
+  
+    /**
+     * Handle the jQuery UI widget's touchmove events
+     * @param {Object} event The document's touchmove event
+     */
+    mouseProto._touchMove = function (event) {
+  
+      // Ignore event if not handled
+      if (!touchHandled) {
+        return;
+      }
+  
+      // Interaction was not a click
+      this._touchMoved = true;
+  
+      // Simulate the mousemove event
+      simulateMouseEvent(event, 'mousemove');
+    };
+  
+    /**
+     * Handle the jQuery UI widget's touchend events
+     * @param {Object} event The document's touchend event
+     */
+    mouseProto._touchEnd = function (event) {
+  
+      // Ignore event if not handled
+      if (!touchHandled) {
+        return;
+      }
+  
+      // Simulate the mouseup event
+      simulateMouseEvent(event, 'mouseup');
+  
+      // Simulate the mouseout event
+      simulateMouseEvent(event, 'mouseout');
+  
+      // If the touch interaction did not move, it should trigger a click
+      if (!this._touchMoved) {
+  
+        // Simulate the click event
+        simulateMouseEvent(event, 'click');
+      }
+  
+      // Unset the flag to allow other widgets to inherit the touch event
+      touchHandled = false;
+    };
+  
+    /**
+     * A duck punch of the $.ui.mouse _mouseInit method to support touch events.
+     * This method extends the widget with bound touch event handlers that
+     * translate touch events to mouse events and pass them to the widget's
+     * original mouse event handling methods.
+     */
+    mouseProto._mouseInit = function () {
+      
+      var self = this;
+  
+      // Delegate the touch handlers to the widget's element
+      self.element.on({
+        touchstart: Function.prototype.bind(self, '_touchStart'),
+        touchmove: Function.prototype.bind(self, '_touchMove'),
+        touchend: Function.prototype.bind(self, '_touchEnd')
+      });
+  
+      // Call the original $.ui.mouse init method
+      _mouseInit.call(self);
+    };
+  
+    /**
+     * Remove the touch event handlers
+     */
+    mouseProto._mouseDestroy = function () {
+      
+      var self = this;
+  
+      // Delegate the touch handlers to the widget's element
+      self.element.on({
+        touchstart: Function.prototype.bind(self, '_touchStart'),
+        touchmove: Function.prototype.bind(self, '_touchMove'),
+        touchend: Function.prototype.bind(self, '_touchEnd')
+      });
+  
+      // Call the original $.ui.mouse destroy method
+      _mouseDestroy.call(self);
+    };
+  
+})(jQuery);
 
 /*!
  * jQuery UI Sortable Animation 1.0.3
@@ -11079,6 +11248,395 @@ if (!Function.prototype.bind) {
 */
 !function(t,n){if("function"==typeof define&&define.amd)define(["exports"],n);else if("undefined"!=typeof exports)n(exports);else{var e={};n(e),t.breakpointsEs=e}}(this,function(t){"use strict";function u(t,n){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!n||"object"!=typeof n&&"function"!=typeof n?t:n}function e(t,n){if("function"!=typeof n&&null!==n)throw new TypeError("Super expression must either be null or a function, not "+typeof n);t.prototype=Object.create(n&&n.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),n&&(Object.setPrototypeOf?Object.setPrototypeOf(t,n):t.__proto__=n)}function l(t,n){if(!(t instanceof n))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var n=function(){function i(t,n){for(var e=0;e<n.length;e++){var i=n[e];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(t,n,e){return n&&i(t.prototype,n),e&&i(t,e),t}}(),o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},i={xs:{min:0,max:767},sm:{min:768,max:991},md:{min:992,max:1199},lg:{min:1200,max:1/0}},s=function(t,n){for(var e in t)if(("object"!==(void 0===t?"undefined":o(t))||t.hasOwnProperty(e))&&!1===n(e,t[e]))break},a=function(t){return"function"==typeof t||!1},r=function(t,n){for(var e in n)t[e]=n[e];return t},c=function(){function t(){l(this,t),this.length=0,this.list=[]}return n(t,[{key:"add",value:function(t,n){var e=2<arguments.length&&void 0!==arguments[2]&&arguments[2];this.list.push({fn:t,data:n,one:e}),this.length++}},{key:"remove",value:function(t){for(var n=0;n<this.list.length;n++)this.list[n].fn===t&&(this.list.splice(n,1),this.length--,n--)}},{key:"empty",value:function(){this.list=[],this.length=0}},{key:"call",value:function(t,n){var e=2<arguments.length&&void 0!==arguments[2]?arguments[2]:null;n||(n=this.length-1);var i=this.list[n];a(e)?e.call(this,t,i,n):a(i.fn)&&i.fn.call(t||window,i.data),i.one&&(delete this.list[n],this.length--)}},{key:"fire",value:function(t){var n=1<arguments.length&&void 0!==arguments[1]?arguments[1]:null;for(var e in this.list)this.list.hasOwnProperty(e)&&this.call(t,e,n)}}]),t}(),f={current:null,callbacks:new c,trigger:function(e){var i=this.current;this.current=e,this.callbacks.fire(e,function(t,n){a(n.fn)&&n.fn.call({current:e,previous:i},n.data)})},one:function(t,n){return this.on(t,n,!0)},on:function(t,n){var e=2<arguments.length&&void 0!==arguments[2]&&arguments[2];void 0===n&&a(t)&&(n=t,t=void 0),a(n)&&this.callbacks.add(n,t,e)},off:function(t){void 0===t&&this.callbacks.empty()}},h=function(){function e(t,n){l(this,e),this.name=t,this.media=n,this.initialize()}return n(e,[{key:"initialize",value:function(){this.callbacks={enter:new c,leave:new c},this.mql=window.matchMedia&&window.matchMedia(this.media)||{matches:!1,media:this.media,addListener:function(){},removeListener:function(){}};var e=this;this.mqlListener=function(t){var n=t.matches?"enter":"leave";e.callbacks[n].fire(e)},this.mql.addListener(this.mqlListener)}},{key:"on",value:function(t,n,e){var i=3<arguments.length&&void 0!==arguments[3]&&arguments[3];if("object"!==(void 0===t?"undefined":o(t)))return void 0===e&&a(n)&&(e=n,n=void 0),a(e)&&void 0!==this.callbacks[t]&&(this.callbacks[t].add(e,n,i),"enter"===t&&this.isMatched()&&this.callbacks[t].call(this)),this;for(var r in t)t.hasOwnProperty(r)&&this.on(r,n,t[r],i);return this}},{key:"one",value:function(t,n,e){return this.on(t,n,e,!0)}},{key:"off",value:function(t,n){var e=void 0;if("object"!==(void 0===t?"undefined":o(t)))return void 0===t?(this.callbacks.enter.empty(),this.callbacks.leave.empty()):t in this.callbacks&&(n?this.callbacks[t].remove(n):this.callbacks[t].empty()),this;for(e in t)t.hasOwnProperty(e)&&this.off(e,t[e]);return this}},{key:"isMatched",value:function(){return this.mql.matches}},{key:"destroy",value:function(){this.off()}}]),e}(),d={min:function(t){return"(min-width: "+t+(1<arguments.length&&void 0!==arguments[1]?arguments[1]:"px")+")"},max:function(t){return"(max-width: "+t+(1<arguments.length&&void 0!==arguments[1]?arguments[1]:"px")+")"},between:function(t,n){var e=2<arguments.length&&void 0!==arguments[2]?arguments[2]:"px";return"(min-width: "+t+e+") and (max-width: "+n+e+")"},get:function(t,n){var e=2<arguments.length&&void 0!==arguments[2]?arguments[2]:"px";return 0===t?this.max(n,e):n===1/0?this.min(t,e):this.between(t,n,e)}},v=function(t){function a(t){var n=1<arguments.length&&void 0!==arguments[1]?arguments[1]:0,e=2<arguments.length&&void 0!==arguments[2]?arguments[2]:1/0,i=3<arguments.length&&void 0!==arguments[3]?arguments[3]:"px";l(this,a);var r=d.get(n,e,i),o=u(this,(a.__proto__||Object.getPrototypeOf(a)).call(this,t,r));o.min=n,o.max=e,o.unit=i;var s=o;return o.changeListener=function(){s.isMatched()&&f.trigger(s)},o.isMatched()&&(f.current=o),o.mql.addListener(o.changeListener),o}return e(a,h),n(a,[{key:"destroy",value:function(){this.off(),this.mql.removeListener(this.changeListener)}}]),a}(),p=function(t){function n(t){l(this,n);var i=[],r=[];return s(t.split(" "),function(t,n){var e=b.get(n);e&&(i.push(e),r.push(e.media))}),u(this,(n.__proto__||Object.getPrototypeOf(n)).call(this,t,r.join(",")))}return e(n,h),n}(),m={},y={},g=window.Breakpoints=function(){for(var t=arguments.length,n=Array(t),e=0;e<t;e++)n[e]=arguments[e];g.define.apply(g,n)};g.defaults=i;var b=g=r(g,{version:"1.0.6",defined:!1,define:function(t){var n=1<arguments.length&&void 0!==arguments[1]?arguments[1]:{};for(var e in this.defined&&this.destroy(),t||(t=g.defaults),this.options=r(n,{unit:"px"}),t)t.hasOwnProperty(e)&&this.set(e,t[e].min,t[e].max,this.options.unit);this.defined=!0},destroy:function(){s(m,function(t,n){n.destroy()}),m={},f.current=null},is:function(t){var n=this.get(t);return n?n.isMatched():null},all:function(){var n=[];return s(m,function(t){n.push(t)}),n},set:function(t){var n=1<arguments.length&&void 0!==arguments[1]?arguments[1]:0,e=2<arguments.length&&void 0!==arguments[2]?arguments[2]:1/0,i=3<arguments.length&&void 0!==arguments[3]?arguments[3]:"px",r=this.get(t);return r&&r.destroy(),m[t]=new v(t,n,e,i),m[t]},get:function(t){return m.hasOwnProperty(t)?m[t]:null},getUnion:function(t){return y.hasOwnProperty(t)||(y[t]=new p(t)),y[t]},getMin:function(t){var n=this.get(t);return n?n.min:null},getMax:function(t){var n=this.get(t);return n?n.max:null},current:function(){return f.current},getMedia:function(t){var n=this.get(t);return n?n.media:null},on:function(t,n,e,i){var r=4<arguments.length&&void 0!==arguments[4]&&arguments[4];if("change"===(t=t.trim()))return i=e,e=n,f.on(e,i,r);if(t.includes(" ")){var o=this.getUnion(t);o&&o.on(n,e,i,r)}else{var s=this.get(t);s&&s.on(n,e,i,r)}return this},one:function(t,n,e,i){return this.on(t,n,e,i,!0)},off:function(t,n,e){if("change"===(t=t.trim()))return f.off(n);if(t.includes(" ")){var i=this.getUnion(t);i&&i.off(n,e)}else{var r=this.get(t);r&&r.off(n,e)}return this}});t.default=b});
 
+/**
+* jquery-match-height 0.7.2 by @liabru
+* http://brm.io/jquery-match-height/
+* License: MIT
+*/
+
+;(function(factory) { // eslint-disable-line no-extra-semi
+    'use strict';
+    if (typeof define === 'function' && define.amd) {
+        // AMD
+        define(['jquery'], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        // CommonJS
+        module.exports = factory(require('jquery'));
+    } else {
+        // Global
+        factory(jQuery);
+    }
+})(function($) {
+    /*
+    *  internal
+    */
+
+    var _previousResizeWidth = -1,
+        _updateTimeout = -1;
+
+    /*
+    *  _parse
+    *  value parse utility function
+    */
+
+    var _parse = function(value) {
+        // parse value and convert NaN to 0
+        return parseFloat(value) || 0;
+    };
+
+    /*
+    *  _rows
+    *  utility function returns array of jQuery selections representing each row
+    *  (as displayed after float wrapping applied by browser)
+    */
+
+    var _rows = function(elements) {
+        var tolerance = 1,
+            $elements = $(elements),
+            lastTop = null,
+            rows = [];
+
+        // group elements by their top position
+        $elements.each(function(){
+            var $that = $(this),
+                top = $that.offset().top - _parse($that.css('margin-top')),
+                lastRow = rows.length > 0 ? rows[rows.length - 1] : null;
+
+            if (lastRow === null) {
+                // first item on the row, so just push it
+                rows.push($that);
+            } else {
+                // if the row top is the same, add to the row group
+                if (Math.floor(Math.abs(lastTop - top)) <= tolerance) {
+                    rows[rows.length - 1] = lastRow.add($that);
+                } else {
+                    // otherwise start a new row group
+                    rows.push($that);
+                }
+            }
+
+            // keep track of the last row top
+            lastTop = top;
+        });
+
+        return rows;
+    };
+
+    /*
+    *  _parseOptions
+    *  handle plugin options
+    */
+
+    var _parseOptions = function(options) {
+        var opts = {
+            byRow: true,
+            property: 'height',
+            target: null,
+            remove: false
+        };
+
+        if (typeof options === 'object') {
+            return $.extend(opts, options);
+        }
+
+        if (typeof options === 'boolean') {
+            opts.byRow = options;
+        } else if (options === 'remove') {
+            opts.remove = true;
+        }
+
+        return opts;
+    };
+
+    /*
+    *  matchHeight
+    *  plugin definition
+    */
+
+    var matchHeight = $.fn.matchHeight = function(options) {
+        var opts = _parseOptions(options);
+
+        // handle remove
+        if (opts.remove) {
+            var that = this;
+
+            // remove fixed height from all selected elements
+            this.css(opts.property, '');
+
+            // remove selected elements from all groups
+            $.each(matchHeight._groups, function(key, group) {
+                group.elements = group.elements.not(that);
+            });
+
+            // TODO: cleanup empty groups
+
+            return this;
+        }
+
+        if (this.length <= 1 && !opts.target) {
+            return this;
+        }
+
+        // keep track of this group so we can re-apply later on load and resize events
+        matchHeight._groups.push({
+            elements: this,
+            options: opts
+        });
+
+        // match each element's height to the tallest element in the selection
+        matchHeight._apply(this, opts);
+
+        return this;
+    };
+
+    /*
+    *  plugin global options
+    */
+
+    matchHeight.version = '0.7.2';
+    matchHeight._groups = [];
+    matchHeight._throttle = 80;
+    matchHeight._maintainScroll = false;
+    matchHeight._beforeUpdate = null;
+    matchHeight._afterUpdate = null;
+    matchHeight._rows = _rows;
+    matchHeight._parse = _parse;
+    matchHeight._parseOptions = _parseOptions;
+
+    /*
+    *  matchHeight._apply
+    *  apply matchHeight to given elements
+    */
+
+    matchHeight._apply = function(elements, options) {
+        var opts = _parseOptions(options),
+            $elements = $(elements),
+            rows = [$elements];
+
+        // take note of scroll position
+        var scrollTop = $(window).scrollTop(),
+            htmlHeight = $('html').outerHeight(true);
+
+        // get hidden parents
+        var $hiddenParents = $elements.parents().filter(':hidden');
+
+        // cache the original inline style
+        $hiddenParents.each(function() {
+            var $that = $(this);
+            $that.data('style-cache', $that.attr('style'));
+        });
+
+        // temporarily must force hidden parents visible
+        $hiddenParents.css('display', 'block');
+
+        // get rows if using byRow, otherwise assume one row
+        if (opts.byRow && !opts.target) {
+
+            // must first force an arbitrary equal height so floating elements break evenly
+            $elements.each(function() {
+                var $that = $(this),
+                    display = $that.css('display');
+
+                // temporarily force a usable display value
+                if (display !== 'inline-block' && display !== 'flex' && display !== 'inline-flex') {
+                    display = 'block';
+                }
+
+                // cache the original inline style
+                $that.data('style-cache', $that.attr('style'));
+
+                $that.css({
+                    'display': display,
+                    'padding-top': '0',
+                    'padding-bottom': '0',
+                    'margin-top': '0',
+                    'margin-bottom': '0',
+                    'border-top-width': '0',
+                    'border-bottom-width': '0',
+                    'height': '100px',
+                    'overflow': 'hidden'
+                });
+            });
+
+            // get the array of rows (based on element top position)
+            rows = _rows($elements);
+
+            // revert original inline styles
+            $elements.each(function() {
+                var $that = $(this);
+                $that.attr('style', $that.data('style-cache') || '');
+            });
+        }
+
+        $.each(rows, function(key, row) {
+            var $row = $(row),
+                targetHeight = 0;
+
+            if (!opts.target) {
+                // skip apply to rows with only one item
+                if (opts.byRow && $row.length <= 1) {
+                    $row.css(opts.property, '');
+                    return;
+                }
+
+                // iterate the row and find the max height
+                $row.each(function(){
+                    var $that = $(this),
+                        style = $that.attr('style'),
+                        display = $that.css('display');
+
+                    // temporarily force a usable display value
+                    if (display !== 'inline-block' && display !== 'flex' && display !== 'inline-flex') {
+                        display = 'block';
+                    }
+
+                    // ensure we get the correct actual height (and not a previously set height value)
+                    var css = { 'display': display };
+                    css[opts.property] = '';
+                    $that.css(css);
+
+                    // find the max height (including padding, but not margin)
+                    if ($that.outerHeight(false) > targetHeight) {
+                        targetHeight = $that.outerHeight(false);
+                    }
+
+                    // revert styles
+                    if (style) {
+                        $that.attr('style', style);
+                    } else {
+                        $that.css('display', '');
+                    }
+                });
+            } else {
+                // if target set, use the height of the target element
+                targetHeight = opts.target.outerHeight(false);
+            }
+
+            // iterate the row and apply the height to all elements
+            $row.each(function(){
+                var $that = $(this),
+                    verticalPadding = 0;
+
+                // don't apply to a target
+                if (opts.target && $that.is(opts.target)) {
+                    return;
+                }
+
+                // handle padding and border correctly (required when not using border-box)
+                if ($that.css('box-sizing') !== 'border-box') {
+                    verticalPadding += _parse($that.css('border-top-width')) + _parse($that.css('border-bottom-width'));
+                    verticalPadding += _parse($that.css('padding-top')) + _parse($that.css('padding-bottom'));
+                }
+
+                // set the height (accounting for padding and border)
+                $that.css(opts.property, (targetHeight - verticalPadding) + 'px');
+            });
+        });
+
+        // revert hidden parents
+        $hiddenParents.each(function() {
+            var $that = $(this);
+            $that.attr('style', $that.data('style-cache') || null);
+        });
+
+        // restore scroll position if enabled
+        if (matchHeight._maintainScroll) {
+            $(window).scrollTop((scrollTop / htmlHeight) * $('html').outerHeight(true));
+        }
+
+        return this;
+    };
+
+    /*
+    *  matchHeight._applyDataApi
+    *  applies matchHeight to all elements with a data-match-height attribute
+    */
+
+    matchHeight._applyDataApi = function() {
+        var groups = {};
+
+        // generate groups by their groupId set by elements using data-match-height
+        $('[data-match-height], [data-mh]').each(function() {
+            var $this = $(this),
+                groupId = $this.attr('data-mh') || $this.attr('data-match-height');
+
+            if (groupId in groups) {
+                groups[groupId] = groups[groupId].add($this);
+            } else {
+                groups[groupId] = $this;
+            }
+        });
+
+        // apply matchHeight to each group
+        $.each(groups, function() {
+            this.matchHeight(true);
+        });
+    };
+
+    /*
+    *  matchHeight._update
+    *  updates matchHeight on all current groups with their correct options
+    */
+
+    var _update = function(event) {
+        if (matchHeight._beforeUpdate) {
+            matchHeight._beforeUpdate(event, matchHeight._groups);
+        }
+
+        $.each(matchHeight._groups, function() {
+            matchHeight._apply(this.elements, this.options);
+        });
+
+        if (matchHeight._afterUpdate) {
+            matchHeight._afterUpdate(event, matchHeight._groups);
+        }
+    };
+
+    matchHeight._update = function(throttle, event) {
+        // prevent update if fired from a resize event
+        // where the viewport width hasn't actually changed
+        // fixes an event looping bug in IE8
+        if (event && event.type === 'resize') {
+            var windowWidth = $(window).width();
+            if (windowWidth === _previousResizeWidth) {
+                return;
+            }
+            _previousResizeWidth = windowWidth;
+        }
+
+        // throttle updates
+        if (!throttle) {
+            _update(event);
+        } else if (_updateTimeout === -1) {
+            _updateTimeout = setTimeout(function() {
+                _update(event);
+                _updateTimeout = -1;
+            }, matchHeight._throttle);
+        }
+    };
+
+    /*
+    *  bind events
+    */
+
+    // apply on DOM ready event
+    $(matchHeight._applyDataApi);
+
+    // use on or bind where supported
+    var on = $.fn.on ? 'on' : 'bind';
+
+    // update heights on load and resize events
+    $(window)[on]('load', function(event) {
+        matchHeight._update(false, event);
+    });
+
+    // throttled update heights on resize events
+    $(window)[on]('resize orientationchange', function(event) {
+        matchHeight._update(true, event);
+    });
+
+});
+
 /* animations.init.js */
 (function($) {
     // animate only after page finished loading
@@ -11127,6 +11685,9 @@ if (!Function.prototype.bind) {
                     $(this).find(".dashboard-plugin-refresh").trigger("click");
                 });
             }
+
+            // bubble plugin
+            $(".panel-3d").matchHeight();
     });
 
 })(jQuery);
@@ -23147,3 +23708,1132 @@ module.exports = exports.default;
 /***/ })
 /******/ ]);
 });
+
+//
+// jQuery MiniColors: A tiny color picker built on jQuery
+//
+// Developed by Cory LaViska for A Beautiful Site, LLC
+//
+// Licensed under the MIT license: http://opensource.org/licenses/MIT
+//
+(function (factory) {
+    if(typeof define === 'function' && define.amd) {
+      // AMD. Register as an anonymous module.
+      define(['jquery'], factory);
+    } else if(typeof exports === 'object') {
+      // Node/CommonJS
+      module.exports = factory(require('jquery'));
+    } else {
+      // Browser globals
+      factory(jQuery);
+    }
+  }(function ($) {
+    'use strict';
+  
+    // Defaults
+    $.minicolors = {
+      defaults: {
+        animationSpeed: 50,
+        animationEasing: 'swing',
+        change: null,
+        changeDelay: 0,
+        control: 'hue',
+        defaultValue: '',
+        format: 'hex',
+        hide: null,
+        hideSpeed: 100,
+        inline: false,
+        keywords: '',
+        letterCase: 'lowercase',
+        opacity: false,
+        position: 'bottom',
+        show: null,
+        showSpeed: 100,
+        theme: 'default',
+        swatches: []
+      }
+    };
+  
+    // Public methods
+    $.extend($.fn, {
+      minicolors: function(method, data) {
+  
+        switch(method) {
+          // Destroy the control
+          case 'destroy':
+            $(this).each(function() {
+              destroy($(this));
+            });
+            return $(this);
+  
+          // Hide the color picker
+          case 'hide':
+            hide();
+            return $(this);
+  
+          // Get/set opacity
+          case 'opacity':
+            // Getter
+            if(data === undefined) {
+              // Getter
+              return $(this).attr('data-opacity');
+            } else {
+              // Setter
+              $(this).each(function() {
+                updateFromInput($(this).attr('data-opacity', data));
+              });
+            }
+            return $(this);
+  
+          // Get an RGB(A) object based on the current color/opacity
+          case 'rgbObject':
+            return rgbObject($(this), method === 'rgbaObject');
+  
+          // Get an RGB(A) string based on the current color/opacity
+          case 'rgbString':
+          case 'rgbaString':
+            return rgbString($(this), method === 'rgbaString');
+  
+          // Get/set settings on the fly
+          case 'settings':
+            if(data === undefined) {
+              return $(this).data('minicolors-settings');
+            } else {
+              // Setter
+              $(this).each(function() {
+                var settings = $(this).data('minicolors-settings') || {};
+                destroy($(this));
+                $(this).minicolors($.extend(true, settings, data));
+              });
+            }
+            return $(this);
+  
+          // Show the color picker
+          case 'show':
+            show($(this).eq(0));
+            return $(this);
+  
+          // Get/set the hex color value
+          case 'value':
+            if(data === undefined) {
+              // Getter
+              return $(this).val();
+            } else {
+              // Setter
+              $(this).each(function() {
+                if(typeof(data) === 'object' && data !== null) {
+                  if(data.opacity !== undefined) {
+                    $(this).attr('data-opacity', keepWithin(data.opacity, 0, 1));
+                  }
+                  if(data.color) {
+                    $(this).val(data.color);
+                  }
+                } else {
+                  $(this).val(data);
+                }
+                updateFromInput($(this));
+              });
+            }
+            return $(this);
+  
+          // Initializes the control
+          default:
+            if(method !== 'create') data = method;
+            $(this).each(function() {
+              init($(this), data);
+            });
+            return $(this);
+  
+        }
+  
+      }
+    });
+  
+    // Initialize input elements
+    function init(input, settings) {
+      var minicolors = $('<div class="minicolors" />');
+      var defaults = $.minicolors.defaults;
+      var name;
+      var size;
+      var swatches;
+      var swatch;
+      var swatchString;
+      var panel;
+      var i;
+  
+      // Do nothing if already initialized
+      if(input.data('minicolors-initialized')) return;
+  
+      // Handle settings
+      settings = $.extend(true, {}, defaults, settings);
+  
+      // The wrapper
+      minicolors
+        .addClass('minicolors-theme-' + settings.theme)
+        .toggleClass('minicolors-with-opacity', settings.opacity);
+  
+      // Custom positioning
+      if(settings.position !== undefined) {
+        $.each(settings.position.split(' '), function() {
+          minicolors.addClass('minicolors-position-' + this);
+        });
+      }
+  
+      // Input size
+      if(settings.format === 'rgb') {
+        size = settings.opacity ? '25' : '20';
+      } else {
+        size = settings.keywords ? '11' : '7';
+      }
+  
+      // The input
+      input
+        .addClass('minicolors-input')
+        .data('minicolors-initialized', false)
+        .data('minicolors-settings', settings)
+        .prop('size', size)
+        .wrap(minicolors)
+        .after(
+          '<div class="minicolors-panel minicolors-slider-' + settings.control + '">' +
+                  '<div class="minicolors-slider minicolors-sprite">' +
+                    '<div class="minicolors-picker"></div>' +
+                  '</div>' +
+                  '<div class="minicolors-opacity-slider minicolors-sprite">' +
+                    '<div class="minicolors-picker"></div>' +
+                  '</div>' +
+                  '<div class="minicolors-grid minicolors-sprite">' +
+                    '<div class="minicolors-grid-inner"></div>' +
+                    '<div class="minicolors-picker"><div></div></div>' +
+                  '</div>' +
+                '</div>'
+        );
+  
+      // The swatch
+      if(!settings.inline) {
+        input.after('<span class="minicolors-swatch minicolors-sprite minicolors-input-swatch"><span class="minicolors-swatch-color"></span></span>');
+        input.next('.minicolors-input-swatch').on('click', function(event) {
+          event.preventDefault();
+          input.trigger('focus');
+        });
+      }
+  
+      // Prevent text selection in IE
+      panel = input.parent().find('.minicolors-panel');
+      panel.on('selectstart', function() { return false; }).end();
+  
+      // Swatches
+      if(settings.swatches && settings.swatches.length !== 0) {
+        panel.addClass('minicolors-with-swatches');
+        swatches = $('<ul class="minicolors-swatches"></ul>')
+          .appendTo(panel);
+        for(i = 0; i < settings.swatches.length; ++i) {
+          // allow for custom objects as swatches
+          if(typeof settings.swatches[i] === 'object') {
+            name = settings.swatches[i].name;
+            swatch = settings.swatches[i].color;
+          } else {
+            name = '';
+            swatch = settings.swatches[i];
+          }
+          swatchString = swatch;
+          swatch = isRgb(swatch) ? parseRgb(swatch, true) : hex2rgb(parseHex(swatch, true));
+          $('<li class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color"></span></li>')
+            .attr("title", name)
+            .appendTo(swatches)
+            .data('swatch-color', swatchString)
+            .find('.minicolors-swatch-color')
+            .css({
+              backgroundColor: ((swatchString !== 'transparent') ? rgb2hex(swatch) : 'transparent'),
+              opacity: String(swatch.a)
+            });
+          settings.swatches[i] = swatch;
+        }
+      }
+  
+      // Inline controls
+      if(settings.inline) input.parent().addClass('minicolors-inline');
+  
+      updateFromInput(input, false);
+  
+      input.data('minicolors-initialized', true);
+    }
+  
+    // Returns the input back to its original state
+    function destroy(input) {
+      var minicolors = input.parent();
+  
+      // Revert the input element
+      input
+        .removeData('minicolors-initialized')
+        .removeData('minicolors-settings')
+        .removeProp('size')
+        .removeClass('minicolors-input');
+  
+      // Remove the wrap and destroy whatever remains
+      minicolors.before(input).remove();
+    }
+  
+    // Shows the specified dropdown panel
+    function show(input) {
+      var minicolors = input.parent();
+      var panel = minicolors.find('.minicolors-panel');
+      var settings = input.data('minicolors-settings');
+  
+      // Do nothing if uninitialized, disabled, inline, or already open
+      if(
+        !input.data('minicolors-initialized') ||
+        input.prop('disabled') ||
+        minicolors.hasClass('minicolors-inline') ||
+        minicolors.hasClass('minicolors-focus')
+      ) return;
+  
+      hide();
+  
+      minicolors.addClass('minicolors-focus');
+      if (panel.animate) {
+        panel
+          .stop(true, true)
+          .fadeIn(settings.showSpeed, function () {
+            if (settings.show) settings.show.call(input.get(0));
+          });
+      } else {
+        panel.show();
+        if (settings.show) settings.show.call(input.get(0));
+      }
+    }
+  
+    // Hides all dropdown panels
+    function hide() {
+      $('.minicolors-focus').each(function() {
+        var minicolors = $(this);
+        var input = minicolors.find('.minicolors-input');
+        var panel = minicolors.find('.minicolors-panel');
+        var settings = input.data('minicolors-settings');
+  
+        if (panel.animate) {
+          panel.fadeOut(settings.hideSpeed, function () {
+            if (settings.hide) settings.hide.call(input.get(0));
+            minicolors.removeClass('minicolors-focus');
+          });
+        } else {
+          panel.hide();
+          if (settings.hide) settings.hide.call(input.get(0));
+          minicolors.removeClass('minicolors-focus');
+        }
+      });
+    }
+  
+    // Moves the selected picker
+    function move(target, event, animate) {
+      var input = target.parents('.minicolors').find('.minicolors-input');
+      var settings = input.data('minicolors-settings');
+      var picker = target.find('[class$=-picker]');
+      var offsetX = target.offset().left;
+      var offsetY = target.offset().top;
+      var x = Math.round(event.pageX - offsetX);
+      var y = Math.round(event.pageY - offsetY);
+      var duration = animate ? settings.animationSpeed : 0;
+      var wx, wy, r, phi, styles;
+  
+      // Touch support
+      if(event.originalEvent.changedTouches) {
+        x = event.originalEvent.changedTouches[0].pageX - offsetX;
+        y = event.originalEvent.changedTouches[0].pageY - offsetY;
+      }
+  
+      // Constrain picker to its container
+      if(x < 0) x = 0;
+      if(y < 0) y = 0;
+      if(x > target.width()) x = target.width();
+      if(y > target.height()) y = target.height();
+  
+      // Constrain color wheel values to the wheel
+      if(target.parent().is('.minicolors-slider-wheel') && picker.parent().is('.minicolors-grid')) {
+        wx = 75 - x;
+        wy = 75 - y;
+        r = Math.sqrt(wx * wx + wy * wy);
+        phi = Math.atan2(wy, wx);
+        if(phi < 0) phi += Math.PI * 2;
+        if(r > 75) {
+          r = 75;
+          x = 75 - (75 * Math.cos(phi));
+          y = 75 - (75 * Math.sin(phi));
+        }
+        x = Math.round(x);
+        y = Math.round(y);
+      }
+  
+      // Move the picker
+      styles = {
+        top: y + 'px'
+      };
+      if(target.is('.minicolors-grid')) {
+        styles.left = x + 'px';
+      }
+      if (picker.animate) {
+        picker
+          .stop(true)
+          .animate(styles, duration, settings.animationEasing, function() {
+            updateFromControl(input, target);
+          });
+      } else {
+        picker
+          .css(styles);
+        updateFromControl(input, target);
+      }
+    }
+  
+    // Sets the input based on the color picker values
+    function updateFromControl(input, target) {
+  
+      function getCoords(picker, container) {
+        var left, top;
+        if(!picker.length || !container) return null;
+        left = picker.offset().left;
+        top = picker.offset().top;
+  
+        return {
+          x: left - container.offset().left + (picker.outerWidth() / 2),
+          y: top - container.offset().top + (picker.outerHeight() / 2)
+        };
+      }
+  
+      var hue, saturation, brightness, x, y, r, phi;
+      var hex = input.val();
+      var opacity = input.attr('data-opacity');
+  
+      // Helpful references
+      var minicolors = input.parent();
+      var settings = input.data('minicolors-settings');
+      var swatch = minicolors.find('.minicolors-input-swatch');
+  
+      // Panel objects
+      var grid = minicolors.find('.minicolors-grid');
+      var slider = minicolors.find('.minicolors-slider');
+      var opacitySlider = minicolors.find('.minicolors-opacity-slider');
+  
+      // Picker objects
+      var gridPicker = grid.find('[class$=-picker]');
+      var sliderPicker = slider.find('[class$=-picker]');
+      var opacityPicker = opacitySlider.find('[class$=-picker]');
+  
+      // Picker positions
+      var gridPos = getCoords(gridPicker, grid);
+      var sliderPos = getCoords(sliderPicker, slider);
+      var opacityPos = getCoords(opacityPicker, opacitySlider);
+  
+      // Handle colors
+      if(target.is('.minicolors-grid, .minicolors-slider, .minicolors-opacity-slider')) {
+  
+        // Determine HSB values
+        switch(settings.control) {
+          case 'wheel':
+            // Calculate hue, saturation, and brightness
+            x = (grid.width() / 2) - gridPos.x;
+            y = (grid.height() / 2) - gridPos.y;
+            r = Math.sqrt(x * x + y * y);
+            phi = Math.atan2(y, x);
+            if(phi < 0) phi += Math.PI * 2;
+            if(r > 75) {
+              r = 75;
+              gridPos.x = 69 - (75 * Math.cos(phi));
+              gridPos.y = 69 - (75 * Math.sin(phi));
+            }
+            saturation = keepWithin(r / 0.75, 0, 100);
+            hue = keepWithin(phi * 180 / Math.PI, 0, 360);
+            brightness = keepWithin(100 - Math.floor(sliderPos.y * (100 / slider.height())), 0, 100);
+            hex = hsb2hex({
+              h: hue,
+              s: saturation,
+              b: brightness
+            });
+  
+            // Update UI
+            slider.css('backgroundColor', hsb2hex({ h: hue, s: saturation, b: 100 }));
+            break;
+  
+          case 'saturation':
+            // Calculate hue, saturation, and brightness
+            hue = keepWithin(parseInt(gridPos.x * (360 / grid.width()), 10), 0, 360);
+            saturation = keepWithin(100 - Math.floor(sliderPos.y * (100 / slider.height())), 0, 100);
+            brightness = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
+            hex = hsb2hex({
+              h: hue,
+              s: saturation,
+              b: brightness
+            });
+  
+            // Update UI
+            slider.css('backgroundColor', hsb2hex({ h: hue, s: 100, b: brightness }));
+            minicolors.find('.minicolors-grid-inner').css('opacity', saturation / 100);
+            break;
+  
+          case 'brightness':
+            // Calculate hue, saturation, and brightness
+            hue = keepWithin(parseInt(gridPos.x * (360 / grid.width()), 10), 0, 360);
+            saturation = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
+            brightness = keepWithin(100 - Math.floor(sliderPos.y * (100 / slider.height())), 0, 100);
+            hex = hsb2hex({
+              h: hue,
+              s: saturation,
+              b: brightness
+            });
+  
+            // Update UI
+            slider.css('backgroundColor', hsb2hex({ h: hue, s: saturation, b: 100 }));
+            minicolors.find('.minicolors-grid-inner').css('opacity', 1 - (brightness / 100));
+            break;
+  
+          default:
+            // Calculate hue, saturation, and brightness
+            hue = keepWithin(360 - parseInt(sliderPos.y * (360 / slider.height()), 10), 0, 360);
+            saturation = keepWithin(Math.floor(gridPos.x * (100 / grid.width())), 0, 100);
+            brightness = keepWithin(100 - Math.floor(gridPos.y * (100 / grid.height())), 0, 100);
+            hex = hsb2hex({
+              h: hue,
+              s: saturation,
+              b: brightness
+            });
+  
+            // Update UI
+            grid.css('backgroundColor', hsb2hex({ h: hue, s: 100, b: 100 }));
+            break;
+        }
+  
+        // Handle opacity
+        if(settings.opacity) {
+          opacity = parseFloat(1 - (opacityPos.y / opacitySlider.height())).toFixed(2);
+        } else {
+          opacity = 1;
+        }
+  
+        updateInput(input, hex, opacity);
+      }
+      else {
+        // Set swatch color
+        swatch.find('span').css({
+          backgroundColor: hex,
+          opacity: String(opacity)
+        });
+  
+        // Handle change event
+        doChange(input, hex, opacity);
+      }
+    }
+  
+    // Sets the value of the input and does the appropriate conversions
+    // to respect settings, also updates the swatch
+    function updateInput(input, value, opacity) {
+      var rgb;
+  
+      // Helpful references
+      var minicolors = input.parent();
+      var settings = input.data('minicolors-settings');
+      var swatch = minicolors.find('.minicolors-input-swatch');
+  
+      if(settings.opacity) input.attr('data-opacity', opacity);
+  
+      // Set color string
+      if(settings.format === 'rgb') {
+        // Returns RGB(A) string
+  
+        // Checks for input format and does the conversion
+        if(isRgb(value)) {
+          rgb = parseRgb(value, true);
+        }
+        else {
+          rgb = hex2rgb(parseHex(value, true));
+        }
+  
+        opacity = input.attr('data-opacity') === '' ? 1 : keepWithin(parseFloat(input.attr('data-opacity')).toFixed(2), 0, 1);
+        if(isNaN(opacity) || !settings.opacity) opacity = 1;
+  
+        if(input.minicolors('rgbObject').a <= 1 && rgb && settings.opacity) {
+          // Set RGBA string if alpha
+          value = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat(opacity) + ')';
+        } else {
+          // Set RGB string (alpha = 1)
+          value = 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+        }
+      } else {
+        // Returns hex color
+  
+        // Checks for input format and does the conversion
+        if(isRgb(value)) {
+          value = rgbString2hex(value);
+        }
+  
+        value = convertCase(value, settings.letterCase);
+      }
+  
+      // Update value from picker
+      input.val(value);
+  
+      // Set swatch color
+      swatch.find('span').css({
+        backgroundColor: value,
+        opacity: String(opacity)
+      });
+  
+      // Handle change event
+      doChange(input, value, opacity);
+    }
+  
+    // Sets the color picker values from the input
+    function updateFromInput(input, preserveInputValue) {
+      var hex, hsb, opacity, keywords, alpha, value, x, y, r, phi;
+  
+      // Helpful references
+      var minicolors = input.parent();
+      var settings = input.data('minicolors-settings');
+      var swatch = minicolors.find('.minicolors-input-swatch');
+  
+      // Panel objects
+      var grid = minicolors.find('.minicolors-grid');
+      var slider = minicolors.find('.minicolors-slider');
+      var opacitySlider = minicolors.find('.minicolors-opacity-slider');
+  
+      // Picker objects
+      var gridPicker = grid.find('[class$=-picker]');
+      var sliderPicker = slider.find('[class$=-picker]');
+      var opacityPicker = opacitySlider.find('[class$=-picker]');
+  
+      // Determine hex/HSB values
+      if(isRgb(input.val())) {
+        // If input value is a rgb(a) string, convert it to hex color and update opacity
+        hex = rgbString2hex(input.val());
+        alpha = keepWithin(parseFloat(getAlpha(input.val())).toFixed(2), 0, 1);
+        if(alpha) {
+          input.attr('data-opacity', alpha);
+        }
+      } else {
+        hex = convertCase(parseHex(input.val(), true), settings.letterCase);
+      }
+  
+      if(!hex){
+        hex = convertCase(parseInput(settings.defaultValue, true), settings.letterCase);
+      }
+      hsb = hex2hsb(hex);
+  
+      // Get array of lowercase keywords
+      keywords = !settings.keywords ? [] : $.map(settings.keywords.split(','), function(a) {
+        return a.toLowerCase().trim();
+      });
+  
+      // Set color string
+      if(input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1) {
+        value = convertCase(input.val());
+      } else {
+        value = isRgb(input.val()) ? parseRgb(input.val()) : hex;
+      }
+  
+      // Update input value
+      if(!preserveInputValue) input.val(value);
+  
+      // Determine opacity value
+      if(settings.opacity) {
+        // Get from data-opacity attribute and keep within 0-1 range
+        opacity = input.attr('data-opacity') === '' ? 1 : keepWithin(parseFloat(input.attr('data-opacity')).toFixed(2), 0, 1);
+        if(isNaN(opacity)) opacity = 1;
+        input.attr('data-opacity', opacity);
+        swatch.find('span').css('opacity', String(opacity));
+  
+        // Set opacity picker position
+        y = keepWithin(opacitySlider.height() - (opacitySlider.height() * opacity), 0, opacitySlider.height());
+        opacityPicker.css('top', y + 'px');
+      }
+  
+      // Set opacity to zero if input value is transparent
+      if(input.val().toLowerCase() === 'transparent') {
+        swatch.find('span').css('opacity', String(0));
+      }
+  
+      // Update swatch
+      swatch.find('span').css('backgroundColor', hex);
+  
+      // Determine picker locations
+      switch(settings.control) {
+        case 'wheel':
+          // Set grid position
+          r = keepWithin(Math.ceil(hsb.s * 0.75), 0, grid.height() / 2);
+          phi = hsb.h * Math.PI / 180;
+          x = keepWithin(75 - Math.cos(phi) * r, 0, grid.width());
+          y = keepWithin(75 - Math.sin(phi) * r, 0, grid.height());
+          gridPicker.css({
+            top: y + 'px',
+            left: x + 'px'
+          });
+  
+          // Set slider position
+          y = 150 - (hsb.b / (100 / grid.height()));
+          if(hex === '') y = 0;
+          sliderPicker.css('top', y + 'px');
+          
+          // Update panel color
+          slider.css('backgroundColor', hsb2hex({ h: hsb.h, s: hsb.s, b: 100 }));
+          break;
+  
+        case 'saturation':
+          // Set grid position
+          x = keepWithin((5 * hsb.h) / 12, 0, 150);
+          y = keepWithin(grid.height() - Math.ceil(hsb.b / (100 / grid.height())), 0, grid.height());
+          gridPicker.css({
+            top: y + 'px',
+            left: x + 'px'
+          });
+  
+          // Set slider position
+          y = keepWithin(slider.height() - (hsb.s * (slider.height() / 100)), 0, slider.height());
+          sliderPicker.css('top', y + 'px');
+  
+          // Update UI
+          slider.css('backgroundColor', hsb2hex({ h: hsb.h, s: 100, b: hsb.b }));
+          minicolors.find('.minicolors-grid-inner').css('opacity', hsb.s / 100);
+          break;
+  
+        case 'brightness':
+          // Set grid position
+          x = keepWithin((5 * hsb.h) / 12, 0, 150);
+          y = keepWithin(grid.height() - Math.ceil(hsb.s / (100 / grid.height())), 0, grid.height());
+          gridPicker.css({
+            top: y + 'px',
+            left: x + 'px'
+          });
+  
+          // Set slider position
+          y = keepWithin(slider.height() - (hsb.b * (slider.height() / 100)), 0, slider.height());
+          sliderPicker.css('top', y + 'px');
+  
+          // Update UI
+          slider.css('backgroundColor', hsb2hex({ h: hsb.h, s: hsb.s, b: 100 }));
+          minicolors.find('.minicolors-grid-inner').css('opacity', 1 - (hsb.b / 100));
+          break;
+  
+        default:
+          // Set grid position
+          x = keepWithin(Math.ceil(hsb.s / (100 / grid.width())), 0, grid.width());
+          y = keepWithin(grid.height() - Math.ceil(hsb.b / (100 / grid.height())), 0, grid.height());
+          gridPicker.css({
+            top: y + 'px',
+            left: x + 'px'
+          });
+  
+          // Set slider position
+          y = keepWithin(slider.height() - (hsb.h / (360 / slider.height())), 0, slider.height());
+          sliderPicker.css('top', y + 'px');
+  
+          // Update panel color
+          grid.css('backgroundColor', hsb2hex({ h: hsb.h, s: 100, b: 100 }));
+          break;
+      }
+  
+      // Fire change event, but only if minicolors is fully initialized
+      if(input.data('minicolors-initialized')) {
+        doChange(input, value, opacity);
+      }
+    }
+  
+    // Runs the change and changeDelay callbacks
+    function doChange(input, value, opacity) {
+      var settings = input.data('minicolors-settings');
+      var lastChange = input.data('minicolors-lastChange');
+      var obj, sel, i;
+  
+      // Only run if it actually changed
+      if(!lastChange || lastChange.value !== value || lastChange.opacity !== opacity) {
+  
+        // Remember last-changed value
+        input.data('minicolors-lastChange', {
+          value: value,
+          opacity: opacity
+        });
+  
+        // Check and select applicable swatch
+        if(settings.swatches && settings.swatches.length !== 0) {
+          if(!isRgb(value)) {
+            obj = hex2rgb(value);
+          }
+          else {
+            obj = parseRgb(value, true);
+          }
+          sel = -1;
+          for(i = 0; i < settings.swatches.length; ++i) {
+            if(obj.r === settings.swatches[i].r && obj.g === settings.swatches[i].g && obj.b === settings.swatches[i].b && obj.a === settings.swatches[i].a) {
+              sel = i;
+              break;
+            }
+          }
+  
+          input.parent().find('.minicolors-swatches .minicolors-swatch').removeClass('selected');
+          if(sel !== -1) {
+            input.parent().find('.minicolors-swatches .minicolors-swatch').eq(i).addClass('selected');
+          }
+        }
+  
+        // Fire change event
+        if(settings.change) {
+          if(settings.changeDelay) {
+            // Call after a delay
+            clearTimeout(input.data('minicolors-changeTimeout'));
+            input.data('minicolors-changeTimeout', setTimeout(function() {
+              settings.change.call(input.get(0), value, opacity);
+            }, settings.changeDelay));
+          } else {
+            // Call immediately
+            settings.change.call(input.get(0), value, opacity);
+          }
+        }
+        input.trigger('change').trigger('input');
+      }
+    }
+  
+    // Generates an RGB(A) object based on the input's value
+    function rgbObject(input) {
+      var rgb,
+        opacity = $(input).attr('data-opacity');
+      if( isRgb($(input).val()) ) {
+        rgb = parseRgb($(input).val(), true);
+      } else {
+        var hex = parseHex($(input).val(), true);
+        rgb = hex2rgb(hex);
+      }
+      if( !rgb ) return null;
+      if( opacity !== undefined ) $.extend(rgb, { a: parseFloat(opacity) });
+      return rgb;
+    }
+  
+    // Generates an RGB(A) string based on the input's value
+    function rgbString(input, alpha) {
+      var rgb,
+        opacity = $(input).attr('data-opacity');
+      if( isRgb($(input).val()) ) {
+        rgb = parseRgb($(input).val(), true);
+      } else {
+        var hex = parseHex($(input).val(), true);
+        rgb = hex2rgb(hex);
+      }
+      if( !rgb ) return null;
+      if( opacity === undefined ) opacity = 1;
+      if( alpha ) {
+        return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat(opacity) + ')';
+      } else {
+        return 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')';
+      }
+    }
+  
+    // Converts to the letter case specified in settings
+    function convertCase(string, letterCase) {
+      return letterCase === 'uppercase' ? string.toUpperCase() : string.toLowerCase();
+    }
+  
+    // Parses a string and returns a valid hex string when possible
+    function parseHex(string, expand) {
+      string = string.replace(/^#/g, '');
+      if(!string.match(/^[A-F0-9]{3,6}/ig)) return '';
+      if(string.length !== 3 && string.length !== 6) return '';
+      if(string.length === 3 && expand) {
+        string = string[0] + string[0] + string[1] + string[1] + string[2] + string[2];
+      }
+      return '#' + string;
+    }
+  
+    // Parses a string and returns a valid RGB(A) string when possible
+    function parseRgb(string, obj) {
+      var values = string.replace(/[^\d,.]/g, '');
+      var rgba = values.split(',');
+  
+      rgba[0] = keepWithin(parseInt(rgba[0], 10), 0, 255);
+      rgba[1] = keepWithin(parseInt(rgba[1], 10), 0, 255);
+      rgba[2] = keepWithin(parseInt(rgba[2], 10), 0, 255);
+      if(rgba[3] !== undefined) {
+        rgba[3] = keepWithin(parseFloat(rgba[3], 10), 0, 1);
+      }
+  
+      // Return RGBA object
+      if( obj ) {
+        if (rgba[3] !== undefined) {
+          return {
+            r: rgba[0],
+            g: rgba[1],
+            b: rgba[2],
+            a: rgba[3]
+          };
+        } else {
+          return {
+            r: rgba[0],
+            g: rgba[1],
+            b: rgba[2]
+          };
+        }
+      }
+  
+      // Return RGBA string
+      if(typeof(rgba[3]) !== 'undefined' && rgba[3] <= 1) {
+        return 'rgba(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ', ' + rgba[3] + ')';
+      } else {
+        return 'rgb(' + rgba[0] + ', ' + rgba[1] + ', ' + rgba[2] + ')';
+      }
+  
+    }
+  
+    // Parses a string and returns a valid color string when possible
+    function parseInput(string, expand) {
+      if(isRgb(string)) {
+        // Returns a valid rgb(a) string
+        return parseRgb(string);
+      } else {
+        return parseHex(string, expand);
+      }
+    }
+  
+    // Keeps value within min and max
+    function keepWithin(value, min, max) {
+      if(value < min) value = min;
+      if(value > max) value = max;
+      return value;
+    }
+  
+    // Checks if a string is a valid RGB(A) string
+    function isRgb(string) {
+      var rgb = string.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+      return (rgb && rgb.length === 4) ? true : false;
+    }
+  
+    // Function to get alpha from a RGB(A) string
+    function getAlpha(rgba) {
+      rgba = rgba.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+(\.\d{1,2})?|\.\d{1,2})[\s+]?/i);
+      return (rgba && rgba.length === 6) ? rgba[4] : '1';
+    }
+  
+    // Converts an HSB object to an RGB object
+    function hsb2rgb(hsb) {
+      var rgb = {};
+      var h = Math.round(hsb.h);
+      var s = Math.round(hsb.s * 255 / 100);
+      var v = Math.round(hsb.b * 255 / 100);
+      if(s === 0) {
+        rgb.r = rgb.g = rgb.b = v;
+      } else {
+        var t1 = v;
+        var t2 = (255 - s) * v / 255;
+        var t3 = (t1 - t2) * (h % 60) / 60;
+        if(h === 360) h = 0;
+        if(h < 60) { rgb.r = t1; rgb.b = t2; rgb.g = t2 + t3; }
+        else if(h < 120) {rgb.g = t1; rgb.b = t2; rgb.r = t1 - t3; }
+        else if(h < 180) {rgb.g = t1; rgb.r = t2; rgb.b = t2 + t3; }
+        else if(h < 240) {rgb.b = t1; rgb.r = t2; rgb.g = t1 - t3; }
+        else if(h < 300) {rgb.b = t1; rgb.g = t2; rgb.r = t2 + t3; }
+        else if(h < 360) {rgb.r = t1; rgb.g = t2; rgb.b = t1 - t3; }
+        else { rgb.r = 0; rgb.g = 0; rgb.b = 0; }
+      }
+      return {
+        r: Math.round(rgb.r),
+        g: Math.round(rgb.g),
+        b: Math.round(rgb.b)
+      };
+    }
+  
+    // Converts an RGB string to a hex string
+    function rgbString2hex(rgb){
+      rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+      return (rgb && rgb.length === 4) ? '#' +
+        ('0' + parseInt(rgb[1],10).toString(16)).slice(-2) +
+        ('0' + parseInt(rgb[2],10).toString(16)).slice(-2) +
+        ('0' + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+    }
+  
+    // Converts an RGB object to a hex string
+    function rgb2hex(rgb) {
+      var hex = [
+        rgb.r.toString(16),
+        rgb.g.toString(16),
+        rgb.b.toString(16)
+      ];
+      $.each(hex, function(nr, val) {
+        if(val.length === 1) hex[nr] = '0' + val;
+      });
+      return '#' + hex.join('');
+    }
+  
+    // Converts an HSB object to a hex string
+    function hsb2hex(hsb) {
+      return rgb2hex(hsb2rgb(hsb));
+    }
+  
+    // Converts a hex string to an HSB object
+    function hex2hsb(hex) {
+      var hsb = rgb2hsb(hex2rgb(hex));
+      if(hsb.s === 0) hsb.h = 360;
+      return hsb;
+    }
+  
+    // Converts an RGB object to an HSB object
+    function rgb2hsb(rgb) {
+      var hsb = { h: 0, s: 0, b: 0 };
+      var min = Math.min(rgb.r, rgb.g, rgb.b);
+      var max = Math.max(rgb.r, rgb.g, rgb.b);
+      var delta = max - min;
+      hsb.b = max;
+      hsb.s = max !== 0 ? 255 * delta / max : 0;
+      if(hsb.s !== 0) {
+        if(rgb.r === max) {
+          hsb.h = (rgb.g - rgb.b) / delta;
+        } else if(rgb.g === max) {
+          hsb.h = 2 + (rgb.b - rgb.r) / delta;
+        } else {
+          hsb.h = 4 + (rgb.r - rgb.g) / delta;
+        }
+      } else {
+        hsb.h = -1;
+      }
+      hsb.h *= 60;
+      if(hsb.h < 0) {
+        hsb.h += 360;
+      }
+      hsb.s *= 100/255;
+      hsb.b *= 100/255;
+      return hsb;
+    }
+  
+    // Converts a hex string to an RGB object
+    function hex2rgb(hex) {
+      hex = parseInt(((hex.indexOf('#') > -1) ? hex.substring(1) : hex), 16);
+      return {
+        r: hex >> 16,
+        g: (hex & 0x00FF00) >> 8,
+        b: (hex & 0x0000FF)
+      };
+    }
+  
+    // Handle events
+    $([document])
+      // Hide on clicks outside of the control
+      .on('mousedown.minicolors touchstart.minicolors', function(event) {
+        if(!$(event.target).parents().add(event.target).hasClass('minicolors')) {
+          hide();
+        }
+      })
+      // Start moving
+      .on('mousedown.minicolors touchstart.minicolors', '.minicolors-grid, .minicolors-slider, .minicolors-opacity-slider', function(event) {
+        var target = $(this);
+        event.preventDefault();
+        $(event.delegateTarget).data('minicolors-target', target);
+        move(target, event, true);
+      })
+      // Move pickers
+      .on('mousemove.minicolors touchmove.minicolors', function(event) {
+        var target = $(event.delegateTarget).data('minicolors-target');
+        if(target) move(target, event);
+      })
+      // Stop moving
+      .on('mouseup.minicolors touchend.minicolors', function() {
+        $(this).removeData('minicolors-target');
+      })
+      // Selected a swatch
+      .on('click.minicolors', '.minicolors-swatches li', function(event) {
+        event.preventDefault();
+        var target = $(this), input = target.parents('.minicolors').find('.minicolors-input'), color = target.data('swatch-color');
+        updateInput(input, color, getAlpha(color));
+        updateFromInput(input);
+      })
+      // Show panel when swatch is clicked
+      .on('mousedown.minicolors touchstart.minicolors', '.minicolors-input-swatch', function(event) {
+        var input = $(this).parent().find('.minicolors-input');
+        event.preventDefault();
+        show(input);
+      })
+      // Show on focus
+      .on('focus.minicolors', '.minicolors-input', function() {
+        var input = $(this);
+        if(!input.data('minicolors-initialized')) return;
+        show(input);
+      })
+      // Update value on blur
+      .on('blur.minicolors', '.minicolors-input', function() {
+        var input = $(this);
+        var settings = input.data('minicolors-settings');
+        var keywords;
+        var hex;
+        var rgba;
+        var swatchOpacity;
+        var value;
+  
+        if(!input.data('minicolors-initialized')) return;
+  
+        // Get array of lowercase keywords
+        keywords = !settings.keywords ? [] : $.map(settings.keywords.split(','), function(a) {
+          return a.toLowerCase().trim();
+        });
+  
+        // Set color string
+        if(input.val() !== '' && $.inArray(input.val().toLowerCase(), keywords) > -1) {
+          value = input.val();
+        } else {
+          // Get RGBA values for easy conversion
+          if(isRgb(input.val())) {
+            rgba = parseRgb(input.val(), true);
+          } else {
+            hex = parseHex(input.val(), true);
+            rgba = hex ? hex2rgb(hex) : null;
+          }
+  
+          // Convert to format
+          if(rgba === null) {
+            value = settings.defaultValue;
+          } else if(settings.format === 'rgb') {
+            value = settings.opacity ?
+              parseRgb('rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + input.attr('data-opacity') + ')') :
+              parseRgb('rgb(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ')');
+          } else {
+            value = rgb2hex(rgba);
+          }
+        }
+  
+        // Update swatch opacity
+        swatchOpacity = settings.opacity ? input.attr('data-opacity') : 1;
+        if(value.toLowerCase() === 'transparent') swatchOpacity = 0;
+        input
+          .closest('.minicolors')
+          .find('.minicolors-input-swatch > span')
+          .css('opacity', String(swatchOpacity));
+  
+        // Set input value
+        input.val(value);
+  
+        // Is it blank?
+        if(input.val() === '') input.val(parseInput(settings.defaultValue, true));
+  
+        // Adjust case
+        input.val(convertCase(input.val(), settings.letterCase));
+  
+      })
+      // Handle keypresses
+      .on('keydown.minicolors', '.minicolors-input', function(event) {
+        var input = $(this);
+        if(!input.data('minicolors-initialized')) return;
+        switch(event.which) {
+          case 9: // tab
+            hide();
+            break;
+          case 13: // enter
+          case 27: // esc
+            hide();
+            input.blur();
+            break;
+        }
+      })
+      // Update on keyup
+      .on('keyup.minicolors', '.minicolors-input', function() {
+        var input = $(this);
+        if(!input.data('minicolors-initialized')) return;
+        updateFromInput(input, true);
+      })
+      // Update on paste
+      .on('paste.minicolors', '.minicolors-input', function() {
+        var input = $(this);
+        if(!input.data('minicolors-initialized')) return;
+        setTimeout(function() {
+          updateFromInput(input, true);
+        }, 1);
+      });
+}));  

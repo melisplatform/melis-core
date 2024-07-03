@@ -1945,6 +1945,52 @@ label {
 #orderCheckoutCountries {
 	width: auto !important;
 }
+#btn_prospect_theme_add,
+#id_meliscms_mini_template_manager_tool_header_add_btn,
+#btn_cms_new_lang,
+#id_meliscms_tool_styles_header_add,
+#id_meliscms_tool_templates_header_add,
+.addRedirectSite,
+#id_melissb_tool_userrole_header_buttons_add_role,
+#btn-new-meliscms-tool-sites,
+#btn-save-meliscms-tool-sites,
+#id_meliscms_tool_platform_ids_add_button {
+	float: right;
+}
+#market-place-most-downloaded-package-list .simple-post-list li a,
+.melis-market-place-view-details .product-thumb-info-content a {
+	text-decoration: none;
+}
+.platform-scheme .minicolors input[type=hidden] + .minicolors-swatch {
+	width: 16px;
+}
+.platform-scheme .minicolors-theme-default .minicolors-swatch {
+	width: 16px;
+	height: 16px;
+}
+.minicolor-hex {
+	text-transform: lowercase;
+}
+#melis_core_platform_scheme_form .col-12:nth-child(2) .minicolors-position-bottom .minicolors-panel,
+#melis_core_platform_scheme_form .col-12:last-child .minicolors-position-bottom .minicolors-panel {
+	left: -173px;
+}
+#id_meliscommerce_order_status_form_container .minicolors-theme-default .minicolors-input,
+#id_meliscommerce_order_status_form_container .minicolors-theme-default.minicolors {
+	width: 100%;
+}
+#id_meliscommerce_order_status_form_container .minicolors-theme-default .minicolors-input {
+	height: auto;
+	padding: .375rem .75rem;
+}
+#id_meliscommerce_order_status_form_container .minicolors-theme-default .minicolors-swatch {
+	right: 5px;
+	left: auto;
+	display: none;
+}
+#id_meliscommerce_order_status_form_container .minicolors-position-bottom .minicolors-panel {
+	right: 0;
+}
 /* Mobile Responsive */
 @media (max-width: 1128px) {
 	#btnModulesBundle,
@@ -1997,5 +2043,9 @@ label {
 	}
 	.melis-toolcreator-steps-table-list ul li > span span.text {
 		display: inline-block;
+	}
+	/* platfor-scheme color picker */
+	.minicolors-position-bottom .minicolors-panel {
+		left: -173px;
 	}
 }

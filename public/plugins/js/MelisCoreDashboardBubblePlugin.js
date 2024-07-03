@@ -112,7 +112,7 @@ $(function() {
         $bubbleShowButton       = $("#btn-show-bubble-plugins"),
         $bubbleHideButton       = $("#btn-hide-bubble-plugins"),
         $dbMsg                  = $body.find(".melis-core-dashboard-msg");
-
+        
         // flipping the card
         $body.on('click', '.melis-dashboard-bubble-plugin .front .btn', function () {
             $(this).closest('.panel-3d').addClass('panel-flip');

@@ -17,6 +17,7 @@ $(function() {
                 return entityMap[s];
             });
         }
+
         $body.on("click", "#savePlatformScheme", function() {
             $("form#melis_core_platform_scheme_images").trigger("submit");
         });
@@ -106,5 +107,5 @@ $(function() {
                     $headerTitle.removeClass("ml-header");
                 }
                 $headerTitle.html(text);
-        })
+        });
 });

@@ -71,14 +71,11 @@ if($headerTitleLen > 13) {
                 <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="" class="d-flex flex-row justify-content-between"><div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($tooltips[$element->getName()]); ?>"></i></label>
-                        <div class="input-group colorpicker-component osta_color_code colorpicker-element">
+                        <div class="input-group platform-scheme osta_color_code">
                             <?= $this->formRow($element->setLabel("")); ?>
-                            <!-- <span class="input-group-addon"> -->
-                            <span class="input-group-append">
-                                <span class="input-group-text colorpicker-input-addon">
-                                    <i style="background-color: <?=  $element->getValue(); ?>;"></i>
-                                </span>
-                            </span> 
+                            <span class="input-group-addon">
+                                <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                            </span>
                         </div>
                     </div>
                 </div>    
@@ -192,12 +189,40 @@ if($headerTitleLen > 13) {
                 </div>
             </form>
             <script>
-                $(function() {
+                (function($) {
                     //$(".osta_color_code").colorpicker({format: 'hex',useAlpha: false});
-                    $(".osta_color_code").colorpicker({ popover: false });
+                    $(".minicolor").each(function() {
+                        var $this = $(this);
+                            $this.minicolors({
+                                control: $this.attr("data-control") || 'hue',
+                                defaultValue: $this.attr("data-defaultValue") || '',
+                                format: $this.attr('data-format') || 'hex',
+                                keywords: $this.attr('data-keywords') || '',
+                                inline: $this.attr('data-inline') === 'true',
+                                letterCase: $this.attr('data-letterCase') || 'lowercase',
+                                opacity: $this.attr('data-opacity'),
+                                position: $this.attr('data-position') || 'bottom',
+                                swatches: $this.attr('data-swatches') ? $this.attr('data-swatches').split('|') : [],
+                                change: function(hex, opacity) {
+                                    var log;
+                                        try {
+                                            log = hex ? hex : 'transparent';
+
+                                            if( opacity ) 
+                                                log += ', ' + opacity;
+                                            
+                                            if ( $this.closest(".osta_color_code").find(".minicolor-hex").length ) {
+                                                $this.closest(".osta_color_code").find(".minicolor-hex").val(hex);
+                                            }
+                                        } catch(e) {}
+                                },
+                                theme: 'default'
+                            });
+                    });
+                    
                     $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
                     $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
-                });
+                })(jQuery);
             </script>
         </div>
         <?php
