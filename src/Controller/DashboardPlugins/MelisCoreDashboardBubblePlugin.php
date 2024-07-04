@@ -47,7 +47,7 @@ class MelisCoreDashboardBubblePlugin extends MelisCoreDashboardTemplatingPlugin
                 $plugin = $pluginManager->get($pluginName);
                 $pluginModel = $plugin->render();
 
-                $html .= '<div class="col">';
+                $html .= '<div class="col-12 col-sm-6">';
                 $html .= $viewRender->render($pluginModel);
                 $html .= '</div>';
             }
