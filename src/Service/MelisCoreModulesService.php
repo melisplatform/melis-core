@@ -704,11 +704,11 @@ class MelisCoreModulesService extends MelisServiceManager
                 /**
                  * We merge all bundled files
                  */
-                $cssAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
+                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
                 /**
                  * Combine all
                  */
-                $this->combineAssets($cssAssets, $type);
+                $this->combineAssets($allAssets, $type);
             }
 
             /**
@@ -1016,28 +1016,32 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function getFileContent($fileStr, $removeComments = true)
     {
-        $container = new Container('meliscore');
-        $locale = $container['melis-lang-locale'];
-        if(function_exists('curl_version')) {
+//        $container = new Container('meliscore');
+//        $locale = $container['melis-lang-locale'];
 
-            if(str_contains($fileStr, '/get-translations'))
-                $fileStr .= '?locale='.$locale;
+        if(!str_contains($fileStr, '/get-translations')) {
+            if (function_exists('curl_version')) {
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_URL, $fileStr);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-            $text = curl_exec($ch);
-            curl_close($ch);
-        }else{
-            $text = file_get_contents($fileStr);
+//                if(str_contains($fileStr, '/get-translations'))
+//                    $fileStr .= '?locale=' . $locale;
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_URL, $fileStr);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                $text = curl_exec($ch);
+                curl_close($ch);
+            } else {
+                $text = file_get_contents($fileStr);
+            }
+
+            if ($removeComments)
+                $text = preg_replace('!/\*.*?\*/!s', '', $text);
+
+            return $text;
         }
-
-        if($removeComments)
-            $text = preg_replace('!/\*.*?\*/!s', '', $text);
-
-        return $text;
+        return "";
     }
 
     /**
