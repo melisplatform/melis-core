@@ -2094,6 +2094,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	.minicolors-position-bottom .minicolors-panel {
 		left: -173px;
 	}
+	/* melis-commerce status */
 	#id_meliscommerce_order_status_form_container .minicolors-position-bottom .minicolors-panel {
 		left: auto;
 	}

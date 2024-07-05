@@ -23,7 +23,8 @@ $headerTitleLen = str_replace(' ', '', trim($sidebarHeaderText));
 $headerTitleLen = strlen($headerTitleLen);
 
 if($headerTitleLen > 13) {
-    $headerTitle = '<span class="ml-header">'.$this->escapeHtml($sidebarHeaderText).'</span>';
+    // class="ml-header"
+    $headerTitle = '<span>'.$this->escapeHtml($sidebarHeaderText).'</span>';
 }
 
 $headerExclusions = array(
