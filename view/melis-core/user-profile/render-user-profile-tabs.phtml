@@ -14,7 +14,7 @@ $data_melisKey = $this->melisKey;
                     <?php if($configKey == "melismessenger_tool") { ?>
                         <?php if(trim($this->$configKey) != ""){ ?>
                             <li class="nav-item" role="presentation" id="melis-messenger-tab">
-                                <a class="nav-link glyphicons <?= $configVal['conf']['icon'] ?> cs-fa" data-bs-toggle="tab" data-bs-target="#<?=$configVal['conf']['id']?>" href="#<?=$configVal['conf']['id']?>" aria-expanded="true">
+                                <a class="nav-link glyphicons <?= $configVal['conf']['icon'] ?> cs-fa" data-bs-toggle="tab" href="#<?=$configVal['conf']['id']?>" aria-expanded="true">
                                     <i></i>
                                     <span><?=$this->translate($configVal['conf']['name']); ?></span>
                                 </a>
@@ -22,7 +22,7 @@ $data_melisKey = $this->melisKey;
                         <?php } ?>
                     <?php }else { ?>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link glyphicons <?= $configVal['conf']['icon'] ?> cs-fa" data-bs-toggle="tab" data-bs-target="#<?=$configVal['conf']['id']?>" href="#<?=$configVal['conf']['id']?>" aria-expanded="true">
+                            <a class="nav-link glyphicons <?= $configVal['conf']['icon'] ?> cs-fa" data-bs-toggle="tab" href="#<?=$configVal['conf']['id']?>" aria-expanded="true">
                                 <i></i>
                                 <span><?=$this->translate($configVal['conf']['name']); ?></span>
                             </a>

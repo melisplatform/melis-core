@@ -3603,12 +3603,13 @@ div#modal-user-management div.widget {
 
 @media only screen and (max-width: 767px) {
 	/* Old Modal */
-	#content .tooltabmodal#modal-user-management .nav.nav-tabs li {
+	/* Commented, issue on tabs not stacked not side by side */
+	/* #content .tooltabmodal#modal-user-management .nav.nav-tabs li {
 		float: none !important;
 	}
 	#content .tooltabmodal#modal-user-management .nav.nav-tabs li.active {
 		float: none !important;
-	}
+	} */
 	#content .tooltabmodal#modal-user-management .widget {
 		width: auto;
 	}
