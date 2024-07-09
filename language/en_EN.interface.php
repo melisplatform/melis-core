@@ -221,6 +221,11 @@ return [
     'tr_meliscore_common_apply' => 'Apply',
     'tr_meliscore_common_update' => 'Update',
     'tr_meliscore_common_clear' => 'Clear',
+    'tr_meliscore_common_submit' => 'Submit',
+    'tr_meliscore_common_content' => 'Content',
+    'tr_meliscore_common_header' => 'Header',
+    'tr_meliscore_common_header_left' => 'Left header',
+    'tr_meliscore_common_header_right' => 'Right header',
 
     'tr_meliscore_login_remember_me' => 'Remember my details',
     'tr_meliscore_login_header' => 'Login to your Account',
@@ -831,6 +836,7 @@ return [
     'tr_meliscore_tool_other_config_header_description' => 'Here you can configure additional options for each module of the platform',
     'tr_meliscore_tool_other_config_content_tabs_user_login' => 'Core',
     'tr_meliscore_tool_other_config_content_tabs_password_validity_header' => 'Login',
+    'tr_meliscore_tool_other_config_content_tabs_password_validity_content' => 'Login Content',
 
     'tr_meliscore_tool_other_config_password_validity_header' => 'Password validity lifetime',
     'tr_meliscore_tool_other_config_password_validity_lifetime' => 'Password lifetime (in days)',

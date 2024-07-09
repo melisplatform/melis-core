@@ -652,7 +652,7 @@ return [
                                                 'meliscore_tool_other_config_header' => [
                                                     'conf' => [
                                                         'id' => 'id_meliscore_tool_other_config_header',
-                                                        'name' => 'tr_meliscore_tool_other_config_header',
+                                                        'name' => 'tr_meliscore_common_header',
                                                         'melisKey' => 'meliscore_tool_other_config_header',
                                                     ],
                                                     'forward' => [
@@ -665,7 +665,7 @@ return [
                                                         'meliscore_tool_other_config_header_left' => [
                                                             'conf' => [
                                                                 'id' => 'id_meliscore_tool_other_config_header_left',
-                                                                'name' => 'tr_meliscore_tool_other_config_header_left',
+                                                                'name' => 'tr_meliscore_common_header_left',
                                                                 'melisKey' => 'meliscore_tool_other_config_header_left',
                                                             ],
                                                             'forward' => [
@@ -691,7 +691,7 @@ return [
                                                         'meliscore_tool_other_config_header_right' => [
                                                             'conf' => [
                                                                 'id' => 'id_meliscore_tool_other_config_header_right',
-                                                                'name' => 'tr_meliscore_tool_other_config_header_right',
+                                                                'name' => 'tr_meliscore_common_header_right',
                                                                 'melisKey' => 'meliscore_tool_other_config_header_right',
                                                             ],
                                                             'forward' => [
@@ -719,7 +719,7 @@ return [
                                                 'meliscore_tool_other_config_content' => [
                                                     'conf' => [
                                                         'id' => 'id_meliscore_tool_other_config_content',
-                                                        'name' => 'tr_meliscore_tool_other_config_content',
+                                                        'name' => 'tr_meliscore_common_content',
                                                         'melisKey' => 'meliscore_tool_other_config_content',
                                                     ],
                                                     'forward' => [

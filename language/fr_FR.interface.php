@@ -224,6 +224,10 @@ return [
     'tr_meliscore_common_update' => 'Mettre a jour',
     'tr_meliscore_common_clear' => 'Effacer',
     'tr_meliscore_common_submit' => 'Submit',
+    'tr_meliscore_common_content' => 'Contenu',
+    'tr_meliscore_common_header' => 'Header',
+    'tr_meliscore_common_header_left' => 'En-tête gauche',
+    'tr_meliscore_common_header_right' => 'En-tête droit',
 
     'tr_meliscore_login_remember_me' => 'Se rappeler de moi',
     'tr_meliscore_login_header' => 'Connexion à votre compte',
@@ -843,6 +847,7 @@ return [
     'tr_meliscore_tool_other_config_header_description' => 'Vous pouvez configurer ici des options supplémentaires pour chaque module de la plateforme.',
     'tr_meliscore_tool_other_config_content_tabs_user_login' => 'Core',
     'tr_meliscore_tool_other_config_content_tabs_password_validity_header' => 'Se Connecter',
+    'tr_meliscore_tool_other_config_content_tabs_password_validity_content' => 'Login Content',
 
     'tr_meliscore_tool_other_config_password_validity_header' => 'Durée de validité du mot de passe',
     'tr_meliscore_tool_other_config_password_validity_lifetime' => 'Validité (en jours)',
