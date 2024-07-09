@@ -19,8 +19,8 @@ return [
     'tr_meliscore_center_dashboard_menu' => 'Dashboard plugins',
     'tr_meliscore_melis_dashboard_no_plugins_to_load' => "<strong>Votre dashboard est vide</strong>. <br>Merci d'utiliser le menu de droite pour ajouter les plugins que vous voulez utiliser et personnaliser votre dashboard",
     'tr_meliscore_melis_dashboard_no_access' => "Vos <strong>droits ne vous permettent pas d'utiliser les plugins de dashboard</strong>. <br>Merci de contacter votre administrateur afin de pouvoir les utiliser.",
-	'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
-	'tr_meliscore_dashboard_notify_step_1_msg' => "Cliquez sur le bouton pour voir la liste des <br>plugins disponibles pour votre tableau de bord.",
+    'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
+    'tr_meliscore_dashboard_notify_step_1_msg' => "Cliquez sur le bouton pour voir la liste des <br>plugins disponibles pour votre tableau de bord.",
     'tr_meliscore_dashboard_notify_step_2_msg' => "Cliquez sur une section pour voir les plugins disponibles dans cette catégorie, <br>puis faites glisser vers votre tableau de bord afin de le personnaliser.",
     'tr_meliscore_dashboard_notify_steps_general_next_text' => "Suivant",
     'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Fermer l'aide",
@@ -29,7 +29,7 @@ return [
 
     // Rights
     'tr_meliscore_meliscore' => 'MelisCore',
-    'tr_meliscore_header' => 'Header',
+    'tr_meliscore_header' => 'En-tête',
     'tr_meliscore_header_flash_messenger' => 'Flash messenger',
     'tr_meliscore_header_flash_messenger_title' => 'Notifications',
     'tr_meliscore_header_language' => 'Langue',
@@ -225,9 +225,9 @@ return [
     'tr_meliscore_common_clear' => 'Effacer',
     'tr_meliscore_common_submit' => 'Submit',
     'tr_meliscore_common_content' => 'Contenu',
-    'tr_meliscore_common_header' => 'Header',
+    'tr_meliscore_common_header' => 'En-tête',
     'tr_meliscore_common_header_left' => 'En-tête gauche',
-    'tr_meliscore_common_header_right' => 'En-tête droit',
+    'tr_meliscore_common_header_right' => 'En-tête droite',
 
     'tr_meliscore_login_remember_me' => 'Se rappeler de moi',
     'tr_meliscore_login_header' => 'Connexion à votre compte',
@@ -274,7 +274,7 @@ return [
     'tr_meliscore_datepicker_apply' => 'Appliquer',
     'tr_meliscore_datepicker_cancel' => 'Annuler',
     'tr_meliscore_datepicker_custom_range' => 'Période personnalisée',
-      
+    
     // AJAX Errors
     'tr_meliscore_error_message' => 'Une erreur est survenue, veuillez réessayer ou contactez l\'administrateur si le problème persiste.',
     'tr_meliscore_error_language' => 'Une erreur est survenue lors du changement de langage, veuillez réessayer.',
@@ -338,9 +338,9 @@ return [
     // Platform Tool Translations
     'tr_meliscore_tool_platform_title' => 'Plateformes',
     'tr_meliscore_tool_platform_title info' => 'Melis Platform permet de déclarer des environnements différents (ex : local, pre-production, production) afin de sauvegarder des configurations spécifiques pour chacun d\'entre eux (domaine). Le nom de la plateforme doit correspondre à la variable d\'environnement définie dans le vhost (MELIS_PLATFORM).<br>Il est impossible de supprimer la plateforme courante.',
-    'tr_meliscore_tool_platform_header' => 'Header',
+    'tr_meliscore_tool_platform_header' => 'En-tête',
     'tr_meliscore_tool_platform_header_add' => 'Nouvelle plateforme',
-    'tr_meliscore_tool_platform_content' => 'Content',
+    'tr_meliscore_tool_platform_content' => 'Contenu',
     'tr_meliscore_tool_platform_modals' => 'Modals',
     'tr_meliscore_tool_platform_modal_new' => 'Nouvelle plateforme',
     'tr_meliscore_tool_platform_modal_edit' => 'Editer plateforme',
@@ -374,8 +374,8 @@ return [
     // Language Tool Translations
     'tr_meliscore_tool_language' => 'Langages du back-office',
     'tr_meliscore_tool_language_description' => 'Définissez ici les différents langages qui peuvent être utilisés dans le Back Office.',
-    'tr_meliscore_tool_language_header' => 'Header',
-    'tr_meliscore_tool_language_content' => 'Content',
+    'tr_meliscore_tool_language_header' => 'En-tête',
+    'tr_meliscore_tool_language_content' => 'Contenu',
     'tr_meliscore_tool_language_modal' => 'Modals',
     'tr_meliscore_tool_language_lang_id' => 'ID',
     'tr_meliscore_tool_language_lang_locale' => 'Locale',
@@ -411,7 +411,7 @@ return [
     'tr_meliscore_tool_emails_mngt_generic_from' => 'Email Creation and Edition Form',
     'tr_meliscore_tool_emails_mngt' => 'Gestion des emails',
     'tr_meliscore_tool_emails_mngt_description' => 'Vous pouvez définir ici toutes les propriétés de l&#39;email.',
-    'tr_meliscore_tool_emails_mngt_header' => 'Header',
+    'tr_meliscore_tool_emails_mngt_header' => 'En-tête',
     'tr_meliscore_tool_emails_mngt_header_description' => 'Cet outil permet de gérer les emails envoyés par les différents outils du Back Office. <br>Certains de ces emails ne peuvent être supprimés (ex: "Mot de pass oublié") car ils font partie des fonctionnalitées de base de la plateforme. Tous peuvent cependant être redéfinis.  <br>D&#39;autres outils spécifiques peuvent venir ajouter des emails à ce système.',
     'tr_meliscore_tool_emails_mngt_header_btn_add' => 'Ajouter un email',
     'tr_meliscore_tool_emails_mngt_content' => 'Contenu',
@@ -437,7 +437,7 @@ return [
     'tr_emails_management_edition' => 'Edition de l\'email',
     'tr_emails_management_add_email' =>  'Ajouter un email',
     'tr_emails_management_title_creation' =>  'Création',
-    'tr_meliscore_tool_emails_mngt_generic_from_header' => 'Header',
+    'tr_meliscore_tool_emails_mngt_generic_from_header' => 'En-tête',
     'tr_meliscore_tool_emails_mngt_generic_from_content' => 'Contenu',
     'tr_meliscore_tool_emails_mngt_generic_from_header_cancel' => 'Annuler',
     'tr_meliscore_tool_emails_mngt_generic_from_header_save' => 'Sauvegarder l\'email',
@@ -526,37 +526,37 @@ return [
     'tr_melis_module_diagnostics_run_test' => '<i class="fa fa-play"></i> Run',
     'tr_melis_module_diagnostics_testing' => '<i class="fa fa-spinner"></i> Testing...',
     'tr_melis_module_diagnostics_collapse' => '<i class="fa fa-minus"></i> Hide',
-    'tr_melis_module_diagnostics_tool_header' => 'Header',
-    'tr_melis_module_diagnostics_tool_content' => 'Content',
+    'tr_melis_module_diagnostics_tool_header' => 'En-tête',
+    'tr_melis_module_diagnostics_tool_content' => 'Contenu',
     'tr_melis_module_diagnostics_tool_header_run_all' => '<i class="glyphicon glyphicon-flash"></i> Run all',
     'tr_melis_module_diagnostics_tool_header_hide_all' => '<i class="fa fa-minus"></i> Hide all',
-     
+    
     'tr_melis_module_rights_dir' => 'Module basic folder test',
     'tr_melis_module_basic_action_test' => 'Basic action test',
     'tr_melis_module_file_creation_test' => 'File creation test',
     'tr_melis_module_db_test' => 'Test module database table(s)',
-     
-     
+    
+    
     'tr_melis_module_diag_check_rights' => 'Checking rights for <strong>"%s"</strong>',
-     
+    
     'tr_melis_module_diag_folder_read_write' => 'Directory <strong>"%s"</strong> is readable and writable',
     'tr_melis_module_diag_folder_not_exists' => 'Directory <strong>"%s"</strong> does not exist',
     'tr_melis_module_diag_folder_check' => 'Checking file <strong>"%s"</strong>',
-     
+    
     'tr_melis_module_rights_ok' => 'folder <strong>"%s"</strong> is readable and writable',
     'tr_melis_module_check_rights' => 'Please check the rights for this folder <strong>"%s"</strong>',
-     
+    
     'tr_melis_module_controller_check_route' => 'Checking <strong><strong>"%s"</strong></strong> route configuration',
     'tr_melis_module_controller_testing_route' => 'Testing route status: <strong>"%s"</strong>',
     'tr_melis_module_controller_testing_route_not_found' => 'Unable to test route, cannot find <strong>"%s"</strong> in your route configuration, please check %s/config/module.config.php',
     'tr_melis_module_controller_route_test_results' => 'Route results: <strong>%s</strong>',
-     
+    
     'tr_melis_module_ending_test' => 'Finishing testing for <strong>%s</strong>...',
     'tr_melis_module_no_more_results' => 'Request doesn\'t have anymore response. Response payload might be too big for the diagnostic tool to handle',
     'tr_melis_module_aborted' => 'Done',
-     
+    
     'tr_melis_test_config_not_found' => '%s not found, please create one',
-     
+    
     'tr_melis_test_writable_false' => '/public folder of module "%s" is not writable',
     'tr_melis_test_write_not_found' => 'Cannot find %s in %s',
     'tr_melis_test_create_file_false' => 'Cannot create file "%s" in %s/public, you have no rights on creating a file on this folder',
@@ -564,16 +564,16 @@ return [
     'tr_melis_test_path_exists_false' => '%s path does not exists',
     'tr_melis_test_path_write_success' => '%s file has been created successfully',
     'tr_melis_test_path_delete_success' => '%s file has been deleted',
-     
+    
     'tr_melis_test_db_config_exists_false' => 'Unable to test module tables, %s not found',
     'tr_melis_test_db_table_exists_false' => 'Table "%s" does not exists. ',
     'tr_melis_test_db_table_test_success' => 'Testing table "%s" successful',
     'tr_melis_test_db_table_test_failed' => 'Testing table "%s" failed, table does not exists',
-     
+    
     'tr_melis_module_controller_action_warn' => 'Please add diagnostic.config.php in your %s module',
     
     'tr_melis_diag_test_module_config_title' => 'Testing module config folder and melis.module.load file',
-     
+    
     // Tooltip messages
     'tr_meliscore_tool_tooltip_password' => 'Le mot de passe doit être d`au moins 8 caractères et doit contenir au moins une lettre ET un chiffre.',
     'tr_meliscore_tool_tooltip_password_2' => 'Confirmer le mot de passe',
@@ -611,12 +611,12 @@ return [
     'tr_meliscore_logs_tool_log_item_id' => 'ID élément',
     'tr_meliscore_logs_tool_log_user' => 'Utilisateur',
     'tr_meliscore_logs_tool_log_date_added' => 'Date ajoutée',
-     
+    
     // Log type details
     'tr_meliscore_logs_tool_log_type_name' => 'Nom',
     'tr_meliscore_logs_tool_log_type_description' => 'Description',
     'tr_meliscore_logs_tool_log_type_code' => 'Code type de log',
-     
+    
     'tr_meliscore_logs_tool_log_save_success' => 'Le type de log a été sauvegardé avec succès',
     'tr_meliscore_logs_tool_log_save_unable' => 'Impossible de sauvegarder le type de log, veuillez réessayer',
     'tr_meliscore_logs_tool_log_input_to_long_255' => 'Valeur trop longue, elle doit être de moins de 255 caractères',
