@@ -215,6 +215,7 @@ return [
                             'attributes' => [
                                 'name' => 'newusermanagement',
                                 'id' => 'idnewusermanagement',
+                                'class' => 'clearfix',
                                 'method' => 'POST',
                                 'enctype' => 'multipart/form-data',
                                 'action' => '',

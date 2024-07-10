@@ -2039,7 +2039,24 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	margin-right: 8px;
 	padding: 3px 12px;
 }
-
+.container-level-a .tooltabmodal .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
+	float: left;
+}
+#modal-user-management .tns-controls button {
+	background-color: #e61c23;
+	border: 0;
+	color: #fff;
+}
+#modal-user-management .tns-controls button[data-controls="prev"] {
+	float: left;
+}
+#modal-user-management .tns-controls button[data-controls="next"] {
+	float: right;
+}
+.news-details-workflow:focus,
+.news-details-workflow:hover {
+	text-decoration: none;
+}
 /* Mobile Responsive */
 @media (max-width: 1128px) {
 	#btnModulesBundle,
@@ -2098,6 +2115,32 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	#id_meliscommerce_order_status_form_container .minicolors-position-bottom .minicolors-panel {
 		left: auto;
 	}
+	/* scripts tab */
+	[data-meliskey="meliscms_tool_sites_script_content"] .widget-tabs {
+		margin: 0 -15px !important;
+	}
+	/* users tab */
+	#btnResetRightsNew {
+		margin-right: 1rem !important;
+	}
+	.tooltabmodal .widget.widget-tabs.widget-tabs-responsive>.widget-head ul {
+		display: inline-block;
+	}
+	.container-level-a .tooltabmodal .widget.widget-tabs.widget-tabs-responsive>.widget-head ul li {
+		float: left;
+	}
+	.container-level-a .tooltabmodal .widget.widget-tabs.widget-tabs-responsive>.widget-head ul li,
+	.container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li a {
+		border-bottom: 0;
+	}
+	.tooltabmodal .tab-pane .row {
+		display: block;
+		width: 100%;
+		margin: 0;
+	}
+	.tooltabmodal .inner-2x.innerAll {
+		padding: 30px 15px !important;
+	}
 }
 @media (max-width: 425px) {
 	.news-details-workflow {
@@ -2107,5 +2150,17 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	}
 	.melis-news-heading {
 		padding-bottom: 3rem !important;
+	}
+	#btnResetRights,
+	#btnResetRightsNew {
+		margin-right: 1rem !important;
+	}
+}
+@media (max-width: 375px) {
+	.tooltabmodal .tab-pane .btn {
+		display: block;
+		float: none !important;
+		max-width: 100% !important;
+		margin: 0.5rem 0 0 0 !important;
 	}
 }

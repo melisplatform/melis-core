@@ -209,16 +209,18 @@ return array(
 
                     //Bootstrap tags
                     '/MelisCore/css/bootstrap-tagsinput.css',
+                    // tiny-slider
+                    '/MelisCore/css/tiny-slider.css',
 
-                    // MelisCore main CSS - should always be in bottom
-                    '/MelisCore/css/styles.css',
-                    // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
-                    '/MelisCore/css/custom-style.css',
                     '/MelisCore/css/diagnostic.css',
 
                     // Custom font-awesome checkbox
                     '/MelisCore/css/custom-fontawesome.css',
 
+                    // MelisCore main CSS - should always be in bottom
+                    '/MelisCore/css/styles.css',
+                    // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
+                    '/MelisCore/css/custom-style.css',
                 ),
                 'js' => array(
                     '/melis/get-translations',
