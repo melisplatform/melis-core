@@ -298,6 +298,7 @@ return array(
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
+                    '/MelisCore/js/tools/announcement.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
                     '/MelisCore/js/core/loader.js',
@@ -309,7 +310,7 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => true,
+                    'use_build_assets' => false,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 

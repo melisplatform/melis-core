@@ -2745,6 +2745,182 @@ return [
                         ],
                     ],
                 ],//end gdpr
+                //start announcement tool
+                'announcement_tool' => [
+                    'table' => [
+                        'target' => '#tableAnnouncement',
+                        'ajaxUrl' => '/melis/MelisCore/Announcement/getAnnouncement',
+                        'dataFunction' => '',
+                        'ajaxCallback' => '',
+                        'filters' => [
+                            'left' => [
+                                'announcement-limit' => [
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Announcement',
+                                    'action' => 'render-tool-filters-limit'
+                                ],
+                            ],
+                            'center' => [
+                                'announcement-search' => [
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Announcement',
+                                    'action' => 'render-tool-filters-search'
+                                ],
+                            ],
+                            'right' => [
+                                'announcement-refresh' => [
+                                    'module' => 'MelisCore',
+                                    'controller' => 'Announcement',
+                                    'action' => 'render-tool-filters-refresh'
+                                ],
+                            ],
+                        ],
+                        'columns' => [
+                            'mca_id' => [
+                                'text' => 'Id',
+                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'sortable' => true,
+                            ],
+                            'mca_status' => [
+                                'text' => 'Status',
+                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mca_date' => [
+                                'text' => 'Date',
+                                'css' => ['width' => '25%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mca_title' => [
+                                'text' => 'Title',
+                                'css' => ['width' => '25%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                            'mca_text' => [
+                                'text' => 'Text',
+                                'css' => ['width' => '25%', 'padding-right' => '0'],
+                                'sortable' => false,
+                            ],
+                        ],
+
+                        // define what columns can be used in searching
+                        'searchables' => ['mca_id', 'mca_title', 'mca_text'],
+                        'actionButtons' => [
+                            'edit' => [
+                                'module' => 'MelisCore',
+                                'controller' => 'Announcement',
+                                'action' => 'render-tool-action-edit',
+                            ],
+                            'delete' => [
+                                'module' => 'MelisCore',
+                                'controller' => 'Announcement',
+                                'action' => 'render-tool-action-delete',
+                            ],
+                        ],
+                    ],
+                    'forms' => [
+                        'announcement_tool_form' => [
+                            'attributes' => [
+                                'name' => 'announcement_tool_form',
+                                'id' => 'id_announcement_tool_form',
+                                'method' => 'POST',
+                                'action' => '',
+                                'class' => 'form-horizontal'
+                            ],
+                            'hydrator' => 'Laminas\Hydrator\ArraySerializableHydrator',
+                            'elements' => [
+                                [
+                                    'spec' => [
+                                        'name' => 'mca_id',
+                                        'type' => 'hidden'
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mca_status',
+                                        'type' => 'Select',
+                                        'options' => [
+                                            'label' => 'tr_meliscore_common_status',
+//                                            'tooltip' => 'tr_meliscore_tool_platform_activate_cache tooltip',
+                                            'switchOptions' => [
+                                                'label' => 'tr_meliscore_common_status',
+                                                'label-on' => 'tr_meliscore_common_yes',
+                                                'label-off' => 'tr_meliscore_common_nope',
+                                                'icon' => "glyphicon glyphicon-resize-horizontal",
+                                            ],
+//                                            'value_options' => [
+//                                                'on' => 'on',
+//                                            ],
+                                            'disable_inarray_validator' => true
+                                        ],
+                                        'disable_inarray_validator' => true,
+                                        'attributes' => [
+                                            'id' => 'plf_activate_cache',
+                                            'value' => 1,
+                                            'required' => false
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mca_title',
+                                        'type' => 'MelisText',
+                                        'options' => [
+                                            'label' => 'Title',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'mca_title'
+                                        ]
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mca_date',
+                                        'type' => 'DateField',
+                                        'options' => [
+                                            'label' => 'Date',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'mca_date',
+                                            'dateId' => 'mca_date',
+                                        ]
+                                    ],
+                                ],
+                                [
+                                    'spec' => [
+                                        'name' => 'mca_text',
+                                        'type' => 'Textarea',
+                                        'options' => [
+                                            'label' => 'Text',
+                                        ],
+                                        'attributes' => [
+                                            'id' => 'mca_text'
+                                        ]
+                                    ],
+                                ],
+                            ],
+                            'input_filter' => [
+                                'mca_title' => [
+                                    'name' => 'mca_title',
+                                    'required' => false,
+                                    'validators' => [
+                                        [
+                                            'name' => 'regex', false,
+                                            'options' => [
+                                                'pattern' => '/[A-Za-z]/',
+                                                'message' => [\Laminas\Validator\Regex::INVALID => 'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error'],
+                                            ],
+                                        ],
+                                    ],
+                                    'filters' => [
+
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                //end announcement tool
             ],
         ],
     ],

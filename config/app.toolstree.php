@@ -1086,6 +1086,81 @@ return [
 
                                             ), // end tool interface
                                         ), // end user management tool
+                                        //start announcement tool
+                                        'melis_core_announcement_tool' => [
+                                            'conf' => [
+                                                'id' => 'id_melis_core_announcement_tool',
+                                                'melisKey' => 'melis_core_announcement_tool',
+                                                'name' => 'tr_melis_core_announcement_tool',
+                                                'icon' => 'fa fa-bullhorn',
+                                            ],
+                                            'forward' => [
+                                                'module' => 'MelisCore',
+                                                'controller' => 'Announcement',
+                                                'action' => 'render-tool',
+                                                'jscallback' => '',
+                                                'jsdatas' => []
+                                            ],
+                                            'interface' => [
+                                                'melis_core_announcement_tool_header' => [
+                                                    'conf' => [
+                                                        'id' => 'id_melis_core_announcement_tool_header',
+                                                        'melisKey' => 'melis_core_announcement_tool_header',
+                                                        'name' => 'tr_melis_core_announcement_tool_header',
+                                                    ],
+                                                    'forward' => [
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'Announcement',
+                                                        'action' => 'render-tool-header',
+                                                        'jscallback' => '',
+                                                        'jsdatas' => []
+                                                    ],
+                                                ],
+                                                'melis_core_announcement_tool_content' => [
+                                                    'conf' => [
+                                                        'id' => 'id_melis_core_announcement_tool_content',
+                                                        'melisKey' => 'melis_core_announcement_tool_content',
+                                                        'name' => 'tr_melis_core_announcement_tool_content',
+                                                    ],
+                                                    'forward' => [
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'Announcement',
+                                                        'action' => 'render-tool-content',
+                                                        'jscallback' => '',
+                                                        'jsdatas' => []
+                                                    ],
+                                                ],
+                                                'melis_core_announcement_tool_content_modal_container' => [
+                                                    'conf' => [
+                                                        'id' => 'id_melis_core_announcement_tool_content_modal_container',
+                                                        'melisKey' => 'melis_core_announcement_tool_content_modal_container',
+                                                        'name' => 'tr_melis_core_announcement_tool_content_modal_container'
+                                                    ],
+                                                    'forward' => [
+                                                        'module' => 'MelisCore',
+                                                        'controller' => 'Announcement',
+                                                        'action' => 'render-tool-content-modal-container',
+
+                                                    ],
+                                                    'interface' => [
+                                                        'melis_core_announcement_tool_content_modal_container_form' => [
+                                                            'conf' => [
+                                                                'id' => 'id_melis_core_announcement_tool_content_modal_container_form',
+                                                                'melisKey' => 'melis_core_announcement_tool_content_modal_container_form',
+                                                                'name' => 'tr_melis_core_announcement_tool_content_modal_container_form'
+                                                            ],
+                                                            'forward' => [
+                                                                'module' => 'MelisCore',
+                                                                'controller' => 'Announcement',
+                                                                'action' => 'render-tool-content-modal-container-form',
+//                                                                'jscallback' => 'initProductSwitch();'
+                                                            ],
+                                                        ]
+                                                    ]
+                                                ],
+                                            ]
+                                        ]
+                                        //end announcement tool
                                     ),
                                 ),
                             ]

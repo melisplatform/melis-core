@@ -1,0 +1,53 @@
+<?php
+	$name = '';
+	$id = '';
+	if (!empty($this->zoneconfig['conf']['name']))
+		$name = $this->zoneconfig['conf']['name'];
+	if (!empty($this->zoneconfig['conf']['id']))
+		$id = $this->zoneconfig['conf']['id'];
+	$data_melisKey = $this->melisKey;
+$imageData = '';
+?>
+<div class="modal-content" id="<?= $id; ?>" data-melisKey="<?= $data_melisKey; ?>">
+	<div class="modal-body padding-none">
+		<div class="wizard">
+			<div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
+                <div class="widget-head">
+                	<ul class="nav nav-tabs">
+                		<li class="active"><a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="glyphicons <?php echo ($this->id) ? 'pencil' : 'plus'?>" data-toggle="tab" aria-expanded="true"><i></i> <?php echo $this->title ?></a></li>
+            		</ul>
+        		</div>
+        		<div class="widget-body innerAll inner-2x">
+        			<div class="tab-content">
+        				<div class="tab-pane" id="<?php echo $id ?>">
+                            <?php
+                                $form = $this->form;
+                                $form->prepare();
+                                echo $this->form()->openTag($form);
+                                echo $this->melisFieldCollection($form);
+                                echo $this->form()->closeTag();
+                                echo $this->datePickerInit;
+                            ?>
+                            <div class="footer-modal d-flex flex-row justify-content-between">
+                                <button data-dismiss="modal" class="btn btn-danger float-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
+                                <button class="btn btn-success" id="btnComSaveAnnouncement"><i class="fa fa-save"></i>  <?php echo $this->translate('tr_meliscore_tool_gen_save') ?></button>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var option = {
+                            mode : "none",
+                            height : "300px",
+                            plugins : [
+                                'lists', 'advlist', 'autolink', 'link', 'image', 'charmap', 'preview', 'anchor', 'help', 'nonbreaking',
+                                'searchreplace', 'visualblocks', 'insertdatetime', 'media', 'table'
+                            ],
+                            toolbar : 'undo redo | styleselect | bold italic | link image |  alignleft aligncenter alignright alignjustify | forecolor backcolor | code',
+                        };
+                        melisTinyMCE.createTinyMCE("tool", "#mca_text", option);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

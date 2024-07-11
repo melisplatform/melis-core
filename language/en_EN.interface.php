@@ -897,4 +897,16 @@ return [
     'tr_meliscore_tool_other_config_password_config_file_permission_message' => 'Please give the rights to write in the following directories or contact the administrator if the problem persists',
     'tr_meliscore_tool_other_config_password_config_file_permission_config' => '<b>/config/app.login.php</b> - This file is responsible for the config of the user password',
     'tr_meliscore_tool_other_config_password_config_file_permission_module' => '<b>/module</b> - The directory where the created modules are saved',
+
+    'tr_melis_core_announcement_tool' => 'Announcement',
+    'tr_melis_core_announcement_tool_title' => 'Announcement',
+    'tr_melis_core_announcement_tool_desc' => 'Announcement',
+    'tr_melis_core_announcement_tool_add_announcement' => 'Add Announcement',
+    'tr_melis_core_announcement_tool_edit_announcement' => 'Edit Announcement',
+    'tr_melis_core_announcement_tool_save_success' => 'Save successfully',
+    'tr_melis_core_announcement_tool_save_failed' => 'Unable to save announcement',
+    'tr_melis_core_announcement_tool_delete_title' => 'Delete announcement',
+    'tr_melis_core_announcement_tool_delete_message' => 'Are you sure you want to delete this announcement?',
+    'tr_melis_core_announcement_tool_delete_message_ok' => 'Announcement successfully deleted',
+    'tr_melis_core_announcement_tool_delete_message_ko' => 'Error occurred while deleting announcement',
 ];
