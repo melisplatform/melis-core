@@ -223,6 +223,28 @@ var loader = (function(window) {
             }
         }
 
+        // adding of loader overlay on melis cms plugin menu
+        function addLoadingCmsPluginMenu(pageId) {
+            var $melisCms           = $body.find("#"+pageId+"[data-meliskey='meliscms_page']"),
+                $melisIframe        = $melisCms.find(".melis-iframe"),
+                $dashMenu           = $melisIframe.contents().find("#cmsPluginsMenuLoader");
+
+                if ( $dashMenu.length > 0 ) {
+                    $dashMenu.prepend(overlayLoader);
+                }
+        }
+
+        // remove loader overlay on melis cms plugin menu
+        function removeLoadingCmsPluginMenu(pageId) {
+            var $melisCms           = $body.find("#"+pageId+"[data-meliskey='meliscms_page']"),
+                $melisIframe        = $melisCms.find(".melis-iframe"),
+                $dashMenu           = $melisIframe.contents().find("#cmsPluginsMenuLoader");
+
+                if ( $dashMenu.length > 0 ) {
+                    $dashMenu.remove();
+                }
+        }
+
         init();
 
         return {
@@ -247,6 +269,10 @@ var loader = (function(window) {
 
             //for dashboard plugins menu
             addLoadingDashboardPluginMenu       : addLoadingDashboardPluginMenu,
-            removeLoadingDashboardPluginMenu    : removeLoadingDashboardPluginMenu
+            removeLoadingDashboardPluginMenu    : removeLoadingDashboardPluginMenu,
+
+            //for cms plugins menu
+            addLoadingCmsPluginMenu             : addLoadingCmsPluginMenu,
+            removeLoadingCmsPluginMenu          : removeLoadingCmsPluginMenu
         };
 })(window);
