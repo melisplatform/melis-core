@@ -58,6 +58,7 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
 
                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js')) {
                     $jsFiles = [];
+                    $jsFiles[] = '/melis/get-translations';
                     $jsFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js'.$time;
                 }
             }
