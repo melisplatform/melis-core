@@ -995,10 +995,47 @@ class MelisCoreModulesService extends MelisServiceManager
                     if(!is_writable($dir.$completFilePath))
                         chmod($dir.$completFilePath, 0777);
 
-                    copy($dir.$completFilePath, $path.'/'.$fileName);
+                    if(is_dir($dir.$completFilePath)){
+                        $this->copyDir($dir.$completFilePath, $path.'/'.$fileName);
+                    }else {
+                        copy($dir . $completFilePath, $path . '/' . $fileName);
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * @param $src
+     * @param $dst
+     */
+    private function copyDir($src, $dst) {
+        // open the source directory
+        $dir = opendir($src);
+        //create folder if not exist
+        if(!file_exists($dst))
+            mkdir($dst, 0777);
+
+        //make sure destination is writable
+        if(!is_writable($dst))
+            chmod($dst, 0777);
+
+        // Loop through the files in source directory
+        while( $file = readdir($dir) ) {
+
+            if (( $file != '.' ) && ( $file != '..' )) {
+                if ( is_dir($src . '/' . $file) )
+                {
+                    // Recursively calling custom copy function
+                    // for sub directory
+                    $this->copyDir($src . '/' . $file, $dst . '/' . $file);
+                }
+                else {
+                    copy($src . '/' . $file, $dst . '/' . $file);
+                }
+            }
+        }
+        closedir($dir);
     }
 
     /**
