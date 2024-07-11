@@ -121,6 +121,13 @@
             }
         </style>';
     ?>
+    <style>
+        @media print {
+            .d-print-none {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body class="show-breadcrumb show-nav-tabs hide-levelB <?= $loginClas; ?>" <?= $loginClas ? '' : null ?>>
     <?= $this->content; ?>
