@@ -2083,7 +2083,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 		margin-left: 0.625rem;
 	}
 	#btnModulesBundle {
-		margin: 0;
+		margin: 0 1rem 0 0;
 	}
 	.melis-dashboard-plugin-creator-steps-content .multi {
 		max-width: 38% !important;
