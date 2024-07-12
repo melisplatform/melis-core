@@ -134,12 +134,12 @@ class LanguageController extends MelisAbstractActionController
      */
     public function getTranslationsAction()
     {
-        $locale = $this->getRequest()->getQuery('locale');
-        // Get the current language
-        if(empty($locale)) {
+//        $locale = $this->getRequest()->getQuery('locale');
+//         Get the current language
+//        if(empty($locale)) {
             $container = new Container('meliscore');
             $locale = $container['melis-lang-locale'];
-        }
+//        }
 
         $translator = $this->getServiceManager()->get('translator');
         $melisTranslation = $this->getServiceManager()->get('MelisCoreTranslation');
