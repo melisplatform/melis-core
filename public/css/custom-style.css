@@ -1984,9 +1984,12 @@ label {
 	padding: .375rem .75rem;
 }
 #id_meliscommerce_order_status_form_container .minicolors-theme-default .minicolors-swatch {
-	right: 5px;
+	right: 9px;
 	left: auto;
-	display: none;
+	display: block;
+	width: 16px;
+	height: 16px;
+	top: 9px;
 }
 #id_meliscommerce_order_status_form_container .minicolors-position-bottom .minicolors-panel {
 	right: 0;
