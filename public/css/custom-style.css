@@ -2148,6 +2148,10 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	.tooltabmodal .inner-2x.innerAll {
 		padding: 30px 15px !important;
 	}
+	/* melis-commerce / accounts / contacts */
+	.linkContactBtn {
+		margin-top: 0.5rem;
+	}
 }
 @media (max-width: 425px) {
 	.news-details-workflow {
