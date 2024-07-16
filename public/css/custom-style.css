@@ -2152,6 +2152,11 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	.linkContactBtn {
 		margin-top: 0.5rem;
 	}
+	/* mini template manager */
+	#tableMiniTemplateManager tbody tr td {
+		white-space: normal;
+    	word-break: break-word;
+	}
 }
 @media (max-width: 425px) {
 	.news-details-workflow {
