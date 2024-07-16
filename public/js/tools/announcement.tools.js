@@ -68,4 +68,11 @@ $(document).ready(function () {
 
         e.preventDefault();
     });
+
+    $body.on("click", ".announcement-pagination .page-link", function() {
+        var next = $(this).data('next');
+        if(next != undefined) {
+            melisDashBoardDragnDrop.refreshWidget($(this), {"next": next});
+        }
+    });
 });

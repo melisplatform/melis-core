@@ -18,6 +18,7 @@ use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreDashboardMenuListener;
 use MelisCore\Listener\MelisCoreFlashMessengerListener;
 use MelisCore\Listener\MelisCoreGetRightsTreeViewListener;
+use MelisCore\Listener\MelisCoreInsertDashboardPluginListener;
 use MelisCore\Listener\MelisCoreInstallCreateNewUserListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 use MelisCore\Listener\MelisCoreNewPlatformListener;
@@ -93,6 +94,7 @@ class Module
             (new MelisCoreUrlAccessCheckerListenner())->attach($eventManager);
             (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
             (new MelisCoreClearCacheListenerListener())->attach($eventManager);
+            (new MelisCoreInsertDashboardPluginListener())->attach($eventManager);
         }
     }
 
@@ -364,6 +366,7 @@ class Module
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleUpdatesPlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleNotificationsPlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleChatPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardAnnouncementPlugin.config.php',
             /*
              * gdpr auto delete
              */

@@ -258,6 +258,8 @@ return array(
                     '/MelisCore/js/library/tinymce/themes/silver/theme.js', */
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
+                    //moment language
+                    '/MelisCore/js/moment/fr.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
 
@@ -310,7 +312,7 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => false,
+                    'use_build_assets' => true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 

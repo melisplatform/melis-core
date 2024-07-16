@@ -2778,17 +2778,17 @@ return [
                         'columns' => [
                             'mca_id' => [
                                 'text' => 'Id',
-                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'css' => ['width' => '5%', 'padding-right' => '0'],
                                 'sortable' => true,
                             ],
                             'mca_status' => [
                                 'text' => 'Status',
-                                'css' => ['width' => '10%', 'padding-right' => '0'],
+                                'css' => ['width' => '5%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                             'mca_date' => [
                                 'text' => 'Date',
-                                'css' => ['width' => '25%', 'padding-right' => '0'],
+                                'css' => ['width' => '15%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                             'mca_title' => [
@@ -2798,7 +2798,7 @@ return [
                             ],
                             'mca_text' => [
                                 'text' => 'Text',
-                                'css' => ['width' => '25%', 'padding-right' => '0'],
+                                'css' => ['width' => '50%', 'padding-right' => '0'],
                                 'sortable' => false,
                             ],
                         ],
@@ -2866,7 +2866,7 @@ return [
                                         'name' => 'mca_title',
                                         'type' => 'MelisText',
                                         'options' => [
-                                            'label' => 'Title',
+                                            'label' => 'tr_meliscore_common_title',
                                         ],
                                         'attributes' => [
                                             'id' => 'mca_title'
@@ -2876,13 +2876,13 @@ return [
                                 [
                                     'spec' => [
                                         'name' => 'mca_date',
-                                        'type' => 'DateField',
+                                        'type' => 'MelisText',
                                         'options' => [
-                                            'label' => 'Date',
+                                            'label' => 'tr_meliscore_common_date',
                                         ],
                                         'attributes' => [
-                                            'id' => 'mca_date',
-                                            'dateId' => 'mca_date',
+                                            'class' => 'form-control',
+                                            'id' => 'mca_date'
                                         ]
                                     ],
                                 ],
@@ -2891,7 +2891,7 @@ return [
                                         'name' => 'mca_text',
                                         'type' => 'Textarea',
                                         'options' => [
-                                            'label' => 'Text',
+                                            'label' => 'tr_meliscore_common_text',
                                         ],
                                         'attributes' => [
                                             'id' => 'mca_text'

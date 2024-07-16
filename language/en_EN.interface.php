@@ -221,6 +221,9 @@ return [
     'tr_meliscore_common_apply' => 'Apply',
     'tr_meliscore_common_update' => 'Update',
     'tr_meliscore_common_clear' => 'Clear',
+    'tr_meliscore_common_date' => 'Date',
+    'tr_meliscore_common_title' => 'Title',
+    'tr_meliscore_common_text' => 'Text',
 
     'tr_meliscore_login_remember_me' => 'Remember my details',
     'tr_meliscore_login_header' => 'Login to your Account',
@@ -909,4 +912,9 @@ return [
     'tr_melis_core_announcement_tool_delete_message' => 'Are you sure you want to delete this announcement?',
     'tr_melis_core_announcement_tool_delete_message_ok' => 'Announcement successfully deleted',
     'tr_melis_core_announcement_tool_delete_message_ko' => 'Error occurred while deleting announcement',
+    'tr_melis_core_announcement_plugin_title' => 'Announcement',
+    'tr_melis_core_announcement_plugin_description' => 'Announcement',
+    'tr_melis_core_announcement_plugin_no_data' => 'Aucune donn&eacute;e disponible',
+    'tr_melis_core_announcement_plugin_today' => 'Today',
+    'tr_melis_core_announcement_plugin_tomorrow' => 'Tomorrow',
 ];

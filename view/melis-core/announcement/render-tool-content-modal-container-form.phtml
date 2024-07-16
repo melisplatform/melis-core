@@ -45,6 +45,8 @@ $imageData = '';
                             toolbar : 'undo redo | styleselect | bold italic | link image |  alignleft aligncenter alignright alignjustify | forecolor backcolor | code',
                         };
                         melisTinyMCE.createTinyMCE("tool", "#mca_text", option);
+
+                        $("#mca_date").datetimepicker({locale: "<?= $this->locale;?>", format: "<?= $this->dateTimePickerFormat;?>"});
                     </script>
                 </div>
             </div>

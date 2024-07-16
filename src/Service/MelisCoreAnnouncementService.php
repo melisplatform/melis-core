@@ -21,6 +21,44 @@ class MelisCoreAnnouncementService extends MelisGeneralService
     }
 
     /**
+     * @param null $status
+     * @param string $searchValue
+     * @param array $searchKeys
+     * @param null $start
+     * @param null $limit
+     * @param string $orderColumn
+     * @param string $order
+     * @param bool $count
+     * @return mixed
+     */
+    public function getLists($status = null, $searchValue = '', $searchKeys = [], $start = null, $limit = null, $orderColumn = 'mca_id', $order = 'DESC', $count = false)
+    {
+        // Event parameters prepare
+        $arrayParameters = $this->makeArrayFromParameters(__METHOD__, func_get_args());
+
+        // Sending service start event
+        $arrayParameters = $this->sendEvent('melis_core_announcement_get_lists_start', $arrayParameters);
+
+        $results = $this->announcementTable()->getLists(
+            $arrayParameters['status'],
+            $arrayParameters['searchValue'],
+            $arrayParameters['searchKeys'],
+            $arrayParameters['start'],
+            $arrayParameters['limit'],
+            $arrayParameters['orderColumn'],
+            $arrayParameters['order'],
+            $arrayParameters['count']
+        );
+
+        // Adding results to parameters for events treatment if needed
+        $arrayParameters['results'] = $results;
+        // Sending service end event
+        $arrayParameters = $this->sendEvent('melis_core_announcement_get_lists_end', $arrayParameters);
+
+        return $arrayParameters['results'];
+    }
+
+    /**
      * @param $data
      * @param null $id
      * @return mixed

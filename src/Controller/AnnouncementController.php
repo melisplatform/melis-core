@@ -10,6 +10,7 @@
 namespace MelisCore\Controller;
 
 
+use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 
@@ -154,6 +155,7 @@ class AnnouncementController extends MelisAbstractActionController
 
                 $tableData[$key]['mca_status'] = $status;
                 $tableData[$key]['mca_date'] = $this->getTool()->dateFormatLocale($val['mca_date']);
+                $tableData[$key]['mca_text'] = mb_strimwidth($val['mca_text'], 0, 50, '....');
             }
         }
         return new JsonModel(array(
@@ -183,6 +185,14 @@ class AnnouncementController extends MelisAbstractActionController
     {
         $id = $this->params()->fromRoute('mca_id', $this->params()->fromQuery('mca_id', ''));
 
+        $container = new Container('meliscore');
+        $locale = $container['melis-lang-locale'];
+        $locale = explode('_', $locale);
+        $locale = $locale[0];
+        $dateTimePickerFormat = 'MM/DD/YYYY HH:mm:ss';
+        if($locale == 'fr')
+            $dateTimePickerFormat = 'DD/MM/YYYY HH:mm:ss';
+
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $title = $this->getTool()->getTranslation('tr_melis_core_announcement_tool_add_announcement');
         $data = array();
@@ -194,11 +204,9 @@ class AnnouncementController extends MelisAbstractActionController
         if($id) {
             $title = $this->getTool()->getTranslation('tr_melis_core_announcement_tool_edit_announcement');
             $data = $announcementTable->getEntryById((int) $id)->current();
-            $data->mca_date = $this->getTool()->dateFormatLocale($data->mca_date);
+            $data->mca_date = $this->getTool()->dateFormatLocale($data->mca_date, 'H:i:s');
             $form->bind($data);
         }
-
-        $datePickerInit = $this->getTool()->datePickerInit('mca_date');
 
         $view = new ViewModel();
         $view->melisKey = $melisKey;
@@ -206,7 +214,8 @@ class AnnouncementController extends MelisAbstractActionController
         $view->title = $title;
         $view->form = $form;
         $view->data = $data;
-        $view->datePickerInit = $datePickerInit;
+        $view->dateTimePickerFormat = $dateTimePickerFormat;
+        $view->locale = $locale;
         return $view;
     }
 
@@ -220,6 +229,8 @@ class AnnouncementController extends MelisAbstractActionController
         $textTitle = $translator->translate('tr_melis_core_announcement_tool');
         $textMessage = $translator->translate('tr_melis_core_announcement_tool_save_failed');
         $errors = array();
+        $itemId = 0;
+        $typeCode = 'CORE_ANNOUNCEMENT_EDIT';
 
         $request = $this->getRequest();
         if($request->isPost()){
@@ -235,7 +246,10 @@ class AnnouncementController extends MelisAbstractActionController
                 $service = $this->getServiceManager()->get('MelisCoreAnnouncementService');
                 $data = $form->getData();
                 $announcementId = $data['mca_id'];
-                $data['mca_date'] = $this->getTool()->localeDateToSql($data['mca_date']);
+                if(empty($announcementId))
+                    $typeCode = 'CORE_ANNOUNCEMENT_ADD';
+
+                $data['mca_date'] = $this->getTool()->localeDateToSql($data['mca_date'], 'H:i:s');
                 unset($data['mca_id']);
                 /**
                  * Save announcement
@@ -243,6 +257,7 @@ class AnnouncementController extends MelisAbstractActionController
                 $result = $service->saveAnnouncement($data, $announcementId);
 
                 if($result) {
+                    $itemId = $result;
                     $success = 1;
                     $textMessage = $translator->translate('tr_melis_core_announcement_tool_save_success');
                 }
@@ -272,6 +287,8 @@ class AnnouncementController extends MelisAbstractActionController
             'errors' => $errors,
         );
 
+        $this->getEventManager()->trigger('meliscore_announcement_save_end', $this, array_merge($response, ['typeCode' => $typeCode, 'itemId' => $itemId]));
+
         return new JsonModel($response);
     }
 
@@ -285,6 +302,7 @@ class AnnouncementController extends MelisAbstractActionController
         $textTitle = $translator->translate('tr_melis_core_announcement_tool_delete_title');
         $textMessage = $translator->translate('tr_melis_core_announcement_tool_delete_message_ko');
         $errors = array();
+        $itemId = 0;
 
         $request = $this->getRequest();
         if($request->isPost()){
@@ -293,6 +311,7 @@ class AnnouncementController extends MelisAbstractActionController
                 $service = $this->getServiceManager()->get('MelisCoreAnnouncementService');
                 $res = $service->deleteAnnouncement($postValues['mca_id']);
                 if($res){
+                    $itemId = $postValues['mca_id'];
                     $success = 1;
                     $textMessage = $translator->translate('tr_melis_core_announcement_tool_delete_message_ok');
                 }
@@ -305,6 +324,8 @@ class AnnouncementController extends MelisAbstractActionController
             'textMessage' => $textMessage,
             'errors' => $errors,
         );
+
+        $this->getEventManager()->trigger('meliscore_announcement_delete_end', $this, array_merge($response, ['typeCode' => 'CORE_ANNOUNCEMENT_DELETE', 'itemId' => $itemId]));
 
         return new JsonModel($response);
     }
