@@ -148,6 +148,8 @@ return array(
                     // scheme
                     'platform_scheme' => $_SERVER['REQUEST_SCHEME']
                 ],
+                //use to check whether we use the bundle-all assets
+                'build_bundle' => true,
                 /**
                  * Used to copy necessary file to
                  * main public/bundles-generated folder

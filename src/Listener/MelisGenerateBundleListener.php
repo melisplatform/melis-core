@@ -40,8 +40,16 @@ class MelisGenerateBundleListener
                 //check if bundle already exist
                 if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all.css')
                     && !file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all.js')) {
-                    $moduleService = $serviceManager->get('ModulesService');
-                    $moduleService->generateBundle();
+
+                    $coreConfig = $serviceManager->get('MelisCoreConfig');
+                    $buildBundle = $coreConfig->getItem('/meliscore/datas/')['build_bundle'] ?? true;
+                    /**
+                     * Check if we build the bundle all
+                     */
+                    if($buildBundle) {
+                        $moduleService = $serviceManager->get('ModulesService');
+                        $moduleService->generateBundle();
+                    }
                 }
             }
         }
