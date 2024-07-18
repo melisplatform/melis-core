@@ -128,7 +128,7 @@ var melisCore = (function(window){
             dataType: 'json'
         }).done(function(data) {
             // check if there is a flash message
-            if(data.flashMessage.length) {
+            if ( data.flashMessage !== undefined && data.flashMessage.length ) {
                 $flashMessenger.removeClass("empty-notif");
                 $body.find("#flash-messenger").prev().find(".badge").removeClass("hidden");
 

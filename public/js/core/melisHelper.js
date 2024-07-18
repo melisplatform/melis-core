@@ -682,33 +682,30 @@ var melisHelper = (function () {
 	// ZONE RELOADING =================================================================================================================
 	function zoneReload(zoneId, melisKey, parameters, callback) {
 		var datastring = { cpath: melisKey },
-			$melisCmsPage = $body.find(
-				"#" + activeTabId + "[data-meliskey='meliscms_page'].tab-pane"
-			),
+			$melisCmsPage = $body.find("#" + activeTabId + "[data-meliskey='meliscms_page'].tab-pane"),
 			$iframeContainer = $melisCmsPage.find(".iframe-container"),
 			$pageEdition = $iframeContainer.find(".meliscms-page-tab-edition");
 
-		//add parameters value to datastring object if available
-		if (parameters !== undefined) {
-			$.each(parameters, function (index, value) {
-				datastring[index] = value;
-			});
-		}
+			//add parameters value to datastring object if available
+			if (parameters !== undefined) {
+				$.each(parameters, function (index, value) {
+					datastring[index] = value;
+				});
+			}
 
-		// add the temp loader
-		var tempLoader =
-			'<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
-		$("#" + zoneId).append(tempLoader);
+			// add the temp loader
+			var tempLoader = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+			$("#" + zoneId).append(tempLoader);
 
-		// add an inline css overflow: hidden
-		melisCoreTool.addOverflowHidden();
+			// add an inline css overflow: hidden
+			melisCoreTool.addOverflowHidden();
 
-		$.ajax({
-			url: "/melis/zoneview",
-			data: datastring,
-			encode: true,
-			dataType: "json",
-		})
+			$.ajax({
+				url: "/melis/zoneview",
+				data: datastring,
+				encode: true,
+				dataType: "json",
+			})
 			.done(function (data) {
 				setTimeout(function () {
 					if (data !== null) {
@@ -783,7 +780,7 @@ var melisHelper = (function () {
 						});
 
 						// if(zoneId == 'id_melismarketing_toolstree_section_dashboard'){
-						// 	if($("#"+zoneId).hasClass("active")){
+						// if($("#"+zoneId).hasClass("active")){
 						//find active dashboard end with _toolstree_section_dashboard
 						if ( $("[id$=_toolstree_section_dashboard]").hasClass("active") ) {
 							//update bubble plugins

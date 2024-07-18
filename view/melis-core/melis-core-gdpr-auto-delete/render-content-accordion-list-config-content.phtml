@@ -1,4 +1,4 @@
-<div id="list-config-content" class="collapse show" aria-labelledby="list-config" data-parent="#accordion">
+<div id="list-config-content" class="collapse show" aria-labelledby="list-config" data-bs-parent="#accordion">
     <div class="list-config-content-table">
         <?php
         $id = '';
@@ -25,7 +25,7 @@
             echo $this->melisGenericTable()->renderTable();
             ?>
             <script type="text/javascript">
-                $(document).ready(function() {
+                $(function() {
                     <?= $this->toolDataTableConfig; ?>
                 });
             </script>
