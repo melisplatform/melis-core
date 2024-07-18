@@ -2869,7 +2869,8 @@ return [
                                             'label' => 'tr_meliscore_common_title',
                                         ],
                                         'attributes' => [
-                                            'id' => 'mca_title'
+                                            'id' => 'mca_title',
+                                            'required' => true,
                                         ]
                                     ],
                                 ],
@@ -2894,7 +2895,9 @@ return [
                                             'label' => 'tr_meliscore_common_text',
                                         ],
                                         'attributes' => [
-                                            'id' => 'mca_text'
+                                            'class' => 'form-control',
+                                            'id' => 'mca_text',
+                                            'required' => true,
                                         ]
                                     ],
                                 ],
@@ -2902,13 +2905,31 @@ return [
                             'input_filter' => [
                                 'mca_title' => [
                                     'name' => 'mca_title',
-                                    'required' => false,
+                                    'required' => true,
                                     'validators' => [
                                         [
-                                            'name' => 'regex', false,
+                                            'name' => 'NotEmpty',
                                             'options' => [
-                                                'pattern' => '/[A-Za-z]/',
-                                                'message' => [\Laminas\Validator\Regex::INVALID => 'tr_melis_core_gdpr_tool_form_user_name_with_numbers_error'],
+                                                'messages' => [
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty'
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'filters' => [
+
+                                    ],
+                                ],
+                                'mca_text' => [
+                                    'name' => 'mca_text',
+                                    'required' => true,
+                                    'validators' => [
+                                        [
+                                            'name' => 'NotEmpty',
+                                            'options' => [
+                                                'messages' => [
+                                                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_meliscore_emails_mngt_tool_general_properties_form_empty'
+                                                ],
                                             ],
                                         ],
                                     ],

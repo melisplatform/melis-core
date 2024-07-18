@@ -239,7 +239,6 @@ class AnnouncementController extends MelisAbstractActionController
             $postValues['mca_status'] = $postValues['mca_status'] ?? 0;
 
             $form = $this->getForm();
-            $appConfigFormElements = $this->getConfigForm();
 
             $form->setData($postValues);
             if($form->isValid()){
@@ -249,7 +248,7 @@ class AnnouncementController extends MelisAbstractActionController
                 if(empty($announcementId))
                     $typeCode = 'CORE_ANNOUNCEMENT_ADD';
 
-                $data['mca_date'] = $this->getTool()->localeDateToSql($data['mca_date'], 'H:i:s');
+                $data['mca_date'] = !empty($data['mca_date']) ? $this->getTool()->localeDateToSql($data['mca_date'], 'H:i:s') : date('Y-m-d H:i:s');
                 unset($data['mca_id']);
                 /**
                  * Save announcement
@@ -263,21 +262,8 @@ class AnnouncementController extends MelisAbstractActionController
                 }
             }else{
                 $textMessage = $translator->translate('tr_melis_core_announcement_tool_save_failed');
-                $errors = $form->getMessages();
+                $errors = $this->formatErrorMessage($form->getMessages());
             }
-
-            // Preparing Error message if error occurred
-            foreach ($errors as $keyError => $valueError)
-            {
-                foreach ($appConfigFormElements as $keyForm => $valueForm)
-                {
-                    if ($valueForm['spec']['name'] == $keyError && !empty($valueForm['spec']['options']['label']))
-                    {
-                        $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
-                    }
-                }
-            }
-
         }
 
         $response = array(
@@ -360,5 +346,27 @@ class AnnouncementController extends MelisAbstractActionController
     {
         $melisMelisCoreConfig = $this->getServiceManager()->get('MelisCoreConfig');
         return $melisMelisCoreConfig->getFormMergedAndOrdered('meliscore/tools/announcement_tool/forms/announcement_tool_form','announcement_tool_form');
+    }
+
+    /**
+     * @param array $errors
+     *
+     * @return array
+     */
+    private function formatErrorMessage($errors = [])
+    {
+        $appConfigForm = $this->getConfigForm();
+        $appConfigForm = $appConfigForm['elements'];
+
+        foreach ($errors as $keyError => $valueError) {
+            foreach ($appConfigForm as $keyForm => $valueForm) {
+                if ($valueForm['spec']['name'] == $keyError &&
+                    !empty($valueForm['spec']['options']['label'])) {
+                    $errors[$keyError]['label'] = $valueForm['spec']['options']['label'];
+                }
+            }
+        }
+
+        return $errors;
     }
 }
