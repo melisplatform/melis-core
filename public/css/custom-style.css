@@ -1688,3 +1688,15 @@ transition: all 0.4s ease-in-out;
     display: block;
     text-align: center;
 }
+
+.layout-timeline ul.timeline {
+	padding: 15px 15px 15px 50px;
+}
+.layout-timeline ul.timeline>li .type {
+	width: 115px;
+	left: -175px;
+	font-size: 12px;
+}
+.layout-timeline ul.timeline>li .type .time {
+	top: 20px;
+}
