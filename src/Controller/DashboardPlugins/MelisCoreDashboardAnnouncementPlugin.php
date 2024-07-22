@@ -103,7 +103,7 @@ class MelisCoreDashboardAnnouncementPlugin extends MelisCoreDashboardTemplatingP
         }elseif($timestamp == date("Y-m-d", strtotime("today"))){
             return $translator->translate('tr_melis_core_announcement_plugin_today');
         }else{
-            return $tool->formatDate(strtotime($date), null, -1);
+            return $tool->formatDate(strtotime($date), 2, -1);
         }
     }
 }
