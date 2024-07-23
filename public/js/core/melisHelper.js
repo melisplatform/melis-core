@@ -681,10 +681,10 @@ var melisHelper = (function () {
 
 	// ZONE RELOADING =================================================================================================================
 	function zoneReload(zoneId, melisKey, parameters, callback) {
-		var datastring = { cpath: melisKey },
-			$melisCmsPage = $body.find("#" + activeTabId + "[data-meliskey='meliscms_page'].tab-pane"),
-			$iframeContainer = $melisCmsPage.find(".iframe-container"),
-			$pageEdition = $iframeContainer.find(".meliscms-page-tab-edition");
+		var datastring 			= { cpath: melisKey },
+			$melisCmsPage 		= $body.find("#" + activeTabId + "[data-meliskey='meliscms_page'].tab-pane"),
+			$iframeContainer 	= $melisCmsPage.find(".iframe-container"),
+			$pageEdition 		= $iframeContainer.find(".meliscms-page-tab-edition");
 
 			//add parameters value to datastring object if available
 			if (parameters !== undefined) {
@@ -715,19 +715,14 @@ var melisHelper = (function () {
 						// remove the inline style
 						melisCoreTool.removeOverflowHidden();
 
-						$("#" + zoneId)
-							.html(data.html)
-							.children()
-							.unwrap();
+						$("#" + zoneId).html(data.html).children().unwrap();
 
 						// set the current active tab based from 'activeTabId' value
 						tabSwitch(activeTabId);
 
 						// set active the the 'Edition' tab and its 'Tab Content'
 						$("#" + zoneId + " .nav-tabs li:first-child").addClass("active");
-						$("#" + zoneId + " .tab-content > div:first-child").addClass(
-							"active"
-						);
+						$("#" + zoneId + " .tab-content > div:first-child").addClass("active");
 
 						// --------------------------------------------------------------
 						// Run callback scripts here | from app.interface
@@ -739,30 +734,16 @@ var melisHelper = (function () {
 							// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
 							var splitFunctions = value.split(" ");
 
-							/*if( splitFunctions.length > 1){
-									// run all the function extracted from a single jsCallback
-									$.each( splitFunctions, function( key, value ) {
-										value = value.slice(0, -3);
-										executeCallbackFunction(value, window);
-									});
-								}
-								else{
-									value = value.slice(0, -3);
-									executeCallbackFunction(value, window);
-								}*/
-
-							$.each(splitFunctions, function (key, value) {
-								try {
-									eval(value);
-								} catch (err) {
-									// console.log(err);
-								}
-							});
+								$.each(splitFunctions, function (key, value) {
+									try {
+										eval(value);
+									} catch (err) {
+										// console.log(err);
+									}
+								});
 						});
 					} else {
-						$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
-							.parent("li")
-							.remove();
+						$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
 						$("#" + zoneId).remove();
 
 						melisHelper.melisKoNotification(
@@ -773,14 +754,18 @@ var melisHelper = (function () {
 						);
 					}
 
+					if ( callback !== undefined || callback !== null) {
+						if (callback) {
+							callback();
+						}
+					}
+
 					//this will reload all cached dashboard plugins
 					if ($("#" + zoneId).length > 0) {
 						$.each($("#" + zoneId + " .grid-stack-item"), function () {
 							$(this).find(".dashboard-plugin-refresh").trigger("click");
 						});
 
-						// if(zoneId == 'id_melismarketing_toolstree_section_dashboard'){
-						// if($("#"+zoneId).hasClass("active")){
 						//find active dashboard end with _toolstree_section_dashboard
 						if ( $("[id$=_toolstree_section_dashboard]").hasClass("active") ) {
 							//update bubble plugins
@@ -798,7 +783,6 @@ var melisHelper = (function () {
 									$("#" + zoneId +".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css("visibility", "hidden");
 								}
 						}
-						// }
 					}
 				}, 300);
 			})
@@ -807,9 +791,7 @@ var melisHelper = (function () {
 				//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 				alert(translations.tr_meliscore_error_message);
 
-				$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]')
-					.parent("li")
-					.remove();
+				$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
 				$("#" + zoneId).remove();
 			});
 	}
