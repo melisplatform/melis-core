@@ -540,13 +540,10 @@ var toolUserManagement = {
                                 melisDashBoardDragnDrop.dragWidget();
                                 //remove dashboard plugin menu indicator if its loaded already
                                 $(".melis-core-dashboard-dnd-box").removeClass("hasCached");
-
-                                toolUserManagement.refreshTable();
-
                             });
-                        } else {
-                            toolUserManagement.refreshTable();
                         }
+
+                        toolUserManagement.refreshTable();
                 }
                 else {
                     melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
