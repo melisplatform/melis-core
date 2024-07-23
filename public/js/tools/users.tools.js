@@ -545,7 +545,7 @@ var toolUserManagement = {
                             setTimeout(function() {
                                 // timeout request to avoid redirection
                                 toolUserManagement.refreshTable();
-                            },3000);
+                            },4000);
                         } else {
                             toolUserManagement.refreshTable();
                         }
