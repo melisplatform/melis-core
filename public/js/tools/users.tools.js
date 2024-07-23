@@ -531,18 +531,20 @@ var toolUserManagement = {
                         }
                         toolUserManagement.refreshTable();
 
-                        //check if data that has been updated is equal to the current user info to replicate the user profile data
-                        if ( _tmpUserId == $userNameLink.attr("data-user-id") ) {
-                            melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
-                            melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
+                        setTimeout(function() {
+                            //check if data that has been updated is equal to the current user info to replicate the user profile data
+                            if ( _tmpUserId == $userNameLink.attr("data-user-id") ) {
+                                melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
+                                melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
 
-                            //reload the dashboard plugins menu to update the plugin rights
-                            melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
-                                melisDashBoardDragnDrop.dragWidget();
-                                //remove dashboard plugin menu indicator if its loaded already
-                                $(".melis-core-dashboard-dnd-box").removeClass("hasCached");
-                            });
-                        }
+                                //reload the dashboard plugins menu to update the plugin rights
+                                melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
+                                    melisDashBoardDragnDrop.dragWidget();
+                                    //remove dashboard plugin menu indicator if its loaded already
+                                    $(".melis-core-dashboard-dnd-box").removeClass("hasCached");
+                                });
+                            }
+                        }, 500)
                 }
                 else {
                     melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
