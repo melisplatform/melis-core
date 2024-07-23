@@ -543,11 +543,10 @@ var toolUserManagement = {
                             });
 
                             setTimeout(function() {
-                                console.log("executed 1");
+                                // timeout request to avoid redirection
                                 toolUserManagement.refreshTable();
-                            },5000);
+                            },3000);
                         } else {
-                            console.log("executed 2");
                             toolUserManagement.refreshTable();
                         }
                 }
