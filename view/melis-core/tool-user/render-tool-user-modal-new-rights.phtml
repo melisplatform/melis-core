@@ -1,14 +1,12 @@
 <p class="modal-text-info"><?= $this->translate('tr_meliscore_tool_user_rights_description') ?></p>
-<div id="new-rights-fancytree">
-
-</div>
+<div id="new-rights-fancytree"></div>
 
 <?php 
-echo $this->melisModalInvoker()->render(
-    array(
-        'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
-        'class' => 'btn btn-danger float-left rightsBtn'
-    ), 'dismiss');
+    echo $this->melisModalInvoker()->render(
+        array(
+            'text' => '<i class="fa fa-times"></i> '.$this->translate('tr_meliscore_common_close'),
+            'class' => 'btn btn-danger float-left rightsBtn'
+        ), 'dismiss');
 ?>
 <div class="float-right">
     <button type="button" class="btn btn-success rightsBtn d-none d-sm-block float-right " id="btnAddRights"><i class="fa fa-plus"></i>  <?= $this->translate('tr_meliscore_tool_user_new_btn'); ?></button>

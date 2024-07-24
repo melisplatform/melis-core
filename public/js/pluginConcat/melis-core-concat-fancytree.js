@@ -1,3 +1,7 @@
+/**
+ * We use the jquery.fancytree-all.js with select extensions
+ * jQuery UI v1.13.2 is already loaded under ../melis-core-concat-plugins.js
+ */
 /*!
  * jquery.fancytree.js
  * Tree view control with support for lazy loading and much more.
@@ -10,7 +14,6 @@
  * @version 2.38.3
  * @date 2023-02-01T20:52:50Z
  */
-// jQuery UI v1.13.2 is already loaded under ../melis-core-concat-plugins.js
 /** Core Fancytree module.
  */
 

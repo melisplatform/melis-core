@@ -1,21 +1,24 @@
-(function($){
-	window.initRightsTree = function(trees, url){
+(function($, window, document) {
+	//Check this for updates: https://github.com/mar10/fancytree/blob/master/demo/sample-api.html
+	window.initRightsTree = function(trees, url) {
 		$(trees).fancytree({
 			checkbox: true,
 			selectMode: 2,
 			debugLevel: 0,
 			toggleEffect: {
-			effect: "slideToggle",
-			duration: 500
+				effect: "slideToggle",
+				duration: 500
 			},
 			source: {
-				url: url,
+				url: url/* ,
+				cache: true,
+				dataType: "json" */
 			},
 			//load
 			lazyLoad: function(event, data) {
 				var lazyURL = data.node.data.melisData.lazyURL;
 					data.result = { 
-						url: lazyURL,
+						url: lazyURL
 					}
 			},
 			renderNode: function (event, data) {
@@ -32,16 +35,17 @@
 					$(data.node.span).find('.fancytree-title').css("color","#686868" );
 				}
 			},
-			loadChildren: function(event, data){
+			loadChildren: function(event, data) {
 				userRightsData = [ { "treeStatus" : [] }];
 				
-				var tree = $(trees).fancytree('getTree');
-				
+				//var tree = $(trees).fancytree('getTree');
+				var tree = $.ui.fancytree.getTree(trees);
+					
 					tree.findAll(function(node){
 						userRightsData[0]['treeStatus'].push(node.key);
 						
 						// on first render of the tree get all the toplevel parent node and add them to the array
-						if( ( node.isTopLevel() )  && (node.isStatusNode() === false) ){
+						if( ( node.isTopLevel() ) && (node.isStatusNode() === false) ){
 							var parentObj = {};
 							parentObj[node.key] = [];
 							userRightsData.push(parentObj);  
@@ -107,7 +111,7 @@
 				});  
 			}
 		});
-	}
+	};
 
 	$('#rights-fancytree').niceScroll({
 		zindex: 1000,
@@ -116,4 +120,4 @@
 		cursorcolor: primaryColor,
 		autohidemode: false
 	});
-})(jQuery);
+})(jQuery, window);

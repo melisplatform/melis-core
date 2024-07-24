@@ -2064,6 +2064,25 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .news-details-workflow:hover {
 	text-decoration: none;
 }
+/* GDPR */
+.cron-info:focus,
+.cron-info,
+.toggle-arrow-indication:hover,
+.toggle-arrow-indication {
+	text-decoration: none;
+}
+.form-group {
+	color: #686868;
+}
+.arrow-down-sm-accordion:after {
+	color: #808080;
+}
+.arrow-right-sm-accordion:before {
+	color: #808080;
+}
+#id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal .nav-tabs {
+	height: 40px;
+}
 /* Mobile Responsive */
 @media (max-width: 1128px) {
 	#btnModulesBundle,

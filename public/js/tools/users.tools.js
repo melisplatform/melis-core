@@ -4,17 +4,14 @@ $(":file").filestyle({buttonBefore: true});
 
 // re-initialize the rights treeview with current selected userID
 function getRightsTree(userId) {
-
-    var tree = $("#rights-fancytree").fancytree("getTree");
+    //var tree = $("#rights-fancytree").fancytree("getTree");
+    var tree = $.ui.fancytree.getTree("#rights-fancytree");
         tree.reload({
-            url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId,
-            //load
-            lazyLoad: function (event, data) {
-                alert("expanded");
-            }
+            url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
+            //url: '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
         });
 
-    var checker = setInterval(function () {
+    var checker = setInterval(function() {
         if (tree.count() > 1) {
             $("#btnEdit").removeClass("disabled").css("pointer-events", "auto");
             $("#btnEditRights").removeClass("disabled").css("pointer-events", "auto");
@@ -30,7 +27,7 @@ window.setUserDateConnection = function (d) {
 };
 
 // action buttons
-$(function () {
+$(function() {
     var $body = $("body");
 
         //image preveiew
@@ -110,13 +107,13 @@ $(function () {
                 });
         })
 
-        $body.on("click", '.btnUserEdit', function () {
+        $body.on("click", '.btnUserEdit', function() {
             var id              = $(this).parents("tr").attr("id"),
                 $switch_status  = $("#switch-user-api-status"),
                 $dateCon        = $("#tableUserViewDateConnection");
 
                 melisCoreTool.hideAlert("#editformalert");
-                melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal', '#id_meliscore_tool_user_edit_modal');
+                melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_new_modal,#id_meliscore_tool_user_new_rights_modal','#id_meliscore_tool_user_edit_modal');
                 melisCoreTool.resetLabels("#idusermanagement");
                 toolUserManagement.retrieveUser(id);
                 // Micro service status
@@ -238,20 +235,20 @@ $(function () {
                 $("#" + tableId).DataTable().ajax.reload();
         });
 
-        $body.on("click", "#id_meliscore_tool_user_action_new_user, .btnUserEdit", function() {
+        /* $body.on("click", "#id_meliscore_tool_user_action_new_user, .btnUserEdit", function() {
             var $userModal = $("#modal-user-management");
                 var userModalTimeout = setTimeout(function() {
                     if ( $userModal.hasClass("show") ) {
                         $userModal.find(".tab-content .tab-pane .row > .col-md-12").addClass("clearfix");
                         $userModal.find(".widget-head .nav-tabs").addClass("nav-tabs-slider");
 
-                        // owl-carousel
+                        // owl-carousel, for issue: 6587
                         //modalUserManagementSlider( $userModal );
 
                         clearTimeout( userModalTimeout );
                     }
                 }, 1000);
-        });
+        }); */
 
         function modalUserManagementSlider( $el ) {
             var $modalDialog        = $el.find(".modal-dialog"),
@@ -265,7 +262,6 @@ $(function () {
                 });
 
                 if ( navItemTotalWidth > modalDialogWidth ) {
-                    console.log(`modalUserManagementSlider() make modalUserManagementSlider!!!`);
                     var slider = tns({
                         container: '.nav-tabs-slider',
                         controlsText: ["<", ">"],
@@ -284,11 +280,20 @@ $(function () {
                     });
                 }
         }
+
+        /* $body.on("click", ".melis-opentools", function() {
+            var toolId = $(this).data("tool-id");
+                console.log(`toolId: `, toolId);
+                if ( toolId === 'id_meliscore_tool_user' ) {
+                    toolUserManagement.initFancyTree();
+                }
+        }); */
 });
 
 // call the empty rights data and put it inside the new user treeview
 function melisNewUserRights() {
-    var tree = $("#new-rights-fancytree").fancytree("getTree");
+    //var tree = $("#new-rights-fancytree").fancytree("getTree");
+    var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
         tree.reload({
             url: '/melis/MelisCore/ToolUser/getRightsTreeView'
         });
@@ -296,23 +301,31 @@ function melisNewUserRights() {
 
 // get the index then make it right
 window.initRetrieveUser = function(data, tblSettings) {
-    if ($('#toolUserStatusSelect').length) {
+    if ( $('#toolUserStatusSelect').length ) {
         data.status = $('#toolUserStatusSelect').val();
     }
-    var btnDelete = $('#tableToolUserManagement tr.clsCurrent td').find(".btnUserDelete");
-    btnDelete.remove();
+
+    var btnUserDeleteTimeout = setTimeout(function() {
+        var btnDelete = $('#tableToolUserManagement tr.clsCurrent td.dtActionCls').find(".btnUserDelete");
+            if ( btnDelete.length ) {
+                btnDelete.remove();
+
+                clearTimeout( btnUserDeleteTimeout );
+            }
+    }, 1000);
 };
 
 var toolUserManagement = {
-    table: function () {
+
+    table: function() {
         return "#tableToolUserManagement";
     },
 
-    initTools: function () {
+    initTools: function() {
         melisHelper.zoneReload("id_meliscore_tool_user", "meliscore_tool_user");
     },
 
-    refreshTable: function () {
+    refreshTable: function() {
         // reload the whole content of the tool
         melisHelper.zoneReload("id_meliscore_tool_user", "meliscore_tool_user");
     },
@@ -496,7 +509,7 @@ var toolUserManagement = {
             melisCoreTool.pending("#btnEdit");
             melisCoreTool.processing();
 
-            // $btnUserEdit.prop("data-toggle", null);
+            //$btnUserEdit.prop("data-bs-toggle", null);
 
             $.ajax({
                 type: 'POST',
@@ -512,8 +525,11 @@ var toolUserManagement = {
                         $userNameLink   = $("#user-name-link");
 
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                        $modalUserMgnt.modal('hide');
-
+                        
+                        const $bsModal = bootstrap.Modal.getOrCreateInstance($modalUserMgnt[0]);
+                        
+                        $bsModal.hide();
+                        
                         if ( data.datas.isMyInfo == 1 ) {
                             var $profPic = $("#meliscore_left_menu_profile_pic");
                                 $profPic.attr("src", "");
@@ -536,7 +552,7 @@ var toolUserManagement = {
                             melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
 
                             //reload the dashboard plugins menu to update the plugin rights
-                            melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function(){
+                            melisHelper.zoneReload('id_meliscore_center_dashboard_menu','meliscore_center_dashboard_menu', {}, function() {
                                 melisDashBoardDragnDrop.dragWidget();
                                 //remove dashboard plugin menu indicator if its loaded already
                                 $(".melis-core-dashboard-dnd-box").removeClass("hasCached");

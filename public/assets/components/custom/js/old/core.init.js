@@ -14,7 +14,7 @@ _canLog = MELIS.plugins.tree.debug;
   /* Remove Envato Frame */
   if (window.location != window.parent.location) top.location.href = document.location.href;
   (function($, window) {
-    window.onunload = function() {};
+    //window.onunload = function() {};
     //alert($('.tab-pane.active.full-width').height());
     //$('.iframe-content').attr({"width":$('.tab-pane.active.full-width').width()+'px',"height":$('.tab-pane.active.full-width').height()+'px'});
     window.initTinymce = function() {

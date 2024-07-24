@@ -33,13 +33,12 @@ if (!empty($this->zoneconfig['conf']['id']))
         <?php if($this->netStatus){?>
             <iframe class="marketplaceUpdate" src="about:blank" width="1px" height="1px" style="border-color: transparent; background: transparent;"></iframe>
         <?php }?>
-
 		<script type="text/javascript">
 			// render table to DataTable plugin
 			$(function() {
 				<?= $this->getToolDataTableConfig; ?>
 				<?= $this->getToolDataTableConfigForDateConnection; ?>
-
+				
 				// Initialize the rights treeviews --------------------------------------->
 				initRightsTree("#rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
 				initRightsTree("#new-rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
@@ -49,7 +48,7 @@ if (!empty($this->zoneconfig['conf']['id']))
 					e.preventDefault();
 				});
 				
-				$("#idnewusermanagement ").on('submit', function(e) {
+				$("#idnewusermanagement").on('submit', function(e) {
 					toolUserManagement.addNewUser(this);
 					e.preventDefault();
 				});
@@ -63,6 +62,7 @@ if (!empty($this->zoneconfig['conf']['id']))
 					$("#idnewusermanagement").trigger("submit");
 					return false;
 				});
+				
 				//melisTool.buttons.refresh("#idToolUserContentRefresh .btnRefresh", toolUserManagement.refreshTable());
 				$("#idusermanagement input:file, #idnewusermanagement input:file").filestyle({buttonBefore: true, input: false, buttonText: '<?= $this->translate('tr_meliscore_tool_user_usr_file_button'); ?>'});
 
@@ -72,9 +72,9 @@ if (!empty($this->zoneconfig['conf']['id']))
 					url         : '/melis/MelisCore/MelisAuth/getCurrentLoggedInUser',
 					dataType    : 'json',
 					encode		: true,
-				}).done(function(s){
+				}).done(function(s) {
 					var btnDelete = $('#tableToolUserManagement td:nth-child(4):contains("'+ s.login +'")').siblings(':last').find(".btnUserDelete");
-					btnDelete.hide();
+						btnDelete.hide();
 				});
 
 				$($.fn.dataTable.tables(true)).DataTable().responsive.recalc();

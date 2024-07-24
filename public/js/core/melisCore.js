@@ -189,19 +189,23 @@ var melisCore = (function(window){
             translations.tr_meliscore_tool_user_reset_rights,
             translations.tr_meliscore_common_label_reset_rights_msg,
             function () {
-                var tree = $("#new-rights-fancytree").fancytree("getTree");
-                tree.findAll(function(node){
-                    if(node.isSelected() === true){
-                        node.setSelected(false);
-                    }
-                });
+                //var tree = $("#new-rights-fancytree").fancytree("getTree");
+                var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
+
+                    tree.findAll(function(node){
+                        if(node.isSelected() === true){
+                            node.setSelected(false);
+                        }
+                    });
             });
 
         melisCoreTool.done("#btnResetRightsNew");
     });
 
     function resetUserRights () {
-        var tree = $("#rights-fancytree").fancytree("getTree");
+        //var tree = $("#rights-fancytree").fancytree("getTree");
+        var tree = $.ui.fancytree.getTree("#rights-fancytree");
+
         tree.findAll(function(node){
             if(node.isSelected() === true){
                 node.setSelected(false);
@@ -234,8 +238,8 @@ var melisCore = (function(window){
                 // update flash messenger values
                 melisCore.flashMessenger();
             }
-        }).fail(function () {
-
+        }).fail(function(xhr, textStatus, errorThrown) { // added
+            alert( translations.tr_meliscore_error_message );
         });
     }
 

@@ -16,29 +16,29 @@ var gdprAutoDelete = {
      * show modal cron info
      */
     showModalCronInfo: function () {
-        $("#id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal").modal({
-            show: true,
-            keyboard: false,
-            backdrop: true
-        });
+        var modalID = 'id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal';
+            const $modalCronInfo = bootstrap.Modal.getOrCreateInstance("#" + modalID, {
+                show: true,
+                keyboard: false
+                /* backdrop: true */
+            });
+
+            $modalCronInfo.show();
     },
     /**
      * hide list config datatable
      */
     hideListConfig: function() {
-        console.log(`hideListConfig()!!!`);
-        //var $listConfigHide = new bootstrap.Collapse('#list-config-content');
-        //$("#list-config-content").collapse('hide');
         var $collapse = this.getBootstrapCollapse();
+
             $collapse.hide();
     },
     /**
      * show list config datatable
      */
     showListConfig: function() {
-        //var $listConfigShow = new bootstrap.Collapse('#list-config-content');
-        //$("#list-config-content").collapse('show');
         var $collapse = this.getBootstrapCollapse();
+
             $collapse.show();
     },
     /**
@@ -77,17 +77,16 @@ var gdprAutoDelete = {
      */
     showAddEditConfig: function(element) {
         // hide list config
-        this.hideListConfig();
+        //this.hideListConfig();
 
-        console.log(`$("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").find(".d-none").length: `, $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").find(".d-none").length);
         // remove class d-none to show the add/edit config area
-        $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").find(".d-none").removeClass('d-none');
+        $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
         
         // zone reload to get forms
         melisCoreTool.pending(element);
-        melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config', [], function () {
-            $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").find(".d-none").removeClass('d-none');
-            console.log(`melisHelper.zoneReload() $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").find(".d-none").length: `, $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").find(".d-none").length);
+
+        melisHelper.zoneReload('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config', 'meliscoregdpr_auto_delete_content_accordion_add_edit_config', [], function() {
+            $("#id_meliscoregdpr_auto_delete_content_accordion_add_edit_config").removeClass('d-none');
             melisCoreTool.done(element);
         });
     },
@@ -118,6 +117,7 @@ var gdprAutoDelete = {
 
             var configId = $("#mgdprc_id").val();
             var headingTitle = $("#add-edit-main-heading");
+
             // changed dynamically the main heading of add / edit accordion
             if (configId !== ""  && typeof(configId) !== "undefined") {
                 
@@ -125,6 +125,7 @@ var gdprAutoDelete = {
             } else {
                 headingTitle.html(translations.tr_melis_core_gdpr_autodelete_label_add_accordion_heading + "<p class='accordion-subtitle'>" + translations.tr_melis_core_gdpr_autodelete_label_add_accordion_sub_heading + "</p>");
             }
+
             // for save button
             if (typeof(configId) !== "undefined") {
                 $("#saveAutoDeleteConfigurations").prop("disabled", false);
@@ -362,15 +363,15 @@ var gdprAutoDelete = {
         return dataString;
     }, 
     appendModalToBody : function(){
-        $modal = $("#id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal");
-        if ($("body > #id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal").length == 0) {
-            $("body").append($modal);
-        } else {
-            //re append modal
-            //remove first current modal
-            $("body > #id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal").remove();
-            $("body").append($modal);
-        }
+        var $modal = $("#id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal");
+            if ($("body > #id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal").length == 0) {
+                $("body").append($modal);
+            } else {
+                //re append modal
+                //remove first current modal
+                $("body > #id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal").remove();
+                $("body").append($modal);
+            }
     }
 };
 /**
@@ -379,7 +380,7 @@ var gdprAutoDelete = {
 $(function () {
     var $body = $("body");
 
-        $body.on('click', ".btn-gdpr-delete-config", function(){
+        $body.on('click', ".btn-gdpr-delete-config", function() {
             var btn = this;
             melisCoreTool.confirm(
                 translations.tr_meliscore_common_yes,
@@ -392,18 +393,18 @@ $(function () {
             );
         });
         /*
-        * add auto delet econfig
+        * add auto delete config
         */
         $body.on('click', "#add-auto-delete-config", function () {
             // show add / edit configration zone
             gdprAutoDelete.showAddEditConfig(this);
 
-            // trigger accordtion toggle list to hide the accordion 
+            // trigger accordion toggle list to hide the accordion 
             // commented, hideListConfig() is already called inside gdprAutoDelete.showAddEditConfig();
             //gdprAutoDelete.hideListConfig();
 
-            // animation scroll
-            gdprAutoDelete.scrollAnimationToElment('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config')
+            //animation scroll
+            gdprAutoDelete.scrollAnimationToElment('id_meliscoregdpr_auto_delete_content_accordion_add_edit_config');
         });
 
         /*
@@ -554,7 +555,7 @@ $(function () {
 
         $body.on('click', "#id_meliscoregdpr_auto_delete_add_edit_config_tab_logs_tab", function(){
             setTimeout(function(){
-                    $("#tableGdprAutoDeleteLogs").DataTable().responsive.recalc();
+                $("#tableGdprAutoDeleteLogs").DataTable().responsive.recalc();
             },500)
             clearTimeout();
         });
