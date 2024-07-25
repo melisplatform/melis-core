@@ -848,7 +848,7 @@ var melisHelper = (function () {
 					const $modal = bootstrap.Modal.getOrCreateInstance("#" + modalID, {
 						show: true,
 						keyboard: false,
-						backdrop: modalBackDrop,
+						backdrop: modalBackDrop
 					});
 
 					$modal.show();

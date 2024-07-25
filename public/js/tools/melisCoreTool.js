@@ -311,6 +311,24 @@ var melisCoreTool = (function (window) {
                     }
             }, 2000);
         }
+
+        /**
+         * hideModal
+         * Specifically for $modal.hide() as per bootstrap 5.3.3
+         */
+        function hideModal( modalID ) {
+            const $hideModal = bootstrap.Modal.getOrCreateInstance("#" + modalID);
+                $hideModal.hide();
+        }
+
+        /**
+         * showModal
+         * Specifically for $modal.show() as per bootstrap 5.3.3
+         */
+        function showModal( modalID ) {
+            const $showModal = bootstrap.Modal.getOrCreateInstance("#" + modalID);
+                $showModal.show();
+        }
         
         return {
             // modal
@@ -360,6 +378,10 @@ var melisCoreTool = (function (window) {
             removeOverflowHidden : removeOverflowHidden,
 
             // adds a class on body tag
-            addBodyClass : addBodyClass
+            addBodyClass : addBodyClass,
+
+            // utility function hide and show bootstrap modal 5.3.3
+            hideModal : hideModal,
+            showModal : showModal
         }
 })(window);
