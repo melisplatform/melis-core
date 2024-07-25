@@ -168,7 +168,7 @@ $(function() {
 
                         clearTimeout( modalSliderTimeout );
                     }
-                }, 1000);
+                }, 500);
         });
 
         $body.on("click", "#btn-melis-core-user-gen-api", function() {
@@ -207,12 +207,21 @@ $(function() {
                 });
         });
 
-        $body.on("click", "#id_meliscore_tool_user_action_new_user", function () {
+        $body.on("click", "#id_meliscore_tool_user_action_new_user", function() {
             melisNewUserRights();
-            melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_edit_modal,#id_meliscore_tool_user_rights_modal,#id_meliscore_tool_user_view_date_connection_modal,#id_meliscore_tool_user_microservice_modal','#id_meliscore_tool_user_new_modal');
+            melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_edit_modal,#id_meliscore_tool_user_rights_modal,#id_meliscore_tool_user_view_date_connection_modal,#id_meliscore_tool_user_microservice_modal', '#id_meliscore_tool_user_new_modal');
 
             // insert necessary css class for mobile responsive
             toolUserManagement.insertCSSClassOnElement();
+
+            // modal slider on tab headers
+            var modalSliderTimeout = setTimeout(function() {
+                if ( melisModalNavTabsSlider != undefined ) {
+                    melisModalNavTabsSlider.checkedNavTabsModalSlider();
+
+                    clearTimeout( modalSliderTimeout );
+                }
+            }, 500);
         });
 
         //open up user profile when user icon click in identity menu
@@ -253,8 +262,8 @@ $(function() {
 
 // call the empty rights data and put it inside the new user treeview
 function melisNewUserRights() {
-    var tree = $("#new-rights-fancytree").fancytree("getTree");
-    //var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
+    //var tree = $("#new-rights-fancytree").fancytree("getTree");
+    var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
         tree.reload({
             url: '/melis/MelisCore/ToolUser/getRightsTreeView'
         });

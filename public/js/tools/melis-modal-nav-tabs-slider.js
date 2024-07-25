@@ -8,24 +8,20 @@ var melisModalNavTabsSlider = (function($, window) {
 		ulEndPoint = false,
 		maxPosPrev = 25;
 
-		function checkedNavTabsModalSlider() {
-			modalUl = $(".tooltabmodal .widget .melis-nav-tabs-box .nav.nav-tabs");
-			modalContainerWidth = $(".tooltabmodal .widget").outerWidth();
-			
-			if ( $(".tooltabmodal .widget .melis-nav-tabs-box .nav.nav-tabs li:hidden").length ) {
-				$(".tooltabmodal .widget .melis-nav-tabs-box .nav.nav-tabs li:hidden").remove();
-			}
-
-			var modalNavContainer 	= 0,
+		function checkedNavTabsModalSlider() {	
+			var modalNavContainer   = 0,
 				minSize 			= 150,
 				maxSize 			= 225,
-				modalTabs 			= $(".tooltabmodal .widget .melis-nav-tabs-box .nav.nav-tabs li"),
+				modalTabs 			= $("#modal-user-management .widget .melis-nav-tabs-box .nav.nav-tabs li:not(:hidden)"),
 				tabLength 			= modalTabs.length,
 				tabSize 			= tabLength * maxSize;
 
+				modalUl = $("#modal-user-management .widget .melis-nav-tabs-box .nav.nav-tabs");
+				modalContainerWidth = $("#modal-user-management .widget").outerWidth();
+
 				maxPosNext = tabSize / tabLength;
 
-				$(".tooltabmodal .widget .melis-nav-tabs-box .nav.nav-tabs li").each(function() {
+				$("#modal-user-management .widget .melis-nav-tabs-box .nav.nav-tabs li:not(:hidden)").each(function() {
 					var $this = $(this);
 						modalNavContainer += $this.outerWidth();
 
@@ -35,23 +31,24 @@ var melisModalNavTabsSlider = (function($, window) {
 
 				if ( modalNavContainer > modalContainerWidth ) {
 					modalTabs.width(minSize);
-					$(".tooltabmodal .widget .melis-nav-tabs-box .nav.nav-tabs").width(tabSize);
+					$("#modal-user-management .widget .melis-nav-tabs-box .nav.nav-tabs").width(tabSize);
 					
 					// -50 for prev and next button widths
-					$(".tooltabmodal .widget .melis-nav-tabs-box").width( modalContainerWidth - 50 );
+					$("#modal-user-management .widget .melis-nav-tabs-box").width( modalContainerWidth - 50 );
 
 					// addClass .active to the prev and next button
-					$(".tooltabmodal .widget .widget-melis-tabprev").addClass("active");
-					$(".tooltabmodal .widget .widget-melis-tabnext").addClass("active");
+					$("#modal-user-management .widget .widget-melis-tabprev").addClass("active");
+					$("#modal-user-management .widget .widget-melis-tabnext").addClass("active");
 				} 
 				else {
-					$(".tooltabmodal .widget .widget-melis-tabprev").removeClass("active");
-					$(".tooltabmodal .widget .widget-melis-tabnext").removeClass("active");
+					$("#modal-user-management .widget .widget-melis-tabprev").removeClass("active");
+					$("#modal-user-management .widget .widget-melis-tabnext").removeClass("active");
 
 					if ( modalNavContainer == 0 ) {
-						$(".tooltabmodal .widget .melis-nav-tabs-box").css({"width": "auto"});
+						$("#modal-user-management .widget .melis-nav-tabs-box").css({"width": "auto"});
 					} else {
-						$(".tooltabmodal .widget .melis-nav-tabs-box").width(modalContainerWidth);
+						$("#modal-user-management .widget .melis-nav-tabs-box").width(modalContainerWidth);
+						$("#modal-user-management .widget .melis-nav-tabs-box .nav.nav-tabs").css("left", "auto");
 					}
 				}
 		}
