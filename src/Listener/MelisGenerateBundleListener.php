@@ -42,7 +42,7 @@ class MelisGenerateBundleListener
                     && !file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all.js')) {
 
                     $coreConfig = $serviceManager->get('MelisCoreConfig');
-                    $buildBundle = $coreConfig->getItem('/meliscore/datas/')['build_bundle'] ?? true;
+                    $buildBundle = $coreConfig->getItem('/meliscore/datas/')[getenv('MELIS_PLATFORM')]['build_bundle'] ?? true;
                     /**
                      * Check if we build the bundle all
                      */

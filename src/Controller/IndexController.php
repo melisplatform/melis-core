@@ -45,8 +45,7 @@ class IndexController extends MelisAbstractActionController
 
 
         $coreConfig = $this->getServiceManager()->get('MelisCoreConfig');
-        $buildBundle = $coreConfig->getItem('/meliscore/datas/')['build_bundle'] ?? true;
-
+        $buildBundle = $coreConfig->getItem('/meliscore/datas/')[getenv('MELIS_PLATFORM')]['build_bundle'] ?? true;
         $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets($buildBundle);
 
         $this->layout()->setVariable('schemes', $schemeData);
