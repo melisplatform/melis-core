@@ -147,7 +147,17 @@ class MelisModal extends AbstractHelper
      */
     public function getTabs()
     {
-        return '<div class="widget-head"><ul class="nav nav-tabs">'.$this->_tabs.'</ul></div>';
+        return '<div class="widget-head">
+                    <span class="widget-melis-tabprev nav-tab-btn">
+                        <i class="fa fa-angle-left"></i>
+                    </span>
+                    <div class="melis-nav-tabs-box">
+                        <ul class="nav nav-tabs">'.$this->_tabs.'</ul>
+                    </div>
+                    <span class="widget-melis-tabnext nav-tab-btn">
+                        <i class="fa fa-angle-right"></i>
+                    </span>
+                </div>';
     }
     
     /**

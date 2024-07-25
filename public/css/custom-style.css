@@ -2083,6 +2083,58 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 #id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal .nav-tabs {
 	height: 40px;
 }
+.tooltabmodal .modal-body .melis-nav-tabs-box {
+	float: left;
+	height: 40px;
+	overflow: hidden;
+}
+.tooltabmodal .modal-body .widget-head {
+	position: relative;
+}
+.tooltabmodal .nav-tab-btn {
+	display: none;
+    cursor: pointer;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+.tooltabmodal .widget-melis-tabprev {
+	float: left;
+}
+.tooltabmodal .widget-melis-tabnext {
+	float: right;
+}
+.tooltabmodal .widget-melis-tabprev.active,
+.tooltabmodal .widget-melis-tabnext.active {
+    display: inline-block;
+}
+.tooltabmodal .nav-tab-btn:focus,
+.tooltabmodal .nav-tab-btn:hover {
+	background-color: #fff;
+}
+.tooltabmodal .nav-tab-btn .fa {
+	padding: 9px 10px;
+    color: #fff;
+}
+.tooltabmodal .melis-nav-tabs-box .nav-tabs li a {
+	white-space: nowrap;
+}
+.tooltabmodal .melis-nav-tabs-box .nav-tabs .nav-link {
+	border: 0 !important;
+	border-radius: 0 !important;
+}
+.tooltabmodal .melis-nav-tabs-box .nav-tabs li a:hover {
+	border: 0;
+	border-radius: 0;
+
+	transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    -moz-transition: none;
+    -webkit-transition: none;
+}
 /* Mobile Responsive */
 @media (max-width: 1128px) {
 	#btnModulesBundle,

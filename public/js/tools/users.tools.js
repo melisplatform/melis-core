@@ -157,6 +157,18 @@ $(function() {
                 }).fail(function() {
                     alert(translations.tr_meliscore_error_message);
                 });
+
+                // insert necessary css class for mobile responsive
+                toolUserManagement.insertCSSClassOnElement();
+
+                // modal slider on tab headers
+                var modalSliderTimeout = setTimeout(function() {
+                    if ( melisModalNavTabsSlider != undefined ) {
+                        melisModalNavTabsSlider.checkedNavTabsModalSlider();
+
+                        clearTimeout( modalSliderTimeout );
+                    }
+                }, 1000);
         });
 
         $body.on("click", "#btn-melis-core-user-gen-api", function() {
@@ -198,6 +210,9 @@ $(function() {
         $body.on("click", "#id_meliscore_tool_user_action_new_user", function () {
             melisNewUserRights();
             melisCoreTool.hideTabs('#modal-user-management', '#id_meliscore_tool_user_edit_modal,#id_meliscore_tool_user_rights_modal,#id_meliscore_tool_user_view_date_connection_modal,#id_meliscore_tool_user_microservice_modal','#id_meliscore_tool_user_new_modal');
+
+            // insert necessary css class for mobile responsive
+            toolUserManagement.insertCSSClassOnElement();
         });
 
         //open up user profile when user icon click in identity menu
@@ -234,66 +249,12 @@ $(function() {
             var tableId = $(this).parents().eq(6).find('table').attr('id');
                 $("#" + tableId).DataTable().ajax.reload();
         });
-
-        /* $body.on("click", "#id_meliscore_tool_user_action_new_user, .btnUserEdit", function() {
-            var $userModal = $("#modal-user-management");
-                var userModalTimeout = setTimeout(function() {
-                    if ( $userModal.hasClass("show") ) {
-                        $userModal.find(".tab-content .tab-pane .row > .col-md-12").addClass("clearfix");
-                        $userModal.find(".widget-head .nav-tabs").addClass("nav-tabs-slider");
-
-                        // owl-carousel, for issue: 6587
-                        //modalUserManagementSlider( $userModal );
-
-                        clearTimeout( userModalTimeout );
-                    }
-                }, 1000);
-        }); */
-
-        function modalUserManagementSlider( $el ) {
-            var $modalDialog        = $el.find(".modal-dialog"),
-                modalDialogWidth    = $modalDialog.outerWidth(),
-                $navItem            = $el.find(".modal-body .nav-tabs .nav-item:visible"),
-                navItemTotalWidth   = 0;
-
-                $navItem.each(function(i, v) {
-                    var $this = $(v);
-                        navItemTotalWidth += $this.outerWidth();
-                });
-
-                if ( navItemTotalWidth > modalDialogWidth ) {
-                    var slider = tns({
-                        container: '.nav-tabs-slider',
-                        controlsText: ["<", ">"],
-                        loop: false,
-                        responsive: {
-                            375: {
-                                items: 2
-                            },
-                            500: {
-                                items: 3
-                            }
-                        },
-                        swipeAngle: false,
-                        speed: 400,
-                        nav: false
-                    });
-                }
-        }
-
-        /* $body.on("click", ".melis-opentools", function() {
-            var toolId = $(this).data("tool-id");
-                console.log(`toolId: `, toolId);
-                if ( toolId === 'id_meliscore_tool_user' ) {
-                    toolUserManagement.initFancyTree();
-                }
-        }); */
 });
 
 // call the empty rights data and put it inside the new user treeview
 function melisNewUserRights() {
-    //var tree = $("#new-rights-fancytree").fancytree("getTree");
-    var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
+    var tree = $("#new-rights-fancytree").fancytree("getTree");
+    //var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
         tree.reload({
             url: '/melis/MelisCore/ToolUser/getRightsTreeView'
         });
@@ -312,7 +273,7 @@ window.initRetrieveUser = function(data, tblSettings) {
 
                 clearTimeout( btnUserDeleteTimeout );
             }
-    }, 1000);
+    }, 500);
 };
 
 var toolUserManagement = {
@@ -595,5 +556,18 @@ var toolUserManagement = {
 
     makeSwitch: function (selector) {
         melisHelper.initSwitch(selector);
+    },
+
+    // for #modal-user-management mobile responsive
+    insertCSSClassOnElement: function() {
+        var insertElementTimeout = setTimeout(function() {
+            var $tabModal = $("#modal-user-management");
+
+                if ( $tabModal.length ) {
+                    $tabModal.find(".tab-content .tab-pane .row .col-md-12").addClass("clearfix");
+
+                    clearTimeout( insertElementTimeout );
+                }
+        }, 500);
     }
 };

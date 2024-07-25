@@ -301,6 +301,7 @@ return array(
                     '/MelisCore/js/tools/platform.scheme.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
+                    '/MelisCore/js/tools/melis-modal-nav-tabs-slider.js',
                     '/MelisCore/js/core/loader.js',
                 ),
                 /**
