@@ -263,7 +263,9 @@ $(function() {
 // call the empty rights data and put it inside the new user treeview
 function melisNewUserRights() {
     //var tree = $("#new-rights-fancytree").fancytree("getTree");
-    var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
+
+    // use this so no console error regarding fancytree only init supported
+    var tree = $.ui.fancytree.getTree("#new-rights-fancytree"); 
         tree.reload({
             url: '/melis/MelisCore/ToolUser/getRightsTreeView'
         });
@@ -276,7 +278,7 @@ window.initRetrieveUser = function(data, tblSettings) {
     }
 
     var btnUserDeleteTimeout = setTimeout(function() {
-        var btnDelete = $('#tableToolUserManagement tr.clsCurrent td.dtActionCls').find(".btnUserDelete");
+        var btnDelete = $('#tableToolUserManagement tr.clsCurrent td.dtActionCls div').find(".btnUserDelete");
             if ( btnDelete.length ) {
                 btnDelete.remove();
 
