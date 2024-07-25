@@ -317,8 +317,13 @@ var melisCoreTool = (function (window) {
          * Specifically for $modal.hide() as per bootstrap 5.3.3
          */
         function hideModal( modalID ) {
-            const $hideModal = bootstrap.Modal.getOrCreateInstance("#" + modalID);
-                $hideModal.hide();
+            const $hideModal = bootstrap.Modal.getOrCreateInstance("#" + modalID, {
+                show: true,
+                keyboard: false,
+                backdrop: true
+            });
+                
+            $hideModal.hide();
         }
 
         /**
@@ -326,8 +331,13 @@ var melisCoreTool = (function (window) {
          * Specifically for $modal.show() as per bootstrap 5.3.3
          */
         function showModal( modalID ) {
-            const $showModal = bootstrap.Modal.getOrCreateInstance("#" + modalID);
-                $showModal.show();
+            const $showModal = bootstrap.Modal.getOrCreateInstance("#" + modalID, {
+                show: true,
+                keyboard: false,
+                backdrop: true
+            });
+                
+            $showModal.show();
         }
         
         return {
