@@ -282,14 +282,18 @@ var melisCoreTool = (function (window) {
 
         // used usually on page edition loading with smooth scroll to .melis-iframe
         function addOverflowHidden() {
-            var $melisIframe = $("#"+activeTabId+ " .melis-iframe");
+            var overflowTimeout = setTimeout(function() {
+                var $melisIframe = $("#"+activeTabId+ " .melis-iframe");
+                    if ( $melisIframe.length ) {
+                        $("html, body").animate({ 
+                            scrollTop: ( $melisIframe.length > 0 ) ? $melisIframe.offset().top : 0 },
+                            0, function() {
+                                $body.css("overflow-x", "hidden");
+                            });
 
-                //if ( $melisIframe.length ) {
-                    $("html, body").animate({ scrollTop: ( $melisIframe.length > 0 ) ? $melisIframe.offset().top : 0 },
-                        0, function() {
-                            $body.css("overflow", "hidden");
-                        });
-                //}
+                        clearTimeout(overflowTimeout);
+                    }
+            }, 500);
         }
 
         function removeOverflowHidden() {
@@ -317,7 +321,7 @@ var melisCoreTool = (function (window) {
          * Specifically for $modal.hide() as per bootstrap 5.3.3
          */
         function hideModal( modalID ) {
-            const $hideModal = bootstrap.Modal.getOrCreateInstance(modalID);
+            const $hideModal = new bootstrap.Modal("#"+modalID, {});
                 $hideModal.hide();
         }
 
@@ -326,7 +330,7 @@ var melisCoreTool = (function (window) {
          * Specifically for $modal.show() as per bootstrap 5.3.3
          */
         function showModal( modalID ) {
-            const $showModal = bootstrap.Modal.getOrCreateInstance(modalID);
+            const $showModal = new bootstrap.Modal("#"+modalID, {});
                 $showModal.show();
         }
         
