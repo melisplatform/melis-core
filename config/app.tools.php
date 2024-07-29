@@ -2784,22 +2784,22 @@ return [
                             'mca_status' => [
                                 'text' => 'Status',
                                 'css' => ['width' => '5%', 'padding-right' => '0'],
-                                'sortable' => false,
+                                'sortable' => true,
                             ],
                             'mca_date' => [
                                 'text' => 'Date',
                                 'css' => ['width' => '15%', 'padding-right' => '0'],
-                                'sortable' => false,
+                                'sortable' => true,
                             ],
                             'mca_title' => [
                                 'text' => 'Title',
                                 'css' => ['width' => '25%', 'padding-right' => '0'],
-                                'sortable' => false,
+                                'sortable' => true,
                             ],
                             'mca_text' => [
                                 'text' => 'Text',
                                 'css' => ['width' => '50%', 'padding-right' => '0'],
-                                'sortable' => false,
+                                'sortable' => true,
                             ],
                         ],
 
