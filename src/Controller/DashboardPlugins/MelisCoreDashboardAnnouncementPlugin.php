@@ -58,14 +58,14 @@ class MelisCoreDashboardAnnouncementPlugin extends MelisCoreDashboardTemplatingP
         $announcementService = $this->getServiceManager()->get('MelisCoreAnnouncementService');
         $announcements = $announcementService->getLists(1, null, [], null, null, 'mca_date')->toArray();
 
-        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $tableUser = $this->getServiceManager()->get('MelisCoreTableUser');
         $_defaultProfile = '/MelisCore/images/profile/default_picture.jpg';
         foreach($announcements as $key => $val){
             $announcements[$key]['date_str'] = $this->getDate($val['mca_date']);
             //get user info
-            $userAuthDatas =  $melisCoreAuth->getStorage()->read();
-            $announcements[$key]['user_name'] = $userAuthDatas->usr_firstname .' '.$userAuthDatas->usr_lastname;
-            $announcements[$key]['user_image'] = !empty($userAuthDatas->usr_image) ? 'data:image/jpeg;base64,'. base64_encode($userAuthDatas->usr_image) : $_defaultProfile;
+            $userDatas =  $tableUser->getEntryById($announcements[$key]['mca_user_id'])->current();
+            $announcements[$key]['user_name'] = (!empty($userDatas)) ? $userDatas->usr_firstname .' '.$userDatas->usr_lastname : null;
+            $announcements[$key]['user_image'] = !empty($userDatas->usr_image) ? 'data:image/jpeg;base64,'. base64_encode($userDatas->usr_image) : $_defaultProfile;
         }
         //check if it has data
         if(!empty($announcements))
