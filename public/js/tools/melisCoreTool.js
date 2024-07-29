@@ -321,8 +321,8 @@ var melisCoreTool = (function (window) {
          * Specifically for $modal.hide() as per bootstrap 5.3.3
          */
         function hideModal( modalID ) {
-            console.log(`hideModal() getOrCreateInstance modalID: `, modalID);           
-            const $hideModal = bootstrap.Modal.getOrCreateInstance("#"+modalID);
+            console.log(`hideModal() getInstance modalID: `, modalID);           
+            const $hideModal = bootstrap.Modal.getInstance("#"+modalID);
                 $hideModal.hide();
         }
 
