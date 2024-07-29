@@ -248,6 +248,12 @@ class AnnouncementController extends MelisAbstractActionController
                 if(empty($announcementId))
                     $typeCode = 'CORE_ANNOUNCEMENT_ADD';
 
+
+                //get current user
+                $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+                $userAuthDatas =  $melisCoreAuth->getStorage()->read();
+                $data['mca_user_id'] = (int) $userAuthDatas->usr_id;
+
                 $data['mca_date'] = !empty($data['mca_date']) ? $this->getTool()->localeDateToSql($data['mca_date'], 'H:i:s') : date('Y-m-d H:i:s');
                 unset($data['mca_id']);
                 /**
