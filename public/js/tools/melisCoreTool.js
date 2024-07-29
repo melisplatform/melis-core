@@ -332,7 +332,7 @@ var melisCoreTool = (function (window) {
          */
         function showModal( modalID ) {
             console.log(`showModal() bootstrap.Modal show: true, modalID: `, modalID);
-            const $showModal = new bootstrap.Modal("#", modalID, { show: true });
+            const $showModal = new bootstrap.Modal("#" + modalID, { show: true });
                 $showModal.show();
         }
         
