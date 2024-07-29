@@ -322,7 +322,7 @@ var melisCoreTool = (function (window) {
          */
         function hideModal( modalID ) {
             console.log(`hideModal() getOrCreateInstance modalID: `, modalID);           
-            const $hideModal = bootstrap.Modal.getOrCreateInstance(modalID);
+            const $hideModal = bootstrap.Modal.getOrCreateInstance("#"+modalID);
                 $hideModal.hide();
         }
 
@@ -331,8 +331,8 @@ var melisCoreTool = (function (window) {
          * Specifically for $modal.show() as per bootstrap 5.3.3
          */
         function showModal( modalID ) {
-            console.log(`showModal() getOrCreateInstance modalID: `, modalID);
-            const $showModal = bootstrap.Modal.getOrCreateInstance(modalID);
+            console.log(`showModal() bootstrap.Modal show: true, modalID: `, modalID);
+            const $showModal = bootstrap.Modal("#", modalID, { show: true });
                 $showModal.show();
         }
         
