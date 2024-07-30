@@ -834,44 +834,44 @@ var melisHelper = (function () {
 				data: datastring,
 				encode: true,
 			})
-				.done(function (data) {
-					// Requesting flag set to false so this function will set state to ready
-					createModalRequestingFlag = false;
+			.done(function (data) {
+				// Requesting flag set to false so this function will set state to ready
+				createModalRequestingFlag = false;
 
-					$("#melis-modals-container").append(data);
+				$("#melis-modals-container").append(data);
 
-					var modalID = $(data).find(".modal").attr("id");
+				var modalID = $(data).find(".modal").attr("id");
 
-					melisHelper.zoneReload(zoneId, melisKey, parameters);
+				melisHelper.zoneReload(zoneId, melisKey, parameters);
 
-					const $modal = new bootstrap.Modal('#' + modalID, {
-					//const $modal = bootstrap.Modal.getOrCreateInstance("#" + modalID, {
-						show: true,
-						keyboard: false,
-						backdrop: modalBackDrop
-					});
-
-					$modal.show();
-
-					if (
-						typeof callback !== "undefined" &&
-						typeof callback === "function"
-					) {
-						callback();
-					}
-				})
-				.fail(function (xhr, textStatus, errorThrown) {
-					alert(
-						"ERROR !! Status = " +
-							textStatus +
-							"\n Error = " +
-							errorThrown +
-							"\n xhr = " +
-							xhr.statusText
-					);
-					// Requesting flag set to false so this function will set state to ready
-					createModalRequestingFlag = true;
+				const $modal = new bootstrap.Modal('#' + modalID, {
+				//const $modal = bootstrap.Modal.getOrCreateInstance("#" + modalID, {
+					show: true,
+					keyboard: false,
+					backdrop: modalBackDrop
 				});
+
+				$modal.show();
+
+				if (
+					typeof callback !== "undefined" &&
+					typeof callback === "function"
+				) {
+					callback();
+				}
+			})
+			.fail(function (xhr, textStatus, errorThrown) {
+				alert(
+					"ERROR !! Status = " +
+						textStatus +
+						"\n Error = " +
+						errorThrown +
+						"\n xhr = " +
+						xhr.statusText
+				);
+				// Requesting flag set to false so this function will set state to ready
+				createModalRequestingFlag = true;
+			});
 		}
 	}
 

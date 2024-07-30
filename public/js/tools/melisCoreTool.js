@@ -318,7 +318,7 @@ var melisCoreTool = (function (window) {
 
         /**
          * hideModal
-         * Specifically for $modal.hide() as per bootstrap 5.3.3
+         * Specifically for $hideModal.hide() as per bootstrap 5.3.3
          */
         function hideModal( modalID ) {
             console.log(`hideModal() getOrCreateInstance works on npage workflow modalID: `, modalID);
@@ -329,7 +329,7 @@ var melisCoreTool = (function (window) {
 
         /**
          * showModal
-         * Specifically for $modal.show() as per bootstrap 5.3.3
+         * Specifically for $showModal.show() as per bootstrap 5.3.3
          */
         function showModal( modalID ) {
             console.log(`showModal() bootstrap.Modal show: true, modalID: `, modalID);
