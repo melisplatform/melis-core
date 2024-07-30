@@ -155,7 +155,8 @@ class AnnouncementController extends MelisAbstractActionController
 
                 $tableData[$key]['mca_status'] = $status;
                 $tableData[$key]['mca_date'] = $this->getTool()->dateFormatLocale($val['mca_date']);
-                $tableData[$key]['mca_text'] = mb_strimwidth($val['mca_text'], 0, 50, '....');
+                $tableData[$key]['mca_text'] = mb_strimwidth($val['mca_text'], 0, 50, ' ....');
+                $tableData[$key]['mca_title'] = mb_strimwidth($val['mca_title'], 0, 50, ' ....');
             }
         }
         return new JsonModel(array(
