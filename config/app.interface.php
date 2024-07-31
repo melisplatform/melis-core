@@ -260,6 +260,8 @@ return array(
                     '/MelisCore/js/library/tinymce/themes/silver/theme.js', */
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
+                    //moment language
+                    '/MelisCore/js/moment/fr.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
 
@@ -300,6 +302,7 @@ return array(
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
+                    '/MelisCore/js/tools/announcement.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
                     '/MelisCore/js/core/loader.js',
