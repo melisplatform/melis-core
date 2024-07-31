@@ -26,7 +26,7 @@
                                             'thumbnail' => '/MelisCore/plugins/images/MelisCoreDashboardAnnouncementPlugin.png',
                                             'jscallback' => '',
                                             'max_lines' => 8,
-                                            'height' => 7,
+                                            'height' => 6,
                                             'width' => 6,
                                             'x-axis' => 0,
                                             'y-axis' => 0,
