@@ -916,7 +916,7 @@ return [
 
     'tr_melis_core_announcement_tool' => 'Annonces',
     'tr_melis_core_announcement_tool_title' => 'Annonces',
-    'tr_melis_core_announcement_tool_desc' => 'Annonces',
+    'tr_melis_core_announcement_tool_desc' => 'Cet outil regroupe les annonces affichées sur le Dashboard',
     'tr_melis_core_announcement_tool_add_announcement' => 'Ajouter Annonces',
     'tr_melis_core_announcement_tool_edit_announcement' => 'Modifier Annonces',
     'tr_melis_core_announcement_tool_save_success' => 'Enregistré avec succès',
@@ -926,7 +926,7 @@ return [
     'tr_melis_core_announcement_tool_delete_message_ok' => 'Annonce supprimée avec succès',
     'tr_melis_core_announcement_tool_delete_message_ko' => 'Une erreur est survenue lors de la suppression de l\'annonce',
     'tr_melis_core_announcement_plugin_title' => 'Annonces',
-    'tr_melis_core_announcement_plugin_description' => 'Annonces',
+    'tr_melis_core_announcement_plugin_description' => 'Ce plugin affiche les annonces',
     'tr_melis_core_announcement_plugin_no_data' => 'Aucune donn&eacute;e disponible',
     'tr_melis_core_announcement_plugin_today' => 'Aujourd\'hui',
     'tr_melis_core_announcement_plugin_tomorrow' => 'Demain',

@@ -903,7 +903,7 @@ return [
 
     'tr_melis_core_announcement_tool' => 'Announcement',
     'tr_melis_core_announcement_tool_title' => 'Announcement',
-    'tr_melis_core_announcement_tool_desc' => 'Announcement',
+    'tr_melis_core_announcement_tool_desc' => 'This tool regroups the announces displayed in the dashboard',
     'tr_melis_core_announcement_tool_add_announcement' => 'Add Announcement',
     'tr_melis_core_announcement_tool_edit_announcement' => 'Edit Announcement',
     'tr_melis_core_announcement_tool_save_success' => 'Save successfully',
@@ -913,8 +913,8 @@ return [
     'tr_melis_core_announcement_tool_delete_message_ok' => 'Announcement successfully deleted',
     'tr_melis_core_announcement_tool_delete_message_ko' => 'Error occurred while deleting announcement',
     'tr_melis_core_announcement_plugin_title' => 'Announcement',
-    'tr_melis_core_announcement_plugin_description' => 'Announcement',
-    'tr_melis_core_announcement_plugin_no_data' => 'Aucune donn&eacute;e disponible',
+    'tr_melis_core_announcement_plugin_description' => 'This plugin displays the announces',
+    'tr_melis_core_announcement_plugin_no_data' => 'No data available',
     'tr_melis_core_announcement_plugin_today' => 'Today',
     'tr_melis_core_announcement_plugin_tomorrow' => 'Tomorrow',
 ];
