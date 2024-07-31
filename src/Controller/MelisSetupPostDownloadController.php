@@ -161,6 +161,7 @@ class MelisSetupPostDownloadController extends MelisAbstractActionController imp
                                         </meliscore_leftmenu>
                                         <melis_dashboardplugin>
                                             <id>melis_dashboardplugin_root</id>
+                                            <id>MelisCoreDashboardAnnouncementPlugin</id>
                                         </melis_dashboardplugin>
                                         </document>',
                     ]);
