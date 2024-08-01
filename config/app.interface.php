@@ -155,7 +155,8 @@ return array(
                 'bundle_all_needed_files' => [
                     //will be put inside css folder
                     'css' => [
-                        '/build/css/loading.gif'
+                        '/build/css/loading.gif',
+                        '/build/css/icons.gif'
                     ],
                     //will be put inside js folder
                     'js' => [
