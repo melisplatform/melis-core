@@ -20847,3 +20847,5 @@ $(document).on('preInit.dt.dtSelect', function (e, ctx) {
 
 return DataTable;
 }));
+
+DataTable.defaults.column.orderSequence = ['asc', 'desc'];

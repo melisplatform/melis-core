@@ -78,16 +78,16 @@ if (!empty($this->zoneconfig['conf']['id']))
 </div>
 	
 <script type="text/javascript">
-$(document).ready(function() {
-    // initialize jquery sortable
-    $(".module-sortable").sortable({
-        containment: "parent",
-        placeholder: "ui-sortable-placeholder",
-        opacity: 0.8,
-        revert: 300,
-        tolerance: "pointer",
+    $(function() {
+        // initialize jquery sortable
+        $(".module-sortable").sortable({
+            containment: "parent",
+            placeholder: "ui-sortable-placeholder",
+            opacity: 0.8,
+            revert: 300,
+            tolerance: "pointer",
+        });
     });
-});
 </script>
 
 

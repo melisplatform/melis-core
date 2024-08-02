@@ -640,6 +640,9 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             //remove special characters in function name
             $fnName = preg_replace('/\W/', '', $fnName);
+
+            // processing: true,
+            // bSort: true,
             
             // simulate javascript code function here
             $dtJScript = 'window.' . $fnName . ' = function() {
@@ -647,8 +650,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 var ' . str_replace("#", "$", $tableId) . ' = $("' . $tableId . '").DataTable({
                     ' . $select . '
                     ' . $finalTblOptionStr . '
-                    responsive:true,
-                    processing: true,
+                    responsive: true,
                     pagingType: "simple_numbers",
                     lengthMenu: [ [5, 10, 25, 50], [5, 10, 25, 50] ],
                     ajax: {
@@ -656,7 +658,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                         type: "POST",
                         ' . $dataFunction . '
                     },
-                    initComplete : function(oSettings, json) {
+                    initComplete: function(oSettings, json) {
                         ' . $initComplete . '  
                     },
                     fnDrawCallback: function(oSettings) {
@@ -664,8 +666,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                     },
                     columns: ' . $jsonColumns . ',
                     language: ' . $language . ',
-                    sDom : \'' . $sDomStructure . '\',
-                    bSort: true,
+                    sDom: \'' . $sDomStructure . '\',
                     searchDelay: 1500,
                     columnDefs: [
                         ' . $columnsStylesStr . '  
