@@ -36,22 +36,22 @@ var melisCore = (function(window){
     // CHANGE LANGUAGE
     window.melisChangeLanguage = function(langId){
         var datastring = { langId: langId };
-        $.ajax({
-            type        : 'GET',
-            url         : '/melis/change-language',
-            data        : datastring,
-            dataType    : 'json',
-            encode      : true
-        }).done(function(data) {
-            if (data.success){
-                location.reload();
-            }
-            else{
-                alert( translations.tr_meliscore_error_language );
-            }
-        }).fail(function(xhr, textStatus, errorThrown) {
-            alert( translations.tr_meliscore_error_message );
-        });
+            $.ajax({
+                type        : 'GET',
+                url         : '/melis/change-language',
+                data        : datastring,
+                dataType    : 'json',
+                encode      : true
+            }).done(function(data) {
+                if (data.success) {
+                    location.reload();
+                }
+                else{
+                    alert( translations.tr_meliscore_error_language );
+                }
+            }).fail(function(xhr, textStatus, errorThrown) {
+                alert( translations.tr_meliscore_error_message );
+            });
     }
 
     // REQUEST LOST PASSWORD
