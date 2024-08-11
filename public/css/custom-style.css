@@ -2135,6 +2135,10 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
     -moz-transition: none;
     -webkit-transition: none;
 }
+/* applicable on all DataTables table */
+.content-cont .dataTables_length {
+	width: 100% !important;
+}
 /* Mobile Responsive */
 @media (max-width: 1128px) {
 	#btnModulesBundle,
