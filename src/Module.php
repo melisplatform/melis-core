@@ -337,7 +337,7 @@ class Module
 
         $events = $mm->getEventManager();
 
-        $events->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, [new MelisGenerateBundleListener(), 'onLoadModulesPost']);
+        //$events->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, [new MelisGenerateBundleListener(), 'onLoadModulesPost']);
     }
 
 

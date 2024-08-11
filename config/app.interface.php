@@ -194,6 +194,7 @@ return array(
                     '/MelisCore/js/library/fancytree/extensions/contextmenu/css/jquery.contextMenu.css',
 
                     '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
+                    '/MelisCore/assets/components/library/icons/bootstrap-icons/font/bootstrap-icons.min.css',
                     '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
                     '/MelisCore/assets/components/library/icons/glyphicons/assets/css/glyphicons_social.css',
