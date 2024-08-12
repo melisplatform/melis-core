@@ -353,6 +353,7 @@ return [
             'MelisPasswordSettingsService'          => \MelisCore\Service\MelisPasswordSettingsService::class,
             'MelisUpdatePasswordHistoryService'     => \MelisCore\Service\MelisUpdatePasswordHistoryService::class,
             'MelisCoreCacheSystemService'           => \MelisCore\Service\MelisCoreCacheSystemService::class,
+            'MelisCoreAnnouncementService'           => \MelisCore\Service\MelisCoreAnnouncementService::class,
 
             // Model
             'MelisCoreTableLang'                    => \MelisCore\Model\Tables\MelisLangTable::class,
@@ -377,6 +378,7 @@ return [
             'MelisGdprDeleteEmailsTable'            => \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::class,
             'MelisGdprDeleteEmailsSmtp'             => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable::class,
             'MelisUserPasswordHistoryTable'         => \MelisCore\Model\Tables\MelisUserPasswordHistoryTable::class,
+            'MelisAnnouncementTable'         => \MelisCore\Model\Tables\MelisAnnouncementTable::class,
         ],
         'abstract_factories' => [
             /**
@@ -418,6 +420,7 @@ return [
             'MelisCore\Controller\MelisCoreGdprAutoDeleteTabs'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteTabsController::class,
             'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtp'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteSmtpController::class,
             'MelisCore\Controller\MelisCoreOtherConfig'         => \MelisCore\Controller\MelisCoreOtherConfigController::class,
+            'MelisCore\Controller\Announcement'                 => \MelisCore\Controller\AnnouncementController::class,
         ],
     ],
     'controller_plugins' => [
@@ -429,6 +432,7 @@ return [
             'MelisCoreDashboardBubbleUpdatesPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleUpdatesPlugin::class,
             'MelisCoreDashboardBubbleNotificationsPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleNotificationsPlugin::class,
             'MelisCoreDashboardBubbleChatPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleChatPlugin::class,
+            'MelisCoreDashboardAnnouncementPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardAnnouncementPlugin::class,
         ]
     ],
     'validators' => [
@@ -515,10 +519,12 @@ return [
             'melis-core/dashboard-plugin/bubble-updates'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-updates.phtml',
             'melis-core/dashboard-plugin/bubble-notifications'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-notifications.phtml',
             'melis-core/dashboard-plugin/bubble-chat'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-chat.phtml',
+            'melis-core/dashboard-plugin/announcements'  => __DIR__ . '/../view/melis-core/dashboard-plugins/announcements.phtml',
 
             'melis-core/dashboard-plugin/noformtemplate'   => __DIR__ . '/../view/melis-core/dashboard-plugins/noformtemplate.phtml',
 
             'melis-core/dashboard-plugin/dashboard-menu-content'   => __DIR__ . '/../view/melis-core/dashboard-plugins/dashboard-menu-content.phtml',
+            'melis-core/announcement/pagination'   => __DIR__ . '/../view/melis-core/announcement/pagination.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',

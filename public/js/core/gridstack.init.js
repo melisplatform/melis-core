@@ -839,8 +839,10 @@ var melisDashBoardDragnDrop = {
             }
     },
     // refresh a widget/plugin
-    refreshWidget: function(el) {
+    refreshWidget: function(el, additionalParam) {
         var self = this;
+
+        additionalParam = (additionalParam != undefined) ? additionalParam : {};
 
         var dataString = new Array;
             // create dashboard array
@@ -870,6 +872,15 @@ var melisDashBoardDragnDrop = {
                             });
                         }
                     });
+
+                if(!$.isEmptyObject(additionalParam)){
+                    $.each(additionalParam, function(index, value){
+                        dataString.push({
+                            name: index,
+                            value: value
+                        });
+                    });
+                }
 
                 var request = $.post("/melis/MelisCore/DashboardPlugins/getPlugin", dataString);
 

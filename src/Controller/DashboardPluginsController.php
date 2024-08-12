@@ -107,7 +107,7 @@ class DashboardPluginsController extends MelisAbstractActionController
                         }
 
                         //use the plugin name if translated value is null
-                        $name = !empty($name)?$name:$pluginName;
+                        $name = !empty($name) ? $name : $pluginName;
                         $pluginRaw = json_encode($plugin);
                         $plugins[$module][$name] = [
                             'module' => $module,

@@ -62,7 +62,9 @@ class MelisAuthController extends MelisAbstractActionController
         if(!empty($platformData))
             $time = $platformData->plf_scheme_file_time;
 
-        $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets();
+        $coreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+        $buildBundle = $coreConfig->getItem('/meliscore/datas/')[getenv('MELIS_PLATFORM')]['build_bundle'] ?? true;
+        $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets($buildBundle);
 
 
         $this->layout()->addChild($view, 'content');
@@ -72,6 +74,7 @@ class MelisAuthController extends MelisAbstractActionController
         $this->layout()->schemes = $schemeData;
         $this->layout()->bundle = $bundleAsset;
         $this->layout()->schemeTime = $time;
+        $this->layout()->buildBundle = $buildBundle;
 
         return $view;
 

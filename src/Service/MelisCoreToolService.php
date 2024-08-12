@@ -1044,7 +1044,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         *
         * @return \DateTime
         */
-    public function localeDateToSql($date)
+    public function localeDateToSql($date, $timeFormat = null)
     {
         $container = new Container('meliscore');
         $locale = $container['melis-lang-locale'];
@@ -1052,11 +1052,11 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             case 'fr_FR':
                 //converts dd/mm/yyyy to yyyy-mm-dd
                 $date = !empty($date) ? str_replace('/', '-', $date) : null;
-                $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
+                $date = !empty($date) ? date("Y-m-d " . $timeFormat, strtotime($date)) : null;
                 break;
             default:
                 //converts mm/dd/yyyy to yyyy-mm-dd
-                $date = !empty($date) ? date("Y-m-d", strtotime($date)) : null;
+                $date = !empty($date) ? date("Y-m-d " . $timeFormat, strtotime($date)) : null;
                 break;
         }
 

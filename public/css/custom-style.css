@@ -2259,3 +2259,14 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 		margin: 0.5rem 0 0 0 !important;
 	}
 }
+.layout-timeline ul.timeline {
+	padding: 15px 15px 15px 50px;
+}
+.layout-timeline ul.timeline>li .type {
+	width: 115px;
+	left: -175px;
+	font-size: 12px;
+}
+.layout-timeline ul.timeline>li .type .time {
+	top: 20px;
+}

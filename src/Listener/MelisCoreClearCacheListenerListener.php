@@ -25,8 +25,11 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
          */
         $this->attachEventListener(
             $events,
-            'MelisCore',
-            'meliscore_module_management_save_end',
+            '*',
+            [
+                'melissb_userrole_update_end',
+                'meliscore_module_management_save_end'
+            ],
             function($e){
                 $sm = $e->getTarget()->getEvent()->getApplication()->getServiceManager();
                 $params = $e->getParams();
@@ -37,9 +40,19 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
 
                     /**
                      * remove bundle-all files inside public/bundles-generated folder
+                     *
                      */
-                    $path = $_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME;
-                    $this->deleteFiles($path);
+                    if(isset($params['typeCode'])){
+                        //remove only if it was not coming from user role update
+                        if($params['typeCode'] != 'SB_ROLE_UPDATE'){
+                            $path = $_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME;
+                            $this->deleteFiles($path);
+                        }
+                    }else{
+                        $path = $_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME;
+                        $this->deleteFiles($path);
+                    }
+
                 }
             },
             -1000

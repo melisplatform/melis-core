@@ -43,7 +43,10 @@ class IndexController extends MelisAbstractActionController
         if(!empty($platformData))
             $time = $platformData->plf_scheme_file_time;
 
-        $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets();
+
+        $coreConfig = $this->getServiceManager()->get('MelisCoreConfig');
+        $buildBundle = $coreConfig->getItem('/meliscore/datas/')[getenv('MELIS_PLATFORM')]['build_bundle'] ?? true;
+        $bundleAsset = $this->getServiceManager()->get('MelisAssetManagerWebPack')->getAssets($buildBundle);
 
         $this->layout()->setVariable('schemes', $schemeData);
         $this->layout()->setVariable('bundle', $bundleAsset);

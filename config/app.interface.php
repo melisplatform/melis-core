@@ -139,14 +139,16 @@ return array(
                 'gdpr_auto_anonymized_time_format' => "d",
 
                 /**
-                 * scheme configuration to use in the url
                  *  - override this in the MelisModuleConfig
                  */
                 getenv('MELIS_PLATFORM') => [
+                    //scheme configuration to use in the url
                     // host
                     'host' => $_SERVER['HTTP_HOST'],
                     // scheme
-                    'platform_scheme' => $_SERVER['REQUEST_SCHEME']
+                    'platform_scheme' => $_SERVER['REQUEST_SCHEME'],
+                    //use to check whether we use the bundle-all assets or load bundle for each module
+                    'build_bundle' => true,
                 ],
                 /**
                  * Used to copy necessary file to
@@ -261,6 +263,8 @@ return array(
                     '/MelisCore/js/library/tinymce/langs/fr_FR.js',
                     '/MelisCore/js/tinyMCE/melis_tinymce.js',
                     '/MelisCore/js/tinyMCE/tinymce_cleaner.js',
+                    //moment language
+                    '/MelisCore/js/moment/fr.js',
 
                     '/MelisCore/assets/components/modules/admin/notifications/gritter/assets/custom/js/gritter.init.js',
 
@@ -301,6 +305,7 @@ return array(
                     '/MelisCore/js/tools/user-profile.js',
                     '/MelisCore/js/tools/melisModalOpenTools.js',
                     '/MelisCore/js/tools/platform.scheme.tools.js',
+                    '/MelisCore/js/tools/announcement.tools.js',
 
                     '/MelisCore/js/tools/melis-core-gdpr-tool.js',
                     '/MelisCore/js/tools/melis-modal-nav-tabs-slider.js',
