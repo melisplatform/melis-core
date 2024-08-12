@@ -11680,8 +11680,8 @@ if (!Function.prototype.bind) {
             /**
              * This will refresh all dashboard plugins only if its in cache
              */
-            if ($("#id_meliscore_toolstree_section_dashboard").length > 0) {
-                $.each($("#id_meliscore_toolstree_section_dashboard .grid-stack-item"), function () {
+            if ($("#id_meliscore_toolstree_section_dashboard.active").length > 0) {
+                $.each($("#id_meliscore_toolstree_section_dashboard.active .grid-stack-item"), function () {
                     $(this).find(".dashboard-plugin-refresh").trigger("click");
                 });
             }
