@@ -2139,6 +2139,10 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .content-cont .dataTables_length {
 	width: 100% !important;
 }
+/* latest comments on dashboard plugin */
+#id_mccom_user_acct_search {
+	width: 100% !important;
+}
 /* Mobile Responsive */
 @media (max-width: 1128px) {
 	#btnModulesBundle,
