@@ -56,7 +56,7 @@
 		"symfony/var-dumper": "^6.4",
 		"laminas/laminas-developer-tools": "^2.8",
 		"laminas/laminas-development-mode": "^3.12",
-		"laminas/laminas-serializer": "2.17",
+		"laminas/laminas-serializer": "^3.0",
 		"laminas/laminas-paginator": "^2.18",
 		"symfony/service-contracts": "2.5.0",
 		"psr/container": "1.1.1",
