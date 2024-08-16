@@ -241,8 +241,8 @@ return array(
                 ),
                 'js' => array(
                     '/melis/get-translations',
-                    // jquery-ui is in melis-core-concat-plugins.js
                     '/MelisCore/assets/components/library/jquery/jquery.min.js',
+                    '/MelisCore/assets/components/library/jquery-ui/js/jquery-ui.min.js',
                     '/MelisCore/assets/components/library/jquery/jquery-migrate.min.js',
 
                     // Concat plugins
