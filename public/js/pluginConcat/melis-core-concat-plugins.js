@@ -7358,7 +7358,7 @@ if (!Function.prototype.bind) {
 })(jQuery);
 
 /*!
- * jQuery UI Sortable Animation 1.0.3
+ * jQuery UI Sortable Animation 1.0.6
  *
  * Copyright 2015, Egor Sharapov
  * Licensed under the MIT license.
@@ -7418,7 +7418,7 @@ if (!Function.prototype.bind) {
             props = {},
             reset_props = {},
             offset,
-            axis = String.prototype.trim(this.options.axis);
+            axis = this.options.axis.trim();
   
         // just call the original implementation of _rearrange()
         // if option `animation` is turned off
@@ -7430,15 +7430,13 @@ if (!Function.prototype.bind) {
           return this._superApply(arguments);
         }
   
-        // call original _rearrange() at first, before access to item, which may be undefined
-        this._superApply(arguments);
-        if (item == null) { return; }
-        
         $item = $(item.item[0]);
         // if moved up, then move item up to its height,
         // if moved down, then move item down
         offset = (this.direction == 'up' ? '' : '-') + ($item[axis == 'x' ? 'width' : 'height']()) + 'px';
   
+        // call original _rearrange() at first
+        this._superApply(arguments);
   
         // prepare starting css props
         if (use_css_animation) {
@@ -7481,7 +7479,7 @@ if (!Function.prototype.bind) {
         }, this.options.animation);
       }
     });
-}));
+  }));  
 
 /* jquery.nicescroll.min.js */
 /* nicescroll v3.7.6 InuYaksa - MIT - */
