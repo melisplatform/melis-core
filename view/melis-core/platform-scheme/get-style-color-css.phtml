@@ -157,6 +157,12 @@ small a,
     color: <?= $primaryColor; ?> !important;
 }
 
+.table .btn-group .btn-danger.btn-regular:hover,
+.table .btn-group .btn-danger.btn-regular:focus {
+    background-color: #fff !important;
+    color: <?= $primaryColor; ?> !important;
+}
+
 .innerTB .glyphicons p a,
 .widget .widget-body p a,
 #convo-content .chat-contact-name {
@@ -365,6 +371,15 @@ body .navbar.main.navbar-primary {
 .pagination > .page-item.active > .page-link:hover {
     background-color: <?= $primaryColor; ?>;
     border-color: <?= $primaryColor; ?>;
+}
+
+.page-link {
+    color: <?= $primaryColor; ?>;
+}
+
+.dt-paging-button.page-item.active .page-link:hover,
+.dt-paging-button.page-item .page-link:hover {
+    color: <?= $primaryColor; ?> !important;
 }
 
 /* Buttons */

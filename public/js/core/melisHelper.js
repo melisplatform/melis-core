@@ -704,10 +704,11 @@ var melisHelper = (function () {
 				url: "/melis/zoneview",
 				data: datastring,
 				encode: true,
-				dataType: "json",
+				dataType: "json"
 			})
 			.done(function (data) {
-				setTimeout(function () {
+				//console.log(`melisHelper.js zoneReload() data: `, data);
+				setTimeout(function() {
 					if (data !== null) {
 						// hide the loader
 						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
@@ -729,19 +730,19 @@ var melisHelper = (function () {
 						// --------------------------------------------------------------
 						var jsCallbacks = data.jsCallbacks;
 
-						$.each(jsCallbacks, function (key, value) {
-							// check if there is more than 1 function in a single jsCallback from app.interface
-							// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
-							var splitFunctions = value.split(" ");
+							$.each(jsCallbacks, function (key, value) {
+								// check if there is more than 1 function in a single jsCallback from app.interface
+								// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
+								var splitFunctions = value.split(" ");
 
-								$.each(splitFunctions, function (key, value) {
-									try {
-										eval(value);
-									} catch (err) {
-										// console.log(err);
-									}
-								});
-						});
+									$.each(splitFunctions, function (key, value) {
+										try {
+											eval(value);
+										} catch (e) {
+											//console.log(e);
+										}
+									});
+							});
 					} else {
 						$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
 						$("#" + zoneId).remove();
@@ -762,7 +763,7 @@ var melisHelper = (function () {
 
 					//this will reload all cached dashboard plugins
 					if ($("#" + zoneId).length > 0) {
-						$.each($("#" + zoneId + " .grid-stack-item"), function () {
+						$.each($("#" + zoneId + " .grid-stack-item"), function() {
 							$(this).find(".dashboard-plugin-refresh").trigger("click");
 						});
 

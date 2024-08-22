@@ -13,7 +13,7 @@ if ($('#nav-tabs-li-' + node.data.tab_id).length) {
                         id: 'nav-tabs-li-' + node.data.tab_id,
                         class: 'active',
                         'data-id': node.data.tab_id,
-                        html: '<a class="glyphicons file" href="#tabContent-' + node.data.tab_id + '" data-toggle="tab"><i></i>' + node.data.tab_name + '</a><a class="close" data-idtab="' + node.data.tab_id + '">Close</a>'
+                        html: '<a class="glyphicons file" href="#tabContent-' + node.data.tab_id + '" data-bs-toggle="tab"><i></i>' + node.data.tab_name + '</a><a class="close" data-idtab="' + node.data.tab_id + '">Close</a>'
                     });
                     // Append New item Tab
                     $('.content-nav-tabs .widget-head ul').append($newTabItem);

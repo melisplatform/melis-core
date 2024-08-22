@@ -164,9 +164,7 @@ var dashboardNotify = (function() {
 
 $(function() {
     var $dbMsg          = $("#"+activeTabId).find(".melis-core-dashboard-msg"),
-        mods            = $dbMsg.data("activeMods"),
-        $noDbAccess     = $(".no-dashboard-access"),
-        activeModule    = ( mods !== undefined ) ? mods.match(/MelisUserTabs/g) : '';
+        $noDbAccess     = $(".no-dashboard-access");
 
         if ( $dbMsg.length > 0 ) {
             /* 
@@ -175,8 +173,7 @@ $(function() {
             * If MelisUserTabs is an activeModule then it executes dashboardNotify.init() function
             * from with melisUserTabs ajax call.
             */
-            //if ( ! $.inArray( "MelisUserTabs", activeModule ) !== -1 ) {
-            if ( activeModule !== null ) {
+            if ( typeof melisUserTabs !== "undefined" ) {
                 melisUserTabs.getUserSavedOpenTabs();
             }
             else {
