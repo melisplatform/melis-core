@@ -707,7 +707,6 @@ var melisHelper = (function () {
 				dataType: "json"
 			})
 			.done(function (data) {
-				//console.log(`melisHelper.js zoneReload() data: `, data);
 				setTimeout(function() {
 					if (data !== null) {
 						// hide the loader

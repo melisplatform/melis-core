@@ -998,6 +998,12 @@ a[data-bs-toggle="modal"]:focus {
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li.active {
 	height: 39px;
 }
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a {
+	color: #fff;
+}
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a i:before {
+	color: #fff;
+}
 .no-dashboard-access p {
 	margin-bottom: 0;
 }

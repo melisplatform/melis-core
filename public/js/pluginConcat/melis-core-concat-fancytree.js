@@ -3612,7 +3612,7 @@
 				path = keyPathList[i];
 				// strip leading slash
 				if (path.charAt(0) === sep) {
-					path = path.substr(1);
+					path = path.substring(1);
 				}
 				// segListMap[path] = { parent: parent, segList: path.split(sep) };
 				pathSegList.push(path.split(sep));

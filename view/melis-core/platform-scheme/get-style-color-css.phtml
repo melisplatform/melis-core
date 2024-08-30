@@ -169,6 +169,8 @@ small a,
     color: <?= $primaryColor; ?>;
 }
 
+#content.render-widgets.widgets .widget .widget-body .widget-timeline .view-all:focus,
+#content.render-widgets.widgets .widget .widget-body .widget-timeline .view-all:hover,
 .media-msgrBody .text-danger {
     color: <?= $primaryColor; ?> !important;
 }
@@ -271,8 +273,11 @@ body .navbar.main.navbar-primary {
     color: <?= $primaryColor; ?>;
 }
 
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.active i:before,
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.active,
+.render-tabs .widget.widget-tabs-double.widget-regular > .widget-head ul li.active a i:before,
 .widget.widget-tabs-icons-only-2>.widget-head ul li a.glyphicons:hover i:before {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .widget.widget-tabs-double-2>.widget-head ul li:hover a {
@@ -373,10 +378,16 @@ body .navbar.main.navbar-primary {
     border-color: <?= $primaryColor; ?>;
 }
 
+.widget.widget-3 .widget-footer a:hover i:before,
+.widget.widget-3 .widget-footer a:hover,
+#pdfTarget .btn:focus .fa-download,
+#pdfTarget .btn:hover .fa-download,
 .page-link {
     color: <?= $primaryColor; ?>;
 }
 
+.rating:not(.read-only) span.star:hover:before, 
+.rating:not(.read-only) span.star:hover~span.star:before,
 .dt-paging-button.page-item.active .page-link:hover,
 .dt-paging-button.page-item .page-link:hover {
     color: <?= $primaryColor; ?> !important;

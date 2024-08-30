@@ -191,7 +191,7 @@
 		 */
 		find: function(ctx, options, callback) {
 			var obj = this.get(ctx);
-			options.value = $.isArray(options.value) ? options.value : [options.value];
+			options.value = Array.isArray(options.value) ? options.value : [options.value];
 			for ( var property in obj ) {
 				if ( obj.hasOwnProperty(property) ) {
 					var isFound = false;
