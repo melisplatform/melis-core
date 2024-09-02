@@ -3609,9 +3609,7 @@
 				keyPathList = [keyPathList];
 			}
 			for (i = 0; i < keyPathList.length; i++) {
-				path = keyPathList[i];
-				console.log(`path: `, path);
-				console.log(`path.charAt(0): `, path.charAt(0));
+				path = keyPathList[i].toString();
 				// strip leading slash
 				if (path.charAt(0) === sep) {
 					path = path.substring(1);
