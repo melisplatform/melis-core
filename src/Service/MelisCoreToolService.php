@@ -202,7 +202,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     {
         $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
         $content = $this->_appConfig['modals'][$formKey]['content'];
-        $contentValue = $this->getViewContent($content);
+        $contentValue = $this->getViewContent($content, true);
 
         return $contentValue;
     }
@@ -214,7 +214,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
      *
      * @return string
      */
-    public function getViewContent($dispatchHandler)
+    public function getViewContent($dispatchHandler, bool $replaceQuotes = false)
     {
         $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
         $module = $dispatchHandler['module'];
@@ -237,7 +237,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         $content = $property->getValue($html);
 
         // replace single quote with duoble quote
-        $content = str_replace('\'', '"', $content);
+        if ($replaceQuotes)
+            $content = str_replace('\'', '"', $content);
 
         return $content;
     }
@@ -419,7 +420,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             // render the buttons in the left section of the filter bar
             foreach ($left as $leftKey => $leftValue) {
-                $htmlContent = $this->getViewContent($leftValue);
+                $htmlContent = $this->getViewContent($leftValue, true);
                 // making html in single line
                 $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
@@ -435,7 +436,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             // render the buttons in the center section of the filter bar
             foreach ($center as $centerKey => $centerValue) {
-                $htmlContent = $this->getViewContent($centerValue);
+                $htmlContent = $this->getViewContent($centerValue, true);
                 // making html in single line
                 $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
@@ -452,7 +453,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             // render the buttons in the right sectuib if the filter bar
             foreach ($right as $rightKey => $rightValue) {
-                $htmlContent = $this->getViewContent($rightValue);
+                $htmlContent = $this->getViewContent($rightValue, true);
                 $htmlContent = $this->replaceQuotes($htmlContent);
                 // making html in single line
                 $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
@@ -497,7 +498,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
             $actionCount = 0;
             foreach ($actionContainer as $actionKey => $actionContent) {
-                $actionButtons .= $this->getViewContent($actionContent) . ' ';
+                $actionButtons .= $this->getViewContent($actionContent, true) . ' ';
             }
 
             // remove unnecessary new lines and text paragraphs (not <p> tags)
@@ -687,6 +688,9 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 ' . $jsSdomContentInit . '
                 ' . $tableSearchPlugin . '
             });';
+
+            // remove new lines
+            $dtJScript = preg_replace("/\s+|\n+|\r/", ' ', $dtJScript);
         }
 
         return $dtJScript;
