@@ -1,3 +1,4 @@
+/** v4.0.1 */
 var EnjoyHint = function (_options) {
 
     var $event_element;

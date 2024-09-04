@@ -134,7 +134,7 @@ $availableLang = "";
                                     // set value for tags
                                     if (!empty($this->module_tags)) {
                                         // remove url revalidation
-                                        $forDeleteTags = str_replace(',URL_VALIDATION', null, $this->module_tags);
+                                        $forDeleteTags = str_replace(',URL_VALIDATION', '', $this->module_tags);
                                         $formEmailDelete->get('mgdpre_email_tags')->setValue($forDeleteTags);
                                     }
                                     // form open tag

@@ -71,7 +71,7 @@
 
       // Trim value
       if (typeof item === "string" && self.options.trimValue) {
-        item = $.trim(item);
+        item = item.trim();
       }
 
       // Throw an error when trying to add an object while the itemValue option was not set
@@ -292,10 +292,10 @@
             var map = this.map,
                 data = typeahead.source(query);
 
-            if ($.isFunction(data.success)) {
+            if (typeof data.success === "function") {
               // support for Angular callbacks
               data.success(processItems);
-            } else if ($.isFunction(data.then)) {
+            } else if (typeof data.then === "function") {
               // support for Angular promises
               data.then(processItems);
             } else {
@@ -328,14 +328,14 @@
 
           // Determine if main configurations were passed or simply a dataset
           var typeaheadjs = self.options.typeaheadjs;
-          if ($.isArray(typeaheadjs)) {
+          if (Array.isArray(typeaheadjs)) {
             typeaheadConfig = typeaheadjs[0];
             typeaheadDatasets = typeaheadjs[1];
           } else {
             typeaheadDatasets = typeaheadjs;
           }
-
-          self.$input.typeahead(typeaheadConfig, typeaheadDatasets).on('typeahead:selected', $.proxy(function (obj, datum) {
+          // $.proxy = bind()
+          self.$input.typeahead(typeaheadConfig, typeaheadDatasets).on('typeahead:selected', bind(function (obj, datum) {
             if (typeaheadDatasets.valueKey)
               self.add(datum[typeaheadDatasets.valueKey]);
             else
@@ -343,8 +343,8 @@
             self.$input.typeahead('val', '');
           }, self));
       }
-
-      self.$container.on('click', $.proxy(function(event) {
+      // $.proxy = bind()
+      self.$container.on('click', bind(function(event) {
         if (! self.$element.attr('disabled')) {
           self.$input.prop('disabled', false);
         }
@@ -352,7 +352,8 @@
       }, self));
 
         if (self.options.addOnBlur && self.options.freeInput) {
-          self.$input.on('focusout', $.proxy(function(event) {
+          // $.proxy = bind()
+          self.$input.on('focusout', bind(function(event) {
               // HACK: only process on focusout when no typeahead opened, to
               //       avoid adding the typeahead text as tag
               if ($('.typeahead, .twitter-typeahead', self.$container).length === 0) {
@@ -362,8 +363,8 @@
           }, self));
         }
 
-
-      self.$container.on('keydown', 'input', $.proxy(function(event) {
+      // $.proxy = bind()
+      self.$container.on('keydown', 'input', bind(function(event) {
         var $input = $(event.target),
             $inputWrapper = self.findInputWrapper();
 
@@ -399,7 +400,7 @@
             var $prevTag = $inputWrapper.prev();
             if ($input.val().length === 0 && $prevTag[0]) {
               $prevTag.before($inputWrapper);
-              $input.focus();
+              $input.trigger("focus");
             }
             break;
           // RIGHT ARROW
@@ -408,7 +409,7 @@
             var $nextTag = $inputWrapper.next();
             if ($input.val().length === 0 && $nextTag[0]) {
               $nextTag.after($inputWrapper);
-              $input.focus();
+              $input.trigger("focus");
             }
             break;
          default:
@@ -421,8 +422,8 @@
             size = textLength + wordSpace + 1;
         $input.attr('size', Math.max(this.inputSize, $input.val().length));
       }, self));
-
-      self.$container.on('keypress', 'input', $.proxy(function(event) {
+      // $.proxy = bind()
+      self.$container.on('keypress', 'input', bind(function(event) {
          var $input = $(event.target);
 
          if (self.$element.attr('disabled')) {
@@ -435,7 +436,7 @@
          if (self.options.freeInput && (keyCombinationInList(event, self.options.confirmKeys) || maxLengthReached)) {
             // Only attempt to add a tag if there is data in the field
             if (text.length !== 0) {
-               self.add(maxLengthReached ? text.substr(0, self.options.maxChars) : text);
+               self.add(maxLengthReached ? text.substring(0, self.options.maxChars) : text);
                $input.val('');
             }
 
@@ -452,8 +453,8 @@
          $input.attr('size', Math.max(this.inputSize, $input.val().length));
       }, self));
 
-      // Remove icon clicked
-      self.$container.on('click', '[data-role=remove]', $.proxy(function(event) {
+      // Remove icon clicked, $.proxy = bind()
+      self.$container.on('click', '[data-role=remove]', bind(function(event) {
         if (self.$element.attr('disabled')) {
           return;
         }
@@ -491,7 +492,7 @@
      * Sets focus on the tagsinput
      */
     focus: function() {
-      this.$input.focus();
+      this.$input.trigger("focus");
     },
 
     /**
@@ -597,7 +598,7 @@
   function doGetCaretPosition(oField) {
     var iCaretPos = 0;
     if (document.selection) {
-      oField.focus ();
+      oField.trigger("focus");
       var oSel = document.selection.createRange();
       oSel.moveStart ('character', -oField.value.length);
       iCaretPos = oSel.text.length;
