@@ -465,31 +465,31 @@ var melisCore = (function(window){
     */
     function closedOpenTabs() {
         var listData = $("#melis-id-nav-bar-tabs li");
-        // loop all tab list
-        listData.each(function() {
-            var dataID =  $(this).attr('data-tool-id');
-            if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
-                melisHelper.tabClose(dataID);
+            // loop all tab list
+            listData.each(function() {
+                var dataID =  $(this).attr('data-tool-id');
+                if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
+                    melisHelper.tabClose(dataID);
+                }
+            });
+
+            // detect if mobile / tablet
+            if ( screenSize <= 767 ) {
+                $("#newplugin-cont").toggleClass("show-menu");
             }
-        });
 
-        // detect if mobile / tablet
-        if ( screenSize <= 767 ) {
-            $("#newplugin-cont").toggleClass("show-menu");
-        }
+            $("#close-all-tab").hide();
 
-        $("#close-all-tab").hide();
+            if ( screenSize >= 768 ) {
+                setTimeout(function() {
+                    $("#melis-id-nav-bar-tabs").css("left", "0");
+                }, 1);
+            }
 
-        if ( screenSize >= 768 ) {
-            setTimeout(function() {
-                $("#melis-id-nav-bar-tabs").css("left", "0");
-            }, 1);
-        }
-
-        // check dashboard if melisDashBoardDragnDrop is defined
-        if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
-            melisDashBoardDragnDrop.checkDashboard();
-        }
+            // check dashboard if melisDashBoardDragnDrop is defined
+            if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
+                melisDashBoardDragnDrop.checkDashboard();
+            }
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--

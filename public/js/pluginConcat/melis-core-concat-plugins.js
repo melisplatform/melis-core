@@ -16264,7 +16264,7 @@ $.removeCookie = function (key, options) {
             }
         });
         if (lastDialogInstance !== null) {
-            lastDialogInstance.getModal().focus();
+            lastDialogInstance.getModal().trigger("focus");
         }
     };
 

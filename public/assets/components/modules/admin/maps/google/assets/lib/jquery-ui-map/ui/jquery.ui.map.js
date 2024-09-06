@@ -143,7 +143,8 @@
 		addMarker: function(markerOptions, callback) {
 			markerOptions.map = this.get('map');
 			markerOptions.position = this._latLng(markerOptions.position);
-			var marker = new (markerOptions.marker || google.maps.Marker)(markerOptions);
+			//var marker = new (markerOptions.marker || google.maps.Marker)(markerOptions);
+			var marker = new (markerOptions.marker || google.maps.marker.AdvancedMarkerElement)(markerOptions);
 			var markers = this.get('markers');
 			if ( marker.id ) {
 				markers[marker.id] = marker;
