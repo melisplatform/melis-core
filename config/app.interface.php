@@ -158,7 +158,8 @@ return array(
                     //will be put inside css folder
                     'css' => [
                         '/build/css/loading.gif',
-                        '/build/css/icons.gif'
+                        '/build/css/icons.gif',
+                        '/build/images/sprite.png'
                     ],
                     //will be put inside js folder
                     'js' => [
