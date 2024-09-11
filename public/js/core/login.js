@@ -35,7 +35,7 @@ $(function() {
                     let message = '';
                     let adminEmail = data.accountLockAdminEmail;
                     let firstSentence = '<h4 style="margin-top: 10px; margin-bottom: 15px; text-align: center;">' + translations.tr_meliscore_login_maximum_amount_of_failed_login_attempts_message + '</h4>';
-                    let thirdSentence = '<p style="text-align: center;"><i>' + translations.tr_meliscore_login_contact_an_administrator_for_assistance_message.replace('%s', '<b>' + adminEmail + '</b>') + '</i></p>';
+                    let thirdSentence = '<p style="text-align: center;"><i>' + translations.tr_meliscore_login_contact_an_administrator_for_assistance_message.replace('%s', '<strong>' + adminEmail + '</strong>') + '</i></p>';
 
                     if (data.accountLockType == 'admin') {
                         let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_message + '</p>';
@@ -49,7 +49,7 @@ $(function() {
                         let daysString = translations.tr_meliscore_login_locked_in_days_message;
                         let hoursString = translations.tr_meliscore_login_locked_in_hours_message;
                         let minutesString = translations.tr_meliscore_login_locked_in_minutes_message;
-                        let durationString = '<b>';
+                        let durationString = '<strong>';
                         let components = [];
 
                         if (days > 0) {
@@ -65,9 +65,9 @@ $(function() {
                         }
 
                         if (components.length === 1) {
-                            durationString += components[0] + "</b>.";
+                            durationString += components[0] + "</strong>.";
                         } else {
-                            durationString += components.join(', ') + "</b>.";
+                            durationString += components.join(', ') + "</strong>.";
                         }
 
                         let secondSentence = '<p style="text-align: center; font-size: 1rem;">' + translations.tr_meliscore_login_account_is_now_locked_for_duration_message + durationString + '</p>';

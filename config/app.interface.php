@@ -643,7 +643,7 @@ return array(
                 'css' => array(
                     '/MelisCore/css/OpenSans.css',
                     '/MelisCore/css/Roboto.css',
-                    '/MelisCore/css/Monseratt.css',
+                    '/MelisCore/css/Montserrat.css',
 
                     '/MelisCore/assets/components/library/bootstrap/css/bootstrap.min.css',
                     '/MelisCore/assets/components/library/icons/fontawesome/assets/css/font-awesome.min.css',
