@@ -158,7 +158,8 @@ return array(
                     //will be put inside css folder
                     'css' => [
                         '/build/css/loading.gif',
-                        '/build/css/icons.gif'
+                        '/build/css/icons.gif',
+                        '/assets/components/library/icons/bootstrap-icons/font/fonts'
                     ],
                     //will be put inside js folder
                     'js' => [
@@ -272,6 +273,7 @@ return array(
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v0.8.3',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.js?v=v0.8.3',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.resize.js?v=v0.8.3',
+                    //'/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.pie.js?v=v0.8.3',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.time.js?v=v0.8.3',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/plugins/jquery.flot.tooltip.min.js?v=v0.8.3',
                     '/MelisCore/assets/components/modules/admin/charts/flot/assets/lib/jquery.flot.stack.js?v=v0.8.3',
@@ -318,7 +320,7 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => false,
+                    'use_build_assets' => true,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 
