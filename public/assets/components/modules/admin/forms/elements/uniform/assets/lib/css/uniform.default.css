@@ -482,7 +482,6 @@ Not advised to edit stuff below this line
   /* zoom: 1; */
   transform: scale(1);
 	transform-origin: 0 0;
-  *display: inline;
 }
 
 .selector select:focus, .radio input:focus, .checker input:focus, .uploader input:focus {

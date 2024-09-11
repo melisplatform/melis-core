@@ -158,8 +158,7 @@ return array(
                     //will be put inside css folder
                     'css' => [
                         '/build/css/loading.gif',
-                        '/build/css/icons.gif',
-                        '/build/images/sprite.png'
+                        '/build/css/icons.gif'
                     ],
                     //will be put inside js folder
                     'js' => [
@@ -319,7 +318,7 @@ return array(
                 'build' => [
                     //'disable_bundle' => true,
                     // set to "true" if you want to use the build assets
-                    'use_build_assets' => true,
+                    'use_build_assets' => false,
                     // path to where the build CSS and JS are located
                     'build_path' => 'public/build/',
 

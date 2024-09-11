@@ -253,7 +253,6 @@
     /* zoom: 1; */
     transform: scale(1);
 	transform-origin: 0 0;
-    *display: inline;/*IE7 life-saver */
     margin: 5px;
     padding: 3px 10px;
     font-size: 12px;
@@ -279,7 +278,6 @@
     /* zoom: 1; */
     transform: scale(1);
 	transform-origin: 0 0;
-    *display: inline;/*IE7 life-saver */
 }
 .owl-theme .owl-controls .owl-page span{
     display: block;
@@ -3991,7 +3989,6 @@ div.ColVis_collection button.ColVis_Button:hover {
   background-color: #fff;
   border: 1px solid #d0d0d0;
   cursor: pointer;
-  *cursor: hand;
 }
 
 button.ColVis_Button::-moz-focus-inner { 
@@ -4125,7 +4122,6 @@ table.table thead .sorting_desc,
 table.table thead .sorting_asc_disabled,
 table.table thead .sorting_desc_disabled {
   cursor: pointer;
-  *cursor: hand;
 }
 
 /* table.table thead .sorting { background-image: url('/media/images/sort_both.png'); background-repeat: no-repeat; background-position: center right; }
@@ -4191,7 +4187,6 @@ div.dataTables_scrollFoot table {
 
 table.DTTT_selectable tbody tr {
   cursor: pointer;
-  *cursor: hand;
 }
 
 ul.DTTT_dropdown.dropdown-menu a {
