@@ -272,6 +272,7 @@ class TreeToolsController extends MelisAbstractActionController
             'meliscore_leftmenu_dashboard',
             'meliscore_toolstree_section',
             'meliscms_sitetree',
+            'meliscmsdocumentation_tree',
             'meliscms_toolstree_section',
             'melismarketing_toolstree_section',
             'meliscommerce_toolstree_section',
