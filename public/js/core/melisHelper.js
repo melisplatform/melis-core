@@ -755,6 +755,12 @@ var melisHelper = (function () {
 						);
 					}
 
+					if ( callback !== undefined || callback !== null) {
+						if (callback) {
+							callback();
+						}
+					}
+
 					//this will reload all cached dashboard plugins
 					if ($("#" + zoneId).length > 0) {
 						//console.log(`$("#" + zoneId + " .grid-stack-item"): `, $("#" + zoneId + " .grid-stack-item") );
@@ -778,12 +784,6 @@ var melisHelper = (function () {
 									$("#" + zoneId +".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards").addClass("hidden");
 									$("#" + zoneId +".active #id_meliscore_dashboard_bubble_plugins").find(".bubble-plugin-flip-cards .melis-dashboard-bubble-plugin").css("visibility", "hidden");
 								}
-						}
-					}
-
-					if ( callback !== undefined || callback !== null) {
-						if (callback) {
-							callback();
 						}
 					}
 				}, 300);
