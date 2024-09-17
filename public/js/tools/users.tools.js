@@ -448,7 +448,9 @@ var toolUserManagement = {
                 var $modalUserMgnt = $("#modal-user-management");
                     if ( data.success ) {
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                        $modalUserMgnt.modal('hide');
+                        
+                        //$modalUserMgnt.modal('hide');
+                        melisCoreTool.hideModal("modal-user-management");
                         toolUserManagement.refreshTable();
                     }
                     else {
@@ -481,7 +483,7 @@ var toolUserManagement = {
             melisCoreTool.pending("#btnEdit");
             melisCoreTool.processing();
 
-            //$btnUserEdit.prop("data-bs-toggle", null);
+            $btnUserEdit.prop("data-bs-toggle", null);
 
             $.ajax({
                 type: 'POST',
@@ -497,17 +499,18 @@ var toolUserManagement = {
                         $userNameLink   = $("#user-name-link");
 
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);
-                        
-                        const $bsModal = bootstrap.Modal.getOrCreateInstance($modalUserMgnt[0]);
-                        
-                        $bsModal.hide();
+
+                        //$modalUserMgnt.modal("hide");
+                        melisCoreTool.hideModal("modal-user-management");
                         
                         if ( data.datas.isMyInfo == 1 ) {
                             var $profPic = $("#meliscore_left_menu_profile_pic");
+
                                 $profPic.attr("src", "");
 
                                 $.when(melisHelper.zoneReload("id_meliscore_leftmenu", "meliscore_leftmenu")).then(function () {
                                     var isFirefox = navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
+                                        // console.log(`isFirefox: `, isFirefox);
                                         if (isFirefox) {
                                             $profPic.fadeOut();
                                             setTimeout(function () {
@@ -519,6 +522,7 @@ var toolUserManagement = {
                         }
 
                         //check if data that has been updated is equal to the current user info to replicate the user profile data
+                        // console.log(`_tmpUserId == $userNameLink.attr("data-user-id"): `, _tmpUserId == $userNameLink.attr("data-user-id") );
                         if ( _tmpUserId == $userNameLink.attr("data-user-id") ) {
                             melisHelper.zoneReload("id_meliscore_user_profile_form", "meliscore_user_profile_form");
                             melisHelper.zoneReload("id_meliscore_user_profile_left", "meliscore_user_profile_left");
@@ -531,10 +535,12 @@ var toolUserManagement = {
                             });
 
                             setTimeout(function() {
+                                // console.log(`setTimeout 4000 to avoid redirection refreshTable()`);
                                 // timeout request to avoid redirection
                                 toolUserManagement.refreshTable();
-                            },4000);
+                            }, 0); //4000
                         } else {
+                            // console.log(`else no setTimeout refreshTable()`);
                             toolUserManagement.refreshTable();
                         }
                 }
@@ -546,7 +552,7 @@ var toolUserManagement = {
                 melisCoreTool.done("#btnEdit");
                 melisCore.flashMessenger();
                 melisCoreTool.processDone();
-            }).fail(function () {
+            }).fail(function() {
                 alert(translations.tr_meliscore_error_message);
             });
     },

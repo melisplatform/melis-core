@@ -708,9 +708,10 @@ var melisHelper = (function () {
 			})
 			.done(function (data) {
 				setTimeout(function() {
+					//console.log(`melisHelper.js zoneReload() [`+ zoneId +`] data: `, data);
 					if (data !== null) {
 						// hide the loader
-						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+						$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
 						// remove the inline style
 						melisCoreTool.removeOverflowHidden();
@@ -754,14 +755,9 @@ var melisHelper = (function () {
 						);
 					}
 
-					if ( callback !== undefined || callback !== null) {
-						if (callback) {
-							callback();
-						}
-					}
-
 					//this will reload all cached dashboard plugins
 					if ($("#" + zoneId).length > 0) {
+						//console.log(`$("#" + zoneId + " .grid-stack-item"): `, $("#" + zoneId + " .grid-stack-item") );
 						$.each($("#" + zoneId + " .grid-stack-item"), function() {
 							$(this).find(".dashboard-plugin-refresh").trigger("click");
 						});
@@ -784,11 +780,19 @@ var melisHelper = (function () {
 								}
 						}
 					}
+
+					if ( callback !== undefined || callback !== null) {
+						if (callback) {
+							callback();
+						}
+					}
 				}, 300);
 			})
 			.fail(function (xhr, textStatus, errorThrown) {
 				//hide the loader
-				//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+				$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+
+				console.log("ERROR !! Status = " + textStatus + "\n Error = " + errorThrown + "\n xhr = " + xhr + "\n xhr.statusText = " + xhr.statusText);
 				alert(translations.tr_meliscore_error_message);
 
 				$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();
@@ -845,7 +849,6 @@ var melisHelper = (function () {
 				melisHelper.zoneReload(zoneId, melisKey, parameters);
 
 				const $modal = new bootstrap.Modal('#' + modalID, {
-				//const $modal = bootstrap.Modal.getOrCreateInstance("#" + modalID, {
 					show: true,
 					keyboard: false,
 					backdrop: modalBackDrop
