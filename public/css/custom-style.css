@@ -2279,3 +2279,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .nav-tabs {
 	border-radius: 0;
 }
+.navbar.main.navbar-primary .nav > li a.close {
+	top: 2px;
+	right: 2px;
+}
