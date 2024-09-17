@@ -711,7 +711,7 @@ var melisHelper = (function () {
 					//console.log(`melisHelper.js zoneReload() [`+ zoneId +`] data: `, data);
 					if (data !== null) {
 						// hide the loader
-						$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
 						// remove the inline style
 						melisCoreTool.removeOverflowHidden();
@@ -790,9 +790,9 @@ var melisHelper = (function () {
 			})
 			.fail(function (xhr, textStatus, errorThrown) {
 				//hide the loader
-				$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+				//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
-				console.log("ERROR !! Status = " + textStatus + "\n Error = " + errorThrown + "\n xhr = " + xhr + "\n xhr.statusText = " + xhr.statusText);
+				// console.log("ERROR !! Status = " + textStatus + "\n Error = " + errorThrown + "\n xhr = " + xhr + "\n xhr.statusText = " + xhr.statusText);
 				alert(translations.tr_meliscore_error_message);
 
 				$('#melis-id-nav-bar-tabs a[data-id="' + zoneId + '"]').parent("li").remove();

@@ -2276,3 +2276,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .layout-timeline ul.timeline>li .type .time {
 	top: 20px;
 }
+.nav-tabs {
+	border-radius: 0;
+}

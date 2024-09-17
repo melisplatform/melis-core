@@ -135,6 +135,11 @@ var melisCoreTool = (function (window) {
             $(form).find("label").css("color", "#686868");
         }
 
+        function processingActiveTabId() {
+            var overlay = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
+                $("#"+activeTabId).append(overlay);
+        }
+
         function processing() {
             var overlay = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
                 $(overlay).appendTo('body');
@@ -387,6 +392,9 @@ var melisCoreTool = (function (window) {
 
             // utility function hide and show bootstrap modal 5.3.3
             hideModal : hideModal,
-            showModal : showModal
+            showModal : showModal,
+
+            // utility function to add loading on activeTabId
+            processingActiveTabId: processingActiveTabId
         }
 })(window);
