@@ -198,31 +198,32 @@ $(function() {
                 tableId,
                 ids,
                 hasData = false;
+                
+                $('#id_melis_core_gdpr_content_tabs').find('.dt-scroll').each(function() { // .dataTables_scroll
+                    var $this = $(this);
 
-            $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
-                var $this = $(this);
+                        tableId = $this.find('.dt-scroll-body .table').attr('id'); // .dataTables_scrollBody
+                        ids     = [];
 
-                    tableId = $this.find('.dataTables_scrollBody .table').attr('id');
-                    ids     = [];
+                        // .dataTables_scrollBody
+                        $this.find('.dt-scroll-body #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                            var $this = $(this);
 
-                    $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
-                        var $this = $(this);
+                                ids.push( $this.val() );
+                                hasData = true;
+                        });
+                        modules[tableId] = ids;
+                });
 
-                            ids.push( $this.val() );
-                            hasData = true;
-                    });
-                    modules[tableId] = ids;
-            });
-
-            //only send request if there are any ids
-            if (hasData) {
-                GdprTool.extractSelected(modules);
-            } else {
-                melisHelper.melisKoNotification(
-                    translations.tr_melis_core_gdpr_notif_extract_user,
-                    translations.tr_melis_core_gdpr_notif_no_selected_extract_user
-                );
-            }
+                //only send request if there are any ids
+                if (hasData) {
+                    GdprTool.extractSelected(modules);
+                } else {
+                    melisHelper.melisKoNotification(
+                        translations.tr_melis_core_gdpr_notif_extract_user,
+                        translations.tr_melis_core_gdpr_notif_no_selected_extract_user
+                    );
+                }
         });
 
         /**
@@ -234,14 +235,14 @@ $(function() {
                 ids,
                 hasData = false;
 
-            $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
+            $('#id_melis_core_gdpr_content_tabs').find('.dt-scroll').each(function() { // .dataTables_scroll
                 var $this = $(this);
 
-                tableId = $this.find('.dataTables_scrollBody .table').attr('id');
+                tableId = $this.find('.dt-scroll-body .table').attr('id'); // .dataTables_scrollBody
                 ids = [];
 
                 //push all selected ids to array
-                $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                $this.find('.dt-scroll-body #' + tableId + ' .checkRow:checkbox:checked').each(function() {
                     var $this = $(this);
                         
                         ids.push( $this.val() );
@@ -269,17 +270,22 @@ $(function() {
             var $this   = $(this),
                 href    = $this.attr("href");
 
+                e.preventDefault();
+
                 $this.toggleClass("active").siblings().removeClass("active");
                 $this.closest("li").toggleClass("active").siblings().removeClass("active");
 
                 $(href).toggleClass("active").siblings().removeClass("active");
-                $(href).tab("show");
+
+                // $(href).tab("show");
+                if ( $(href).length ) {
+                    const tabEl = $(href)[0];
+                        bootstrap.Tab.getOrCreateInstance(tabEl).show();
+                }
 
                 $('html body').animate({
                     scrollTop: $(href).offset().top
                 }, 2000);
-
-                e.preventDefault();
         });
 
         $body.on('click', ".gdpr-tab-menu-li", function(){
@@ -289,7 +295,6 @@ $(function() {
                 table.DataTable().columns.adjust().draw();
                 table.width("auto");
             }
-
         });
 
         var GdprTool = {
@@ -302,8 +307,12 @@ $(function() {
                     if (data.success) {
                         //this will be used on deleting a row
                         gdprFormData = formData;
+
                         //show the tabs so that the loading view will be shown to the user
                         $('#id_melis_core_gdpr_content_tabs').show();
+                        /* const $gdprTab = new bootstrap.Tab('#id_melis_core_gdpr_content_tabs');
+                        $gdprTab.show(); */
+
                         melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
                             show: true,
                             formData: formData,
