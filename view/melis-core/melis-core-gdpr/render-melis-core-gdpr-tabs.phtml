@@ -17,163 +17,167 @@
         <div class="widget widget-tabs widget-tabs-double widget-regular widget-tabs-vertical row row-merge gdpr-tab-table-container">
             <!-- Left Side Tab -->
             <!-- Tabs Heading -->
-            <div class="widget-head col-12 col-md-3">
-                <ul>
-                    <?php $firstItem = true; ?>
-                    <!-- condition start -->
-                    <?php if(isset($modules)) { ?>
-                        <!-- loop start -->
-                        <?php foreach ($modules as $module) { ?>
+            <div class="col-12 col-md-3">
+                <div class="widget-head">
+                    <ul>
+                        <?php $firstItem = true; ?>
+                        <!-- condition start -->
+                        <?php if(isset($modules)) { ?>
+                            <!-- loop start -->
+                            <?php foreach ($modules as $module) { ?>
 
-                            <?php if(isset($module['moduleName']) && isset($module['icon'])) { ?>
-                                <li class="<?php echo $firstItem ? 'active' : ''; ?> gdpr-tab-menu-li" data-table-id="<?= $module['moduleName']?>"style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="<?= $module['moduleName'] ?>-left-tab">
-                                    <p style="margin-bottom: 0px;margin-top: 5px;white-space: nowrap;text-overflow: ellipsis;width: 100%;overflow: hidden;"><i class="<?= $module['icon'] ?>" style="margin-left: 20px;margin-right: 12px; width: 22.86px;"></i><?= $module['moduleName'] ?></p></a>
-                                </li>
+                                <?php if(isset($module['moduleName']) && isset($module['icon'])) { ?>
+                                    <li class="<?php echo $firstItem ? 'active' : ''; ?> gdpr-tab-menu-li" data-table-id="<?= $module['moduleName']?>"style="border-bottom: 1px solid #e5e5e5"><a href="#<?= $module['moduleName'] ?>-tab" id="<?= $module['moduleName'] ?>-left-tab">
+                                        <p style="margin-bottom: 0px;margin-top: 5px;white-space: nowrap;text-overflow: ellipsis;width: 100%;overflow: hidden;"><i class="<?= $module['icon'] ?>" style="margin-left: 20px;margin-right: 12px; width: 22.86px;"></i><?= $module['moduleName'] ?></p></a>
+                                    </li>
+                                <?php } ?>
+                                <?php $firstItem = false; ?>
+
                             <?php } ?>
-                            <?php $firstItem = false; ?>
-
+                            <!-- loop end -->
                         <?php } ?>
-                        <!-- loop end -->
-                    <?php } ?>
-                    <!-- condition end -->
-                </ul>
+                        <!-- condition end -->
+                    </ul>
+                </div>
             </div>
             <!-- // Tabs Heading END -->
-            <div class="widget-body col-12 col-md-9">
-                <div class="tab-content">
-                    <!-- Right Side Tab -->
-                    <!-- Tab content -->
-                    <?php if(isset($modules)) { ?>
+            <div class="col-12 col-md-9">
+                <div class="widget-body">
+                    <div class="tab-content">
+                        <!-- Right Side Tab -->
+                        <!-- Tab content -->
+                        <?php if(isset($modules)) { ?>
 
-                        <?php foreach($modules as $module) { ?>
-                            <?php if(isset($module['moduleName']) && isset($module['icon']) && isset($module['values']['columns']) && isset($module['values']['datas'])) {?>
-                                <div class="tab-pane" id="<?= $module['moduleName']; ?>-tab">
-                                    <table id="<?= $module['moduleName']; ?>" class="table table-striped table-primary dt-responsive stripe">
-                                        <thead>
-                                        <tr role="row">
-                                            <th style="padding-right: 10px !important;">ID</th>
-                                            <th class="sorting_disabled sort-all" style="padding-left: 15px !important;padding-right: 15px !important;">
-                                                <div class="checkbox checkbox-single margin-none gdpr-table-checkbox">
-                                                    <label class="checkbox-custom gdpr-table-checkbox-custom">
-                                                        <i class="fa fa-fw fa-square-o" style="color:white;"></i>
-                                                        <input type="checkbox" class="check-all">
-                                                    </label>
-                                                </div>
-                                            </th>
-                                            <?php foreach($module['values']['columns'] as $column) { ?>
-                                                <?php
-                                                    $id = '';
-                                                    $class = '';
-                                                    $style = '';
-                                                    $text = '';
+                            <?php foreach($modules as $module) { ?>
+                                <?php if(isset($module['moduleName']) && isset($module['icon']) && isset($module['values']['columns']) && isset($module['values']['datas'])) {?>
+                                    <div class="tab-pane" id="<?= $module['moduleName']; ?>-tab">
+                                        <table id="<?= $module['moduleName']; ?>" class="table table-striped table-primary dt-responsive stripe">
+                                            <thead>
+                                            <tr role="row">
+                                                <th style="padding-right: 10px !important;">ID</th>
+                                                <th class="sorting_disabled sort-all" style="padding-left: 15px !important;padding-right: 15px !important;">
+                                                    <div class="checkbox checkbox-single margin-none gdpr-table-checkbox">
+                                                        <label class="checkbox-custom gdpr-table-checkbox-custom">
+                                                            <i class="fa fa-fw fa-square-o" style="color:white;"></i>
+                                                            <input type="checkbox" class="check-all">
+                                                        </label>
+                                                    </div>
+                                                </th>
+                                                <?php foreach($module['values']['columns'] as $column) { ?>
+                                                    <?php
+                                                        $id = '';
+                                                        $class = '';
+                                                        $style = '';
+                                                        $text = '';
 
-                                                    if (isset($column['id']) && $column['id'] != "") {
-                                                        $id .= $column['id'];
-                                                    }
-
-                                                    if (isset($column['sorting']) && $column['sorting'] != "") {
-                                                        $class .= $column['sorting'] === true ? 'sorting_asc ' : 'sorting_disabled ';
-                                                    } else {
-                                                        $class .= 'sorting_disabled ';
-                                                    }
-
-                                                    if (isset($column['class']) && $column['class'] != "") {
-                                                        $class .= $column['class'];
-                                                    }
-
-                                                    if (isset($column['style']) && $column['style'] != "") {
-                                                        $style = $column['style'];
-                                                    }
-
-                                                    if (isset($column['text']) && $column['text'] != "") {
-                                                        $text .= $column['text'];
-                                                    }
-                                                ?>
-                                                <th id="<?= $column['id'] ?>" class="<?= $class ?>" style="<?= $style ?>"><?= $this->translate($column['text']) ?></th>
-                                            <?php } ?>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php if(isset($module['values']['datas'])) { ?>
-                                            <?php foreach($module['values']['datas'] as $dataArrayKey => $dataArrayValue) { ?>
-                                                <tr role="row" class="">
-                                                    <td style="width:1%;"><?= $dataArrayKey ?></td>
-                                                    <td class="not-included" style="width:1%;padding-left: 15px !important;padding-right: 15px !important;">
-                                                        <div class="checkbox checkbox-single margin-none gdpr-table-checkbox">
-                                                            <label class="checkbox-custom gdpr-table-checkbox-custom">
-                                                                <i class="fa fa-fw fa-square-o custom-gdpr-tab-table-checkbox"></i>
-                                                                <input type="checkbox" class="checkRow" value="<?= $dataArrayKey ?>">
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <?php foreach($dataArrayValue as $dataKey => $dataValue ) { ?>
-                                                        <?php
-                                                            $style = '';
-
-                                                            if (isset($module['values']['columns'][$dataKey]['style']) && $module['values']['columns'][$dataKey]['style'] != "") {
-                                                                $style = $module['values']['columns'][$dataKey]['style'];
-                                                            }
-                                                        ?>
-                                                        <td style="<?= $style ?>"><?= $dataValue ?></td>
-                                                    <?php } ?>
-                                                </tr>
-                                            <?php } ?>
-                                        <?php } ?>
-                                        </tbody>
-                                    </table>
-                                    <script>
-                                        $(function() {
-                                            //redraw table when tab is shown where the table is located so that the headers will have the right size
-                                            $(document).on('shown.bs.tab', 'a[href="<?php echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
-                                                if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
-                                                } else {
-                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
-                                                }
-
-                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
-                                                $("<?php echo '#' . $module['moduleName']; ?>").DataTable().draw();
-                                                $("<?php echo '#' . $module['moduleName']; ?>").DataTable().columns.adjust().responsive.recalc();
-                                                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-                                            });
-
-                                            setTimeout(function(){
-                                                $("<?php echo '#' . $module['moduleName']; ?>").dataTable({
-                                                    // commented, fix for adding max-height: 300px that will result to overlapping of the data details on mobile responsive
-                                                    scrollY: '300px',
-                                                    scrollCollapse: true,
-                                                    paging: false,
-                                                    searching: false,
-                                                    ordering: true,
-                                                    order: [[0, 'desc']],
-                                                    responsive: true,
-
-                                                    language: {
-                                                        "info": translations.tr_meliscore_dt_sInfo,
-                                                    },
-                                                    columnDefs: [{
-                                                        orderable: false,
-                                                        targets: "sorting_disabled",
-                                                    }],
-                                                    "drawCallback": function() {
-                                                        if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
-                                                        } else {
-                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
+                                                        if (isset($column['id']) && $column['id'] != "") {
+                                                            $id .= $column['id'];
                                                         }
 
-                                                        $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
-                                                    }
-                                                });
-                                            }, 1);
+                                                        if (isset($column['sorting']) && $column['sorting'] != "") {
+                                                            $class .= $column['sorting'] === true ? 'sorting_asc ' : 'sorting_disabled ';
+                                                        } else {
+                                                            $class .= 'sorting_disabled ';
+                                                        }
 
-                                        });
-                                    </script>
-                                </div>
+                                                        if (isset($column['class']) && $column['class'] != "") {
+                                                            $class .= $column['class'];
+                                                        }
+
+                                                        if (isset($column['style']) && $column['style'] != "") {
+                                                            $style = $column['style'];
+                                                        }
+
+                                                        if (isset($column['text']) && $column['text'] != "") {
+                                                            $text .= $column['text'];
+                                                        }
+                                                    ?>
+                                                    <th id="<?= $column['id'] ?>" class="<?= $class ?>" style="<?= $style ?>"><?= $this->translate($column['text']) ?></th>
+                                                <?php } ?>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php if(isset($module['values']['datas'])) { ?>
+                                                <?php foreach($module['values']['datas'] as $dataArrayKey => $dataArrayValue) { ?>
+                                                    <tr role="row" class="">
+                                                        <td style="width:1%;"><?= $dataArrayKey ?></td>
+                                                        <td class="not-included" style="width:1%;padding-left: 15px !important;padding-right: 15px !important;">
+                                                            <div class="checkbox checkbox-single margin-none gdpr-table-checkbox">
+                                                                <label class="checkbox-custom gdpr-table-checkbox-custom">
+                                                                    <i class="fa fa-fw fa-square-o custom-gdpr-tab-table-checkbox"></i>
+                                                                    <input type="checkbox" class="checkRow" value="<?= $dataArrayKey ?>">
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <?php foreach($dataArrayValue as $dataKey => $dataValue ) { ?>
+                                                            <?php
+                                                                $style = '';
+
+                                                                if (isset($module['values']['columns'][$dataKey]['style']) && $module['values']['columns'][$dataKey]['style'] != "") {
+                                                                    $style = $module['values']['columns'][$dataKey]['style'];
+                                                                }
+                                                            ?>
+                                                            <td style="<?= $style ?>"><?= $dataValue ?></td>
+                                                        <?php } ?>
+                                                    </tr>
+                                                <?php } ?>
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
+                                        <script>
+                                            $(function() {
+                                                //redraw table when tab is shown where the table is located so that the headers will have the right size
+                                                $(document).on('shown.bs.tab', 'a[href="<?php echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
+                                                    if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
+                                                        $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
+                                                    } else {
+                                                        $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
+                                                    }
+
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").DataTable().draw();
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").DataTable().columns.adjust().responsive.recalc();
+                                                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                                                });
+
+                                                setTimeout(function(){
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").dataTable({
+                                                        // commented, fix for adding max-height: 300px that will result to overlapping of the data details on mobile responsive
+                                                        scrollY: '300px',
+                                                        scrollCollapse: true,
+                                                        paging: false,
+                                                        searching: false,
+                                                        ordering: true,
+                                                        order: [[0, 'desc']],
+                                                        responsive: true,
+
+                                                        language: {
+                                                            "info": translations.tr_meliscore_dt_sInfo,
+                                                        },
+                                                        columnDefs: [{
+                                                            orderable: false,
+                                                            targets: "sorting_disabled",
+                                                        }],
+                                                        "drawCallback": function() {
+                                                            if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
+                                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
+                                                            } else {
+                                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
+                                                            }
+
+                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                        }
+                                                    });
+                                                }, 1);
+
+                                            });
+                                        </script>
+                                    </div>
+                                <?php } ?>
                             <?php } ?>
                         <?php } ?>
-                    <?php } ?>
-                    <!-- // Tab content END -->
+                        <!-- // Tab content END -->
+                    </div>
                 </div>
             </div>
         </div>
