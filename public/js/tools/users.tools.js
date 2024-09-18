@@ -7,8 +7,8 @@ function getRightsTree(userId) {
     //var tree = $("#rights-fancytree").fancytree("getTree");
     var tree = $.ui.fancytree.getTree("#rights-fancytree");
         tree.reload({
-            url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
-            //url: '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
+            // url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
+            url: '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
         });
 
     var checker = setInterval(function() {

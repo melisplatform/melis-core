@@ -998,12 +998,12 @@ a[data-bs-toggle="modal"]:focus {
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li.active {
 	height: 39px;
 }
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li a {
+/* #modal-user-management .widget.widget-tabs-double > .widget-head ul li a {
 	color: #fff;
 }
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a i:before {
 	color: #fff;
-}
+} */
 .no-dashboard-access p {
 	margin-bottom: 0;
 }
@@ -2282,4 +2282,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .navbar.main.navbar-primary .nav > li a.close {
 	top: 2px;
 	right: 2px;
+}
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons, 
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons i:before {
+    color: #fff;
 }

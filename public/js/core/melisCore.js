@@ -189,8 +189,8 @@ var melisCore = (function(window){
             translations.tr_meliscore_tool_user_reset_rights,
             translations.tr_meliscore_common_label_reset_rights_msg,
             function () {
-                var tree = $("#new-rights-fancytree").fancytree("getTree");
-                //var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
+                // var tree = $("#new-rights-fancytree").fancytree("getTree");
+                var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
 
                     tree.findAll(function(node){
                         if(node.isSelected() === true){
@@ -203,8 +203,8 @@ var melisCore = (function(window){
     });
 
     function resetUserRights () {
-        var tree = $("#rights-fancytree").fancytree("getTree");
-        //var tree = $.ui.fancytree.getTree("#rights-fancytree");
+        // var tree = $("#rights-fancytree").fancytree("getTree");
+        var tree = $.ui.fancytree.getTree("#rights-fancytree");
 
         tree.findAll(function(node){
             if(node.isSelected() === true){
