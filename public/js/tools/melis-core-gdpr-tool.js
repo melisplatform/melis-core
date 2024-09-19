@@ -272,16 +272,14 @@ $(function() {
 
                 e.preventDefault();
 
+                // li and a
                 $this.toggleClass("active").siblings().removeClass("active");
                 $this.closest("li").toggleClass("active").siblings().removeClass("active");
 
+                // .tab-pane
                 $(href).toggleClass("active").siblings().removeClass("active");
 
                 // $(href).tab("show");
-                if ( $(href).length ) {
-                    const tabEl = $(href)[0];
-                        bootstrap.Tab.getOrCreateInstance(tabEl).show();
-                }
 
                 $('html body').animate({
                     scrollTop: $(href).offset().top

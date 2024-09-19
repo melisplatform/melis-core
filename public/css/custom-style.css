@@ -2287,3 +2287,41 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons i:before {
     color: #fff;
 }
+.gdpr-tab-table-container .widget-head ul li, 
+.gdpr-tab-table-container .widget-head ul li.active,
+.widget.widget-tabs-double .widget-head ul li, 
+.widget.widget-tabs-double .widget-head ul li.active {
+    height: 40px;
+    line-height: 20px;
+}
+.gdpr-tab-table-container .widget-head,
+.widget.widget-tabs-double .widget-head {
+	background: #fff;
+    border-color: #e5e5e5;
+    overflow: visible;
+}
+.gdpr-tab-table-container .widget-head, 
+.gdpr-tab-table-container .widget-head ul, 
+.gdpr-tab-table-container .widget-head ul li a, 
+.gdpr-tab-table-container .widget-head ul li.active a,
+.widget.widget-tabs-double .widget-head, 
+.widget.widget-tabs-double .widget-head ul, 
+.widget.widget-tabs-double .widget-head ul li a, 
+.widget.widget-tabs-double .widget-head ul li.active a {
+	height: 40px;
+}
+.gdpr-tab-table-container .table-primary {
+    border-color: #e5e5e5;
+    border-top: none;
+}
+.gdpr-tab-table-container .table {
+    margin: 0 0 15px;
+    position: relative;
+    -webkit-border-radius: 0 0 0 0;
+    -moz-border-radius: 0 0 0 0;
+    border-radius: 0 0 0 0;
+}
+.gdpr-tab-table-container .tab-pane .dt-layout-full {
+	display: block !important;
+	width: 100% !important;
+}

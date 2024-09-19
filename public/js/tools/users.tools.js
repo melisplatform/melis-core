@@ -7,8 +7,8 @@ function getRightsTree(userId) {
     //var tree = $("#rights-fancytree").fancytree("getTree");
     var tree = $.ui.fancytree.getTree("#rights-fancytree");
         tree.reload({
-            // url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
-            url: '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
+            url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
+            // url: '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
         });
 
     var checker = setInterval(function() {
@@ -538,7 +538,7 @@ var toolUserManagement = {
                                 // console.log(`setTimeout 4000 to avoid redirection refreshTable()`);
                                 // timeout request to avoid redirection
                                 toolUserManagement.refreshTable();
-                            }, 0); //4000
+                            }, 4000);
                         } else {
                             // console.log(`else no setTimeout refreshTable()`);
                             toolUserManagement.refreshTable();

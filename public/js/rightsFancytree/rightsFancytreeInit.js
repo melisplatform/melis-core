@@ -40,7 +40,7 @@
 				
 				//var tree = $(trees).fancytree('getTree');
 				var tree = $.ui.fancytree.getTree(trees);
-					
+					// console.log(`rightsFancytreeInit.js loadChildren() tree: `, tree);
 					tree.findAll(function(node){
 						userRightsData[0]['treeStatus'].push(node.key);
 						

@@ -6,7 +6,7 @@
 	if (!empty($this->zoneconfig['conf']['id']))
 		$id = $this->zoneconfig['conf']['id'];
 	$data_melisKey = $this->melisKey;
-$imageData = '';
+    $imageData = '';
 ?>
 <div class="modal-content" id="<?= $id; ?>" data-melisKey="<?= $data_melisKey; ?>">
 	<div class="modal-body padding-none">
@@ -49,7 +49,15 @@ $imageData = '';
                         };
                         melisTinyMCE.createTinyMCE("tool", "#mca_text", option);
 
-                        $("#mca_date").datetimepicker({locale: "<?= $this->locale;?>", format: "<?= $this->dateTimePickerFormat;?>"});
+                        /* console.log(`tempusDominus locale: `, <?php //$this->locale; ?>);
+                        console.log(`tempusDominus format: `, <?php //$this->dateTimePickerFormat; ?>); */
+
+                        $("#mca_date").tempusDominus({
+                            localization: {
+                                locale: "<?= $this->locale;?>", 
+                                format: "<?= $this->dateTimePickerFormat;?>"
+                            }
+                        });
                     </script>
                 </div>
             </div>
