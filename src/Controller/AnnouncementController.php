@@ -190,9 +190,9 @@ class AnnouncementController extends MelisAbstractActionController
         $locale = $container['melis-lang-locale'];
         $locale = explode('_', $locale);
         $locale = $locale[0];
-        $dateTimePickerFormat = 'MM/DD/YYYY HH:mm:ss';
+        $dateTimePickerFormat = 'MM/dd/yyyy HH:mm:ss';
         if($locale == 'fr')
-            $dateTimePickerFormat = 'DD/MM/YYYY HH:mm:ss';
+            $dateTimePickerFormat = 'dd/MM/yyyy HH:mm:ss';
 
         $melisKey = $this->params()->fromRoute('melisKey', '');
         $title = $this->getTool()->getTranslation('tr_melis_core_announcement_tool_add_announcement');
