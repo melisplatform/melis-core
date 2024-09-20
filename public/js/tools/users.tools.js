@@ -546,6 +546,8 @@ var toolUserManagement = {
                             // console.log(`else no setTimeout refreshTable()`);
                             toolUserManagement.refreshTable();
                         } */
+
+                        $(".tooluser-refresh .melis-refreshTable").trigger("click");
                 }
                 else {
                     melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
