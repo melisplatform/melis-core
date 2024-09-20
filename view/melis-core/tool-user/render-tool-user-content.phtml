@@ -40,8 +40,8 @@ if (!empty($this->zoneconfig['conf']['id']))
 				<?= $this->getToolDataTableConfigForDateConnection; ?>
 				
 				// Initialize the rights treeviews --------------------------------------->
-				initRightsTree("#rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
-				initRightsTree("#new-rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
+				// initRightsTree("#rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
+				// initRightsTree("#new-rights-fancytree", '/melis/MelisCore/ToolUser/getRightsTreeView');
 
 				$("#idusermanagement").on('submit', function(e) {
 					toolUserManagement.updateUser(this);
