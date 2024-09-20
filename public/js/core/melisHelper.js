@@ -729,7 +729,7 @@ var melisHelper = (function () {
 						// Run callback scripts here | from app.interface
 						// --------------------------------------------------------------
 						var jsCallbacks = data.jsCallbacks;
-
+							// console.log(`melisHelper.js zoneReload() jsCallbacks: `, jsCallbacks);
 							$.each(jsCallbacks, function (key, value) {
 								// check if there is more than 1 function in a single jsCallback from app.interface
 								// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)

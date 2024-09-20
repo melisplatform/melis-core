@@ -483,7 +483,8 @@ var toolUserManagement = {
             melisCoreTool.pending("#btnEdit");
             melisCoreTool.processing();
 
-            $btnUserEdit.prop("data-bs-toggle", null);
+            /* $btnUserEdit.prop("data-bs-toggle", null);
+            $btnUserEdit.prop("href", null); */
 
             $.ajax({
                 type: 'POST',
@@ -521,6 +522,8 @@ var toolUserManagement = {
                                 });
                         }
 
+                        toolUserManagement.refreshTable();
+
                         //check if data that has been updated is equal to the current user info to replicate the user profile data
                         // console.log(`_tmpUserId == $userNameLink.attr("data-user-id"): `, _tmpUserId == $userNameLink.attr("data-user-id") );
                         if ( _tmpUserId == $userNameLink.attr("data-user-id") ) {
@@ -534,15 +537,15 @@ var toolUserManagement = {
                                 $(".melis-core-dashboard-dnd-box").removeClass("hasCached");
                             });
 
-                            setTimeout(function() {
+                            /* setTimeout(function() {
                                 // console.log(`setTimeout 4000 to avoid redirection refreshTable()`);
                                 // timeout request to avoid redirection
                                 toolUserManagement.refreshTable();
-                            }, 4000);
-                        } else {
+                            }, 4000); */
+                        } /* else {
                             // console.log(`else no setTimeout refreshTable()`);
                             toolUserManagement.refreshTable();
-                        }
+                        } */
                 }
                 else {
                     melisCoreTool.alertDanger("#editformalert", translations.tr_meliscore_common_error + "! ", data.textMessage);
