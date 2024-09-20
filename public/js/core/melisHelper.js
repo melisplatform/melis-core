@@ -708,7 +708,7 @@ var melisHelper = (function () {
 			})
 			.done(function (data) {
 				setTimeout(function() {
-					//console.log(`melisHelper.js zoneReload() [`+ zoneId +`] data: `, data);
+					// console.log(`user-management melisHelper.js zoneReload() [`+ zoneId +`] data: `, data);
 					if (data !== null) {
 						// hide the loader
 						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');

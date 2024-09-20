@@ -51,7 +51,7 @@ var dashboard = (function() {
 					if ( $el[0].id === "melisDashBoardPluginBtn" ) {
 						// toggle class .shown
 						$dbPluginMenu.toggleClass("shown");
-
+						//console.log(`$dbPluginMenu.hasClass("shown"): `, $dbPluginMenu.hasClass("shown"));
 						// dashboard plugin menu button clicked, on
 						if ( $dbPluginMenu.hasClass("shown") )	{
 							if ( $lm.hasClass("shown") ) {
@@ -234,8 +234,6 @@ var dashboard = (function() {
 									$tabArrowTop.addClass("hide-arrow");
 								}
 						}
-
-
 					}
 				}
 
@@ -255,7 +253,20 @@ var dashboard = (function() {
 
 							setTimeout(function () {
 								melisDashBoardDragnDrop.init();
-								$($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached");
+
+								// shown class added again as on top code it is using toggleClass()
+								$($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached shown");
+
+								if ( $lm.hasClass("shown") ) {
+									$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+									$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								}
+								else {
+									$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+									$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+									$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								}
 							}, 100);
 
 							loader.removeLoadingDashboardPluginMenu();
