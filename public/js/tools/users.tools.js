@@ -438,6 +438,9 @@ var toolUserManagement = {
 	},
 
 	retrieveUser: function (id) {
+		// re-initialize the tree with current selected userID
+		getRightsTree(id);
+
 		var $btnEdit = $("#btnEdit"),
 			$btnEditRights = $("#btnEditRights");
 
@@ -498,8 +501,8 @@ var toolUserManagement = {
 					$userMgntPass.val("");
 					$userMgntConPass.val("");
 
-					// re-initialize the tree with current selected userID
-					getRightsTree(id);
+					// // re-initialize the tree with current selected userID
+					// getRightsTree(id);
 				}
 			})
 			.fail(function () {
@@ -581,7 +584,8 @@ var toolUserManagement = {
 		melisCoreTool.pending("#btnEdit");
 		melisCoreTool.processing();
 
-		$btnUserEdit.prop("data-bs-toggle", null);
+		/* $btnUserEdit.prop("data-bs-toggle", null);
+            $btnUserEdit.prop("href", null); */
 
 		$.ajax({
 			type: "POST",
@@ -605,7 +609,7 @@ var toolUserManagement = {
 					if (data.datas.isMyInfo == 1) {
 						var $profPic = $("#meliscore_left_menu_profile_pic");
 
-						// $profPic.attr("src", "");
+						$profPic.attr("src", "");
 
 						$.when(
 							melisHelper.zoneReload(
@@ -625,6 +629,8 @@ var toolUserManagement = {
 							}
 						});
 					}
+
+					toolUserManagement.refreshTable();
 
 					//check if data that has been updated is equal to the current user info to replicate the user profile data
 					// console.log(`_tmpUserId == $userNameLink.attr("data-user-id"): `, _tmpUserId == $userNameLink.attr("data-user-id") );
@@ -650,15 +656,17 @@ var toolUserManagement = {
 							}
 						);
 
-						setTimeout(function () {
-							// console.log(`setTimeout 4000 to avoid redirection refreshTable()`);
-							// timeout request to avoid redirection
-							toolUserManagement.refreshTable();
-						}, 4000);
-					} else {
-						// console.log(`else no setTimeout refreshTable()`);
-						toolUserManagement.refreshTable();
-					}
+						/* setTimeout(function() {
+                                // console.log(`setTimeout 4000 to avoid redirection refreshTable()`);
+                                // timeout request to avoid redirection
+                                toolUserManagement.refreshTable();
+                            }, 4000); */
+					} /* else {
+                            // console.log(`else no setTimeout refreshTable()`);
+                            toolUserManagement.refreshTable();
+                        } */
+
+					$(".tooluser-refresh .melis-refreshTable").trigger("click");
 				} else {
 					melisCoreTool.alertDanger(
 						"#editformalert",

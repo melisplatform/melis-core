@@ -2283,6 +2283,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	top: 2px;
 	right: 2px;
 }
+.modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
+.modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before,
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons, 
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons i:before {
     color: #fff;

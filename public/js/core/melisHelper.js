@@ -708,7 +708,7 @@ var melisHelper = (function () {
 			})
 			.done(function (data) {
 				setTimeout(function() {
-					//console.log(`melisHelper.js zoneReload() [`+ zoneId +`] data: `, data);
+					// console.log(`user-management melisHelper.js zoneReload() [`+ zoneId +`] data: `, data);
 					if (data !== null) {
 						// hide the loader
 						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
@@ -729,7 +729,7 @@ var melisHelper = (function () {
 						// Run callback scripts here | from app.interface
 						// --------------------------------------------------------------
 						var jsCallbacks = data.jsCallbacks;
-
+							// console.log(`melisHelper.js zoneReload() jsCallbacks: `, jsCallbacks);
 							$.each(jsCallbacks, function (key, value) {
 								// check if there is more than 1 function in a single jsCallback from app.interface
 								// example: 'jscallback' => 'simpleChartInit(); anotherFunction();'  separated by (space)
