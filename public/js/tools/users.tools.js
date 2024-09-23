@@ -343,14 +343,15 @@ window.initRetrieveUser = function (data, tblSettings) {
 		data.status = $("#toolUserStatusSelect").val();
 	}
 
-	var btnUserDeleteTimeout = setTimeout(function () {
+	// removing delete button for the current user
+	var btnUserDeleteTimeout = setInterval(function () {
 		var btnDelete = $(
-			"#tableToolUserManagement tr.clsCurrent td.dtActionCls div"
+			"body #tableToolUserManagement tr.clsCurrent td.dtActionCls div"
 		).find(".btnUserDelete");
 		if (btnDelete.length) {
 			btnDelete.remove();
 
-			clearTimeout(btnUserDeleteTimeout);
+			clearInterval(btnUserDeleteTimeout);
 		}
 	}, 500);
 };
@@ -606,67 +607,64 @@ var toolUserManagement = {
 					//$modalUserMgnt.modal("hide");
 					melisCoreTool.hideModal("modal-user-management");
 
-					if (data.datas.isMyInfo == 1) {
-						var $profPic = $("#meliscore_left_menu_profile_pic");
+					melisHelper.zoneReload(
+						"id_meliscore_tool_user",
+						"meliscore_tool_user",
+						{},
+						() => {
+							if (data.datas.isMyInfo == 1) {
+								var $profPic = $("#meliscore_left_menu_profile_pic");
 
-						$profPic.attr("src", "");
+								$profPic.attr("src", "");
 
-						$.when(
-							melisHelper.zoneReload(
-								"id_meliscore_leftmenu",
-								"meliscore_leftmenu"
-							)
-						).then(function () {
-							var isFirefox =
-								navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
-							// console.log(`isFirefox: `, isFirefox);
-							if (isFirefox) {
-								$profPic.fadeOut();
-								setTimeout(function () {
-									$profPic.attr("src", data.datas.loadProfile);
-									$profPic.fadeIn();
-								}, 3000);
+								melisHelper.zoneReload(
+									"id_meliscore_leftmenu",
+									"meliscore_leftmenu",
+									{},
+									() => {
+										var isFirefox =
+											navigator.userAgent.indexOf("Firefox") > 0 ? true : false;
+										// console.log(`isFirefox: `, isFirefox);
+										if (isFirefox) {
+											$profPic.fadeOut();
+											setTimeout(function () {
+												$profPic.attr("src", data.datas.loadProfile);
+												$profPic.fadeIn();
+											}, 3000);
+										}
+
+										melisHelper.zoneReload(
+											"id_meliscore_user_profile_form",
+											"meliscore_user_profile_form",
+											{},
+											() => {
+												melisHelper.zoneReload(
+													"id_meliscore_user_profile_left",
+													"meliscore_user_profile_left",
+													{},
+													() => {
+														//reload the dashboard plugins menu to update the plugin rights
+														melisHelper.zoneReload(
+															"id_meliscore_center_dashboard_menu",
+															"meliscore_center_dashboard_menu",
+															{},
+															function () {
+																melisDashBoardDragnDrop.dragWidget();
+																//remove dashboard plugin menu indicator if its loaded already
+																$(".melis-core-dashboard-dnd-box").removeClass(
+																	"hasCached"
+																);
+															}
+														);
+													}
+												);
+											}
+										);
+									}
+								);
 							}
-						});
-					}
-
-					toolUserManagement.refreshTable();
-
-					//check if data that has been updated is equal to the current user info to replicate the user profile data
-					// console.log(`_tmpUserId == $userNameLink.attr("data-user-id"): `, _tmpUserId == $userNameLink.attr("data-user-id") );
-					if (_tmpUserId == $userNameLink.attr("data-user-id")) {
-						melisHelper.zoneReload(
-							"id_meliscore_user_profile_form",
-							"meliscore_user_profile_form"
-						);
-						melisHelper.zoneReload(
-							"id_meliscore_user_profile_left",
-							"meliscore_user_profile_left"
-						);
-
-						//reload the dashboard plugins menu to update the plugin rights
-						melisHelper.zoneReload(
-							"id_meliscore_center_dashboard_menu",
-							"meliscore_center_dashboard_menu",
-							{},
-							function () {
-								melisDashBoardDragnDrop.dragWidget();
-								//remove dashboard plugin menu indicator if its loaded already
-								$(".melis-core-dashboard-dnd-box").removeClass("hasCached");
-							}
-						);
-
-						/* setTimeout(function() {
-                                // console.log(`setTimeout 4000 to avoid redirection refreshTable()`);
-                                // timeout request to avoid redirection
-                                toolUserManagement.refreshTable();
-                            }, 4000); */
-					} /* else {
-                            // console.log(`else no setTimeout refreshTable()`);
-                            toolUserManagement.refreshTable();
-                        } */
-
-					$(".tooluser-refresh .melis-refreshTable").trigger("click");
+						}
+					);
 				} else {
 					melisCoreTool.alertDanger(
 						"#editformalert",
