@@ -2338,3 +2338,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .gdpr-tab-table-container .widget-head ul li.active a .fa:before {
     color: #e61c23;
 }
+.datepicker td,
+.datepicker th {
+	border: 0;
+}
