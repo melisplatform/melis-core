@@ -894,8 +894,10 @@ var melisDashBoardDragnDrop = {
 
                             // remove loader
                             $(dashboardItem).find('.overlay-loader').remove();
-
-                            grid.removeWidget($(dashboardItem));
+                            
+                            if ( $(dashboardItem).length ) {
+                                grid.removeWidget($(dashboardItem));
+                            }
 
                         var html = $(data.html);
 
