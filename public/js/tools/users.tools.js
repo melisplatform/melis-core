@@ -4,32 +4,21 @@ $(":file").filestyle({ buttonBefore: true });
 
 // re-initialize the rights treeview with current selected userID
 function getRightsTree(userId) {
-	let tree = $.ui.fancytree.getTree("#rights-fancytree");
+    //var tree = $("#rights-fancytree").fancytree("getTree");
+    var tree = $.ui.fancytree.getTree("#rights-fancytree");
+        tree.reload({
+            // url: source = '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
+            url: '/melis/MelisCore/ToolUser/getRightsTreeView?userId=' + userId
+        });
 
-	if (tree == null) {
-		tree = initRightsTree(
-			"body #rights-fancytree",
-			"/melis/MelisCore/ToolUser/getRightsTreeView?userId=" + userId
-		);
-	} else {
-		tree.reload({
-			url: (source =
-				"/melis/MelisCore/ToolUser/getRightsTreeView?userId=" + userId),
-		});
-	}
-
-	var checker = setInterval(function () {
-		let tree = $.ui.fancytree.getTree("#rights-fancytree");
-
-		if (tree != null) {
-			$("#btnEdit").removeClass("disabled").css("pointer-events", "auto");
-			$("#btnEditRights").removeClass("disabled").css("pointer-events", "auto");
-			$("#btnResetRights")
-				.removeClass("disabled")
-				.css("pointer-events", "auto");
-			clearInterval(checker);
-		}
-	}, 500);
+    var checker = setInterval(function() {
+        if (tree.count() > 1) {
+            $("#btnEdit").removeClass("disabled").css("pointer-events", "auto");
+            $("#btnEditRights").removeClass("disabled").css("pointer-events", "auto");
+            $("#btnResetRights").removeClass("disabled").css("pointer-events", "auto");
+            clearInterval(checker);
+        }
+    }, 500);
 }
 
 var _tmpUserId = null;

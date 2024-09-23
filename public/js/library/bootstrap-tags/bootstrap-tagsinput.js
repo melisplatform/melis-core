@@ -335,7 +335,7 @@
             typeaheadDatasets = typeaheadjs;
           }
           // $.proxy = bind()
-          self.$input.typeahead(typeaheadConfig, typeaheadDatasets).on('typeahead:selected', bind(function (obj, datum) {
+          self.$input.typeahead(typeaheadConfig, typeaheadDatasets).on('typeahead:selected', $.proxy(function (obj, datum) {
             if (typeaheadDatasets.valueKey)
               self.add(datum[typeaheadDatasets.valueKey]);
             else
@@ -344,7 +344,7 @@
           }, self));
       }
       // $.proxy = bind()
-      self.$container.on('click', bind(function(event) {
+      self.$container.on('click', $.proxy(function(event) {
         if (! self.$element.attr('disabled')) {
           self.$input.prop('disabled', false);
         }
@@ -353,7 +353,7 @@
 
         if (self.options.addOnBlur && self.options.freeInput) {
           // $.proxy = bind()
-          self.$input.on('focusout', bind(function(event) {
+          self.$input.on('focusout', $.proxy(function(event) {
               // HACK: only process on focusout when no typeahead opened, to
               //       avoid adding the typeahead text as tag
               if ($('.typeahead, .twitter-typeahead', self.$container).length === 0) {
@@ -364,7 +364,7 @@
         }
 
       // $.proxy = bind()
-      self.$container.on('keydown', 'input', bind(function(event) {
+      self.$container.on('keydown', 'input', $.proxy(function(event) {
         var $input = $(event.target),
             $inputWrapper = self.findInputWrapper();
 
@@ -423,7 +423,7 @@
         $input.attr('size', Math.max(this.inputSize, $input.val().length));
       }, self));
       // $.proxy = bind()
-      self.$container.on('keypress', 'input', bind(function(event) {
+      self.$container.on('keypress', 'input', $.proxy(function(event) {
          var $input = $(event.target);
 
          if (self.$element.attr('disabled')) {
@@ -454,7 +454,7 @@
       }, self));
 
       // Remove icon clicked, $.proxy = bind()
-      self.$container.on('click', '[data-role=remove]', bind(function(event) {
+      self.$container.on('click', '[data-role=remove]', $.proxy(function(event) {
         if (self.$element.attr('disabled')) {
           return;
         }
