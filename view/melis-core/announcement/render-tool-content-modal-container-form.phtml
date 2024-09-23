@@ -48,8 +48,13 @@
                             toolbar : 'insertfile undo redo | blocks | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | minitemplate code'
                         };
                         melisTinyMCE.createTinyMCE("tool", "#mca_text", option);
-
-                        $("#mca_date").datetimepicker({locale: "<?= $this->locale;?>", format: "<?= $this->dateTimePickerFormat;?>"});
+                        // option sideBySide: true, triggers datepicker (calendar view) with timepicker on the left side
+                        $("#mca_date").datetimepicker({
+                            locale: "<?= $this->locale;?>", 
+                            format: "<?= $this->dateTimePickerFormat;?>",
+                            /* sideBySide: true,
+                            keepOpen: true */
+                        });
                     </script>
                 </div>
             </div>

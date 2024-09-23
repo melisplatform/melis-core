@@ -2342,3 +2342,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .datepicker th {
 	border: 0;
 }
+.bootstrap-datetimepicker-widget .datepicker > div {
+	display: block;
+}
