@@ -125,42 +125,52 @@ elseif (!$isParentTool && $melisKey !== 'melismarketplace_toolstree_section') :
                                             $data_tool_name = $tool['tool_name'];
                                             $data_tool_meliskey = $tool['tool_melisKey'];
                                             ?>
-                                            <?php if (isset($tool['toolsection_has_nav_child']) && (bool) $tool['toolsection_has_nav_child'] === true): ?>
-                                            <li class="hasSubmenu" data-meliskey="">
-                                                <a data-target="#sub-load-<?= $keyTool; ?>" data-toggle="collapse" class="collapsed">
-                                                    <i class="fa <?= $toolIcon; ?>"></i>
-                                                    <span><?= $data_tool_name ?></span>
-                                                </a>
-                                                <ul class="collapse secondlvl-container" id="sub-load-<?= $keyTool; ?>">
-                                                    <?php
-                                                    foreach ($tool['toolsection_children'] as $childKeyTool => $childTool) {
-                                                        $toolIcon = 'fa-wrench';
-                                                        if (!empty($childTool['tool_icon'])) {
-                                                            $toolIcon = $childTool['tool_icon'];
-                                                        }
+                                            <!--This will check if we display the menu or the html rendered directly-->
+                                            <?php if($tool['tool_view_render']) { ?>
+                                                <?php echo $this->$data_tool_meliskey;?>
+                                            <?php } else { ?>
+                                                <?php if (isset($tool['toolsection_has_nav_child']) && (bool) $tool['toolsection_has_nav_child'] === true): ?>
+                                                <li class="hasSubmenu" data-meliskey="">
+                                                    <a data-target="#sub-load-<?= $keyTool; ?>" data-toggle="collapse" class="collapsed">
+                                                        <i class="fa <?= $toolIcon; ?>"></i>
+                                                        <span><?= $data_tool_name ?></span>
+                                                    </a>
+                                                    <ul class="collapse secondlvl-container" id="sub-load-<?= $keyTool; ?>">
+                                                        <?php
+                                                        foreach ($tool['toolsection_children'] as $childKeyTool => $childTool) {
+                                                            $toolIcon = 'fa-wrench';
+                                                            if (!empty($childTool['tool_icon'])) {
+                                                                $toolIcon = $childTool['tool_icon'];
+                                                            }
 
-                                                        $data_tool_id = $childTool['tool_id'];
-                                                        $data_tool_name = $childTool['tool_name'];
-                                                        $data_tool_meliskey = $childTool['tool_melisKey'];
+                                                            $data_tool_id = $childTool['tool_id'];
+                                                            $data_tool_name = $childTool['tool_name'];
+                                                            $data_tool_meliskey = $childTool['tool_melisKey'];
+                                                            ?>
+                                                            <!--This will check if we display the menu or the html rendered directly-->
+                                                            <?php if($childTool['tool_view_render']) { ?>
+                                                                <?php echo $this->$data_tool_meliskey;?>
+                                                            <?php } else { ?>
+                                                                <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
+                                                                    <a href="#">
+                                                                        <i class="fa <?= $toolIcon ?>"></i>
+                                                                        <span><?= $data_tool_name ?> </span>
+                                                                    </a>
+                                                                </li>
+                                                            <?php } ?>
+                                                        <?php }
                                                         ?>
-                                                        <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
-                                                            <a href="#">
-                                                                <i class="fa <?= $toolIcon ?>"></i>
-                                                                <span><?= $data_tool_name ?> </span>
-                                                            </a>
-                                                        </li>
-                                                    <?php }
-                                                    ?>
-                                                </ul>
-                                            </li>
-                                        <?php else: ?>
-                                            <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
-                                                <a href="#">
-                                                    <i class="fa <?= $toolIcon ?>"></i>
-                                                    <span><?= $data_tool_name ?> </span>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
+                                                    </ul>
+                                                </li>
+                                                <?php else: ?>
+                                                    <li class="melis-opentools" data-tool-icon="<?= $toolIcon ?>" data-tool-name="<?= $data_tool_name ?>" data-tool-id="<?= $data_tool_id ?>" data-tool-meliskey="<?= $data_tool_meliskey ?>">
+                                                        <a href="#">
+                                                            <i class="fa <?= $toolIcon ?>"></i>
+                                                            <span><?= $data_tool_name ?> </span>
+                                                        </a>
+                                                    </li>
+                                                <?php endif; ?>
+                                            <?php } ?>
                                         <?php endif; ?>
                                         <?php
                                     }
@@ -199,7 +209,6 @@ endif;
     <script>
         if (typeof(jQuery) !== 'undefined') {
             if ($("#meliscms_toolstree_section").length > 0) {
-                $("#documentation-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('hidden').show();
                 $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('hidden').show();
             }
         }

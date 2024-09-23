@@ -98,6 +98,7 @@ class TreeToolsController extends MelisAbstractActionController
 
                                     $tools[$key]['toolsection_children'][$keyTool] = [
                                         'tool_id' => $toolName['conf']['id'] ?? $keyTool,
+                                        'tool_view_render' => isset($toolName['conf']['view_render']) ? $toolName['conf']['view_render'] : false,
                                         'tool_name' => $toolName['conf']['name'] ?? "<strike>$keyTool</strike>",
                                         'tool_icon' => $icon,
                                         'tool_forward' => isset($toolName['forward']) ? $toolName['forward'] : [],
@@ -134,6 +135,7 @@ class TreeToolsController extends MelisAbstractActionController
                                                 if ($melisCoreRights->canAccess($childKeyTool)) {
                                                     $tools[$key]['toolsection_children'][$keyTool]['toolsection_children'][$childKeyTool] = [
                                                         'tool_id' => $childToolname['conf']['id'] ?? $keyTool,
+                                                        'tool_view_render' => isset($childToolname['conf']['view_render']) ? (($childToolname['conf']['view_render']) ? true : false) : false,
                                                         'tool_name' => $childToolname['conf']['name'] ?? "<strike>$childKeyTool</strike>",
                                                         'tool_icon' => $icon,
                                                         'tool_forward' => isset($childToolname['forward']) ? $childToolname['forward'] : [],
@@ -155,6 +157,7 @@ class TreeToolsController extends MelisAbstractActionController
 
                         $toolConfig = [
                             'toolsection_id' => $toolSectionName['conf']['id'] ?? $key,
+                            'toolsection_view_render' => isset($toolSectionName['conf']['view_render']) ? (($toolSectionName['conf']['view_render']) ? true : false) : false,
                             'toolsection_name' => $toolSectionName['conf']['name'] ?? $key,
                             'toolsection_meliskey' => $toolSectionName['conf']['melisKey'] ?? $key,
                             'toolsection_icon' => $toolSectionName['conf']['icon'] ?? 'fa-cube',

@@ -930,7 +930,6 @@ var melisCore = (function(window){
 
     // melis cms tools tree
     if ( $("#meliscms_toolstree_section").length > 0 ) {
-        $("#documentation-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('hidden').show();
         $("#site-tree-cont").prependTo("#meliscms_toolstree_section_tools").removeClass('hidden').show();
     }
 
