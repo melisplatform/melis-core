@@ -321,20 +321,12 @@ $(function () {
 
 // call the empty rights data and put it inside the new user treeview
 function melisNewUserRights() {
-	// var tree = $("#new-rights-fancytree").fancytree("getTree");
-
 	let tree = $.ui.fancytree.getTree("#new-rights-fancytree");
-
-	// use this so no console error regarding fancytree only init supported
-	// var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
-	// tree.reload({
-	// 	url: "/melis/MelisCore/ToolUser/getRightsTreeView",
-	// });
-	if (tree == null)
-		initRightsTree(
-			"#new-rights-fancytree",
-			"/melis/MelisCore/ToolUser/getRightsTreeView"
-		);
+		if (tree == null)
+			initRightsTree(
+				"#new-rights-fancytree",
+				"/melis/MelisCore/ToolUser/getRightsTreeView"
+			);
 }
 
 // get the index then make it right
