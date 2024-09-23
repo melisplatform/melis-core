@@ -17,7 +17,7 @@
         <div class="widget widget-tabs widget-tabs-double widget-regular widget-tabs-vertical row row-merge gdpr-tab-table-container">
             <!-- Left Side Tab -->
             <!-- Tabs Heading -->
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-3 custom-widget-head-column">
                 <div class="widget-head">
                     <ul>
                         <?php $firstItem = true; ?>
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <!-- // Tabs Heading END -->
-            <div class="col-12 col-md-9">
+            <div class="col-12 col-md-9 custom-widget-body-column">
                 <div class="widget-body">
                     <div class="tab-content">
                         <!-- Right Side Tab -->
@@ -128,20 +128,20 @@
                                             $(function() {
                                                 //redraw table when tab is shown where the table is located so that the headers will have the right size
                                                 $(document).on('shown.bs.tab', 'a[href="<?php echo '#' . $module['moduleName']; ?>-tab"]', function (e) {
-                                                    if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                        $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
+                                                    if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dt-scroll .dt-scroll-body table").height() < 230) {
+                                                        $("<?php echo '#' . $module['moduleName']; ?>").closest('.dt-scroll-body').css("overflow", "");
                                                     } else {
-                                                        $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
+                                                        $("<?php echo '#' . $module['moduleName']; ?>").closest('.dt-scroll-body').css("overflow", "auto");
                                                     }
 
-                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").closest('.dt-scroll-body').siblings('.dt-scroll-head').css("overflow", "");
                                                     $("<?php echo '#' . $module['moduleName']; ?>").DataTable().draw();
                                                     $("<?php echo '#' . $module['moduleName']; ?>").DataTable().columns.adjust().responsive.recalc();
                                                     $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                                                 });
 
                                                 setTimeout(function(){
-                                                    $("<?php echo '#' . $module['moduleName']; ?>").dataTable({
+                                                    $("<?php echo '#' . $module['moduleName']; ?>").DataTable({
                                                         // commented, fix for adding max-height: 300px that will result to overlapping of the data details on mobile responsive
                                                         scrollY: '300px',
                                                         scrollCollapse: true,
@@ -159,13 +159,13 @@
                                                             targets: "sorting_disabled",
                                                         }],
                                                         "drawCallback": function() {
-                                                            if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dataTables_scroll .dataTables_scrollBody table").height() < 230) {
-                                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "");
+                                                            if ($("body").find("<?php echo '#' . $module['moduleName']; ?>-tab").find(".dt-scroll .dt-scroll-body table").height() < 230) {
+                                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dt-scroll-body').css("overflow", "");
                                                             } else {
-                                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').css("overflow", "auto");
+                                                                $("<?php echo '#' . $module['moduleName']; ?>").closest('.dt-scroll-body').css("overflow", "auto");
                                                             }
 
-                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').css("overflow", "");
+                                                            $("<?php echo '#' . $module['moduleName']; ?>").closest('.dt-scroll-body').siblings('.dt-scroll-head').css("overflow", "");
                                                         }
                                                     });
                                                 }, 1);
@@ -189,7 +189,7 @@
             <!-- END OF CONDITION -->
         </div>
     <?php } ?>
-    <script>
+    <script type="text/javascript">
         var $body = $("body");
         var $tabContent = $("#id_melis_core_gdpr_content_tabs .tab-content");
         var $contentTabs = $("#id_melis_core_gdpr_content_tabs");
@@ -200,9 +200,22 @@
 
             $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
                 countOfRows = $(this).find('table tbody tr').length;
-                moduleName = $(this).find('table').attr('id');
+                moduleName = $(this).find('table').attr('id'),
+                pTag = $(this).closest('.custom-widget-body-column').siblings('.custom-widget-head-column').find('ul #' + moduleName + '-left-tab p');
 
-                $(this).closest('.widget-body').siblings('.widget-head').find('ul #' + moduleName + '-left-tab p').append(' (0/' + countOfRows + ')');
+                pTag.append(' (0/' + countOfRows + ')');
+
+                if ( countOfRows === 1 ) {
+                    // code remove scroll
+                    $(this).find(".dt-container .dt-scroll-headInner").css("width", "100% !important");
+                    $(this).find(".dt-container table").css("width", "100% !important");
+
+                    $(this).find(".dt-container .dt-scroll-body").css({
+                        "width" : "100% !important",
+                        "overflow-y" : "hidden"
+                    });
+
+                }
             });
         }
 

@@ -6,6 +6,8 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.gdpr-tab-table-container .widget-head ul li.active a,
+.gdpr-tab-table-container .widget-head ul li.active a .fa:before,
 .melis-modal-cont .modal-content h3 a .glyphicons.lock i::before {
     color: <?= $primaryColor; ?> !important;
 }
@@ -869,6 +871,8 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $loginLinkColor; ?>
 }
 /* =============== Secondary Color =============== */
+.gdpr-tab-table-container .widget-head ul li a,
+.gdpr-tab-table-container .widget-head ul li a .fa:before,
 .reponsive-menu-tabs:hover span, .reponsive-menu-tabs:hover .fa {
     color:  <?= $secondaryColor; ?>;
 }

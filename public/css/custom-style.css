@@ -2327,3 +2327,14 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	display: block !important;
 	width: 100% !important;
 }
+.gdpr-tab-table-container .widget-head ul li a {
+	text-decoration: none;
+}
+.gdpr-tab-table-container .widget-head ul li a,
+.gdpr-tab-table-container .widget-head ul li a .fa:before {
+	color: #ce5459;
+}
+.gdpr-tab-table-container .widget-head ul li.active a,
+.gdpr-tab-table-container .widget-head ul li.active a .fa:before {
+    color: #e61c23;
+}

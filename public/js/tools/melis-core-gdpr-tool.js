@@ -98,7 +98,7 @@ $(function() {
                 $iconPlaceholder    = $this.siblings('i');
 
                 $iconPlaceholder.toggleClass("checked");
-                $iconPlaceholder.closest('.dataTables_scrollHead').siblings('.dataTables_scrollBody').find('.checkRow').each(function() {
+                $iconPlaceholder.closest('.dt-scroll-head').siblings('.dt-scroll-body').find('.checkRow').each(function() {
                     var $this   = $(this),
                         $i      = $this.siblings('i'),
                         $row    = $this.parents('tr');
@@ -118,7 +118,7 @@ $(function() {
                         }
                 });
 
-            var moduleName = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
+            var moduleName = $this.closest('.dt-scroll').find('.dt-scroll-body table').attr('id');
 
                 $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
                     var $this = $(this);
@@ -134,12 +134,12 @@ $(function() {
                         //p.append( "texting");
                 });
 
-            var moduleName          = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id'),
-                countOfRows         = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table tbody tr').length,
+            var moduleName          = $this.closest('.dt-scroll').find('.dt-scroll-body table').attr('id'),
+                countOfRows         = $this.closest('.dt-scroll').find('.dt-scroll-body table tbody tr').length,
                 pTag                = $body.find('.widget-head ul #' + moduleName + '-left-tab p'),
                 charIndex           = pTag.html().indexOf(" ("),
                 lengthToDelete      = charIndex - pTag.html().length,
-                countOfCheckedRows  = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
+                countOfCheckedRows  = $this.closest('.dt-scroll').find('.dt-scroll-body table tr .checkRow:checked').length;
 
                 pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
         });
@@ -166,14 +166,14 @@ $(function() {
                 numberOfCheckboxes          = $this.closest('table').find('.checkRow').length;
 
                 if (numberOfCheckedCheckBoxes < numberOfCheckboxes) {
-                    var checkAll = $this.closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+                    var checkAll = $this.closest('.dt-scroll-body').siblings('.dt-scroll-head').find('.table thead .check-all');
 
                         if (checkAll.prop('checked')) {
                             checkAll.prop('checked', false);
                             $(checkAll).siblings('i').removeClass("checked");
                         }
                 } else if (numberOfCheckedCheckBoxes == numberOfCheckboxes && numberOfCheckboxes != 0) {
-                    var checkAll = $this.closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+                    var checkAll = $this.closest('.dt-scroll-body').siblings('.dt-scroll-head').find('.table thead .check-all');
 
                         if (checkAll.prop('checked') == false) {
                             checkAll.prop('checked', true);
@@ -272,14 +272,15 @@ $(function() {
 
                 e.preventDefault();
 
-                // li and a
-                $this.toggleClass("active").siblings().removeClass("active");
-                $this.closest("li").toggleClass("active").siblings().removeClass("active");
+                if ( !$this.closest("li").hasClass("active") ) {
+                    // li and a
+                    $this.toggleClass("active") // .siblings().removeClass("active");
+                    $this.closest("li").toggleClass("active").siblings().removeClass("active");
 
-                // .tab-pane
-                $(href).toggleClass("active").siblings().removeClass("active");
-
-                // $(href).tab("show");
+                    // .tab-pane
+                    $(href).toggleClass("active").siblings().removeClass("active");
+                    // $(href).tab("show");
+                }
 
                 $('html body').animate({
                     scrollTop: $(href).offset().top
@@ -308,8 +309,6 @@ $(function() {
 
                         //show the tabs so that the loading view will be shown to the user
                         $('#id_melis_core_gdpr_content_tabs').show();
-                        /* const $gdprTab = new bootstrap.Tab('#id_melis_core_gdpr_content_tabs');
-                        $gdprTab.show(); */
 
                         melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
                             show: true,
