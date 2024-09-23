@@ -48,8 +48,8 @@
                             toolbar : 'insertfile undo redo | blocks | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | minitemplate code'
                         };
                         melisTinyMCE.createTinyMCE("tool", "#mca_text", option);
-                        // {locale: "<?php //$this->locale;?>", format: "<?php //$this->dateTimePickerFormat;?>"}
-                        $("#mca_date").datetimepicker();
+
+                        $("#mca_date").datetimepicker({locale: "<?= $this->locale;?>", format: "<?= $this->dateTimePickerFormat;?>"});
                     </script>
                 </div>
             </div>
