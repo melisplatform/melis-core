@@ -208,8 +208,8 @@ return array(
                     '/MelisCore/assets/components/modules/admin/tables/responsive/assets/lib/css/footable.core.min.css',
 
                     // datetimepicker
-                    // '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/css/bootstrap-datetimepicker.min.css',
-                    '/MelisCore/assets/components/plugins/tempus-dominus/css/tempus-dominus.min.css',
+                    '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/css/bootstrap-datetimepicker.min.css',
+                    // '/MelisCore/assets/components/plugins/tempus-dominus/css/tempus-dominus.min.css',
 
                     //daterangepicker
                     '/MelisCore/assets/components/plugins/daterangepicker/css/daterangepicker.css',
@@ -285,12 +285,12 @@ return array(
                     '/MelisCore/assets/components/library/bootstrap/js/bootstrap-datepicker.fr.js',
 
                     // datetimepicker
-                    // '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
+                    '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
                     
                     // '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/js/bootstrap-timerpicker.js',
 
-                    '/MelisCore/assets/components/plugins/tempus-dominus/js/tempus-dominus.min.js',
-                    '/MelisCore/assets/components/plugins/tempus-dominus/js/tempus-dominus-jquery-interface.min.js',
+                    /* '/MelisCore/assets/components/plugins/tempus-dominus/js/tempus-dominus.min.js',
+                    '/MelisCore/assets/components/plugins/tempus-dominus/js/tempus-dominus-jquery-interface.min.js', */
 
                     '/MelisCore/assets/components/FileSaver/FileSaver.min.js',
 

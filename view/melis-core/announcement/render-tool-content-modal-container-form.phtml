@@ -49,12 +49,7 @@
                         };
                         melisTinyMCE.createTinyMCE("tool", "#mca_text", option);
 
-                        $("#mca_date").tempusDominus({
-                            localization: {
-                                locale: "<?= $this->locale;?>", 
-                                format: "<?= $this->dateTimePickerFormat;?>"
-                            }
-                        });
+                        $("#mca_date").datetimepicker({locale: "<?= $this->locale;?>", format: "<?= $this->dateTimePickerFormat;?>"});
                     </script>
                 </div>
             </div>
