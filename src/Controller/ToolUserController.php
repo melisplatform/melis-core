@@ -1647,7 +1647,7 @@ class ToolUserController extends MelisAbstractActionController
 
             $data              = $userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection, $start, $length)->toArray();
             $dataCount         = $userTbl->getTotalData();
-            $dataFilteredCount = $userTbl->getTotalFiltered();
+            $dataFilteredCount = count($userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection)->toArray());
             $tableData         = $data;
 
             for($ctr = 0; $ctr < count($tableData); $ctr++) {
