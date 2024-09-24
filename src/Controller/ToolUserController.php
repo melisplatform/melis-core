@@ -1656,8 +1656,8 @@ class ToolUserController extends MelisAbstractActionController
                     $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue, 80);
                 }
 
-                $loginDate = $melisTool->formatDate(strtotime($tableData[$ctr]['usrcd_last_login_date']), null, \IntlDateFormatter::SHORT);
-                $loginDate = explode(' ' , $loginDate)[0];
+                $loginDate = $melisTool->formatDate(strtotime($tableData[$ctr]['usrcd_last_login_date']), null, \IntlDateFormatter::SHORT, null, null, 'MMMM d');
+                // $loginDate = explode(' ' , $loginDate)[0];
 
                 $connectionTime = $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date']) == '-' ? '0' :
                     $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date'], false);
@@ -1665,7 +1665,7 @@ class ToolUserController extends MelisAbstractActionController
 
                 $tableData[$ctr]['usrcd_id']                   = date('H:i:s', strtotime($tableData[$ctr]['usrcd_last_login_date']));
                 $tableData[$ctr]['usrcd_usr_login']            = date('H:i:s', strtotime($tableData[$ctr]['usrcd_last_connection_time']));
-                $tableData[$ctr]['usrcd_last_login_date']      = $loginDate;
+                $tableData[$ctr]['usrcd_last_login_date']      = ucfirst($loginDate);
                 $tableData[$ctr]['usrcd_last_connection_time'] = $connectionTime;
                 $tableData[$ctr]['DT_RowId']                   = $tableData[$ctr]['usrcd_id'];
             }
