@@ -302,7 +302,10 @@ var melisCoreTool = (function (window) {
         }
 
         function removeOverflowHidden() {
-            $body.prop("style", null);
+            var $iFrame = $("#"+activeTabId+" .melis-iframe");
+                if ( $iFrame.length ) {
+                    $body.prop("style", null);
+                }
         }
 
         /**

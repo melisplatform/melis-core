@@ -697,7 +697,7 @@ var melisHelper = (function () {
 			var tempLoader = '<div id="loader" class="overlay-loader"><img class="loader-icon spinning-cog" src="/MelisCore/assets/images/cog12.svg" data-cog="cog12"></div>';
 			$("#" + zoneId).append(tempLoader);
 
-			// add an inline css overflow: hidden
+			// add an inline css overflow-x: hidden, page edition
 			melisCoreTool.addOverflowHidden();
 
 			$.ajax({
@@ -711,9 +711,9 @@ var melisHelper = (function () {
 					// console.log(`user-management melisHelper.js zoneReload() [`+ zoneId +`] data: `, data);
 					if (data !== null) {
 						// hide the loader
-						//$('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
+						// $('.container-level-a > #loader > .loader-icon').removeClass('spinning-cog').addClass('shrinking-cog');
 
-						// remove the inline style
+						// remove the inline style overflow for page edition
 						melisCoreTool.removeOverflowHidden();
 
 						$("#" + zoneId).html(data.html).children().unwrap();
