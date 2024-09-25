@@ -6,7 +6,7 @@
 	if (!empty($this->zoneconfig['conf']['id']))
 		$id = $this->zoneconfig['conf']['id'];
 	$data_melisKey = $this->melisKey;
-$imageData = '';
+    $imageData = '';
 ?>
 <div class="modal-content" id="<?= $id; ?>" data-melisKey="<?= $data_melisKey; ?>">
 	<div class="modal-body padding-none">
@@ -14,7 +14,9 @@ $imageData = '';
 			<div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
                 <div class="widget-head">
                 	<ul class="nav nav-tabs">
-                		<li class="active"><a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="glyphicons <?php echo ($this->id) ? 'pencil' : 'plus'?>" data-toggle="tab" aria-expanded="true"><i></i> <?php echo $this->title ?></a></li>
+                		<li class="nav-item active">
+                            <a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="nav-link glyphicons <?php echo ($this->id) ? 'pencil' : 'plus'?>" data-bs-toggle="tab" aria-expanded="true"><i></i> <?php echo $this->title ?></a>
+                        </li>
             		</ul>
         		</div>
         		<div class="widget-body innerAll inner-2x">
@@ -29,7 +31,7 @@ $imageData = '';
                                 echo $this->datePickerInit;
                             ?>
                             <div class="footer-modal d-flex flex-row justify-content-between">
-                                <button data-dismiss="modal" class="btn btn-danger float-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
+                                <button data-bs-dismiss="modal" class="btn btn-danger float-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></button>
                                 <button class="btn btn-success" id="btnComSaveAnnouncement"><i class="fa fa-save"></i>  <?php echo $this->translate('tr_meliscore_tool_gen_save') ?></button>
                             </div>
                         </div>
@@ -46,8 +48,13 @@ $imageData = '';
                             toolbar : 'insertfile undo redo | blocks | forecolor | bold italic strikethrough underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | minitemplate code'
                         };
                         melisTinyMCE.createTinyMCE("tool", "#mca_text", option);
-
-                        $("#mca_date").datetimepicker({locale: "<?= $this->locale;?>", format: "<?= $this->dateTimePickerFormat;?>"});
+                        // option sideBySide: true, triggers datepicker (calendar view) with timepicker on the left side
+                        $("#mca_date").datetimepicker({
+                            locale: "<?= $this->locale;?>", 
+                            format: "<?= $this->dateTimePickerFormat;?>",
+                            /* sideBySide: true,
+                            keepOpen: true */
+                        });
                     </script>
                 </div>
             </div>

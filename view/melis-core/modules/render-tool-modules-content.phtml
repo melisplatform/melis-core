@@ -6,9 +6,8 @@ if (!empty($this->zoneconfig['conf']['id']))
     $status = '';
 
 ?>
-
 <div <?= $id; ?> data-melisKey="<?= $data_melisKey; ?>">
-	<div class="spacing-x2 innerAll">
+	<div class="spacing-x2 innerAll">        
         <div class="switch-all-container">
             <div class="row">
                 <div class="col-md-12">
@@ -18,7 +17,7 @@ if (!empty($this->zoneconfig['conf']['id']))
                 </div>
                 <div class="switch-all-noti">
                     <div class="icon-cont clearfix">
-                        <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_select_deselect_all_module_noti'); ?>"></i>
+                        <i tabindex="1000000" class="fa fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="left" title="<?=$this->translate('tr_meliscore_module_management_select_deselect_all_module_noti'); ?>"></i>
                     </div>
                 </div>
             </div>
@@ -34,7 +33,7 @@ if (!empty($this->zoneconfig['conf']['id']))
                         </div>
                         <div class="col-md-6 col-6">
                             <div class="icon-cont">
-                                <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="left" title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
+                                <i tabindex="1000000" class="fa fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="<?=$this->translate('tr_meliscore_module_management_notification_tip'); ?>"></i>
                             </div>
                         </div>
                     </div>
@@ -79,16 +78,16 @@ if (!empty($this->zoneconfig['conf']['id']))
 </div>
 	
 <script type="text/javascript">
-$(document).ready(function() {
-    // initialize jquery sortable
-    $(".module-sortable").sortable({
-        containment: "parent",
-        placeholder: "ui-sortable-placeholder",
-        opacity: 0.8,
-        revert: 300,
-        tolerance: "pointer",
+    $(function() {
+        // initialize jquery sortable
+        $(".module-sortable").sortable({
+            containment: "parent",
+            placeholder: "ui-sortable-placeholder",
+            opacity: 0.8,
+            revert: 300,
+            tolerance: "pointer",
+        });
     });
-});
 </script>
 
 

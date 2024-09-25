@@ -5,7 +5,7 @@
 			$(this).parents('.widget:first').attr('data-collapse-closed', "false");
 		})
 		.on('shown.bs.collapse', function(){
-			setTimeout(function(){ $(window).resize(); }, 500);
+			setTimeout(function(){ $(window).trigger("resize"); }, 500);
 		})
 		.on('hidden.bs.collapse', function(){
 			$(this).parents('.widget:first').attr('data-collapse-closed', "true");

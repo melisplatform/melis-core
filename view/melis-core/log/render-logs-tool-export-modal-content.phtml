@@ -12,8 +12,10 @@ if (!empty($this->zoneconfig['conf']['id']))
 			<div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
                 <div class="widget-head">
                 	<ul class="nav nav-tabs">
-                		<li class="active"><a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="glyphicons notes" data-toggle="tab" aria-expanded="true"><i></i><?php echo $this->translate($this->title); ?>
-                		</a></li>
+                		<li class="nav-item active">
+                            <a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="nav-link glyphicons notes" data-bs-toggle="tab" aria-expanded="true"><i></i><?php echo $this->translate($this->title); ?>
+                            </a>
+                        </li>
             		</ul>
         		</div>
         		<div class="widget-body innerAll inner-2x">
@@ -25,7 +27,7 @@ if (!empty($this->zoneconfig['conf']['id']))
                             ?>
 
                             <div class="footer-modal d-flex flex-row justify-content-between">
-                                <button type="button" data-dismiss="modal" id="btn-export-logs-cancel" class="btn btn-danger float-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_logs_cancel')?></button>
+                                <button type="button" data-bs-dismiss="modal" id="btn-export-logs-cancel" class="btn btn-danger float-left"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_logs_cancel')?></button>
                                 <button type="submit" class="btn btn-success" id="btn-export-logs"><i class="fa fa-file-text-o"></i>  <?php echo $this->translate('tr_meliscore_log_export_export_btn') ?></button>
                             </div>
                             <div class="clearfix"></div>
@@ -40,7 +42,7 @@ if (!empty($this->zoneconfig['conf']['id']))
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(function(){
         $("body").find("#log_user").select2({
             ajax: {
                 type: 'POST',

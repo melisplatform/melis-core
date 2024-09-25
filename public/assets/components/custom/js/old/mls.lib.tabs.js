@@ -35,7 +35,7 @@ $.widget( "mls.tabs", {
       _init: function(){
         this.element.find('.item-tree').each(function() {
           $thisItemTree = $(this);
-          $thisItemTree.bind("click", function(){
+          $thisItemTree.on("click", function(){
             alert($thisItemTree.attr("href"));
           })
         });

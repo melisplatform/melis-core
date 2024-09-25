@@ -43,16 +43,16 @@ var MelisCoreDashboardBubblePlugin = {
     showBubblePlugins: function () {
         var cookies = document.cookie.split(';');
         var showBubblePlugins = false;
-        $.each(cookies, function(key, cookie) {
-            if (cookie.indexOf('show_bubble_plugins') >= 0) {
-                var value = cookie.split('=');
-                if (value[1] === 'true') {
-                    showBubblePlugins = true;
+            $.each(cookies, function(key, cookie) {
+                if (cookie.indexOf('show_bubble_plugins') >= 0) {
+                    var value = cookie.split('=');
+                    if (value[1] === 'true') {
+                        showBubblePlugins = true;
+                    }
                 }
-            }
-        });
+            });
 
-        return showBubblePlugins;
+            return showBubblePlugins;
     },
     addMinMaxWidth: function() {
         var setBubblePluginInterval = setInterval(function() {
@@ -112,7 +112,7 @@ $(function() {
         $bubbleShowButton       = $("#btn-show-bubble-plugins"),
         $bubbleHideButton       = $("#btn-hide-bubble-plugins"),
         $dbMsg                  = $body.find(".melis-core-dashboard-msg");
-
+        
         // flipping the card
         $body.on('click', '.melis-dashboard-bubble-plugin .front .btn', function () {
             $(this).closest('.panel-3d').addClass('panel-flip');

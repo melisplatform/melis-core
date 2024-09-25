@@ -4,7 +4,7 @@
  * .responsive.recalc().columns.adjust()
  */
 $(function() {
-    $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+    $(document).on('shown.bs.tab', 'a[data-bs-toggle="tab"]', function (e) {
         $($.fn.dataTable.tables(true)).DataTable().responsive.recalc().columns.adjust();
     });
 });

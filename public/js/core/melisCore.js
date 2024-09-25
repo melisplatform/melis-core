@@ -23,38 +23,39 @@ var melisCore = (function(window){
         $tabConInner    = $("#melis-navtabs-container-inner"),
         $tabArrowTop    = $("#tab-arrow-top"),
         $pluginBtn      = $("#melisDashBoardPluginBtn"),
+        $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box");
         $pluginBox      = $pluginBtn.closest(".melis-core-dashboard-dnd-box"),
-        $dbPluginSnippets = $(".melis-core-dashboard-plugin-snippets"),
+        $dbPluginSnippets = $(".melis-core-dashboard-plugin-snippets");
         // fixes conlict between jquery ui and bootstrap same function name .tooltip()
-        jqeBsTooltip    = $.fn.tooltip.noConflict();
+        //jqeBsTooltip    = $.fn.tooltip.noConflict();
 
-    $.fn.tlp = jqeBsTooltip;
+        //$.fn.tlp = jqeBsTooltip;
 
     // MAIN FUNCTIONS =================================================================================================================
 
     // CHANGE LANGUAGE
     window.melisChangeLanguage = function(langId){
         var datastring = { langId: langId };
-        $.ajax({
-            type        : 'GET',
-            url         : '/melis/change-language',
-            data        : datastring,
-            dataType    : 'json',
-            encode      : true
-        }).done(function(data) {
-            if (data.success){
-                location.reload();
-            }
-            else{
-                alert( translations.tr_meliscore_error_language );
-            }
-        }).fail(function(xhr, textStatus, errorThrown) {
-            alert( translations.tr_meliscore_error_message );
-        });
+            $.ajax({
+                type        : 'GET',
+                url         : '/melis/change-language',
+                data        : datastring,
+                dataType    : 'json',
+                encode      : true
+            }).done(function(data) {
+                if (data.success) {
+                    location.reload();
+                }
+                else{
+                    alert( translations.tr_meliscore_error_language );
+                }
+            }).fail(function(xhr, textStatus, errorThrown) {
+                alert( translations.tr_meliscore_error_message );
+            });
     }
 
     // REQUEST LOST PASSWORD
-    $('#idformmeliscoreforgot').submit(function(event) {
+    $('#idformmeliscoreforgot').on("submit", function(event) {
         var datastring = $("#idformmeliscoreforgot").serialize();
 
         $.ajax({
@@ -127,7 +128,7 @@ var melisCore = (function(window){
             dataType: 'json'
         }).done(function(data) {
             // check if there is a flash message
-            if(data.flashMessage.length) {
+            if ( data.flashMessage !== undefined && data.flashMessage.length ) {
                 $flashMessenger.removeClass("empty-notif");
                 $body.find("#flash-messenger").prev().find(".badge").removeClass("hidden");
 
@@ -188,19 +189,23 @@ var melisCore = (function(window){
             translations.tr_meliscore_tool_user_reset_rights,
             translations.tr_meliscore_common_label_reset_rights_msg,
             function () {
-                var tree = $("#new-rights-fancytree").fancytree("getTree");
-                tree.findAll(function(node){
-                    if(node.isSelected() === true){
-                        node.setSelected(false);
-                    }
-                });
+                // var tree = $("#new-rights-fancytree").fancytree("getTree");
+                var tree = $.ui.fancytree.getTree("#new-rights-fancytree");
+
+                    tree.findAll(function(node){
+                        if(node.isSelected() === true){
+                            node.setSelected(false);
+                        }
+                    });
             });
 
         melisCoreTool.done("#btnResetRightsNew");
     });
 
     function resetUserRights () {
-        var tree = $("#rights-fancytree").fancytree("getTree");
+        // var tree = $("#rights-fancytree").fancytree("getTree");
+        var tree = $.ui.fancytree.getTree("#rights-fancytree");
+
         tree.findAll(function(node){
             if(node.isSelected() === true){
                 node.setSelected(false);
@@ -233,12 +238,12 @@ var melisCore = (function(window){
                 // update flash messenger values
                 melisCore.flashMessenger();
             }
-        }).fail(function () {
-
+        }).fail(function(xhr, textStatus, errorThrown) { // added
+            alert( translations.tr_meliscore_error_message );
         });
     }
 
-    $body.find("#id_meliscore_header_flash_messenger").mouseleave(function () {
+    $body.find("#id_meliscore_header_flash_messenger").on("mouseleave", function () {
         if( $body.find("#flash-messenger").prev().find(".badge").hasClass("hidden") === false )
             $body.find("#flash-messenger").prev().find(".badge").addClass("hidden");
     });
@@ -417,9 +422,9 @@ var melisCore = (function(window){
             }
 
             // scroll top every time we click a tab to RESET the scrollbars and return page actions to original position
-            $("#"+ activeTabId + " .page-head-container").removeAttr("style");
+            $("#"+ activeTabId + " .page-head-container").prop("style", null);
             $("#"+ activeTabId + " .page-head-container > .innerAll").removeClass('sticky-pageactions');
-            $("#"+ activeTabId + " .page-head-container > .innerAll").removeAttr("style");
+            $("#"+ activeTabId + " .page-head-container > .innerAll").prop("style", null);
             $('html, body').animate({scrollTop:0},0);
 
             // dataTable responsive plugin ----=[ PLUGIN BUG FIX ]=-----
@@ -460,31 +465,31 @@ var melisCore = (function(window){
     */
     function closedOpenTabs() {
         var listData = $("#melis-id-nav-bar-tabs li");
-        // loop all tab list
-        listData.each(function() {
-            var dataID =  $(this).attr('data-tool-id');
-            if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
-                melisHelper.tabClose(dataID);
+            // loop all tab list
+            listData.each(function() {
+                var dataID =  $(this).attr('data-tool-id');
+                if ( dataID !== "id_meliscore_toolstree_section_dashboard" ) {
+                    melisHelper.tabClose(dataID);
+                }
+            });
+
+            // detect if mobile / tablet
+            if ( screenSize <= 767 ) {
+                $("#newplugin-cont").toggleClass("show-menu");
             }
-        });
 
-        // detect if mobile / tablet
-        if ( screenSize <= 767 ) {
-            $("#newplugin-cont").toggleClass("show-menu");
-        }
+            $("#close-all-tab").hide();
 
-        $("#close-all-tab").hide();
+            if ( screenSize >= 768 ) {
+                setTimeout(function() {
+                    $("#melis-id-nav-bar-tabs").css("left", "0");
+                }, 1);
+            }
 
-        if ( screenSize >= 768 ) {
-            setTimeout(function() {
-                $("#melis-id-nav-bar-tabs").css("left", "0");
-            }, 1);
-        }
-
-        // check dashboard if melisDashBoardDragnDrop is defined
-        if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
-            melisDashBoardDragnDrop.checkDashboard();
-        }
+            // check dashboard if melisDashBoardDragnDrop is defined
+            if ( typeof melisDashBoardDragnDrop !== 'undefined' ) {
+                melisDashBoardDragnDrop.checkDashboard();
+            }
     }
 
     // --=[ MULTI LAYER MODAL FEATURE ]=--
@@ -535,7 +540,7 @@ var melisCore = (function(window){
 
     // focus the tag box when we click
     $body.on("click", ".multi-value-input", function(){
-        $(this).find(".tag-creator input").focus();
+        $(this).find(".tag-creator input").trigger("focus");
     });
 
     // remove a specific tag
@@ -591,7 +596,7 @@ var melisCore = (function(window){
     // add a specific tag. triggered by a comma (,)
     $body.on("keyup", ".multi-value-input .tag-creator input", function(event){
         if(event.keyCode == 188) {
-            $(this).val('').focus();
+            $(this).val('').trigger("focus");
             commaHandler = false;
         }
     });
@@ -666,11 +671,11 @@ var melisCore = (function(window){
     // BIND & DELEGATE EVENTS =================================================================================================================
 
     // switch nav-tabs even if href begins with a digit e.g. #1_id_cmspage
-    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch).filter(":first").click();
+    $body.on("shown.bs.tab", ".nav-tabs li a", navTabsSwitch).filter(":first").trigger("click");
 
     // toggle plugin menu in mobile
     $body.on("click", "#plugin-menu", function(){
-        $("#id_meliscore_leftmenu").removeAttr('style');
+        $("#id_meliscore_leftmenu").prop('style', null);
         $("#id_meliscore_footer").addClass('slide-left');
 
         $("#newplugin-cont").toggleClass("show-menu");
@@ -878,7 +883,7 @@ var melisCore = (function(window){
                 $body.removeClass("sidebar-mini");
 
                 // reset layout and remove styles
-                $("#content, #id_meliscore_leftmenu, #id_meliscore_footer").removeAttr("style");
+                $("#content, #id_meliscore_leftmenu, #id_meliscore_footer").prop("style", null);
 
                 // check tabExpander();
                 if ( typeof tabExpander !== 'undefined' ) {

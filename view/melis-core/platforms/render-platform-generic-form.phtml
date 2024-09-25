@@ -9,8 +9,8 @@
 			<div class="widget widget-tabs widget-tabs-double widget-tabs-responsive margin-none border-none">
                 <div class="widget-head">
                 	<ul class="nav nav-tabs">
-						<li class="active">
-							<a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="glyphicons <?php echo ($this->platformId) ? 'pencil' : 'plus' ?>" data-toggle="tab" aria-expanded="true">
+						<li class="nav-item active">
+							<a href="#<?php echo $this->zoneconfig['conf']['id'] ?>" class="nav-link glyphicons <?php echo ($this->platformId) ? 'pencil' : 'plus' ?>" data-bs-toggle="tab" aria-expanded="true">
 								<i></i> <?php echo $this->translate('Platform') ?>
 							</a>
 						</li>
@@ -35,7 +35,7 @@
                                         ?>
                                     </div>
                                  	<div class="footer d-flex flex-row justify-content-between">
-                                 		<a data-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></a>
+                                 		<a data-bs-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> <?php echo $this->translate('tr_meliscore_common_close')?></a>
                                  		<a class="btn btn-success" id="btnPlatformSave"><i class="fa fa-save"></i>  <?= $this->translate('tr_meliscore_tool_gen_save'); ?></a>
                                  	</div>
                             	</div>

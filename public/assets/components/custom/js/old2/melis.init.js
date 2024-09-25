@@ -12,7 +12,7 @@
   /* Remove Envato Frame */
   if (window.location != window.parent.location) top.location.href = document.location.href;
   (function($, window) {
-    window.onunload = function() {};
+    //window.onunload = function() {};
     //alert($('.tab-pane.active.full-width').height());
     //$('.iframe-content').attr({"width":$('.tab-pane.active.full-width').width()+'px',"height":$('.tab-pane.active.full-width').height()+'px'});
     window.initTinymce = function() {
@@ -39,12 +39,12 @@
         });
       }, 100);
     };
-    $(window).resize(function() {
+    $(window).on("resize", function() {
       resizeIframe();
     });
     //$().alert('close');
     window.initConextMenu = function() {
-      $('.context').contextmenu({
+      $('.context').on("contextmenu", {
         target: '#context-menu',
         before: function(e, context) {
           // execute code before context menu if shown
@@ -73,7 +73,7 @@
       });
     });
     // --- Initialize first Dynatree -------------------------------------------
-    $('#' + MELIS.plugins.tabs.levelB.idLevelB + ' li > a').bind('click', function() {
+    $('#' + MELIS.plugins.tabs.levelB.idLevelB + ' li > a').on('click', function() {
       //console.log($(this).data('option'));
       $('#' + MELIS.plugins.tabs.levelA.idLevelA + ' li').attr('data-currentOption', $(this).data('option'))
     });
