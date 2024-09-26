@@ -2338,6 +2338,11 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .gdpr-tab-table-container .widget-head ul li.active a .fa:before {
     color: #e61c23;
 }
+.table-primary thead th {
+    border-color: #e61c23;
+    background-color: #e61c23 !important;
+    color: #fff;
+}
 /* datetimepicker - tempusDominus */
 .datepicker td,
 .datepicker th {
