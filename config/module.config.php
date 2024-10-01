@@ -459,6 +459,7 @@ return [
             'MelisCoreTinyMCE'              => \MelisCore\Form\Factory\MelisCoreTinyMCEFactory::class,
             'MelisCoreUserSelect'           => \MelisCore\Form\Factory\MelisCoreUsersSelect2Factory::class,
             'MelisCoreGdprModuleSelect'     => \MelisCore\Form\Factory\MelisGdprAutoDeleteModuleListSelectFactory::class,
+            'MelisModuleSelect'             => \MelisCore\Form\Factory\MelisModuleSelectFactory::class,
         ],
     ],
     'view_helpers' => [
