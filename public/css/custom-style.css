@@ -1697,10 +1697,10 @@ transition: all 0.4s ease-in-out;
 
 /* jQuery 3.7.1 migration */
 .float-left {
-	float: left;
+	float: left !important;
 }
 .float-right {
-	float: right;
+	float: right !important;
 }
 .input-group.colorpicker-component {
 	display: flex;

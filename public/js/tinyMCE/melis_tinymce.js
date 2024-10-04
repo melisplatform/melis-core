@@ -38,7 +38,7 @@ var melisTinyMCE = (function() {
 			let tinyMceConfig = window.parent.melisTinyMCE.tinyMceConfigs[type];
 
 			let config = $.extend(tinyMceConfig, dataString);
-			
+
 				if (typeof tinyMCE != "undefined") {
 					if (selector.length) {
 						try {
