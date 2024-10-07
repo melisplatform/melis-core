@@ -28,6 +28,7 @@ class MelisCoreEmailSendingService extends MelisServiceManager
 
 	    $html = new MimePart($message_html);
 	    $html->type = 'text/html';
+        $html->charset = 'UTF-8';
 
 	    $body = new MimeMessage();
 
@@ -36,6 +37,7 @@ class MelisCoreEmailSendingService extends MelisServiceManager
 	        // Add Alternative Email Text Content
     	    $text = new MimePart($message_text);
     	    $text->type = 'text/plain';
+            $text->charset = 'UTF-8';
     	    
     	    $body->addPart($html,$text);
     	    
