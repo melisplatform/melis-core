@@ -202,7 +202,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
     {
         $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
         $content = $this->_appConfig['modals'][$formKey]['content'];
-        $contentValue = $this->getViewContent($content);
+        $contentValue = $this->getViewContent($content, true);
 
         return $contentValue;
     }
@@ -214,7 +214,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
      *
      * @return string
      */
-    public function getViewContent($dispatchHandler)
+    public function getViewContent($dispatchHandler, bool $replaceQuotes = false)
     {
         $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
         $module = $dispatchHandler['module'];
@@ -237,7 +237,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
         $content = $property->getValue($html);
 
         // replace single quote with duoble quote
-        $content = str_replace('\'', '"', $content);
+        if ($replaceQuotes)
+            $content = str_replace('\'', '"', $content);
 
         return $content;
     }
@@ -419,7 +420,9 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             // render the buttons in the left section of the filter bar
             foreach ($left as $leftKey => $leftValue) {
-                $htmlContent = $this->getViewContent($leftValue);
+                $htmlContent = $this->getViewContent($leftValue, true);
+                // making html in single line
+                $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $leftDom .= '<"' . $leftKey . '">';
                     $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $leftKey . '").html(\'' . $this->replaceQuotes($htmlContent) . '\');';
@@ -433,7 +436,9 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             // render the buttons in the center section of the filter bar
             foreach ($center as $centerKey => $centerValue) {
-                $htmlContent = $this->getViewContent($centerValue);
+                $htmlContent = $this->getViewContent($centerValue, true);
+                // making html in single line
+                $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $centerDom .= '<"' . $centerKey . '">';
                     $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $centerKey . '").html(\'' . $htmlContent . '\');';
@@ -448,8 +453,10 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             // render the buttons in the right sectuib if the filter bar
             foreach ($right as $rightKey => $rightValue) {
-                $htmlContent = $this->getViewContent($rightValue);
+                $htmlContent = $this->getViewContent($rightValue, true);
                 $htmlContent = $this->replaceQuotes($htmlContent);
+                // making html in single line
+                $htmlContent = preg_replace("/\s+|\n+|\r/", ' ', $htmlContent);
                 if (!in_array($htmlContent, $preDefDTFilter)) {
                     $rightDom .= '<"' . $rightKey . '">';
                     $jsSdomContentInit .= '$("'.$tableId.'_wrapper .filter-bar .' . $rightKey . '").html(\'' . $htmlContent . '\');';
@@ -464,7 +471,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
 
             $tableSearchPlugin = '';
             if (!empty($searchInputClass)) {
-                $tableSearchPlugin = '$(\'.' . $searchInputClass . ' input[type="search"]\').unbind();
+                $tableSearchPlugin = '$(\'.' . $searchInputClass . ' input[type="search"]\').off();
                                     $(\'.' . $searchInputClass . ' input[type="search"]\').typeWatch({
                                             captureLength: 2,
                                             callback: function(value) {
@@ -491,7 +498,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             $forward = $this->getServiceManager()->get('ControllerPluginManager')->get('forward');
             $actionCount = 0;
             foreach ($actionContainer as $actionKey => $actionContent) {
-                $actionButtons .= $this->getViewContent($actionContent) . ' ';
+                $actionButtons .= $this->getViewContent($actionContent, true) . ' ';
             }
 
             // remove unnecessary new lines and text paragraphs (not <p> tags)
@@ -510,7 +517,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             }
 
             if (!empty($actionButtons)) {
-                $jsonColumns .= '{"data":"actions"}';
+                //$jsonColumns .= '{"data":"actions"}'; commented, generates warning, https://datatables.net/tn/4
+                $jsonColumns .= '{"data": null}';
 
                 // Preparing the Table Action column Buttons
                 $actionColumn = '{
@@ -631,24 +639,27 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                 $tableLangTrans = 'default';
             $language = 'melisDataTable.tableLanguage.'.$tableLangTrans;
 
-
             //remove special characters in function name
             $fnName = preg_replace('/\W/', '', $fnName);
+
+            // processing: true,
+            // bSort: true,
+            
             // simulate javascript code function here
             $dtJScript = 'window.' . $fnName . ' = function() {
                 ' . $reInitTable . '
                 var ' . str_replace("#", "$", $tableId) . ' = $("' . $tableId . '").DataTable({
                     ' . $select . '
                     ' . $finalTblOptionStr . '
-                    responsive:true,
-                    processing: true,
+                    responsive: true,
+                    pagingType: "simple_numbers",
                     lengthMenu: [ [5, 10, 25, 50], [5, 10, 25, 50] ],
                     ajax: {
                         url: "' . $ajaxUrl . '",
                         type: "POST",
                         ' . $dataFunction . '
                     },
-                    initComplete : function(oSettings, json) {
+                    initComplete: function(oSettings, json) {
                         ' . $initComplete . '  
                     },
                     fnDrawCallback: function(oSettings) {
@@ -656,8 +667,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                     },
                     columns: ' . $jsonColumns . ',
                     language: ' . $language . ',
-                    sDom : \'' . $sDomStructure . '\',
-                    bSort: true,
+                    sDom: \'' . $sDomStructure . '\',
                     searchDelay: 1500,
                     columnDefs: [
                         ' . $columnsStylesStr . '  
@@ -676,8 +686,11 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             var ' . str_replace("#", "$", $tableId) . ' = ' . $fnName . '();
             $("' . $tableId . '").on("init.dt", function(e, settings) {
                 ' . $jsSdomContentInit . '
-                ' . $tableSearchPlugin . '   
+                ' . $tableSearchPlugin . '
             });';
+
+            // remove new lines
+            $dtJScript = preg_replace("/\s+|\n+|\r/", ' ', $dtJScript);
         }
 
         return $dtJScript;

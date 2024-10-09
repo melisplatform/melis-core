@@ -243,7 +243,7 @@ THE SOFTWARE.
 
         function processbindEvents(plot, eventHolder) {
             if (isPluginRegistered('resize')) {
-                plot.getPlaceholder().resize(onResize);
+                plot.getPlaceholder().on("resize", onResize);
             }
         }
 
@@ -304,7 +304,7 @@ THE SOFTWARE.
         }
 
         function shutdown(plot, eventHolder) {
-            plot.getPlaceholder().unbind('resize', onResize);
+            plot.getPlaceholder().off('resize', onResize);
             if (growfunc) {
                 cancelAnimationFrame(growfunc);
                 growfunc = null;

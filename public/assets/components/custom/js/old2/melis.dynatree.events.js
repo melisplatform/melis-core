@@ -103,7 +103,7 @@ var DynatreeEvents = (function (window) {
                     MelisHelper.initNewItemMainTabs(key, '#' + MELIS.plugins.tabs.levelA.idLevelA + ' ul #' + getIdLevelA(key), node.data.options);
                     // Bind event close
 
-                    $('#' + MELIS.plugins.tabs.levelA.idLevelA + ' ul #' + getIdLevelA(key)).find('a.close').bind("click", function (event) {
+                    $('#' + MELIS.plugins.tabs.levelA.idLevelA + ' ul #' + getIdLevelA(key)).find('a.close').on("click", function (event) {
                         $('#' + MELIS.plugins.tabs.levelA.idLevelA + ' ul #' + getIdLevelA(key)).hide();
                         if ($('#' + MELIS.plugins.tabs.levelA.idLevelA + ' ul #' + getIdLevelA(key)).hasClass('active')) {
 

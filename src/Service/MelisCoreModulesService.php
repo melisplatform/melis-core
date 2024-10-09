@@ -989,7 +989,7 @@ class MelisCoreModulesService extends MelisServiceManager
             $completFilePath = $moduleName.'/public'.$file;
 
             //make sure file does not exist yet in destination
-            if(!file_exists($path.'/'.$fileName)){
+            //if(!file_exists($path.'/'.$fileName)){
                 //make sure file source exist
                 if(file_exists($dir.$completFilePath)){
                     if(!is_writable($dir.$completFilePath))
@@ -1001,7 +1001,7 @@ class MelisCoreModulesService extends MelisServiceManager
                         copy($dir . $completFilePath, $path . '/' . $fileName);
                     }
                 }
-            }
+            //}
         }
     }
 

@@ -5256,11 +5256,11 @@ body {
     border: none
 }
 
-.sidebar>.sidebarMenuWrapper ul li>a[data-toggle="collapse"] {
+.sidebar>.sidebarMenuWrapper ul li>a[data-bs-toggle="collapse"] {
     position: relative
 }
 
-.sidebar>.sidebarMenuWrapper ul li>a[data-toggle="collapse"]:after {
+.sidebar>.sidebarMenuWrapper ul li>a[data-bs-toggle="collapse"]:after {
     display: inline-block;
     font-family: "picto-foundry-general";
     font-style: normal;
@@ -5280,7 +5280,7 @@ body {
     height: auto
 }
 
-.sidebar>.sidebarMenuWrapper ul li.active.hasSubmenu>a[data-toggle="collapse"]:after {
+.sidebar>.sidebarMenuWrapper ul li.active.hasSubmenu>a[data-bs-toggle="collapse"]:after {
     content: "\f16f";
     top: 21px
 }
@@ -5330,7 +5330,7 @@ body {
     background: #cb4040
 }
 
-.sidebar.sidebar-default ul li>a[data-toggle="collapse"]:after {
+.sidebar.sidebar-default ul li>a[data-bs-toggle="collapse"]:after {
     color: #797979
 }
 
@@ -5391,7 +5391,7 @@ body {
     background: #fff
 }
 
-.sidebar.sidebar-default>.sidebarMenuWrapper>ul li.active.hasSubmenu>a[data-toggle="collapse"] {
+.sidebar.sidebar-default>.sidebarMenuWrapper>ul li.active.hasSubmenu>a[data-bs-toggle="collapse"] {
     background: #fff;
     color: #797979 !important
 }
@@ -5507,7 +5507,7 @@ body {
     background: #373737
 }
 
-.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu>a[data-toggle="collapse"] {
+.sidebar.sidebar-inverse>.sidebarMenuWrapper>ul li.active.hasSubmenu>a[data-bs-toggle="collapse"] {
     background: #373737
 }
 

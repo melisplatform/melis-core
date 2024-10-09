@@ -98,7 +98,7 @@ $(function() {
                 $iconPlaceholder    = $this.siblings('i');
 
                 $iconPlaceholder.toggleClass("checked");
-                $iconPlaceholder.closest('.dataTables_scrollHead').siblings('.dataTables_scrollBody').find('.checkRow').each(function() {
+                $iconPlaceholder.closest('.dt-scroll-head').siblings('.dt-scroll-body').find('.checkRow').each(function() {
                     var $this   = $(this),
                         $i      = $this.siblings('i'),
                         $row    = $this.parents('tr');
@@ -118,7 +118,7 @@ $(function() {
                         }
                 });
 
-            var moduleName = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id');
+            var moduleName = $this.closest('.dt-scroll').find('.dt-scroll-body table').attr('id');
 
                 $body.find('#id_melis_core_gdpr_content_tabs .tab-content .tab-pane').each(function() {
                     var $this = $(this);
@@ -134,12 +134,12 @@ $(function() {
                         //p.append( "texting");
                 });
 
-            var moduleName          = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table').attr('id'),
-                countOfRows         = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table tbody tr').length,
+            var moduleName          = $this.closest('.dt-scroll').find('.dt-scroll-body table').attr('id'),
+                countOfRows         = $this.closest('.dt-scroll').find('.dt-scroll-body table tbody tr').length,
                 pTag                = $body.find('.widget-head ul #' + moduleName + '-left-tab p'),
                 charIndex           = pTag.html().indexOf(" ("),
                 lengthToDelete      = charIndex - pTag.html().length,
-                countOfCheckedRows  = $this.closest('.dataTables_scroll').find('.dataTables_scrollBody table tr .checkRow:checked').length;
+                countOfCheckedRows  = $this.closest('.dt-scroll').find('.dt-scroll-body table tr .checkRow:checked').length;
 
                 pTag.html(pTag.html().slice(0, lengthToDelete)).append(" (" + countOfCheckedRows + "/" + countOfRows + ")");
         });
@@ -166,14 +166,14 @@ $(function() {
                 numberOfCheckboxes          = $this.closest('table').find('.checkRow').length;
 
                 if (numberOfCheckedCheckBoxes < numberOfCheckboxes) {
-                    var checkAll = $this.closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+                    var checkAll = $this.closest('.dt-scroll-body').siblings('.dt-scroll-head').find('.table thead .check-all');
 
                         if (checkAll.prop('checked')) {
                             checkAll.prop('checked', false);
                             $(checkAll).siblings('i').removeClass("checked");
                         }
                 } else if (numberOfCheckedCheckBoxes == numberOfCheckboxes && numberOfCheckboxes != 0) {
-                    var checkAll = $this.closest('.dataTables_scrollBody').siblings('.dataTables_scrollHead').find('.table thead .check-all');
+                    var checkAll = $this.closest('.dt-scroll-body').siblings('.dt-scroll-head').find('.table thead .check-all');
 
                         if (checkAll.prop('checked') == false) {
                             checkAll.prop('checked', true);
@@ -198,31 +198,32 @@ $(function() {
                 tableId,
                 ids,
                 hasData = false;
+                
+                $('#id_melis_core_gdpr_content_tabs').find('.dt-scroll').each(function() { // .dataTables_scroll
+                    var $this = $(this);
 
-            $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
-                var $this = $(this);
+                        tableId = $this.find('.dt-scroll-body .table').attr('id'); // .dataTables_scrollBody
+                        ids     = [];
 
-                    tableId = $this.find('.dataTables_scrollBody .table').attr('id');
-                    ids     = [];
+                        // .dataTables_scrollBody
+                        $this.find('.dt-scroll-body #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                            var $this = $(this);
 
-                    $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
-                        var $this = $(this);
+                                ids.push( $this.val() );
+                                hasData = true;
+                        });
+                        modules[tableId] = ids;
+                });
 
-                            ids.push( $this.val() );
-                            hasData = true;
-                    });
-                    modules[tableId] = ids;
-            });
-
-            //only send request if there are any ids
-            if (hasData) {
-                GdprTool.extractSelected(modules);
-            } else {
-                melisHelper.melisKoNotification(
-                    translations.tr_melis_core_gdpr_notif_extract_user,
-                    translations.tr_melis_core_gdpr_notif_no_selected_extract_user
-                );
-            }
+                //only send request if there are any ids
+                if (hasData) {
+                    GdprTool.extractSelected(modules);
+                } else {
+                    melisHelper.melisKoNotification(
+                        translations.tr_melis_core_gdpr_notif_extract_user,
+                        translations.tr_melis_core_gdpr_notif_no_selected_extract_user
+                    );
+                }
         });
 
         /**
@@ -234,14 +235,14 @@ $(function() {
                 ids,
                 hasData = false;
 
-            $('#id_melis_core_gdpr_content_tabs').find('.dataTables_scroll').each(function() {
+            $('#id_melis_core_gdpr_content_tabs').find('.dt-scroll').each(function() { // .dataTables_scroll
                 var $this = $(this);
 
-                tableId = $this.find('.dataTables_scrollBody .table').attr('id');
+                tableId = $this.find('.dt-scroll-body .table').attr('id'); // .dataTables_scrollBody
                 ids = [];
 
                 //push all selected ids to array
-                $this.find('.dataTables_scrollBody #' + tableId + ' .checkRow:checkbox:checked').each(function() {
+                $this.find('.dt-scroll-body #' + tableId + ' .checkRow:checkbox:checked').each(function() {
                     var $this = $(this);
                         
                         ids.push( $this.val() );
@@ -269,17 +270,21 @@ $(function() {
             var $this   = $(this),
                 href    = $this.attr("href");
 
-                $this.toggleClass("active").siblings().removeClass("active");
-                $this.closest("li").toggleClass("active").siblings().removeClass("active");
+                e.preventDefault();
 
-                $(href).toggleClass("active").siblings().removeClass("active");
-                $(href).tab("show");
+                if ( !$this.closest("li").hasClass("active") ) {
+                    // li and a
+                    $this.toggleClass("active") // .siblings().removeClass("active");
+                    $this.closest("li").toggleClass("active").siblings().removeClass("active");
+
+                    // .tab-pane
+                    $(href).toggleClass("active").siblings().removeClass("active");
+                    // $(href).tab("show");
+                }
 
                 $('html body').animate({
                     scrollTop: $(href).offset().top
                 }, 2000);
-
-                e.preventDefault();
         });
 
         $body.on('click', ".gdpr-tab-menu-li", function(){
@@ -289,7 +294,6 @@ $(function() {
                 table.DataTable().columns.adjust().draw();
                 table.width("auto");
             }
-
         });
 
         var GdprTool = {
@@ -302,8 +306,10 @@ $(function() {
                     if (data.success) {
                         //this will be used on deleting a row
                         gdprFormData = formData;
+
                         //show the tabs so that the loading view will be shown to the user
                         $('#id_melis_core_gdpr_content_tabs').show();
+
                         melisHelper.zoneReload('id_melis_core_gdpr_content_tabs', 'melis_core_gdpr_content_tabs', {
                             show: true,
                             formData: formData,

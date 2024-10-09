@@ -143,7 +143,8 @@
 		addMarker: function(markerOptions, callback) {
 			markerOptions.map = this.get('map');
 			markerOptions.position = this._latLng(markerOptions.position);
-			var marker = new (markerOptions.marker || google.maps.Marker)(markerOptions);
+			//var marker = new (markerOptions.marker || google.maps.Marker)(markerOptions);
+			var marker = new (markerOptions.marker || google.maps.marker.AdvancedMarkerElement)(markerOptions);
 			var markers = this.get('markers');
 			if ( marker.id ) {
 				markers[marker.id] = marker;
@@ -191,7 +192,7 @@
 		 */
 		find: function(ctx, options, callback) {
 			var obj = this.get(ctx);
-			options.value = $.isArray(options.value) ? options.value : [options.value];
+			options.value = Array.isArray(options.value) ? options.value : [options.value];
 			for ( var property in obj ) {
 				if ( obj.hasOwnProperty(property) ) {
 					var isFound = false;
@@ -298,7 +299,7 @@
 		 * @param callback
 		 */
 		_call: function(callback) {
-			if ( callback && $.isFunction(callback) ) {
+			if ( callback && typeof callback === "function" ) {
 				callback.apply(this, Array.prototype.slice.call(arguments, 1));
 			}
 		},

@@ -34,8 +34,11 @@ class MelisCoreDashboardBubbleUpdatesPlugin extends MelisCoreDashboardTemplating
 
     public function getUpdates()
     {
-        $melisMarketPlaceController = new \MelisMarketPlace\Controller\MelisMarketPlaceController();
-        if(!$melisMarketPlaceController->isMarketplaceAccessible()){
+        $result = $this->getController()->forward()->dispatch(
+            'MelisMarketPlace\Controller\MelisMarketPlace',
+            ['action' => 'isMarketplaceAccessible'])->getVariables();
+
+        if(!$result['isMarketplaceAccessible']){
             return new JsonModel([
                 'data' => [],
                 'count' => 0

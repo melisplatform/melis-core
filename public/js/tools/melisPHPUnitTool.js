@@ -49,7 +49,7 @@ $(function() {
                 $(btn).addClass("btn-info");
 
                 setTimeout(function() {
-                    $(".btn-run-pu-module-test").removeAttr("disabled");
+                   $(".btn-run-pu-module-test").prop("disabled", false);
                 }, 1000);
         }
 

@@ -121,10 +121,7 @@ var loader = (function(window) {
                 if ( $loader.length === 0 ) {
                     // loader
                     $melisTabEdition.prepend( pageOverlayLoader );
-                    melisCoreTool.addOverflowHidden();
-                }
-                else {
-                    melisCoreTool.removeOverflowHidden();
+                    //melisCoreTool.addOverflowHidden();
                 }
 
                 // set .melis-iframe css height
@@ -141,14 +138,17 @@ var loader = (function(window) {
                 $iframeElements     = $melisIframe.contents().find("body").children(),
                 $loader             = $melisTabEdition.find("#loader");
 
-                // checks for the inside iframes elements
-                // if ( $iframeElements.length > 0 ) {
-                    // remove loader
+                // remove loader
+                if ( $loader.length )
                     $loader.remove();
 
-                    // remove overflow hidden
-                    melisCoreTool.removeOverflowHidden();
-                // }
+                // remove overflow hidden
+                melisCoreTool.removeOverflowHidden();
+
+                // scroll back to top
+                /* $('html, body').animate({
+                    scrollTop: 0
+                }, 500); */
 
                 // set .melis-iframe css height
                 $melisIframe.css("height", melisIframeHeight);
@@ -175,6 +175,7 @@ var loader = (function(window) {
                         else {
                             if ( $melisIframe.length > 0 ) {
                                 removePageEditionLoading();
+                                
                                 clearInterval( setCmsBtnDisabledInterval );
                             }
                         }
@@ -199,7 +200,7 @@ var loader = (function(window) {
                         }
                         else {
                             removeActivePageEditionLoading(zoneId);
-
+                            
                             clearInterval( setCmsBtnDisabledInterval );
                         }
                 }, 500);
@@ -256,7 +257,7 @@ var loader = (function(window) {
             // removing of loading overlay on left sidebar menu
             removeLoadingLeftMenuOnWindowLoad   : removeLoadingLeftMenuOnWindowLoad,
 
-            // #2
+            // #2, double click from melis-cms page
             addActivePageEditionLoading         : addActivePageEditionLoading,
             removeActivePageEditionLoading      : removeActivePageEditionLoading,
 

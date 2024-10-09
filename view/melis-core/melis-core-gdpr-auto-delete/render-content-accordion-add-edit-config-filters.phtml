@@ -6,12 +6,12 @@
         'mgdprc_module_name',
     ];
 ?>
-<div id="add-edit-config-content" class="collapse show" aria-labelledby="add-edit-config" data-parent="#accordion-add-edit">
+<div id="add-edit-config-content" class="collapse show" aria-labelledby="add-edit-config" data-bs-parent="#accordion-add-edit">
 <div class="add-edit-config-filters">
     <div class="row">
         <div class="col-md-6">
             <?= $this->form()->openTag($this->formFilter) ?>
-            <div class="form-row">
+            <div class="row">
                 <?php foreach ($priorityPositinoInputs as $elementName) {?>
                     <?php foreach ($this->formFilter as $element => $options) {?>
                         <?php if ( $elementName == $element ){?>

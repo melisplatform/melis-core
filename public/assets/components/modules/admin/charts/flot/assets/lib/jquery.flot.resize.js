@@ -83,7 +83,7 @@ can just fix the size of their placeholders.
                 s.h = a !== t ? a : r.height();
                 i.apply(this, arguments)
             }
-            if ($.isFunction(e)) {
+            if (typeof e === 'function') {
                 i = e;
                 return a
             } else {
@@ -156,11 +156,11 @@ can just fix the size of their placeholders.
         }
         
         function bindEvents(plot, eventHolder) {
-            plot.getPlaceholder().resize(onResize);
+            plot.getPlaceholder().on("resize", onResize);
         }
 
         function shutdown(plot, eventHolder) {
-            plot.getPlaceholder().unbind("resize", onResize);
+            plot.getPlaceholder().off("resize", onResize);
         }
         
         plot.hooks.bindEvents.push(bindEvents);

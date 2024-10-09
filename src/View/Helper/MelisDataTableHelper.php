@@ -64,7 +64,7 @@ class MelisDataTableHelper extends AbstractHelper
         //call the js that will initialize the datatable
         $jsInit =
             '<script type="text/javascript">'.
-                '$(document).ready(function() {'.
+                '$(function() {'.
                     'melisHelper.melisInitDataTable('.json_encode($tableConfig).');'.
                 '});'.
             '</script>';

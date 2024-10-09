@@ -1,6 +1,6 @@
 $(function() {
 	// forget password form submit
-    $('#idformmeliscoreforgot').submit(function(event) {
+    $('#idformmeliscoreforgot').on("submit", function(event) {
         var datastring = $("#idformmeliscoreforgot").serialize();
 
         $.ajax({
@@ -23,7 +23,7 @@ $(function() {
         event.preventDefault();
     });
 
-    $("#idformmeliscoreresetpass").submit(function(event) {
+    $("#idformmeliscoreresetpass").on("submit", function(event) {
         //window.location.href = window.location.href;
         var $this = $(this),
             rhash = $(this).serialize();
@@ -50,7 +50,7 @@ $(function() {
         event.preventDefault();
     });
 
-    $("#idformmeliscoregeneratepass").submit(function(event) {
+    $("#idformmeliscoregeneratepass").on("submit", function(event) {
         //window.location.href = window.location.href;
         var $this = $(this),
             rhash = $(this).serialize();
@@ -77,7 +77,7 @@ $(function() {
         event.preventDefault();
     });
 
-    $("#idformmeliscorerenewpass").submit(function(event) {
+    $("#idformmeliscorerenewpass").on("submit", function(event) {
         //window.location.href = window.location.href;
         var $this = $(this),
             rhash = $(this).serialize();

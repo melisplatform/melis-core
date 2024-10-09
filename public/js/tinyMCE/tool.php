@@ -1,7 +1,7 @@
 <?php
 	return [
 		'relative_urls' => false,
-        'base_url' => 'MelisCore/build/js/',
+        'base_url' => '/MelisCore/build/js/',
 	    //'mode' => 'textareas',
 	    'selector' => 'tool-editable-selector',
 		'language' => 'en',

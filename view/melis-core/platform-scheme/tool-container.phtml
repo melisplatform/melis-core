@@ -70,10 +70,12 @@ if($headerTitleLen > 13) {
             ?>
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label for="" class="d-flex flex-row justify-content-between"><div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate($tooltips[$element->getName()]); ?>"></i></label>
-                        <div class="input-group colorpicker-component osta_color_code colorpicker-element">
+                        <label for="" class="d-flex flex-row justify-content-between"><div class="label-text"><?= $element->getLabel(); ?></div> <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate($tooltips[$element->getName()]); ?>"></i></label>
+                        <div class="input-group platform-scheme osta_color_code">
                             <?= $this->formRow($element->setLabel("")); ?>
-                            <span class="input-group-addon"><i style="background-color: <?=  $element->getValue(); ?>;"></i></span>
+                            <span class="input-group-addon">
+                                <input type="hidden" class="minicolor" value="<?= $element->getValue(); ?>" />
+                            </span>
                         </div>
                     </div>
                 </div>    
@@ -90,7 +92,7 @@ if($headerTitleLen > 13) {
                             <div class="form-group">
                                 <label for="favicon" class="d-flex flex-row justify-content-between">
                                     <div class="label-text"><?= $this->translate('tr_meliscore_platform_scheme_form_favicon') ?></div>
-                                    <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_favicon_tooltip'); ?>"></i>
+                                    <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate('tr_meliscore_platform_scheme_favicon_tooltip'); ?>"></i>
                                 </label>
                                 <div class="input-group">
                                     <input type="file" id="favicon" name="favicon" onchange="melisCoreTool.changeImage('#platform-scheme-favicon', this)">
@@ -112,7 +114,7 @@ if($headerTitleLen > 13) {
                             <div class="form-group">
                                 <label for="login-logo" class="d-flex flex-row justify-content-between">
                                     <div class="label-text"><?= $this->translate('tr_meliscore_platform_scheme_form_login_logo') ?></div>
-                                    <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_login_logo_tooltip'); ?>"></i>
+                                    <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate('tr_meliscore_platform_scheme_login_logo_tooltip'); ?>"></i>
                                 </label>
                                 <div class="input-group">
                                     <input type="file" id="login_logo" name="login_logo" onchange="melisCoreTool.changeImage('#platform-scheme-login-logo', this)">
@@ -134,7 +136,7 @@ if($headerTitleLen > 13) {
                             <div class="form-group">
                                 <label for="login-background" class="d-flex flex-row justify-content-between">
                                     <div class="label-text"><?= $this->translate('tr_meliscore_platform_scheme_form_login_background') ?></div>
-                                    <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_login_background_tooltip'); ?>"></i>
+                                    <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate('tr_meliscore_platform_scheme_login_background_tooltip'); ?>"></i>
                                 </label>
                                 <div class="input-group">
                                     <input type="file" id="login_background" name="login_background" onchange="melisCoreTool.changeImage('#platform-scheme-login-background', this)">
@@ -157,7 +159,7 @@ if($headerTitleLen > 13) {
                             <div class="form-group">
                                 <label for="sidebar-header-logo" class="d-flex flex-row justify-content-between">
                                     <div class="label-text"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_logo') ?></div>
-                                    <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_sidebar_header_logo_tooltip'); ?>"></i>
+                                    <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate('tr_meliscore_platform_scheme_sidebar_header_logo_tooltip'); ?>"></i>
                                 </label>
                                 <div class="input-group">
                                     <input type="file" id="sidebar_header_logo" name="sidebar_header_logo" onchange="melisCoreTool.changeImage('#platform-scheme-sidebar-header-logo', this)">
@@ -167,7 +169,7 @@ if($headerTitleLen > 13) {
                             <div class="form-group">
                                 <label for="sidebar-header-title" class="d-flex flex-row justify-content-between">
                                     <div class="label-text"><?= $this->translate('tr_meliscore_platform_scheme_form_sidebar_header_title') ?></div>
-                                    <i class="fa fa-info-circle fa-lg tip-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?= $this->translate('tr_meliscore_platform_scheme_sidebar_header_title_tooltip'); ?>"></i>
+                                    <i class="fa fa-info-circle fa-lg tip-info" data-bs-toggle="tooltip" data-bs-placement="left" title="" data-bs-title="<?= $this->translate('tr_meliscore_platform_scheme_sidebar_header_title_tooltip'); ?>"></i>
                                 </label>
                                 <div class="input-group">
                                     <input type="text" id="sidebar_header_text" name="sidebar_header_text" maxlength="45" class="form-control" value="<?= $sidebarHeaderTitle ?>">
@@ -186,10 +188,41 @@ if($headerTitleLen > 13) {
                     </div>
                 </div>
             </form>
-            <script>
-                $(".osta_color_code").colorpicker({format: 'hex', useAlpha: false});
-                $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
-                $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+            <script type="text/javascript">
+                (function($) {
+                    //$(".osta_color_code").colorpicker({format: 'hex',useAlpha: false});
+                    $(".minicolor").each(function() {
+                        var $this = $(this);
+                            $this.minicolors({
+                                control: $this.attr("data-control") || 'hue',
+                                defaultValue: $this.attr("data-defaultValue") || '',
+                                format: $this.attr('data-format') || 'hex',
+                                keywords: $this.attr('data-keywords') || '',
+                                inline: $this.attr('data-inline') === 'true',
+                                letterCase: $this.attr('data-letterCase') || 'lowercase',
+                                opacity: $this.attr('data-opacity'),
+                                position: $this.attr('data-position') || 'bottom',
+                                swatches: $this.attr('data-swatches') ? $this.attr('data-swatches').split('|') : [],
+                                change: function(hex, opacity) {
+                                    var log;
+                                        try {
+                                            log = hex ? hex : 'transparent';
+
+                                            if( opacity ) 
+                                                log += ', ' + opacity;
+                                            
+                                            if ( $this.closest(".osta_color_code").find(".minicolor-hex").length ) {
+                                                $this.closest(".osta_color_code").find(".minicolor-hex").val(hex);
+                                            }
+                                        } catch(e) {}
+                                },
+                                theme: 'default'
+                            });
+                    });
+                    
+                    $("input:file").filestyle({buttonName: "btn-primary", buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+                    $("input#sidebar_header_logo:file").filestyle({buttonName: "btn-primary", input: false, buttonText: '<?= $this->translate('tr_meliscore_platform_scheme_file_button'); ?>'});
+                })(jQuery);
             </script>
         </div>
         <?php

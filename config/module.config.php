@@ -460,6 +460,7 @@ return [
             'MelisCoreUserSelect'           => \MelisCore\Form\Factory\MelisCoreUsersSelect2Factory::class,
             'MelisCoreGdprModuleSelect'     => \MelisCore\Form\Factory\MelisGdprAutoDeleteModuleListSelectFactory::class,
             'MelisModuleSelect'             => \MelisCore\Form\Factory\MelisModuleSelectFactory::class,
+            'MelisCoreUsersSelect'           => \MelisCore\Form\Factory\MelisCoreUsersSelectFactory::class,
         ],
     ],
     'view_helpers' => [

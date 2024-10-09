@@ -871,7 +871,7 @@
             }
         };
 
-        $(window).resize(this.onResizeHandler);
+        $(window).on("resize", this.onResizeHandler);
         this.onResizeHandler();
 
         if (!self.opts.staticGrid && typeof self.opts.removable === 'string') {
@@ -974,7 +974,7 @@
                     if (!el.data('_gridstack_node')) {
                         return;
                     }
-                    el.unbind('drag', onDrag);
+                    el.off('drag', onDrag);
                     var node = el.data('_gridstack_node');
                     node.el = null;
                     self.grid.removeNode(node);
@@ -1008,7 +1008,7 @@
                         .enableSelection()
                         .removeData('draggable')
                         .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
-                        .unbind('drag', onDrag);
+                        .off('drag', onDrag);
                     self.container.append(el);
                     self._prepareElementsByNode(el, node);
                     self._updateContainerHeight();
@@ -1017,7 +1017,7 @@
                     self._triggerChangeEvent();
 
                     self.grid.endUpdate();
-                    $(ui.draggable).unbind('drag', onDrag);
+                    $(ui.draggable).off('drag', onDrag);
                     $(ui.draggable).removeData('_gridstack_node');
                     $(ui.draggable).removeData('_gridstack_node_orig');
                     self.container.trigger('dropped', [originalNode, node]);

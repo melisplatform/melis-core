@@ -861,7 +861,8 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_color_primary_color',
                                     'value' => '',
-                                    'class' => 'form-control',
+                                    'class' => 'form-control minicolor-hex',
+                                    'data-control' => 'hue',
                                     'placeholder' => 'tr_meliscore_platform_color_primary',
                                 ),
                             ),
@@ -877,7 +878,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_color_secondary_color',
                                     'value' => '',
-                                    'class' => 'form-control',
+                                    'class' => 'form-control minicolor-hex',
                                     'placeholder' => 'tr_meliscore_platform_color_secondary',
                                 ),
                             ),
@@ -893,7 +894,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_color_sidebar_bg_color',
                                     'value' => '',
-                                    'class' => 'form-control',
+                                    'class' => 'form-control minicolor-hex',
                                     'placeholder' => 'color',
                                 ),
                             ),
@@ -909,7 +910,7 @@ return array(
                                 'attributes' => array(
                                     'id' => 'melis_core_platform_color_login_link_color',
                                     'value' => '',
-                                    'class' => 'form-control',
+                                    'class' => 'form-control minicolor-hex',
                                     'placeholder' => 'color',
                                 ),
                             ),

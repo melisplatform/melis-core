@@ -1,7 +1,7 @@
 $(function()
 {
 	
-	$('#maps_vector_tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e)
+	$('#maps_vector_tabs a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e)
 	{
 		if ($(this).attr('data-init'))
 			return;
@@ -106,7 +106,7 @@ $(function()
 			          {latLng: [15.3, -61.38], name: 'Dominica'},
 			          {latLng: [-20.2, 57.5], name: 'Mauritius'},
 			          {latLng: [26.02, 50.55], name: 'Bahrain'},
-			          {latLng: [0.33, 6.73], name: 'São Tomé and Príncipe'}
+			          {latLng: [0.33, 6.73], name: 'Sï¿½o Tomï¿½ and Prï¿½ncipe'}
 			          ]
 		});
 	}
