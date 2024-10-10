@@ -239,7 +239,7 @@ return array(
 
                     // MelisCore main CSS - should always be in bottom
                     '/MelisCore/css/styles.css',
-                    // custom-style.css for the update on jquery 3.3.1 and bootstrap 4.3.1
+                    // override some css from styles.css
                     '/MelisCore/css/custom-style.css',
                 ),
                 'js' => array(

@@ -44,7 +44,7 @@ $sections = [
 <?php
 if ($isParentTool && !empty($this->tools)):
     ?>
-    <li class="melis-opentools melis-marketplace-junry-testing" data-tool-icon="<?= $tabIcon ?>" data-tool-name="<?= $tabName ?>" data-tool-id="<?= $targetId ?>" data-tool-meliskey="<?= $targetMelisKey ?>">
+    <li class="melis-opentools" data-tool-icon="<?= $tabIcon ?>" data-tool-name="<?= $tabName ?>" data-tool-id="<?= $targetId ?>" data-tool-meliskey="<?= $targetMelisKey ?>">
         <?php
         if (in_array($melisKey, array_keys($sections))) : ?>
             <a data-bs-target="#<?= $id ?>_tools">

@@ -6,6 +6,8 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active span,
+.nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active,
 .gdpr-tab-table-container .widget-head ul li.active a,
 .gdpr-tab-table-container .widget-head ul li.active a .fa:before,
 .melis-modal-cont .modal-content h3 a .glyphicons.lock i::before {
@@ -296,6 +298,7 @@ body .navbar.main.navbar-primary {
     color: <?= $primaryColor; ?>;
 }
 
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons.active i:before,
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover i:before,
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover i:before {
     color: <?= $primaryColor; ?>;
