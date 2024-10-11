@@ -51,15 +51,18 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
                 /**
                  * check if bundle for login is available
                  */
-                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css')) {
+                $docroot = $_SERVER['DOCUMENT_ROOT'];
+                $bundleFolder = $docroot.'/../etc';
+
+                if (file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css')) {
                     $cssFiles = [];
-                    $cssFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css'.$time;
+                    $cssFiles[] = '/melis/get-css-bundles'.$time;
                 }
 
-                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js')) {
+                if (file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js')) {
                     $jsFiles = [];
                     $jsFiles[] = '/melis/get-translations';
-                    $jsFiles[] = '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js'.$time;
+                    $jsFiles[] = '/melis/get-js-bundles'.$time;
                 }
             }
         }

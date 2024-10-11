@@ -175,6 +175,26 @@ return [
                             ],
                         ],
                     ],
+                    'get-js-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-js-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-js-bundles',
+                            ],
+                        ],
+                    ],
+                    'get-css-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-css-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-css-bundles',
+                            ],
+                        ],
+                    ],
                     'get-platform-color-css' => [
                         'type' => 'Segment',
                         'options' => [

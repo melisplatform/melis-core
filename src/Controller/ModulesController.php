@@ -9,6 +9,7 @@
 
 namespace MelisCore\Controller;
 
+use function Laminas\Session\SaveHandler\read;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Laminas\Session\Container;
@@ -330,6 +331,60 @@ class ModulesController extends MelisAbstractActionController
             'success' => $success,
             'errors' => []
         ));
+    }
+
+    /**
+     * Returns a Javascript format of Melis Translations
+     */
+    public function getJsBundlesAction()
+    {
+        $docroot = $_SERVER['DOCUMENT_ROOT'];
+        $bundleFolder = $docroot.'/../etc';
+
+        $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/js/bundle-all.js';
+
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $user = $melisCoreAuth->hasIdentity();
+        if(!$user)
+            $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/js/bundle-all-login.js';
+
+        if (file_exists($path)) {
+            // Send the appropriate headers to tell the browser this is a js file
+            header('Content-Type: text/javascript');
+            header('Content-Length: ' . filesize($path));
+
+            // Output the file content
+            readfile($path);
+        }
+        exit;
+    }
+
+    /**
+     * Returns a Javascript format of Melis Translations
+     */
+    public function getCssBundlesAction()
+    {
+        $docroot = $_SERVER['DOCUMENT_ROOT'];
+        $bundleFolder = $docroot.'/../etc';
+
+        $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/css/bundle-all.css';
+
+        $melisCoreAuth = $this->getServiceManager()->get('MelisCoreAuth');
+        $user = $melisCoreAuth->hasIdentity();
+
+        if(!$user) {
+            $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/css/bundle-all-login.css';
+        }
+
+        if (file_exists($path)) {
+            // Send the appropriate headers to tell the browser this is a CSS file
+            header('Content-Type: text/css');
+            header('Content-Length: ' . filesize($path));
+
+            // Output the file content
+            readfile($path);
+        }
+        exit;
     }
 
 
