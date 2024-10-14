@@ -56,13 +56,13 @@ class MelisCoreHeadPluginHelper extends AbstractHelper
 
                 if (file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all-login.css')) {
                     $cssFiles = [];
-                    $cssFiles[] = '/melis/get-css-bundles'.$time;
+                    $cssFiles[] = '/melis/get-login-css-bundles'.$time;
                 }
 
                 if (file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all-login.js')) {
                     $jsFiles = [];
                     $jsFiles[] = '/melis/get-translations';
-                    $jsFiles[] = '/melis/get-js-bundles'.$time;
+                    $jsFiles[] = '/melis/get-login-js-bundles'.$time;
                 }
             }
         }
