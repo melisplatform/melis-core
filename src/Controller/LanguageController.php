@@ -148,7 +148,7 @@ class LanguageController extends MelisAbstractActionController
         $response = $this->getResponse();
         $response->getHeaders()
             ->addHeaderLine('Content-Type', 'text/javascript; charset=utf-8')
-            ->addHeaderLine('Cache-Control', 'public, max-age=2629744, immutable');
+            ->addHeaderLine('Cache-Control', 'public, max-age=86400, immutable');
 
         $translationCompilation = '';
         foreach($melisTranslation->getTranslationMessages($locale) as $transKey => $transValue)
