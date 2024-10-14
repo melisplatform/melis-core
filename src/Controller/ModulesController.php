@@ -25,7 +25,7 @@ use MelisCore\View\Helper\MelisCoreHeadPluginHelper;
  */
 class ModulesController extends MelisAbstractActionController
 {
-    const BUNDLE_FOLDER_NAME = 'bundles-generated';
+    const BUNDLE_FOLDER_NAME = 'bundles';
 
     const MODULE_LOADER_FILE = 'config/melis.module.load.php';
     private $exclude_modules = array(
