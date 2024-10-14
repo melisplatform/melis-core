@@ -352,6 +352,8 @@ class ModulesController extends MelisAbstractActionController
             // Send the appropriate headers to tell the browser this is a js file
             header('Content-Type: text/javascript');
             header('Content-Length: ' . filesize($path));
+            //cached for 1 month (2629744 seconds)
+            header('Cache-Control: public, max-age=2629744, immutable');
 
             // Output the file content
             readfile($path);
@@ -380,6 +382,8 @@ class ModulesController extends MelisAbstractActionController
             // Send the appropriate headers to tell the browser this is a CSS file
             header('Content-Type: text/css');
             header('Content-Length: ' . filesize($path));
+            //cached for 1 month (2629744 seconds)
+            header('Cache-Control: public, max-age=2629744, immutable');
 
             // Output the file content
             readfile($path);
