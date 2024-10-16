@@ -286,6 +286,7 @@ var melisTinyMCE = (function() {
 			dialogHeight;
 
 			if ( $mcePopUp.length ) {
+				$body.addClass("modal-open");
 				if ( $iframe.length ) {
 					// iframe height
 					var iframeHeight 	= $(window).height(),
@@ -319,6 +320,9 @@ var melisTinyMCE = (function() {
 						window.parent
 							.$("body")
 							.animate({ scrollTop: parent.scrollOffsetTinyMCE() }, 200);
+
+						$body.removeClass("modal-open");
+
 						clearTimeout(timeOut);
 					}
 				}, 300);

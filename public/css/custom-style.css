@@ -1882,7 +1882,10 @@ a[data-bs-toggle="tab"] {
 }
 /* Fix for closing of modal */
 body {
-	overflow-y: auto !important;
+	/* Commented, for .tox-dialog__disable-scroll to take effect when modal is open.
+	 * Need to check other ways that overflow-y: auto !important is needed
+	 * overflow-y: auto !important; 
+	 */
     overflow-x: hidden !important;
 }
 /* jQuery migration */

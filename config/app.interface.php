@@ -287,7 +287,8 @@ return array(
                     // datetimepicker
                     '/MelisCore/assets/components/plugins/bootstrap-datepicker-4/js/bootstrap-datetimepicker.min.js',
                     
-                    // '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/js/bootstrap-timerpicker.js',
+                    // deprecated no longer maintained, https://github.com/jdewit/bootstrap-timepicker
+                    // '/MelisCore/assets/components/modules/admin/forms/elements/bootstrap-timepicker/assets/lib/js/bootstrap-timerpicker.js', 
 
                     /* '/MelisCore/assets/components/plugins/tempus-dominus/js/tempus-dominus.min.js',
                     '/MelisCore/assets/components/plugins/tempus-dominus/js/tempus-dominus-jquery-interface.min.js', */
