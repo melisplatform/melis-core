@@ -109,6 +109,7 @@
     padding-right: 1em !important;
     padding-left: 1em !important;
     height: auto !important;
+    border-top: 1px solid #ddd;
 }
 .site-category.ui-accordion-content {
     border: 0 !important;
@@ -151,7 +152,8 @@
 }
 .site-category .main-category.ui-accordion-content-active.custom-last-child,
 .site-category .ui-accordion-header.custom-last-child {
-    margin-bottom: 0.5rem;
+    /* margin-bottom: 0.5rem; */
+    margin-bottom: 0;
 }
 .mini-template-content {
     height: 485px;
