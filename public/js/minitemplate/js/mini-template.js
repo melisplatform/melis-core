@@ -37,42 +37,9 @@
                 var dType = $(v).data("type");
                     
                     if ( dType === 'category' ) {
-                        // $(v).attr("title")
                         var dCategoryText = $(v).find("span").text();
                             if ( $.inArray( dCategoryText, listArray ) == -1 ) {
                                 listArray.push( dCategoryText );
-                            }
-                    }
-            });
-
-            for ( var x = 0; x < listArray.length; x++ ) {
-              for ( var y = 0; y < uniqueArray.length; y++ ) {
-                if ( listArray[x] == uniqueArray[y] ) {
-                  found = true;
-                }
-              }
-              counting++;
-              if ( counting == 1 && found == false ) {
-                uniqueArray.push( listArray[x] );
-              }
-              found = false;
-              counting = 0;
-            }
-            
-            return uniqueArray;
-    }
-
-    // unique main category
-    function getUniqueMainCategoryId( $elemArray ) {
-        var listArray = [], uniqueArray = [], counting = 0, found = false;
-            
-            $.each($elemArray, function(i, v) {
-                var dType = $(v).data("type");
-                    
-                    if ( dType === 'category' ) {
-                        var dId = $(v).data("id");
-                            if ( $.inArray( dId, listArray ) == -1 ) {
-                                listArray.push( dId );
                             }
                     }
             });
@@ -115,7 +82,7 @@
 
                 setTimeout(function() {
                     appendAccordion(data);
-                }, 1000);
+                }, 500);
             })
             .fail(function(xhr, textStatus, errorThrown) {
                 alert( translations.tr_meliscore_error_message );
@@ -458,26 +425,51 @@
             if ( $prevIframe.length ) {
                 $prevIframe.attr("src", url);
 
-                // melis-demo-cms or melis-demo-commerce
+                // MelisDemoCms or melis-demo-commerce
                 insertDemoMiniTemplateCss();
             }
     }
 
-    // insertion of melis-demo-cms mini template css in iframe head
-    function insertDemoMiniTemplateCss() {
-        setTimeout(function() {
-            // https://mantis2.uat.melistechnology.fr/view.php?id=6103, detect if melis-demo-cms or melis-demo-commerce css files will be inserted on the preview iframe
-            var $previewIframe      = $("#preview-mini-template iframe"),
-                $previewIframeHead  = $previewIframe.contents().find("head"),
-                // possible inserting of melis-demo-cms cssUrl inside active tinymce editor iframe
-                // $activeEditorIframe = $(parent.tinymce.activeEditor).contents().find("head"),
-                cssUrl              = [[
-                    '/MelisDemoCms/css/bootstrap.min.css',
-                    '/MelisDemoCms/vendors/themify-icon/themify-icons.css',
-                    '/MelisDemoCms/vendors/elagent/style.css',
-                    '/MelisDemoCms/css/style.css'
-                ], [
-                    '/MelisDemoCommerce/js/vendor/modernizr-2.8.3.min.js',
+    // list of css files of MelisDemoCms and melis-demo-commerce
+    function listCssUrls() {
+        return cssUrlData = [
+            {
+                css: [
+                    '/MelisDemoCms/public/css/bootstrap.min.css',
+                    '/MelisDemoCms/public/vendors/bootstrap-selector/css/bootstrap-select.min.css',
+                    '/MelisDemoCms/public/vendors/font-awesome/css/all.css',
+                    '/MelisDemoCms/public/css/glyphicons.css',
+                    '/MelisDemoCms/public/vendors/themify-icon/themify-icons.css',
+                    '/MelisDemoCms/public/vendors/flaticon/flaticon.css',
+                    '/MelisDemoCms/public/vendors/animation/animate.css',
+                    '/MelisDemoCms/public/vendors/owl-carousel/assets/owl.carousel.min.css',
+                    '/MelisDemoCms/public/vendors/magnify-pop/magnific-popup.css',
+                    '/MelisDemoCms/public/vendors/nice-select/nice-select.css',
+                    '/MelisDemoCms/public/vendors/elagent/style.css',
+                    '/MelisDemoCms/public/vendors/scroll/jquery.mCustomScrollbar.min.css',
+                    '/MelisDemoCms/public/css/style.css',
+                    '/MelisDemoCms/public/css/responsive.css',
+                    '/MelisDemoCms/public/css/custom.css'
+                ],
+                js: [
+                    '/MelisDemoCms/public/js/jquery-3.7.1.min.js',
+                    '/MelisDemoCms/public/js/popper.js',
+                    '/MelisDemoCms/public/js/bootstrap.min.js',
+                    '/MelisDemoCms/public/vendors/wow/wow.min.js',
+                    '/MelisDemoCms/public/vendors/sckroller/jquery.parallax-scroll.js',
+                    '/MelisDemoCms/public/vendors/owl-carousel/owl.carousel.min.js',
+                    '/MelisDemoCms/public/vendors/imagesloaded/imagesloaded.pkgd.min.js',
+                    '/MelisDemoCms/public/vendors/isotope/isotope-min.js',
+                    '/MelisDemoCms/public/vendors/magnify-pop/jquery.magnific-popup.min.js',
+                    '/MelisDemoCms/public/vendors/bootstrap-selector/js/bootstrap-select.min.js',
+                    '/MelisDemoCms/public/vendors/nice-select/jquery.nice-select.min.js',
+                    '/MelisDemoCms/public/vendors/scroll/jquery.mCustomScrollbar.concat.min.js',
+                    '/MelisDemoCms/public/js/plugins.js',
+                    '/MelisDemoCms/public/js/main.js'
+                ]
+            },
+            {
+                css: [
                     '/MelisDemoCommerce/css/bootstrap.min.css',
                     '/MelisDemoCommerce/css/core.css',
                     '/MelisDemoCommerce/css/shortcode/shortcodes.css',
@@ -489,38 +481,74 @@
                     '/MelisDemoCommerce/css/animate.css',
                     '/MelisDemoCommerce/css/custom.css',
                     '/MelisDemoCommerce/css/skin/skin-default.css'
-                ]];
+                ],
+                js: [
+                    '/MelisDemoCommerce/public/js/vendor/jquery-3.7.1.min.js',
+                    '/MelisDemoCommerce/public/js/bootstrap.min.js',
+                    '/MelisDemoCommerce/public/js/owl.carousel.js',
+                    '/MelisDemoCommerce/public/js/jquery.countdown.min.js',
+                    '/MelisDemoCommerce/public/js/plugins.js',
+                    '/MelisDemoCommerce/public/js/main.js',
+                    '/MelisDemoCommerce/public/js/custom.js',
+                    '/MelisDemoCommerce/public/js/checkout.js',
+                    '/MelisDemoCommerce/public/js/remove-cart.js',
+                    '/MelisDemoCommerce/public/js/melisSiteHelper.js',
+                    '/MelisDemoCommerce/public/js/checkout-paypal-style.js'
+                ]
+            }
+        ];
+    }
+
+    // insertion of MelisDemoCms mini template css in iframe head
+    function insertDemoMiniTemplateCss() {
+        setTimeout(function() {
+            // https://mantis2.uat.melistechnology.fr/view.php?id=6103, detect if MelisDemoCms or melis-demo-commerce css files will be inserted on the preview iframe
+            var $previewIframe      = $("#preview-mini-template iframe"),
+                $previewIframeHead  = $previewIframe.contents().find("head");
 
                 if ( $previewIframe.length ) {
                     let $previewIframeSrc   = $previewIframe.attr("src"),
                         previewModuleText   = '',
-                        moduleUrl           = '';
+                        moduleUrl           = '',
+                        cssUrl              = listCssUrls();
                         
                         previewModuleText = $previewIframeSrc.split("\\")[1] ? $previewIframeSrc.split("\\")[1] : $previewIframeSrc.split("/")[1];
-
+                        console.log(`cssUrl: `, cssUrl);
                         switch(previewModuleText) {
                             case "MelisDemoCms":
                                 moduleUrl = cssUrl[0];
+                                //console.log(`MelisDemoCms moduleUrl.css: `, moduleUrl.css);
+                                //insertCssOnTinymceActiveEditor(moduleUrl);
                                 break;
                             case "MelisDemoCommerce":
                                 moduleUrl = cssUrl[1];
+                                //insertCssOnTinymceActiveEditor(moduleUrl);
                                 break;
                             default:
                                 console.log(parent.tinymce.util.I18n.translate("No demo site detected."));
                         }
 
-                        $.each( moduleUrl, function(i, v) {
-                            var el = document.createElement("link");
+                        console.log(`moduleUrl.css: `, moduleUrl.css);
+                        console.log(`moduleUrl.js: `, moduleUrl.js);
+                        
+                        insertAssetsOnIframe($previewIframe, moduleUrl);
 
+                        /* $.each( moduleUrl, function(i, v) {
+                            console.log(`moduleUrl v.css: `, v.css);
+                            var el = document.createElement("link");
                                 el.href     = moduleUrl[i];
                                 el.rel      = "stylesheet";
                                 el.media    = "screen";
                                 el.type     = "text/css";
 
                                 $previewIframeHead.append( el );
-                        });
+                        }); */
                 }
         }, 1000);
+    }
+
+    function insertAssetsOnIframe($iframe, urls) {
+        
     }
 
     function siteNameHtml( siteName, index ) {
@@ -594,18 +622,46 @@
             if ( miniTemplate ) {
                 parent.tinymce.activeEditor.insertContent(miniTemplate);
             }
-            parent.tinymce.activeEditor.windowManager.close();
+
+            // insert demo cms css on the tinymce activeEditor iframe before closing the modal
+            $.when( 
+                insertCssOnTinymceActiveEditor() 
+            ).then(function() {
+                // close the current modal
+                parent.tinymce.activeEditor.windowManager.close();
+            });
     }
 
-    // initialize
-    /* function initIframe() {
-        var $iframe = $("#preview-mini-template iframe");
+    // insert the demo cms inside the tinymce iframe, parent.tinymce.activeEditor.contentCSS or tinymce.activeEditor.contentCSS
+    function insertCssOnTinymceActiveEditor(urls) {
+        // get the active tinymce editor instance
+        const editor = parent.tinymce.activeEditor;
+            
+            // check if array
+            if ( Array.isArray(urls) ) {
+                for ( var i = 0; i < urls.length; i++ ) {
+                    // access the editor's iframe document and create a link element
+                    const iframeElement = editor.iframeElement;
+                        if ( iframeElement !== null ) {
+                            const iframeHead = iframeElement.contentDocument.head,
+                                linkElement = document.createElement("link");
 
-            // insertion of melis-demo-cms mini template css in iframe head
-            if ( $iframe.length ) {
-                insertMelisDemoCmsMiniTemplateCss();
+                                linkElement.rel = "stylesheet";
+                                linkElement.type = "text/css";
+                                linkElement.href = urls[i];
+
+                                // append the link element to the iframe's head
+                                iframeHead.appendChild(linkElement);
+                        }
+                }
             }
-    } */
+
+            /* if ( callback !== undefined || callback !== null) {
+                if (callback) {
+                    callback();
+                }
+            } */
+    }
 
     /**
      * Init template with mustach
