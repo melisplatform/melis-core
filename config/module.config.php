@@ -175,6 +175,49 @@ return [
                             ],
                         ],
                     ],
+                    'get-js-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-js-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-js-bundles',
+                            ],
+                        ],
+                    ],
+                    'get-css-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-css-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-css-bundles',
+                            ],
+                        ],
+                    ],
+                    //need to create a separate bundle loader for login since we are going to cached this url
+                    //since we have separate assets for login, we need to separate it
+                    'get-login-js-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-login-js-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-js-bundles',
+                            ],
+                        ],
+                    ],
+                    'get-login-css-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-login-css-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-css-bundles',
+                            ],
+                        ],
+                    ],
+                    //end
                     'get-platform-color-css' => [
                         'type' => 'Segment',
                         'options' => [
