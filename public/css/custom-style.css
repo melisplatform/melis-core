@@ -2368,6 +2368,15 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active span {
 	color: #e61c23;
 }
+.product-text-tab-container .product-text-tab li a,
 .nav-tabs .nav-link {
-	border-radius: 0;
+	border-radius: 0 !important;
+	border: 0;
+}
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link {
+	border: 0 !important;
+}
+.nav-tabs:not(.product-text-tab) .nav-link.active span {
+	color: #e61c23 !important;
 }
