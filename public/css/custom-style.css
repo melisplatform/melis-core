@@ -2380,6 +2380,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .nav-tabs:not(.product-text-tab) .nav-link.active span {
 	color: #e61c23 !important;
 }
-.nav-tabs .nav-item.active .nav-link.active {
+.nav-tabs:not(.product-text-tab) .nav-item.active .nav-link.active {
     background-color: #fff;
 }
