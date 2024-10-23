@@ -42,14 +42,17 @@ class MelisCoreClearCacheListenerListener extends MelisGeneralListener implement
                      * remove bundle-all files inside public/bundles-generated folder
                      *
                      */
+                    $docroot = $_SERVER['DOCUMENT_ROOT'];
+                    $bundleFolder = $docroot.'/../etc';
+
                     if(isset($params['typeCode'])){
                         //remove only if it was not coming from user role update
                         if($params['typeCode'] != 'SB_ROLE_UPDATE'){
-                            $path = $_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME;
+                            $path = $bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME;
                             $this->deleteFiles($path);
                         }
                     }else{
-                        $path = $_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME;
+                        $path = $bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME;
                         $this->deleteFiles($path);
                     }
 

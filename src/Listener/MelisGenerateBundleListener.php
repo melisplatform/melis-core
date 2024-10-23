@@ -37,9 +37,12 @@ class MelisGenerateBundleListener
                 /** @var ServiceManager $serviceManager */
                 $serviceManager = $e->getParam('ServiceManager');
 
+                $docroot = $_SERVER['DOCUMENT_ROOT'];
+                $bundleFolder = $docroot.'/../etc';
+
                 //check if bundle already exist
-                if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all.css')
-                    && !file_exists($_SERVER['DOCUMENT_ROOT'] . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all.js')) {
+                if (!file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/css/bundle-all.css')
+                    && !file_exists($bundleFolder . '/'.ModulesController::BUNDLE_FOLDER_NAME.'/js/bundle-all.js')) {
 
                     $coreConfig = $serviceManager->get('MelisCoreConfig');
                     $buildBundle = $coreConfig->getItem('/meliscore/datas/')[getenv('MELIS_PLATFORM')]['build_bundle'] ?? true;

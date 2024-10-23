@@ -979,7 +979,10 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function copyFile($fileNeeded, $type, $moduleName)
     {
-        $path = $_SERVER['DOCUMENT_ROOT'] . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
+        $docroot = $_SERVER['DOCUMENT_ROOT'];
+        $bundleFolder = $docroot.'/../etc';
+
+        $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
         $dir = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/';
 
         foreach($fileNeeded as $key => $file){
@@ -1087,10 +1090,15 @@ class MelisCoreModulesService extends MelisServiceManager
      */
     private function createDIR($name)
     {
-        $path = $_SERVER['DOCUMENT_ROOT'].'/'.ModulesController::BUNDLE_FOLDER_NAME.'/'.$name;
+        $docroot = $_SERVER['DOCUMENT_ROOT'];
+        $bundleFolder = $docroot.'/../etc';
+        if(!file_exists($bundleFolder))
+            mkdir($bundleFolder, 0777);
 
-        if(!file_exists($_SERVER['DOCUMENT_ROOT'].'/'.ModulesController::BUNDLE_FOLDER_NAME.'/'))
-            mkdir($_SERVER['DOCUMENT_ROOT'].'/'.ModulesController::BUNDLE_FOLDER_NAME, 0777);
+        $path = $bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME.'/'.$name;
+
+        if(!file_exists($bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME.'/'))
+            mkdir($bundleFolder.'/'.ModulesController::BUNDLE_FOLDER_NAME, 0777);
 
         if(!file_exists($path))
             mkdir($path, 0777);
