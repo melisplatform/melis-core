@@ -705,7 +705,7 @@ class MelisCoreModulesService extends MelisServiceManager
                 $newModuleFildeHolder = [];
                 if(!empty($moduleFileHolder)){
                     foreach($moduleFileHolder as $module => $moduleFiles){
-                        foreach($files as $file) {
+                        foreach($moduleFiles as $file) {
                             $newModuleFildeHolder[] = $file;
                         }
                     }
