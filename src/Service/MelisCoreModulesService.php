@@ -701,10 +701,21 @@ class MelisCoreModulesService extends MelisServiceManager
                 elseif ($type == 'js')
                     $this->minifyJs($moduleFileHolder, $arrayPaths);
 
+                //hot fix
+                $newModuleFildeHolder = [];
+                if(!empty($moduleFileHolder)){
+                    foreach($moduleFileHolder as $module => $moduleFiles){
+                        foreach($files as $file) {
+                            $newModuleFildeHolder[] = $file;
+                        }
+                    }
+                }
+
                 /**
                  * We merge all bundled files
                  */
-                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
+                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $newModuleFildeHolder);
+//                $allAssets = array_merge($vendorFileHolder, $moduleFileHolderAlreadyBundled, $arrayPaths);
                 /**
                  * Combine all
                  */
