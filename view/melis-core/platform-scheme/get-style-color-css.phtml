@@ -6,6 +6,11 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.table-primary thead th {
+    border-color: <?= $primaryColor; ?> !important;
+    background-color: <?= $primaryColor; ?> !important;
+}
+.nav-tabs:not(.product-text-tab) .nav-item.active .nav-link.active span,
 .nav-tabs:not(.product-text-tab) .nav-link.active span,
 .nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active span,
 .nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active,

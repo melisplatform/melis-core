@@ -43,7 +43,9 @@ $(function () {
                     encode: true
                 }).done(function(data) {
                     if (data.success) {
-                        $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
+                        // $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
+                        melisCoreTool.hideModal("id_meliscore_tool_platform_generic_form_container");
+
                         melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
                         // Show Pop-up Notification
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);

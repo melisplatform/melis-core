@@ -853,10 +853,10 @@ var melisCore = (function(window){
 
             if ( screenSize <= 767 ) {
                 tabDraggable("#melis-id-nav-bar-tabs", true);
-                $tabMenu.addClass("no-gutters");
+                $tabMenu.addClass("g-0");
             } else {
                 tabDraggable("#melis-id-nav-bar-tabs", false);
-                $tabMenu.removeClass("no-gutters");
+                $tabMenu.removeClass("g-0");
             }
 
             //check tabExpander() when window is resized
