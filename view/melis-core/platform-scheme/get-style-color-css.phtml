@@ -10,7 +10,12 @@
     border-color: <?= $primaryColor; ?> !important;
     background-color: <?= $primaryColor; ?> !important;
 }
-.widget.widget-tabs-double-2>.widget-head ul li.active a i:before,
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons, 
+.widget.widget-tabs-double .widget-head ul li a.glyphicons:hover, 
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons:hover, 
+.widget-tabs .nav-tabs > li.active > a.glyphicons:hover, 
+.widget-tabs .nav-tabs > li > a.glyphicons:hover,
+.widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons i:before,
 .widget.widget-tabs > .widget-head ul li.active a.glyphicons, 
 .widget.widget-tabs > .widget-head ul li.active a.glyphicons i:before,
 .nav-tabs:not(.product-text-tab) .nav-item.active .nav-link.active span,
@@ -304,18 +309,18 @@ body .navbar.main.navbar-primary {
 }
 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons.active i:before,
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover i:before,
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover i:before {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover,
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .wizard.wizard-design .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons,
