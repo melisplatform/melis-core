@@ -190,7 +190,7 @@ return array(
 
                     // Data Tables
                     //'/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables.min.css',
-                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables-2.0.6.min.css',
+                    '/MelisCore/assets/components/modules/admin/tables/datatables/assets/css/datatables-2.1.4.min.css',
 
                     // fancytree
                     '/MelisCore/js/library/fancytree/src/skin-lion/ui.fancytree.css',
