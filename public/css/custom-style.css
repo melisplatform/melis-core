@@ -2394,3 +2394,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .nav-tabs:not(.product-text-tab) .nav-item.active .nav-link.active {
     background-color: #fff;
 } */
+.modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head {
+    border-radius: 0 !important;
+}
