@@ -2370,14 +2370,14 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
  * Need to add an entry on view/melis-core/platform-scheme/get-style-color-css.phtml
  * for primary, secondary color etc..
  */
-.nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active {
+/* .nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active {
 	background-color: #fff;
-}
+} */
 /* added on get-style-color-css.phtml */
-.nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active,
+/* .nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active,
 .nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active span {
 	color: #e61c23;
-}
+} */
 .product-text-tab-container .product-text-tab li a,
 .nav-tabs .nav-link {
 	border-radius: 0 !important;
@@ -2388,9 +2388,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	border: 0 !important;
 }
 /* added on get-style-color-css.phtml */
-.nav-tabs:not(.product-text-tab) .nav-link.active span {
+/* .nav-tabs:not(.product-text-tab) .nav-link.active span {
 	color: #e61c23 !important;
 }
 .nav-tabs:not(.product-text-tab) .nav-item.active .nav-link.active {
     background-color: #fff;
-}
+} */
