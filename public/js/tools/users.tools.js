@@ -457,9 +457,7 @@ var toolUserManagement = {
 					$userLogin.html(data.user.usr_login);
 					toolUserManagement.setImage("#profile-image", data.user.usr_image);
 
-					$(
-						"form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select"
-					).each(function (index) {
+					$("form#idusermanagement input[type='text'], form#idusermanagement input[type='hidden'], form#idusermanagement select").each(function (index) {
 						var $this = $(this),
 							name = $this.attr("name"),
 							$toolUserMgntTmp = $("#tool_user_management_id_tmp"),

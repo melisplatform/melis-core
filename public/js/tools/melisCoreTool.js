@@ -55,7 +55,7 @@ var melisCoreTool = (function (window) {
                                 if ( $footerBtns.find(".btn:first-child").hasClass("btn-success") ) {
                                     $footerBtns.find(".btn:first-child").removeClass("btn-success");
                                 }
-                            }, 500);
+                            }, 0);
                             $footerBtns.find(".btn:first-child").addClass("btn-danger pull-left").removeClass("btn-secondary btn-default");
                             $footerBtns.find(".btn").addClass("btn-success").removeClass("btn-secondary btn-default");
                         }
