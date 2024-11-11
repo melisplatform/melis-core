@@ -25,7 +25,8 @@ return [
     'tr_meliscore_dashboard_notify_steps_general_next_text' => "Suivant",
     'tr_meliscore_dashboard_notify_steps_general_skip_text' => "Fermer l'aide",
     'tr_meliscore_dashboard_notify_step_2_next_text' => "J'ai compris, fermer",
-    'tr_meliscore_no_access_to_tool' => "You don't have an access to this tool",
+    'tr_meliscore_dashboard_bubble_plugins' => 'Bubble plugins',
+    'tr_meliscore_dashboard_content' => 'Dashboard contents',
 
     // Rights
     'tr_meliscore_meliscore' => 'MelisCore',

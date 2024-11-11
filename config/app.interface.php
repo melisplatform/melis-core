@@ -561,7 +561,8 @@ return array(
                 ),
                 'meliscore_center' => array(
                     'conf' => array(
-                        'rightsDisplay' => 'none',
+//                        'rightsDisplay' => 'none',
+                        'name' => 'tr_meliscore_dashboard'
                     ),
                     'forward' => array(
                         'module' => 'MelisCore',
@@ -574,7 +575,7 @@ return array(
                         'meliscore_dashboard' => array(
                             'conf' => array(
                                 'id' => 'id_meliscore_toolstree_section_dashboard',
-                                'name' => 'tr_meliscore_dashboard',
+                                'name' => 'tr_meliscore_dashboard_content',
                                 'melisKey' => 'meliscore_dashboard',
                                 'icon' => 'fa-tachometer',
                                 'dashboard' => true
@@ -604,8 +605,8 @@ return array(
                                     'conf' => [
                                         'id' => 'id_meliscore_dashboard_bubble_plugins',
                                         'melisKey' => 'meliscore_dashboard_bubble_plugins',
-                                        'name' => 'tr_meliscore_dashboard',
-                                        'rightsDisplay' => 'none'
+                                        'name' => 'tr_meliscore_dashboard_bubble_plugins',
+//                                        'rightsDisplay' => 'none'
                                     ],
                                     'forward' => [
                                         'module' => 'MelisCore',
