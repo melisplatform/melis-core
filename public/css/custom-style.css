@@ -2377,3 +2377,21 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 .modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head {
     border-radius: 0 !important;
 }
+/* sort icon beside the table header text */
+.dt-container table.dataTable thead>tr>th.dt-orderable-asc span.dt-column-order, 
+.dt-container table.dataTable thead>tr>th.dt-orderable-desc span.dt-column-order, 
+.dt-container table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order, 
+.dt-container table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order, 
+.dt-container table.dataTable thead>tr>td.dt-orderable-asc span.dt-column-order, 
+.dt-container table.dataTable thead>tr>td.dt-orderable-desc span.dt-column-order, 
+.dt-container table.dataTable thead>tr>td.dt-ordering-asc span.dt-column-order, 
+.dt-container table.dataTable thead>tr>td.dt-ordering-desc span.dt-column-order {
+    position: relative;
+    display: inline-block;
+    margin-left: 0.5rem;
+    right: auto;
+    top: -6px;
+    bottom: auto;
+    left: auto;
+    z-index: 1;
+}

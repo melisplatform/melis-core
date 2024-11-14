@@ -97,28 +97,26 @@
     // ajax
     function processAjax() {
         // var miniTemplateUrl = window.parent.melisTinyMCE.miniTemplateUrl();
-        // var miniTemplateUrl = parent.tinymce.activeEditor.options.get("mini_templates_url");
+        var options = parent.tinymce.activeEditor.options.get("plugins");
+        var miniTemplateUrl = parent.tinymce.activeEditor.options.get("mini_templates_url");
+            console.log({options});
+            console.log({miniTemplateUrl});
             $.ajax({
                 type: 'GET',
                 url: parent.tinymce.activeEditor.options.get("mini_templates_url"),
                 dataType: 'json',
                 cache: false
-            }).done(function(data) {
-                // console.table(data);
-                // console.log(data);
-                
-                /* for ( var i = 0; i < data.length; i++ ) {
-                    if ( data[i].type === 'category' ) {
-                        console.log(`data[i].id: `, data[i].id);
-                    }
-                } */
-
+            })
+            .done(function(data) {
+                console.log(`processAjax() data: `, data);
                 setTimeout(function() {
                     appendAccordion(data);
                 }, 1000);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                alert( translations.tr_meliscore_error_message );
+                // console.log(`translations: `, translations);
+                // alert( translations.tr_meliscore_error_message );
+                alert(parent.tinymce.util.I18n.translate('Error'));
             });
     }
 

@@ -1134,7 +1134,8 @@ var melisHelper = (function () {
 						data: null,
 						width: "10%",
 						bSortable: false,
-						sClass: "dtActionCls all",
+						// sClass: "dtActionCls all",
+						className: "dtActionCls all",
 						mRender: function () {
 							return actionButtons;
 						},

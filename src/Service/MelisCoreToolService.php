@@ -528,7 +528,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                                         return \'<div>' . $actionButtons . '</div>\';
                                     },
                                     "bSortable" : false,
-                                    "sClass" : \'dtActionCls\',
+                                    "className" : \'dtActionCls\',
                                 }';
             }
             $jsonColumns .= ']';
