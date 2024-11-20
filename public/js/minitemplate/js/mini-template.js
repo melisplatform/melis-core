@@ -97,10 +97,7 @@
     // ajax
     function processAjax() {
         // var miniTemplateUrl = window.parent.melisTinyMCE.miniTemplateUrl();
-        var options = parent.tinymce.activeEditor.options.get("plugins");
-        var miniTemplateUrl = parent.tinymce.activeEditor.options.get("mini_templates_url");
-            console.log({options});
-            console.log({miniTemplateUrl});
+        // var miniTemplateUrl = parent.tinymce.activeEditor.options.get("mini_templates_url");
             $.ajax({
                 type: 'GET',
                 url: parent.tinymce.activeEditor.options.get("mini_templates_url"),
@@ -108,15 +105,12 @@
                 cache: false
             })
             .done(function(data) {
-                console.log(`processAjax() data: `, data);
                 setTimeout(function() {
                     appendAccordion(data);
                 }, 1000);
             })
             .fail(function(xhr, textStatus, errorThrown) {
-                // console.log(`translations: `, translations);
-                // alert( translations.tr_meliscore_error_message );
-                alert(parent.tinymce.util.I18n.translate('Error'));
+                alert( parent.translations.tr_meliscore_error_message );
             });
     }
 

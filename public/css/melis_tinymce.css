@@ -22,3 +22,6 @@
 img {
 	display: unset !important;
 }
+.melis-cms-plugin-snippets img {
+    max-width: 100%;
+}
