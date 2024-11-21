@@ -767,6 +767,19 @@ var melisCore = (function(window){
             $tabConOuter.removeClass("hide-res-menus");
     });
 
+    // removes aria-hidden attribute on modal, issue: https://w3c.github.io/aria/#aria-hidden
+    $body.on("show.bs.modal", ".modal", function() {
+        // $('[aria-hidden="true"]')
+        $(this).attr("aria-modal", "true");
+        $(this).attr("aria-hidden", "false");
+    });
+
+    $body.on("hidden.bs.modal", ".modal", function() {
+        $(this).attr("aria-hidden", "false");
+        $(this).attr("aria-modal", "false");
+        $(this).removeAttr("style");
+    });
+
     function showPlugLists() {
         if($(this).hasClass("active")) {
             $(this).removeClass("active")

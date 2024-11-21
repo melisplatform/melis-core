@@ -963,7 +963,6 @@ var melisHelper = (function () {
 					[5, 10, 25, 50],
 				],
 				pageLength: 10,
-				bSort: true,
 				searchDelay: 1500,
 				columnDefs: [
 					{ responsivePriority: 1, targets: 0 },
@@ -1022,8 +1021,8 @@ var melisHelper = (function () {
 						settings.columnDefs.push({
 							width: item.css.width,
 							targets: ctr,
-							sClass: item.sClass,
-							bSortable: isColumnSortable,
+							className: item.className,
+							orderable: isColumnSortable,
 						});
 
 						ctr++;
@@ -1133,7 +1132,7 @@ var melisHelper = (function () {
 						targets: -1,
 						data: null,
 						width: "10%",
-						bSortable: false,
+						orderable: false,
 						// sClass: "dtActionCls all",
 						className: "dtActionCls all",
 						mRender: function () {
