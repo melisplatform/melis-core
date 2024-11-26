@@ -529,7 +529,7 @@ var melisHelper = (function () {
 				"' data-id='" +
 				zoneId +
 				"' title='" +
-				title.replace(/'/g, "&apos;") +
+				title?.replace(/'/g, "&apos;") +
 				"'>";
 			li +=
 				"<i class='fa " + icon + " fa-2x'></i><span class='navtab-pagename'>";
