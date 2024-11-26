@@ -14,7 +14,9 @@ $(function() {
 					encode		: true
 				}).done(function(data) {
 					if(data.success) {
-						$('#modal-language').modal('hide');
+						// $('#modal-language').modal('hide');
+						melisCoreTool.hideModal("modal-language");
+
 						melisHelper.zoneReload("id_meliscore_tool_language", "meliscore_tool_language");
 						melisHelper.zoneReload("id_meliscore_header_language", "meliscore_header_language");
 						melisHelper.melisOkNotification(data.textTitle, data.textMessage);

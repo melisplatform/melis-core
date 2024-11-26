@@ -2261,7 +2261,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {
 .modal .modal-footer {
 	padding: 15px;
 }
-/* .modal .modal-footer button:first-child{
+/* .modal .modal-footer button:first-child {
 
 } */
 .modal-content {
@@ -2295,14 +2295,14 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {
 .widget.widget-tabs-double > .widget-head ul li.active {
 	height: 39px;
 }
-.widget.widget-tabs-double > .widget-head ul li a.glyphicons,
+/* .widget.widget-tabs-double > .widget-head ul li a.glyphicons,
 .widget.widget-tabs-double > .widget-head ul li a.glyphicons i:before {
 	color: #fff;
 }
 .widget.widget-tabs > .widget-head ul li.active a.glyphicons,
 .widget.widget-tabs > .widget-head ul li.active a.glyphicons i:before {
 	color: #e61c23;
-}
+} */
 .widget.widget-tabs > .widget-head ul li.active:first-child {
 	border-radius: 0;
 }
@@ -3602,14 +3602,6 @@ div#modal-user-management div.widget {
 }
 
 @media only screen and (max-width: 767px) {
-	/* Old Modal */
-	/* Commented, issue on tabs not stacked not side by side */
-	/* #content .tooltabmodal#modal-user-management .nav.nav-tabs li {
-		float: none !important;
-	}
-	#content .tooltabmodal#modal-user-management .nav.nav-tabs li.active {
-		float: none !important;
-	} */
 	#content .tooltabmodal#modal-user-management .widget {
 		width: auto;
 	}

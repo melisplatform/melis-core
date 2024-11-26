@@ -998,12 +998,6 @@ a[data-bs-toggle="modal"]:focus {
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li.active {
 	height: 39px;
 }
-/* #modal-user-management .widget.widget-tabs-double > .widget-head ul li a {
-	color: #fff;
-}
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li a i:before {
-	color: #fff;
-} */
 .no-dashboard-access p {
 	margin-bottom: 0;
 }
@@ -1882,7 +1876,10 @@ a[data-bs-toggle="tab"] {
 }
 /* Fix for closing of modal */
 body {
-	overflow-y: auto !important;
+	/* Commented, for .tox-dialog__disable-scroll to take effect when modal is open.
+	 * Need to check other ways that overflow-y: auto !important is needed
+	 * overflow-y: auto !important; 
+	 */
     overflow-x: hidden !important;
 }
 /* jQuery migration */
@@ -2001,7 +1998,9 @@ label {
 	right: 0;
 }
 .dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, 
-.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before { background-color: transparent !important; }
+.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before { 
+	background-color: transparent; 
+}
 
 table.dataTable.dtr-inline.collapsed>tbody>tr>td, 
 table.dataTable.dtr-inline.collapsed>tbody>tr>th {
@@ -2283,8 +2282,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	top: 2px;
 	right: 2px;
 }
-.modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
-.modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before,
+/* .modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
+.modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before, */
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons, 
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons i:before {
     color: #fff;
@@ -2343,6 +2342,15 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
     background-color: #e61c23 !important;
     color: #fff;
 }
+.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before, 
+.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+    top: 20px !important;
+    border-radius: 0 !important;
+    background-color: #b9b8b8 !important;
+}
+.modal-content .widget .widget-head {
+    border-radius: 0;
+}
 /* datetimepicker - tempusDominus */
 .datepicker td,
 .datepicker th {
@@ -2350,4 +2358,22 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 }
 .bootstrap-datetimepicker-widget .datepicker > div {
 	display: block;
+}
+/* 
+ * Global css for .nav .nav-tabs except the .product-text-tab or the language tab on most melis-commerce
+ * Need to add an entry on view/melis-core/platform-scheme/get-style-color-css.phtml
+ * for primary, secondary color etc..
+ */
+.product-text-tab-container .product-text-tab li a,
+.nav-tabs .nav-link {
+	border-radius: 0 !important;
+	border: 0;
+}
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link {
+	border: 0 !important;
+}
+.bootstrap-dialog .modal-header,
+.modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head {
+    border-radius: 0 !important;
 }

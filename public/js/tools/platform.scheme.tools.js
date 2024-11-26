@@ -68,6 +68,9 @@ $(function() {
                 formData.append('colors', JSON.stringify(colors));
 
                 melisCoreTool.pending(".button");
+                
+                melisCoreTool.addOverflowHidden();
+
                 $.ajax({
                     type    : 'POST',
                     url     : 'melis/MelisCore/PlatformScheme/save',
@@ -78,6 +81,8 @@ $(function() {
                     dataType    : 'json'
                 }).done(function(data) {
                     if(data.success) {
+                        melisCoreTool.removeOverflowHidden();
+
                         melisCoreTool.processing();
                         location.reload(true);
                     }

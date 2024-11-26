@@ -6,6 +6,22 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.table-primary thead th {
+    border-color: <?= $primaryColor; ?> !important;
+    background-color: <?= $primaryColor; ?> !important;
+}
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons, 
+.widget.widget-tabs-double .widget-head ul li a.glyphicons:hover, 
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons:hover, 
+.widget-tabs .nav-tabs > li.active > a.glyphicons:hover, 
+.widget-tabs .nav-tabs > li > a.glyphicons:hover,
+.widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons i:before,
+.widget.widget-tabs > .widget-head ul li.active a.glyphicons, 
+.widget.widget-tabs > .widget-head ul li.active a.glyphicons i:before,
+.nav-tabs:not(.product-text-tab) .nav-item.active .nav-link.active span,
+.nav-tabs:not(.product-text-tab) .nav-link.active span,
+.nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active span,
+.nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active,
 .gdpr-tab-table-container .widget-head ul li.active a,
 .gdpr-tab-table-container .widget-head ul li.active a .fa:before,
 .melis-modal-cont .modal-content h3 a .glyphicons.lock i::before {
@@ -270,11 +286,14 @@ body .navbar.main.navbar-primary {
 .modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons i:before,
 .widget.widget-tabs .widget-head ul li.active a.glyphicons,
 .widget.widget-tabs .widget-head ul li.active a.glyphicons i:before
+.widget.widget-tabs>.widget-head ul li.active a.glyphicons span,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons i:before {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.glyphicons.active i:before,
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.glyphicons.active,
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons:hover, 
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons:hover i:before,
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.active i:before,
@@ -293,17 +312,18 @@ body .navbar.main.navbar-primary {
 }
 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons.active i:before,
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover i:before,
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover i:before {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover,
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .wizard.wizard-design .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons,
@@ -798,7 +818,7 @@ input[type="color"]:focus,
 }
 
 .content-cont .widget.widget-tabs-double-2>.widget-head ul li a:hover {
-color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?>;
 }
 
 #external-events li {
@@ -871,6 +891,10 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $loginLinkColor; ?>
 }
 /* =============== Secondary Color =============== */
+.widget.widget-tabs > .widget-head ul li.active a.glyphicons:focus i:before,
+.widget.widget-tabs > .widget-head ul li.active a.glyphicons:hover i:before,
+.widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons:focus i:before,
+.widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons:hover i:before,
 .gdpr-tab-table-container .widget-head ul li a,
 .gdpr-tab-table-container .widget-head ul li a .fa:before,
 .reponsive-menu-tabs:hover span, .reponsive-menu-tabs:hover .fa {
@@ -991,7 +1015,7 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 .nav-tabs>li>a:hover, .nav-pills>li>a, .nav-pills>li>a:hover {
-    color: <?= $secondaryColor; ?>;
+    color: <?= $secondaryColor; ?> !important;
 }
 
 .list-group-1>li:hover>a>[class*="fa-"] {

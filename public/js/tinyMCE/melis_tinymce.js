@@ -69,12 +69,9 @@ var melisTinyMCE = (function() {
 				tinyMCE.init(config);
 
 				// defaulting function callbacks to string except for .file_picker_callback needs to be a function
-				// window.parent.melisTinyMCE.tinyMceConfigs[type].setup = setup;
 				var afterConfigs = window.parent.melisTinyMCE.tinyMceConfigs[type];
 					
 					if ( typeof setupCb === 'string' ) {
-						//afterConfigs.setup = setupCb;
-						//afterConfigs.setup = afterConfigs.setup;
 						afterConfigs.setup = 'melisTinyMCE.tinyMceActionEvent';
 					}
 
@@ -86,17 +83,7 @@ var melisTinyMCE = (function() {
 						afterConfigs.file_picker_callback = filePickerCb.name;
 						afterConfigs.file_picker_callback = eval(afterConfigs.file_picker_callback);
 					}
-
-					/* window.parent.$body.on("click", window.parent.$body.find(".melis-publishpage"), function() {
-						afterConfigs.file_picker_callback = window.parent.melisTinyMCE.filePickerCallback.name;
-					}); */
 		}, 1000);
-
-		$(document).on("focusin", function(e) {
-			if ($(e.target).closest(".tox-dialog").length) {
-				e.stopImmediatePropagation();
-			}
-		});
 	}
 
 	filePickerCallback = function(cb, value, meta) {
@@ -286,6 +273,7 @@ var melisTinyMCE = (function() {
 			dialogHeight;
 
 			if ( $mcePopUp.length ) {
+				$body.addClass("modal-open");
 				if ( $iframe.length ) {
 					// iframe height
 					var iframeHeight 	= $(window).height(),
@@ -319,6 +307,9 @@ var melisTinyMCE = (function() {
 						window.parent
 							.$("body")
 							.animate({ scrollTop: parent.scrollOffsetTinyMCE() }, 200);
+
+						$body.removeClass("modal-open");
+
 						clearTimeout(timeOut);
 					}
 				}, 300);
@@ -347,6 +338,14 @@ var melisTinyMCE = (function() {
 		setMultipleAttributes: setMultipleAttributes
 	};
 })();
+
+// Prevent Bootstrap dialog from blocking focusin
+document.addEventListener('focusin', (e) => {
+	if (e.target.closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window") !== null) {
+		e.stopImmediatePropagation();
+	}
+});
+
 // This whole file is not the one inside the page edition iframe
 (function($) {
 	var $body = $("body");

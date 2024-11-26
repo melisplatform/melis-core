@@ -37,7 +37,8 @@
                 var dType = $(v).data("type");
                     
                     if ( dType === 'category' ) {
-                        var dCategoryText = $(v).attr("title");
+                        // $(v).attr("title")
+                        var dCategoryText = $(v).find("span").text();
                             if ( $.inArray( dCategoryText, listArray ) == -1 ) {
                                 listArray.push( dCategoryText );
                             }
@@ -61,17 +62,57 @@
             return uniqueArray;
     }
 
+    // unique main category
+    function getUniqueMainCategoryId( $elemArray ) {
+        var listArray = [], uniqueArray = [], counting = 0, found = false;
+            
+            $.each($elemArray, function(i, v) {
+                var dType = $(v).data("type");
+                    
+                    if ( dType === 'category' ) {
+                        var dId = $(v).data("id");
+                            if ( $.inArray( dId, listArray ) == -1 ) {
+                                listArray.push( dId );
+                            }
+                    }
+            });
+
+            for ( var x = 0; x < listArray.length; x++ ) {
+              for ( var y = 0; y < uniqueArray.length; y++ ) {
+                if ( listArray[x] == uniqueArray[y] ) {
+                  found = true;
+                }
+              }
+              counting++;
+              if ( counting == 1 && found == false ) {
+                uniqueArray.push( listArray[x] );
+              }
+              found = false;
+              counting = 0;
+            }
+            
+            return uniqueArray;
+    }
+
     // ajax
     function processAjax() {
-        //var miniTemplateUrl = window.parent.melisTinyMCE.miniTemplateUrl();
-            //console.log("processAjax() miniTemplateUrl: ", miniTemplateUrl);
+        // var miniTemplateUrl = window.parent.melisTinyMCE.miniTemplateUrl();
+        // var miniTemplateUrl = parent.tinymce.activeEditor.options.get("mini_templates_url");
             $.ajax({
                 type: 'GET',
                 url: parent.tinymce.activeEditor.options.get("mini_templates_url"),
                 dataType: 'json',
                 cache: false
             }).done(function(data) {
-                // var uText = getUniqueText(data);
+                // console.table(data);
+                // console.log(data);
+                
+                /* for ( var i = 0; i < data.length; i++ ) {
+                    if ( data[i].type === 'category' ) {
+                        console.log(`data[i].id: `, data[i].id);
+                    }
+                } */
+
                 setTimeout(function() {
                     appendAccordion(data);
                 }, 1000);
@@ -81,22 +122,229 @@
             });
     }
 
-    function siteNameHtml( siteName, index ) {
-        return '<h3>'+ siteName +'</h3>' +
-                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'"></div>';
+    // accordion
+    function appendAccordion(data) {
+        var $accordion = $("#accordion-mini-template");
+            
+            // template lists
+            for ( var i = 0; i < data.length; i++ ) {
+                var template        = data[i],
+                    dId             = template.id,
+                    dParent         = template.parent,
+                    dText           = template.text,
+                    dType           = template.type,
+                    dModule         = template.module,
+                    dSiteName       = template.site_name,
+                    dImageSource    = template.imgSource,
+                    dUrl            = template.url,
+                    buttons         = '';
+
+                var trimDText       = dText.replaceAll("-", " "); // $button = $("button[title='"+trimDText+"']")
+
+                    // mini-template buttons
+                    if ( dType === 'mini-template' ) {
+                        buttons = $("<button />", {
+                            "title"           : trimDText,
+                            "id"              : 'btn_'+i,
+                            "class"           : 'mini-template-button',
+                            "data-id"         : dId,
+                            "data-module"     : dModule,
+                            "data-parent"     : dParent,
+                            "data-type"       : dType,
+                            "data-site-name"  : dSiteName,
+                            "data-url"        : dUrl
+                        });
+                    }
+
+
+                    // category
+                    if ( dType === 'category' ) {
+                        buttons = $("<button />", {
+                            "title"             : trimDText,
+                            "class"             : 'mini-template-button category d-none',
+                            "data-type"         : dType,
+                            "data-site-name"    : dSiteName,
+                            "data-id"           : dId
+                        });
+                    }
+
+                    if ( dImageSource != '' && typeof dImageSource != 'undefined' ) {
+                        var $image  = "<img src=" + dImageSource + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />";
+                            buttons.append( $image );
+                    }                    
+
+                    buttons.prepend( "<span>" + trimDText + "</span>");
+                    
+                    $accordion.append( buttons );
+            }
+
+            /**
+             * Appending of site category
+             * Creating site category based on unique values from button's data-site-name
+             */
+            var $miniTemplateButtons = $accordion.find(".mini-template-button");
+
+                // .site-category
+                createSiteCategory( $miniTemplateButtons );
+                
+                // .main-category, .other-category
+                $.when(
+                    appendMainCategoryToSiteCategory( $miniTemplateButtons )
+                ).then(function() {
+                    // re-arranging the mini template buttons to its own category based on data attributes
+                    $.each( $miniTemplateButtons, function(i, v) {
+                        var $btn            = $(v),
+                            title           = $btn.text(),
+                            id              = $btn.data("id"),
+                            parent          = $btn.data("parent"),
+                            type            = $btn.data("type"),
+                            siteName        = $btn.data("site-name"),
+                            $siteCategory   = $(".site-category"),
+                            $mainCategory   = $(".main-category");
+
+                            /**
+                             * Check if mini-template should be inside a main category or
+                             * If parent == '#' means it is under .site-category
+                             */
+                            if ( parent === '#' ) {
+                                // .site-category
+                                $.each($siteCategory, function(i, v) {
+                                    var $siteCategoryElement = $(v),
+                                        siteCategorySiteName = $siteCategoryElement.data("site-name");
+                                        
+                                        if ( siteName === siteCategorySiteName ) {
+                                            $accordion.find('.site-category').append( $btn );
+                                        }
+                                });
+                            }
+                            else {
+                                // for .main-category
+                                $.each($mainCategory, function(i, v) {
+                                    var $mainCategoryElement = $(v),
+                                        mainCategorySiteName = $mainCategoryElement.data("site-name"),
+                                        mainCategoryId       = $mainCategoryElement.data("id");
+                                        
+                                        if ( siteName === mainCategorySiteName && parent === mainCategoryId ) {
+                                            $("#"+$mainCategoryElement.attr("id")).append($btn);
+                                        }
+                                });
+                            }
+
+                            /**
+                             * Remove this not needed element added by jquery ui accordion.
+                             * <span class="ui-accordion-header-icon ui-icon fa fa-arrow-circle-right"></span>
+                             */
+                            $btn.find(".fa-arrow-circle-right").remove();
+
+                            /**
+                             * Highlight the clicked button to determine from in active.
+                             */
+                            $btn.on("click", function(e) {
+                                var $this = $(this);
+
+                                    $this.toggleClass("active").siblings().removeClass("active");
+
+                                    /**
+                                     * For the issue on displaying all available mini templates.
+                                     * Some button when clicked it closes the accordion
+                                     */
+                                    if ( $this.hasClass( 'ui-accordion-header' ) ) {
+                                        $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
+                                    }
+                            });
+                    });
+                }).then(function() {
+                    /**
+                     * 1. Remove buttons with classes .mini-template-button.category.d-none directly under .main-category
+                     * 2. Remove .accordion classes, display none and height on button directly under .site-category
+                     */
+                    var $siteCategory       = $accordion.find(".site-category"),
+                        $siteCategoryBtns   = $siteCategory.find(".mini-template-button"), // .mini-template-button(s) under a .site-category
+                        $mainCategory       = $siteCategory.find(".main-category"),
+                        $mainCategoryBtns   = $mainCategory.find(".mini-template-button"); // .mini-template-button(s) under a .main-category
+
+                        $.each($siteCategoryBtns, function(i, v) {
+                            var $btn = $(v);
+                                // removes style attribute with display: none; height: 115px;
+                                $btn.removeAttr("style");
+
+                            // removes all accordion related classes
+                            const clsList = $btn[0].classList;
+                                clsList.forEach((clsName) => {
+                                    if ( clsName.startsWith("ui-") ) {
+                                        $btn[0].classList.remove(clsName);
+                                    }
+                                });
+                        });
+
+                        $.each($mainCategoryBtns, function(i, v) {
+                            var $btn = $(v);
+                                // removes style attribute with display: none; height: 115px;
+                                $btn.removeAttr("style");
+
+                                // generated button from dType 'category'
+                                $btn.find(".category.d-none").remove();
+
+                                // removes all accordion related classes
+                            const clsList = $btn[0].classList;
+                                clsList.forEach((clsName) => {
+                                    if ( clsName.startsWith("ui-") ) {
+                                        $btn[0].classList.remove(clsName);
+                                    }
+                                });
+                        });
+
+                        // adding of custom css class for spacing
+                        $siteCategory.find(".main-category:last").prev(".ui-accordion-header").addClass("custom-last-child");
+                        $siteCategory.find(".main-category:last").addClass("custom-last-child");
+                });
+
+                /**
+                 * Turns lists of sites and categories into accordion
+                 */
+                var icons = {
+                    header: 'fa fa-arrow-circle-right',
+                    activeHeader: 'fa fa-arrow-circle-down'
+                };
+
+                $(".accordion").accordion({
+                    animate: 400,
+                    autoHeight: true,
+                    collapsible: true,
+                    icons: icons
+                });
+
+                $(".accordion").niceScroll({cursorcolor:"#CB4040", cursorborder: "#CB4040"});
+
+                $("body").on("click", ".ui-accordion-header", function() {
+                    $(".accordion").getNiceScroll().resize();
+                });
+
+                // hightlight buttons
+                highlightButtons($miniTemplateButtons);
+
+                // get selected mini template form .mini-template-button
+                getSelectedMiniTemplate($miniTemplateButtons);
     }
 
-    function mainCategoryHtml( mainCategoryText, mainCategorySiteName, index ) {
-        return '<h3>'+ mainCategoryText +'</h3>' +
-                '<div id="main-category-'+index+'" class="main-category common-category" data-site-name="'+ mainCategorySiteName +'"></div>'; // data-cat-id="'+ categoryId +'
+    // create category section
+    function createSiteCategory( $miniTemplateButtons ) {
+        var $accordion      = $("#accordion-mini-template"),
+            uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
+            // cycle through the unique site names for .site-category
+            for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
+                var siteName = uniqueSiteNames[index],
+                    siteHtml = '';
+                    
+                    // site category
+                    if ( siteName != 'undefined' ) {
+                        siteHtml = siteNameHtml( siteName, index );
+                        $accordion.prepend( siteHtml );
+                    }      
+            }
     }
 
-    function otherCategoryHtml( otherCategory, otherCategorySiteName, index ) {
-        return '<h3>'+ otherCategory +'</h3>' +
-                '<div id="other-category-'+index+'" class="other-category common-category" data-site-name="'+ otherCategorySiteName +'"></div>';
-    }
-
-    function appendOtherCategoryToSiteCategory( $miniTemplateButtons ) {
+    function appendMainCategoryToSiteCategory( $miniTemplateButtons ) {
         var $accordion              = $("#accordion-mini-template"),
             $siteCategory           = $(".site-category"),
             siteCategorySiteName    = $siteCategory.data('site-name');
@@ -105,36 +353,19 @@
                 countCategoryOccurrence = 0;
 
                 // occurrences of # for .other-category, 
-                $miniTemplateButtons.each(function(i, v) {
+                $.each($miniTemplateButtons, function(i, v) {
                     let $button     = $(v);
                         dParent     = $button.data('parent'),
-                        dCategory   = $button.data('type');
+                        dType       = $button.data('type');
 
                         if ( dParent === '#' ) {
                             countHashOccurrence++;
-                        }
-
-                        if ( dCategory === 'category' ) {
+                        } 
+                        
+                        if ( dType === 'category' ) {
                             countCategoryOccurrence++;
                         }
                 });
-
-                // .other-category
-                if ( countHashOccurrence ) {
-                    var uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
-                    for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
-                        var otherCategorySiteName   = uniqueSiteNames[index],
-                            otherCategory           = parent.tinymce.util.I18n.translate("Other Category"), // translations.tr_meliscore_tinymce_mini_template_other_category,
-                            otherCatHtml            = '';
-
-                            otherCatHtml = otherCategoryHtml( otherCategory, otherCategorySiteName, index );
-
-                            // append .other-category to the right .site-category
-                            if ( siteCategorySiteName === otherCategorySiteName ) {
-                                $accordion.find('.site-category').append( otherCatHtml );
-                            }
-                    }
-                }
 
                 // .main-category
                 if ( countCategoryOccurrence ) {
@@ -144,13 +375,13 @@
                                 mainCatHtml             = '';
 
                                 var uniqueMainCategoryText = getUniqueCategoryText( $miniTemplateButtons );
-                                    for ( var j = 0; j < uniqueMainCategoryText.length; j++ ) {
-                                        var mainCategoryText = uniqueMainCategoryText[j];
-
+                                var ids = uniqueTypeCategoryIds();
+                                    for ( var i = 0; i < ids.length; i++ ) {
+                                        var mainCategoryText = uniqueMainCategoryText[i];
                                             // categoryId, refer to comment {template lists} template.id
-                                            mainCatHtml = mainCategoryHtml( mainCategoryText, mainCategorySiteName, j );
-
-                                            // append .other-category to the right .site-category
+                                            mainCatHtml = mainCategoryHtml( mainCategoryText, mainCategorySiteName, ids[i], i );
+    
+                                            // append .main-category to the right .site-category
                                             if ( siteCategorySiteName === mainCategorySiteName ) {
                                                 $accordion.find('.site-category').append( mainCatHtml );
                                             }
@@ -159,22 +390,152 @@
                 }
     }
 
-    // create category section
-    function createSiteCategory( $miniTemplateButtons ) {
-        var $accordion      = $("#accordion-mini-template"),
-            uniqueSiteNames = getUniqueSiteName( $miniTemplateButtons );
+    // get the unique data-id of a data-type: category .mini-template-button
+    function uniqueTypeCategoryIds() {
+        var uniqueIds           = [];                     
+            // data-id: 2-test2 and 1-test, data-type: category
+            $.each( $(".mini-template-button[data-type='category']"), function(i, v) {
+                var $btn    = $(v),
+                    id      = $btn.data("id");
 
-            // cycle through the unique site names for .site-category
-            for ( var index = 0; index < uniqueSiteNames.length; index++ ) {
-                var siteName = uniqueSiteNames[index],
-                    siteHtml = '';
+                    if ( uniqueIds.indexOf(id) === -1 ) {
+                        uniqueIds.push(id);
+                    }                                                    
+            });
 
-                    // site category
-                    if ( siteName != 'undefined' ) {
-                        siteHtml = siteNameHtml( siteName, index );
-                        $accordion.prepend( siteHtml );
-                    }      
+            return uniqueIds;
+    }
+
+    // get the selected mini template
+    function getSelectedMiniTemplate( $miniTemplateButtons ) {
+        setTimeout(function() {
+            var $siteCategory   = $("#accordion-mini-template > .site-category"),
+                $commonCategory = $("#accordion-mini-template > .common-category");
+               
+                // preview mini template at first load without clicking of buttons
+                if ( $siteCategory.length ) {
+                    var $mainCategoryBtn = $("#accordion-mini-template > .site-category.ui-accordion-content-active .main-category > .mini-template-button:first-child"),
+                        miniTemplateBtnDataUrl = "";
+
+                        // with .main-category
+                        if ( $mainCategoryBtn.length ) {
+                            miniTemplateBtnDataUrl = $mainCategoryBtn.data("url");
+                        }
+                        // no .main-category
+                        else {
+                            var $siteCategoryChildBtn = $("#accordion-mini-template > .site-category.ui-accordion-content-active > .mini-template-button:first-child");
+                                miniTemplateBtnDataUrl = $siteCategoryChildBtn.data("url");
+                        }
+
+                        previewMiniTemplate( miniTemplateBtnDataUrl );
+                }
+                
+                $.each($miniTemplateButtons, function(i, v) {
+                    var $btn = $(v);
+                        
+                        // check if direct parent is the .accordion
+                        if ( $btn.parent(".accordion").length ) {
+                            const clsList = $btn[0].classList;
+                                clsList.forEach((clsName) => {
+                                    if ( clsName.startsWith("ui-") ) {
+                                        $btn[0].classList.remove(clsName);
+                                    }
+                                });
+                        }
+
+                        $btn.on("click", function() {
+                            previewMiniTemplate( $(this).data("url") );
+                        });
+                });
+        }, 1000);
+    }
+
+    // displays mini template in iframe
+    function previewMiniTemplate(url) {
+        var $preview    = $("#preview-mini-template"),
+            $prevIframe = $preview.find(".preview-iframe");
+
+            if ( $prevIframe.length ) {
+                $prevIframe.attr("src", url);
+
+                // melis-demo-cms or melis-demo-commerce
+                insertDemoMiniTemplateCss();
             }
+    }
+
+    // insertion of melis-demo-cms mini template css in iframe head
+    function insertDemoMiniTemplateCss() {
+        setTimeout(function() {
+            // https://mantis2.uat.melistechnology.fr/view.php?id=6103, detect if melis-demo-cms or melis-demo-commerce css files will be inserted on the preview iframe
+            var $previewIframe      = $("#preview-mini-template iframe"),
+                $previewIframeHead  = $previewIframe.contents().find("head"),
+                // possible inserting of melis-demo-cms cssUrl inside active tinymce editor iframe
+                // $activeEditorIframe = $(parent.tinymce.activeEditor).contents().find("head"),
+                cssUrl              = [[
+                    '/MelisDemoCms/css/bootstrap.min.css',
+                    '/MelisDemoCms/vendors/themify-icon/themify-icons.css',
+                    '/MelisDemoCms/vendors/elagent/style.css',
+                    '/MelisDemoCms/css/style.css'
+                ], [
+                    '/MelisDemoCommerce/js/vendor/modernizr-2.8.3.min.js',
+                    '/MelisDemoCommerce/css/bootstrap.min.css',
+                    '/MelisDemoCommerce/css/core.css',
+                    '/MelisDemoCommerce/css/shortcode/shortcodes.css',
+                    '/MelisDemoCommerce/css/owl.carousel.css',
+                    '/MelisDemoCommerce/css/owl.theme.default.css',
+                    '/MelisDemoCommerce/css/owl.theme.green.min.css',
+                    '/MelisDemoCommerce/css/style.css',
+                    '/MelisDemoCommerce/css/responsive.css',
+                    '/MelisDemoCommerce/css/animate.css',
+                    '/MelisDemoCommerce/css/custom.css',
+                    '/MelisDemoCommerce/css/skin/skin-default.css'
+                ]];
+
+                if ( $previewIframe.length ) {
+                    let $previewIframeSrc   = $previewIframe.attr("src"),
+                        previewModuleText   = '',
+                        moduleUrl           = '';
+                        
+                        previewModuleText = $previewIframeSrc.split("\\")[1] ? $previewIframeSrc.split("\\")[1] : $previewIframeSrc.split("/")[1];
+
+                        switch(previewModuleText) {
+                            case "MelisDemoCms":
+                                moduleUrl = cssUrl[0];
+                                break;
+                            case "MelisDemoCommerce":
+                                moduleUrl = cssUrl[1];
+                                break;
+                            default:
+                                console.log(parent.tinymce.util.I18n.translate("No demo site detected."));
+                        }
+
+                        $.each( moduleUrl, function(i, v) {
+                            var el = document.createElement("link");
+
+                                el.href     = moduleUrl[i];
+                                el.rel      = "stylesheet";
+                                el.media    = "screen";
+                                el.type     = "text/css";
+
+                                $previewIframeHead.append( el );
+                        });
+                }
+        }, 1000);
+    }
+
+    function siteNameHtml( siteName, index ) {
+        return '<h3>'+ siteName +'</h3>' +
+                '<div id="site-category-'+index+'" class="site-category accordion" data-site-name="'+ siteName +'"></div>';
+    }
+
+    function mainCategoryHtml( mainCategoryText, mainCategorySiteName, mainCategoryId, index ) {
+        return '<h3>'+ mainCategoryText +'</h3>' +
+                '<div id="main-category-'+index+'" class="main-category common-category" data-id="'+mainCategoryId+'" data-site-name="'+ mainCategorySiteName +'"></div>'; // data-cat-id="'+ categoryId +'
+    }
+
+    function otherCategoryHtml( otherCategory, otherCategorySiteName, index ) {
+        return '<h3>'+ otherCategory +'</h3>' +
+                '<div id="other-category-'+index+'" class="other-category common-category" data-site-name="'+ otherCategorySiteName +'"></div>';
     }
 
     // highlight effect on buttons
@@ -221,270 +582,10 @@
                          * Some button when clicked it closes the accordion
                          */
                         if ( $this.hasClass( 'ui-accordion-header' ) ) {
-                        $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
+                            $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
                         }
                 });
         });
-    }
-
-    // get the selected mini template
-    function getSelectedMiniTemplate( $miniTemplateButtons ) {
-        setTimeout(function() {
-            var $siteCategory   = $("#accordion-mini-template > .site-category"),
-                $commonCategory = $("#accordion-mini-template > .common-category");
-                //templateHtml    = '';
-               
-                // preview mini template at first load without clicking of buttons
-                if ( $siteCategory.length > 1 ) {
-                    if ( $commonCategory.hasClass(".ui-accordion-content-active") ) {
-                        var $commonCategoryButton   = $("#accordion-mini-template > .common-category.ui-accordion-content-active .mini-template-button:first-child"),
-                            commonCategoryDataUrl   = $commonCategoryButton.data("url");
-                            
-                            previewMiniTemplate( commonCategoryDataUrl );
-                    }
-                }
-                else {
-                    var $siteCategoryButton = $("#accordion-mini-template > .site-category.ui-accordion-content-active .mini-template-button:first-child"),
-                        siteCategoryDataUrl = $siteCategoryButton.data("url");
-
-                        previewMiniTemplate( siteCategoryDataUrl );
-                }
-                
-                $.each($miniTemplateButtons, function(i, v) {
-                    var $btn = $(v);
-                        $btn.on("click", function() {
-                            previewMiniTemplate( $(this).data("url") );
-                        });
-                });
-
-                //templateHtml = $("#preview-mini-template iframe").contents().find("body")[0].innerHTML;
-                
-                //return templateHtml;
-        }, 1000);
-    }
-
-    // displays mini template in iframe
-    function previewMiniTemplate(url) {
-        var $preview    = $("#preview-mini-template"),
-            $prevIframe = $preview.find(".preview-iframe");
-
-            if ( $prevIframe.length ) {
-                $prevIframe.attr("src", url);
-
-                // melis-demo-cms or melis-demo-commerce
-                insertDemoMiniTemplateCss();
-            }
-    }
-
-    // insertion of melis-demo-cms mini template css in iframe head
-    function insertDemoMiniTemplateCss() {
-        setTimeout(function() {
-            // https://mantis2.uat.melistechnology.fr/view.php?id=6103, detect if melis-demo-cms or melis-demo-commerce css files will be inserted on the preview iframe
-            var $previewIframe      = $("#preview-mini-template iframe"),
-                $previewIframeHead  = $previewIframe.contents().find("head"),
-                // possible inserting of melis-demo-cms cssUrl inside active tinymce editor iframe
-                $activeEditorIframe = $(parent.tinymce.activeEditor).contents().find("head"),
-                cssUrl              = [[
-                    '/MelisDemoCms/css/bootstrap.min.css',
-                    '/MelisDemoCms/vendors/themify-icon/themify-icons.css',
-                    '/MelisDemoCms/vendors/elagent/style.css',
-                    '/MelisDemoCms/css/style.css'
-                ], [
-                    '/MelisDemoCommerce/js/vendor/modernizr-2.8.3.min.js',
-                    '/MelisDemoCommerce/css/bootstrap.min.css',
-                    '/MelisDemoCommerce/css/core.css',
-                    '/MelisDemoCommerce/css/shortcode/shortcodes.css',
-                    '/MelisDemoCommerce/css/owl.carousel.css',
-                    '/MelisDemoCommerce/css/owl.theme.default.css',
-                    '/MelisDemoCommerce/css/owl.theme.green.min.css',
-                    '/MelisDemoCommerce/css/style.css',
-                    '/MelisDemoCommerce/css/responsive.css',
-                    '/MelisDemoCommerce/css/animate.css',
-                    '/MelisDemoCommerce/css/custom.css',
-                    '/MelisDemoCommerce/css/skin/skin-default.css'
-                ]];
-
-                if ( $previewIframe.length ) {
-                    let $previewIframeSrc   = $previewIframe.attr("src"),
-                        previewModuleText   = '',
-                        moduleUrl           = '';
-                        
-                        previewModuleText = $previewIframeSrc.split("\\")[1] ? $previewIframeSrc.split("\\")[1] : $previewIframeSrc.split("/")[1];
-
-                        switch(previewModuleText) {
-                            case "MelisDemoCms":
-                                moduleUrl = cssUrl[0];
-                                break;
-                            case "MelisDemoCommerce":
-                                moduleUrl = cssUrl[1];
-                                break;
-                            default:
-                                console.log("Invalid css url or files not enumerated");
-                        }
-
-                        $.each( moduleUrl, function(i, v) {
-                            var el = document.createElement("link");
-
-                                el.href     = moduleUrl[i];
-                                el.rel      = "stylesheet";
-                                el.media    = "screen";
-                                el.type     = "text/css";
-
-                                $previewIframeHead.append( el );
-                        });
-                }
-        }, 1000);
-    }
-
-    // accordion
-    function appendAccordion(data) {
-        var $accordion = $("#accordion-mini-template");
-            
-            // template lists
-            for ( var i = 0; i < data.length; i++ ) {
-                var template        = data[i],
-                    dId             = template.id,
-                    dParent         = template.parent,
-                    dText           = template.text,
-                    dType           = template.type,
-                    dModule         = template.module,
-                    dSiteName       = template.site_name,
-                    dImageSource    = template.imgSource,
-                    dUrl            = template.url,
-                    buttons         = '';
-
-                var trimDText       = dText.replaceAll("-", " "); // $button = $("button[title='"+trimDText+"']")
-
-                    // mini-template buttons
-                    if ( dType === 'mini-template' ) {
-                        buttons = $("<button />", {
-                            "title"           : trimDText,
-                            "id"              : 'btn_'+i,
-                            "class"           : 'mini-template-button', // d-none
-                            "data-id"         : dId,
-                            "data-module"     : dModule,
-                            "data-parent"     : dParent,
-                            "data-type"       : dType,
-                            "data-site-name"  : dSiteName,
-                            "data-url"        : dUrl
-                        });
-                    }
-                    
-                    // category
-                    if ( dType === 'category' ) {
-                        buttons = $("<button />", {
-                            "title"             : trimDText,
-                            "class"             : 'mini-template-button category d-none',
-                            "data-type"         : dType,
-                            "data-site-name"    : dSiteName
-                        });
-                    }
-
-                    if ( dImageSource != '' ) {
-                        var $image  = "<img src=" + dImageSource + " width='195px' style='display: block; width: 195px; height: auto; margin: 0 auto 0.5rem;' />";
-
-                            buttons.append( $image );
-                    }                    
-                    buttons.prepend( "<span>" + trimDText + "</span>");
-                    $accordion.append( buttons );
-            }
-
-            /**
-             * Appending of site category
-             * Creating site category based on unique values from button's data-site-name
-             */
-            var $miniTemplateButtons = $accordion.find(".mini-template-button");
-
-                // .site-category
-                createSiteCategory( $miniTemplateButtons );
-                
-                // .main-category, .other-category
-                appendOtherCategoryToSiteCategory( $miniTemplateButtons );
-
-                // re-arranging the mini template buttons to its own category based on data attributes
-                $.each( $miniTemplateButtons, function(i, v) {
-                    var $btn            = $(v),
-                        title           = $btn.text(),
-                        id              = $btn.data("id"),
-                        parent          = $btn.data("parent"),
-                        type            = $btn.data("type"),
-                        siteName        = $btn.data("site-name"),
-                        $otherCategory  = $(".other-category"),
-                        $mainCategory   = $(".main-category");
-
-                        /**
-                         * Check if mini-template should be inside a main category or
-                         * If parent == '#' means it is under .other-category
-                         */
-                        if ( parent === '#' ) {
-                            // .other-category
-                            $.each($otherCategory, function(i, v) {
-                                var $otherCategoryElement = $(v),
-                                    otherCategorySiteName = $otherCategoryElement.data("site-name");
-                                    
-                                    if ( siteName === otherCategorySiteName ) {
-                                        $accordion.find('.other-category').append( $btn );
-                                    }
-                            });
-                        }
-                        else {
-                            // for .main-category
-                            $.each($mainCategory, function(i, v) {
-                                var $mainCategoryElement = $(v),
-                                    mainCategorySiteName = $mainCategoryElement.data('site-name');
-                                    
-                                    if ( siteName === mainCategorySiteName ) {
-                                        $accordion.find('.main-category').append( $btn );
-                                    }
-                            });
-                        }
-
-                        /**
-                         * Remove this not needed element added by jquery ui accordion.
-                         * <span class="ui-accordion-header-icon ui-icon fa fa-arrow-circle-right"></span>
-                         */
-                        $btn.find(".fa-arrow-circle-right").remove();
-
-                        /**
-                         * Highlight the clicked button to determine from in active.
-                         */
-                        $btn.on("click", function(e) {
-                            var $this = $(this);
-
-                                $this.toggleClass("active").siblings().removeClass("active");
-
-                                /**
-                                 * For the issue on displaying all available mini templates.
-                                 * Some button when clicked it closes the accordion
-                                 */
-                                if ( $this.hasClass( 'ui-accordion-header' ) ) {
-                                    $this.closest(".site-category").prev(".ui-accordion-header").trigger("click");
-                                }
-                        });
-                });
-
-                /**
-                 * Turns lists of sites and categories into accordion
-                 */
-                var icons = {
-                    header: 'fa fa-arrow-circle-right',
-                    activeHeader: 'fa fa-arrow-circle-down'
-                };
-
-                $(".accordion").accordion({
-                    animate: 400,
-                    autoHeight: true,
-                    collapsible: true,
-                    icons: icons
-                });
-
-                $(".accordion").niceScroll({cursorcolor:"#CB4040", cursorborder: "#CB4040"});
-
-                // hightlight buttons
-                highlightButtons($miniTemplateButtons);
-
-                // get selected mini template form .mini-template-button
-                getSelectedMiniTemplate($miniTemplateButtons);
     }
 
     // Insert html content mini template into tinymce editor

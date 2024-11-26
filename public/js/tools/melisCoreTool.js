@@ -55,7 +55,7 @@ var melisCoreTool = (function (window) {
                                 if ( $footerBtns.find(".btn:first-child").hasClass("btn-success") ) {
                                     $footerBtns.find(".btn:first-child").removeClass("btn-success");
                                 }
-                            }, 500);
+                            }, 0);
                             $footerBtns.find(".btn:first-child").addClass("btn-danger pull-left").removeClass("btn-secondary btn-default");
                             $footerBtns.find(".btn").addClass("btn-success").removeClass("btn-secondary btn-default");
                         }
@@ -341,6 +341,35 @@ var melisCoreTool = (function (window) {
         function showModal( modalID ) {
             const $showModal = new bootstrap.Modal("#"+modalID, { show: true, backdrop: true });
                 $showModal.show();
+        }
+
+        /**
+         * toggle bootstrap 5.3.3 collapse component
+         * document.querySelector(".widget-body[data-step='1']")
+         * <div class="widget-body" data-step="1"></div>,
+         * $elSelector, triggers the collapse
+         * collaseEl, .collapse .card .card-body
+         */
+        function toggleCollapse( $elSelector, collapseEl ) {
+            var selectorId      = $elSelector.attr("id");
+                selectClassName = $elSelector[0].classList[0];
+
+                if ( typeof selectorId != "undefined" ) {
+                    var $selector = document.getElementById(selectorId);
+
+                        // $selector, element that triggers the collapse
+                        $selector.addEventListener('click', function() {
+                            var collapseElement = new bootstrap.Collapse(collapseEl, {
+                                toggle: false
+                            });
+            
+                            collapseElement.toggle();
+                        });
+                }
+                else if ( selectClassName != "" ) {
+                    const collapseElementList = document.querySelectorAll("."+selectClassName);
+                    const collapseList = [...collapseElementList].map(collapseEl => new bootstrap.Collapse(collapseEl));
+                }
         }
         
         return {

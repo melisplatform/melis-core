@@ -1220,8 +1220,10 @@ var melisDashBoardDragnDrop = {
                     // refresh widget
                     $('.grid-stack-item[data-gs-id="' + pluginId + '"]').find('.dashboard-plugin-refresh').trigger("click");
                 });
+
                 // close modal
-                $('#id_meliscore_dashboard_plugin_modal_container').modal('hide');
+                // $('#id_meliscore_dashboard_plugin_modal_container').modal('hide');
+                melisCoreTool.hideModal("id_meliscore_dashboard_plugin_modal_container");
             } else {
                 dashboardPluginHelpepr.melisMultiKoNotification(data.errors);
             }

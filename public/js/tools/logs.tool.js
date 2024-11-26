@@ -97,7 +97,7 @@ $(function(){
 				});
 			});
 			
-			btn.attr("disabled", true);
+			btn.prop("disabled", true);
 			
 			$.ajax({
 				type        : "POST", 
@@ -108,10 +108,12 @@ $(function(){
 				async		: false,
 			}).done(function(data) {
 				
-				btn.attr("disabled", false);
+				btn.prop("disabled", false);
 				
 				if(data.success){
-					$("#id_meliscore_logs_tool_log_type_form_container").modal("hide");
+					// $("#id_meliscore_logs_tool_log_type_form_container").modal("hide");
+					melisCoreTool.hideModal("id_meliscore_logs_tool_log_type_form_container");
+
 					melisHelper.melisOkNotification(data.textTitle, data.textMessage);
 					melisHelper.zoneReload("id_meliscore_logs_tool", "meliscore_logs_tool");
 				}else{
@@ -121,7 +123,7 @@ $(function(){
 				melisHelper.highlightMultiErrors(data.success, data.errors, "#id_meliscore_logs_tool_log_type_form");
 				melisCore.flashMessenger();
 			}).fail(function(){
-				btn.attr("disabled", false);
+				btn.prop("disabled", false);
 				alert( translations.tr_meliscore_error_message);
 			});
 		});
