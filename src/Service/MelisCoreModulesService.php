@@ -991,9 +991,10 @@ class MelisCoreModulesService extends MelisServiceManager
     private function copyFile($fileNeeded, $type, $moduleName)
     {
         $docroot = $_SERVER['DOCUMENT_ROOT'];
-        $bundleFolder = $docroot.'/../etc';
+//        $bundleFolder = $docroot.'/../etc';
+        $bundleFolder = $docroot;
 
-        $path = $bundleFolder . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
+        $path = $bundleFolder;// . '/' . ModulesController::BUNDLE_FOLDER_NAME . '/'.$type;
         $dir = $_SERVER['DOCUMENT_ROOT'] . '/../vendor/melisplatform/';
 
         foreach($fileNeeded as $key => $file){
