@@ -2291,8 +2291,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 }
 /* .modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
 .modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before, */
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons, 
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons i:before {
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li:not(.active) a:not(.active).glyphicons, 
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li:not(.active) a:not(.active).glyphicons i:before {
     color: #fff;
 }
 .gdpr-tab-table-container .widget-head ul li, 
@@ -2401,4 +2401,10 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
     bottom: auto;
     left: auto;
     z-index: 1;
+}
+.tooltabmodal ul.ui-fancytree li:first-child .parent-with-child-selected .fancytree-title {
+	color: #cb4040 !important;
+}
+.tooltabmodal ul.ui-fancytree li:not(:first-child) .parent-with-child-selected .fancytree-title {
+	color: #99c975 !important;
 }

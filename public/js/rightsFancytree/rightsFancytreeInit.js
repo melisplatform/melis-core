@@ -1,4 +1,4 @@
-(function ($, window, document) {
+var melisCoreRights = (function ($, window, document) {
 	//Check this for updates: https://github.com/mar10/fancytree/blob/master/demo/sample-api.html
 	window.initRightsTree = function (trees, url) {
 		return $(trees).fancytree({
@@ -23,28 +23,32 @@
 			},
 			// clicking of the nodes callback function
 			renderNode: function (event, data) {
-				// removed .fancytree-icon class and replace it with font-awesome icons
-				$(data.node.span)
-					.find(".fancytree-icon")
-					.addClass("page-icons " + data.node.data.iconTab)
-					.removeClass("fancytree-icon");
-				$(data.node.span)
-					.find(".fancytree-checkbox")
-					.addClass("rights-custom-checkbox fa fa-square-o");
+				const fnode = data.node;
 
-				if (data.node.isSelected() === true) {
-					$(data.node.span)
-						.find(".fancytree-title")
-						.css("color", data.node.data.melisData.colorSelected);
-					$(data.node.span)
+					// hightlight parents of selected child nodes
+					updateParentHighlight(fnode);
+
+					// removed .fancytree-icon class and replace it with font-awesome icons
+					$(fnode.span)
+						.find(".fancytree-icon")
+						.addClass("page-icons " + fnode.data.iconTab)
+						.removeClass("fancytree-icon");
+					$(fnode.span)
 						.find(".fancytree-checkbox")
-						.removeClass("fa-square-o")
-						.addClass("fa-check-square-o")
-						.css("color", data.node.data.melisData.colorSelected);
-					//$(data.node.span).closest("li").addClass("fancytree-animating");
-				} else {
-					$(data.node.span).find(".fancytree-title").css("color", "#686868");
-				}
+						.addClass("rights-custom-checkbox fa fa-square-o");
+
+					if (fnode.isSelected() === true) {
+						$(fnode.span)
+							.find(".fancytree-title")
+							.css("color", fnode.data.melisData.colorSelected);
+						$(fnode.span)
+							.find(".fancytree-checkbox")
+							.removeClass("fa-square-o")
+							.addClass("fa-check-square-o")
+							.css("color", fnode.data.melisData.colorSelected);
+					} else {
+						$(fnode.span).find(".fancytree-title").css("color", "#686868");
+					}
 			},
 			loadChildren: function (event, data) {
 				userRightsData = [{ treeStatus: [] }];
@@ -85,55 +89,88 @@
 				});
 			},
 			select: function (event, data) {
-				if (data.node.isSelected() === true) {
-					$(data.node.span)
-						.find(".fancytree-title")
-						.css("color", data.node.data.melisData.colorSelected);
-					$(data.node.span)
-						.find(".fancytree-checkbox")
-						.removeClass("fa-square-o")
-						.addClass("fa-check-square-o")
-						.css("color", data.node.data.melisData.colorSelected);
-				} else {
-					$(data.node.span).find(".fancytree-title").css("color", "#686868");
-					$(data.node.span)
-						.find(".fancytree-checkbox")
-						.removeClass("fa-check-square-o")
-						.addClass("fa-square-o")
-						.css("color", "#686868");
-				}
+				const fnode = data.node;
 
-				// reset the values of the array everytime a node is checked or unchecked to update values
-				for (var i = 0; i < userRightsData.length; i++) {
-					$.each(userRightsData[i], function (key, value) {
-						// dont empty the treeStatus array
-						if (key !== "treeStatus") {
-							userRightsData[i][key] = [];
-						}
-					});
-				}
+					// hightlight parents of selected child nodes
+					updateParentHighlight(fnode);
 
-				// Get a list of all selected nodes, and convert to a key array:
-				var selKeys = $.map(data.tree.getSelectedNodes(), function (node) {
-					// get the parent list of each node
-					var parents = $.map(node.getParentList(false, true), function (node) {
-						return node.key;
-					});
+					if (fnode.isSelected() === true) {
+						$(fnode.span)
+							.find(".fancytree-title")
+							.css("color", fnode.data.melisData.colorSelected);
+						$(fnode.span)
+							.find(".fancytree-checkbox")
+							.removeClass("fa-square-o")
+							.addClass("fa-check-square-o")
+							.css("color", fnode.data.melisData.colorSelected);
+						
+						/* fnode.visitParents(function(parent) {
+							$(parent.span).addClass("parent-with-child-selected");
+						}); */
 
-					// get the topmost parent (top level parent)
-					var getToplvlParent = parents.shift();
-
-					// loop the userRightsData array object and if the toplvl parent node inside userRightsData[] matches the current node parent.
-					// add them to the array of xNodex[]
-					for (var i = 0; i < userRightsData.length; i++) {
-						if (userRightsData[i][getToplvlParent]) {
-							userRightsData[i][getToplvlParent].push(node.key);
-						}
+					} else {
+						$(fnode.span).find(".fancytree-title").css("color", "#686868");
+						$(fnode.span)
+							.find(".fancytree-checkbox")
+							.removeClass("fa-check-square-o")
+							.addClass("fa-square-o")
+							.css("color", "#686868");
+						
+						/* fnode.visitParents(function(parent) {
+							const hasCheckedChildren = parent.children.some(child => child.isSelected());
+								if (!hasCheckedChildren) {
+									$(parent.span).removeClass("parent-with-child-selected");
+								}
+						}); */
 					}
-				});
+
+					// reset the values of the array everytime a node is checked or unchecked to update values
+					for (var i = 0; i < userRightsData.length; i++) {
+						$.each(userRightsData[i], function (key, value) {
+							// dont empty the treeStatus array
+							if (key !== "treeStatus") {
+								userRightsData[i][key] = [];
+							}
+						});
+					}
+
+					// Get a list of all selected nodes, and convert to a key array:
+					var selKeys = $.map(data.tree.getSelectedNodes(), function (node) {
+						// get the parent list of each node
+						var parents = $.map(node.getParentList(false, true), function (node) {
+							return node.key;
+						});
+
+						// get the topmost parent (top level parent)
+						var getToplvlParent = parents.shift();
+
+						// loop the userRightsData array object and if the toplvl parent node inside userRightsData[] matches the current node parent.
+						// add them to the array of xNodex[]
+						for (var i = 0; i < userRightsData.length; i++) {
+							if (userRightsData[i][getToplvlParent]) {
+								userRightsData[i][getToplvlParent].push(node.key);
+							}
+						}
+					});
 			},
 		});
 	};
+
+	function updateParentHighlight(node) {
+		node.tree.visit(function(n) {
+			$(n.span).removeClass("parent-with-child-selected");
+		});
+
+		node.tree.visit(function(n) {
+			if (n.isSelected()) {
+				let currentNode = n.parent;
+					while (currentNode) {
+						$(currentNode.span).addClass("parent-with-child-selected");
+						currentNode = currentNode.parent;
+					}
+			}
+		});
+	}
 
 	$("#rights-fancytree").niceScroll({
 		zindex: 1000,
@@ -142,4 +179,8 @@
 		cursorcolor: primaryColor,
 		autohidemode: false,
 	});
+
+	return {
+		updateParentHighlight : updateParentHighlight
+	}
 })(jQuery, window);
