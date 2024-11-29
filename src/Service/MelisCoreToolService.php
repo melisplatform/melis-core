@@ -527,8 +527,8 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                                     "mRender": function (data, type, full) {
                                         return \'<div>' . $actionButtons . '</div>\';
                                     },
-                                    "bSortable" : false,
-                                    "sClass" : \'dtActionCls\',
+                                    "orderable" : false,
+                                    "className" : \'dtActionCls\',
                                 }';
             }
             $jsonColumns .= ']';
@@ -549,7 +549,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             if ($selectCheckbox) {
                 $selectColDef = '{
                                 "targets": 0,                                   
-                                "bSortable":false,                                 
+                                "orderable":false,                                 
                                 "mRender": function (data, type, full, meta){
                                     return `<div class="checkbox checkbox-single margin-none">
                                                     <label class="checkbox-custom">
@@ -578,7 +578,7 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
             $unSortableColumnsStr = '';
             if (!empty($unSortableColumns)) {
                 // Creating config string for Unsortable Columns
-                $unSortableColumnsStr = '{ targets: [' . implode(',', $unSortableColumns) . '], bSortable: false},';
+                $unSortableColumnsStr = '{ targets: [' . implode(',', $unSortableColumns) . '], orderable: false},';
             }
             // Column Unsortable End
 
@@ -662,12 +662,12 @@ class MelisCoreToolService extends MelisServiceManager implements MelisCoreToolS
                     initComplete: function(oSettings, json) {
                         ' . $initComplete . '  
                     },
-                    fnDrawCallback: function(oSettings) {
+                    drawCallback: function(oSettings) {
                         ' . $ajaxCallBack . '
                     },
                     columns: ' . $jsonColumns . ',
                     language: ' . $language . ',
-                    sDom: \'' . $sDomStructure . '\',
+                    dom: \'' . $sDomStructure . '\',
                     searchDelay: 1500,
                     columnDefs: [
                         ' . $columnsStylesStr . '  

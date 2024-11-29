@@ -12892,7 +12892,8 @@ $(function() {
         startView: 0,
         todayBtn: false,
         todayHighlight: false,
-        weekStart: 0
+        weekStart: 0,
+        version: 2013 // based on the last change log
     };
     var locale_opts = $.fn.datepicker.locale_opts = [
         'format',
