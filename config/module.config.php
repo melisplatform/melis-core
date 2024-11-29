@@ -175,6 +175,49 @@ return [
                             ],
                         ],
                     ],
+                    'get-js-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-js-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-js-bundles',
+                            ],
+                        ],
+                    ],
+                    'get-css-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-css-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-css-bundles',
+                            ],
+                        ],
+                    ],
+                    //need to create a separate bundle loader for login since we are going to cached this url
+                    //since we have separate assets for login, we need to separate it
+                    'get-login-js-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-login-js-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-js-bundles',
+                            ],
+                        ],
+                    ],
+                    'get-login-css-bundles' => [
+                        'type' => 'Segment',
+                        'options' => [
+                            'route' => 'get-login-css-bundles',
+                            'defaults' => [
+                                'controller' => 'MelisCore\Controller\Modules',
+                                'action' => 'get-css-bundles',
+                            ],
+                        ],
+                    ],
+                    //end
                     'get-platform-color-css' => [
                         'type' => 'Segment',
                         'options' => [
@@ -352,6 +395,8 @@ return [
             'MelisCoreGdprAutoDeleteToolService'    => \MelisCore\Service\MelisCoreGdprAutoDeleteToolService::class,
             'MelisPasswordSettingsService'          => \MelisCore\Service\MelisPasswordSettingsService::class,
             'MelisUpdatePasswordHistoryService'     => \MelisCore\Service\MelisUpdatePasswordHistoryService::class,
+            'MelisCoreCacheSystemService'           => \MelisCore\Service\MelisCoreCacheSystemService::class,
+            'MelisCoreAnnouncementService'           => \MelisCore\Service\MelisCoreAnnouncementService::class,
 
             // Model
             'MelisCoreTableLang'                    => \MelisCore\Model\Tables\MelisLangTable::class,
@@ -376,6 +421,7 @@ return [
             'MelisGdprDeleteEmailsTable'            => \MelisCore\Model\Tables\MelisGdprDeleteEmailsTable::class,
             'MelisGdprDeleteEmailsSmtp'             => \MelisCore\Model\Tables\MelisGdprDeleteEmailsSmtpTable::class,
             'MelisUserPasswordHistoryTable'         => \MelisCore\Model\Tables\MelisUserPasswordHistoryTable::class,
+            'MelisAnnouncementTable'         => \MelisCore\Model\Tables\MelisAnnouncementTable::class,
         ],
         'abstract_factories' => [
             /**
@@ -417,6 +463,7 @@ return [
             'MelisCore\Controller\MelisCoreGdprAutoDeleteTabs'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteTabsController::class,
             'MelisCore\Controller\MelisCoreGdprAutoDeleteSmtp'  => \MelisCore\Controller\MelisCoreGdprAutoDeleteSmtpController::class,
             'MelisCore\Controller\MelisCoreOtherConfig'         => \MelisCore\Controller\MelisCoreOtherConfigController::class,
+            'MelisCore\Controller\Announcement'                 => \MelisCore\Controller\AnnouncementController::class,
         ],
     ],
     'controller_plugins' => [
@@ -428,6 +475,7 @@ return [
             'MelisCoreDashboardBubbleUpdatesPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleUpdatesPlugin::class,
             'MelisCoreDashboardBubbleNotificationsPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleNotificationsPlugin::class,
             'MelisCoreDashboardBubbleChatPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardBubbleChatPlugin::class,
+            'MelisCoreDashboardAnnouncementPlugin'    => \MelisCore\Controller\DashboardPlugins\MelisCoreDashboardAnnouncementPlugin::class,
         ]
     ],
     'validators' => [
@@ -454,6 +502,7 @@ return [
             'MelisCoreTinyMCE'              => \MelisCore\Form\Factory\MelisCoreTinyMCEFactory::class,
             'MelisCoreUserSelect'           => \MelisCore\Form\Factory\MelisCoreUsersSelect2Factory::class,
             'MelisCoreGdprModuleSelect'     => \MelisCore\Form\Factory\MelisGdprAutoDeleteModuleListSelectFactory::class,
+            'MelisCoreUsersSelect'           => \MelisCore\Form\Factory\MelisCoreUsersSelectFactory::class,
         ],
     ],
     'view_helpers' => [
@@ -494,6 +543,7 @@ return [
             'layout/layoutCore'                     => __DIR__ . '/../view/layout/layoutCore.phtml',
             'layout/layoutBlank'                    => __DIR__ . '/../view/layout/layoutBlank.phtml',
             'layout/layout'                         => __DIR__ . '/../view/layout/layoutBlank.phtml',
+            'layout/cache'                          => __DIR__ . '/../view/layout/layoutCache.phtml',
             'melis-core/index/index'                => __DIR__ . '/../view/melis-core/index/index.phtml',
             'melis-core/plugin-view/generate'       => __DIR__ . '/../view/melis-core/plugin-view/generate.phtml',
             'error/404'                             => __DIR__ . '/../view/error/404.phtml',
@@ -512,8 +562,12 @@ return [
             'melis-core/dashboard-plugin/bubble-updates'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-updates.phtml',
             'melis-core/dashboard-plugin/bubble-notifications'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-notifications.phtml',
             'melis-core/dashboard-plugin/bubble-chat'  => __DIR__ . '/../view/melis-core/dashboard-plugins/bubble-chat.phtml',
+            'melis-core/dashboard-plugin/announcements'  => __DIR__ . '/../view/melis-core/dashboard-plugins/announcements.phtml',
 
             'melis-core/dashboard-plugin/noformtemplate'   => __DIR__ . '/../view/melis-core/dashboard-plugins/noformtemplate.phtml',
+
+            'melis-core/dashboard-plugin/dashboard-menu-content'   => __DIR__ . '/../view/melis-core/dashboard-plugins/dashboard-menu-content.phtml',
+            'melis-core/announcement/pagination'   => __DIR__ . '/../view/melis-core/announcement/pagination.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
@@ -526,4 +580,30 @@ return [
     'tinyMCE' => [
         'tool' => 'MelisCore/public/js/tinyMCE/tool.php',
     ],
+    'caches' => [
+        'meliscore_platform_cache' => [
+            'active' => true, // activate or deactivate Melis Cache for this conf
+            'adapter' => \Laminas\Cache\Storage\Adapter\Filesystem::class,
+            'options' => [
+                'ttl' => 0,//60 * 60 * 24, // 24hrs
+                'namespace' => \MelisCore\Controller\PluginViewController::cacheConfig,
+                'cache_dir' => $_SERVER['DOCUMENT_ROOT'] . '/../cache'
+            ],
+            'plugins' => [
+                [
+                    'name' => 'exception_handler',
+                    'options' => [
+                        'throw_exceptions' => true
+                    ],
+                ],
+                [
+                    'name' => 'Serializer'
+                ]
+            ],
+            'ttls' => [
+                // add a specific ttl for a specific cache key (found via regexp]
+                // 'my_cache_key' => 60,
+            ]
+        ],
+    ]
 ];

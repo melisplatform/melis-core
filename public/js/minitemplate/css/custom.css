@@ -1,17 +1,22 @@
 #template-container {
     width: 100%;
     overflow: hidden;
+    height: 542px;
 }
 #template-container .row:first-child {
     height: inherit;
 }
 #template-container .modal-footer {
     width: 100%;
+    border-top: 0;
 }
-#accordion-mini-template {
-    height: 480px;
+/* #accordion-mini-template {
+    height: auto;
+    height: 450px;
     overflow: auto;
-}
+    height: 504px;
+    width: 100%;
+} */
 #accordion-mini-template .site-category {
     padding: 0;
 }
@@ -84,7 +89,7 @@
     text-indent: 0 !important;
     overflow: auto !important;
     left: 0.5rem !important;
-    top: 0.2rem !important;
+    top: -0.1rem !important;
     margin-top: 0 !important;
     position: relative !important;
 
@@ -104,6 +109,7 @@
     padding-right: 1em !important;
     padding-left: 1em !important;
     height: auto !important;
+    border-top: 1px solid #ddd;
 }
 .site-category.ui-accordion-content {
     border: 0 !important;
@@ -143,4 +149,18 @@
     background-color: #e3e3e3;
     border-color: #e3e3e3;
     box-shadow: none;
+}
+.site-category .main-category.ui-accordion-content-active.custom-last-child,
+.site-category .ui-accordion-header.custom-last-child {
+    /* margin-bottom: 0.5rem; */
+    margin-bottom: 0;
+}
+.mini-template-content {
+    height: 485px;
+}
+#accordion-mini-template .site-category.ui-accordion-content {
+    height: 450px !important;
+}
+#accordion-mini-template .nicescroll-rails-hr {
+    display: none !important;
 }

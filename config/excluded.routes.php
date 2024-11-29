@@ -25,6 +25,10 @@ return [
                     'melis-backoffice/generate-password',
                     'melis-backoffice/create-password',
                     'melis-backoffice/renew-password',
+                    'melis-backoffice/get-js-bundles',
+                    'melis-backoffice/get-css-bundles',
+                    'melis-backoffice/get-login-js-bundles',
+                    'melis-backoffice/get-login-css-bundles',
                 ]
             ]
         ]

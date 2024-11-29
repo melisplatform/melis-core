@@ -166,7 +166,7 @@ MelisHelper = (function (window) {
             } else {
               if (node.data.tabs[k].active) {
                 classActive = (node.data.tabs[k].default) ? ' active ' : '';
-                $label += '<li class="' + classActive + '"><a class=" ' + node.data.tabs[k].iconTab + '" href="#id-container-level-tab-' + node.data.tabs[k].melisID + '" data-toggle="tab"><i></i><span>' + node.data.tabs[k].title + '</span></a> </li>';
+                $label += '<li class="' + classActive + '"><a class=" ' + node.data.tabs[k].iconTab + '" href="#id-container-level-tab-' + node.data.tabs[k].melisID + '" data-bs-toggle="tab"><i></i><span>' + node.data.tabs[k].title + '</span></a> </li>';
                 $tabs += '<div id="id-container-level-tab-' + node.data.tabs[k].melisID + '" class="tab-pane widget-body-regular' + classActive + '"></div>';
               }
 
@@ -225,7 +225,7 @@ MelisHelper = (function (window) {
             'melisID': node.data.melisID,
             html: function () {
               // Default template
-              var tpl = '<a class="dropdown-toggle menu-icon" data-key="' + node.data.key + '" data-toggle="tab" onclick="MelisHelper.tabs.open(\'' + node.data.melisID + '\')">' +
+              var tpl = '<a class="dropdown-toggle menu-icon" data-key="' + node.data.key + '" data-bs-toggle="tab" onclick="MelisHelper.tabs.open(\'' + node.data.melisID + '\')">' +
                 '<i class="' + node.data.iconTab + ' fa-2x"></i>' + node.data.title +
                 '</a>';
               // Add button close
@@ -291,7 +291,7 @@ MelisHelper = (function (window) {
 
   var tabContainer = $("#melis-id-nav-bar-tabs");
   //append a dummy tab for the dashboard
-  tabContainer.append('<li id="id-nav-bar-tabs-_2" class="active" data-key="_2" melisid="55da1e00be9b7215f5ab3b-a1" data-melisid="55da1e00be9b7215f5ab3b-a1" data-melis_id="55da1e00be9b7215f5ab3b-a1-b1" data-melis_param_index="0" data-melis_param_guid="24e53e1b-97ad-49c8-9b7d-b19192a2f29b"><a class="dropdown-toggle menu-icon" data-key="_2" data-toggle="tab" onclick="MelisHelper.tabs.open(55da1e00be9b7215f5ab3b-a1)"><i class="fa fa-tachometer fa-2x"></i>Dashboard</a></li>');
+  tabContainer.append('<li id="id-nav-bar-tabs-_2" class="active" data-key="_2" melisid="55da1e00be9b7215f5ab3b-a1" data-melisid="55da1e00be9b7215f5ab3b-a1" data-melis_id="55da1e00be9b7215f5ab3b-a1-b1" data-melis_param_index="0" data-melis_param_guid="24e53e1b-97ad-49c8-9b7d-b19192a2f29b"><a class="dropdown-toggle menu-icon" data-key="_2" data-bs-toggle="tab" onclick="MelisHelper.tabs.open(55da1e00be9b7215f5ab3b-a1)"><i class="fa fa-tachometer fa-2x"></i>Dashboard</a></li>');
  
 
   $("#id-menu-dynatree li a").on('click', function(){

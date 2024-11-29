@@ -494,9 +494,9 @@ $get_params = http_build_query($get_params);
 		<div class="tabbable upload-tabbable"> <!-- Only required for left/right tabs -->
 			<div class="container1">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#baseUpload" data-toggle="tab"><?php echo trans('Upload_base');?></a></li>
+				<li class="active"><a href="#baseUpload" data-bs-toggle="tab"><?php echo trans('Upload_base');?></a></li>
 				<?php if($config['url_upload']){ ?>
-				<li><a href="#urlUpload" data-toggle="tab"><?php echo trans('Upload_url');?></a></li>
+				<li><a href="#urlUpload" data-bs-toggle="tab"><?php echo trans('Upload_url');?></a></li>
 				<?php } ?>
 			</ul>
 			<div class="tab-content">
@@ -798,7 +798,7 @@ $files=$sorted;
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
-		<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+		<button type="button" class="btn btn-navbar" data-bs-toggle="collapse" data-bs-target=".nav-collapse">
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
 		<span class="icon-bar"></span>
@@ -909,7 +909,7 @@ $files=$sorted;
 
 	<li class="float-right">
 		<div class="btn-group">
-		<a class="btn dropdown-toggle sorting-btn" data-toggle="dropdown" href="#">
+		<a class="btn dropdown-toggle sorting-btn" data-bs-toggle="dropdown" href="#">
 		<i class="icon-signal"></i>
 		<span class="caret"></span>
 		</a>
@@ -1290,7 +1290,7 @@ $files=$sorted;
 	<!-- player div start -->
 	<div class="modal hide fade" id="previewAV">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3><?php echo trans('Preview');?></h3>
 	</div>
 	<div class="modal-body">

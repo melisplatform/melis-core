@@ -31,7 +31,7 @@ $(function()
 	});
 	
 	// bind window resize event
-	$(window).resize(function()
+	$(window).on("resize", function()
 	{
 		if ($('.widget-employees').length)
 			equalHeight($('.widget-employees').find('.widget-body > .row-merge > [class*="col"]'));
@@ -39,6 +39,6 @@ $(function()
 	
 	// trigger window resize event
 	$(window).on('load', function(){
-		$(this).resize();
+		$(this).trigger("resize");
 	});
 });

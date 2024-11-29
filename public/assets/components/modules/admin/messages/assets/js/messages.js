@@ -14,7 +14,7 @@ $(function()
 		});
 	});
 	
-	$(window).resize(function()
+	$(window).on("resize", function()
 	{
 		if ($('.widget-messages').length)
 			equalHeight($('.widget-messages').find('.widget-body > .row-merge > [class*="col"]'));
@@ -22,6 +22,6 @@ $(function()
 	
 	// trigger window resize event
 	$(window).on('load', function(){
-		$(this).resize();
+		$(this).trigger("resize");
 	});
 });

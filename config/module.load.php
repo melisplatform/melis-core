@@ -14,5 +14,7 @@ return [
     'Laminas\Form',
     'Laminas\Validator',
     'Laminas\Db',
-    'Laminas\InputFilter'
+    'Laminas\InputFilter',
+    'Laminas\Cache',
+    'Laminas\Cache\Storage\Adapter\Filesystem',
 ];

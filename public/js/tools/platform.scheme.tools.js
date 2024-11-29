@@ -17,8 +17,9 @@ $(function() {
                 return entityMap[s];
             });
         }
+
         $body.on("click", "#savePlatformScheme", function() {
-            $("form#melis_core_platform_scheme_images").submit();
+            $("form#melis_core_platform_scheme_images").trigger("submit");
         });
 
         $body.on("click", "#resetPlatformScheme", function() {
@@ -67,6 +68,9 @@ $(function() {
                 formData.append('colors', JSON.stringify(colors));
 
                 melisCoreTool.pending(".button");
+                
+                melisCoreTool.addOverflowHidden();
+
                 $.ajax({
                     type    : 'POST',
                     url     : 'melis/MelisCore/PlatformScheme/save',
@@ -77,6 +81,8 @@ $(function() {
                     dataType    : 'json'
                 }).done(function(data) {
                     if(data.success) {
+                        melisCoreTool.removeOverflowHidden();
+
                         melisCoreTool.processing();
                         location.reload(true);
                     }
@@ -106,5 +112,5 @@ $(function() {
                     $headerTitle.removeClass("ml-header");
                 }
                 $headerTitle.html(text);
-        })
+        });
 });

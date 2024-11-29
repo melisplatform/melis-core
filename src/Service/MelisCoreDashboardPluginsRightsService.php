@@ -125,19 +125,21 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
             $appCtr = 0;
             foreach ($appsConfig['interface'] as $appKey => $appSection) {
                 if(!isset($appSection['datas']['skip_plugin_container'])) {
-                    $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
-                    $tools[$appCtr] = [
-                        'key' => $appKey,
-                        'title' => $appSection['datas']['name'] ?? $appKey,
-                        'lazy' => false,
-                        'children' => [],
-                        'selected' => $selectedTools,
-                        'iconTab' => '',
-                        'melisData' => [
-                            'colorSelected' => '#99C975',
-                        ],
-                    ];
-                    $appCtr++;
+                    if(!isset($appSection['datas']['exclude_rights_display'])) {//check if this plugins is excluded in rights display
+                        $selectedTools = $melisCoreUser->isItemRightChecked($userXml, self::MELISCORE_DASHBOARDPLUGIN_PREFIX, $appKey);
+                        $tools[$appCtr] = [
+                            'key' => $appKey,
+                            'title' => $appSection['datas']['name'] ?? $appKey,
+                            'lazy' => false,
+                            'children' => [],
+                            'selected' => $selectedTools,
+                            'iconTab' => '',
+                            'melisData' => [
+                                'colorSelected' => '#99C975',
+                            ],
+                        ];
+                        $appCtr++;
+                    }
                 }
             }
 
@@ -161,10 +163,18 @@ class MelisCoreDashboardPluginsRightsService extends MelisServiceManager impleme
         $xmlRights = '';
 
         $dashboardPlugins = json_decode($datas[self::DASHBOARD_PLUGIN_ROOT], true);
+        $dashboardPlugins = current($dashboardPlugins);
+
+        /**
+         * Always include Announcement dashboard plugins
+         */
+        if(!in_array('MelisCoreDashboardAnnouncementPlugin', $dashboardPlugins)){
+            $dashboardPlugins[] = 'MelisCoreDashboardAnnouncementPlugin';
+        }
 
         // parent node
         $xmlRights .= '<' . self::MELISCORE_DASHBOARDPLUGIN_PREFIX . '>' . PHP_EOL;
-        foreach (current($dashboardPlugins) as $plugin) {
+        foreach ($dashboardPlugins as $plugin) {
             $xmlRights .= "\t<id>$plugin</id>" . PHP_EOL;
         }
         $xmlRights .= '</' . self::MELISCORE_DASHBOARDPLUGIN_PREFIX . '>' . PHP_EOL;

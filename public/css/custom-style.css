@@ -115,6 +115,7 @@
 }
 .navbar.main .nav > li a.menu-icon {
 	display: block;
+	text-decoration: none;
 }
 .navbar #melis-id-nav-bar-tabs > li {
 	position: relative;
@@ -143,9 +144,6 @@
 	padding-left: 0;
 	padding-right: 0;
 }
-/* #main #content {
-  width: 100%;
-} */
 /* #melis-navtabs / contents */
 .dataTables_wrapper .bottom {
 	display: block;
@@ -171,9 +169,6 @@
 .module-display-heading ul {
 	margin-bottom: 0;
 	padding-left: 20px;
-}
-#img-user-link {
-	margin-right: 1rem;
 }
 .melis-svg-icon .melis-icon {
 	vertical-align: baseline;
@@ -356,6 +351,9 @@ a:not([href]).btn-danger:hover {
 .input-group-addon,
 .input-group-btn {
 	display: table-cell;
+}
+.pageSelect .form-control {
+	width: 100% !important;
 }
 .input-group .form-control {
 	width: 100%;
@@ -761,11 +759,6 @@ fieldset[disabled] .btn {
 	font-size: 0;
 	text-indent: -99999px;
 }
-/* #content */
-/* #content {
-  margin-left: 274px;
-  overflow-x: hidden;
-} */
 a:focus,
 a:hover {
 	text-decoration: underline;
@@ -816,9 +809,9 @@ td.dataTables_empty {
 	display: none;
 }
 /* dashboard plugins btn-default active bg */
-.btn-group label.btn.btn-default.btn-sm.active {
+/* .btn-group label.btn.btn-default.btn-sm.active {
 	background-color: #e7e7e7;
-}
+} */
 .body-overflow-hidden {
 	overflow: hidden;
 }
@@ -865,6 +858,13 @@ td.dataTables_empty {
 	background: none;
 	border-color: transparent;
 }
+.modal .modal-footer {
+	justify-content: space-between;
+}
+.gritter-close {
+	font-size: 0;
+	text-indent: -99999px;
+}
 .btnLangUpdate i.fa.fa-download {
 	color: #72af46;
 }
@@ -909,7 +909,7 @@ td.dataTables_empty {
 	color: #fff !important;
 }
 
-a[data-toggle="modal"]:focus {
+a[data-bs-toggle="modal"]:focus {
 	text-decoration: none;
 }
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a,
@@ -987,7 +987,7 @@ a[data-toggle="modal"]:focus {
 	margin-top: 3px;
 	margin-left: 5px;
 }
-a[data-toggle="modal"]:focus {
+a[data-bs-toggle="modal"]:focus {
 	text-decoration: none;
 }
 #modal-user-management .widget.widget-tabs-double > .widget-head ul li a,
@@ -1223,9 +1223,9 @@ a[data-toggle="modal"]:focus {
 	}
 }
 @media (max-width: 767px) {
-	#melisDashBoardPluginBtn {
+	/* #melisDashBoardPluginBtn {
 		display: none;
-	}
+	} */
 	/* melis-news-bubble-plugin-news */
 	.melis-news-bubble-plugin-news-list .media-body .row .col-md-6.pl-0 {
 		padding-left: 15px !important;
@@ -1694,4 +1694,693 @@ transition: all 0.4s ease-in-out;
     font-size: 16px;
     display: block;
     text-align: center;
+}
+
+/* jQuery 3.7.1 migration */
+.float-left {
+	float: left !important;
+}
+.float-right {
+	float: right !important;
+}
+.input-group.colorpicker-component {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+}
+.input-group.colorpicker-component .input-group-text {
+	background-color: transparent;
+}
+.colorpicker-input-addon {
+	border-radius: 0;
+	padding: 9px 12px;
+}
+.footer a,
+.footer a:hover {
+	text-decoration: none;
+}
+#img-user-link {
+	display: inline-block;
+	margin-right: 1rem;
+}
+#id_meliscore_leftmenu_identity .media-body {
+	display: inline-block;
+}
+#meliscore_left_menu_profile_pic {
+	position: relative;
+	top: -8px;
+}
+#user-name-link {
+	text-decoration: none;
+}
+.btn-info.btn-regular {
+	background: #466baf;
+	border-color: #466baf;
+	color: #fff;
+}
+.btn-info.btn-regular:hover, 
+.btn-info.btn-regular:focus {
+    background: none;
+    color: #466baf;
+}
+/* table.table.dataTable>:not(caption)>*>*, */
+.table-primary thead th {
+	background-color: #e61c23;
+}
+.switch-all-noti .icon-cont .fa-info-circle {
+	margin-right: -1rem;
+}
+/*
+ * buttons no text underline
+ */
+.btn-danger:hover,
+.btn-success:hover {
+	text-decoration: none;
+}
+/*
+ * tooltip
+ */
+.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: #ad6565;
+}
+.tooltip {
+	--bs-tooltip-font-size: 0.765625rem;
+}
+.tooltip.show {
+	z-index: 99999;
+}
+/*
+ * dataTable
+ */
+.table-primary {
+	/* --bs-table-bg: #fafafa;
+	--bs-table-striped-bg: #fff; */
+	--bs-table-bg: #fff;
+	--bs-table-striped-bg: #fff;
+}
+table.table.dataTable.table-striped>tbody>tr:nth-of-type(2n+1)>* {
+	box-shadow: none;
+}
+.table-primary tbody tr:nth-child(odd) td,
+.table-primary tbody tr:nth-child(odd) th {
+	background: #fff;
+}
+.table-primary tbody tr:nth-child(even) td,
+.table-primary tbody tr:nth-child(even) th {
+	background: #fafafa;
+}
+.table-primary tbody tr:nth-child(2n) td, 
+.table-primary tbody tr:nth-child(2n) th {
+	background: #fafafa;
+}
+.table-striped>tbody>tr {
+	border-bottom: 0;
+}
+.dt-container .dt-processing {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 200px;
+	margin-left: -100px;
+	margin-top: -26px;
+	text-align: center;
+	padding: 1em 0;
+
+	background: #fff;
+    border: 1px solid rgba(0, 0, 0, .125);
+    color: #686868;
+}
+.dt-processing > div {
+    display: none;
+}
+.dt-paging-button.page-item.active .page-link:hover,
+.dt-paging-button.page-item .page-link:hover {
+	color: #fff;
+	text-decoration: none;
+}
+/* 
+ * modal ko and multi ko notification 
+ * .modal, z-index: 10001 !important; but issue on melis-design modals
+ */
+.modal.bootstrap-dialog {
+	z-index: 10001 !important;
+}
+.modal-content {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .3rem;
+    outline: 0;
+}
+.modal .modal-content,
+.tooltabmodal .modal-content {
+	border-width: 0;
+}
+.bootstrap-dialog-header {
+	justify-content: space-between;
+    display: flex;
+    width: 100%;
+}
+.bootstrap-dialog-close-button .btn-close {
+	--bs-btn-close-color: #fff;
+}
+/* inside body .nav-tabs */
+.product-text-tab li {
+	width: 100%;
+}
+body {
+	--bs-body-font-size: 0.875rem;
+}
+a[data-bs-toggle="tab"] {
+	text-decoration: none;
+}
+.me-heading .btn {
+	font-size: .875rem;
+}
+.custom-accordion-heading a {
+	text-decoration: none;
+}
+.add-edit-config-filters .form-row {
+	padding-left: 0;
+	padding-right: 0;
+}
+.gdpr-auto-delete-multi-tabs .nav-pills .nav-link {
+	text-decoration: none;
+}
+#newsList_wrapper .dataTables_length {
+	width: 100%;
+}
+/* Fix for closing of modal */
+body {
+	/* Commented, for .tox-dialog__disable-scroll to take effect when modal is open.
+	 * Need to check other ways that overflow-y: auto !important is needed
+	 * overflow-y: auto !important; 
+	 */
+    overflow-x: hidden !important;
+}
+/* jQuery migration */
+.pw-show-ask:hover {
+	text-decoration: none;
+}
+.modal .btn {
+	font-size: 0.875rem;
+}
+.dt-paging .pagination .dt-paging-button .page-link:visited,
+.dt-paging .pagination .dt-paging-button .page-link:focus,
+.dt-paging .pagination .dt-paging-button .page-link:active {
+	/* color: #fff; */
+	text-decoration: none;
+}
+.dt-paging .pagination .dt-paging-button .page-link:hover,
+.dt-paging .pagination {
+	--bs-pagination-font-size: 0.875rem;
+}
+.pagination>li.primary>a:focus,
+.pagination>li>a:hover,
+.pagination>li.primary>a {
+	text-decoration: none;
+}
+select {
+	appearance: menulist !important;
+	-webkit-appearance: menulist !important;
+	-moz-webkit-appearance: menulist !important;
+}
+.dt-length .form-select {
+	--bs-form-select-bg-img: none;
+}
+.melisCmsPageHistoricSelectAction {
+	width: auto;
+}
+.accountContactLink,
+.form-control {
+	font-size: 0.875rem;
+}
+label {
+	margin-bottom: 0.5rem;
+}
+.melis-dashboard-bubble-plugin .btn {
+	font-size: 0.875rem;
+}
+.product-text-tab-content form .input-group .form-control {
+	width: 1%;
+}
+.dataTable thead tr th,
+.dataTable thead tr th.dt-type-numeric {
+	text-align: left;
+}
+.card-body,
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+	color: #686868;
+}
+.tokens-container .placeholder {
+	background-color: transparent;
+}
+.btnUpdateUser:focus,
+.btnUpdateUser:active,
+.btnUpdateUser:hover,
+.btnUpdateUser {
+	text-decoration: none;
+}
+#orderCheckoutCountries {
+	width: auto !important;
+}
+#btn_prospect_theme_add,
+#id_meliscms_mini_template_manager_tool_header_add_btn,
+#btn_cms_new_lang,
+#id_meliscms_tool_styles_header_add,
+#id_meliscms_tool_templates_header_add,
+.addRedirectSite,
+#id_melissb_tool_userrole_header_buttons_add_role,
+#btn-new-meliscms-tool-sites,
+#btn-save-meliscms-tool-sites,
+#id_meliscms_tool_platform_ids_add_button {
+	float: right;
+}
+#market-place-most-downloaded-package-list .simple-post-list li a,
+.melis-market-place-view-details .product-thumb-info-content a {
+	text-decoration: none;
+}
+.platform-scheme .minicolors input[type=hidden] + .minicolors-swatch {
+	width: 16px;
+}
+.platform-scheme .minicolors-theme-default .minicolors-swatch {
+	width: 16px;
+	height: 16px;
+}
+.minicolor-hex {
+	text-transform: lowercase;
+}
+#melis_core_platform_scheme_form .col-12:nth-child(2) .minicolors-position-bottom .minicolors-panel,
+#melis_core_platform_scheme_form .col-12:last-child .minicolors-position-bottom .minicolors-panel {
+	left: -173px;
+}
+#id_meliscommerce_order_status_form_container .minicolors-theme-default .minicolors-input,
+#id_meliscommerce_order_status_form_container .minicolors-theme-default.minicolors {
+	width: 100%;
+}
+#id_meliscommerce_order_status_form_container .minicolors-theme-default .minicolors-input {
+	height: auto;
+	padding: .375rem .75rem;
+}
+#id_meliscommerce_order_status_form_container .minicolors-theme-default .minicolors-swatch {
+	right: 9px;
+	left: auto;
+	display: block;
+	width: 16px;
+	height: 16px;
+	top: 9px;
+}
+#id_meliscommerce_order_status_form_container .minicolors-position-bottom .minicolors-panel {
+	right: 0;
+}
+.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, 
+.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before { 
+	background-color: transparent; 
+}
+
+table.dataTable.dtr-inline.collapsed>tbody>tr>td, 
+table.dataTable.dtr-inline.collapsed>tbody>tr>th {
+	position: relative;
+}
+
+table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:first-child:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:first-child:before {
+    top: 20px;
+    left: 4px;
+    height: 14px;
+    width: 14px;
+    display: block;
+    position: absolute;
+    color: white;
+    border: 2px solid white !important;
+    border-radius: 0;
+    box-shadow: 0 0 3px #444;
+    box-sizing: content-box;
+    text-align: center;
+    text-indent: 0 !important;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 14px;
+    content: '+';
+    background-color: #b9b8b8;
+}
+table.dataTable.dtr-inline.collapsed>tbody>tr>td.dt-empty:first-child:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr>th.dt-empty:first-child:before {
+	display: none;
+}
+table.dataTable.dtr-inline.collapsed>tbody>tr.dt-hasChild.dtr-expanded>td.dtr-control:first-child:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr.dt-hasChild.dtr-expanded>th.dtr-control:first-child:before {
+    content: '-';
+    background-color: #d33333;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.dt-hasChild.dtr-expanded > td:first-child:before, 
+table.dataTable.dtr-inline.collapsed > tbody > tr.dt-hasChild.dtr-expanded > th:first-child:before {
+    background: #696969;
+}
+table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before,
+table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>td.dtr-control:before, 
+table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before {
+	border: 0;
+}
+.news-details-workflow {
+	float: right;
+	margin-right: 8px;
+	padding: 3px 12px;
+}
+.container-level-a .tooltabmodal .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li {
+	float: left;
+}
+#modal-user-management .tns-controls button {
+	background-color: #e61c23;
+	border: 0;
+	color: #fff;
+}
+#modal-user-management .tns-controls button[data-controls="prev"] {
+	float: left;
+}
+#modal-user-management .tns-controls button[data-controls="next"] {
+	float: right;
+}
+.news-details-workflow:focus,
+.news-details-workflow:hover {
+	text-decoration: none;
+}
+/* GDPR */
+.cron-info:focus,
+.cron-info,
+.toggle-arrow-indication:hover,
+.toggle-arrow-indication {
+	text-decoration: none;
+}
+.form-group {
+	color: #686868;
+}
+.arrow-down-sm-accordion:after {
+	color: #808080;
+}
+.arrow-right-sm-accordion:before {
+	color: #808080;
+}
+#id_meliscoregdpr_auto_delete_content_accordion_list_config_modal_modal .nav-tabs {
+	height: 40px;
+}
+.tooltabmodal .modal-body .melis-nav-tabs-box {
+	float: left;
+	height: 40px;
+	overflow: hidden;
+}
+.tooltabmodal .modal-body .widget-head {
+	position: relative;
+}
+.tooltabmodal .nav-tab-btn {
+	display: none;
+    cursor: pointer;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+.tooltabmodal .widget-melis-tabprev {
+	float: left;
+}
+.tooltabmodal .widget-melis-tabnext {
+	float: right;
+}
+.tooltabmodal .widget-melis-tabprev.active,
+.tooltabmodal .widget-melis-tabnext.active {
+    display: inline-block;
+}
+.tooltabmodal .nav-tab-btn:focus,
+.tooltabmodal .nav-tab-btn:hover {
+	background-color: #fff;
+}
+.tooltabmodal .nav-tab-btn .fa {
+	padding: 9px 10px;
+    color: #fff;
+}
+.tooltabmodal .melis-nav-tabs-box .nav-tabs li a {
+	white-space: nowrap;
+}
+.tooltabmodal .melis-nav-tabs-box .nav-tabs .nav-link {
+	border: 0 !important;
+	border-radius: 0 !important;
+}
+.tooltabmodal .melis-nav-tabs-box .nav-tabs li a:hover {
+	border: 0;
+	border-radius: 0;
+
+	transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    -moz-transition: none;
+    -webkit-transition: none;
+}
+/* applicable on all DataTables table */
+.content-cont .dataTables_length {
+	width: 100% !important;
+}
+/* latest comments on dashboard plugin */
+#id_mccom_user_acct_search {
+	width: 100% !important;
+}
+/* Mobile Responsive */
+@media (max-width: 1128px) {
+	#btnModulesBundle,
+	#btnModulesSave {
+		min-width: 5.625rem;
+	}
+	#id_meliscore_tool_user_module_management .me-heading .btn.btn-success {
+		margin-right: 0;
+		margin-top: 0.625rem;
+	}
+}
+/* 767px and below */
+@media (max-width: 767px) {
+	#newplugin-cont ul li a {
+		text-decoration: none;
+	}
+	#id_meliscore_tool_user_module_management .me-heading .btn.btn-success {
+		margin-right: 0;
+		margin-top: 0;
+		margin-left: 0.625rem;
+	}
+	#btnModulesBundle {
+		margin: 0 1rem 0 0;
+	}
+	.melis-dashboard-plugin-creator-steps-content .multi {
+		max-width: 38% !important;
+	}
+	.melis-templating-plugin-creator-steps-content .padding-left-0 {
+		padding-right: 0;
+		border-radius: 0;
+	}
+	.melis-templating-plugin-creator-steps li {
+		border-left: 0;
+	}
+	.widget .widget-body.list ul li {
+		height: auto;
+		min-height: 39px;
+		padding-right: 0;
+	}
+	.melis-toolcreator-steps-table-list ul li > span {
+		position: relative;
+		display: block;
+		text-wrap: nowrap;
+	}
+	.melis-toolcreator-steps-table-list ul li > span i {
+		display: inline-block;
+	}
+	.melis-toolcreator-steps-table-list ul li > span span.text {
+		display: inline-block;
+	}
+	/* platfor-scheme color picker */
+	.minicolors-position-bottom .minicolors-panel {
+		left: -173px;
+	}
+	/* melis-commerce status */
+	#id_meliscommerce_order_status_form_container .minicolors-position-bottom .minicolors-panel {
+		left: auto;
+	}
+	/* scripts tab */
+	[data-meliskey="meliscms_tool_sites_script_content"] .widget-tabs {
+		margin: 0 -15px !important;
+	}
+	/* users tab */
+	#btnResetRightsNew {
+		margin-right: 1rem !important;
+	}
+	.tooltabmodal .widget.widget-tabs.widget-tabs-responsive>.widget-head ul {
+		display: inline-block;
+	}
+	.container-level-a .tooltabmodal .widget.widget-tabs.widget-tabs-responsive>.widget-head ul li {
+		float: left;
+	}
+	.container-level-a .tooltabmodal .widget.widget-tabs.widget-tabs-responsive>.widget-head ul li,
+	.container-level-a .widget.widget-tabs.widget-tabs-responsive > .widget-head ul li a {
+		border-bottom: 0;
+	}
+	.tooltabmodal .tab-pane .row {
+		display: block;
+		width: 100%;
+		margin: 0;
+	}
+	.tooltabmodal .inner-2x.innerAll {
+		padding: 30px 15px !important;
+	}
+	/* melis-commerce / accounts / contacts */
+	.linkContactBtn {
+		margin-top: 0.5rem;
+	}
+	/* mini template manager */
+	#tableMiniTemplateManager tbody tr td {
+		white-space: normal;
+    	word-break: break-word;
+	}
+}
+@media (max-width: 425px) {
+	.news-details-workflow {
+		margin-right: 0;
+		margin-top: 0.5rem;
+		clear: both;
+	}
+	.melis-news-heading {
+		padding-bottom: 3rem !important;
+	}
+	#btnResetRights,
+	#btnResetRightsNew {
+		margin-right: 1rem !important;
+	}
+}
+@media (max-width: 375px) {
+	.tooltabmodal .tab-pane .btn {
+		display: block;
+		float: none !important;
+		max-width: 100% !important;
+		margin: 0.5rem 0 0 0 !important;
+	}
+}
+.layout-timeline ul.timeline {
+	padding: 15px 15px 15px 50px;
+}
+.layout-timeline ul.timeline>li .type {
+	width: 115px;
+	left: -175px;
+	font-size: 12px;
+}
+.layout-timeline ul.timeline>li .type .time {
+	top: 20px;
+}
+.nav-tabs {
+	border-radius: 0;
+}
+.navbar.main.navbar-primary .nav > li a.close {
+	top: 2px;
+	right: 2px;
+}
+/* .modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
+.modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before, */
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons, 
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons i:before {
+    color: #fff;
+}
+.gdpr-tab-table-container .widget-head ul li, 
+.gdpr-tab-table-container .widget-head ul li.active,
+.widget.widget-tabs-double .widget-head ul li, 
+.widget.widget-tabs-double .widget-head ul li.active {
+    height: 40px;
+    line-height: 20px;
+}
+.gdpr-tab-table-container .widget-head,
+.widget.widget-tabs-double .widget-head {
+	background: #fff;
+    border-color: #e5e5e5;
+    overflow: visible;
+}
+.gdpr-tab-table-container .widget-head, 
+.gdpr-tab-table-container .widget-head ul, 
+.gdpr-tab-table-container .widget-head ul li a, 
+.gdpr-tab-table-container .widget-head ul li.active a,
+.widget.widget-tabs-double .widget-head, 
+.widget.widget-tabs-double .widget-head ul, 
+.widget.widget-tabs-double .widget-head ul li a, 
+.widget.widget-tabs-double .widget-head ul li.active a {
+	height: 40px;
+}
+.gdpr-tab-table-container .table-primary {
+    border-color: #e5e5e5;
+    border-top: none;
+}
+.gdpr-tab-table-container .table {
+    margin: 0 0 15px;
+    position: relative;
+    -webkit-border-radius: 0 0 0 0;
+    -moz-border-radius: 0 0 0 0;
+    border-radius: 0 0 0 0;
+}
+.gdpr-tab-table-container .tab-pane .dt-layout-full {
+	display: block !important;
+	width: 100% !important;
+}
+.gdpr-tab-table-container .widget-head ul li a {
+	text-decoration: none;
+}
+.gdpr-tab-table-container .widget-head ul li a,
+.gdpr-tab-table-container .widget-head ul li a .fa:before {
+	color: #ce5459;
+}
+.gdpr-tab-table-container .widget-head ul li.active a,
+.gdpr-tab-table-container .widget-head ul li.active a .fa:before {
+    color: #e61c23;
+}
+.table-primary thead th {
+    border-color: #e61c23;
+    background-color: #e61c23 !important;
+    color: #fff;
+}
+.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before, 
+.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+    top: 20px !important;
+    border-radius: 0 !important;
+    background-color: #b9b8b8 !important;
+}
+.modal-content .widget .widget-head {
+    border-radius: 0;
+}
+/* datetimepicker - tempusDominus */
+.datepicker td,
+.datepicker th {
+	border: 0;
+}
+.bootstrap-datetimepicker-widget .datepicker > div {
+	display: block;
+}
+/* 
+ * Global css for .nav .nav-tabs except the .product-text-tab or the language tab on most melis-commerce
+ * Need to add an entry on view/melis-core/platform-scheme/get-style-color-css.phtml
+ * for primary, secondary color etc..
+ */
+.product-text-tab-container .product-text-tab li a,
+.nav-tabs .nav-link {
+	border-radius: 0 !important;
+	border: 0;
+}
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link {
+	border: 0 !important;
+}
+.bootstrap-dialog .modal-header,
+.modal-content .widget.widget-tabs.widget-tabs-responsive > .widget-head {
+    border-radius: 0 !important;
 }

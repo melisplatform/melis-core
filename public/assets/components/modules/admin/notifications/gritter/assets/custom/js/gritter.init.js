@@ -1,7 +1,5 @@
-$(function()
-{
-	$('.gritter-add-sticky').click(function()
-	{
+$(function() {
+	$('.gritter-add-sticky').on("click", function() {
 		var unique_id = $.gritter.add({
 			// (string | mandatory) the heading of the notification
 			title: 'This is a sticky notice!',
@@ -31,8 +29,7 @@ $(function()
 		return false;
 	});
 
-	$('.gritter-add-regular').click(function()
-	{
+	$('.gritter-add-regular').on("click", function() {
 		$.gritter.add({
 			// (string | mandatory) the heading of the notification
 			title: 'This is a regular notice!',
@@ -50,8 +47,7 @@ $(function()
 
 	});
 	
-	$('.gritter-add-primary').click(function()
-	{
+	$('.gritter-add-primary').on("click", function() {
 		$.gritter.add({
 			// (string | mandatory) the heading of the notification
 			title: 'This is a primary notice!',
@@ -71,8 +67,7 @@ $(function()
 
 	});
 
-    $('.gritter-add-max').click(function()
-    {
+    $('.gritter-add-max').on("click", function() {
         $.gritter.add({
             // (string | mandatory) the heading of the notification
             title: 'This is a notice with a max of 3 on screen at one time!',
@@ -94,8 +89,7 @@ $(function()
         return false;
     });
 
-	$('.gritter-add-without-image').click(function()
-	{
+	$('.gritter-add-without-image').on("click", function() {
 		$.gritter.add({
 			// (string | mandatory) the heading of the notification
 			title: 'This is a notice without an image!',
@@ -106,8 +100,7 @@ $(function()
 		return false;
 	});
 
-    $('.gritter-add-white').click(function()
-    {
+    $('.gritter-add-white').on("click", function() {
         $.gritter.add({
             // (string | mandatory) the heading of the notification
             title: 'This is a light notification',
@@ -117,7 +110,4 @@ $(function()
         });
         return false;
     });
-
-
-
 });

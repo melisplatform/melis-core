@@ -1,6 +1,5 @@
-$(function()
-{
+$(function() {
 	/* FooTable */
-	if ($('.footable').length)
+	if ( $('.footable').length )
 		$('.footable').footable();
 });

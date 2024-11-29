@@ -1,60 +1,301 @@
-$(function(){
-	var $body 	= $("body");
+/** 
+ * Dashboard functionalities manipulation 
+ * on .gridstack, #bubble-plugin, #side-menu and #id_meliscore_center_dashboard_menu widths
+ * Works in connection with gridstack.init.js
+ * 
+ * Setting the value for .gridstack data-min-width and data-max-width is in gristack.init.js
+ * checkDashboardElemWidths()
+ * console.log() is for tracing where the action falls
+ * 
+ * Left menu is opened by default while dashboard plugin menu is closed
+ * Issue:
+ *  - When drag and dropping dashboard plugins into the .gridstack/dashboard
+ *  - When scale recommended, 150% on 1920 x 1080 laptop/desktop
+ */
+var dashboard = (function() {
+	// CACHE SELECTORS ==================================================================================
+	var $body 				= $("body"),
+		$activeTabId		= $("#"+activeTabId),
+		$gs 				= $activeTabId.find(".grid-stack"),
+		$lm 				= $("#id_meliscore_leftmenu"),
+		$lmBtn 				= $("#side-menu"),
+		$tabArrowTop    	= $("#tab-arrow-top"), // show main tabs on small screen devices
+		//$dbPluginMenu 		= $("#id_meliscore_center_dashboard_menu"),
+		$dbPluginMenuBtn 	= $("#melisDashBoardPluginBtn");
 
-		$body.on("click", "#melisDashBoardPluginBtn", function() {
-			$(this).closest(".melis-core-dashboard-dnd-box").toggleClass("shown");
-		});
-		
-		$body.on("click", ".melis-core-dashboard-filter-btn", showPlugLists);
-		$body.on("click", ".melis-core-dashboard-category-btn", showCatPlugLists);
-		
-		/*var dashboardTooltip = {
-			placement: "left",
-			template: '<div class="tooltip melis-plugin-tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-		};*/
-		
-		//$("body .melis-core-dashboard-plugin-snippets").tooltip(dashboardTooltip);
-		
-		// Tooltip
-		/* $("body .melis-core-dashboard-plugin-snippets").tooltip({
-			position: {
-				my: "left center",
-				at: "left+110% center",
-				using: function( position, feedback ) {
-					$( this ).css( position );
-					$(this).addClass( "melis-plugin-tooltip" ).addClass( feedback.vertical ).addClass( feedback.horizontal ).appendTo( this );
+	// dashboard specific selectors and data values
+	var $dbMsg 				= $activeTabId.find(".melis-core-dashboard-msg"),
+		lmWidth 			= $lm.outerWidth(),
+		//dbpmWidth 			= $dbPluginMenu.outerWidth(),
+		dbMsgWidth 			= $dbMsg.outerWidth(),
+		animationDuration   = 50,
+		minWidth 			= parseInt( $gs.attr("data-min-width") ),
+		maxWidth 			= parseInt( $gs.attr("data-max-width") );
+
+
+		// FUNCTION DEFINITIONS =============================================================================
+
+		// subtrace .gridstack and other elements from menus .outerWidth()
+		function toggleDashboardElements($el) {
+			var currentGsWidth 	= $gs.outerWidth(),
+				$bpWrapper 		= $("#id_meliscore_dashboard_bubble_plugins"),
+				$bp 			= $bpWrapper.find(".tab-pane .bubble-plugin"),
+				bpWidth 		= $bp.outerWidth(),
+				$dbPluginMenu 	= $("#id_meliscore_center_dashboard_menu"),
+				dbpmWidth 		= $dbPluginMenu.outerWidth();
+
+				// check screenSize for responsive, desktop
+				if ( melisCore.screenSize >= 768 ) {
+					//console.log(`768 $el[0].id: `, $el[0].id);
+					// dashboard menu button clicked
+					if ( $el[0].id === "melisDashBoardPluginBtn" ) {
+						// toggle class .shown
+						$dbPluginMenu.toggleClass("shown");
+						//console.log(`$dbPluginMenu.hasClass("shown"): `, $dbPluginMenu.hasClass("shown"));
+						// dashboard plugin menu button clicked, on
+						if ( $dbPluginMenu.hasClass("shown") )	{
+							if ( $lm.hasClass("shown") ) {
+								//console.log(`768 dbPluginMenu shown, lm shown`);
+								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+
+								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								
+								if ( $bp.length ) {
+									$bp.animate({ width: currentGsWidth - dbpmWidth}, animationDuration);
+								}
+							}
+							else {
+								//console.log(`768 dbPluginMenu shown, lm not shown`);
+								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+
+								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								
+								if ( $bp.length ) {
+									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								}
+							}
+						}
+						// db menu not shown, off
+						else {
+							if ( $lm.hasClass("shown") ) {
+								//console.log(`768 dbPluginMenu not shown, lm shown`);
+
+								$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								
+								$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								
+								if ( $bp.length ) {
+									$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								}
+							}
+							else {
+								//console.log(`768 dbPluginMenu not shown, lm not shown`);
+								$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+
+								$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								
+								if ( $bp.length ) {
+									$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								}
+							}
+						}
+					}
+					// left menu button is clicked, sidebarMenuClicked
+					else if ( $el[0].id === "sidebar-menu" ) {
+						$lm.toggleClass("shown");
+						//console.log(`768 $lm.hasClass("shown"): `, $lm.hasClass("shown") );
+						if ( $lm.hasClass("shown") ) {
+							if ( $dbPluginMenu.hasClass("shown") ) {
+								//console.log(`768 lm shown, dbPluginMenu shown`);
+								// if .grid-stack width is below .bubble-plugin width
+								if ( currentGsWidth != bpWidth ) {
+									$gs.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+
+									$dbMsg.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: bpWidth - dbpmWidth }, animationDuration);
+									}
+								}
+								else {
+									$gs.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+
+									$dbMsg.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+									}
+								}
+							}
+							else {
+								//console.log(`768 lm shown, dbPluginMenu not shown`);
+								// if .grid-stack width is below .bubble-plugin width
+								if ( currentGsWidth != bpWidth ) {
+									$gs.animate({ width: bpWidth - lmWidth }, animationDuration);
+
+									$dbMsg.animate({ width: bpWidth - lmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: bpWidth - lmWidth }, animationDuration);
+									}
+								}
+								$gs.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+
+								$dbMsg.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+								
+								if ( $bp.length ) {
+									$bp.animate({ width: currentGsWidth - lmWidth }, animationDuration);
+								}
+							}
+						}
+						// false
+						else {
+							if ( $dbPluginMenu.hasClass("shown") ) {
+								//console.log(`768 lm not shown, dbPluginMenu shown`);
+								$gs.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+
+								$dbMsg.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+								
+								if ( $bp.length ) {
+									$bp.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+								}
+							}
+							else {
+								//console.log(`768 lm not shown, dbPluginMenu not shown`);
+								// if .grid-stack width is below .bubble-plugin width
+								if ( bpWidth == currentGsWidth ) {
+									$gs.animate({ width: bpWidth + lmWidth }, animationDuration);
+
+									$dbMsg.animate({ width: bpWidth + lmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: $bp.outerWidth() + lmWidth }, animationDuration);
+									}
+								}
+								else {
+									$gs.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+
+									$dbMsg.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+									
+									if ( $bp.length ) {
+										$bp.animate({ width: currentGsWidth + lmWidth }, animationDuration);
+									}
+								}
+							}
+						}
+					}
 				}
-			},
+				// considered mobile width
+				else {
+					// dashboard menu button clicked
+					if ( $el[0].id === "melisDashBoardPluginBtn" ) {
+						// toggle class .shown
+						$dbPluginMenu.toggleClass("shown");
+
+						// dashboard plugin menu button clicked, on
+						if ( $dbPluginMenu.hasClass("shown") )	{
+							if ( $lm.hasClass("shown") ) {
+								//console.log(`767 dbPluginMenu shown, lm shown`);
+								$gs.animate({ width: minWidth }, animationDuration);
+
+								$dbMsg.animate({ width: minWidth }, animationDuration);
+								
+								if ( $bp.length ) {
+									$bp.animate({ width: minWidth }, animationDuration);
+								}
+							}
+							else {
+								//console.log(`767 dbPluginMenu shown, lm not shown`);
+								$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+
+								$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								
+								if ( $bp.length ) {
+									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								}
+							}
+						}
+						// db menu not clicked, off
+						else {
+							//console.log(`767 dbPluginMenu not shown, lm not shown`);
+							$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+
+							$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+							
+							if ( $bp.length ) {
+								$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+							}
+
+							var $tabArrowTop = $(".tab-arrow-top");
+								if ( $tabArrowTop.length ) {
+									$tabArrowTop.removeClass("hide-arrow");
+								}
+								else {
+									$tabArrowTop.addClass("hide-arrow");
+								}
+						}
+					}
+				}
+
+				/**
+				 * This will request a plugin menu content
+				 */
+				if( $($el).closest(".melis-core-dashboard-dnd-box").hasClass("shown") ) {
+					if( !$($el).closest(".melis-core-dashboard-dnd-box").hasClass("hasCached") ) {
+						$.ajax({
+							type: 'GET',
+							url: '/melis/MelisCore/DashboardPlugins/dashboardMenuContent',
+							beforeSend: function () {
+								loader.addLoadingDashboardPluginMenu();
+							}
+						}).done(function (data) {
+							$("#dashboardMenuContent").html(data.view);
+
+							setTimeout(function () {
+								melisDashBoardDragnDrop.init();
+
+								// shown class added again as on top code it is using toggleClass()
+								$($el).closest(".melis-core-dashboard-dnd-box").addClass("hasCached shown");
+
+								if ( $lm.hasClass("shown") ) {
+									$gs.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+									$dbMsg.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+									$bp.animate({ width: currentGsWidth - dbpmWidth }, animationDuration);
+								}
+								else {
+									$gs.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+									$dbMsg.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+									$bp.animate({ width: currentGsWidth + dbpmWidth }, animationDuration);
+								}
+							}, 100);
+
+							loader.removeLoadingDashboardPluginMenu();
+						});
+					}
+				}
+		}
+
+		// BIND & DELEGATE EVENTS ===========================================================================
+		/* 
+		 * Subtracts the .grid-stack width with the plugins sidebar's width so that it would not overlap
+		 * workaround solution for the issue: http://mantis.melistechnology.fr/view.php?id=2418
+		 * this is also applied on mobile responsive as it would not allow to drop plugins if sidebar is position fixed
+		 * in melisCore.js @ 494 #melisDashBoardPluginBtn click event
+		 */
+		$body.on("click", "#melisDashBoardPluginBtn, #sidebar-menu", function(e) {
+			e.preventDefault();
+
+			toggleDashboardElements( $(this) );
 		});
-		
-		$("body .melis-core-dashboard-plugin-snippets").hover(function() {
-			$(this).children(".melis-plugin-tooltip").fadeIn();
-		}); */
-		
-		function showPlugLists() {
-			if($(this).hasClass("active")) {
-				$(this).removeClass("active")
-					.siblings(".melis-core-dashboard-plugin-snippets-box")
-					.slideUp();
-				$(this).siblings(".melis-core-dashboard-plugin-snippets-box")
-					.find(".melis-core-dashboard-category-btn.active")
-					.removeClass("active")
-					.siblings(".melis-core-dashboard-category-plugins-box")
-					.slideUp();
-			} else {
-				$(".melis-core-dashboard-filter-btn.active").removeClass("active").siblings(".melis-core-dashboard-plugin-snippets-box").slideUp();
-				$(this).addClass("active");
-				$(".melis-core-dashboard-filter-btn.active").siblings(".melis-core-dashboard-plugin-snippets-box").slideDown();
-			}
+
+		// FUNCTION CALLS ===================================================================================
+
+		// RETURN ===========================================================================================
+		/*
+		 * Include your newly created functions inside the object so it will be accessible outside
+    	 * sample syntax in calling it outside - dashboard.functionName()
+		 */
+		return {
+			toggleDashboardElements : toggleDashboardElements
 		}
-		
-		function showCatPlugLists() {
-			if($(this).hasClass("active")) {
-				$(this).removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
-			} else {
-				$(".melis-core-dashboard-category-btn.active").removeClass("active").siblings(".melis-core-dashboard-category-plugins-box").slideUp();
-				$(this).addClass("active");
-				$(".melis-core-dashboard-category-btn.active").siblings(".melis-core-dashboard-category-plugins-box").slideDown();
-			}
-		}
-});
+})();

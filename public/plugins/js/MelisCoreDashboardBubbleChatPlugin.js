@@ -92,7 +92,7 @@ var MelisCoreDashboardBubbleChatPlugin = {
     }
 };
 
-$(document).ready(function() {
+$(function() {
     var $body = $('body');
     var msgrTotalNotificationMsg = 0;
     var msgrFirstLoad = true;
@@ -111,9 +111,9 @@ $(document).ready(function() {
     function openMessengerTab(senderId) {
         var userName = $("#user-name-link").html().trim();
         melisHelper.tabOpen(userName, 'fa-user', 'id_meliscore_user_profile', 'meliscore_user_profile', null, null, function () {
-            $body.find('#melis-messenger-tab a').click();
+            $body.find('#melis-messenger-tab a').trigger("click");
             waitForEl('.list-group-item.selectContact', function () {
-                $body.find('.selectContact[data-contact-id="' + senderId + '"]').click();
+                $body.find('.selectContact[data-contact-id="' + senderId + '"]').trigger("click");
             });
         });
     }

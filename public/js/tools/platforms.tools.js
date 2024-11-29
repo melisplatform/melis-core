@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
     var formAdd     = "#formplatformadd form#idformsite",
         formEdit    = "#formplatformedit form#idformsite";
 
@@ -14,12 +14,13 @@ $(document).ready(function () {
 
         function platformFormModal(platformId) {
             var platformId = (typeof platformId !== "undefined") ? platformId : null;
-
+                
                 // initialation of local variable
                 zoneId = 'id_meliscore_tool_platform_generic_form';
                 melisKey = 'meliscore_tool_platform_generic_form';
                 modalUrl = '/melis/MelisCore/MelisGenericModal/emptyGenericModal';
-                window.parent.melisHelper.createModal(zoneId, melisKey, false, {plf_id: platformId}, modalUrl);
+                //window.parent.melisHelper.createModal(zoneId, melisKey, false, {plf_id: platformId}, modalUrl);
+                melisHelper.createModal(zoneId, melisKey, false, {plf_id: platformId}, modalUrl);
         }
 
         addEvent("#btnPlatformSave", function () {
@@ -42,7 +43,9 @@ $(document).ready(function () {
                     encode: true
                 }).done(function(data) {
                     if (data.success) {
-                        $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
+                        // $("#id_meliscore_tool_platform_generic_form_container").modal("hide");
+                        melisCoreTool.hideModal("id_meliscore_tool_platform_generic_form_container");
+
                         melisHelper.zoneReload("id_meliscore_tool_platform_content", "meliscore_tool_platform_content");
                         // Show Pop-up Notification
                         melisHelper.melisOkNotification(data.textTitle, data.textMessage);

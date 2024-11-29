@@ -104,7 +104,7 @@
 			charts.chart_simple.init();
 	});
 
-	$('.btn-group [data-toggle="tab"]').on('show.bs.tab', function(){
+	$('.btn-group [data-bs-toggle="tab"]').on('show.bs.tab', function(){
 		$(this).parent().find('[data-toggle]').removeClass('active');
 		$(this).addClass('active');
 	});

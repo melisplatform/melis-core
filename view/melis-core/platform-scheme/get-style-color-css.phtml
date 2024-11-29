@@ -6,11 +6,34 @@
     $loginLinkColor = $this->melis_core_platform_color_login_link_color ?: '#E61C23';
 ?>
 /* =============== Primary Color =============== */
+.table-primary thead th {
+    border-color: <?= $primaryColor; ?> !important;
+    background-color: <?= $primaryColor; ?> !important;
+}
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons, 
+.widget.widget-tabs-double .widget-head ul li a.glyphicons:hover, 
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons:hover, 
+.widget-tabs .nav-tabs > li.active > a.glyphicons:hover, 
+.widget-tabs .nav-tabs > li > a.glyphicons:hover,
+.widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons i:before,
+.widget.widget-tabs > .widget-head ul li.active a.glyphicons, 
+.widget.widget-tabs > .widget-head ul li.active a.glyphicons i:before,
+.nav-tabs:not(.product-text-tab) .nav-item.active .nav-link.active span,
+.nav-tabs:not(.product-text-tab) .nav-link.active span,
+.nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active span,
+.nav.nav-tabs:not(.product-text-tab) .nav-item .nav-link.active,
+.gdpr-tab-table-container .widget-head ul li.active a,
+.gdpr-tab-table-container .widget-head ul li.active a .fa:before,
+.melis-modal-cont .modal-content h3 a .glyphicons.lock i::before {
+    color: <?= $primaryColor; ?> !important;
+}
 .grid-stack .grid-stack-placeholder>.placeholder-content,
 .client-contact-address .default-card>.card-header,
 .client-contact-address .panel-default>.panel-heading {
     background-color: <?= $primaryColor; ?> !important;
 }
+.accordion-button:not(.collapsed),
+.accordion-button,
 #btnDelImg,
 .cron-info-toggle,
 .progressContent .progress .text-danger,
@@ -109,6 +132,7 @@
 .tool_line-chart path {
     stroke: <?= $primaryColor; ?>;
 }
+#convo-content .chat-contact-name,
 small a:hover,
 small a,
 .carousel-caption a:hover,
@@ -151,19 +175,26 @@ small a,
     color: <?= $primaryColor; ?> !important;
 }
 
+.table .btn-group .btn-danger.btn-regular:hover,
+.table .btn-group .btn-danger.btn-regular:focus {
+    background-color: #fff !important;
+    color: <?= $primaryColor; ?> !important;
+}
+
 .innerTB .glyphicons p a,
 .widget .widget-body p a,
 #convo-content .chat-contact-name {
     color: <?= $primaryColor; ?>;
 }
 
+#content.render-widgets.widgets .widget .widget-body .widget-timeline .view-all:focus,
+#content.render-widgets.widgets .widget .widget-body .widget-timeline .view-all:hover,
 .media-msgrBody .text-danger {
     color: <?= $primaryColor; ?> !important;
 }
 
 #categoryProductListTbl .toolTipHoverEvent,
-#categoryProductListTbl .toolTipCatHoverEvent,
-#tableProductList .toolTipHoverEvent {
+#categoryProductListTbl .toolTipCatHoverEvent {
     color: <?= $primaryColor; ?> !important;
 }
 
@@ -176,8 +207,7 @@ small a,
     color: <?= $primaryColor; ?>;
 }
 
-.footer a,
-a:hover {
+a, a:hover {
     color: <?= $primaryColor; ?>;
 }
 
@@ -242,20 +272,35 @@ body .navbar.main.navbar-primary {
     background: <?= $primaryColor; ?>;
 }
 
-.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-toggle="collapse"] {
+.sidebar.sidebar-inverse > .sidebarMenuWrapper > ul li.active-menu.hasSubmenu > a[data-bs-toggle="collapse"] {
     background-color: <?= $primaryColor; ?>;
 }
 
 /* Widgets */
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons,
+.widget.widget-tabs-double .widget-head ul li a.glyphicons:hover, 
+.widget.widget-tabs-double .widget-head ul li.active a.glyphicons:hover, 
+.widget.widget-tabs-double.widget-regular .widget-head ul li.active a i:before,
+.widget.widget-tabs-double.widget-regular .widget-head ul li.active a,
 .modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons,
 .modal .widget.widget-tabs.widget-tabs-gray>.widget-head ul li.active a.glyphicons i:before,
+.widget.widget-tabs .widget-head ul li.active a.glyphicons,
+.widget.widget-tabs .widget-head ul li.active a.glyphicons i:before
+.widget.widget-tabs>.widget-head ul li.active a.glyphicons span,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons,
 .widget.widget-tabs>.widget-head ul li.active a.glyphicons i:before {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.glyphicons.active i:before,
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.glyphicons.active,
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons:hover, 
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons:hover i:before,
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.active i:before,
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li.active a.active,
+.render-tabs .widget.widget-tabs-double.widget-regular > .widget-head ul li.active a i:before,
 .widget.widget-tabs-icons-only-2>.widget-head ul li a.glyphicons:hover i:before {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .widget.widget-tabs-double-2>.widget-head ul li:hover a {
@@ -267,17 +312,18 @@ body .navbar.main.navbar-primary {
 }
 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
+.wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons.active i:before,
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover i:before,
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover i:before {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .wizard .widget.widget-tabs-double>.widget-head ul li a.glyphicons:hover,
 .wizard .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons:hover {
-    color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?> !important;
 }
 
 .wizard.wizard-design .widget.widget-tabs-double>.widget-head ul li.active a.glyphicons,
@@ -299,7 +345,6 @@ body .navbar.main.navbar-primary {
     color: <?= $primaryColor; ?>;
 }
 
-
 #id_meliscore_header_flash_messenger {
     border-left: 1px solid <?= $secondaryColor; ?> !important;
 }
@@ -308,6 +353,10 @@ body .navbar.main.navbar-primary {
     background-color: <?= $primaryColor; ?>;
 }
 
+.fc-prev-button.btn-primary:focus .bi.bi-chevron-left::before,
+.fc-prev-button.btn-primary:hover .bi.bi-chevron-left::before,
+.fc-next-button.btn-primary:focus .bi.bi-chevron-right::before,
+.fc-next-button.btn-primary:hover .bi.bi-chevron-right::before,
 .text-primary {
     color: <?= $primaryColor; ?> !important;
 }
@@ -331,7 +380,7 @@ body .navbar.main.navbar-primary {
 
 .table-primary thead th {
     border-color: <?= $primaryColor; ?>;
-    background-color: <?= $primaryColor; ?>;
+    background-color: <?= $primaryColor; ?> !important;
     color: #fff;
 }
 
@@ -343,6 +392,7 @@ body .navbar.main.navbar-primary {
 }
 
 .pagination>li.primary>a:focus,
+.pagination>li>a:focus,
 .pagination>li>a:hover,
 .pagination>li.primary>a {
     background: <?= $primaryColor; ?>;
@@ -353,6 +403,21 @@ body .navbar.main.navbar-primary {
 .pagination > .page-item.active > .page-link:hover {
     background-color: <?= $primaryColor; ?>;
     border-color: <?= $primaryColor; ?>;
+}
+
+.widget.widget-3 .widget-footer a:hover i:before,
+.widget.widget-3 .widget-footer a:hover,
+#pdfTarget .btn:focus .fa-download,
+#pdfTarget .btn:hover .fa-download,
+.page-link {
+    color: <?= $primaryColor; ?>;
+}
+
+.rating:not(.read-only) span.star:hover:before, 
+.rating:not(.read-only) span.star:hover~span.star:before,
+.dt-paging-button.page-item.active .page-link:hover,
+.dt-paging-button.page-item .page-link:hover {
+    color: <?= $primaryColor; ?> !important;
 }
 
 /* Buttons */
@@ -753,7 +818,7 @@ input[type="color"]:focus,
 }
 
 .content-cont .widget.widget-tabs-double-2>.widget-head ul li a:hover {
-color: <?= $primaryColor; ?>;
+    color: <?= $primaryColor; ?>;
 }
 
 #external-events li {
@@ -826,6 +891,12 @@ div.glyphicons-social.glyphicon-primary i:before {
     color: <?= $loginLinkColor; ?>
 }
 /* =============== Secondary Color =============== */
+.widget.widget-tabs > .widget-head ul li.active a.glyphicons:focus i:before,
+.widget.widget-tabs > .widget-head ul li.active a.glyphicons:hover i:before,
+.widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons:focus i:before,
+.widget.widget-tabs-double-2>.widget-head ul li.active a.glyphicons:hover i:before,
+.gdpr-tab-table-container .widget-head ul li a,
+.gdpr-tab-table-container .widget-head ul li a .fa:before,
 .reponsive-menu-tabs:hover span, .reponsive-menu-tabs:hover .fa {
     color:  <?= $secondaryColor; ?>;
 }
@@ -870,9 +941,19 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-left-color: <?= $secondaryColor; ?>;
 }
 
+.bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-bottom-color: <?= $secondaryColor; ?> !important;
+}
+
 .tooltip.fade.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
 .tooltip.fade.bs-tooltip-bottom .arrow::before {
     border-bottom-color: <?= $secondaryColor; ?> !important;
+}
+
+.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-top-color: <?= $secondaryColor; ?> !important;
 }
 
 .tooltip.fade.bs-tooltip-auto[x-placement^=top] .arrow::before,
@@ -880,10 +961,21 @@ div.glyphicons-social.glyphicon-primary i:before {
     border-top-color: <?= $secondaryColor; ?> !important;
 }
 
+.bs-tooltip-auto[data-popper-placement^=right] .tooltip-arrow::before, 
+.bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: <?= $secondaryColor; ?> !important;
+}
+
 .tooltip.fade.bs-tooltip-auto[x-placement^=right] .arrow::before, 
 .tooltip.fade.bs-tooltip-right .arrow::before {
     border-right-color: <?= $secondaryColor; ?> !important;
 }
+
+.bs-tooltip-auto[data-popper-placement^=left] .tooltip-arrow::before, 
+.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: <?= $secondaryColor; ?> !important;
+}
+
 .bs-tooltip-auto[x-placement^="left"] .arrow::before,
 .bs-tooltip-left .arrow::before,
 .tooltip.fade.bs-tooltip-auto[x-placement^=left] .arrow::before, 
@@ -923,7 +1015,7 @@ div.glyphicons-social.glyphicon-primary i:before {
 }
 
 .nav-tabs>li>a:hover, .nav-pills>li>a, .nav-pills>li>a:hover {
-    color: <?= $secondaryColor; ?>;
+    color: <?= $secondaryColor; ?> !important;
 }
 
 .list-group-1>li:hover>a>[class*="fa-"] {

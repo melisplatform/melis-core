@@ -119,7 +119,13 @@
               }
             });
 
-            // commented to disable clicks except the middle separator
+            $switchLeft.on('click', function (e) {
+              changeStatus($(this));
+            });
+
+            $switchRight.on('click', function (e) {
+              changeStatus($(this));
+            });
 
             $element.find(inputSelector).on('change', function (e, skipOnChange) {
               var $this = $(this)
@@ -157,9 +163,9 @@
               $this.closest('div').removeClass('switch-animate');
 
               if ($this.closest('.has-switch').is('.deactivate')) {
-                $this.unbind('click');
+                $this.off('click');
               } else if ($this.closest('.switch-on').parent().is('.radio-no-uncheck')) {
-                $this.unbind('click');
+                $this.off('click');
               } else {
                 $this.on('mousemove touchmove', function (e) {
                   var $element = $(this).closest('.make-switch')
@@ -186,7 +192,7 @@
                   e.stopImmediatePropagation();
                   e.preventDefault();
 
-                  $this.unbind('mouseleave');
+                  $this.off('mouseleave');
 
                   if (moving)
                     $myRadioCheckBox.prop('checked', !(parseInt($this.parent().css('left')) < -25));
@@ -204,7 +210,7 @@
                   e.preventDefault();
                   e.stopImmediatePropagation();
 
-                  $this.unbind('mouseleave');
+                  $this.off('mouseleave');
                   $this.trigger('mouseup');
 
                   $myInputBox.prop('checked', !(parseInt($this.parent().css('left')) < -25)).trigger('change');
@@ -214,13 +220,13 @@
                   e.stopImmediatePropagation();
                   e.preventDefault();
 
-                  $(this).unbind('mousemove');
+                  $(this).off('mousemove');
                 });
               }
             });
 
             if ($form.data('bootstrapSwitch') !== 'injected') {
-              $form.bind('reset', function () {
+              $form.on('reset', function () {
                 setTimeout(function () {
                   $form.find('.make-switch').each(function () {
                     var $input = $(this).find(inputSelector);
@@ -248,7 +254,7 @@
 
         if (active) {
           $this.removeClass('deactivate');
-          $this.find(inputSelector).removeAttr('disabled');
+          $this.find(inputSelector).prop('disabled', false);
         }
         else {
           $this.addClass('deactivate');
@@ -350,10 +356,10 @@
         $inputbox = $div.children();
         $inputbox.unwrap().unwrap();
 
-        $inputbox.unbind('change');
+        $inputbox.off('change');
 
         if ($form) {
-          $form.unbind('reset');
+          $form.off('reset');
           $form.removeData('bootstrapSwitch');
         }
 

@@ -1,0 +1,1 @@
+ALTER TABLE `melis_core_announcement` ADD `mca_user_id` INT NOT NULL AFTER `mca_id`;

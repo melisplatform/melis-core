@@ -1368,6 +1368,9 @@ class ToolUserController extends MelisAbstractActionController
                             }
 
                             $userTable->save($data, $userId);
+
+                            $isMyInfo = false;
+                            $loadProfile = null;
                             // check if you are updating your own info
                             $userSession = $melisCoreAuth->getStorage()->read();
                             if ($data['usr_login'] == $userSession->usr_login) {
@@ -1383,11 +1386,15 @@ class ToolUserController extends MelisAbstractActionController
                                 $userSession->usr_password = $savedPassword;
 
                                 $image = !empty($userSession->usr_image) ? base64_encode($userSession->usr_image) : null;
-                                $datas = [
-                                    'isMyInfo' => 1,
-                                    'loadProfile' => 'data:image/jpeg;base64,' . $image,
-                                ];
+                                $isMyInfo = true;
+                                $loadProfile = 'data:image/jpeg;base64,' . $image;
                             }
+                            $datas = [
+                                'isMyInfo' => $isMyInfo,
+                                'loadProfile' => $loadProfile,
+                                'usr_id' => $userId
+                            ];
+
                             // free up memory
                             unset($data);
                         }
@@ -1640,7 +1647,7 @@ class ToolUserController extends MelisAbstractActionController
 
             $data              = $userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection, $start, $length)->toArray();
             $dataCount         = $userTbl->getTotalData();
-            $dataFilteredCount = $userTbl->getTotalFiltered();
+            $dataFilteredCount = count($userTbl->getUserConnectionData($userId, null, $searchValue, $searchableCols, $selColOrder, $orderDirection)->toArray());
             $tableData         = $data;
 
             for($ctr = 0; $ctr < count($tableData); $ctr++) {
@@ -1649,8 +1656,8 @@ class ToolUserController extends MelisAbstractActionController
                     $tableData[$ctr][$vKey] = $melisTool->limitedText($vValue, 80);
                 }
 
-                $loginDate = $melisTool->formatDate(strtotime($tableData[$ctr]['usrcd_last_login_date']), null, \IntlDateFormatter::SHORT);
-                $loginDate = explode(' ' , $loginDate)[0];
+                $loginDate = $melisTool->formatDate(strtotime($tableData[$ctr]['usrcd_last_login_date']), null, \IntlDateFormatter::SHORT, null, null, 'MMMM d');
+                // $loginDate = explode(' ' , $loginDate)[0];
 
                 $connectionTime = $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date']) == '-' ? '0' :
                     $userSvc->getUserSessionTime( (int) $tableData[$ctr]['usr_id'], $tableData[$ctr]['usrcd_last_login_date'], false);
@@ -1658,7 +1665,7 @@ class ToolUserController extends MelisAbstractActionController
 
                 $tableData[$ctr]['usrcd_id']                   = date('H:i:s', strtotime($tableData[$ctr]['usrcd_last_login_date']));
                 $tableData[$ctr]['usrcd_usr_login']            = date('H:i:s', strtotime($tableData[$ctr]['usrcd_last_connection_time']));
-                $tableData[$ctr]['usrcd_last_login_date']      = $loginDate;
+                $tableData[$ctr]['usrcd_last_login_date']      = ucfirst($loginDate);
                 $tableData[$ctr]['usrcd_last_connection_time'] = $connectionTime;
                 $tableData[$ctr]['DT_RowId']                   = $tableData[$ctr]['usrcd_id'];
             }

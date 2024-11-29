@@ -9,13 +9,16 @@
 
 namespace MelisCore;
 
+use Laminas\ModuleManager\ModuleEvent;
 use MelisCore\Listener\MelisChangeLangOnCreatePassListener;
+use MelisCore\Listener\MelisCoreClearCacheListenerListener;
 use MelisCore\Listener\MelisCoreDashboardPluginRightsTreeViewListener;
 use MelisCore\Listener\MelisCoreAuthSuccessListener;
 use MelisCore\Listener\MelisCoreCheckUserRightsListener;
 use MelisCore\Listener\MelisCoreDashboardMenuListener;
 use MelisCore\Listener\MelisCoreFlashMessengerListener;
 use MelisCore\Listener\MelisCoreGetRightsTreeViewListener;
+use MelisCore\Listener\MelisCoreInsertDashboardPluginListener;
 use MelisCore\Listener\MelisCoreInstallCreateNewUserListener;
 use MelisCore\Listener\MelisCoreMicroServiceRouteParamListener;
 use MelisCore\Listener\MelisCoreNewPlatformListener;
@@ -37,6 +40,7 @@ use Laminas\Mvc\ModuleRouteListener;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
 use Laminas\Stdlib\ArrayUtils;
+use MelisCore\Listener\MelisGenerateBundleListener;
 
 /**
  * Class Module
@@ -56,12 +60,15 @@ class Module
         $this->initSession($e);
         $this->createTranslations($e);
 
-        $eventManager->getSharedManager()->attach(__NAMESPACE__,
-            MvcEvent::EVENT_DISPATCH, function ($e) {
+        $eventManager->getSharedManager()->attach(
+            __NAMESPACE__,
+            MvcEvent::EVENT_DISPATCH,
+            function ($e) {
                 $e->getTarget()->layout('layout/layoutCore');
-            });
+            }
+        );
 
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, function ($e) {
             $this->checkIdentity($e);
         });
 
@@ -89,6 +96,8 @@ class Module
             (new MelisCoreDashboardPluginRightsTreeViewListener())->attach($eventManager);
             (new MelisCoreUrlAccessCheckerListenner())->attach($eventManager);
             (new MelisCoreTableColumnDisplayListener())->attach($eventManager);
+            (new MelisCoreClearCacheListenerListener())->attach($eventManager);
+            (new MelisCoreInsertDashboardPluginListener())->attach($eventManager);
         }
     }
 
@@ -97,9 +106,11 @@ class Module
         $sm = $e->getApplication()->getServiceManager();
         $melisAppConfig = $sm->get('MelisCoreConfig');
         $coreConfig = $melisAppConfig->getItemPerPlatform('/meliscore/datas/');
-        if (!empty($coreConfig['errors']) &&
+        if (
+            !empty($coreConfig['errors']) &&
             isset($coreConfig['errors']['error_reporting']) &&
-            isset($coreConfig['errors']['display_errors'])) {
+            isset($coreConfig['errors']['display_errors'])
+        ) {
             error_reporting($coreConfig['errors']['error_reporting']);
             ini_set('display_errors', $coreConfig['errors']['display_errors']);
         } else {
@@ -149,22 +160,22 @@ class Module
                     $container['melis-lang-locale'] = 'en_EN';
                 }
             }
-
         } else {
             $container['melis-lang-id'] = $langId;
             $container['melis-lang-locale'] = $locale;
         }
     }
 
-    public function changePasswordPageLangOverride($e){
+    public function changePasswordPageLangOverride($e)
+    {
         // AssetManager, we don't want listener to be executed if it's not a php code
         $uri = $_SERVER['REQUEST_URI'];
 
-        $route = isset(explode('/',$uri)[2]) ? explode('/',$uri)[2] : null;
-        $rhash = isset(explode('/',$uri)[3]) ? explode('/',$uri)[3] : null;
+        $route = isset(explode('/', $uri)[2]) ? explode('/', $uri)[2] : null;
+        $rhash = isset(explode('/', $uri)[3]) ? explode('/', $uri)[3] : null;
         $sm = $e->getApplication()->getServiceManager();
 
-        if(!empty($route)) {
+        if (!empty($route)) {
             if (strpos($route, "change-language") !== false) {
                 $container = new Container('meliscore');
                 $container['melis-lang-changed'] = true;
@@ -263,31 +274,46 @@ class Module
         $lang = $lang[0];
     }
 
+
     public function checkIdentity(MvcEvent $e)
     {
         $sm = $e->getApplication()->getServiceManager();
         $melisCoreAuth = $sm->get('MelisCoreAuth');
-
         $routeMatch = $e->getRouteMatch();
         $matchedRouteName = $routeMatch->getMatchedRouteName();
 
-        /**
-         * get excluded routes
-         */
+        // Get excluded routes
         $excludedRoutes = $sm->get('MelisConfig')->getItem('/meliscore/datas/excluded_routes');
- 
+
+        // INFO: If the route is in excludedRoutes or it's a CLI request, allow it
         if (in_array($matchedRouteName, $excludedRoutes) || php_sapi_name() == 'cli') {
             return true;
         }
 
-        if (!$melisCoreAuth->hasIdentity()) {
-            $controller = $e->getTarget();
-            $controller->plugin('redirect')->toUrl('/melis/login');
-            $e->stopPropagation();
+        $request = $e->getRequest();
+        $method = strtoupper($request->getMethod());
 
-            return false;
+        // INFO: Check if the user is authenticated
+        $isAuthenticated = $melisCoreAuth->hasIdentity();
+
+        // INFO: If method is not GET and not authenticated, return 404
+        if ($method !== 'GET' && !$isAuthenticated) {
+            header("HTTP/1.0 404 Not Found");
+            $e->stopPropagation();
+            exit;
         }
+
+        // INFO: If method is GET and not authenticated, redirect to login
+        if ($method === 'GET' && !$isAuthenticated) {
+            $e->stopPropagation();
+            header('Location: /melis/login');
+            exit;
+        }
+
+        // INFO: If authenticated and not caught by any of the above conditions, allow access
+        return true;
     }
+
 
     private function isInInstallMode($e)
     {
@@ -322,19 +348,22 @@ class Module
                 $sm = $e->getApplication()->getServiceManager();
                 $oController = $e->getTarget();
                 $rhash = $e->getRouteMatch()->getParam('rhash');
-                $result = @$oController->forward()->dispatch('MelisCore\Controller\User',
+                $result = @$oController->forward()->dispatch(
+                    'MelisCore\Controller\User',
                     [
                         'action' => 'setHash',
                         'rhash' => $rhash,
-                    ])->getVariables();
+                    ]
+                )->getVariables();
             }
-
         }, 100);
-
 
         $events = $mm->getEventManager();
 
+        $events->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, [new MelisGenerateBundleListener(), 'onLoadModulesPost']);
     }
+
+
 
     public function getConfig()
     {
@@ -358,6 +387,7 @@ class Module
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleUpdatesPlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleNotificationsPlugin.config.php',
             include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardBubbleChatPlugin.config.php',
+            include __DIR__ . '/../config/dashboard-plugins/MelisCoreDashboardAnnouncementPlugin.config.php',
             /*
              * gdpr auto delete
              */
@@ -374,7 +404,6 @@ class Module
 
         foreach ($configFiles as $file) {
             $config = ArrayUtils::merge($config, $file);
-
         }
 
         return $config;

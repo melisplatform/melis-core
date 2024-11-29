@@ -1,0 +1,1 @@
+ALTER TABLE `melis_core_platform` ADD `plf_activate_cache` INT NOT NULL DEFAULT '1' AFTER `plf_update_marketplace`;

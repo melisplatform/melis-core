@@ -1,0 +1,58 @@
+<div class="row">
+    <?php if($this->hasData) { ?>
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <div class="layout-timeline">
+                <div class="innerAll">
+                    <ul class="timeline">
+                        <?php foreach($this->paginator as $key => $ann) { ?>
+                            <?php
+                                $time = date('H:i', strtotime($ann['mca_date']));
+                            ?>
+                            <li class="active">
+                                <div class="separator bottom">
+                                    <span class="type p-0"><?= $ann['date_str']; ?><span class="time"><?= $time; ?></span></span>
+                                </div>
+                                <div class="widget widget-heading-simple widget-body-white margin-none">
+                                    <div class="widget-body">
+                                        <div class="media">
+                                            <div class="media-object float-left"><img src="<?= $ann['user_image'];?>" width="50" alt="Image" class="rounded-circle" />
+                                            </div>
+                                            <div class="media-body">
+                                                <h4 class="author"><?= $ann['user_name'];?></h4>
+                                                <h4 class="muted"><?= $ann['mca_title'];?></h4>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-gray">
+                                            <p class="margin-none">
+                                                <?= $ann['mca_text'];?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            </div>
+
+<!--            show only paginator if data is more than 3-->
+            <!-- Pagination -->
+            <?php
+            if(sizeof($this->announcements) > 3) {
+                // Generating Pagination Control using partial view
+                echo $this->paginationControl(
+                    $this->paginator,
+                    'Sliding',
+                    'melis-core/announcement/pagination',
+                    [
+                        'nbPageBeforeAfter' => 2
+                    ]
+                );
+            }
+            ?>
+        </div>
+    <?php }else{ ?>
+        <label class="alert alert-warning mt-3 ml-5 mr-5" style="width:100%"> <?= $this->translate('tr_melis_core_announcement_plugin_no_data');?></label>
+    <?php } ?>
+</div>

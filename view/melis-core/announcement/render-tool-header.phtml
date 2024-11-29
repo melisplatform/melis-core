@@ -1,0 +1,19 @@
+<?php
+    $id = $this->zoneconfig['conf']['id'];
+    $melisKey = $this->zoneconfig['conf']['melisKey'];
+?>
+<div id="<?php echo $id ?>" data-melisKey="<?php echo $melisKey; ?>">
+    <div class="me-heading bg-white border-bottom">
+        <div class="row">
+            <div class="me-hl col-8 col-md-8 col-lg-8">
+                <h1 class="content-heading"><?php echo $this->translate('tr_melis_core_announcement_tool_title')?></h1>
+                <?php if ($this->translate('tr_melis_core_announcement_tool_desc') != 'tr_melis_core_announcement_tool_desc') {?>
+                    <p><?= $this->translate('tr_melis_core_announcement_tool_desc'); ?></p>
+                <?php } ?>
+            </div>
+            <div class="me-hl col-4 col-md-4 col-lg-4">
+                <button class="btn btn-success pull-right" id="btnAnnouncementAdd"><i class="fa fa-plus"></i>  <?php echo $this->translate('tr_melis_core_announcement_tool_add_announcement') ?></button>
+            </div>
+        </div>
+    </div>
+</div>
