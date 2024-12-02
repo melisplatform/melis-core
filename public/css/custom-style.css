@@ -2402,9 +2402,9 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
     left: auto;
     z-index: 1;
 }
-.tooltabmodal ul.ui-fancytree li:first-child .parent-with-child-selected .fancytree-title {
+.tooltabmodal ul.ui-fancytree > li:first-child .parent-with-child-selected .fancytree-title {
 	color: #cb4040 !important;
 }
-.tooltabmodal ul.ui-fancytree li:not(:first-child) .parent-with-child-selected .fancytree-title {
+.tooltabmodal ul.ui-fancytree > li:not(:first-child) .parent-with-child-selected .fancytree-title {
 	color: #99c975 !important;
 }
