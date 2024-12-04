@@ -17,16 +17,13 @@ var melisCoreRights = (function ($, window, document) {
 			//load
 			lazyLoad: function (event, data) {
 				var lazyURL = data.node.data.melisData.lazyURL;
-				data.result = {
-					url: lazyURL,
-				};
+					data.result = {
+						url: lazyURL,
+					};
 			},
-			// clicking of the nodes callback function
+			// clicking of the nodes callback function, node is rendered or re-rendered
 			renderNode: function (event, data) {
 				const fnode = data.node;
-
-					// hightlight parents of selected child nodes
-					updateParentHighlight(fnode);
 
 					// removed .fancytree-icon class and replace it with font-awesome icons
 					$(fnode.span)
@@ -49,51 +46,58 @@ var melisCoreRights = (function ($, window, document) {
 					} else {
 						$(fnode.span).find(".fancytree-title").css("color", "#686868");
 					}
+
+					// hightlight parents of selected child nodes
+					updateParentHighlight(fnode);
 			},
+			// load or update the children of a node in the tree
 			loadChildren: function (event, data) {
+				
+				// hightlight parents of selected child nodes
+				updateParentHighlight(data.node);
+
 				userRightsData = [{ treeStatus: [] }];
 
 				//var tree = $(trees).fancytree('getTree');
 				var tree = $.ui.fancytree.getTree(trees);
-				// console.log(`rightsFancytreeInit.js loadChildren() tree: `, tree);
-				tree.findAll(function (node) {
-					userRightsData[0]["treeStatus"].push(node.key);
+					tree.findAll(function (node) {
+						userRightsData[0]["treeStatus"].push(node.key);
 
-					// on first render of the tree get all the toplevel parent node and add them to the array
-					if (node.isTopLevel() && node.isStatusNode() === false) {
-						var parentObj = {};
-						parentObj[node.key] = [];
-						userRightsData.push(parentObj);
-					}
+						// on first render of the tree get all the toplevel parent node and add them to the array
+						if (node.isTopLevel() && node.isStatusNode() === false) {
+							var parentObj = {};
+							parentObj[node.key] = [];
+							userRightsData.push(parentObj);
+						}
 
-					if (node.isSelected() === true) {
-						// get the parent list of each node
-						var parents = $.map(
-							node.getParentList(false, true),
-							function (node) {
-								return node.key;
-							}
-						);
+						if (node.isSelected() === true) {
+							// get the parent list of each node
+							var parents = $.map(
+								node.getParentList(false, true),
+								function (node) {
+									return node.key;
+								}
+							);
 
-						// get the topmost parent (top level parent)
-						var getToplvlParent = parents.shift();
+							// get the topmost parent (top level parent)
+							var getToplvlParent = parents.shift();
 
-						// loop the userRightsData array object and if the toplvl parent node inside userRightsData[] matches the current node parent.
-						// add them to the array of xNodex[]
-						for (var i = 0; i < userRightsData.length; i++) {
-							if (userRightsData[i][getToplvlParent]) {
-								userRightsData[i][getToplvlParent].push(node.key);
+							// loop the userRightsData array object and if the toplvl parent node inside userRightsData[] matches the current node parent.
+							// add them to the array of xNodex[]
+							for (var i = 0; i < userRightsData.length; i++) {
+								if (userRightsData[i][getToplvlParent]) {
+									userRightsData[i][getToplvlParent].push(node.key);
+								}
 							}
 						}
-					}
-				});
+					});
 			},
 			select: function (event, data) {
 				const fnode = data.node;
 
 					// hightlight parents of selected child nodes
 					updateParentHighlight(fnode);
-
+					
 					if (fnode.isSelected() === true) {
 						$(fnode.span)
 							.find(".fancytree-title")
@@ -103,11 +107,6 @@ var melisCoreRights = (function ($, window, document) {
 							.removeClass("fa-square-o")
 							.addClass("fa-check-square-o")
 							.css("color", fnode.data.melisData.colorSelected);
-						
-						/* fnode.visitParents(function(parent) {
-							$(parent.span).addClass("parent-with-child-selected");
-						}); */
-
 					} else {
 						$(fnode.span).find(".fancytree-title").css("color", "#686868");
 						$(fnode.span)
@@ -115,13 +114,6 @@ var melisCoreRights = (function ($, window, document) {
 							.removeClass("fa-check-square-o")
 							.addClass("fa-square-o")
 							.css("color", "#686868");
-						
-						/* fnode.visitParents(function(parent) {
-							const hasCheckedChildren = parent.children.some(child => child.isSelected());
-								if (!hasCheckedChildren) {
-									$(parent.span).removeClass("parent-with-child-selected");
-								}
-						}); */
 					}
 
 					// reset the values of the array everytime a node is checked or unchecked to update values
@@ -153,6 +145,24 @@ var melisCoreRights = (function ($, window, document) {
 						}
 					});
 			},
+			click: function(event, data) {
+				// event.originalEvent.target.className = fancytree-title
+				var targetType = data.targetType;
+					if(targetType === "title") {
+						data.node.tree.visit(function(n) {
+							if (n.isSelected()) {
+								let currentNode = n.parent;
+									while (currentNode) {
+										$(currentNode.span).addClass("parent-with-child-selected");
+										// $(currentNode.span).find(".fancytree-title").addClass("fancytree-parent-has-child-selected");
+										currentNode = currentNode.parent;
+									}
+							}
+						});
+
+						event.preventDefault();
+					}
+			}
 		});
 	};
 
@@ -166,6 +176,7 @@ var melisCoreRights = (function ($, window, document) {
 				let currentNode = n.parent;
 					while (currentNode) {
 						$(currentNode.span).addClass("parent-with-child-selected");
+						// $(currentNode.span).find(".fancytree-title").addClass("fancytree-parent-has-child-selected");
 						currentNode = currentNode.parent;
 					}
 			}
