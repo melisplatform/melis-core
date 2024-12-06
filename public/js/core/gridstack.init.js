@@ -165,10 +165,10 @@ var melisDashBoardDragnDrop = {
                 var html = $(data.html);
 
                 // add widget to dashboard default size 6 x 6
-                var widget = grid.addWidget(html, gridData.gsX, gridData.gsY, html.data("gsWidth"), html.data("gsHeight"));
+                var widget = grid?.addWidget(html, gridData.gsX, gridData.gsY, html.data("gsWidth"), html.data("gsHeight"));
 
                     // remove clone widgets
-                    grid.removeWidget($(widget).prev());
+                    grid?.removeWidget($(widget).prev());
 
                     // remove full width loading effect on mobile, fix for https://mantis2.uat.melistechnology.fr/view.php?id=860
                     if ( melisCore.screenSize <= 767 ) {
