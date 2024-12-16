@@ -6,30 +6,30 @@ $(":file").filestyle({ buttonBefore: true });
 function getRightsTree(userId) {
 	let tree = $.ui.fancytree.getTree("#rights-fancytree");
 
-	if (tree == null) {
-		tree = initRightsTree(
-			"body #rights-fancytree",
-			"/melis/MelisCore/ToolUser/getRightsTreeView?userId=" + userId
-		);
-	} else {
-		tree.reload({
-			url: (source =
-				"/melis/MelisCore/ToolUser/getRightsTreeView?userId=" + userId),
-		});
-	}
-
-	var checker = setInterval(function () {
-		let tree = $.ui.fancytree.getTree("#rights-fancytree");
-
-		if (tree != null) {
-			$("#btnEdit").removeClass("disabled").css("pointer-events", "auto");
-			$("#btnEditRights").removeClass("disabled").css("pointer-events", "auto");
-			$("#btnResetRights")
-				.removeClass("disabled")
-				.css("pointer-events", "auto");
-			clearInterval(checker);
+		if (tree == null) {
+			tree = initRightsTree(
+				"body #rights-fancytree",
+				"/melis/MelisCore/ToolUser/getRightsTreeView?userId=" + userId
+			);
+		} else {
+			tree.reload({
+				url: (source =
+					"/melis/MelisCore/ToolUser/getRightsTreeView?userId=" + userId),
+			});
 		}
-	}, 500);
+
+		var checker = setInterval(function () {
+			let tree = $.ui.fancytree.getTree("#rights-fancytree");
+
+			if (tree != null) {
+				$("#btnEdit").removeClass("disabled").css("pointer-events", "auto");
+				$("#btnEditRights").removeClass("disabled").css("pointer-events", "auto");
+				$("#btnResetRights")
+					.removeClass("disabled")
+					.css("pointer-events", "auto");
+				clearInterval(checker);
+			}
+		}, 500);
 }
 
 var _tmpUserId = null;

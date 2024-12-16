@@ -1675,8 +1675,15 @@ transition: all 0.4s ease-in-out;
 	display: inline-block;
 }
 /**
- * Custom button in tinymce Insert/Edit Link dialog box
+ * evo/user-mngt-rights
  */
+#rights-fancytree .fancytree-container li:first-child .fancytree-title.color-highlight {
+	/* color: #cb4040; */
+	color: rgba(203, 64, 64, 0.7) !important;
+}
+#rights-fancytree .fancytree-container li .fancytree-title.color-highlight {
+	color: rgba(153, 201, 117, 0.7) !important;
+}
 #mce-link-tree {
 	width: 34px;
 	height: 34px;
@@ -2282,10 +2289,10 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
 	top: 2px;
 	right: 2px;
 }
-/* .modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
-.modal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before, */
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons, 
-#modal-user-management .widget.widget-tabs-double > .widget-head ul li a.glyphicons i:before {
+.tooltabmodal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons, 
+.tooltabmodal .widget.widget-tabs-double > .widget-head ul li:not(.active) a.glyphicons i:before,
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li:not(.active) a:not(.active).glyphicons, 
+#modal-user-management .widget.widget-tabs-double > .widget-head ul li:not(.active) a:not(.active).glyphicons i:before {
     color: #fff;
 }
 .gdpr-tab-table-container .widget-head ul li, 
@@ -2394,4 +2401,12 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.dtr-expanded>th.dtr-control:before
     bottom: auto;
     left: auto;
     z-index: 1;
+}
+.tooltabmodal ul.ui-fancytree > li:first-child .fancytree-parent-has-child-selected,
+.tooltabmodal ul.ui-fancytree > li:first-child .parent-with-child-selected .fancytree-title {
+	color: #cb4040 !important;
+}
+.tooltabmodal ul.ui-fancytree > li:not(:first-child) .fancytree-parent-has-child-selected,
+.tooltabmodal ul.ui-fancytree > li:not(:first-child) .parent-with-child-selected .fancytree-title {
+	color: #99c975 !important;
 }
