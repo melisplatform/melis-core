@@ -1082,10 +1082,20 @@ class MelisCoreModulesService extends MelisServiceManager
                 curl_setopt($ch, CURLOPT_URL, $fileStr);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                //to fixed problem on redirect
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
                 $text = curl_exec($ch);
                 curl_close($ch);
             } else {
-                $text = file_get_contents($fileStr);
+                //to fixed problem on redirect
+                $options = [
+                    "http" => [
+                        "method" => "GET",
+                        "follow_location" => 1, // Enable following redirects
+                    ],
+                ];
+                $context = stream_context_create($options);
+                $text = file_get_contents($fileStr, false, $context);
             }
 
             if ($removeComments)
